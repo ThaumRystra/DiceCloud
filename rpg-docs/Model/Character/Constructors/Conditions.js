@@ -33,15 +33,15 @@ effect, such as when a creature is hurled\
 away by the thunderwave spell."
 	],
 	effects: [
-		{stat: "attributes.speed.maximum", value: 0}
+		{stat: "attributes.speed.max", value: 0}
 	]
 }
 
 Conditions.Incapacitated = {
 	effects: [
-		{stat: "attributes.actions.maximum", value: 0},
-		{stat: "attributes.reactions.maximum", value: 0},
-		{stat: "attributes.bonusActions.maximum", value: 0}
+		{stat: "attributes.actions.max", value: 0},
+		{stat: "attributes.reactions.max", value: 0},
+		{stat: "attributes.bonusActions.max", value: 0}
 	]
 }
 
@@ -54,7 +54,7 @@ Conditions.Paralyzed = {
 	effects: [
 		{stat: "skills.strengthSave.fail", value: 1},
 		{stat: "skills.dexteritySave.fail", value: 1},
-		{stat: "attributes.speed.maximum", value: 0}
+		{stat: "attributes.speed.max", value: 0}
 	]
 }
 _.extend(Conditions.Paralyzed, Conditions.Incapacitated);
@@ -67,7 +67,7 @@ Conditions.Petrified = {
 		{stat: "attributes.ageRate.min", value: 0},
 		{stat: "skills.strengthSave.fail", value: 1},
 		{stat: "skills.dexteritySave.fail", value: 1},
-		{stat: "attributes.speed.maximum", value: 0}
+		{stat: "attributes.speed.max", value: 0}
 	]
 }
 for(var i = 0, l = DamageTypes.length; i < l; i++){
@@ -91,14 +91,14 @@ Conditions.Prone = {
 
 Conditions.Restrained = {
 	effects: [
-		{stat: "attributes.speed.maximum", value: 0}
+		{stat: "attributes.speed.max", value: 0}
 	]
 }
 
 Conditions.Stunned = {
 	//implies incapacitated
 	effects: [
-		{stat: "attributes.speed.maximum", value: 0},
+		{stat: "attributes.speed.max", value: 0},
 		{stat: "skills.strengthSave.fail", value: 1},
 		{stat: "skills.dexteritySave.fail", value: 1}
 	]
@@ -109,7 +109,7 @@ Conditions.Unconscious = {
 	//implies incapacitated
 	//implies prone
 	effects: [
-		{stat: "attributes.speed.maximum", value: 0},
+		{stat: "attributes.speed.max", value: 0},
 		{stat: "skills.strengthSave.fail", value: 1},
 		{stat: "skills.dexteritySave.fail", value: 1}
 	]
