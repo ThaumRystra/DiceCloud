@@ -22,33 +22,46 @@ Attribute = function(base){
 }
 
 var attributes = [
-	"strength", 
-	"dexterity", 
-	"constitution", 
-	"intelligence",
-	"wisdom", 
-	"charisma",
-	"hitPoints",
-	"experience",
-	"proficiencyBonus",
-	"speed",
-	"armor",
-	"weight",
-	"weightCarried",
-	"age",
-	"ageRate",
-	"level1SpellSlots",
-	"level2SpellSlots",
-	"level3SpellSlots",
-	"level4SpellSlots",
-	"level5SpellSlots",
-	"level6SpellSlots",
-	"level7SpellSlots",
-	"level8SpellSlots",
-	"level9SpellSlots",
-	"ki",
-	"sorceryPoints",
-	"rages"
+	{name: "strength"}, 
+	{name: "dexterity"}, 
+	{name: "constitution"}, 
+	{name: "intelligence"},
+	{name: "wisdom"}, 
+	{name: "charisma"},
+	{name: "hitPoints"},
+	{name: "experience"},
+	{name: "proficiencyBonus", 
+	 add: [
+		 {name: "Level 1", value: 2}
+	 ]
+	},
+	{name: "speed", 
+	 add: [
+		 {name: "Base Speed", value: 30}
+	 ]
+	},
+	{name: "armor", 
+	 add: [
+		 {name: "Base Armor Class", value: 10}, 
+		 {name: "Dexterity Modifier", value: "skillMod skills.dexterityArmor"}
+	 ]
+	},
+	{name: "weight"},
+	{name: "weightCarried"},
+	{name: "age"},
+	{name: "ageRate"},
+	{name: "level1SpellSlots"},
+	{name: "level2SpellSlots"},
+	{name: "level3SpellSlots"},
+	{name: "level4SpellSlots"},
+	{name: "level5SpellSlots"},
+	{name: "level6SpellSlots"},
+	{name: "level7SpellSlots"},
+	{name: "level8SpellSlots"},
+	{name: "level9SpellSlots"},
+	{name: "ki"},
+	{name: "sorceryPoints"},
+	{name: "rages"}
 ];
 
 //Skills are bonuses to rolls: "+2" etc.
@@ -98,9 +111,15 @@ var skills = [
 	{skill: "survival", ability: "wisdom"},
 
 	{skill: "initiative", ability: "dexterity"},
-	{skill: "strengthAttack", ability: "strength"},
-	{skill: "dexterityAttack", ability: "dexterity"},
-	{skill: "rangedAttack", ability: "dexterity"},
+
+	{skill: "strengthAttack", ability: "strength", proficiency: 1},
+	{skill: "dexterityAttack", ability: "dexterity", proficiency: 1},
+	{skill: "constitutionAttack", ability: "constitution", proficiency: 1},
+	{skill: "intelligenceAttack", ability: "intelligence", proficiency: 1},
+	{skill: "wisdomAttack", ability: "wisdom", proficiency: 1},
+	{skill: "charismaAttack", ability: "charisma", proficiency: 1},
+	{skill: "rangedAttack", ability: "dexterity", proficiency: 1},
+
 	{skill: "dexterityArmor", ability: "dexterity"}
 
 ];
@@ -124,17 +143,19 @@ Character = function(owner){
 	//attributes
 	this.attributes = {};
 	for(var i = 0, l = attributes.length; i < l; i++){
-		this.attributes[attributes[i]] = new Attribute(0);
+		this.attributes[attributes[i].name] = new Attribute(0);
+		this.attributes[attributes[i].name].add = attributes[i].add || [];
+		this.attributes[attributes[i].name].mul = attributes[i].mul || [];
+		this.attributes[attributes[i].name].min = attributes[i].min || [];
+		this.attributes[attributes[i].name].max = attributes[i].max || [];
 	}
-	
-	//add 10 and dex bonus to armor
-	this.attributes.armor.add.push({name: "Base Armor Class", value: 10});
-	this.attributes.armor.add.push({name: "Dexterity Modifier", value: "skillMod skills.dexterityArmor"});
 
 	//skills
 	this.skills = {};
 	for(var i = 0, l = skills.length; i < l; i++){
 		this.skills[skills[i].skill] = new Skill(skills[i].ability);
+		if(skills[i].proficiency)
+			this.skills[skills[i].skill].proficiency.push(skills[i].proficiency);
 	}
 
 	this.deathSave = {
@@ -153,8 +174,6 @@ Character = function(owner){
 	this.spells = [];
 
 	this.classes = [];
-
-	this.experience = new Experience();
 
 	this.vulnerability = {};
 	for(var i = 0, l = DamageTypes.length; i < l; i++){
@@ -276,41 +295,41 @@ signedString = function(number){
 
 // turns dot notation strings into keys of root
 // argument formats:
-	// 157, anything -> 157
-	// "some.number", object -> object.some.number
-	// "some.function", object -> object.some.function()
-	// "some.function arg1 arg2", object -> object.some.function(arg1, arg2)
+// 157, anything -> 157
+// "some.number", object -> object.some.number
+// "some.function", object -> object.some.function()
+// "some.function arg1 arg2", object -> object.some.function(arg1, arg2)
 pop = function(input, root){
-	
+
 	if(typeof(input) === "string"){
 		//we need root for this part
 		if(root === undefined) return;
-		
+
 		//this is a likely to fail if the string is malformed
 		try{
 			//split over spaces
 			var parts = input.split(" "); 
-			
+
 			//for each word
 			for (var i = 0; i < parts.length; i++){
 				//split over dots
 				var str = parts[i].split(".");
-				
+
 				//start at root
 				parts[i] = root;
-				
+
 				//for each word between dots
 				for (var j = 0; j < str.length; j++){
 					parts[i] = parts[i][str[j]];
 				}
 			}
-			
+
 			//pull the first word out, might be a function
 			var func = parts.splice(0, 1)[0];
-			
+
 			//if it's a function, apply the arguments to it
 			if(_.isFunction(func)) return +func.apply(root, parts);
-			
+
 			//if it's a number, return it
 			if(!isNaN(func)) return +func;
 		} catch (err) {
@@ -320,6 +339,6 @@ pop = function(input, root){
 			return;
 		}
 	}
-	
+
 	return +input;
 }
