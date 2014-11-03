@@ -29,6 +29,7 @@ var attributes = [
 	"wisdom", 
 	"charisma",
 	"hitPoints",
+	"experience",
 	"proficiencyBonus",
 	"speed",
 	"armor",
