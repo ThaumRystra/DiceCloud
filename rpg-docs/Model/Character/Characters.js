@@ -1,14 +1,5 @@
 //set up the collection for characters
-Characters = new Meteor.Collection("characters", {
-	//transform function alters the object returned by the database
-	transform: function (doc) {
-		//extend character with its protoypal functions
-		var newInstance = Object.create(protoCharacter);
-		doc = _.extend(newInstance, doc);
-
-		return  doc;
-	}
-});
+Characters = new Meteor.Collection("characters");
 
 var attributes = [
 	{name: "strength"}, 
@@ -100,6 +91,7 @@ var strings = [
 	"alignment", 
 	"gender", 
 	"race",
+	"class",
 	"description",
 	"personality",
 	"ideals",
@@ -132,18 +124,20 @@ Character = function(owner){
 		success : 0,
 		fail: 0
 	};
-
-	this.hitDice = [];
-
+	
 	this.weaponProficiencies = [];
 	this.toolProficiencies = [];
 	this.languages = [];
 
+	/*
+	//anything that needs to be edited rather than added or removed
+	//needs its own collection.
+	this.hitDice = [];
+
 	this.features = [];
 
 	this.spells = [];
-
-	this.classes = [];
+	*/
 
 	this.vulnerability = {};
 	for(var i = 0, l = DamageTypes.length; i < l; i++){
@@ -159,7 +153,7 @@ Character = function(owner){
 }
 
 //functions and calculated values go here
-var protoCharacter = {
+protoCharacter = { 
 	attributeValue: function(attribute){
 		if (attribute === undefined) return;
 		//base value
@@ -252,6 +246,41 @@ var protoCharacter = {
 	passiveAbility: function(attribute){
 		var mod = +getMod(this.attributeValue(attribute));
 		return 10 + mod;
+	},
+
+	pushEffects : function(effectName, effectsArray){
+		//check that the arguments are of the right for
+		check(effectName, String);
+		check(effectsArray, [{ _id: String, stat: String, value: Number}]);
+
+		for(var i = 0; i < effectsArray.length; i++){
+			var effect = effectsArray[i];
+
+			//check if the character exists with the field we are changing
+			if(pop(effect.stat, this) !== undefined){
+				var newEffect = {};
+				newEffect[effect.stat] = {_id: effect.id, name: effectName, value: effect.value};
+				//update the field
+				Characters.update(this._id, {$push: newEffect});
+			}
+		}
+	},
+
+	pullEffects : function(effectsArray){
+		//check that the arguments are of the right form
+		check(effectsArray, [{ _id: String, stat: String, value: Number}]);
+
+		for(var i = 0; i < effectsArray.length; i++){
+			var effect = effectsArray[i];
+
+			//check if the character exists with the field we are changing
+			if(pop(effect.stat, this) !== undefined){
+				var effectToPull = {};
+				effectToPull[effect.stat] = {_id: effect.id};
+				//update the field
+				Characters.update(this._id, {$pull: effectToPull});
+			}
+		}
 	}
 }
 

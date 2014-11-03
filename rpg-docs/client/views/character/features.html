@@ -1,0 +1,8 @@
+<template name="features">
+	{{#each features}}
+		<li><strong>{{name}}</strong><input class="enabled" type="checkbox" checked={{enabled}}><br>
+		{{# each effects}}
+			{{stat}}: {{value}}
+		{{/each}}</li>
+	{{/each}}
+</template>
