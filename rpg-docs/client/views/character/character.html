@@ -1,0 +1,21 @@
+<template name="character">
+	<div>
+		{{> characterName}}
+	</div>
+	<div class="flexContainer">
+		<div id="abilityScores" class="flexItem">
+			{{> abilities}}
+		</div>
+		<div class="flexItem">
+			<div>
+				Proficiency Bonus {{proficiencyBonus}}
+			</div>
+			<div id="savesAndSkills" class="floatBox">
+				{{> savesAndSkills}}
+			</div>
+		</div>
+		<div id="stats" class="flexItem">
+			{{> characterStats}}
+		</div>
+	</div>
+</template>

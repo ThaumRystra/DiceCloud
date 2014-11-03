@@ -1,0 +1,10 @@
+<template name="home">
+	{{>loginButtons}}
+	<div>
+		{{# each characters}}
+		<li><a href="{{ pathFor 'character' }} ">{{_id}}</a></li>
+		{{/each}}
+	</div>
+	<input id="addCharacter" type="button" value="Add Character">
+	<input id="nukeCharacters" type="button" value="Clear all characters">
+</template>

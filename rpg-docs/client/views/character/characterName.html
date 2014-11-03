@@ -1,0 +1,11 @@
+<template name="characterName">
+	<div id="level">
+		{{experience.level}}
+	</div>
+	<div id="name">
+		{{name}}
+	</div>
+	<div id="role">
+		{{alignment}} {{gender}} {{race}} {{#each class}} {{this}} {{/each}}
+	</div>
+</template>

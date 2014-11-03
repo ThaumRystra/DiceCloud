@@ -1,0 +1,81 @@
+.flexContainer {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#abilityScores {
+	text-align: center;
+	flex-basis: 120px;
+	flex-grow: 1;
+	max-width: 340px;
+}
+
+/*Float boxes are indivisble, have shadows*/
+.floatBox{
+	border: 2px solid black;
+	border-radius: 0px 0px 10px 10px;
+	padding: 5px;
+	margin: 5px;
+	background: white;
+}
+
+/* headings in floatboxes */
+.floatBox h2{
+	background: black;
+	color: white;
+	font-size: 1em;
+	margin: 0px -5px 0px -5px;
+	padding: 2px 15px;
+}
+
+.floatBox h2:first-child{
+	margin: -5px -5px 0px -5px;
+}
+
+.floatBox.rounded {
+	border-radius: 10px;
+	display: inline-block;
+	text-align: center;
+}
+
+/* Ability scores */
+.floatBox.ability {
+	border-radius: 10px;
+	width: 85px;
+	text-align: center;
+	margin: 5px 5px 20px 5px;
+	display: inline-block;
+}
+
+.abilityName {
+	
+}
+
+.abilityScore {
+	font-size: 2em;
+}
+
+.abilityMod {
+	margin: 0 auto -15px;
+	padding: 2px;
+	border: 2px solid black;
+	border-radius: 5px;
+	background: white;
+	width: 40px;
+}
+
+/* Stats */
+#armorClassBox {
+	width: 90px;
+	height: 100px;
+	background-image: url('/svg/ac.svg');
+	background-repeat: no-repeat;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.statValue {
+	font-size: 2em;
+}
