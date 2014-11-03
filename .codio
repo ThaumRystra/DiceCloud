@@ -3,14 +3,11 @@
 
 // Run button configuration
   "commands": {
-        "Node version": "node --version"
+        "Run Meteor": "cd rpg-docs \n meteor"
   },
 
 // Preview button configuration
   "preview": {
-        "Project Index (static)": "https://{{domain}}/{{index}}",
-        "Current File (static)": "https://{{domain}}/{{filepath}}",
-        "Box URL": "http://{{domain}}:3000/",
-        "Box URL SSL": "https://{{domain}}:9500/"
+        "Prieview": "https://period-sheriff-3000.codio.io"
   }
 }
