@@ -7,4 +7,5 @@ Item = function(name, container){
 	this.weight = 0.0;
 	this.value = 0;//value in gold pieces
 	this.description = "";
+	this.effects = [];
 }

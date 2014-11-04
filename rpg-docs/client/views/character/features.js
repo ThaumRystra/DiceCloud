@@ -1,12 +1,12 @@
-Template.features.helpers = {
+Template.features.helpers({
 	features: function(){
 		var features = Features.find({character: this._id});
 		console.log('found: ', features);
 		return features;
 	}
-}
+});
 
-Template.features.events = {
+Template.features.events({
 	// Fires when any element is clicked
 	'change .enabled': function (event) {
 		var enable = event.target.checked
@@ -17,4 +17,4 @@ Template.features.events = {
 			Template.parentData(1).pullEffects(this.effects);
 		}
 	}
-}
+});
