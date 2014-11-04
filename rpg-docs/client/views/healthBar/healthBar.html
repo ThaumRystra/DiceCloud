@@ -1,0 +1,8 @@
+<template name="healthBar">
+	<div class= "healthBar">		
+		<div class="healthBarInner" style="width: {{hpPercent}}%"></div>
+		<div class="healthBarBorder">
+			<span class="hpReadout">{{attributeValue attributes.hitPoints}}/{{maxHp}}</span>
+		</div>
+	</div>
+</template>

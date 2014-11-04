@@ -1,0 +1,23 @@
+.healthBar{
+	width: 320px;
+	height: 30px;
+}
+
+.healthBarInner{
+	height: 100%;
+	border-radius: 15px;
+	background-color: green;
+}
+
+.healthBarBorder{
+	position: relative;
+	left: 0px;
+	top: -100%;
+	width: 100%;
+	height: 100%;
+	background-image: url('/svg/bar-border.svg');
+	
+	display: flex;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+}
