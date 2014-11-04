@@ -1,7 +1,6 @@
 Template.features.helpers({
 	features: function(){
 		var features = Features.find({character: this._id});
-		console.log('found: ', features);
 		return features;
 	}
 });

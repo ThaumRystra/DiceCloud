@@ -1,23 +1,66 @@
-.healthBar{
-	width: 320px;
+.healthBarContainer{
+	width: 300px;
 	height: 30px;
+	display: flex;
+	position: relative;
+	align-items: center; /* align vertical */
+	margin-top: 25px;
 }
 
-.healthBarInner{
-	height: 100%;
+.healthBar{
+	position: relative;
+	height: 30px;
+	flex-grow: 1;
+}
+
+.healthBarGreen{
+	position: absolute;
+	height: 30px;
 	border-radius: 15px;
 	background-color: green;
 }
 
+.healthBarRed{
+	position: absolute;
+	height: 30px;
+	border-radius: 15px;
+	background-color: red;
+}
+
+.healthBarYellow{
+	position: absolute;
+	height: 30px;
+	border-radius: 15px;
+	background-color: yellow;
+}
+
 .healthBarBorder{
-	position: relative;
-	left: 0px;
-	top: -100%;
-	width: 100%;
-	height: 100%;
-	background-image: url('/svg/bar-border.svg');
+	position: absolute;
+	height: 2px;
+	border-width: 14px 40px 14px 40px;
+	width: 160px;
+	border-image: url('/png/bar-border.png') 14 40 14 40;
 	
 	display: flex;
 	justify-content: center; /* align horizontal */
 	align-items: center; /* align vertical */
+}
+
+.healthBarButton{
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+}
+
+.healthBarPlus{
+	
+}
+
+.healthBarMinus{
+	
+}
+
+.deltaHp{
+	position: absolute;
+	top: -20px;
 }

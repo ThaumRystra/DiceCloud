@@ -1,8 +1,20 @@
 <template name="healthBar">
-	<div class= "healthBar">		
-		<div class="healthBarInner" style="width: {{hpPercent}}%"></div>
-		<div class="healthBarBorder">
-			<span class="hpReadout">{{attributeValue attributes.hitPoints}}/{{maxHp}}</span>
+	<div class="deltaHpContainer">
+			
 		</div>
+	<div class="healthBarContainer">
+		<button class="healthBarMinus healthBarButton"></button>
+		<div class= "healthBar">
+			<div class="deltaHp" style="left:{{hpPercentDelta}}%">
+				<button id="applyDelta" style="display: {{showDelta}}">{{deltaHp}}</button>
+			</div>
+			<div class="healthBarYellow" style="width: {{hpYellow}}%"></div>
+			<div class="healthBarRed" style="width: {{hpRed}}%"></div>
+			<div class="healthBarGreen" style="width: {{hpGreen}}%"></div>
+			<div class="healthBarBorder">
+				<span class="hpReadout">{{attributeValue attributes.hitPoints}}/{{maxHp}}</span>
+			</div>
+		</div>
+		<button class="healthBarPlus healthBarButton"></button>
 	</div>
 </template>
