@@ -10,4 +10,5 @@ iron:router
 accounts-password
 accounts-ui
 random
+dburles:collection-helpers
 

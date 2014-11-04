@@ -14,13 +14,6 @@ Router.map( function () {
 		notFoundTemplate: 'characterNotFound',
 		data: function() {
 			var data = Characters.findOne({_id: this.params._id});
-			data.features = Features.find({character: data._id});
-			data.containers = Containers.find({owner: data._id});
-			data.containers.forEach(function(container){
-				container.items = Items.find({container: container._id});
-			});
-			var newInstance = Object.create(protoCharacter);
-			data = _.extend(newInstance, data);
 			return data;
 		}
 	});
@@ -31,9 +24,6 @@ Router.map( function () {
 		data: {
 			containers: function() {
 				var containers = Containers.find({owner: data._id});
-				containers.forEach(function(container){
-					container.items = Items.find({container: container._id});
-				});
 				return containers;
 			},
 

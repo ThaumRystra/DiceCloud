@@ -3,7 +3,6 @@ Character.js is under construction... expect broken character sheets
 issues
 ------
 
-* hot code pushes don't apply transforms correctly
 
 Characters attributes and buffs
 -------------------------------

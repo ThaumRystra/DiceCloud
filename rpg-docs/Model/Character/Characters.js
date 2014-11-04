@@ -153,7 +153,7 @@ Character = function(owner){
 }
 
 //functions and calculated values go here
-protoCharacter = { 
+Characters.helpers({ 
 	attributeValue: function(attribute){
 		if (attribute === undefined) return;
 		//base value
@@ -282,7 +282,7 @@ protoCharacter = {
 			}
 		}
 	}
-}
+});
 
 getMod = function(score){
 	return Math.floor((score-10)/2);
