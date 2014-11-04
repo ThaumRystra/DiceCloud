@@ -15,31 +15,35 @@
 
 .healthBarGreen{
 	position: absolute;
-	height: 30px;
+	top: 2px;
+	height: 26px;
 	border-radius: 15px;
-	background-color: green;
+	background-color: #008C00;
 }
 
 .healthBarRed{
 	position: absolute;
-	height: 30px;
+	top: 2px;
+	height: 26px;
 	border-radius: 15px;
-	background-color: red;
+	background-color: #AF0000;
 }
 
 .healthBarYellow{
 	position: absolute;
-	height: 30px;
+	top: 2px;
+	height: 26px;
 	border-radius: 15px;
-	background-color: yellow;
+	background-color: #AF6700;
 }
 
 .healthBarBorder{
 	position: absolute;
-	height: 2px;
-	border-width: 14px 40px 14px 40px;
-	width: 160px;
-	border-image: url('/png/bar-border.png') 14 40 14 40;
+	left: -1px;
+	height: 0px;
+	border-width: 15px 40px 15px 40px;
+	width: 222px;
+	border-image: url('/png/bar-border.png') 44 120 49 119 stretch;
 	
 	display: flex;
 	justify-content: center; /* align horizontal */

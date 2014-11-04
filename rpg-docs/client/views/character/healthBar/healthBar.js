@@ -64,7 +64,7 @@ Template.healthBar.events({
 	},
 	"drag": function(event, templateInstance, handler){
 		//the width of the bar, fetch dynamically if needed
-		var healthBarWidth = 240;
+		var healthBarWidth = 300;
 		var hpLeft = this.attributeValue(this.attributes.hitPoints)
 		var damage = this.attributes.hitPoints.base
 		var maxHp = hpLeft - damage;

@@ -12,11 +12,20 @@
 
 /*Float boxes are indivisble, have shadows*/
 .floatBox{
-	border: 2px solid black;
-	border-radius: 0px 0px 10px 10px;
-	padding: 5px;
-	margin: 5px;
+	border-image-width: 90px 54px 50px 54px;
+	border-image-outset: 10px;
+	border-image-source: url('/png/big-border.png');
+	border-image-slice: 271 163 151 163;
+	border-image-repeat: stretch;
+	
+	padding: 5px 10px 5px 10px;
+	margin: 10px;
 	background: white;
+	border-radius: 20px;
+}
+
+.bigborder{
+	
 }
 
 /* headings in floatboxes */
@@ -24,7 +33,6 @@
 	background: black;
 	color: white;
 	font-size: 1em;
-	margin: 0px -5px 0px -5px;
 	padding: 2px 15px;
 }
 
@@ -33,35 +41,9 @@
 }
 
 .floatBox.rounded {
-	border-radius: 10px;
-	display: inline-block;
-	text-align: center;
-}
-
-/* Ability scores */
-.floatBox.ability {
-	border-radius: 10px;
-	width: 85px;
-	text-align: center;
-	margin: 5px 5px 20px 5px;
-	display: inline-block;
-}
-
-.abilityName {
 	
-}
-
-.abilityScore {
-	font-size: 2em;
-}
-
-.abilityMod {
-	margin: 0 auto -15px;
-	padding: 2px;
-	border: 2px solid black;
-	border-radius: 5px;
-	background: white;
-	width: 40px;
+	display: inline-block;
+	text-align: center;
 }
 
 /* Stats */
