@@ -41,10 +41,9 @@
 	position: absolute;
 	left: -1px;
 	height: 0px;
-	border-width: 15px 40px 15px 40px;
-	width: 222px;
-	border-image: url('/png/bar-border.png') 44 120 49 119 stretch;
-	
+	width: 227px;
+	border-width: 15px 37px 16px 37px;
+	border-image: url('/png/bar-border.png') 46 112 48 112 stretch;
 	display: flex;
 	justify-content: center; /* align horizontal */
 	align-items: center; /* align vertical */

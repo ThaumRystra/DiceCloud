@@ -12,15 +12,17 @@
 
 /*Float boxes are indivisble, have shadows*/
 .floatBox{
-	border-image-width: 90px 54px 50px 54px;
-	border-image-outset: 10px;
+	color: #301d02;
+	
+	border-image-width: 92px 60px 57px 60px;
+	border-image-outset: 15px;
 	border-image-source: url('/png/big-border.png');
-	border-image-slice: 271 163 151 163;
+	border-image-slice: 275 179 171 179;
 	border-image-repeat: stretch;
 	
-	padding: 5px 10px 5px 10px;
-	margin: 10px;
-	background: white;
+	padding: 0px 5px 5px 5px;
+	margin: 15px;
+	background: #f0e3d1;
 	border-radius: 20px;
 }
 
@@ -30,18 +32,10 @@
 
 /* headings in floatboxes */
 .floatBox h2{
-	background: black;
-	color: white;
 	font-size: 1em;
-	padding: 2px 15px;
-}
-
-.floatBox h2:first-child{
-	margin: -5px -5px 0px -5px;
 }
 
 .floatBox.rounded {
-	
 	display: inline-block;
 	text-align: center;
 }
