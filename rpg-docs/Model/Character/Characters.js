@@ -185,15 +185,9 @@ Characters.helpers({
 
 		return value;
 	},
-
-	skillMod: function(skill){
-		//get the final value of the ability score
-		var ability = this.attributeValue(this.attributes[skill.ability]);
-
-		//base modifier
-		var mod = +getMod(ability)
-
-		//multiply proficiency bonus by largest value in proficiency array
+	
+	proficiency: function(skill){
+		//return largest value in proficiency array
 		var prof = 0;
 		for(var i = 0, l = skill.proficiency.length; i < l; i++){
 			var newProf = pop(skill.proficiency[i].value, this);
@@ -201,6 +195,23 @@ Characters.helpers({
 				prof = newProf;
 			}
 		}
+		return prof;
+	},
+
+	skillMod: function(skill){
+		if(skill === undefined){ 
+			console.log("Cannot get skillMod of undefined");
+			return;
+		}
+		//get the final value of the ability score
+		var ability = this.attributeValue(this.attributes[skill.ability]);
+
+		//base modifier
+		var mod = +getMod(ability)
+
+		//multiply proficiency bonus by largest value in proficiency array
+		var prof = this.proficiency(skill);
+		
 		//add multiplied proficiency bonus to modifier
 		mod += prof * this.attributeValue(this.attributes.proficiencyBonus);
 

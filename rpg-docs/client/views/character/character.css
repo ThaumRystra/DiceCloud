@@ -1,6 +1,7 @@
 .flexContainer {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: space-around;
 }
 
 #abilityScores {
@@ -14,11 +15,15 @@
 .floatBox{
 	color: #301d02;
 	
+	/*Fancy image border*/
 	border-image-width: 92px 60px 57px 60px;
 	border-image-outset: 15px;
 	border-image-source: url('/png/big-border.png');
 	border-image-slice: 275 179 171 179;
 	border-image-repeat: stretch;
+	
+	/*Shadow*/
+	box-shadow: 0px 5px 20px rgba(0, 0, 0, 1);
 	
 	padding: 0px 5px 5px 5px;
 	margin: 15px;

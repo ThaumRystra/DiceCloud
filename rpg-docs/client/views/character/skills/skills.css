@@ -1,0 +1,38 @@
+.profIcon{
+	display: inline-block;
+	width: 23px;
+	height: 14px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	
+	position: relative;
+	top: 1px;
+}
+
+table.skillTable td:nth-of-type(2) { 
+	text-align: right; 
+}
+
+table.skillTable td:nth-of-type(3) { 
+	padding-left: 8px;
+}
+
+td.fail {
+	color: #AF0000;
+}
+
+.advantage{
+	background-image: url(/png/advantage/greenUp.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.disadvantage{
+	background-image: url(/png/advantage/redDown.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+td.conditionals::after{
+	content: "*";
+}
