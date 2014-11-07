@@ -121,8 +121,9 @@ Character = function(owner){
 	}
 
 	this.deathSave = {
-		success : 0,
-		fail: 0
+		pass : 0,
+		fail: 0,
+		canDeathSave: true
 	};
 	
 	this.weaponProficiencies = [];
@@ -292,6 +293,19 @@ Characters.helpers({
 				Characters.update(this._id, {$pull: effectToPull});
 			}
 		}
+	},
+	
+	level: function(){
+		var xp = this.attributeValue(this.attributes.experience);
+		var xpTable = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
+					  85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000,
+					  305000, 355000];
+		for(var i = 0, l = xpTable.length; i < l; i++){
+			if(xp < xpTable[i]){
+				return i;
+			}
+		}
+		return 20;
 	}
 });
 

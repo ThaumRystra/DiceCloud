@@ -11,6 +11,8 @@
 	position: relative;
 	height: 30px;
 	flex-grow: 1;
+	display: flex;
+	align-items: center; /* align vertical */
 }
 
 .healthBarGreen{
@@ -39,14 +41,20 @@
 
 .healthBarBorder{
 	position: absolute;
+	top: 0px;
 	left: -1px;
 	height: 0px;
-	width: 227px;
+	width: 228px;
 	border-width: 15px 37px 16px 37px;
 	border-image: url('/png/bar-border.png') 46 112 48 112 stretch;
 	display: flex;
 	justify-content: center; /* align horizontal */
 	align-items: center; /* align vertical */
+	pointer-events: none;
+}
+
+.hpReadout {
+	color: #FFE0B5;
 }
 
 .healthBarButton{
@@ -62,8 +70,74 @@
 .healthBarMinus{
 	
 }
+/*deadbar*/
+.deadText {
+	color: #AF0000;
+	text-align: center;
+	flex-grow: 1;
+	letter-spacing: 10px;
+	font-weight: bold;
+	cursor: default;
+}
 
+/*death saves bar*/
 .deltaHp{
 	position: absolute;
 	top: -20px;
+}
+
+.deathSaveFail{
+	display:inline-block;
+}
+
+.deathSavePass{
+	display: inline-block;
+}
+
+.untickedDeathFail{
+	display: inline-block;
+	width: 30px;
+	height: 28px;
+	background-color: grey;
+}
+
+.tickedDeathFail{
+	display: inline-block;
+	width: 30px;
+	height: 28px;
+	background-color: red;
+}
+
+.untickedDeathPass{
+	display: inline-block;
+	width: 30px;
+	height: 28px;
+	background-color: grey;
+}
+
+.tickedDeathPass{
+	display: inline-block;
+	width: 30px;
+	height: 28px;
+	background-color: green;
+}
+
+.stability{
+	display: inline-block;
+	flex-grow: 1;
+	text-align: center;
+	color: #40D940;
+	cursor: default;
+}
+
+.heal{
+	display: inline-block;
+	flex-grow: 1;
+	text-align: center;
+	color: #FFB44B;
+	cursor: default;
+}
+
+.unstableButton{
+	display: inline-block;
 }

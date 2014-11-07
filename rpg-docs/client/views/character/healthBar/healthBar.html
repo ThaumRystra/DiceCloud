@@ -1,20 +1,52 @@
 <template name="healthBar">
 	<div class="deltaHpContainer">
-			
-		</div>
+
+	</div>
 	<div class="healthBarContainer">
 		<!--<button class="healthBarMinus healthBarButton"></button>-->
-		<div class= "healthBar">
-			<div class="deltaHp" style="left:{{hpPercentDelta}}%">
-				<button id="applyDelta" style="display: {{showDelta}}">{{deltaHp}}</button>
-			</div>
-			<div class="healthBarYellow" style="width: {{hpYellow}}%"></div>
-			<div class="healthBarRed" style="width: {{hpRed}}%"></div>
-			<div class="healthBarGreen" style="width: {{hpGreen}}%"></div>
-			<div class="healthBarBorder">
-				<span class="hpReadout">{{attributeValue attributes.hitPoints}}/{{maxHp}}</span>
-			</div>
-		</div>
+		{{#if healthy}}
+			{{> hitPointBars}}
+		{{else}}
+			{{# if dead}}
+				{{> deadBar}}
+			{{else}}
+				{{> deathSaves}}
+			{{/if}}
+		{{/if}}
 		<!--<button class="healthBarPlus healthBarButton"></button>-->
+	</div>
+</template>
+
+<template name="hitPointBars">
+	<div class= "healthBar">
+		<div class="deltaHp" style="left:{{hpPercentDelta}}%">
+			<button id="applyDelta" style="display: {{showDelta}}">{{deltaHp}}</button>
+		</div>
+		<div class="healthBarYellow" style="width: {{hpYellow}}%"></div>
+		<div class="healthBarRed" style="width: {{hpRed}}%"></div>
+		<div class="healthBarGreen" style="width: {{hpGreen}}%"></div>
+		<div class="healthBarBorder">
+			<span class="hpReadout">{{attributeValue attributes.hitPoints}}/{{maxHp}}</span>
+		</div>
+	</div>
+</template>
+
+<template name="deadBar">
+	<div class= "healthBar">
+		<div class="deadText">DEAD</div>
+		<div class="healthBarBorder"></div>
+	</div>
+</template>
+	
+<template name="deathSaves">
+	<div class= "healthBar">
+		<div class={{deathFailGT 0}}></div>
+		<div class={{deathFailGT 1}}></div>
+		<div class={{deathFailGT 2}}></div>
+		<div class={{stable}}>{{stabilizeText}}</div>
+		<div class={{deathPassGT 2}}></div>
+		<div class={{deathPassGT 1}}></div>
+		<div class={{deathPassGT 0}}></div>
+		<div class="healthBarBorder"></div>
 	</div>
 </template>

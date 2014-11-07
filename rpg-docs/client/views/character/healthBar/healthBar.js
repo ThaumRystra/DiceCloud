@@ -1,4 +1,20 @@
 Template.healthBar.helpers({
+	healthy: function(){
+		var hp = this.attributeValue(this.attributes.hitPoints);
+		return hp > 0;
+	},
+	dead: function(){
+		if(this.deathSave.canDeathSave){
+			return this.deathSave.fail >= 3;
+		} else{
+			//creatures that can't make death saves die at 0 HP
+			var hp = this.attributeValue(this.attributes.hitPoints);
+			return hp <= 0;
+		}
+	}
+});
+
+Template.hitPointBars.helpers({
 	hpRed: function(){
 		var currentHp = this.attributeValue(this.attributes.hitPoints);
 		var damage = this.attributes.hitPoints.base;
@@ -58,7 +74,7 @@ Template.healthBar.helpers({
 	}
 });
 
-Template.healthBar.events({
+Template.hitPointBars.events({
 	"dragstart .healthBar": function(event) {
 		Template.instance().startDrag = new ReactiveVar(Template.instance().deltaHp.get());
 	},
@@ -98,5 +114,59 @@ Template.healthBar.events({
 	"click #applyDelta": function(event){
 		Characters.update(this._id, {$inc: {"attributes.hitPoints.base": Template.instance().deltaHp.get()}})
 		Template.instance().deltaHp.set(0);
+	}
+});
+
+Template.deadBar.events({
+	"click .deadText": function(){
+		Characters.update(this._id, {$set: {"deathSave.fail": 0}});
+		Characters.update(this._id, {$set: {"deathSave.pass": 0}});
+	}
+});
+
+Template.deathSaves.helpers({
+	deathFailGT: function(num){
+		if(this.deathSave.fail > num) return "tickedDeathFail";
+		else return "untickedDeathFail";
+	},
+	deathPassGT: function(num){
+		if(this.deathSave.pass > num) return "tickedDeathPass";
+		else return "untickedDeathPass";
+	},
+	stable: function(){
+		if(this.deathSave.pass > 0 || this.deathSave.fail > 0){
+			return "stability";
+		} else{
+			return "heal";
+		}
+	},
+	stabilizeText: function(){
+		if(this.deathSave.pass > 0 || this.deathSave.fail > 0){
+			return "stabilize";
+		} else{
+			return "heal";
+		}
+	}
+});
+
+Template.deathSaves.events({
+	"click .stability": function(){
+		Characters.update(this._id, {$set: {"deathSave.fail": 0}});
+		Characters.update(this._id, {$set: {"deathSave.pass": 0}});
+	},
+	"click .heal": function(){
+		Characters.update(this._id, {$inc: {"attributes.hitPoints.base": 1}});
+	},
+	"click .untickedDeathFail" : function(){
+		Characters.update(this._id, {$inc: {"deathSave.fail": 1}});
+	},
+	"click .untickedDeathPass" : function(){
+		Characters.update(this._id, {$inc: {"deathSave.pass": 1}});
+	},
+	"click .tickedDeathFail" : function(){
+		Characters.update(this._id, {$inc: {"deathSave.fail": -1}});
+	},
+	"click .tickedDeathPass" : function(){
+		Characters.update(this._id, {$inc: {"deathSave.pass": -1}});
 	}
 });

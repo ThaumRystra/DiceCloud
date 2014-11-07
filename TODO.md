@@ -1,6 +1,4 @@
-Character.js is under construction... expect broken character sheets
-
-issues
+sxissues
 ------
 
 
