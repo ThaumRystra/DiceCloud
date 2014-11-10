@@ -1,0 +1,9 @@
+<template name="textField">
+	{{#if editing}}
+		<div id="textInput" class={{outputClass}} contenteditable=true>{{input}}</div>
+	{{else}}
+		<div id="textOutput" class={{outputClass}}>
+			{{output}}
+		</div>
+	{{/if}}
+</template>

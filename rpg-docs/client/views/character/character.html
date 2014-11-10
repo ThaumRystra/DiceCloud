@@ -3,9 +3,6 @@
 		{{> characterName}}
 	</div>
 	<div class="flexContainer">
-		<div id="abilityScores" class="flexItem">
-			{{> bigAbilities}}
-		</div>
 		<div class="flexItem">
 			<div>
 				Proficiency Bonus {{proficiencyBonus}}
@@ -14,11 +11,8 @@
 				{{> skills}}
 			</div>
 		</div>
-		<div id="stats" class="flexItem">
-			{{> characterStats}}
-		</div>
-		<div>
-			{{> features}}
+		<div class="flexItem floatBox">
+			{{> textField character=this field="description"}}
 		</div>
 	</div>
 </template>

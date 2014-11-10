@@ -126,6 +126,10 @@ Character = function(owner){
 		canDeathSave: true
 	};
 	
+	for(var i = 0, l = string.length; i < l; i++){
+		this.strings[strings[i]] = "";
+	};
+	
 	this.weaponProficiencies = [];
 	this.toolProficiencies = [];
 	this.languages = [];
