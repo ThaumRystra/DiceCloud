@@ -96,7 +96,9 @@ var strings = [
 	"personality",
 	"ideals",
 	"bonds",
-	"flaws"
+	"flaws",
+	"backstory",
+	"notes"
 ];
 
 //Data structure for the character
@@ -126,7 +128,8 @@ Character = function(owner){
 		canDeathSave: true
 	};
 	
-	for(var i = 0, l = string.length; i < l; i++){
+	this.strings = {};
+	for(var i = 0, l = strings.length; i < l; i++){
 		this.strings[strings[i]] = "";
 	};
 	

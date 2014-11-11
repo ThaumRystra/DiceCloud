@@ -6,3 +6,8 @@ body {
 	font-family: sans-serif;
 	background: #201500;
 }
+
+.calculatedValue {
+	color: #021C33;
+	font-weight: bold;
+}

@@ -1,8 +1,8 @@
 <template name="textField">
 	{{#if editing}}
-		<div id="textInput" class={{outputClass}} contenteditable=true>{{input}}</div>
+		<div id="textInput" class="editBox {{outputClass}}" contenteditable=true>{{input}}</div>
 	{{else}}
-		<div id="textOutput" class={{outputClass}}>
+		<div id="textOutput" class="editBox {{outputClass}}">
 			{{output}}
 		</div>
 	{{/if}}
