@@ -1,0 +1,6 @@
+<template  name="itemRow">
+	<tr class={{#if isSelected}}selected{{/if}}>
+		<td>{{#if stackable}}{{quantity}}{{/if}}</td>
+		<td>{{pluralName}}</td>
+	</tr>
+</template>
