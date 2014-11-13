@@ -32,8 +32,7 @@ Template.textField.events({
 		var setter = {};
 		setter["strings."+this.field] = text;
 		Characters.update(this.character._id, {$set: setter}, function(error, result) {
-			console.log(error);
-			console.log(result);
+			if(error) console.log(error);
 		});
 	},
 	"click #textOutput": function(){

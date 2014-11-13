@@ -6,15 +6,38 @@ Schemas.Character = new SimpleSchema({
 	attributes: 	{ type: Schemas.Attributes },
 	skills: 		{ type: Schemas.Skills },
 	vulerabilities:	{ type: Schemas.Vulnerabilities },
-	proficiencies:	{ type: Schemas.Proficiencies }
-
+	proficiencies:	{ type: Schemas.Proficiencies },
+	features:		{ type: [Schemas.Feature]},
+	time:			{ type: Number, min: 0, decimal: true},
+	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true}
 	//TODO add permission stuff for owner, readers and writers
 	//TODO hit dice
 });
 
 Characters.attachSchema(Schemas.Character);
 
-//functions and calculated values go here
+//react to time changing
+Characters.find({fields: {time: 1}}).observeChanges({
+	changed: function(id, fields){
+		var currentTime = fields.time;
+		console.log(id + "time changed to " + currentTime)
+		var features = Characters.findOne(id, { fields: {features: 1} }).features;
+		_.each(features, function(feature){
+			//expired features, if no expiry time is set, this is always false
+			if(feature.expires >= currentTime){
+				//remove buffs
+				pullBuffs(id, feature.buffs);
+				//disable feature
+				Characters.update(
+					{_id: id, "features._id": feature.id},
+					{$set: {"features.$.enabled": false}}
+				);
+			}
+		});
+	}
+});
+
+//functions and calculated values
 Characters.helpers({ 
 	attributeValue: function(attribute){
 		if (attribute === undefined) return;
@@ -47,7 +70,7 @@ Characters.helpers({
 
 		return value;
 	},
-	
+
 	proficiency: function(skill){
 		//return largest value in proficiency array
 		var prof = 0;
@@ -73,7 +96,7 @@ Characters.helpers({
 
 		//multiply proficiency bonus by largest value in proficiency array
 		var prof = this.proficiency(skill);
-		
+
 		//add multiplied proficiency bonus to modifier
 		mod += prof * this.attributeValue(this.attributes.proficiencyBonus);
 
@@ -120,54 +143,17 @@ Characters.helpers({
 		var mod = +getMod(this.attributeValue(attribute));
 		return 10 + mod;
 	},
-	
-	pushEffects : function(effectName, effectsArray){
-		throw "this function is not implemented correctly for buffs->effects"
-		//check that the arguments are of the right for
-		check(effectName, String);
-		check(effectsArray, [{ _id: String, stat: String, value: Number}]);
 
-		for(var i = 0; i < effectsArray.length; i++){
-			var effect = effectsArray[i];
-
-			//check if the character exists with the field we are changing
-			if(pop(effect.stat, this) !== undefined){
-				var newEffect = {};
-				newEffect[effect.stat] = {_id: effect.id, name: effectName, value: effect.value};
-				//update the field
-				Characters.update(this._id, {$push: newEffect});
-			}
-		}
-	},
-
-	pullEffects : function(effectsArray){
-		throw "this function is not implemented correctly for buffs->effects"
-		//check that the arguments are of the right form
-		check(effectsArray, [{ _id: String, stat: String, value: Number}]);
-
-		for(var i = 0; i < effectsArray.length; i++){
-			var effect = effectsArray[i];
-
-			//check if the character exists with the field we are changing
-			if(pop(effect.stat, this) !== undefined){
-				var effectToPull = {};
-				effectToPull[effect.stat] = {_id: effect.id};
-				//update the field
-				Characters.update(this._id, {$pull: effectToPull});
-			}
-		}
-	},
-	
 	level: function(){
 		var xp = this.attributeValue(this.attributes.experience);
 		var xpTable = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
-					  85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000,
-					  305000, 355000];
-		for(var i = 0, l = xpTable.length; i < l; i++){
-			if(xp < xpTable[i]){
+					   85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000,
+					   305000, 355000];
+		_.each(xpTable, function(value, i){
+			if(xp < value){
 				return i;
 			}
-		}
+		});
 		return 20;
 	}
 });
