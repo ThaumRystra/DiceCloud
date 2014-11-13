@@ -1,7 +1,10 @@
-Containers = new Meteor.Collection('containers');
+//set up the collection for containers
+Containers = new Meteor.Collection("containers");
 
-Container = function(name, owner){
-	this.name = name;
-	this.owner = owner;
-	this.isCarried = true;
-};
+Schemas.Container = new SimpleSchema({
+	name: 		{ type: String },
+	owner: 		{ type: String, regEx: SimpleSchema.RegEx.Id},
+	isCarried: 	{ type: Boolean }
+});
+
+Containers.attachSchema(Schemas.Container);

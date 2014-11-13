@@ -31,7 +31,10 @@ Template.textField.events({
 		//TODO sanitise the html
 		var setter = {};
 		setter["strings."+this.field] = text;
-		Characters.update(this.character._id, {$set: setter});
+		Characters.update(this.character._id, {$set: setter}, function(error, result) {
+			console.log(error);
+			console.log(result);
+		});
 	},
 	"click #textOutput": function(){
 		Template.instance().editing.set(true);

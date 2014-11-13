@@ -1,0 +1,10 @@
+Schemas.Proficiency = new simpleSchema({
+	name: 	{type: String},
+	source: {type: String}
+})
+
+Schemas.Proficiencies = new SimpleSchema({
+	weapons: {type: [Schemas.Proficiency]},
+	tools: {type: [Schemas.Proficiency]},
+	languages: {type: [Schemas.Proficiency]}
+});

@@ -1,164 +1,18 @@
 //set up the collection for characters
 Characters = new Meteor.Collection("characters");
 
-var attributes = [
-	{name: "strength"}, 
-	{name: "dexterity"}, 
-	{name: "constitution"}, 
-	{name: "intelligence"},
-	{name: "wisdom"}, 
-	{name: "charisma"},
-	{name: "hitPoints"},
-	{name: "experience"},
-	{name: "proficiencyBonus", 
-	 add: [
-		 new Effect("Level 1", 2)
-	 ]
-	},
-	{name: "speed", 
-	 add: [
-		 new Effect("Base Speed", 30)
-	 ]
-	},
-	{name: "armor", 
-	 add: [
-		 new Effect("Base Armor Class", 10), 
-		 new Effect("Dexterity Modifier", "skillMod skills.dexterityArmor")
-	 ]
-	},
-	{name: "weight"},
-	{name: "weightCarried"},
-	{name: "age"},
-	{name: "ageRate"},
-	{name: "level1SpellSlots"},
-	{name: "level2SpellSlots"},
-	{name: "level3SpellSlots"},
-	{name: "level4SpellSlots"},
-	{name: "level5SpellSlots"},
-	{name: "level6SpellSlots"},
-	{name: "level7SpellSlots"},
-	{name: "level8SpellSlots"},
-	{name: "level9SpellSlots"},
-	{name: "ki"},
-	{name: "sorceryPoints"},
-	{name: "rages"}
-];
+Schemas.Character = new SimpleSchema({
+	strings: 		{ type: Schemas.Strings },
+	attributes: 	{ type: Schemas.Attributes },
+	skills: 		{ type: Schemas.Skills },
+	vulerabilities:	{ type: Schemas.Vulnerabilities },
+	proficiencies:	{ type: Schemas.Proficiencies }
 
-var skills = [
-	{skill: "strengthSave", ability: "strength"},
-	{skill: "dexteritySave", ability: "dexterity"},
-	{skill: "constitutionSave", ability: "constitution"},
-	{skill: "intelligenceSave", ability: "intelligence"},
-	{skill: "wisdomSave", ability: "wisdom"},
-	{skill: "charismaSave", ability: "charisma"},
+	//TODO add permission stuff for owner, readers and writers
+	//TODO hit dice
+});
 
-	{skill: "acrobatics", ability: "dexterity"}, 
-	{skill: "animalHandling", ability: "wisdom"}, 
-	{skill: "arcana",ability: "intelligence"}, 
-	{skill: "athletics", ability: "strength"}, 
-	{skill: "deception", ability: "charisma"}, 
-	{skill: "history", ability: "intelligence"}, 
-	{skill: "insight", ability: "wisdom"}, 
-	{skill: "intimidation", ability: "charisma"}, 
-	{skill: "investigation", ability: "intelligence"}, 
-	{skill: "medicine", ability: "wisdom"}, 
-	{skill: "nature", ability: "intelligence"}, 
-	{skill: "perception", ability: "wisdom"}, 
-	{skill: "performance", ability: "charisma"}, 
-	{skill: "persuasion", ability: "charisma"}, 
-	{skill: "religion", ability: "intelligence"}, 
-	{skill: "sleightOfHand", ability: "dexterity"}, 
-	{skill: "stealth", ability: "dexterity"}, 
-	{skill: "survival", ability: "wisdom"},
-
-	{skill: "initiative", ability: "dexterity"},
-
-	{skill: "strengthAttack", ability: "strength", proficiency: 1},
-	{skill: "dexterityAttack", ability: "dexterity", proficiency: 1},
-	{skill: "constitutionAttack", ability: "constitution", proficiency: 1},
-	{skill: "intelligenceAttack", ability: "intelligence", proficiency: 1},
-	{skill: "wisdomAttack", ability: "wisdom", proficiency: 1},
-	{skill: "charismaAttack", ability: "charisma", proficiency: 1},
-	{skill: "rangedAttack", ability: "dexterity", proficiency: 1},
-
-	{skill: "dexterityArmor", ability: "dexterity"}
-
-];
-
-//Plain text fields for the character
-var strings = [
-	"name",
-	"alignment", 
-	"gender", 
-	"race",
-	"class",
-	"description",
-	"personality",
-	"ideals",
-	"bonds",
-	"flaws",
-	"backstory",
-	"notes"
-];
-
-//Data structure for the character
-//no functions can be added to this constructor
-Character = function(owner){
-	//attributes
-	this.attributes = {};
-	for(var i = 0, l = attributes.length; i < l; i++){
-		this.attributes[attributes[i].name] = new Attribute(0);
-		this.attributes[attributes[i].name].add = attributes[i].add || [];
-		this.attributes[attributes[i].name].mul = attributes[i].mul || [];
-		this.attributes[attributes[i].name].min = attributes[i].min || [];
-		this.attributes[attributes[i].name].max = attributes[i].max || [];
-	}
-
-	//skills
-	this.skills = {};
-	for(var i = 0, l = skills.length; i < l; i++){
-		this.skills[skills[i].skill] = new Skill(skills[i].ability);
-		if(skills[i].proficiency)
-			this.skills[skills[i].skill].proficiency.push(skills[i].proficiency);
-	}
-
-	this.deathSave = {
-		pass : 0,
-		fail: 0,
-		canDeathSave: true
-	};
-	
-	this.strings = {};
-	for(var i = 0, l = strings.length; i < l; i++){
-		this.strings[strings[i]] = "";
-	};
-	
-	this.weaponProficiencies = [];
-	this.toolProficiencies = [];
-	this.languages = [];
-
-	/*
-	//anything that needs to be edited rather than added or removed
-	//needs its own collection.
-	this.hitDice = [];
-
-	this.features = [];
-
-	this.spells = [];
-	*/
-
-	this.vulnerability = {};
-	for(var i = 0, l = DamageTypes.length; i < l; i++){
-		this.vulnerability[DamageTypes[i]] = new Attribute(1);
-		this.vulnerability[DamageTypes[i]].min.push({name: "Resistance doesn't stack", value: 0.5});
-		this.vulnerability[DamageTypes[i]].max.push({name: "Vulnerability doesn't stack", value: 2});
-	}
-
-	//admin
-	this.owner = owner;
-	this.readers = [];
-	this.writers = [];
-}
+Characters.attachSchema(Schemas.Character);
 
 //functions and calculated values go here
 Characters.helpers({ 
@@ -266,8 +120,9 @@ Characters.helpers({
 		var mod = +getMod(this.attributeValue(attribute));
 		return 10 + mod;
 	},
-
+	
 	pushEffects : function(effectName, effectsArray){
+		throw "this function is not implemented correctly for buffs->effects"
 		//check that the arguments are of the right for
 		check(effectName, String);
 		check(effectsArray, [{ _id: String, stat: String, value: Number}]);
@@ -286,6 +141,7 @@ Characters.helpers({
 	},
 
 	pullEffects : function(effectsArray){
+		throw "this function is not implemented correctly for buffs->effects"
 		//check that the arguments are of the right form
 		check(effectsArray, [{ _id: String, stat: String, value: Number}]);
 
