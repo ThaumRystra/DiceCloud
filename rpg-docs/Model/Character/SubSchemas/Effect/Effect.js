@@ -7,7 +7,7 @@ Schemas.Effect = new SimpleSchema({
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 		autoValue: function(){
-			if(!isSet) return Random.id();
+			if(!this.isSet) return Random.id();
 		}
 	},
 	name: {
@@ -23,13 +23,3 @@ Schemas.Effect = new SimpleSchema({
 		optional: true
 	}
 });
-
-Effect = function(name, value){
-	this._id = Random.id();
-	this.name = name;
-	if (typeof value === "string"){
-		this.calculation = value;
-	} else if (typeof valye === "number"){
-		this.value = value;
-	}
-};

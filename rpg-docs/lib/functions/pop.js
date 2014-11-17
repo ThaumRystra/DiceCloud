@@ -1,6 +1,6 @@
 // turns dot notation strings into keys of root
 // argument formats:
-// 157, anything -> 157
+// 157, object -> 157
 // "some.number", object -> object.some.number
 // "some.function", object -> object.some.function()
 // "some.function arg1 arg2", object -> object.some.function(arg1, arg2)

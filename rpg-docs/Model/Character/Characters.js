@@ -9,31 +9,26 @@ Schemas.Character = new SimpleSchema({
 	proficiencies:	{ type: Schemas.Proficiencies },
 	features:		{ type: [Schemas.Feature]},
 	time:			{ type: Number, min: 0, decimal: true},
-	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true}
+	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true},
+	expirations:	{ type: [Schemas.Expiration]}
 	//TODO add permission stuff for owner, readers and writers
 	//TODO hit dice
+	//TODO spells
 });
 
 Characters.attachSchema(Schemas.Character);
 
-//react to time changing
-Characters.find({fields: {time: 1}}).observeChanges({
-	changed: function(id, fields){
-		var currentTime = fields.time;
-		console.log(id + "time changed to " + currentTime)
-		var features = Characters.findOne(id, { fields: {features: 1} }).features;
-		_.each(features, function(feature){
-			//expired features, if no expiry time is set, this is always false
-			if(feature.expires >= currentTime){
-				//remove buffs
-				pullBuffs(id, feature.buffs);
-				//disable feature
-				Characters.update(
-					{_id: id, "features._id": feature.id},
-					{$set: {"features.$.enabled": false}}
-				);
+//reactively remove expired effects
+//this can be optimised a lot once clients can do projections
+Characters.find({},{fields: {time: 1, expirations: 1}}).observe({
+	changed: function(character, oldCharacter){
+		var currentTime = character.time;
+		_.each(character.expirations, function(expiration){
+			if(expiration.expiry <= currentTime){
+				pullEffect(character._id, expiration.stat, expiration.effectId);
+				pullExpiry(character._id, expiration._id);
 			}
-		});
+		})
 	}
 });
 
@@ -45,28 +40,26 @@ Characters.helpers({
 		var value = attribute.base;
 
 		//add all values in add array
-		for(var i = 0, l = attribute.add.length; i < l; i++){
-			var add = pop(attribute.add[i].value, this);
-			value += add ;
-		}
+		_.each(attribute.add, function(effect){
+			value += pop(effect.value, this)
+		});
 
 		//multiply all values in mul array
-		for(var i = 0, l = attribute.mul.length; i < l; i++){
-			var mul = pop(attribute.mul[i], this);
-			value *= mul;
-		}
+		_.each(attribute.mul, function(effect){
+			value *= pop(effect.value, this)
+		});
 
 		//largest min
-		for(var i = 0, l = attribute.min.length; i < l; i++){
-			var min = pop(attribute.min[i], this);
+		_.each(attribute.min, function(effect){
+			var min = pop(effect.value, this);
 			value = value > min? value : min;
-		}
+		});
 
 		//smallest max
-		for(var i = 0, l = attribute.max.length; i < l; i++){
-			var max = pop(attribute.max[i], this);
+		_.each(attribute.max, function(effect){
+			var max = pop(effect.value, this);
 			value = value < max? value : max;
-		}
+		});
 
 		return value;
 	},
@@ -101,26 +94,26 @@ Characters.helpers({
 		mod += prof * this.attributeValue(this.attributes.proficiencyBonus);
 
 		//add all values in add array
-		for(var i = 0, l = skill.add.length; i < l; i++){
-			mod += pop(skill.add[i].value, this);
-		}
+		_.each(skill.add, function(effect){
+			mod += pop(effect.value, this)
+		});
 
 		//multiply all values in mul array
-		for(var i = 0, l = skill.mul.length; i < l; i++){
-			mod *= pop(skill.mul[i].value, this);
-		}
+		_.each(skill.mul, function(effect){
+			mod *= pop(effect.value, this)
+		});
 
 		//largest min
-		for(var i = 0, l = skill.min.length; i < l; i++){
-			var min = pop(skill.min[i], this);
+		_.each(skill.min, function(effect){
+			var min = pop(effect.value, this);
 			mod = mod > min? mod : min;
-		}
+		});
 
 		//smallest max
-		for(var i = 0, l = skill.max.length; i < l; i++){
-			var max = pop(skill.max[i], this);
+		_.each(skill.max, function(effect){
+			var max = pop(effect.value, this);
 			mod = mod < max? mod : max;
-		}
+		});
 
 		return signedString(mod);
 	},
@@ -128,9 +121,9 @@ Characters.helpers({
 	passiveSkill: function(skill){
 		var mod = +this.skillMod(skill);
 		var value = 10 + mod;
-		for(var i = 0, l = skill.passiveAdd.length; i < l; i++){
-			value += pop(skill.passiveAdd[i].value, this);
-		}
+		_.each(skill.passiveAdd, function(effect){
+			value += pop(effect.value, this);
+		});
 		return value;
 		//TODO decide whether (dis)advantage gives (-)+5 to passive checks
 	},
@@ -157,11 +150,3 @@ Characters.helpers({
 		return 20;
 	}
 });
-
-getMod = function(score){
-	return Math.floor((score-10)/2);
-}
-
-signedString = function(number){
-	return number > 0? "+" + number : "" + number;
-}

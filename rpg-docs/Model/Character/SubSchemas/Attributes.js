@@ -44,7 +44,7 @@ Schemas.Attributes = new SimpleSchema({
 	"armor.add": {
 		type: [Schemas.Effect],
 		defaultValue: [
-			new Effect("Dexterity Modifier", "skillMod skills.dexterityArmor")
+			{name: "Dexterity Modifier", value: "skillMod skills.dexterityArmor"}
 		]
 	}
 });

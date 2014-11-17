@@ -1,9 +1,9 @@
 Schemas.Vulnerability = _.extend({
 	"min.defaultValue": [
-		new Effect("Resistance doesn't stack", 0.5)
+		{name: "Resistance doesn't stack", value: 0.5}
 	],
 	"max.defaultValue": [
-		new Effect("Vulnerability doesn't stack", 2)
+		{name: "Vulnerability doesn't stack", value:  2}
 	]
 }, Schemas.Attribute);
 

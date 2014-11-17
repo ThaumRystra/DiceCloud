@@ -10,8 +10,3 @@ Schemas.Buff = new SimpleSchema({
 		type: Schemas.Effect
 	}
 });
-
-Buff = function(name, stat, value){
-	this.stat = stat;
-	this.effect = new Effect(name, value);
-};
