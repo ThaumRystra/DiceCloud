@@ -9,11 +9,13 @@ Template.textField.helpers({
 	},
 	input: function(){
 		var text = this.character.strings[this.field];
-		return Spacebars.SafeString(text);
+		if (_.isString(text)) return Spacebars.SafeString(text);
+		return text;
 	},
 	output: function(){
 		var html = evaluateString(this.character, this.character.strings[this.field]);
-		return Spacebars.SafeString(html);
+		if (_.isString(html)) return Spacebars.SafeString(html);
+		return html;
 	},
 	outputClass: function(){
 		if(Template.instance().editing.get()){
@@ -28,6 +30,7 @@ Template.textField.events({
 	"blur #textInput": function(){
 		Template.instance().editing.set(false);
 		var text = $("#textInput").html();
+		if(!_.isString(text)) text = "";
 		//TODO sanitise the html
 		var setter = {};
 		setter["strings."+this.field] = text;

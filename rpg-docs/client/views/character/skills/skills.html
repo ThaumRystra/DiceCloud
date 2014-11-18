@@ -2,7 +2,7 @@
 	<h2>Saving Throws</h2>
 	<table class="skillTable">
 		{{#each saveList}}
-			<tr>
+			<tr title={{effectList skill ..}}>
 				<td><div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div></td>
 				{{#if failSkill}}
 					<td class="fail">fail</td>
@@ -16,7 +16,7 @@
 	<h2>Skills</h2>
 	<table class="skillTable">
 		{{#each skillList}}
-			<tr>
+			<tr title={{effectList skill ..}}>
 				<td><div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div></td>
 				{{#if failSkill}}
 					<td class="fail">fail</td>

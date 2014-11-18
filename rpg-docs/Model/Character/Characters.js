@@ -5,12 +5,12 @@ Schemas.Character = new SimpleSchema({
 	strings: 		{ type: Schemas.Strings },
 	attributes: 	{ type: Schemas.Attributes },
 	skills: 		{ type: Schemas.Skills },
-	vulerabilities:	{ type: Schemas.Vulnerabilities },
 	proficiencies:	{ type: Schemas.Proficiencies },
-	features:		{ type: [Schemas.Feature]},
-	time:			{ type: Number, min: 0, decimal: true},
-	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true},
-	expirations:	{ type: [Schemas.Expiration]}
+	features:		{ type: [Schemas.Feature], defaultValue: []},
+	deathSave:		{ type: Schemas.DeathSave },
+	time:			{ type: Number, min: 0, decimal: true, defaultValue: 0},
+	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
+	expirations:	{ type: [Schemas.Expiration], defaultValue: []}
 	//TODO add permission stuff for owner, readers and writers
 	//TODO hit dice
 	//TODO spells
@@ -38,26 +38,26 @@ Characters.helpers({
 		if (attribute === undefined) return;
 		//base value
 		var value = attribute.base;
-
+		var char = this;
 		//add all values in add array
 		_.each(attribute.add, function(effect){
-			value += pop(effect.value, this)
+			value += evaluateEffect(char, effect);
 		});
 
 		//multiply all values in mul array
 		_.each(attribute.mul, function(effect){
-			value *= pop(effect.value, this)
+			value *= evaluateEffect(char, effect);
 		});
 
 		//largest min
 		_.each(attribute.min, function(effect){
-			var min = pop(effect.value, this);
+			var min = evaluateEffect(char, effect);
 			value = value > min? value : min;
 		});
 
 		//smallest max
 		_.each(attribute.max, function(effect){
-			var max = pop(effect.value, this);
+			var max = evaluateEffect(char, effect);
 			value = value < max? value : max;
 		});
 
@@ -66,13 +66,14 @@ Characters.helpers({
 
 	proficiency: function(skill){
 		//return largest value in proficiency array
+		var char = this;
 		var prof = 0;
-		for(var i = 0, l = skill.proficiency.length; i < l; i++){
-			var newProf = pop(skill.proficiency[i].value, this);
+		_.each(skill.proficiency, function(effect){
+			var newProf = evaluateEffect(char, effect);
 			if (newProf > prof){
 				prof = newProf;
 			}
-		}
+		});
 		return prof;
 	},
 
@@ -81,6 +82,7 @@ Characters.helpers({
 			console.log("Cannot get skillMod of undefined");
 			return;
 		}
+		var char = this;
 		//get the final value of the ability score
 		var ability = this.attributeValue(this.attributes[skill.ability]);
 
@@ -95,23 +97,23 @@ Characters.helpers({
 
 		//add all values in add array
 		_.each(skill.add, function(effect){
-			mod += pop(effect.value, this)
+			mod += evaluateEffect(char, effect);
 		});
 
 		//multiply all values in mul array
 		_.each(skill.mul, function(effect){
-			mod *= pop(effect.value, this)
+			mod *= evaluateEffect(char, effect);
 		});
 
 		//largest min
 		_.each(skill.min, function(effect){
-			var min = pop(effect.value, this);
+			var min = evaluateEffect(char, effect);
 			mod = mod > min? mod : min;
 		});
 
 		//smallest max
 		_.each(skill.max, function(effect){
-			var max = pop(effect.value, this);
+			var max = evaluateEffect(char, effect);
 			mod = mod < max? mod : max;
 		});
 
@@ -120,9 +122,10 @@ Characters.helpers({
 
 	passiveSkill: function(skill){
 		var mod = +this.skillMod(skill);
+		var char = this;
 		var value = 10 + mod;
 		_.each(skill.passiveAdd, function(effect){
-			value += pop(effect.value, this);
+			value += evaluateEffect(char, effect);
 		});
 		return value;
 		//TODO decide whether (dis)advantage gives (-)+5 to passive checks

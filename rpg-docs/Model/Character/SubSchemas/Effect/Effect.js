@@ -21,5 +21,11 @@ Schemas.Effect = new SimpleSchema({
 	calculation: {
 		type: String,
 		optional: true
+	},
+	//indicates what the effect originated from
+	type: {
+		type: String,
+		defaultValue: "default",
+		allowedValues: ["default", "class", "race", "feat", "equippedMagic", "equippedMundane", "external"]
 	}
 });
