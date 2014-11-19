@@ -2,7 +2,6 @@
 	cursor: pointer;
 }
 
-.editBox {
-	min-height: 36px;
-	width: 300px;
+.textField {
+	min-height: 32px;
 }

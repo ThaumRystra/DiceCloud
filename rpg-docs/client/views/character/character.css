@@ -30,6 +30,8 @@
 	margin: 15px;
 	background: #f0e3d1;
 	border-radius: 20px;
+	
+	min-width: 200px;
 }
 
 .bigborder{
