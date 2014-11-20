@@ -7,7 +7,7 @@ Router.map( function () {
 		},
 		data: { 
 			characters: function(){
-				return Characters.find() 
+				return Characters.find({}, {fields: {_id: 1}});
 			}
 		}
 	});
@@ -19,7 +19,7 @@ Router.map( function () {
 			return Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId());
 		},
 		data: function() {
-			var data = Characters.findOne({_id: this.params._id});
+			var data = Characters.findOne({_id: this.params._id}, {fields: {_id: 1}});
 			return data;
 		}
 	});
@@ -29,7 +29,7 @@ Router.map( function () {
 		notFoundTemplate: 'characterNotFound',
 		data: {
 			containers: function() {
-				var containers = Containers.find({owner: data._id});
+				var containers = Containers.find({owner: data._id}, {fields: {_id: 1}});
 				return containers;
 			},
 

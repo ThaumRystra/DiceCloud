@@ -2,7 +2,8 @@ Template.home.events({
 	"click #addCharacter": function (event, template) {
 		Characters.insert({});
 	},
-	"click .delete": function(event, template){
+	"click #deleteChar": function(event, template){
+		console.log("deleting", this);
 		Characters.remove(this._id);
 	}
 });

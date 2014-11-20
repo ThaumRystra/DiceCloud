@@ -8,12 +8,12 @@ Template.textField.helpers({
 		return Template.instance().editing.get();
 	},
 	input: function(){
-		var text = this.character.strings[this.field];
+		var text = this.character.getField(this.field);
 		if (_.isString(text)) return Spacebars.SafeString(text);
 		return text;
 	},
 	output: function(){
-		var html = evaluateString(this.character, this.character.strings[this.field]);
+		var html = evaluateString(this.character._id, this.character.getField(this.field));
 		if (_.isString(html)) return Spacebars.SafeString(html);
 		return html;
 	},
@@ -33,7 +33,7 @@ Template.textField.events({
 		if(!_.isString(text)) text = "";
 		//TODO sanitise the html
 		var setter = {};
-		setter["strings."+this.field] = text;
+		setter[this.field] = text;
 		Characters.update(this.character._id, {$set: setter}, function(error, result) {
 			if(error) console.log(error);
 		});

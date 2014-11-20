@@ -2,17 +2,242 @@
 Characters = new Meteor.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
-	strings: 		{ type: Schemas.Strings },
-	attributes: 	{ type: Schemas.Attributes },
-	skills: 		{ type: Schemas.Skills },
-	proficiencies:	{ type: Schemas.Proficiencies },
+	//strings
+	name:		{ type: String, defaultValue: "", optional: true },
+	alignment:	{ type: String, defaultValue: "", optional: true },
+	gender:		{ type: String, defaultValue: "", optional: true },
+	race:		{ type: String, defaultValue: "", optional: true },
+	description:{ type: String, defaultValue: "", optional: true },
+	personality:{ type: String, defaultValue: "", optional: true },
+	ideals:		{ type: String, defaultValue: "", optional: true },
+	bonds:		{ type: String, defaultValue: "", optional: true },
+	flaws:		{ type: String, defaultValue: "", optional: true },
+	backstory: 	{ type: String, defaultValue: "", optional: true },
+	notes: 		{ type: String, defaultValue: "", optional: true },
+
+	//attributes
+	//ability scores
+	strength:			{type: Schemas.Attribute},
+	dexterity:			{type: Schemas.Attribute},
+	constitution:		{type: Schemas.Attribute},
+	intelligence:		{type: Schemas.Attribute},
+	wisdom:				{type: Schemas.Attribute},
+	charisma:			{type: Schemas.Attribute},
+
+	//stats
+	hitPoints:			{type: Schemas.Attribute},
+	"hitPoints.add": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Constitution modifier for each level", calculation: "level * constitutionMod"}
+		]
+	},
+	experience:			{type: Schemas.Attribute},
+	proficiencyBonus:	{type: Schemas.Attribute},
+	speed:				{type: Schemas.Attribute},
+	weight: 			{type: Schemas.Attribute},
+	weightCarried: 		{type: Schemas.Attribute},
+	age: 				{type: Schemas.Attribute},
+	ageRate: 			{type: Schemas.Attribute},
+	armor:				{type: Schemas.Attribute},
+	"armor.add": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Dexterity Modifier", calculation: "dexterityArmor"}
+		]
+	},
+
+	//resources
+	level1SpellSlots:	{type: Schemas.Attribute},
+	level2SpellSlots:	{type: Schemas.Attribute},
+	level3SpellSlots:	{type: Schemas.Attribute},
+	level4SpellSlots:	{type: Schemas.Attribute},
+	level5SpellSlots:	{type: Schemas.Attribute},
+	level6SpellSlots:	{type: Schemas.Attribute},
+	level7SpellSlots:	{type: Schemas.Attribute},
+	level8SpellSlots:	{type: Schemas.Attribute},
+	level9SpellSlots:	{type: Schemas.Attribute},
+	ki:					{type: Schemas.Attribute},
+	sorceryPoints:		{type: Schemas.Attribute},
+	rages:				{type: Schemas.Attribute},
+
+
+	//hit dice
+	d6HitDice:				{type: Schemas.Attribute},
+	d8HitDice:				{type: Schemas.Attribute},
+	d10HitDice:				{type: Schemas.Attribute},
+	d12HitDice:				{type: Schemas.Attribute},
+
+	//vulnerabilities
+	acidMultiplier:			{type: Schemas.Vulnerability},
+	bludgeoningMultiplier:	{type: Schemas.Vulnerability},
+	coldMultiplier:			{type: Schemas.Vulnerability},
+	fireMultiplier:			{type: Schemas.Vulnerability},
+	forceMultiplier:		{type: Schemas.Vulnerability},
+	lightningMultiplier:	{type: Schemas.Vulnerability},
+	necroticMultiplier:		{type: Schemas.Vulnerability},
+	piercingMultiplier:		{type: Schemas.Vulnerability},
+	poisonMultiplier:		{type: Schemas.Vulnerability},
+	psychicMultiplier:		{type: Schemas.Vulnerability},
+	radiantMultiplier:		{type: Schemas.Vulnerability},
+	slashingMultiplier:		{type: Schemas.Vulnerability},
+	thunderMultiplier:		{type: Schemas.Vulnerability},
+
+
+	//skills
+	//saves
+	strengthSave: 	{type: Schemas.Skill},
+	"strengthSave.ability": 	{ type: String, defaultValue: "strength" },
+
+	dexteritySave:	{type: Schemas.Skill},
+	"dexteritySave.ability": 	{ type: String, defaultValue: "dexterity" },
+
+	constitutionSave:{type: Schemas.Skill},
+	"constitutionSave.ability":	{ type: String, defaultValue: "constitution" },
+
+	intelligenceSave:{type: Schemas.Skill},
+	"intelligenceSave.ability":	{ type: String, defaultValue: "intelligence" },
+
+	wisdomSave:		{type: Schemas.Skill},
+	"wisdomSave.ability":		{ type: String, defaultValue: "wisdom" },
+
+	charismaSave:	{type: Schemas.Skill},
+	"charismaSave.ability":		{ type: String, defaultValue: "charisma" },
+
+
+	//skill skills
+	acrobatics: 	{type: Schemas.Skill},
+	"acrobatics.ability": 		{ type: String, defaultValue: "dexterity" },
+
+	animalHandling: {type: Schemas.Skill},
+	"animalHandling.ability":	{ type: String, defaultValue: "wisdom" },
+
+	arcana: 		{type: Schemas.Skill},
+	"arcana.ability": 			{ type: String, defaultValue: "intelligence" },
+
+	athletics: 		{type: Schemas.Skill},
+	"athletics.ability": 		{ type: String, defaultValue: "strength" },
+
+	deception: 		{type: Schemas.Skill},
+	"deception.ability": 		{ type: String, defaultValue: "charisma" },
+
+	history: 		{type: Schemas.Skill},
+	"history.ability": 			{ type: String, defaultValue: "intelligence" },
+
+	insight:		{type: Schemas.Skill},
+	"insight.ability":			{ type: String, defaultValue: "wisdom" },
+
+	intimidation:	{type: Schemas.Skill},
+	"intimidation.ability":		{ type: String, defaultValue: "charisma" },
+
+	investigation:	{type: Schemas.Skill},
+	"investigation.ability":	{ type: String, defaultValue: "intelligence" },
+
+	medicine:		{type: Schemas.Skill},
+	"medicine.ability": 		{ type: String, defaultValue: "wisdom" },
+
+	nature:			{type: Schemas.Skill},
+	"nature.ability": 			{ type: String, defaultValue: "intelligence" },
+
+	perception:		{type: Schemas.Skill},
+	"perception.ability": 		{ type: String, defaultValue: "wisdom" },
+
+	performance:	{type: Schemas.Skill},
+	"performance.ability": 		{ type: String, defaultValue: "charisma" },
+
+	persuasion: 	{type: Schemas.Skill},
+	"persuasion.ability": 		{ type: String, defaultValue: "charisma" },
+
+	religion:		{type: Schemas.Skill},
+	"religion.ability": 		{ type: String, defaultValue: "intelligence" },
+
+	sleightOfHand:	{type: Schemas.Skill},
+	"sleightOfHand.ability":	{ type: String, defaultValue: "dexterity" },
+
+	stealth:		{type: Schemas.Skill},
+	"stealth.ability": 			{ type: String, defaultValue: "dexterity" },
+
+	survival:		{type: Schemas.Skill},
+	"survival.ability": 		{ type: String, defaultValue: "wisdom" },
+
+
+	//Mechanical Skills
+	initiative: 		{type: Schemas.Skill},
+	"initiative.ability":		{ type: String, defaultValue: "dexterity" },
+
+	strengthAttack:		{type: Schemas.Skill},
+	"strengthAttack.ability": 	{type: String,defaultValue: "strength"},
+	"strengthAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	dexterityAttack:	{type: Schemas.Skill},
+	"dexterityAttack.ability":	{ type: String, defaultValue: "dexterity" },
+	"dexterityAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	constitutionAttack:	{type: Schemas.Skill},
+	"constitutionAttack.ability":{ type: String, defaultValue: "constitution" },
+	"constitutionAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	intelligenceAttack:	{type: Schemas.Skill},
+	"intelligenceAttack.ability":{ type: String, defaultValue: "intelligence" },
+	"intelligenceAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	wisdomAttack:		{type: Schemas.Skill},
+	"wisdomAttack.ability":		{ type: String, defaultValue: "wisdom" },
+	"wisdomAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	charismaAttack:		{type: Schemas.Skill},
+	"charismaAttack.ability":	{ type: String, defaultValue: "charisma" },
+	"charismaAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	rangedAttack:		{type: Schemas.Skill},
+	"rangedAttack.ability":		{ type: String, defaultValue: "dexterity" },
+	"rangedAttack.proficiency": {
+		type: [Schemas.Effect],
+		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+	},
+
+	dexterityArmor:		{type: Schemas.Skill},
+	"dexterityArmor.ability":	{ type: String, defaultValue: "dexterity" },
+
+	//proficiencies
+	weaponsProficiencies: {
+		type: [Schemas.Proficiency], 
+		defaultValue: []
+	},
+	toolsProficiencies: {
+		type: [Schemas.Proficiency],
+		defaultValue: []
+	},
+	languages: {
+		type: [Schemas.Proficiency], 
+		defaultValue: []
+	},
+
+	//mechanics
 	features:		{ type: [Schemas.Feature], defaultValue: []},
 	deathSave:		{ type: Schemas.DeathSave },
 	time:			{ type: Number, min: 0, decimal: true, defaultValue: 0},
 	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
 	expirations:	{ type: [Schemas.Expiration], defaultValue: []}
 	//TODO add permission stuff for owner, readers and writers
-	//TODO hit dice
 	//TODO spells
 });
 
@@ -32,32 +257,69 @@ Characters.find({},{fields: {time: 1, expirations: 1}}).observe({
 	}
 });
 
-//functions and calculated values
+//functions and calculated values. 
+//These functions can only rely on this._id since no other 
+//field is likely to be attached to all returned characters
 Characters.helpers({ 
+	//returns the value stored in the field requested
+	//will set up dependencies on just that field
+	getField : function(fieldName){
+		var fieldSelector = {};
+		fieldSelector[fieldName] = 1;
+		var char = Characters.findOne(this._id, {fields: fieldSelector});
+		var field = char[fieldName];
+		if(field === undefined){
+			throw "no such field "+fieldName+" exists";
+		}
+		return field;
+	},
+	//returns the value of a field
+	fieldValue : function(fieldName){
+		if(!Schemas.Character.schema(fieldName)){
+			console.log("Character's schema does not contain a field called: " + fieldName);
+			return;
+		}
+		var field = this.getField(fieldName);
+		//duck typing to get the right value function
+		//.proficiency implies skill
+		if (Schemas.Character.schema(fieldName + ".proficiency")){
+			return this.skillMod(field);
+		}
+		//base without proficiency implies attribute
+		if (Schemas.Character.schema(fieldName + ".base")){
+			return this.attributeValue(field);
+		}
+		//fall back to just returning the field itself
+		return field;
+	},
+
 	attributeValue: function(attribute){
 		if (attribute === undefined) return;
+		var charId = this._id;
+		if (_.isString(attribute)){
+			attribute = this.getField(attribute);
+		}
 		//base value
 		var value = attribute.base;
-		var char = this;
 		//add all values in add array
 		_.each(attribute.add, function(effect){
-			value += evaluateEffect(char, effect);
+			value += evaluateEffect(charId, effect);
 		});
 
 		//multiply all values in mul array
 		_.each(attribute.mul, function(effect){
-			value *= evaluateEffect(char, effect);
+			value *= evaluateEffect(charId, effect);
 		});
 
 		//largest min
 		_.each(attribute.min, function(effect){
-			var min = evaluateEffect(char, effect);
+			var min = evaluateEffect(charId, effect);
 			value = value > min? value : min;
 		});
 
 		//smallest max
 		_.each(attribute.max, function(effect){
-			var max = evaluateEffect(char, effect);
+			var max = evaluateEffect(charId, effect);
 			value = value < max? value : max;
 		});
 
@@ -65,11 +327,14 @@ Characters.helpers({
 	},
 
 	proficiency: function(skill){
+		if (_.isString(skill)){
+			skill = this.getField(skill);
+		}
+		var charId = this._id;
 		//return largest value in proficiency array
-		var char = this;
 		var prof = 0;
 		_.each(skill.proficiency, function(effect){
-			var newProf = evaluateEffect(char, effect);
+			var newProf = evaluateEffect(charId, effect);
 			if (newProf > prof){
 				prof = newProf;
 			}
@@ -82,9 +347,12 @@ Characters.helpers({
 			console.log("Cannot get skillMod of undefined");
 			return;
 		}
-		var char = this;
+		var charId = this._id;
+		if (_.isString(skill)){
+			skill = this.getField(skill);
+		}
 		//get the final value of the ability score
-		var ability = this.attributeValue(this.attributes[skill.ability]);
+		var ability = this.attributeValue(skill.ability);
 
 		//base modifier
 		var mod = +getMod(ability)
@@ -93,27 +361,27 @@ Characters.helpers({
 		var prof = this.proficiency(skill);
 
 		//add multiplied proficiency bonus to modifier
-		mod += prof * this.attributeValue(this.attributes.proficiencyBonus);
+		mod += prof * this.attributeValue("proficiencyBonus");
 
 		//add all values in add array
 		_.each(skill.add, function(effect){
-			mod += evaluateEffect(char, effect);
+			mod += evaluateEffect(charId, effect);
 		});
 
 		//multiply all values in mul array
 		_.each(skill.mul, function(effect){
-			mod *= evaluateEffect(char, effect);
+			mod *= evaluateEffect(charId, effect);
 		});
 
 		//largest min
 		_.each(skill.min, function(effect){
-			var min = evaluateEffect(char, effect);
+			var min = evaluateEffect(charId, effect);
 			mod = mod > min? mod : min;
 		});
 
 		//smallest max
 		_.each(skill.max, function(effect){
-			var max = evaluateEffect(char, effect);
+			var max = evaluateEffect(charId, effect);
 			mod = mod < max? mod : max;
 		});
 
@@ -121,11 +389,14 @@ Characters.helpers({
 	},
 
 	passiveSkill: function(skill){
+		if (_.isString(skill)){
+			skill = this.getField(skill);
+		}
+		var charId = this._id
 		var mod = +this.skillMod(skill);
-		var char = this;
 		var value = 10 + mod;
 		_.each(skill.passiveAdd, function(effect){
-			value += evaluateEffect(char, effect);
+			value += evaluateEffect(charId, effect);
 		});
 		return value;
 		//TODO decide whether (dis)advantage gives (-)+5 to passive checks
@@ -141,15 +412,16 @@ Characters.helpers({
 	},
 
 	level: function(){
-		var xp = this.attributeValue(this.attributes.experience);
+		var xp = this.attributeValue("experience");
 		var xpTable = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
 					   85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000,
 					   305000, 355000];
-		_.each(xpTable, function(value, i){
-			if(xp < value){
+		for(var i = 0; i < 19; i++){
+			if(xp < xpTable[i]){
 				return i;
 			}
-		});
-		return 20;
+		};
+		if(xp > 355000) return 20;
+		return 0;
 	}
 });

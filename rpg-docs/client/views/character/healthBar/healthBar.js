@@ -1,14 +1,15 @@
 Template.healthBar.helpers({
 	healthy: function(){
-		var hp = this.attributeValue(this.attributes.hitPoints);
+		var hp = this.attributeValue("hitPoints");
 		return hp > 0;
 	},
 	dead: function(){
-		if(this.deathSave.canDeathSave){
-			return this.deathSave.fail >= 3;
+		var deathSave = this.getField("deathSave");
+		if(deathSave.canDeathSave){
+			return deathSave.fail >= 3;
 		} else{
 			//creatures that can't make death saves die at 0 HP
-			var hp = this.attributeValue(this.attributes.hitPoints);
+			var hp = this.attributeValue("hitPoints");
 			return hp <= 0;
 		}
 	}
@@ -16,13 +17,13 @@ Template.healthBar.helpers({
 
 Template.hitPointBars.helpers({
 	hpRed: function(){
-		var currentHp = this.attributeValue(this.attributes.hitPoints);
-		var damage = this.attributes.hitPoints.base;
+		var currentHp = this.attributeValue("hitPoints");
+		var damage = this.getField("hitPoints").base;
 		return 100*(currentHp/(currentHp - damage));
 	},
 	hpGreen: function(){
-		var currentHp = this.attributeValue(this.attributes.hitPoints);
-		var damage = this.attributes.hitPoints.base;
+		var currentHp = this.attributeValue("hitPoints");
+		var damage = this.getField("hitPoints").base;
 		var maxHp = currentHp - damage;
 		var percent =  100*(currentHp/ maxHp);
 		var change = 100 * Template.instance().deltaHp.get() / maxHp;
@@ -33,8 +34,8 @@ Template.hitPointBars.helpers({
 		}
 	},
 	hpYellow: function(){
-		var currentHp = this.attributeValue(this.attributes.hitPoints);
-		var damage = this.attributes.hitPoints.base;
+		var currentHp = this.attributeValue("hitPoints");
+		var damage = this.getField("hitPoints").base;
 		var maxHp = currentHp - damage;
 		var percent =  100*(currentHp/ maxHp);
 		var change = 100 * Template.instance().deltaHp.get() / maxHp;
@@ -48,16 +49,16 @@ Template.hitPointBars.helpers({
 		if(!Template.instance().deltaHp){
 			Template.instance().deltaHp = new ReactiveVar(0);
 		}
-		var currentHp = this.attributeValue(this.attributes.hitPoints);
-		var damage = this.attributes.hitPoints.base;
+		var currentHp = this.attributeValue("hitPoints");
+		var damage = this.getField("hitPoints").base;
 		var maxHp = currentHp - damage;
 		var percent =  100*(currentHp/ maxHp);
 		var change = 100 * Template.instance().deltaHp.get() / maxHp;
 		return percent + change;
 	},
 	maxHp: function(){
-		var currentHp = this.attributeValue(this.attributes.hitPoints);
-		var damage = this.attributes.hitPoints.base;
+		var currentHp = this.attributeValue("hitPoints");
+		var damage = this.getField("hitPoints").base;
 		return currentHp - damage;
 	},
 	deltaHp: function(){
@@ -81,8 +82,8 @@ Template.hitPointBars.events({
 	"drag": function(event, templateInstance, handler){
 		//the width of the bar, fetch dynamically if needed
 		var healthBarWidth = 300;
-		var hpLeft = this.attributeValue(this.attributes.hitPoints)
-		var damage = this.attributes.hitPoints.base
+		var hpLeft = this.attributeValue("hitPoints");
+		var damage = this.getField("hitPoints").base;
 		var maxHp = hpLeft - damage;
 		var dragMultiplier = maxHp / healthBarWidth; 
 		var newValue = dragMultiplier * handler.deltaX + Template.instance().startDrag.get();
@@ -98,7 +99,7 @@ Template.hitPointBars.events({
 	"click .healthBarPlus": function(event){
 		var newValue = Template.instance().deltaHp.get() + 1;
 		//don't heal more than -damage
-		var damage = this.attributes.hitPoints.base
+		var damage = this.getField("hitPoints").base;
 		newValue = newValue < -damage ? newValue : -damage;
 		//set value
 		Template.instance().deltaHp.set(newValue);
@@ -106,13 +107,13 @@ Template.hitPointBars.events({
 	"click .healthBarMinus": function(event){
 		var newValue = Template.instance().deltaHp.get() - 1;
 		//dont damage more than hit points left
-		var hpLeft = this.attributeValue(this.attributes.hitPoints)
+		var hpLeft = this.getField("hitPoints").base;
 		newValue = newValue > -hpLeft ? newValue : -hpLeft;
 		//set value
 		Template.instance().deltaHp.set(newValue);
 	},
 	"click #applyDelta": function(event){
-		Characters.update(this._id, {$inc: {"attributes.hitPoints.base": Template.instance().deltaHp.get()}})
+		Characters.update(this._id, {$inc: {"hitPoints.base": Template.instance().deltaHp.get()}})
 		Template.instance().deltaHp.set(0);
 	}
 });
@@ -126,22 +127,26 @@ Template.deadBar.events({
 
 Template.deathSaves.helpers({
 	deathFailGT: function(num){
-		if(this.deathSave.fail > num) return "tickedDeathFail";
+		var deathSave = this.getField("deathSave");
+		if(deathSave.fail > num) return "tickedDeathFail";
 		else return "untickedDeathFail";
 	},
 	deathPassGT: function(num){
-		if(this.deathSave.pass > num) return "tickedDeathPass";
+		var deathSave = this.getField("deathSave");
+		if(deathSave.pass > num) return "tickedDeathPass";
 		else return "untickedDeathPass";
 	},
 	stable: function(){
-		if(this.deathSave.pass > 0 || this.deathSave.fail > 0){
+		var deathSave = this.getField("deathSave");
+		if(deathSave.pass > 0 || deathSave.fail > 0){
 			return "stability";
 		} else{
 			return "heal";
 		}
 	},
 	stabilizeText: function(){
-		if(this.deathSave.pass > 0 || this.deathSave.fail > 0){
+		var deathSave = this.getField("deathSave");
+		if(deathSave.pass > 0 || deathSave.fail > 0){
 			return "stabilize";
 		} else{
 			return "heal";
