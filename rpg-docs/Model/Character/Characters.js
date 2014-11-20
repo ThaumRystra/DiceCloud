@@ -3,17 +3,17 @@ Characters = new Meteor.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings
-	name:		{ type: String, defaultValue: "", optional: true },
-	alignment:	{ type: String, defaultValue: "", optional: true },
-	gender:		{ type: String, defaultValue: "", optional: true },
-	race:		{ type: String, defaultValue: "", optional: true },
-	description:{ type: String, defaultValue: "", optional: true },
-	personality:{ type: String, defaultValue: "", optional: true },
-	ideals:		{ type: String, defaultValue: "", optional: true },
-	bonds:		{ type: String, defaultValue: "", optional: true },
-	flaws:		{ type: String, defaultValue: "", optional: true },
-	backstory: 	{ type: String, defaultValue: "", optional: true },
-	notes: 		{ type: String, defaultValue: "", optional: true },
+	name:		{ type: String, defaultValue: "", trim: false},
+	alignment:	{ type: String, defaultValue: "", trim: false},
+	gender:		{ type: String, defaultValue: "", trim: false},
+	race:		{ type: String, defaultValue: "", trim: false},
+	description:{ type: String, defaultValue: "", trim: false},
+	personality:{ type: String, defaultValue: "", trim: false},
+	ideals:		{ type: String, defaultValue: "", trim: false},
+	bonds:		{ type: String, defaultValue: "", trim: false},
+	flaws:		{ type: String, defaultValue: "", trim: false},
+	backstory: 	{ type: String, defaultValue: "", trim: false},
+	notes: 		{ type: String, defaultValue: "", trim: false},
 
 	//attributes
 	//ability scores
@@ -269,7 +269,7 @@ Characters.helpers({
 		var char = Characters.findOne(this._id, {fields: fieldSelector});
 		var field = char[fieldName];
 		if(field === undefined){
-			throw "no such field "+fieldName+" exists";
+			console.log("no field ", fieldName, " exists for character ", char)
 		}
 		return field;
 	},
@@ -279,52 +279,123 @@ Characters.helpers({
 			console.log("Character's schema does not contain a field called: " + fieldName);
 			return;
 		}
-		var field = this.getField(fieldName);
 		//duck typing to get the right value function
 		//.proficiency implies skill
 		if (Schemas.Character.schema(fieldName + ".proficiency")){
-			return this.skillMod(field);
+			return this.skillMod(fieldName);
 		}
 		//base without proficiency implies attribute
 		if (Schemas.Character.schema(fieldName + ".base")){
-			return this.attributeValue(field);
+			return this.attributeValue(fieldName);
 		}
 		//fall back to just returning the field itself
-		return field;
+		return this.getField(fieldName);
 	},
 
-	attributeValue: function(attribute){
-		if (attribute === undefined) return;
-		var charId = this._id;
-		if (_.isString(attribute)){
-			attribute = this.getField(attribute);
+	attributeValue: (function(){ 
+		//store a private array of attributes we've visited without returning
+		//if we try to visit the same attribute twice before resolving its value
+		//we are in a dependency loop and need to GTFO
+		var visitedAttributes = [];
+		return function(attributeName){
+			check(attributeName, String);
+			//we're still evaluating this attribute, must be in a loop
+			if(_.contains(visitedAttributes, attributeName)) {
+				console.log("dependency loop detected");
+				return NaN;
+			}
+			//push this attribute to the list of visited attributes
+			//we can't visit it again unless it returns first
+			visitedAttributes.push(attributeName);
+
+			var charId = this._id;
+			var attribute = this.getField(attributeName);
+			//base value
+			var value = attribute.base;
+			//add all values in add array
+			_.each(attribute.add, function(effect){
+				value += evaluateEffect(charId, effect);
+			});
+
+			//multiply all values in mul array
+			_.each(attribute.mul, function(effect){
+				value *= evaluateEffect(charId, effect);
+			});
+
+			//largest min
+			_.each(attribute.min, function(effect){
+				var min = evaluateEffect(charId, effect);
+				value = value > min? value : min;
+			});
+
+			//smallest max
+			_.each(attribute.max, function(effect){
+				var max = evaluateEffect(charId, effect);
+				value = value < max? value : max;
+			});
+			//done traversing the tree, this attribute returns, pull it from the array
+			visitedAttributes = _.without(visitedAttributes, attributeName);
+			return value;
 		}
-		//base value
-		var value = attribute.base;
-		//add all values in add array
-		_.each(attribute.add, function(effect){
-			value += evaluateEffect(charId, effect);
-		});
+	})(),
 
-		//multiply all values in mul array
-		_.each(attribute.mul, function(effect){
-			value *= evaluateEffect(charId, effect);
-		});
+	skillMod: (function(){
+		//store a private array of skills we've visited without returning
+		//if we try to visit the same skill twice before resolving its value
+		//we are in a dependency loop and need to GTFO
+		var visitedSkills = [];
+		return function(skillName){
+			check(skillName, String);
+			//we're still evaluating this attribute, must be in a loop
+			if(_.contains(visitedSkills, skillName)) {
+				console.log("dependency loop detected");
+				return NaN;
+			}
+			//push this skill to the list of visited skills
+			//we can't visit it again unless it returns first
+			visitedSkills.push(skillName);
 
-		//largest min
-		_.each(attribute.min, function(effect){
-			var min = evaluateEffect(charId, effect);
-			value = value > min? value : min;
-		});
+			var charId = this._id;
+			skill = this.getField(skillName);
+			//get the final value of the ability score
+			var ability = this.attributeValue(skill.ability);
 
-		//smallest max
-		_.each(attribute.max, function(effect){
-			var max = evaluateEffect(charId, effect);
-			value = value < max? value : max;
-		});
+			//base modifier
+			var mod = +getMod(ability)
 
-		return value;
-	},
+			//multiply proficiency bonus by largest value in proficiency array
+			var prof = this.proficiency(skill);
+
+			//add multiplied proficiency bonus to modifier
+			mod += prof * this.attributeValue("proficiencyBonus");
+
+			//add all values in add array
+			_.each(skill.add, function(effect){
+				mod += evaluateEffect(charId, effect);
+			});
+
+			//multiply all values in mul array
+			_.each(skill.mul, function(effect){
+				mod *= evaluateEffect(charId, effect);
+			});
+
+			//largest min
+			_.each(skill.min, function(effect){
+				var min = evaluateEffect(charId, effect);
+				mod = mod > min? mod : min;
+			});
+
+			//smallest max
+			_.each(skill.max, function(effect){
+				var max = evaluateEffect(charId, effect);
+				mod = mod < max? mod : max;
+			});
+
+			//done traversing the tree, this skill returns, pull it from the array
+			visitedSkills = _.without(visitedSkills, skillName);
+			return signedString(mod);
+		}
+	})(),
 
 	proficiency: function(skill){
 		if (_.isString(skill)){
@@ -340,52 +411,6 @@ Characters.helpers({
 			}
 		});
 		return prof;
-	},
-
-	skillMod: function(skill){
-		if(skill === undefined){ 
-			console.log("Cannot get skillMod of undefined");
-			return;
-		}
-		var charId = this._id;
-		if (_.isString(skill)){
-			skill = this.getField(skill);
-		}
-		//get the final value of the ability score
-		var ability = this.attributeValue(skill.ability);
-
-		//base modifier
-		var mod = +getMod(ability)
-
-		//multiply proficiency bonus by largest value in proficiency array
-		var prof = this.proficiency(skill);
-
-		//add multiplied proficiency bonus to modifier
-		mod += prof * this.attributeValue("proficiencyBonus");
-
-		//add all values in add array
-		_.each(skill.add, function(effect){
-			mod += evaluateEffect(charId, effect);
-		});
-
-		//multiply all values in mul array
-		_.each(skill.mul, function(effect){
-			mod *= evaluateEffect(charId, effect);
-		});
-
-		//largest min
-		_.each(skill.min, function(effect){
-			var min = evaluateEffect(charId, effect);
-			mod = mod > min? mod : min;
-		});
-
-		//smallest max
-		_.each(skill.max, function(effect){
-			var max = evaluateEffect(charId, effect);
-			mod = mod < max? mod : max;
-		});
-
-		return signedString(mod);
 	},
 
 	passiveSkill: function(skill){

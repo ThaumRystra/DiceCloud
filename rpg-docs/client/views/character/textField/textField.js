@@ -34,14 +34,13 @@ Template.textField.events({
 		//TODO sanitise the html
 		var setter = {};
 		setter[this.field] = text;
-		Characters.update(this.character._id, {$set: setter}, function(error, result) {
-			if(error) console.log(error);
-		});
+		Characters.update(this.character._id, {$set: setter}, {removeEmptyStrings: false});
 	},
 	"click #textOutput": function(){
 		Template.instance().editing.set(true);
 		Tracker.afterFlush(function(){
 			$("#textInput").focus();
+			placeCaretAtEnd($("#textInput"));
 		});
 	}
 })

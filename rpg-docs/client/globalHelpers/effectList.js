@@ -1,10 +1,11 @@
-Template.registerHelper("effectList", function(obj, character){
+/*Template.registerHelper(function("effectList", */var disabled = function(charId, fieldName){
+	var obj = Characters.findOne(charId, {fields: {_id: 1}}).getField(fieldName);
 	var result = $("<div>");
 	if(_.has(obj, "conditional") && obj.conditional.length > 0){
 		_.each(obj.conditional, function(cond){
 			var c = $("<div>")
 			.append("* ")
-			.append(evaluateString(character, cond.name));
+			.append(evaluateString(charId, cond.name));
 			result.append(c);
 		});
 	}
@@ -19,7 +20,7 @@ Template.registerHelper("effectList", function(obj, character){
 	if(_.has(obj, "proficiency") && obj.proficiency.length > 0){
 		var highestProf = {};
 		_.each(obj.proficiency, function(prof, i){
-			var value = evaluateEffect(character, prof)
+			var value = evaluateEffect(charId, prof)
 			if(i === 0 || value > highestProf.value){
 				highestProf.value = value;
 				highestProf.name = prof.name;
@@ -34,7 +35,7 @@ Template.registerHelper("effectList", function(obj, character){
 
 	if(_.has(obj, "add") && obj.add.length > 0){
 		_.each(obj.add, function(a){
-			var value = signedString(evaluateEffect(character, a));
+			var value = signedString(evaluateEffect(charId, a));
 			var c = $("<div>")
 			.append($("<span>").addClass("auditValue").append(value))
 			.append(a.name);
@@ -44,7 +45,7 @@ Template.registerHelper("effectList", function(obj, character){
 
 	if(_.has(obj, "mul") && obj.mul.length > 0){
 		_.each(obj.mul, function(a){
-			var value = signedString(evaluateEffect(character, a));
+			var value = signedString(evaluateEffect(charId, a));
 			var c = $("<div>")
 			.append($("<span>").addClass("auditValue").append("&times;").append(value))
 			.append(a.name);
@@ -55,7 +56,7 @@ Template.registerHelper("effectList", function(obj, character){
 	if(_.has(obj, "min") && obj.min.length > 0){
 		var highestMin = {};
 		_.each(obj.min, function(m, i){
-			var value = evaluateEffect(character, m)
+			var value = evaluateEffect(charId, m)
 			if(i === 0 || value > highestMin.value){
 				highestMin.value = value;
 				highestMin.name = m.name;
@@ -71,7 +72,7 @@ Template.registerHelper("effectList", function(obj, character){
 	if(_.has(obj, "max") && obj.max.length > 0){
 		var lowestMax = {};
 		_.each(obj.max, function(m, i){
-			var value = evaluateEffect(character, m)
+			var value = evaluateEffect(charId, m)
 			if(i === 0 || value < lowestMax.value){
 				lowestMax.value = value;
 				lowestMax.name = m.name;
@@ -120,4 +121,4 @@ Template.registerHelper("effectList", function(obj, character){
 	var string = result.html()
 	if (_.isString(string)) return Spacebars.SafeString(string);
 	return string;
-});
+};

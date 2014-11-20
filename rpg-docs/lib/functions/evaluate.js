@@ -24,7 +24,7 @@ evaluate = function(charId, string){
 	} catch(e){
 		console.log(e)
 		return string;
-	}	
+	}
 }
 
 //takes a string with {calculations} and returns it with the results 
