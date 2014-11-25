@@ -1,0 +1,26 @@
+<template name="skills">
+	<h2>Saving Throws</h2>
+	<table class="skillTable">
+		{{#each saveList}}
+			{{> skillRow}}
+		{{/each}}
+	</table>
+	<h2>Skills</h2>
+	<table class="skillTable">
+		{{#each skillList}}
+			{{> skillRow}}
+		{{/each}}
+	</table>
+</template>
+
+<template name="skillRow">
+	<tr>
+		<td><div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div></td>
+		{{#if failSkill}}
+		<td class="fail">fail</td>
+		{{else}}
+		<td class="{{advantage}}">{{../skillMod skill}}</td>
+		{{/if}}
+		<td class={{conditionals}}>{{name}}</td>
+	</tr>
+</template>

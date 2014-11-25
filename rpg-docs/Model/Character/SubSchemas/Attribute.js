@@ -1,7 +1,7 @@
 Schemas.Attribute = new SimpleSchema({
-	//the unmodified value of the attribute
+	//the temporary shift of the attribute
 	//should be zero for most attributes after a long rest
-	base: {
+	adjustment: {
 		type: Number,
 		defaultValue: 0
 	},
@@ -16,7 +16,7 @@ Schemas.Attribute = new SimpleSchema({
 //note that to make an invulnerability add a new max of zero value
 Schemas.Vulnerability = new SimpleSchema({
 	//same as attribute
-	base: {
+	adjustment: {
 		type: Number,
 		defaultValue: 0
 	},

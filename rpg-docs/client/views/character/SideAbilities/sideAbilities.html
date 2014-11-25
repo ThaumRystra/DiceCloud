@@ -1,0 +1,62 @@
+<template name="sideAbilities">
+			<div class="abilityDetails {{expanded}}">
+				<table>
+					{{#if selected "strength"}}
+						{{> skillRow name="Save" skill="strengthSave"}}
+						{{> skillRow name="Athletics" skill="athletics"}}
+					{{/if}}
+					{{#if selected "dexterity"}}
+						{{> skillRow name="Save" skill="dexteritySave"}}
+						{{> skillRow name="Acrobatics" skill="acrobatics"}}
+						{{> skillRow name="Sleight of Hand" skill="sleightOfHand"}}
+						{{> skillRow name="Stealth" skill="stealth"}}
+					{{/if}}
+					{{#if selected "constitution"}}
+						{{> skillRow name="Save" skill="constitutionSave"}}
+					{{/if}}
+					{{#if selected "intelligence"}}
+						{{> skillRow name="Save" skill="intelligenceSave"}}
+						{{> skillRow name="Arcana" skill="arcana"}}
+						{{> skillRow name="History" skill="history"}}
+						{{> skillRow name="Investigation" skill="investigation"}}
+						{{> skillRow name="Nature" skill="nature"}}
+						{{> skillRow name="Religion" skill="religion"}}
+					{{/if}}
+					{{#if selected "wisdom"}}
+						{{> skillRow name="Save" skill="wisdomSave"}}
+						{{> skillRow name="Animal Handling" skill="animalHandling"}}
+						{{> skillRow name="Insight" skill="insight"}}
+						{{> skillRow name="Medicine" skill="medicine"}}
+						{{> skillRow name="Perception" skill="perception"}}
+						{{> skillRow name="Survival" skill="survival"}}
+					{{/if}}
+					{{#if selected "charisma"}}
+						{{> skillRow name="Save" skill="charismaSave"}}
+						{{> skillRow name="Deception" skill="deception"}}
+						{{> skillRow name="Intimidation" skill="intimidation"}}
+						{{> skillRow name="Performance" skill="performance"}}
+						{{> skillRow name="Persuasion" skill="persuasion"}}
+					{{/if}}
+				</table>
+				<div class="stubHolder">	
+			<div class="strengthStub abilityStub">
+				Str<br>{{abilityMod "strength"}}
+			</div>
+			<div class="dexterityStub abilityStub">
+				Dex<br>{{abilityMod "dexterity"}}
+			</div>
+			<div class="constitutionStub abilityStub">
+				Con<br>{{abilityMod "constitution"}}
+			</div>
+			<div class="intelligenceStub abilityStub">
+				Int<br>{{abilityMod "intelligence"}}
+			</div>
+			<div class="wisdomStub abilityStub">
+				Wis<br>{{abilityMod "wisdom"}}
+			</div>
+			<div class="charismaStub abilityStub">
+				Cha<br>{{abilityMod "charisma"}}
+			</div>
+			</div>
+		</div>
+</template>

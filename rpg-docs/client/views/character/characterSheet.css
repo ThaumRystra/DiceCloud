@@ -1,0 +1,11 @@
+#characterSheetTabs {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: flex-start;
+}
+
+.characterTab {
+	flex-grow: 1;
+	min-width: 100px;
+}

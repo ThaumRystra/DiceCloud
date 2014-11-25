@@ -1,15 +1,17 @@
 Items = new Meteor.Collection('items');
 
 Schemas.Item = new SimpleSchema({
-	name: 		{type: String},
-	description:{type: String},
+	name: 		{type: String, defaultValue: "New Item"},
+	plural:		{type: String, optional: true},
+	description:{type: String, defaultValue: ""},
 	container:	{type: String, regEx: SimpleSchema.RegEx.Id},
 	quantity:	{type: Number, min: 0, defaultValue: 1},
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	tradeGood:	{type: Boolean, defaultValue: false},
 	stackable:	{type: Boolean, defaultValue: false},
-	buffs:		{type: [Schemas.Buff]}
+	buffs:		{type: [Schemas.Buff], defaultValue: []},
+	equipmentSlot:	{type: String, defaultValue: "", allowedValues: ["head", "body", "arms", "hands", "held", "feet"]},
 });
 
 Items.attachSchema(Schemas.Item);

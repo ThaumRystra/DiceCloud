@@ -1,0 +1,80 @@
+<template name="stats">
+	<div id="stats">
+		<div>
+			<div id="abilities">
+				{{> bigAbilities}}
+			</div>
+			<div id="savesAndSkills">
+				{{> skills}}
+			</div>
+		</div>
+		<div>
+			<div id="armor">
+				{{attributeValue "armor"}}
+			</div>
+			<div id="initiative">
+				{{attributeValue "initiative"}}
+			</div>
+			<div id="proficiencyBonus">
+				{{attributeValue "proficiencyBonus"}}
+			</div>
+			<div id="speed">
+				{{attributeValue "speed"}}
+			</div>
+			<div id="passivePerception">
+				{{passiveSkill "perception"}}
+			</div>
+			<div id="hitDice">
+				{{> hitDice "d6HitDice"}}
+				{{> hitDice "d8HitDice"}}
+				{{> hitDice "d10HitDice"}}
+				{{> hitDice "d12HitDice"}}
+			</div>
+			<div id="spellSlots">
+				{{# if canCast}}
+					{{> spellSlots}}
+				{{/if}}
+			</div>
+			<div id="rages">
+				{{# if attributeBase "rages"}}
+					{{attributeValue "rages"}}/{{attributeBase "rages"}} rages
+				{{/if}}
+			</div>
+			<div id="sorceryPoints">
+				{{# if attributeBase "sorceryPoints"}}
+					{{attributeValue "sorceryPoints"}}/{{attributeBase "sorceryPoints"}} Sorcery Points
+				{{/if}}
+			</div>
+			<div id="expertiseDice">
+				{{# if attributeBase "expertiseDice"}}
+					{{attributeValue "expertiseDice"}}/{{attributeBase "expertiseDice"}} Expertise Dice
+				{{/if}}
+			</div>
+			<div id="superiorityDice">
+				{{# if attributeBase "superiorityDice"}}
+					{{attributeValue "superiorityDice"}}/{{attributeBase "superiorityDice"}} Superiority Dice
+				{{/if}}
+			</div>			
+		</div>
+	</div>
+</template>
+
+<template name="hitDice">
+	{{# if ../attributeBase hitDice}}
+	<div id={{hitDice}}>
+		{{../attributeValue hitDice}}/{{../attributeBase hitDice}}
+	</div>
+	{{/if}}
+</template>
+
+<template name="spellSlots">
+	{{attributevalue "level1SpellSlots"}}
+	{{attributevalue "level2SpellSlots"}}
+	{{attributevalue "level3SpellSlots"}}
+	{{attributevalue "level4SpellSlots"}}
+	{{attributevalue "level5SpellSlots"}}
+	{{attributevalue "level6SpellSlots"}}
+	{{attributevalue "level7SpellSlots"}}
+	{{attributevalue "level8SpellSlots"}}
+	{{attributevalue "level9SpellSlots"}}
+</template>

@@ -160,7 +160,7 @@ Template.deathSaves.events({
 		Characters.update(this._id, {$set: {"deathSave.pass": 0}});
 	},
 	"click .heal": function(){
-		Characters.update(this._id, {$inc: {"attributes.hitPoints.base": 1}});
+		Characters.update(this._id, {$inc: {"hitPoints.base": 1}});
 	},
 	"click .untickedDeathFail" : function(){
 		Characters.update(this._id, {$inc: {"deathSave.fail": 1}});

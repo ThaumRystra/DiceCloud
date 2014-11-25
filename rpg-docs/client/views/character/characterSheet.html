@@ -1,0 +1,19 @@
+<template name="characterSheet">
+	<div id="characterHeader">
+		{{> characterName}}
+		{{> healthBar}}
+		<div id="characterSheetTabs">
+			<div id="statsTab" class="characterTab">Stats</div>
+			<div id="featuresTab" class="characterTab">Features</div>
+			<div id="personaTab" class="characterTab">Persona</div>
+			<div id="inventoryTab" class="characterTab">Inventory</div>
+			{{#if canCast}}
+				<div id="spellsTab" class="characterTab">Spellbook</div>
+			{{/if}}
+			<div id="journalTab" class="characterTab">Journal</div>
+		</div>
+	</div>
+	<div id="characterDetails">
+		{{Template.dynamic template=getTab}}
+	</div>
+</template>

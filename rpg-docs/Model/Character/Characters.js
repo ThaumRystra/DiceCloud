@@ -60,6 +60,8 @@ Schemas.Character = new SimpleSchema({
 	ki:					{type: Schemas.Attribute},
 	sorceryPoints:		{type: Schemas.Attribute},
 	rages:				{type: Schemas.Attribute},
+	superiorityDice:	{type: Schemas.Attribute},
+	expertiseDice:		{type: Schemas.Attribute},
 
 
 	//hit dice
@@ -236,9 +238,9 @@ Schemas.Character = new SimpleSchema({
 	deathSave:		{ type: Schemas.DeathSave },
 	time:			{ type: Number, min: 0, decimal: true, defaultValue: 0},
 	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
-	expirations:	{ type: [Schemas.Expiration], defaultValue: []}
+	expirations:	{ type: [Schemas.Expiration], defaultValue: []},
+	spells:			{ type: [Schemas.Spell], defaultValue: []}
 	//TODO add permission stuff for owner, readers and writers
-	//TODO spells
 });
 
 Characters.attachSchema(Schemas.Character);
@@ -256,6 +258,32 @@ Characters.find({},{fields: {time: 1, expirations: 1}}).observe({
 		})
 	}
 });
+
+var attributeBase = function(attribute){
+	var value = 0;
+	//add all values in add array
+	_.each(attribute.add, function(effect){
+		value += evaluateEffect(charId, effect);
+	});
+
+	//multiply all values in mul array
+	_.each(attribute.mul, function(effect){
+		value *= evaluateEffect(charId, effect);
+	});
+
+	//largest min
+	_.each(attribute.min, function(effect){
+		var min = evaluateEffect(charId, effect);
+		value = value > min? value : min;
+	});
+
+	//smallest max
+	_.each(attribute.max, function(effect){
+		var max = evaluateEffect(charId, effect);
+		value = value < max? value : max;
+	});
+	return value;
+}
 
 //functions and calculated values. 
 //These functions can only rely on this._id since no other 
@@ -311,29 +339,37 @@ Characters.helpers({
 			var charId = this._id;
 			var attribute = this.getField(attributeName);
 			//base value
-			var value = attribute.base;
-			//add all values in add array
-			_.each(attribute.add, function(effect){
-				value += evaluateEffect(charId, effect);
-			});
+			var value = attributeBase(attribute);
+			value += attribute.adjustment;
+			
+			//this attribute returns, pull it from the array, we may visit it again safely
+			visitedAttributes = _.without(visitedAttributes, attributeName);
+			return value;
+		}
+	})(),
 
-			//multiply all values in mul array
-			_.each(attribute.mul, function(effect){
-				value *= evaluateEffect(charId, effect);
-			});
+	attributeBase: (function(){ 
+		//store a private array of attributes we've visited without returning
+		//if we try to visit the same attribute twice before resolving its value
+		//we are in a dependency loop and need to GTFO
+		var visitedAttributes = [];
+		return function(attributeName){
+			check(attributeName, String);
+			//we're still evaluating this attribute, must be in a loop
+			if(_.contains(visitedAttributes, attributeName)) {
+				console.log("dependency loop detected");
+				return NaN;
+			}
+			//push this attribute to the list of visited attributes
+			//we can't visit it again unless it returns first
+			visitedAttributes.push(attributeName);
 
-			//largest min
-			_.each(attribute.min, function(effect){
-				var min = evaluateEffect(charId, effect);
-				value = value > min? value : min;
-			});
-
-			//smallest max
-			_.each(attribute.max, function(effect){
-				var max = evaluateEffect(charId, effect);
-				value = value < max? value : max;
-			});
-			//done traversing the tree, this attribute returns, pull it from the array
+			var charId = this._id;
+			var attribute = this.getField(attributeName);
+			//base value
+			var value = attributeBase(attribute);
+			
+			//this attribute returns, pull it from the array, we may visit it again safely
 			visitedAttributes = _.without(visitedAttributes, attributeName);
 			return value;
 		}

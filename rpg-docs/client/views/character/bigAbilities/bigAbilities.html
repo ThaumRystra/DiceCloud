@@ -1,68 +1,32 @@
 <template name = "bigAbilities">
-	<div class="ability floatBox">
-		<div class ="abilityName">
-			Strength
+	<div class="ability">
+		{{> bigAbility name="Strength" ability="strength"}}
+	</div>
+	<div class="ability">
+		{{> bigAbility name="Dexterity" ability="dexterity"}}
+	</div>
+	<div class="ability">
+		{{> bigAbility name="Constitution" ability="constitution"}}
+	</div>
+	<div class="ability">
+		{{> bigAbility name="Intelligence" ability="intelligence"}}
+	</div>
+	<div class="ability">
+		{{> bigAbility name="Wisdom" ability="wisdom"}}
+	</div>
+	<div class="ability">
+		{{> bigAbility name="Charisma" ability="charisma"}}
+	</div>
+</template>
+
+<template name="bigAbility">
+	<div class ="abilityName">
+			{{name}}
 		</div>
 		<div class="abilityScore">
-			{{attributeValue "strength"}}
+			{{../attributeValue ability}}
 		</div>
 		<div class="abilityMod">
-			{{abilityMod "strength"}}
+			{{../abilityMod ability}}
 		</div>
-	</div>
-	<div class="ability floatBox">
-		<div class ="abilityName">
-			Dexterity
-		</div>
-		<div class="abilityScore">
-			{{attributeValue "dexterity"}}
-		</div>
-		<div class="abilityMod">
-			{{abilityMod "dexterity"}}
-		</div>
-	</div>
-	<div class="ability floatBox">
-		<div class ="abilityName">
-			Constitution
-		</div>
-		<div class="abilityScore">
-			{{attributeValue "constitution"}}
-		</div>
-		<div class="abilityMod">
-			{{abilityMod "constitution"}}
-		</div>
-	</div>
-	<div class="ability floatBox">
-		<div class ="abilityName">
-			Intelligence
-		</div>
-		<div class="abilityScore">
-			{{attributeValue "intelligence"}}
-		</div>
-		<div class="abilityMod">
-			{{abilityMod "intelligence"}}
-		</div>
-	</div>
-	<div class="ability floatBox">
-		<div class ="abilityName">
-			Wisdom
-		</div>
-		<div class="abilityScore">
-			{{attributeValue "wisdom"}}
-		</div>
-		<div class="abilityMod">
-			{{abilityMod "wisdom"}}
-		</div>
-	</div>
-	<div class="ability floatBox">
-		<div class ="abilityName">
-			Charisma
-		</div>
-		<div class="abilityScore">
-			{{attributeValue "charisma"}}
-		</div>
-		<div class="abilityMod">
-			{{abilityMod "charisma"}}
-		</div>
-	</div>
 </template>

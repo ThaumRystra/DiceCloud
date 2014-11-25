@@ -1,0 +1,43 @@
+.abilityDetails {
+	background-color: #ebe2d5;
+	
+	position: absolute;
+	
+	top: 0px;
+	height: 300px;
+	right: 0px;
+	width: 160px;
+	
+	z-index: 10;
+	
+	background-color: #ebe2d5;
+
+	transition: right 0.3s ease;
+}
+
+.stubHolder {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+
+	position: absolute;
+
+	top: 0px;
+	bottom: 0px;
+	width: 40px;
+	left: -40px;
+}
+
+.abilityStub {
+	text-align: center;
+	cursor: pointer;
+	background-color: #ebe2d5;
+}
+
+.abilityDetails.collapse{
+	right: -160px;
+}
+
+.abilityDetails.expand{
+	right: 0px;
+}

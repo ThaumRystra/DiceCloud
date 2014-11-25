@@ -1,0 +1,19 @@
+[[[[[ ~/workspace/rpg-docs ]]]]]
+
+=> Started proxy.
+=> Started MongoDB.
+[34mI20141122-15:44:13.239(0)? [39m** You've set up some data subscriptions with Meteor.publish(), but
+[34mI20141122-15:44:13.351(0)? [39m** you still have autopublish turned on. Because autopublish is still
+[34mI20141122-15:44:13.352(0)? [39m** on, your Meteor.publish() calls won't have much effect. All data
+[34mI20141122-15:44:13.352(0)? [39m** will still be sent to all clients.
+[34mI20141122-15:44:13.352(0)? [39m**
+[34mI20141122-15:44:13.352(0)? [39m** Turn off autopublish by removing the autopublish package:
+[34mI20141122-15:44:13.353(0)? [39m**
+[34mI20141122-15:44:13.353(0)? [39m**   $ meteor remove autopublish
+[34mI20141122-15:44:13.353(0)? [39m**
+[34mI20141122-15:44:13.353(0)? [39m** .. and make sure you have Meteor.publish() and Meteor.subscribe() calls
+[34mI20141122-15:44:13.353(0)? [39m** for each collection that you want clients to see.
+[34mI20141122-15:44:13.353(0)? [39m
+=> Started your app.
+
+=> App running at: http://localhost:3000/

@@ -30,7 +30,10 @@ Template.skills.helpers({
 			{name: "Stealth", skill: "stealth"},
 			{name: "Survival", skill: "survival"}
 		];
-	},
+	}
+});
+
+Template.skillRow.helpers({
 	profIcon: function(skill){
 		var prof = Template.parentData(1).proficiency(this.skill);
 		if(prof > 0 && prof < 1) return "profHalf.png";

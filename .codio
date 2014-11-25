@@ -8,7 +8,7 @@
 
 // Preview button configuration
   "preview": {
-      "Prieview": "https://period-sheriff-3000.codio.io",
+      "Prieview": "http://period-sheriff-3000.codio.io",
 	  "Ungit": "https://period-sheriff-9501.codio.io/#/repository?path=/home/codio/workspace"
   }
 }

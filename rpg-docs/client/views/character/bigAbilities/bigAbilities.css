@@ -1,3 +1,9 @@
+.flexItem.abilities {
+	flex-grow: 1;
+	width: 100px;
+	max-width: 400px;
+}
+
 .floatBox.ability {
 	width: 85px;
 	text-align: center;
