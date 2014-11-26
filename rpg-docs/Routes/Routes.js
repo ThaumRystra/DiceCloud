@@ -12,7 +12,7 @@ Router.map( function () {
 		}
 	});
 
-	this.route('character', {
+	this.route('characterSheet', {
 		path: '/character/:_id',
 		notFoundTemplate: 'characterNotFound',
 		waitOn: function(){

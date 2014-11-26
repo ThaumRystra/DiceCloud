@@ -1,0 +1,18 @@
+{
+  "name": "core-docs",
+  "private": true,
+  "dependencies": {
+    "core-doc-viewer": "Polymer/core-doc-viewer#^0.5.0"
+  },
+  "version": "0.5.1",
+  "homepage": "https://github.com/Polymer/core-docs",
+  "_release": "0.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.5.1",
+    "commit": "0fe77192d19b3d1491cf6e8bd958a5ff0047a5ad"
+  },
+  "_source": "git://github.com/Polymer/core-docs.git",
+  "_target": "^0.5.0",
+  "_originalSource": "Polymer/core-docs"
+}

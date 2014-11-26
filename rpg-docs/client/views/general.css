@@ -3,11 +3,15 @@ root {
 }
 
 body {
-	font-family: sans-serif;
-	background: #201500;
+	font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+	margin: 0;
+	color: #333;
 	overflow-x: hidden;
-	margin: 0px;
 	box-sizing: border-box;
+}
+
+body.core-narrow {
+	padding: 8px;
 }
 
 .calculatedValue {
@@ -21,4 +25,9 @@ body {
 
 h2 {
 	margin: 0;
+}
+
+h3 {
+	font-size: 16px;
+	font-weight: 400;
 }

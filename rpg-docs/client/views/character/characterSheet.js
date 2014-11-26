@@ -1,34 +1,35 @@
 Template.characterSheet.created = function(){
-	Template.instance().tab = new ReactiveVar("characterStats")
+	Template.instance().selectedTab = new ReactiveVar(0)
+}
+
+Template.characterSheet.rendered = function(){
+	var observer = new ObjectObserver(document.querySelector('#characterSheetTabs'));
+	var instance = Template.instance();
+	observer.open(function(added, removed, changed, getOldValueFn) {
+		Object.keys(changed).forEach(function(property) {
+			if(property === "selected"){
+				var selected = changed[property];
+				instance.selectedTab.set(selected);
+			}
+		})
+	});
 }
 
 Template.characterSheet.helpers({
-	getTab: function(){
-		return Template.instance().tab.get();
+	selectedTab: function(){
+		return Template.instance().selectedTab.get();
 	},
 });
 
-var setTab = function(value){
-	Template.instance().tab.set(value);
-}
-
 Template.characterSheet.events({
-	"click #statsTab": function(){
-		setTab("stats");
-	},
-	"click #featuresTab": function(){
-		setTab("features");
-	},
-	"click #personaTab": function(){
-		setTab("persona");
-	},
-	"click #inventoryTab": function(){
-		setTab("inventory");
-	},
-	"click #spellsTab": function(){
-		setTab("spellbook");
-	},
-	"click #journalTab": function(){
-		setTab("journal");
-	},
+	
 })
+
+/* requires the following templates
+stats
+features
+persona
+inventory
+spellbook
+journal
+*/
