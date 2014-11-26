@@ -37,3 +37,8 @@ Packages used
 * aldeed:autoform
     * Automatically generates bootstrap forms for collection2 Schemas.
     * [github](https://github.com/aldeed/meteor-autoform)
+
+************
+	
+To Speed up builds when you know you wont need online package checking use
+METEOR_OFFLINE_CATALOG=1

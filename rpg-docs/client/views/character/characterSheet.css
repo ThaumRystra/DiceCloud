@@ -17,7 +17,7 @@ paper-tabs[noink][nobar] paper-tab.core-selected {
 }
 
 ::shadow #ink {
-	color: #d50000 !important;
+	color: #b22 !important;
 }
 
 paper-tabs.transparent-brown {
