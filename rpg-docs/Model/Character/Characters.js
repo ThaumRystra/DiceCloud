@@ -34,6 +34,12 @@ Schemas.Character = new SimpleSchema({
 	},
 	experience:			{type: Schemas.Attribute},
 	proficiencyBonus:	{type: Schemas.Attribute},
+  "proficiencyBonus.add": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Proficiency bonus by level", calculation: "floor(level / 4.1) + 2"}
+		]
+	},
 	speed:				{type: Schemas.Attribute},
 	weight: 			{type: Schemas.Attribute},
 	weightCarried: 		{type: Schemas.Attribute},
@@ -221,7 +227,7 @@ Schemas.Character = new SimpleSchema({
 
 	//proficiencies
 	weaponsProficiencies: {
-		type: [Schemas.Proficiency], 
+		type: [Schemas.Proficiency],
 		defaultValue: []
 	},
 	toolsProficiencies: {
@@ -229,7 +235,7 @@ Schemas.Character = new SimpleSchema({
 		defaultValue: []
 	},
 	languages: {
-		type: [Schemas.Proficiency], 
+		type: [Schemas.Proficiency],
 		defaultValue: []
 	},
 
@@ -259,7 +265,7 @@ Characters.find({},{fields: {time: 1, expirations: 1}}).observe({
 	}
 });
 
-var attributeBase = function(attribute){
+var attributeBase = function(charId, attribute){
 	var value = 0;
 	//add all values in add array
 	_.each(attribute.add, function(effect){
@@ -285,10 +291,10 @@ var attributeBase = function(attribute){
 	return value;
 }
 
-//functions and calculated values. 
-//These functions can only rely on this._id since no other 
+//functions and calculated values.
+//These functions can only rely on this._id since no other
 //field is likely to be attached to all returned characters
-Characters.helpers({ 
+Characters.helpers({
 	//returns the value stored in the field requested
 	//will set up dependencies on just that field
 	getField : function(fieldName){
@@ -320,7 +326,7 @@ Characters.helpers({
 		return this.getField(fieldName);
 	},
 
-	attributeValue: (function(){ 
+	attributeValue: (function(){
 		//store a private array of attributes we've visited without returning
 		//if we try to visit the same attribute twice before resolving its value
 		//we are in a dependency loop and need to GTFO
@@ -339,16 +345,16 @@ Characters.helpers({
 			var charId = this._id;
 			var attribute = this.getField(attributeName);
 			//base value
-			var value = attributeBase(attribute);
+			var value = attributeBase(charId, attribute);
 			value += attribute.adjustment;
-			
+
 			//this attribute returns, pull it from the array, we may visit it again safely
 			visitedAttributes = _.without(visitedAttributes, attributeName);
 			return value;
 		}
 	})(),
 
-	attributeBase: (function(){ 
+	attributeBase: (function(){
 		//store a private array of attributes we've visited without returning
 		//if we try to visit the same attribute twice before resolving its value
 		//we are in a dependency loop and need to GTFO
@@ -367,8 +373,8 @@ Characters.helpers({
 			var charId = this._id;
 			var attribute = this.getField(attributeName);
 			//base value
-			var value = attributeBase(attribute);
-			
+			var value = attributeBase(charId, attribute);
+
 			//this attribute returns, pull it from the array, we may visit it again safely
 			visitedAttributes = _.without(visitedAttributes, attributeName);
 			return value;
@@ -449,12 +455,12 @@ Characters.helpers({
 		return prof;
 	},
 
-	passiveSkill: function(skill){
-		if (_.isString(skill)){
-			skill = this.getField(skill);
+	passiveSkill: function(skillName){
+		if (_.isString(skillName)){
+			var skill = this.getField(skillName);
 		}
 		var charId = this._id
-		var mod = +this.skillMod(skill);
+		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
 		_.each(skill.passiveAdd, function(effect){
 			value += evaluateEffect(charId, effect);

@@ -1,11 +1,15 @@
+Router.configure({
+  loadingTemplate: 'loading'
+});
+
 Router.map( function () {
-	this.route('home', 
+	this.route('home',
 			   {
 		path: '/',
 		waitOn: function(){
 			return Meteor.subscribe("characterList", Meteor.userId());
 		},
-		data: { 
+		data: {
 			characters: function(){
 				return Characters.find({}, {fields: {_id: 1}});
 			}

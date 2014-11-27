@@ -1,33 +1,119 @@
 root {
-	display: block;
+  display: block;
 }
 
 body {
-	font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
-	margin: 0;
-	color: #333;
-	overflow-x: hidden;
-	box-sizing: border-box;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 body.core-narrow {
-	padding: 8px;
+  padding: 8px;
 }
 
 .calculatedValue {
-	color: #021C33;
-	font-weight: bold;
+  color: #021C33;
+  font-weight: bold;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-h2 {
-	margin: 0;
+h1, .headline {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0;
+  color: #000;
+  color: rgba(0,0,0,0.87);
+  letter-spacing: 0;
 }
 
-h3 {
-	font-size: 16px;
-	font-weight: 400;
+h2, .title {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+  color: #000;
+  color: rgba(0,0,0,0.87);
+  letter-spacing: 0.005;
+}
+
+h3, .subhead {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+  color: #000;
+  color: rgba(0,0,0,0.87);
+  letter-spacing: 0.010;
+}
+
+.body2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  color: rgba(0,0,0,0.87);
+  letter-spacing: 0.010;
+}
+
+p, .body1, body {
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  color: rgba(0,0,0,0.87);
+  letter-spacing: 0.010;
+}
+
+.caption{
+  font-size: 12px;
+  font-weight: 400;
+  color: #000;
+  color: rgba(0,0,0,0.54);
+  letter-spacing: 0.020;
+}
+
+hr {
+  background-color: #444;
+  opacity: 0.12;
+  border-width: 0;
+  color: #444;
+  height: 1px;
+  line-height: 0;
+  margin: 0 -16px;
+  text-align: center;
+}
+
+paper-button {
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #000;
+  color: rgba(0,0,0,0.87);
+  letter-spacing: 0.010;
+}
+
+.card {
+  width: 148px;
+  margin: 4px;
+  padding: 16px;
+  font-size: 14px;
+  border-radius: 2px;
+  background-color: white;
+}
+
+.card.double {
+  width: 304px;
+}
+
+.card paper-button {
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.grey-background, body {
+  background-color: #E0E0E0;
+}
+
+.center {
+  text-align: center;
 }
