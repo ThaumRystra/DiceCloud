@@ -1,0 +1,99 @@
+.display2 {
+	font-size: 45px;
+	font-weight: 400;
+	color: #000;
+	color: rgba(0,0,0,0.54);
+	letter-spacing: 0;
+}
+
+.white-text .display2{
+	color: rgba(255,255,255,0.54);
+}
+
+.display1 {
+	font-size: 34px;
+	font-weight: 400;
+	color: #000;
+	color: rgba(0,0,0,0.54);
+	letter-spacing: 0;
+}
+
+.white-text .display1{
+	color: rgba(255,255,255,0.54);
+}
+
+h1, .headline {
+	font-size: 24px;
+	font-weight: 400;
+	margin: 0;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0;
+}
+
+.white-text h1, .white-text .headline{
+	color: rgba(255,255,255,0.87);
+}
+
+h2, .title {
+	font-size: 20px;
+	font-weight: 500;
+	margin: 0;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.005em;
+}
+
+.white-text h2{
+	color: rgba(255,255,255,0.87);
+}
+
+h3, .subhead {
+	font-size: 16px;
+	font-weight: 400;
+	margin: 0;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.010em;
+}
+
+.white-text h3, .white-text .subhead{
+	color: rgba(255,255,255,0.87);
+}
+
+.body2 {
+	font-size: 14px;
+	font-weight: 500;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.010em;
+}
+
+.white-text .body2{
+	color: rgba(255,255,255,0.87);
+}
+
+p, .body1, body {
+	font-size: 14px;
+	font-weight: 400;
+	margin: 0;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.010em;
+}
+
+.white-text p{
+	color: rgba(255,255,255,0.87);
+}
+
+.caption{
+	font-size: 12px;
+	font-weight: 400;
+	color: #000;
+	color: rgba(0,0,0,0.54);
+	letter-spacing: 0.020em;
+}
+
+.white-text .caption{
+	color: rgba(255,255,255,0.54);
+}

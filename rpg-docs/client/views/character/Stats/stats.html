@@ -1,80 +1,84 @@
 <template name="stats">
-    <div id="stats">
-        {{> abilityCards}}
-        <paper-shadow class="card" id="armor">
-            <h1>{{attributeValue "armor"}}</h1>
-            <p class="caption">Armor</p>
-        </paper-shadow>
-        <paper-shadow class="card" id="initiative">
-           <h1>{{skillMod "initiative"}}</h1>
-            <p class="caption">Initiative</p>
-        </paper-shadow>
-        <paper-shadow class="card" id="proficiencyBonus">
-            <h1>{{attributeValue "proficiencyBonus"}}</h1>
-            <p class="caption">Proficiency Bonus</p>
-        </paper-shadow>
-        <paper-shadow class="card" id="speed">
-            <h1>{{attributeValue "speed"}}</h1>
-            <p class="caption">Speed</p>
-        </paper-shadow>
-        <paper-shadow class="card" id="passivePerception">
-            <h1>{{passiveSkill "perception"}}</h1>
-            <p class="caption">Passive Perception</p>
-        </paper-shadow>
-        <paper-shadow class="card" id="hitDice">
-            <h1>{{> hitDice hitDice="d6HitDice" d="6"}}</h1>
-            <h1>{{> hitDice hitDice="d8HitDice" d="8"}}</h1>
-            <h1>{{> hitDice hitDice="d10HitDice" d="10"}}</h1>
-            <h1>{{> hitDice hitDice="d12HitDice" d="12"}}</h1>
-           <p class="caption">Hit Dice</p>
-        </paper-shadow>
-        {{# if canCast}}
-            <paper-shadow class="card" id="spellSlots">
-                <h1>{{> spellSlots}}</h1>
-                <p class="caption">Spell Slots</p>
-            </paper-shadow>
-        {{/if}}
-        {{# if attributeBase "rages"}}
-            <paper-shadow class="card" id="rages">
-                <h1>{{attributeValue "rages"}}</h1>
-                <p class="caption">rages</p>
-            </paper-shadow>
-        {{/if}}
-        {{# if attributeBase "sorceryPoints"}}
-            <paper-shadow class="card" id="sorceryPoints">
-                <h1>{{attributeValue "sorceryPoints"}}</h1>
-                <p class="caption">Sorcery Points</p>
-            </paper-shadow>
-        {{/if}}
-        {{# if attributeBase "expertiseDice"}}
-            <paper-shadow class="card" id="expertiseDice">
-                <h1>{{attributeValue "expertiseDice"}}</h1>
-                <p class="caption">Expertise Dice</p>
-            </paper-shadow>
-        {{/if}}
-        {{# if attributeBase "superiorityDice"}}
-            <paper-shadow class="card" id="superiorityDice">
-                <h1>{{attributeValue "superiorityDice"}}</h1>
-                <p class="caption">Superiority Dice</p>
-            </paper-shadow>
-        {{/if}}
-    </div>
+	<div id="stats">
+		<div class="abilityFlex">
+			{{> abilityCards}}
+		</div>
+		<div class="statsFlex">
+			<paper-shadow class="card" id="armor">
+				<h1>{{attributeValue "armor"}}</h1>
+				<p class="caption">Armor</p>
+			</paper-shadow>
+			<paper-shadow class="card" id="initiative">
+				<h1>{{skillMod "initiative"}}</h1>
+				<p class="caption">Initiative</p>
+			</paper-shadow>
+			<paper-shadow class="card" id="proficiencyBonus">
+				<h1>{{attributeValue "proficiencyBonus"}}</h1>
+				<p class="caption">Proficiency Bonus</p>
+			</paper-shadow>
+			<paper-shadow class="card" id="speed">
+				<h1>{{attributeValue "speed"}}</h1>
+				<p class="caption">Speed</p>
+			</paper-shadow>
+			<paper-shadow class="card" id="passivePerception">
+				<h1>{{passiveSkill "perception"}}</h1>
+				<p class="caption">Passive Perception</p>
+			</paper-shadow>
+			<paper-shadow class="card" id="hitDice">
+				<h1>{{> hitDice hitDice="d6HitDice" d="6"}}</h1>
+				<h1>{{> hitDice hitDice="d8HitDice" d="8"}}</h1>
+				<h1>{{> hitDice hitDice="d10HitDice" d="10"}}</h1>
+				<h1>{{> hitDice hitDice="d12HitDice" d="12"}}</h1>
+				<p class="caption">Hit Dice</p>
+			</paper-shadow>
+			{{# if canCast}}
+			<paper-shadow class="card" id="spellSlots">
+				<h1>{{> spellSlots}}</h1>
+				<p class="caption">Spell Slots</p>
+			</paper-shadow>
+			{{/if}}
+			{{# if attributeBase "rages"}}
+			<paper-shadow class="card" id="rages">
+				<h1>{{attributeValue "rages"}}</h1>
+				<p class="caption">rages</p>
+			</paper-shadow>
+			{{/if}}
+			{{# if attributeBase "sorceryPoints"}}
+			<paper-shadow class="card" id="sorceryPoints">
+				<h1>{{attributeValue "sorceryPoints"}}</h1>
+				<p class="caption">Sorcery Points</p>
+			</paper-shadow>
+			{{/if}}
+			{{# if attributeBase "expertiseDice"}}
+			<paper-shadow class="card" id="expertiseDice">
+				<h1>{{attributeValue "expertiseDice"}}</h1>
+				<p class="caption">Expertise Dice</p>
+			</paper-shadow>
+			{{/if}}
+			{{# if attributeBase "superiorityDice"}}
+			<paper-shadow class="card" id="superiorityDice">
+				<h1>{{attributeValue "superiorityDice"}}</h1>
+				<p class="caption">Superiority Dice</p>
+			</paper-shadow>
+			{{/if}}	
+		</div>
+	</div>
 </template>
 
 <template name="hitDice">
-    {{# if ../attributeBase hitDice}}
-        {{../attributeValue hitDice}}d{{d}} + {{../abilityMod "constitution"}}
-    {{/if}}
+	{{# if ../attributeBase hitDice}}
+	{{../attributeValue hitDice}}d{{d}} + {{../abilityMod "constitution"}}
+	{{/if}}
 </template>
 
 <template name="spellSlots">
-    {{attributeValue "level1SpellSlots"}}
-    {{attributeValue "level2SpellSlots"}}
-    {{attributeValue "level3SpellSlots"}}
-    {{attributeValue "level4SpellSlots"}}
-    {{attributeValue "level5SpellSlots"}}
-    {{attributeValue "level6SpellSlots"}}
-    {{attributeValue "level7SpellSlots"}}
-    {{attributeValue "level8SpellSlots"}}
-    {{attributeValue "level9SpellSlots"}}
+	{{attributeValue "level1SpellSlots"}}
+	{{attributeValue "level2SpellSlots"}}
+	{{attributeValue "level3SpellSlots"}}
+	{{attributeValue "level4SpellSlots"}}
+	{{attributeValue "level5SpellSlots"}}
+	{{attributeValue "level6SpellSlots"}}
+	{{attributeValue "level7SpellSlots"}}
+	{{attributeValue "level8SpellSlots"}}
+	{{attributeValue "level9SpellSlots"}}
 </template>

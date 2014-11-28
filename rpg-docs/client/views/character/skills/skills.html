@@ -14,13 +14,13 @@
 </template>
 
 <template name="skillRow">
-	<tr>
-		<td><div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div></td>
+	<div class="subhead skillRow">
+		<div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div>
 		{{#if failSkill}}
-		<td class="fail">fail</td>
+		<div class="fail skillMod">fail</div>
 		{{else}}
-		<td class="{{advantage}}">{{../skillMod skill}}</td>
+		<div class="{{advantage}} skillMod">{{../skillMod skill}}</div>
 		{{/if}}
-		<td class={{conditionals}}>{{name}}</td>
-	</tr>
+		<div class="{{conditionals}} skillName">{{name}}</div>
+	</div>
 </template>

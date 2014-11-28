@@ -314,15 +314,14 @@ Characters.helpers({
 		var field = char[fieldName];
 		if(!field){
 			throw new Meteor.Error("getField failed", 
-								   "getField could not find field" + fieldName + " in character "+ char._id);
+								   "getField could not find field " + fieldName + " in character "+ char._id);
 		}
 		return field;
 	},
 	//returns the value of a field
 	fieldValue : function(fieldName){
 		if(!Schemas.Character.schema(fieldName)){
-			console.log("Character's schema does not contain a field called: " + fieldName);
-			return;
+			throw new Meteor.Error("Field not found", "Character's schema does not contain a field called: " + fieldName);
 		}
 		//duck typing to get the right value function
 		//.proficiency implies skill
@@ -353,14 +352,16 @@ Characters.helpers({
 			//we can't visit it again unless it returns first
 			visitedAttributes.push(attributeName);
 
-			var charId = this._id;
-			var attribute = this.getField(attributeName);
-			//base value
-			var value = attributeBase(charId, attribute);
-			value += attribute.adjustment;
-
-			//this attribute returns, pull it from the array, we may visit it again safely
-			visitedAttributes = _.without(visitedAttributes, attributeName);
+			try{
+				var charId = this._id;
+				var attribute = this.getField(attributeName);
+				//base value
+				var value = attributeBase(charId, attribute);
+				value += attribute.adjustment;
+			}finally{
+				//this attribute returns or fails, pull it from the array, we may visit it again safely
+				visitedAttributes = _.without(visitedAttributes, attributeName);
+			}
 			return value;
 		}
 	})(),
@@ -380,14 +381,15 @@ Characters.helpers({
 			//push this attribute to the list of visited attributes
 			//we can't visit it again unless it returns first
 			visitedAttributes.push(attributeName);
-
-			var charId = this._id;
-			var attribute = this.getField(attributeName);
-			//base value
-			var value = attributeBase(charId, attribute);
-
-			//this attribute returns, pull it from the array, we may visit it again safely
-			visitedAttributes = _.without(visitedAttributes, attributeName);
+			try{
+				var charId = this._id;
+				var attribute = this.getField(attributeName);
+				//base value
+				var value = attributeBase(charId, attribute);
+			}finally{
+				//this attribute returns or fails, pull it from the array, we may visit it again safely
+				visitedAttributes = _.without(visitedAttributes, attributeName);
+			}
 			return value;
 		}
 	})(),
@@ -407,45 +409,46 @@ Characters.helpers({
 			//push this skill to the list of visited skills
 			//we can't visit it again unless it returns first
 			visitedSkills.push(skillName);
+			try{
+				var charId = this._id;
+				skill = this.getField(skillName);
+				//get the final value of the ability score
+				var ability = this.attributeValue(skill.ability);
 
-			var charId = this._id;
-			skill = this.getField(skillName);
-			//get the final value of the ability score
-			var ability = this.attributeValue(skill.ability);
+				//base modifier
+				var mod = +getMod(ability)
 
-			//base modifier
-			var mod = +getMod(ability)
+				//multiply proficiency bonus by largest value in proficiency array
+				var prof = this.proficiency(skill);
 
-			//multiply proficiency bonus by largest value in proficiency array
-			var prof = this.proficiency(skill);
+				//add multiplied proficiency bonus to modifier
+				mod += prof * this.attributeValue("proficiencyBonus");
 
-			//add multiplied proficiency bonus to modifier
-			mod += prof * this.attributeValue("proficiencyBonus");
+				//add all values in add array
+				_.each(skill.add, function(effect){
+					mod += evaluateEffect(charId, effect);
+				});
 
-			//add all values in add array
-			_.each(skill.add, function(effect){
-				mod += evaluateEffect(charId, effect);
-			});
+				//multiply all values in mul array
+				_.each(skill.mul, function(effect){
+					mod *= evaluateEffect(charId, effect);
+				});
 
-			//multiply all values in mul array
-			_.each(skill.mul, function(effect){
-				mod *= evaluateEffect(charId, effect);
-			});
+				//largest min
+				_.each(skill.min, function(effect){
+					var min = evaluateEffect(charId, effect);
+					mod = mod > min? mod : min;
+				});
 
-			//largest min
-			_.each(skill.min, function(effect){
-				var min = evaluateEffect(charId, effect);
-				mod = mod > min? mod : min;
-			});
-
-			//smallest max
-			_.each(skill.max, function(effect){
-				var max = evaluateEffect(charId, effect);
-				mod = mod < max? mod : max;
-			});
-
-			//done traversing the tree, this skill returns, pull it from the array
-			visitedSkills = _.without(visitedSkills, skillName);
+				//smallest max
+				_.each(skill.max, function(effect){
+					var max = evaluateEffect(charId, effect);
+					mod = mod < max? mod : max;
+				});
+			} finally{
+				//this skill returns or fails, pull it from the array
+				visitedSkills = _.without(visitedSkills, skillName);
+			}
 			return signedString(mod);
 		}
 	})(),

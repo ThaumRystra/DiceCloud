@@ -2,18 +2,18 @@
 	<paper-tabs id="characterSheetTabs" scrollable="true" selected={{selectedTab}}>
 		<paper-tab>Stats</paper-tab>
 		<paper-tab>Features</paper-tab>
-		<paper-tab>Persona</paper-tab>
 		<paper-tab>Inventory</paper-tab>
 		<paper-tab>Spellbook</paper-tab>
+		<paper-tab>Persona</paper-tab>
 		<paper-tab>Journal</paper-tab>
 	</paper-tabs>
 
 	<core-animated-pages selected={{selectedTab}} transitions="slide-from-right">
 		<div>{{> stats}}</div>
 		<div>features</div>
-		<div>persona</div>
 		<div>inventory</div>
 		<div>spellBook</div>
+		<div>persona</div>
 		<div>journal</div>
 	</core-animated-pages>
 </template>

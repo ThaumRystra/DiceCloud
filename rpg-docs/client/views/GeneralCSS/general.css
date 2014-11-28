@@ -1,0 +1,80 @@
+root {
+	display: block;
+}
+
+body {
+	font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+body.core-narrow {
+	padding: 8px;
+}
+
+.calculatedValue {
+	color: #021C33;
+	font-weight: bold;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+td {
+	padding: 0;
+}
+
+table {
+	border-spacing: 0;
+}
+
+hr {
+	background-color: #444;
+	opacity: 0.12;
+	border-width: 0;
+	color: #444;
+	height: 1px;
+	line-height: 0;
+	margin: 0 -16px;
+	text-align: center;
+}
+
+paper-button {
+	font-size: 14px;
+	font-weight: 400;
+	text-transform: uppercase;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.010;
+}
+
+.listRow {
+	height: 32px;
+}
+
+.card {
+	width: 148px;
+	margin: 4px;
+	padding: 16px;
+	font-size: 14px;
+	border-radius: 2px;
+	background-color: white;
+}
+
+.card.double {
+	width: 304px;
+}
+
+.card paper-button {
+	font-size: 14px;
+	letter-spacing: 0.01em;
+}
+
+.grey-background, body {
+	background-color: #E0E0E0;
+}
+
+.center {
+	text-align: center;
+}
