@@ -1,0 +1,19 @@
+{
+  "name": "core-animation",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.0",
+    "web-animations-next": "web-animations/web-animations-next#master"
+  },
+  "version": "0.5.1",
+  "homepage": "https://github.com/Polymer/core-animation",
+  "_release": "0.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.5.1",
+    "commit": "3f36bd913cbc59676b8fb1dcf7248ad95c4faa47"
+  },
+  "_source": "git://github.com/Polymer/core-animation.git",
+  "_target": "^0.5.0",
+  "_originalSource": "Polymer/core-animation"
+}

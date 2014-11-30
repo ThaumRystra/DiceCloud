@@ -26,6 +26,6 @@ Schemas.Effect = new SimpleSchema({
 	type: {
 		type: String,
 		defaultValue: "default",
-		allowedValues: ["default", "class", "race", "feat", "equippedMagic", "equippedMundane", "external"]
+		allowedValues: ["default", "inate", "class", "race", "feat", "equippedMagic", "equippedMundane", "external"]
 	}
 });

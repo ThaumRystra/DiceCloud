@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 iron:router
 accounts-password
@@ -16,5 +15,5 @@ cw4gn3r:jquery-event-drag
 underscore
 aldeed:collection2
 aldeed:autoform
-mike:mocha
+multiply:iron-router-progress
 

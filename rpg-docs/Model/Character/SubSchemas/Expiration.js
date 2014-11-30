@@ -6,7 +6,8 @@ Schemas.Expiration = new SimpleSchema({
 		autoValue: function(){
 			if(!this.isSet) return Random.id();
 		}},
-	stat: 		{ type: String },
-	effectId: 	{ type: String, regEx: SimpleSchema.RegEx.Id },
-	expiry:		{ type: Number }
+	stat:      { type: String },
+	effectIds: { type: [String], regEx: SimpleSchema.RegEx.Id },
+  featureIds:{ type: [String], regEx: SimpleSchema.RegEx.Id },
+	expiry:    { type: Number }
 });

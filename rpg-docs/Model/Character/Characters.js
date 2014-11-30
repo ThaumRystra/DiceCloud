@@ -3,43 +3,48 @@ Characters = new Meteor.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings
-	name:		{ type: String, defaultValue: "", trim: false},
-	alignment:	{ type: String, defaultValue: "", trim: false},
-	gender:		{ type: String, defaultValue: "", trim: false},
-	race:		{ type: String, defaultValue: "", trim: false},
+	name:       { type: String, defaultValue: "", trim: false},
+	alignment:  { type: String, defaultValue: "", trim: false},
+	gender:     { type: String, defaultValue: "", trim: false},
+	race:       { type: String, defaultValue: "", trim: false},
 	description:{ type: String, defaultValue: "", trim: false},
 	personality:{ type: String, defaultValue: "", trim: false},
-	ideals:		{ type: String, defaultValue: "", trim: false},
-	bonds:		{ type: String, defaultValue: "", trim: false},
-	flaws:		{ type: String, defaultValue: "", trim: false},
-	backstory: 	{ type: String, defaultValue: "", trim: false},
-	notes: 		{ type: String, defaultValue: "", trim: false},
+	ideals:     { type: String, defaultValue: "", trim: false},
+	bonds:      { type: String, defaultValue: "", trim: false},
+	flaws:      { type: String, defaultValue: "", trim: false},
+	backstory:  { type: String, defaultValue: "", trim: false},
+	notes:      { type: String, defaultValue: "", trim: false},
 
 	//attributes
 	//ability scores
-	strength:			{type: Schemas.Attribute},
-	dexterity:			{type: Schemas.Attribute},
-	constitution:		{type: Schemas.Attribute},
-	intelligence:		{type: Schemas.Attribute},
-	wisdom:				{type: Schemas.Attribute},
-	charisma:			{type: Schemas.Attribute},
+	strength:     {type: Schemas.Attribute},
+	dexterity:    {type: Schemas.Attribute},
+	constitution: {type: Schemas.Attribute},
+	intelligence: {type: Schemas.Attribute},
+	wisdom:       {type: Schemas.Attribute},
+	charisma:     {type: Schemas.Attribute},
 
 	//stats
-	hitPoints:			{type: Schemas.Attribute},
+	hitPoints:    {type: Schemas.Attribute},
 	"hitPoints.add": {
 		type: [Schemas.Effect],
 		defaultValue: [
 			{name: "Constitution modifier for each level", calculation: "level * constitutionMod"}
 		]
 	},
-	experience:			{type: Schemas.Attribute},
+	experience:   {type: Schemas.Attribute},
 	proficiencyBonus:	{type: Schemas.Attribute},
-	speed:				{type: Schemas.Attribute},
-	weight: 			{type: Schemas.Attribute},
-	weightCarried: 		{type: Schemas.Attribute},
-	age: 				{type: Schemas.Attribute},
-	ageRate: 			{type: Schemas.Attribute},
-	armor:				{type: Schemas.Attribute},
+	"proficiencyBonus.add": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Proficiency bonus by level", calculation: "floor(level / 4.1) + 2"}
+		]
+	},
+	speed:        {type: Schemas.Attribute},
+	weight:       {type: Schemas.Attribute},
+	age:          {type: Schemas.Attribute},
+	ageRate:      {type: Schemas.Attribute},
+	armor:        {type: Schemas.Attribute},
 	"armor.add": {
 		type: [Schemas.Effect],
 		defaultValue: [
@@ -48,63 +53,63 @@ Schemas.Character = new SimpleSchema({
 	},
 
 	//resources
-	level1SpellSlots:	{type: Schemas.Attribute},
-	level2SpellSlots:	{type: Schemas.Attribute},
-	level3SpellSlots:	{type: Schemas.Attribute},
-	level4SpellSlots:	{type: Schemas.Attribute},
-	level5SpellSlots:	{type: Schemas.Attribute},
-	level6SpellSlots:	{type: Schemas.Attribute},
-	level7SpellSlots:	{type: Schemas.Attribute},
-	level8SpellSlots:	{type: Schemas.Attribute},
-	level9SpellSlots:	{type: Schemas.Attribute},
-	ki:					{type: Schemas.Attribute},
-	sorceryPoints:		{type: Schemas.Attribute},
-	rages:				{type: Schemas.Attribute},
-	superiorityDice:	{type: Schemas.Attribute},
-	expertiseDice:		{type: Schemas.Attribute},
+	level1SpellSlots: {type: Schemas.Attribute},
+	level2SpellSlots: {type: Schemas.Attribute},
+	level3SpellSlots: {type: Schemas.Attribute},
+	level4SpellSlots: {type: Schemas.Attribute},
+	level5SpellSlots: {type: Schemas.Attribute},
+	level6SpellSlots: {type: Schemas.Attribute},
+	level7SpellSlots: {type: Schemas.Attribute},
+	level8SpellSlots: {type: Schemas.Attribute},
+	level9SpellSlots: {type: Schemas.Attribute},
+	ki:               {type: Schemas.Attribute},
+	sorceryPoints:    {type: Schemas.Attribute},
+	rages:            {type: Schemas.Attribute},
+	superiorityDice:  {type: Schemas.Attribute},
+	expertiseDice:    {type: Schemas.Attribute},
 
 
 	//hit dice
-	d6HitDice:				{type: Schemas.Attribute},
-	d8HitDice:				{type: Schemas.Attribute},
-	d10HitDice:				{type: Schemas.Attribute},
-	d12HitDice:				{type: Schemas.Attribute},
+	d6HitDice:        {type: Schemas.Attribute},
+	d8HitDice:        {type: Schemas.Attribute},
+	d10HitDice:       {type: Schemas.Attribute},
+	d12HitDice:       {type: Schemas.Attribute},
 
 	//vulnerabilities
-	acidMultiplier:			{type: Schemas.Vulnerability},
-	bludgeoningMultiplier:	{type: Schemas.Vulnerability},
-	coldMultiplier:			{type: Schemas.Vulnerability},
-	fireMultiplier:			{type: Schemas.Vulnerability},
-	forceMultiplier:		{type: Schemas.Vulnerability},
-	lightningMultiplier:	{type: Schemas.Vulnerability},
-	necroticMultiplier:		{type: Schemas.Vulnerability},
-	piercingMultiplier:		{type: Schemas.Vulnerability},
-	poisonMultiplier:		{type: Schemas.Vulnerability},
-	psychicMultiplier:		{type: Schemas.Vulnerability},
-	radiantMultiplier:		{type: Schemas.Vulnerability},
-	slashingMultiplier:		{type: Schemas.Vulnerability},
-	thunderMultiplier:		{type: Schemas.Vulnerability},
+	acidMultiplier:        {type: Schemas.Vulnerability},
+	bludgeoningMultiplier: {type: Schemas.Vulnerability},
+	coldMultiplier:        {type: Schemas.Vulnerability},
+	fireMultiplier:        {type: Schemas.Vulnerability},
+	forceMultiplier:       {type: Schemas.Vulnerability},
+	lightningMultiplier:   {type: Schemas.Vulnerability},
+	necroticMultiplier:    {type: Schemas.Vulnerability},
+	piercingMultiplier:    {type: Schemas.Vulnerability},
+	poisonMultiplier:      {type: Schemas.Vulnerability},
+	psychicMultiplier:     {type: Schemas.Vulnerability},
+	radiantMultiplier:     {type: Schemas.Vulnerability},
+	slashingMultiplier:    {type: Schemas.Vulnerability},
+	thunderMultiplier:     {type: Schemas.Vulnerability},
 
 
 	//skills
 	//saves
-	strengthSave: 	{type: Schemas.Skill},
-	"strengthSave.ability": 	{ type: String, defaultValue: "strength" },
+	strengthSave:    {type: Schemas.Skill},
+	"strengthSave.ability":     { type: String, defaultValue: "strength" },
 
-	dexteritySave:	{type: Schemas.Skill},
-	"dexteritySave.ability": 	{ type: String, defaultValue: "dexterity" },
+	dexteritySave:	 {type: Schemas.Skill},
+	"dexteritySave.ability":    { type: String, defaultValue: "dexterity" },
 
 	constitutionSave:{type: Schemas.Skill},
-	"constitutionSave.ability":	{ type: String, defaultValue: "constitution" },
+	"constitutionSave.ability": { type: String, defaultValue: "constitution" },
 
 	intelligenceSave:{type: Schemas.Skill},
 	"intelligenceSave.ability":	{ type: String, defaultValue: "intelligence" },
 
-	wisdomSave:		{type: Schemas.Skill},
-	"wisdomSave.ability":		{ type: String, defaultValue: "wisdom" },
+	wisdomSave:      {type: Schemas.Skill},
+	"wisdomSave.ability":       { type: String, defaultValue: "wisdom" },
 
-	charismaSave:	{type: Schemas.Skill},
-	"charismaSave.ability":		{ type: String, defaultValue: "charisma" },
+	charismaSave:    {type: Schemas.Skill},
+	"charismaSave.ability":     { type: String, defaultValue: "charisma" },
 
 
 	//skill skills
@@ -221,7 +226,7 @@ Schemas.Character = new SimpleSchema({
 
 	//proficiencies
 	weaponsProficiencies: {
-		type: [Schemas.Proficiency], 
+		type: [Schemas.Proficiency],
 		defaultValue: []
 	},
 	toolsProficiencies: {
@@ -229,7 +234,7 @@ Schemas.Character = new SimpleSchema({
 		defaultValue: []
 	},
 	languages: {
-		type: [Schemas.Proficiency], 
+		type: [Schemas.Proficiency],
 		defaultValue: []
 	},
 
@@ -247,19 +252,30 @@ Characters.attachSchema(Schemas.Character);
 
 //reactively remove expired effects
 //this can be optimised a lot once clients can do projections
-Characters.find({},{fields: {time: 1, expirations: 1}}).observe({
-	changed: function(character, oldCharacter){
+Characters.find({},{fields: {time: 1, expirations: 1, features: 1}}).observe({
+	changed: function(character){
 		var currentTime = character.time;
 		_.each(character.expirations, function(expiration){
 			if(expiration.expiry <= currentTime){
-				pullEffect(character._id, expiration.stat, expiration.effectId);
-				pullExpiry(character._id, expiration._id);
+				var charId = character._id;
+				var stat = expiration.stat;
+				//remove expired effects
+				_.each(expiration.effectIds, function(effectId){
+					pullEffect(charId, stat, effectId);
+				});
+				//disable expired features
+				_.each(expiration.featureIds, function(featureId){
+					var feature = Characters.findOne({_id: charId, "features._id": featureId}, {fields: {features: 1}}).features[0];
+					feature.enabled = false;
+					Characters.update({_id: charId, "features._id": featureId}, {$set: {"features.$": feature}});
+				});
+				pullExpiry(charId, expiration._id);
 			}
-		})
+		});
 	}
 });
 
-var attributeBase = function(attribute){
+var attributeBase = function(charId, attribute){
 	var value = 0;
 	//add all values in add array
 	_.each(attribute.add, function(effect){
@@ -285,10 +301,10 @@ var attributeBase = function(attribute){
 	return value;
 }
 
-//functions and calculated values. 
-//These functions can only rely on this._id since no other 
+//functions and calculated values.
+//These functions can only rely on this._id since no other
 //field is likely to be attached to all returned characters
-Characters.helpers({ 
+Characters.helpers({
 	//returns the value stored in the field requested
 	//will set up dependencies on just that field
 	getField : function(fieldName){
@@ -296,16 +312,16 @@ Characters.helpers({
 		fieldSelector[fieldName] = 1;
 		var char = Characters.findOne(this._id, {fields: fieldSelector});
 		var field = char[fieldName];
-		if(field === undefined){
-			console.log("no field ", fieldName, " exists for character ", char)
+		if(!field){
+			throw new Meteor.Error("getField failed", 
+								   "getField could not find field " + fieldName + " in character "+ char._id);
 		}
 		return field;
 	},
 	//returns the value of a field
 	fieldValue : function(fieldName){
 		if(!Schemas.Character.schema(fieldName)){
-			console.log("Character's schema does not contain a field called: " + fieldName);
-			return;
+			throw new Meteor.Error("Field not found", "Character's schema does not contain a field called: " + fieldName);
 		}
 		//duck typing to get the right value function
 		//.proficiency implies skill
@@ -320,7 +336,7 @@ Characters.helpers({
 		return this.getField(fieldName);
 	},
 
-	attributeValue: (function(){ 
+	attributeValue: (function(){
 		//store a private array of attributes we've visited without returning
 		//if we try to visit the same attribute twice before resolving its value
 		//we are in a dependency loop and need to GTFO
@@ -336,19 +352,21 @@ Characters.helpers({
 			//we can't visit it again unless it returns first
 			visitedAttributes.push(attributeName);
 
-			var charId = this._id;
-			var attribute = this.getField(attributeName);
-			//base value
-			var value = attributeBase(attribute);
-			value += attribute.adjustment;
-			
-			//this attribute returns, pull it from the array, we may visit it again safely
-			visitedAttributes = _.without(visitedAttributes, attributeName);
+			try{
+				var charId = this._id;
+				var attribute = this.getField(attributeName);
+				//base value
+				var value = attributeBase(charId, attribute);
+				value += attribute.adjustment;
+			}finally{
+				//this attribute returns or fails, pull it from the array, we may visit it again safely
+				visitedAttributes = _.without(visitedAttributes, attributeName);
+			}
 			return value;
 		}
 	})(),
 
-	attributeBase: (function(){ 
+	attributeBase: (function(){
 		//store a private array of attributes we've visited without returning
 		//if we try to visit the same attribute twice before resolving its value
 		//we are in a dependency loop and need to GTFO
@@ -363,14 +381,15 @@ Characters.helpers({
 			//push this attribute to the list of visited attributes
 			//we can't visit it again unless it returns first
 			visitedAttributes.push(attributeName);
-
-			var charId = this._id;
-			var attribute = this.getField(attributeName);
-			//base value
-			var value = attributeBase(attribute);
-			
-			//this attribute returns, pull it from the array, we may visit it again safely
-			visitedAttributes = _.without(visitedAttributes, attributeName);
+			try{
+				var charId = this._id;
+				var attribute = this.getField(attributeName);
+				//base value
+				var value = attributeBase(charId, attribute);
+			}finally{
+				//this attribute returns or fails, pull it from the array, we may visit it again safely
+				visitedAttributes = _.without(visitedAttributes, attributeName);
+			}
 			return value;
 		}
 	})(),
@@ -390,45 +409,46 @@ Characters.helpers({
 			//push this skill to the list of visited skills
 			//we can't visit it again unless it returns first
 			visitedSkills.push(skillName);
+			try{
+				var charId = this._id;
+				skill = this.getField(skillName);
+				//get the final value of the ability score
+				var ability = this.attributeValue(skill.ability);
 
-			var charId = this._id;
-			skill = this.getField(skillName);
-			//get the final value of the ability score
-			var ability = this.attributeValue(skill.ability);
+				//base modifier
+				var mod = +getMod(ability)
 
-			//base modifier
-			var mod = +getMod(ability)
+				//multiply proficiency bonus by largest value in proficiency array
+				var prof = this.proficiency(skill);
 
-			//multiply proficiency bonus by largest value in proficiency array
-			var prof = this.proficiency(skill);
+				//add multiplied proficiency bonus to modifier
+				mod += prof * this.attributeValue("proficiencyBonus");
 
-			//add multiplied proficiency bonus to modifier
-			mod += prof * this.attributeValue("proficiencyBonus");
+				//add all values in add array
+				_.each(skill.add, function(effect){
+					mod += evaluateEffect(charId, effect);
+				});
 
-			//add all values in add array
-			_.each(skill.add, function(effect){
-				mod += evaluateEffect(charId, effect);
-			});
+				//multiply all values in mul array
+				_.each(skill.mul, function(effect){
+					mod *= evaluateEffect(charId, effect);
+				});
 
-			//multiply all values in mul array
-			_.each(skill.mul, function(effect){
-				mod *= evaluateEffect(charId, effect);
-			});
+				//largest min
+				_.each(skill.min, function(effect){
+					var min = evaluateEffect(charId, effect);
+					mod = mod > min? mod : min;
+				});
 
-			//largest min
-			_.each(skill.min, function(effect){
-				var min = evaluateEffect(charId, effect);
-				mod = mod > min? mod : min;
-			});
-
-			//smallest max
-			_.each(skill.max, function(effect){
-				var max = evaluateEffect(charId, effect);
-				mod = mod < max? mod : max;
-			});
-
-			//done traversing the tree, this skill returns, pull it from the array
-			visitedSkills = _.without(visitedSkills, skillName);
+				//smallest max
+				_.each(skill.max, function(effect){
+					var max = evaluateEffect(charId, effect);
+					mod = mod < max? mod : max;
+				});
+			} finally{
+				//this skill returns or fails, pull it from the array
+				visitedSkills = _.without(visitedSkills, skillName);
+			}
 			return signedString(mod);
 		}
 	})(),
@@ -449,12 +469,12 @@ Characters.helpers({
 		return prof;
 	},
 
-	passiveSkill: function(skill){
-		if (_.isString(skill)){
-			skill = this.getField(skill);
+	passiveSkill: function(skillName){
+		if (_.isString(skillName)){
+			var skill = this.getField(skillName);
 		}
 		var charId = this._id
-		var mod = +this.skillMod(skill);
+		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
 		_.each(skill.passiveAdd, function(effect){
 			value += evaluateEffect(charId, effect);

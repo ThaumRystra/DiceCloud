@@ -2,7 +2,7 @@
 	{{>loginButtons}}
 	<div>
 		{{# each characters}}
-		<li><a href="{{ pathFor 'character' }} ">{{_id}}</a> <button id="deleteChar">delete</button></li>
+		<li><a href="{{ pathFor 'characterSheet' }} ">{{_id}}</a> <button id="deleteChar">delete</button></li>
 		{{/each}}
 	</div>
 	<input id="addCharacter" type="button" value="Add Character">

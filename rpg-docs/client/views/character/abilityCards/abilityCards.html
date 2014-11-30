@@ -1,0 +1,110 @@
+<template name="abilityCards">
+	{{> strengthCard}}
+	{{> dexterityCard}}
+	{{> constitutionCard}}
+	{{> intelligenceCard}}
+	{{> wisdomCard}}
+	{{> charismaCard}}
+</template>
+
+<template name="strengthCard">
+	<paper-shadow class="card double">
+		<div class="abilityScore red white-text">
+			<h1 class="display1">{{attributeValue "strength"}}</h1>
+			<h2>{{abilityMod "strength"}}</h2>
+		</div>
+		<div class="abilityCardRight">
+			<h1>Strength</h1>
+			{{> skillRow name="Save" skill="strengthSave"}}
+			<hr>
+			{{> skillRow name="Athletics" skill="athletics"}}
+		</div>
+	</paper-shadow>
+</template>
+
+<template name="dexterityCard">
+	<paper-shadow class="card double">
+		<div class="abilityScore green white-text">
+			<h1 class="display1">{{attributeValue "dexterity"}}</h1>
+			<h2>{{abilityMod "dexterity"}}</h2>
+		</div>
+		<div class="abilityCardRight">
+			<h1>Dexterity</h1>
+			{{> skillRow name="Save" skill="dexteritySave"}}
+			<hr>
+			{{> skillRow name="Acrobatics" skill="acrobatics"}}
+			{{> skillRow name="Sleight of Hand" skill="sleightOfHand"}}
+			{{> skillRow name="Stealth" skill="stealth"}}
+		</div>
+	</paper-shadow>
+</template>
+
+<template name="constitutionCard">
+	<paper-shadow class="card double">
+		<div class="abilityScore deep-orange white-text">
+			<h1 class="display1">{{attributeValue "constitution"}}</h1>
+			<h2>{{abilityMod "constitution"}}</h2>
+		</div>
+		<div class="abilityCardRight">
+			<h1>Constitution</h1>
+			{{> skillRow name="Save" skill="constitutionSave"}}
+			<hr>
+		</div>
+	</paper-shadow>
+</template>
+
+<template name="intelligenceCard">
+	<paper-shadow class="card double">
+		<div class="abilityScore indigo white-text">
+			<h1 class="display1">{{attributeValue "intelligence"}}</h1>
+			<h2>{{abilityMod "intelligence"}}</h2>
+		</div>
+		<div class="abilityCardRight">
+			<h1>Intelligence</h1>
+			{{> skillRow name="Save" skill="intelligenceSave"}}
+			<hr>
+			{{> skillRow name="Arcana" skill="arcana"}}
+			{{> skillRow name="History" skill="history"}}
+			{{> skillRow name="Investigation" skill="investigation"}}
+			{{> skillRow name="Nature" skill="nature"}}
+			{{> skillRow name="Religion" skill="religion"}}
+		</div>
+	</paper-shadow>
+</template>
+
+<template name="wisdomCard">
+	<paper-shadow class="card double">
+		<div class="abilityScore purple white-text">
+			<h1 class="display1">{{attributeValue "wisdom"}}</h1>
+			<h2>{{abilityMod "wisdom"}}</h2>
+		</div>
+		<div class="abilityCardRight">
+			<h1>Wisdom</h1>
+			{{> skillRow name="Save" skill="wisdomSave"}}
+			<hr>
+			{{> skillRow name="Animal Handling" skill="animalHandling"}}
+			{{> skillRow name="Insight" skill="insight"}}
+			{{> skillRow name="Medicine" skill="medicine"}}
+			{{> skillRow name="Perception" skill="perception"}}
+			{{> skillRow name="Survival" skill="survival"}}
+		</div>
+	</paper-shadow>
+</template>
+
+<template name="charismaCard">
+	<paper-shadow class="card double">
+		<div class="abilityScore pink white-text">
+			<h1 class="display1">{{attributeValue "charisma"}}</h1>
+			<h2>{{abilityMod "charisma"}}</h2>
+		</div>
+		<div class="abilityCardRight">
+			<h1>Charisma</h1>
+			{{> skillRow name="Save" skill="charismaSave"}}
+			<hr>
+			{{> skillRow name="Deception" skill="deception"}}
+			{{> skillRow name="Intimidation" skill="intimidation"}}
+			{{> skillRow name="Performance" skill="performance"}}
+			{{> skillRow name="Persuasion" skill="persuasion"}}
+		</div>
+	</paper-shadow>
+</template>

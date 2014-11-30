@@ -1,4 +1,22 @@
-#stats{
+#stats {
+	padding: 4px;
+}
+
+#stats, #stats .abilityFlex, #stats .statsFlex{
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+#stats .abilityFlex{
+	flex-basis: 642px;
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+#stats .statsFlex{
+	min-width: 152px;
+	flex-basis: 0px;
+	flex-grow: 1;
 }

@@ -1,0 +1,30 @@
+.card.double {
+	display: flex;
+}
+.card.double > div{
+	vertical-align: top;
+	padding: 16px;
+}
+
+.abilityScore {
+	width: 70px;
+	text-align: center;
+	background-color: #D50000;
+	padding: 16px;
+}
+
+.abilityFlex .card {
+	padding: 0;
+}
+
+.abilityCardRight {
+	flex-grow: 1;
+}
+
+.abilityCardRight hr{
+	margin: 8px -16px;
+}
+
+.abilityCardRight h1{
+	margin-bottom: 8px;
+}
