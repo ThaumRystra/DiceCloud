@@ -1,3 +1,7 @@
-paper-spinner.red::shadow .circle {
-    border-color: #db4437;
+#iron-router-progress {
+    background-color : #D50000;
+}
+
+#iron-router-progress.spinner:before {
+    border-color : #D50000;
 }

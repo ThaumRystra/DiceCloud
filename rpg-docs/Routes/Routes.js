@@ -1,6 +1,6 @@
-/*Router.configure({
-  loadingTemplate: 'loading'
-});*/
+Router.configure({
+	loadingTemplate: 'loading'
+});
 
 Router.map( function () {
 	this.route('home',
@@ -19,8 +19,7 @@ Router.map( function () {
 	this.route('characterSheet', {
 		path: '/character/:_id',
 		waitOn: function(){
-      return Meteor.subscribe("characterList", Meteor.userId());
-			//return Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId());
+			return Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId());
 		},
 		data: function() {
 			var data = Characters.findOne({_id: this.params._id}, {fields: {_id: 1}});
@@ -45,5 +44,9 @@ Router.map( function () {
 			var data = Items.findOne({_id: this.params._id});
 			return data;
 		}
+	});
+	
+	this.route('loading', {
+		path: '/loading'
 	});
 });
