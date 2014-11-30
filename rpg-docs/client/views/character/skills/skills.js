@@ -42,17 +42,34 @@ Template.skillRow.helpers({
 		return "profNone.png";
 	},
 	failSkill: function(){
-		return Template.parentData(1).getField(this.skill).fail.length > 0;
+		var skill = Template.parentData(1).getField(this.skill);
+		_.each(skill.effets, function(effect){
+			if (effect.operation === "fail"){
+				return true;
+			}
+		})
+		return false;
 	},
 	advantage: function(){
-		var adv = 		Template.parentData(1).getField(this.skill).advantage.length;
-		var disadv = 	Template.parentData(1).getField(this.skill).disadvantage.length;
+		var adv = 0;
+		var disadv = 0;
+		var skill = Template.parentData(1).getField(this.skill);
+		_.each(skill.effets, function(effect){
+			if (effect.operation === "advantage"){
+				adv ++;
+			} else if (effect.operation === "disadvantage") {
+				disadv ++;
+			}
+		})
 		if(adv > 0 && disadv === 0) return "advantage";
 		if(disadv > 0 && adv === 0) return "disadvantage";
 	},
 	conditionals: function(){
-		if(Template.parentData(1).getField(this.skill).conditional.length > 0){
-			return "conditionals";
-		}
+		var skill = Template.parentData(1).getField(this.skill);
+		_.each(skill.effets, function(effect){
+			if (effect.operation === "conditional"){
+				return "conditionals";
+			}
+		})
 	}
 });

@@ -13,6 +13,11 @@ Schemas.Effect = new SimpleSchema({
 	name: {
 		type: String
 	},
+	operation: {
+		type: String,
+		defaultValue: "add",
+		allowedValues: ["proficiency","add","mul","min","max","advantage","disadvantage","passiveAdd","fail","conditional","passiveAdd"]
+	},
 	value: {
 		type: Number,
 		decimal: true,

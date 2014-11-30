@@ -19,10 +19,10 @@ evaluate = function(charId, string){
 		return sub;
 	});
 	try{
-		result = math.eval(string);
-		return result
+		var result = math.eval(string);
+		return result;
 	} catch(e){
-		console.log(e)
+		console.log("Failed to evaluate ", string);
 		return string;
 	}
 }

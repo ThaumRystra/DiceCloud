@@ -26,18 +26,18 @@ Schemas.Character = new SimpleSchema({
 
 	//stats
 	hitPoints:    {type: Schemas.Attribute},
-	"hitPoints.add": {
+	"hitPoints.effects": {
 		type: [Schemas.Effect],
 		defaultValue: [
-			{name: "Constitution modifier for each level", calculation: "level * constitutionMod"}
+			{name: "Constitution modifier for each level", calculation: "level * constitutionMod", operation: "add", type: "inate"}
 		]
 	},
 	experience:   {type: Schemas.Attribute},
 	proficiencyBonus:	{type: Schemas.Attribute},
-	"proficiencyBonus.add": {
+	"proficiencyBonus.effects": {
 		type: [Schemas.Effect],
 		defaultValue: [
-			{name: "Proficiency bonus by level", calculation: "floor(level / 4.1) + 2"}
+			{name: "Proficiency bonus by level", calculation: "floor(level / 4.1) + 2", operation: "add", type: "inate"}
 		]
 	},
 	speed:        {type: Schemas.Attribute},
@@ -45,10 +45,10 @@ Schemas.Character = new SimpleSchema({
 	age:          {type: Schemas.Attribute},
 	ageRate:      {type: Schemas.Attribute},
 	armor:        {type: Schemas.Attribute},
-	"armor.add": {
+	"armor.effects": {
 		type: [Schemas.Effect],
 		defaultValue: [
-			{name: "Dexterity Modifier", calculation: "dexterityArmor"}
+			{name: "Dexterity Modifier", calculation: "dexterityArmor", operation: "add", type: "inate"}
 		]
 	},
 
@@ -174,51 +174,51 @@ Schemas.Character = new SimpleSchema({
 
 	strengthAttack:		{type: Schemas.Skill},
 	"strengthAttack.ability": 	{type: String,defaultValue: "strength"},
-	"strengthAttack.proficiency": {
+	"strengthAttack.effects": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	dexterityAttack:	{type: Schemas.Skill},
 	"dexterityAttack.ability":	{ type: String, defaultValue: "dexterity" },
 	"dexterityAttack.proficiency": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	constitutionAttack:	{type: Schemas.Skill},
 	"constitutionAttack.ability":{ type: String, defaultValue: "constitution" },
 	"constitutionAttack.proficiency": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	intelligenceAttack:	{type: Schemas.Skill},
 	"intelligenceAttack.ability":{ type: String, defaultValue: "intelligence" },
 	"intelligenceAttack.proficiency": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	wisdomAttack:		{type: Schemas.Skill},
 	"wisdomAttack.ability":		{ type: String, defaultValue: "wisdom" },
 	"wisdomAttack.proficiency": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	charismaAttack:		{type: Schemas.Skill},
 	"charismaAttack.ability":	{ type: String, defaultValue: "charisma" },
 	"charismaAttack.proficiency": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	rangedAttack:		{type: Schemas.Skill},
 	"rangedAttack.ability":		{ type: String, defaultValue: "dexterity" },
 	"rangedAttack.proficiency": {
 		type: [Schemas.Effect],
-		defaultValue: [{_id: Random.id(),name: "Attack Proficiency",value: 1}]
+		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
 	},
 
 	dexterityArmor:		{type: Schemas.Skill},
@@ -277,26 +277,23 @@ Characters.find({},{fields: {time: 1, expirations: 1, features: 1}}).observe({
 
 var attributeBase = function(charId, attribute){
 	var value = 0;
-	//add all values in add array
-	_.each(attribute.add, function(effect){
-		value += evaluateEffect(charId, effect);
-	});
-
-	//multiply all values in mul array
-	_.each(attribute.mul, function(effect){
-		value *= evaluateEffect(charId, effect);
-	});
-
-	//largest min
-	_.each(attribute.min, function(effect){
-		var min = evaluateEffect(charId, effect);
-		value = value > min? value : min;
-	});
-
-	//smallest max
-	_.each(attribute.max, function(effect){
-		var max = evaluateEffect(charId, effect);
-		value = value < max? value : max;
+	_.each(attribute.effects, function(effect){
+		switch(effect.operation) {
+			case "add":
+				value += evaluateEffect(charId, effect);
+				break;
+			case "mul":
+				value *= evaluateEffect(charId, effect);
+				break;
+			case "min":
+				var min = evaluateEffect(charId, effect);
+				value = value > min? value : min;
+				break;
+			case "max":
+				var max = evaluateEffect(charId, effect);
+				value = value < max? value : max;
+				break;
+		}
 	});
 	return value;
 }
@@ -324,12 +321,12 @@ Characters.helpers({
 			throw new Meteor.Error("Field not found", "Character's schema does not contain a field called: " + fieldName);
 		}
 		//duck typing to get the right value function
-		//.proficiency implies skill
-		if (Schemas.Character.schema(fieldName + ".proficiency")){
+		//.ability implies skill
+		if (Schemas.Character.schema(fieldName + ".ability")){
 			return this.skillMod(fieldName);
 		}
-		//base without proficiency implies attribute
-		if (Schemas.Character.schema(fieldName + ".base")){
+		//adjustment implies attribute
+		if (Schemas.Character.schema(fieldName + ".adjustment")){
 			return this.attributeValue(fieldName);
 		}
 		//fall back to just returning the field itself
@@ -424,26 +421,23 @@ Characters.helpers({
 				//add multiplied proficiency bonus to modifier
 				mod += prof * this.attributeValue("proficiencyBonus");
 
-				//add all values in add array
-				_.each(skill.add, function(effect){
-					mod += evaluateEffect(charId, effect);
-				});
-
-				//multiply all values in mul array
-				_.each(skill.mul, function(effect){
-					mod *= evaluateEffect(charId, effect);
-				});
-
-				//largest min
-				_.each(skill.min, function(effect){
-					var min = evaluateEffect(charId, effect);
-					mod = mod > min? mod : min;
-				});
-
-				//smallest max
-				_.each(skill.max, function(effect){
-					var max = evaluateEffect(charId, effect);
-					mod = mod < max? mod : max;
+				_.each(skill.effects, function(effect){
+					switch(effect.operation) {
+						case "add":
+							mod += evaluateEffect(charId, effect);
+							break;
+						case "mul":
+							mod *= evaluateEffect(charId, effect);
+							break;
+						case "min":
+							var min = evaluateEffect(charId, effect);
+							mod = mod > min? mod : min;
+							break;
+						case "max":
+							var max = evaluateEffect(charId, effect);
+							mod = mod < max? mod : max;
+							break;
+					}
 				});
 			} finally{
 				//this skill returns or fails, pull it from the array
@@ -460,10 +454,12 @@ Characters.helpers({
 		var charId = this._id;
 		//return largest value in proficiency array
 		var prof = 0;
-		_.each(skill.proficiency, function(effect){
-			var newProf = evaluateEffect(charId, effect);
-			if (newProf > prof){
-				prof = newProf;
+		_.each(skill.effects, function(effect){
+			if(effect.operation === "proficiency"){
+				var newProf = evaluateEffect(charId, effect);
+				if (newProf > prof){
+					prof = newProf;
+				}
 			}
 		});
 		return prof;
@@ -476,8 +472,10 @@ Characters.helpers({
 		var charId = this._id
 		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
-		_.each(skill.passiveAdd, function(effect){
-			value += evaluateEffect(charId, effect);
+		_.each(skill.effects, function(effect){
+			if(effect.operation === "passiveAdd"){
+				value += evaluateEffect(charId, effect);
+			}
 		});
 		return value;
 		//TODO decide whether (dis)advantage gives (-)+5 to passive checks

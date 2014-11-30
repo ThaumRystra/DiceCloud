@@ -6,11 +6,7 @@ Schemas.Attribute = new SimpleSchema({
 		defaultValue: 0
 	},
 	//effect arrays
-	add: 		{ type: [Schemas.Effect], defaultValue: [] },
-	mul: 		{ type: [Schemas.Effect], defaultValue: [] },
-	min: 		{ type: [Schemas.Effect], defaultValue: [] },
-	max: 		{ type: [Schemas.Effect], defaultValue: [] },
-	conditional:{ type: [Schemas.Effect], defaultValue: [] },
+	effects: { type: [Schemas.Effect], defaultValue: [] },
   reset: {
     type: String,
     defaultValue: "longRest",
