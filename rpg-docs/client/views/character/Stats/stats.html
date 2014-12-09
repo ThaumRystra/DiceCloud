@@ -4,70 +4,72 @@
 			{{> abilityCards}}
 		</div>
 		<div class="statsFlex">
-			<paper-shadow class="card" id="armor">
+			{{#clickCard class="card" id="armor"}}
 				<h1>{{attributeValue "armor"}}</h1>
 				<p class="caption">Armor</p>
-			</paper-shadow>
-			<paper-shadow class="card" id="initiative">
+			{{/clickCard}}
+			{{#clickCard class="card" id="initiative"}}
 				<h1>{{skillMod "initiative"}}</h1>
 				<p class="caption">Initiative</p>
-			</paper-shadow>
-			<paper-shadow class="card" id="proficiencyBonus">
+			{{/clickCard}}
+			{{#clickCard class="card" id="proficiencyBonus"}}
 				<h1>{{attributeValue "proficiencyBonus"}}</h1>
 				<p class="caption">Proficiency Bonus</p>
-			</paper-shadow>
-			<paper-shadow class="card" id="speed">
+			{{/clickCard}}
+			{{#clickCard class="card" id="speed"}}
 				<h1>{{attributeValue "speed"}}</h1>
 				<p class="caption">Speed</p>
-			</paper-shadow>
-			<paper-shadow class="card" id="passivePerception">
+			{{/clickCard}}
+			{{#clickCard class="card" id="passivePerception"}}
 				<h1>{{passiveSkill "perception"}}</h1>
 				<p class="caption">Passive Perception</p>
-			</paper-shadow>
-			<paper-shadow class="card" id="hitDice">
-				<h1>{{> hitDice hitDice="d6HitDice" d="6"}}</h1>
-				<h1>{{> hitDice hitDice="d8HitDice" d="8"}}</h1>
-				<h1>{{> hitDice hitDice="d10HitDice" d="10"}}</h1>
-				<h1>{{> hitDice hitDice="d12HitDice" d="12"}}</h1>
+			{{/clickCard}}
+			{{#clickCard class="card" id="hitDice"}}
+				<h1 class="attribute">{{> hitDice hitDice="d6HitDice" d="6"}}</h1>
+				<h1 class="attribute">{{> hitDice hitDice="d8HitDice" d="8"}}</h1>
+				<h1 class="attribute">{{> hitDice hitDice="d10HitDice" d="10"}}</h1>
+				<h1 class="attribute">{{> hitDice hitDice="d12HitDice" d="12"}}</h1>
 				<p class="caption">Hit Dice</p>
-			</paper-shadow>
+			{{/clickCard}}
 			{{# if canCast}}
-			<paper-shadow class="card" id="spellSlots">
-				<h1>{{> spellSlots}}</h1>
-				<p class="caption">Spell Slots</p>
-			</paper-shadow>
+				{{#clickCard class="card" id="spellSlots"}}
+					<h1>{{> spellSlots}}</h1>
+					<p class="caption">Spell Slots</p>
+				{{/clickCard}}
 			{{/if}}
 			{{# if attributeBase "rages"}}
-			<paper-shadow class="card" id="rages">
-				<h1>{{attributeValue "rages"}}</h1>
-				<p class="caption">rages</p>
-			</paper-shadow>
+				{{#clickCard class="card" id="rages"}}
+					<h1>{{attributeValue "rages"}}</h1>
+					<p class="caption">rages</p>
+				{{/clickCard}}
 			{{/if}}
 			{{# if attributeBase "sorceryPoints"}}
-			<paper-shadow class="card" id="sorceryPoints">
-				<h1>{{attributeValue "sorceryPoints"}}</h1>
-				<p class="caption">Sorcery Points</p>
-			</paper-shadow>
+				{{#clickCard class="card" id="sorceryPoints"}}
+					<h1>{{attributeValue "sorceryPoints"}}</h1>
+					<p class="caption">Sorcery Points</p>
+				{{/clickCard}}
 			{{/if}}
 			{{# if attributeBase "expertiseDice"}}
-			<paper-shadow class="card" id="expertiseDice">
-				<h1>{{attributeValue "expertiseDice"}}</h1>
-				<p class="caption">Expertise Dice</p>
-			</paper-shadow>
+				{{#clickCard class="card" id="expertiseDice"}}
+					<h1>{{attributeValue "expertiseDice"}}</h1>
+					<p class="caption">Expertise Dice</p>
+				{{/clickCard}}
 			{{/if}}
 			{{# if attributeBase "superiorityDice"}}
-			<paper-shadow class="card" id="superiorityDice">
-				<h1>{{attributeValue "superiorityDice"}}</h1>
-				<p class="caption">Superiority Dice</p>
-			</paper-shadow>
+				{{#clickCard class="card" id="superiorityDice"}}
+					<h1>{{attributeValue "superiorityDice"}}</h1>
+					<p class="caption">Superiority Dice</p>
+				{{/clickCard}}
 			{{/if}}	
 		</div>
 	</div>
+	{{> attributeDialog character=this}}
+	{{> skillDialog character=this}}
 </template>
 
 <template name="hitDice">
 	{{# if ../attributeBase hitDice}}
-	{{../attributeValue hitDice}}d{{d}} + {{../abilityMod "constitution"}}
+		{{../attributeValue hitDice}}d{{d}} + {{../abilityMod "constitution"}}
 	{{/if}}
 </template>
 
@@ -81,4 +83,60 @@
 	{{attributeValue "level7SpellSlots"}}
 	{{attributeValue "level8SpellSlots"}}
 	{{attributeValue "level9SpellSlots"}}
+</template>
+
+<template name="attributeDialog">
+	<!--needs character, attributeName, attributeTitle-->
+	<paper-dialog id="attributeDialog" heading={{session "selectedAttributeTitle"}} backdrop transition="core-transition-center">
+		{{#if attributeName}}
+		{{character.attributeValue attributeName}}<br>
+		{{#each effects.add}}
+			{{> attributeEffect}}
+		{{/each}}
+		{{#each effects.mul}}
+			{{> attributeEffect}}
+		{{/each}}
+		{{#each effects.min}}
+			{{> attributeEffect}}
+		{{/each}}
+		{{#each effects.max}}
+			{{> attributeEffect}}
+		{{/each}}
+		{{signedString attribute.adjustment}}
+		{{/if}}
+	</paper-dialog>
+</template>
+
+<template name="attributeEffect">
+	{{#if editing}}
+		<div class="editEffect">
+			<paper-dropdown-menu label="Operation">
+				<core-menu id="operationSelector">
+					<paper-item>add</paper-item>
+					<paper-item>multiply</paper-item>
+					<paper-item>min</paper-item>
+					<paper-item>max</paper-item>
+				</core-menu>
+			</paper-dropdown-menu>
+			<paper-input id="effectValueInput" label="Value" floatinglabel></paper-input>
+			<paper-input id="effectNameInput" label="Name" floatinglabel></paper-input>
+			<paper-icon-button id="doneButton" icon="done" title="save" role="button" aria-label="save"></paper-icon-button>
+			<paper-icon-button id="cancelButton" icon="clear" title="cancel" role="button" aria-label="cancel"></paper-icon-button>
+			<paper-icon-button id="deleteButton" icon="delete" title="delete" role="button" aria-label="delete"></paper-icon-button>
+		</div>
+	{{else}}
+		<div class="effect">
+			<div class="effectValue">{{operation}} {{signedEffectValue}}</div><div class="effectName"> {{name}}</div>
+			{{#if editable}}
+				<div class="editButton">EDIT</div>
+			{{/if}}
+		</div>
+	{{/if}}
+</template>
+
+<template name="skillDialog">
+	<!--needs character and skill string-->
+	<paper-dialog id="skillDialog" backdrop transition="core-transition-center">
+
+	</paper-dialog>
 </template>

@@ -30,7 +30,7 @@ Schemas.Effect = new SimpleSchema({
 	//indicates what the effect originated from
 	type: {
 		type: String,
-		defaultValue: "default",
-		allowedValues: ["default", "inate", "class", "race", "feat", "equippedMagic", "equippedMundane", "external"]
+		defaultValue: "editable",
+		allowedValues: ["editable", "feat", "buff", "equipment", "inate"]
 	}
 });

@@ -14,7 +14,6 @@ blaze@2.0.3
 boilerplate-generator@1.0.1
 callback-hook@1.0.1
 check@1.0.2
-coffeescript@1.0.4
 ctl-helper@1.0.4
 ctl@1.0.2
 cw4gn3r:jquery-event-drag@2.2.0
@@ -54,7 +53,6 @@ mobile-status-bar@1.0.1
 mongo-livedata@1.0.6
 mongo@1.0.8
 mrt:moment@2.6.0
-multiply:iron-router-progress@1.0.0
 npm-bcrypt@0.7.7
 observe-sequence@1.0.3
 ordered-dict@1.0.1

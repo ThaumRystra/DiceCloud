@@ -2,6 +2,11 @@
 	height: 32px;
 	display: flex;
 	align-items: center;
+	position: relative;
+}
+
+.skillRow:hover{
+	background: #FFEBEE;
 }
 
 .profIcon{

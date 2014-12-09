@@ -3,17 +3,18 @@
 		<paper-tab>Stats</paper-tab>
 		<paper-tab>Features</paper-tab>
 		<paper-tab>Inventory</paper-tab>
+		Proficiency Bonus
 		<paper-tab>Spellbook</paper-tab>
 		<paper-tab>Persona</paper-tab>
 		<paper-tab>Journal</paper-tab>
 	</paper-tabs>
-
-	<core-animated-pages selected={{selectedTab}} transitions="slide-from-right">
-		<div>{{> stats}}</div>
-		<div>features</div>
-		<div>inventory</div>
-		<div>spellBook</div>
-		<div>persona</div>
-		<div>journal</div>
+	
+	<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right">
+		<swipe-detect>{{> stats}}</swipe-detect>
+		<swipe-detect>features</swipe-detect>
+		<swipe-detect>inventory</swipe-detect>
+		<swipe-detect>spellBook</swipe-detect>
+		<swipe-detect>persona</swipe-detect>
+		<swipe-detect>journal</swipe-detect>
 	</core-animated-pages>
 </template>

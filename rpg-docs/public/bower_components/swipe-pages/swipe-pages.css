@@ -1,0 +1,20 @@
+:host, .pagesContainer {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+:host{
+	overflow: hidden;
+}
+
+.pagesContainer{
+	overflow-x : hidden;
+	overflow-y: hidden;
+	background-color: rgba(255,255,255,0);
+	transform: translateZ(0);
+}
+
+content[select="swipe-page"]::content *{
+	position: relative;
+}

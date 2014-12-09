@@ -15,6 +15,7 @@
 
 <template name="skillRow">
 	<div class="subhead skillRow">
+		{{> ripple}}
 		<div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div>
 		{{#if failSkill}}
 		<div class="fail skillMod">fail</div>

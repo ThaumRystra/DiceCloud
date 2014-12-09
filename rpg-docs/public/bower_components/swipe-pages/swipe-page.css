@@ -1,0 +1,15 @@
+:host, .pageContainer{
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.pageContainer{
+	overflow-y: auto;
+	background-color: rgba(255,255,255,0);
+
+	/*This is for a bug in chrome where pages flash white. Why? I dunno.
+	  But, these two lines solve the problem... so... DO NOT TOUCH THIS!*/
+	backface-visibility: hidden;
+	transform: scale(1);
+}

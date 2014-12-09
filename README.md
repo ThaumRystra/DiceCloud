@@ -1,3 +1,14 @@
+TODO
+====
+
+Strip the core interaction out of swipe-pages to create an element that just listens to swipe events
+
+wishlist:
+
+* swipes are emitted as an event if possible
+* swiping should translate the element
+* it should bounce back to its resting position when released
+
 Packages used
 =============
 

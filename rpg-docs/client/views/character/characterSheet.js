@@ -1,6 +1,18 @@
 Template.characterSheet.created = function(){
 	Template.instance().selectedTab = new ReactiveVar(0)
-}
+};
+
+var setTab = function(instance, num){
+	instance.selectedTab.set(num);
+};
+
+var incTab = function(instance, num){
+	var current = +instance.selectedTab.get();
+	var selected = current + num;
+	if (selected < 0) return;
+	if (selected >= document.querySelector('#tabPages').children.length) return;
+	setTab(instance, selected);
+};
 
 Template.characterSheet.rendered = function(){
 	var observer = new ObjectObserver(document.querySelector('#characterSheetTabs'));
@@ -9,11 +21,11 @@ Template.characterSheet.rendered = function(){
 		Object.keys(changed).forEach(function(property) {
 			if(property === "selected"){
 				var selected = changed[property];
-				instance.selectedTab.set(selected);
+				setTab(instance, selected);
 			}
 		})
 	});
-}
+};
 
 Template.characterSheet.helpers({
 	selectedTab: function(){
@@ -22,8 +34,16 @@ Template.characterSheet.helpers({
 });
 
 Template.characterSheet.events({
-	
-})
+	"#tabPages track": function(event){
+		console.log(event);
+	},
+	"swipeleft": function(event){
+		incTab(Template.instance(), 1);
+	},
+	"swiperight": function(event){
+		incTab(Template.instance(), -1);
+	},
+});
 
 /* requires the following templates
 stats
