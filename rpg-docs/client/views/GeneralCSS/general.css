@@ -12,6 +12,10 @@ body.core-narrow {
 	padding: 8px;
 }
 
+body /deep/ core-menu {
+	overflow-x: hidden !important;
+}
+
 .calculatedValue {
 	color: #021C33;
 	font-weight: bold;
@@ -77,4 +81,16 @@ paper-button {
 
 .center {
 	text-align: center;
+}
+
+.screen-center {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+*[hidden] {
+	visibility: hidden;
 }

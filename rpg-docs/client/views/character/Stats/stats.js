@@ -2,20 +2,56 @@ selectAttribute = function(name, title){
 	Session.set("selectedAttribute", name);
 	Session.set("selectedAttributeTitle", title);
 	Session.set("editingEffect", null);
-	document.querySelector("#attributeDialog").toggle();
 };
 
 selectSkill = function(name, title){
 	Session.set("selectedSkill", name);
 	Session.set("selectedSkillTitle", title);
 	Session.set("editingEffect", null);
-	document.querySelector("#skillDialog").toggle();
 };
 
+Template.stats.created = function(){
+	this.selectedSection = new ReactiveVar(0);
+}
+
 Template.stats.events({
-	"click #armor": function(){
-		console.log("clicked armor");
-		selectAttribute("armor", "Armor")
+	"tap .attribute": function(event){
+		var instance = Template.instance();
+		var selected = $(event.currentTarget).attr("hero-id");
+		var current = Session.get("selectedAttribute");
+		var f = function(){
+			selectAttribute(selected, "Title");
+			instance.selectedSection.set(1);
+		}
+		//we already have the dialog open
+		if(instance.selectedSection.get() === 1 && current != selected){
+			instance.selectedSection.set(0);
+			_.delay(f, 200);
+		} else {
+			f();
+		}
+			
+	},
+	"tap #darkOverlay": function(event){
+		Template.instance().selectedSection.set(0);
+		// let the user click through before it is completely gone
+		$("#darkOverlay").css("pointer-events", "none");
+		// make clickable again later
+		_.delay(function(){
+			$("#darkOverlay").css("pointer-events", "auto");
+		}, 500);
+	}
+});
+
+Template.stats.helpers({
+	selectedSection: function(){
+		return Template.instance().selectedSection.get();
+	},
+	isHero: function(string){
+		if(string === Session.get("selectedAttribute")||
+		   string === Session.get("selectedSkill")){
+			return "hero";
+		}
 	}
 });
 
@@ -59,6 +95,20 @@ Template.attributeEffect.helpers({
 				return this.operation;
 		}
 	},
+	operationNumber: function(){
+		switch(this.operation){
+			case "add":
+				return 0;
+			case "mul":
+				return 1;
+			case "min":
+				return 2;
+			case "max":
+				return 3;
+			default:
+				return -1;
+		}
+	},
 	signedEffectValue: function(){
 		var value = evaluateEffect(Template.parentData(1).character._id, this);
 		return signedString(value);
@@ -66,22 +116,23 @@ Template.attributeEffect.helpers({
 });
 
 Template.attributeEffect.events({
-	"click .editButton": function(event){
+	"tap #editButton": function(event){
 		Session.set("editingEffect", this._id);
 	},
-	"click #doneButton": function(event){
-		var newEffect = {};
+	"tap #doneButton": function(event){
+		var newEffect = {
+
+		};
 		//TODO setup the changed effect
 		var attribute = Session.get("selectedAttribute");
 		var charId = Template.parentData(2)._id;
 		Meteor.call("updateEffect", charId, attribute, this._id, newEffect)
 		Session.set("editingEffect", null);
 	},
-	"click #cancelButton": function(event){
+	"tap #cancelButton": function(event){
 		Session.set("editingEffect", null);
 	},
-	"click #deleteButton": function(event){
-		console.log("check that ", Template.parentData(2), "is a character");
+	"tap #deleteButton": function(event){
 		var attribute = Session.get("selectedAttribute");
 		var pullObject = {};
 		pullObject[attribute + ".effects"] = {_id: this._id};

@@ -3,10 +3,14 @@
 }
 
 #stats, #stats .abilityFlex, #stats .statsFlex{
-	display: flex;
+	display: flex !important;
 	justify-content: center;
-	align-items: flex-start;
+	align-items: stretch;
 	flex-wrap: wrap;
+}
+
+#stats .card {
+	flex-grow: 1;
 }
 
 #stats .abilityFlex{
@@ -19,4 +23,39 @@
 	min-width: 152px;
 	flex-basis: 0px;
 	flex-grow: 1;
+}
+
+.editEffect > * {
+	vertical-align: bottom;
+}
+
+.detailCard {
+	background: white;
+	border-radius: 2px;
+	padding: 16px;
+}
+
+#detailContainer {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+}
+
+#detailContainer > *{
+	pointer-events: auto;
+}
+
+#darkOverlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.6);
+}
+
+section:not(.core-selected):not([animate]) paper-shadow[hero] {
+	visibility: hidden;
 }

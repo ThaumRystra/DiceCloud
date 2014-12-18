@@ -19,6 +19,7 @@
 	/*TODO fix the actual images and remove inversion*/
 	-webkit-filter: invert(100%);
 	opacity: 0.54;
+	pointer-events: none;
 }
 
 .skillMod {

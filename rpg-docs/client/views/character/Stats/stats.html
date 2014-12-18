@@ -1,70 +1,83 @@
 <template name="stats">
-	<div id="stats">
-		<div class="abilityFlex">
-			{{> abilityCards}}
-		</div>
-		<div class="statsFlex">
-			{{#clickCard class="card" id="armor"}}
-				<h1>{{attributeValue "armor"}}</h1>
-				<p class="caption">Armor</p>
-			{{/clickCard}}
-			{{#clickCard class="card" id="initiative"}}
-				<h1>{{skillMod "initiative"}}</h1>
-				<p class="caption">Initiative</p>
-			{{/clickCard}}
-			{{#clickCard class="card" id="proficiencyBonus"}}
-				<h1>{{attributeValue "proficiencyBonus"}}</h1>
-				<p class="caption">Proficiency Bonus</p>
-			{{/clickCard}}
-			{{#clickCard class="card" id="speed"}}
-				<h1>{{attributeValue "speed"}}</h1>
-				<p class="caption">Speed</p>
-			{{/clickCard}}
-			{{#clickCard class="card" id="passivePerception"}}
-				<h1>{{passiveSkill "perception"}}</h1>
-				<p class="caption">Passive Perception</p>
-			{{/clickCard}}
-			{{#clickCard class="card" id="hitDice"}}
-				<h1 class="attribute">{{> hitDice hitDice="d6HitDice" d="6"}}</h1>
-				<h1 class="attribute">{{> hitDice hitDice="d8HitDice" d="8"}}</h1>
-				<h1 class="attribute">{{> hitDice hitDice="d10HitDice" d="10"}}</h1>
-				<h1 class="attribute">{{> hitDice hitDice="d12HitDice" d="12"}}</h1>
-				<p class="caption">Hit Dice</p>
-			{{/clickCard}}
-			{{# if canCast}}
-				{{#clickCard class="card" id="spellSlots"}}
-					<h1>{{> spellSlots}}</h1>
-					<p class="caption">Spell Slots</p>
-				{{/clickCard}}
-			{{/if}}
-			{{# if attributeBase "rages"}}
-				{{#clickCard class="card" id="rages"}}
-					<h1>{{attributeValue "rages"}}</h1>
-					<p class="caption">rages</p>
-				{{/clickCard}}
-			{{/if}}
-			{{# if attributeBase "sorceryPoints"}}
-				{{#clickCard class="card" id="sorceryPoints"}}
-					<h1>{{attributeValue "sorceryPoints"}}</h1>
-					<p class="caption">Sorcery Points</p>
-				{{/clickCard}}
-			{{/if}}
-			{{# if attributeBase "expertiseDice"}}
-				{{#clickCard class="card" id="expertiseDice"}}
-					<h1>{{attributeValue "expertiseDice"}}</h1>
-					<p class="caption">Expertise Dice</p>
-				{{/clickCard}}
-			{{/if}}
-			{{# if attributeBase "superiorityDice"}}
-				{{#clickCard class="card" id="superiorityDice"}}
-					<h1>{{attributeValue "superiorityDice"}}</h1>
-					<p class="caption">Superiority Dice</p>
-				{{/clickCard}}
-			{{/if}}	
-		</div>
-	</div>
-	{{> attributeDialog character=this}}
-	{{> skillDialog character=this}}
+	<core-animated-pages selected={{selectedSection}} transitions="hero-transition cross-fade">
+		<section id="stats">
+			<div class="abilityFlex">
+				{{> abilityCards}}
+			</div>
+			<div class="statsFlex">
+				<paper-shadow {{isHero "armor"}} class="card attribute" hero-id="armor">
+					<h1>{{attributeValue "armor"}}</h1>
+					<p class="caption">Armor</p>
+				</paper-shadow>
+				<paper-shadow {{isHero "initiative"}} class="card skill" hero-id="initiative">
+					<h1>{{skillMod "initiative"}}</h1>
+					<p class="caption">Initiative</p>
+				</paper-shadow>
+				<paper-shadow {{isHero "proficiencyBonus"}} class="card attribute" hero-id="proficiencyBonus">
+					<h1>{{attributeValue "proficiencyBonus"}}</h1>
+					<p class="caption">Proficiency Bonus</p>
+				</paper-shadow>
+				<paper-shadow {{isHero "speed"}} class="card attribute" hero-id="speed">
+					<h1>{{attributeValue "speed"}}</h1>
+					<p class="caption">Speed</p>
+				</paper-shadow>
+				<paper-shadow {{isHero "passivePerception"}} class="card" hero-id="passivePerception">
+					<h1>{{passiveSkill "perception"}}</h1>
+					<p class="caption">Passive Perception</p>
+				</paper-shadow>
+				<paper-shadow class="card" id="hitDice">
+					<h1 class="attribute" hero-id="d6HitDice" {{isHero "d6HitDice"}}>
+						{{> hitDice hitDice="d6HitDice" d="6"}}
+					</h1>
+					<h1 class="attribute" hero-id="d8HitDice" {{isHero "d8HitDice"}}>
+						{{> hitDice hitDice="d8HitDice" d="8"}}
+					</h1>
+					<h1 class="attribute" hero-id="d10HitDice" {{isHero "d10HitDice"}}>
+						{{> hitDice hitDice="d10HitDice" d="10"}}
+					</h1>
+					<h1 class="attribute" hero-id="d12HitDice" {{isHero "d12HitDice"}}>
+						{{> hitDice hitDice="d12HitDice" d="12"}}
+					</h1>
+					<p class="caption">Hit Dice</p>
+				</paper-shadow>
+				{{# if canCast}}
+					<paper-shadow class="card" id="spellSlots">
+						<h1>{{> spellSlots}}</h1>
+						<p class="caption">Spell Slots</p>
+					</paper-shadow>
+				{{/if}}
+				{{# if attributeBase "rages"}}
+					<paper-shadow class="card" id="rages">
+						<h1>{{attributeValue "rages"}}</h1>
+						<p class="caption">rages</p>
+					</paper-shadow>
+				{{/if}}
+				{{# if attributeBase "sorceryPoints"}}
+					<paper-shadow class="card" id="sorceryPoints">
+						<h1>{{attributeValue "sorceryPoints"}}</h1>
+						<p class="caption">Sorcery Points</p>
+					</paper-shadow>
+				{{/if}}
+				{{# if attributeBase "expertiseDice"}}
+					<paper-shadow class="card" id="expertiseDice">
+						<h1>{{attributeValue "expertiseDice"}}</h1>
+						<p class="caption">Expertise Dice</p>
+					</paper-shadow>
+				{{/if}}
+				{{# if attributeBase "superiorityDice"}}
+					<paper-shadow class="card" id="superiorityDice">
+						<h1>{{attributeValue "superiorityDice"}}</h1>
+						<p class="caption">Superiority Dice</p>
+					</paper-shadow>
+				{{/if}}	
+			</div>
+		</section>
+		<section id="detailContainer">
+			<div cross-fade id="darkOverlay"></div>
+			{{> attributeDialog character=this}}
+			{{> skillDialog character=this}}	
+		</section>
+	</core-animated-pages>
 </template>
 
 <template name="hitDice">
@@ -87,8 +100,14 @@
 
 <template name="attributeDialog">
 	<!--needs character, attributeName, attributeTitle-->
-	<paper-dialog id="attributeDialog" heading={{session "selectedAttributeTitle"}} backdrop transition="core-transition-center">
-		{{#if attributeName}}
+	{{#if attributeName}}
+	<paper-shadow id="attributeDialog"
+				  class="detailCard"
+				  hero-id={{session "selectedAttribute"}} 
+				  hero
+				  heading={{session "selectedAttributeTitle"}} 
+				  z="2">
+		
 		{{character.attributeValue attributeName}}<br>
 		{{#each effects.add}}
 			{{> attributeEffect}}
@@ -103,23 +122,25 @@
 			{{> attributeEffect}}
 		{{/each}}
 		{{signedString attribute.adjustment}}
-		{{/if}}
-	</paper-dialog>
+	</paper-shadow>
+	{{/if}}
 </template>
 
 <template name="attributeEffect">
 	{{#if editing}}
 		<div class="editEffect">
 			<paper-dropdown-menu label="Operation">
-				<core-menu id="operationSelector">
-					<paper-item>add</paper-item>
-					<paper-item>multiply</paper-item>
-					<paper-item>min</paper-item>
-					<paper-item>max</paper-item>
-				</core-menu>
+				<paper-dropdown layered class="dropdown">
+					<core-menu id="operationSelector" selected={{operationNumber}} class="menu">
+						<paper-item>add</paper-item>
+						<paper-item>multiply</paper-item>
+						<paper-item>min</paper-item>
+						<paper-item>max</paper-item>
+					</core-menu>
+				</paper-dropdown>
 			</paper-dropdown-menu>
-			<paper-input id="effectValueInput" label="Value" floatinglabel></paper-input>
-			<paper-input id="effectNameInput" label="Name" floatinglabel></paper-input>
+			<paper-input id="effectValueInput" label="Value" value={{value}} floatinglabel></paper-input>
+			<paper-input id="effectNameInput" label="Name" value={{name}} floatinglabel></paper-input>
 			<paper-icon-button id="doneButton" icon="done" title="save" role="button" aria-label="save"></paper-icon-button>
 			<paper-icon-button id="cancelButton" icon="clear" title="cancel" role="button" aria-label="cancel"></paper-icon-button>
 			<paper-icon-button id="deleteButton" icon="delete" title="delete" role="button" aria-label="delete"></paper-icon-button>
@@ -128,7 +149,7 @@
 		<div class="effect">
 			<div class="effectValue">{{operation}} {{signedEffectValue}}</div><div class="effectName"> {{name}}</div>
 			{{#if editable}}
-				<div class="editButton">EDIT</div>
+				<paper-icon-button id="editButton" icon="create" title="edit" role="button" aria-label="edit"></paper-icon-button>
 			{{/if}}
 		</div>
 	{{/if}}
@@ -136,7 +157,7 @@
 
 <template name="skillDialog">
 	<!--needs character and skill string-->
-	<paper-dialog id="skillDialog" backdrop transition="core-transition-center">
+	<paper-dialog layered="false" id="skillDialog" backdrop transition="core-transition-center">
 
 	</paper-dialog>
 </template>
