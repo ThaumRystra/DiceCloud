@@ -3,7 +3,6 @@
 		<paper-tab>Stats</paper-tab>
 		<paper-tab>Features</paper-tab>
 		<paper-tab>Inventory</paper-tab>
-		Proficiency Bonus
 		<paper-tab>Spellbook</paper-tab>
 		<paper-tab>Persona</paper-tab>
 		<paper-tab>Journal</paper-tab>
@@ -11,7 +10,7 @@
 	
 	<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right">
 		<swipe-detect touch-action="pan-y">{{> stats}}</swipe-detect>
-		<swipe-detect touch-action="pan-y">features</swipe-detect>
+		<swipe-detect touch-action="pan-y">{{> features}}</swipe-detect>
 		<swipe-detect touch-action="pan-y">inventory</swipe-detect>
 		<swipe-detect touch-action="pan-y">spellBook</swipe-detect>
 		<swipe-detect touch-action="pan-y">persona</swipe-detect>

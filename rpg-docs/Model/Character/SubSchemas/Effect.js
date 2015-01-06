@@ -1,5 +1,5 @@
 /*
- * Effects are reason-value pairs attached to skills and abilities
+ * Effects are reason-value attached to skills and abilities
  * that modify their final value or presentation in some way
  */
 Schemas.Effect = new SimpleSchema({
@@ -16,7 +16,7 @@ Schemas.Effect = new SimpleSchema({
 	operation: {
 		type: String,
 		defaultValue: "add",
-		allowedValues: ["proficiency","add","mul","min","max","advantage","disadvantage","passiveAdd","fail","conditional","passiveAdd"]
+		allowedValues: ["base", "proficiency","add","mul","min","max","advantage","disadvantage","passiveAdd","fail","conditional","passiveAdd"]
 	},
 	value: {
 		type: Number,
@@ -32,5 +32,10 @@ Schemas.Effect = new SimpleSchema({
 		type: String,
 		defaultValue: "editable",
 		allowedValues: ["editable", "feat", "buff", "equipment", "inate"]
+	},
+	//which stat the effect is applied to
+	stat: {
+		type: String,
+		optional: true
 	}
 });

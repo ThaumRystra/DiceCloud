@@ -33,6 +33,7 @@
 		<div class="abilityCardRight">
 			<h1>Dexterity</h1>
 			{{> skillRow name="Save" skill="dexteritySave"}}
+			{{> skillRow name="Initiative" skill="initiative"}}
 			<hr>
 			{{> skillRow name="Acrobatics" skill="acrobatics"}}
 			{{> skillRow name="Sleight of Hand" skill="sleightOfHand"}}
@@ -52,6 +53,18 @@
 			<h1>Constitution</h1>
 			{{> skillRow name="Save" skill="constitutionSave"}}
 			<hr>
+			<h1 class="attribute" hero-id="d6HitDice">
+				{{> hitDice hitDice="d6HitDice" d="6"}}
+			</h1>
+			<h1 class="attribute" hero-id="d8HitDice">
+				{{> hitDice hitDice="d8HitDice" d="8"}}
+			</h1>
+			<h1 class="attribute" hero-id="d10HitDice">
+				{{> hitDice hitDice="d10HitDice" d="10"}}
+			</h1>
+			<h1 class="attribute" hero-id="d12HitDice">
+				{{> hitDice hitDice="d12HitDice" d="12"}}
+			</h1>
 		</div>
 	</paper-shadow>
 </template>
@@ -90,7 +103,7 @@
 			{{> skillRow name="Animal Handling" skill="animalHandling"}}
 			{{> skillRow name="Insight" skill="insight"}}
 			{{> skillRow name="Medicine" skill="medicine"}}
-			{{> skillRow name="Perception" skill="perception"}}
+			{{> skillRow name="Perception" skill="perception" showPassive="true"}}
 			{{> skillRow name="Survival" skill="survival"}}
 		</div>
 	</paper-shadow>
@@ -113,4 +126,10 @@
 			{{> skillRow name="Persuasion" skill="persuasion"}}
 		</div>
 	</paper-shadow>
+</template>
+
+<template name="hitDice">
+	{{# if ../attributeBase hitDice}}
+		{{../attributeValue hitDice}}d{{d}} {{../abilityMod "constitution"}}
+	{{/if}}
 </template>

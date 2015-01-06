@@ -12,6 +12,7 @@
 	background-color: #D50000;
 	padding: 16px;
 	position: relative;
+	border-radius: 2px 0 0 2px;
 }
 
 .abilityFlex .card {
@@ -20,10 +21,11 @@
 
 .abilityCardRight {
 	flex-grow: 1;
+	padding-right: 0;
 }
 
 .abilityCardRight hr{
-	margin: 8px -16px;
+	margin: 8px 0 8px -16px;
 }
 
 .abilityCardRight h1{

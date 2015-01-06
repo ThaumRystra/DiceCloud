@@ -55,6 +55,15 @@ Template.stats.helpers({
 	}
 });
 
+Template.statCard.helpers({
+	isHero: function(string){
+		if(string === Session.get("selectedAttribute")||
+		   string === Session.get("selectedSkill")){
+			return "hero";
+		}
+	}
+});
+
 Template.attributeDialog.helpers({
 	attributeTitle: function(){
 		return Session.get("selectedAttributeTitle");

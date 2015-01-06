@@ -1,13 +1,11 @@
 TODO
 ====
 
-Strip the core interaction out of swipe-pages to create an element that just listens to swipe events
-
-wishlist:
-
-* swipes are emitted as an event if possible
-* swiping should translate the element
-* it should bounce back to its resting position when released
+* Get Polymer installed using bower.
+* Install Vulcanize package listed below
+* Copy the differential polymer demo to get polymer implemented nicely
+* Update Meteor
+* Install and use LESS
 
 Packages used
 =============
@@ -48,8 +46,13 @@ Packages used
 * aldeed:autoform
     * Automatically generates bootstrap forms for collection2 Schemas.
     * [github](https://github.com/aldeed/meteor-autoform)
+* differential:vulcanize
+	* Bakes all the polymer imports into one file
+	* [github](https://github.com/Differential/meteor-vulcanize)
 
 ************
-	
-To Speed up builds when you know you wont need online package checking use
-METEOR_OFFLINE_CATALOG=1
+
+Resources
+=========
+
+[differential's polymer demo](https://github.com/Differential/polymer-demo)

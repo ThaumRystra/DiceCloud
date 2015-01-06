@@ -37,7 +37,7 @@ Schemas.Character = new SimpleSchema({
 	"proficiencyBonus.effects": {
 		type: [Schemas.Effect],
 		defaultValue: [
-			{name: "Proficiency bonus by level", calculation: "floor(level / 4.1) + 2", operation: "add", type: "inate"}
+			{name: "Proficiency bonus by level", calculation: "floor(level / 4 + 1.75)", operation: "add", type: "inate"}
 		]
 	},
 	speed:        {type: Schemas.Attribute},
@@ -68,6 +68,8 @@ Schemas.Character = new SimpleSchema({
 	superiorityDice:  {type: Schemas.Attribute},
 	expertiseDice:    {type: Schemas.Attribute},
 
+	//specific features
+	rageDamage:       {type: Schemas.Attribute},
 
 	//hit dice
 	d6HitDice:        {type: Schemas.Attribute},
@@ -174,52 +176,24 @@ Schemas.Character = new SimpleSchema({
 
 	strengthAttack:		{type: Schemas.Skill},
 	"strengthAttack.ability": 	{type: String,defaultValue: "strength"},
-	"strengthAttack.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	dexterityAttack:	{type: Schemas.Skill},
 	"dexterityAttack.ability":	{ type: String, defaultValue: "dexterity" },
-	"dexterityAttack.proficiency": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	constitutionAttack:	{type: Schemas.Skill},
 	"constitutionAttack.ability":{ type: String, defaultValue: "constitution" },
-	"constitutionAttack.proficiency": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	intelligenceAttack:	{type: Schemas.Skill},
 	"intelligenceAttack.ability":{ type: String, defaultValue: "intelligence" },
-	"intelligenceAttack.proficiency": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	wisdomAttack:		{type: Schemas.Skill},
 	"wisdomAttack.ability":		{ type: String, defaultValue: "wisdom" },
-	"wisdomAttack.proficiency": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	charismaAttack:		{type: Schemas.Skill},
 	"charismaAttack.ability":	{ type: String, defaultValue: "charisma" },
-	"charismaAttack.proficiency": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	rangedAttack:		{type: Schemas.Skill},
 	"rangedAttack.ability":		{ type: String, defaultValue: "dexterity" },
-	"rangedAttack.proficiency": {
-		type: [Schemas.Effect],
-		defaultValue: [{name: "Attack Proficiency", value: 1, operation: "proficiency", type: "inate"}]
-	},
 
 	dexterityArmor:		{type: Schemas.Skill},
 	"dexterityArmor.ability":	{ type: String, defaultValue: "dexterity" },
@@ -239,19 +213,22 @@ Schemas.Character = new SimpleSchema({
 	},
 
 	//mechanics
-	features:		{ type: [Schemas.Feature], defaultValue: []},
+	features:		{ type: [String], defaultValue: [], regEx: SimpleSchema.RegEx.Id,},
+	customFeatures: { type: [Schemas.Feature], defaultValue: []},
+	actions:		{ type: [Schemas.Action], defaultValue: []},
 	deathSave:		{ type: Schemas.DeathSave },
 	time:			{ type: Number, min: 0, decimal: true, defaultValue: 0},
 	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
-	expirations:	{ type: [Schemas.Expiration], defaultValue: []},
-	spells:			{ type: [Schemas.Spell], defaultValue: []}
+	buffs:			{ type: [Schemas.Buff], defaultValue: []}
 	//TODO add permission stuff for owner, readers and writers
+	//TODO add per-character settings
 });
 
 Characters.attachSchema(Schemas.Character);
 
 //reactively remove expired effects
-//this can be optimised a lot once clients can do projections
+//TODO broken with the move from expirations -> buffs
+//TODO fix by finding every buff whose expiry is >= current time, pull those buffs
 Characters.find({},{fields: {time: 1, expirations: 1, features: 1}}).observe({
 	changed: function(character){
 		var currentTime = character.time;
@@ -276,24 +253,37 @@ Characters.find({},{fields: {time: 1, expirations: 1, features: 1}}).observe({
 });
 
 var attributeBase = function(charId, attribute){
+	var effects = _.groupBy(attribute.effects, "operation");
 	var value = 0;
-	_.each(attribute.effects, function(effect){
-		switch(effect.operation) {
-			case "add":
-				value += evaluateEffect(charId, effect);
-				break;
-			case "mul":
-				value *= evaluateEffect(charId, effect);
-				break;
-			case "min":
-				var min = evaluateEffect(charId, effect);
-				value = value > min? value : min;
-				break;
-			case "max":
-				var max = evaluateEffect(charId, effect);
-				value = value < max? value : max;
-				break;
+	
+	//start with the highest base value
+	_.each(effects.base, function(effect){
+		var efv = evaluateEffect(charId, effect)
+		if (effect.value > value){
+			value = effect.value;
 		}
+	});
+	
+	//add all the add values
+	_.each(effects.add, function(effect){
+		value += evaluateEffect(charId, effect);
+	});
+	
+	//multiply all the mul values
+	_.each(effects.mul, function(effect){
+		value *= evaluateEffect(charId, effect);
+	});
+	
+	//ensure value is >= all mins
+	_.each(effects.min, function(effect){
+		var min = evaluateEffect(charId, effect);
+		value = value > min? value : min;
+	});
+	
+	//ensure value is <= all maxes
+	_.each(effects.max, function(effect){
+		var max = evaluateEffect(charId, effect);
+		value = value < max? value : max;
 	});
 	return value;
 }
@@ -309,7 +299,7 @@ Characters.helpers({
 		fieldSelector[fieldName] = 1;
 		var char = Characters.findOne(this._id, {fields: fieldSelector});
 		var field = char[fieldName];
-		if(!field){
+		if(field === undefined){
 			throw new Meteor.Error("getField failed", 
 								   "getField could not find field " + fieldName + " in character "+ char._id);
 		}
@@ -333,35 +323,15 @@ Characters.helpers({
 		return this.getField(fieldName);
 	},
 
-	attributeValue: (function(){
-		//store a private array of attributes we've visited without returning
-		//if we try to visit the same attribute twice before resolving its value
-		//we are in a dependency loop and need to GTFO
-		var visitedAttributes = [];
-		return function(attributeName){
-			check(attributeName, String);
-			//we're still evaluating this attribute, must be in a loop
-			if(_.contains(visitedAttributes, attributeName)) {
-				console.log("dependency loop detected");
-				return NaN;
-			}
-			//push this attribute to the list of visited attributes
-			//we can't visit it again unless it returns first
-			visitedAttributes.push(attributeName);
-
-			try{
-				var charId = this._id;
-				var attribute = this.getField(attributeName);
-				//base value
-				var value = attributeBase(charId, attribute);
-				value += attribute.adjustment;
-			}finally{
-				//this attribute returns or fails, pull it from the array, we may visit it again safely
-				visitedAttributes = _.without(visitedAttributes, attributeName);
-			}
-			return value;
-		}
-	})(),
+	attributeValue: function(attributeName){
+		var charId = this._id;
+		var attribute = this.getField(attributeName);
+		//base value
+		var value = this.attributeBase(attributeName);
+		//plus adjustment
+		value += attribute.adjustment;
+		return value;
+	},
 
 	attributeBase: (function(){
 		//store a private array of attributes we've visited without returning

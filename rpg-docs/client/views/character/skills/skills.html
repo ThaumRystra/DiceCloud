@@ -22,6 +22,11 @@
 		{{else}}
 		<div class="{{advantage}} skillMod">{{../skillMod skill}}</div>
 		{{/if}}
-		<div class="{{conditionals}} skillName">{{name}}</div>
+		<div class="{{conditionals}} skillName">
+			{{name}}
+			{{#if showPassive}}
+			({{../passiveSkill skill}})
+			{{/if}}
+		</div>
 	</div>
 </template>

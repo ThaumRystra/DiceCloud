@@ -1,0 +1,32 @@
+<template name="features">
+	<div class="statsFlex"><!--resources-->
+		{{#if attributeBase "rages"}}
+			{{#statCard id="rages" type="attribute" title="Rages"}}
+				{{attributeValue "rages"}}
+			{{/statCard}}
+		{{/if}}
+		{{#if canCast}}
+			{{#statCard id="spellSlots" type="attribute" title="Spell Slots"}}
+				<h1>{{> spellSlots}}</h1>
+			{{/statCard}}
+		{{/if}}
+		{{#if attributeBase "sorceryPoints"}}
+			{{#statCard id="sorceryPoints" type="attribute" title="Sorcery Points"}}
+				{{attributeValue "sorceryPoints"}}
+			{{/statCard}}
+		{{/if}}
+		{{#if attributeBase "expertiseDice"}}
+			{{#statCard id="expertiseDice" type="attribute" title="Expertise Dice"}}
+				{{attributeValue "expertiseDice"}}
+			{{/statCard}}
+		{{/if}}
+		{{#if attributeBase "superiorityDice"}}
+			{{#statCard id="superiorityDice" type="attribute" title="Superiority Dice"}}
+				{{attributeValue "superiorityDice"}}
+			{{/statCard}}
+		{{/if}}	
+	</div>
+	<div class="actionsFlex">
+		
+	</div>
+</template>

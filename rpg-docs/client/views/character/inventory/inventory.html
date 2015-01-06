@@ -1,6 +1,20 @@
 <template name="inventory">
-	<div class="flexItem floatBox">
-		<h2>Inventory</h2>
-		{{> inventoryTables}}
+	<paper-shadow class="equipment">
+		Armor: {{#if equippedArmor}}{{equippedArmor}}{{else}}None{{/if}}
+	</paper-shadow>
+	<div class="containers">
+		{{#each containers}}
+			<paper-shadow>
+				<h3>{{name}}</h3>
+				<table>
+					{{#each items}}
+						<tr class={{#if isSelected}}selected{{/if}}>
+							<td>{{#if stackable}}{{quantity}}{{/if}}</td>
+							<td>{{pluralName}}</td>
+						</tr>
+					{{/each}}
+				</table>
+			</paper-shadow>
+		{{/each}}
 	</div>
 </template>

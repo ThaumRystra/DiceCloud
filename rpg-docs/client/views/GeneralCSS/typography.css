@@ -31,7 +31,7 @@ h1, .headline {
 	letter-spacing: 0;
 }
 
-.white-text h1, .white-text .headline{
+.white-text h1, .white-text .headline, .white-text.headline{
 	color: rgba(255,255,255,0.87);
 }
 

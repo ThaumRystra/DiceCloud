@@ -13,8 +13,10 @@ Schemas.Spell = new SimpleSchema({
 	duration:	{type: Number},
 	"components.verbal":		{type: Boolean},
 	"components.somatic":		{type: Boolean},
-	"components.material":		{type: String},
+	"components.material":		{type: String, optional: true},
 	"components.concentration":	{type: Boolean},
-	buffs: 		{type: [Schemas.Buff], optional: true},
+	ritual:		{type: Boolean},
+	selfBuffs:	{type: [Schemas.Buff], defaultValue: []},
 	level:		{type: Number},
+	class:		{type: String}
 });

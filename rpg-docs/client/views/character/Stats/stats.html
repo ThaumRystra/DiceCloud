@@ -4,73 +4,6 @@
 			<div class="abilityFlex">
 				{{> abilityCards}}
 			</div>
-			<div class="statsFlex">
-				<paper-shadow {{isHero "armor"}} class="card attribute" hero-id="armor">
-					<h1>{{attributeValue "armor"}}</h1>
-					<p class="caption">Armor</p>
-				</paper-shadow>
-				<paper-shadow {{isHero "initiative"}} class="card skill" hero-id="initiative">
-					<h1>{{skillMod "initiative"}}</h1>
-					<p class="caption">Initiative</p>
-				</paper-shadow>
-				<paper-shadow {{isHero "proficiencyBonus"}} class="card attribute" hero-id="proficiencyBonus">
-					<h1>{{attributeValue "proficiencyBonus"}}</h1>
-					<p class="caption">Proficiency Bonus</p>
-				</paper-shadow>
-				<paper-shadow {{isHero "speed"}} class="card attribute" hero-id="speed">
-					<h1>{{attributeValue "speed"}}</h1>
-					<p class="caption">Speed</p>
-				</paper-shadow>
-				<paper-shadow {{isHero "passivePerception"}} class="card" hero-id="passivePerception">
-					<h1>{{passiveSkill "perception"}}</h1>
-					<p class="caption">Passive Perception</p>
-				</paper-shadow>
-				<paper-shadow class="card" id="hitDice">
-					<h1 class="attribute" hero-id="d6HitDice" {{isHero "d6HitDice"}}>
-						{{> hitDice hitDice="d6HitDice" d="6"}}
-					</h1>
-					<h1 class="attribute" hero-id="d8HitDice" {{isHero "d8HitDice"}}>
-						{{> hitDice hitDice="d8HitDice" d="8"}}
-					</h1>
-					<h1 class="attribute" hero-id="d10HitDice" {{isHero "d10HitDice"}}>
-						{{> hitDice hitDice="d10HitDice" d="10"}}
-					</h1>
-					<h1 class="attribute" hero-id="d12HitDice" {{isHero "d12HitDice"}}>
-						{{> hitDice hitDice="d12HitDice" d="12"}}
-					</h1>
-					<p class="caption">Hit Dice</p>
-				</paper-shadow>
-				{{# if canCast}}
-					<paper-shadow class="card" id="spellSlots">
-						<h1>{{> spellSlots}}</h1>
-						<p class="caption">Spell Slots</p>
-					</paper-shadow>
-				{{/if}}
-				{{# if attributeBase "rages"}}
-					<paper-shadow class="card" id="rages">
-						<h1>{{attributeValue "rages"}}</h1>
-						<p class="caption">rages</p>
-					</paper-shadow>
-				{{/if}}
-				{{# if attributeBase "sorceryPoints"}}
-					<paper-shadow class="card" id="sorceryPoints">
-						<h1>{{attributeValue "sorceryPoints"}}</h1>
-						<p class="caption">Sorcery Points</p>
-					</paper-shadow>
-				{{/if}}
-				{{# if attributeBase "expertiseDice"}}
-					<paper-shadow class="card" id="expertiseDice">
-						<h1>{{attributeValue "expertiseDice"}}</h1>
-						<p class="caption">Expertise Dice</p>
-					</paper-shadow>
-				{{/if}}
-				{{# if attributeBase "superiorityDice"}}
-					<paper-shadow class="card" id="superiorityDice">
-						<h1>{{attributeValue "superiorityDice"}}</h1>
-						<p class="caption">Superiority Dice</p>
-					</paper-shadow>
-				{{/if}}	
-			</div>
 		</section>
 		<section id="detailContainer">
 			<div cross-fade id="darkOverlay"></div>
@@ -78,12 +11,6 @@
 			{{> skillDialog character=this}}	
 		</section>
 	</core-animated-pages>
-</template>
-
-<template name="hitDice">
-	{{# if ../attributeBase hitDice}}
-		{{../attributeValue hitDice}}d{{d}} + {{../abilityMod "constitution"}}
-	{{/if}}
 </template>
 
 <template name="spellSlots">
@@ -96,6 +23,17 @@
 	{{attributeValue "level7SpellSlots"}}
 	{{attributeValue "level8SpellSlots"}}
 	{{attributeValue "level9SpellSlots"}}
+</template>
+
+<template name="statCard">
+	<paper-shadow {{isHero id}} class="card {{type}}" hero-id={{id}}>
+		<div id="{{id}}Heading"  class="card-top headline {{class}}">
+			{{> UI.contentBlock}}
+		</div>
+		<div class="subhead">
+			{{title}}
+		</div>
+	</paper-shadow>
 </template>
 
 <template name="attributeDialog">

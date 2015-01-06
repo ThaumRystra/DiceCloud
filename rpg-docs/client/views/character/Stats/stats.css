@@ -11,6 +11,7 @@
 
 #stats .card {
 	flex-grow: 1;
+	max-width: 480px;
 }
 
 #stats .abilityFlex{
@@ -25,6 +26,26 @@
 	flex-grow: 1;
 }
 
+.attribute.card, .skill.card {
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+
+.card-top {
+	flex-grow: 1;
+	padding: 16px;
+	border-radius: 2px 2px 0 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card .subhead {
+	padding: 16px;
+}
+
 .editEffect > * {
 	vertical-align: bottom;
 }
@@ -33,6 +54,14 @@
 	background: white;
 	border-radius: 2px;
 	padding: 16px;
+}
+
+#armorHeading {
+	background: url(/jpg/rusted-metal-armor.jpg) no-repeat; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
 
 #detailContainer {

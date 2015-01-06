@@ -58,7 +58,6 @@ paper-button {
 }
 
 .card {
-	width: 148px;
 	margin: 4px;
 	padding: 16px;
 	font-size: 14px;
@@ -67,7 +66,7 @@ paper-button {
 }
 
 .card.double {
-	width: 304px;
+	width: 332px;
 }
 
 .card paper-button {
