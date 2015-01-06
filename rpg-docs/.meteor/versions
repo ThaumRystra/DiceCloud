@@ -18,6 +18,7 @@ cw4gn3r:jquery-event-drag@2.2.0
 dburles:collection-helpers@1.0.2
 ddp@1.0.13
 deps@1.0.6
+differential:vulcanize@0.0.3
 ejson@1.0.5
 email@1.0.5
 fastclick@1.0.2
