@@ -1,6 +1,7 @@
 .card.double {
 	display: flex;
 }
+
 .card.double > div{
 	vertical-align: top;
 	padding: 16px;
@@ -15,7 +16,7 @@
 	border-radius: 2px 0 0 2px;
 }
 
-.abilityFlex .card {
+#stats .card {
 	padding: 0;
 }
 

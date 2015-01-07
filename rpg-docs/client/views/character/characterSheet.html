@@ -1,19 +1,30 @@
 <template name="characterSheet">
-	<paper-tabs id="characterSheetTabs" scrollable="true" selected={{selectedTab}}>
-		<paper-tab>Stats</paper-tab>
-		<paper-tab>Features</paper-tab>
-		<paper-tab>Inventory</paper-tab>
-		<paper-tab>Spellbook</paper-tab>
-		<paper-tab>Persona</paper-tab>
-		<paper-tab>Journal</paper-tab>
-	</paper-tabs>
-	
-	<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right">
-		<swipe-detect touch-action="pan-y">{{> stats}}</swipe-detect>
-		<swipe-detect touch-action="pan-y">{{> features}}</swipe-detect>
-		<swipe-detect touch-action="pan-y">inventory</swipe-detect>
-		<swipe-detect touch-action="pan-y">spellBook</swipe-detect>
-		<swipe-detect touch-action="pan-y">persona</swipe-detect>
-		<swipe-detect touch-action="pan-y">journal</swipe-detect>
-	</core-animated-pages>
+	<!--<div tool horizontal layout flex end-justified class="bottom">Title-bottom</div>-->
+	<core-toolbar class="medium-tall">
+		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+		<div flex>
+			Name
+		</div>
+		<paper-icon-button icon="more-vert" role="button"></paper-icon-button>
+		<div class="bottom fit" horizontal layout>
+			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}}>
+				<paper-tab>Stats</paper-tab>
+				<paper-tab>Features</paper-tab>
+				<paper-tab>Inventory</paper-tab>
+				<paper-tab>Spellbook</paper-tab>
+				<paper-tab>Persona</paper-tab>
+				<paper-tab>Journal</paper-tab>
+			</paper-tabs>
+		</div>
+	</core-toolbar>
+	<div>
+		<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right">
+			<swipe-detect touch-action="pan-y">{{> stats}}</swipe-detect>
+			<swipe-detect touch-action="pan-y">{{> features}}</swipe-detect>
+			<swipe-detect touch-action="pan-y">inventory</swipe-detect>
+			<swipe-detect touch-action="pan-y">spellBook</swipe-detect>
+			<swipe-detect touch-action="pan-y">persona</swipe-detect>
+			<swipe-detect touch-action="pan-y">journal</swipe-detect>
+		</core-animated-pages>
+	</div>
 </template>

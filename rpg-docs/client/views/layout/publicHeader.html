@@ -1,0 +1,48 @@
+<template name="publicHeader">
+  <core-toolbar class="toolbar toolbar-primary">
+
+    <a class="header-logo" href="/">
+      <img src="/img/white-logo.png"/>
+    </a>
+
+    <div flex></div>
+
+    <div class="visible-md wide">
+      <div layout horizontal>
+        {{> headerItems}}
+      </div>
+    </div>
+
+    <paper-menu-button class="hidden-md narrow">
+      <paper-icon-button icon="menu" role="button"></paper-icon-button>
+      <paper-dropdown class="dropdown" halign="right">
+        <core-menu class="menu">
+          {{> headerItems}}
+        </core-menu>
+      </paper-dropdown>
+    </paper-menu-button>
+
+  </core-toolbar>
+</template>
+
+<template name="headerItems">
+
+  <paper-item class="toolbar-item">
+    <a href="{{pathFor route='pricing'}}">
+      Pricing
+    </a>
+  </paper-item>
+
+  <paper-item class="toolbar-item">
+    <a href="{{pathFor route='accounts.signUp'}}">
+      Sign Up
+    </a>
+  </paper-item>
+
+  <paper-item class="toolbar-item">
+    <a href="{{pathFor route='accounts.signIn'}}">
+      Sign In
+    </a>
+  </paper-item>
+
+</template>
