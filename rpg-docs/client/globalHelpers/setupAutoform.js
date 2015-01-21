@@ -1,0 +1,1 @@
+AutoForm.setDefaultTemplate('paper');

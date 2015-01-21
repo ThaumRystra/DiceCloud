@@ -1,0 +1,23 @@
+body /deep/ .featureDialogWidth {
+	width: 600px;
+}
+
+body /deep/ #statGroupDropDown {
+	width: 120px;
+}
+
+body /deep/ #statDropDown {
+	width: 120px;
+}
+
+body /deep/ #operationDropDown {
+	width: 100px;
+}
+
+body /deep/ #damageMultiplierDropDown {
+	width: 120px;
+}
+
+body /deep/ #proficiencyDropDown {
+	width: 120px;
+}

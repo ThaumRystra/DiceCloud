@@ -8,20 +8,34 @@ Meteor.methods({
 			selector,
 			{ $set: setter }
 		)
+	},
+	updateFeatureEffect: function (featureId, newEffect) {
+		var selector = {_id: featureId};
+		selector["effects._id"] = newEffect._id;
+		var setter = {};
+		setter["effects.$"] = newEffect
+		Features.update(
+			selector,
+			{ $set: setter }
+		)
 	}
 });
 
 //pull a single effect by stat and id
 pullEffect = function(id, effect){
-	var pullObject = {};
-	pullObject[effect.stat + ".effects"] = {_id: effect._id};
-	Characters.update(id, {$pull: pullObject });
-}
+	if(effect.stat){
+		var pullObject = {};
+		pullObject[effect.stat + ".effects"] = {_id: effect._id};
+		Characters.update(id, {$pull: pullObject });
+	}
+},
 
 pushEffect = function(id, effect){
-	var pushObject = {};
-	pushObject[effect.stat + ".effects"] = effect;
-	Characters.update(id, {$push: pushObject});
+	if(effect.stat){
+		var pushObject = {};
+		pushObject[effect.stat + ".effects"] = effect;
+		Characters.update(id, {$push: pushObject});
+	}
 }
 
 

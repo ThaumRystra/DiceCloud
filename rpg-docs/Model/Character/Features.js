@@ -1,28 +1,9 @@
-//Features are features that can be selected but not edited
-//they are the things that come in the player's handbook and
-//facilitate the quick building of characters
-//They are the primary means of collecting cease and desist letters :(
-//
-//Should only be edited by admins
-//
-//TODO add a Meteor Method that lets users add a feature to their character
-//and pushes the effects and actions accordingly
-//
-//TODO add a Method that updates every character with a given feature if that feature should change
-
 Features = new Meteor.Collection("features");
 
 Schemas.Feature = new SimpleSchema({
-	_id: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		autoValue: function(){
-			if(!this.isSet) return Random.id();
-		}
-	},
+	charId:		{type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
 	name:       {type: String},
 	description:{type: String, optional: true},
-	source:     {type: String, optional: true},
 	effects:    {type: [Schemas.Effect], defaultValue: []},
 	actions:    {type: [Schemas.Action], defaultValue: []},
 	attacks:	{type: [Schemas.Attack], defaultValue: []},
@@ -31,12 +12,24 @@ Schemas.Feature = new SimpleSchema({
 
 Features.attachSchema(Schemas.Feature);
 
-//observe standard features for changes and update characters using them
-Features.find().observe({
+//update the features of the items as needed
+Features.find({}, {fields: {name: 0, description: 0}}).observe({
+	added: function(newFeature){
+		if(newFeature.charId){
+			//make sure existing versions of this feature's effects aren't duplicated
+			removeFeatureEffects(newFeature.charId, newFeature);
+			//add the new feature's effects
+			addFeatureEffects(newFeature.charId, newFeature);
+		}
+	},
 	changed: function(newFeature, oldFeature){
-		//TODO
+		if(oldFeature.charId)
+			removeFeatureEffects(oldFeature.charId, oldFeature);
+		if(newFeature.charId)
+			addFeatureEffects(newFeature.charId, newFeature);
 	},
 	removed: function(oldFeature){
-		//TODO
+		if(oldFeature.charId)
+			removeFeatureEffects(oldFeature.charId, oldFeature);
 	}
 });

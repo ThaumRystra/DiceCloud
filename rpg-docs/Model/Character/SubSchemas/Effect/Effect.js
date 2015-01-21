@@ -16,7 +16,7 @@ Schemas.Effect = new SimpleSchema({
 	operation: {
 		type: String,
 		defaultValue: "add",
-		allowedValues: ["base", "proficiency","add","mul","min","max","advantage","disadvantage","passiveAdd","fail","conditional","passiveAdd"]
+		allowedValues: ["base", "proficiency","add","mul","min","max","advantage","disadvantage","passiveAdd","fail","conditional"]
 	},
 	value: {
 		type: Number,
@@ -31,7 +31,7 @@ Schemas.Effect = new SimpleSchema({
 	type: {
 		type: String,
 		defaultValue: "editable",
-		allowedValues: ["editable", "feat", "buff", "equipment", "inate"]
+		allowedValues: ["editable", "feature", "buff", "equipment", "inate"]
 	},
 	//which stat the effect is applied to
 	stat: {

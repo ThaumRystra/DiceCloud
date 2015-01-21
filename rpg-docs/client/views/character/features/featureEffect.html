@@ -1,0 +1,69 @@
+<template name="featureEffect">
+	<paper-dropdown-menu id="statGroupDropDown" label="Stat Group">
+		<paper-dropdown class="dropdown">
+			<core-menu id="statGroupMenu" class="menu" selected={{selectedStatGroup}}>
+				{{#each statGroups}}
+					<paper-item>{{this}}</paper-item>
+				{{/each}}
+			</core-menu>
+		</paper-dropdown>
+	</paper-dropdown-menu>
+	{{#if stats}}
+		<paper-dropdown-menu id="statDropDown" label="Stat">
+			<paper-dropdown class="dropdown">
+				<core-menu id="statMenu" class="menu"  selected={{selectedStat}}>
+					{{#each stats}}
+						<paper-item>{{name}}</paper-item>
+					{{/each}}
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+	{{/if}}
+	{{#if operations}}
+		<paper-dropdown-menu id="operationDropDown" label="Operation">
+			<paper-dropdown class="dropdown">
+				<core-menu id="operationMenu" class="menu" selected={{selectedOperation}}>
+					{{#each operations}}
+						<paper-item>{{name}}</paper-item>
+					{{/each}}
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+	{{/if}}
+	{{> Template.dynamic template=effectValueTemplate data=valueTemplateData}}
+	{{#if needsCommit}}
+		<paper-icon-button id="commitChanges" role="button" tabindex="0" icon="check" aria-label="Commit Changes"></paper-icon-button>
+		<paper-icon-button id="clearChanges" role="button" tabindex="0" icon="clear" aria-label="Clear Changes"></paper-icon-button>
+	{{else}}
+		<paper-icon-button id="deleteEffect" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
+	{{/if}}
+	<br>
+</template>
+
+<template name="regularEffectValue">
+	<paper-input id="effectValueInput" label="Value" floatinglabel value={{effectValue}}></paper-input>
+</template>
+
+<template name="multiplierEffectValue">
+	<paper-dropdown-menu id="damageMultiplierDropDown" label="Damage Multiplier">
+		<paper-dropdown class="dropdown">
+			<core-menu id="multiplierMenu" class="menu" selected={{selectedDamageMultiplier}}>
+				<paper-item>Resistance</paper-item>
+				<paper-item>Vulnerability</paper-item>
+				<paper-item>Immunity</paper-item>
+			</core-menu>
+		</paper-dropdown>
+	</paper-dropdown-menu>
+</template>
+
+<template name="proficiencyEffectValue">
+	<paper-dropdown-menu id="proficiencyDropDown" label="Proficiency">
+		<paper-dropdown class="dropdown">
+			<core-menu id="proficiencyMenu" class="menu" selected={{selectedProfiencyMultiplier}}>
+				<paper-item>Proficient</paper-item>
+				<paper-item>Half Prof. Bonus</paper-item>
+				<paper-item>Double Prof. Bonus</paper-item>
+			</core-menu>
+		</paper-dropdown>
+	</paper-dropdown-menu>
+</template>

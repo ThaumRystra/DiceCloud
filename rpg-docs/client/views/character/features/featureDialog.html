@@ -1,0 +1,24 @@
+<template name="autoFeatureDialog">
+	{{> quickForm schema="Schemas.Feature" id="insertFeatureForm" type="insert"}}
+	<paper-button affirmative>Cancel</paper-button>
+	<paper-button affirmative>Save Item</paper-button>
+</template>
+
+<template name="featureDialog">
+	{{#with feature}}
+		<div class="featureDialogWidth"></div>
+		<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+		<paper-input-decorator label="Description" floatinglabel layout vertical>
+			<paper-autogrow-textarea>
+				<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+			</paper-autogrow-textarea>
+		</paper-input-decorator>
+		<h3>Effects</h3>
+		{{#each effects}}
+			{{>featureEffect}}
+		{{/each}}
+		<br>
+		<paper-icon-button id="addEffectButton" role="button" tabindex="0" icon="add" aria-label="addEffect"></paper-icon-button>
+	{{/with}}
+	<paper-button affirmative>Done</paper-button>
+</template>

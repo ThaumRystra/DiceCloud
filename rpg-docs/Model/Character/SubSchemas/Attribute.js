@@ -7,11 +7,11 @@ Schemas.Attribute = new SimpleSchema({
 	},
 	//effect arrays
 	effects: { type: [Schemas.Effect], defaultValue: [] },
-  reset: {
-    type: String,
-    defaultValue: "longRest",
-    allowedValues: ["longRest", "shortRest"]
-  }
+	reset: {
+		type: String,
+		defaultValue: "longRest",
+		allowedValues: ["longRest", "shortRest"]
+	}
 });
 
 //note that to make an invulnerability add a new max of zero value
@@ -22,12 +22,16 @@ Schemas.Vulnerability = new SimpleSchema({
 		defaultValue: 0
 	},
 	//effect arrays
-	mul: 		{ type: [Schemas.Effect], defaultValue: [] },
-	min: 		{ type: [Schemas.Effect], defaultValue: [{name: "Resistance doesn't stack", value: 0.5}] },
-	max: 		{ type: [Schemas.Effect], defaultValue: [{name: "Vulnerability doesn't stack", value:  2}] },
-  reset: {
-    type: String,
-    defaultValue: "longRest",
-    allowedValues: ["longRest", "shortRest"]
-  }
+	effects: { 
+		type: [Schemas.Effect], 
+		defaultValue: [
+			{type: "inate", name: "Resistance doesn't stack", operation: "min", value: 0.5}, 
+			{type: "inate", name: "Vulnerability doesn't stack", operation: "max", value:  2}
+		]
+	},
+	reset: {
+		type: String,
+		defaultValue: "longRest",
+		allowedValues: ["longRest", "shortRest"]
+	}
 });

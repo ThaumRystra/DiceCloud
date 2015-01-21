@@ -1,20 +1,27 @@
 <template name="inventory">
-	<paper-shadow class="equipment">
-		Armor: {{#if equippedArmor}}{{equippedArmor}}{{else}}None{{/if}}
+	<paper-shadow class="equipment card double">
+		Armor:<br>
+		<paper-item>{{#if armor}}{{armor.name}}{{else}}none{{/if}}</paper-item>
+		Equipment:<br>
+		{{#each equipment}}
+			<paper-item>
+				{{name}}
+			</paper-item>
+		{{/each}}
 	</paper-shadow>
 	<div class="containers">
 		{{#each containers}}
-			<paper-shadow>
-				<h3>{{name}}</h3>
-				<table>
-					{{#each items}}
-						<tr class={{#if isSelected}}selected{{/if}}>
-							<td>{{#if stackable}}{{quantity}}{{/if}}</td>
-							<td>{{pluralName}}</td>
-						</tr>
-					{{/each}}
-				</table>
-			</paper-shadow>
+		<paper-shadow class="card">
+			<h3>{{name}}</h3>
+			{{#each items ../_id _id}}
+				<paper-item>
+					{{#if stackable}}{{quantity}}{{/if}} {{pluralName}}
+				</paper-item>
+			{{/each}}
+		</paper-shadow>
 		{{/each}}
 	</div>
+	<paper-fab id="add" icon="add" title="Add" role="button" tabindex="0" aria-label="Add"></paper-fab>
+	<paper-fab id="addItem" icon="note-add" title="Add Item" role="button" tabindex="0" aria-label="Add Item"></paper-fab>
+	<paper-fab id="addContainer" icon="work" title="Add Container" role="button" tabindex="0" aria-label="Add Container"></paper-fab>
 </template>

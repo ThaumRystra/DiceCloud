@@ -13,11 +13,14 @@
 		</core-header-panel>
 	</core-drawer-panel>
 
-	<paper-action-dialog global-dialog layered backdrop
+	<paper-action-dialog global-dialog backdrop
 						 transition="paper-dialog-transition-bottom"
-						 full-on-mobile>
+						 class={{#if globalDialogFullOnMobile}}full-on-mobile{{/if}}
+						 autoclosedisabled
+						 heading={{globalDialogHeader}}
+						 layered>
 		{{#if globalDialogTemplate}}
-		{{> UI.dynamic template=globalDialogTemplate data=globalDialogData}}
+			{{> UI.dynamic template=globalDialogTemplate data=globalDialogData}}
 		{{/if}}
 	</paper-action-dialog>
 

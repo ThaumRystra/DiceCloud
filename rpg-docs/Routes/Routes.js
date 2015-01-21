@@ -20,7 +20,12 @@ Router.map( function () {
 	this.route('characterSheet', {
 		path: '/character/:_id',
 		waitOn: function(){
-			return Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId());
+			return [
+				Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId()),
+				Meteor.subscribe("characterContainers", this.params._id, Meteor.userId()),
+				Meteor.subscribe("characterItems", this.params._id, Meteor.userId()),
+				Meteor.subscribe("characterFeatures", this.params._id, Meteor.userId()),
+				];
 		},
 		data: function() {
 			var data = Characters.findOne({_id: this.params._id}, {fields: {_id: 1}});

@@ -3,7 +3,7 @@
 
 // Run button configuration
   "commands": {
-        "Run Meteor": "cd rpg-docs \n METEOR_OFFLINE_CATALOG=1 meteor run"
+        "Run Meteor": "cd rpg-docs \n meteor run"
   },
 
 // Preview button configuration

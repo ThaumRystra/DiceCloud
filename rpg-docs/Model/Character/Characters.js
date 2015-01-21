@@ -213,8 +213,6 @@ Schemas.Character = new SimpleSchema({
 	},
 
 	//mechanics
-	features:		{ type: [String], defaultValue: [], regEx: SimpleSchema.RegEx.Id,},
-	customFeatures: { type: [Schemas.Feature], defaultValue: []},
 	actions:		{ type: [Schemas.Action], defaultValue: []},
 	deathSave:		{ type: Schemas.DeathSave },
 	time:			{ type: Number, min: 0, decimal: true, defaultValue: 0},
