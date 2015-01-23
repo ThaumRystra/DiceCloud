@@ -6,6 +6,15 @@
 
 <template name="featureDialog">
 	{{#with feature}}
+		<paper-menu-button>
+			<paper-icon-button role="button" tabindex="0" icon="delete" aria-label="Delete Feature" noink></paper-icon-button>
+			<paper-dropdown class="dropdown">
+				<paper-button id="deleteFeature">Delete Feature</paper-button>
+				<paper-button>Cancel</paper-button>
+			</paper-dropdown>
+		</paper-menu-button>
+		
+		
 		<div class="featureDialogWidth"></div>
 		<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
 		<paper-input-decorator label="Description" floatinglabel layout vertical>

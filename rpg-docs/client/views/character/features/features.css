@@ -1,5 +1,38 @@
 paper-shadow.featureCard {
+	width: 300px;
 	padding: 16px;
-	margin: 8px;
+	margin: 4px;
 	background: white;
+	flex-grow: 1;
+	border-radius: 2px;
 }
+
+.features {
+	display: flex !important;
+	justify-content: center;
+	align-items: stretch;
+	flex-wrap: wrap;
+	padding: 4px;
+}
+
+.featureCardTop {
+	margin-bottom: 8px;
+}
+
+.featureCardBottom {
+	white-space: pre-line;
+}
+
+#addFeature {
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
+	}
+
+@media (max-width: 640px) {
+	#addFeature {
+		bottom: 16px;
+		right: 24px;
+	}
+}
+

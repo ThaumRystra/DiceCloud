@@ -11,16 +11,16 @@ Template.features.events({
 		GlobalUI.showDialog({
 			heading:      "New Feature",
 			template:     "featureDialog",
-			data:         {featureId: featureId},
+			data:         {featureId: featureId, charId: this._id},
 			fullOnMobile: true
 		})
 	},
 	"tap .featureCard": function(event){
 		var featureId = this._id;
-		GlobalUI.showDialog({
+		GlobalUI.setDialog({
 			heading:      this.name,
 			template:     "featureDialog",
-			data:         {featureId: featureId},
+			data:         {featureId: featureId, charId: Template.parentData()._id},
 			fullOnMobile: true
 		})
 	}

@@ -1,22 +1,25 @@
 <template name="features">
-	<div class="resources"><!--resources-->
-		
+	<div fit>
+		<div class="scroll-y" fit>
+			<div class="resources"><!--resources-->
+
+			</div>
+			<div class="actions">
+
+			</div>
+			<div class="features">
+				{{#each features}}
+				<paper-shadow class="featureCard">
+					<div class="featureCardTop">
+						<h2>{{name}}</h2>
+					</div>
+					<div class="featureCardBottom"><p>{{description}}</p></div>
+					<paper-ripple fit></paper-ripple>
+				</paper-shadow>
+				{{/each}}
+			</div>
+			<div class="fab-buffer"></div>
+		</div>
+		<paper-fab id="addFeature" icon="add" title="Add" role="button" tabindex="0" aria-label="Add"></paper-fab>
 	</div>
-	<div class="actions">
-		
-	</div>
-	<div class="features">
-		{{#each features}}
-			<paper-shadow class="featureCard">
-				<div class="featureCardTop">
-					<h1>{{name}}</h1>
-				</div>
-				<div class="featureCardBottom">
-					<p>{{description}}</p>
-				</div>
-				<paper-ripple fit></paper-ripple>
-			</paper-shadow>
-		{{/each}}
-	</div>
-	<paper-fab id="addFeature" icon="add" title="Add" role="button" tabindex="0" aria-label="Add"></paper-fab>
 </template>

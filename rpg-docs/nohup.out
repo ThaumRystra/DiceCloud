@@ -1,0 +1,8 @@
+[[[[[ ~/workspace/rpg-docs ]]]]]
+
+=> Started proxy.
+=> Started MongoDB.
+Vulcanize: Adding all imports...
+=> Started your app.
+
+=> App running at: http://localhost:3000/

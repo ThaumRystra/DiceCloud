@@ -233,19 +233,19 @@ Template.featureEffect.helpers({
 
 Template.featureEffect.events({
 	"tap #commitChanges": function(event){
-		var newEffect = this;
+		var changedFields = {};
 		var inst = Template.instance();
-		newEffect.operation = inst.selectedOperation.get();
-		newEffect.stat = inst.selectedStat.get();
+		changedFields.operation = inst.selectedOperation.get();
+		changedFields.stat = inst.selectedStat.get();
 		var val = inst.value.get();
 		if(_.isNumber(val)){
-			newEffect.value = val;
-			newEffect.calculation = null;
+			changedFields.value = val;
+			changedFields.calculation = null;
 		} else if(_.isString(val)) {
-			newEffect.calculation = val;
-			newEffect.value = null;
+			changedFields.calculation = val;
+			changedFields.value = null;
 		}
-		Meteor.call("updateFeatureEffect", Template.parentData()._id, newEffect);
+		Effects.update(this._id, {$set: changedFields});
 	},
 	"tap #clearChanges": function(event){
 		//essentially re-render
@@ -262,10 +262,12 @@ Template.featureEffect.events({
 		inst.value.set(value);
 	},
 	"tap #deleteEffect": function(event){
-		Features.update(Template.parentData()._id, { $pull: { "effects": {_id: this._id} } });
+		Effects.remove(this._id);
 	},
 	"core-select #statGroupMenu": function(event){
-		var groupIndex = Template.instance().find("#statGroupMenu").selected;
+		var groupMenu = Template.instance().find("#statGroupMenu")
+		if(!groupMenu) return;
+		var groupIndex = groupMenu.selected;
 		var groupName = statGroupNames[groupIndex]
 		var oldName = Template.instance().selectedStatGroup.get();
 		if(oldName != groupName){
@@ -277,8 +279,11 @@ Template.featureEffect.events({
 		}	
 	},
 	"core-select #statMenu": function(event){
-		var statIndex = Template.instance().find("#statMenu").selected;
-		var groupIndex = Template.instance().find("#statGroupMenu").selected;
+		var statMenu = Template.instance().find("#statMenu");
+		var groupMenu = Template.instance().find("#statGroupMenu");
+		if(!statMenu || !groupMenu) return;
+		var statIndex = statMenu.selected;
+		var groupIndex = groupMenu.selected;
 		var groupName = statGroupNames[groupIndex]
 		var group = statGroups[groupName];
 		var statObj = group[statIndex];
@@ -289,7 +294,9 @@ Template.featureEffect.events({
 	"core-select #operationMenu": function(event){
 		var groupName = Template.instance().selectedStatGroup.get();
 		var opGroup = (groupName === "Saving Throws" || groupName === "Skills")? skillOperations : attributeOperations;
-		var opIndex = Template.instance().find("#operationMenu").selected;
+		var opMenu = Template.instance().find("#operationMenu")
+		if(!opMenu) return;
+		var opIndex = opMenu.selected;
 		var op = opGroup[opIndex];
 		if(!op) return;
 		var opName =  op.operation;
@@ -297,7 +304,9 @@ Template.featureEffect.events({
 	},
 	"core-select #multiplierMenu": function(event){
 		var inst = Template.instance();
-		var selected = Template.instance().find("#multiplierMenu").selected;
+		var mulMenu = Template.instance().find("#multiplierMenu");
+		if(!mulMenu) return;
+		var selected = mulMenu.selected;
 		if(selected === 0){
 			inst.value.set(0.5);
 			inst.selectedOperation.set("mul");
@@ -311,7 +320,9 @@ Template.featureEffect.events({
 	},
 	"core-select #proficiencyMenu": function(event){
 		var inst = Template.instance();
-		var selected = inst.find("#proficiencyMenu").selected;
+		var profMenu = inst.find("#proficiencyMenu");
+		if(!profMenu) return;
+		var selected = profMenu.selected;
 		var value;
 		if(selected === 0){
 			inst.value.set(1);
@@ -323,7 +334,9 @@ Template.featureEffect.events({
 	},
 	"change #effectValueInput": function(event){
 		var inst = Template.instance();
-		var value = inst.find("#effectValueInput").value;
+		var input = inst.find("#effectValueInput");
+		if(!input) return;
+		var value = input.value;
 		inst.value.set(value);
 	}
 });

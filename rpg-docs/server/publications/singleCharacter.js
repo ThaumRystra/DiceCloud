@@ -14,3 +14,7 @@ Meteor.publish("characterItems", function(characterId, userId){
 Meteor.publish("characterFeatures", function(characterId, userId){
 	return Features.find({charId: characterId});
 });
+
+Meteor.publish("characterEffects", function(characterId, userId){
+	return Effects.find({charId: characterId});
+});

@@ -9,6 +9,14 @@ this.GlobalUI = (function() {
 		toast.text = text;
 		return toast.show();
 	};
+	
+	GlobalUI.setDialog = function(opts){
+		this.dialog = $("[global-dialog]")[0];
+		Session.set("global.ui.dialogHeader", opts.heading);
+		Session.set("global.ui.dialogData", opts.data);
+		Session.set("global.ui.dialogTemplate", opts.template);
+		Session.set("global.ui.dialogFullOnMobile", opts.fullOnMobile != null);
+	};
 
 	GlobalUI.showDialog = function(opts) {
 		this.dialog = $("[global-dialog]")[0];

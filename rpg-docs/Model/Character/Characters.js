@@ -17,40 +17,22 @@ Schemas.Character = new SimpleSchema({
 
 	//attributes
 	//ability scores
-	strength:     {type: Schemas.Attribute},
-	dexterity:    {type: Schemas.Attribute},
-	constitution: {type: Schemas.Attribute},
-	intelligence: {type: Schemas.Attribute},
-	wisdom:       {type: Schemas.Attribute},
-	charisma:     {type: Schemas.Attribute},
+	strength:         {type: Schemas.Attribute},
+	dexterity:        {type: Schemas.Attribute},
+	constitution:     {type: Schemas.Attribute},
+	intelligence:     {type: Schemas.Attribute},
+	wisdom:           {type: Schemas.Attribute},
+	charisma:         {type: Schemas.Attribute},
 
 	//stats
-	hitPoints:    {type: Schemas.Attribute},
-	"hitPoints.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [
-			{name: "Constitution modifier for each level", calculation: "level * constitutionMod", operation: "add", type: "inate"}
-		]
-	},
-	experience:   {type: Schemas.Attribute},
-	proficiencyBonus:	{type: Schemas.Attribute},
-	"proficiencyBonus.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [
-			{name: "Proficiency bonus by level", calculation: "floor(level / 4 + 1.75)", operation: "add", type: "inate"}
-		]
-	},
-	speed:        {type: Schemas.Attribute},
-	weight:       {type: Schemas.Attribute},
-	age:          {type: Schemas.Attribute},
-	ageRate:      {type: Schemas.Attribute},
-	armor:        {type: Schemas.Attribute},
-	"armor.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [
-			{name: "Dexterity Modifier", calculation: "dexterityArmor", operation: "add", type: "inate"}
-		]
-	},
+	hitPoints:        {type: Schemas.Attribute},
+	experience:       {type: Schemas.Attribute},
+	proficiencyBonus: {type: Schemas.Attribute},
+	speed:            {type: Schemas.Attribute},
+	weight:           {type: Schemas.Attribute},
+	age:              {type: Schemas.Attribute},
+	ageRate:          {type: Schemas.Attribute},
+	armor:            {type: Schemas.Attribute},
 
 	//resources
 	level1SpellSlots: {type: Schemas.Attribute},
@@ -199,61 +181,52 @@ Schemas.Character = new SimpleSchema({
 	"dexterityArmor.ability":	{ type: String, defaultValue: "dexterity" },
 
 	//proficiencies
-	weaponsProficiencies: {
-		type: [Schemas.Proficiency],
-		defaultValue: []
-	},
-	toolsProficiencies: {
-		type: [Schemas.Proficiency],
-		defaultValue: []
-	},
-	languages: {
-		type: [Schemas.Proficiency],
-		defaultValue: []
-	},
+	weaponsProficiencies: { type: [Schemas.Proficiency], defaultValue: [] },
+	toolsProficiencies:   { type: [Schemas.Proficiency], defaultValue: [] },
+	languages:            { type: [Schemas.Proficiency], defaultValue: [] },
 
 	//mechanics
-	actions:		{ type: [Schemas.Action], defaultValue: []},
-	deathSave:		{ type: Schemas.DeathSave },
-	time:			{ type: Number, min: 0, decimal: true, defaultValue: 0},
+	actions:        { type: [Schemas.Action], defaultValue: []},
+	deathSave:      { type: Schemas.DeathSave },
+	time:           { type: Number, min: 0, decimal: true, defaultValue: 0},
 	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
-	buffs:			{ type: [Schemas.Buff], defaultValue: []}
+	buffs:          { type: [Schemas.Buff], defaultValue: []}
 	//TODO add permission stuff for owner, readers and writers
 	//TODO add per-character settings
 });
 
 Characters.attachSchema(Schemas.Character);
 
-//reactively remove expired effects
-//TODO broken with the move from expirations -> buffs
-//TODO fix by finding every buff whose expiry is >= current time, pull those buffs
-Characters.find({},{fields: {time: 1, expirations: 1, features: 1}}).observe({
-	changed: function(character){
-		var currentTime = character.time;
-		_.each(character.expirations, function(expiration){
-			if(expiration.expiry <= currentTime){
-				var charId = character._id;
-				var stat = expiration.stat;
-				//remove expired effects
-				_.each(expiration.effectIds, function(effectId){
-					pullEffect(charId, stat, effectId);
-				});
-				//disable expired features
-				_.each(expiration.featureIds, function(featureId){
-					var feature = Characters.findOne({_id: charId, "features._id": featureId}, {fields: {features: 1}}).features[0];
-					feature.enabled = false;
-					Characters.update({_id: charId, "features._id": featureId}, {$set: {"features.$": feature}});
-				});
-				pullExpiry(charId, expiration._id);
-			}
-		});
-	}
-});
+//TODO on creating a new character, these effects need to be set up
+/*
+"hitPoints.effects": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Constitution modifier for each level", calculation: "level * constitutionMod", operation: "add", type: "inate"}
+		]
+	},
+	"proficiencyBonus.effects": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Proficiency bonus by level", calculation: "floor(level / 4 + 1.75)", operation: "add", type: "inate"}
+		]
+	},
+	"armor.effects": {
+		type: [Schemas.Effect],
+		defaultValue: [
+			{name: "Dexterity Modifier", calculation: "dexterityArmor", operation: "add", type: "inate"}
+		]
+	},
+	{type: "inate", name: "Resistance doesn't stack", operation: "min", value: 0.5}, 
+	{type: "inate", name: "Vulnerability doesn't stack", operation: "max", value:  2}
+*/
 
-var attributeBase = function(charId, attribute){
-	var effects = _.groupBy(attribute.effects, "operation");
+var attributeBase = function(charId, statName){
+	check(statName, String);
+	var effects = Effects.find({charId: charId, stat: statName}).fetch();
+	effects = _.groupBy(effects, "operation");
 	var value = 0;
-	
+
 	//start with the highest base value
 	_.each(effects.base, function(effect){
 		var efv = evaluateEffect(charId, effect)
@@ -261,23 +234,23 @@ var attributeBase = function(charId, attribute){
 			value = effect.value;
 		}
 	});
-	
+
 	//add all the add values
 	_.each(effects.add, function(effect){
 		value += evaluateEffect(charId, effect);
 	});
-	
+
 	//multiply all the mul values
 	_.each(effects.mul, function(effect){
 		value *= evaluateEffect(charId, effect);
 	});
-	
+
 	//ensure value is >= all mins
 	_.each(effects.min, function(effect){
 		var min = evaluateEffect(charId, effect);
 		value = value > min? value : min;
 	});
-	
+
 	//ensure value is <= all maxes
 	_.each(effects.max, function(effect){
 		var max = evaluateEffect(charId, effect);
@@ -348,9 +321,8 @@ Characters.helpers({
 			visitedAttributes.push(attributeName);
 			try{
 				var charId = this._id;
-				var attribute = this.getField(attributeName);
 				//base value
-				var value = attributeBase(charId, attribute);
+				var value = attributeBase(charId, attributeName);
 			}finally{
 				//this attribute returns or fails, pull it from the array, we may visit it again safely
 				visitedAttributes = _.without(visitedAttributes, attributeName);
@@ -388,8 +360,7 @@ Characters.helpers({
 
 				//add multiplied proficiency bonus to modifier
 				mod += prof * this.attributeValue("proficiencyBonus");
-
-				_.each(skill.effects, function(effect){
+				Effects.find({charId: charId, stat: skillName}).forEach(function(effect){
 					switch(effect.operation) {
 						case "add":
 							mod += evaluateEffect(charId, effect);
@@ -415,14 +386,11 @@ Characters.helpers({
 		}
 	})(),
 
-	proficiency: function(skill){
-		if (_.isString(skill)){
-			skill = this.getField(skill);
-		}
+	proficiency: function(skillName){
 		var charId = this._id;
 		//return largest value in proficiency array
 		var prof = 0;
-		_.each(skill.effects, function(effect){
+		Effects.find({charId: charId, stat: skillName}).forEach(function(effect){
 			if(effect.operation === "proficiency"){
 				var newProf = evaluateEffect(charId, effect);
 				if (newProf > prof){
@@ -440,7 +408,7 @@ Characters.helpers({
 		var charId = this._id
 		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
-		_.each(skill.effects, function(effect){
+		Effects.find({charId: charId, stat: skillName}).forEach(function(effect){
 			if(effect.operation === "passiveAdd"){
 				value += evaluateEffect(charId, effect);
 			}

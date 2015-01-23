@@ -8,10 +8,6 @@ Schemas.Buff = new SimpleSchema({
 			if(!this.isSet) return Random.id();
 		}},
 	
-	//things that expire
-	effects: 	{ type: [Schemas.Effect], defaultValue: [] },
-	actions:	{ type: [Schemas.Action], defaultValue: [] },
-	
 	//expiry time
 	expiry:     { type: Number, optional: true},
 	duration:	{ type: Number }

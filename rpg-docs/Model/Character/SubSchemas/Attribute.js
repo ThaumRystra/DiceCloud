@@ -5,8 +5,6 @@ Schemas.Attribute = new SimpleSchema({
 		type: Number,
 		defaultValue: 0
 	},
-	//effect arrays
-	effects: { type: [Schemas.Effect], defaultValue: [] },
 	reset: {
 		type: String,
 		defaultValue: "longRest",
@@ -20,14 +18,6 @@ Schemas.Vulnerability = new SimpleSchema({
 	adjustment: {
 		type: Number,
 		defaultValue: 0
-	},
-	//effect arrays
-	effects: { 
-		type: [Schemas.Effect], 
-		defaultValue: [
-			{type: "inate", name: "Resistance doesn't stack", operation: "min", value: 0.5}, 
-			{type: "inate", name: "Vulnerability doesn't stack", operation: "max", value:  2}
-		]
 	},
 	reset: {
 		type: String,

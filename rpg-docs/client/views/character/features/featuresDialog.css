@@ -1,5 +1,5 @@
 body /deep/ .featureDialogWidth {
-	width: 600px;
+	width: 560px;
 }
 
 body /deep/ #statGroupDropDown {
@@ -20,4 +20,13 @@ body /deep/ #damageMultiplierDropDown {
 
 body /deep/ #proficiencyDropDown {
 	width: 120px;
+}
+
+html /deep/ paper-input {
+	margin-bottom: 1px;
+}
+
+html /deep/ .featureEffect {
+	display: flex;
+	align-items: flex-end;
 }
