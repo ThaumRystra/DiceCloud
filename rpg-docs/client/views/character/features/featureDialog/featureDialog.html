@@ -1,9 +1,3 @@
-<template name="autoFeatureDialog">
-	{{> quickForm schema="Schemas.Feature" id="insertFeatureForm" type="insert"}}
-	<paper-button affirmative>Cancel</paper-button>
-	<paper-button affirmative>Save Item</paper-button>
-</template>
-
 <template name="featureDialog">
 	{{#with feature}}
 		<paper-menu-button>
@@ -24,7 +18,7 @@
 		</paper-input-decorator>
 		<h3>Effects</h3>
 		{{#each effects}}
-			{{>featureEffect}}
+			{{>effectEdit}}
 		{{/each}}
 		<br>
 		<paper-icon-button id="addEffectButton" role="button" tabindex="0" icon="add" aria-label="addEffect"></paper-icon-button>

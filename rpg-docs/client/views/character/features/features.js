@@ -8,7 +8,7 @@ Template.features.helpers({
 Template.features.events({
 	"tap #addFeature": function(event){
 		var featureId = Features.insert({name: "New Feature", charId: this._id});
-		GlobalUI.showDialog({
+		GlobalUI.setDialog({
 			heading:      "New Feature",
 			template:     "featureDialog",
 			data:         {featureId: featureId, charId: this._id},

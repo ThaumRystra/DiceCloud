@@ -223,7 +223,7 @@ Characters.attachSchema(Schemas.Character);
 
 var attributeBase = function(charId, statName){
 	check(statName, String);
-	var effects = Effects.find({charId: charId, stat: statName}).fetch();
+	var effects = Effects.find({charId: charId, stat: statName, enabled: true}).fetch();
 	effects = _.groupBy(effects, "operation");
 	var value = 0;
 
@@ -360,7 +360,7 @@ Characters.helpers({
 
 				//add multiplied proficiency bonus to modifier
 				mod += prof * this.attributeValue("proficiencyBonus");
-				Effects.find({charId: charId, stat: skillName}).forEach(function(effect){
+				Effects.find({charId: charId, stat: skillName, enabled: true}).forEach(function(effect){
 					switch(effect.operation) {
 						case "add":
 							mod += evaluateEffect(charId, effect);
@@ -390,7 +390,7 @@ Characters.helpers({
 		var charId = this._id;
 		//return largest value in proficiency array
 		var prof = 0;
-		Effects.find({charId: charId, stat: skillName}).forEach(function(effect){
+		Effects.find({charId: charId, stat: skillName, enabled: true}).forEach(function(effect){
 			if(effect.operation === "proficiency"){
 				var newProf = evaluateEffect(charId, effect);
 				if (newProf > prof){
@@ -408,7 +408,7 @@ Characters.helpers({
 		var charId = this._id
 		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
-		Effects.find({charId: charId, stat: skillName}).forEach(function(effect){
+		Effects.find({charId: charId, stat: skillName, enabled: true}).forEach(function(effect){
 			if(effect.operation === "passiveAdd"){
 				value += evaluateEffect(charId, effect);
 			}

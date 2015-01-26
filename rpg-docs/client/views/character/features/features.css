@@ -22,17 +22,3 @@ paper-shadow.featureCard {
 .featureCardBottom {
 	white-space: pre-line;
 }
-
-#addFeature {
-		position: absolute;
-		bottom: 24px;
-		right: 24px;
-	}
-
-@media (max-width: 640px) {
-	#addFeature {
-		bottom: 16px;
-		right: 24px;
-	}
-}
-

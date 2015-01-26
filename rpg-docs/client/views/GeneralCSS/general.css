@@ -112,3 +112,13 @@ paper-button {
 		border-radius: 0;
 	}
 }
+
+.floatyButton {
+	position: absolute;
+	bottom: 24px;
+	right: 24px;
+}
+
+paper-fab-menu /deep/ .container {
+	padding: 24px !important;
+}

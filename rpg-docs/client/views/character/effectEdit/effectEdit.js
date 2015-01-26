@@ -1,3 +1,4 @@
+//TODO add dexterity armor
 var stats = [
 	{stat: "strength", name: "Strength", group: "Ability Scores"},
 	{stat: "dexterity", name: "Dexterity", group: "Ability Scores"},
@@ -120,14 +121,14 @@ var operationIndex = function(statName, operation){
 	return _.indexOf(_.pluck(opGroup, "operation"), operation);
 }
 
-Template.featureEffect.created = function(){
+Template.effectEdit.created = function(){
 	this.selectedStatGroup = new ReactiveVar();
 	this.selectedStat = new ReactiveVar();
 	this.selectedOperation = new ReactiveVar();
 	this.value = new ReactiveVar();
 };
 
-Template.featureEffect.rendered = function(){
+Template.effectEdit.rendered = function(){
 	var self = this;
 	self.autorun(function(){
 		var data = Template.currentData();
@@ -153,7 +154,7 @@ Template.featureEffect.rendered = function(){
 	})
 };
 
-Template.featureEffect.helpers({
+Template.effectEdit.helpers({
 	selectedStatGroup: function(){
 		var groupName = Template.instance().selectedStatGroup.get();
 		return _.indexOf(statGroupNames, groupName);
@@ -231,7 +232,7 @@ Template.featureEffect.helpers({
 
 });
 
-Template.featureEffect.events({
+Template.effectEdit.events({
 	"tap #commitChanges": function(event){
 		var changedFields = {};
 		var inst = Template.instance();

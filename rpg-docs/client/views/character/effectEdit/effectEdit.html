@@ -1,10 +1,10 @@
-<template name="featureEffect">
-	<div class="featureEffect">
+<template name="effectEdit">
+	<div class="effectEdit">
 		<paper-dropdown-menu id="statGroupDropDown" label="Stat Group">
 			<paper-dropdown class="dropdown">
 				<core-menu id="statGroupMenu" class="menu" selected={{selectedStatGroup}}>
 					{{#each statGroups}}
-						<paper-item>{{this}}</paper-item>
+						<paper-item class="statGroupSelect">{{this}}</paper-item>
 					{{/each}}
 				</core-menu>
 			</paper-dropdown>

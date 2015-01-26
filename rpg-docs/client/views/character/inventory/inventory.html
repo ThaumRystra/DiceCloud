@@ -1,27 +1,33 @@
 <template name="inventory">
-	<paper-shadow class="equipment card double">
-		Armor:<br>
-		<paper-item>{{#if armor}}{{armor.name}}{{else}}none{{/if}}</paper-item>
-		Equipment:<br>
-		{{#each equipment}}
-			<paper-item>
-				{{name}}
-			</paper-item>
-		{{/each}}
-	</paper-shadow>
-	<div class="containers">
-		{{#each containers}}
-		<paper-shadow class="card">
-			<h3>{{name}}</h3>
-			{{#each items ../_id _id}}
-				<paper-item>
-					{{#if stackable}}{{quantity}}{{/if}} {{pluralName}}
-				</paper-item>
-			{{/each}}
-		</paper-shadow>
-		{{/each}}
+	<div fit>
+		<div id="inventory" class="scroll-y" fit>
+			<paper-shadow class="equipment card double">
+				Armor:<br>
+				<paper-item>{{#if armor}}{{armor.name}}{{else}}none{{/if}}</paper-item>
+				Equipment:<br>
+				{{#each equipment}}
+					<paper-item class="inventoryItem">
+						{{name}}
+					</paper-item>
+				{{/each}}
+			</paper-shadow>
+			<div class="containers">
+				{{#each containers}}
+					<paper-shadow class="card">
+						<h3>{{name}}</h3>
+						{{#each items ../_id _id}}
+							<paper-item class="inventoryItem">
+								{{#if gt1 quantity}}{{quantity}}{{/if}}&nbsp;{{pluralName}}
+							</paper-item>
+						{{/each}}
+					</paper-shadow>
+				{{/each}}
+			</div>
+		</div>
+		<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
+			<paper-fab-menu-item id="addItem" icon="note-add" color="#d23f31" tooltip="Item"></paper-fab-menu-item>
+			<paper-fab-menu-item id="addContainer" icon="work" color="#d23f31" tooltip="Container"></paper-fab-menu-item>
+		</paper-fab-menu>
+
 	</div>
-	<paper-fab id="add" icon="add" title="Add" role="button" tabindex="0" aria-label="Add"></paper-fab>
-	<paper-fab id="addItem" icon="note-add" title="Add Item" role="button" tabindex="0" aria-label="Add Item"></paper-fab>
-	<paper-fab id="addContainer" icon="work" title="Add Container" role="button" tabindex="0" aria-label="Add Container"></paper-fab>
 </template>

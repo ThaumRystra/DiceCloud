@@ -1,0 +1,77 @@
+<template name="itemDialog">
+	{{#with item}}
+		<!--Delete button-->
+		<paper-menu-button>
+			<paper-icon-button role="button" tabindex="0" icon="delete" aria-label="Delete Item" noink></paper-icon-button>
+			<paper-dropdown class="dropdown">
+				<paper-button id="deleteItem">Delete Item</paper-button>
+				<paper-button>Cancel</paper-button>
+			</paper-dropdown>
+		</paper-menu-button>
+		
+		<div class="itemDialogWidth"></div>
+		<!--Name and plural name-->
+		<paper-input id="itemNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+		{{# if quantity}}<paper-input id="itemPluralInput" label="Plural Name" floatinglabel value={{plural}}></paper-input>{{/if}}
+		<!--Equipped-->
+		{{# if canEquip}}
+			<div center horizontal layout>
+				<div flex>Equipped</div>
+				<paper-toggle-button id="equippedInput"
+									 checked={{equipped}} 
+									 role="button" 
+									 aria-pressed="false" 
+									 tabindex="0" 
+									 touch-action="pan-y">
+				</paper-toggle-button>
+			</div>
+		{{/if}}
+		<!--Quantity-->
+		<paper-input-decorator label="Quantity" floatinglabel>
+			<input id="quantityInput" type="number" value={{quantity}}>
+		</paper-input-decorator>
+		<!--Weight-->
+		<paper-input-decorator label="Weight" floatinglabel>
+			<input id="weightInput" type="number" value={{weight}}>
+		</paper-input-decorator>
+		<!--Value-->
+		<paper-input-decorator label="Value" floatinglabel>
+			<input id="valueInput" type="number" value={{value}}>
+		</paper-input-decorator>
+		<!--Description-->
+		<paper-input-decorator label="Description" floatinglabel layout vertical>
+			<paper-autogrow-textarea>
+				<textarea id="itemDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+			</paper-autogrow-textarea>
+		</paper-input-decorator>
+		<!--Container dropdown-->
+		<paper-dropdown-menu label="Container">
+			<paper-dropdown class="dropdown">
+				<core-menu id="containerDropDown" class="menu"  selected={{containerIndex}}>
+					{{#each containers}}
+						<paper-item class="containerMenuItem">{{name}}</paper-item>
+					{{/each}}
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+		<!--Equipment slot dropdown-->
+		<paper-dropdown-menu label="slot">
+			<paper-dropdown class="dropdown">
+				<core-menu id="slotDropDown" class="menu"  selected={{equipmentSlotIndex}}>
+					{{#each equipmentSlots}}
+						<paper-item class="slotMenuItem">{{name}}</paper-item>
+					{{/each}}
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+		
+		<!--Effects-->
+		<h3>Effects</h3>
+		{{#each effects}}
+			{{>effectEdit}}
+		{{/each}}
+		<br>
+		<paper-icon-button id="addEffectButton" role="button" tabindex="0" icon="add" aria-label="addEffect"></paper-icon-button>
+	{{/with}}
+	<paper-button affirmative>Done</paper-button>
+</template>
