@@ -3,7 +3,7 @@ Items = new Meteor.Collection('items');
 Schemas.Item = new SimpleSchema({
 	name: 		{type: String, defaultValue: "New Item"},
 	plural:		{type: String, optional: true},
-	description:{type: String, defaultValue: ""},
+	description:{type: String, optional: true},
 	container:	{type: String, regEx: SimpleSchema.RegEx.Id}, //id of container it is normally stowed in
 	charId:     {type: String, regEx: SimpleSchema.RegEx.Id}, //id of owner
 	quantity:	{type: Number, min: 0, defaultValue: 1},

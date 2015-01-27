@@ -53,5 +53,12 @@ Template.inventory.events({
 			data:         {itemId: this._id, charId: this.charId},
 			fullOnMobile: true
 		});
+	},
+	"tap .containerName": function(event){
+		GlobalUI.setDialog({
+			template:     "containerDialog",
+			data:         {containerId: this._id, charId: this.charId},
+			fullOnMobile: true
+		});
 	}
 })
