@@ -51,19 +51,3 @@ Schemas.Effect = new SimpleSchema({
 });
 
 Effects.attachSchema(Schemas.Effect);
-
-//Keep effects in-sync with items
-Effects.find({type: "equipment"}, {fields: {type: 1, enabled: 1, sourceId: 1}}).observe({
-	added: function(newEffect){
-		var item = Items.findOne(newEffect.sourceId);
-		if(item && item.equipped !== newEffect.enabled){
-			Effects.update(newEffect._id, {$set: {enabled: item.equipped}})
-		}
-	},
-	changed: function(newEffect, oldEffect){
-		var item = Items.findOne(newEffect.sourceId);
-		if(item && item.equipped !== newEffect.enabled){
-			Effects.update(newEffect._id, {$set: {enabled: item.equipped}})
-		}
-	}
-})

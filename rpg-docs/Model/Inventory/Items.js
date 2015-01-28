@@ -38,17 +38,15 @@ Items.helpers({
 //keep effects sycned with items
 Items.find({}, {fields: {equipped: 1}}).observeChanges({
 	added: function(id, fields){
-		Effects.find({type: "equipment", sourceId: id}, {fields: {enabled: 1} }).forEach(function(effect){
-			if(fields.equipped !== effect.enabled){
-				Effects.update(effect._id, {$set: {enabled: fields.equipped}})
-			}
+		Effects.find({ type: "equipment", sourceId: id, enabled: {$ne: fields.equipped} },
+					 {fields: {enabled: 1} }).forEach(function(effect){
+			Effects.update(effect._id, {$set: {enabled: fields.equipped}})
 		});
 	},
 	changed: function(id, fields){
-		Effects.find({type: "equipment", sourceId: id}, {fields: {enabled: 1} }).forEach(function(effect){
-			if(fields.equipped !== effect.enabled){
-				Effects.update(effect._id, {$set: {enabled: fields.equipped}})
-			}
+		Effects.find({type: "equipment", sourceId: id, enabled: {$ne: fields.equipped} }, 
+					 {fields: {enabled: 1} }).forEach(function(effect){
+			Effects.update(effect._id, {$set: {enabled: fields.equipped}})
 		});
 	},
 	removed: function(id){
@@ -57,3 +55,18 @@ Items.find({}, {fields: {equipped: 1}}).observeChanges({
 		});
 	}
 });
+
+Effects.find({type: "equipment"}, {fields: {type: 1, enabled: 1, sourceId: 1}}).observe({
+	added: function(newEffect){
+		var item = Items.findOne(newEffect.sourceId, {fields: {equipped: 1}});
+		if(item && item.equipped !== newEffect.enabled){
+			Effects.update(newEffect._id, {$set: {enabled: item.equipped}})
+		}
+	},
+	changed: function(newEffect, oldEffect){
+		var item = Items.findOne(newEffect.sourceId, {fields: {equipped: 1}});
+		if(item && item.equipped !== newEffect.enabled){
+			Effects.update(newEffect._id, {$set: {enabled: item.equipped}})
+		}
+	}
+})
