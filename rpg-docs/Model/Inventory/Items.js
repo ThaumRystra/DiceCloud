@@ -36,6 +36,7 @@ Items.helpers({
 });
 
 //keep effects sycned with items
+//if an item's equipped state changes, update related effects' enabled state
 Items.find({}, {fields: {equipped: 1}}).observeChanges({
 	added: function(id, fields){
 		Effects.find({ type: "equipment", sourceId: id, enabled: {$ne: fields.equipped} },
@@ -48,14 +49,10 @@ Items.find({}, {fields: {equipped: 1}}).observeChanges({
 					 {fields: {enabled: 1} }).forEach(function(effect){
 			Effects.update(effect._id, {$set: {enabled: fields.equipped}})
 		});
-	},
-	removed: function(id){
-		Effects.find({type: "equipment", sourceId: id}, {fields: {_id: 1} }).forEach(function(effect){
-			Effects.remove(effect._id);
-		});
 	}
 });
 
+//if an effect's type, source or enabled state change, keep the enabled state up to date with the item's equipped state
 Effects.find({type: "equipment"}, {fields: {type: 1, enabled: 1, sourceId: 1}}).observe({
 	added: function(newEffect){
 		var item = Items.findOne(newEffect.sourceId, {fields: {equipped: 1}});

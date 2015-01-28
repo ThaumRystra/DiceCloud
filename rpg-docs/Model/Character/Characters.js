@@ -349,7 +349,7 @@ Characters.helpers({
 				var mod = +getMod(ability)
 
 				//multiply proficiency bonus by largest value in proficiency array
-				var prof = this.proficiency(skill);
+				var prof = this.proficiency(skillName);
 
 				//add multiplied proficiency bonus to modifier
 				mod += prof * this.attributeValue("proficiencyBonus");
