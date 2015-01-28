@@ -180,17 +180,10 @@ Schemas.Character = new SimpleSchema({
 	dexterityArmor:		{type: Schemas.Skill},
 	"dexterityArmor.ability":	{ type: String, defaultValue: "dexterity" },
 
-	//proficiencies
-	weaponsProficiencies: { type: [Schemas.Proficiency], defaultValue: [] },
-	toolsProficiencies:   { type: [Schemas.Proficiency], defaultValue: [] },
-	languages:            { type: [Schemas.Proficiency], defaultValue: [] },
-
 	//mechanics
-	actions:        { type: [Schemas.Action], defaultValue: []},
 	deathSave:      { type: Schemas.DeathSave },
 	time:           { type: Number, min: 0, decimal: true, defaultValue: 0},
-	initiativeOrder:{ type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
-	buffs:          { type: [Schemas.Buff], defaultValue: []}
+	initiativeRoll: { type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
 	//TODO add permission stuff for owner, readers and writers
 	//TODO add per-character settings
 });

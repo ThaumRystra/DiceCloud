@@ -1,13 +1,12 @@
+Actions = new Meteor.Collection("actions");
+
 /*
  * Actions are given to a character by items and features
  */
 Schemas.Action = new SimpleSchema({
-	_id: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		autoValue: function(){
-			if(!this.isSet) return Random.id();
-		}
+	charId: {
+		type: String, 
+		regEx: SimpleSchema.RegEx.Id
 	},
 	name: {
 		type: String
@@ -20,10 +19,10 @@ Schemas.Action = new SimpleSchema({
 		allowedValues: ["action, bonus, reaction, free"],
 		defaultValue: "action"
 	},
-	selfBuffs: {
-		type: [Schemas.Buff], defaultValue: []
-	},
-	selfAdjustments: {
+	//the immediate impact of doing this action (eg. -1 rages)
+	adjustments: {
 		type: [Schemas.Adjustment], defaultValue: []
 	}
 });
+
+Actions.attachSchema(Schemas.Action);

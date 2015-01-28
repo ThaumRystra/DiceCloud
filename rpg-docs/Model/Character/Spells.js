@@ -1,11 +1,7 @@
+Spells = new Meteor.Collection("spells");
+
 Schemas.Spell = new SimpleSchema({
-	_id: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		autoValue: function(){
-			if(!isSet) return Random.id();
-		}
-	},
+	charId: {type: String, regEx: SimpleSchema.RegEx.Id},
 	name:		{type: String},
 	description:{type: String},
 	castingTime:{type: String},
@@ -20,3 +16,5 @@ Schemas.Spell = new SimpleSchema({
 	level:		{type: Number},
 	class:		{type: String}
 });
+
+Spells.attachSchema(Schemas.Spell);
