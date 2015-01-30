@@ -188,14 +188,14 @@ Template.effectEdit.helpers({
 		//resistance/vulnerability template
 		var group = Template.instance().selectedStatGroup.get();
 		if(group === "Weakness/Resistance") return "multiplierEffectValue";
-		
+
 		var op = Template.instance().selectedOperation.get();
 		if(!op) return null;
 		//operations that don't need templates
 		if(op === "advantage" || op === "disadvantage" || op === "fail") return null;
 		//proficiency template
 		if(op === "proficiency") return "proficiencyEffectValue";
-		
+
 		//default template
 		return "regularEffectValue";
 	},
@@ -265,71 +265,58 @@ Template.effectEdit.events({
 	"tap #deleteEffect": function(event){
 		Effects.remove(this._id);
 	},
-	"core-select #statGroupMenu": function(event){
-		var groupMenu = Template.instance().find("#statGroupMenu")
-		if(!groupMenu) return;
-		var groupIndex = groupMenu.selected;
-		var groupName = statGroupNames[groupIndex]
+	"core-select #statGroupDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var groupName = detail.item.getAttribute("name");
 		var oldName = Template.instance().selectedStatGroup.get();
 		if(oldName != groupName){
 			Template.instance().selectedStatGroup.set(groupName);
-			var oldIndex = statGroupIndex(Template.instance().selectedStat.get()) 
+			var oldIndex = statGroupIndex(Template.instance().selectedStat.get());
+			var groupIndex = statGroupIndex(groupName);
 			if(oldIndex != groupIndex){
 				Template.instance().selectedStat.set(null);
 			}
 		}	
 	},
-	"core-select #statMenu": function(event){
-		var statMenu = Template.instance().find("#statMenu");
-		var groupMenu = Template.instance().find("#statGroupMenu");
-		if(!statMenu || !groupMenu) return;
-		var statIndex = statMenu.selected;
-		var groupIndex = groupMenu.selected;
-		var groupName = statGroupNames[groupIndex]
-		var group = statGroups[groupName];
-		var statObj = group[statIndex];
-		if(!statObj) return;
-		var statName = statObj.stat;
+	"core-select #statDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var statName = detail.item.getAttribute("name");
 		Template.instance().selectedStat.set(statName);
 	},
-	"core-select #operationMenu": function(event){
-		var groupName = Template.instance().selectedStatGroup.get();
-		var opGroup = (groupName === "Saving Throws" || groupName === "Skills")? skillOperations : attributeOperations;
-		var opMenu = Template.instance().find("#operationMenu")
-		if(!opMenu) return;
-		var opIndex = opMenu.selected;
-		var op = opGroup[opIndex];
-		if(!op) return;
-		var opName =  op.operation;
+	"core-select #operationDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var opName = detail.item.getAttribute("name");
 		Template.instance().selectedOperation.set(opName);
 	},
-	"core-select #multiplierMenu": function(event){
+	"core-select #damageMultiplierDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var selected = detail.item.getAttribute("name");
 		var inst = Template.instance();
-		var mulMenu = Template.instance().find("#multiplierMenu");
-		if(!mulMenu) return;
-		var selected = mulMenu.selected;
-		if(selected === 0){
+		if(selected === "resistance"){
 			inst.value.set(0.5);
 			inst.selectedOperation.set("mul");
-		} else if (selected === 1){
+		} else if (selected === "vulnerability"){
 			inst.value.set(2);
 			inst.selectedOperation.set("mul");
-		} else if (selected === 2){
+		} else if (selected === "immunity"){
 			inst.value.set(0);
 			inst.selectedOperation.set("max");
 		}	
 	},
-	"core-select #proficiencyMenu": function(event){
+	"core-select #proficiencyDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var selected = detail.item.getAttribute("name");
 		var inst = Template.instance();
-		var profMenu = inst.find("#proficiencyMenu");
-		if(!profMenu) return;
-		var selected = profMenu.selected;
-		var value;
-		if(selected === 0){
+		if(selected === "proficient"){
 			inst.value.set(1);
-		} else if (selected === 1){
+		} else if (selected === "half"){
 			inst.value.set(0.5);
-		} else if (selected === 2){
+		} else if (selected === "double"){
 			inst.value.set(2);
 		}
 	},

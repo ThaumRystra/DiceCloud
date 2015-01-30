@@ -1,3 +1,12 @@
 body /deep/ .featureDialogWidth {
 	width: 560px;
 }
+
+.featureContent {
+	padding: 24px;
+}
+
+#addEffectButton {
+	background: #d23f31;
+	color: #fff;
+}

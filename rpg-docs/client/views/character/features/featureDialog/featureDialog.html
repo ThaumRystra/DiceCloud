@@ -1,27 +1,32 @@
 <template name="featureDialog">
 	{{#with feature}}
-		<paper-menu-button>
-			<paper-icon-button role="button" tabindex="0" icon="delete" aria-label="Delete Feature" noink></paper-icon-button>
-			<paper-dropdown class="dropdown">
-				<paper-button id="deleteFeature">Delete Feature</paper-button>
-				<paper-button>Cancel</paper-button>
-			</paper-dropdown>
-		</paper-menu-button>
-		
-		
-		<div class="featureDialogWidth"></div>
-		<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-		<paper-input-decorator label="Description" floatinglabel layout vertical>
-			<paper-autogrow-textarea>
-				<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-			</paper-autogrow-textarea>
-		</paper-input-decorator>
-		<h3>Effects</h3>
-		{{#each effects}}
-			{{>effectEdit}}
-		{{/each}}
-		<br>
-		<paper-icon-button id="addEffectButton" role="button" tabindex="0" icon="add" aria-label="addEffect"></paper-icon-button>
+		<core-header-panel fit>
+			<core-toolbar>
+				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
+				<div flex>{{name}}</div>
+				<paper-menu-button>
+					<paper-icon-button role="button" tabindex="0" icon="delete" aria-label="Delete Feature" noink></paper-icon-button>
+					<paper-dropdown layered class="dropdown">
+						<paper-button id="deleteFeature">Delete Feature</paper-button>
+						<paper-button>Cancel</paper-button>
+					</paper-dropdown>
+				</paper-menu-button>
+			</core-toolbar>
+			<div class="featureContent">
+				<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+				<paper-input-decorator label="Description" floatinglabel layout vertical>
+					<paper-autogrow-textarea>
+						<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+					</paper-autogrow-textarea>
+				</paper-input-decorator>
+				<h3>Effects</h3>
+				{{#each effects}}
+					{{>effectEdit}}
+				{{/each}}
+				<div layout horizontal end-justified>
+					<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
+				</div>
+			</div>
+		</core-header-panel>
 	{{/with}}
-	<paper-button affirmative>Done</paper-button>
 </template>

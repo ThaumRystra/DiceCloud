@@ -9,7 +9,7 @@
 			</div>
 			<div class="features">
 				{{#each features}}
-				<paper-shadow class="featureCard">
+				<paper-shadow class="featureCard" hero-id="main">
 					<div class="featureCardTop">
 						<h2>{{name}}</h2>
 					</div>
@@ -20,6 +20,13 @@
 			</div>
 			<div class="fab-buffer"></div>
 		</div>
-		<paper-fab id="addFeature" class="floatyButton" icon="add" title="Add" role="button" tabindex="0" aria-label="Add"></paper-fab>
+		<paper-fab id="addFeature" 
+				   class="floatyButton" 
+				   icon="add" 
+				   title="Add" 
+				   role="button" 
+				   tabindex="0" 
+				   aria-label="Add" 
+				   hero-id="main"></paper-fab>
 	</div>
 </template>

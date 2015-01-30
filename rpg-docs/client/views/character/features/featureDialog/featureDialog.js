@@ -5,13 +5,19 @@ Template.featureDialog.rendered = function(){
 		if(feature && feature.name) Session.set("global.ui.dialogHeader", feature.name);
 	})
 	//after the dialog is built, open it
-	_.defer(function(){GlobalUI.dialog.open()});
+	if (!this.alreadyRendered){
+		Session.set("global.ui.detailShow", true);
+		this.alreadyRendered = true;
+	}
 }
 
 Template.featureDialog.events({
+	"tap #backButton": function(){
+		GlobalUI.closeDetail()
+	},
 	"tap #deleteFeature": function(){
 		Features.remove(this._id);
-		GlobalUI.closeDialog()
+		GlobalUI.closeDetail()
 	},
 	"tap #addEffectButton": function(){
 		Effects.insert({

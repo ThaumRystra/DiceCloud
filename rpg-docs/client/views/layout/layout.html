@@ -8,9 +8,27 @@
 				<core-item icon="settings" label="item2"></core-item>
 			</core-menu>
 		</core-header-panel>
-		<core-header-panel main navigation flex mode="seamed">
-			{{> yield}}
-		</core-header-panel>
+		<core-animated-pages main 
+							 navigation 
+							 detail-pages 
+							 transitions="hero-transition cross-fade"
+							 selected={{globalDetailSelected}}>
+			<section id="mainContentSection">
+				<core-header-panel fit mode="seamed">
+					{{> yield}}
+				</core-header-panel>
+			</section>
+			<section id="detailSection">
+				<div id="detailScreenFiller">
+					<div id="screenDim" cross-fade></div>
+					<paper-shadow id="globalDetail" z="5" animated hero hero-id="main">
+						{{#if globalDetailTemplate}}
+							{{> UI.dynamic template=globalDetailTemplate data=globalDetailData}}
+						{{/if}}
+					</paper-shadow>
+				</div>
+			</section>
+		</core-animated-pages>
 	</core-drawer-panel>
 
 	<paper-action-dialog global-dialog backdrop
@@ -25,4 +43,6 @@
 	</paper-action-dialog>
 
 	<paper-toast global-toast></paper-toast>
+	<core-overlay></core-overlay>
+	<core-overlay-layer></core-overlay-layer>
 </template>

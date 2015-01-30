@@ -1,20 +1,20 @@
 <template name="effectEdit">
 	<div class="effectEdit">
 		<paper-dropdown-menu id="statGroupDropDown" label="Stat Group">
-			<paper-dropdown class="dropdown">
+			<paper-dropdown layered class="dropdown">
 				<core-menu id="statGroupMenu" class="menu" selected={{selectedStatGroup}}>
 					{{#each statGroups}}
-						<paper-item class="statGroupSelect">{{this}}</paper-item>
+						<paper-item class="statGroupSelect" name={{this}}>{{this}}</paper-item>
 					{{/each}}
 				</core-menu>
 			</paper-dropdown>
 		</paper-dropdown-menu>
 		{{#if stats}}
 			<paper-dropdown-menu id="statDropDown" label="Stat">
-				<paper-dropdown class="dropdown">
-					<core-menu id="statMenu" class="menu"  selected={{selectedStat}}>
+				<paper-dropdown layered class="dropdown">
+					<core-menu id="statMenu" class="menu"  selected={{selectedStat}} on-tap="onStatMenuTap">
 						{{#each stats}}
-							<paper-item>{{name}}</paper-item>
+							<paper-item name={{stat}}>{{name}}</paper-item>
 						{{/each}}
 					</core-menu>
 				</paper-dropdown>
@@ -22,10 +22,10 @@
 		{{/if}}
 		{{#if operations}}
 			<paper-dropdown-menu id="operationDropDown" label="Operation">
-				<paper-dropdown class="dropdown">
+				<paper-dropdown layered class="dropdown">
 					<core-menu id="operationMenu" class="menu" selected={{selectedOperation}}>
 						{{#each operations}}
-							<paper-item>{{name}}</paper-item>
+							<paper-item name={{operation}}>{{name}}</paper-item>
 						{{/each}}
 					</core-menu>
 				</paper-dropdown>
@@ -48,11 +48,11 @@
 
 <template name="multiplierEffectValue">
 	<paper-dropdown-menu id="damageMultiplierDropDown" label="Damage Multiplier">
-		<paper-dropdown class="dropdown">
+		<paper-dropdown layered class="dropdown">
 			<core-menu id="multiplierMenu" class="menu" selected={{selectedDamageMultiplier}}>
-				<paper-item>Resistance</paper-item>
-				<paper-item>Vulnerability</paper-item>
-				<paper-item>Immunity</paper-item>
+				<paper-item name="resistance">Resistance</paper-item>
+				<paper-item name="vulnerability">Vulnerability</paper-item>
+				<paper-item name="immunity">Immunity</paper-item>
 			</core-menu>
 		</paper-dropdown>
 	</paper-dropdown-menu>
@@ -60,11 +60,11 @@
 
 <template name="proficiencyEffectValue">
 	<paper-dropdown-menu id="proficiencyDropDown" label="Proficiency">
-		<paper-dropdown class="dropdown">
+		<paper-dropdown layered class="dropdown">
 			<core-menu id="proficiencyMenu" class="menu" selected={{selectedProfiencyMultiplier}}>
-				<paper-item>Proficient</paper-item>
-				<paper-item>Half Prof. Bonus</paper-item>
-				<paper-item>Double Prof. Bonus</paper-item>
+				<paper-item name="proficient">Proficient</paper-item>
+				<paper-item name="half">Half Prof. Bonus</paper-item>
+				<paper-item name="double">Double Prof. Bonus</paper-item>
 			</core-menu>
 		</paper-dropdown>
 	</paper-dropdown-menu>

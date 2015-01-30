@@ -223,8 +223,8 @@ var attributeBase = function(charId, statName){
 	//start with the highest base value
 	_.each(effects.base, function(effect){
 		var efv = evaluateEffect(charId, effect)
-		if (effect.value > value){
-			value = effect.value;
+		if (efv > value){
+			value = efv;
 		}
 	});
 

@@ -43,6 +43,9 @@ Template.characterSheet.events({
 	"swiperight": function(event){
 		incTab(Template.instance(), -1);
 	},
+	"core-animated-pages-transition-end #tabPages": function(event) {
+		event.stopPropagation();
+	}
 });
 
 /* requires the following templates

@@ -22,7 +22,7 @@ html /deep/ paper-input {
 	margin-bottom: 1px;
 }
 
-html /deep/ .featureEffect {
+html /deep/ .effectEdit {
 	display: flex;
 	align-items: flex-end;
 }
