@@ -9,4 +9,5 @@ body /deep/ .featureDialogWidth {
 #addEffectButton {
 	background: #d23f31;
 	color: #fff;
+	margin-top: 16px;
 }

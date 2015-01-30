@@ -4,6 +4,16 @@ Template.featureDialog.rendered = function(){
 		var feature = Features.findOne(Template.currentData().featureId, {fields: {name: 1}});
 		if(feature && feature.name) Session.set("global.ui.dialogHeader", feature.name);
 	})
+	//update all autogrows after they've been filled
+	var pata = this.$("paper-autogrow-textarea");
+	pata.each(function(index, el){
+		el.update($(el).children().get(0));
+	})
+	//update all input fields as well
+	var input = this.$("paper-input");
+	input.each(function(index, el){
+		el.valueChanged();
+	})
 	//after the dialog is built, open it
 	if (!this.alreadyRendered){
 		Session.set("global.ui.detailShow", true);
