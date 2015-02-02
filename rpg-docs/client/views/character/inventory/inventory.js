@@ -36,29 +36,35 @@ Template.inventory.events({
 		}
 		_.defer(function(){
 			var itemId = Items.insert({charId: charId, container: containerId});
-			GlobalUI.showDialog({
-				template:     "itemDialog",
-				data:         {itemId: itemId, charId: charId},
-				fullOnMobile: true
+			GlobalUI.setDetail({
+				template: "itemDialog",
+				data:     {itemId: itemId, charId: charId},
+				hero:     $(event.currentTarget)
 			});
 		});
 	},
 	"tap #addContainer": function(event){
 		var containerId = Containers.insert({name: "New Container", isCarried: true, charId: this._id});
-		//TODO show container dialog
+		GlobalUI.setDetail({
+			template: "containerDialog",
+			data:     {containerId: this._id, charId: this.charId},
+			hero:     $(event.currentTarget)
+		});
 	},
 	"tap .inventoryItem": function(event){
-		GlobalUI.setDialog({
-			template:     "itemDialog",
-			data:         {itemId: this._id, charId: this.charId},
-			fullOnMobile: true
+		var itemId = this._id;
+		var charId = Template.parentData()._id;
+		GlobalUI.setDetail({
+			template: "itemDialog",
+			data:     {itemId: itemId, charId: charId},
+			hero:     $(event.currentTarget)
 		});
 	},
 	"tap .containerName": function(event){
-		GlobalUI.setDialog({
-			template:     "containerDialog",
-			data:         {containerId: this._id, charId: this.charId},
-			fullOnMobile: true
+		GlobalUI.setDetail({
+			template: "containerDialog",
+			data:     {containerId: this._id, charId: this.charId},
+			hero:     $(event.currentTarget).parent()
 		});
 	}
-})
+});

@@ -16,10 +16,11 @@ Template.features.events({
 	},
 	"tap .featureCard": function(event){
 		var featureId = this._id;
+		var charId = Template.parentData()._id;
 		GlobalUI.setDetail({
 			template: "featureDialog",
-			data:     {featureId: featureId, charId: Template.parentData()._id},
+			data:     {featureId: featureId, charId: charId},
 			hero:     $(event.currentTarget)
-		})
+		});
 	}
 });

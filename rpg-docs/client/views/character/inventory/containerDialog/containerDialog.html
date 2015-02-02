@@ -1,31 +1,34 @@
 <template name="containerDialog">
 	{{#with container}}
-		<!--Delete button-->
-		<paper-menu-button>
-			<paper-icon-button role="button" tabindex="0" icon="delete" aria-label="Delete Container" noink></paper-icon-button>
-			<paper-dropdown class="dropdown">
-				<paper-button id="deleteContainer">Delete Container</paper-button>
-				<paper-button>Cancel</paper-button>
-			</paper-dropdown>
-		</paper-menu-button>
-		
-		<div class="containerDialogWidth"></div>
-		<!--Name and plural name-->
-		<paper-input id="containerNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-		<!--Weight-->
-		<paper-input-decorator label="Weight" floatinglabel>
-			<input id="weightInput" type="number" value={{weight}}>
-		</paper-input-decorator>
-		<!--Value-->
-		<paper-input-decorator label="Value" floatinglabel>
-			<input id="valueInput" type="number" value={{value}}>
-		</paper-input-decorator>
-		<!--Description-->
-		<paper-input-decorator label="Description" floatinglabel layout vertical>
-			<paper-autogrow-textarea>
-				<textarea id="containerDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-			</paper-autogrow-textarea>
-		</paper-input-decorator>
+		<core-header-panel fit>
+			<core-toolbar hero-id="toolbar" hero>
+				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
+				<div flex>{{name}}</div>
+				<paper-icon-button id="deleteContainer" 
+								   role="button"
+								   tabindex="0"
+								   icon="delete" 
+								   aria-label="Delete Feature" 
+								   noink></paper-icon-button>
+			</core-toolbar>
+			<div class="detailContent">
+				<!--Name and plural name-->
+				<paper-input id="containerNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+				<!--Weight-->
+				<paper-input-decorator label="Weight" floatinglabel>
+					<input id="weightInput" type="number" value={{weight}}>
+				</paper-input-decorator>
+				<!--Value-->
+				<paper-input-decorator label="Value" floatinglabel>
+					<input id="valueInput" type="number" value={{value}}>
+				</paper-input-decorator>
+				<!--Description-->
+				<paper-input-decorator label="Description" floatinglabel layout vertical>
+					<paper-autogrow-textarea>
+						<textarea id="containerDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+					</paper-autogrow-textarea>
+				</paper-input-decorator>
+			</div>
+		</core-header-panel>
 	{{/with}}
-	<paper-button affirmative>Done</paper-button>
 </template>

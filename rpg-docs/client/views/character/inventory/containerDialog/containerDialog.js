@@ -1,17 +1,29 @@
 Template.containerDialog.rendered = function(){
 	var self = this;
-	this.autorun(function(){
-		var container = Containers.findOne(Template.currentData().containerId, {fields: {name: 1}});
-		if(container) Session.set("global.ui.dialogHeader", container.name);
+	//update all autogrows after they've been filled
+	var pata = this.$("paper-autogrow-textarea");
+	pata.each(function(index, el){
+		el.update($(el).children().get(0));
+	})
+	//update all input fields as well
+	var input = this.$("paper-input");
+	input.each(function(index, el){
+		el.valueChanged();
 	})
 	//after the dialog is built, open it
-	_.defer(function(){GlobalUI.dialog.open()});
+	if (!this.alreadyRendered){
+		Session.set("global.ui.detailShow", true);
+		this.alreadyRendered = true;
+	}
 }
 
 Template.containerDialog.events({
+	"tap #backButton": function(){
+		GlobalUI.closeDetail();
+	},
 	"tap #deleteContainer": function(){
 		Containers.remove(this._id);
-		GlobalUI.closeDialog()
+		GlobalUI.closeDetail();
 	},
 	//TODO clean up String -> num here so they don't need casting by Schema.clean
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors

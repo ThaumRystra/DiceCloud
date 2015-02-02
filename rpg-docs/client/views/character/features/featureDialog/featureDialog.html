@@ -1,7 +1,7 @@
 <template name="featureDialog">
 	{{#with feature}}
 		<core-header-panel fit>
-			<core-toolbar>
+			<core-toolbar hero-id="toolbar" hero>
 				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
 				<div flex>{{name}}</div>
 				<paper-icon-button id="deleteFeature" 
@@ -11,7 +11,7 @@
 								   aria-label="Delete Feature" 
 								   noink></paper-icon-button>
 			</core-toolbar>
-			<div class="featureContent">
+			<div class="detailContent">
 				<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
 				<hr style="margin: 16px 0 16px 0;">
 				<paper-input-decorator label="Description" floatinglabel layout vertical>
@@ -19,15 +19,17 @@
 						<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
 					</paper-autogrow-textarea>
 				</paper-input-decorator>
-				<hr style="margin: 16px 0 16px 0;">
-				<div id="effects">
-					<h2>Effects</h2>
-					{{#each effects}}
-						{{>effectEdit}}
-					{{/each}}
-					<div layout horizontal end-justified>
-						<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
+				{{#if effects}}
+					<hr style="margin: 16px 0 16px 0;">
+					<div id="effects">
+						<h2>Effects</h2>
+						{{#each effects}}
+							{{>effectEdit}}
+						{{/each}}
 					</div>
+				{{/if}}
+				<div layout horizontal end-justified>
+					<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
 				</div>
 			</div>
 		</core-header-panel>

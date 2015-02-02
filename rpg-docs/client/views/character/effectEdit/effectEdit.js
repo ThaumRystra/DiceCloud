@@ -321,10 +321,7 @@ Template.effectEdit.events({
 		}
 	},
 	"change #effectValueInput": function(event){
-		var inst = Template.instance();
-		var input = inst.find("#effectValueInput");
-		if(!input) return;
-		var value = input.value;
-		inst.value.set(value);
+		var value = event.currentTarget.value;
+		Template.instance().value.set(value);
 	}
 });

@@ -30,7 +30,7 @@ this.GlobalUI = (function() {
 			};
 		})(this));
 	};
-	
+
 	//To show a detail, first animate the click, with raising z-depth
 	//then call this function with a template and data
 	//the element should have a hero-id of detail-main
@@ -40,14 +40,14 @@ this.GlobalUI = (function() {
 		GlobalUI.detailHero = opts.hero;
 		Session.set("global.ui.detailShow", true);
 	};
-	
+
 	//if setting the detail rather than showing it, 
 	//the template should contain the following in template.rendered
 	//
 	//if (!this.alreadyRendered){
-    //	Session.set("global.ui.detailShow", true);
-    //	this.alreadyRendered = true;
-  	//}
+	//	Session.set("global.ui.detailShow", true);
+	//	this.alreadyRendered = true;
+	//}
 	GlobalUI.setDetail = function(opts) {
 		Session.set("global.ui.detailData", opts.data);
 		Session.set("global.ui.detailTemplate", opts.template);

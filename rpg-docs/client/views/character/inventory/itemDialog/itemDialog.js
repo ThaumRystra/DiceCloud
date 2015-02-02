@@ -1,17 +1,29 @@
 Template.itemDialog.rendered = function(){
 	var self = this;
-	this.autorun(function(){
-		var item = Items.findOne(Template.currentData().itemId, {fields: {name: 1}});
-		if(item) Session.set("global.ui.dialogHeader", item.pluralName());
+	//update all autogrows after they've been filled
+	var pata = this.$("paper-autogrow-textarea");
+	pata.each(function(index, el){
+		el.update($(el).children().get(0));
+	})
+	//update all input fields as well
+	var input = this.$("paper-input");
+	input.each(function(index, el){
+		el.valueChanged();
 	})
 	//after the dialog is built, open it
-	_.defer(function(){GlobalUI.dialog.open()});
+	if (!this.alreadyRendered){
+		Session.set("global.ui.detailShow", true);
+		this.alreadyRendered = true;
+	}
 }
 
 Template.itemDialog.events({
+	"tap #backButton": function(){
+		GlobalUI.closeDetail();
+	},
 	"tap #deleteItem": function(){
 		Items.remove(this._id);
-		GlobalUI.closeDialog()
+		GlobalUI.closeDetail();
 	},
 	"tap #addEffectButton": function(){
 		Effects.insert({

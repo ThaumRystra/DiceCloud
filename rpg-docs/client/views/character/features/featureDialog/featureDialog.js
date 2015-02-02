@@ -1,9 +1,5 @@
 Template.featureDialog.rendered = function(){
 	var self = this;
-	this.autorun(function(){
-		var feature = Features.findOne(Template.currentData().featureId, {fields: {name: 1}});
-		if(feature && feature.name) Session.set("global.ui.dialogHeader", feature.name);
-	})
 	//update all autogrows after they've been filled
 	var pata = this.$("paper-autogrow-textarea");
 	pata.each(function(index, el){
@@ -52,7 +48,7 @@ Template.featureDialog.helpers({
 		return Features.findOne(this.featureId);
 	},
 	effects: function(){
-		var cursor = Effects.find({charId: Template.currentData().charId, type: "feature", sourceId: this._id})
+		var cursor = Effects.find({sourceId: this._id, type: "feature"})
 		return cursor;
 	}
 });
