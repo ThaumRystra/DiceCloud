@@ -184,7 +184,11 @@ Schemas.Character = new SimpleSchema({
 	deathSave:      { type: Schemas.DeathSave },
 	time:           { type: Number, min: 0, decimal: true, defaultValue: 0},
 	initiativeRoll: { type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
-	//TODO add permission stuff for owner, readers and writers
+	
+	//permissions
+	owner: { type: String, regEx: SimpleSchema.RegEx.Id },
+	readers: { type: [String], regEx: SimpleSchema.RegEx.Id },
+	writers: { type: [String], regEx: SimpleSchema.RegEx.Id }
 	//TODO add per-character settings
 });
 
