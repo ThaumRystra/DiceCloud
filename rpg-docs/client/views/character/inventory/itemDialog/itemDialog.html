@@ -47,21 +47,21 @@
 					</paper-autogrow-textarea>
 				</paper-input-decorator>
 				<!--Container dropdown-->
-				<paper-dropdown-menu label="Container">
-					<paper-dropdown class="dropdown">
-						<core-menu id="containerDropDown" class="menu"  selected={{containerIndex}}>
+				<paper-dropdown-menu id="containerDropDown" label="Container">
+					<paper-dropdown layered class="dropdown">
+						<core-menu class="menu"  selected={{containerIndex}}>
 							{{#each containers}}
-								<paper-item class="containerMenuItem">{{name}}</paper-item>
+								<paper-item containerId={{_id}} class="containerMenuItem">{{name}}</paper-item>
 							{{/each}}
 						</core-menu>
 					</paper-dropdown>
 				</paper-dropdown-menu>
 				<!--Equipment slot dropdown-->
-				<paper-dropdown-menu label="slot">
-					<paper-dropdown class="dropdown">
-						<core-menu id="slotDropDown" class="menu"  selected={{equipmentSlotIndex}}>
+				<paper-dropdown-menu id="slotDropDown" label="slot">
+					<paper-dropdown layered class="dropdown">
+						<core-menu class="menu"  selected={{equipmentSlotIndex}}>
 							{{#each equipmentSlots}}
-								<paper-item class="slotMenuItem">{{name}}</paper-item>
+								<paper-item class="slotMenuItem" value={{value}}>{{name}}</paper-item>
 							{{/each}}
 						</core-menu>
 					</paper-dropdown>

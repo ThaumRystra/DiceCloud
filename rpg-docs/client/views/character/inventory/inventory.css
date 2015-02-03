@@ -1,3 +1,28 @@
-.containerName {
+#inventory {
+	padding: 4px;
+}
+
+.containers {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.container {
+	width: 332px;
+	flex-grow: 1;
+}
+
+.containerTop {
 	cursor: pointer;
+	margin: -16px -16px 0 -16px;
+	padding: 16px;
+}
+
+.containerBottom {
+	margin: 0 -16px -16px -16px;
+	padding: 16px;
+}
+
+.inventoryItem {
+	background: white;
 }

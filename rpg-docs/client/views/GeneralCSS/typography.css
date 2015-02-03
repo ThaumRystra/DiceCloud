@@ -44,7 +44,7 @@ h2, .title {
 	letter-spacing: 0.005em;
 }
 
-.white-text h2{
+.white-text h2, .white-text .title, .white-text.title{
 	color: rgba(255,255,255,0.87);
 }
 

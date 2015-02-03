@@ -39,7 +39,7 @@ Template.inventory.events({
 			GlobalUI.setDetail({
 				template: "itemDialog",
 				data:     {itemId: itemId, charId: charId},
-				hero:     $(event.currentTarget)
+				heroId:   itemId
 			});
 		});
 	},
@@ -47,8 +47,8 @@ Template.inventory.events({
 		var containerId = Containers.insert({name: "New Container", isCarried: true, charId: this._id});
 		GlobalUI.setDetail({
 			template: "containerDialog",
-			data:     {containerId: this._id, charId: this.charId},
-			hero:     $(event.currentTarget)
+			data:     {containerId: containerId, charId: this.charId},
+			heroId:   containerId
 		});
 	},
 	"tap .inventoryItem": function(event){
@@ -57,14 +57,14 @@ Template.inventory.events({
 		GlobalUI.setDetail({
 			template: "itemDialog",
 			data:     {itemId: itemId, charId: charId},
-			hero:     $(event.currentTarget)
+			heroId:   itemId
 		});
 	},
-	"tap .containerName": function(event){
+	"tap .containerTop": function(event){
 		GlobalUI.setDetail({
 			template: "containerDialog",
 			data:     {containerId: this._id, charId: this.charId},
-			hero:     $(event.currentTarget).parent()
+			heroId:   this._id
 		});
 	}
 });

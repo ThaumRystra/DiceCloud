@@ -64,11 +64,17 @@ Template.itemDialog.events({
 		var equipped = Template.instance().find("#equippedInput").checked;
 		Items.update(this._id, {$set: {equipped: equipped}});
 	},
-	"tap .containerMenuItem": function(event){
-		Items.update(Template.currentData().itemId, {$set: {container: this._id}});
+	"core-select #containerDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var containerId = detail.item.getAttribute("containerId");
+		Items.update(Template.currentData().itemId, {$set: {container: containerId}});
 	},
-	"tap .slotMenuItem": function(event){
-		Items.update(Template.currentData().itemId, {$set: {equipmentSlot: this.value}});
+	"core-select #slotDropDown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var value = detail.item.getAttribute("value");
+		Items.update(Template.currentData().itemId, {$set: {equipmentSlot: value}});
 	}
 });
 

@@ -9,8 +9,8 @@
 			</div>
 			<div class="features">
 				{{#each features}}
-				<paper-shadow class="featureCard" hero-id="main" animated>
-					<div hero-id="toolbar"></div>
+				<paper-shadow class="featureCard" hero-id="main" {{detailHero}} animated>
+					<div hero-id="toolbar" {{detailHero}}></div>
 					<div class="featureCardTop">
 						<h2>{{name}}</h2>
 					</div>

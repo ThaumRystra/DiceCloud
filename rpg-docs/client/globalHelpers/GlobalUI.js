@@ -37,7 +37,7 @@ this.GlobalUI = (function() {
 	GlobalUI.showDetail = function(opts) {
 		Session.set("global.ui.detailData", opts.data);
 		Session.set("global.ui.detailTemplate", opts.template);
-		GlobalUI.detailHero = opts.hero;
+		Session.set("global.ui.detailHeroId", opts.heroId);
 		Session.set("global.ui.detailShow", true);
 	};
 
@@ -51,7 +51,7 @@ this.GlobalUI = (function() {
 	GlobalUI.setDetail = function(opts) {
 		Session.set("global.ui.detailData", opts.data);
 		Session.set("global.ui.detailTemplate", opts.template);
-		GlobalUI.detailHero = opts.hero;
+		Session.set("global.ui.detailHeroId", opts.heroId);
 	};
 
 	GlobalUI.closeDetail = function(){
@@ -108,21 +108,15 @@ Template.layout.events({
 		} else {
 			Session.set("global.ui.detailData", null);
 			Session.set("global.ui.detailTemplate", null);
-			//remove the hero attribute
-			var heroElem = GlobalUI.detailHero;
-			heroElem && heroElem.attr("hero", null);
-			heroElem && heroElem.find("[hero-id]").attr("hero", null);
-			GlobalUI.detailHero = null;
+			Session.set("global.ui.detailHeroId", null);
 		}
 	},
 	"core-animated-pages-transition-prepare": function(e) {
 		var detailOpened = Session.get("global.ui.detailShow");
 		if(detailOpened) {
-			//add the hero attribute where needed
-			var heroElem = GlobalUI.detailHero;
-			heroElem && heroElem.attr("hero", "");
-			heroElem && heroElem.find("[hero-id]").attr("hero", "");
+			//set up the transition
 		} else {
+			//undo hack
 			$("#mainContentSection").removeClass("fake-selected");
 		}
 	},

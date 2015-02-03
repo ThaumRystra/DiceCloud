@@ -11,7 +11,7 @@ Template.features.events({
 		GlobalUI.setDetail({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: this._id},
-			hero:     $(event.currentTarget)
+			heroId:   featureId
 		})
 	},
 	"tap .featureCard": function(event){
@@ -20,7 +20,7 @@ Template.features.events({
 		GlobalUI.setDetail({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: charId},
-			hero:     $(event.currentTarget)
+			heroId:   featureId
 		});
 	}
 });

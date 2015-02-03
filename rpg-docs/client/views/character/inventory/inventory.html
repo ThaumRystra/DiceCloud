@@ -5,27 +5,33 @@
 				Armor:<br>
 				{{#if armor}}
 					{{#with armor}}
-						<paper-item class="inventoryItem"  hero-id="main">{{name}}</paper-item>
+						<paper-item class="inventoryItem"  hero-id="main" {{detailHero}}>{{name}}</paper-item>
 					{{/with}}
 				{{else}}
 					<paper-item>none</paper-item>
 				{{/if}}
 				Equipment:<br>
 				{{#each equipment}}
-					<paper-item class="inventoryItem"  hero-id="main">
+					<paper-item class="inventoryItem"  hero-id="main" {{detailHero}}>
 						{{name}}
 					</paper-item>
 				{{/each}}
 			</paper-shadow>
 			<div class="containers">
 				{{#each containers}}
-					<paper-shadow class="card"  hero-id="main">
-						<h2 class="containerName">{{name}}</h2>
-						{{#each items ../_id _id}}
-							<paper-item class="inventoryItem" hero-id="main">
+					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal {{detailHero}}>
+							<div class="containerName title" hero-id="title" flex {{detailHero}}>{{name}}</div>
+							<div class="caption" style="margin-right: 8px">{{valueString totalValue}}</div>
+							<div class="caption">{{round totalWeight}}lbs</div>
+						</div>
+						<div flex class="containerMain">
+							{{#each items ../_id _id}}
+							<paper-item class="inventoryItem" hero-id="main" {{detailHero}}>
 								{{#if gt1 quantity}}{{quantity}}{{/if}}&nbsp;{{pluralName}}
 							</paper-item>
 						{{/each}}
+						</div>
 					</paper-shadow>
 				{{/each}}
 			</div>
