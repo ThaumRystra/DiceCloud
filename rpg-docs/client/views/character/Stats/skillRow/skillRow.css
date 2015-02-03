@@ -1,36 +1,19 @@
 .skillRow {
 	height: 32px;
-	display: flex;
-	align-items: center;
-	position: relative;
+	margin: 0 -8px 0 -8px;
 }
 
-.skillRow:hover{
-	background: #FFEBEE;
-}
-
-.profIcon{
-	display: inline-block;
-	width: 40px;
-	height: 26px;
-	background-size: contain;
-	background-repeat: no-repeat;
-
-	/*TODO fix the actual images and remove inversion*/
-	-webkit-filter: invert(100%);
-	opacity: 0.54;
-	pointer-events: none;
+.skillRow core-icon {
+	color: rgba(0,0,0,0.54);
 }
 
 .skillMod {
-	width: 20px;
-	text-align: right;
+	width: 42px;
+	text-align: center;
 }
 
 .skillName, .skillMod{
-	display: inline-block;
-	vertical-align: top; 
-	margin-right: 8px;
+	
 }
 
 .fail.skillMod {
@@ -41,14 +24,16 @@
 	background-image: url(/png/advantage/greenUp.png);
 	background-size: contain;
 	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .disadvantage{
 	background-image: url(/png/advantage/redDown.png);
 	background-size: contain;
 	background-repeat: no-repeat;
+	background-position: center;
 }
 
-td.conditionals::after{
+.hasConditionals::after{
 	content: "*";
 }

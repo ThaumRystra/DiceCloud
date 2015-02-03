@@ -1,17 +1,16 @@
 <template name="skillRow">
-	<div class="subhead skillRow">
-		{{> ripple}}
-		<div class="profIcon" style="background-image: url(/png/profIcons/{{profIcon skill}})"></div>
+	<paper-item class="skillRow" layout horizontal>
+		<core-icon icon="{{profIcon}}"></core-icon>
 		{{#if failSkill}}
 		<div class="fail skillMod">fail</div>
 		{{else}}
 		<div class="{{advantage}} skillMod">{{../skillMod skill}}</div>
 		{{/if}}
-		<div class="{{conditionals}} skillName">
+		<div class="{{#if conditionalCount}}hasConditionals{{/if}} skillName">
 			{{name}}
 			{{#if showPassive}}
-			({{../passiveSkill skill}})
+				({{../passiveSkill skill}})
 			{{/if}}
 		</div>
-	</div>
+	</paper-item>
 </template>

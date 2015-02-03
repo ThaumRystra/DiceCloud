@@ -184,7 +184,7 @@ Schemas.Character = new SimpleSchema({
 	deathSave:      { type: Schemas.DeathSave },
 	time:           { type: Number, min: 0, decimal: true, defaultValue: 0},
 	initiativeRoll: { type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
-	
+
 	//permissions
 	owner: { type: String, regEx: SimpleSchema.RegEx.Id },
 	readers: { type: [String], regEx: SimpleSchema.RegEx.Id },
@@ -405,13 +405,20 @@ Characters.helpers({
 		var charId = this._id
 		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
-		Effects.find({charId: charId, stat: skillName, enabled: true}).forEach(function(effect){
-			if(effect.operation === "passiveAdd"){
-				value += evaluateEffect(charId, effect);
-			}
+		Effects.find({charId: charId, stat: skillName, enabled: true, operation: "passiveAdd"}).forEach(function(effect){
+			value += evaluateEffect(charId, effect);
 		});
 		return value;
 		//TODO decide whether (dis)advantage gives (-)+5 to passive checks
+	},
+
+	advantage: function(skillName){
+		var charId = this._id
+		var advantage = Effects.find({charId: charId, stat: skillName, enabled: true, operation: "advantage"}).count();
+		var disadvantage = Effects.find({charId: charId, stat: skillName, enabled: true, operation: "disadvantage"}).count();
+		if(advantage && !disadvantage) return 1;
+		if(disadvantage && !advantage) return -1;
+		return 0;
 	},
 
 	abilityMod: function(attribute){
