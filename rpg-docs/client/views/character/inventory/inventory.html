@@ -1,23 +1,32 @@
 <template name="inventory">
 	<div fit>
 		<div id="inventory" class="scroll-y" fit>
-			<paper-shadow class="equipment card double">
-				Armor:<br>
-				{{#if armor}}
-					{{#with armor}}
-						<paper-item class="inventoryItem"  hero-id="main" {{detailHero}}>{{name}}</paper-item>
-					{{/with}}
-				{{else}}
-					<paper-item>none</paper-item>
-				{{/if}}
-				Equipment:<br>
-				{{#each equipment}}
-					<paper-item class="inventoryItem"  hero-id="main" {{detailHero}}>
-						{{name}}
-					</paper-item>
-				{{/each}}
-			</paper-shadow>
 			<div class="containers">
+				<paper-shadow class="card container">
+					<div class="equipmentTop blue white-text" layout horizontal>
+						<div class="containerName title" flex>Equipment</div>
+						<div class="caption" style="margin-right: 8px">(net Worth)</div>
+						<div class="caption">(weightCarried)lbs</div>
+					</div>
+					<div flex class="equipmentMain">
+						{{#if armor}}
+						{{#with armor}}
+							<div class="itemSlot">
+								<paper-item class="inventoryItem armorItem" hero-id="main" {{detailHero}}>
+									{{name}}
+								</paper-item>
+							</div>
+						{{/with}}
+						{{/if}}
+						{{#each equipment}}
+							<div class="itemSlot">
+								<paper-item class="inventoryItem" hero-id="main" {{detailHero}}>
+									{{name}}
+								</paper-item>
+							</div>
+						{{/each}}
+					</div>
+				</paper-shadow>
 				{{#each containers}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
 						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal {{detailHero}}>
@@ -27,10 +36,12 @@
 						</div>
 						<div flex class="containerMain">
 							{{#each items ../_id _id}}
-							<paper-item class="inventoryItem" hero-id="main" {{detailHero}}>
-								{{#if gt1 quantity}}{{quantity}}{{/if}}&nbsp;{{pluralName}}
-							</paper-item>
-						{{/each}}
+							<div class="itemSlot">
+								<paper-item class="inventoryItem" hero-id="main" {{detailHero}}>
+									{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
+								</paper-item>
+							</div>
+							{{/each}}
 						</div>
 					</paper-shadow>
 				{{/each}}
@@ -40,6 +51,5 @@
 			<paper-fab-menu-item id="addItem" icon="note-add" color="#d23f31" tooltip="Item"></paper-fab-menu-item>
 			<paper-fab-menu-item id="addContainer" icon="work" color="#d23f31" tooltip="Container"></paper-fab-menu-item>
 		</paper-fab-menu>
-
 	</div>
 </template>

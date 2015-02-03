@@ -18,8 +18,8 @@ Template.inventory.helpers({
 	showAddButtons: function(){
 		return Template.instance().showAddButtons.get();
 	},
-	gt1: function(num){
-		return num > 1;
+	ne1: function(num){
+		return num !== 1;
 	}
 });
 
