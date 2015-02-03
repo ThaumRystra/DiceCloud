@@ -7,20 +7,18 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 8,
 		value: 5,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 11,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 11,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Leather Armor",
@@ -30,15 +28,13 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 10,
 		value: 10,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 11,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 11,
+			}
+		]
 	},
 	{
 		name: "Studded leather Armor",
@@ -48,15 +44,13 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 13,
 		value: 45,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 12,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 12,
+			}
+		]
 	},
 	{
 		name: "Hide Armor",
@@ -66,20 +60,18 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 12,
 		value: 10,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 12,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 2,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 12,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 2,
+			}
+		]
 	},
 	{
 		name: "Chain Shirt",
@@ -89,20 +81,18 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 20,
 		value: 50,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 13,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 2,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 13,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 2,
+			}
+		]
 	},
 	{
 		name: "Scale Mail",
@@ -112,25 +102,24 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 45,
 		value: 50,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 14,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 2,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 14,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 2,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Breastplate",
@@ -140,20 +129,18 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 20,
 		value: 400,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 14,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 2,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 14,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 2,
+			}
+		]
 	},
 	{
 		name: "Half Plate",
@@ -163,25 +150,23 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 40,
 		value: 750,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 15,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 2,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 15,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 2,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Ring Mail",
@@ -191,25 +176,23 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 40,
 		value: 30,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 14,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 0,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 14,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 0,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Chain Mail",
@@ -219,25 +202,23 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 55,
 		value: 75,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 16,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 0,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 16,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 0,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Splint Armor",
@@ -247,25 +228,23 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 60,
 		value: 200,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 17,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 0,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 17,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 0,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Plate Armor",
@@ -275,25 +254,23 @@ standardItems = [
 		equipmentSlot: "armor",
 		weight: 65,
 		value: 1500,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "base",
-					value: 18,
-				},
-				{
-					stat: "dexterityArmor",
-					operation: "max",
-					value: 0,
-				},
-				{
-					stat: "stealth",
-					operation: "disadvantage",
-					value: 1,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "base",
+				value: 18,
+			},
+			{
+				stat: "dexterityArmor",
+				operation: "max",
+				value: 0,
+			},
+			{
+				stat: "stealth",
+				operation: "disadvantage",
+				value: 1,
+			}
+		]
 	},
 	{
 		name: "Shield",
@@ -303,14 +280,12 @@ standardItems = [
 		equipmentSlot: "held",
 		weight: 6,
 		value: 10,
-		feature: {
-			effects: [
-				{
-					stat: "armor",
-					operation: "add",
-					value: 2,
-				}
-			]
-		}
+		effects: [
+			{
+				stat: "armor",
+				operation: "add",
+				value: 2,
+			}
+		]
 	},
 ]
