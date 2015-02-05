@@ -3,7 +3,7 @@
 		<div id="inventory" class="scroll-y" fit>
 			<div class="containers">
 				<paper-shadow class="card container">
-					<div class="equipmentTop blue white-text" layout horizontal>
+					<div class="equipmentTop blue white-text" layout horizontal center>
 						<div class="containerName title" flex>Equipment</div>
 						<div class="caption" style="margin-right: 8px">(net Worth)</div>
 						<div class="caption">(weightCarried)lbs</div>
@@ -29,7 +29,7 @@
 				</paper-shadow>
 				{{#each containers}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal {{detailHero}}>
+						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
 							<div class="containerName title" hero-id="title" flex {{detailHero}}>{{name}}</div>
 							<div class="caption" style="margin-right: 8px">{{valueString totalValue}}</div>
 							<div class="caption">{{round totalWeight}}lbs</div>
@@ -45,6 +45,7 @@
 						</div>
 					</paper-shadow>
 				{{/each}}
+				<div class="fab-buffer"></div>
 			</div>
 		</div>
 		<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">

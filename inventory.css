@@ -1,0 +1,49 @@
+#inventory {
+	padding: 4px;
+}
+
+.containers {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.container {
+	width: 332px;
+	flex-grow: 1;
+}
+
+.containerTop {
+	cursor: pointer;
+	margin: -16px -16px 0 -16px;
+	padding: 16px;
+}
+
+.equipmentTop {
+	margin: -16px -16px 0 -16px;
+	padding: 16px;
+}
+
+.containerMain {
+	margin: 0 -16px -16px -16px;
+	padding-bottom: 16px;
+}
+
+.equipmentMain {
+	margin: 0 -16px -16px -16px;
+	padding-bottom: 16px;
+}
+
+.inventoryItem {
+	background: white;
+	transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	margin: 1px 0 1px 0;
+}
+
+.inventoryItem[hero] {
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+
+.itemSlot {
+	background-color: rgb(232, 232, 232);
+	background-color: rgba(0, 0, 0, 0.1);
+}

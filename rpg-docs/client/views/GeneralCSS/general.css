@@ -96,6 +96,7 @@ paper-button {
 
 .fab-buffer {
 	height: 88px;
+	width: 100%;
 }
 
 *[hidden] {
