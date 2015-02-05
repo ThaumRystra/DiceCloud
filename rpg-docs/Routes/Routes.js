@@ -22,10 +22,6 @@ Router.map( function () {
 		waitOn: function(){
 			return [
 				Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId()),
-				Meteor.subscribe("characterContainers", this.params._id, Meteor.userId()),
-				Meteor.subscribe("characterItems", this.params._id, Meteor.userId()),
-				Meteor.subscribe("characterFeatures", this.params._id, Meteor.userId()),
-				Meteor.subscribe("characterEffects", this.params._id, Meteor.userId()),
 				];
 		},
 		data: function() {
