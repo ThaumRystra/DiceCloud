@@ -1,0 +1,30 @@
+<template name="spells">
+	<div fit>
+		<div id="spells" class="scroll-y" fit>
+			<div class="containers">
+				{{#each spellLevels}}
+					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
+							<div class="containerName title" hero-id="title" flex {{detailHero}}>{{name}}</div>
+							{{#if attribute}}<div class="subhead">{{../attributeValue attribute}} / {{../attributeBase attribute}}</div>{{/if}}
+						</div>
+						<div flex class="containerMain">
+							{{#each spellsAtLevel}}
+								<div class="itemSlot">
+									<paper-item class="inventoryItem" hero-id="main" {{detailHero}}>
+										{{name}}
+									</paper-item>
+								</div>
+							{{/each}}
+						</div>
+					</paper-shadow>
+				{{/each}}
+				<div class="fab-buffer"></div>
+			</div>
+		</div>
+	</div>
+	<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
+		<paper-fab-menu-item id="addSpell" icon="note-add" color="#d23f31" tooltip="Spell"></paper-fab-menu-item>
+		<paper-fab-menu-item id="addSpellList" icon="work" color="#d23f31" tooltip="Spell List"></paper-fab-menu-item>
+	</paper-fab-menu>
+</template>
