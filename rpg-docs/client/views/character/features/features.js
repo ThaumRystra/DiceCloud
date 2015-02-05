@@ -2,6 +2,9 @@ Template.features.helpers({
 	features: function(){
 		var features = Features.find({charId: this._id});
 		return features;
+	},
+	hasUses: function(){
+		return this.usesValue() > 0;
 	}
 });
 
@@ -14,7 +17,7 @@ Template.features.events({
 			heroId:   featureId
 		})
 	},
-	"tap .featureCard": function(event){
+	"tap .containerTop": function(event){
 		var featureId = this._id;
 		var charId = Template.parentData()._id;
 		GlobalUI.setDetail({
@@ -22,5 +25,13 @@ Template.features.events({
 			data:     {featureId: featureId, charId: charId},
 			heroId:   featureId
 		});
+	},
+	"tap .useFeature": function(event){
+		var featureId = this._id;
+		Features.update(featureId, {$inc: {used: 1}});
+	},
+	"tap .resetFeature": function(event){
+		var featureId = this._id;
+		Features.update(featureId, {$set: {used: 0}});
 	}
 });

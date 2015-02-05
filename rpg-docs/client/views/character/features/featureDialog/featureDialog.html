@@ -19,6 +19,20 @@
 						<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
 					</paper-autogrow-textarea>
 				</paper-input-decorator>
+				<hr style="margin: 16px 0 16px 0;">
+				<div layout horizontal center>
+					<div class="caption">Limit Uses <paper-toggle-button id="limitUseCheck"
+											 checked={{usesSet}} 
+											 role="button" 
+											 aria-pressed="false" 
+											 tabindex="0" 
+											 touch-action="pan-y">
+						</paper-toggle-button>
+						{{#if usesSet}}
+							<paper-input id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
+						{{/if}}
+					</div>
+				</div>
 				{{#if effects}}
 					<hr style="margin: 16px 0 16px 0;">
 					<div id="effects">

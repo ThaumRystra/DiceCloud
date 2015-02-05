@@ -40,7 +40,21 @@ Template.featureDialog.events({
 	"change #featureDescriptionInput": function(event){
 		var description = Template.instance().find("#featureDescriptionInput").value;
 		Features.update(this._id, {$set: {description: description}});
-	}
+	},
+	"change #limitUseCheck": function(event){
+		var currentUses = this.uses;
+		var featureId = this._id;
+		if( event.target.checked && !_.isString(currentUses) ){
+			Features.update(featureId, {$set: {uses: ""}}, {removeEmptyStrings: false});
+		} else if (!event.target.checked && _.isString(currentUses)){
+			Features.update(featureId, {$unset: {uses: ""}});
+		}
+	},
+	"change #usesInput, input #quantityInput": function(event){
+		var value = event.target.value;
+		var featureId = this._id;
+		Features.update(featureId, {$set: {uses: value}});
+	},
 });
 
 Template.featureDialog.helpers({
@@ -50,5 +64,8 @@ Template.featureDialog.helpers({
 	effects: function(){
 		var cursor = Effects.find({sourceId: this._id, type: "feature"})
 		return cursor;
+	},
+	usesSet: function(){
+		return _.isString(this.uses);
 	}
 });

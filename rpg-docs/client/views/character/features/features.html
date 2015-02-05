@@ -7,16 +7,24 @@
 			<div class="actions">
 
 			</div>
-			<div class="features">
+			<div class="containers">
 				{{#each features}}
-				<paper-shadow class="featureCard" hero-id="main" {{detailHero}} animated>
-					<div hero-id="toolbar" {{detailHero}}></div>
-					<div class="featureCardTop">
-						<h2>{{name}}</h2>
-					</div>
-					<div class="featureCardBottom"><p>{{description}}</p></div>
-					<paper-ripple fit></paper-ripple>
-				</paper-shadow>
+					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>
+						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
+							<div class="containerName title" hero-id="title" flex {{detailHero}}>{{name}}</div>
+							{{#if hasUses}}<div class="subhead" style="margin-right: 8px">{{usesLeft}}/{{usesValue}}</div>{{/if}}
+							<paper-ripple fit></paper-ripple>
+						</div>
+						<div flex class="containerMain body1 featureDescription">
+							{{description}}
+						</div>
+						{{#if hasUses}}
+							<div class="containerFoot" layout horizontal center end-justified>
+								{{#if usesLeft}}<paper-button class="useFeature">Use</paper-button>{{/if}}
+								<paper-button class="resetFeature">Reset</paper-button>
+							</div>
+						{{/if}}
+					</paper-shadow>
 				{{/each}}
 			</div>
 			<div class="fab-buffer"></div>
