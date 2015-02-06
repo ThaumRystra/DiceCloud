@@ -1,0 +1,24 @@
+<template name="personaDetailsDialog">
+	<core-header-panel fit>
+		<core-toolbar hero-id="toolbar" hero>
+			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
+			<div flex hero-id="title" hero>{{name}}</div>
+			<paper-icon-button id="deleteContainer" 
+							   role="button"
+							   tabindex="0"
+							   icon="delete" 
+							   aria-label="Delete Feature" 
+							   noink></paper-icon-button>
+		</core-toolbar>
+		<div class="detailContent">
+			<!--Name-->
+			<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input><br>
+			<!--Alignment-->
+			<paper-input id="alignmentInput" label="Alignment" floatinglabel value={{alignment}}></paper-input><br>
+			<!--Gender-->
+			<paper-input id="genderInput" label="Gender" floatinglabel value={{gender}}></paper-input><br>
+			<!--Race-->
+			<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input><br>
+		</div>
+	</core-header-panel>
+</template>

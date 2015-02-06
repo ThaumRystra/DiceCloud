@@ -13,7 +13,6 @@ Schemas.Character = new SimpleSchema({
 	bonds:      { type: String, defaultValue: "", trim: false},
 	flaws:      { type: String, defaultValue: "", trim: false},
 	backstory:  { type: String, defaultValue: "", trim: false},
-	notes:      { type: String, defaultValue: "", trim: false},
 
 	//attributes
 	//ability scores

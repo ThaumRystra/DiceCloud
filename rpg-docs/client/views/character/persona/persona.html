@@ -1,0 +1,30 @@
+<template name="persona">
+	<div fit>
+		<div id="persona" class="scroll-y" fit>
+			<div class="containers">
+				{{#with characterDetails}}
+					{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
+				{{/with}}
+				{{> containerCard characterField "description" "Description"}}
+				{{> containerCard characterField "personality" "Personality Traits"}}
+				{{> containerCard characterField "ideals" "Ideals"}}
+				{{> containerCard characterField "bonds" "Bonds"}}
+				{{> containerCard characterField "flaws" "Flaws"}}
+				{{> containerCard characterField "backstory" "Background"}}
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="containerCard">
+	{{#containerCardHelper this}}{{body}}{{/containerCardHelper}}
+</template>
+
+<template name="containerCardHelper">
+	<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+		<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
+			<div class="containerName title" hero-id="title" flex {{detailHero}}>{{title}}</div>
+		</div>
+		<div flex class="containerMain">{{> UI.contentBlock}}</div>
+	</paper-shadow>
+</template>
