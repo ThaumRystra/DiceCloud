@@ -3,7 +3,7 @@
 	<core-toolbar class="medium-tall">
 		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
 		<div flex>
-			Name
+			{{name}}
 		</div>
 		<paper-icon-button icon="more-vert" role="button"></paper-icon-button>
 		<div class="bottom fit" horizontal layout>
@@ -23,7 +23,7 @@
 			<swipe-detect touch-action="pan-y" flex>{{> features}}</swipe-detect>
 			<swipe-detect touch-action="pan-y" flex>{{> inventory}}</swipe-detect>
 			<swipe-detect touch-action="pan-y" flex>{{> spells}}</swipe-detect>
-			<swipe-detect touch-action="pan-y" flex>Persona Under Construction</swipe-detect>
+			<swipe-detect touch-action="pan-y" flex>{{> persona}}</swipe-detect>
 			<swipe-detect touch-action="pan-y" flex>Journal Under Construction</swipe-detect>
 		</core-animated-pages>
 	</div>
