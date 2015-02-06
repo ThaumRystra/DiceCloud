@@ -15,9 +15,7 @@
 							{{#if hasUses}}<div class="subhead" style="margin-right: 8px">{{usesLeft}}/{{usesValue}}</div>{{/if}}
 							<paper-ripple fit></paper-ripple>
 						</div>
-						<div flex class="containerMain body1 featureDescription">
-							{{description}}
-						</div>
+						<div flex class="containerMain body1 featureDescription">{{description}}</div>
 						{{#if hasUses}}
 							<div class="containerFoot" layout horizontal center end-justified>
 								{{#if usesLeft}}<paper-button class="useFeature">Use</paper-button>{{/if}}
