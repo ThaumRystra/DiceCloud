@@ -116,5 +116,8 @@ Template.itemDialog.helpers({
 	},
 	canEquip: function(){
 		return this.equipmentSlot !== "none";
+	},
+	ne1: function(num){
+		return num != 1;
 	}
 });

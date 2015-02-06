@@ -27,7 +27,7 @@ Items.helpers({
 		return this.weight * this.quantity;
 	},
 	pluralName: function(){
-		if(this.plural && this.quantity > 1){
+		if(this.plural && this.quantity !== 1){
 			return this.plural;
 		} else{
 			return this.name;
