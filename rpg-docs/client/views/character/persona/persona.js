@@ -9,7 +9,6 @@ Template.persona.helpers({
 		var fieldSelector = {fields: {}};
 		fieldSelector.fields[field] = 1;
 		var char = Characters.findOne(this._id, fieldSelector);
-		console.log("body is ", char[field])
 		return {_id: char._id + field, title: title, field: field, body: char[field]};
 	}
 });
