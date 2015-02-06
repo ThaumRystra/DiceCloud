@@ -21,6 +21,7 @@
 .equipmentTop {
 	margin: -16px -16px 0 -16px;
 	padding: 16px;
+	border-bottom: rgba(0,0,0,0.12) solid 1px;
 }
 
 .containerMain {
@@ -36,6 +37,7 @@
 .inventoryItem {
 	background: white;
 	transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	height: 40px;
 	margin: 1px 0 1px 0;
 }
 
