@@ -2,19 +2,24 @@
 	<div fit>
 		<div id="spells" class="scroll-y" fit>
 			<div class="containers">
-				{{#each spellLevels}}
+				{{#each spellLists}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
 						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
-							<div class="containerName title" hero-id="title" flex {{detailHero}}>{{name}}</div>
-							{{#if attribute}}<div class="subhead">{{../attributeValue attribute}} / {{../attributeBase attribute}}</div>{{/if}}
+							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
+							{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{maxPrepared}}</div>{{/if}}
 						</div>
 						<div flex class="containerMain">
-							{{#each spellsAtLevel}}
-								<div class="itemSlot">
-									<paper-item class="inventoryItem" hero-id="main" {{detailHero}}>
-										{{name}}
-									</paper-item>
-								</div>
+							{{#each levels}}
+								{{#if spellCount ../_id ../../_id}}
+									<div class="list-subhead" layout horizontal center>{{name}}</div>
+								{{/if}}
+								{{#each spells ../_id ../../_id}}
+									<div class="itemSlot">
+										<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal center>
+											<!--school icon here--><div flex>{{name}}</div><!--prepared checkbox here-->
+										</paper-item>
+									</div>
+								{{/each}}
 							{{/each}}
 						</div>
 					</paper-shadow>

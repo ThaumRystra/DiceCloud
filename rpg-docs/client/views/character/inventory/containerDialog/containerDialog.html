@@ -1,7 +1,7 @@
 <template name="containerDialog">
 	{{#with container}}
 		<core-header-panel fit>
-			<core-toolbar hero-id="toolbar" hero>
+			<core-toolbar hero-id="toolbar" class={{colorClass}} hero>
 				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
 				<div flex hero-id="title" hero>{{name}}</div>
 				<paper-icon-button id="deleteContainer" 
@@ -14,6 +14,8 @@
 			<div class="detailContent">
 				<!--Name and plural name-->
 				<paper-input id="containerNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+				<!--Color-->
+				{{> colorDropdown}}
 				<!--Weight-->
 				<paper-input-decorator label="Weight" floatinglabel>
 					<input id="weightInput" type="number" value={{weight}}>

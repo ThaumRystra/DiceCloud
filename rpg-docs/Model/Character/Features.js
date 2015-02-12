@@ -7,6 +7,7 @@ Schemas.Feature = new SimpleSchema({
 	uses:       {type: String, optional: true, trim: false},
 	used:       {type: Number, defaultValue: 0},
 	reset:      {type: String, allowedValues: ["manual", "longRest", "shortRest"], defaultValue: "manual"},
+	color:      {type: String, allowedValues: _.keys(colorOptions), defaultValue: "green"}
 });
 
 Features.attachSchema(Schemas.Feature);

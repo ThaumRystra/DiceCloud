@@ -9,9 +9,9 @@
 			</div>
 			<div class="containers">
 				{{#each features}}
-					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>
-						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
-							<div class="containerName title" hero-id="title" flex {{detailHero}}>{{name}}</div>
+					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}} style="order: {{featureOrder}};">
+						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
 							{{#if hasUses}}<div class="subhead" style="margin-right: 8px">{{usesLeft}}/{{usesValue}}</div>{{/if}}
 							<paper-ripple fit></paper-ripple>
 						</div>

@@ -30,7 +30,7 @@ Template.characterSheet.rendered = function(){
 Template.characterSheet.helpers({
 	selectedTab: function(){
 		return Template.instance().selectedTab.get();
-	},
+	}
 });
 
 Template.characterSheet.events({

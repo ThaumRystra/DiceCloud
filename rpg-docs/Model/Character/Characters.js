@@ -187,7 +187,8 @@ Schemas.Character = new SimpleSchema({
 	//permissions
 	owner: { type: String, regEx: SimpleSchema.RegEx.Id },
 	readers: { type: [String], regEx: SimpleSchema.RegEx.Id },
-	writers: { type: [String], regEx: SimpleSchema.RegEx.Id }
+	writers: { type: [String], regEx: SimpleSchema.RegEx.Id },
+	color:   {type: String, allowedValues: _.keys(colorOptions), defaultValue: "grey"}
 	//TODO add per-character settings
 });
 

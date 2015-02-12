@@ -1,79 +1,83 @@
-.red {
+html /deep/ .red {
 	background-color: #F44336;
 }
 
-.pink {
+html /deep/ .pink {
 	background-color: #E91E63;
 }
 
-.purple {
+html /deep/ .purple {
 	background-color: #9C27B0;
 }
 
-.deep-purple {
+html /deep/ .deep-purple {
 	background-color: #673AB7;
 }
 
-.indigo {
+html /deep/ .indigo {
 	background-color: #3F51B5;
 }
 
-.blue {
+html /deep/ .blue {
 	background-color: #2196F3;
 }
 
-.light-blue {
+html /deep/ .light-blue {
 	background-color: #03A9F4;
 }
 
-.cyan {
+html /deep/ .cyan {
 	background-color: #00BCD4;
 }
 
-.teal {
+html /deep/ .teal {
 	background-color: #009688;
 }
 
-.green {
+html /deep/ .green {
 	background-color: #4CAF50;
 }
 
-.light-green {
+html /deep/ .light-green {
 	background-color: #8BC34A;
 }
 
-.lime {
+html /deep/ .lime {
 	background-color: #CDDC39;
 }
 
-.yellow {
+html /deep/ .yellow {
 	background-color: #FFEB3B;
 }
 
-.amber {
+html /deep/ .amber {
 	background-color: #FFC107;
 }
 
-.orange {
+html /deep/ .orange {
 	background-color: #FF9800;
 }
 
-.deep-orange {
+html /deep/ .deep-orange {
 	background-color: #FF5722;
 }
 
-.brown {
+html /deep/ .brown {
 	background-color: #795548;
 }
 
-.grey {
+html /deep/ .grey {
 	background-color: #9E9E9E;
 }
 
-.blue-grey {
+html /deep/ .blue-grey {
 	background-color: #607D8B;
 }
 
-.white {
+html /deep/ .white {
 	background-color: #ffffff;
+}
+
+html /deep/ .black {
+	background-color: #000000;
 }

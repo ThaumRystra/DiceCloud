@@ -7,6 +7,6 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 		Features.find({charId: characterId}),
 		Effects.find({charId: characterId}),
 		Spells.find({charId: characterId}),
-		SpellLists.find({charID: characterId})
+		SpellLists.find({charId: characterId})
 	];
 });

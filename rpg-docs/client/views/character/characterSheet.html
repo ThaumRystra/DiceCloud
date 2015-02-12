@@ -1,13 +1,13 @@
 <template name="characterSheet">
 	<!--<div tool horizontal layout flex end-justified class="bottom">Title-bottom</div>-->
-	<core-toolbar class="medium-tall">
+	<core-toolbar class="medium-tall {{colorClass}}">
 		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
 		<div flex>
 			{{name}}
 		</div>
 		<paper-icon-button icon="more-vert" role="button"></paper-icon-button>
 		<div class="bottom fit" horizontal layout>
-			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}}>
+			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
 				<paper-tab>Stats</paper-tab>
 				<paper-tab>Features</paper-tab>
 				<paper-tab>Inventory</paper-tab>

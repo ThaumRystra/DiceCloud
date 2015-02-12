@@ -1,10 +1,16 @@
 Template.features.helpers({
 	features: function(){
-		var features = Features.find({charId: this._id});
+		var features = Features.find({charId: this._id}, {sort: {name: 1}});
 		return features;
 	},
 	hasUses: function(){
 		return this.usesValue() > 0;
+	},
+	colorClass: function(){
+		return getColorClass(this.color)
+	},
+	featureOrder: function(){
+		return _.indexOf(_.keys(colorOptions), this.color);
 	}
 });
 

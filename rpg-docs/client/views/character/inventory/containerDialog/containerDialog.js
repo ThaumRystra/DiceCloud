@@ -43,11 +43,20 @@ Template.containerDialog.events({
 	"change #containerDescriptionInput": function(event){
 		var description = Template.instance().find("#containerDescriptionInput").value;
 		Containers.update(this._id, {$set: {description: description}});
+	},
+	"core-select .colorDropdown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var value = detail.item.getAttribute("name");
+		Containers.update(this._id, {$set: {color: value}});
 	}
 });
 
 Template.containerDialog.helpers({
 	container: function(){
 		return Containers.findOne(this.containerId);
+	},
+	colorClass: function(){
+		return getColorClass(this.color)
 	}
 });

@@ -55,6 +55,12 @@ Template.featureDialog.events({
 		var featureId = this._id;
 		Features.update(featureId, {$set: {uses: value}});
 	},
+	"core-select .colorDropdown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var value = detail.item.getAttribute("name");
+		Features.update(this._id, {$set: {color: value}});
+	}
 });
 
 Template.featureDialog.helpers({
@@ -67,5 +73,8 @@ Template.featureDialog.helpers({
 	},
 	usesSet: function(){
 		return _.isString(this.uses);
+	},
+	colorClass: function(){
+		return getColorClass(this.color)
 	}
 });

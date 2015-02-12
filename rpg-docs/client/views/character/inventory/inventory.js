@@ -4,7 +4,7 @@ Template.inventory.created = function(){
 
 Template.inventory.helpers({
 	containers: function(){
-		return Containers.find({charId: this._id})
+		return Containers.find({charId: this._id}, {sort: {name: 1}})
 	},
 	items: function(charId, containerId){
 		return Items.find({charId: charId, equipped: false, container: containerId })
@@ -20,6 +20,12 @@ Template.inventory.helpers({
 	},
 	ne1: function(num){
 		return num !== 1;
+	},
+	colorClass: function(){
+		return getColorClass(this.color)
+	},
+	containerOrder: function(){
+		return _.indexOf(_.keys(colorOptions), this.color);
 	}
 });
 

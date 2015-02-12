@@ -8,7 +8,8 @@ Schemas.Container = new SimpleSchema({
 	isCarried: 	{ type: Boolean },
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	description:{type: String, optional: true}
+	description:{type: String, optional: true},
+	color:      {type: String, allowedValues: _.keys(colorOptions), defaultValue: "brown"}
 });
 
 Containers.attachSchema(Schemas.Container);

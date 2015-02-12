@@ -22,8 +22,8 @@
 
 <template name="containerCardHelper">
 	<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-		<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
-			<div class="containerName title" hero-id="title" flex {{detailHero}}>{{title}}</div>
+		<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+			<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{title}}</div>
 		</div>
 		<div flex class="containerMain">{{> UI.contentBlock}}</div>
 	</paper-shadow>

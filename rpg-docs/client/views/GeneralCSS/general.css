@@ -97,6 +97,7 @@ paper-button {
 .fab-buffer {
 	height: 88px;
 	width: 100%;
+	order: 999;
 }
 
 *[hidden] {
@@ -122,4 +123,12 @@ paper-button {
 
 paper-fab-menu /deep/ .container {
 	padding: 24px !important;
+}
+
+.list-subhead {
+	color: rgba(0,0,0,0.54);
+	font-size: 14px;
+	height: 40px;
+	padding-left: 16px;
+	font-weight: 500;
 }

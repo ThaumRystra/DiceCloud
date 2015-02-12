@@ -1,0 +1,11 @@
+<template name="colorDropdown">
+	<paper-dropdown-menu class="colorDropdown {{colorClass color}}" label="Color">
+		<paper-dropdown layered class="dropdown">
+			<core-menu class="menu"  selected={{color}}>
+				{{#each colorKeys}}
+					<paper-item name={{this}} class="containerMenuItem {{colorClass this}}">{{this}}</paper-item>
+				{{/each}}
+			</core-menu>
+		</paper-dropdown>
+	</paper-dropdown-menu>
+</template>
