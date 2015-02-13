@@ -1,10 +1,7 @@
-#inventory {
-	padding: 4px;
-}
-
 .containers {
 	display: flex;
 	flex-wrap: wrap;
+	padding: 4px;
 }
 
 .container {
@@ -16,6 +13,7 @@
 	cursor: pointer;
 	margin: -16px -16px 0 -16px;
 	padding: 16px;
+	position: relative;
 }
 
 .equipmentTop {
@@ -39,6 +37,16 @@
 	transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 	height: 40px;
 	margin: 1px 0 1px 0;
+	font-size: 16px;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.010em;
+}
+
+.inventoryItem /deep/ .button-content {
+	-webkit-flex: 1;
+	flex: 1;
+	-webkit-flex-basis: 0.000000001px;
+	flex-basis: 0.000000001px;
 }
 
 .inventoryItem[hero] {

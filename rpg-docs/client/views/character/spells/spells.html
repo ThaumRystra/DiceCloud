@@ -3,12 +3,23 @@
 		<div id="spells" class="scroll-y" fit>
 			<div class="containers">
 				{{#each spellLists}}
-					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-						<div class="containerTop green white-text" hero-id="toolbar" layout horizontal center {{detailHero}}>
-							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
+					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{order}};">
+						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+							<div flex>
+								<div class="containerName subhead">{{name}}</div>
+								<div class="caption">
+									{{#if saveDC}}
+										Save DC: {{evaluate charId saveDC}}
+										<div style="width: 16px; display: inline-block;"></div>
+									{{/if}}
+									{{#if attackBonus}}
+										Attack Bonus: {{evaluateSigned charId attackBonus}}
+									{{/if}}
+								</div>
+							</div>
 							{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{maxPrepared}}</div>{{/if}}
 						</div>
-						<div flex class="containerMain">
+						<div class="containerMain">
 							{{#each levels}}
 								{{#if spellCount ../_id ../../_id}}
 									<div class="list-subhead" layout horizontal center>{{name}}</div>
@@ -16,7 +27,9 @@
 								{{#each spells ../_id ../../_id}}
 									<div class="itemSlot">
 										<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal center>
-											<!--school icon here--><div flex>{{name}}</div><!--prepared checkbox here-->
+											<core-icon icon="social:whatshot"></core-icon>
+											<div flex>{{name}}</div>
+											<paper-icon-button class="castButton" icon="send"></paper-icon-button>
 										</paper-item>
 									</div>
 								{{/each}}
