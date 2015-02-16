@@ -17,30 +17,37 @@
 									{{/if}}
 								</div>
 							</div>
-							{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{maxPrepared}}</div>{{/if}}
+							{{#if settings.showUnprepared}}
+								{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{maxPrepared}}</div>{{/if}}
+								<paper-icon-button class="finishPrep" icon="done"></paper-icon-button>
+							{{else}}
+								<paper-icon-button class="prepSpells" icon="book"></paper-icon-button>
+							{{/if}}
 						</div>
 						<div class="containerMain">
 							{{#each levels}}
-								{{#if spellCount ../_id ../../_id}}
+								{{#if spellCount .. ../../_id}}
 									<div class="list-subhead" layout horizontal center>{{name}}</div>
 								{{/if}}
 								{{#each spells ../_id ../../_id}}
-									<div class="itemSlot">
-										<paper-item class="inventoryItem spell" hero-id="main" {{detailHero}} layout horizontal center>
-											<core-icon icon="social:whatshot" style="color: {{hexColor color}};"></core-icon>
-											<div flex layout vertical>
-												<div>{{name}}</div>
-												<div class="caption">
-													{{school}} {{castingTime}}{{#if ritual}} (ritual){{/if}} - {{spellComponents}}
+									{{#if showSpell ../../settings.showUnprepared}}
+										<div class="itemSlot">
+											<paper-item class="inventoryItem spell" hero-id="main" {{detailHero}} layout horizontal center>
+												<core-icon icon="social:whatshot" style="color: {{hexColor color}};"></core-icon>
+												<div flex layout vertical>
+													<div>{{name}}</div>
+													<div class="caption">
+														{{school}} {{castingTime}}{{#if ritual}} (ritual){{/if}} - {{spellComponents}}
+													</div>
 												</div>
-											</div>
-											{{#if ../../settings.showUnprepared}}
-												<paper-checkbox class="preparedCheckbox" checked={{isPrepared}} disabled={{cantUnprepare}}></paper-checkbox>
-											{{else}}
-												<paper-icon-button class="castButton" icon="send"></paper-icon-button>
-											{{/if}}
-										</paper-item>
-									</div>
+												{{#if ../../settings.showUnprepared}}
+													<paper-checkbox class="preparedCheckbox" checked={{isPrepared}} disabled={{cantUnprepare}}></paper-checkbox>
+												{{else}}
+													<!--<paper-icon-button class="castButton" icon="send"></paper-icon-button>-->
+												{{/if}}
+											</paper-item>
+										</div>
+									{{/if}}
 								{{/each}}
 							{{/each}}
 						</div>

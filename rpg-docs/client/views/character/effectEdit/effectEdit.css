@@ -18,8 +18,9 @@ body /deep/ #proficiencyDropDown {
 	width: 120px;
 }
 
-html /deep/ paper-input {
-	margin-bottom: 1px;
+html /deep/ .effectEdit paper-input {
+	position: relative;
+	bottom: 5px;
 }
 
 html /deep/ .effectEdit {

@@ -15,8 +15,14 @@ Template.spells.helpers({
 	spellLists: function(){
 		return SpellLists.find({charId: this._id});
 	},
-	spellCount: function(listId, charId){
-		return Spells.find( {charId: charId, listId: listId, level: this.level}, {fields: {_id: 1, level: 1}} ).count() > 0;
+	spellCount: function(list, charId){
+		if(list.settings.showUnprepared){
+			return Spells.find( {charId: charId, listId: list._id, level: this.level}, 
+							    {fields: {_id: 1, level: 1}} ).count() > 0;
+		} else{
+			return Spells.find( {charId: charId, listId: list._id, level: this.level, prepared: {$in: ["prepared", "always"]} }, 
+								{fields: {_id: 1, level: 1}} ).count() > 0;
+		}
 	},
 	spells: function(listId, charId){
 		return Spells.find( {charId: charId, listId: listId, level: this.level} );
@@ -49,6 +55,13 @@ Template.spells.helpers({
 	},
 	isPrepared: function(){
 		return this.prepared === "prepared" || this.prepared === "always";
+	},
+	showSpell: function(listShowPrepped){
+		if(listShowPrepped) {
+			return true;
+		} else {
+			return this.prepared === "prepared" || this.prepared === "always";
+		}
 	},
 	cantUnprepare: function(){
 		return this.prepared === "always";
@@ -113,5 +126,13 @@ Template.spells.events({
 			Spells.update(this._id, {$set: {prepared: "prepared"}});
 		else if(this.prepared === "prepared" && !value)
 			Spells.update(this._id, {$set: {prepared: "unprepared"}});
-	}
+	},
+	"tap .prepSpells": function(event){
+		SpellLists.update(this._id, {$set: {"settings.showUnprepared": true}});
+		event.stopPropagation();
+	},
+	"tap .finishPrep": function(event){
+		SpellLists.update(this._id, {$set: {"settings.showUnprepared": false}});
+		event.stopPropagation();
+	},
 });

@@ -6,7 +6,7 @@ Schemas.Spell = new SimpleSchema({
 	prepared:    {type: String, defaultValue: "unprepared", allowedValues: ["prepared","unprepared","always"]},
 	name:		 {type: String},
 	description: {type: String, optional: true},
-	castingTime: {type: String, defaultValue: "action"},
+	castingTime: {type: String, optional: true, defaultValue: "action"},
 	range:		 {type: String, optional: true},
 	duration:	 {type: String, optional: true},
 	"components.verbal":		{type: Boolean, defaultValue: false},

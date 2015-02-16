@@ -6,3 +6,11 @@
 	width: 32px;
 	height: 32px;
 }
+
+#spells .inventoryItem paper-checkbox{
+	pointer-events: initial;
+}
+
+#spells paper-checkbox /deep/ #ink {
+	color: #009688;
+}
