@@ -22,6 +22,9 @@ Template.personaDetailsDialog.helpers({
 });
 
 Template.personaDetailsDialog.events({
+	"tap #backButton": function(){
+		GlobalUI.closeDetail()
+	},
 	"change #nameInput": function(event){
 		var input = event.currentTarget.value;
 		Characters.update( this.charId, {$set: {name: input}} );
