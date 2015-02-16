@@ -71,23 +71,6 @@ var statsDict = _.indexBy(stats, "stat")
 var statGroups = _.groupBy(stats, "group");
 var statGroupNames = _.keys(statGroups);
 
-var statGroupIndex = function(statName){
-	if(!_.isString(statName)) return;
-	var stat = statsDict[statName];
-	if(stat){
-		return _.indexOf(statGroupNames, stat.group)
-	}
-}
-
-var statIndex = function(statName){
-	if(!_.isString(statName)) return;
-	var stat = statsDict[statName];
-	if(!stat) return;
-	var group = statGroups[stat.group];
-	if(!group) return;
-	return _.indexOf(_.pluck(group, "stat"), statName);
-}
-
 var attributeOperations = [
 	{name: "Base Value", operation: "base"}, 
 	{name: "Add", operation: "add"}, 
@@ -108,65 +91,14 @@ var skillOperations = [
 	{name: "Conditional Benefit", operation: "conditional"}
 ];
 
-var operationIndex = function(statName, operation){
-	if(!_.isString(statName)) return;
-	if(!_.isString(operation)) return;
-	var group = statsDict[statName].group;
-	var opGroup;
-	if(group === "Saving Throws" || group === "Skills"){
-		opGroup = skillOperations;
-	} else {
-		opGroup = attributeOperations;
-	}
-	return _.indexOf(_.pluck(opGroup, "operation"), operation);
-}
-
 Template.effectEdit.created = function(){
-	this.selectedStatGroup = new ReactiveVar();
-	this.selectedStat = new ReactiveVar();
-	this.selectedOperation = new ReactiveVar();
-	this.value = new ReactiveVar();
-};
-
-Template.effectEdit.rendered = function(){
-	var self = this;
-	self.autorun(function(){
-		var data = Template.currentData();
-		if(!data) return;
-		if(data.stat){
-			if(statsDict[data.stat]){
-				self.selectedStatGroup.set(statsDict[data.stat].group);
-			}
-			self.selectedStat.set(data.stat);
-		}
-		if(data.operation){
-			self.selectedOperation.set(data.operation);
-		}
-		var value = undefined;
-		if(_.isNumber(data.value)){
-			value = data.value;
-		} else if (_.isString(data.calculation)){
-			value = data.calculation;
-		}
-		if(value){
-			self.value.set(value);
-		}
-	})
+	var statGroup = statsDict[this.data.stat].group;
+	this.selectedStatGroup = new ReactiveVar(statGroup);
 };
 
 Template.effectEdit.helpers({
 	selectedStatGroup: function(){
-		var groupName = Template.instance().selectedStatGroup.get();
-		return _.indexOf(statGroupNames, groupName);
-	},
-	selectedStat: function(){
-		var statName = Template.instance().selectedStat.get();
-		return statIndex(statName);
-	},
-	selectedOperation: function(){
-		var opName = Template.instance().selectedOperation.get();
-		var statName = Template.instance().selectedStat.get();
-		return operationIndex(statName, opName);
+		return Template.instance().selectedStatGroup.get();
 	},
 	statGroups: function(){
 		return statGroupNames;
@@ -189,7 +121,7 @@ Template.effectEdit.helpers({
 		var group = Template.instance().selectedStatGroup.get();
 		if(group === "Weakness/Resistance") return "multiplierEffectValue";
 
-		var op = Template.instance().selectedOperation.get();
+		var op = this.operation;
 		if(!op) return null;
 		//operations that don't need templates
 		if(op === "advantage" || op === "disadvantage" || op === "fail") return null;
@@ -198,70 +130,16 @@ Template.effectEdit.helpers({
 
 		//default template
 		return "regularEffectValue";
-	},
-	needsCommit: function(){
-		var inst = Template.instance();
-		if(
-			inst.selectedStat.get() !== this.stat ||
-			inst.selectedOperation.get() !== this.operation ||
-			(inst.value.get() !== this.value && inst.value.get() !== this.calculation)
-		){
-			return true;
-		} else {
-			return false;
-		}
-	},
-	valueTemplateData: function(){
-		var value = Template.instance().value.get()
-		var effectValue = value;
-		var selectedDamageMultiplier = null;
-		if(value === 0.5) selectedDamageMultiplier = 0;
-		if(value === 2) selectedDamageMultiplier = 1;
-		if(value === 0) selectedDamageMultiplier = 2;
-		var selectedProfiencyMultiplier = null;
-		if(value === 1) selectedProfiencyMultiplier = 0;
-		if(value === 0.5) selectedProfiencyMultiplier = 1;
-		if(value === 2) selectedProfiencyMultiplier = 2;
-		var data = {
-			effectValue: effectValue,
-			selectedDamageMultiplier: selectedDamageMultiplier,
-			selectedProfiencyMultiplier: selectedProfiencyMultiplier
-		};
-		return data;
 	}
+});
 
+Template.regularEffectValue.helpers({
+	effectValue: function(){
+		return this.calculation || this.value;
+	}
 });
 
 Template.effectEdit.events({
-	"tap #commitChanges": function(event){
-		var changedFields = {};
-		var inst = Template.instance();
-		changedFields.operation = inst.selectedOperation.get();
-		changedFields.stat = inst.selectedStat.get();
-		var val = inst.value.get();
-		if(_.isNumber(val)){
-			changedFields.value = val;
-			changedFields.calculation = null;
-		} else if(_.isString(val)) {
-			changedFields.calculation = val;
-			changedFields.value = null;
-		}
-		Effects.update(this._id, {$set: changedFields});
-	},
-	"tap #clearChanges": function(event){
-		//essentially re-render
-		var inst = Template.instance();
-		if(this.operation) inst.selectedOperation.set(this.operation);
-		if(this.stat) inst.selectedStat.set(this.stat);
-		if(this.stat) inst.selectedStatGroup.set(statsDict[this.stat].group)
-		var value = undefined;
-		if(_.isNumber(this.value)){
-			value = this.value;
-		} else if (_.isString(this.calculation)){
-			value = this.calculation;
-		}
-		inst.value.set(value);
-	},
 	"tap #deleteEffect": function(event){
 		Effects.remove(this._id);
 	},
@@ -272,39 +150,36 @@ Template.effectEdit.events({
 		var oldName = Template.instance().selectedStatGroup.get();
 		if(oldName != groupName){
 			Template.instance().selectedStatGroup.set(groupName);
-			var oldIndex = statGroupIndex(Template.instance().selectedStat.get());
-			var groupIndex = statGroupIndex(groupName);
-			if(oldIndex != groupIndex){
-				Template.instance().selectedStat.set(null);
-			}
-		}	
+			Effects.update(this._id, {$unset: {stat: ""}});
+		}
 	},
 	"core-select #statDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var statName = detail.item.getAttribute("name");
-		Template.instance().selectedStat.set(statName);
+		if (statName == this.stat) return;
+		Effects.update(this._id, {$set: {stat: statName}});
 	},
 	"core-select #operationDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var opName = detail.item.getAttribute("name");
-		Template.instance().selectedOperation.set(opName);
+		if (opName == this.operation) return;
+		Effects.update(this._id, {$set: {operation: opName}});
 	},
 	"core-select #damageMultiplierDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var selected = detail.item.getAttribute("name");
-		var inst = Template.instance();
 		if(selected === "resistance"){
-			inst.value.set(0.5);
-			inst.selectedOperation.set("mul");
+			if(this.operation == "mul" && this.value == 0.5) return;
+			Effects.update(this._id, {$set: {operation: "mul", value: 0.5, calculation: ""}});
 		} else if (selected === "vulnerability"){
-			inst.value.set(2);
-			inst.selectedOperation.set("mul");
+			if(this.operation == "mul" && this.value == 2) return;
+			Effects.update(this._id, {$set: {operation: "mul", value: 2, calculation: ""}});
 		} else if (selected === "immunity"){
-			inst.value.set(0);
-			inst.selectedOperation.set("max");
+			if(this.operation == "max" && this.value == 0) return;
+			Effects.update(this._id, {$set: {operation: "max", value: 0, calculation: ""}});
 		}	
 	},
 	"core-select #proficiencyDropDown": function(event){
@@ -313,15 +188,25 @@ Template.effectEdit.events({
 		var selected = detail.item.getAttribute("name");
 		var inst = Template.instance();
 		if(selected === "proficient"){
-			inst.value.set(1);
+			if(this.value == 1) return;
+			Effects.update(this._id, {$set: {value: 1}});
 		} else if (selected === "half"){
-			inst.value.set(0.5);
+			if(this.value == 0.5) return;
+			Effects.update(this._id, {$set: {value: 0.5}});
 		} else if (selected === "double"){
-			inst.value.set(2);
+			if(this.value == 2) return;
+			Effects.update(this._id, {$set: {value: 2}});
 		}
 	},
 	"change #effectValueInput": function(event){
 		var value = event.currentTarget.value;
-		Template.instance().value.set(value);
+		var numValue = +value;
+		if(_.isFinite(numValue)){
+			if (this.value === numValue) return;
+			Effects.update(this._id, {$set: {value: numValue, calculation: ""}});
+		} else if (_.isString(value)){
+			if (this.calculation === value) return;
+			Effects.update(this._id, {$set: {value: "", calculation: value}});
+		}
 	}
 });
