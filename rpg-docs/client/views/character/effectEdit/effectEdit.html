@@ -1,6 +1,6 @@
 <template name="effectEdit">
-	<div class="effectEdit">
-		<paper-dropdown-menu id="statGroupDropDown" label="Stat Group">
+	<div class="effectEdit" layout horizontal center>
+		<paper-dropdown-menu id="statGroupDropDown" label="Stat Group" flex>
 			<paper-dropdown layered class="dropdown">
 				<core-menu id="statGroupMenu" class="menu" selected={{selectedStatGroup}}>
 					{{#each statGroups}}
@@ -10,7 +10,7 @@
 			</paper-dropdown>
 		</paper-dropdown-menu>
 		{{#if stats}}
-			<paper-dropdown-menu id="statDropDown" label="Stat">
+			<paper-dropdown-menu id="statDropDown" label="Stat" flex>
 				<paper-dropdown layered class="dropdown">
 					<core-menu id="statMenu" class="menu"  selected={{stat}} on-tap="onStatMenuTap">
 						{{#each stats}}
@@ -21,7 +21,7 @@
 			</paper-dropdown-menu>
 		{{/if}}
 		{{#if operations}}
-			<paper-dropdown-menu id="operationDropDown" label="Operation">
+			<paper-dropdown-menu id="operationDropDown" label="Operation" flex>
 				<paper-dropdown layered class="dropdown">
 					<core-menu id="operationMenu" class="menu" selected={{operation}}>
 						{{#each operations}}
@@ -32,22 +32,17 @@
 			</paper-dropdown-menu>
 		{{/if}}
 		{{> Template.dynamic template=effectValueTemplate}}
-		{{#if needsCommit}}
-			<paper-icon-button id="commitChanges" role="button" tabindex="0" icon="check" aria-label="Commit Changes"></paper-icon-button>
-			<paper-icon-button id="clearChanges" role="button" tabindex="0" icon="clear" aria-label="Clear Changes"></paper-icon-button>
-		{{else}}
-			<paper-icon-button id="deleteEffect" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
-		{{/if}}
+		<paper-icon-button id="deleteEffect" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
 		<br>
 	</div>
 </template>
 
 <template name="regularEffectValue">
-	<paper-input id="effectValueInput" label="Value" floatinglabel value={{effectValue}}></paper-input>
+	<paper-input id="effectValueInput" label="Value" floatinglabel value={{effectValue}} flex></paper-input>
 </template>
 
 <template name="multiplierEffectValue">
-	<paper-dropdown-menu id="damageMultiplierDropDown" label="Damage Multiplier">
+	<paper-dropdown-menu id="damageMultiplierDropDown" label="Damage Multiplier" flex>
 		<paper-dropdown layered class="dropdown">
 			<core-menu id="multiplierMenu" class="menu" selected={{value}}>
 				<paper-item name="0.5">Resistance</paper-item>
@@ -59,7 +54,7 @@
 </template>
 
 <template name="proficiencyEffectValue">
-	<paper-dropdown-menu id="proficiencyDropDown" label="Proficiency">
+	<paper-dropdown-menu id="proficiencyDropDown" label="Proficiency" flex>
 		<paper-dropdown layered class="dropdown">
 			<core-menu id="proficiencyMenu" class="menu" selected={{value}}>
 				<paper-item name="1">Proficient</paper-item>

@@ -11,11 +11,11 @@ paper-tabs[noink][nobar] paper-tab.core-selected {
 	color: #fff;
 }
 
-::shadow #selectionBar, #onRadio  {
+paper-tabs /deep/ #selectionBar, #onRadio  {
 	background-color: #d50000;
 }
 
-::shadow #ink {
+paper-tabs ::shadow #ink {
 	color: #b22 !important;
 }
 

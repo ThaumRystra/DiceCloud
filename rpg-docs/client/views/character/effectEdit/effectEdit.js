@@ -170,33 +170,16 @@ Template.effectEdit.events({
 	"core-select #damageMultiplierDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
-		var selected = detail.item.getAttribute("name");
-		if(selected === "resistance"){
-			if(this.operation == "mul" && this.value == 0.5) return;
-			Effects.update(this._id, {$set: {operation: "mul", value: 0.5, calculation: ""}});
-		} else if (selected === "vulnerability"){
-			if(this.operation == "mul" && this.value == 2) return;
-			Effects.update(this._id, {$set: {operation: "mul", value: 2, calculation: ""}});
-		} else if (selected === "immunity"){
-			if(this.operation == "max" && this.value == 0) return;
-			Effects.update(this._id, {$set: {operation: "max", value: 0, calculation: ""}});
-		}	
+		var value = +detail.item.getAttribute("name");
+		if (value == this.value) return;
+		Effects.update(this._id, {$set: {value: value, calculation: ""}});
 	},
 	"core-select #proficiencyDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
-		var selected = detail.item.getAttribute("name");
-		var inst = Template.instance();
-		if(selected === "proficient"){
-			if(this.value == 1) return;
-			Effects.update(this._id, {$set: {value: 1}});
-		} else if (selected === "half"){
-			if(this.value == 0.5) return;
-			Effects.update(this._id, {$set: {value: 0.5}});
-		} else if (selected === "double"){
-			if(this.value == 2) return;
-			Effects.update(this._id, {$set: {value: 2}});
-		}
+		var value = +detail.item.getAttribute("name");
+		if (value == this.value) return;
+		Effects.update(this._id, {$set: {value: value, calculation: ""}});
 	},
 	"change #effectValueInput": function(event){
 		var value = event.currentTarget.value;
