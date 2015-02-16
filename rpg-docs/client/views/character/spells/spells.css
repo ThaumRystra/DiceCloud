@@ -1,0 +1,8 @@
+#spells .inventoryItem {
+	height: 56px;
+}
+
+#spells .inventoryItem core-icon{
+	width: 32px;
+	height: 32px;
+}

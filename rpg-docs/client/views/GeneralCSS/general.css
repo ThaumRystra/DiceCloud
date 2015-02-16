@@ -132,3 +132,7 @@ paper-fab-menu /deep/ .container {
 	padding-left: 16px;
 	font-weight: 500;
 }
+
+.fullwidth {
+	width: 100%;
+}

@@ -26,10 +26,19 @@
 								{{/if}}
 								{{#each spells ../_id ../../_id}}
 									<div class="itemSlot">
-										<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal center>
-											<core-icon icon="social:whatshot"></core-icon>
-											<div flex>{{name}}</div>
-											<paper-icon-button class="castButton" icon="send"></paper-icon-button>
+										<paper-item class="inventoryItem spell" hero-id="main" {{detailHero}} layout horizontal center>
+											<core-icon icon="social:whatshot" style="color: {{hexColor color}};"></core-icon>
+											<div flex layout vertical>
+												<div>{{name}}</div>
+												<div class="caption">
+													{{school}} {{castingTime}}{{#if ritual}} (ritual){{/if}} - {{spellComponents}}
+												</div>
+											</div>
+											{{#if ../../settings.showUnprepared}}
+												<paper-checkbox class="preparedCheckbox" checked={{isPrepared}} disabled={{cantUnprepare}}></paper-checkbox>
+											{{else}}
+												<paper-icon-button class="castButton" icon="send"></paper-icon-button>
+											{{/if}}
 										</paper-item>
 									</div>
 								{{/each}}

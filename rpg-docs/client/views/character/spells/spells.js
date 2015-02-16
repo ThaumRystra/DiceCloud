@@ -29,6 +29,29 @@ Template.spells.helpers({
 	},
 	order: function(){
 		return _.indexOf(_.keys(colorOptions), this.color);
+	},
+	spellComponents: function(){
+		var components = "";
+		if(this.components.verbal){
+			components += "V"
+		}
+		if(this.components.somatic){
+			components += components? ", S" : "S";
+		}
+		if(this.components.material){
+			components += components? ", M" : "M";
+			components += "("+this.components.material+")";
+		}
+		if(this.components.concentration){
+			components += " - Requires concentration"
+		}
+		return components;
+	},
+	isPrepared: function(){
+		return this.prepared === "prepared" || this.prepared === "always";
+	},
+	cantUnprepare: function(){
+		return this.prepared === "always";
 	}
 });
 
@@ -37,6 +60,13 @@ Template.spells.events({
 		GlobalUI.setDetail({
 			template: "spellListDialog",
 			data:     {spellListId: this._id, charId: this.charId},
+			heroId:   this._id
+		});
+	},
+	"tap .spell": function(event){
+		GlobalUI.setDetail({
+			template: "spellDialog",
+			data:     {spellId: this._id, charId: this.charId},
 			heroId:   this._id
 		});
 	},
@@ -57,10 +87,31 @@ Template.spells.events({
 			}
 		});
 	},
-	"downAction .castButton": function(event){
-		event.stopPropagation()
+	"tap #addSpell": function(event){
+		var charId = this.charId;
+		var listId = this.listId;
+		Spells.insert({
+			name: "New Spell", 
+			charId: this._id,
+			listId: SpellLists.findOne({charId: this._id})._id
+		}, function(error, id){
+			if(!error){
+				GlobalUI.setDetail({
+					template: "spellDialog",
+					data:     {spellId: id, charId: charId, listId: listId},
+					heroId:   id
+				});
+			}
+		});
 	},
-	"upAction .castButton": function(event){
-		event.stopPropagation()
+	"tap .preparedCheckbox": function(event){
+		event.stopPropagation();
+	},
+	"change .preparedCheckbox": function(event){
+		var value = event.currentTarget.checked;
+		if(this.prepared === "unprepared" && value)
+			Spells.update(this._id, {$set: {prepared: "prepared"}});
+		else if(this.prepared === "prepared" && !value)
+			Spells.update(this._id, {$set: {prepared: "unprepared"}});
 	}
 });

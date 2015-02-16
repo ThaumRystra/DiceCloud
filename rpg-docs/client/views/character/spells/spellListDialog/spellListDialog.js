@@ -43,6 +43,7 @@ Template.spellListDialog.events({
 		var value = event.currentTarget.value
 		SpellLists.update(this._id, {$set: {maxPrepared: value}});
 	},
+	//TODO change #spellListDescription
 	"core-select .colorDropdown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
