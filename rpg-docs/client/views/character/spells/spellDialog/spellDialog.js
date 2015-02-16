@@ -68,30 +68,35 @@ Template.spellDialog.events({
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
+		if (value == this.listId) return;
 		Spells.update(this._id, {$set: {listId: value}});
 	},
 	"core-select #levelDropdown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
+		if(value == this.level) return;
 		Spells.update(this._id, {$set: {level: value}});
 	},
 	"core-select #schoolDropdown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
+		if(value == this.school) return;
 		Spells.update(this._id, {$set: {school: value}});
 	},
 	"core-select #preparedDropdown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
+		if(value == this.school) return;
 		Spells.update(this._id, {$set: {prepared: value}});
 	},
 	"core-select .colorDropdown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
+		if(value == this.color) return;
 		Spells.update(this._id, {$set: {color: value}});
 	},
 	"change #verbalCheckbox": function(event){

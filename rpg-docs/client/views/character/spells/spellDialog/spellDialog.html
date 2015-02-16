@@ -58,14 +58,8 @@
 						</core-menu>
 					</paper-dropdown>
 				</paper-dropdown-menu>
-				<!--Casting Time-->
-				<paper-input id="castingTimeInput" class="fullwidth" label="Casting Time" floatinglabel value={{castingTime}} flex></paper-input>
-				<!--Range-->
-				<paper-input id="rangeInput" class="fullwidth" label="Range" floatinglabel value={{range}} flex></paper-input>
-				<!--Duration-->
-				<paper-input id="durationInput" class="fullwidth" label="Duration" floatinglabel value={{duration}} flex></paper-input>
 				<!--Components-->
-				<div horizontal layout wrap>
+				<div horizontal layout center wrap>
 					<div>Verbal:</div>
 					<paper-checkbox id="verbalCheckbox" checked={{components.verbal}}></paper-checkbox>
 					<div>Somatic:</div>
@@ -77,6 +71,12 @@
 					<paper-checkbox id="ritualCheckbox" checked={{ritual}}></paper-checkbox>
 				</div>
 				<paper-input id="materialInput" class="fullwidth" label="Material Components" floatinglabel value={{components.material}} flex></paper-input>
+				<!--Casting Time-->
+				<paper-input id="castingTimeInput" class="fullwidth" label="Casting Time" floatinglabel value={{castingTime}} flex></paper-input>
+				<!--Range-->
+				<paper-input id="rangeInput" class="fullwidth" label="Range" floatinglabel value={{range}} flex></paper-input>
+				<!--Duration-->
+				<paper-input id="durationInput" class="fullwidth" label="Duration" floatinglabel value={{duration}} flex></paper-input>
 				<!--Description-->
 				<paper-input-decorator label="Description" floatinglabel layout vertical>
 					<paper-autogrow-textarea>

@@ -32,5 +32,8 @@ Template.textDialog.events({
 		var setter = {$set: {}};
 		setter.$set[this.field] = input;
 		Characters.update(this.charId, setter);
-	}
+	},
+	"tap #backButton": function(){
+		GlobalUI.closeDetail()
+	},
 });
