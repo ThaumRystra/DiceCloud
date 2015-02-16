@@ -16,7 +16,7 @@ Schemas.Spell = new SimpleSchema({
 	ritual:		 {type: Boolean, defaultValue: false},
 	level:		 {type: Number, defaultValue: 0},
 	school:      {type: String, defaultValue: "Abjuration", allowedValues: magicSchools},
-	color:       {type: String, allowedValues: _.keys(colorOptions), defaultValue: "green"}
+	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"}
 });
 
 Spells.attachSchema(Schemas.Spell);

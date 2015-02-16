@@ -2,8 +2,8 @@
 	<paper-dropdown-menu class="colorDropdown {{colorClass color}}" label="Color">
 		<paper-dropdown layered class="dropdown">
 			<core-menu class="menu"  selected={{color}}>
-				{{#each colorKeys}}
-					<paper-item name={{this}} class="containerMenuItem {{colorClass this}}">{{this}}</paper-item>
+				{{#each colors}}
+					<paper-item name={{key}} class="containerMenuItem {{colorClass key}}">{{className}}</paper-item>
 				{{/each}}
 			</core-menu>
 		</paper-dropdown>

@@ -15,7 +15,7 @@ Schemas.Item = new SimpleSchema({
 		allowedValues: ["none", "head", "armor", "arms", "hands", "held", "feet"]
 	},
 	equipped: 	{type: Boolean, defaultValue: false},
-	color:       {type: String, allowedValues: _.keys(colorOptions), defaultValue: "green"}
+	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"}
 });
 
 Items.attachSchema(Schemas.Item);

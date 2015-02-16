@@ -58,7 +58,17 @@ paper-button {
 }
 
 .card {
-	margin: 4px;
+	margin-bottom: 8px;
+	/*hack to stop flickering*/
+	-webkit-backface-visibility: hidden;
+	-webkit-transform: translateX(0);
+	/*stop divs breaking over divide*/
+	-webkit-column-break-inside: avoid;
+	page-break-inside: avoid;
+	break-inside: avoid;
+	
+	width: 100%;
+	
 	padding: 16px;
 	font-size: 14px;
 	border-radius: 2px;
@@ -66,7 +76,7 @@ paper-button {
 }
 
 .card.double {
-	width: 332px;
+	padding: 0;
 }
 
 .card paper-button {

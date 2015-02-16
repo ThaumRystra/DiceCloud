@@ -9,7 +9,7 @@ Schemas.Container = new SimpleSchema({
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	description:{type: String, optional: true},
-	color:      {type: String, allowedValues: _.keys(colorOptions), defaultValue: "brown"}
+	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"}
 });
 
 Containers.attachSchema(Schemas.Container);

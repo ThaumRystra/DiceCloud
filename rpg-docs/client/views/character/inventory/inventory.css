@@ -1,12 +1,15 @@
 .containers {
-	display: flex;
-	flex-wrap: wrap;
-	padding: 4px;
+	-webkit-column-width: 300px;
+	   -moz-column-width: 300px;
+	        column-width: 300px;
+	-webkit-column-gap: 8px;
+	   -moz-column-gap: 8px;
+	        column-gap: 8px;
+	padding: 8px;
 }
 
 .container {
-	width: 332px;
-	flex-grow: 1;
+
 }
 
 .containerTop {

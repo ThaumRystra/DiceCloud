@@ -13,7 +13,7 @@ var spellLevels = [
 
 Template.spells.helpers({
 	spellLists: function(){
-		return SpellLists.find({charId: this._id});
+		return SpellLists.find({charId: this._id}, {sort: {color: 1, name: 1}});
 	},
 	spellCount: function(list, charId){
 		if(list.settings.showUnprepared){
@@ -25,7 +25,7 @@ Template.spells.helpers({
 		}
 	},
 	spells: function(listId, charId){
-		return Spells.find( {charId: charId, listId: listId, level: this.level} );
+		return Spells.find( {charId: charId, listId: listId, level: this.level}, {sort: {color: 1, name: 1}} );
 	},
 	levels: function(){
 		return spellLevels;

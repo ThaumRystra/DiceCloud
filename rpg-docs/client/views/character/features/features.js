@@ -1,6 +1,6 @@
 Template.features.helpers({
 	features: function(){
-		var features = Features.find({charId: this._id}, {sort: {name: 1}});
+		var features = Features.find({charId: this._id}, {sort: {color: 1, name: 1}});
 		return features;
 	},
 	hasUses: function(){

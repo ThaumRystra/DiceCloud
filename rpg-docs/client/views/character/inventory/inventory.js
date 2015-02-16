@@ -4,10 +4,10 @@ Template.inventory.created = function(){
 
 Template.inventory.helpers({
 	containers: function(){
-		return Containers.find({charId: this._id}, {sort: {name: 1}})
+		return Containers.find({charId: this._id}, {sort: {color: 1, name: 1}})
 	},
 	items: function(charId, containerId){
-		return Items.find({charId: charId, equipped: false, container: containerId })
+		return Items.find({charId: charId, equipped: false, container: containerId }, {sort: {color: 1, name: 1}})
 	},
 	armor: function(){
 		return Items.findOne({ charId: this._id, equipped: true, equipmentSlot: "armor" })

@@ -7,7 +7,7 @@ Schemas.SpellLists = new SimpleSchema({
 	saveDC:      {type: String, optional: true},
 	attackBonus: {type: String, optional: true},
 	maxPrepared: {type: String, optional: true},
-	color:       {type: String, allowedValues: _.keys(colorOptions), defaultValue: "green"},
+	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"},
 	"settings.showUnprepared": {type: Boolean, defaultValue: true},
 });
 

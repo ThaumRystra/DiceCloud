@@ -3,5 +3,5 @@ Template.registerHelper("colorClass", function(color){
 });
 
 Template.registerHelper("hexColor", function(color){
-	return colorOptions[color].color;
+	return getHexColor(color);
 });

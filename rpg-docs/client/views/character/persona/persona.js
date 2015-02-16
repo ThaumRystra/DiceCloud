@@ -1,10 +1,10 @@
 var colorMap = {
-	description: "indigo",
-	personality: "blue",
-	ideals: "light-blue",
-	bonds: "cyan",
-	flaws: "teal",
-	backstory: "green"
+	description: "e",
+	personality: "f",
+	ideals: "g",
+	bonds: "h",
+	flaws: "i",
+	backstory: "j"
 }
 
 Template.persona.helpers({
@@ -12,7 +12,7 @@ Template.persona.helpers({
 		var char = Characters.findOne(this._id, {fields: {name: 1, gender: 1, alignment: 1, race:1}})
 		char._id += "details";
 		char.title = char.name;
-		char.color = "deep-purple";
+		char.color = "d";
 		return char;
 	},
 	characterField: function(field, title){
