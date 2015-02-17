@@ -1,3 +1,7 @@
+#spells .containerMain {
+	padding: 0 0 16px 0;
+}
+
 #spells .inventoryItem {
 	height: 56px;
 }

@@ -1,21 +1,49 @@
 <template name="features">
 	<div fit>
 		<div class="scroll-y" fit>
-			<div class="resources"><!--resources-->
-
+			<div class="resourceCards" layout horizontal wrap>
+				<!--Armor-->
+				<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
+					<div class="containerLeft">
+						{{attributeValue "armor"}}
+					</div>
+					<div class="containerRight" flex horizontal layout center>
+						Armor Class
+					</div>
+					<paper-ripple fit></paper-ripple>
+				</paper-shadow>
+				<!--Speed-->
+				<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
+					<div class="containerLeft">
+						{{attributeValue "speed"}}
+					</div>
+					<div class="containerRight" flex horizontal layout center>
+						Speed
+					</div>
+					<paper-ripple fit></paper-ripple>
+				</paper-shadow>
+				<!--ki-->
+				{{>resource name="ki" title="Ki Points" char=this}}
+				<!--sorceryPoints-->
+				{{>resource name="sorceryPoints" title="Sorcery Points" char=this}}
+				<!--rages-->
+				{{>resource name="rages" title="Rages" char=this}}
+				<!--superiorityDice-->
+				{{>resource name="superiorityDice" title="Superiority Dice" char=this}}
+				<!--expertiseDice-->
+				{{>resource name="expertiseDice" title="Expertise Dice" char=this}}
+				{{>gridPadding num="6" class="card container"}}
 			</div>
-			<div class="actions">
-
-			</div>
+			<!--<div class="cardHeader" layout horizontal center>Features</div>-->
 			<div class="containers">
 				{{#each features}}
-					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}} style="order: {{featureOrder}};">
+					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
 							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
 							{{#if hasUses}}<div class="subhead" style="margin-right: 8px">{{usesLeft}}/{{usesValue}}</div>{{/if}}
 							<paper-ripple fit></paper-ripple>
 						</div>
-						<div flex class="containerMain body1 featureDescription">{{description}}</div>
+						{{#if description}}<div flex class="containerMain body1 featureDescription">{{description}}</div>{{/if}}
 						{{#if hasUses}}
 							<div class="containerFoot" layout horizontal center end-justified>
 								{{#if usesLeft}}<paper-button class="useFeature">Use</paper-button>{{/if}}
@@ -36,4 +64,23 @@
 				   aria-label="Add" 
 				   hero-id="main"></paper-fab>
 	</div>
+</template>
+
+<template name="resource">
+	{{#if char.attributeBase name}}
+		<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
+			<div class="containerLeft">
+				<div class="resourceValue">{{char.attributeValue name}}</div>
+				<!--<div class="resourceMax">{{char.attributeBase name}}</div>-->
+				<div class="resourceButtons">
+					<paper-icon-button class="resourceUp" icon="arrow-drop-up" disabled={{cantIncrement}}></paper-icon-button>
+					<paper-icon-button class="resourceDown" icon="arrow-drop-down" disabled={{cantDecrement}}></paper-icon-button>
+				</div>
+			</div>
+			<div class="containerRight" flex relative horizontal layout center>
+				{{title}}
+				<paper-ripple fit></paper-ripple>
+			</div>
+		</paper-shadow>
+	{{/if}}
 </template>

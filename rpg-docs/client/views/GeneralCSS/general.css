@@ -66,10 +66,11 @@ paper-button {
 	-webkit-column-break-inside: avoid;
 	page-break-inside: avoid;
 	break-inside: avoid;
-	
+	/*Fixes extra margin at top of columns*/
+	display: inline-block;
+
 	width: 100%;
-	
-	padding: 16px;
+
 	font-size: 14px;
 	border-radius: 2px;
 	background-color: white;
@@ -82,6 +83,31 @@ paper-button {
 .card paper-button {
 	font-size: 14px;
 	letter-spacing: 0.01em;
+}
+
+.cardHeader {
+	height: 48px;
+	padding: 0 16px 0 16px;
+	align-content: center;
+	font-size: 14px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.54);
+}
+
+.statCard {
+	cursor: pointer;
+}
+
+.resourceCards {
+	padding: 4px 4px 0 4px;
+	margin-bottom: -4px;
+}
+
+.resourceCards .card {
+	width: 180px;
+	margin: 4px;
+	flex-grow: 1;
+	flex-shrink: 1;
 }
 
 .grey-background, body {

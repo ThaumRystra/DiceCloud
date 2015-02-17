@@ -92,7 +92,7 @@ var skillOperations = [
 ];
 
 Template.effectEdit.created = function(){
-	var statGroup = statsDict[this.data.stat].group;
+	var statGroup = statsDict[this.data.stat] && statsDict[this.data.stat].group;
 	this.selectedStatGroup = new ReactiveVar(statGroup);
 };
 

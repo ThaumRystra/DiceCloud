@@ -8,36 +8,100 @@
 	padding: 8px;
 }
 
-.container {
+.containerLeft {
+	padding: 16px;
+	background-color: #2196F3;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	border-radius: 2px 0 0 2px;
+	
+	/* same style as display-1 */
+	font-size: 34px;
+	font-weight: 400;
+	color: #ffffff;
+	color: rgba(255,255,255,0.54);
+	letter-spacing: 0;
+}
 
+.containerRight {
+	padding: 16px;
+	cursor: pointer;
+	
+	/* same style as subhead */
+	font-size: 16px;
+	font-weight: 400;
+	margin: 0;
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	letter-spacing: 0.010em;
+}
+
+.resourceValue {
+	display: inline-block;
+}
+
+.resourceMax {
+	display: inline-block;
+	align-self: flex-end;
+	
+	/* same style as subhead */
+	font-size: 16px;
+	font-weight: 400;
+	margin: 0;
+	color: #fff;
+	color: rgba(255,255,255,0.54);
+	letter-spacing: 0.010em;
+}
+
+.resourceMax:before {
+   content: "/";
+}
+
+.resourceButtons {
+	margin: -16px -16px -16px 8px;
+	align-self: center;
+}
+
+.resourceButtons paper-icon-button{
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	display: block;
+}
+
+.resourceButtons paper-icon-button[disabled]{
+	color: rgba(255, 255, 255, 0.26);
+}
+
+.resourceButtons /deep/ core-icon {
+	width: 32px;
+	height: 32px;
 }
 
 .containerTop {
 	cursor: pointer;
-	margin: -16px -16px 0 -16px;
 	padding: 16px;
 	position: relative;
+	border-radius: 2px 2px 0 0;
 }
 
 .equipmentTop {
-	margin: -16px -16px 0 -16px;
 	padding: 16px;
 	border-bottom: rgba(0,0,0,0.12) solid 1px;
 }
 
 .containerMain {
-	margin: 0 -16px -16px -16px;
-	padding-bottom: 16px;
+	padding: 16px;
 }
 
 .equipmentMain {
-	margin: 0 -16px -16px -16px;
 	padding-bottom: 16px;
 }
 
 .inventoryItem {
 	background: white;
-	transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: box-shadow 0.1s ease;
 	height: 40px;
 	margin: 1px 0 1px 0;
 	font-size: 16px;
@@ -67,4 +131,8 @@
 .itemSlot {
 	background-color: rgb(232, 232, 232);
 	background-color: rgba(0, 0, 0, 0.1);
+}
+
+#inventory .containerMain {
+	padding: 0 0 16px 0;
 }

@@ -1,6 +1,18 @@
 <template name="spells">
 	<div fit>
 		<div id="spells" class="scroll-y" fit>
+			<div class="resourceCards" layout horizontal wrap>
+				{{>resource name="level1SpellSlots" title="Level 1" char=this}}
+				{{>resource name="level2SpellSlots" title="Level 2" char=this}}
+				{{>resource name="level3SpellSlots" title="Level 3" char=this}}
+				{{>resource name="level4SpellSlots" title="Level 4" char=this}}
+				{{>resource name="level5SpellSlots" title="Level 5" char=this}}
+				{{>resource name="level6SpellSlots" title="Level 6" char=this}}
+				{{>resource name="level7SpellSlots" title="Level 7" char=this}}
+				{{>resource name="level8SpellSlots" title="Level 8" char=this}}
+				{{>resource name="level9SpellSlots" title="Level 9" char=this}}
+				{{>gridPadding num="8" class="card container"}}
+			</div>
 			<div class="containers">
 				{{#each spellLists}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{order}};">
@@ -18,7 +30,7 @@
 								</div>
 							</div>
 							{{#if settings.showUnprepared}}
-								{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{maxPrepared}}</div>{{/if}}
+								{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{evaluate charId maxPrepared}}</div>{{/if}}
 								<paper-icon-button class="finishPrep" icon="done"></paper-icon-button>
 							{{else}}
 								<paper-icon-button class="prepSpells" icon="book"></paper-icon-button>
