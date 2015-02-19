@@ -1,0 +1,25 @@
+<template name="journal">
+	<div fit>
+		<div id="journal" class="scroll-y" fit>
+			<div class="containers">
+				{{#each notes}}
+					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+							<div flex>
+								<div class="containerName subhead">{{name}}</div>
+							</div>
+						</div>
+						<div class="containerMain">
+							{{description}}
+						</div>
+					</paper-shadow>
+				{{/each}}
+			</div>
+			<div class="fab-buffer"></div>
+		</div>
+	</div>
+	<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
+		<paper-fab-menu-item id="addNote" icon="note-add" color="#d23f31" tooltip="Note"></paper-fab-menu-item>
+		<paper-fab-menu-item id="addXP" icon="work" color="#d23f31" tooltip="Experience"></paper-fab-menu-item>
+	</paper-fab-menu>
+</template>
