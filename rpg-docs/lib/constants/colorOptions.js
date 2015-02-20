@@ -25,11 +25,11 @@ var colorOptionMap = _.pluck(colorOptions, "key");
 
 getColorClass = function(key){
 	if(!key){
-		return "brown white-text";
+		return "grey white-text";
 	}
 	var index = _.indexOf(colorOptionMap, key);
 	if(index == -1){
-		return "brown white-text";
+		return "grey white-text";
 	}
 	var option = colorOptions[index];
 	var colorClass = option.className;

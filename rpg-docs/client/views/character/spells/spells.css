@@ -11,10 +11,44 @@
 	height: 32px;
 }
 
+#spells .inventoryItem[disabled] {
+	color: #ccc !important;
+	color: rgba(0,0,0,0.26) !important;
+	pointer-events: initial !important;
+	cursor: pointer !important;
+}
+
+#spells .inventoryItem[disabled] core-icon{
+	color: #ccc !important;
+	color: rgba(0,0,0,0.26) !important;
+}
+
 #spells .inventoryItem paper-checkbox{
-	pointer-events: initial;
+	pointer-events: initial !important;
 }
 
 #spells paper-checkbox /deep/ #ink {
 	color: #009688;
+}
+
+#spells .inventoryItem.spellSlot {
+	height: 48px;
+}
+
+.slotName {
+	margin-right: 16px;
+}
+
+.slotBubble {
+	pointer-events: initial !important;
+}
+
+.slotBubble {
+	color: #000;
+	color: rgba(0,0,0,0.54);
+}
+
+.slotBubble[disabled] {
+	color: #cccccc;
+	color: rgba(0,0,0,0.26);
 }

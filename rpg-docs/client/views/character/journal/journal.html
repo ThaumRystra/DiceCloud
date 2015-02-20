@@ -2,9 +2,30 @@
 	<div fit>
 		<div id="journal" class="scroll-y" fit>
 			<div class="containers">
+				<paper-shadow class="card container experiencesCard"  hero-id="main" {{detailHero}}>
+					<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+						<div class="containerName subhead" flex>Experience</div>
+						<div class="subhead">{{experience}}XP</div>
+					</div>
+					<div class="containerMain experiences">
+						{{#each experiences}}
+							<div class="itemSlot">
+								<paper-item class="inventoryItem experience" hero-id="main" {{detailHero}} layout horizontal>
+									<div flex>{{name}}</div><div class="xpValue">{{value}}</div>
+								</paper-item>
+							</div>
+						{{/each}}
+					</div>
+					{{#if moreExperiencesOrCollapse}}
+						<div class="containerFoot" layout="" horizontal="" center="" end-justified="">
+							<paper-button id="moreExperiences" disabled={{notMoreExperiences}}>Load More</paper-button>
+							<paper-button id="lessExperiences" disabled={{cantCollapse}}>Collapse</paper-button>
+						</div>
+					{{/if}}
+				</paper-shadow>
 				{{#each notes}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+						<div class="containerTop {{colorClass}} noteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
 							<div flex>
 								<div class="containerName subhead">{{name}}</div>
 							</div>

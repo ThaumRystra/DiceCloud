@@ -188,8 +188,9 @@ Schemas.Character = new SimpleSchema({
 	owner: { type: String, regEx: SimpleSchema.RegEx.Id },
 	readers: { type: [String], regEx: SimpleSchema.RegEx.Id },
 	writers: { type: [String], regEx: SimpleSchema.RegEx.Id },
-	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"}
+	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"},
 	//TODO add per-character settings
+	"settings.experiencesInc": {type: Number, defaultValue: 20},
 });
 
 Characters.attachSchema(Schemas.Character);
@@ -431,7 +432,7 @@ Characters.helpers({
 	},
 
 	level: function(){
-		var xp = this.attributeValue("experience");
+		var xp = this.experience();
 		var xpTable = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
 					   85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000,
 					   305000, 355000];
@@ -442,5 +443,13 @@ Characters.helpers({
 		};
 		if(xp > 355000) return 20;
 		return 0;
+	},
+	
+	experience: function(){
+		var xp = 0;
+		Experiences.find({charId: this._id}, {fields: {value: 1}}).forEach(function(e){
+			xp += e.value;
+		})
+		return xp;
 	}
 });

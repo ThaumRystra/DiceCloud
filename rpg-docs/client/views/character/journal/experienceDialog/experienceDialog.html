@@ -1,0 +1,32 @@
+<template name="experienceDialog">
+	{{#with experience}}
+		<core-header-panel fit class="experienceDialog">
+			<core-toolbar hero-id="toolbar" class={{colorClass}} hero>
+				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
+				<div flex hero-id="title" hero>{{name}}</div>
+				<paper-icon-button id="deleteExperience" 
+								   role="button"
+								   tabindex="0"
+								   icon="delete" 
+								   aria-label="Delete Feature" 
+								   noink></paper-icon-button>
+			</core-toolbar>
+			<div class="detailContent">
+				<div horizontal layout>
+					<!--Name-->
+					<paper-input id="experienceNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
+					<!--Value-->
+					<paper-input-decorator label="Value" floatinglabel>
+						<input id="valueInput" type="number" value={{value}}>
+					</paper-input-decorator>
+				</div>
+				<!--Description-->
+				<paper-input-decorator label="Description" floatinglabel layout vertical>
+					<paper-autogrow-textarea>
+						<textarea id="experienceDescriptionInput" placeholder value={{description}}></textarea>
+					</paper-autogrow-textarea>
+				</paper-input-decorator>
+			</div>
+		</core-header-panel>
+	{{/with}}
+</template>

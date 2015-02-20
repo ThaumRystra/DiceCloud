@@ -8,6 +8,7 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 		Effects.find({charId: characterId}),
 		Spells.find({charId: characterId}),
 		SpellLists.find({charId: characterId}),
-		Notes.find({charId: characterId})
+		Notes.find({charId: characterId}),
+		Experiences.find({charId: characterId})
 	];
 });

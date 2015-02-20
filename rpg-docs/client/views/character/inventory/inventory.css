@@ -5,6 +5,8 @@
 	-webkit-column-gap: 8px;
 	   -moz-column-gap: 8px;
 	        column-gap: 8px;
+	-moz-column-fill: balance;
+	     column-fill: balance;
 	padding: 8px;
 }
 

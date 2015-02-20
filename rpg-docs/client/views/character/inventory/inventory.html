@@ -36,11 +36,11 @@
 						</div>
 						<div flex class="containerMain">
 							{{#each items ../_id _id}}
-							<div class="itemSlot">
-								<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal>
-									{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
-								</paper-item>
-							</div>
+								<div class="itemSlot">
+									<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal>
+										{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
+									</paper-item>
+								</div>
 							{{/each}}
 						</div>
 					</paper-shadow>

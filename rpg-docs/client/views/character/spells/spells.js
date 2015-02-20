@@ -18,10 +18,10 @@ Template.spells.helpers({
 	spellCount: function(list, charId){
 		if(list.settings.showUnprepared){
 			return Spells.find( {charId: charId, listId: list._id, level: this.level}, 
-							    {fields: {_id: 1, level: 1}} ).count() > 0;
+							   {fields: {_id: 1, level: 1}} ).count() > 0;
 		} else{
 			return Spells.find( {charId: charId, listId: list._id, level: this.level, prepared: {$in: ["prepared", "always"]} }, 
-								{fields: {_id: 1, level: 1}} ).count() > 0;
+							   {fields: {_id: 1, level: 1}} ).count() > 0;
 		}
 	},
 	spells: function(listId, charId){
@@ -65,10 +65,69 @@ Template.spells.helpers({
 	},
 	cantUnprepare: function(){
 		return this.prepared === "always";
+	},
+	cantCast: function(level, char){
+		for(var i = level; i <= 9; i++){
+			if (char.attributeValue("level"+i+"SpellSlots") > 0){
+				return false;
+			}
+		}
+		return true;
+	},
+	baseSlots: function(char){
+		return char.attributeBase("level" + this.level +"SpellSlots");
+	},
+	slots: function(char){
+		return char.attributeValue("level" + this.level +"SpellSlots");
+	},
+	showSlots: function(char){
+		return this.level && char.attributeBase("level" + this.level +"SpellSlots");
+	},
+	slotBubbles: function(char){
+		var baseSlots = char.attributeBase("level" + this.level +"SpellSlots"),
+			currentSlots = char.attributeValue("level" + this.level +"SpellSlots"),
+			slotsUsed = baseSlots - currentSlots,
+			bubbles = [], i;
+		for(i = 0; i < currentSlots; i++){
+			bubbles.push({
+				icon: "radio-button-on", 
+				disabled: i !== currentSlots -1, //last full slot not disabled
+				attribute: "level" + this.level +"SpellSlots",
+				charId: char._id
+			});
+		}
+		for(i = 0; i < slotsUsed; i++){
+			bubbles.push({
+				icon: "radio-button-off", 
+				disabled: i !== 0, //first empty slot not disabled
+				attribute: "level" + this.level +"SpellSlots",
+				charId: char._id
+			});
+		}
+		return bubbles;
 	}
 });
 
 Template.spells.events({
+	"tap .slotBubble": function(event){
+		if(!event.currentTarget.disabled){
+			var char = Characters.findOne(this.charId);
+			if(event.currentTarget.icon === "radio-button-off"){
+				if(char.attributeValue(this.attribute) < char.attributeBase(this.attribute)){
+					var modifier = {$inc: {}};
+					modifier.$inc[this.attribute + ".adjustment"] = 1;
+					Characters.update(this.charId, modifier, {validate: false});
+				}
+			} else {
+				if(char.attributeValue(this.attribute) > 0){
+					var modifier = {$inc: {}};
+					modifier.$inc[this.attribute + ".adjustment"] = -1;
+					Characters.update(this.charId, modifier, {validate: false});
+				}
+			}
+		}
+		event.stopPropagation();
+	},
 	"tap .containerTop": function(event){
 		GlobalUI.setDetail({
 			template: "spellListDialog",
