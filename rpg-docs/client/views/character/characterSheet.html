@@ -19,12 +19,12 @@
 	</core-toolbar>
 	<div fit>
 		<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right" fit>
-			<swipe-detect touch-action="pan-y" flex>{{> stats}}</swipe-detect>
-			<swipe-detect touch-action="pan-y" flex>{{> features}}</swipe-detect>
-			<swipe-detect touch-action="pan-y" flex>{{> inventory}}</swipe-detect>
-			<swipe-detect touch-action="pan-y" flex>{{> spells}}</swipe-detect>
-			<swipe-detect touch-action="pan-y" flex>{{> persona}}</swipe-detect>
-			<swipe-detect touch-action="pan-y" flex>{{> journal}}</swipe-detect>
+			<section flex>{{> stats}}</section>
+			<section flex>{{> features}}</section>
+			<section flex>{{> inventory}}</section>
+			<section flex>{{> spells}}</section>
+			<section flex>{{> persona}}</section>
+			<section flex>{{> journal}}</section>
 		</core-animated-pages>
 	</div>
 </template>

@@ -2,6 +2,14 @@
 	<div fit>
 		<div class="scroll-y" fit>
 			<div class="resourceCards" layout horizontal wrap>
+				<paper-shadow class="card container healthCard" hero-id="main" {{detailHero}} layout vertical>
+					<paper-slider id="hitPointSlider"
+							  value={{attributeValue "hitPoints"}}
+							  max={{attributeBase "hitPoints"}} 
+							  editable pin
+							  role="slider"
+							  ></paper-slider>
+				</paper-shadow>
 				<!--Armor-->
 				<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
 					<div class="containerLeft">
