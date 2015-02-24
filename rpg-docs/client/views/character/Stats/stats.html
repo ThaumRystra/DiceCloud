@@ -1,7 +1,100 @@
 <template name="stats">
 	<div class="scroll-y" fit>
+		<div class="resourceCards" layout horizontal wrap>
+			{{> healthCard}}
+		</div>
 		<div id="stats" class="containers" >
-			{{> abilityCards}}
+			<!--Ability Scores-->
+			{{> abilityMiniCard ability="strength" title="Strength" color="red"}}
+			{{> abilityMiniCard ability="dexterity" title="Dexterity" color="indigo"}}
+			{{> abilityMiniCard ability="constitution" title="Constitution" color="green"}}
+			{{> abilityMiniCard ability="intelligence" title="Intelligence" color="deep-orange"}}
+			{{> abilityMiniCard ability="wisdom" title="Wisdom" color="purple"}}
+			{{> abilityMiniCard ability="charisma" title="Charisma" color="pink"}}
+			<!--Armor-->
+			<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
+				<div class="containerLeft teal">
+					{{attributeValue "armor"}}
+				</div>
+				<div class="containerRight" flex horizontal layout center>
+					Armor Class
+				</div>
+				<paper-ripple fit></paper-ripple>
+			</paper-shadow>
+			<!--Speed-->
+			<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
+				<div class="containerLeft teal">
+					{{attributeValue "speed"}}
+				</div>
+				<div class="containerRight" flex horizontal layout center>
+					Speed
+				</div>
+				<paper-ripple fit></paper-ripple>
+			</paper-shadow>
+			<!--Initiative-->
+			<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
+				<div class="containerLeft indigo">
+					{{skillMod "initiative"}}
+				</div>
+				<div class="containerRight" flex horizontal layout center>
+					Initiative
+				</div>
+				<paper-ripple fit></paper-ripple>
+			</paper-shadow>
+			<!--Proficiency Bonus-->
+			<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
+				<div class="containerLeft blue">
+					+{{attributeValue "proficiencyBonus"}}
+				</div>
+				<div class="containerRight" flex horizontal layout center>
+					Proficiency Bonus
+				</div>
+				<paper-ripple fit></paper-ripple>
+			</paper-shadow>
+			{{>hitDice name="d6HitDice" diceNum="6" char=this}}
+			{{>hitDice name="d8HitDice" diceNum="8" char=this}}
+			{{>hitDice name="d10HitDice" diceNum="10" char=this}}
+			{{>hitDice name="d12HitDice" diceNum="12" char=this}}
+			<!--Saving Throws-->
+			<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+				<div class="containerTop teal white-text" layout horizontal center>
+					<div class="containerName subhead" hero-id="title" flex>Saving Throws</div>
+				</div>
+				<div flex class="containerMain">
+					{{> skillRow name="Strength" skill="strengthSave"}}
+					{{> skillRow name="Dexterity" skill="dexteritySave"}}
+					{{> skillRow name="Constitution" skill="constitutionSave"}}
+					{{> skillRow name="Intelligence" skill="intelligenceSave"}}
+					{{> skillRow name="Wisdom" skill="wisdomSave"}}
+					{{> skillRow name="Charisma" skill="charismaSave"}}
+				</div>
+			</paper-shadow>
+			<!--Skills-->
+			<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+				<div class="containerTop blue white-text" layout horizontal center>
+					<div class="containerName subhead" hero-id="title" flex>Skills</div>
+				</div>
+				<div flex class="containerMain">
+					{{> skillRow name="Acrobatics" skill="acrobatics"}}
+					{{> skillRow name="Animal Handling" skill="animalHandling"}}
+					{{> skillRow name="Arcana" skill="arcana"}}
+					{{> skillRow name="Athletics" skill="athletics"}}
+					{{> skillRow name="Deception" skill="deception"}}
+					{{> skillRow name="History" skill="history"}}
+					{{> skillRow name="Insight" skill="insight"}}
+					{{> skillRow name="Intimidation" skill="intimidation"}}
+					{{> skillRow name="Investigation" skill="investigation"}}
+					{{> skillRow name="Medicine" skill="medicine"}}
+					{{> skillRow name="Nature" skill="nature"}}
+					{{> skillRow name="Perception" skill="perception" showPassive="true"}}
+					{{> skillRow name="Performance" skill="performance"}}
+					{{> skillRow name="Persuasion" skill="persuasion"}}
+					{{> skillRow name="Religion" skill="religion"}}
+					{{> skillRow name="Sleight of Hand" skill="sleightOfHand"}}
+					{{> skillRow name="Stealth" skill="stealth"}}
+					{{> skillRow name="Survival" skill="survival"}}
+				</div>
+			</paper-shadow>
 		</div>
 	</div>
 </template>

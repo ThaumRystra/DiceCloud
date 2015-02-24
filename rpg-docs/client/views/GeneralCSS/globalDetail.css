@@ -47,6 +47,12 @@
 }
 
 @media (max-width: 640px) {
+	#globalDetail core-toolbar {
+		border-radius: 0;
+	}
+}
+
+@media (max-width: 640px) {
 	#globalDetail {
 		top: 0 !important;
 		left: 0 !important;

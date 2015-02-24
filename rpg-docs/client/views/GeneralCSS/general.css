@@ -172,3 +172,11 @@ paper-fab-menu /deep/ .container {
 .fullwidth {
 	width: 100%;
 }
+
+.padded {
+	padding: 16px;
+}
+
+.leftRound{
+	border-radius: 2px 0 0 2px;
+}

@@ -1,0 +1,24 @@
+<template name="hitDice">
+	{{#if char.attributeBase name}}
+		<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
+			<div class="containerLeft green">
+				<div class="resourceValue" layout vertical center>
+					<div>
+						{{../attributeValue name}}
+					</div>
+					<div class="title white-text">
+						d{{diceNum}} {{../abilityMod "constitution"}}
+					</div>
+				</div>
+				<div class="resourceButtons">
+					<paper-icon-button class="resourceUp" icon="arrow-drop-up" disabled={{cantIncrement}}></paper-icon-button>
+					<paper-icon-button class="resourceDown" icon="arrow-drop-down" disabled={{cantDecrement}}></paper-icon-button>
+				</div>
+			</div>
+			<div class="containerRight" flex relative horizontal layout center>
+				Hit Dice
+				<paper-ripple fit></paper-ripple>
+			</div>
+		</paper-shadow>
+	{{/if}}
+</template>

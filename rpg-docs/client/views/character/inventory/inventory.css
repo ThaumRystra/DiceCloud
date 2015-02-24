@@ -1,3 +1,12 @@
+div#stats {
+	-webkit-column-width: 200px;
+	   -moz-column-width: 200px;
+	        column-width: 200px;
+	-webkit-column-count: 4;
+       -moz-column-count: 4;
+            column-count: 4;
+}
+
 .containers {
 	-webkit-column-width: 300px;
 	   -moz-column-width: 300px;
@@ -11,8 +20,7 @@
 }
 
 .containerLeft {
-	padding: 16px;
-	background-color: #2196F3;
+	padding: 16px 16px 16px 24px;
 	display: flex;
 	justify-content: center;
 	flex-direction: row;
@@ -24,6 +32,10 @@
 	color: #ffffff;
 	color: rgba(255,255,255,0.54);
 	letter-spacing: 0;
+}
+
+.statCard .containerLeft {
+	padding: 16px;
 }
 
 .containerRight {

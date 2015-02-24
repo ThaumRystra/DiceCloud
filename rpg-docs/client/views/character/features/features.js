@@ -39,11 +39,6 @@ Template.features.events({
 	"tap .resetFeature": function(event){
 		var featureId = this._id;
 		Features.update(featureId, {$set: {used: 0}});
-	},
-	"change #hitPointSlider": function(event){
-		var value = event.currentTarget.value;
-		var adjustment = value - this.attributeBase("hitPoints");
-		Characters.update(this._id, {$set: {"hitPoints.adjustment": adjustment}});
 	}
 });
 
@@ -53,6 +48,13 @@ Template.resource.helpers({
 	},
 	cantDecrement: function(){
 		return !(this.char.attributeValue(this.name) > 0);
+	},
+	getColor: function(){
+		if(this.char.attributeValue(this.name) > 0){
+			return this.color;
+		} else {
+			return "grey";
+		}
 	}
 });
 

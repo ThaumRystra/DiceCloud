@@ -1,0 +1,25 @@
+.healthCard paper-slider{
+	width: 100%;
+}
+
+/*Slider knob color*/
+#hitPointSlider::shadow #sliderKnobInner {
+	background-color: #0f9d58;
+}
+
+/*Slider pin*/
+#hitPointSlider::shadow #sliderKnobInner::before {
+	background-color: #0f9d58;
+	height: 32px;
+	width: 32px;
+}
+
+/*Slider pin text*/
+#hitPointSlider::shadow #sliderKnob > #sliderKnobInner::after {
+	font-size: 16px;
+}
+
+/*Slider bar*/
+#hitPointSlider::shadow #sliderBar::shadow #activeProgress {
+	background-color: #0f9d58;
+}

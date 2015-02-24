@@ -1,49 +1,18 @@
 <template name="features">
 	<div fit>
 		<div class="scroll-y" fit>
-			<div class="resourceCards" layout horizontal wrap>
-				<paper-shadow class="card container healthCard" hero-id="main" {{detailHero}} layout vertical>
-					<paper-slider id="hitPointSlider"
-							  value={{attributeValue "hitPoints"}}
-							  max={{attributeBase "hitPoints"}} 
-							  editable pin
-							  role="slider"
-							  ></paper-slider>
-				</paper-shadow>
-				<!--Armor-->
-				<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
-					<div class="containerLeft">
-						{{attributeValue "armor"}}
-					</div>
-					<div class="containerRight" flex horizontal layout center>
-						Armor Class
-					</div>
-					<paper-ripple fit></paper-ripple>
-				</paper-shadow>
-				<!--Speed-->
-				<paper-shadow class="card container statCard" hero-id="main" {{detailHero}} layout horizontal>
-					<div class="containerLeft">
-						{{attributeValue "speed"}}
-					</div>
-					<div class="containerRight" flex horizontal layout center>
-						Speed
-					</div>
-					<paper-ripple fit></paper-ripple>
-				</paper-shadow>
-				<!--ki-->
-				{{>resource name="ki" title="Ki Points" char=this}}
-				<!--sorceryPoints-->
-				{{>resource name="sorceryPoints" title="Sorcery Points" char=this}}
-				<!--rages-->
-				{{>resource name="rages" title="Rages" char=this}}
-				<!--superiorityDice-->
-				{{>resource name="superiorityDice" title="Superiority Dice" char=this}}
-				<!--expertiseDice-->
-				{{>resource name="expertiseDice" title="Expertise Dice" char=this}}
-				{{>gridPadding num="6" class="card container"}}
-			</div>
-			<!--<div class="cardHeader" layout horizontal center>Features</div>-->
 			<div class="containers">
+				<!--expertiseDice-->
+				{{>resource name="expertiseDice" title="Expertise Dice" color="teal" char=this}}
+				<!--ki-->
+				{{>resource name="ki" title="Ki Points" color="teal" char=this}}
+				<!--rages-->
+				{{>resource name="rages" title="Rages" color="teal" char=this}}
+				<!--sorceryPoints-->
+				{{>resource name="sorceryPoints" title="Sorcery Points" color="teal" char=this}}
+				<!--superiorityDice-->
+				{{>resource name="superiorityDice" title="Superiority Dice" color="teal" char=this}}
+				<!--features-->
 				{{#each features}}
 					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
@@ -77,7 +46,7 @@
 <template name="resource">
 	{{#if char.attributeBase name}}
 		<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
-			<div class="containerLeft">
+			<div class="containerLeft {{getColor}}">
 				<div class="resourceValue">{{char.attributeValue name}}</div>
 				<!--<div class="resourceMax">{{char.attributeBase name}}</div>-->
 				<div class="resourceButtons">
