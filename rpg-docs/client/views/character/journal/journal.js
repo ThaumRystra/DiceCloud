@@ -19,6 +19,16 @@ Template.journal.helpers({
 	moreExperiencesOrCollapse: function(){
 		return (!(Experiences.find({charId: this._id}).count() < Template.instance().experiencesLimit.get())) ||
 			Template.instance().experiencesLimit.get() > (this.settings && this.settings.experiencesInc || 10);
+	},
+	classes: function(){
+		return Classes.find({charId: this._id}, {sort: {createdAt: 1}});
+	},
+	levels: function(charId){
+		return Levels.find({charId: charId, classId: this._id}, {sort: {value: 1}});
+	},
+	race: function(){
+		var char = Characters.findOne(this._id, {fields: {race: 1}});
+		return char && char.race;
 	}
 });
 
@@ -35,6 +45,20 @@ Template.journal.events({
 			template: "experienceDialog",
 			data: {experienceId: this._id, charId: this.charId},
 			heroId: this._id
+		});
+	},
+	"tap .level": function(event){
+		GlobalUI.setDetail({
+			template: "levelDialog",
+			data: {levelId: this._id, charId: this.charId},
+			heroId: this._id
+		});
+	},
+	"tap .race": function(event){
+		GlobalUI.setDetail({
+			template: "raceDialog",
+			data: {charId: this._id},
+			heroId: this._id + "race"
 		});
 	},
 	"tap #addNote": function(event){

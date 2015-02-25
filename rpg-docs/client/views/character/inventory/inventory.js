@@ -24,8 +24,36 @@ Template.inventory.helpers({
 	colorClass: function(){
 		return getColorClass(this.color)
 	},
-	containerOrder: function(){
-		return _.indexOf(_.keys(colorOptions), this.color);
+	netWorth: function(){
+		var worth = 0;
+		Items.find({charId: this._id}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+			worth += item.totalValue();
+		});
+		return worth;
+	},
+	weightCarried: function(){
+		var weight = 0;
+		Containers.find({charId: this._id, isCarried: true}).forEach(function(container){
+			weight += container.totalWeight();
+		});
+		Items.find({charId: this._id, equipped: false}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+			weight += item.totalWeight();
+		});
+		return weight;
+	},
+	equipmentValue: function(){
+		var value = 0;
+		Items.find({charId: this._id, equipped: true}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+			value += item.totalValue();
+		});
+		return value;
+	},
+	equipmentWeight: function(){
+		var weight = 0;
+		Items.find({charId: this._id, equipped: true}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+			weight += item.totalWeight();
+		});
+		return weight;
 	}
 });
 

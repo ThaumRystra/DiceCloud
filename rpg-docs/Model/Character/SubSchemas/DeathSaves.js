@@ -14,5 +14,9 @@ Schemas.DeathSave = new SimpleSchema({
 	canDeathSave: {
 		type: Boolean,
 		defaultValue: true
+	},
+	stable: {
+		type: Boolean,
+		defaultValue: false
 	}
 });

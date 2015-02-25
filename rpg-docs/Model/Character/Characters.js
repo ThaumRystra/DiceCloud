@@ -3,16 +3,18 @@ Characters = new Meteor.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings
-	name:       { type: String, defaultValue: "", trim: false},
-	alignment:  { type: String, defaultValue: "", trim: false},
-	gender:     { type: String, defaultValue: "", trim: false},
-	race:       { type: String, defaultValue: "", trim: false},
-	description:{ type: String, defaultValue: "", trim: false},
-	personality:{ type: String, defaultValue: "", trim: false},
-	ideals:     { type: String, defaultValue: "", trim: false},
-	bonds:      { type: String, defaultValue: "", trim: false},
-	flaws:      { type: String, defaultValue: "", trim: false},
-	backstory:  { type: String, defaultValue: "", trim: false},
+	name:         { type: String, defaultValue: "", trim: false},
+	alignment:    { type: String, defaultValue: "", trim: false},
+	gender:       { type: String, defaultValue: "", trim: false},
+	race:         { type: String, defaultValue: "", trim: false},
+	description:  { type: String, defaultValue: "", trim: false},
+	personality:  { type: String, defaultValue: "", trim: false},
+	ideals:       { type: String, defaultValue: "", trim: false},
+	bonds:        { type: String, defaultValue: "", trim: false},
+	flaws:        { type: String, defaultValue: "", trim: false},
+	backstory:    { type: String, defaultValue: "", trim: false},
+	proficiencies:{ type: String, defaultValue: "", trim: false},
+	languages:    { type: String, defaultValue: "", trim: false},
 
 	//attributes
 	//ability scores

@@ -34,15 +34,9 @@ evaluateString = function(charId, string){
 	if(!string) return string;
 	var brackets = /\{[^\{\}]*\}/g;
 	var result = string.replace(brackets, function(exp){
-		var exp = exp.replace(/(\{|\})/g, "") //remove brackets
-		var span = jQuery('<span/>', {
-			title: exp,
-			text: evaluate(charId, exp),
-			class: "calculatedValue"
-		});
-		return span.prop('outerHTML');
+		var exp = exp.replace(/(\{|\})/g, "") //remove curly brackets
+		return evaluate(charId, exp);
 	});
-	//this is going to return HTML, ensure it is santized!
 	return result;
 }
 

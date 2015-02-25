@@ -31,15 +31,15 @@ Template.spellListDialog.events({
 		var value = event.currentTarget.value
 		SpellLists.update(this._id, {$set: {name: value}});
 	},
-	"change #spellListSaveDCInput, input #spellListNameInput": function(event){
+	"change #spellListSaveDCInput, input #spellListSaveDCInput": function(event){
 		var value = event.currentTarget.value
 		SpellLists.update(this._id, {$set: {saveDC: value}});
 	},
-	"change #spellListAttackBonusInput, input #spellListNameInput": function(event){
+	"change #spellListAttackBonusInput, input #spellListAttackBonusInput": function(event){
 		var value = event.currentTarget.value
 		SpellLists.update(this._id, {$set: {attackBonus: value}});
 	},
-	"change #spellListMaxPreparedInput, input #spellListNameInput": function(event){
+	"change #spellListMaxPreparedInput, input #spellListMaxPreparedInput": function(event){
 		var value = event.currentTarget.value
 		SpellLists.update(this._id, {$set: {maxPrepared: value}});
 	},

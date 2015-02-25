@@ -12,6 +12,48 @@
 				{{>resource name="sorceryPoints" title="Sorcery Points" color="teal" char=this}}
 				<!--superiorityDice-->
 				{{>resource name="superiorityDice" title="Superiority Dice" color="teal" char=this}}
+				
+				<!--Attacks-->
+				<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+					<div class="whiteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
+						<div flex>
+							<div class="containerName subhead">Attacks</div>
+						</div>
+						<paper-icon-button class="black54" id="addAttackButton" icon="add"></paper-icon-button>
+					</div>
+					<div class="containerMain listPadded">
+						{{#each attacks}}
+							<div class="itemSlot">
+								<paper-item class="white attack" hero-id="main" {{detailHero}}>
+									<div layout horizontal class="fullwidth">
+										<div class="headline rightPadded" layout horizontal center>
+											{{evaluateSigned ../_id attackBonus}}
+										</div>
+										<div layout vertical flex>
+											<div>{{name}}</div>
+											<div class="caption">
+												{{{evaluateString ../_id damage}}} {{damageType}} {{range}}
+											</div>
+										</div>
+									</div>
+								</paper-item>
+							</div>
+						{{/each}}
+					</div>
+				</paper-shadow>
+				
+				<!--Proficiencies-->
+				<paper-shadow class="card container"  hero-id="main" {{detailHero "proficiencies"}}>
+					<div id="proficiencies" 
+						 class="containerTop grey white-text" 
+						 hero-id="toolbar" 
+						 layout horizontal center 
+						 {{detailHero "proficiencies"}}>
+						<div class="containerName subhead">Proficiencies</div>
+					</div>
+					<div flex class="containerMain padded preline">{{characterProficiencies}}</div>
+				</paper-shadow>
+				
 				<!--features-->
 				{{#each features}}
 					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>

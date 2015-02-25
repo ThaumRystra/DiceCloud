@@ -5,7 +5,7 @@ Effects = new Meteor.Collection("effects");
  * that modify their final value or presentation in some way
  */
 Schemas.Effect = new SimpleSchema({
-	charId: {
+	charId: { 
 		type: String, 
 		regEx: SimpleSchema.RegEx.Id
 	},
@@ -31,7 +31,7 @@ Schemas.Effect = new SimpleSchema({
 	type: {
 		type: String,
 		defaultValue: "editable",
-		allowedValues: ["editable", "feature", "buff", "equipment", "inate"]
+		allowedValues: ["editable", "feature", "level", "buff", "equipment", "racial", "inate"]
 	},
 	//the id of the feature, buff or item that created this effect
 	sourceId: {

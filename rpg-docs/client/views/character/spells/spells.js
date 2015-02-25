@@ -46,7 +46,7 @@ Template.spells.helpers({
 		}
 		if(this.components.material){
 			components += components? ", M" : "M";
-			components += "("+this.components.material+")";
+			components += " ("+this.components.material+")";
 		}
 		if(this.components.concentration){
 			components += " - Requires concentration"
@@ -82,6 +82,14 @@ Template.spells.helpers({
 	},
 	showSlots: function(char){
 		return this.level && char.attributeBase("level" + this.level +"SpellSlots");
+	},
+	hasSlots: function(){
+		for(var i = 1; i <= 9; i += 1){
+			if(this.attributeBase("level"+i+"SpellSlots")){
+				return true;
+			}
+		}
+		return false;
 	},
 	slotBubbles: function(char){
 		var baseSlots = char.attributeBase("level" + this.level +"SpellSlots"),
@@ -165,7 +173,8 @@ Template.spells.events({
 		Spells.insert({
 			name: "New Spell", 
 			charId: this._id,
-			listId: SpellLists.findOne({charId: this._id})._id
+			listId: SpellLists.findOne({charId: this._id})._id,
+			prepared: "prepared"
 		}, function(error, id){
 			if(!error){
 				GlobalUI.setDetail({

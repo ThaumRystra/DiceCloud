@@ -101,3 +101,8 @@ p, .body1, body {
 html /deep/ .white-text{
 	color: #fff;
 }
+
+.black54 {
+	color: #444;
+	color: rgba(0,0,0,0.54);
+}

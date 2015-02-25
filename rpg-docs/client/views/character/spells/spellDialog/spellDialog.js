@@ -1,5 +1,5 @@
 var spellLevels = [
-	{ name: "Cantrips", level: 0 },
+	{ name: "Cantrip", level: 0 },
 	{ name: "Level 1",  level: 1 },
 	{ name: "Level 2",  level: 2 },
 	{ name: "Level 3",  level: 3 },

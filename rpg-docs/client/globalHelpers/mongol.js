@@ -1,14 +1,18 @@
 Session.set("Mongol", {
 	'collections': [
 		"Characters",
+		"Actions",
+		"Attacks",
+		"Classes",
 		"Containers",
-		"Items",
-		"Features",
 		"Effects",
-		"Spells",
-		"SpellLists",
+		"Experiences",
+		"Features",
+		"Items",
+		"Levels",
 		"Notes",
-		"Experiences"
+		"Spells",
+		"SpellLists"
 	],
 	'display': true,
 	'opacity_normal': ".7",

@@ -9,7 +9,8 @@ Schemas.Attack = new SimpleSchema({
 		regEx: SimpleSchema.RegEx.Id
 	},
 	name: {
-		type: String
+		type: String,
+		defaultValue: "New Attack"
 	},
 	range: {
 		type: String,
@@ -17,15 +18,24 @@ Schemas.Attack = new SimpleSchema({
 	},
 	attackBonus: {
 		type: String,
-		optional: true
+		optional: true,
+		defaultValue: "strengthMod + proficiencyBonus"
 	},
 	damage: {
-		type: String
+		type: String,
+		optional: true,
+		defaultValue: "1d8 + {strengthMod}"
 	},
 	damageType: {
 		type: String,
-		allowedValues: ["acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", 
-						"piercing", "poison", "psychic", "radiant", "slashing", "thunder"] 
+		allowedValues: ["bludgeoning", "piercing", "slashing", "acid", "cold", "fire", "force", "lightning", "necrotic", 
+						"poison", "psychic", "radiant", "thunder"],
+		defaultValue: "slashing"
+	},
+	color: {
+		type: String, 
+		allowedValues: _.pluck(colorOptions, "key"), 
+		defaultValue: "q"
 	}
 });
 

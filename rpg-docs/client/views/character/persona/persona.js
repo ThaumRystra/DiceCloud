@@ -4,7 +4,8 @@ var colorMap = {
 	ideals: "g",
 	bonds: "h",
 	flaws: "i",
-	backstory: "j"
+	backstory: "j",
+	languages: "k"
 }
 
 Template.persona.helpers({

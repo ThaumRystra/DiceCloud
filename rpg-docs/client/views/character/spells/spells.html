@@ -2,27 +2,29 @@
 	<div fit>
 		<div id="spells" class="scroll-y" fit>
 			<div class="containers">
-				<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
-					<div class="containerTop {{colorClass}}" layout horizontal center>
-						<div class="containerName subhead" hero-id="title" flex>Spell Slots</div>
-					</div>
-					<div flex class="containerMain">
-						{{#each levels}}{{#if showSlots ..}}
-							<div class="itemSlot">
-								<paper-item class="inventoryItem spellSlot" hero-id="main" {{detailHero}} layout horizontal>
-									<div class="slotName">
-										{{name}}
-									</div>
-									<div flex layout horizontal center>
-										{{#each slotBubbles ..}}
-											<paper-icon-button class="slotBubble" icon={{icon}} disabled={{disabled}}></paper-icon-button>
-										{{/each}}
-									</div>
-								</paper-item>
-							</div>
-						{{/if}}{{/each}}
-					</div>
-				</paper-shadow>
+				{{#if hasSlots}}
+					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
+						<div class="containerTop {{colorClass}}" layout horizontal center>
+							<div class="containerName subhead" hero-id="title" flex>Spell Slots</div>
+						</div>
+						<div flex class="containerMain">
+							{{#each levels}}{{#if showSlots ..}}
+								<div class="itemSlot">
+									<paper-item class="inventoryItem spellSlot" hero-id="main" {{detailHero}} layout horizontal>
+										<div class="slotName">
+											{{name}}
+										</div>
+										<div flex layout horizontal center>
+											{{#each slotBubbles ..}}
+												<paper-icon-button class="slotBubble" icon={{icon}} disabled={{disabled}}></paper-icon-button>
+											{{/each}}
+										</div>
+									</paper-item>
+								</div>
+							{{/if}}{{/each}}
+						</div>
+					</paper-shadow>
+				{{/if}}
 				{{#each spellLists}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{order}};">
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>

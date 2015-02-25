@@ -2,11 +2,32 @@
 	<div fit>
 		<div id="inventory" class="scroll-y" fit>
 			<div class="containers">
+				<!--Net Worth-->
+				<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
+					<div class="indigo white-text subhead padded leftRound" layout horizontal center>
+						Net Worth
+					</div>
+					<div class="padded" layout horizontal center>
+						{{valueString netWorth}}
+					</div>
+				</paper-shadow>
+				<!--Weight Carried-->
+				<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
+					<div class="green white-text subhead padded leftRound" layout horizontal center>
+						Weight Carried
+					</div>
+					<div class="padded" layout horizontal center>
+						{{round weightCarried}}lbs
+					</div>
+				</paper-shadow>
+				<!--Equipment-->
 				<paper-shadow class="card container">
 					<div class="equipmentTop" layout horizontal center>
-						<div class="containerName subhead" flex>Equipment</div>
-						<div class="caption" style="margin-right: 8px">(net Worth)</div>
-						<div class="caption">(weightCarried)lbs</div>
+						<div class="containerName subhead" flex>
+							Equipment
+						</div>
+						<div class="caption" style="margin-right: 8px">{{valueString equipmentValue}}</div>
+						<div class="caption">{{round equipmentWeight}}lbs</div>
 					</div>
 					<div flex class="equipmentMain">
 						{{#if armor}}

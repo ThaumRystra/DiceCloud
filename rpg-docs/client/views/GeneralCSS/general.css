@@ -161,12 +161,28 @@ paper-fab-menu /deep/ .container {
 	padding: 24px !important;
 }
 
+paper-slider {
+	margin-left: -8px;
+}
+
 .list-subhead {
 	color: rgba(0,0,0,0.54);
 	font-size: 14px;
 	height: 40px;
 	padding-left: 16px;
 	font-weight: 500;
+}
+
+.whiteTop {
+	border-bottom: rgba(0,0,0,0.12) solid 1px;
+	background: white;
+	padding: 16px;
+	position: relative;
+	border-radius: 2px 2px 0 0;
+}
+
+.whiteTop paper-icon-button {
+	margin: -8px;
 }
 
 .fullwidth {
@@ -177,6 +193,26 @@ paper-fab-menu /deep/ .container {
 	padding: 16px;
 }
 
+.listPadded {
+	padding: 0 0 16px 0; 
+}
+
+.rightPadded {
+	padding-right: 16px;
+}
+
+.bottomPadded {
+	padding-bottom: 16px;
+}
+
+.s {
+	padding: 0 0 16px 0;
+}
+
 .leftRound{
 	border-radius: 2px 0 0 2px;
+}
+
+.preline {
+	white-space: pre-line;
 }

@@ -5,7 +5,7 @@
 				<paper-shadow class="card container experiencesCard"  hero-id="main" {{detailHero}}>
 					<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
 						<div class="containerName subhead" flex>Experience</div>
-						<div class="subhead">{{experience}}XP</div>
+						<div class="subhead">{{experience}} XP</div>
 					</div>
 					<div class="containerMain experiences">
 						{{#each experiences}}
@@ -23,6 +23,35 @@
 						</div>
 					{{/if}}
 				</paper-shadow>
+				<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+					<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+						<div flex>
+							<div class="containerName subhead">Levels</div>
+						</div>
+					</div>
+					<div class="containerMain experiences">
+						<div class="list-subhead" layout horizontal center>
+							Race
+						</div>
+						<div class="itemSlot">
+							<paper-item class="inventoryItem race" hero-id="main" {{detailHero "race"}} layout horizontal>
+								{{race}}
+							</paper-item>
+						</div>
+						{{#each classes}}
+							<div class="list-subhead" layout horizontal center>
+								{{name}}
+							</div>
+							{{#each levels ../_id}}
+								<div class="itemSlot">
+									<paper-item class="inventoryItem level" hero-id="main" {{detailHero}} layout horizontal>
+										Level {{value}}
+									</paper-item>
+								</div>
+							{{/each}}
+						{{/each}}
+					</div>
+				</paper-shadow>
 				{{#each notes}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
 						<div class="containerTop {{colorClass}} noteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
@@ -30,9 +59,7 @@
 								<div class="containerName subhead">{{name}}</div>
 							</div>
 						</div>
-						<div class="containerMain">
-							{{description}}
-						</div>
+						<div class="containerMain preline">{{description}}</div>
 					</paper-shadow>
 				{{/each}}
 			</div>
