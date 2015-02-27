@@ -1,3 +1,4 @@
 .meteor/local
 .meteor/meteorite
 public/components
+nohup.out
