@@ -1,32 +1,10 @@
 <template name="levelDialog">
 	{{#with level}}
-		<core-header-panel fit>
-			<core-toolbar class="grey white-text" hero-id="toolbar" hero>
-				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-				<div flex>{{name}}</div>
-				<paper-icon-button id="deleteLevel" 
-								   role="button"
-								   tabindex="0"
-								   icon="delete" 
-								   aria-label="Delete Level" 
-								   noink></paper-icon-button>
-			</core-toolbar>
-			<div class="detailContent">
-				<!--Level-->
-				<paper-input id="levelValueInput" label="Level" floatinglabel value={{value}}></paper-input>
-				{{#if effects}}
-					<hr style="margin: 16px 0 16px 0;">
-					<div id="effects">
-						<h2>Effects</h2>
-						{{#each effects}}
-							{{>effectEdit}}
-						{{/each}}
-					</div>
-				{{/if}}
-				<div layout horizontal end-justified>
-					<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
-				</div>
-			</div>
-		</core-header-panel>
+		{{#baseDialog title=name class=colorClass hideColor="true"}}
+			<!--Level-->
+			<paper-input id="levelValueInput" label="Level" floatinglabel value={{value}}></paper-input>
+			<!--Effects-->
+			{{> effectsEditList sourceId=_id charId=charId type="level"}}
+		{{/baseDialog}}
 	{{/with}}
 </template>

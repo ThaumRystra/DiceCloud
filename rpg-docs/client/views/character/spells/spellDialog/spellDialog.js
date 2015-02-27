@@ -11,35 +11,36 @@ var spellLevels = [
 	{ name: "Level 9",  level: 9 },
 ];
 
-Template.spellDialog.rendered = function(){
-	var self = this;
-	//update all autogrows after they've been filled
-	var pata = this.$("paper-autogrow-textarea");
-	pata.each(function(index, el){
-		el.update($(el).children().get(0));
-	})
-	//update all input fields as well
-	var input = this.$("paper-input");
-	input.each(function(index, el){
-		el.valueChanged();
-	})
-	//after the dialog is built, open it
-	if (!this.alreadyRendered){
-		Session.set("global.ui.detailShow", true);
-		this.alreadyRendered = true;
+Template.spellDialog.helpers({
+	spell: function(){
+		return Spells.findOne(this.spellId);
+	},
+	spellLists: function(){
+		return SpellLists.find({charId: this.charId}, {fields: {name: 1}});
+	},
+	magicSchools: function(){
+		return magicSchools;
+	},
+	spellLevels: function(){
+		return spellLevels;
+	},
+	preparedOptions: function(){
+		return [
+			{name: "Prepared", value: "prepared"},
+			{name: "Unprepared", value: "unprepared"},
+			{name: "Always Prepared", value: "always"}
+		];
 	}
-}
+});
 
 Template.spellDialog.events({
-	"tap #backButton": function(){
-		GlobalUI.closeDetail();
+	"color-change": function(event, instance){
+		Spells.update(instance.data.spellId, {$set: {color: event.color}});
 	},
-	"tap #deleteSpell": function(){
-		Spells.remove(this._id);
-		GlobalUI.closeDetail();
+	"tap #deleteButton": function(event, instance){
+		Spells.remove(instance.data.spellId);
+		GlobalUI.closeDetail()
 	},
-	//TODO clean up String -> num here so they don't need casting by Schema.clean
-	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
 	"change #spellNameInput, input #spellNameInput": function(event){
 		var value = event.currentTarget.value
 		Spells.update(this._id, {$set: {name: value}});
@@ -92,13 +93,6 @@ Template.spellDialog.events({
 		if(value == this.school) return;
 		Spells.update(this._id, {$set: {prepared: value}});
 	},
-	"core-select .colorDropdown": function(event){
-		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
-		var value = detail.item.getAttribute("name");
-		if(value == this.color) return;
-		Spells.update(this._id, {$set: {color: value}});
-	},
 	"change #verbalCheckbox": function(event){
 		var value = event.currentTarget.checked;
 		Spells.update(this._id, {$set: {"components.verbal": value}});
@@ -115,29 +109,4 @@ Template.spellDialog.events({
 		var value = event.currentTarget.checked;
 		Spells.update(this._id, {$set: {"ritual": value}});
 	},
-});
-
-Template.spellDialog.helpers({
-	spell: function(){
-		return Spells.findOne(this.spellId);
-	},
-	colorClass: function(){
-		return getColorClass(this.color)
-	},
-	spellLists: function(){
-		return SpellLists.find({charId: this.charId}, {fields: {name: 1}});
-	},
-	magicSchools: function(){
-		return magicSchools;
-	},
-	spellLevels: function(){
-		return spellLevels;
-	},
-	preparedOptions: function(){
-		return [
-			{name: "Prepared", value: "prepared"},
-			{name: "Unprepared", value: "unprepared"},
-			{name: "Always Prepared", value: "always"}
-		];
-	}
 });

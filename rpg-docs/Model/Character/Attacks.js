@@ -10,21 +10,25 @@ Schemas.Attack = new SimpleSchema({
 	},
 	name: {
 		type: String,
-		defaultValue: "New Attack"
+		defaultValue: "New Attack", 
+		trim: false
 	},
 	range: {
 		type: String,
-		optional: true
+		optional: true, 
+		trim: false
 	},
 	attackBonus: {
 		type: String,
 		optional: true,
-		defaultValue: "strengthMod + proficiencyBonus"
+		defaultValue: "strengthMod + proficiencyBonus",
+		trim: false
 	},
 	damage: {
 		type: String,
 		optional: true,
-		defaultValue: "1d8 + {strengthMod}"
+		defaultValue: "1d8 + {strengthMod}",
+		trim: false
 	},
 	damageType: {
 		type: String,

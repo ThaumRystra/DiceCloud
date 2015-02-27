@@ -1,0 +1,23 @@
+<template name="baseDialog">
+	<core-header-panel fit>
+		<core-toolbar class={{class}} hero-id="toolbar" hero>
+			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
+			<div flex>{{title}}</div>
+			{{#if hideColor}}{{else}}
+				<!--color-->
+				{{> colorDropdown}}
+			{{/if}}
+			{{#if hideDelete}}{{else}}
+			<paper-icon-button id="deleteButton" 
+							   role="button"
+							   tabindex="0"
+							   icon="delete" 
+							   aria-label="Delete Feature" 
+							   noink></paper-icon-button>
+			{{/if}}
+		</core-toolbar>
+		<div class="detailContent">
+			{{> UI.contentBlock}}
+		</div>
+	</core-header-panel>
+</template>

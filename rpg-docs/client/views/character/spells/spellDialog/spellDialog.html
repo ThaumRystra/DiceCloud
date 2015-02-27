@@ -1,89 +1,75 @@
 <template name="spellDialog">
 	{{#with spell}}
-		<core-header-panel fit class="spellDialog">
-			<core-toolbar hero-id="toolbar" class={{colorClass}} hero>
-				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-				<div flex hero-id="title" hero>{{name}}</div>
-				<paper-icon-button id="deleteSpell" 
-								   role="button"
-								   tabindex="0"
-								   icon="delete" 
-								   aria-label="Delete Feature" 
-								   noink></paper-icon-button>
-			</core-toolbar>
-			<div class="detailContent">
-				<!--Name-->
-				<div horizontal layout>
-					<paper-input id="spellNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
-					<!--Color-->
-					{{> colorDropdown}}<br>
-				</div>
-				<!--List dropdown-->
-				<paper-dropdown-menu id="listDropdown" label="Spell List">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{listId}}>
-							{{#each spellLists}}
-								<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
-				<!--Level-->
-				<paper-dropdown-menu id="levelDropdown" label="Level">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{level}}>
-							{{#each spellLevels}}
-								<paper-item name={{level}} class="containerMenuItem">{{name}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
-				<!--School-->
-				<paper-dropdown-menu id="schoolDropdown" label="School">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{school}}>
-							{{#each magicSchools}}
-								<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
-				<!--Prepared-->
-				<paper-dropdown-menu id="preparedDropdown" label="School">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{prepared}}>
-							{{#each preparedOptions}}
-								<paper-item name={{value}} class="containerMenuItem">{{name}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
-				<!--Components-->
-				<div horizontal layout center wrap>
-					<div>Verbal:</div>
-					<paper-checkbox id="verbalCheckbox" checked={{components.verbal}}></paper-checkbox>
-					<div>Somatic:</div>
-					<paper-checkbox id="somaticCheckbox" checked={{components.somatic}}></paper-checkbox>
-					<div>Concentration:</div>
-					<paper-checkbox id="concentrationCheckbox" checked={{components.concentration}}></paper-checkbox>
-					<!--Ritual-->
-					<div>Ritual: </div>
-					<paper-checkbox id="ritualCheckbox" checked={{ritual}}></paper-checkbox>
-				</div>
-				<paper-input id="materialInput" class="fullwidth" label="Material Components" floatinglabel value={{components.material}} flex></paper-input>
-				<!--Casting Time-->
-				<paper-input id="castingTimeInput" class="fullwidth" label="Casting Time" floatinglabel value={{castingTime}} flex></paper-input>
-				<!--Range-->
-				<paper-input id="rangeInput" class="fullwidth" label="Range" floatinglabel value={{range}} flex></paper-input>
-				<!--Duration-->
-				<paper-input id="durationInput" class="fullwidth" label="Duration" floatinglabel value={{duration}} flex></paper-input>
-				<!--Description-->
-				<paper-input-decorator label="Description" floatinglabel layout vertical>
-					<paper-autogrow-textarea>
-						<textarea id="descriptionInput" placeholder value={{description}}></textarea>
-					</paper-autogrow-textarea>
-				</paper-input-decorator>
+		{{#baseDialog title=name class=colorClass}}
+			<!--Name-->
+			<div horizontal layout>
+				<paper-input id="spellNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
 			</div>
-		</core-header-panel>
+			<!--List dropdown-->
+			<paper-dropdown-menu id="listDropdown" label="Spell List">
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu"  selected={{listId}}>
+						{{#each spellLists}}
+						<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
+						{{/each}}
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+			<!--Level-->
+			<paper-dropdown-menu id="levelDropdown" label="Level">
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu"  selected={{level}}>
+						{{#each spellLevels}}
+						<paper-item name={{level}} class="containerMenuItem">{{name}}</paper-item>
+						{{/each}}
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+			<!--School-->
+			<paper-dropdown-menu id="schoolDropdown" label="School">
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu"  selected={{school}}>
+						{{#each magicSchools}}
+						<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
+						{{/each}}
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+			<!--Prepared-->
+			<paper-dropdown-menu id="preparedDropdown" label="School">
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu"  selected={{prepared}}>
+						{{#each preparedOptions}}
+						<paper-item name={{value}} class="containerMenuItem">{{name}}</paper-item>
+						{{/each}}
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+			<!--Components-->
+			<div horizontal layout center wrap>
+				<div>Verbal:</div>
+				<paper-checkbox id="verbalCheckbox" checked={{components.verbal}}></paper-checkbox>
+				<div>Somatic:</div>
+				<paper-checkbox id="somaticCheckbox" checked={{components.somatic}}></paper-checkbox>
+				<div>Concentration:</div>
+				<paper-checkbox id="concentrationCheckbox" checked={{components.concentration}}></paper-checkbox>
+				<!--Ritual-->
+				<div>Ritual: </div>
+				<paper-checkbox id="ritualCheckbox" checked={{ritual}}></paper-checkbox>
+			</div>
+			<paper-input id="materialInput" class="fullwidth" label="Material Components" floatinglabel value={{components.material}} flex></paper-input>
+			<!--Casting Time-->
+			<paper-input id="castingTimeInput" class="fullwidth" label="Casting Time" floatinglabel value={{castingTime}} flex></paper-input>
+			<!--Range-->
+			<paper-input id="rangeInput" class="fullwidth" label="Range" floatinglabel value={{range}} flex></paper-input>
+			<!--Duration-->
+			<paper-input id="durationInput" class="fullwidth" label="Duration" floatinglabel value={{duration}} flex></paper-input>
+			<!--Description-->
+			<paper-input-decorator label="Description" floatinglabel layout vertical>
+				<paper-autogrow-textarea>
+					<textarea id="descriptionInput" placeholder value={{description}}></textarea>
+				</paper-autogrow-textarea>
+			</paper-input-decorator>
+		{{/baseDialog}}
 	{{/with}}
 </template>

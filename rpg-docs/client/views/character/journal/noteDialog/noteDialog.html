@@ -1,30 +1,16 @@
 <template name="noteDialog">
 	{{#with note}}
-		<core-header-panel fit class="noteDialog">
-			<core-toolbar hero-id="toolbar" class={{colorClass}} hero>
-				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-				<div flex hero-id="title" hero>{{name}}</div>
-				<paper-icon-button id="deleteNote" 
-								   role="button"
-								   tabindex="0"
-								   icon="delete" 
-								   aria-label="Delete Feature" 
-								   noink></paper-icon-button>
-			</core-toolbar>
-			<div class="detailContent">
-				<!--Name-->
-				<div horizontal layout>
-					<paper-input id="noteNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
-					<!--Color-->
-					{{> colorDropdown}}<br>
-				</div>
-				<!--Description-->
-				<paper-input-decorator label="Description" floatinglabel layout vertical>
-					<paper-autogrow-textarea>
-						<textarea id="noteDescriptionInput" placeholder value={{description}}></textarea>
-					</paper-autogrow-textarea>
-				</paper-input-decorator>
+		{{#baseDialog title=name class=colorClass}}
+			<!--Name-->
+			<div horizontal layout>
+				<paper-input id="noteNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
 			</div>
-		</core-header-panel>
+			<!--Description-->
+			<paper-input-decorator label="Description" floatinglabel layout vertical>
+				<paper-autogrow-textarea>
+					<textarea id="noteDescriptionInput" placeholder value={{description}}></textarea>
+				</paper-autogrow-textarea>
+			</paper-input-decorator>
+		{{/baseDialog}}
 	{{/with}}
 </template>

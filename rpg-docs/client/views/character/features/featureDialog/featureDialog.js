@@ -1,37 +1,10 @@
-Template.featureDialog.rendered = function(){
-	var self = this;
-	//update all autogrows after they've been filled
-	var pata = this.$("paper-autogrow-textarea");
-	pata.each(function(index, el){
-		el.update($(el).children().get(0));
-	})
-	//update all input fields as well
-	var input = this.$("paper-input");
-	input.each(function(index, el){
-		el.valueChanged();
-	})
-	//after the dialog is built, open it
-	if (!this.alreadyRendered){
-		Session.set("global.ui.detailShow", true);
-		this.alreadyRendered = true;
-	}
-}
-
 Template.featureDialog.events({
-	"tap #backButton": function(){
-		GlobalUI.closeDetail()
+	"color-change": function(event, instance){
+		Features.update(instance.data.featureId, {$set: {color: event.color}});
 	},
-	"tap #deleteFeature": function(){
-		Features.remove(this._id);
+	"tap #deleteButton": function(event, instance){
+		Features.remove(instance.data.featureId);
 		GlobalUI.closeDetail()
-	},
-	"tap #addEffectButton": function(){
-		Effects.insert({
-			charId: Template.currentData().charId,
-			sourceId: this._id,
-			operation: "add",
-			type: "feature"
-		});
 	},
 	"change #featureNameInput": function(event){
 		var name = Template.instance().find("#featureNameInput").value;
@@ -54,22 +27,12 @@ Template.featureDialog.events({
 		var value = event.target.value;
 		var featureId = this._id;
 		Features.update(featureId, {$set: {uses: value}});
-	},
-	"core-select .colorDropdown": function(event){
-		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
-		var value = detail.item.getAttribute("name");
-		Features.update(this._id, {$set: {color: value}});
 	}
 });
 
 Template.featureDialog.helpers({
 	feature: function(){
 		return Features.findOne(this.featureId);
-	},
-	effects: function(){
-		var cursor = Effects.find({sourceId: this._id, type: "feature"})
-		return cursor;
 	},
 	usesSet: function(){
 		return _.isString(this.uses);

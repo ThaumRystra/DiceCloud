@@ -2,7 +2,7 @@ Classes = new Meteor.Collection("classes");
 
 Schemas.Class = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
-	name:		 {type: String},
+	name:		 {type: String, trim: false},
 	createdAt: {
 		type: Date,
 		autoValue: function() {

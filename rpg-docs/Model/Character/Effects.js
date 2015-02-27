@@ -11,7 +11,8 @@ Schemas.Effect = new SimpleSchema({
 	},
 	name: {
 		type: String,
-		optional: true //TODO make necessary if there is no owner
+		optional: true, //TODO make necessary if there is no owner
+		trim: false
 	},
 	operation: {
 		type: String,
@@ -25,7 +26,8 @@ Schemas.Effect = new SimpleSchema({
 	},
 	calculation: {
 		type: String,
-		optional: true
+		optional: true, 
+		trim: false
 	},
 	//indicates what the effect originated from
 	type: {

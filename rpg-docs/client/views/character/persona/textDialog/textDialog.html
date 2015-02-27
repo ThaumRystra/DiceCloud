@@ -1,16 +1,9 @@
 <template name="textDialog">
-	<core-header-panel fit>
-		<core-toolbar hero-id="toolbar" hero class={{colorClass}}>
-			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-			<div flex hero-id="title" hero>{{title}}</div>
-		</core-toolbar>
-		<div class="detailContent">
-			<!--Description-->
-			<paper-input-decorator label={{title}} floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="textInput" placeholder value={{value}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
-		</div>
-	</core-header-panel>
+	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true"}}
+		<paper-input-decorator label={{title}} floatinglabel layout vertical>
+			<paper-autogrow-textarea>
+				<textarea id="textInput" placeholder value={{value}}></textarea>
+			</paper-autogrow-textarea>
+		</paper-input-decorator>
+	{{/baseDialog}}
 </template>

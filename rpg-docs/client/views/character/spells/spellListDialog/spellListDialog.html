@@ -1,48 +1,34 @@
 <template name="spellListDialog">
 	{{#with spellList}}
-		<core-header-panel fit class="spellListDialog">
-			<core-toolbar hero-id="toolbar" class={{colorClass}} hero>
-				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-				<div flex hero-id="title" hero>{{name}}</div>
-				<paper-icon-button id="deleteSpellList" 
-								   role="button"
-								   tabindex="0"
-								   icon="delete" 
-								   aria-label="Delete Feature" 
-								   noink></paper-icon-button>
-			</core-toolbar>
-			<div class="detailContent">
-				<!--Name-->
-				<div horizontal layout>
-					<paper-input id="spellListNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
-					<!--Color-->
-					{{> colorDropdown}}<br>
-				</div>
-				<!--Save DC-->
-				<paper-input id="spellListSaveDCInput" 
-							 label="Save DC" 
-							 floatinglabel 
-							 value={{saveDC}} 
-							 style="width: 100%;"></paper-input><br>
-				<!--Attack Bonus-->
-				<paper-input id="spellListAttackBonusInput" 
-							 label="Attack Bonus" 
-							 floatinglabel 
-							 value={{attackBonus}} 
-							 style="width: 100%;"></paper-input><br>
-				<!--Max Prepared-->
-				<paper-input id="spellListMaxPreparedInput" 
-							 label="Maximum Prepared Spells" 
-							 floatinglabel 
-							 value={{maxPrepared}} 
-							 style="width: 100%;"></paper-input><br>
-				<!--Description-->
-				<paper-input-decorator label="Description" floatinglabel layout vertical>
-					<paper-autogrow-textarea>
-						<textarea id="spellListDescriptionInput" placeholder value={{description}}></textarea>
-					</paper-autogrow-textarea>
-				</paper-input-decorator>
+		{{#baseDialog title=name class=colorClass}}
+			<!--Name-->
+			<div horizontal layout>
+				<paper-input id="spellListNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
 			</div>
-		</core-header-panel>
+			<!--Save DC-->
+			<paper-input id="spellListSaveDCInput" 
+						 label="Save DC" 
+						 floatinglabel 
+						 value={{saveDC}} 
+						 style="width: 100%;"></paper-input><br>
+			<!--Attack Bonus-->
+			<paper-input id="spellListAttackBonusInput" 
+						 label="Attack Bonus" 
+						 floatinglabel 
+						 value={{attackBonus}} 
+						 style="width: 100%;"></paper-input><br>
+			<!--Max Prepared-->
+			<paper-input id="spellListMaxPreparedInput" 
+						 label="Maximum Prepared Spells" 
+						 floatinglabel 
+						 value={{maxPrepared}} 
+						 style="width: 100%;"></paper-input><br>
+			<!--Description-->
+			<paper-input-decorator label="Description" floatinglabel layout vertical>
+				<paper-autogrow-textarea>
+					<textarea id="spellListDescriptionInput" placeholder value={{description}}></textarea>
+				</paper-autogrow-textarea>
+			</paper-input-decorator>
+		{{/baseDialog}}
 	{{/with}}
 </template>

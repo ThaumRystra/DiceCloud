@@ -7,7 +7,6 @@ Template.healthCard.helpers({
 		return char && char.deathSave;
 	},
 	failIcon: function(num){
-		console.log("checking ", num, " against fail", this)
 		if(num <= this.fail) return "radio-button-on";
 		else return "radio-button-off";
 	},

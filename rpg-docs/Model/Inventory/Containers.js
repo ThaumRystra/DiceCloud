@@ -2,12 +2,12 @@
 Containers = new Meteor.Collection("containers");
 
 Schemas.Container = new SimpleSchema({
-	name: 		{ type: String },
+	name: 		{ type: String, trim: false },
 	charId: 	{ type: String, regEx: SimpleSchema.RegEx.Id},
 	isCarried: 	{ type: Boolean },
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	description:{type: String, optional: true},
+	description:{type: String, optional: true, trim: false},
 	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"}
 });
 

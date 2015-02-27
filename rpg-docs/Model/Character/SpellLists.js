@@ -2,11 +2,11 @@ SpellLists = new Meteor.Collection("spellLists");
 
 Schemas.SpellLists = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
-	name:        {type: String},
-	description: {type: String, optional: true},
-	saveDC:      {type: String, optional: true},
-	attackBonus: {type: String, optional: true},
-	maxPrepared: {type: String, optional: true},
+	name:        {type: String, trim: false},
+	description: {type: String, optional: true, trim: false},
+	saveDC:      {type: String, optional: true, trim: false},
+	attackBonus: {type: String, optional: true, trim: false},
+	maxPrepared: {type: String, optional: true, trim: false},
 	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"},
 	"settings.showUnprepared": {type: Boolean, defaultValue: true},
 });

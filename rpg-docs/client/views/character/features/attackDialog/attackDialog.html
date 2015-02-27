@@ -1,40 +1,26 @@
 <template name="attackDialog">
 	{{#with attack}}
-		<core-header-panel fit>
-			<core-toolbar class={{colorClass}} hero-id="toolbar" hero>
-				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-				<div flex>{{name}}</div>
-				<paper-icon-button id="deleteAttack" 
-								   role="button"
-								   tabindex="0"
-								   icon="delete" 
-								   aria-label="Delete Attack" 
-								   noink></paper-icon-button>
-			</core-toolbar>
-			<div class="detailContent">
-				<div layout horizontal>
-					<!--Name-->
-					<paper-input id="attackNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-					<!--color-->
-					{{> colorDropdown}}
-				</div>
-				<!--attackBonus-->
-				<paper-input id="attackBonusInput" label="Attack Bonus" floatinglabel value={{attackBonus}}></paper-input>
-				<!--damage-->
-				<paper-input id="damageInput" label="Damage" floatinglabel value={{damage}}></paper-input>
-				<!--range-->
-				<paper-input id="rangeInput" label="Range" floatinglabel value={{range}}></paper-input>
-				<!--DamageType-->
-				<paper-dropdown-menu id="damageTypeDropdown" label="DamageType">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{damageType}}>
-							{{#each damageTypes}}
-								<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
+		{{#baseDialog title=name class=colorClass}}
+			<div layout horizontal>
+				<!--Name-->
+				<paper-input id="attackNameInput" label="Name" floatinglabel value={{name}}></paper-input>
 			</div>
-		</core-header-panel>
+			<!--attackBonus-->
+			<paper-input id="attackBonusInput" label="Attack Bonus" floatinglabel value={{attackBonus}}></paper-input>
+			<!--damage-->
+			<paper-input id="damageInput" label="Damage" floatinglabel value={{damage}}></paper-input>
+			<!--range-->
+			<paper-input id="rangeInput" label="Range" floatinglabel value={{range}}></paper-input>
+			<!--DamageType-->
+			<paper-dropdown-menu id="damageTypeDropdown" label="DamageType">
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu"  selected={{damageType}}>
+						{{#each damageTypes}}
+						<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
+						{{/each}}
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+		{{/baseDialog}}
 	{{/with}}
 </template>

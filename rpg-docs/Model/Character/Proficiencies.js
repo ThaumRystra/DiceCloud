@@ -6,7 +6,8 @@ Schemas.Proficiency = new SimpleSchema({
 		regEx: SimpleSchema.RegEx.Id
 	},
 	name: 	{
-		type: String
+		type: String,
+		trim: false
 	},
 	//indicates what type of thing proficiency originated from
 	type: {

@@ -1,0 +1,15 @@
+<!--needs to be given charId, sourceId and type-->
+<template name="effectsEditList">
+	{{#if effects}}
+		<hr style="margin: 16px 0 16px 0;">
+		<div id="effects">
+			<h2>Effects</h2>
+			{{#each effects}}
+				{{>effectEdit}}
+			{{/each}}
+		</div>
+	{{/if}}
+	<div layout horizontal end-justified>
+		<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
+	</div>
+</template>

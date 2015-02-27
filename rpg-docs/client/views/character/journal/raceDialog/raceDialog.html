@@ -1,23 +1,6 @@
 <template name="raceDialog">
-	<core-header-panel fit>
-		<core-toolbar class="grey white-text" hero-id="toolbar" hero>
-			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-			<div flex>{{race}}</div>
-		</core-toolbar>
-		<div class="detailContent">
-			<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
-			{{#if effects}}
-				<hr style="margin: 16px 0 16px 0;">
-				<div id="effects">
-					<h2>Effects</h2>
-					{{#each effects}}
-						{{>effectEdit}}
-					{{/each}}
-				</div>
-			{{/if}}
-			<div layout horizontal end-justified>
-				<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
-			</div>
-		</div>
-	</core-header-panel>
+	{{#baseDialog title="Race" class=colorClass hideColor="true" hideDelete="true"}}
+		<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
+		{{> effectsEditList sourceId=_id charId=charId type="racial"}}
+	{{/baseDialog}}
 </template>

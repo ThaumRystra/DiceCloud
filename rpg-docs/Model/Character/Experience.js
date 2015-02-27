@@ -2,8 +2,8 @@ Experiences = new Meteor.Collection("experience");
 
 Schemas.Experience = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
-	name:		 {type: String, defaultValue: "New Experience"},
-	description: {type: String, optional: true},
+	name:		 {type: String, defaultValue: "New Experience", trim: false},
+	description: {type: String, optional: true, trim: false},
 	value:       {type: Number, defaultValue: 0},
 	dateAdded:   {
 		type: Date,

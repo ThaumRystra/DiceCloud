@@ -1,56 +1,31 @@
 <template name="featureDialog">
 	{{#with feature}}
-		<core-header-panel fit>
-			<core-toolbar class={{colorClass}} hero-id="toolbar" hero>
-				<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-				<div flex>{{name}}</div>
-				<paper-icon-button id="deleteFeature" 
-								   role="button"
-								   tabindex="0"
-								   icon="delete" 
-								   aria-label="Delete Feature" 
-								   noink></paper-icon-button>
-			</core-toolbar>
-			<div class="detailContent">
-				<!--name-->
-				<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-				<!--color-->
-				{{> colorDropdown}}
-				<hr style="margin: 16px 0 16px 0;">
-				<!--description-->
-				<paper-input-decorator label="Description" floatinglabel layout vertical>
-					<paper-autogrow-textarea>
-						<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-					</paper-autogrow-textarea>
-				</paper-input-decorator>
-				<hr style="margin: 16px 0 16px 0;">
-				<div layout horizontal center style="height: 60px;">
-					<div class="caption">Limit Uses</div>
-					<paper-toggle-button id="limitUseCheck"
-										 checked={{usesSet}} 
-										 role="button" 
-										 aria-pressed="false" 
-										 tabindex="0" 
-										 touch-action="pan-y"
-										 style="margin-left: 8px; margin-right:8px;">
-					</paper-toggle-button>
-					{{#if usesSet}}
-						<paper-input id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
-					{{/if}}
-				</div>
-				{{#if effects}}
-					<hr style="margin: 16px 0 16px 0;">
-					<div id="effects">
-						<h2>Effects</h2>
-						{{#each effects}}
-							{{>effectEdit}}
-						{{/each}}
-					</div>
+		{{#baseDialog title=name class=colorClass}}
+			<!--name-->
+			<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+			<hr style="margin: 16px 0 16px 0;">
+			<!--description-->
+			<paper-input-decorator label="Description" floatinglabel layout vertical>
+				<paper-autogrow-textarea>
+					<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+				</paper-autogrow-textarea>
+			</paper-input-decorator>
+			<hr style="margin: 16px 0 16px 0;">
+			<div layout horizontal center style="height: 60px;">
+				<div class="caption">Limit Uses</div>
+				<paper-toggle-button id="limitUseCheck"
+									 checked={{usesSet}} 
+									 role="button" 
+									 aria-pressed="false" 
+									 tabindex="0" 
+									 touch-action="pan-y"
+									 style="margin-left: 8px; margin-right:8px;">
+				</paper-toggle-button>
+				{{#if usesSet}}
+				<paper-input id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
 				{{/if}}
-				<div layout horizontal end-justified>
-					<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
-				</div>
 			</div>
-		</core-header-panel>
+			{{> effectsEditList sourceId=_id charId=charId type="feature"}}
+		{{/baseDialog}}
 	{{/with}}
 </template>

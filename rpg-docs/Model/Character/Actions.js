@@ -9,10 +9,10 @@ Schemas.Action = new SimpleSchema({
 		regEx: SimpleSchema.RegEx.Id
 	},
 	name: {
-		type: String
+		type: String, trim: false
 	},
 	description: {
-		type: String
+		type: String, trim: false
 	},
 	type: {
 		type: String,
