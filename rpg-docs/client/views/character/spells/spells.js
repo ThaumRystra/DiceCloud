@@ -46,10 +46,9 @@ Template.spells.helpers({
 		}
 		if(this.components.material){
 			components += components? ", M" : "M";
-			components += " ("+this.components.material+")";
 		}
 		if(this.components.concentration){
-			components += " - Requires concentration"
+			components += components? ", C" : "C";
 		}
 		return components;
 	},

@@ -1,6 +1,6 @@
 Template.effectsEditList.helpers({
 	effects: function(){
-		var cursor = Effects.find({sourceId: this.sourceId});
+		var cursor = Effects.find({sourceId: this.sourceId, type: this.type});
 		return cursor;
 	}
 });

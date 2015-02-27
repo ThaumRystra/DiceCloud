@@ -1,8 +1,23 @@
+Template.home.helpers({
+	characterDetails: function(){
+		var char = Characters.findOne(this._id, {fields: {name: 1, gender: 1, alignment: 1, race:1}})
+		char.title = char.name;
+		char.field = "base"
+		char.color = "d";
+		char.class = "characterCard"
+		return char;
+	}
+});
+
 Template.home.events({
-	"click #addCharacter": function (event, template) {
-		Characters.insert({});
+	"tap .characterCard": function(event, instance){
+		console.log(this);
+		Router.go("characterSheet", {_id: this._id});
 	},
-	"click #deleteChar": function(event, template){
+	"tap #addCharacter": function (event, template) {
+		Characters.insert({owner: Meteor.userId()});
+	},
+	"tap #deleteChar": function(event, template){
 		console.log("deleting", this);
 		Characters.remove(this._id);
 	}

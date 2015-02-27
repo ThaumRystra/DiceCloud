@@ -187,9 +187,9 @@ Schemas.Character = new SimpleSchema({
 	initiativeRoll: { type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
 
 	//permissions
-	owner: { type: String, regEx: SimpleSchema.RegEx.Id },
-	readers: { type: [String], regEx: SimpleSchema.RegEx.Id },
-	writers: { type: [String], regEx: SimpleSchema.RegEx.Id },
+	owner: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
+	readers: { type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [] },
+	writers: { type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [] },
 	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"},
 	//TODO add per-character settings
 	"settings.experiencesInc": {type: Number, defaultValue: 20},
@@ -219,6 +219,7 @@ Characters.attachSchema(Schemas.Character);
 	},
 	{type: "inate", name: "Resistance doesn't stack", operation: "min", value: 0.5}, 
 	{type: "inate", name: "Vulnerability doesn't stack", operation: "max", value:  2}
+	{stat: "armor", name: "Natural Armor", value: 10, operation: "base", type: "inate"}}
 */
 
 var attributeBase = function(charId, statName){
