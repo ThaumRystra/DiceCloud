@@ -11,7 +11,6 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 		Experiences.find({charId: characterId}),
 		Features.find({charId: characterId}),
 		Items.find({charId: characterId}),
-		Levels.find({charId: characterId}),
 		Notes.find({charId: characterId}),
 		Spells.find({charId: characterId}),
 		SpellLists.find({charId: characterId}),

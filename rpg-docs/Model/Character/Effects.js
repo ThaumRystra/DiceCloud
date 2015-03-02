@@ -33,7 +33,7 @@ Schemas.Effect = new SimpleSchema({
 	type: {
 		type: String,
 		defaultValue: "editable",
-		allowedValues: ["editable", "feature", "level", "buff", "equipment", "racial", "inate"]
+		allowedValues: ["editable", "feature", "class", "buff", "equipment", "racial", "inate"]
 	},
 	//the id of the feature, buff or item that created this effect
 	sourceId: {

@@ -1,0 +1,12 @@
+<template name="classDialog">
+	{{#with class}}
+		{{#baseDialog title=name class=colorClass hideColor="true"}}
+			<!--Name-->
+			<paper-input id="classNameInput" label="Class Name" floatinglabel value={{name}}></paper-input>
+			<!--Level-->
+			<paper-input id="levelValueInput" label="Level" floatinglabel value={{level}}></paper-input>
+			<!--Effects-->
+			{{> effectsEditList sourceId=_id charId=charId type="class"}}
+		{{/baseDialog}}
+	{{/with}}
+</template>

@@ -433,8 +433,8 @@ Characters.helpers({
 		var mod = +getMod(this.attributeValue(attribute));
 		return 10 + mod;
 	},
-
-	level: function(){
+	
+	xpLevel: function(){
 		var xp = this.experience();
 		var xpTable = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
 					   85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000,
@@ -446,6 +446,14 @@ Characters.helpers({
 		};
 		if(xp > 355000) return 20;
 		return 0;
+	},
+
+	level: function(){
+		var level = 0;
+		Classes.find({charId: this._id}).forEach(function(cls){
+			level += cls.level;
+		})
+		return level;
 	},
 	
 	experience: function(){

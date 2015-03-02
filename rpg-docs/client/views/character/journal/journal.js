@@ -26,6 +26,12 @@ Template.journal.helpers({
 	levels: function(charId){
 		return Levels.find({charId: charId, classId: this._id}, {sort: {value: 1}});
 	},
+	nextLevelXP: function(){
+		var currentLevel = this.level();
+		if (currentLevel < 20){
+			return xpTable[currentLevel];
+		}
+	},
 	race: function(){
 		var char = Characters.findOne(this._id, {fields: {race: 1}});
 		return char && char.race;
@@ -47,10 +53,10 @@ Template.journal.events({
 			heroId: this._id
 		});
 	},
-	"tap .level": function(event){
+	"tap .class": function(event){
 		GlobalUI.setDetail({
-			template: "levelDialog",
-			data: {levelId: this._id, charId: this.charId},
+			template: "classDialog",
+			data: {classId: this._id, charId: this.charId},
 			heroId: this._id
 		});
 	},
@@ -85,6 +91,22 @@ Template.journal.events({
 				GlobalUI.setDetail({
 					template: "experienceDialog",
 					data: {experienceId: id, charId: charId},
+					heroId: id
+				});
+			}
+		})
+	},
+	"tap #addClassButton":function(event){
+		var charId = this._id;
+		Classes.insert({
+			charId: charId,
+			name: "new Class",
+			level: 1
+		}, function(error, id){
+			if(!error){
+				GlobalUI.setDetail({
+					template: "classDialog",
+					data: {classId: id, charId: charId},
 					heroId: id
 				});
 			}

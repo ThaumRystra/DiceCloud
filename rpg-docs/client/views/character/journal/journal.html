@@ -2,10 +2,12 @@
 	<div fit>
 		<div id="journal" class="scroll-y" fit>
 			<div class="containers">
+				<!--Experience Table-->
 				<paper-shadow class="card container experiencesCard"  hero-id="main" {{detailHero}}>
-					<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+					<div class="whiteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
 						<div class="containerName subhead" flex>Experience</div>
 						<div class="subhead">{{experience}} XP</div>
+						<paper-icon-button class="black54" id="addXP" icon="add"></paper-icon-button>
 					</div>
 					<div class="containerMain experiences">
 						{{#each experiences}}
@@ -23,35 +25,35 @@
 						</div>
 					{{/if}}
 				</paper-shadow>
+				<!--Class Table-->
 				<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-					<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+					<div class="whiteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
 						<div flex>
-							<div class="containerName subhead">Levels</div>
+							<div class="containerName subhead">Level {{level}}</div>
+							{{#if nextLevelXP}}
+								<div class="caption">
+									Next Level: {{nextLevelXP}}XP
+								</div>
+							{{/if}}
 						</div>
+						<paper-icon-button class="black54" id="addClassButton" icon="add"></paper-icon-button>
 					</div>
 					<div class="containerMain experiences">
-						<div class="list-subhead" layout horizontal center>
-							Race
-						</div>
 						<div class="itemSlot">
 							<paper-item class="inventoryItem race" hero-id="main" {{detailHero "race"}} layout horizontal>
 								{{race}}
 							</paper-item>
 						</div>
 						{{#each classes}}
-							<div class="list-subhead" layout horizontal center>
-								{{name}}
+							<div class="itemSlot">
+								<paper-item class="inventoryItem class" hero-id="main" {{detailHero}} layout horizontal>
+									{{name}}&nbsp;{{level}}
+								</paper-item>
 							</div>
-							{{#each levels ../_id}}
-								<div class="itemSlot">
-									<paper-item class="inventoryItem level" hero-id="main" {{detailHero}} layout horizontal>
-										Level {{value}}
-									</paper-item>
-								</div>
-							{{/each}}
 						{{/each}}
 					</div>
 				</paper-shadow>
+				<!--Notes-->
 				{{#each notes}}
 					<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
 						<div class="containerTop {{colorClass}} noteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
@@ -66,8 +68,11 @@
 			<div class="fab-buffer"></div>
 		</div>
 	</div>
-	<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
-		<paper-fab-menu-item id="addNote" icon="note-add" color="#d23f31" tooltip="Note"></paper-fab-menu-item>
-		<paper-fab-menu-item id="addXP" icon="work" color="#d23f31" tooltip="Experience"></paper-fab-menu-item>
-	</paper-fab-menu>
+	<paper-fab id="addNote" 
+				   class="floatyButton" 
+				   icon="add" 
+				   title="Add" 
+				   role="button" 
+				   tabindex="0" 
+				   hero-id="main"></paper-fab>
 </template>

@@ -2,18 +2,26 @@
 evaluate = function(charId, string){
 	if(!string) return string;
 	var char = Characters.findOne(charId, {fields: {_id: 1}});
-	string = string.replace(/\b[a-zA-Z]+\b/g, function(sub){
+	string = string.replace(/\b[a-z]+\b/gi, function(sub){
 		//fields
 		if(Schemas.Character.schema(sub)){
 			return char.fieldValue(sub)
 		}
 		//ability modifiers
-		var abilityMods = ["strengthMod", "dexterityMod", "constitutionMod", "intelligenceMod", "wisdomMod", "charismaMod"]
-		if( _.contains(abilityMods, sub) ){
+		var abilityMods = ["STRENGTHMOD", "DEXTERITYMOD", "CONSTITUTIONMOD", "INTELLIGENCEMOD", "WISDOMMOD", "CHARISMAMOD"]
+		if( _.contains(abilityMods, sub.toUpperCase()) ){
 			var slice = sub.slice(0, - 3);
 			return char.abilityMod(slice);
 		}
-		if(sub === "level"){
+		//class levels
+		if(/\w+levels?\b/gi.test(sub)){
+			//strip out "level"
+			var className = sub.replace(/levels?\b/gi, "");
+			var cls = Classes.findOne({charId: charId, name: className});
+			return cls && cls.level;
+		}
+		//character level
+		if(sub.toUpperCase()  === "LEVEL"){
 			return char.level();
 		}
 		return sub;
