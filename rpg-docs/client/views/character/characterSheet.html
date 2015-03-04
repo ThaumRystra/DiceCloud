@@ -8,23 +8,23 @@
 		<paper-icon-button icon="more-vert" role="button"></paper-icon-button>
 		<div class="bottom fit" horizontal layout>
 			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
-				<paper-tab>Stats</paper-tab>
-				<paper-tab>Features</paper-tab>
-				<paper-tab>Inventory</paper-tab>
-				<paper-tab>Spells</paper-tab>
-				<paper-tab>Persona</paper-tab>
-				<paper-tab>Journal</paper-tab>
+				<paper-tab name="stats">Stats</paper-tab>
+				<paper-tab name="features">Features</paper-tab>
+				<paper-tab name="inventory">Inventory</paper-tab>
+				<paper-tab name="spells">Spells</paper-tab>
+				<paper-tab name="persona">Persona</paper-tab>
+				<paper-tab name="journal">Journal</paper-tab>
 			</paper-tabs>
 		</div>
 	</core-toolbar>
 	<div fit>
 		<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right" fit>
-			<section flex>{{> stats}}</section>
-			<section flex>{{> features}}</section>
-			<section flex>{{> inventory}}</section>
-			<section flex>{{> spells}}</section>
-			<section flex>{{> persona}}</section>
-			<section flex>{{> journal}}</section>
+			<section flex name="stats">{{> stats}}</section>
+			<section flex name="features">{{> features}}</section>
+			<section flex name="inventory">{{> inventory}}</section>
+			<section flex name="spells">{{> spells}}</section>
+			<section flex name="persona">{{> persona}}</section>
+			<section flex name="journal">{{> journal}}</section>
 		</core-animated-pages>
 	</div>
 </template>
