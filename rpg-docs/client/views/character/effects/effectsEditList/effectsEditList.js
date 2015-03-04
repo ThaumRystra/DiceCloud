@@ -7,11 +7,15 @@ Template.effectsEditList.helpers({
 
 Template.effectsEditList.events({
 	"tap #addEffectButton": function(){
+		if ( !_.isBoolean(this.enabled) ) {
+			this.enabled = true;
+		}
 		Effects.insert({
 			charId: this.charId,
 			sourceId: this.sourceId,
 			operation: "add",
-			type: this.type
+			type: this.type,
+			enabled: this.enabled
 		});
 	},
 });

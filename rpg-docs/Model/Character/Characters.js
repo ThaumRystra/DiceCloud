@@ -433,7 +433,7 @@ Characters.helpers({
 		var mod = +getMod(this.attributeValue(attribute));
 		return 10 + mod;
 	},
-	
+
 	xpLevel: function(){
 		var xp = this.experience();
 		var xpTable = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
@@ -455,12 +455,30 @@ Characters.helpers({
 		})
 		return level;
 	},
-	
+
 	experience: function(){
 		var xp = 0;
 		Experiences.find({charId: this._id}, {fields: {value: 1}}).forEach(function(e){
 			xp += e.value;
 		})
 		return xp;
+	}
+});
+
+//clean up all data related to that character before removing it
+Characters.before.remove(function (userId, character) {
+	if(Meteor.isServer){
+		Actions       .remove({charId: character._id});
+		Attacks       .remove({charId: character._id});
+		Buffs         .remove({charId: character._id});
+		Classes       .remove({charId: character._id});
+		Effects       .remove({charId: character._id});
+		Experience    .remove({charId: character._id});
+		Features      .remove({charId: character._id});
+		Notes         .remove({charId: character._id});
+		Proficiencies .remove({charId: character._id});
+		SpellLists    .remove({charId: character._id});
+		Items         .remove({charId: character._id});
+		Containers    .remove({charId: character._id});
 	}
 });

@@ -22,3 +22,13 @@ SpellLists.helpers({
 		return num;
 	}
 });
+
+SpellLists.before.remove(function (userId, list) {
+	if(Meteor.isServer){
+		Spells.remove({listId: list._id});
+	} else {
+		Spells.find({listId: list._id}).forEach(function(spell){
+			Spells.remove(spell._id);
+		});
+	}
+});

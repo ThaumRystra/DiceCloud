@@ -20,3 +20,9 @@ Features.helpers({
 		return evaluate(this.charId, this.uses);
 	}
 });
+
+Features.before.remove(function (userId, feature) {
+	Effects.find({sourceId: feature._id, type: "feature"}).forEach(function(effect){
+		Effects.remove(effect._id);
+	});
+});

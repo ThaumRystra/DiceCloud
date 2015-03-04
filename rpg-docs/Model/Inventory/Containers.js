@@ -29,3 +29,13 @@ Containers.helpers({
 		return weight;
 	}
 });
+
+Containers.before.remove(function (userId, container) {
+	if(Meteor.isServer){
+		Items.remove({container: container._id});
+	} else {
+		Items.find({container: container._id}).forEach(function(item){
+			Items.remove(item._id);
+		});
+	}
+});

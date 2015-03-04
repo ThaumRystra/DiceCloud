@@ -19,3 +19,10 @@ Schemas.Buff = new SimpleSchema({
 });
 
 Buffs.attachSchema(Schemas.Buff);
+
+Buffs.before.remove(function (userId, buff) {
+	Effects.find({sourceId: buff._id, type: "buff"}).forEach(function(effect){
+		Effects.remove(effect._id);
+	});
+});
+
