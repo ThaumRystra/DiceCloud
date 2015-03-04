@@ -197,31 +197,6 @@ Schemas.Character = new SimpleSchema({
 
 Characters.attachSchema(Schemas.Character);
 
-//TODO on creating a new character, these effects need to be set up
-/*
-"hitPoints.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [
-			{name: "Constitution modifier for each level", calculation: "level * constitutionMod", operation: "add", type: "inate"}
-		]
-	},
-	"proficiencyBonus.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [
-			{name: "Proficiency bonus by level", calculation: "floor(level / 4 + 1.75)", operation: "add", type: "inate"}
-		]
-	},
-	"armor.effects": {
-		type: [Schemas.Effect],
-		defaultValue: [
-			{name: "Dexterity Modifier", calculation: "dexterityArmor", operation: "add", type: "inate"}
-		]
-	},
-	{type: "inate", name: "Resistance doesn't stack", operation: "min", value: 0.5}, 
-	{type: "inate", name: "Vulnerability doesn't stack", operation: "max", value:  2}
-	{stat: "armor", name: "Natural Armor", value: 10, operation: "base", type: "inate"}}
-*/
-
 var attributeBase = function(charId, statName){
 	check(statName, String);
 	var effects = Effects.find({charId: charId, stat: statName, enabled: true}).fetch();
@@ -473,7 +448,7 @@ Characters.before.remove(function (userId, character) {
 		Buffs         .remove({charId: character._id});
 		Classes       .remove({charId: character._id});
 		Effects       .remove({charId: character._id});
-		Experience    .remove({charId: character._id});
+		Experiences   .remove({charId: character._id});
 		Features      .remove({charId: character._id});
 		Notes         .remove({charId: character._id});
 		Proficiencies .remove({charId: character._id});
