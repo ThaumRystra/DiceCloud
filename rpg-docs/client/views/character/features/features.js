@@ -6,6 +6,12 @@ Template.features.helpers({
 	hasUses: function(){
 		return this.usesValue() > 0;
 	},
+	noUsesLeft: function(){
+		return this.usesLeft() <= 0;
+	},
+	usesFull: function(){
+		return this.usesLeft() >= this.usesValue();
+	},
 	colorClass: function(){
 		return getColorClass(this.color)
 	},

@@ -32,3 +32,7 @@ paper-tabs.transparent-brown::shadow #selectionBar {
 paper-tabs.transparent-brown paper-tab::shadow #ink {
 	color: #795548;
 }
+
+core-toolbar.medium-tall {
+	height: 108px;
+}
