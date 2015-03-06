@@ -1,5 +1,5 @@
 <template name="skillRow">
-	<paper-item class="skillRow" layout horizontal>
+	<paper-item class="skillRow" layout horizontal hero-id="main" {{detailHero skill ../_id}}>
 		<core-icon icon="{{profIcon}}"></core-icon>
 		{{#if failSkill}}
 		<div class="fail skillMod">fail</div>

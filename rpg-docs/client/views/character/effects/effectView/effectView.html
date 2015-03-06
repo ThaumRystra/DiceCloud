@@ -1,0 +1,12 @@
+<template name="effectView">
+	<div class="effectView" layout horizontal center>
+		{{#if sourceId}}
+			<div>{{sourceName}}</div>
+		{{else}}
+			<div flex>{{statName}}</div>
+		{{/if}}
+		<div>{{operationName}}</div>
+		<div>{{statValue}}</div>
+		<br>
+	</div>
+</template>

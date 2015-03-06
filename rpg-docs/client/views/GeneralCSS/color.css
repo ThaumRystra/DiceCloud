@@ -1,83 +1,83 @@
-html /deep/ .red {
+.red {
 	background-color: #F44336;
 }
 
-html /deep/ .pink {
+.pink {
 	background-color: #E91E63;
 }
 
-html /deep/ .purple {
+.purple {
 	background-color: #9C27B0;
 }
 
-html /deep/ .deep-purple {
+.deep-purple {
 	background-color: #673AB7;
 }
 
-html /deep/ .indigo {
+.indigo {
 	background-color: #3F51B5;
 }
 
-html /deep/ .blue {
+.blue {
 	background-color: #2196F3;
 }
 
-html /deep/ .light-blue {
+.light-blue {
 	background-color: #03A9F4;
 }
 
-html /deep/ .cyan {
+.cyan {
 	background-color: #00BCD4;
 }
 
-html /deep/ .teal {
+.teal {
 	background-color: #009688;
 }
 
-html /deep/ .green {
+.green {
 	background-color: #4CAF50;
 }
 
-html /deep/ .light-green {
+.light-green {
 	background-color: #8BC34A;
 }
 
-html /deep/ .lime {
+.lime {
 	background-color: #CDDC39;
 }
 
-html /deep/ .yellow {
+.yellow {
 	background-color: #FFEB3B;
 }
 
-html /deep/ .amber {
+.amber {
 	background-color: #FFC107;
 }
 
-html /deep/ .orange {
+.orange {
 	background-color: #FF9800;
 }
 
-html /deep/ .deep-orange {
+.deep-orange {
 	background-color: #FF5722;
 }
 
-html /deep/ .brown {
+.brown {
 	background-color: #795548;
 }
 
-html /deep/ .grey {
+.grey {
 	background-color: #9E9E9E;
 }
 
-html /deep/ .blue-grey {
+.blue-grey {
 	background-color: #607D8B;
 }
 
-html /deep/ .white {
+.white {
 	background-color: #ffffff;
 }
 
-html /deep/ .black {
-	background-color: #000000;
+.black {
+	background-color: #262626;
 }

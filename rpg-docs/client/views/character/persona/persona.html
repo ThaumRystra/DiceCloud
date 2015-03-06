@@ -22,9 +22,9 @@
 </template>
 
 <template name="containerCardHelper">
-	<paper-shadow class="card container {{class}}"  hero-id="main" {{detailHero field}}>
-		<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero field}}>
-			<div class="containerName subhead" hero-id="title" flex {{detailHero field}}>{{title}}</div>
+	<paper-shadow class="card container {{class}}"  hero-id="main" {{detailHero field ../_id}}>
+		<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero field ../_id}}>
+			<div class="containerName subhead" hero-id="title" flex {{detailHero field ../_id}}>{{title}}</div>
 		</div>
 		<div flex class="containerMain">{{> UI.contentBlock}}</div>
 	</paper-shadow>

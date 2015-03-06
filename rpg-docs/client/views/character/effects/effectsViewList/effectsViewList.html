@@ -1,0 +1,12 @@
+<!--needs to be given charId, sourceId and type-->
+<template name="effectsViewList">
+	{{#if effects}}
+		<hr style="margin: 16px 0 16px 0;">
+		<div id="effects">
+			<h2>Effects</h2>
+			{{#each effects}}
+				{{>effectView}}
+			{{/each}}
+		</div>
+	{{/if}}
+</template>

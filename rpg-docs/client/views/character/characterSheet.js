@@ -22,5 +22,8 @@ Template.characterSheet.events({
 	},
 	"tap #characterSheetTabs paper-tab": function(event, instance){
 		setTab(this._id, event.currentTarget.getAttribute("name"));
-	}
+	},
+	"color-change": function(event, instance){
+		Characters.update(this._id, {$set: {color: event.color}});
+	},
 });

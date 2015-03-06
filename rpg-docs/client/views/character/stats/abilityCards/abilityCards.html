@@ -1,13 +1,13 @@
 <template name="abilityMiniCard">
-	<paper-shadow class="card double">
+	<paper-shadow class="card double abilityMiniCard">
 		<div class="abilityScore white-text {{color}}">
-			{{> ripple color="#eee"}}
 			<h1 class="display1">{{../attributeValue ability}}</h1>
 			<h2>{{../abilityMod ability}}</h2>
 		</div>
 		<div class="abilityCardRight subhead" layout horizontal center>
 			{{title}}
 		</div>
+		<paper-ripple fit></paper-ripple>
 	</paper-shadow>
 </template>
 

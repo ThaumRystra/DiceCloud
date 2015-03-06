@@ -5,7 +5,9 @@
 		<div flex>
 			{{name}}
 		</div>
-		<paper-icon-button icon="more-vert" role="button"></paper-icon-button>
+		<div>
+			{{> colorDropdown}}
+		</div>
 		<div class="bottom fit" horizontal layout>
 			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
 				<paper-tab name="stats">Stats</paper-tab>

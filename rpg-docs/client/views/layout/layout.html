@@ -2,7 +2,41 @@
 
 	<core-drawer-panel>
 		<core-header-panel drawer navigation flex mode="seamed" class="white">
-			<core-toolbar class="grey white-text">Cloud Character Sheet</core-toolbar>
+			<div id="accountSummary" class="padded white-text">
+				{{#if loggingIn}}
+					<paper-spinner active alt="Signing In"></paper-spinner>
+				{{else}}{{#if currentUser}}
+					{{#with currentUser}}
+						<div class="body2">
+							{{username}}
+						</div>
+						<div class="body1">
+							{{#each emails}}
+								{{address}}
+							{{/each}}
+							<paper-menu-button>
+								<paper-icon-button icon="arrow-drop-down" noink></paper-icon-button>
+								<paper-dropdown class="dropdown">
+									<core-menu class="menu">
+										<paper-item id="signOutButton">Sign Out</paper-item>
+									</core-menu>
+								</paper-dropdown>
+							</paper-menu-button>
+						</div>
+					{{/with}}
+				{{else}}
+						<h2>Sign In</h2>
+						<paper-input class="fullwidth" label="Email" id="emailInput"></paper-input><br>
+						<paper-input-decorator class="fullwidth" label="Password">
+							<input class="fullwidth" type="password" is="core-input" id="passwordInput">
+						</paper-input-decorator><br>
+					{{#if session "creatingNewUser"}}
+						<paper-button raised id="createAccountButton">Create Account</paper-button>
+					{{else}}
+						<paper-button raised id="signInButton">Sign In</paper-button>
+					{{/if}}
+				{{/if}}{{/if}}
+			</div>
 			<core-menu theme="core-light-theme">
 				<paper-item id="charactersMenuButton">Characters</paper-item>
 			</core-menu>
@@ -12,7 +46,7 @@
 							 detail-pages 
 							 transitions="hero-transition cross-fade"
 							 selected={{globalDetailSelected}}>
-			<section id="mainContentSection">
+			<section id="mainContentSection" class={{notSelected}}>
 				<core-header-panel fit mode="seamed">
 					{{> yield}}
 				</core-header-panel>

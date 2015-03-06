@@ -1,6 +1,7 @@
 .skillRow {
 	height: 32px;
 	margin: 0 -16px 0 -16px;
+	background: white;
 }
 
 .skillRow core-icon {

@@ -63,6 +63,6 @@
 	}
 }
 
-.fake-selected [hero] {
+.not-selected [hero] {
 	visibility: hidden;
 }

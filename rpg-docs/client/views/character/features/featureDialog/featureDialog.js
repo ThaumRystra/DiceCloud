@@ -36,8 +36,5 @@ Template.featureDialog.helpers({
 	},
 	usesSet: function(){
 		return _.isString(this.uses);
-	},
-	colorClass: function(){
-		return getColorClass(this.color)
 	}
 });

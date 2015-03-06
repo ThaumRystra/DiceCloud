@@ -82,7 +82,7 @@ p, .body1, body {
 	letter-spacing: 0.010em;
 }
 
-.white-text p{
+.white-text p, .white-text .body1{
 	color: rgba(255,255,255,0.87);
 }
 

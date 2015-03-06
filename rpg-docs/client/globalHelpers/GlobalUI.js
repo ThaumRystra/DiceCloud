@@ -98,14 +98,7 @@ Template.layout.events({
 	},
 	"core-animated-pages-transition-end [detail-pages]": function(e) {
 		var detailOpened = Session.get("global.ui.detailShow");
-		if(detailOpened){
-			//HACK by putting core-selected back on the main content section
-			//we stop it being hidden while the detail section is shown
-			$("#mainContentSection").addClass("core-selected");
-			//but we still want to track whether it is or isn't actually selected
-			//so we can hide hero elements, since they are technically now shown as detail
-			$("#mainContentSection").addClass("fake-selected");
-		} else {
+		if(!detailOpened){
 			Session.set("global.ui.detailData", null);
 			Session.set("global.ui.detailTemplate", null);
 			Session.set("global.ui.detailHeroId", null);
