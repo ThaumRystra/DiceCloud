@@ -25,7 +25,7 @@
 				</paper-dropdown>
 			</paper-dropdown-menu>
 			<!--Equipped-->
-			{{# if canEquip}}
+			{{#if canEquip}}
 				<div center horizontal layout>
 					<div flex>Equipped</div>
 					<paper-toggle-button id="equippedInput"
@@ -55,10 +55,12 @@
 					<textarea id="itemDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
 				</paper-autogrow-textarea>
 			</paper-input-decorator>
-			<!--Effects-->
-			{{> effectsEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
-			<!--Attacks-->
-			{{> attackEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
+			{{#if canEquip}}
+				<!--Effects-->
+				{{> effectsEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
+				<!--Attacks-->
+				{{> attackEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
+			{{/if}}
 		{{/baseDialog}}
 	{{/with}}
 </template>
