@@ -1,6 +1,6 @@
 <!--needs to be given charId, sourceId and type-->
 <template name="effectsEditList">
-	{{#if effects}}
+	{{#if effects.count}}
 		<hr style="margin: 16px 0 16px 0;">
 		<div id="effects">
 			<h2>Effects</h2>
@@ -9,7 +9,5 @@
 			{{/each}}
 		</div>
 	{{/if}}
-	<div layout horizontal end-justified>
-		<paper-button id="addEffectButton"  raised>Add Effect</paper-button>
-	</div>
+	<paper-button id="addEffectButton" class="red-button"  raised>Add Effect</paper-button>
 </template>

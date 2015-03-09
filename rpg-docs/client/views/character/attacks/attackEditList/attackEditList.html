@@ -1,0 +1,13 @@
+<!--needs to be given charId, sourceId and type-->
+<template name="attackEditList">
+	{{#if attacks.count}}
+		<hr style="margin: 16px 0 16px 0;">
+		<div id="attacks">
+			<h2>Attacks</h2>
+			{{#each attacks}}
+				{{>attackEdit}}
+			{{/each}}
+		</div>
+	{{/if}}
+	<paper-button id="addAttackButton" class="red-button" raised>Add Attack</paper-button>
+</template>

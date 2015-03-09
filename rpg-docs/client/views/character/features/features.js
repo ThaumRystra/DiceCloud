@@ -19,7 +19,7 @@ Template.features.helpers({
 		return _.indexOf(_.keys(colorOptions), this.color);
 	},
 	attacks: function(){
-		return Attacks.find({charId: this._id}, {sort: {color: 1, name: 1}});
+		return Attacks.find({charId: this._id, enabled: true}, {sort: {color: 1, name: 1}});
 	},
 	characterProficiencies: function(){
 		var char = Characters.findOne(this._id);

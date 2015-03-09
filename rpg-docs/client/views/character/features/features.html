@@ -19,7 +19,7 @@
 						<div flex>
 							<div class="containerName subhead">Attacks</div>
 						</div>
-						<paper-icon-button class="black54" id="addAttackButton" icon="add"></paper-icon-button>
+						<!--<paper-icon-button class="black54" id="addAttackButton" icon="add"></paper-icon-button>-->
 					</div>
 					<div class="containerMain listPadded">
 						{{#each attacks}}
@@ -30,10 +30,17 @@
 											{{evaluateSigned ../_id attackBonus}}
 										</div>
 										<div layout vertical flex>
-											<div>{{name}}</div>
-											<div class="caption">
-												{{{evaluateString ../_id damage}}} {{damageType}} {{range}}
+											<div class="body2">
+												{{name}}
 											</div>
+											<div>
+												{{damageDice}}&nbsp;{{{evaluateSignedSpaced ../_id damageBonus}}}&nbsp;{{damageType}}
+											</div>
+											{{#if details}}
+												<div class="caption">
+													{{details}}
+												</div>
+											{{/if}}
 										</div>
 									</div>
 								</paper-item>

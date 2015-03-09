@@ -13,22 +13,28 @@ Schemas.Attack = new SimpleSchema({
 		defaultValue: "New Attack", 
 		trim: false
 	},
-	range: {
+	details: {
 		type: String,
 		optional: true, 
 		trim: false
 	},
 	attackBonus: {
 		type: String,
-		optional: true,
 		defaultValue: "strengthMod + proficiencyBonus",
+		optional: true, 
 		trim: false
 	},
-	damage: {
+	damageBonus: {
+		type: String,
+		defaultValue: "strengthMod",
+		optional: true, 
+		trim: false
+	},
+	damageDice: {
 		type: String,
 		optional: true,
-		defaultValue: "1d8 + {strengthMod}",
-		trim: false
+		defaultValue: "1d8",
+		allowedValues: DAMAGE_DICE
 	},
 	damageType: {
 		type: String,
@@ -36,10 +42,26 @@ Schemas.Attack = new SimpleSchema({
 						"poison", "psychic", "radiant", "thunder"],
 		defaultValue: "slashing"
 	},
+	//indicates what the attack originated from
+	type: {
+		type: String,
+		defaultValue: "editable",
+		allowedValues: ["editable", "feature", "class", "buff", "equipment", "racial", "inate"]
+	},
+	//the id of the feature, buff or item that created this effect
+	sourceId: {
+		type: String, 
+		regEx: SimpleSchema.RegEx.Id,
+		optional: true
+	},
 	color: {
 		type: String, 
 		allowedValues: _.pluck(colorOptions, "key"), 
 		defaultValue: "q"
+	},
+	enabled: {
+		type: Boolean,
+		defaultValue: true
 	}
 });
 

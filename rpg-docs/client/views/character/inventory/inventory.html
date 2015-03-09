@@ -34,7 +34,7 @@
 						{{#with armor}}
 							<div class="itemSlot">
 								<paper-item class="inventoryItem armorItem" hero-id="main" {{detailHero}} layout horizontal>
-									{{name}}
+									{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
 								</paper-item>
 							</div>
 						{{/with}}
@@ -42,7 +42,7 @@
 						{{#each equipment}}
 							<div class="itemSlot">
 								<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal>
-									{{name}}
+									{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
 								</paper-item>
 							</div>
 						{{/each}}

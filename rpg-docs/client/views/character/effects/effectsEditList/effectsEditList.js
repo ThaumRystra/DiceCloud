@@ -11,6 +11,7 @@ Template.effectsEditList.events({
 			this.enabled = true;
 		}
 		Effects.insert({
+			name: this.name,
 			charId: this.charId,
 			sourceId: this.sourceId,
 			operation: "add",

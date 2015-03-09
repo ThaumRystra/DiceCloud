@@ -36,16 +36,22 @@ Items.helpers({
 	}
 });
 
-//remove effects if their item source is removed
+//remove effects and attacks if their item source is removed
 Items.before.remove(function (userId, item) {
 	Effects.find({sourceId: item._id, type: "equipment"}).forEach(function(effect){
 		Effects.remove(effect._id);
 	});
+	Attacks.find({sourceId: item._id, type: "equipment"}).forEach(function(attack){
+		Attacks.remove(attack._id);
+	});
 });
 
-//keep the effects on the correct character and enabled when equipped
+//keep the effects and attacks on the correct character and enabled when equipped
 Items.after.update(function (userId, item, fieldNames, modifier, options) {
 	Effects.find({sourceId: item._id, type: "equipment"}).forEach(function(effect){
-		Effects.update(effect._id, { $set: {charId: item.charId, enabled: item.equipped} });
-	}, {fetchPrevious: false});
-});
+		Effects.update(effect._id, { $set: {charId: item.charId, enabled: item.equipped, name: item.name} });
+	});
+	Attacks.find({sourceId: item._id, type: "equipment"}).forEach(function(attack){
+		Attacks.update(attack._id, { $set: {charId: item.charId, enabled: item.equipped, name: item.name} });
+	});
+}, {fetchPrevious: false});

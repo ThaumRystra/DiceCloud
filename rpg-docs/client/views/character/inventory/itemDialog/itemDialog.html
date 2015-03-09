@@ -56,7 +56,9 @@
 				</paper-autogrow-textarea>
 			</paper-input-decorator>
 			<!--Effects-->
-			{{> effectsEditList sourceId=_id charId=charId type="equipment" enabled=equipped}}
+			{{> effectsEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
+			<!--Attacks-->
+			{{> attackEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
 		{{/baseDialog}}
 	{{/with}}
 </template>
