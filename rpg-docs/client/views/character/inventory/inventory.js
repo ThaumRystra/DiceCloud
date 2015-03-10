@@ -18,9 +18,6 @@ Template.inventory.helpers({
 	showAddButtons: function(){
 		return Template.instance().showAddButtons.get();
 	},
-	ne1: function(num){
-		return num !== 1;
-	},
 	colorClass: function(){
 		return getColorClass(this.color)
 	},
@@ -102,3 +99,65 @@ Template.inventory.events({
 		});
 	}
 });
+
+Template.inventoryItem.helpers({
+	ne1: function(num){
+		return num !== 1;
+	},
+	hidden: function(){
+		return Session.equals("inventory.dragItemId", this._id)? "hidden" : null;
+	}
+});
+
+Template.layout.events({
+	"dragstart .inventoryItem": function(event, instance){
+		Session.set("inventory.dragItemId", this._id);
+		Session.set("inventory.dragItemOriginalContainer", this.container);
+		Session.set("inventory.dragItemOriginalCharacter", this.charId);
+	},
+	"dragend .inventoryItem": function(event, instance){
+		resetInvetorySession();
+	},
+	"dragover .itemContainer": function(event, instance){
+		event.preventDefault();
+	},
+	"dragover .equipmentContainer": function(event, instance){
+		var containerId = Session.get("inventory.dragItemOriginalContainer");
+		var charId = Session.get("inventory.dragItemOriginalCharacter");
+
+		if (this._id !== charId) return; //we can't equip something we don't own
+
+		var item = Items.findOne(Session.get("inventory.dragItemId"));
+		if (item.equipmentSlot === "none") return; //we can't equip this
+
+		event.preventDefault(); //this is a valid drop zone
+	},
+	"drop .container": function(event, instacne){
+		var item = Items.findOne(Session.get("inventory.dragItemId"));
+		if (item.container === this._id && !item.equipped) return; //the item is already here
+		if(Containers.findOne(this._id)){//the container exists
+			Items.update(item._id, {$set: {container: this._id, charId: this.charId, equipped: false}});
+		}
+		resetInvetorySession();
+	},
+	"drop .equipmentContainer": function(event, instance){
+		var containerId = Session.get("inventory.dragItemOriginalContainer");
+		var charId = Session.get("inventory.dragItemOriginalCharacter");
+
+		if (this._id !== charId) return; //we can't equip something we don't own
+
+		var item = Items.findOne(Session.get("inventory.dragItemId"));
+		if (item.equipmentSlot === "none") return; //we can't equip this
+		//equip the item if it's not equipped
+		if(!item.equipped) Items.update(item._id, {$set: {equipped: true, container: containerId, charId: charId}});
+		resetInvetorySession();
+	}
+})
+
+var resetInvetorySession = function(){
+	_.defer(function(){
+		Session.set("inventory.dragItemId", null);
+		Session.set("inventory.dragItemOriginalContainer", null);
+		Session.set("inventory.dragItemOriginalCharacter", null);
+	})
+}

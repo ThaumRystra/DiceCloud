@@ -21,7 +21,7 @@
 					</div>
 				</paper-shadow>
 				<!--Equipment-->
-				<paper-shadow class="card container">
+				<paper-shadow class="card container equipmentContainer">
 					<div class="equipmentTop" layout horizontal center>
 						<div class="containerName subhead" flex>
 							Equipment
@@ -32,24 +32,16 @@
 					<div flex class="equipmentMain">
 						{{#if armor}}
 						{{#with armor}}
-							<div class="itemSlot">
-								<paper-item class="inventoryItem armorItem" hero-id="main" {{detailHero}} layout horizontal>
-									{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
-								</paper-item>
-							</div>
+							{{>inventoryItem}}
 						{{/with}}
 						{{/if}}
 						{{#each equipment}}
-							<div class="itemSlot">
-								<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal>
-									{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
-								</paper-item>
-							</div>
+							{{>inventoryItem}}
 						{{/each}}
 					</div>
 				</paper-shadow>
 				{{#each containers}}
-					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
+					<paper-shadow class="card container itemContainer"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
 							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
 							<div class="caption" style="margin-right: 8px">{{valueString totalValue}}</div>
@@ -57,11 +49,7 @@
 						</div>
 						<div flex class="containerMain">
 							{{#each items ../_id _id}}
-								<div class="itemSlot">
-									<paper-item class="inventoryItem" hero-id="main" {{detailHero}} layout horizontal>
-										{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
-									</paper-item>
-								</div>
+								{{>inventoryItem}}
 							{{/each}}
 						</div>
 					</paper-shadow>
@@ -73,5 +61,13 @@
 			<paper-fab-menu-item id="addItem" icon="note-add" color="#d23f31" tooltip="Item"></paper-fab-menu-item>
 			<paper-fab-menu-item id="addContainer" icon="work" color="#d23f31" tooltip="Container"></paper-fab-menu-item>
 		</paper-fab-menu>
+	</div>
+</template>
+
+<template name="inventoryItem">
+	<div class="itemSlot">
+		<paper-item class="inventoryItem {{hidden}}" hero-id="main" {{detailHero}} layout horizontal draggable="true">
+			{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
+		</paper-item>
 	</div>
 </template>

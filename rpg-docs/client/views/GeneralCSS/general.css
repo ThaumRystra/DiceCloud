@@ -140,6 +140,10 @@ paper-button {
 	visibility: hidden;
 }
 
+.hidden{
+	opacity: 0;
+}
+
 @media (max-width: 640px) {
 	html /deep/ paper-action-dialog[global-dialog] {
 		top: 0 !important;
