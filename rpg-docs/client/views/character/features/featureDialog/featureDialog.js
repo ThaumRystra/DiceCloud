@@ -27,7 +27,14 @@ Template.featureDialog.events({
 		var value = event.target.value;
 		var featureId = this._id;
 		Features.update(featureId, {$set: {uses: value}});
-	}
+	},
+	"core-select #enabledDropdown": function(event){
+		var detail = event.originalEvent.detail;
+		if(!detail.isSelected) return;
+		var value = detail.item.getAttribute("name");
+		if (value === this.enabled) return;
+		Features.update(this._id, {$set: {enabled: value}});
+	},
 });
 
 Template.featureDialog.helpers({
@@ -36,5 +43,8 @@ Template.featureDialog.helpers({
 	},
 	usesSet: function(){
 		return _.isString(this.uses);
+	},
+	isEnabled: function(){
+		return this.enabled !== "disabled";
 	}
 });

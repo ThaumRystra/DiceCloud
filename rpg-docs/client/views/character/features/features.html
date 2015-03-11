@@ -65,9 +65,15 @@
 				{{#each features}}
 					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+							<paper-ripple fit></paper-ripple>
 							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
 							{{#if hasUses}}<div class="subhead" style="margin-right: 8px">{{usesLeft}}/{{usesValue}}</div>{{/if}}
 							<paper-ripple fit></paper-ripple>
+							{{#if canEnable}}
+								<core-tooltip label="Feature enabled" position="left">
+									<paper-checkbox class="enabledCheckbox" checked={{isEnabled}}></paper-checkbox>
+								</core-tooltip>
+							{{/if}}
 						</div>
 						{{#if description}}<div flex class="containerMain body1 featureDescription">{{description}}</div>{{/if}}
 						{{#if hasUses}}

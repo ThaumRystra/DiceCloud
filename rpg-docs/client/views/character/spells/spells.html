@@ -42,9 +42,13 @@
 							</div>
 							{{#if settings.showUnprepared}}
 								{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{evaluate charId maxPrepared}}</div>{{/if}}
-								<paper-icon-button class="finishPrep" icon="done"></paper-icon-button>
+								<core-tooltip label="Done" position="left">
+									<paper-icon-button class="finishPrep" icon="done"></paper-icon-button>
+							</core-tooltip>
 							{{else}}
-								<paper-icon-button class="prepSpells" icon="book"></paper-icon-button>
+								<core-tooltip label="Change prepared spells" position="left">
+									<paper-icon-button class="prepSpells" icon="book"></paper-icon-button>
+								</core-tooltip>
 							{{/if}}
 						</div>
 						<div class="containerMain">

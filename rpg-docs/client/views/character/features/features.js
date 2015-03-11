@@ -24,6 +24,12 @@ Template.features.helpers({
 	characterProficiencies: function(){
 		var char = Characters.findOne(this._id);
 		return char && char.proficiencies;
+	},
+	canEnable: function(){
+		return this.enabled !== "alwaysEnabled";
+	},
+	isEnabled: function(){
+		return this.enabled !== "disabled";
 	}
 });
 
@@ -83,6 +89,15 @@ Template.features.events({
 			data:     {charId: charId, field: "proficiencies", title: "Proficiencies", color: "q"},
 			heroId:   this._id + "proficiencies"
 		});
+	},
+	"tap .enabledCheckbox": function(event){
+		event.stopPropagation();
+	},
+	"change .enabledCheckbox": function(event){
+		var enabled;
+		if(this.enabled === "enabled") enabled = "disabled";
+		else enabled = "enabled";
+		Features.update(this._id, {$set: {enabled: enabled}});
 	}
 });
 

@@ -24,8 +24,17 @@
 				{{#if usesSet}}
 				<paper-input id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
 				{{/if}}
+				<paper-dropdown-menu id="enabledDropdown" label="Enable Feature">
+					<paper-dropdown layered class="dropdown">
+						<core-menu id="enabledMenu" class="menu"  selected={{enabled}} on-tap="onStatMenuTap">
+							<paper-item name="alwaysEnabled"> Always Enabled </paper-item>
+							<paper-item name="enabled">       Enabled        </paper-item>
+							<paper-item name="disabled">      Disabled       </paper-item>
+						</core-menu>
+					</paper-dropdown>
+				</paper-dropdown-menu>
 			</div>
-			{{> effectsEditList sourceId=_id charId=charId type="feature"}}
+			{{> effectsEditList sourceId=_id charId=charId type="feature" name=name enabled=isEnabled}}
 		{{/baseDialog}}
 	{{/with}}
 </template>
