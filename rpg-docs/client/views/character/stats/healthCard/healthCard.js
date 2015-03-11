@@ -20,8 +20,32 @@ Template.healthCard.helpers({
 	passDisabled: function(num){
 		return !(num === this.pass || num - 1 === this.pass)
 	},
-	dead: function(char){
+	dead: function(){
 		return this.fail >= 3;
+	},
+	multipliers: function(){
+		var char = Characters.findOne(this._id, {fields: {_id: 1} });
+		var multipliers = [
+			{name: "Acid",        value: char.attributeValue("acidMultiplier", 1)},
+			{name: "Bludgeoning", value: char.attributeValue("bludgeoningMultiplier", 1)},
+			{name: "Cold",        value: char.attributeValue("coldMultiplier", 1)},
+			{name: "Fire",        value: char.attributeValue("fireMultiplier", 1)},
+			{name: "Force",       value: char.attributeValue("forceMultiplier", 1)},
+			{name: "Lightning",   value: char.attributeValue("lightningMultiplier", 1)},
+			{name: "Necrotic",    value: char.attributeValue("necroticMultiplier", 1)},
+			{name: "Piercing",    value: char.attributeValue("piercingMultiplier", 1)},
+			{name: "Poison",      value: char.attributeValue("poisonMultiplier", 1)},
+			{name: "Psychic",     value: char.attributeValue("psychicMultiplier", 1)},
+			{name: "Radiant",     value: char.attributeValue("radiantMultiplier", 1)},
+			{name: "Slashing",    value: char.attributeValue("slashingMultiplier", 1)},
+			{name: "Thunder",     value: char.attributeValue("thunderMultiplier", 1)}
+		];
+		multipliers = _.groupBy(multipliers, "value");
+		return {
+			"immunities": multipliers["0"] || [],
+			"resistances": multipliers["0.5"] || [],
+			"weaknesses": multipliers["2"] || []
+		};
 	}
 })
 

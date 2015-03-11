@@ -175,7 +175,7 @@ Template.effectEdit.events({
 		if(!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
-		Effects.update(this._id, {$set: {value: value, calculation: ""}});
+		Effects.update(this._id, {$set: {value: value, calculation: "", operation: "mul"}});
 	},
 	"core-select #proficiencyDropDown": function(event){
 		var detail = event.originalEvent.detail;

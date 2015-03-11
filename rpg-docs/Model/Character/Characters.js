@@ -61,19 +61,19 @@ Schemas.Character = new SimpleSchema({
 	d12HitDice:       {type: Schemas.Attribute},
 
 	//vulnerabilities
-	acidMultiplier:        {type: Schemas.Vulnerability},
-	bludgeoningMultiplier: {type: Schemas.Vulnerability},
-	coldMultiplier:        {type: Schemas.Vulnerability},
-	fireMultiplier:        {type: Schemas.Vulnerability},
-	forceMultiplier:       {type: Schemas.Vulnerability},
-	lightningMultiplier:   {type: Schemas.Vulnerability},
-	necroticMultiplier:    {type: Schemas.Vulnerability},
-	piercingMultiplier:    {type: Schemas.Vulnerability},
-	poisonMultiplier:      {type: Schemas.Vulnerability},
-	psychicMultiplier:     {type: Schemas.Vulnerability},
-	radiantMultiplier:     {type: Schemas.Vulnerability},
-	slashingMultiplier:    {type: Schemas.Vulnerability},
-	thunderMultiplier:     {type: Schemas.Vulnerability},
+	acidMultiplier:        {type: Schemas.Attribute},
+	bludgeoningMultiplier: {type: Schemas.Attribute},
+	coldMultiplier:        {type: Schemas.Attribute},
+	fireMultiplier:        {type: Schemas.Attribute},
+	forceMultiplier:       {type: Schemas.Attribute},
+	lightningMultiplier:   {type: Schemas.Attribute},
+	necroticMultiplier:    {type: Schemas.Attribute},
+	piercingMultiplier:    {type: Schemas.Attribute},
+	poisonMultiplier:      {type: Schemas.Attribute},
+	psychicMultiplier:     {type: Schemas.Attribute},
+	radiantMultiplier:     {type: Schemas.Attribute},
+	slashingMultiplier:    {type: Schemas.Attribute},
+	thunderMultiplier:     {type: Schemas.Attribute},
 
 
 	//skills
@@ -178,7 +178,7 @@ var attributeBase = function(charId, statName){
 	check(statName, String);
 	var effects = Effects.find({charId: charId, stat: statName, enabled: true}).fetch();
 	effects = _.groupBy(effects, "operation");
-	var value = 0;
+	var value = _.contains(DAMAGE_MULTIPLIERS, statName)? 1 : 0;
 
 	//start with the highest base value
 	_.each(effects.base, function(effect){

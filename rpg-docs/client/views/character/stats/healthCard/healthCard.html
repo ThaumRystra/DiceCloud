@@ -10,6 +10,12 @@
 						  editable pin
 						  role="slider"
 						  ></paper-slider>
+			<!--Temp hitpoints go here-->
+			<div class="caption">
+				{{#if multipliers.immunities.length}} <div>Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}</div>{{/if}}
+				{{#if multipliers.resistances.length}}<div>Resistance: {{#each multipliers.resistances}} {{name}} {{/each}}</div>{{/if}}
+				{{#if multipliers.weaknesses.length}} <div>Weakness:   {{#each multipliers.weaknesses}}  {{name}} {{/each}}</div>{{/if}}
+			</div>
 			{{#if showDeathSave}}
 				{{#with deathSaveObject}}
 					<div class="padded" layout vertical center>
