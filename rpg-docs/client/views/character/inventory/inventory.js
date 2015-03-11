@@ -7,13 +7,10 @@ Template.inventory.helpers({
 		return Containers.find({charId: this._id}, {sort: {color: 1, name: 1}})
 	},
 	items: function(charId, containerId){
-		return Items.find({charId: charId, equipped: false, container: containerId }, {sort: {color: 1, name: 1}})
-	},
-	armor: function(){
-		return Items.findOne({ charId: this._id, equipped: true, equipmentSlot: "armor" })
+		return Items.find({charId: charId, equipped: false, container: containerId }, {sort: {color: 1, name: 1}});
 	},
 	equipment: function(){
-		return Items.find({ charId: this._id, equipped: true, equipmentSlot: {$ne: "armor"} })
+		return Items.find({ charId: this._id, equipped: true }, {sort: {color: 1, name: 1}});
 	},
 	showAddButtons: function(){
 		return Template.instance().showAddButtons.get();

@@ -30,11 +30,6 @@
 						<div class="caption">{{round equipmentWeight}}lbs</div>
 					</div>
 					<div flex class="equipmentMain">
-						{{#if armor}}
-						{{#with armor}}
-							{{>inventoryItem}}
-						{{/with}}
-						{{/if}}
 						{{#each equipment}}
 							{{>inventoryItem}}
 						{{/each}}
