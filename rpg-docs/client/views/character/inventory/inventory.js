@@ -30,7 +30,7 @@ Template.inventory.helpers({
 		Containers.find({charId: this._id, isCarried: true}).forEach(function(container){
 			weight += container.totalWeight();
 		});
-		Items.find({charId: this._id, equipped: false}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+		Items.find({charId: this._id, equipped: true}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
@@ -94,6 +94,15 @@ Template.inventory.events({
 			data:     {containerId: this._id, charId: this.charId},
 			heroId:   this._id
 		});
+	},
+	"tap .carriedCheckbox": function(event){
+		event.stopPropagation();
+	},
+	"change .carriedCheckbox": function(event){
+		var carried;
+		if(this.isCarried) carried = false;
+		else carried = true;
+		Containers.update(this._id, {$set: {isCarried: carried}});
 	}
 });
 

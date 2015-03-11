@@ -40,7 +40,10 @@
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
 							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
 							<div class="caption" style="margin-right: 8px">{{valueString totalValue}}</div>
-							<div class="caption">{{round totalWeight}}lbs</div>
+							<div class="caption" style="margin-right: 8px">{{round totalWeight}}lbs</div>
+							<core-tooltip label="Container carried" position="left">
+								<paper-checkbox class="carriedCheckbox" checked={{isCarried}}></paper-checkbox>
+							</core-tooltip>
 						</div>
 						<div flex class="containerMain">
 							{{#each items ../_id _id}}

@@ -23,12 +23,12 @@
 }
 
 /*To change the ink color for checked state:*/
-paper-checkbox.enabledCheckbox::shadow #ink[checked] {
+.containerTop paper-checkbox::shadow #ink[checked] {
 	color: #ffffff;
 }
 
 /*To change the checkbox checked color:*/
-paper-checkbox.enabledCheckbox::shadow #checkbox.checked {
+.containerTop paper-checkbox::shadow #checkbox.checked {
 	background-color: #ffffff;
 	background-color: rgba(255,255,255,0.27);
 	border-color: #ffffff;
@@ -36,22 +36,22 @@ paper-checkbox.enabledCheckbox::shadow #checkbox.checked {
 }
 
 /*ensure the checkmark is shown when ticked*/
-paper-checkbox.enabledCheckbox::shadow #checkbox.checked #checkmark {
+.containerTop paper-checkbox::shadow #checkbox.checked #checkmark {
 	display: initial;
 }
 
 /*To change the ink color for unchecked state:*/
-paper-checkbox.enabledCheckbox::shadow #ink {
+.containerTop paper-checkbox::shadow #ink {
 	color: #ffffff;
 }
 
 /*To change the checkbox unchecked color:*/
-paper-checkbox.enabledCheckbox::shadow #checkbox {
+.containerTop paper-checkbox::shadow #checkbox {
 	border-color: #ffffff;
 	border-color: rgba(255,255,255,0.54);
 }
 
 /*ensure checkmark isn't shown early*/
-paper-checkbox.enabledCheckbox::shadow #checkbox #checkmark {
+.containerTop paper-checkbox::shadow #checkbox #checkmark {
 	display: none;
 }
