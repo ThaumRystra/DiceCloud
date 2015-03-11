@@ -1,21 +1,21 @@
 div#stats {
 	-webkit-column-width: 200px;
-	   -moz-column-width: 200px;
-	        column-width: 200px;
+	-moz-column-width: 200px;
+	column-width: 200px;
 	-webkit-column-count: 4;
-       -moz-column-count: 4;
-            column-count: 4;
+	-moz-column-count: 4;
+	column-count: 4;
 }
 
 .containers {
 	-webkit-column-width: 300px;
-	   -moz-column-width: 300px;
-	        column-width: 300px;
+	-moz-column-width: 300px;
+	column-width: 300px;
 	-webkit-column-gap: 8px;
-	   -moz-column-gap: 8px;
-	        column-gap: 8px;
+	-moz-column-gap: 8px;
+	column-gap: 8px;
 	-moz-column-fill: balance;
-	     column-fill: balance;
+	column-fill: balance;
 	padding: 8px;
 }
 
@@ -25,7 +25,7 @@ div#stats {
 	justify-content: center;
 	flex-direction: row;
 	border-radius: 2px 0 0 2px;
-	
+
 	/* same style as display-1 */
 	font-size: 34px;
 	font-weight: 400;
@@ -41,7 +41,7 @@ div#stats {
 .containerRight {
 	padding: 16px;
 	cursor: pointer;
-	
+
 	/* same style as subhead */
 	font-size: 16px;
 	font-weight: 400;
@@ -58,7 +58,7 @@ div#stats {
 .resourceMax {
 	display: inline-block;
 	align-self: flex-end;
-	
+
 	/* same style as subhead */
 	font-size: 16px;
 	font-weight: 400;
@@ -69,7 +69,7 @@ div#stats {
 }
 
 .resourceMax:before {
-   content: "/";
+	content: "/";
 }
 
 .resourceButtons {
@@ -115,7 +115,8 @@ div#stats {
 
 .inventoryItem {
 	background: white;
-	transition: box-shadow 0.1s ease;
+	transition: box-shadow 0.3s ease,
+		opacity 0.3s ease;
 	height: 40px;
 	margin: 1px 0 1px 0;
 	font-size: 16px;
@@ -139,7 +140,7 @@ div#stats {
 }
 
 .inventoryItem[hero] {
-	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+	box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.37);
 }
 
 .itemSlot {

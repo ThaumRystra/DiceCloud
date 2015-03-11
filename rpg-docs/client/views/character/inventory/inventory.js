@@ -134,6 +134,7 @@ Template.layout.events({
 	},
 	"drop .container": function(event, instacne){
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
+		if (!item) return; //the item doesn't exist
 		if (item.container === this._id && !item.equipped) return; //the item is already here
 		if(Containers.findOne(this._id)){//the container exists
 			Items.update(item._id, {$set: {container: this._id, charId: this.charId, equipped: false}});
