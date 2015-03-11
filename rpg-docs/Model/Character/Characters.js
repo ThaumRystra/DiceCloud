@@ -157,34 +157,11 @@ Schemas.Character = new SimpleSchema({
 	initiative: 		{type: Schemas.Skill},
 	"initiative.ability":		{ type: String, defaultValue: "dexterity" },
 
-	strengthAttack:		{type: Schemas.Skill},
-	"strengthAttack.ability": 	{type: String,defaultValue: "strength"},
-
-	dexterityAttack:	{type: Schemas.Skill},
-	"dexterityAttack.ability":	{ type: String, defaultValue: "dexterity" },
-
-	constitutionAttack:	{type: Schemas.Skill},
-	"constitutionAttack.ability":{ type: String, defaultValue: "constitution" },
-
-	intelligenceAttack:	{type: Schemas.Skill},
-	"intelligenceAttack.ability":{ type: String, defaultValue: "intelligence" },
-
-	wisdomAttack:		{type: Schemas.Skill},
-	"wisdomAttack.ability":		{ type: String, defaultValue: "wisdom" },
-
-	charismaAttack:		{type: Schemas.Skill},
-	"charismaAttack.ability":	{ type: String, defaultValue: "charisma" },
-
-	rangedAttack:		{type: Schemas.Skill},
-	"rangedAttack.ability":		{ type: String, defaultValue: "dexterity" },
-
 	dexterityArmor:		{type: Schemas.Skill},
 	"dexterityArmor.ability":	{ type: String, defaultValue: "dexterity" },
 
 	//mechanics
 	deathSave:      { type: Schemas.DeathSave },
-	time:           { type: Number, min: 0, decimal: true, defaultValue: 0},
-	initiativeRoll: { type: Number, min: 0, max: 1, decimal: true, defaultValue: 0},
 
 	//permissions
 	owner: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
@@ -192,7 +169,7 @@ Schemas.Character = new SimpleSchema({
 	writers: { type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [] },
 	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"},
 	//TODO add per-character settings
-	"settings.experiencesInc": {type: Number, defaultValue: 20},
+	"settings.experiencesInc": {type: Number, defaultValue: 20}, //how many experiences to load at a time in XP table
 });
 
 Characters.attachSchema(Schemas.Character);
