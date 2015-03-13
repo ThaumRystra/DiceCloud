@@ -4,7 +4,21 @@ Router.configure({
 });
 
 Router.map( function () {
+	/*
 	this.route('home',
+			   {
+		path: '/',
+		waitOn: function(){
+			return Meteor.subscribe("characterList", Meteor.userId());
+		},
+		data: {
+			characters: function(){
+				return Characters.find({}, {fields: {_id: 1}});
+			}
+		}
+	});*/ //add a home route and change characterList route
+
+	this.route('characterList',
 			   {
 		path: '/',
 		waitOn: function(){
@@ -22,7 +36,7 @@ Router.map( function () {
 		waitOn: function(){
 			return [
 				Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId()),
-				];
+			];
 		},
 		data: function() {
 			var data = Characters.findOne({_id: this.params._id}, {fields: {_id: 1, name: 1, color: 1}});
@@ -48,7 +62,7 @@ Router.map( function () {
 			return data;
 		}
 	});
-	
+
 	this.route('loading', {
 		path: '/loading'
 	});

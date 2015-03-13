@@ -1,4 +1,4 @@
 Meteor.publish("characterList",function(userId){
-	//TODO also return characters this user can view
-	return Characters.find();
+	if(!userId) return;
+	return Characters.find({$or: [ {readers: userId}, {writers: userId}, {owner: userId} ] });
 });

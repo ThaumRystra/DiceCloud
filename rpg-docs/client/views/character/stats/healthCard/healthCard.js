@@ -1,4 +1,7 @@
 Template.healthCard.helpers({
+	tempHitPoints: function(){
+		return TemporaryHitPoints.find({charId: this._id});
+	},
 	showDeathSave: function(){
 		return this.attributeValue("hitPoints") <= 0;
 	},
@@ -54,6 +57,15 @@ Template.healthCard.events({
 		var value = event.currentTarget.value;
 		var adjustment = value - this.attributeBase("hitPoints");
 		Characters.update(this._id, {$set: {"hitPoints.adjustment": adjustment}});
+	},
+	"change .tempHitPointSlider": function(event){
+		var value = event.currentTarget.value;
+		var used = this.maximum - value;
+		TemporaryHitPoints.update(this._id, {$set: {"used": used}});
+	},
+	"tap #addTempHP": function(event){
+		var max = prompt("Add temporary hitpoints", "10");
+		TemporaryHitPoints.insert({charId: this._id, maximum: max, used: 0});
 	},
 	"tap .failBubble": function(event){
 		if(event.currentTarget.disabled) return;

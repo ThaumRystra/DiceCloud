@@ -14,5 +14,6 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 		Notes.find({charId: characterId}),
 		Spells.find({charId: characterId}),
 		SpellLists.find({charId: characterId}),
+		TemporaryHitPoints.find({charId: characterId}),
 	];
 });

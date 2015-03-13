@@ -1,7 +1,8 @@
 <template name="healthCard">
 	<paper-shadow class="card container healthCard" hero-id="main" {{detailHero}} layout horizontal wrap>
-		<div class="green white-text subhead padded leftRound" layout horizontal center>
+		<div class="green white-text subhead padded leftRound" layout vertical center-justified>
 			Hit Points
+			<paper-icon-button class="white54" id="addTempHP" icon="add"></paper-icon-button>
 		</div>
 		<div class="padded" flex layout vertical center-justified style="min-width: 180px;">
 			<paper-slider id="hitPointSlider"
@@ -10,7 +11,14 @@
 						  editable pin
 						  role="slider"
 						  ></paper-slider>
-			<!--Temp hitpoints go here-->
+			{{#each tempHitPoints}}
+				<paper-slider class="tempHitPointSlider"
+						  value={{left}}
+						  max={{maximum}} 
+						  editable pin
+						  role="slider"
+						  ></paper-slider>
+			{{/each}}
 			<div class="caption">
 				{{#if multipliers.immunities.length}} <div>Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}</div>{{/if}}
 				{{#if multipliers.resistances.length}}<div>Resistance: {{#each multipliers.resistances}} {{name}} {{/each}}</div>{{/if}}

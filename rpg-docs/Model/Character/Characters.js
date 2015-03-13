@@ -164,7 +164,7 @@ Schemas.Character = new SimpleSchema({
 	deathSave:      { type: Schemas.DeathSave },
 
 	//permissions
-	owner: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
+	owner:   { type: String, regEx: SimpleSchema.RegEx.Id },
 	readers: { type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [] },
 	writers: { type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [] },
 	color:   {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"},
