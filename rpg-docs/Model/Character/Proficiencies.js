@@ -24,3 +24,6 @@ Schemas.Proficiency = new SimpleSchema({
 });
 
 Proficiencies.attachSchema(Schemas.Proficiency);
+
+Proficiencies.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Proficiencies.deny(CHARACTER_SUBSCHEMA_DENY);

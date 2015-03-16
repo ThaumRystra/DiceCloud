@@ -20,3 +20,6 @@ Schemas.Experience = new SimpleSchema({
 });
 
 Experiences.attachSchema(Schemas.Experience);
+
+Experiences.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Experiences.deny(CHARACTER_SUBSCHEMA_DENY);

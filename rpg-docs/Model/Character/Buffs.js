@@ -26,3 +26,5 @@ Buffs.before.remove(function (userId, buff) {
 	});
 });
 
+Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Buffs.deny(CHARACTER_SUBSCHEMA_DENY);

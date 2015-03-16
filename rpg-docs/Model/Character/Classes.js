@@ -20,3 +20,6 @@ Schemas.Class = new SimpleSchema({
 });
 
 Classes.attachSchema(Schemas.Class);
+
+Classes.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Classes.deny(CHARACTER_SUBSCHEMA_DENY);

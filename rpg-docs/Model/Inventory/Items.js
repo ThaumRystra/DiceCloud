@@ -55,3 +55,5 @@ Items.after.update(function (userId, item, fieldNames, modifier, options) {
 		Attacks.update(attack._id, { $set: {charId: item.charId, enabled: item.equipped, name: item.name} });
 	});
 }, {fetchPrevious: false});
+
+Items.allow(CHARACTER_SUBSCHEMA_ALLOW);

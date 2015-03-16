@@ -66,3 +66,6 @@ Schemas.Attack = new SimpleSchema({
 });
 
 Attacks.attachSchema(Schemas.Attack);
+
+Attacks.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Attacks.deny(CHARACTER_SUBSCHEMA_DENY);

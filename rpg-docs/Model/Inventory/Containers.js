@@ -39,3 +39,5 @@ Containers.before.remove(function (userId, container) {
 		});
 	}
 });
+
+Containers.allow(CHARACTER_SUBSCHEMA_ALLOW);

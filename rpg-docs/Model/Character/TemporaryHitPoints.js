@@ -33,3 +33,6 @@ TemporaryHitPoints.after.update(function (userId, thp, fieldNames, modifier, opt
 		TemporaryHitPoints.remove(thp._id);
 	}
 }, {fetchPrevious: false});
+
+TemporaryHitPoints.allow(CHARACTER_SUBSCHEMA_ALLOW);
+TemporaryHitPoints.deny(CHARACTER_SUBSCHEMA_DENY);

@@ -8,3 +8,6 @@ Schemas.Note = new SimpleSchema({
 });
 
 Notes.attachSchema(Schemas.Note);
+
+Notes.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Notes.deny(CHARACTER_SUBSCHEMA_DENY);

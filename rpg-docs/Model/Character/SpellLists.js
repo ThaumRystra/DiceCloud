@@ -32,3 +32,6 @@ SpellLists.before.remove(function (userId, list) {
 		});
 	}
 });
+
+SpellLists.allow(CHARACTER_SUBSCHEMA_ALLOW);
+SpellLists.deny(CHARACTER_SUBSCHEMA_DENY);

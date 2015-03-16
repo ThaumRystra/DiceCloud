@@ -20,3 +20,6 @@ Schemas.Spell = new SimpleSchema({
 });
 
 Spells.attachSchema(Schemas.Spell);
+
+Spells.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Spells.deny(CHARACTER_SUBSCHEMA_DENY);

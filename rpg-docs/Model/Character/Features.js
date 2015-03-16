@@ -36,3 +36,6 @@ Features.after.update(function (userId, feature, fieldNames, modifier, options) 
 		Effects.update(effect._id, { $set: {charId: feature.charId, enabled: enabled, name: feature.name} });
 	});
 }, {fetchPrevious: false});
+
+Features.allow(CHARACTER_SUBSCHEMA_ALLOW);
+Features.deny(CHARACTER_SUBSCHEMA_DENY);
