@@ -31,6 +31,10 @@ this.GlobalUI = (function() {
 		})(this));
 	};
 
+	GlobalUI.closeDialog = function() {
+		return this.dialog.close();
+	};
+
 	//To show a detail, first animate the click, with raising z-depth
 	//then call this function with a template and data
 	//the element should have a hero-id of detail-main
@@ -52,14 +56,33 @@ this.GlobalUI = (function() {
 		Session.set("global.ui.detailData", opts.data);
 		Session.set("global.ui.detailTemplate", opts.template);
 		Session.set("global.ui.detailHeroId", opts.heroId);
+		if(!!(window.history && window.history.pushState)){
+			history.replaceState({detail: "closed", opts: opts}, "Detail Dialog");
+			history.pushState({detail: "opened", opts: opts}, "Detail Dialog");
+		}
 	};
 
 	GlobalUI.closeDetail = function(){
-		Session.set("global.ui.detailShow", false);
+		if(!!(window.history && window.history.pushState)){
+			history.back();
+		} else{
+			Session.set("global.ui.detailShow", false);
+		}
 	};
 
-	GlobalUI.closeDialog = function() {
-		return this.dialog.close();
+	GlobalUI.popStateHandler = function(e){
+		console.log();
+		var state = e.originalEvent.state;
+		if(state) {
+			if(state.detail === "closed"){
+				Session.set("global.ui.detailShow", false);
+			} else if(state.detail === "opened"){
+				var opts = state.opts;
+				Session.set("global.ui.detailData", opts.data);
+				Session.set("global.ui.detailTemplate", opts.template);
+				Session.set("global.ui.detailHeroId", opts.heroId);
+			}
+		}
 	};
 
 	return GlobalUI;
