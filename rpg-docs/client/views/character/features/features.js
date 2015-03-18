@@ -26,10 +26,7 @@ Template.features.helpers({
 		return char && char.proficiencies;
 	},
 	canEnable: function(){
-		return this.enabled !== "alwaysEnabled";
-	},
-	isEnabled: function(){
-		return this.enabled !== "disabled";
+		return !this.alwaysEnabled;
 	}
 });
 
@@ -94,9 +91,7 @@ Template.features.events({
 		event.stopPropagation();
 	},
 	"change .enabledCheckbox": function(event){
-		var enabled;
-		if(this.enabled === "enabled") enabled = "disabled";
-		else enabled = "enabled";
+		var enabled = !this.enabled;
 		Features.update(this._id, {$set: {enabled: enabled}});
 	}
 });

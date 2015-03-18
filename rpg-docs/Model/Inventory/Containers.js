@@ -27,6 +27,10 @@ Containers.helpers({
 			weight += item.totalWeight();
 		});
 		return weight;
+	},
+	moveToCharacter: function(characterId){
+		if(this.charId === characterId) return;
+		Items.update(this._id, {$set: {charId: characterId}});
 	}
 });
 

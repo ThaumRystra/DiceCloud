@@ -32,11 +32,31 @@ Items.helpers({
 		} else{
 			return this.name;
 		}
+	},
+	equip: function(){
+		Items.update(this._id, {$set: {enabled: true}});
+	},
+	unequip: function(){
+		Items.update(this._id, {$set: {enabled: false}});
+	},
+	moveToContainer: function(containerId){
+		Items.update(this._id, {$set: {"parent.collection": "Containers", "parent.id": containerId, enabled: false}});
+	},
+	moveToCharacter: function(characterId){
+		if(this.charId === characterId) return;
+		Items.update(this._id, {$set: {"parent.collection": "Characters", "parent.id": characterId, charId: characterId, enabled: false}});
+	}
+});
+
+Items.before.update(function(userId, doc, fieldNames, modifier, options){
+	if(modifier && modifier.$set && modifier.$set.enabled){
+		modifier.$set["parent.collection"] = "Characters";
+		modifier.$set["parent.id"] = doc.charId;
 	}
 });
 
 Items.attachBehaviour('softRemovable');
 makeChild(Items); //children of containers
-makeParent(Items); //parents of effects and attacks
+makeParent(Items, ['name', 'enabled']); //parents of effects and attacks
 
 Items.allow(CHARACTER_SUBSCHEMA_ALLOW);

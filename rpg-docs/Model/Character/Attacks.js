@@ -66,7 +66,7 @@ Schemas.Attack = new SimpleSchema({
 Attacks.attachSchema(Schemas.Attack);
 
 Attacks.attachBehaviour('softRemovable');
-makeChild(Attacks); //children of lots of things
+makeChild(Attacks, ['name', 'enabled']); //children of lots of things
 
 Attacks.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Attacks.deny(CHARACTER_SUBSCHEMA_DENY);

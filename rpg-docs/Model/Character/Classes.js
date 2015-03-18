@@ -22,7 +22,7 @@ Schemas.Class = new SimpleSchema({
 Classes.attachSchema(Schemas.Class);
 
 Classes.attachBehaviour('softRemovable');
-makeParent(Classes); //parents of effects and attacks
+makeParent(Classes, 'name'); //parents of effects and attacks
 
 Classes.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Classes.deny(CHARACTER_SUBSCHEMA_DENY);

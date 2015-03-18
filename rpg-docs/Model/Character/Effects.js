@@ -90,7 +90,7 @@ Characters.after.insert(function (userId, char) {
 });
 
 Effects.attachBehaviour('softRemovable');
-makeChild(Effects); //children of lots of things
+makeChild(Effects, ['name', 'enabled']); //children of lots of things
 
 Effects.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Effects.deny(CHARACTER_SUBSCHEMA_DENY);

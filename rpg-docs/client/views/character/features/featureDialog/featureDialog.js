@@ -32,8 +32,16 @@ Template.featureDialog.events({
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if (value === this.enabled) return;
-		Features.update(this._id, {$set: {enabled: value}});
+		var setter;
+		if(value === "enabled"){
+			setter = {enabled: true, alwaysEnabled: false};
+		} else if (value === "disabled"){
+			setter = {enabled: false, alwaysEnabled: false};
+		} else{
+			setter = {enabled: true, alwaysEnabled: true};
+		}
+		if (setter.enabled === this.enabled && setter.alwaysEnabled === this.alwaysEnabled) return;
+		Features.update(this._id, {$set: setter});
 	},
 });
 

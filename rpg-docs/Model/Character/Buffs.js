@@ -21,7 +21,7 @@ Schemas.Buff = new SimpleSchema({
 Buffs.attachSchema(Schemas.Buff);
 
 Buffs.attachBehaviour('softRemovable');
-makeParent(Buffs); //parents of effects and attacks
+makeParent(Buffs, 'name'); //parents of effects and attacks
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);

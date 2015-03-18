@@ -7,7 +7,6 @@ var childSchema = new SimpleSchema({
 var joinWithDefaultKeys = function(keys){
 	var defaultKeys = [
 		'charId',
-		'enabled',
 		'removed',
 		'removedAt',
 		'removedBy',
@@ -17,11 +16,21 @@ var joinWithDefaultKeys = function(keys){
 	return _.union(keys, defaultKeys);
 }
 
+var limitModifierToKeys = function(modifier, keys){
+	if(!modifier) return;
+	modifier = _.pick(modifier, ['$set', '$unset']);
+	if(modifier.$set) modifier.$set   = _.pick(modifier.$set,   keys);
+	if(modifier.$unset) modifier.$unset = _.pick(modifier.$unset, keys);
+	if(_.isEmpty(modifier.$set))   delete modifier.$set;
+	if(_.isEmpty(modifier.$unset)) delete modifier.$unset;
+	return modifier;
+}
+
 var childCollections = [];
 
 makeChild = function(collection, inheritedKeys){
-	collection.inheritedKeys = joinWithDefaultKeys(inheritedKeys);
-
+	inheritedKeys = inheritedKeys || [];
+	if(inheritedKeys) collection.inheritedKeys = joinWithDefaultKeys(inheritedKeys);
 	collection.helpers({
 		//returns the parent even if it's removed
 		getParent: function(){
@@ -53,16 +62,13 @@ makeChild = function(collection, inheritedKeys){
 };
 
 makeParent = function(collection, donatedKeys){
-	collection.donatedKeys = joinWithDefaultKeys(donatedKeys);
+	donatedKeys = joinWithDefaultKeys(donatedKeys);
 
 	//after changing, push the changes to all children
 	collection.after.update(function (userId, doc, fieldNames, modifier, options) {
-		if(!modifier) return;
-		modifier = _.pick(modifier, ['$set', '$unset']);
-		modifier.$set   = _.pick(modifier.$set,   donatedKeys);
-		modifier.$unset = _.pick(modifier.$unset, donatedKeys);
+		modifier = limitModifierToKeys(modifier, donatedKeys);
 		doc = _.pick(doc, ['_id','charId']);
-		Meteor.call('updateChildren', doc, modifier);
+		Meteor.call('updateChildren', doc, modifier, true);
 	});
 
 	collection.after.remove(function (userId, doc) {
@@ -86,17 +92,19 @@ var checkPermission = function(userId, charId){
 };
 
 Meteor.methods({
-	updateChildren: function (parent, modifier) {
+	updateChildren: function (parent, modifier, limitToInheritance) {
 		check(parent, {_id: String, charId: String});
 		check(modifier, Object);
 		checkPermission(this.userId, parent.charId);
-
 		_.each(childCollections, function(collection){
-			collection.update(
-				{charId: parent.charId, 'parent.id': parent._id},
-				modifier,
-				{multi: true}
-			);
+			var thisModifier;
+			if(limitToInheritance){
+				thisModifier = limitModifierToKeys(modifier, collection.inheritedKeys);
+			} else{
+				thisModifier = _.clone(modifier);
+			}
+			if(_.isEmpty(thisModifier)) return;
+			collection.update( {'parent.id': parent._id}, thisModifier, {multi: true});
 		});
 	},
 	removeChildren: function (parent) {
