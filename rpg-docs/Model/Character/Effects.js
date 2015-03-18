@@ -35,11 +35,9 @@ Schemas.Effect = new SimpleSchema({
 		defaultValue: "editable",
 		allowedValues: ["editable", "feature", "class", "buff", "equipment", "racial", "inate"]
 	},
-	//the id of the feature, buff or item that created this effect
-	sourceId: {
-		type: String, 
-		regEx: SimpleSchema.RegEx.Id,
-		optional: true
+	//the thing that created this effect
+	parent: {
+		type: Schemas.Parent
 	},
 	//which stat the effect is applied to
 	stat: {
@@ -90,6 +88,9 @@ Characters.after.insert(function (userId, char) {
 		});
 	}
 });
+
+Effects.attachBehaviour('softRemovable');
+makeChild(Effects); //children of lots of things
 
 Effects.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Effects.deny(CHARACTER_SUBSCHEMA_DENY);

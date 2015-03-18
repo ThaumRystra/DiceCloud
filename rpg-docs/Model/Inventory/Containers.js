@@ -30,14 +30,7 @@ Containers.helpers({
 	}
 });
 
-Containers.before.remove(function (userId, container) {
-	if(Meteor.isServer){
-		Items.remove({container: container._id});
-	} else {
-		Items.find({container: container._id}).forEach(function(item){
-			Items.remove(item._id);
-		});
-	}
-});
+Containers.attachBehaviour('softRemovable');
+makeParent(Containers); //parents of items
 
 Containers.allow(CHARACTER_SUBSCHEMA_ALLOW);

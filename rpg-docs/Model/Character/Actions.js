@@ -27,5 +27,8 @@ Schemas.Action = new SimpleSchema({
 
 Actions.attachSchema(Schemas.Action);
 
+Actions.attachBehaviour('softRemovable');
+makeChild(Actions);
+
 Actions.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Actions.deny(CHARACTER_SUBSCHEMA_DENY);

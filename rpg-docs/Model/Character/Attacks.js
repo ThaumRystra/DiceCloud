@@ -49,10 +49,8 @@ Schemas.Attack = new SimpleSchema({
 		allowedValues: ["editable", "feature", "class", "buff", "equipment", "racial", "inate"]
 	},
 	//the id of the feature, buff or item that created this effect
-	sourceId: {
-		type: String, 
-		regEx: SimpleSchema.RegEx.Id,
-		optional: true
+	parent: {
+		type: Schemas.Parent
 	},
 	color: {
 		type: String, 
@@ -66,6 +64,9 @@ Schemas.Attack = new SimpleSchema({
 });
 
 Attacks.attachSchema(Schemas.Attack);
+
+Attacks.attachBehaviour('softRemovable');
+makeChild(Attacks); //children of lots of things
 
 Attacks.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Attacks.deny(CHARACTER_SUBSCHEMA_DENY);

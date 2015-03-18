@@ -15,15 +15,12 @@ Schemas.Proficiency = new SimpleSchema({
 		defaultValue: "editable",
 		allowedValues: ["editable", "feature", "buff", "equipment", "inate"]
 	},
-	//the id of the feature, buff or item that created this effect
-	sourceId: {
-		type: String, 
-		regEx: SimpleSchema.RegEx.Id,
-		optional: true
-	},
 });
 
 Proficiencies.attachSchema(Schemas.Proficiency);
+
+Proficiencies.attachBehaviour('softRemovable');
+makeChild(Proficiencies); 
 
 Proficiencies.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Proficiencies.deny(CHARACTER_SUBSCHEMA_DENY);

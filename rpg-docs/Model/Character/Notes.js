@@ -9,5 +9,7 @@ Schemas.Note = new SimpleSchema({
 
 Notes.attachSchema(Schemas.Note);
 
+Notes.attachBehaviour('softRemovable');
+
 Notes.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Notes.deny(CHARACTER_SUBSCHEMA_DENY);

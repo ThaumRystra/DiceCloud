@@ -23,15 +23,8 @@ SpellLists.helpers({
 	}
 });
 
-SpellLists.before.remove(function (userId, list) {
-	if(Meteor.isServer){
-		Spells.remove({listId: list._id});
-	} else {
-		Spells.find({listId: list._id}).forEach(function(spell){
-			Spells.remove(spell._id);
-		});
-	}
-});
+SpellLists.attachBehaviour('softRemovable');
+makeParent(SpellLists); //parents of spells
 
 SpellLists.allow(CHARACTER_SUBSCHEMA_ALLOW);
 SpellLists.deny(CHARACTER_SUBSCHEMA_DENY);

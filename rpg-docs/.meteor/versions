@@ -15,6 +15,7 @@ blaze-tools@1.0.3
 boilerplate-generator@1.0.3
 callback-hook@1.0.3
 check@1.0.5
+coffeescript@1.0.6
 conielo:autoform-polymer-paper@0.1.1
 dburles:collection-helpers@1.0.2
 dburles:mongo-collection-instances@0.3.3
@@ -67,7 +68,6 @@ retry@1.0.3
 routepolicy@1.0.5
 service-configuration@1.0.4
 session@1.1.0
-sewdn:collection-behaviours@0.2.0
 sha@1.0.3
 spacebars@1.0.6
 spacebars-compiler@1.0.5
@@ -79,3 +79,5 @@ underscore@1.0.3
 url@1.0.4
 webapp@1.2.0
 webapp-hashing@1.0.3
+zimme:collection-behaviours@1.0.3
+zimme:collection-softremovable@1.0.3

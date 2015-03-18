@@ -21,5 +21,7 @@ Schemas.Experience = new SimpleSchema({
 
 Experiences.attachSchema(Schemas.Experience);
 
+Experiences.attachBehaviour('softRemovable');
+
 Experiences.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Experiences.deny(CHARACTER_SUBSCHEMA_DENY);

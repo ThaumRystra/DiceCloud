@@ -2,7 +2,6 @@ Spells = new Mongo.Collection("spells");
 
 Schemas.Spell = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
-	listId:      {type: String, regEx: SimpleSchema.RegEx.Id},
 	prepared:    {type: String, defaultValue: "unprepared", allowedValues: ["prepared","unprepared","always"]},
 	name:		 {type: String, trim: false},
 	description: {type: String, optional: true, trim: false},
@@ -20,6 +19,9 @@ Schemas.Spell = new SimpleSchema({
 });
 
 Spells.attachSchema(Schemas.Spell);
+
+Spells.attachBehaviour('softRemovable');
+makeChild(Spells); //children of spell lists
 
 Spells.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Spells.deny(CHARACTER_SUBSCHEMA_DENY);

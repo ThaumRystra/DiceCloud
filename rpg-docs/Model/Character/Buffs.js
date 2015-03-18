@@ -20,11 +20,8 @@ Schemas.Buff = new SimpleSchema({
 
 Buffs.attachSchema(Schemas.Buff);
 
-Buffs.before.remove(function (userId, buff) {
-	Effects.find({sourceId: buff._id, type: "buff"}).forEach(function(effect){
-		Effects.remove(effect._id);
-	});
-});
+Buffs.attachBehaviour('softRemovable');
+makeParent(Buffs); //parents of effects and attacks
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);

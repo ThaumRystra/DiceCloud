@@ -1,19 +1,29 @@
 Meteor.publish("singleCharacter", function(characterId, userId){
-	//TODO check if this characer can be viewed by this user
-	return [
-		Characters.find({_id: characterId}),
-		
-		Actions.find({charId: characterId}),
-		Attacks.find({charId: characterId}),
-		Classes.find({charId: characterId}),
-		Containers.find({charId: characterId}),
-		Effects.find({charId: characterId}),
-		Experiences.find({charId: characterId}),
-		Features.find({charId: characterId}),
-		Items.find({charId: characterId}),
-		Notes.find({charId: characterId}),
-		Spells.find({charId: characterId}),
-		SpellLists.find({charId: characterId}),
-		TemporaryHitPoints.find({charId: characterId}),
-	];
+	if( 
+		Characters.findOne({
+			_id: characterId,
+			$or: [
+				{readers: userId}, 
+				{writers: userId}, 
+				{owner: userId} 
+			]
+		})
+	){
+		return [
+			Characters.find({_id: characterId}),
+			//get all the assets for this character including soft deleted ones
+			Actions.find           ({charId: characterId}, {removed: true}),
+			Attacks.find           ({charId: characterId}, {removed: true}),
+			Classes.find           ({charId: characterId}, {removed: true}),
+			Containers.find        ({charId: characterId}, {removed: true}),
+			Effects.find           ({charId: characterId}, {removed: true}),
+			Experiences.find       ({charId: characterId}, {removed: true}),
+			Features.find          ({charId: characterId}, {removed: true}),
+			Items.find             ({charId: characterId}, {removed: true}),
+			Notes.find             ({charId: characterId}, {removed: true}),
+			Spells.find            ({charId: characterId}, {removed: true}),
+			SpellLists.find        ({charId: characterId}, {removed: true}),
+			TemporaryHitPoints.find({charId: characterId}, {removed: true}),
+		];
+	}
 });
