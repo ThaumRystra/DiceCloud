@@ -1,5 +1,5 @@
 //set up the collection for containers
-Containers = new Meteor.Collection("containers");
+Containers = new Mongo.Collection("containers");
 
 Schemas.Container = new SimpleSchema({
 	name: 		{ type: String, trim: false },

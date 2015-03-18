@@ -1,4 +1,4 @@
-SpellLists = new Meteor.Collection("spellLists");
+SpellLists = new Mongo.Collection("spellLists");
 
 Schemas.SpellLists = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},

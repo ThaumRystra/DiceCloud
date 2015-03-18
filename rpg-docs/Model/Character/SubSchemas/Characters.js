@@ -1,5 +1,5 @@
 //set up the collection for characters
-Characters = new Meteor.Collection("characters");
+Characters = new Mongo.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings

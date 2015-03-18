@@ -1,4 +1,4 @@
-Parties = new Meteor.Collection("parties");
+Parties = new Mongo.Collection("parties");
 
 Schemas.Party = new SimpleSchema({
 	//each character/monster can only be in one party at a time

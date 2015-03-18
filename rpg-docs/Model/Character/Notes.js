@@ -1,4 +1,4 @@
-Notes = new Meteor.Collection("notes");
+Notes = new Mongo.Collection("notes");
 
 Schemas.Note = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},

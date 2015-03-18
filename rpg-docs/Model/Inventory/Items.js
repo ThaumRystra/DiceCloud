@@ -1,4 +1,4 @@
-Items = new Meteor.Collection('items');
+Items = new Mongo.Collection('items');
 
 Schemas.Item = new SimpleSchema({
 	name: 		{type: String, defaultValue: "New Item", trim: false},

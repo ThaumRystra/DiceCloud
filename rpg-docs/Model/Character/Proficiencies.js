@@ -1,4 +1,4 @@
-Proficiencies = new Meteor.Collection("proficiencies");
+Proficiencies = new Mongo.Collection("proficiencies");
 
 Schemas.Proficiency = new SimpleSchema({
 	charId: {

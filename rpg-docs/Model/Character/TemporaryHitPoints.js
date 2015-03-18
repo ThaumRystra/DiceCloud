@@ -1,4 +1,4 @@
-TemporaryHitPoints = new Meteor.Collection("temporaryHitPoints");
+TemporaryHitPoints = new Mongo.Collection("temporaryHitPoints");
 
 Schemas.TemporaryHitPoints = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},

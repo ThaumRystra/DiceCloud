@@ -1,4 +1,4 @@
-Actions = new Meteor.Collection("actions");
+Actions = new Mongo.Collection("actions");
 
 /*
  * Actions are given to a character by items and features

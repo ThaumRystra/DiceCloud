@@ -1,4 +1,4 @@
-Classes = new Meteor.Collection("classes");
+Classes = new Mongo.Collection("classes");
 
 Schemas.Class = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},

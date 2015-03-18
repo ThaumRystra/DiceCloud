@@ -1,4 +1,4 @@
-Features = new Meteor.Collection("features");
+Features = new Mongo.Collection("features");
 
 Schemas.Feature = new SimpleSchema({
 	charId:		{type: String, regEx: SimpleSchema.RegEx.Id},

@@ -1,4 +1,4 @@
-Attacks = new Meteor.Collection("attacks");
+Attacks = new Mongo.Collection("attacks");
 
 /*
  * Attacks are given to a character by items and features

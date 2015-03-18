@@ -1,4 +1,4 @@
-Effects = new Meteor.Collection("effects");
+Effects = new Mongo.Collection("effects");
 
 /*
  * Effects are reason-value attached to skills and abilities

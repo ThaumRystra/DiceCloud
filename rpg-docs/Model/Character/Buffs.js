@@ -1,4 +1,4 @@
-Buffs = new Meteor.Collection("buffs");
+Buffs = new Mongo.Collection("buffs");
 
 //buffs are temporary once applied and store things which expire and their expiry time
 Schemas.Buff = new SimpleSchema({

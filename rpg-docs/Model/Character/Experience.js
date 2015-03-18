@@ -1,4 +1,4 @@
-Experiences = new Meteor.Collection("experience");
+Experiences = new Mongo.Collection("experience");
 
 Schemas.Experience = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
