@@ -16,22 +16,23 @@ Template.spells.helpers({
 		return SpellLists.find({charId: this._id}, {sort: {color: 1, name: 1}});
 	},
 	spellCount: function(list, charId){
+		if(!list || !list.settings) return;
 		if(list.settings.showUnprepared){
-			return Spells.find( {charId: charId, listId: list._id, level: this.level}, 
+			return Spells.find( {charId: charId, "parent.id": list._id, level: this.level}, 
 							   {fields: {_id: 1, level: 1}} ).count() > 0;
 		} else{
-			return Spells.find( {charId: charId, listId: list._id, level: this.level, prepared: {$in: ["prepared", "always"]} }, 
+			return Spells.find( {charId: charId, "parent.id": list._id, level: this.level, prepared: {$in: ["prepared", "always"]} }, 
 							   {fields: {_id: 1, level: 1}} ).count() > 0;
 		}
 	},
 	spells: function(listId, charId){
-		return Spells.find( {charId: charId, listId: listId, level: this.level}, {sort: {color: 1, name: 1}} );
+		return Spells.find( {charId: charId, "parent.id": listId, level: this.level}, {sort: {color: 1, name: 1}} );
 	},
 	levels: function(){
 		return spellLevels;
 	},
 	numPrepared: function(){
-		return Spells.find({charId: Template.parentData()._id, listId: this._id, prepared: "prepared"}).count();
+		return Spells.find({charId: Template.parentData()._id, "parent.id": this._id, prepared: "prepared"}).count();
 	},
 	order: function(){
 		return _.indexOf(_.keys(colorOptions), this.color);
@@ -168,17 +169,20 @@ Template.spells.events({
 	},
 	"tap #addSpell": function(event){
 		var charId = this.charId;
-		var listId = this.listId;
+		var listId = SpellLists.findOne({charId: this._id})._id;
 		Spells.insert({
 			name: "New Spell", 
 			charId: this._id,
-			listId: SpellLists.findOne({charId: this._id})._id,
+			parent: {
+				id: listId,
+				collection: "SpellLists"
+			},
 			prepared: "prepared"
 		}, function(error, id){
 			if(!error){
 				GlobalUI.setDetail({
 					template: "spellDialog",
-					data:     {spellId: id, charId: charId, listId: listId},
+					data:     {spellId: id, charId: charId},
 					heroId:   id
 				});
 			}

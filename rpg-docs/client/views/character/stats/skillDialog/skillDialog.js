@@ -152,7 +152,7 @@ Template.skillDialog.helpers({
 		return Characters.findOne(this.charId, {fields:{_id: 1}});
 	},
 	sourceName: function(){
-		var id = this.sourceId;
+		var id = this.parent.id;
 		if(!id) return;
 		switch(this.type){
 			case "feature":

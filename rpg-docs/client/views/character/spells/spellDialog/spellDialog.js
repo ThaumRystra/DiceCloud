@@ -69,8 +69,8 @@ Template.spellDialog.events({
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if (value == this.listId) return;
-		Spells.update(this._id, {$set: {listId: value}});
+		if (value == this.parent.id) return;
+		Spells.update(this._id, {$set: {"parent.id": value}});
 	},
 	"core-select #levelDropdown": function(event){
 		var detail = event.originalEvent.detail;

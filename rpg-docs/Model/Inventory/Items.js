@@ -33,17 +33,24 @@ Items.helpers({
 			return this.name;
 		}
 	},
-	equip: function(){
-		Items.update(this._id, {$set: {enabled: true}});
+	equip: function(characterId){
+		var charId = characterId || this.charId;
+		if(!charId || ! Characters.findOne(charId)) throw "Invalid character";
+		if(this.parent.collection === "Characters" && this.parent.id === charId && this.enabled) return;
+		Items.update(this._id, {$set: {"parent.collection": "Characters", "parent.id": charId, enabled: true}});
 	},
 	unequip: function(){
+		if(!this.enabled) return;
 		Items.update(this._id, {$set: {enabled: false}});
 	},
 	moveToContainer: function(containerId){
+		if( !containerId || !Containers.findOne(containerId) ) throw "Invalid container";
+		if(this.parent.collection === "Containers" && this.parent.id === containerId && !this.enabled) return;
 		Items.update(this._id, {$set: {"parent.collection": "Containers", "parent.id": containerId, enabled: false}});
 	},
 	moveToCharacter: function(characterId){
-		if(this.charId === characterId) return;
+		if(!characterId || ! Characters.findOne(characterId)) throw "Invalid character";
+		if(this.parent.collection === "Characters" && this.parent.id === characterId && !this.enabled) return;
 		Items.update(this._id, {$set: {"parent.collection": "Characters", "parent.id": characterId, charId: characterId, enabled: false}});
 	}
 });

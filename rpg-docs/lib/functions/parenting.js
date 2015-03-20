@@ -14,7 +14,7 @@ var joinWithDefaultKeys = function(keys){
 		'restoredBy'
 	];
 	return _.union(keys, defaultKeys);
-}
+};
 
 var limitModifierToKeys = function(modifier, keys){
 	if(!modifier) return;
@@ -24,7 +24,23 @@ var limitModifierToKeys = function(modifier, keys){
 	if(_.isEmpty(modifier.$set))   delete modifier.$set;
 	if(_.isEmpty(modifier.$unset)) delete modifier.$unset;
 	return modifier;
-}
+};
+
+var getParent = function(doc){
+	if(!doc || !doc.parent) return;
+	var parentCol = Meteor.isClient? 
+		window[doc.parent.collection] : global[doc.parent.collection];
+	if (parentCol)
+		return parentCol.findOne(doc.parent.id, {removed: true});
+};
+
+var inheritParentProperties = function(doc, collection){
+	var parent = getParent(doc);
+	if(!parent) throw new Meteor.Error('Parenting Error',
+									   'Document\'s parent does not exist');
+	var handMeDowns = _.pick(parent, collection.inheritedKeys);
+	collection.update(doc._id, {$set: handMeDowns});
+};
 
 var childCollections = [];
 
@@ -34,25 +50,23 @@ makeChild = function(collection, inheritedKeys){
 	collection.helpers({
 		//returns the parent even if it's removed
 		getParent: function(){
-			var parentCol = Meteor.isClient? 
-				window[this.parent.collection] : global[this.parent.collection];
-			if (parentCol)
-				return parentCol.findOne(this.parent.id, {removed: true});
+			return getParent(this);
 		},
 		getParentCollection: function(){
 			return Meteor.isClient? 
 				window[this.parent.collection] : global[this.parent.collection];
 		}
 	});
+	
+	//when created, inherit parent properties
+	collection.after.insert(function(userId, doc){
+		inheritParentProperties(doc, collection);
+	});
 
 	//when we change parents, inherit its properties
 	collection.after.update(function (userId, doc, fieldNames, modifier, options) {
 		if(modifier && modifier.$set && modifier.$set.parent){
-			var parent = doc.getParent();
-			if(!parent) throw new Meteor.Error('Parenting Error',
-											   'Document\'s parent does not exist');
-			var handMeDowns = _.pick(parent, collection.inheritedKeys);
-			collection.update(doc._id, {$set: handMeDowns});
+			inheritParentProperties(doc, collection);
 		}
 	});
 

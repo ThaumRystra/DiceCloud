@@ -1,21 +1,19 @@
 Template.attackEditList.helpers({
 	attacks: function(){
-		var cursor = Attacks.find({sourceId: this.sourceId, type: this.type});
+		var cursor = Attacks.find({"parent.id": this.parentId, type: this.type, charId: this.charId});
 		return cursor;
 	}
 });
 
 Template.attackEditList.events({
 	"tap #addAttackButton": function(){
-		if ( !_.isBoolean(this.enabled) ) {
-			this.enabled = true;
-		}
 		Attacks.insert({
-			name: this.name,
 			charId: this.charId,
-			sourceId: this.sourceId,
+			parent: {
+				id: this.parentId,
+				collection: this.parentCollection
+			},
 			type: this.type,
-			enabled: this.enabled
 		});
 	},
 });

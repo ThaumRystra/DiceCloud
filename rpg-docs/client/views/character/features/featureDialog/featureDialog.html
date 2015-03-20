@@ -34,7 +34,7 @@
 					</paper-dropdown>
 				</paper-dropdown-menu>
 			</div>
-			{{> effectsEditList sourceId=_id charId=charId type="feature" name=name enabled=isEnabled}}
+			{{> effectsEditList parentId=_id parentCollection="Features" charId=charId type="feature" name=name enabled=isEnabled}}
 		{{/baseDialog}}
 	{{/with}}
 </template>

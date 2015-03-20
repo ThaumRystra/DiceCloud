@@ -7,9 +7,9 @@
 			<!--Container dropdown-->
 			<paper-dropdown-menu id="containerDropDown" label="Container">
 				<paper-dropdown layered class="dropdown">
-					<core-menu class="menu"  selected={{containerIndex}}>
+					<core-menu class="menu"  selected={{parent.id}}>
 						{{#each containers}}
-							<paper-item containerId={{_id}} class="containerMenuItem">{{name}}</paper-item>
+							<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
 						{{/each}}
 					</core-menu>
 				</paper-dropdown>
@@ -57,9 +57,9 @@
 			</paper-input-decorator>
 			{{#if canEquip}}
 				<!--Effects-->
-				{{> effectsEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
+				{{> effectsEditList parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
 				<!--Attacks-->
-				{{> attackEditList sourceId=_id charId=charId type="equipment" enabled=equipped name=name}}
+				{{> attackEditList  parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
 			{{/if}}
 		{{/baseDialog}}
 	{{/with}}

@@ -7,10 +7,10 @@ Template.inventory.helpers({
 		return Containers.find({charId: this._id}, {sort: {color: 1, name: 1}})
 	},
 	items: function(charId, containerId){
-		return Items.find({charId: charId, equipped: false, container: containerId }, {sort: {color: 1, name: 1}});
+		return Items.find({charId: charId, "parent.id": containerId }, {sort: {color: 1, name: 1}});
 	},
 	equipment: function(){
-		return Items.find({ charId: this._id, equipped: true }, {sort: {color: 1, name: 1}});
+		return Items.find({ charId: this._id, enabled: true }, {sort: {color: 1, name: 1}});
 	},
 	showAddButtons: function(){
 		return Template.instance().showAddButtons.get();
@@ -30,21 +30,21 @@ Template.inventory.helpers({
 		Containers.find({charId: this._id, isCarried: true}).forEach(function(container){
 			weight += container.totalWeight();
 		});
-		Items.find({charId: this._id, equipped: true}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+		Items.find({charId: this._id, "parent.id": this._id}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
 	},
 	equipmentValue: function(){
 		var value = 0;
-		Items.find({charId: this._id, equipped: true}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+		Items.find({charId: this._id, enabled: true}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
 			value += item.totalValue();
 		});
 		return value;
 	},
 	equipmentWeight: function(){
 		var weight = 0;
-		Items.find({charId: this._id, equipped: true}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+		Items.find({charId: this._id, enabled: true}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
@@ -63,7 +63,13 @@ Template.inventory.events({
 			containerId = Containers.insert({name: "New Container", isCarried: true, charId: this._id});
 		}
 		_.defer(function(){
-			var itemId = Items.insert({charId: charId, container: containerId});
+			var itemId = Items.insert({
+				charId: charId, 
+				parent:{
+					id: containerId,
+					collection: "Containers"
+				} 
+			});
 			GlobalUI.setDetail({
 				template: "itemDialog",
 				data:     {itemId: itemId, charId: charId},
@@ -128,35 +134,18 @@ Template.layout.events({
 		event.preventDefault();
 	},
 	"dragover .equipmentContainer": function(event, instance){
-		var containerId = Session.get("inventory.dragItemOriginalContainer");
-		var charId = Session.get("inventory.dragItemOriginalCharacter");
-
-		if (this._id !== charId) return; //we can't equip something we don't own
-
-		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		if (item.equipmentSlot === "none") return; //we can't equip this
-
 		event.preventDefault(); //this is a valid drop zone
 	},
-	"drop .container": function(event, instacne){
+	"drop .itemContainer": function(event, instacne){
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		if (!item) return; //the item doesn't exist
-		if (item.container === this._id && !item.equipped) return; //the item is already here
-		if(Containers.findOne(this._id)){//the container exists
-			Items.update(item._id, {$set: {container: this._id, charId: this.charId, equipped: false}});
-		}
+		//move item to the container
+		item.moveToContainer(this._id)
 		resetInvetorySession();
 	},
 	"drop .equipmentContainer": function(event, instance){
-		var containerId = Session.get("inventory.dragItemOriginalContainer");
 		var charId = Session.get("inventory.dragItemOriginalCharacter");
-
-		if (this._id !== charId) return; //we can't equip something we don't own
-
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		if (item.equipmentSlot === "none") return; //we can't equip this
-		//equip the item if it's not equipped
-		if(!item.equipped) Items.update(item._id, {$set: {equipped: true, container: containerId, charId: charId}});
+		item.equip(charId);
 		resetInvetorySession();
 	}
 })

@@ -86,20 +86,20 @@ var operations = {
 
 Template.effectView.helpers({
 	sourceName: function(){
-		var id = this.sourceId;
+		var id = this.parent.id;
 		if(!id) return;
-		switch(this.type){
-			case "feature":
+		switch(this.parent.collection){
+			case "Features":
 				return "Feature - " + Features.findOne(id, {fields: {name: 1}}).name;
-			case "class":
+			case "Classes":
 				return Classes.findOne(id, {fields: {name: 1}}).name;
-			case "buff":
+			case "Buffs":
 				return "Buff - " + Buffs.findOne(id, {fields: {name: 1}}).name;
-			case "equipment":
+			case "Items":
 				return "Equipment - " + Items.findOne(id, {fields: {name: 1}}).name;
-			case "racial":
+			case "Characters":
 				return Characters.findOne(this.charId, {fields: {race: 1}}).race;
-			case "inate":
+			default:
 				return "Inate"
 		}
 	},

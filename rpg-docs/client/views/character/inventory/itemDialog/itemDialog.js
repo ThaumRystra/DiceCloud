@@ -19,11 +19,6 @@ Template.itemDialog.helpers({
 	containers: function(){
 		return getContainers(this.charId);
 	},
-	containerIndex: function(){
-		var containers = getContainers(this.charId);
-		var containerIds = _.pluck(containers, "_id");
-		return _.indexOf(containerIds, this.container);
-	},
 	equipmentSlots: function(){
 		return equipmentSlots;
 	},
@@ -79,8 +74,9 @@ Template.itemDialog.events({
 	"core-select #containerDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
-		var containerId = detail.item.getAttribute("containerId");
-		Items.update(Template.currentData().itemId, {$set: {container: containerId}});
+		var containerId = detail.item.getAttribute("name");
+		var item = Items.findOne(Template.currentData().itemId);
+		item.moveToContainer(containerId);
 	},
 	"core-select #slotDropDown": function(event){
 		var detail = event.originalEvent.detail;

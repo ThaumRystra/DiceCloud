@@ -1,6 +1,6 @@
 <template name="raceDialog">
 	{{#baseDialog title="Race" class=colorClass hideColor="true" hideDelete="true"}}
 		<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
-		{{> effectsEditList sourceId=_id charId=charId type="racial"}}
+		{{> effectsEditList parentId=_id parentCollection="Characters" charId=charId type="racial"}}
 	{{/baseDialog}}
 </template>

@@ -8,7 +8,7 @@
 			<!--List dropdown-->
 			<paper-dropdown-menu id="listDropdown" label="Spell List">
 				<paper-dropdown layered class="dropdown">
-					<core-menu class="menu"  selected={{listId}}>
+					<core-menu class="menu"  selected={{parent.id}}>
 						{{#each spellLists}}
 						<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
 						{{/each}}

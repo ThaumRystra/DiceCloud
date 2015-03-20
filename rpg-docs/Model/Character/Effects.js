@@ -60,7 +60,11 @@ Characters.after.insert(function (userId, char) {
 			name: "Constitution modifier for each level",
 			stat: "hitPoints",
 			operation: "add",
-			calculation: "level * constitutionMod"
+			calculation: "level * constitutionMod",
+			parent: {
+				id: char._id,
+				collection: "Characters"
+			}
 		});
 		Effects.insert({
 			charId: char._id,
@@ -68,7 +72,11 @@ Characters.after.insert(function (userId, char) {
 			name: "Proficiency bonus by level",
 			stat: "proficiencyBonus",
 			operation: "add",
-			calculation: "floor(level / 4 + 1.75)"
+			calculation: "floor(level / 4 + 1.75)",
+			parent: {
+				id: char._id,
+				collection: "Characters"
+			}
 		});
 		Effects.insert({
 			charId: char._id,
@@ -76,7 +84,11 @@ Characters.after.insert(function (userId, char) {
 			name: "Dexterity Armor Bonus",
 			stat: "armor",
 			operation: "add",
-			calculation: "dexterityArmor"
+			calculation: "dexterityArmor",
+			parent: {
+				id: char._id,
+				collection: "Characters"
+			}
 		});
 		Effects.insert({
 			charId: char._id,
@@ -84,7 +96,11 @@ Characters.after.insert(function (userId, char) {
 			name: "Natural Armor",
 			stat: "armor",
 			operation: "base",
-			value: 10
+			value: 10,
+			parent: {
+				id: char._id,
+				collection: "Characters"
+			} 
 		});
 	}
 });
