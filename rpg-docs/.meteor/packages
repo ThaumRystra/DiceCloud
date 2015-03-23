@@ -14,8 +14,8 @@ reactive-var
 underscore
 aldeed:collection2
 differential:vulcanize
-aldeed:autoform
-conielo:autoform-polymer-paper
 msavin:mongol
 matb33:collection-hooks
 zimme:collection-softremovable
+momentjs:moment
+mike:mocha
