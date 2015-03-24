@@ -78,7 +78,9 @@
 		{{/if}}
 	</paper-action-dialog>
 
-	<paper-toast global-toast></paper-toast>
-	<core-overlay></core-overlay>
-	<core-overlay-layer></core-overlay-layer>
+	<paper-toast global-toast>
+		{{#if session globalToastTemplate}}
+			{{> UI.dynamic template=globalToastTemplate data=globalToastData}}
+		{{/if}}
+	</paper-toast>
 </template>

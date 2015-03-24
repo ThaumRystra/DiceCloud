@@ -3,12 +3,25 @@ this.GlobalUI = (function() {
 
 	GlobalUI.dialog = {};
 
-	GlobalUI.toast = function(text, className) {
+	GlobalUI.toast = function(opts) {
 		var toast;
 		toast = $("[global-toast]")[0];
-		toast.text = text;
+		toast.text = opts.text;
+		Session.set("global.ui.toastTemplate", opts.template);
+		Session.set("global.ui.toastData", opts.data);
 		return toast.show();
 	};
+	
+	GlobalUI.deletedToast = function(id, collection, itemName){
+		GlobalUI.toast({
+			text: itemName? itemName + " deleted" : "Deleted item from" + collection,
+			template: "undoToast", 
+			data: {
+				id: id,
+				collection: collection
+			}
+		})
+	}
 
 	GlobalUI.setDialog = function(opts){
 		this.dialog = $("[global-dialog]")[0];
@@ -110,6 +123,12 @@ Template.layout.helpers({
 	},
 	globalDetailData: function(){
 		return Session.get("global.ui.detailData");
+	},
+	globalToastTemplate: function(){
+		return Session.get("global.ui.toastTemplate");
+	},
+	globalToastData: function(){
+		return Session.get("global.ui.toastData");
 	}
 });
 
