@@ -257,87 +257,46 @@ Characters.helpers({
 		return value;
 	},
 
-	attributeBase: (function(){
-		//store a private array of attributes we've visited without returning
-		//if we try to visit the same attribute twice before resolving its value
-		//we are in a dependency loop and need to GTFO
-		var visitedAttributes = [];
-		return function(attributeName){
-			check(attributeName, String);
-			//we're still evaluating this attribute, must be in a loop
-			if(_.contains(visitedAttributes, attributeName)) {
-				console.log("dependency loop detected");
-				return NaN;
-			}
-			//push this attribute to the list of visited attributes
-			//we can't visit it again unless it returns first
-			visitedAttributes.push(attributeName);
-			try{
-				var charId = this._id;
-				//base value
-				var value = attributeBase(charId, attributeName);
-			}finally{
-				//this attribute returns or fails, pull it from the array, we may visit it again safely
-				visitedAttributes = _.without(visitedAttributes, attributeName);
-			}
-			return value;
-		}
-	})(),
+	attributeBase: preventLoop(function(attributeName){
+		var charId = this._id;
+		//base value
+		return attributeBase(charId, attributeName);
+	}),
 
-	skillMod: (function(){
-		//store a private array of skills we've visited without returning
-		//if we try to visit the same skill twice before resolving its value
-		//we are in a dependency loop and need to GTFO
-		var visitedSkills = [];
-		return function(skillName){
-			check(skillName, String);
-			//we're still evaluating this attribute, must be in a loop
-			if(_.contains(visitedSkills, skillName)) {
-				console.log("dependency loop detected");
-				return NaN;
-			}
-			//push this skill to the list of visited skills
-			//we can't visit it again unless it returns first
-			visitedSkills.push(skillName);
-			try{
-				var charId = this._id;
-				skill = this.getField(skillName);
-				//get the final value of the ability score
-				var ability = this.attributeValue(skill.ability);
+	skillMod: preventLoop(function(skillName){
+		var charId = this._id;
+		var skill = this.getField(skillName);
+		//get the final value of the ability score
+		var ability = this.attributeValue(skill.ability);
 
-				//base modifier
-				var mod = +getMod(ability)
+		//base modifier
+		var mod = +getMod(ability)
 
-				//multiply proficiency bonus by largest value in proficiency array
-				var prof = this.proficiency(skillName);
+		//multiply proficiency bonus by largest value in proficiency array
+		var prof = this.proficiency(skillName);
 
-				//add multiplied proficiency bonus to modifier
-				mod += prof * this.attributeValue("proficiencyBonus");
-				Effects.find({charId: charId, stat: skillName, enabled: true}).forEach(function(effect){
-					switch(effect.operation) {
-						case "add":
-							mod += evaluateEffect(charId, effect);
-							break;
-						case "mul":
-							mod *= evaluateEffect(charId, effect);
-							break;
-						case "min":
-							var min = evaluateEffect(charId, effect);
-							mod = mod > min? mod : min;
-							break;
-						case "max":
-							var max = evaluateEffect(charId, effect);
-							mod = mod < max? mod : max;
-							break;
-					}
-				});
-			} finally{
-				//this skill returns or fails, pull it from the array
-				visitedSkills = _.without(visitedSkills, skillName);
-			}
-			return signedString(mod);
-		}
-	})(),
+		//add multiplied proficiency bonus to modifier
+		mod += prof * this.attributeValue("proficiencyBonus");
+
+		//apply all effects
+		var rawEffects = Effects.find({charId: charId, stat: skillName, enabled: true}).fetch();
+		var effects = _.groupBy(rawEffects, "operation");
+		_.forEach(effects.add, function(effect){
+			mod += evaluateEffect(charId, effect);
+		});
+		_.forEach(effects.mul, function(effect){
+			mod *= evaluateEffect(charId, effect);
+		});
+		_.forEach(effects.min, function(effect){
+			var min = evaluateEffect(charId, effect);
+			mod = mod > min? mod : min;
+		});
+		_.forEach(effects.max, function(effect){
+			var max = evaluateEffect(charId, effect);
+			mod = mod < max? mod : max;
+		});
+		return signedString(mod);
+	}),
 
 	proficiency: function(skillName){
 		var charId = this._id;
@@ -418,7 +377,7 @@ Characters.helpers({
 });
 
 //clean up all data related to that character before removing it
-Characters.before.remove(function (userId, character) {
+Characters.after.remove(function (userId, character) {
 	if(Meteor.isServer){
 		Actions       .remove({charId: character._id});
 		Attacks       .remove({charId: character._id});

@@ -3,7 +3,7 @@
 
 // Run button configuration
   "commands": {
-        "Run Meteor": "ROOT_URL=http://period-sheriff-3000.codio.io\ncd rpg-docs \n meteor run"
+        "Run Meteor": "cd rpg-docs \n ROOT_URL=http://period-sheriff.codio.io:3000 meteor"
   },
 
 // Preview button configuration
