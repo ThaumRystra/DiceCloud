@@ -3,8 +3,9 @@ Template.featureDialog.events({
 		Features.update(instance.data.featureId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Features.remove(instance.data.featureId);
-		GlobalUI.closeDetail()
+		Features.softRemove(instance.data.featureId);
+		GlobalUI.deletedToast(instance.data.featureId, "Features", "Feature");
+		GlobalUI.closeDetail();
 	},
 	"change #featureNameInput": function(event){
 		var name = Template.instance().find("#featureNameInput").value;

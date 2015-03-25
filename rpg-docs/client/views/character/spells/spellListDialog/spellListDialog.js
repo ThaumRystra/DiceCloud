@@ -3,7 +3,8 @@ Template.spellListDialog.events({
 		SpellLists.update(instance.data.spellListId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		SpellLists.remove(instance.data.spellListId);
+		SpellLists.softRemove(instance.data.spellListId);
+		GlobalUI.deletedToast(instance.data.spellListId, "SpellLists", "Spell list and contents");
 		GlobalUI.closeDetail()
 	},
 	//TODO clean up String -> num here so they don't need casting by Schema.clean

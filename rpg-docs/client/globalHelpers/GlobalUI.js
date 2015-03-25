@@ -11,7 +11,7 @@ this.GlobalUI = (function() {
 		Session.set("global.ui.toastData", opts.data);
 		return toast.show();
 	};
-	
+
 	GlobalUI.deletedToast = function(id, collection, itemName){
 		GlobalUI.toast({
 			text: itemName? itemName + " deleted" : "Deleted item from" + collection,
@@ -20,15 +20,15 @@ this.GlobalUI = (function() {
 				id: id,
 				collection: collection
 			}
-		})
-	}
+		});
+	};
 
 	GlobalUI.setDialog = function(opts){
 		this.dialog = $("[global-dialog]")[0];
 		Session.set("global.ui.dialogHeader", opts.heading);
 		Session.set("global.ui.dialogData", opts.data);
 		Session.set("global.ui.dialogTemplate", opts.template);
-		Session.set("global.ui.dialogFullOnMobile", opts.fullOnMobile != null);
+		Session.set("global.ui.dialogFullOnMobile", opts.fullOnMobile !== null);
 	};
 
 	GlobalUI.showDialog = function(opts) {
@@ -36,7 +36,7 @@ this.GlobalUI = (function() {
 		Session.set("global.ui.dialogHeader", opts.heading);
 		Session.set("global.ui.dialogData", opts.data);
 		Session.set("global.ui.dialogTemplate", opts.template);
-		Session.set("global.ui.dialogFullOnMobile", opts.fullOnMobile != null);
+		Session.set("global.ui.dialogFullOnMobile", opts.fullOnMobile !== null);
 		return Tracker.afterFlush((function(_this) {
 			return function() {
 				return _this.dialog.open();

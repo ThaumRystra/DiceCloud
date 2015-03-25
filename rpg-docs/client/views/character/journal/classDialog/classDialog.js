@@ -1,6 +1,7 @@
 Template.classDialog.events({
 	"tap #deleteButton": function(event, instance){
-		Classes.remove(instance.data.classId);
+		Classes.softRemove(instance.data.classId);
+		GlobalUI.deletedToast(instance.data.classId, "Classes", "Class");
 		GlobalUI.closeDetail()
 	},
 	"change #classNameInput": function(event){

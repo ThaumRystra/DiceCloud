@@ -1,7 +1,10 @@
 Template.undoToast.events({
 	'tap #undoButton': function(event, instance){
 		var collection = window[this.collection];
-		if(!collection) return;
+		if(!collection){
+			console.warn("Collection with name ", this.collection, " could not be found");
+			return;
+		}
 		collection.restore(this.id);
 	}
 });

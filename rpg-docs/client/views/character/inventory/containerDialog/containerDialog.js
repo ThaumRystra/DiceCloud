@@ -9,7 +9,8 @@ Template.containerDialog.events({
 		Containers.update(instance.data.containerId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Containers.remove(instance.data.containerId);
+		Containers.softRemove(instance.data.containerId);
+		GlobalUI.deletedToast(instance.data.containerId, "Containers", "Container and contents");
 		GlobalUI.closeDetail()
 	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors

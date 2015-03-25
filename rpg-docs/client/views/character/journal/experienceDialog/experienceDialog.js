@@ -1,6 +1,7 @@
 Template.experienceDialog.events({
 	"tap #deleteButton": function(event, instance){
-		Experiences.remove(instance.data.experienceId);
+		Experiences.softRemove(instance.data.experienceId);
+		GlobalUI.deletedToast(instance.data.experienceId, "Experiences", "Experience");
 		GlobalUI.closeDetail()
 	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors

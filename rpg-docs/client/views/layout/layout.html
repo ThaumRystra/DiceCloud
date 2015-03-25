@@ -78,9 +78,13 @@
 		{{/if}}
 	</paper-action-dialog>
 
-	<paper-toast global-toast>
-		{{#if session globalToastTemplate}}
+	<paper-toast global-toast duration="5000">
+		{{#if globalToastTemplate}}
 			{{> UI.dynamic template=globalToastTemplate data=globalToastData}}
+		{{else}}
+			<div>
+				No Toast template defined
+			</div>
 		{{/if}}
 	</paper-toast>
 </template>
