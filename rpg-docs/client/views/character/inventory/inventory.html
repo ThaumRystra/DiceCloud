@@ -35,6 +35,21 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
+				<!--Carried Items-->
+				<paper-shadow class="card container carriedContainer">
+					<div class="equipmentTop" layout horizontal center>
+						<div class="containerName subhead" flex>
+							Carried
+						</div>
+						<div class="caption" style="margin-right: 8px">{{valueString carriedValue}}</div>
+						<div class="caption">{{round carriedWeight}}lbs</div>
+					</div>
+					<div flex class="containerMain">
+						{{#each carriedItems}}
+							{{>inventoryItem}}
+						{{/each}}
+					</div>
+				</paper-shadow>
 				{{#each containers}}
 					<paper-shadow class="card container itemContainer"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>

@@ -1,10 +1,10 @@
 Template.inventory.created = function(){
 	this.showAddButtons = new ReactiveVar(false);
-}
+};
 
 Template.inventory.helpers({
 	containers: function(){
-		return Containers.find({charId: this._id}, {sort: {color: 1, name: 1}})
+		return Containers.find({charId: this._id}, {sort: {color: 1, name: 1}});
 	},
 	items: function(charId, containerId){
 		return Items.find({charId: charId, "parent.id": containerId }, {sort: {color: 1, name: 1}});
@@ -12,11 +12,14 @@ Template.inventory.helpers({
 	equipment: function(){
 		return Items.find({ charId: this._id, enabled: true }, {sort: {color: 1, name: 1}});
 	},
+	carriedItems: function(){
+		return Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {sort: {color: 1, name: 1}});
+	},
 	showAddButtons: function(){
 		return Template.instance().showAddButtons.get();
 	},
 	colorClass: function(){
-		return getColorClass(this.color)
+		return getColorClass(this.color);
 	},
 	netWorth: function(){
 		var worth = 0;
@@ -48,28 +51,35 @@ Template.inventory.helpers({
 			weight += item.totalWeight();
 		});
 		return weight;
-	}
+	},
+	carriedValue: function(){
+		var value = 0;
+		Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+			value += item.totalValue();
+		});
+		return value;
+	},
+	carriedWeight: function(){
+		var weight = 0;
+		Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+			weight += item.totalWeight();
+		});
+		return weight;
+	},
 });
 
 Template.inventory.events({
 	"tap #addItem": function(event){
 		var charId = this._id;
-		var container = Containers.findOne({charId: charId}, {sort: {name: 1, _id: 1}, fields: {_id: 1}});
-		var containerId;
-		if(container){
-			containerId = container._id;
-		} else{
-			console.log("no container was found for new item, adding a new container");
-			containerId = Containers.insert({name: "New Container", isCarried: true, charId: this._id});
-		}
-		_.defer(function(){
-			var itemId = Items.insert({
-				charId: charId, 
-				parent:{
-					id: containerId,
-					collection: "Containers"
-				} 
-			});
+		console.log(charId);
+		Items.insert({
+			charId: charId,
+			parent:{
+				id: charId,
+				collection: "Characters"
+			}
+		}, function(err, itemId){
+			if(err) console.log(err);
 			GlobalUI.setDetail({
 				template: "itemDialog",
 				data:     {itemId: itemId, charId: charId},
@@ -128,18 +138,21 @@ Template.layout.events({
 		Session.set("inventory.dragItemOriginalCharacter", this.charId);
 	},
 	"dragend .inventoryItem": function(event, instance){
-		resetInvetorySession();
+		resetInvetorySession(); //this is a valid drop zone
 	},
 	"dragover .itemContainer": function(event, instance){
 		event.preventDefault();
 	},
 	"dragover .equipmentContainer": function(event, instance){
-		event.preventDefault(); //this is a valid drop zone
+		event.preventDefault();
+	},
+	"dragover .carriedContainer": function(event, instance){
+		event.preventDefault();
 	},
 	"drop .itemContainer": function(event, instacne){
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
 		//move item to the container
-		item.moveToContainer(this._id)
+		item.moveToContainer(this._id);
 		resetInvetorySession();
 	},
 	"drop .equipmentContainer": function(event, instance){
@@ -147,13 +160,19 @@ Template.layout.events({
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
 		item.equip(charId);
 		resetInvetorySession();
+	},
+	"drop .carriedContainer": function(event, instance){
+		var charId = Session.get("inventory.dragItemOriginalCharacter");
+		var item = Items.findOne(Session.get("inventory.dragItemId"));
+		item.moveToCharacter(this._id);
+		resetInvetorySession();
 	}
-})
+});
 
 var resetInvetorySession = function(){
 	_.defer(function(){
 		Session.set("inventory.dragItemId", null);
 		Session.set("inventory.dragItemOriginalContainer", null);
 		Session.set("inventory.dragItemOriginalCharacter", null);
-	})
-}
+	});
+};

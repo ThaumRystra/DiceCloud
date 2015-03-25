@@ -39,6 +39,7 @@ var inheritParentProperties = function(doc, collection){
 	if(!parent) throw new Meteor.Error('Parenting Error',
 									   'Document\'s parent does not exist');
 	var handMeDowns = _.pick(parent, collection.inheritedKeys);
+	if(_.isEmpty(handMeDowns)) return;
 	collection.update(doc._id, {$set: handMeDowns});
 };
 
@@ -57,7 +58,7 @@ makeChild = function(collection, inheritedKeys){
 				window[this.parent.collection] : global[this.parent.collection];
 		}
 	});
-	
+
 	//when created, inherit parent properties
 	collection.after.insert(function(userId, doc){
 		inheritParentProperties(doc, collection);
@@ -96,7 +97,7 @@ var checkPermission = function(userId, charId){
 	if(!char)
 		throw new Meteor.Error('Access Denied',
 							   'Character '+charId+' does not exist');
-	if (!userId) 
+	if (!userId)
 		throw new Meteor.Error('Access Denied',
 							   'No UserId set when trying to update character asset.');
 	if (char.owner !== userId && !_.contains(char.writers, userId))

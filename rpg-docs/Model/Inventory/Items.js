@@ -51,7 +51,11 @@ Items.helpers({
 });
 
 Items.before.update(function(userId, doc, fieldNames, modifier, options){
-	if(modifier && modifier.$set && modifier.$set.enabled){
+	if(
+		modifier && modifier.$set && modifier.$set.enabled && //we are equipping this item
+		!(modifier.$set["parent.collection"] === "Characters" && modifier.$set["parent.id"]) //and we haven't specified a character to equip to
+	){
+		//equip it to the current character
 		modifier.$set["parent.collection"] = "Characters";
 		modifier.$set["parent.id"] = doc.charId;
 	}
