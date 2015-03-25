@@ -64,10 +64,12 @@ makeChild = function(collection, inheritedKeys){
 		inheritParentProperties(doc, collection);
 	});
 
-	//when we change parents, inherit its properties
 	collection.after.update(function (userId, doc, fieldNames, modifier, options) {
-		if(modifier && modifier.$set && modifier.$set.parent){
-			inheritParentProperties(doc, collection);
+		if(modifier && modifier.$set){
+			//when we change parents, inherit its properties
+			if(modifier.$set.parent){
+				inheritParentProperties(doc, collection);
+			}
 		}
 	});
 
@@ -119,7 +121,7 @@ Meteor.methods({
 				thisModifier = _.clone(modifier);
 			}
 			if(_.isEmpty(thisModifier)) return;
-			collection.update( {'parent.id': parent._id}, thisModifier, {multi: true});
+			collection.update( {'parent.id': parent._id}, thisModifier, {multi: true, removed: true});
 		});
 	},
 	removeChildren: function (parent) {
