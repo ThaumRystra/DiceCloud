@@ -1,5 +1,6 @@
 .healthCard paper-slider{
 	width: 100%;
+	margin-right: 8px;
 }
 
 /*Slider knob color*/

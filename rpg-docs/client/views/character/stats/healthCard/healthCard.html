@@ -12,12 +12,18 @@
 						  role="slider"
 						  ></paper-slider>
 			{{#each tempHitPoints}}
-				<paper-slider class="tempHitPointSlider"
-						  value={{left}}
-						  max={{maximum}} 
-						  editable pin
-						  role="slider"
-						  ></paper-slider>
+				<div layout horizontal>
+					<paper-slider class="tempHitPointSlider"
+							  value={{left}}
+							  max={{maximum}}
+							  editable pin
+							  role="slider"
+							  flex
+							  ></paper-slider>
+					{{#unless left}}{{#unless deleteOnZero}}
+						<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
+					{{/unless}}{{/unless}}
+				</div>
 			{{/each}}
 			<div class="caption">
 				{{#if multipliers.immunities.length}} <div>Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}</div>{{/if}}

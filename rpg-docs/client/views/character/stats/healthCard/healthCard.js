@@ -18,10 +18,10 @@ Template.healthCard.helpers({
 		else return "radio-button-off";
 	},
 	failDisabled: function(num){
-		return !(num === this.fail || num - 1 === this.fail)
+		return !(num === this.fail || num - 1 === this.fail);
 	},
 	passDisabled: function(num){
-		return !(num === this.pass || num - 1 === this.pass)
+		return !(num === this.pass || num - 1 === this.pass);
 	},
 	dead: function(){
 		return this.fail >= 3;
@@ -50,7 +50,7 @@ Template.healthCard.helpers({
 			"weaknesses": multipliers["2"] || []
 		};
 	}
-})
+});
 
 Template.healthCard.events({
 	"change #hitPointSlider": function(event){
@@ -63,9 +63,14 @@ Template.healthCard.events({
 		var used = this.maximum - value;
 		TemporaryHitPoints.update(this._id, {$set: {"used": used}});
 	},
+	"tap .deleteTHP": function(event){
+		TemporaryHitPoints.remove(this._id);
+	},
 	"tap #addTempHP": function(event){
-		var max = prompt("Add temporary hitpoints", "10");
-		TemporaryHitPoints.insert({charId: this._id, maximum: max, used: 0});
+		GlobalUI.showDialog({
+				template: "addTHPDialog",
+				data: {charId: this._id}
+			});
 	},
 	"tap .failBubble": function(event){
 		if(event.currentTarget.disabled) return;

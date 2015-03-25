@@ -1,0 +1,13 @@
+<!-- data just needs charId -->
+<template name="addTHPDialog">
+	<div style="width: 200px; height: 100px;">
+		<paper-input-decorator label="Quantity" floatinglabel>
+			<input autoFocus id="quantityInput" type="number" value="10">
+		</paper-input-decorator>
+		<div layout horizontal justify-center>
+			Delete when zero <paper-checkbox id="deleteWhenZeroCheckbox" checked style="margin-left: 8px;"></paper-checkbox>
+		</div>
+	</div>
+	<paper-button id="cancelButton" affirmative> Cancel </paper-button>
+	<paper-button id="addButton"    affirmative> Add    </paper-button>
+</template>
