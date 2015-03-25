@@ -1,18 +1,13 @@
 Items = new Mongo.Collection('items');
 
 Schemas.Item = new SimpleSchema({
-	name: 		{type: String, defaultValue: "New Item", trim: false},
+	name:       {type: String, defaultValue: "New Item", trim: false},
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
 	charId:     {type: String, regEx: SimpleSchema.RegEx.Id}, //id of owner
 	quantity:	{type: Number, min: 0, defaultValue: 1},
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	equipmentSlot:	{
-		type: String, 
-		defaultValue: "none", 
-		allowedValues: ["none", "head", "armor", "arms", "hands", "held", "feet"]
-	},
 	enabled:    {type: Boolean, defaultValue: false},
 	color:      {type: String, allowedValues: _.pluck(colorOptions, "key"), defaultValue: "q"}
 });

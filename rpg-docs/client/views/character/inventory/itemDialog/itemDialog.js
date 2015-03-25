@@ -2,31 +2,12 @@ var getContainers = function(charId){
 	return Containers.find({charId: charId}, {sort: {name: 1, _id: 1}, fields: {name: 1}}).fetch();
 };
 
-var equipmentSlots =  [
-	{name: "None", value: "none"},
-	{name: "Held", value: "held"},
-	{name: "Armor", value: "armor"},
-	{name: "Head", value: "head"},
-	{name: "Arms", value: "arms"}, 
-	{name: "Hands", value: "hands"},
-	{name: "Feet", value: "feet"}
-];
-
 Template.itemDialog.helpers({
 	item: function(){
 		return Items.findOne(this.itemId);
 	},
 	containers: function(){
 		return getContainers(this.charId);
-	},
-	equipmentSlots: function(){
-		return equipmentSlots;
-	},
-	equipmentSlotIndex: function(){
-		return _.indexOf(_.pluck(equipmentSlots, "value"), this.equipmentSlot);
-	},
-	canEquip: function(){
-		return this.equipmentSlot !== "none";
 	},
 	ne1: function(num){
 		return num != 1;
@@ -40,11 +21,11 @@ Template.itemDialog.events({
 	"tap #deleteButton": function(event, instance){
 		Items.softRemove(instance.data.itemId);
 		GlobalUI.deletedToast(instance.data.itemId, "Items", "Item");
-		GlobalUI.closeDetail()
+		GlobalUI.closeDetail();
 	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
 	"change #itemNameInput, input #itemNameInput": function(event){
-		console.log("changed Nameinput")
+		console.log("changed Nameinput");
 		var name = Template.instance().find("#itemNameInput").value;
 		Items.update(this._id, {$set: {name: name}});
 	},
@@ -70,7 +51,14 @@ Template.itemDialog.events({
 	},
 	"change #equippedInput": function(event){
 		var equipped = Template.instance().find("#equippedInput").checked;
-		Items.update(this._id, {$set: {equipped: equipped}});
+		var item = Items.findOne(this._id);
+		if(item){
+			if(equipped){
+				item.equip();
+			} else {
+				item.unequip();
+			}
+		}
 	},
 	"core-select #containerDropDown": function(event){
 		var detail = event.originalEvent.detail;
@@ -78,11 +66,5 @@ Template.itemDialog.events({
 		var containerId = detail.item.getAttribute("name");
 		var item = Items.findOne(Template.currentData().itemId);
 		item.moveToContainer(containerId);
-	},
-	"core-select #slotDropDown": function(event){
-		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
-		var value = detail.item.getAttribute("value");
-		Items.update(Template.currentData().itemId, {$set: {equipmentSlot: value}});
 	}
 });

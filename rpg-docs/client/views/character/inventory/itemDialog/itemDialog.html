@@ -14,29 +14,17 @@
 					</core-menu>
 				</paper-dropdown>
 			</paper-dropdown-menu>
-			<!--Equipment slot dropdown-->
-			<paper-dropdown-menu id="slotDropDown" label="slot">
-				<paper-dropdown layered class="dropdown">
-					<core-menu class="menu"  selected={{equipmentSlotIndex}}>
-						{{#each equipmentSlots}}
-							<paper-item class="slotMenuItem" value={{value}}>{{name}}</paper-item>
-						{{/each}}
-					</core-menu>
-				</paper-dropdown>
-			</paper-dropdown-menu>
 			<!--Equipped-->
-			{{#if canEquip}}
-				<div center horizontal layout>
-					<div flex>Equipped</div>
-					<paper-toggle-button id="equippedInput"
-										 checked={{equipped}} 
-										 role="button" 
-										 aria-pressed="false" 
-										 tabindex="0" 
-										 touch-action="pan-y">
-					</paper-toggle-button>
-				</div>
-			{{/if}}
+			<div center horizontal layout>
+				<div flex>Equipped</div>
+				<paper-toggle-button id="equippedInput"
+									 checked={{enabled}}
+									 role="button" 
+									 aria-pressed="false"
+									 tabindex="0" 
+									 touch-action="pan-y">
+				</paper-toggle-button>
+			</div>
 			<!--Quantity-->
 			<paper-input-decorator label="Quantity" floatinglabel>
 				<input id="quantityInput" type="number" value={{quantity}}>
@@ -55,12 +43,10 @@
 					<textarea id="itemDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
 				</paper-autogrow-textarea>
 			</paper-input-decorator>
-			{{#if canEquip}}
-				<!--Effects-->
-				{{> effectsEditList parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
-				<!--Attacks-->
-				{{> attackEditList  parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
-			{{/if}}
+			<!--Effects-->
+			{{> effectsEditList parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
+			<!--Attacks-->
+			{{> attackEditList  parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
 		{{/baseDialog}}
 	{{/with}}
 </template>
