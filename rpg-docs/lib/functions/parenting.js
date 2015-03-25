@@ -28,7 +28,7 @@ var limitModifierToKeys = function(modifier, keys){
 
 var getParent = function(doc){
 	if(!doc || !doc.parent) return;
-	var parentCol = Meteor.isClient? 
+	var parentCol = Meteor.isClient?
 		window[doc.parent.collection] : global[doc.parent.collection];
 	if (parentCol)
 		return parentCol.findOne(doc.parent.id, {removed: true});
@@ -128,8 +128,21 @@ Meteor.methods({
 
 		_.each(childCollections, function(collection){
 			collection.remove(
-				{charId: parent.charId, 'parent.id': parent._id}
+				{'parent.id': parent._id}
 			);
+		});
+	},
+	cloneChildren: function (objectId, newParent){
+		check(objectId, String);
+		check(newParent, {id: String, collection: String});
+
+		_.each(childCollections, function(collection){
+			var keys = collection.simpleSchema().objectKeys();
+			collection.find({'parent.id': objectId}).forEach(function(doc){
+				var newDoc = _.pick( doc, keys);
+				newDoc.parent = newParent;
+				collection.insert(newDoc);
+			});
 		});
 	}
 });

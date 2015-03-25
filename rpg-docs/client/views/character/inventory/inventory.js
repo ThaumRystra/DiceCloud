@@ -151,8 +151,20 @@ Template.layout.events({
 	},
 	"drop .itemContainer": function(event, instacne){
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		//move item to the container
-		item.moveToContainer(this._id);
+		if(event.ctrlKey){
+			//split the stack to the container
+			GlobalUI.showDialog({
+				template: "splitStackDialog",
+				data: {
+					id: item._id,
+					parentCollection: "Containers",
+					parentId: this._id
+				}
+			});
+		} else{
+			//move item to the container
+			item.moveToContainer(this._id);
+		}
 		resetInvetorySession();
 	},
 	"drop .equipmentContainer": function(event, instance){
@@ -164,7 +176,20 @@ Template.layout.events({
 	"drop .carriedContainer": function(event, instance){
 		var charId = Session.get("inventory.dragItemOriginalCharacter");
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		item.moveToCharacter(this._id);
+		if(event.ctrlKey){
+			//split the stack to the container
+			GlobalUI.showDialog({
+				template: "splitStackDialog",
+				data: {
+					id: item._id,
+					parentCollection: "Characters",
+					parentId: this._id
+				}
+			});
+		} else{
+			//move item to the character
+			item.moveToCharacter(this._id);
+		}
 		resetInvetorySession();
 	}
 });
