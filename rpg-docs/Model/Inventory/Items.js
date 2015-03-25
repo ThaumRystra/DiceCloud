@@ -66,3 +66,55 @@ makeChild(Items); //children of containers
 makeParent(Items, ['name', 'enabled']); //parents of effects and attacks
 
 Items.allow(CHARACTER_SUBSCHEMA_ALLOW);
+
+//give characters default items
+Characters.after.insert(function (userId, char) {
+	if(Meteor.isServer){
+		var containerId = Containers.insert({
+			name: "Coin Pouch",
+			charId: char._id,
+			isCarried: true,
+			description: "A sturdy pouch for coins",
+			color: "d"
+		});
+		Items.insert({
+			name: "Gold piece",
+			plural: "Gold pieces",
+			charId: char._id,
+			quantity: 0,
+			weight: 0.02,
+			value: 1,
+			color: "n",
+			parent: {
+				id: containerId,
+				collection: "Containers"
+			}
+		});
+		Items.insert({
+			name: "Silver piece",
+			plural: "Silver pieces",
+			charId: char._id,
+			quantity: 0,
+			weight: 0.02,
+			value: 0.1,
+			color: "n",
+			parent: {
+				id: containerId,
+				collection: "Containers"
+			}
+		});
+		Items.insert({
+			name: "Copper piece",
+			plural: "Copper pieces",
+			charId: char._id,
+			quantity: 0,
+			weight: 0.02,
+			value: 1,
+			color: "n",
+			parent: {
+				id: containerId,
+				collection: "Containers"
+			}
+		});
+	}
+});
