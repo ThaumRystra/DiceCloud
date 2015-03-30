@@ -132,7 +132,7 @@ Characters.after.insert(function (userId, char) {
 			quantity: 0,
 			weight: 0.02,
 			value: 0.1,
-			color: "n",
+			color: "q",
 			parent: {
 				id: containerId,
 				collection: "Containers"
@@ -144,8 +144,8 @@ Characters.after.insert(function (userId, char) {
 			charId: char._id,
 			quantity: 0,
 			weight: 0.02,
-			value: 1,
-			color: "n",
+			value: 0.01,
+			color: "s",
 			parent: {
 				id: containerId,
 				collection: "Containers"
