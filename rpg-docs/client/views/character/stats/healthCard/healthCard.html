@@ -12,7 +12,9 @@
 						  role="slider"
 						  ></paper-slider>
 			{{#each tempHitPoints}}
-				<div layout horizontal>
+				<div>
+					{{name}}
+					<div layout horizontal>
 					<paper-slider class="tempHitPointSlider"
 							  value={{left}}
 							  max={{maximum}}
@@ -24,6 +26,7 @@
 						<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
 					{{/unless}}{{/unless}}
 				</div>
+			</div>
 			{{/each}}
 			<div class="caption">
 				{{#if multipliers.immunities.length}} <div>Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}</div>{{/if}}

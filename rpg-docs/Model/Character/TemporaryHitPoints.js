@@ -2,6 +2,7 @@ TemporaryHitPoints = new Mongo.Collection("temporaryHitPoints");
 
 Schemas.TemporaryHitPoints = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
+	name:        {type: String, optional: true},
 	maximum:     {type: Number, defaultValue: 0},
 	used:        {type: Number, defaultValue: 0},
 	deleteOnZero:{type: Boolean, defaultValue: true},
@@ -9,9 +10,9 @@ Schemas.TemporaryHitPoints = new SimpleSchema({
 		type: Date,
 		autoValue: function() {
 			if (this.isInsert) {
-				return new Date;
+				return new Date();
 			} else if (this.isUpsert) {
-				return {$setOnInsert: new Date};
+				return {$setOnInsert: new Date()};
 			} else {
 				this.unset();
 			}
