@@ -8,6 +8,15 @@
 		<div>
 			{{> colorDropdown}}
 		</div>
+		<paper-menu-button>
+			<paper-icon-button icon="menu" noink></paper-icon-button>
+			<paper-dropdown class="dropdown" halign="right">
+				<core-menu class="menu" style="color: black; color: rgba(0,0,0,0.87);">
+					<paper-item id="deleteCharacter"><core-icon icon="delete"></core-icon>Delete</paper-item>
+					<paper-item id="shareCharacter"><core-icon icon="social:share"></core-icon>Share</paper-item>
+				</core-menu>
+			</paper-dropdown>
+		</paper-menu-button>
 		<div class="bottom fit" horizontal layout>
 			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
 				<paper-tab name="stats">Stats</paper-tab>

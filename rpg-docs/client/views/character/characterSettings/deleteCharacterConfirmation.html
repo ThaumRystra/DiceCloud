@@ -1,0 +1,9 @@
+<template name="deleteCharacterConfirmation">
+	<div>
+		Deleting a character cannot be undone.<br>
+		To continue type "{{name}}" into the box below.<br>
+		<paper-input id="nameInput" label="type the characters's name here" style="width: 100%;"></paper-input><br>
+		<paper-button id="deleteButton" style={{getStyle}} disabled={{cantDelete}}>Delete Character</paper-button>
+	</div>
+	<paper-button id="cancelButton" affirmative> Cancel </paper-button>
+</template>

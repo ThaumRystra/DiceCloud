@@ -36,7 +36,7 @@
 						{{#each attuned}}
 							{{>inventoryItem}}
 						{{/each}}
-						<div class="list-subhead" layout horizontal center>{{name}}</div>
+						{{#if attuned.count}}<div class="list-subhead" layout horizontal center>Equipment</div>{{/if}}
 						{{#each equipment}}
 							{{>inventoryItem}}
 						{{/each}}

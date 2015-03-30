@@ -1,6 +1,6 @@
 Template.characterSheet.created = function(){
 	Session.setDefault(this.data._id + ".selectedTab", "stats");
-}
+};
 
 var setTab = function(charId, tab){
 	return Session.set(charId + ".selectedTab", tab);
@@ -25,5 +25,12 @@ Template.characterSheet.events({
 	},
 	"color-change": function(event, instance){
 		Characters.update(this._id, {$set: {color: event.color}});
+	},
+	"tap #deleteCharacter": function(event, instance){
+		GlobalUI.showDialog({
+			heading: "Delete " + this.name,
+			data: this,
+			template: "deleteCharacterConfirmation",
+		});
 	},
 });

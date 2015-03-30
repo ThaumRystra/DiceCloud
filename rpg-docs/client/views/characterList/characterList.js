@@ -10,14 +10,9 @@ Template.characterList.helpers({
 
 Template.characterList.events({
 	"tap .characterCard": function(event, instance){
-		console.log(this);
 		Router.go("characterSheet", {_id: this._id});
 	},
 	"tap .addCharacter": function (event, template) {
 		Characters.insert({owner: Meteor.userId()});
 	},
-	"tap #deleteChar": function(event, template){
-		console.log("deleting", this);
-		Characters.remove(this._id);
-	}
 });

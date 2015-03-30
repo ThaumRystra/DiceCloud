@@ -8,14 +8,14 @@
 	<div class="scroll-y" fit>
 			{{#if currentUser}}
 				{{#if characters.count}}
-					<div layout horizontal class="characterCards">
+					<div layout horizontal wrap class="characterCards">
 						{{# each characters}}
 							{{#with characterDetails}}
 								{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
 							{{/with}}
 						{{/each}}
+						{{> gridPadding class="characterCard" num=12}}
 					</div>
-					{{> gridPadding class="characterCard" num=12}}
 				{{else}}
 					<div layout vertical center center-justified>
 						<div>You don't seem to have any characters :(</div>

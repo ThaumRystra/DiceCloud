@@ -1,0 +1,3 @@
+Template.characterSettings.events({
+	
+});

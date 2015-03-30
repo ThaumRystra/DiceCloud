@@ -29,7 +29,7 @@
 	padding: 24px;
 }
 
-.red-button {
+html /deep/ .red-button {
 	background: #d23f31;
 	color: #fff;
 	margin-top: 16px;

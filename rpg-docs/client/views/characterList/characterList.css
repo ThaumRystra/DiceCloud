@@ -5,4 +5,6 @@
 .characterCard{
 	width: 272px;
 	margin: 4px;
+	min-width: 272px;
+	flex-grow: 1;
 }

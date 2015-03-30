@@ -14,7 +14,6 @@ reactive-var
 underscore
 aldeed:collection2
 differential:vulcanize
-msavin:mongol
 matb33:collection-hooks
 zimme:collection-softremovable
 momentjs:moment

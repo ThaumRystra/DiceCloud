@@ -1,7 +1,8 @@
 var childSchema = new SimpleSchema({
 	parent:              { type: Object },
 	'parent.collection': { type: String },
-	'parent.id':         { type: String, regEx: SimpleSchema.RegEx.Id }
+	'parent.id':         { type: String, regEx: SimpleSchema.RegEx.Id },
+	'removedWithParent': { type: Boolean, defaultValue: false},
 });
 
 var joinWithDefaultKeys = function(keys){
@@ -11,7 +12,8 @@ var joinWithDefaultKeys = function(keys){
 		'removedAt',
 		'removedBy',
 		'restoredAt',
-		'restoredBy'
+		'restoredBy',
+		'removedWith',
 	];
 	return _.union(keys, defaultKeys);
 };
@@ -54,7 +56,7 @@ makeChild = function(collection, inheritedKeys){
 			return getParent(this);
 		},
 		getParentCollection: function(){
-			return Meteor.isClient? 
+			return Meteor.isClient?
 				window[this.parent.collection] : global[this.parent.collection];
 		}
 	});
@@ -62,6 +64,13 @@ makeChild = function(collection, inheritedKeys){
 	//when created, inherit parent properties
 	collection.after.insert(function(userId, doc){
 		inheritParentProperties(doc, collection);
+	});
+
+	collection.before.update(function(userId, doc, fieldNames, modifier, options){
+		//if we are restoring this asset, unmark that it was removed with its parent, we no longer care
+		if( modifier && modifier.$set && modifier.$set.removed === false ){
+			modifier.$set.removedWithParent = false;
+		}
 	});
 
 	collection.after.update(function (userId, doc, fieldNames, modifier, options) {
@@ -113,6 +122,7 @@ Meteor.methods({
 		check(parent, {_id: String, charId: String});
 		check(modifier, Object);
 		checkPermission(this.userId, parent.charId);
+		var selector = {'parent.id': parent._id};
 		_.each(childCollections, function(collection){
 			var thisModifier;
 			if(limitToInheritance){
@@ -121,7 +131,16 @@ Meteor.methods({
 				thisModifier = _.clone(modifier);
 			}
 			if(_.isEmpty(thisModifier)) return;
-			collection.update( {'parent.id': parent._id}, thisModifier, {multi: true, removed: true});
+			if(modifier.$set){
+				if(modifier.$set.removed === true){
+					//note that this item is inheriting a soft removal
+					modifier.$set.removedWithParent = true;
+				} else if (modifier.$set.removed === false){
+					//only ressurect children who inherited a soft removal
+					selector = selector.removedWithParent = true;
+				}
+			}
+			collection.update( selector, thisModifier, {multi: true, removed: true});
 		});
 	},
 	removeChildren: function (parent) {
