@@ -6,22 +6,32 @@
 		</div>
 	</core-toolbar>
 	<div class="scroll-y" fit>
-		<div layout horizontal class="characterCards">
-			{{# each characters}}
-				{{#with characterDetails}}
-					{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
-				{{/with}}
-			{{/each}}
-		</div>
-		{{> gridPadding class="characterCard" num=12}}
+			{{#if currentUser}}
+				{{#if characters.count}}
+					<div layout horizontal class="characterCards">
+						{{# each characters}}
+							{{#with characterDetails}}
+								{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
+							{{/with}}
+						{{/each}}
+					</div>
+					{{> gridPadding class="characterCard" num=12}}
+				{{else}}
+					<div layout vertical center center-justified>
+						<div>You don't seem to have any characters :(</div>
+						<paper-button class="addCharacter red-button" raised>Add Character</paper-button>
+					</div>
+				{{/if}}
+			{{else}}
+				You must sign in first.
+			{{/if}}
 		<div class="fab-buffer"></div>
-		<paper-fab id="addCharacter" 
-				   class="floatyButton" 
-				   icon="add" 
-				   title="Add" 
-				   role="button" 
-				   tabindex="0" 
-				   aria-label="Add" 
+		<paper-fab class="floatyButton addCharacter"
+				   icon="add"
+				   title="Add"
+				   role="button"
+				   tabindex="0"
+				   aria-label="Add"
 				   hero-id="main"></paper-fab>
 	</div>
 </template>
