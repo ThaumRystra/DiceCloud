@@ -5,5 +5,6 @@ magicSchools = [
 	"Enchantment",
 	"Evocation",
 	"Illusion",
-	"Necromancy"
+	"Necromancy",
+	"Transmutation",
 ];
