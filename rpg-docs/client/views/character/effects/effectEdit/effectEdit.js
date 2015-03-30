@@ -70,15 +70,15 @@ var stats = [
 	{stat: "thunderMultiplier", name: "Thunder", group: "Weakness/Resistance"}
 ];
 
-var statsDict = _.indexBy(stats, "stat")
+var statsDict = _.indexBy(stats, "stat");
 var statGroups = _.groupBy(stats, "group");
 var statGroupNames = _.keys(statGroups);
 
 var attributeOperations = [
-	{name: "Base Value", operation: "base"}, 
-	{name: "Add", operation: "add"}, 
-	{name: "Multiply", operation: "mul"}, 
-	{name: "Min", operation: "min"}, 
+	{name: "Base Value", operation: "base"},
+	{name: "Add", operation: "add"},
+	{name: "Multiply", operation: "mul"},
+	{name: "Min", operation: "min"},
 	{name: "Max", operation: "max"}
 ];
 var skillOperations = [
@@ -147,14 +147,20 @@ Template.effectEdit.events({
 		Effects.softRemove(this._id);
 		GlobalUI.deletedToast(this._id, "Effects", "Effect");
 	},
-	"core-select #statGroupDropDown": function(event){
+	"core-select #statGroupDropDown": function(event, instance){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var groupName = detail.item.getAttribute("name");
 		var oldName = Template.instance().selectedStatGroup.get();
 		if(oldName != groupName){
-			Template.instance().selectedStatGroup.set(groupName);
-			Effects.update(this._id, {$unset: {stat: ""}});
+			instance.selectedStatGroup.set(groupName);
+			if(groupName === "Skills" || groupName === "Saving Throws"){
+				Effects.update(this._id, {$set: {operation: "proficiency", value: 1, calculation: ""}, $unset: {stat: ""} });
+			} else if(groupName === "Weakness/Resistance"){
+				Effects.update(this._id, {$set: {value: 0.5, calculation: "", operation: "mul"}, $unset: {stat: ""} });
+			} else {
+				Effects.update(this._id, { $set: {operation: "add"}, $unset: {stat: "", value: "", calculation: ""} });
+			}
 		}
 	},
 	"core-select #statDropDown": function(event){
