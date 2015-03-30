@@ -25,6 +25,11 @@
 									 touch-action="pan-y">
 				</paper-toggle-button>
 			</div>
+			<!--Equipped-->
+			<div center horizontal layout>
+				<div flex>Requires Attunement</div>
+				<paper-checkbox id="attunementCheckbox" checked={{requiresAttunement}}></paper-checkbox>
+			</div>
 			<!--Quantity-->
 			<paper-input-decorator label="Quantity" floatinglabel>
 				<input id="quantityInput" type="number" value={{quantity}}>

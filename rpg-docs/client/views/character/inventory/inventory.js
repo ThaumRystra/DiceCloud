@@ -9,8 +9,11 @@ Template.inventory.helpers({
 	items: function(charId, containerId){
 		return Items.find({charId: charId, "parent.id": containerId }, {sort: {color: 1, name: 1}});
 	},
+	attuned: function(){
+		return Items.find({ charId: this._id, enabled: true, requiresAttunement: true  }, {sort: {color: 1, name: 1}});
+	},
 	equipment: function(){
-		return Items.find({ charId: this._id, enabled: true }, {sort: {color: 1, name: 1}});
+		return Items.find({ charId: this._id, enabled: true, requiresAttunement: false }, {sort: {color: 1, name: 1}});
 	},
 	carriedItems: function(){
 		return Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {sort: {color: 1, name: 1}});

@@ -24,24 +24,24 @@ Template.itemDialog.events({
 		GlobalUI.closeDetail();
 	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
-	"change #itemNameInput, input #itemNameInput": function(event){
+	"change #itemNameInput": function(event){
 		console.log("changed Nameinput");
 		var name = Template.instance().find("#itemNameInput").value;
 		Items.update(this._id, {$set: {name: name}});
 	},
-	"change #itemPluralInput, input #itemPluralInput": function(event){
+	"change #itemPluralInput": function(event){
 		var plural = Template.instance().find("#itemPluralInput").value;
 		Items.update(this._id, {$set: {plural: plural}});
 	},
-	"change #quantityInput, input #quantityInput": function(event){
+	"change #quantityInput": function(event){
 		var quantity = +Template.instance().find("#quantityInput").value;
 		Items.update(this._id, {$set: {quantity: quantity}});
 	},
-	"change #weightInput, input #weightInput": function(event){
+	"change #weightInput": function(event){
 		var weight = +Template.instance().find("#weightInput").value;
 		Items.update(this._id, {$set: {weight: weight}});
 	},
-	"change #valueInput, input #valueInput": function(event){
+	"change #valueInput": function(event){
 		var value = +Template.instance().find("#valueInput").value;
 		Items.update(this._id, {$set: {value: value}});
 	},
@@ -59,6 +59,10 @@ Template.itemDialog.events({
 				item.unequip();
 			}
 		}
+	},
+	"change #attunementCheckbox": function(event){
+		var value = event.currentTarget.checked;
+		Items.update(this._id, {$set: {requiresAttunement: value}});
 	},
 	"core-select #containerDropDown": function(event){
 		var detail = event.originalEvent.detail;

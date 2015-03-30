@@ -30,6 +30,13 @@
 						<div class="caption">{{round equipmentWeight}}lbs</div>
 					</div>
 					<div flex class="equipmentMain">
+						{{#if attuned.count}}
+							<div class="list-subhead" layout horizontal center>Attuned</div>
+						{{/if}}
+						{{#each attuned}}
+							{{>inventoryItem}}
+						{{/each}}
+						<div class="list-subhead" layout horizontal center>{{name}}</div>
 						{{#each equipment}}
 							{{>inventoryItem}}
 						{{/each}}
