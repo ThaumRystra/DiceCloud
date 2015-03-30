@@ -75,9 +75,13 @@ this.GlobalUI = (function() {
 		}
 	};
 
+	var throttleBack = _.throttle(function(){
+		history.back();
+	}, 800, {trailing: false});
+
 	GlobalUI.closeDetail = function(){
 		if(!!(window.history && window.history.pushState)){
-			history.back();
+			throttleBack();
 		} else{
 			Session.set("global.ui.detailShow", false);
 		}

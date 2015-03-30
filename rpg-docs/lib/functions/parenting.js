@@ -94,6 +94,7 @@ makeParent = function(collection, donatedKeys){
 	collection.after.update(function (userId, doc, fieldNames, modifier, options) {
 		modifier = limitModifierToKeys(modifier, donatedKeys);
 		doc = _.pick(doc, ['_id','charId']);
+		if(!modifier) return;
 		Meteor.call('updateChildren', doc, modifier, true);
 	});
 

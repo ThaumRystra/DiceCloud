@@ -13,6 +13,6 @@ Template.characterList.events({
 		Router.go("characterSheet", {_id: this._id});
 	},
 	"tap .addCharacter": function (event, template) {
-		Characters.insert({owner: Meteor.userId()});
+		GlobalUI.showDialog({heading: "New Character", template: "newCharacterDialog"});
 	},
 });
