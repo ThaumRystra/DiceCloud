@@ -2,7 +2,14 @@
 
 	<core-drawer-panel>
 		<core-header-panel drawer navigation flex mode="seamed" class="white">
-			{{> loginButtons}}
+			<div id="accountSummary">
+				{{> loginButtons}}
+				{{#if currentUser}}
+					<div id="profileLink" style="text-decoration: underline; cursor: pointer;">
+						My account
+					</div>
+				{{/if}}
+			</div>
 			<paper-item id="charactersMenuButton">Characters</paper-item>
 		</core-header-panel>
 		<core-animated-pages main 

@@ -1,0 +1,24 @@
+<template name="profile">
+	{{#with currentUser}}
+		<core-toolbar class="blue-grey white-text">
+			<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+			<div id="username" class="clickable" flex>
+				{{#if username}}
+					{{username}}
+				{{else}}
+					Tap to set username
+				{{/if}}
+			</div>
+		</core-toolbar>
+		<div id="userProfile" class="padded">
+			<div>
+				<h2>Email</h2>
+				{{#each emails}}
+					<div layout horizontal>
+						<p>{{address}}</p>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	{{/with}}
+</template>

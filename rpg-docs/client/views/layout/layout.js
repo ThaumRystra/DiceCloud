@@ -15,5 +15,8 @@ Template.layout.helpers({
 Template.layout.events({
 	"tap #charactersMenuButton": function(event, instance){
 		Router.go("/");
+	},
+	"tap #profileLink": function(event, instance){
+		Router.go("profile");
 	}
 });

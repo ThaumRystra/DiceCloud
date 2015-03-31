@@ -17,13 +17,15 @@
 						{{> gridPadding class="characterCard" num=12}}
 					</div>
 				{{else}}
-					<div layout vertical center center-justified>
+					<div layout vertical center center-justified class="padded">
 						<div>You don't seem to have any characters :(</div>
 						<paper-button class="addCharacter red-button" raised>Add Character</paper-button>
 					</div>
 				{{/if}}
 			{{else}}
-				You must sign in first.
+				<div layout vertical center center-justified class="padded">
+					<div>You must sign in to view your characters</div>
+				</div>
 			{{/if}}
 		<div class="fab-buffer"></div>
 		<paper-fab class="floatyButton addCharacter"

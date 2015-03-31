@@ -5,8 +5,7 @@ Router.configure({
 
 Router.map( function () {
 	/*
-	this.route('home',
-			   {
+	this.route('home', {
 		path: '/',
 		waitOn: function(){
 			return Meteor.subscribe("characterList", Meteor.userId());
@@ -18,8 +17,7 @@ Router.map( function () {
 		}
 	});*/ //add a home route and change characterList route
 
-	this.route('characterList',
-			   {
+	this.route('characterList', {
 		path: '/',
 		waitOn: function(){
 			return Meteor.subscribe("characterList", Meteor.userId());
@@ -65,5 +63,9 @@ Router.map( function () {
 
 	this.route('loading', {
 		path: '/loading'
+	});
+
+	this.route('profile', {
+		path: '/account'
 	});
 });

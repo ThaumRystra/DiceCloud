@@ -1,0 +1,9 @@
+<template name="usernameDialog">
+	{{#with currentUser}}
+		<div>
+			<paper-input id="usernameInput" label="Username" value={{username}}></paper-input>
+		</div>
+	{{/with}}
+	<paper-button id="cancelButton" affirmative>    Cancel          </paper-button>
+	<paper-button id="changeButton"    affirmative> Change Username </paper-button>
+</template>
