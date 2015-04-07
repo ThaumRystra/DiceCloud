@@ -5,6 +5,6 @@ Template.undoToast.events({
 			console.warn("Collection with name ", this.collection, " could not be found");
 			return;
 		}
-		collection.restore(this.id);
+		collection.restoreNode(this.id);
 	}
 });

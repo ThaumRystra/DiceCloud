@@ -73,6 +73,14 @@ makeChild = function(collection, inheritedKeys){
 		}
 	});
 
+	collection.softRemoveNode = collection.softRemoveNode || function(id){
+		collection.softRemove(id);
+	};
+
+	collection.restoreNode = collection.restoreNode || function(id){
+		collection.restore(id);
+	};
+
 	collection.attachSchema(childSchema);
 
 	childCollections.push(collection);
