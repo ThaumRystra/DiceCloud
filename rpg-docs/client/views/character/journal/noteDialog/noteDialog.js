@@ -3,7 +3,7 @@ Template.noteDialog.events({
 		Notes.update(instance.data.noteId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Notes.softRemove(instance.data.noteId);
+		Notes.softRemoveNode(instance.data.noteId);
 		GlobalUI.deletedToast(instance.data.noteId, "Notes", "Note");
 		GlobalUI.closeDetail()
 	},

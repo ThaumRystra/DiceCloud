@@ -144,7 +144,7 @@ Template.regularEffectValue.helpers({
 
 Template.effectEdit.events({
 	"tap #deleteEffect": function(event){
-		Effects.softRemove(this._id);
+		Effects.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Effects", "Effect");
 	},
 	"core-select #statGroupDropDown": function(event, instance){

@@ -1,6 +1,6 @@
 Template.experienceDialog.events({
 	"tap #deleteButton": function(event, instance){
-		Experiences.softRemove(instance.data.experienceId);
+		Experiences.softRemoveNode(instance.data.experienceId);
 		GlobalUI.deletedToast(instance.data.experienceId, "Experiences", "Experience");
 		GlobalUI.closeDetail()
 	},

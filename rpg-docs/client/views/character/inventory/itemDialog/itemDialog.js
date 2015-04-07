@@ -19,7 +19,7 @@ Template.itemDialog.events({
 		Items.update(instance.data.itemId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Items.softRemove(instance.data.itemId);
+		Items.softRemoveNode(instance.data.itemId);
 		GlobalUI.deletedToast(instance.data.itemId, "Items", "Item");
 		GlobalUI.closeDetail();
 	},

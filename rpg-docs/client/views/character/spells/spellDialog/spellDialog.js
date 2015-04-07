@@ -38,7 +38,7 @@ Template.spellDialog.events({
 		Spells.update(instance.data.spellId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Spells.softRemove(instance.data.spellId);
+		Spells.softRemoveNode(instance.data.spellId);
 		GlobalUI.deletedToast(instance.data.spellId, "Spells", "Spell");
 		GlobalUI.closeDetail()
 	},

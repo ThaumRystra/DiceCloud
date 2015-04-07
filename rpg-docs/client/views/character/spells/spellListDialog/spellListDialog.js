@@ -3,7 +3,7 @@ Template.spellListDialog.events({
 		SpellLists.update(instance.data.spellListId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		SpellLists.softRemove(instance.data.spellListId);
+		SpellLists.softRemoveNode(instance.data.spellListId);
 		GlobalUI.deletedToast(instance.data.spellListId, "SpellLists", "Spell list and contents");
 		GlobalUI.closeDetail()
 	},

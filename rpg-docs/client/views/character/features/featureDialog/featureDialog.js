@@ -3,7 +3,7 @@ Template.featureDialog.events({
 		Features.update(instance.data.featureId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Features.softRemove(instance.data.featureId);
+		Features.softRemoveNode(instance.data.featureId);
 		GlobalUI.deletedToast(instance.data.featureId, "Features", "Feature");
 		GlobalUI.closeDetail();
 	},

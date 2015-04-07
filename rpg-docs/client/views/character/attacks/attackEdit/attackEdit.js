@@ -3,7 +3,7 @@ var damageTypes = ["bludgeoning", "piercing", "slashing", "acid", "cold", "fire"
 
 Template.attackEdit.events({
 	"tap #deleteAttack": function(event, instance){
-		Attacks.softRemove(this._id);
+		Attacks.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Attacks", "Attack");
 	},
 	"change #attackBonusInput": function(event){
