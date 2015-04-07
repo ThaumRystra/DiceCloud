@@ -130,7 +130,7 @@ var checkPermission = function(userId, charId){
 
 var cascadeSoftRemove = function(id, removedWithId){
 	_.each(childCollections, function(treeCollection){
-		treeCollection.update({"parent.id": id}, {$set: {removed: true, removedWith: removedWithId}});
+		treeCollection.update({"parent.id": id}, {$set: {removed: true, removedWith: removedWithId}}, {multi: true});
 		treeCollection.find({"parent.id": id}).forEach(function(doc){
 			cascadeSoftRemove(doc._id, removedWithId);
 		});
@@ -158,7 +158,7 @@ Meteor.methods({
 		var collection = Mongo.Collection.get(collectionName);
 		collection.restore(id);
 		_.each(childCollections, function(treeCollection){
-			treeCollection.update({removedWith: id, removed: true}, { $unset: {removed: true, removedWith: ""} });
+			treeCollection.update({removedWith: id, removed: true}, { $unset: {removed: true, removedWith: ""} }, {multi: true});
 		});
 	},
 	updateChildren: function (parent, modifier, limitToInheritance) {

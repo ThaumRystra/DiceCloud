@@ -57,6 +57,13 @@ Template.healthCard.events({
 		var value = event.currentTarget.value;
 		var adjustment = value - this.attributeBase("hitPoints");
 		Characters.update(this._id, {$set: {"hitPoints.adjustment": adjustment}});
+		//reset the death saves if we are gaining HP
+		if(value > 0)
+			Characters.update(this._id, { $set: {
+				"deathSave.pass": 0,
+				"deathSave.fail": 0,
+				"deathSave.stable": false
+			} });
 	},
 	"change .tempHitPointSlider": function(event){
 		var value = event.currentTarget.value;
@@ -68,9 +75,9 @@ Template.healthCard.events({
 	},
 	"tap #addTempHP": function(event){
 		GlobalUI.showDialog({
-				template: "addTHPDialog",
-				data: {charId: this._id}
-			});
+			template: "addTHPDialog",
+			data: {charId: this._id}
+		});
 	},
 	"tap .failBubble": function(event){
 		if(event.currentTarget.disabled) return;

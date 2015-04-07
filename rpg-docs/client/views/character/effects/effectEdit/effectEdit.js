@@ -143,11 +143,11 @@ Template.regularEffectValue.helpers({
 });
 
 Template.effectEdit.events({
-	"tap #deleteEffect": function(event){
+	"tap .deleteEffect": function(event){
 		Effects.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Effects", "Effect");
 	},
-	"core-select #statGroupDropDown": function(event, instance){
+	"core-select .statGroupDropDown": function(event, instance){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var groupName = detail.item.getAttribute("name");
@@ -163,35 +163,35 @@ Template.effectEdit.events({
 			}
 		}
 	},
-	"core-select #statDropDown": function(event){
+	"core-select .statDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var statName = detail.item.getAttribute("name");
 		if (statName == this.stat) return;
 		Effects.update(this._id, {$set: {stat: statName}});
 	},
-	"core-select #operationDropDown": function(event){
+	"core-select .operationDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var opName = detail.item.getAttribute("name");
 		if (opName == this.operation) return;
 		Effects.update(this._id, {$set: {operation: opName}});
 	},
-	"core-select #damageMultiplierDropDown": function(event){
+	"core-select .damageMultiplierDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
 		Effects.update(this._id, {$set: {value: value, calculation: "", operation: "mul"}});
 	},
-	"core-select #proficiencyDropDown": function(event){
+	"core-select .proficiencyDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
 		Effects.update(this._id, {$set: {value: value, calculation: ""}});
 	},
-	"change #effectValueInput": function(event){
+	"change .effectValueInput": function(event){
 		var value = event.currentTarget.value;
 		var numValue = +value;
 		if(_.isFinite(numValue)){

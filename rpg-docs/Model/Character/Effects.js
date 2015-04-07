@@ -5,8 +5,8 @@ Effects = new Mongo.Collection("effects");
  * that modify their final value or presentation in some way
  */
 Schemas.Effect = new SimpleSchema({
-	charId: { 
-		type: String, 
+	charId: {
+		type: String,
 		regEx: SimpleSchema.RegEx.Id
 	},
 	name: {
@@ -26,7 +26,7 @@ Schemas.Effect = new SimpleSchema({
 	},
 	calculation: {
 		type: String,
-		optional: true, 
+		optional: true,
 		trim: false
 	},
 	//indicates what the effect originated from
@@ -52,57 +52,55 @@ Schemas.Effect = new SimpleSchema({
 
 Effects.attachSchema(Schemas.Effect);
 
-Characters.after.insert(function (userId, char) {
-	if(Meteor.isServer){
-		Effects.insert({
-			charId: char._id,
-			type: "inate",
-			name: "Constitution modifier for each level",
-			stat: "hitPoints",
-			operation: "add",
-			calculation: "level * constitutionMod",
-			parent: {
-				id: char._id,
-				collection: "Characters"
-			}
-		});
-		Effects.insert({
-			charId: char._id,
-			type: "inate",
-			name: "Proficiency bonus by level",
-			stat: "proficiencyBonus",
-			operation: "add",
-			calculation: "floor(level / 4 + 1.75)",
-			parent: {
-				id: char._id,
-				collection: "Characters"
-			}
-		});
-		Effects.insert({
-			charId: char._id,
-			type: "inate",
-			name: "Dexterity Armor Bonus",
-			stat: "armor",
-			operation: "add",
-			calculation: "dexterityArmor",
-			parent: {
-				id: char._id,
-				collection: "Characters"
-			}
-		});
-		Effects.insert({
-			charId: char._id,
-			type: "inate",
-			name: "Natural Armor",
-			stat: "armor",
-			operation: "base",
-			value: 10,
-			parent: {
-				id: char._id,
-				collection: "Characters"
-			} 
-		});
-	}
+if(Meteor.isServer) Characters.after.insert(function (userId, char) {
+	Effects.insert({
+		charId: char._id,
+		type: "inate",
+		name: "Constitution modifier for each level",
+		stat: "hitPoints",
+		operation: "add",
+		calculation: "level * constitutionMod",
+		parent: {
+			id: char._id,
+			collection: "Characters"
+		}
+	});
+	Effects.insert({
+		charId: char._id,
+		type: "inate",
+		name: "Proficiency bonus by level",
+		stat: "proficiencyBonus",
+		operation: "add",
+		calculation: "floor(level / 4 + 1.75)",
+		parent: {
+			id: char._id,
+			collection: "Characters"
+		}
+	});
+	Effects.insert({
+		charId: char._id,
+		type: "inate",
+		name: "Dexterity Armor Bonus",
+		stat: "armor",
+		operation: "add",
+		calculation: "dexterityArmor",
+		parent: {
+			id: char._id,
+			collection: "Characters"
+		}
+	});
+	Effects.insert({
+		charId: char._id,
+		type: "inate",
+		name: "Natural Armor",
+		stat: "armor",
+		operation: "base",
+		value: 10,
+		parent: {
+			id: char._id,
+			collection: "Characters"
+		}
+	});
 });
 
 Effects.attachBehaviour('softRemovable');

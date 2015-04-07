@@ -16,9 +16,16 @@ CHARACTER_SUBSCHEMA_ALLOW = {
 };
 
 CHARACTER_SUBSCHEMA_DENY = {
-	update: function (userId, docs, fields, modifier) {
-		// can't change character
-		return _.contains(fields, 'charId');
+	update: function (userId, doc, fields, modifier) {
+		if(modifier && modifier.$set && modifier.$set.charId){
+			var id1 = doc.charId;
+			var char1 = Characters.findOne( id1, { fields: {owner: 1, writers: 1} } ) || {};
+			var char1Allowed = ( userId && char1.owner === userId || _.contains(char1.writers, userId) );
+			var id2 = modifier.$set.charId;
+			var char2 = Characters.findOne( id2, { fields: {owner: 1, writers: 1} } ) || {};
+			var char2Allowed = ( userId && char1.owner === userId || _.contains(char1.writers, userId) );
+			return (!char1Allowed || !char2Allowed);
+		}
 	},
 	fetch: ["charId"]
 };

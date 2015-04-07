@@ -15,46 +15,46 @@
 	<!--numerical value-->
 	<div>
 		<!--Ability Mod-->
-		<div>
-			<div>{{abilityName}}</div>
-			<div>{{char.abilityMod ability}}</div>
+		<div horizontal center-justified layout>
+			<div flex>{{abilityName}}</div>
+			<div class="summaryNumber">{{char.abilityMod ability}}</div>
 		</div>
 		<!--Prof bonus-->
 		{{#if char.proficiency skillName}}
-			<div>
-				<div>{{#with profSource}}{{statValue}}{{/with}}</div>
-				<div>+{{profBonus}}</div>
+			<div horizontal center-justified layout>
+				<div flex>{{#with profSource}}{{statValue}}{{/with}}</div>
+				<div class="summaryNumber">{{signedString profBonus}}</div>
 			</div>
 		{{/if}}
 		<!--numerical effects-->
 		{{#each addEffects}}
-			<div>
-				<div>{{sourceName}}</div>
-				<div>&plus;{{statValue}}</div>
+			<div horizontal center-justified layout>
+				<div flex>{{sourceName}}</div>
+				<div class="summaryNumber">{{signedString statValue}}</div>
 			</div>
 		{{/each}}
 		{{#each mulEffects}}
-			<div>
-				<div>{{sourceName}}</div>
-				<div>&times;{{statValue}}</div>
+			<div horizontal center-justified layout>
+				<div flex>{{sourceName}}</div>
+				<div class="summaryNumber">&times;{{statValue}}</div>
 			</div>
 		{{/each}}
 		{{#each minEffects}}
-			<div>
-				<div>{{sourceName}}</div>
-				<div>Min: {{statValue}}</div>
+			<div horizontal center-justified layout>
+				<div flex>{{sourceName}}</div>
+				<div class="summaryNumber">Min: {{statValue}}</div>
 			</div>
 		{{/each}}
 		{{#each maxEffects}}
-			<div>
-				<div>{{sourceName}}</div>
-				<div>Max: {{statValue}}</div>
+			<div horizontal center-justified layout>
+				<div flex>{{sourceName}}</div>
+				<div class="summaryNumber">Max: {{statValue}}</div>
 			</div>
 		{{/each}}
 		<!--Total-->
-		<div>
-			<div>Total</div>
-			<div>{{char.skillMod skillName}}</div>
+		<div horizontal center-justified layout>
+			<div flex>Total</div>
+			<div class="summaryNumber">{{char.skillMod skillName}}</div>
 		</div>
 	</div>
 	<!--Advantage effects-->
