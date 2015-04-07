@@ -129,13 +129,24 @@ var cascadeSoftRemove = function(id, removedWithId){
 	});
 };
 
+var checkRemovePermission = function(collectionName, id, self){
+	check(collectionName, String);
+	check(id, String);
+	var collection = Mongo.Collection.get(collectionName);
+	var node = collection.findOne(id);
+	var charId = node && node.charId;
+	checkPermission(self.userId, charId);
+};
+
 Meteor.methods({
 	softRemoveNode: function(collectionName, id){
+		checkRemovePermission(collectionName, id, this);
 		var collection = Mongo.Collection.get(collectionName);
 		collection.softRemove(id);
 		cascadeSoftRemove(id, id);
 	},
 	restoreNode: function(collectionName, id){
+		checkRemovePermission(collectionName, id, this);
 		var collection = Mongo.Collection.get(collectionName);
 		collection.restore(id);
 		_.each(childCollections, function(treeCollection){
