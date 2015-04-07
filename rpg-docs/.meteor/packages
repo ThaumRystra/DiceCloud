@@ -17,3 +17,4 @@ matb33:collection-hooks
 zimme:collection-softremovable
 momentjs:moment
 mike:mocha
+dburles:mongo-collection-instances

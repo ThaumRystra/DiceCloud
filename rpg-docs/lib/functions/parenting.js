@@ -2,18 +2,12 @@ var childSchema = new SimpleSchema({
 	parent:              { type: Object },
 	'parent.collection': { type: String },
 	'parent.id':         { type: String, regEx: SimpleSchema.RegEx.Id },
-	'removedWithParent': { type: Boolean, defaultValue: false},
+	'removedWith':       { optional: true, type: String, regEx: SimpleSchema.RegEx.Id },
 });
 
 var joinWithDefaultKeys = function(keys){
 	var defaultKeys = [
 		'charId',
-		'removed',
-		'removedAt',
-		'removedBy',
-		'restoredAt',
-		'restoredBy',
-		'removedWith',
 	];
 	return _.union(keys, defaultKeys);
 };
@@ -38,8 +32,7 @@ var getParent = function(doc){
 
 var inheritParentProperties = function(doc, collection){
 	var parent = getParent(doc);
-	if(!parent) throw new Meteor.Error('Parenting Error',
-									   'Document\'s parent does not exist');
+	if(!parent) throw new Meteor.Error('Parenting Error', 'Document\'s parent does not exist');
 	var handMeDowns = _.pick(parent, collection.inheritedKeys);
 	if(_.isEmpty(handMeDowns)) return;
 	collection.update(doc._id, {$set: handMeDowns});
@@ -69,17 +62,14 @@ makeChild = function(collection, inheritedKeys){
 	collection.before.update(function(userId, doc, fieldNames, modifier, options){
 		//if we are restoring this asset, unmark that it was removed with its parent, we no longer care
 		if( modifier && modifier.$unset && modifier.$unset.removed){
-			modifier.$set = modifier.$set || {};
-			modifier.$set.removedWithParent = false;
+			modifier.$unset.removedWith = "";
 		}
 	});
 
 	if(Meteor.isClient) collection.after.update(function (userId, doc, fieldNames, modifier, options) {
-		if(modifier && modifier.$set){
+		if(modifier && modifier.$set && modifier.$set.parent){
 			//when we change parents, inherit its properties
-			if(modifier.$set.parent){
-				inheritParentProperties(doc, collection);
-			}
+			inheritParentProperties(doc, collection);
 		}
 	});
 
@@ -90,7 +80,7 @@ makeChild = function(collection, inheritedKeys){
 
 makeParent = function(collection, donatedKeys){
 	donatedKeys = joinWithDefaultKeys(donatedKeys);
-
+	var collectionName = collection._collection.name;
 	//after changing, push the changes to all children
 	if(Meteor.isClient) collection.after.update(function (userId, doc, fieldNames, modifier, options) {
 		modifier = limitModifierToKeys(modifier, donatedKeys);
@@ -99,27 +89,59 @@ makeParent = function(collection, donatedKeys){
 		Meteor.call('updateChildren', doc, modifier, true);
 	});
 
-	if(Meteor.isClient) collection.after.remove(function (userId, doc) {
-		doc = _.pick(doc, ['_id','charId']);
-		Meteor.call('removeChildren', doc);
+	collection.softRemoveNode = function(id){
+		Meteor.call('softRemoveNode', collectionName, id);
+	};
+
+	collection.restoreNode = function(id){
+		Meteor.call('restoreNode', collectionName, id);
+	};
+
+	if(Meteor.isServer) collection.after.remove(function (userId, doc) {
+		_.each(childCollections, function(collection){
+			collection.remove(
+				{'parent.id': doc._id}
+			);
+		});
 	});
 };
 
 var checkPermission = function(userId, charId){
 	var char = Characters.findOne( charId, { fields: {owner: 1, writers: 1} } );
 	if(!char)
-		throw new Meteor.Error('Access Denied',
+		throw new Meteor.Error('Access Denied, no charId',
 							   'Character '+charId+' does not exist');
 	if (!userId)
-		throw new Meteor.Error('Access Denied',
+		throw new Meteor.Error('Access Denied, no userId',
 							   'No UserId set when trying to update character asset.');
 	if (char.owner !== userId && !_.contains(char.writers, userId))
-		throw new Meteor.Error('Access Denied',
+		throw new Meteor.Error('Access Denied, not permitted',
 							   'Not permitted to update assets of this character.');
 	return true;
 };
 
+var cascadeSoftRemove = function(id, removedWithId){
+	_.each(childCollections, function(treeCollection){
+		treeCollection.update({"parent.id": id}, {$set: {removed: true, removedWith: removedWithId}});
+		treeCollection.find({"parent.id": id}).forEach(function(doc){
+			cascadeSoftRemove(doc._id, removedWithId);
+		});
+	});
+};
+
 Meteor.methods({
+	softRemoveNode: function(collectionName, id){
+		var collection = Mongo.Collection.get(collectionName);
+		collection.softRemove(id);
+		cascadeSoftRemove(id, id);
+	},
+	restoreNode: function(collectionName, id){
+		var collection = Mongo.Collection.get(collectionName);
+		collection.restore(id);
+		_.each(childCollections, function(treeCollection){
+			treeCollection.update({removedWith: id, removed: true}, { $unset: {removed: true, removedWith: ""} });
+		});
+	},
 	updateChildren: function (parent, modifier, limitToInheritance) {
 		check(parent, {_id: String, charId: String});
 		check(modifier, Object);
@@ -133,27 +155,10 @@ Meteor.methods({
 				thisModifier = _.clone(modifier);
 			}
 			if(_.isEmpty(thisModifier)) return;
-			if(thisModifier.$set && thisModifier.$set.removed){
-				//note that this item is inheriting a soft removal
-				thisModifier.$set.removedWithParent = true;
-			} else if (thisModifier.$unset && thisModifier.$unset.removed){
-				//only ressurect children who inherited a soft removal
-				selector.removedWithParent = true;
-			}
-			var num = collection.update( selector, thisModifier, {multi: true, removed: true});
-			console.log("updating ", num, selector, thisModifier);
+			collection.update( selector, thisModifier, {multi: true, removed: true});
 		});
 	},
-	removeChildren: function (parent) {
-		check(parent, {_id: String, charId: String});
-		checkPermission(this.userId, parent.charId);
 
-		_.each(childCollections, function(collection){
-			collection.remove(
-				{'parent.id': parent._id}
-			);
-		});
-	},
 	cloneChildren: function (objectId, newParent){
 		check(objectId, String);
 		check(newParent, {id: String, collection: String});
