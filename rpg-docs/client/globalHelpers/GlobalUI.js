@@ -88,7 +88,6 @@ this.GlobalUI = (function() {
 	};
 
 	GlobalUI.popStateHandler = function(e){
-		console.log();
 		var state = e.originalEvent.state;
 		if(state) {
 			if(state.detail === "closed"){

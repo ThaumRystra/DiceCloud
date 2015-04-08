@@ -1,2 +1,1 @@
 Schemas = {};
-SimpleSchema.debug = true

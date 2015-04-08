@@ -74,7 +74,6 @@ Template.inventory.helpers({
 Template.inventory.events({
 	"tap #addItem": function(event){
 		var charId = this._id;
-		console.log(charId);
 		Items.insert({
 			charId: charId,
 			parent:{
@@ -82,7 +81,7 @@ Template.inventory.events({
 				collection: "Characters"
 			}
 		}, function(err, itemId){
-			if(err) console.log(err);
+			if(err) throw err;
 			GlobalUI.setDetail({
 				template: "itemDialog",
 				data:     {itemId: itemId, charId: charId},

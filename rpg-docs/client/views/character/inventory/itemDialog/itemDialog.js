@@ -25,7 +25,6 @@ Template.itemDialog.events({
 	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
 	"change #itemNameInput": function(event){
-		console.log("changed Nameinput");
 		var name = Template.instance().find("#itemNameInput").value;
 		Items.update(this._id, {$set: {name: name}});
 	},
