@@ -3,16 +3,16 @@ Template.noteDialog.events({
 		Notes.update(instance.data.noteId, {$set: {color: event.color}});
 	},
 	"tap #deleteButton": function(event, instance){
-		Notes.softRemoveNode(instance.data.noteId);
+		Notes.softRemove(instance.data.noteId);
 		GlobalUI.deletedToast(instance.data.noteId, "Notes", "Note");
-		GlobalUI.closeDetail()
+		GlobalUI.closeDetail();
 	},
 	"change #noteNameInput, input #noteNameInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Notes.update(this._id, {$set: {name: value}});
 	},
 	"change #noteDescriptionInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Notes.update(this._id, {$set: {description: value}});
 	}
 });
