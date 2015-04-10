@@ -1,0 +1,24 @@
+<template name="shareDialog">
+	<div>
+		<div>
+			{{#each readers}}
+
+			{{/each}}
+			{{#each writers}}
+
+			{{/each}}
+		</div>
+		<paper-input id="userNameOrEmailInput" label="Username or email" floatinglabel></paper-input>
+		<br>
+		<paper-dropdown-menu id="accessLevelDropdown" label="Access Level">
+			<paper-dropdown layered class="dropdown">
+				<core-menu id="accessLevelMenu" class="menu"  selected="read" on-tap="onStatMenuTap">
+					<paper-item name="read">  View Only </paper-item>
+					<paper-item name="write"> Can Edit  </paper-item>
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+		<br>
+		<paper-button id="shareButton" class="red-button" raised>Share</paper-button>
+	</div>
+</template>

@@ -33,4 +33,11 @@ Template.characterSheet.events({
 			template: "deleteCharacterConfirmation",
 		});
 	},
+	"tap #shareCharacter": function(event, instance){
+		GlobalUI.showDialog({
+			heading: "Share " + this.name,
+			data: this,
+			template: "shareDialog",
+		});
+	},
 });
