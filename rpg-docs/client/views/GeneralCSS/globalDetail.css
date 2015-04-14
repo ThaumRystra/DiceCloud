@@ -29,7 +29,7 @@
 	padding: 24px;
 }
 
-html /deep/ .red-button {
+html /deep/ .red-button:not([disabled]) {
 	background: #d23f31;
 	color: #fff;
 	margin-top: 16px;

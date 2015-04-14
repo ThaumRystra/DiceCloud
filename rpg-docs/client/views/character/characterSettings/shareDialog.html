@@ -1,24 +1,26 @@
 <template name="shareDialog">
 	<div>
 		<div>
+			<div class="subhead">
+				Can View
+			</div>
 			{{#each readers}}
-
+				{{this}}<br>
 			{{/each}}
+			<div class="subhead">
+				Can Edit
+			</div>
 			{{#each writers}}
-
+				{{this}}<br>
 			{{/each}}
 		</div>
-		<paper-input id="userNameOrEmailInput" label="Username or email" floatinglabel></paper-input>
+		<paper-input id="userNameOrEmailInput" label="Username or email" floatinglabel></paper-input><br>
+		{{#if userFindError}}<p style="color: red;">{{userFindError}}</p>{{/if}}
+		<paper-radio-group id="accessLevelMenu" selected="read">
+			<paper-radio-button name="read" label="View Only"></paper-radio-button>
+			<paper-radio-button name="write" label="Can Edit"></paper-radio-button>
+		</paper-radio-group>
 		<br>
-		<paper-dropdown-menu id="accessLevelDropdown" label="Access Level">
-			<paper-dropdown layered class="dropdown">
-				<core-menu id="accessLevelMenu" class="menu"  selected="read" on-tap="onStatMenuTap">
-					<paper-item name="read">  View Only </paper-item>
-					<paper-item name="write"> Can Edit  </paper-item>
-				</core-menu>
-			</paper-dropdown>
-		</paper-dropdown-menu>
-		<br>
-		<paper-button id="shareButton" class="red-button" raised>Share</paper-button>
+		<paper-button id="shareButton" class="red-button" raised disabled={{shareButtonDisabled}}>Share</paper-button>
 	</div>
 </template>
