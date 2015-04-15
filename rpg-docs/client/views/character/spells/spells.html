@@ -1,9 +1,9 @@
 <template name="spells">
 	<div fit>
 		<div id="spells" class="scroll-y" fit>
-			<div class="containers">
+			<div class="spellsContainer" layout horizontal start wrap>
 				{{#if hasSlots}}
-					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
+					<paper-shadow class="card container spellSlotContainer"  hero-id="main" {{detailHero}}>
 						<div class="containerTop {{colorClass}}" layout horizontal center>
 							<div class="containerName subhead" hero-id="title" flex>Spell Slots</div>
 						</div>
@@ -26,7 +26,7 @@
 					</paper-shadow>
 				{{/if}}
 				{{#each spellLists}}
-					<paper-shadow class="card container"  hero-id="main" {{detailHero}} style="order: {{order}};">
+					<paper-shadow class="card container spellList"  hero-id="main" {{detailHero}} flex>
 						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
 							<div flex>
 								<div class="containerName subhead">{{name}}</div>
@@ -53,36 +53,36 @@
 						</div>
 						<div class="containerMain">
 							{{#each levels}}
-								{{#if spellCount .. ../../_id}}
-									<div class="list-subhead" layout horizontal center>
-										{{name}}
-									</div>
-								{{/if}}
-								{{#each spells ../_id ../../_id}}
-									{{#if showSpell ../../settings.showUnprepared}}
-										<div class="itemSlot">
-											<paper-item class="inventoryItem spell" hero-id="main" {{detailHero}} 
-														layout horizontal center>
-													<!--disabled={{cantCast ../level ../../..}} to grey out spells above highest usable slot-->
-												<core-icon icon="social:whatshot" 
-														   style="color: {{hexColor color}};"
-														   ></core-icon>
-												<div flex layout vertical>
-													<div>{{name}}</div>
-													<div class="caption">
-														{{school}} {{castingTime}}
-														{{#if ritual}}(ritual){{/if}}{{#if spellComponents}} - {{spellComponents}}{{/if}}
-													</div>
-												</div>
-												{{#if ../../settings.showUnprepared}}
-													<paper-checkbox class="preparedCheckbox" checked={{isPrepared}} disabled={{cantUnprepare}}></paper-checkbox>
-												{{else}}
-													<!--<paper-icon-button class="castButton" icon="send"></paper-icon-button>-->
-												{{/if}}
-											</paper-item>
+								<div class="spellLevel">
+									{{#if spellCount .. ../../_id}}
+										<div class="list-subhead" layout horizontal center>
+											{{name}}
 										</div>
 									{{/if}}
-								{{/each}}
+									{{#each spells ../_id ../../_id}}
+										{{#if showSpell ../../settings.showUnprepared}}
+											<div class="itemSlot">
+												<paper-item class="inventoryItem spell" hero-id="main" {{detailHero}} 
+															layout horizontal center>
+														<!--disabled={{cantCast ../level ../../..}} to grey out spells above highest usable slot-->
+													<core-icon icon="social:whatshot" 
+															   style="color: {{hexColor color}};"
+															   ></core-icon>
+													<div flex layout vertical>
+														<div>{{name}}</div>
+														<div class="caption">
+															{{school}} {{castingTime}}
+															{{#if ritual}}(ritual){{/if}}{{#if spellComponents}} - {{spellComponents}}{{/if}}
+														</div>
+													</div>
+													{{#if ../../settings.showUnprepared}}
+														<paper-checkbox class="preparedCheckbox" checked={{isPrepared}} disabled={{cantUnprepare}}></paper-checkbox>
+													{{/if}}
+												</paper-item>
+											</div>
+										{{/if}}
+									{{/each}}
+								</div>
 							{{/each}}
 						</div>
 					</paper-shadow>

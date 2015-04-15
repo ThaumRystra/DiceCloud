@@ -52,3 +52,38 @@
 	color: #cccccc;
 	color: rgba(0,0,0,0.26);
 }
+
+.spellsContainer{
+	padding: 4px;
+}
+
+.card.spellList {
+	min-width: 280px;
+	margin: 4px;
+}
+
+.card.spellSlotContainer {
+	width: initial;
+	margin: 4px;
+}
+
+.spellList .containerMain {
+	-ms-column-width: 300px;
+	-webkit-column-width: 300px;
+	-moz-column-width: 300px;
+	column-width: 300px;
+	-ms-column-gap: 8px;
+	-webkit-column-gap: 8px;
+	-moz-column-gap: 8px;
+	column-gap: 8px;
+	-moz-column-fill: balance;
+	column-fill: balance;
+}
+
+.spellLevel {
+	-webkit-backface-visibility: hidden;
+	-webkit-transform: translateX(0);
+	-webkit-column-break-inside: avoid;
+	page-break-inside: avoid;
+	break-inside: avoid;
+}
