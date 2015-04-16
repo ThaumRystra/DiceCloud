@@ -1,0 +1,17 @@
+<template name="attackView">
+	<div class="attackView" layout horizontal>
+		<div class="headline rightPadded" layout horizontal center>
+			{{evaluateSigned charId attackBonus}}
+		</div>
+		<div layout vertical>
+			<div>
+				{{damageDice}}&nbsp;{{{evaluateSignedSpaced charId damageBonus}}}&nbsp;{{damageType}}
+			</div>
+			{{#if details}}
+			<div class="caption">
+				{{details}}
+			</div>
+			{{/if}}
+		</div>
+	</div>
+</template>

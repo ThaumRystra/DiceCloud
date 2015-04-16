@@ -109,6 +109,7 @@ Template.effectView.helpers({
 	operationName: function(){
 		if(this.operation === "proficiency") return null;
 		if(stats[this.stat].group === "Weakness/Resistance") return null;
+		if(this.operation === "add" && evaluateEffect(this.charId, this) < 0) return null;
 		return operations[this.operation] && operations[this.operation].name || "No Operation";
 	},
 	statValue: function(){
@@ -128,6 +129,6 @@ Template.effectView.helpers({
 			if(this.value == 2   || this.calculation == 2)   return "Vulnerability";
 			if(this.value == 0   || this.calculation == 0)   return "Immunity";
 		}
-		return this.calculation || this.value;
+		return evaluateEffect(this.charId, this);
 	}
 });

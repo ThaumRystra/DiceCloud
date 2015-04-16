@@ -161,6 +161,14 @@ paper-button {
 	right: 24px;
 }
 
+.wideTable td {
+	padding: 4px 8px 4px 8px;
+}
+
+.wideTable table {
+	padding: 8px;
+}
+
 paper-fab-menu /deep/ .container {
 	padding: 24px !important;
 }
@@ -217,6 +225,10 @@ paper-slider {
 .vertMargin {
 	margin-top: 16px;
 	margin-bottom: 16px;
+}
+
+.spaceAfter {
+	margin-bottom: 8px;
 }
 
 .s {

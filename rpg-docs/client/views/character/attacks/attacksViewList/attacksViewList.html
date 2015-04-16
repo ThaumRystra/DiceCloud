@@ -1,3 +1,11 @@
 <template name="attacksViewList">
-	Attacks view list goes here
+	{{#if attacks.count}}
+		<hr style="margin: 16px 0 16px 0;">
+		<div class="attacks">
+			<h2 class="spaceAfter">Attacks</h2>
+			{{#each attacks}}
+				{{> attackView}}
+			{{/each}}
+		</div>
+	{{/if}}
 </template>
