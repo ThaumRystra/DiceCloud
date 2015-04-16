@@ -1,12 +1,6 @@
 <template name="effectView">
-	<div class="effectView" layout horizontal center>
-		{{#with statName}}
-			<div flex>{{this}}</div>
-		{{else}}
-			<div flex>{{sourceName}}</div>
-		{{/with}}
-		<div>{{operationName}}</div>
-		<div>{{statValue}}</div>
-		<br>
-	</div>
+	<tr>
+		<td>{{statName}}</td>
+		<td>{{operationName}}{{statValue}}</td>
+	</tr>
 </template>

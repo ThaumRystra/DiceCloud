@@ -33,8 +33,8 @@ var stats = {
 	"initiative":{"name":"Initiative",},
 	"hitPoints":{"name":"Hit Points"},
 	"armor":{"name":"Armor"},
-	"dexterityArmor":{"name":"Dexterity Armor Bonus"}
-	,"speed":{"name":"Speed"},
+	"dexterityArmor":{"name":"Dexterity Armor Bonus"},
+	"speed":{"name":"Speed"},
 	"proficiencyBonus":{"name":"Proficiency Bonus"},
 	"ki":{"name":"Ki Points"},
 	"sorceryPoints":{"name":"Sorcery Points"},
@@ -55,19 +55,19 @@ var stats = {
 	"d8HitDice":{"name":"d8 Hit Dice"},
 	"d10HitDice":{"name":"d10 Hit Dice"},
 	"d12HitDice":{"name":"d12 Hit Dice"},
-	"acidMultiplier":{"name":"Acid", "group": "Weakness/Resistance"},
-	"bludgeoningMultiplier":{"name":"Bludgeoning", "group": "Weakness/Resistance"},
-	"coldMultiplier":{"name":"Cold", "group": "Weakness/Resistance"},
-	"fireMultiplier":{"name":"Fire", "group": "Weakness/Resistance"},
-	"forceMultiplier":{"name":"Force", "group": "Weakness/Resistance"},
-	"lightningMultiplier":{"name":"Lightning", "group": "Weakness/Resistance"},
-	"necroticMultiplier":{"name":"Necrotic", "group": "Weakness/Resistance"},
-	"piercingMultiplier":{"name":"Piercing", "group": "Weakness/Resistance"},
-	"poisonMultiplier":{"name":"Poison", "group": "Weakness/Resistance"},
-	"psychicMultiplier":{"name":"Psychic", "group": "Weakness/Resistance"},
-	"radiantMultiplier":{"name":"Radiant", "group": "Weakness/Resistance"},
-	"slashingMultiplier":{"name":"Slashing", "group": "Weakness/Resistance"},
-	"thunderMultiplier":{"name":"Thunder", "group": "Weakness/Resistance"}
+	"acidMultiplier":{"name":"Acid damage", "group": "Weakness/Resistance"},
+	"bludgeoningMultiplier":{"name":"Bludgeoning damage", "group": "Weakness/Resistance"},
+	"coldMultiplier":{"name":"Cold damage", "group": "Weakness/Resistance"},
+	"fireMultiplier":{"name":"Fire damage", "group": "Weakness/Resistance"},
+	"forceMultiplier":{"name":"Force damage", "group": "Weakness/Resistance"},
+	"lightningMultiplier":{"name":"Lightning damage", "group": "Weakness/Resistance"},
+	"necroticMultiplier":{"name":"Necrotic damage", "group": "Weakness/Resistance"},
+	"piercingMultiplier":{"name":"Piercing damage", "group": "Weakness/Resistance"},
+	"poisonMultiplier":{"name":"Poison damage", "group": "Weakness/Resistance"},
+	"psychicMultiplier":{"name":"Psychic damage", "group": "Weakness/Resistance"},
+	"radiantMultiplier":{"name":"Radiant damage", "group": "Weakness/Resistance"},
+	"slashingMultiplier":{"name":"Slashing damage", "group": "Weakness/Resistance"},
+	"thunderMultiplier":{"name":"Thunder damage", "group": "Weakness/Resistance"}
 };
 
 var operations = {
@@ -75,11 +75,11 @@ var operations = {
 	proficiency: {name: "Proficiency"},
 	add: {name: "+"},
 	mul: {name: "x"},
-	min: {name: "Min"},
-	max: {name: "Max"},
+	min: {name: "Min: "},
+	max: {name: "Max: "},
 	advantage: {name: "Advantage"},
 	disadvantage: {name: "Disadvantage"},
-	passiveAdd: {name: "Passive Bonus"},
+	passiveAdd: {name: "Passive Bonus: "},
 	fail: {name: "Automatically Fail"},
 	conditional: {name: "Conditional Benefit"}
 };

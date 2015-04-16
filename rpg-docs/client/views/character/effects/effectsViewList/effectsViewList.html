@@ -2,11 +2,13 @@
 <template name="effectsViewList">
 	{{#if effects.count}}
 		<hr style="margin: 16px 0 16px 0;">
-		<div id="effects">
+		<div class="effects">
 			<h2>Effects</h2>
-			{{#each effects}}
-				{{>effectView}}
-			{{/each}}
+			<table>
+				{{#each effects}}
+					{{>effectView}}
+				{{/each}}
+			</table>
 		</div>
 	{{/if}}
 </template>
