@@ -1,57 +1,98 @@
 <template name="itemDialog">
 	{{#with item}}
-		{{#baseDialog title=name class=colorClass}}
-			<!--Name and plural name-->
-			<paper-input id="itemNameInput" class="fullwidth" label="Name" floatinglabel value={{name}}></paper-input>
-			{{# if ne1 quantity}}<paper-input id="itemPluralInput" label="Plural Name" floatinglabel value={{plural}}></paper-input>{{/if}}
-			<!--Container dropdown-->
-			<paper-dropdown-menu id="containerDropDown" label="Container">
-				<paper-dropdown layered class="dropdown">
-					<core-menu class="menu"  selected={{parent.id}}>
-						{{#each containers}}
-							<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
-						{{/each}}
-					</core-menu>
-				</paper-dropdown>
-			</paper-dropdown-menu>
-			<!--Equipped-->
-			<div center horizontal layout>
-				<div flex>Equipped</div>
-				<paper-toggle-button id="equippedInput"
-									 checked={{enabled}}
-									 role="button" 
-									 aria-pressed="false"
-									 tabindex="0" 
-									 touch-action="pan-y">
-				</paper-toggle-button>
-			</div>
-			<!--Equipped-->
-			<div center horizontal layout>
-				<div flex>Requires Attunement</div>
-				<paper-checkbox id="attunementCheckbox" checked={{requiresAttunement}}></paper-checkbox>
-			</div>
-			<!--Quantity-->
-			<paper-input-decorator label="Quantity" floatinglabel>
-				<input id="quantityInput" type="number" value={{quantity}}>
-			</paper-input-decorator>
-			<!--Weight-->
-			<paper-input-decorator label="Weight Each (lbs)" floatinglabel>
-				<input id="weightInput" type="number" value={{weight}}>
-			</paper-input-decorator>
-			<!--Value-->
-			<paper-input-decorator label="Value Each (GP)" floatinglabel>
-				<input id="valueInput" type="number" value={{value}}>
-			</paper-input-decorator>
-			<!--Description-->
-			<paper-input-decorator label="Description" floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="itemDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
-			<!--Effects-->
-			{{> effectsEditList parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
-			<!--Attacks-->
-			{{> attackEditList  parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
+		{{#baseDialog title=itemHeading class=colorClass showEdit=true editing=editing}}
+			{{#if editing}}
+				{{> itemEdit}}
+			{{else}}
+				{{> itemDetails}}
+			{{/if}}
 		{{/baseDialog}}
 	{{/with}}
+</template>
+
+<template name="itemDetails">
+	<div layout horizontal wrap center justified class="headline">
+		{{#if weight}}<div class="sideMargin">{{totalWeight}}lbs</div>{{/if}}
+		{{#if value}}<div>{{valueString totalValue}}</div>{{/if}}
+	</div>
+	<div layout horizontal wrap class="caption">
+		{{#if enabled}}<div class="vertMargin" style="margin-right: 16px">Equipped</div>{{/if}}
+		{{#if requiresAttunement}}<div class="vertMargin">Requires Attunement</div>{{/if}}
+	</div>
+	{{#if description}}
+		<hr class="vertMargin">
+		<div class="prewrap">{{description}}</div>
+	{{/if}}
+	{{> effectsViewList charId=charId parentId=_id}}
+	{{> attacksViewList}}
+</template>
+
+<template name="itemEdit">
+	<paper-input class="fullwidth" id="itemNameInput" label="Name" floatinglabel value={{name}}></paper-input>
+	<div layout horizontal wrap>
+		<paper-input-decorator label="Quantity" floatinglabel>
+			<input id="quantityInput" type="number" value={{quantity}}>
+		</paper-input-decorator>
+		{{# if ne1 quantity}}<paper-input flex id="itemPluralInput" label="Plural Name" floatinglabel value={{plural}}></paper-input>{{/if}}
+	</div>
+
+	<hr class="vertMargin">
+
+	<div layout horizontal wrap justified>
+		<div center horizontal layout>
+			<div class="padded">Container</div>
+			{{> containerDropdown}}
+		</div>
+		<div center horizontal layout>
+			<div class="padded">Equipped</div>
+			<paper-toggle-button id="equippedInput"
+								 checked={{enabled}}
+								 role="button"
+								 aria-pressed="false"
+								 tabindex="0"
+								 touch-action="pan-y">
+			</paper-toggle-button>
+		</div>
+		<div center horizontal layout>
+			<div class="padded">Requires Attunement</div>
+			<paper-checkbox id="attunementCheckbox" checked={{requiresAttunement}}></paper-checkbox>
+		</div>
+	</div>
+
+	<hr class="vertMargin">
+
+	<div layout horizontal around-justified>
+		<paper-input-decorator label="Weight Each (lbs)" floatinglabel>
+			<input id="weightInput" type="number" value={{weight}}>
+		</paper-input-decorator>
+		<!--Value-->
+		<paper-input-decorator label="Value Each (GP)" floatinglabel>
+			<input id="valueInput" type="number" value={{value}}>
+		</paper-input-decorator>
+	</div>
+
+	<hr class="vertMargin">
+
+	<!--Description-->
+	<paper-input-decorator label="Description" floatinglabel layout vertical>
+		<paper-autogrow-textarea>
+			<textarea id="itemDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+		</paper-autogrow-textarea>
+	</paper-input-decorator>
+	<!--Effects-->
+	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
+	<!--Attacks-->
+	{{> attackEditList  parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
+</template>
+
+<template name="containerDropdown">
+	<paper-dropdown-menu id="containerDropDown" label="Container">
+		<paper-dropdown layered class="dropdown">
+			<core-menu class="menu"  selected={{parent.id}}>
+				{{#each containers}}
+					<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
+				{{/each}}
+			</core-menu>
+		</paper-dropdown>
+	</paper-dropdown-menu>
 </template>

@@ -3,17 +3,41 @@
 		<core-toolbar class={{class}} hero-id="toolbar" hero>
 			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
 			<div flex>{{title}}</div>
-			{{#if hideColor}}{{else}}
-				<!--color-->
-				{{> colorDropdown}}
-			{{/if}}
-			{{#if hideDelete}}{{else}}
-			<paper-icon-button id="deleteButton" 
-							   role="button"
-							   tabindex="0"
-							   icon="delete" 
-							   aria-label="Delete Feature" 
-							   noink></paper-icon-button>
+			{{#if showEdit}}
+				{{#if editing}}
+					{{#unless hideDelete}}
+						<paper-icon-button id="deleteButton"
+										   role="button"
+										   tabindex="0"
+										   icon="delete"
+										   aria-label="Delete Feature"
+										   noink></paper-icon-button>
+					{{/unless}}
+					{{#unless hideColor}}
+						{{> colorDropdown}}
+					{{/unless}}
+					<paper-icon-button id="doneEditingButton"
+									   icon="done"
+									   aria-label="Delete Feature"
+									   noink></paper-icon-button>
+				{{else}}
+					<paper-icon-button id="editButton"
+									   icon="create"
+									   aria-label="Delete Feature"
+									   noink></paper-icon-button>
+				{{/if}}
+			{{else}}
+				{{#unless hideDelete}}
+					<paper-icon-button id="deleteButton"
+									   role="button"
+									   tabindex="0"
+									   icon="delete"
+									   aria-label="Delete Feature"
+									   noink></paper-icon-button>
+				{{/unless}}
+				{{#unless hideColor}}
+					{{> colorDropdown}}
+				{{/unless}}
 			{{/if}}
 		</core-toolbar>
 		<div class="detailContent">

@@ -71,10 +71,10 @@ var stats = {
 };
 
 var operations = {
-	base: {name: "Base Value"}, 
+	base: {name: "Base Value"},
 	proficiency: {name: "Proficiency"},
-	add: {name: "Add"},
-	mul: {name: "Multiply"},
+	add: {name: "+"},
+	mul: {name: "x"},
 	min: {name: "Min"},
 	max: {name: "Max"},
 	advantage: {name: "Advantage"},
@@ -100,16 +100,16 @@ Template.effectView.helpers({
 			case "Characters":
 				return Characters.findOne(this.charId, {fields: {race: 1}}).race;
 			default:
-				return "Inate"
+				return "Inate";
 		}
 	},
 	statName: function(){
-		return stats[this.stat] && stats[this.stat].name || "No Stat"
+		return stats[this.stat] && stats[this.stat].name || "No Stat";
 	},
 	operationName: function(){
 		if(this.operation === "proficiency") return null;
 		if(stats[this.stat].group === "Weakness/Resistance") return null;
-		return operations[this.operation] && operations[this.operation].name || "No Operation"
+		return operations[this.operation] && operations[this.operation].name || "No Operation";
 	},
 	statValue: function(){
 		if(this.operation === "advantage" ||

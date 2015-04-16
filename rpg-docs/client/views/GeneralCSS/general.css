@@ -209,6 +209,16 @@ paper-slider {
 	padding-bottom: 16px;
 }
 
+.sideMargin {
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.vertMargin {
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+
 .s {
 	padding: 0 0 16px 0;
 }
@@ -219,4 +229,8 @@ paper-slider {
 
 .preline {
 	white-space: pre-line;
+}
+
+.prewrap{
+	white-space: pre-wrap;
 }
