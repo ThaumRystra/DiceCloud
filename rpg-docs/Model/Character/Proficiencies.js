@@ -2,25 +2,27 @@ Proficiencies = new Mongo.Collection("proficiencies");
 
 Schemas.Proficiency = new SimpleSchema({
 	charId: {
-		type: String, 
+		type: String,
 		regEx: SimpleSchema.RegEx.Id
 	},
-	name: 	{
+	name: {
 		type: String,
 		trim: false
 	},
-	//indicates what type of thing proficiency originated from
+	value: {
+		type: Number,
+		allowedValues: [0, 0.5, 1],
+	},
 	type: {
 		type: String,
-		defaultValue: "editable",
-		allowedValues: ["editable", "feature", "buff", "equipment", "inate"]
-	},
+		allowedValues: ["skill", "save", "weapon", "armor", "tool", "language"]
+	}
 });
 
 Proficiencies.attachSchema(Schemas.Proficiency);
 
 Proficiencies.attachBehaviour('softRemovable');
-makeChild(Proficiencies); 
+makeChild(Proficiencies);
 
 Proficiencies.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Proficiencies.deny(CHARACTER_SUBSCHEMA_DENY);
