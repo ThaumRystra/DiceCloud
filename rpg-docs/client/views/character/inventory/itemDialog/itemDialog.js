@@ -30,6 +30,14 @@ Template.itemDialog.events({
 	"tap #doneEditingButton": function(event, instance){
 		instance.editing.set(false);
 	},
+	"color-change": function(event, instance){
+		Items.update(instance.data.itemId, {$set: {color: event.color}});
+	},
+	"tap #deleteButton": function(event, instance){
+		Items.softRemoveNode(instance.data.itemId);
+		GlobalUI.deletedToast(instance.data.itemId, "Items", "Item");
+		GlobalUI.closeDetail();
+	},
 });
 
 Template.itemEdit.helpers({
@@ -39,14 +47,6 @@ Template.itemEdit.helpers({
 });
 
 Template.itemEdit.events({
-	"color-change": function(event, instance){
-		Items.update(instance.data.itemId, {$set: {color: event.color}});
-	},
-	"tap #deleteButton": function(event, instance){
-		Items.softRemoveNode(instance.data.itemId);
-		GlobalUI.deletedToast(instance.data.itemId, "Items", "Item");
-		GlobalUI.closeDetail();
-	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
 	"change #itemNameInput": function(event){
 		var name = Template.instance().find("#itemNameInput").value;
