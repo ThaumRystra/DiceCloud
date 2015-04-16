@@ -20,5 +20,5 @@ Template.registerHelper("valueString", function(value){
 		}
 		result += resultArray[i];
 	}
-	return result;	
+	return result;
 });
