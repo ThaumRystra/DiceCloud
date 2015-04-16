@@ -40,6 +40,10 @@ Template.itemDialog.events({
 	},
 });
 
+Template.itemEdit.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.itemEdit.helpers({
 	ne1: function(num){
 		return num != 1;

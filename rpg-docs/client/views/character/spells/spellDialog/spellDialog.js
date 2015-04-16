@@ -11,10 +11,61 @@ var spellLevels = [
 	{ name: "Level 9",  level: 9 },
 ];
 
+
+Template.spellDialog.onCreated(function(){
+	this.editing = new ReactiveVar(false);
+});
+
 Template.spellDialog.helpers({
 	spell: function(){
 		return Spells.findOne(this.spellId);
 	},
+	editing: function(){
+		return Template.instance().editing.get();
+	},
+});
+
+Template.spellDialog.events({
+	"color-change": function(event, instance){
+		Spells.update(instance.data.spellId, {$set: {color: event.color}});
+	},
+	"tap #editButton": function(event, instance){
+		instance.editing.set(true);
+	},
+	"tap #doneEditingButton": function(event, instance){
+		instance.editing.set(false);
+	},
+	"tap #deleteButton": function(event, instance){
+		Spells.softRemoveNode(instance.data.spellId);
+		GlobalUI.deletedToast(instance.data.spellId, "Spells", "Spell");
+		GlobalUI.closeDetail();
+	},
+});
+
+Template.spellDetails.helpers({
+	getComponents: function(){
+		var components = "";
+		if(this.components.concentration) components += "C";
+		if(this.components.verbal) components += components.length? ", V" : "V";
+		if(this.components.somatic) components += components.length? ", S" : "S";
+		if(this.components.material) {
+			components += components.length? ", M" : "M";
+			components += " (" + this.components.material + ")";
+		}
+		return components;
+	},
+	preparedString: function(){
+		if(this.prepared === "prepared") return "prepared";
+		if(this.prepared === "unprepared") return "unprepared";
+		if(this.prepared === "always") return "always prepared";
+	},
+});
+
+Template.spellEdit.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
+Template.spellEdit.helpers({
 	spellLists: function(){
 		return SpellLists.find({charId: this.charId}, {fields: {name: 1}});
 	},
@@ -33,37 +84,29 @@ Template.spellDialog.helpers({
 	}
 });
 
-Template.spellDialog.events({
-	"color-change": function(event, instance){
-		Spells.update(instance.data.spellId, {$set: {color: event.color}});
-	},
-	"tap #deleteButton": function(event, instance){
-		Spells.softRemoveNode(instance.data.spellId);
-		GlobalUI.deletedToast(instance.data.spellId, "Spells", "Spell");
-		GlobalUI.closeDetail()
-	},
+Template.spellEdit.events({
 	"change #spellNameInput, input #spellNameInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {name: value}});
 	},
 	"change #castingTimeInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {castingTime: value}});
 	},
 	"change #rangeInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {range: value}});
 	},
 	"change #durationInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {duration: value}});
 	},
 	"change #materialInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {"components.material": value}});
 	},
 	"change #descriptionInput": function(event){
-		var value = event.currentTarget.value
+		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {"description": value}});
 	},
 	"core-select #listDropdown": function(event){
