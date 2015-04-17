@@ -26,6 +26,9 @@ Router.map( function () {
 			characters: function(){
 				return Characters.find({}, {fields: {_id: 1}});
 			}
+		},
+		onAfterAction: function() {
+			document.title = appName;
 		}
 	});
 
@@ -39,25 +42,15 @@ Router.map( function () {
 		data: function() {
 			var data = Characters.findOne({_id: this.params._id}, {fields: {_id: 1, name: 1, color: 1}});
 			return data;
-		}
-	});
-
-	this.route('inventory', {
-		path: '/inventory/:_id',
-		data: {
-			containers: function() {
-				var containers = Containers.find({owner: data._id}, {fields: {_id: 1}});
-				return containers;
-			},
-
-		}
-	});
-
-	this.route('item', {
-		path: '/item/:_id',
-		data: function() {
-			var data = Items.findOne({_id: this.params._id});
-			return data;
+		},
+		onAfterAction: function() {
+			var char = Characters.findOne({_id: this.params._id}, {fields: {_id: 1, name: 1, color: 1}});
+			var name = char.name;
+			if(name){
+				document.title = name;
+			} else {
+				document.title = appName + "Character";
+			}
 		}
 	});
 
@@ -66,6 +59,9 @@ Router.map( function () {
 	});
 
 	this.route('profile', {
-		path: '/account'
+		path: '/account',
+		onAfterAction: function() {
+			document.title = appName + " Account";
+		}
 	});
 });

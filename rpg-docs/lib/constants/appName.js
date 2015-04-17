@@ -1,0 +1,1 @@
+appName = "Dice Cloud";
