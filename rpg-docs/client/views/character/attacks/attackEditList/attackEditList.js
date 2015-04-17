@@ -1,6 +1,6 @@
 Template.attackEditList.helpers({
 	attacks: function(){
-		var cursor = Attacks.find({"parent.id": this.parentId, type: this.type, charId: this.charId});
+		var cursor = Attacks.find({"parent.id": this.parentId, charId: this.charId});
 		return cursor;
 	}
 });
@@ -12,8 +12,7 @@ Template.attackEditList.events({
 			parent: {
 				id: this.parentId,
 				collection: this.parentCollection
-			},
-			type: this.type,
+			}
 		});
 	},
 });

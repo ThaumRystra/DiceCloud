@@ -1,6 +1,6 @@
 Template.effectsEditList.helpers({
 	effects: function(){
-		var cursor = Effects.find({"parent.id": this.parentId, "parent.collection": this.parentCollection, type: this.type});
+		var cursor = Effects.find({"parent.id": this.parentId, "parent.collection": this.parentCollection});
 		return cursor;
 	}
 });
@@ -18,7 +18,6 @@ Template.effectsEditList.events({
 				collection: this.parentCollection
 			},
 			operation: "add",
-			type: this.type,
 			enabled: this.enabled
 		});
 	},

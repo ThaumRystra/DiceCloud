@@ -13,10 +13,6 @@ Schemas.Proficiency = new SimpleSchema({
 		type: Number,
 		allowedValues: [0, 0.5, 1],
 	},
-	type: {
-		type: String,
-		allowedValues: ["skill", "save", "weapon", "armor", "tool", "language"]
-	}
 });
 
 Proficiencies.attachSchema(Schemas.Proficiency);

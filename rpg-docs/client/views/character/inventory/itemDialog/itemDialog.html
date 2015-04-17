@@ -80,9 +80,9 @@
 		</paper-autogrow-textarea>
 	</paper-input-decorator>
 	<!--Effects-->
-	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
+	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
 	<!--Attacks-->
-	{{> attackEditList  parentId=_id parentCollection="Items" charId=charId type="equipment" enabled=equipped name=name}}
+	{{> attackEditList  parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
 </template>
 
 <template name="containerDropdown">

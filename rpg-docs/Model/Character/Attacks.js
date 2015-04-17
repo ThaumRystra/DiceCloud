@@ -42,12 +42,6 @@ Schemas.Attack = new SimpleSchema({
 						"poison", "psychic", "radiant", "thunder"],
 		defaultValue: "slashing"
 	},
-	//indicates what the attack originated from
-	type: {
-		type: String,
-		defaultValue: "editable",
-		allowedValues: ["editable", "feature", "class", "buff", "equipment", "racial", "inate"]
-	},
 	//the id of the feature, buff or item that created this effect
 	parent: {
 		type: Schemas.Parent

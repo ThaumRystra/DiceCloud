@@ -29,12 +29,6 @@ Schemas.Effect = new SimpleSchema({
 		optional: true,
 		trim: false
 	},
-	//indicates what the effect originated from
-	type: {
-		type: String,
-		defaultValue: "editable",
-		allowedValues: ["editable", "feature", "class", "buff", "equipment", "racial", "inate"]
-	},
 	//the thing that created this effect
 	parent: {
 		type: Schemas.Parent

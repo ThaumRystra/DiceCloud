@@ -152,27 +152,14 @@ Template.skillDialog.helpers({
 		return Characters.findOne(this.charId, {fields:{_id: 1}});
 	},
 	sourceName: function(){
-		var id = this.parent.id;
-		if(!id) return;
-		switch(this.type){
-			case "feature":
-				return Features.findOne(id, {fields: {name: 1}}).name;
-			case "class":
-				return Classes.findOne(id, {fields: {name: 1}}).name;
-			case "buff":
-				return Buffs.findOne(id, {fields: {name: 1}}).name;
-			case "equipment":
-				return Items.findOne(id, {fields: {name: 1}}).name;
-			case "racial":
-				return Characters.findOne(this.charId, {fields: {race: 1}}).race;
-			case "inate":
-				return "Inate"
-		}
+		if (this.parent.collection === "Characters") return "inate";
+		var parent = this.getParent();
+		return parent && parent.name;
 	},
 	operationName: function(){
 		if(this.operation === "proficiency") return null;
 		if(stats[this.stat].group === "Weakness/Resistance") return null;
-		return operations[this.operation] && operations[this.operation].name || "No Operation"
+		return operations[this.operation] && operations[this.operation].name || "No Operation";
 	},
 	statValue: function(){
 		if(this.operation === "advantage" ||

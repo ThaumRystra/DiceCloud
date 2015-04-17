@@ -17,7 +17,6 @@ var getPointBuyEffect = function(stat, value, pointsUsed, charId){
 			name: pointsUsed + " Point Buy",
 			operation: "base",
 			value: value,
-			type: "inate",
 			parent: {collection: "Characters", id: charId},
 			enabled: true,
 		},
@@ -25,7 +24,6 @@ var getPointBuyEffect = function(stat, value, pointsUsed, charId){
 			charId: charId,
 			stat: stat,
 			operation: "base",
-			type: "inate"
 		}
 	};
 };
