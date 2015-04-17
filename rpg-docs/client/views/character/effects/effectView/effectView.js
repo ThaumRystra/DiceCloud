@@ -71,7 +71,7 @@ var stats = {
 };
 
 var operations = {
-	base: {name: "Base Value"},
+	base: {name: "Base Value: "},
 	proficiency: {name: "Proficiency"},
 	add: {name: "+"},
 	mul: {name: "x"},
@@ -81,7 +81,6 @@ var operations = {
 	disadvantage: {name: "Disadvantage"},
 	passiveAdd: {name: "Passive Bonus: "},
 	fail: {name: "Automatically Fail"},
-	conditional: {name: "Conditional Benefit"}
 };
 
 Template.effectView.helpers({
@@ -107,7 +106,8 @@ Template.effectView.helpers({
 		return stats[this.stat] && stats[this.stat].name || "No Stat";
 	},
 	operationName: function(){
-		if(this.operation === "proficiency") return null;
+		if(this.operation === "proficiency" ||
+			this.operation === "conditional") return null;
 		if(stats[this.stat].group === "Weakness/Resistance") return null;
 		if(this.operation === "add" && evaluateEffect(this.charId, this) < 0) return null;
 		return operations[this.operation] && operations[this.operation].name || "No Operation";
@@ -115,8 +115,7 @@ Template.effectView.helpers({
 	statValue: function(){
 		if(this.operation === "advantage" ||
 		   this.operation === "disadvantage" ||
-		   this.operation === "fail" ||
-		   this.operation === "conditional"){
+		   this.operation === "fail"){
 			return null;
 		}
 		if(this.operation === "proficiency"){
@@ -124,11 +123,16 @@ Template.effectView.helpers({
 			if(this.value == 1   || this.calculation == 1)   return "Proficiency";
 			if(this.value == 2   || this.calculation == 2)   return "Double Proficiency";
 		}
+		if(this.operation === "conditional"){
+			return this.calculation || this.value;
+		}
 		if(stats[this.stat].group === "Weakness/Resistance"){
 			if(this.value == 0.5 || this.calculation == 0.5) return "Resistance";
 			if(this.value == 2   || this.calculation == 2)   return "Vulnerability";
 			if(this.value == 0   || this.calculation == 0)   return "Immunity";
 		}
-		return evaluateEffect(this.charId, this);
+		var value = evaluateEffect(this.charId, this);
+		if(_.isNumber(value)) return value;
+		return this.calculation || this.value;
 	}
 });
