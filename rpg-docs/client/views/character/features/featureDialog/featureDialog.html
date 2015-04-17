@@ -1,40 +1,85 @@
 <template name="featureDialog">
 	{{#with feature}}
-		{{#baseDialog title=name class=colorClass}}
-			<!--name-->
-			<paper-input id="featureNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-			<hr style="margin: 16px 0 16px 0;">
-			<!--description-->
-			<paper-input-decorator label="Description" floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
-			<hr style="margin: 16px 0 16px 0;">
-			<div layout horizontal center style="height: 60px;">
-				<div class="caption">Limit Uses</div>
-				<paper-toggle-button id="limitUseCheck"
-									 checked={{usesSet}} 
-									 role="button" 
-									 aria-pressed="false" 
-									 tabindex="0" 
-									 touch-action="pan-y"
-									 style="margin-left: 8px; margin-right:8px;">
-				</paper-toggle-button>
-				{{#if usesSet}}
-				<paper-input id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
-				{{/if}}
-				<paper-dropdown-menu id="enabledDropdown" label="Enable Feature">
-					<paper-dropdown layered class="dropdown">
-						<core-menu id="enabledMenu" class="menu"  selected={{enabled}} on-tap="onStatMenuTap">
-							<paper-item name="alwaysEnabled"> Always Enabled </paper-item>
-							<paper-item name="enabled">       Enabled        </paper-item>
-							<paper-item name="disabled">      Disabled       </paper-item>
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
-			</div>
-			{{> effectsEditList parentId=_id parentCollection="Features" charId=charId type="feature" name=name enabled=isEnabled}}
+		{{#baseDialog title=name class=colorClass showEdit=true editing=editing}}
+			{{#if editing}}
+				{{> featureEdit}}
+			{{else}}
+				{{> featureDetails}}
+			{{/if}}
 		{{/baseDialog}}
 	{{/with}}
+</template>
+
+<template name="featureDetails">
+	{{#if or canEnable hasUses}}
+		<div layout horizontal center justified wrap>
+			{{#if canEnable}}
+				<div>enabled:</div>
+				<paper-checkbox class="sideMargin" checked={{enabled}}></paper-checkbox>
+			{{/if}}
+			{{#if hasUses}}
+				<div class="subhead" style="margin-right: 16px">
+					Uses: {{usesLeft}}/{{usesValue}}
+				</div>
+			{{/if}}
+			{{#if hasUses}}
+				<div layout horizontal>
+					<paper-button class="useFeature" disabled={{noUsesLeft}}>Use</paper-button>
+					<paper-button class="resetFeature" disabled={{usesFull}}>Reset</paper-button>
+				</div>
+			{{/if}}
+		</div>
+
+		<hr class="vertMargin">
+	{{/if}}
+
+	{{#if description}}
+		<div class="prewrap">{{description}}</div>
+	{{/if}}
+
+	{{> effectsViewList charId=charId parentId=_id}}
+</template>
+
+<template name="featureEdit">
+	<!--name-->
+	<paper-input id="featureNameInput" class="fullwidth" label="Name" floatinglabel value={{name}}></paper-input>
+
+	<hr class="vertMargin">
+
+	<div layout horizontal center style="height: 60px;">
+		<paper-dropdown-menu id="enabledDropdown" label="Enable Feature">
+			<paper-dropdown layered class="dropdown">
+				<core-menu id="enabledMenu" class="menu"  selected={{enabledSelection}} on-tap="onStatMenuTap">
+					<paper-item name="alwaysEnabled"> Always Enabled </paper-item>
+					<paper-item name="enabled">       Enabled        </paper-item>
+					<paper-item name="disabled">      Disabled       </paper-item>
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+		<div layout horizontal center class="sideMargin">
+			<div>Limit Uses: </div>
+			<paper-toggle-button id="limitUseCheck"
+								 class="sideMargin"
+								 checked={{usesSet}}
+								 role="button" 
+								 aria-pressed="false"
+								 tabindex="0"
+								 touch-action="pan-y">
+			</paper-toggle-button>
+		</div>
+		{{#if usesSet}}
+			<paper-input flex id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
+		{{/if}}
+	</div>
+
+	<hr class="vertMargin">
+
+	<!--description-->
+	<paper-input-decorator label="Description" floatinglabel layout vertical>
+		<paper-autogrow-textarea>
+			<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+		</paper-autogrow-textarea>
+	</paper-input-decorator>
+
+	{{> effectsEditList parentId=_id parentCollection="Features" charId=charId type="feature" name=name enabled=enabled}}
 </template>
