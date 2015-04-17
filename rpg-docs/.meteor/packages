@@ -18,3 +18,4 @@ zimme:collection-softremovable
 momentjs:moment
 mike:mocha
 dburles:mongo-collection-instances
+percolate:migrations

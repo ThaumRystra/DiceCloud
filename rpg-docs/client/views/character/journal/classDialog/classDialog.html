@@ -7,6 +7,7 @@
 			<paper-input id="levelValueInput" label="Level" floatinglabel value={{level}}></paper-input>
 			<!--Effects-->
 			{{> effectsEditList parentId=_id parentCollection="Classes" charId=charId}}
+			{{> proficiencyEditList parentId=_id parentCollection="Characters" charId=charId}}
 		{{/baseDialog}}
 	{{/with}}
 </template>

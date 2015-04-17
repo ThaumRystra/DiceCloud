@@ -38,6 +38,7 @@
 	{{/if}}
 
 	{{> effectsViewList charId=charId parentId=_id}}
+	{{> proficiencyViewList charId=charId parentId=_id}}
 </template>
 
 <template name="featureEdit">
@@ -82,4 +83,5 @@
 	</paper-input-decorator>
 
 	{{> effectsEditList parentId=_id parentCollection="Features" charId=charId name=name enabled=enabled}}
+	{{> proficiencyEditList parentId=_id parentCollection="Features" charId=charId enabled=enabled}}
 </template>

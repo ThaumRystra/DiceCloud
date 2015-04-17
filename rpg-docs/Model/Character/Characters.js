@@ -13,7 +13,6 @@ Schemas.Character = new SimpleSchema({
 	bonds:        { type: String, defaultValue: "", trim: false},
 	flaws:        { type: String, defaultValue: "", trim: false},
 	backstory:    { type: String, defaultValue: "", trim: false},
-	proficiencies:{ type: String, defaultValue: "", trim: false},
 	languages:    { type: String, defaultValue: "", trim: false},
 
 	//attributes
@@ -182,7 +181,7 @@ var attributeBase = function(charId, statName){
 
 	//start with the highest base value
 	_.each(effects.base, function(effect){
-		var efv = evaluateEffect(charId, effect)
+		var efv = evaluateEffect(charId, effect);
 		if (efv > value){
 			value = efv;
 		}
@@ -210,7 +209,7 @@ var attributeBase = function(charId, statName){
 		value = value < max? value : max;
 	});
 	return value;
-}
+};
 
 //functions and calculated values.
 //These functions can only rely on this._id since no other
@@ -302,12 +301,10 @@ Characters.helpers({
 		var charId = this._id;
 		//return largest value in proficiency array
 		var prof = 0;
-		Effects.find({charId: charId, stat: skillName, enabled: true}).forEach(function(effect){
-			if(effect.operation === "proficiency"){
-				var newProf = evaluateEffect(charId, effect);
-				if (newProf > prof){
-					prof = newProf;
-				}
+		Proficiencies.find({charId: charId, name: skillName, enabled: true}).forEach(function(proficiency){
+			var newProf = proficiency.value;
+			if (newProf > prof){
+				prof = newProf;
 			}
 		});
 		return prof;
@@ -317,7 +314,7 @@ Characters.helpers({
 		if (_.isString(skillName)){
 			var skill = this.getField(skillName);
 		}
-		var charId = this._id
+		var charId = this._id;
 		var mod = +this.skillMod(skillName);
 		var value = 10 + mod;
 		Effects.find({charId: charId, stat: skillName, enabled: true, operation: "passiveAdd"}).forEach(function(effect){
@@ -328,7 +325,7 @@ Characters.helpers({
 	},
 
 	advantage: function(skillName){
-		var charId = this._id
+		var charId = this._id;
 		var advantage = Effects.find({charId: charId, stat: skillName, enabled: true, operation: "advantage"}).count();
 		var disadvantage = Effects.find({charId: charId, stat: skillName, enabled: true, operation: "disadvantage"}).count();
 		if(advantage && !disadvantage) return 1;

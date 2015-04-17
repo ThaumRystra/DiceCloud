@@ -1,0 +1,43 @@
+<template name="proficiencyEdit">
+	<div layout horizontal around-justified>
+		<paper-dropdown-menu class="typeDropDown" label="Stat Group" flex>
+			<paper-dropdown layered class="dropdown">
+				<core-menu class="menu typeMenu" selected={{type}}>
+					{{#each proficiencyTypes}}
+					<paper-item class="statGroupSelect" name={{type}}>{{name}}</paper-item>
+					{{/each}}
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+		{{> UI.dynamic template=nameInputTemplate}}
+		<paper-dropdown-menu class="valueDropDown" label="Proficiency" flex>
+			<paper-dropdown layered class="dropdown">
+				<core-menu class="menu valueMenu" selected={{value}}>
+					<paper-item name="1">Proficient</paper-item>
+					<paper-item name="0.5">Half Prof. Bonus</paper-item>
+					<paper-item name="2">Double Prof. Bonus</paper-item>
+				</core-menu>
+			</paper-dropdown>
+		</paper-dropdown-menu>
+	</div>
+</template>
+
+<template name="nameDropdown">
+	<paper-dropdown-menu class="nameDropDown sideMargin" label="Proficiency" flex>
+		<paper-dropdown layered class="dropdown">
+			<core-menu class="menu nameMenu" selected={{name}}>
+				{{#each nameDropdownItems}}
+					<paper-item name={{stat}}>{{name}}</paper-item>
+				{{/each}}
+			</core-menu>
+		</paper-dropdown>
+	</paper-dropdown-menu>
+</template>
+
+<template name="nameInput sideMargin">
+	<paper-input class="nameInput"
+				 label="Name"
+				 floatinglabel
+				 value={{name}}
+				 flex></paper-input>
+</template>

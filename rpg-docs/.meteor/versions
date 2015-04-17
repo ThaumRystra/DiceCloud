@@ -55,6 +55,7 @@ mongo@1.1.0
 npm-bcrypt@0.7.8_2
 observe-sequence@1.0.6
 ordered-dict@1.0.3
+percolate:migrations@0.7.3
 practicalmeteor:chai@1.9.2_3
 practicalmeteor:loglevel@1.1.0_3
 random@1.0.3

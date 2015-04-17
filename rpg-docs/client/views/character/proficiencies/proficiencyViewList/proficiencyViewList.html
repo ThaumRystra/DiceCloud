@@ -1,0 +1,11 @@
+<template name="proficiencyViewList">
+	{{#if proficiencies.count}}
+		<hr class="vertMargin">
+		<div class="proficiencies">
+			<h2 class="spaceAfter">Proficiencies</h2>
+			{{#each proficiencies}}
+				{{> proficiencyView}}
+			{{/each}}
+		</div>
+	{{/if}}
+</template>

@@ -2,5 +2,6 @@
 	{{#baseDialog title="Race" class=colorClass hideColor="true" hideDelete="true"}}
 		<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
 		{{> effectsEditList parentId=charId parentCollection="Characters" charId=charId}}
+		{{> proficiencyEditList parentId=charId parentCollection="Characters" charId=charId}}
 	{{/baseDialog}}
 </template>

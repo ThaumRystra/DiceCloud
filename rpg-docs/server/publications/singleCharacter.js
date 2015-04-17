@@ -3,9 +3,9 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 		Characters.findOne({
 			_id: characterId,
 			$or: [
-				{readers: userId}, 
-				{writers: userId}, 
-				{owner: userId} 
+				{readers: userId},
+				{writers: userId},
+				{owner: userId}
 			]
 		})
 	){
@@ -24,6 +24,7 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 			Spells.find            ({charId: characterId}, {removed: true}),
 			SpellLists.find        ({charId: characterId}, {removed: true}),
 			TemporaryHitPoints.find({charId: characterId}, {removed: true}),
+			Proficiencies.find     ({charId: characterId}, {removed: true}),
 		];
 	}
 });
