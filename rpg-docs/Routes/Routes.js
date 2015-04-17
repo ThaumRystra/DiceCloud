@@ -44,12 +44,10 @@ Router.map( function () {
 			return data;
 		},
 		onAfterAction: function() {
-			var char = Characters.findOne({_id: this.params._id}, {fields: {_id: 1, name: 1, color: 1}});
-			var name = char.name;
+			var char = Characters.findOne({_id: this.params._id}, {fields: {name: 1}});
+			var name = char && char.name;
 			if(name){
 				document.title = name;
-			} else {
-				document.title = appName + "Character";
 			}
 		}
 	});
