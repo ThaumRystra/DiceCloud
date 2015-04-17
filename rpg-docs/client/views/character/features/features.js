@@ -37,7 +37,7 @@ Template.features.events({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: this._id},
 			heroId:   featureId
-		})
+		});
 	},
 	"tap #addAttackButton": function(event){
 		var charId = this._id;
@@ -63,12 +63,12 @@ Template.features.events({
 		});
 	},
 	"tap .attack": function(event){
-		var attackId = this._id;
-		var charId = Template.parentData()._id;
+		var itemId = this.parent.id;
+		var charId = this.charId;
 		GlobalUI.setDetail({
-			template: "attackDialog",
-			data:     {attackId: attackId, charId: charId},
-			heroId:   attackId
+			template: "itemDialog",
+			data:     {itemId: itemId, charId: charId},
+			heroId:   this._id
 		});
 	},
 	"tap .useFeature": function(event){
