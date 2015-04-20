@@ -5,29 +5,43 @@ var getEffect = function(charId, op, value){
 var getAttributeEffect = function(charId, attribute, op, value){
 	return {
 		charId: charId,
-		type: "inate",
 		stat: attribute,
 		operation: op,
 		value: value,
 		parent: {
 			id: charId,
-			collection: "Characters"
+			collection: "Characters",
+			group: "inate",
 		}
-	}
-}
+	};
+};
 
 var getSkillEffect = function(charId, op, value){
 	return {
 		charId: charId,
-		type: "inate",
 		stat: "athletics",
 		operation: op,
 		value: value,
 		parent: {
 			id: charId,
-			collection: "Characters"
+			collection: "Characters",
+			group: "inate",
 		}
-	}
+	};
+};
+
+var getProficiency = function(charId, value){
+	return {
+		charId: charId,
+		value: value,
+		type: "skill",
+		name: "athletics",
+		parent: {
+			id: charId,
+			collection: "Characters",
+			group: "inate",
+		}
+	};
 };
 
 if (!(typeof MochaWeb === 'undefined')){
@@ -118,19 +132,19 @@ if (!(typeof MochaWeb === 'undefined')){
 					beforeEach(function(){
 						Effects.remove({});
 					});
-					
+
 					it("should get its base value from the ability mod", function(){
 						Effects.insert(getAttributeEffect(charId, "strength", "base", 16));
 						chai.assert.equal(3, strMod());
 						chai.assert.equal(3, ath());
 					});
-					
+
 					it("should add a multiple of proficiency bonus", function(){
 						Effects.insert(getAttributeEffect(charId, "strength", "base", 16));
 						Effects.insert(getAttributeEffect(charId, "proficiencyBonus", "base", 7));
 						chai.assert.equal(7, char.attributeValue("proficiencyBonus"), "the proficiency bonus is calculated correctly");
-						Effects.insert(getSkillEffect(charId, "proficiency", 0.5));
-						Effects.insert(getSkillEffect(charId, "proficiency", 2));
+						Proficiencies.insert(getProficiency(charId, 0.5));
+						Proficiencies.insert(getProficiency(charId, 2));
 						chai.assert.equal(17, ath(), "3 strength + (7 x 2) proficiency bonus");
 					});
 
