@@ -1,6 +1,8 @@
 <template name="noteDialog">
 	{{#with note}}
-		{{#baseDialog title=name class=colorClass}}
+		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
+			<div class="prewrap">{{description}}</div>
+		{{else}}
 			<!--Name-->
 			<div horizontal layout>
 				<paper-input id="noteNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
@@ -8,7 +10,7 @@
 			<!--Description-->
 			<paper-input-decorator label="Description" floatinglabel layout vertical>
 				<paper-autogrow-textarea>
-					<textarea id="noteDescriptionInput" placeholder value={{description}}></textarea>
+					<textarea id="noteDescriptionInput" value={{description}}></textarea>
 				</paper-autogrow-textarea>
 			</paper-input-decorator>
 		{{/baseDialog}}

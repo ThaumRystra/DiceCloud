@@ -1,5 +1,12 @@
 Template.proficiencyViewList.helpers({
 	proficiencies: function(){
-		return Proficiencies.find({"parent.id": this.parentId, charId: this.charId});
+		var selector = {
+			"parent.id": this.parentId,
+			"charId": this.charId
+		};
+		if(this.parentGroup){
+			selector["parent.group"] = this.parentGroup;
+		}
+		return Proficiencies.find(selector);
 	}
 });

@@ -1,11 +1,9 @@
 <template name="spellDialog">
 	{{#with spell}}
-		{{#baseDialog title=name class=colorClass showEdit=true editing=editing}}
-			{{#if editing}}
-				{{> spellEdit}}
-			{{else}}
-				{{> spellDetails}}
-			{{/if}}
+		{{#baseDialog title=name class=colorClass  startEditing=../startEditing}}
+			{{> spellDetails}}
+		{{else}}
+			{{> spellEdit}}
 		{{/baseDialog}}
 	{{/with}}
 </template>

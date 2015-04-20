@@ -1,3 +1,7 @@
+Template.textDialog.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.textDialog.helpers({
 	value: function(){
 		var fieldSelector = {fields: {}};

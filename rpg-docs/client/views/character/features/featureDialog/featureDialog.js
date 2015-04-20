@@ -1,11 +1,4 @@
-Template.featureDialog.onCreated(function(){
-	this.editing = new ReactiveVar(false);
-});
-
 Template.featureDialog.helpers({
-	editing: function(){
-		return Template.instance().editing.get();
-	},
 	feature: function(){
 		return Features.findOne(this.featureId);
 	},
@@ -14,12 +7,6 @@ Template.featureDialog.helpers({
 Template.featureDialog.events({
 	"color-change": function(event, instance){
 		Features.update(instance.data.featureId, {$set: {color: event.color}});
-	},
-	"tap #editButton": function(event, instance){
-		instance.editing.set(true);
-	},
-	"tap #doneEditingButton": function(event, instance){
-		instance.editing.set(false);
 	},
 	"tap #deleteButton": function(event, instance){
 		Features.softRemoveNode(instance.data.featureId);

@@ -12,3 +12,9 @@ Template.proficiencyListItem.helpers({
 		return this.name;
 	}
 });
+
+Template.proficiencyListItem.events({
+	"tap .proficiencyItem": function(event, instance){
+		openParentDialog(this.parent, this.charId, this._id);
+	}
+});

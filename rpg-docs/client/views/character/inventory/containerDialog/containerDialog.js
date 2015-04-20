@@ -4,7 +4,11 @@ Template.containerDialog.helpers({
 	}
 });
 
-Template.containerDialog.events({
+Template.containerEdit.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
+Template.containerEdit.events({
 	"color-change": function(event, instance){
 		Containers.update(instance.data.containerId, {$set: {color: event.color}});
 	},

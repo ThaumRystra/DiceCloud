@@ -1,11 +1,9 @@
 <template name="itemDialog">
 	{{#with item}}
-		{{#baseDialog title=itemHeading class=colorClass showEdit=true editing=editing}}
-			{{#if editing}}
-				{{> itemEdit}}
-			{{else}}
-				{{> itemDetails}}
-			{{/if}}
+		{{#baseDialog title=itemHeading class=colorClass startEditing=../startEditing}}
+			{{> itemDetails}}
+		{{else}}
+			{{> itemEdit}}
 		{{/baseDialog}}
 	{{/with}}
 </template>

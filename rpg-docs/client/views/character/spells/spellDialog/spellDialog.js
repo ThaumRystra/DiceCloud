@@ -11,29 +11,15 @@ var spellLevels = [
 	{ name: "Level 9",  level: 9 },
 ];
 
-
-Template.spellDialog.onCreated(function(){
-	this.editing = new ReactiveVar(false);
-});
-
 Template.spellDialog.helpers({
 	spell: function(){
 		return Spells.findOne(this.spellId);
-	},
-	editing: function(){
-		return Template.instance().editing.get();
-	},
+	}
 });
 
 Template.spellDialog.events({
 	"color-change": function(event, instance){
 		Spells.update(instance.data.spellId, {$set: {color: event.color}});
-	},
-	"tap #editButton": function(event, instance){
-		instance.editing.set(true);
-	},
-	"tap #doneEditingButton": function(event, instance){
-		instance.editing.set(false);
 	},
 	"tap #deleteButton": function(event, instance){
 		Spells.softRemoveNode(instance.data.spellId);

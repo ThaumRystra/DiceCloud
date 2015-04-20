@@ -2,9 +2,9 @@
 Containers = new Mongo.Collection("containers");
 
 Schemas.Container = new SimpleSchema({
-	name: 		{ type: String, trim: false },
-	charId: 	{ type: String, regEx: SimpleSchema.RegEx.Id},
-	isCarried: 	{ type: Boolean },
+	name:       { type: String, trim: false },
+	charId:     { type: String, regEx: SimpleSchema.RegEx.Id},
+	isCarried:  { type: Boolean },
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	description:{type: String, optional: true, trim: false},
@@ -14,19 +14,25 @@ Schemas.Container = new SimpleSchema({
 Containers.attachSchema(Schemas.Container);
 
 Containers.helpers({
-	totalValue: function(){
-		var value = this.value;
+	contentsValue: function(){
+		var value = 0;
 		Items.find({"parent.id": this._id}, {fields: {quantity: 1, value: 1}}).forEach(function(item){
 			value += item.totalValue();
 		});
 		return value;
 	},
-	totalWeight: function(){
-		var weight = this.weight;
+	totalValue: function(){
+		return this.contentsValue() + this.value;
+	},
+	contentsWeight: function(){
+		var weight = 0;
 		Items.find({"parent.id": this._id}, {fields: {quantity: 1, weight: 1}}).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
+	},
+	totalWeight: function(){
+		return this.contentsWeight() + this.weight;
 	},
 	moveToCharacter: function(characterId){
 		if(this.charId === characterId) return;

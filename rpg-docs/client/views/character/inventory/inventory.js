@@ -84,7 +84,7 @@ Template.inventory.events({
 			if(err) throw err;
 			GlobalUI.setDetail({
 				template: "itemDialog",
-				data:     {itemId: itemId, charId: charId},
+				data:     {itemId: itemId, charId: charId, startEditing: true},
 				heroId:   itemId
 			});
 		});
@@ -93,7 +93,7 @@ Template.inventory.events({
 		var containerId = Containers.insert({name: "New Container", isCarried: true, charId: this._id});
 		GlobalUI.setDetail({
 			template: "containerDialog",
-			data:     {containerId: containerId, charId: this.charId},
+			data:     {containerId: containerId, charId: this.charId, startEditing: true},
 			heroId:   containerId
 		});
 	},

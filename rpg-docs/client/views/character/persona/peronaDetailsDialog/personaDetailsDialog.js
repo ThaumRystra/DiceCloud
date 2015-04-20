@@ -1,3 +1,7 @@
+Template.personaDetailsDialog.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.personaDetailsDialog.events({
 	"change #nameInput": function(event){
 		var input = event.currentTarget.value;

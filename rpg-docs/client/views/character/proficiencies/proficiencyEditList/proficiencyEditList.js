@@ -1,7 +1,13 @@
 Template.proficiencyEditList.helpers({
 	proficiencies: function(){
-		var cursor = Proficiencies.find({"parent.id": this.parentId, "parent.collection": this.parentCollection});
-		return cursor;
+		var selector = {
+			"parent.id": this.parentId,
+			"charId": this.charId
+		};
+		if(this.parentGroup){
+			selector["parent.group"] = this.parentGroup;
+		}
+		return Proficiencies.find(selector);
 	}
 });
 

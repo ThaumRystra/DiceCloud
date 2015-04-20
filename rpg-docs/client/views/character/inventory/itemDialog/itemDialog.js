@@ -3,7 +3,7 @@ var getContainers = function(charId){
 };
 
 Template.itemDialog.onCreated(function(){
-	this.editing = new ReactiveVar(false);
+	this.editing = new ReactiveVar(!!this.data.startEditing);
 });
 
 Template.itemDialog.helpers({

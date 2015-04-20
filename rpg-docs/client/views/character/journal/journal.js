@@ -76,7 +76,7 @@ Template.journal.events({
 			if(!error){
 				GlobalUI.setDetail({
 					template: "noteDialog",
-					data:     {noteId: id, charId: charId},
+					data:     {noteId: id, charId: charId, startEditing: true},
 					heroId:   id
 				});
 			}
@@ -90,11 +90,11 @@ Template.journal.events({
 			if(!error){
 				GlobalUI.setDetail({
 					template: "experienceDialog",
-					data: {experienceId: id, charId: charId},
+					data: {experienceId: id, charId: charId, startEditing: true},
 					heroId: id
 				});
 			}
-		})
+		});
 	},
 	"tap #addClassButton":function(event){
 		var charId = this._id;
@@ -106,11 +106,11 @@ Template.journal.events({
 			if(!error){
 				GlobalUI.setDetail({
 					template: "classDialog",
-					data: {classId: id, charId: charId},
+					data: {classId: id, charId: charId, startEditing: true},
 					heroId: id
 				});
 			}
-		})
+		});
 	},
 	"tap #moreExperiences": function(event){
 		var inst = Template.instance();
@@ -125,6 +125,6 @@ Template.journal.events({
 		}, 300);
 		//HACK giggle the columns :( to workaround chrome bug that stops .containers height from updating
 		var cs = inst.$(".containers").removeClass("containers");
-		_.defer(function(){cs.addClass("containers")});
+		_.defer(function(){cs.addClass("containers");});
 	}
 });

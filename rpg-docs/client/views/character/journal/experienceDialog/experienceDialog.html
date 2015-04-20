@@ -1,6 +1,14 @@
 <template name="experienceDialog">
 	{{#with experience}}
-		{{#baseDialog title=name class=colorClass hideColor="true"}}
+		{{#baseDialog title=name class=colorClass hideColor="true" startEditing=../startEditing}}
+			<div horizontal layout center-justified>
+				{{value}}
+			</div>
+			{{#if description}}
+				<hr class="vertMargin">
+				<div class="prewrap">{{description}}</div>
+			{{/if}}
+		{{else}}
 			<div horizontal layout>
 				<!--Name-->
 				<paper-input id="experienceNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>

@@ -1,5 +1,7 @@
 <template name="personaDetailsDialog">
-	{{#baseDialog title=name class="deep-purple white-text" hideColor="true" hideDelete="true"}}
+	{{#baseDialog title=name class="deep-purple white-text" hideColor="true" hideDelete="true" startEditing=startEditing}}
+		{{alignment}} {{gender}} {{race}}
+	{{else}}
 		<!--Name-->
 		<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input><br>
 		<!--Alignment-->

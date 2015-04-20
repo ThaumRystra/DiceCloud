@@ -1,3 +1,7 @@
+Template.raceDialog.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.raceDialog.events({
 	"change #raceInput": function(event){
 		var value = event.currentTarget.value;

@@ -40,7 +40,7 @@ Template.features.events({
 		var featureId = Features.insert({name: "New Feature", charId: this._id});
 		GlobalUI.setDetail({
 			template: "featureDialog",
-			data:     {featureId: featureId, charId: this._id},
+			data:     {featureId: featureId, charId: this._id, startEditing: true},
 			heroId:   featureId
 		});
 	},
@@ -68,13 +68,7 @@ Template.features.events({
 		});
 	},
 	"tap .attack": function(event){
-		var itemId = this.parent.id;
-		var charId = this.charId;
-		GlobalUI.setDetail({
-			template: "itemDialog",
-			data:     {itemId: itemId, charId: charId},
-			heroId:   this._id
-		});
+		openParentDialog(this.parent, this.charId, this._id);
 	},
 	"tap .useFeature": function(event){
 		var featureId = this._id;

@@ -1,3 +1,9 @@
+Template.experienceDialog.helpers({
+	feature: function(){
+		return Features.findOne(this.featureId);
+	},
+});
+
 Template.experienceDialog.events({
 	"tap #deleteButton": function(event, instance){
 		Experiences.softRemove(instance.data.experienceId);

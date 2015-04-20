@@ -1,3 +1,7 @@
+Template.classDialog.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.classDialog.events({
 	"tap #deleteButton": function(event, instance){
 		Classes.softRemoveNode(instance.data.classId);

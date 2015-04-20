@@ -1,3 +1,7 @@
+Template.noteDialog.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.noteDialog.events({
 	"color-change": function(event, instance){
 		Notes.update(instance.data.noteId, {$set: {color: event.color}});

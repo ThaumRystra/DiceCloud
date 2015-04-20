@@ -161,7 +161,7 @@ Template.spells.events({
 			if(!error){
 				GlobalUI.setDetail({
 					template: "spellListDialog",
-					data:     {spellListId: id, charId: charId},
+					data:     {spellListId: id, charId: charId, startEditing: true},
 					heroId:   id
 				});
 			}
@@ -182,7 +182,7 @@ Template.spells.events({
 			if(!error){
 				GlobalUI.setDetail({
 					template: "spellDialog",
-					data:     {spellId: id, charId: charId},
+					data:     {spellId: id, charId: charId, startEditing: true},
 					heroId:   id
 				});
 			}

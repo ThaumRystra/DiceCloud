@@ -11,7 +11,7 @@
 			{{> abilityMiniCard ability="intelligence" title="Intelligence" color="deep-orange"}}
 			{{> abilityMiniCard ability="wisdom" title="Wisdom" color="purple"}}
 			{{> abilityMiniCard ability="charisma" title="Charisma" color="pink"}}
-			
+
 			<!--Armor-->
 			{{> statCard stat="armor" name="Armor Class" color="teal"}}
 			<!--Speed-->
@@ -20,7 +20,7 @@
 			{{> statCard stat="initiative" name="Initiative" color="indigo" isSkill="true"}}
 			<!--Proficiency Bonus-->
 			{{> statCard stat="proficiencyBonus" name="Proficiency Bonus" color="blue" prefix="+"}}
-			
+
 			<!--Hit Dice-->
 			{{>hitDice name="d6HitDice" diceNum="6" char=this}}
 			{{>hitDice name="d8HitDice" diceNum="8" char=this}}
@@ -28,7 +28,7 @@
 			{{>hitDice name="d12HitDice" diceNum="12" char=this}}
 			<!--Saving Throws-->
 			<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-				<div class="containerTop teal white-text" layout horizontal center>
+				<div class="containerTop whiteTop" layout horizontal center>
 					<div class="containerName subhead" hero-id="title" flex>Saving Throws</div>
 				</div>
 				<div flex class="containerMain">
@@ -42,7 +42,7 @@
 			</paper-shadow>
 			<!--Skills-->
 			<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-				<div class="containerTop blue white-text" layout horizontal center>
+				<div class="containerTop whiteTop" layout horizontal center>
 					<div class="containerName subhead" hero-id="title" flex>Skills</div>
 				</div>
 				<div flex class="containerMain">

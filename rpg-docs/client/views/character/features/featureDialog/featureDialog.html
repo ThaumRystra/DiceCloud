@@ -1,11 +1,9 @@
 <template name="featureDialog">
 	{{#with feature}}
-		{{#baseDialog title=name class=colorClass showEdit=true editing=editing}}
-			{{#if editing}}
-				{{> featureEdit}}
-			{{else}}
-				{{> featureDetails}}
-			{{/if}}
+		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
+			{{> featureDetails}}
+		{{else}}
+			{{> featureEdit}}
 		{{/baseDialog}}
 	{{/with}}
 </template>

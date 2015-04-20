@@ -3,30 +3,7 @@
 		<core-toolbar class={{class}} hero-id="toolbar" hero>
 			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
 			<div flex>{{title}}</div>
-			{{#if showEdit}}
-				{{#if editing}}
-					{{#unless hideDelete}}
-						<paper-icon-button id="deleteButton"
-										   role="button"
-										   tabindex="0"
-										   icon="delete"
-										   aria-label="Delete Feature"
-										   noink></paper-icon-button>
-					{{/unless}}
-					{{#unless hideColor}}
-						{{> colorDropdown}}
-					{{/unless}}
-					<paper-icon-button id="doneEditingButton"
-									   icon="done"
-									   aria-label="Delete Feature"
-									   noink></paper-icon-button>
-				{{else}}
-					<paper-icon-button id="editButton"
-									   icon="create"
-									   aria-label="Delete Feature"
-									   noink></paper-icon-button>
-				{{/if}}
-			{{else}}
+			{{#if editing}}
 				{{#unless hideDelete}}
 					<paper-icon-button id="deleteButton"
 									   role="button"
@@ -38,10 +15,25 @@
 				{{#unless hideColor}}
 					{{> colorDropdown}}
 				{{/unless}}
+					<paper-icon-button id="doneEditingButton"
+									   icon="done"
+									   aria-label="Delete Feature"
+									   noink></paper-icon-button>
+			{{else}}
+				{{#unless hideEdit}}
+					<paper-icon-button id="editButton"
+									   icon="create"
+									   aria-label="Delete Feature"
+									   noink></paper-icon-button>
+				{{/unless}}
 			{{/if}}
 		</core-toolbar>
 		<div class="detailContent">
-			{{> UI.contentBlock}}
+			{{#unless editing}}
+				{{> UI.contentBlock}}
+			{{else}}
+				{{> UI.elseBlock}}
+			{{/unless}}
 		</div>
 	</core-header-panel>
 </template>

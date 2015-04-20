@@ -1,27 +1,51 @@
 <template name="spellListDialog">
 	{{#with spellList}}
-		{{#baseDialog title=name class=colorClass}}
-			<!--Name-->
-			<div horizontal layout>
-				<paper-input id="spellListNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
+		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
+			<div>
+				<div layout horizontal justified wrap class="subhead">
+					{{#if attackBonus}}
+						<div>
+							Attack Bonus: {{evaluate charId attackBonus}}
+						</div>
+					{{/if}}
+					{{#if saveDC}}
+						<div>
+							Save DC: {{evaluate charId saveDC}}
+						</div>
+					{{/if}}
+					{{#if maxPrepared}}
+						<div>
+							Max Prepared: {{evaluateSigned charId maxPrepared}}
+						</div>
+					{{/if}}
+				</div>
+				<hr class="vertMargin">
+				<div class="prewrap">{{description}}</div>
 			</div>
+		{{else}}
+			<!--Name-->
+			<paper-input id="spellListNameInput"
+						 class="fullwidth"
+						 label="Name"
+						 floatinglabel
+						 value={{name}}></paper-input>
 			<!--Save DC-->
-			<paper-input id="spellListSaveDCInput" 
-						 label="Save DC" 
-						 floatinglabel 
-						 value={{saveDC}} 
+			<paper-input id="spellListSaveDCInput"
+						 label="Save DC"
+						 floatinglabel
+						 value={{saveDC}}
 						 style="width: 100%;"></paper-input><br>
 			<!--Attack Bonus-->
-			<paper-input id="spellListAttackBonusInput" 
-						 label="Attack Bonus" 
-						 floatinglabel 
-						 value={{attackBonus}} 
+			<paper-input id="spellListAttackBonusInput"
+						 label="Attack Bonus"
+						 floatinglabel
+						 value={{attackBonus}}
 						 style="width: 100%;"></paper-input><br>
 			<!--Max Prepared-->
-			<paper-input id="spellListMaxPreparedInput" 
-						 label="Maximum Prepared Spells" 
-						 floatinglabel 
-						 value={{maxPrepared}} 
+			<paper-input id="spellListMaxPreparedInput"
+						 label="Maximum Prepared Spells"
+						 floatinglabel
+						 value={{maxPrepared}}
 						 style="width: 100%;"></paper-input><br>
 			<!--Description-->
 			<paper-input-decorator label="Description" floatinglabel layout vertical>

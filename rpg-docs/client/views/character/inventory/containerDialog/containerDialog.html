@@ -1,22 +1,46 @@
 <template name="containerDialog">
 	{{#with container}}
-		{{#baseDialog title=name class=colorClass}}
-			<!--Name and plural name-->
-			<paper-input id="containerNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-			<!--Weight-->
-			<paper-input-decorator label="Weight" floatinglabel>
-				<input id="weightInput" type="number" value={{weight}}>
-			</paper-input-decorator>
-			<!--Value-->
-			<paper-input-decorator label="Value" floatinglabel>
-				<input id="valueInput" type="number" value={{value}}>
-			</paper-input-decorator>
-			<!--Description-->
-			<paper-input-decorator label="Description" floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="containerDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
+		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
+			{{> containerView}}
+		{{else}}
+			{{> containerEdit}}
 		{{/baseDialog}}
 	{{/with}}
+</template>
+
+<template name="containerEdit">
+	<paper-input id="containerNameInput fullwidth"
+				 label="Name"
+				 floatinglabel
+				 value={{name}}></paper-input>
+	<div layout horizontal around-justified wrap>
+		<paper-input-decorator label="Weight" floatinglabel>
+			<input id="weightInput" type="number" value={{weight}}>
+		</paper-input-decorator>
+		<paper-input-decorator label="Value" floatinglabel>
+			<input id="valueInput" type="number" value={{value}}>
+		</paper-input-decorator>
+	</div>
+
+	<hr class="vertMargin">
+
+	<paper-input-decorator label="Description" floatinglabel layout vertical>
+		<paper-autogrow-textarea>
+			<textarea id="containerDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
+		</paper-autogrow-textarea>
+	</paper-input-decorator>
+</template>
+
+<template name="containerView">
+	<div layout horizontal wrap center justified>
+		<table class="containerSummaryTable fullwidth">
+			<tr><td>Container</td><td>{{weight}}lbs</td><td>{{longValueString value}}</td></tr>
+			<tr><td>Contents</td><td>{{contentsWeight}}lbs</td><td>{{longValueString contentsValue}}</td></tr>
+			<tr class="body2"><td>Total</td><td>{{totalWeight}}lbs</td><td>{{longValueString totalValue}}</td></tr>
+		</table>
+	</div>
+	{{#if description}}
+		<hr class="vertMargin">
+		<div class="prewrap">{{description}}</div>
+	{{/if}}
 </template>
