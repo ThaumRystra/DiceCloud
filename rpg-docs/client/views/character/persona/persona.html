@@ -11,7 +11,16 @@
 				{{> containerCard characterField "bonds" "Bonds"}}
 				{{> containerCard characterField "flaws" "Flaws"}}
 				{{> containerCard characterField "backstory" "Background"}}
-				{{> containerCard characterField "languages" "Languages"}}
+				<paper-shadow class="card container">
+					<div class="containerTop whiteTop" layout horizontal center>
+						<div class="containerName subhead" flex>Languages</div>
+					</div>
+					<div flex class="containerMain">
+						{{#each languages}}
+							{{> proficiencyListItem}}
+						{{/each}}
+					</div>
+				</paper-shadow>
 			</div>
 		</div>
 	</div>
@@ -23,9 +32,9 @@
 
 <template name="containerCardHelper">
 	<paper-shadow class="card container {{class}}"  hero-id="main" {{detailHero field ../_id}}>
-		<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero field ../_id}}>
+		<div class="containerTop {{colorClass}} {{topClass}}" hero-id="toolbar" layout horizontal center {{detailHero field ../_id}}>
 			<div class="containerName subhead" hero-id="title" flex {{detailHero field ../_id}}>{{title}}</div>
 		</div>
-		<div flex class="containerMain">{{> UI.contentBlock}}</div>
+		<div flex class="containerMain prewrap">{{> UI.contentBlock}}</div>
 	</paper-shadow>
 </template>

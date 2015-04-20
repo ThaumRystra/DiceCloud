@@ -48,19 +48,36 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
-				
+
 				<!--Proficiencies-->
 				<paper-shadow class="card container"  hero-id="main" {{detailHero "proficiencies"}}>
-					<div id="proficiencies" 
-						 class="whiteTop" 
-						 hero-id="toolbar" 
-						 layout horizontal center 
-						 {{detailHero "proficiencies"}}>
+					<div id="proficiencies"
+						 class="whiteTop"
+						 layout horizontal center>
 						<div class="containerName subhead">Proficiencies</div>
 					</div>
-					<div flex class="containerMain padded preline">{{characterProficiencies}}</div>
+					<div flex class="containerMain listPadded">
+						{{#if weaponProfs.count}}
+							<div class="list-subhead" layout horizontal center>Weapons</div>
+						{{/if}}
+						{{#each weaponProfs}}
+							{{> proficiencyListItem}}
+						{{/each}}
+						{{#if armorProfs.count}}
+							<div class="list-subhead" layout horizontal center>Armor</div>
+						{{/if}}
+						{{#each armorProfs}}
+							{{> proficiencyListItem}}
+						{{/each}}
+						{{#if toolProfs.count}}
+							<div class="list-subhead" layout horizontal center>Tools</div>
+						{{/if}}
+						{{#each toolProfs}}
+							{{> proficiencyListItem}}
+						{{/each}}
+					</div>
 				</paper-shadow>
-				
+
 				<!--features-->
 				{{#each features}}
 					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>

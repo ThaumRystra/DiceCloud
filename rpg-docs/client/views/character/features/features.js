@@ -13,7 +13,7 @@ Template.features.helpers({
 		return this.usesLeft() >= this.usesValue();
 	},
 	colorClass: function(){
-		return getColorClass(this.color)
+		return getColorClass(this.color);
 	},
 	featureOrder: function(){
 		return _.indexOf(_.keys(colorOptions), this.color);
@@ -21,13 +21,18 @@ Template.features.helpers({
 	attacks: function(){
 		return Attacks.find({charId: this._id, enabled: true}, {sort: {color: 1, name: 1}});
 	},
-	characterProficiencies: function(){
-		var char = Characters.findOne(this._id);
-		return char && char.proficiencies;
-	},
 	canEnable: function(){
 		return !this.alwaysEnabled;
-	}
+	},
+	weaponProfs: function(){
+		return Proficiencies.find({charId: this._id, type: "weapon"});
+	},
+	armorProfs: function(){
+		return Proficiencies.find({charId: this._id, type: "armor"});
+	},
+	toolProfs: function(){
+		return Proficiencies.find({charId: this._id, type: "tool"});
+	},
 });
 
 Template.features.events({

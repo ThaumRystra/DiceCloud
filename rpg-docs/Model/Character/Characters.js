@@ -13,7 +13,6 @@ Schemas.Character = new SimpleSchema({
 	bonds:        { type: String, defaultValue: "", trim: false},
 	flaws:        { type: String, defaultValue: "", trim: false},
 	backstory:    { type: String, defaultValue: "", trim: false},
-	languages:    { type: String, defaultValue: "", trim: false},
 
 	//attributes
 	//ability scores
@@ -269,7 +268,7 @@ Characters.helpers({
 		var ability = this.attributeValue(skill.ability);
 
 		//base modifier
-		var mod = +getMod(ability)
+		var mod = +getMod(ability);
 
 		//multiply proficiency bonus by largest value in proficiency array
 		var prof = this.proficiency(skillName);

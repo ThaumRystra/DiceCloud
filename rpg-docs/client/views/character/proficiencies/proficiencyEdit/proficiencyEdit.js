@@ -51,6 +51,10 @@ Template.proficiencyEdit.helpers({
 });
 
 Template.proficiencyEdit.events({
+	"tap .deleteProficiency": function(event){
+		Proficiencies.softRemoveNode(this._id);
+		GlobalUI.deletedToast(this._id, "Proficiencies", "Proficiency");
+	},
 	"core-select .typeDropDown": function(event){
 		var detail = event.originalEvent.detail;
 		if(!detail.isSelected) return;

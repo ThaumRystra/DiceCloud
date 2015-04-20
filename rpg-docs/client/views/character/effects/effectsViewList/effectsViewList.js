@@ -1,5 +1,12 @@
 Template.effectsViewList.helpers({
 	effects: function(){
-		return Effects.find({"parent.id": this.parentId, charId: this.charId}, {fields: {parent: 0}});
+		var selector = {
+			"parent.id": this.parentId,
+			"charId": this.charId
+		};
+		if(this.parentGroup){
+			selector["parent.group"] = this.parentGroup;
+		}
+		return Effects.find(selector, {fields: {parent: 0}});
 	}
 });

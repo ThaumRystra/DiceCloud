@@ -2,6 +2,7 @@ var childSchema = new SimpleSchema({
 	parent:              { type: Object },
 	'parent.collection': { type: String },
 	'parent.id':         { type: String, regEx: SimpleSchema.RegEx.Id },
+	'parent.group':      { type: String, optional: true},
 	'removedWith':       { optional: true, type: String, regEx: SimpleSchema.RegEx.Id },
 });
 

@@ -1,5 +1,6 @@
 Template.registerHelper("colorClass", function(color){
-	return color? getColorClass(color) : getColorClass(this.color);
+	if(color) return getColorClass(color);
+	else if(this.color) return getColorClass(this.color);
 });
 
 Template.registerHelper("hexColor", function(color){

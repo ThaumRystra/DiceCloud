@@ -1,6 +1,14 @@
 Template.effectsEditList.helpers({
 	effects: function(){
-		var cursor = Effects.find({"parent.id": this.parentId, "parent.collection": this.parentCollection});
+		var selector = {
+			"parent.id": this.parentId,
+			"parent.collection": this.parentCollection,
+			"charId": this.charId
+		};
+		if(this.parentGroup){
+			selector["parent.group"] = this.parentGroup;
+		}
+		var cursor = Effects.find(selector);
 		return cursor;
 	}
 });
