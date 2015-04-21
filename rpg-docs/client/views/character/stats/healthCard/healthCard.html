@@ -1,7 +1,11 @@
 <template name="healthCard">
-	<paper-shadow class="card container healthCard" hero-id="main" {{detailHero}} layout horizontal wrap>
-		<div class="green white-text subhead padded leftRound" layout vertical center-justified>
-			Hit Points
+	<paper-shadow class="card container healthCard" 
+				  hero-id="main" {{detailHero "hitPoints" _id}} 
+				  layout horizontal wrap>
+		<div class="green white-text subhead padded leftRound" 
+			 hero-id="toolbar" {{detailHero "hitPoints" _id}}
+			 layout vertical center>
+			<div class="hitPointTitle clickable">Hit Points</div>
 			<paper-icon-button class="white54" id="addTempHP" icon="add"></paper-icon-button>
 		</div>
 		<div class="padded" flex layout vertical center-justified style="min-width: 180px;">

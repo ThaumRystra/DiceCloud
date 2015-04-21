@@ -93,39 +93,44 @@ var abilities = {
 	charisma: {name: "Charisma"},
 };
 
-Template.attributeDialogView.created = function(){
-	this.data.char = Characters.findOne(this.data.charId, {fields: {_id : 1}});
-};
-
 Template.attributeDialogView.helpers({
 	or: function(a, b, c){
 		return a || b || c;
 	},
 	adjustment: function(){
-		var value = this.char.attributeValue(this.statName);
-		var base = this.char.attributeBase(this.statName);
+		var char = Characters.findOne(this.charId);
+		if(!char) return;
+		var value = char.attributeValue(this.statName);
+		var base = char.attributeBase(this.statName);
 		return value - base;
 	},
 	baseEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.statName, operation: "base"});
+		return Effects.find({charId: this.charId, stat: this.statName, operation: "base"});
 	},
 	addEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.statName, operation: "add"});
+		return Effects.find({charId: this.charId, stat: this.statName, operation: "add"});
 	},
 	mulEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.statName, operation: "mul"});
+		return Effects.find({charId: this.charId, stat: this.statName, operation: "mul"});
 	},
 	minEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.statName, operation: "min"});
+		return Effects.find({charId: this.charId, stat: this.statName, operation: "min"});
 	},
 	maxEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.statName, operation: "max"});
+		return Effects.find({charId: this.charId, stat: this.statName, operation: "max"});
 	},
-	char: function(){
-		return Characters.findOne(this.charId, {fields:{_id: 1}});
+	attributeBase: function(){
+		var char = Characters.findOne(this.charId);
+		if(!char) throw "character is " + char;
+		return char.attributeBase(this.statName);
+	},
+	attributeValue: function () {
+		var char = Characters.findOne(this.charId);
+		if(!char) throw "character is " + char;
+		return char.attributeValue(this.statName);
 	},
 	sourceName: function(){
-		if (this.parent.collection === "Characters") return "inate";
+		if (this.parent.collection === "Characters") return this.name;
 		return this.getParent().name;
 	},
 	operationName: function(){
@@ -133,7 +138,7 @@ Template.attributeDialogView.helpers({
 		return  op && op.name || "No Operation";
 	},
 	statValue: function(){
-		return evaluate(this.charId, this.calculation) || this.value;
+		return evaluateEffect(this.charId, this);
 	},
 });
 

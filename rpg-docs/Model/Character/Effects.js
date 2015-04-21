@@ -98,7 +98,7 @@ if(Meteor.isServer) Characters.after.insert(function (userId, char) {
 });
 
 Effects.attachBehaviour('softRemovable');
-makeChild(Effects, ['name', 'enabled']); //children of lots of things
+makeChild(Effects, ["enabled"]); //children of lots of things
 
 Effects.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Effects.deny(CHARACTER_SUBSCHEMA_DENY);

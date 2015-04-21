@@ -15,6 +15,14 @@ Template.stats.events({
 			});
 		}
 	},
+	"tap .abilityMiniCard": function(event, instance){
+		var charId = Template.parentData()._id;
+		GlobalUI.setDetail({
+			template: "attributeDialog",
+			data:     {name: this.title, statName: this.ability, charId: charId},
+			heroId:   charId + this.ability
+		});
+	},
 	"tap .skillRow": function(event, instance){
 		var skill = this.skill;
 		var charId = instance.data._id;
@@ -23,6 +31,13 @@ Template.stats.events({
 				data:     {name: this.name, skillName: skill, charId: charId},
 				heroId:   charId + skill
 			});
+	},
+	"tap .hitPointTitle": function (event, instance) {
+		GlobalUI.setDetail({
+			template: "attributeDialog",
+			data:     {name: "Hit Points", statName: "hitPoints", charId: this._id},
+			heroId:   this._id + "hitPoints"
+		});
 	}
 });
 

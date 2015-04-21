@@ -104,7 +104,7 @@ paper-button {
 	color: rgba(0, 0, 0, 0.54);
 }
 
-.clickable, .statCard {
+.clickable, .statCard, .abilityMiniCard {
 	cursor: pointer;
 }
 

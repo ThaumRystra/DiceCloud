@@ -113,6 +113,9 @@ Template.spells.helpers({
 			});
 		}
 		return bubbles;
+	}, 
+	slotStatName: function () {
+		return "level" + this.level +"SpellSlots";
 	}
 });
 
@@ -135,6 +138,16 @@ Template.spells.events({
 			}
 		}
 		event.stopPropagation();
+	},
+	"tap .spellSlot": function (event, instance) {
+		var name = "Level " + this.level +" Spell Slots";
+		var stat = "level" + this.level +"SpellSlots";
+		var charId = instance.data._id;
+		GlobalUI.setDetail({
+			template: "attributeDialog",
+			data:     {name: name, statName: stat, charId: charId},
+			heroId:   charId + stat
+		});
 	},
 	"tap .containerTop": function(event){
 		GlobalUI.setDetail({

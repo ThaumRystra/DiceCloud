@@ -10,7 +10,7 @@
 						<div flex class="containerMain">
 							{{#each levels}}{{#if showSlots ..}}
 								<div class="itemSlot">
-									<paper-item class="inventoryItem spellSlot" hero-id="main" {{detailHero}} layout horizontal>
+									<paper-item class="inventoryItem spellSlot" hero-id="main" {{detailHero slotStatName ../_id}} layout horizontal>
 										<div class="slotName">
 											{{name}}
 										</div>

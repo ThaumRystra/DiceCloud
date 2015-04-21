@@ -1,6 +1,8 @@
 <template name="abilityMiniCard">
-	<paper-shadow class="card double abilityMiniCard">
-		<div class="abilityScore white-text {{color}}">
+	<paper-shadow class="card double abilityMiniCard" 
+				  hero-id="main" {{detailHero ability ../_id}}>
+		<div class="abilityScore white-text {{color}}"
+			 hero-id="toolbar" {{detailHero ability ../_id}}>
 			<h1 class="display1">{{../attributeValue ability}}</h1>
 			<h2>{{../abilityMod ability}}</h2>
 		</div>

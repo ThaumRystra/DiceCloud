@@ -125,5 +125,12 @@ Template.resource.events({
 			modifier.$inc[this.name + ".adjustment"] = -1;
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
+	},
+	"tap .containerRight": function (event, instance) {
+		GlobalUI.setDetail({
+			template: "attributeDialog",
+			data:     {name: this.title, statName: this.name, charId: this.char._id},
+			heroId:   this.char._id + this.name
+		});
 	}
 });

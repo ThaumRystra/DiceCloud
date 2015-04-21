@@ -93,67 +93,71 @@ var abilities = {
 	charisma: {name: "Charisma"},
 };
 
-Template.skillDialogView.created = function(){
-	this.data.char = Characters.findOne(this.data.charId, {fields: {_id : 1}});
-};
-
 Template.skillDialogView.helpers({
 	or: function(a, b, c){
 		return a || b || c;
 	},
 	profIcon: function(){
-		var prof = this.char.proficiency(this.skillName);
+		var char = Characters.findOne(this.charId);
+		if(!char) return;
+		var prof = char.proficiency(this.skillName);
 		if(prof > 0 && prof < 1) return "image:brightness-2";
 		if(prof === 1) return "image:brightness-1";
 		if(prof > 1) return "av:album";
 		return "radio-button-off";
 	},
 	profSource: function(){
-		return Proficiencies.findOne({charId: this.char._id, name: this.skillName}, {sort: {value: -1}});
+		return Proficiencies.findOne({charId: this.charId, name: this.skillName}, {sort: {value: -1}});
 	},
 	profBonus: function(){
-		return this.char.proficiency(this.skillName) * this.char.attributeValue("proficiencyBonus");
+		var char = Characters.findOne(this.charId);
+		if(!char) return;
+		return char.proficiency(this.skillName) * char.attributeValue("proficiencyBonus");
 	},
 	proficiencyValue: function(){
-		var prof = this.char.proficiency(this.skillName);
+		var char = Characters.findOne(this.charId);
+		if(!char) return;
+		var prof = char.proficiency(this.skillName);
 		if(prof == 0.5) return "Half Proficiency";
 		if(prof == 1)   return "Proficient";
 		if(prof == 2)   return "Double Proficiency";
 		return prof + "x Proficiency";
 	},
 	addEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "add"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "add"});
 	},
 	mulEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "mul"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "mul"});
 	},
 	minEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "min"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "min"});
 	},
 	maxEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "max"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "max"});
 	},
 	advEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "advantage"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "advantage"});
 	},
 	dadvEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "disadvantage"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "disadvantage"});
 	},
 	conditionalEffects: function(){
-		return Effects.find({charId: this.char._id, stat: this.skillName, operation: "conditional"});
+		return Effects.find({charId: this.charId, stat: this.skillName, operation: "conditional"});
 	},
 	ability: function(){
 		var opts = {fields: {}};
 		opts.fields[this.skillName] = 1;
-		var char = Characters.findOne(this.char._id, opts);
+		var char = Characters.findOne(this.charId, opts);
 		var skill = char && char[this.skillName];
 		return skill.ability;
 	},
 	abilityName: function(){
 		var opts = {fields: {}};
 		opts.fields[this.skillName] = 1;
-		var char = Characters.findOne(this.char._id, opts);
-		var skill = char && char[this.skillName];
+		var char = Characters.findOne(this.charId, opts);
+		if(!char) return;
+		var skill = char[this.skillName];
+		if(!skill) return;
 		var ability = skill.ability;
 		return abilities[ability] && abilities[ability].name;
 	},

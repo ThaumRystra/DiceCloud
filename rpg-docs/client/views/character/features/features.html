@@ -117,16 +117,16 @@
 
 <template name="resource">
 	{{#if char.attributeBase name}}
-		<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
-			<div class="containerLeft {{getColor}}">
-				<div class="resourceValue">{{char.attributeValue name}}</div>
-				<!--<div class="resourceMax">{{char.attributeBase name}}</div>-->
+		<paper-shadow class="card container" hero-id="main" {{detailHero name char._id}} layout horizontal>
+			<div class="containerLeft {{getColor}}" hero-id="toolbar" {{detailHero name char._id}} >
 				<div class="resourceButtons">
 					<paper-icon-button class="resourceUp" icon="arrow-drop-up" disabled={{cantIncrement}}></paper-icon-button>
 					<paper-icon-button class="resourceDown" icon="arrow-drop-down" disabled={{cantDecrement}}></paper-icon-button>
 				</div>
+				<div class="resourceValue">{{char.attributeValue name}}</div>
+				<!--<div class="resourceMax">{{char.attributeBase name}}</div>-->
 			</div>
-			<div class="containerRight" flex relative horizontal layout center>
+			<div class="containerRight clickable" flex relative horizontal layout center>
 				{{title}}
 				<paper-ripple fit></paper-ripple>
 			</div>

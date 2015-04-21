@@ -72,7 +72,8 @@
 
 <template name="statCard">
 	<paper-shadow class="card container statCard" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
-		<div class="containerLeft {{color}}">
+		<div class="containerLeft {{color}}"
+			 hero-id="toolbar" {{detailHero stat ../_id}}>
 			{{#if isSkill}}
 				{{../skillMod stat}}
 			{{else}}

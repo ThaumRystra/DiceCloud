@@ -6,13 +6,13 @@
 </template>
 
 <template name="attributeDialogView">
-	<div layout horizontal center-aligned>
+	<div layout horizontal center-justified end>
 		<div class="display2">
-			{{char.attributeValue statName}}
+			{{attributeValue}}
 		</div>
 		{{#if adjustment}}
 			<div class="display1">
-				/{{char.attributeBase statName}}
+				/{{attributeBase}}
 			</div>
 		{{/if}}
 	</div>
@@ -50,17 +50,19 @@
 				<td>Max: {{statValue}}</td>
 			</tr>
 		{{/each}}
-		<tr class="body2">
-			<td>Base Value</td>
-			<td>{{char.attributeBase statName}}</td>
-		</tr>
-		<tr>
-			<td>Adjustment</td>
-			<td>{{signedString adjustment}}</td>
-		</tr>
+		{{#if adjustment}}
+			<tr class="body2">
+				<td>Base Value</td>
+				<td>{{attributeBase}}</td>
+			</tr>
+			<tr>
+				<td>Adjustment</td>
+				<td>{{signedString adjustment}}</td>
+			</tr>
+		{{/if}}
 		<tr class="body2">
 			<td>Total</td>
-			<td>{{char.attributeValue statName}}</td>
+			<td>{{attributeValue}}</td>
 		</tr>
 	</table>
 </template>
