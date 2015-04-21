@@ -1,8 +1,0 @@
-.containerSummaryTable td{
-	text-align: right;
-	padding: 4px;
-}
-
-.containerSummaryTable td:first-child {
-	text-align: left;
-}

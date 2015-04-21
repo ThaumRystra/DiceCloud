@@ -33,6 +33,16 @@ table {
 	border-spacing: 0;
 }
 
+.summaryTable td{
+	text-align: right;
+	padding: 4px;
+	min-width: 80px;
+}
+
+.summaryTable td:first-child {
+	text-align: left;
+}
+
 hr {
 	background-color: #444;
 	opacity: 0.12;
@@ -94,12 +104,12 @@ paper-button {
 	color: rgba(0, 0, 0, 0.54);
 }
 
-.clickable {
+.clickable, .statCard {
 	cursor: pointer;
 }
 
 .skillRow {
-	cursor: initial;
+	cursor: pointer;
 }
 
 .resourceCards {

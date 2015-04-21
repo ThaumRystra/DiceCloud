@@ -1,0 +1,66 @@
+<!-- needs name, char, and statName -->
+<template name="attributeDialog">
+	{{#baseDialog title=name class=colorClass hideEdit=true}}
+		{{> attributeDialogView}}
+	{{/baseDialog}}
+</template>
+
+<template name="attributeDialogView">
+	<div layout horizontal center-aligned>
+		<div class="display2">
+			{{char.attributeValue statName}}
+		</div>
+		{{#if adjustment}}
+			<div class="display1">
+				/{{char.attributeBase statName}}
+			</div>
+		{{/if}}
+	</div>
+
+	<hr class="vertMargin">
+
+	<table class="summaryTable">
+		{{#each baseEffects}}
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>{{signedString statValue}}</td>
+			</tr>
+		{{/each}}
+		{{#each addEffects}}
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>{{signedString statValue}}</td>
+			</tr>
+		{{/each}}
+		{{#each mulEffects}}
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>&times;{{statValue}}</td>
+			</tr>
+		{{/each}}
+		{{#each minEffects}}
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>Min: {{statValue}}</td>
+			</tr>
+		{{/each}}
+		{{#each maxEffects}}
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>Max: {{statValue}}</td>
+			</tr>
+		{{/each}}
+		<tr class="body2">
+			<td>Base Value</td>
+			<td>{{char.attributeBase statName}}</td>
+		</tr>
+		<tr>
+			<td>Adjustment</td>
+			<td>{{signedString adjustment}}</td>
+		</tr>
+		<tr class="body2">
+			<td>Total</td>
+			<td>{{char.attributeValue statName}}</td>
+		</tr>
+	</table>
+</template>

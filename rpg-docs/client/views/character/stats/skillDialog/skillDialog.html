@@ -1,81 +1,101 @@
 <!-- needs name, char, and skillName -->
 <template name="skillDialog">
-	{{#baseDialog title=name class=colorClass hideColor="true" hideDelete="true"}}
-	<!--proficiency-->
-	<div>
-		<core-icon icon="{{profIcon}}"></core-icon>
-		{{#if profSource}}
-			{{#with profSource}}
-				{{statValue}} - {{sourceName}}
-			{{/with}}
-		{{else}}
-			Not Proficient
-		{{/if}}
-	</div>
-	<!--numerical value-->
-	<div>
-		<!--Ability Mod-->
-		<div horizontal center-justified layout>
-			<div flex>{{abilityName}}</div>
-			<div class="summaryNumber">{{char.abilityMod ability}}</div>
+	{{#baseDialog title=name class=colorClass hideEdit=true}}
+		{{> skillDialogView}}
+	{{/baseDialog}}
+</template>
+
+<template name="skillDialogView">
+	<div layout vertical center>
+		<div class="display2">
+			{{char.skillMod skillName}}
 		</div>
-		<!--Prof bonus-->
+		<div class="subhead">
+			<core-icon icon="{{profIcon}}" class="black54"></core-icon>
+			{{#if profSource}}
+				{{proficiencyValue}} - {{#with profSource}}{{sourceName}}{{/with}}
+			{{else}}
+				Not Proficient
+			{{/if}}
+		</div>
+	</div>
+
+	<hr class="vertMargin">
+
+	<table class="summaryTable">
+		<tr>
+			<td>{{abilityName}}</td>
+			<td>{{char.abilityMod ability}}</td>
+		</tr>
 		{{#if char.proficiency skillName}}
-			<div horizontal center-justified layout>
-				<div flex>{{#with profSource}}{{statValue}}{{/with}}</div>
-				<div class="summaryNumber">{{signedString profBonus}}</div>
-			</div>
+			<tr>
+				<td>{{proficiencyValue}}</td>
+				<td>{{signedString profBonus}}</td>
+			</tr>
 		{{/if}}
-		<!--numerical effects-->
 		{{#each addEffects}}
-			<div horizontal center-justified layout>
-				<div flex>{{sourceName}}</div>
-				<div class="summaryNumber">{{signedString statValue}}</div>
-			</div>
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>{{signedString statValue}}</td>
+			</tr>
 		{{/each}}
 		{{#each mulEffects}}
-			<div horizontal center-justified layout>
-				<div flex>{{sourceName}}</div>
-				<div class="summaryNumber">&times;{{statValue}}</div>
-			</div>
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>&times;{{statValue}}</td>
+			</tr>
 		{{/each}}
 		{{#each minEffects}}
-			<div horizontal center-justified layout>
-				<div flex>{{sourceName}}</div>
-				<div class="summaryNumber">Min: {{statValue}}</div>
-			</div>
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>Min: {{statValue}}</td>
+			</tr>
 		{{/each}}
 		{{#each maxEffects}}
-			<div horizontal center-justified layout>
-				<div flex>{{sourceName}}</div>
-				<div class="summaryNumber">Max: {{statValue}}</div>
+			<tr>
+				<td>{{sourceName}}</td>
+				<td>Max: {{statValue}}</td>
+			</tr>
+		{{/each}}
+		<tr class="body2">
+			<td>Total</td>
+			<td>{{char.skillMod skillName}}</td>
+		</tr>
+	</table>
+
+	{{#if or advEffects.count dadvEffects.count conditionalEffects.count}}
+		<hr class="vertMargin">
+	{{/if}}
+
+	<div class="spaceAfter" horizontal center layout>
+		{{#if advEffects.count}}
+			<div class="body2" style="width: 100px;">
+				Advantage
 			</div>
-		{{/each}}
-		<!--Total-->
-		<div horizontal center-justified layout>
-			<div flex>Total</div>
-			<div class="summaryNumber">{{char.skillMod skillName}}</div>
-		</div>
+			<div flex>
+				{{#each advEffects}}
+					<div>{{sourceName}}</div>
+				{{/each}}
+			</div>
+		{{/if}}
 	</div>
-	<!--Advantage effects-->
-	{{#if advEffects.count}}
-		Advantage:
-		{{#each advEffects}}
-			<div>{{sourceName}}</div>
-		{{/each}}
-	{{/if}}
-	{{#if dadvEffects.count}}
-		Disadvantage:
-		{{#each dadvEffects}}
-			<div>{{sourceName}}</div>
-		{{/each}}
-	{{/if}}
+	<div class="spaceAfter" horizontal center layout>
+		{{#if dadvEffects.count}}
+			<div class="body2" style="width: 100px;">
+				Disadvantage
+			</div>
+			<div flex>
+				{{#each dadvEffects}}
+					<div>{{sourceName}}</div>
+				{{/each}}
+			</div>
+		{{/if}}
+	</div>
 	<!--Conditional Benefits-->
 	{{#each conditionalEffects}}
-		<div>
-			<div>{{sourceName}}</div>
+		<div class="spaceAfter">
+			<div class="body2">{{sourceName}}</div>
 			<div>*{{statValue}}</div>
 		</div>
 	{{/each}}
-	{{/baseDialog}}
 </template>
