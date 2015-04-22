@@ -5,16 +5,16 @@ Migrations.add({
 		//convert proficiency effects to proficiency objects
 		Effects.find({operation: "proficiency"}).forEach(function(effect){
 			var type = "skill";
-			if(_.contains(SAVES, effect.stat)) type = "save";
+			if (_.contains(SAVES, effect.stat)) type = "save";
 			Proficiencies.insert({
 				charId: effect.charId,
 				name: effect.stat,
 				value: effect.value,
 				parent: _.clone(effect.parent),
 				type: type,
-				enabled: effect.enabled
+				enabled: effect.enabled,
 			}, function(err){
-				if(!err) Effects.remove(effect._id);
+				if (!err) Effects.remove(effect._id);
 			});
 		});
 		//store type as a parent group if it's needed

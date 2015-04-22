@@ -3,11 +3,11 @@ Schemas.Attribute = new SimpleSchema({
 	//should be zero after reset
 	adjustment: {
 		type: Number,
-		defaultValue: 0
+		defaultValue: 0,
 	},
 	reset: {
 		type: String,
 		defaultValue: "longRest",
-		allowedValues: ["longRest", "shortRest"]
-	}
+		allowedValues: ["longRest", "shortRest"],
+	},
 });

@@ -112,8 +112,8 @@ Template.effectEdit.helpers({
 	},
 	operations: function(){
 		var group = Template.instance().selectedStatGroup.get();
-		if(group === "Weakness/Resistance") return null;
-		if(group === "Saving Throws" || group === "Skills"){
+		if (group === "Weakness/Resistance") return null;
+		if (group === "Saving Throws" || group === "Skills"){
 			return skillOperations;
 		} else {
 			return attributeOperations;
@@ -122,14 +122,14 @@ Template.effectEdit.helpers({
 	effectValueTemplate: function(){
 		//resistance/vulnerability template
 		var group = Template.instance().selectedStatGroup.get();
-		if(group === "Weakness/Resistance") return "multiplierEffectValue";
+		if (group === "Weakness/Resistance") return "multiplierEffectValue";
 
 		var op = this.operation;
-		if(!op) return null;
+		if (!op) return null;
 		//operations that don't need templates
-		if(op === "advantage" || op === "disadvantage" || op === "fail") return null;
+		if (op === "advantage" || op === "disadvantage" || op === "fail") return null;
 		//proficiency template
-		if(op === "proficiency") return "proficiencyEffectValue";
+		if (op === "proficiency") return "proficiencyEffectValue";
 
 		//default template
 		return "regularEffectValue";
@@ -149,44 +149,57 @@ Template.effectEdit.events({
 	},
 	"core-select .statGroupDropDown": function(event, instance){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var groupName = detail.item.getAttribute("name");
 		var oldName = Template.instance().selectedStatGroup.get();
-		if(oldName != groupName){
+		if (oldName != groupName){
 			instance.selectedStatGroup.set(groupName);
-			if(groupName === "Skills" || groupName === "Saving Throws"){
-				Effects.update(this._id, {$set: {operation: "proficiency", value: 1, calculation: ""}, $unset: {stat: ""} });
-			} else if(groupName === "Weakness/Resistance"){
-				Effects.update(this._id, {$set: {value: 0.5, calculation: "", operation: "mul"}, $unset: {stat: ""} });
+			if (groupName === "Skills" || groupName === "Saving Throws"){
+				Effects.update(this._id, {$set: {
+					operation: "proficiency",
+					value: 1,
+					calculation: ""
+				}, $unset: {stat: ""}});
+			} else if (groupName === "Weakness/Resistance"){
+				Effects.update(this._id, {$set: {
+					value: 0.5,
+					calculation: "",
+					operation: "mul"}, $unset: {stat: ""}});
 			} else {
-				Effects.update(this._id, { $set: {operation: "add"}, $unset: {stat: "", value: "", calculation: ""} });
+				Effects.update(this._id,
+							   {$set: {operation: "add"},
+								$unset: {stat: "", value: "", calculation: ""}});
 			}
 		}
 	},
 	"core-select .statDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var statName = detail.item.getAttribute("name");
 		if (statName == this.stat) return;
 		Effects.update(this._id, {$set: {stat: statName}});
 	},
 	"core-select .operationDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var opName = detail.item.getAttribute("name");
 		if (opName == this.operation) return;
 		Effects.update(this._id, {$set: {operation: opName}});
 	},
 	"core-select .damageMultiplierDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
-		Effects.update(this._id, {$set: {value: value, calculation: "", operation: "mul"}});
+		Effects.update(this._id, {$set: {
+			value: value,
+			calculation: "",
+			operation: "mul"
+		}});
 	},
 	"core-select .proficiencyDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
 		Effects.update(this._id, {$set: {value: value, calculation: ""}});
@@ -194,7 +207,7 @@ Template.effectEdit.events({
 	"change .effectValueInput": function(event){
 		var value = event.currentTarget.value;
 		var numValue = +value;
-		if(_.isFinite(numValue)){
+		if (_.isFinite(numValue)){
 			if (this.value === numValue) return;
 			Effects.update(this._id, {$set: {value: numValue, calculation: ""}});
 		} else if (_.isString(value)){

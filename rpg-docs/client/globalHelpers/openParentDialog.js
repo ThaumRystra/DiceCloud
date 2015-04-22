@@ -1,21 +1,21 @@
-openParentDialog = function(parent, charId, heroId){
+openParentDialog = function(parent, charId, heroId) {
 	var detail;
-	if(parent.collection === "Characters" && parent.group === "racial"){
+	if (parent.collection === "Characters" && parent.group === "racial") {
 		detail = {
 			template: "raceDialog",
 			data: {charId: parent.id},
 		};
-	} else if( parent.collection === "Features" ){
+	} else if (parent.collection === "Features") {
 		detail = {
 			template: "featureDialog",
 			data:     {featureId: parent.id},
 		};
-	} else if( parent.collection === "Classes" ){
+	} else if (parent.collection === "Classes") {
 		detail = {
 			template: "classDialog",
 			data: {classId: parent.id},
 		};
-	} else if( parent.collection === "Items" ){
+	} else if (parent.collection === "Items") {
 		detail = {
 			template: "itemDialog",
 			data:     {itemId: parent.id},

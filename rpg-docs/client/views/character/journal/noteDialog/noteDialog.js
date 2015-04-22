@@ -18,7 +18,7 @@ Template.noteDialog.events({
 	"change #noteDescriptionInput": function(event){
 		var value = event.currentTarget.value;
 		Notes.update(this._id, {$set: {description: value}});
-	}
+	},
 });
 
 Template.noteDialog.helpers({

@@ -1,5 +1,5 @@
-Meteor.publish("characterList",function(userId){
-	if(!userId) {
+Meteor.publish("characterList", function(userId){
+	if (!userId) {
 		this.ready();
 		return;
 	}
@@ -7,7 +7,7 @@ Meteor.publish("characterList",function(userId){
 		$or: [
 			{readers: userId},
 			{writers: userId},
-			{owner: userId}
+			{owner: userId},
 		]
 	});
 });

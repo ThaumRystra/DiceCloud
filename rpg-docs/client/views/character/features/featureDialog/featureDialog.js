@@ -17,7 +17,7 @@ Template.featureDialog.events({
 
 Template.featureDetails.helpers({
 	or: function(a, b){
-		return a ||b;
+		return a || b;
 	},
 	hasUses: function(){
 		return this.usesValue() > 0;
@@ -43,7 +43,7 @@ Template.featureDetails.events({
 	"change .enabledCheckbox": function(event){
 		var enabled = !this.enabled;
 		Features.update(this._id, {$set: {enabled: enabled}});
-	}
+	},
 });
 
 Template.featureEdit.onRendered(function(){
@@ -55,10 +55,10 @@ Template.featureEdit.helpers({
 		return _.isString(this.uses);
 	},
 	enabledSelection: function(){
-		if(!this.enabled) return "disabled";
-		if(this.alwaysEnabled) return "alwaysEnabled";
+		if (!this.enabled) return "disabled";
+		if (this.alwaysEnabled) return "alwaysEnabled";
 		return "enabled";
-	}
+	},
 });
 
 Template.featureEdit.events({
@@ -73,7 +73,7 @@ Template.featureEdit.events({
 	"change #limitUseCheck": function(event){
 		var currentUses = this.uses;
 		var featureId = this._id;
-		if( event.target.checked && !_.isString(currentUses) ){
+		if (event.target.checked && !_.isString(currentUses)){
 			Features.update(featureId, {$set: {uses: ""}}, {removeEmptyStrings: false});
 		} else if (!event.target.checked && _.isString(currentUses)){
 			Features.update(featureId, {$unset: {uses: ""}});
@@ -86,17 +86,18 @@ Template.featureEdit.events({
 	},
 	"core-select #enabledDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		var setter;
-		if(value === "enabled"){
+		if (value === "enabled"){
 			setter = {enabled: true, alwaysEnabled: false};
 		} else if (value === "disabled"){
 			setter = {enabled: false, alwaysEnabled: false};
-		} else{
+		} else {
 			setter = {enabled: true, alwaysEnabled: true};
 		}
-		if (setter.enabled === this.enabled && setter.alwaysEnabled === this.alwaysEnabled) return;
+		if (setter.enabled === this.enabled &&
+			setter.alwaysEnabled === this.alwaysEnabled) return;
 		Features.update(this._id, {$set: setter});
 	},
 });

@@ -8,7 +8,11 @@ Template.spellListDialog.events({
 	},
 	"tap #deleteButton": function(event, instance){
 		SpellLists.softRemoveNode(instance.data.spellListId);
-		GlobalUI.deletedToast(instance.data.spellListId, "SpellLists", "Spell list and contents");
+		GlobalUI.deletedToast(
+			instance.data.spellListId,
+			"SpellLists",
+			"Spell list and contents"
+		);
 		GlobalUI.closeDetail();
 	},
 	//TODO clean up String -> num here so they don't need casting by Schema.clean
@@ -21,11 +25,13 @@ Template.spellListDialog.events({
 		var value = event.currentTarget.value;
 		SpellLists.update(this._id, {$set: {saveDC: value}});
 	},
-	"change #spellListAttackBonusInput, input #spellListAttackBonusInput": function(event){
+	"change #spellListAttackBonusInput, input #spellListAttackBonusInput":
+	function(event){
 		var value = event.currentTarget.value;
 		SpellLists.update(this._id, {$set: {attackBonus: value}});
 	},
-	"change #spellListMaxPreparedInput, input #spellListMaxPreparedInput": function(event){
+	"change #spellListMaxPreparedInput, input #spellListMaxPreparedInput":
+	function(event){
 		var value = event.currentTarget.value;
 		SpellLists.update(this._id, {$set: {maxPrepared: value}});
 	},

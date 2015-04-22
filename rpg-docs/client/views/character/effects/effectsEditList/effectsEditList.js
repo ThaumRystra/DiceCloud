@@ -5,7 +5,7 @@ Template.effectsEditList.helpers({
 			"parent.collection": this.parentCollection,
 			"charId": this.charId
 		};
-		if(this.parentGroup){
+		if (this.parentGroup){
 			selector["parent.group"] = this.parentGroup;
 		}
 		var cursor = Effects.find(selector);
@@ -15,7 +15,7 @@ Template.effectsEditList.helpers({
 
 Template.effectsEditList.events({
 	"tap #addEffectButton": function(){
-		if ( !_.isBoolean(this.enabled) ) {
+		if (!_.isBoolean(this.enabled)) {
 			this.enabled = true;
 		}
 		Effects.insert({

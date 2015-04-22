@@ -12,10 +12,10 @@ this.GlobalUI = (function() {
 		return toast.show();
 	};
 
-	GlobalUI.deletedToast = function(id, collection, itemName){
+	GlobalUI.deletedToast = function(id, collection, itemName) {
 		GlobalUI.toast({
-			text: itemName? itemName + " deleted" : "Deleted item from" + collection,
-			template: "undoToast", 
+			text: itemName ? itemName + " deleted" : "Deleted item from" + collection,
+			template: "undoToast",
 			data: {
 				id: id,
 				collection: collection
@@ -23,7 +23,7 @@ this.GlobalUI = (function() {
 		});
 	};
 
-	GlobalUI.setDialog = function(opts){
+	GlobalUI.setDialog = function(opts) {
 		this.dialog = $("[global-dialog]")[0];
 		Session.set("global.ui.dialogHeader", opts.heading);
 		Session.set("global.ui.dialogData", opts.data);
@@ -58,7 +58,7 @@ this.GlobalUI = (function() {
 		Session.set("global.ui.detailShow", true);
 	};
 
-	//if setting the detail rather than showing it, 
+	//if setting the detail rather than showing it,
 	//the template should contain the following in template.rendered
 	//
 	//if (!this.alreadyRendered){
@@ -69,30 +69,30 @@ this.GlobalUI = (function() {
 		Session.set("global.ui.detailData", opts.data);
 		Session.set("global.ui.detailTemplate", opts.template);
 		Session.set("global.ui.detailHeroId", opts.heroId);
-		if(!!(window.history && window.history.pushState)){
+		if (window.history && window.history.pushState) {
 			history.replaceState({detail: "closed", opts: opts}, "Detail Dialog");
 			history.pushState({detail: "opened", opts: opts}, "Detail Dialog");
 		}
 	};
 
-	var throttleBack = _.throttle(function(){
+	var throttleBack = _.throttle(function() {
 		history.back();
 	}, 800, {trailing: false});
 
-	GlobalUI.closeDetail = function(){
-		if(!!(window.history && window.history.pushState)){
+	GlobalUI.closeDetail = function() {
+		if (!!(window.history && window.history.pushState)) {
 			throttleBack();
-		} else{
+		} else {
 			Session.set("global.ui.detailShow", false);
 		}
 	};
 
-	GlobalUI.popStateHandler = function(e){
+	GlobalUI.popStateHandler = function(e) {
 		var state = e.originalEvent.state;
-		if(state) {
-			if(state.detail === "closed"){
+		if (state) {
+			if (state.detail === "closed") {
 				Session.set("global.ui.detailShow", false);
-			} else if(state.detail === "opened"){
+			} else if (state.detail === "opened") {
 				var opts = state.opts;
 				Session.set("global.ui.detailData", opts.data);
 				Session.set("global.ui.detailTemplate", opts.template);
@@ -115,22 +115,22 @@ Template.layout.helpers({
 	globalDialogFullOnMobile: function() {
 		return Session.get("global.ui.dialogFullOnMobile");
 	},
-	globalDialogHeader: function(){
+	globalDialogHeader: function() {
 		return Session.get("global.ui.dialogHeader");
 	},
-	globalDetailSelected: function(){
+	globalDetailSelected: function() {
 		return Session.get("global.ui.detailShow") ? 1 : 0;
 	},
-	globalDetailTemplate: function(){
+	globalDetailTemplate: function() {
 		return Session.get("global.ui.detailTemplate");
 	},
-	globalDetailData: function(){
+	globalDetailData: function() {
 		return Session.get("global.ui.detailData");
 	},
-	globalToastTemplate: function(){
+	globalToastTemplate: function() {
 		return Session.get("global.ui.toastTemplate");
 	},
-	globalToastData: function(){
+	globalToastData: function() {
 		return Session.get("global.ui.toastData");
 	}
 });
@@ -143,7 +143,7 @@ Template.layout.events({
 	},
 	"core-animated-pages-transition-end [detail-pages]": function(e) {
 		var detailOpened = Session.get("global.ui.detailShow");
-		if(!detailOpened){
+		if (!detailOpened) {
 			Session.set("global.ui.detailData", null);
 			Session.set("global.ui.detailTemplate", null);
 			Session.set("global.ui.detailHeroId", null);
@@ -151,14 +151,14 @@ Template.layout.events({
 	},
 	"core-animated-pages-transition-prepare": function(e) {
 		var detailOpened = Session.get("global.ui.detailShow");
-		if(detailOpened) {
+		if (detailOpened) {
 			//set up the transition
 		} else {
 			//undo hack
 			$("#mainContentSection").removeClass("fake-selected");
 		}
 	},
-	"tap #screenDim": function(e){
+	"tap #screenDim": function(e) {
 		GlobalUI.closeDetail();
 	}
 });

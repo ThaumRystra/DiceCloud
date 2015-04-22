@@ -3,20 +3,20 @@ Schemas.DeathSave = new SimpleSchema({
 		type: Number,
 		min: 0,
 		max: 3,
-		defaultValue: 0
+		defaultValue: 0,
 	},
 	fail: {
 		type: Number,
 		min: 0,
 		max: 3,
-		defaultValue: 0
+		defaultValue: 0,
 	},
 	canDeathSave: {
 		type: Boolean,
-		defaultValue: true
+		defaultValue: true,
 	},
 	stable: {
 		type: Boolean,
-		defaultValue: false
-	}
+		defaultValue: false,
+	},
 });

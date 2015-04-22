@@ -7,27 +7,39 @@ Effects = new Mongo.Collection("effects");
 Schemas.Effect = new SimpleSchema({
 	charId: {
 		type: String,
-		regEx: SimpleSchema.RegEx.Id
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	name: {
 		type: String,
 		optional: true, //TODO make necessary if there is no owner
-		trim: false
+		trim: false,
 	},
 	operation: {
 		type: String,
 		defaultValue: "add",
-		allowedValues: ["base", "proficiency","add","mul","min","max","advantage","disadvantage","passiveAdd","fail","conditional"]
+		allowedValues: [
+			"base",
+			"proficiency",
+			"add",
+			"mul",
+			"min",
+			"max",
+			"advantage",
+			"disadvantage",
+			"passiveAdd",
+			"fail",
+			"conditional",
+		],
 	},
 	value: {
 		type: Number,
 		decimal: true,
-		optional: true
+		optional: true,
 	},
 	calculation: {
 		type: String,
 		optional: true,
-		trim: false
+		trim: false,
 	},
 	//the thing that created this effect
 	parent: {
@@ -36,17 +48,17 @@ Schemas.Effect = new SimpleSchema({
 	//which stat the effect is applied to
 	stat: {
 		type: String,
-		optional: true
+		optional: true,
 	},
 	enabled: {
 		type: Boolean,
-		defaultValue: true
-	}
+		defaultValue: true,
+	},
 });
 
 Effects.attachSchema(Schemas.Effect);
 
-if(Meteor.isServer) Characters.after.insert(function (userId, char) {
+if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 	Effects.insert({
 		charId: char._id,
 		type: "inate",
@@ -56,8 +68,8 @@ if(Meteor.isServer) Characters.after.insert(function (userId, char) {
 		calculation: "level * constitutionMod",
 		parent: {
 			id: char._id,
-			collection: "Characters"
-		}
+			collection: "Characters",
+		},
 	});
 	Effects.insert({
 		charId: char._id,
@@ -68,8 +80,8 @@ if(Meteor.isServer) Characters.after.insert(function (userId, char) {
 		calculation: "floor(level / 4 + 1.75)",
 		parent: {
 			id: char._id,
-			collection: "Characters"
-		}
+			collection: "Characters",
+		},
 	});
 	Effects.insert({
 		charId: char._id,
@@ -80,8 +92,8 @@ if(Meteor.isServer) Characters.after.insert(function (userId, char) {
 		calculation: "dexterityArmor",
 		parent: {
 			id: char._id,
-			collection: "Characters"
-		}
+			collection: "Characters",
+		},
 	});
 	Effects.insert({
 		charId: char._id,
@@ -92,12 +104,12 @@ if(Meteor.isServer) Characters.after.insert(function (userId, char) {
 		value: 10,
 		parent: {
 			id: char._id,
-			collection: "Characters"
-		}
+			collection: "Characters",
+		},
 	});
 });
 
-Effects.attachBehaviour('softRemovable');
+Effects.attachBehaviour("softRemovable");
 makeChild(Effects, ["enabled"]); //children of lots of things
 
 Effects.allow(CHARACTER_SUBSCHEMA_ALLOW);

@@ -11,7 +11,7 @@ DAMAGE_TYPES = {
 	"psychic":     {name: "Psychic"},
 	"radiant":     {name: "Radiant"},
 	"slashing":    {name: "Slashing"},
-	"thunder":     {name: "Thunder"}
+	"thunder":     {name: "Thunder"},
 };
 
 DAMAGE_MULTIPLIERS = [
@@ -27,5 +27,5 @@ DAMAGE_MULTIPLIERS = [
 	"psychicMultiplier",
 	"radiantMultiplier",
 	"slashingMultiplier",
-	"thunderMultiplier"
+	"thunderMultiplier",
 ];

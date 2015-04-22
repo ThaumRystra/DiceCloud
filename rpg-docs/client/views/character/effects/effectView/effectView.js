@@ -6,31 +6,31 @@ var stats = {
 	"intelligence":{"name":"Intelligence"},
 	"wisdom":{"name":"Wisdom"},
 	"charisma":{"name":"Charisma"},
-	"strengthSave":{"name":"Strength Save",},
-	"dexteritySave":{"name":"Dexterity Save",},
-	"constitutionSave":{"name":"Constitution Save",},
-	"intelligenceSave":{"name":"Intelligence Save",},
-	"wisdomSave":{"name":"Wisdom Save",},
-	"charismaSave":{"name":"Charisma Save",},
-	"acrobatics":{"name":"Acrobatics",},
-	"animalHandling":{"name":"Animal Handling",},
-	"arcana":{"name":"Arcana",},
-	"athletics":{"name":"Athletics",},
-	"deception":{"name":"Deception",},
-	"history":{"name":"History",},
-	"insight":{"name":"Insight",},
-	"intimidation":{"name":"Intimidation",},
-	"investigation":{"name":"Investigation",},
-	"medicine":{"name":"Medicine",},
-	"nature":{"name":"Nature",},
-	"perception":{"name":"Perception",},
-	"performance":{"name":"Performance",},
-	"persuasion":{"name":"Persuasion",},
-	"religion":{"name":"Religion",},
-	"sleightOfHand":{"name":"Sleight of Hand",},
-	"stealth":{"name":"Stealth",},
-	"survival":{"name":"Survival",},
-	"initiative":{"name":"Initiative",},
+	"strengthSave":{"name":"Strength Save"},
+	"dexteritySave":{"name":"Dexterity Save"},
+	"constitutionSave":{"name":"Constitution Save"},
+	"intelligenceSave":{"name":"Intelligence Save"},
+	"wisdomSave":{"name":"Wisdom Save"},
+	"charismaSave":{"name":"Charisma Save"},
+	"acrobatics":{"name":"Acrobatics"},
+	"animalHandling":{"name":"Animal Handling"},
+	"arcana":{"name":"Arcana"},
+	"athletics":{"name":"Athletics"},
+	"deception":{"name":"Deception"},
+	"history":{"name":"History"},
+	"insight":{"name":"Insight"},
+	"intimidation":{"name":"Intimidation"},
+	"investigation":{"name":"Investigation"},
+	"medicine":{"name":"Medicine"},
+	"nature":{"name":"Nature"},
+	"perception":{"name":"Perception"},
+	"performance":{"name":"Performance"},
+	"persuasion":{"name":"Persuasion"},
+	"religion":{"name":"Religion"},
+	"sleightOfHand":{"name":"Sleight of Hand"},
+	"stealth":{"name":"Stealth"},
+	"survival":{"name":"Survival"},
+	"initiative":{"name":"Initiative"},
 	"hitPoints":{"name":"Hit Points"},
 	"armor":{"name":"Armor"},
 	"dexterityArmor":{"name":"Dexterity Armor Bonus"},
@@ -56,18 +56,42 @@ var stats = {
 	"d10HitDice":{"name":"d10 Hit Dice"},
 	"d12HitDice":{"name":"d12 Hit Dice"},
 	"acidMultiplier":{"name":"Acid damage", "group": "Weakness/Resistance"},
-	"bludgeoningMultiplier":{"name":"Bludgeoning damage", "group": "Weakness/Resistance"},
-	"coldMultiplier":{"name":"Cold damage", "group": "Weakness/Resistance"},
-	"fireMultiplier":{"name":"Fire damage", "group": "Weakness/Resistance"},
-	"forceMultiplier":{"name":"Force damage", "group": "Weakness/Resistance"},
-	"lightningMultiplier":{"name":"Lightning damage", "group": "Weakness/Resistance"},
-	"necroticMultiplier":{"name":"Necrotic damage", "group": "Weakness/Resistance"},
-	"piercingMultiplier":{"name":"Piercing damage", "group": "Weakness/Resistance"},
-	"poisonMultiplier":{"name":"Poison damage", "group": "Weakness/Resistance"},
-	"psychicMultiplier":{"name":"Psychic damage", "group": "Weakness/Resistance"},
-	"radiantMultiplier":{"name":"Radiant damage", "group": "Weakness/Resistance"},
-	"slashingMultiplier":{"name":"Slashing damage", "group": "Weakness/Resistance"},
-	"thunderMultiplier":{"name":"Thunder damage", "group": "Weakness/Resistance"}
+	"bludgeoningMultiplier":{
+		"name":"Bludgeoning damage", "group": "Weakness/Resistance"
+	},
+	"coldMultiplier":{
+		"name":"Cold damage", "group": "Weakness/Resistance"
+	},
+	"fireMultiplier":{
+		"name":"Fire damage", "group": "Weakness/Resistance"
+	},
+	"forceMultiplier":{
+		"name":"Force damage", "group": "Weakness/Resistance"
+	},
+	"lightningMultiplier":{
+		"name":"Lightning damage", "group": "Weakness/Resistance"
+	},
+	"necroticMultiplier":{
+		"name":"Necrotic damage", "group": "Weakness/Resistance"
+	},
+	"piercingMultiplier":{
+		"name":"Piercing damage", "group": "Weakness/Resistance"
+	},
+	"poisonMultiplier":{
+		"name":"Poison damage", "group": "Weakness/Resistance"
+	},
+	"psychicMultiplier":{
+		"name":"Psychic damage", "group": "Weakness/Resistance"
+	},
+	"radiantMultiplier":{
+		"name":"Radiant damage", "group": "Weakness/Resistance"
+	},
+	"slashingMultiplier":{
+		"name":"Slashing damage", "group": "Weakness/Resistance"
+	},
+	"thunderMultiplier":{
+		"name":"Thunder damage", "group": "Weakness/Resistance"
+	},
 };
 
 var operations = {
@@ -107,7 +131,7 @@ Template.effectView.helpers({
 	},
 	operationName: function(){
 		if(this.operation === "proficiency" ||
-			this.operation === "conditional") return null;
+		   this.operation === "conditional") return null;
 		if(stats[this.stat].group === "Weakness/Resistance") return null;
 		if(this.operation === "add" && evaluateEffect(this.charId, this) < 0) return null;
 		return operations[this.operation] && operations[this.operation].name || "No Operation";
@@ -127,9 +151,9 @@ Template.effectView.helpers({
 			return this.calculation || this.value;
 		}
 		if(stats[this.stat].group === "Weakness/Resistance"){
-			if(this.value == 0.5 || this.calculation == 0.5) return "Resistance";
-			if(this.value == 2   || this.calculation == 2)   return "Vulnerability";
-			if(this.value == 0   || this.calculation == 0)   return "Immunity";
+			if(this.value === 0.5) return "Resistance";
+			if(this.value === 2)   return "Vulnerability";
+			if(this.value === 0)   return "Immunity";
 		}
 		var value = evaluateEffect(this.charId, this);
 		if(_.isNumber(value)) return value;

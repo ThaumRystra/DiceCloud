@@ -9,7 +9,7 @@ Template.colorDropdown.events({
 		var color = event.currentTarget.getAttribute("name");
 		instance.$("#colorDropdown").trigger({
 			type: "color-change",
-			color: color
+			color: color,
 		});
 	}
-})
+});

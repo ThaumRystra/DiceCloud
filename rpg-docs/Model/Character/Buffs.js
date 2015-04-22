@@ -7,21 +7,22 @@ Schemas.Buff = new SimpleSchema({
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 		autoValue: function(){
-			if(!this.isSet) return Random.id();
-		}},
+			if (!this.isSet) return Random.id();
+		},
+	},
 	charId: {
-		type: String, 
-		regEx: SimpleSchema.RegEx.Id
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	//expiry time
-	expiry:     { type: Number, optional: true},
-	duration:	{ type: Number }
+	expiry:     {type: Number, optional: true},
+	duration:	{type: Number},
 });
 
 Buffs.attachSchema(Schemas.Buff);
 
-Buffs.attachBehaviour('softRemovable');
-makeParent(Buffs, 'name'); //parents of effects and attacks
+Buffs.attachBehaviour("softRemovable");
+makeParent(Buffs, "name"); //parents of effects and attacks
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);

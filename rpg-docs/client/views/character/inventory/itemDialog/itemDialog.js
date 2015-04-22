@@ -1,5 +1,8 @@
 var getContainers = function(charId){
-	return Containers.find({charId: charId}, {sort: {name: 1, _id: 1}, fields: {name: 1}});
+	return Containers.find(
+		{charId: charId},
+		{sort: {name: 1, _id: 1}, fields: {name: 1}}
+	);
 };
 
 Template.itemDialog.onCreated(function(){
@@ -14,13 +17,13 @@ Template.itemDialog.helpers({
 		return Template.instance().editing.get();
 	},
 	itemHeading: function(){
-		if(this.quantity === 1){
+		if (this.quantity === 1){
 			return this.name;
-		} else{
+		} else {
 			var pName = this.plural || this.name;
 			return this.quantity + " " + pName;
 		}
-	}
+	},
 });
 
 Template.itemDialog.events({
@@ -79,8 +82,8 @@ Template.itemEdit.events({
 	"change #equippedInput": function(event){
 		var equipped = Template.instance().find("#equippedInput").checked;
 		var item = Items.findOne(this._id);
-		if(item){
-			if(equipped){
+		if (item){
+			if (equipped){
 				item.equip();
 			} else {
 				item.unequip();
@@ -90,7 +93,7 @@ Template.itemEdit.events({
 	"change #attunementCheckbox": function(event){
 		var value = event.currentTarget.checked;
 		Items.update(this._id, {$set: {requiresAttunement: value}});
-	}
+	},
 });
 
 Template.containerDropdown.helpers({
@@ -102,7 +105,7 @@ Template.containerDropdown.helpers({
 Template.containerDropdown.events({
 	"core-select #containerDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var containerId = detail.item.getAttribute("name");
 		var item = Items.findOne(Template.currentData()._id);
 		item.moveToContainer(containerId);

@@ -5,29 +5,32 @@ Actions = new Mongo.Collection("actions");
  */
 Schemas.Action = new SimpleSchema({
 	charId: {
-		type: String, 
-		regEx: SimpleSchema.RegEx.Id
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	name: {
-		type: String, trim: false
+		type: String,
+		trim: false,
 	},
 	description: {
-		type: String, trim: false
+		type: String,
+		trim: false,
 	},
 	type: {
 		type: String,
 		allowedValues: ["action, bonus, reaction, free"],
-		defaultValue: "action"
+		defaultValue: "action",
 	},
 	//the immediate impact of doing this action (eg. -1 rages)
 	adjustments: {
-		type: [Schemas.Adjustment], defaultValue: []
-	}
+		type: [Schemas.Adjustment],
+		defaultValue: [],
+	},
 });
 
 Actions.attachSchema(Schemas.Action);
 
-Actions.attachBehaviour('softRemovable');
+Actions.attachBehaviour("softRemovable");
 makeChild(Actions);
 
 Actions.allow(CHARACTER_SUBSCHEMA_ALLOW);

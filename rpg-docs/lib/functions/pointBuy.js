@@ -6,7 +6,7 @@ pointBuyCost = {
 	"12": 4,
 	"13": 5,
 	"14": 7,
-	"15": 9
+	"15": 9,
 };
 
 var getPointBuyEffect = function(stat, value, pointsUsed, charId){
@@ -24,21 +24,21 @@ var getPointBuyEffect = function(stat, value, pointsUsed, charId){
 			charId: charId,
 			stat: stat,
 			operation: "base",
-		}
+		},
 	};
 };
 
 var checkPermission = function(userId, charId){
-	var char = Characters.findOne( charId, { fields: {owner: 1, writers: 1} } );
-	if(!char)
-		throw new Meteor.Error('Access Denied',
-							   'Character '+charId+' does not exist');
+	var char = Characters.findOne(charId, {fields: {owner: 1, writers: 1}});
+	if (!char)
+		throw new Meteor.Error("Access Denied",
+							   "Character " + charId + " does not exist");
 	if (!userId)
-		throw new Meteor.Error('Access Denied',
-							   'No UserId set when trying to update character asset.');
+		throw new Meteor.Error("Access Denied",
+							   "No UserId set when trying to update character asset.");
 	if (char.owner !== userId && !_.contains(char.writers, userId))
-		throw new Meteor.Error('Access Denied',
-							   'Not permitted to update assets of this character.');
+		throw new Meteor.Error("Access Denied",
+							   "Not permitted to update assets of this character.");
 	return true;
 };
 
@@ -50,7 +50,7 @@ Meteor.methods({
 			constitution: Number,
 			intelligence: Number,
 			wisdom:       Number,
-			charisma:     Number
+			charisma:     Number,
 		});
 		check(charId, String);
 		checkPermission(this.userId, charId);

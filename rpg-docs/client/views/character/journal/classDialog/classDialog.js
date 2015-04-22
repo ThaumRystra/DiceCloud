@@ -15,7 +15,7 @@ Template.classDialog.events({
 	"change #levelValueInput": function(event){
 		var value = event.currentTarget.value;
 		Classes.update(this._id, {$set: {level: value}});
-	}
+	},
 });
 
 Template.classDialog.helpers({

@@ -6,31 +6,31 @@ var stats = {
 	"intelligence":{"name":"Intelligence"},
 	"wisdom":{"name":"Wisdom"},
 	"charisma":{"name":"Charisma"},
-	"strengthSave":{"name":"Strength Save",},
-	"dexteritySave":{"name":"Dexterity Save",},
-	"constitutionSave":{"name":"Constitution Save",},
-	"intelligenceSave":{"name":"Intelligence Save",},
-	"wisdomSave":{"name":"Wisdom Save",},
-	"charismaSave":{"name":"Charisma Save",},
-	"acrobatics":{"name":"Acrobatics",},
-	"animalHandling":{"name":"Animal Handling",},
-	"arcana":{"name":"Arcana",},
-	"athletics":{"name":"Athletics",},
-	"deception":{"name":"Deception",},
-	"history":{"name":"History",},
-	"insight":{"name":"Insight",},
-	"intimidation":{"name":"Intimidation",},
-	"investigation":{"name":"Investigation",},
-	"medicine":{"name":"Medicine",},
-	"nature":{"name":"Nature",},
-	"perception":{"name":"Perception",},
-	"performance":{"name":"Performance",},
-	"persuasion":{"name":"Persuasion",},
-	"religion":{"name":"Religion",},
-	"sleightOfHand":{"name":"Sleight of Hand",},
-	"stealth":{"name":"Stealth",},
-	"survival":{"name":"Survival",},
-	"initiative":{"name":"Initiative",},
+	"strengthSave":{"name":"Strength Save"},
+	"dexteritySave":{"name":"Dexterity Save"},
+	"constitutionSave":{"name":"Constitution Save"},
+	"intelligenceSave":{"name":"Intelligence Save"},
+	"wisdomSave":{"name":"Wisdom Save"},
+	"charismaSave":{"name":"Charisma Save"},
+	"acrobatics":{"name":"Acrobatics"},
+	"animalHandling":{"name":"Animal Handling"},
+	"arcana":{"name":"Arcana"},
+	"athletics":{"name":"Athletics"},
+	"deception":{"name":"Deception"},
+	"history":{"name":"History"},
+	"insight":{"name":"Insight"},
+	"intimidation":{"name":"Intimidation"},
+	"investigation":{"name":"Investigation"},
+	"medicine":{"name":"Medicine"},
+	"nature":{"name":"Nature"},
+	"perception":{"name":"Perception"},
+	"performance":{"name":"Performance"},
+	"persuasion":{"name":"Persuasion"},
+	"religion":{"name":"Religion"},
+	"sleightOfHand":{"name":"Sleight of Hand"},
+	"stealth":{"name":"Stealth"},
+	"survival":{"name":"Survival"},
+	"initiative":{"name":"Initiative"},
 	"hitPoints":{"name":"Hit Points"},
 	"armor":{"name":"Armor"},
 	"dexterityArmor":{"name":"Dexterity Armor Bonus"},
@@ -67,7 +67,7 @@ var stats = {
 	"psychicMultiplier":{"name":"Psychic", "group": "Weakness/Resistance"},
 	"radiantMultiplier":{"name":"Radiant", "group": "Weakness/Resistance"},
 	"slashingMultiplier":{"name":"Slashing", "group": "Weakness/Resistance"},
-	"thunderMultiplier":{"name":"Thunder", "group": "Weakness/Resistance"}
+	"thunderMultiplier":{"name":"Thunder", "group": "Weakness/Resistance"},
 };
 
 var operations = {
@@ -81,7 +81,7 @@ var operations = {
 	disadvantage: {name: "Disadvantage"},
 	passiveAdd: {name: "Passive Bonus"},
 	fail: {name: "Automatically Fail"},
-	conditional: {name: "Conditional Benefit"}
+	conditional: {name: "Conditional Benefit"},
 };
 
 var abilities = {
@@ -99,34 +99,44 @@ Template.attributeDialogView.helpers({
 	},
 	adjustment: function(){
 		var char = Characters.findOne(this.charId);
-		if(!char) return;
+		if (!char) return;
 		var value = char.attributeValue(this.statName);
 		var base = char.attributeBase(this.statName);
 		return value - base;
 	},
 	baseEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.statName, operation: "base"});
+		return Effects.find(
+			{charId: this.charId, stat: this.statName, operation: "base"}
+		);
 	},
 	addEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.statName, operation: "add"});
+		return Effects.find(
+			{charId: this.charId, stat: this.statName, operation: "add"}
+		);
 	},
 	mulEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.statName, operation: "mul"});
+		return Effects.find(
+			{charId: this.charId, stat: this.statName, operation: "mul"}
+		);
 	},
 	minEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.statName, operation: "min"});
+		return Effects.find(
+			{charId: this.charId, stat: this.statName, operation: "min"}
+		);
 	},
 	maxEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.statName, operation: "max"});
+		return Effects.find(
+			{charId: this.charId, stat: this.statName, operation: "max"}
+		);
 	},
 	attributeBase: function(){
 		var char = Characters.findOne(this.charId);
-		if(!char) throw "character is " + char;
+		if (!char) throw "character is " + char;
 		return char.attributeBase(this.statName);
 	},
-	attributeValue: function () {
+	attributeValue: function() {
 		var char = Characters.findOne(this.charId);
-		if(!char) throw "character is " + char;
+		if (!char) throw "character is " + char;
 		return char.attributeValue(this.statName);
 	},
 	sourceName: function(){
@@ -135,10 +145,9 @@ Template.attributeDialogView.helpers({
 	},
 	operationName: function(){
 		var op = operations[this.operation];
-		return  op && op.name || "No Operation";
+		return op && op.name || "No Operation";
 	},
 	statValue: function(){
 		return evaluateEffect(this.charId, this);
 	},
 });
-

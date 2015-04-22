@@ -10,11 +10,11 @@ Template.healthCard.helpers({
 		return char && char.deathSave;
 	},
 	failIcon: function(num){
-		if(num <= this.fail) return "radio-button-on";
+		if (num <= this.fail) return "radio-button-on";
 		else return "radio-button-off";
 	},
 	passIcon: function(num){
-		if(num <= this.pass) return "radio-button-on";
+		if (num <= this.pass) return "radio-button-on";
 		else return "radio-button-off";
 	},
 	failDisabled: function(num){
@@ -27,7 +27,7 @@ Template.healthCard.helpers({
 		return this.fail >= 3;
 	},
 	multipliers: function(){
-		var char = Characters.findOne(this._id, {fields: {_id: 1} });
+		var char = Characters.findOne(this._id, {fields: {_id: 1}});
 		var multipliers = [
 			{name: "Acid",        value: char.attributeValue("acidMultiplier", 1)},
 			{name: "Bludgeoning", value: char.attributeValue("bludgeoningMultiplier", 1)},
@@ -41,15 +41,15 @@ Template.healthCard.helpers({
 			{name: "Psychic",     value: char.attributeValue("psychicMultiplier", 1)},
 			{name: "Radiant",     value: char.attributeValue("radiantMultiplier", 1)},
 			{name: "Slashing",    value: char.attributeValue("slashingMultiplier", 1)},
-			{name: "Thunder",     value: char.attributeValue("thunderMultiplier", 1)}
+			{name: "Thunder",     value: char.attributeValue("thunderMultiplier", 1)},
 		];
 		multipliers = _.groupBy(multipliers, "value");
 		return {
 			"immunities": multipliers["0"] || [],
 			"resistances": multipliers["0.5"] || [],
-			"weaknesses": multipliers["2"] || []
+			"weaknesses": multipliers["2"] || [],
 		};
-	}
+	},
 });
 
 Template.healthCard.events({
@@ -58,12 +58,15 @@ Template.healthCard.events({
 		var adjustment = value - this.attributeBase("hitPoints");
 		Characters.update(this._id, {$set: {"hitPoints.adjustment": adjustment}});
 		//reset the death saves if we are gaining HP
-		if(value > 0)
-			Characters.update(this._id, { $set: {
-				"deathSave.pass": 0,
-				"deathSave.fail": 0,
-				"deathSave.stable": false
-			} });
+		if (value > 0)
+			Characters.update(
+				this._id,
+				{$set: {
+					"deathSave.pass": 0,
+					"deathSave.fail": 0,
+					"deathSave.stable": false,
+				}}
+			);
 	},
 	"change .tempHitPointSlider": function(event){
 		var value = event.currentTarget.value;
@@ -76,24 +79,24 @@ Template.healthCard.events({
 	"tap #addTempHP": function(event){
 		GlobalUI.showDialog({
 			template: "addTHPDialog",
-			data: {charId: this._id}
+			data: {charId: this._id},
 		});
 	},
 	"tap .failBubble": function(event){
-		if(event.currentTarget.disabled) return;
+		if (event.currentTarget.disabled) return;
 		var char = Template.parentData();
-		if(event.currentTarget.icon === "radio-button-off"){
+		if (event.currentTarget.icon === "radio-button-off"){
 			Characters.update(char._id, {$set: {"deathSave.fail": this.fail + 1}});
-		} else{
+		} else {
 			Characters.update(char._id, {$set: {"deathSave.fail": this.fail - 1}});
 		}
 	},
 	"tap .passBubble": function(event){
-		if(event.currentTarget.disabled) return;
+		if (event.currentTarget.disabled) return;
 		var char = Template.parentData();
-		if(event.currentTarget.icon === "radio-button-off"){
+		if (event.currentTarget.icon === "radio-button-off"){
 			Characters.update(char._id, {$set: {"deathSave.pass": this.pass + 1}});
-		} else{
+		} else {
 			Characters.update(char._id, {$set: {"deathSave.pass": this.pass - 1}});
 		}
 	},
@@ -104,5 +107,5 @@ Template.healthCard.events({
 	"tap #unstableButton": function(event){
 		var char = Template.parentData();
 		Characters.update(char._id, {$set: {"deathSave.stable": true}});
-	}
+	},
 });

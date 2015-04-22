@@ -1,3 +1,3 @@
-Template.registerHelper("session", function(key){
+Template.registerHelper("session", function(key) {
 	return Session.get(key);
 });

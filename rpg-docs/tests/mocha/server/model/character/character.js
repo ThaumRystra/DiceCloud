@@ -1,4 +1,4 @@
-if (!(typeof MochaWeb === 'undefined')){
+if (typeof MochaWeb !== "undefined"){
 	MochaWeb.testOnly(function(){
 		var charId;
 		describe("Character", function(){

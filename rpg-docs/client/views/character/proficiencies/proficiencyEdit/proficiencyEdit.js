@@ -4,7 +4,7 @@ var profTypes = [
 	{type: "weapon", name: "Weapon"},
 	{type: "armor", name: "Armor"},
 	{type: "tool", name: "Tool"},
-	{type: "language", name: "Language"}
+	{type: "language", name: "Language"},
 ];
 
 var saves = [
@@ -43,11 +43,11 @@ Template.proficiencyEdit.helpers({
 		return profTypes;
 	},
 	nameInputTemplate: function(){
-		if(!this.type) return null;
-		if(this.type === "skill"||
+		if (!this.type) return null;
+		if (this.type === "skill" ||
 			this.type === "save") return "nameDropdown";
 		return "nameInput";
-	}
+	},
 });
 
 Template.proficiencyEdit.events({
@@ -57,21 +57,21 @@ Template.proficiencyEdit.events({
 	},
 	"core-select .typeDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var type = detail.item.getAttribute("name");
 		if (type == this.type) return;
 		Proficiencies.update(this._id, {$set: {type: type}});
 	},
 	"core-select .valueDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
 		Proficiencies.update(this._id, {$set: {value: value}});
 	},
 	"core-select .nameDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var name = detail.item.getAttribute("name");
 		if (name == this.name) return;
 		Proficiencies.update(this._id, {$set: {name: name}});
@@ -79,7 +79,7 @@ Template.proficiencyEdit.events({
 	"change .nameInput": function(event){
 		var name = event.currentTarget.value;
 		Proficiencies.update(this._id, {$set: {name: name}});
-	}
+	},
 });
 
 Template.nameDropdown.helpers({

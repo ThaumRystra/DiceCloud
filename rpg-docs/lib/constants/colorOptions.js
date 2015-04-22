@@ -24,28 +24,28 @@ colorOptions = [
 var colorOptionMap = _.pluck(colorOptions, "key");
 
 getColorClass = function(key){
-	if(!key){
+	if (!key){
 		return "grey white-text";
 	}
 	var index = _.indexOf(colorOptionMap, key);
-	if(index == -1){
+	if (index == -1){
 		return "grey white-text";
 	}
 	var option = colorOptions[index];
 	var colorClass = option.className;
-	if(option.whiteText){
+	if (option.whiteText){
 		colorClass += " white-text";
 	}
 	return colorClass;
-}
+};
 
 getHexColor = function(key) {
-	if(!key){
+	if (!key){
 		return "#000";
 	}
 	var index = _.indexOf(colorOptionMap, key);
-	if(index === -1){
+	if (index === -1){
 		return "#000";
 	}
 	return colorOptions[index].color;
-}
+};

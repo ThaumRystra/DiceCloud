@@ -6,31 +6,31 @@ var stats = {
 	"intelligence":{"name":"Intelligence"},
 	"wisdom":{"name":"Wisdom"},
 	"charisma":{"name":"Charisma"},
-	"strengthSave":{"name":"Strength Save",},
-	"dexteritySave":{"name":"Dexterity Save",},
-	"constitutionSave":{"name":"Constitution Save",},
-	"intelligenceSave":{"name":"Intelligence Save",},
-	"wisdomSave":{"name":"Wisdom Save",},
-	"charismaSave":{"name":"Charisma Save",},
-	"acrobatics":{"name":"Acrobatics",},
-	"animalHandling":{"name":"Animal Handling",},
-	"arcana":{"name":"Arcana",},
-	"athletics":{"name":"Athletics",},
-	"deception":{"name":"Deception",},
-	"history":{"name":"History",},
-	"insight":{"name":"Insight",},
-	"intimidation":{"name":"Intimidation",},
-	"investigation":{"name":"Investigation",},
-	"medicine":{"name":"Medicine",},
-	"nature":{"name":"Nature",},
-	"perception":{"name":"Perception",},
-	"performance":{"name":"Performance",},
-	"persuasion":{"name":"Persuasion",},
-	"religion":{"name":"Religion",},
-	"sleightOfHand":{"name":"Sleight of Hand",},
-	"stealth":{"name":"Stealth",},
-	"survival":{"name":"Survival",},
-	"initiative":{"name":"Initiative",},
+	"strengthSave":{"name":"Strength Save"},
+	"dexteritySave":{"name":"Dexterity Save"},
+	"constitutionSave":{"name":"Constitution Save"},
+	"intelligenceSave":{"name":"Intelligence Save"},
+	"wisdomSave":{"name":"Wisdom Save"},
+	"charismaSave":{"name":"Charisma Save"},
+	"acrobatics":{"name":"Acrobatics"},
+	"animalHandling":{"name":"Animal Handling"},
+	"arcana":{"name":"Arcana"},
+	"athletics":{"name":"Athletics"},
+	"deception":{"name":"Deception"},
+	"history":{"name":"History"},
+	"insight":{"name":"Insight"},
+	"intimidation":{"name":"Intimidation"},
+	"investigation":{"name":"Investigation"},
+	"medicine":{"name":"Medicine"},
+	"nature":{"name":"Nature"},
+	"perception":{"name":"Perception"},
+	"performance":{"name":"Performance"},
+	"persuasion":{"name":"Persuasion"},
+	"religion":{"name":"Religion"},
+	"sleightOfHand":{"name":"Sleight of Hand"},
+	"stealth":{"name":"Stealth"},
+	"survival":{"name":"Survival"},
+	"initiative":{"name":"Initiative"},
 	"hitPoints":{"name":"Hit Points"},
 	"armor":{"name":"Armor"},
 	"dexterityArmor":{"name":"Dexterity Armor Bonus"},
@@ -67,11 +67,11 @@ var stats = {
 	"psychicMultiplier":{"name":"Psychic", "group": "Weakness/Resistance"},
 	"radiantMultiplier":{"name":"Radiant", "group": "Weakness/Resistance"},
 	"slashingMultiplier":{"name":"Slashing", "group": "Weakness/Resistance"},
-	"thunderMultiplier":{"name":"Thunder", "group": "Weakness/Resistance"}
+	"thunderMultiplier":{"name":"Thunder", "group": "Weakness/Resistance"},
 };
 
 var operations = {
-	base: {name: "Base Value"}, 
+	base: {name: "Base Value"},
 	proficiency: {name: "Proficiency"},
 	add: {name: "&plus;"},
 	mul: {name: "&times;"},
@@ -81,7 +81,7 @@ var operations = {
 	disadvantage: {name: "Disadvantage"},
 	passiveAdd: {name: "Passive Bonus"},
 	fail: {name: "Automatically Fail"},
-	conditional: {name: "Conditional Benefit"}
+	conditional: {name: "Conditional Benefit"},
 };
 
 var abilities = {
@@ -99,50 +99,82 @@ Template.skillDialogView.helpers({
 	},
 	profIcon: function(){
 		var char = Characters.findOne(this.charId);
-		if(!char) return;
+		if (!char) return;
 		var prof = char.proficiency(this.skillName);
-		if(prof > 0 && prof < 1) return "image:brightness-2";
-		if(prof === 1) return "image:brightness-1";
-		if(prof > 1) return "av:album";
+		if (prof > 0 && prof < 1) return "image:brightness-2";
+		if (prof === 1) return "image:brightness-1";
+		if (prof > 1) return "av:album";
 		return "radio-button-off";
 	},
 	profSource: function(){
-		return Proficiencies.findOne({charId: this.charId, name: this.skillName}, {sort: {value: -1}});
+		return Proficiencies.findOne(
+			{charId: this.charId, name: this.skillName},
+			{sort: {value: -1}}
+		);
 	},
 	profBonus: function(){
 		var char = Characters.findOne(this.charId);
-		if(!char) return;
-		return char.proficiency(this.skillName) * char.attributeValue("proficiencyBonus");
+		if (!char) return;
+		return char.proficiency(this.skillName) *
+			char.attributeValue("proficiencyBonus");
 	},
 	proficiencyValue: function(){
 		var char = Characters.findOne(this.charId);
-		if(!char) return;
+		if (!char) return;
 		var prof = char.proficiency(this.skillName);
-		if(prof == 0.5) return "Half Proficiency";
-		if(prof == 1)   return "Proficient";
-		if(prof == 2)   return "Double Proficiency";
+		if (prof == 0.5) return "Half Proficiency";
+		if (prof == 1)   return "Proficient";
+		if (prof == 2)   return "Double Proficiency";
 		return prof + "x Proficiency";
 	},
 	addEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "add"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "add",
+		});
 	},
 	mulEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "mul"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "mul",
+		});
 	},
 	minEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "min"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "min",
+		});
 	},
 	maxEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "max"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "max",
+		});
 	},
 	advEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "advantage"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "advantage",
+		});
 	},
 	dadvEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "disadvantage"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "disadvantage",
+		});
 	},
 	conditionalEffects: function(){
-		return Effects.find({charId: this.charId, stat: this.skillName, operation: "conditional"});
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "conditional",
+		});
 	},
 	ability: function(){
 		var opts = {fields: {}};
@@ -155,9 +187,9 @@ Template.skillDialogView.helpers({
 		var opts = {fields: {}};
 		opts.fields[this.skillName] = 1;
 		var char = Characters.findOne(this.charId, opts);
-		if(!char) return;
+		if (!char) return;
 		var skill = char[this.skillName];
-		if(!skill) return;
+		if (!skill) return;
 		var ability = skill.ability;
 		return abilities[ability] && abilities[ability].name;
 	},
@@ -169,24 +201,24 @@ Template.skillDialogView.helpers({
 		return this.getParent().name;
 	},
 	operationName: function(){
-		if(stats[this.stat].group === "Weakness/Resistance") return null;
+		if (stats[this.stat].group === "Weakness/Resistance") return null;
 		return operations[this.operation] &&
 			operations[this.operation].name ||
 			"No Operation";
 	},
 	statValue: function(){
-		if(
+		if (
 			this.operation === "advantage" ||
 			this.operation === "disadvantage" ||
 			this.operation === "fail"
 		){
 			return null;
 		}
-		if(stats[this.stat].group === "Weakness/Resistance"){
-			if(this.value === 0.5) return "Resistance";
-			if(this.value === 2)   return "Vulnerability";
-			if(this.value === 0)   return "Immunity";
-			return " Damage x"+ this.value;
+		if (stats[this.stat].group === "Weakness/Resistance"){
+			if (this.value === 0.5) return "Resistance";
+			if (this.value === 2)   return "Vulnerability";
+			if (this.value === 0)   return "Immunity";
+			return " Damage x" + this.value;
 		}
 		return evaluate(this.charId, this.calculation) || this.value;
 	},

@@ -4,12 +4,15 @@ var colorMap = {
 	ideals: "g",
 	bonds: "h",
 	flaws: "i",
-	backstory: "j"
+	backstory: "j",
 };
 
 Template.persona.helpers({
 	characterDetails: function(){
-		var char = Characters.findOne(this._id, {fields: {name: 1, gender: 1, alignment: 1, race:1}});
+		var char = Characters.findOne(
+			this._id,
+			{fields: {name: 1, gender: 1, alignment: 1, race:1}}
+		);
 		char.field = "details";
 		char.title = char.name;
 		char.color = "d";
@@ -26,7 +29,7 @@ Template.persona.helpers({
 			field: field,
 			color: color,
 			body: char[field],
-			topClass: "characterField"
+			topClass: "characterField",
 		};
 	},
 	languages: function(){
@@ -36,19 +39,24 @@ Template.persona.helpers({
 
 Template.persona.events({
 	"tap .characterField": function(event){
-		if(this.field !== "details"){
+		if (this.field !== "details"){
 			var charId = Template.parentData()._id;
 			GlobalUI.setDetail({
 				template: "textDialog",
-				data:     {charId: charId, field: this.field, title: this.title, color: this.color},
-				heroId:   this._id + this.field
+				data:     {
+					charId: charId,
+					field: this.field,
+					title: this.title,
+					color: this.color,
+				},
+				heroId:   this._id + this.field,
 			});
-		} else{
+		} else {
 			this.charId = Template.parentData()._id;
 			GlobalUI.setDetail({
 				template: "personaDetailsDialog",
 				data:     this,
-				heroId:   this._id + "details"
+				heroId:   this._id + "details",
 			});
 		}
 	}

@@ -3,7 +3,7 @@ Proficiencies = new Mongo.Collection("proficiencies");
 Schemas.Proficiency = new SimpleSchema({
 	charId: {
 		type: String,
-		regEx: SimpleSchema.RegEx.Id
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	name: {
 		type: String,
@@ -24,12 +24,12 @@ Schemas.Proficiency = new SimpleSchema({
 	enabled: {
 		type: Boolean,
 		defaultValue: true,
-	}
+	},
 });
 
 Proficiencies.attachSchema(Schemas.Proficiency);
 
-Proficiencies.attachBehaviour('softRemovable');
+Proficiencies.attachBehaviour("softRemovable");
 makeChild(Proficiencies);
 
 Proficiencies.allow(CHARACTER_SUBSCHEMA_ALLOW);

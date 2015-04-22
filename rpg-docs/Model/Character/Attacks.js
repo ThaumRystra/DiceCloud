@@ -5,62 +5,75 @@ Attacks = new Mongo.Collection("attacks");
  */
 Schemas.Attack = new SimpleSchema({
 	charId: {
-		type: String, 
-		regEx: SimpleSchema.RegEx.Id
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	name: {
 		type: String,
-		defaultValue: "New Attack", 
-		trim: false
+		defaultValue: "New Attack",
+		trim: false,
 	},
 	details: {
 		type: String,
-		optional: true, 
-		trim: false
+		optional: true,
+		trim: false,
 	},
 	attackBonus: {
 		type: String,
 		defaultValue: "strengthMod + proficiencyBonus",
-		optional: true, 
-		trim: false
+		optional: true,
+		trim: false,
 	},
 	damageBonus: {
 		type: String,
 		defaultValue: "strengthMod",
-		optional: true, 
-		trim: false
+		optional: true,
+		trim: false,
 	},
 	damageDice: {
 		type: String,
 		optional: true,
 		defaultValue: "1d8",
-		allowedValues: DAMAGE_DICE
+		allowedValues: DAMAGE_DICE,
 	},
 	damageType: {
 		type: String,
-		allowedValues: ["bludgeoning", "piercing", "slashing", "acid", "cold", "fire", "force", "lightning", "necrotic", 
-						"poison", "psychic", "radiant", "thunder"],
-		defaultValue: "slashing"
+		allowedValues: [
+			"bludgeoning",
+			"piercing",
+			"slashing",
+			"acid",
+			"cold",
+			"fire",
+			"force",
+			"lightning",
+			"necrotic",
+			"poison",
+			"psychic",
+			"radiant",
+			"thunder",
+		],
+		defaultValue: "slashing",
 	},
 	//the id of the feature, buff or item that created this effect
 	parent: {
 		type: Schemas.Parent
 	},
 	color: {
-		type: String, 
-		allowedValues: _.pluck(colorOptions, "key"), 
-		defaultValue: "q"
+		type: String,
+		allowedValues: _.pluck(colorOptions, "key"),
+		defaultValue: "q",
 	},
 	enabled: {
 		type: Boolean,
-		defaultValue: true
-	}
+		defaultValue: true,
+	},
 });
 
 Attacks.attachSchema(Schemas.Attack);
 
-Attacks.attachBehaviour('softRemovable');
-makeChild(Attacks, ['name', 'enabled']); //children of lots of things
+Attacks.attachBehaviour("softRemovable");
+makeChild(Attacks, ["name", "enabled"]); //children of lots of things
 
 Attacks.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Attacks.deny(CHARACTER_SUBSCHEMA_DENY);

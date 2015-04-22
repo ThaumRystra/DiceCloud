@@ -14,7 +14,10 @@ Template.containerEdit.events({
 	},
 	"tap #deleteButton": function(event, instance){
 		Containers.softRemoveNode(instance.data.containerId);
-		GlobalUI.deletedToast(instance.data.containerId, "Containers", "Container and contents");
+		GlobalUI.deletedToast(
+			instance.data.containerId,
+			"Containers", "Container and contents"
+		);
 		GlobalUI.closeDetail();
 	},
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
@@ -30,8 +33,8 @@ Template.containerEdit.events({
 		var value = +Template.instance().find("#valueInput").value;
 		Containers.update(this._id, {$set: {value: value}});
 	},
-	"change #containerDescriptionInput": function(event){
-		var description = Template.instance().find("#containerDescriptionInput").value;
+	"change #containerDescriptionInput": function(event, instance){
+		var description = instance.find("#containerDescriptionInput").value;
 		Containers.update(this._id, {$set: {description: description}});
-	}
+	},
 });

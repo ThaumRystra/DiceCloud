@@ -16,7 +16,7 @@ Schemas.TemporaryHitPoints = new SimpleSchema({
 			} else {
 				this.unset();
 			}
-		}
+		},
 	},
 });
 
@@ -29,11 +29,13 @@ TemporaryHitPoints.helpers({
 });
 
 //remove the temporary hit points when they hit zero
-TemporaryHitPoints.after.update(function (userId, thp, fieldNames, modifier, options) {
-	if(thp.used >= thp.maximum && thp.deleteOnZero){
-		TemporaryHitPoints.remove(thp._id);
-	}
-}, {fetchPrevious: false});
+TemporaryHitPoints.after.update(
+	function(userId, thp, fieldNames, modifier, options){
+		if (thp.used >= thp.maximum && thp.deleteOnZero){
+			TemporaryHitPoints.remove(thp._id);
+		}
+	}, {fetchPrevious: false}
+);
 
 TemporaryHitPoints.allow(CHARACTER_SUBSCHEMA_ALLOW);
 TemporaryHitPoints.deny(CHARACTER_SUBSCHEMA_DENY);

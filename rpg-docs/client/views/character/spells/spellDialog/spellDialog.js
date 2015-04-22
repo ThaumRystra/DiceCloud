@@ -1,14 +1,14 @@
 var spellLevels = [
-	{ name: "Cantrip", level: 0 },
-	{ name: "Level 1",  level: 1 },
-	{ name: "Level 2",  level: 2 },
-	{ name: "Level 3",  level: 3 },
-	{ name: "Level 4",  level: 4 },
-	{ name: "Level 5",  level: 5 },
-	{ name: "Level 6",  level: 6 },
-	{ name: "Level 7",  level: 7 },
-	{ name: "Level 8",  level: 8 },
-	{ name: "Level 9",  level: 9 },
+	{name: "Cantrip", level: 0},
+	{name: "Level 1",  level: 1},
+	{name: "Level 2",  level: 2},
+	{name: "Level 3",  level: 3},
+	{name: "Level 4",  level: 4},
+	{name: "Level 5",  level: 5},
+	{name: "Level 6",  level: 6},
+	{name: "Level 7",  level: 7},
+	{name: "Level 8",  level: 8},
+	{name: "Level 9",  level: 9},
 ];
 
 Template.spellDialog.helpers({
@@ -31,19 +31,19 @@ Template.spellDialog.events({
 Template.spellDetails.helpers({
 	getComponents: function(){
 		var components = "";
-		if(this.components.concentration) components += "C";
-		if(this.components.verbal) components += components.length? ", V" : "V";
-		if(this.components.somatic) components += components.length? ", S" : "S";
-		if(this.components.material) {
-			components += components.length? ", M" : "M";
+		if (this.components.concentration) components += "C";
+		if (this.components.verbal) components += components.length ? ", V" : "V";
+		if (this.components.somatic) components += components.length ? ", S" : "S";
+		if (this.components.material) {
+			components += components.length ? ", M" : "M";
 			components += " (" + this.components.material + ")";
 		}
 		return components;
 	},
 	preparedString: function(){
-		if(this.prepared === "prepared") return "prepared";
-		if(this.prepared === "unprepared") return "unprepared";
-		if(this.prepared === "always") return "always prepared";
+		if (this.prepared === "prepared") return "prepared";
+		if (this.prepared === "unprepared") return "unprepared";
+		if (this.prepared === "always") return "always prepared";
 	},
 });
 
@@ -65,9 +65,9 @@ Template.spellEdit.helpers({
 		return [
 			{name: "Prepared", value: "prepared"},
 			{name: "Unprepared", value: "unprepared"},
-			{name: "Always Prepared", value: "always"}
+			{name: "Always Prepared", value: "always"},
 		];
-	}
+	},
 });
 
 Template.spellEdit.events({
@@ -97,30 +97,30 @@ Template.spellEdit.events({
 	},
 	"core-select #listDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		if (value == this.parent.id) return;
 		Spells.update(this._id, {$set: {"parent.id": value}});
 	},
 	"core-select #levelDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if(value == this.level) return;
+		if (value == this.level) return;
 		Spells.update(this._id, {$set: {level: value}});
 	},
 	"core-select #schoolDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if(value == this.school) return;
+		if (value == this.school) return;
 		Spells.update(this._id, {$set: {school: value}});
 	},
 	"core-select #preparedDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if(value == this.school) return;
+		if (value == this.school) return;
 		Spells.update(this._id, {$set: {prepared: value}});
 	},
 	"change #verbalCheckbox": function(event){

@@ -1,12 +1,12 @@
 Meteor.publish("singleCharacter", function(characterId, userId){
-	if( 
+	if (
 		Characters.findOne({
 			_id: characterId,
 			$or: [
 				{readers: userId},
 				{writers: userId},
-				{owner: userId}
-			]
+				{owner: userId},
+			],
 		})
 	){
 		return [

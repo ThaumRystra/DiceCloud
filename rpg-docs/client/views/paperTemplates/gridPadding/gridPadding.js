@@ -3,4 +3,4 @@ Template.gridPadding.helpers({
 	list: function(){
 		return _.range(1, this.num);
 	}
-})
+});

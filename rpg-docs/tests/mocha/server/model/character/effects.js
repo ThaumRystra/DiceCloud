@@ -12,7 +12,7 @@ var getAttributeEffect = function(charId, attribute, op, value){
 			id: charId,
 			collection: "Characters",
 			group: "inate",
-		}
+		},
 	};
 };
 
@@ -26,7 +26,7 @@ var getSkillEffect = function(charId, op, value){
 			id: charId,
 			collection: "Characters",
 			group: "inate",
-		}
+		},
 	};
 };
 
@@ -40,11 +40,11 @@ var getProficiency = function(charId, value){
 			id: charId,
 			collection: "Characters",
 			group: "inate",
-		}
+		},
 	};
 };
 
-if (!(typeof MochaWeb === 'undefined')){
+if (typeof MochaWeb !== "undefined"){
 	MochaWeb.testOnly(function(){
 		describe("Character", function(){
 			var charId, char, con, ath, strMod;
@@ -54,9 +54,9 @@ if (!(typeof MochaWeb === 'undefined')){
 				Characters.remove({});
 				charId = Characters.insert({owner: "FWeGYyDY5jc4HuTh8"});
 				char  = Characters.findOne(charId);
-				con = function(){return char.attributeValue("constitution")};
-				ath = function(){return char.skillMod("athletics")};
-				strMod = function(){return char.abilityMod("strength")};
+				con = function(){return char.attributeValue("constitution");};
+				ath = function(){return char.skillMod("athletics");};
+				strMod = function(){return char.abilityMod("strength");};
 			});
 
 			describe("effects", function(){
@@ -111,10 +111,10 @@ if (!(typeof MochaWeb === 'undefined')){
 						Effects.insert(getEffect(charId, "mul", 2));
 						Effects.insert(getEffect(charId, "min", 28));
 						Effects.insert(getEffect(charId, "max", 5));
-						Characters.update(charId, {$set: {"constitution.adjustment": -2}})
+						Characters.update(charId, {$set: {"constitution.adjustment": -2}});
 						chai.assert.equal(3, con());
 						var conBase = char.attributeBase("constitution");
-						chai.assert.equal(5, conBase)
+						chai.assert.equal(5, conBase);
 					});
 
 					it("should be removed when the character is deleted", function(){
@@ -122,7 +122,7 @@ if (!(typeof MochaWeb === 'undefined')){
 						var count = Effects.find({charId: charId}).count();
 						chai.assert.equal(count, 1);
 						Characters.remove(charId);
-						var count = Effects.find({charId: charId}).count();
+						count = Effects.find({charId: charId}).count();
 						chai.assert.equal(count, 0);
 					});
 
@@ -142,7 +142,11 @@ if (!(typeof MochaWeb === 'undefined')){
 					it("should add a multiple of proficiency bonus", function(){
 						Effects.insert(getAttributeEffect(charId, "strength", "base", 16));
 						Effects.insert(getAttributeEffect(charId, "proficiencyBonus", "base", 7));
-						chai.assert.equal(7, char.attributeValue("proficiencyBonus"), "the proficiency bonus is calculated correctly");
+						chai.assert.equal(
+							7,
+							char.attributeValue("proficiencyBonus"),
+							"the proficiency bonus is calculated correctly"
+						);
 						Proficiencies.insert(getProficiency(charId, 0.5));
 						Proficiencies.insert(getProficiency(charId, 2));
 						chai.assert.equal(17, ath(), "3 strength + (7 x 2) proficiency bonus");

@@ -22,13 +22,14 @@ Template.shareDialog.helpers({
 });
 
 Template.shareDialog.events({
-	"input #userNameOrEmailInput, change #userNameOrEmailInput": function(event, instance){
+	"input #userNameOrEmailInput, change #userNameOrEmailInput":
+	function(event, instance){
 		var userName = instance.find("#userNameOrEmailInput").value;
 		instance.userId.set(undefined);
-		Meteor.call("getUserId", userName, function (err, result) {
-			if(err){
+		Meteor.call("getUserId", userName, function(err, result) {
+			if (err){
 				console.error(err);
-			} else{
+			} else {
 				console.log(result);
 				instance.userId.set(result);
 			}
@@ -37,10 +38,10 @@ Template.shareDialog.events({
 	"tap #shareButton": function(event, instance){
 		var self = this;
 		var permission = instance.find("#accessLevelMenu").selected;
-		if(!permission) throw "no permission set";
+		if (!permission) throw "no permission set";
 		var userId = instance.userId.get();
-		if(!userId) return;
-		if(permission === "write"){
+		if (!userId) return;
+		if (permission === "write"){
 			Characters.update(self._id, {
 				$addToSet: {writers: userId},
 				$pull: {readers: userId}

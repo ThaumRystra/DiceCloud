@@ -4,7 +4,7 @@ Template.signIn.events({
 		var pass = instance.find("#passwordInput").value;
 		Meteor.loginWithPassword(email, pass);
 	},
-	"keypress #emailInput, keypress #passwordInput": function (event, instance) {
+	"keypress #emailInput, keypress #passwordInput": function(event, instance) {
 		if (event.which === 13) {
 			var email = instance.find("#emailInput").value;
 			var pass = instance.find("#passwordInput").value;

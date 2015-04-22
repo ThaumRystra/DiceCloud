@@ -19,7 +19,9 @@ Template.features.helpers({
 		return _.indexOf(_.keys(colorOptions), this.color);
 	},
 	attacks: function(){
-		return Attacks.find({charId: this._id, enabled: true}, {sort: {color: 1, name: 1}});
+		return Attacks.find(
+			{charId: this._id, enabled: true},
+			{sort: {color: 1, name: 1}});
 	},
 	canEnable: function(){
 		return !this.alwaysEnabled;
@@ -41,7 +43,7 @@ Template.features.events({
 		GlobalUI.setDetail({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: this._id, startEditing: true},
-			heroId:   featureId
+			heroId:   featureId,
 		});
 	},
 	"tap #addAttackButton": function(event){
@@ -49,11 +51,11 @@ Template.features.events({
 		Attacks.insert({
 			charId: charId
 		}, function(error, id){
-			if(!error){
+			if (!error){
 				GlobalUI.setDetail({
 					template: "attackDialog",
 					data:     {attackId: id, charId: charId},
-					heroId:   id
+					heroId:   id,
 				});
 			}
 		});
@@ -64,7 +66,7 @@ Template.features.events({
 		GlobalUI.setDetail({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: charId},
-			heroId:   featureId
+			heroId:   featureId,
 		});
 	},
 	"tap .attack": function(event){
@@ -82,8 +84,13 @@ Template.features.events({
 		var charId = this._id;
 		GlobalUI.setDetail({
 			template: "textDialog",
-			data:     {charId: charId, field: "proficiencies", title: "Proficiencies", color: "q"},
-			heroId:   this._id + "proficiencies"
+			data:     {
+				charId: charId,
+				field: "proficiencies",
+				title: "Proficiencies",
+				color: "q",
+			},
+			heroId:   this._id + "proficiencies",
 		});
 	},
 	"tap .enabledCheckbox": function(event){
@@ -92,45 +99,48 @@ Template.features.events({
 	"change .enabledCheckbox": function(event){
 		var enabled = !this.enabled;
 		Features.update(this._id, {$set: {enabled: enabled}});
-	}
+	},
 });
 
 Template.resource.helpers({
 	cantIncrement: function(){
-		return !(this.char.attributeValue(this.name) < this.char.attributeBase(this.name));
+		var baseBigger = this.char.attributeValue(this.name) <
+			this.char.attributeBase(this.name);
+		return !baseBigger;
 	},
 	cantDecrement: function(){
-		return !(this.char.attributeValue(this.name) > 0);
+		var valuePositive = this.char.attributeValue(this.name) > 0;
+		return !valuePositive;
 	},
 	getColor: function(){
-		if(this.char.attributeValue(this.name) > 0){
+		if (this.char.attributeValue(this.name) > 0){
 			return this.color;
 		} else {
 			return "grey";
 		}
-	}
+	},
 });
 
 Template.resource.events({
 	"tap .resourceUp": function(event){
-		if(this.char.attributeValue(this.name) < this.char.attributeBase(this.name)){
+		if (this.char.attributeValue(this.name) < this.char.attributeBase(this.name)){
 			var modifier = {$inc: {}};
 			modifier.$inc[this.name + ".adjustment"] = 1;
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
 	"tap .resourceDown": function(event){
-		if(this.char.attributeValue(this.name) > 0){
+		if (this.char.attributeValue(this.name) > 0){
 			var modifier = {$inc: {}};
 			modifier.$inc[this.name + ".adjustment"] = -1;
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .containerRight": function (event, instance) {
+	"tap .containerRight": function(event, instance) {
 		GlobalUI.setDetail({
 			template: "attributeDialog",
 			data:     {name: this.title, statName: this.name, charId: this.char._id},
-			heroId:   this.char._id + this.name
+			heroId:   this.char._id + this.name,
 		});
-	}
+	},
 });

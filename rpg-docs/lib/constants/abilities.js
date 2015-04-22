@@ -4,5 +4,5 @@ abilities = [
 	"constitution",
 	"intelligence",
 	"wisdom",
-	"charisma"
+	"charisma",
 ];

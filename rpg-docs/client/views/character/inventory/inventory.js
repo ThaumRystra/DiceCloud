@@ -7,16 +7,28 @@ Template.inventory.helpers({
 		return Containers.find({charId: this._id}, {sort: {color: 1, name: 1}});
 	},
 	items: function(charId, containerId){
-		return Items.find({charId: charId, "parent.id": containerId }, {sort: {color: 1, name: 1}});
+		return Items.find(
+			{charId: charId, "parent.id": containerId},
+			{sort: {color: 1, name: 1}}
+		);
 	},
 	attuned: function(){
-		return Items.find({ charId: this._id, enabled: true, requiresAttunement: true  }, {sort: {color: 1, name: 1}});
+		return Items.find(
+			{charId: this._id, enabled: true, requiresAttunement: true},
+			{sort: {color: 1, name: 1}}
+		);
 	},
 	equipment: function(){
-		return Items.find({ charId: this._id, enabled: true, requiresAttunement: false }, {sort: {color: 1, name: 1}});
+		return Items.find(
+			{charId: this._id, enabled: true, requiresAttunement: false},
+			{sort: {color: 1, name: 1}}
+		);
 	},
 	carriedItems: function(){
-		return Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {sort: {color: 1, name: 1}});
+		return Items.find(
+			{charId: this._id, enabled: false, "parent.id": this._id},
+			{sort: {color: 1, name: 1}}
+		);
 	},
 	showAddButtons: function(){
 		return Template.instance().showAddButtons.get();
@@ -26,45 +38,64 @@ Template.inventory.helpers({
 	},
 	netWorth: function(){
 		var worth = 0;
-		Items.find({charId: this._id}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+		Items.find(
+			{charId: this._id},
+			{fields: {value : 1, quantity: 1}}
+		).forEach(function(item){
 			worth += item.totalValue();
 		});
 		return worth;
 	},
 	weightCarried: function(){
 		var weight = 0;
-		Containers.find({charId: this._id, isCarried: true}).forEach(function(container){
+		Containers.find(
+			{charId: this._id, isCarried: true}
+		).forEach(function(container){
 			weight += container.totalWeight();
 		});
-		Items.find({charId: this._id, "parent.id": this._id}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+		Items.find(
+			{charId: this._id, "parent.id": this._id},
+			{fields: {weight : 1, quantity: 1}}
+		).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
 	},
 	equipmentValue: function(){
 		var value = 0;
-		Items.find({charId: this._id, enabled: true}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+		Items.find(
+			{charId: this._id, enabled: true},
+			{fields: {value : 1, quantity: 1}}
+		).forEach(function(item){
 			value += item.totalValue();
 		});
 		return value;
 	},
 	equipmentWeight: function(){
 		var weight = 0;
-		Items.find({charId: this._id, enabled: true}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+		Items.find({charId: this._id, enabled: true},
+				   {fields: {weight : 1, quantity: 1}}
+				  ).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
 	},
 	carriedValue: function(){
 		var value = 0;
-		Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {fields: {value : 1, quantity: 1}}).forEach(function(item){
+		Items.find(
+			{charId: this._id, enabled: false, "parent.id": this._id},
+			{fields: {value : 1, quantity: 1}}
+		).forEach(function(item){
 			value += item.totalValue();
 		});
 		return value;
 	},
 	carriedWeight: function(){
 		var weight = 0;
-		Items.find({charId: this._id, enabled: false, "parent.id": this._id}, {fields: {weight : 1, quantity: 1}}).forEach(function(item){
+		Items.find(
+			{charId: this._id, enabled: false, "parent.id": this._id},
+			{fields: {weight : 1, quantity: 1}}
+		).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
@@ -78,23 +109,31 @@ Template.inventory.events({
 			charId: charId,
 			parent:{
 				id: charId,
-				collection: "Characters"
-			}
+				collection: "Characters",
+			},
 		}, function(err, itemId){
-			if(err) throw err;
+			if (err) throw err;
 			GlobalUI.setDetail({
 				template: "itemDialog",
 				data:     {itemId: itemId, charId: charId, startEditing: true},
-				heroId:   itemId
+				heroId:   itemId,
 			});
 		});
 	},
 	"tap #addContainer": function(event){
-		var containerId = Containers.insert({name: "New Container", isCarried: true, charId: this._id});
+		var containerId = Containers.insert({
+			name: "New Container",
+			isCarried: true,
+			charId: this._id,
+		});
 		GlobalUI.setDetail({
 			template: "containerDialog",
-			data:     {containerId: containerId, charId: this.charId, startEditing: true},
-			heroId:   containerId
+			data:     {
+				containerId: containerId,
+				charId: this.charId,
+				startEditing: true,
+			},
+			heroId:   containerId,
 		});
 	},
 	"tap .inventoryItem": function(event){
@@ -103,14 +142,14 @@ Template.inventory.events({
 		GlobalUI.setDetail({
 			template: "itemDialog",
 			data:     {itemId: itemId, charId: charId},
-			heroId:   itemId
+			heroId:   itemId,
 		});
 	},
 	"tap .containerTop": function(event){
 		GlobalUI.setDetail({
 			template: "containerDialog",
 			data:     {containerId: this._id, charId: this.charId},
-			heroId:   this._id
+			heroId:   this._id,
 		});
 	},
 	"tap .carriedCheckbox": function(event){
@@ -118,10 +157,10 @@ Template.inventory.events({
 	},
 	"change .carriedCheckbox": function(event){
 		var carried;
-		if(this.isCarried) carried = false;
+		if (this.isCarried) carried = false;
 		else carried = true;
 		Containers.update(this._id, {$set: {isCarried: carried}});
-	}
+	},
 });
 
 Template.inventoryItem.helpers({
@@ -129,8 +168,8 @@ Template.inventoryItem.helpers({
 		return num !== 1;
 	},
 	hidden: function(){
-		return Session.equals("inventory.dragItemId", this._id)? "hidden" : null;
-	}
+		return Session.equals("inventory.dragItemId", this._id) ? "hidden" : null;
+	},
 });
 
 Template.layout.events({
@@ -153,17 +192,17 @@ Template.layout.events({
 	},
 	"drop .itemContainer": function(event, instacne){
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		if(event.ctrlKey){
+		if (event.ctrlKey){
 			//split the stack to the container
 			GlobalUI.showDialog({
 				template: "splitStackDialog",
 				data: {
 					id: item._id,
 					parentCollection: "Containers",
-					parentId: this._id
-				}
+					parentId: this._id,
+				},
 			});
-		} else{
+		} else {
 			//move item to the container
 			item.moveToContainer(this._id);
 		}
@@ -178,22 +217,22 @@ Template.layout.events({
 	"drop .carriedContainer": function(event, instance){
 		var charId = Session.get("inventory.dragItemOriginalCharacter");
 		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		if(event.ctrlKey){
+		if (event.ctrlKey){
 			//split the stack to the container
 			GlobalUI.showDialog({
 				template: "splitStackDialog",
 				data: {
 					id: item._id,
 					parentCollection: "Characters",
-					parentId: this._id
-				}
+					parentId: this._id,
+				},
 			});
-		} else{
+		} else {
 			//move item to the character
 			item.moveToCharacter(this._id);
 		}
 		resetInvetorySession();
-	}
+	},
 });
 
 var resetInvetorySession = function(){

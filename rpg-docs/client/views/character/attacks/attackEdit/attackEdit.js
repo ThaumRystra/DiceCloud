@@ -1,44 +1,45 @@
-var damageTypes = ["bludgeoning", "piercing", "slashing", "acid", "cold", "fire", "force", "lightning", "necrotic", 
+var damageTypes = ["bludgeoning", "piercing", "slashing",
+				   "acid", "cold", "fire", "force", "lightning", "necrotic",
 				  "poison", "psychic", "radiant", "thunder"];
 
 Template.attackEdit.events({
-	"tap #deleteAttack": function(event, instance){
+	"tap #deleteAttack": function(event, instance) {
 		Attacks.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Attacks", "Attack");
 	},
-	"change #attackBonusInput": function(event){
+	"change #attackBonusInput": function(event) {
 		var value = event.currentTarget.value;
 		Attacks.update(this._id, {$set: {attackBonus: value}});
 	},
-	"change #damageInput": function(event){
+	"change #damageInput": function(event) {
 		var value = event.currentTarget.value;
 		Attacks.update(this._id, {$set: {damageBonus: value}});
 	},
-	"change #detailInput": function(event){
+	"change #detailInput": function(event) {
 		var value = event.currentTarget.value;
 		Attacks.update(this._id, {$set: {details: value}});
 	},
-	"core-select #damageTypeDropdown": function(event){
+	"core-select #damageTypeDropdown": function(event) {
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if(value == this.damageType) return;
+		if (value == this.damageType) return;
 		Attacks.update(this._id, {$set: {damageType: value}});
 	},
-	"core-select #damageDiceDropdown": function(event){
+	"core-select #damageDiceDropdown": function(event) {
 		var detail = event.originalEvent.detail;
-		if(!detail.isSelected) return;
+		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
-		if(value == this.damageDice) return;
+		if (value == this.damageDice) return;
 		Attacks.update(this._id, {$set: {damageDice: value}});
 	}
 });
 
 Template.attackEdit.helpers({
-	damageTypes: function(){
+	damageTypes: function() {
 		return damageTypes;
 	},
-	DAMAGE_DICE: function(){
+	DAMAGE_DICE: function() {
 		return DAMAGE_DICE;
 	}
 });
