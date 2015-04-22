@@ -19,3 +19,4 @@ momentjs:moment
 mike:mocha
 dburles:mongo-collection-instances
 percolate:migrations
+ecwyne:mathjs
