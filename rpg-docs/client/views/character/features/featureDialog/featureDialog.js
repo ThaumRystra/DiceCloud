@@ -55,9 +55,15 @@ Template.featureEdit.helpers({
 		return _.isString(this.uses);
 	},
 	enabledSelection: function(){
-		if (!this.enabled) return "disabled";
-		if (this.alwaysEnabled) return "alwaysEnabled";
-		return "enabled";
+		if (this.enabled){
+			if (this.alwaysEnabled){
+				return "alwaysEnabled";
+			} else {
+				return "enabled";
+			}
+		} else if (this.enabled === false){ //make sure it is false, not just falsey
+			return "disabled";
+		}
 	},
 });
 
