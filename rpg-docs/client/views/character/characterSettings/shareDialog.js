@@ -5,11 +5,11 @@ Template.shareDialog.onCreated(function(){
 Template.shareDialog.helpers({
 	readers: function(){
 		var char = Characters.findOne(this._id, {fields: {readers: 1}});
-		return char && char.readers;
+		return Meteor.users.find({_id: {$in: char.readers}});
 	},
 	writers: function(){
 		var char = Characters.findOne(this._id, {fields: {writers: 1}});
-		return char && char.writers;
+		return Meteor.users.find({_id: {$in: char.writers}});
 	},
 	shareButtonDisabled: function(){
 		return !Template.instance().userId.get();
@@ -18,7 +18,7 @@ Template.shareDialog.helpers({
 		if (!Template.instance().userId.get()){
 			return "User not found";
 		}
-	}
+	},
 });
 
 Template.shareDialog.events({
@@ -44,13 +44,13 @@ Template.shareDialog.events({
 		if (permission === "write"){
 			Characters.update(self._id, {
 				$addToSet: {writers: userId},
-				$pull: {readers: userId}
+				$pull: {readers: userId},
 			});
 		} else {
 			Characters.update(self._id, {
 				$addToSet: {readers: userId},
-				$pull: {writers: userId}
+				$pull: {writers: userId},
 			});
 		}
-	}
+	},
 });

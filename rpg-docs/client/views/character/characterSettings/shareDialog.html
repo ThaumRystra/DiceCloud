@@ -1,18 +1,22 @@
 <template name="shareDialog">
 	<div>
 		<div>
-			<div class="subhead">
-				Can View
-			</div>
-			{{#each readers}}
-				{{this}}<br>
-			{{/each}}
-			<div class="subhead">
-				Can Edit
-			</div>
-			{{#each writers}}
-				{{this}}<br>
-			{{/each}}
+			{{#if writers.count}}
+				<div class="subhead">
+					Can View
+				</div>
+				{{#each readers}}
+					{{username}}<br>
+				{{/each}}
+			{{/if}}
+			{{#if writers.count}}
+				<div class="subhead">
+					Can Edit
+				</div>
+				{{#each writers}}
+					{{username}}<br>
+				{{/each}}
+			{{/if}}
 		</div>
 		<paper-input id="userNameOrEmailInput" label="Username or email" floatinglabel></paper-input><br>
 		{{#if userFindError}}<p style="color: red;">{{userFindError}}</p>{{/if}}

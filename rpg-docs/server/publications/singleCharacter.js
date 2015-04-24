@@ -1,14 +1,13 @@
 Meteor.publish("singleCharacter", function(characterId, userId){
-	if (
-		Characters.findOne({
-			_id: characterId,
-			$or: [
-				{readers: userId},
-				{writers: userId},
-				{owner: userId},
-			],
-		})
-	){
+	var char = Characters.findOne({
+		_id: characterId,
+		$or: [
+			{readers: userId},
+			{writers: userId},
+			{owner: userId},
+		],
+	});
+	if (char){
 		return [
 			Characters.find({_id: characterId}),
 			//get all the assets for this character including soft deleted ones
@@ -25,6 +24,10 @@ Meteor.publish("singleCharacter", function(characterId, userId){
 			SpellLists.find        ({charId: characterId}, {removed: true}),
 			TemporaryHitPoints.find({charId: characterId}, {removed: true}),
 			Proficiencies.find     ({charId: characterId}, {removed: true}),
+			Meteor.users.find      (
+				{_id: {$in: _.union(char.readers, char.writers)}},
+				{fields: {username: 1}}
+			),
 		];
 	}
 });
