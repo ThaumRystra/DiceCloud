@@ -21,6 +21,7 @@ Template.proficiencyEditList.events({
 			parent: {
 				id: this.parentId,
 				collection: this.parentCollection,
+				group: this.parentGroup,
 			},
 			enabled: this.enabled,
 			value: 1,
