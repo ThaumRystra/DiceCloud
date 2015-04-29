@@ -16,6 +16,7 @@ Template.persona.helpers({
 		char.field = "details";
 		char.title = char.name;
 		char.color = "d";
+		char.topClass = "characterField";
 		return char;
 	},
 	characterField: function(field, title){
@@ -56,7 +57,7 @@ Template.persona.events({
 			GlobalUI.setDetail({
 				template: "personaDetailsDialog",
 				data:     this,
-				heroId:   this._id + "details",
+				heroId:   this._id + this.field,
 			});
 		}
 	}
