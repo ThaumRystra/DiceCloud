@@ -82,7 +82,6 @@ var attributeOperations = [
 	{name: "Max", operation: "max"}
 ];
 var skillOperations = [
-	{name: "Proficiency", operation: "proficiency"},
 	{name: "Add", operation: "add"},
 	{name: "Multiply", operation: "mul"},
 	{name: "Min", operation: "min"},
@@ -128,8 +127,6 @@ Template.effectEdit.helpers({
 		if (!op) return null;
 		//operations that don't need templates
 		if (op === "advantage" || op === "disadvantage" || op === "fail") return null;
-		//proficiency template
-		if (op === "proficiency") return "proficiencyEffectValue";
 
 		//default template
 		return "regularEffectValue";
@@ -154,13 +151,7 @@ Template.effectEdit.events({
 		var oldName = Template.instance().selectedStatGroup.get();
 		if (oldName != groupName){
 			instance.selectedStatGroup.set(groupName);
-			if (groupName === "Skills" || groupName === "Saving Throws"){
-				Effects.update(this._id, {$set: {
-					operation: "proficiency",
-					value: 1,
-					calculation: ""
-				}, $unset: {stat: ""}});
-			} else if (groupName === "Weakness/Resistance"){
+			if (groupName === "Weakness/Resistance"){
 				Effects.update(this._id, {$set: {
 					value: 0.5,
 					calculation: "",
@@ -196,13 +187,6 @@ Template.effectEdit.events({
 			calculation: "",
 			operation: "mul"
 		}});
-	},
-	"core-select .proficiencyDropDown": function(event){
-		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
-		var value = +detail.item.getAttribute("name");
-		if (value == this.value) return;
-		Effects.update(this._id, {$set: {value: value, calculation: ""}});
 	},
 	"change .effectValueInput": function(event){
 		var value = event.currentTarget.value;
