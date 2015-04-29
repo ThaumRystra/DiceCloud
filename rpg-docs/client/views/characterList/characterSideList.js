@@ -21,5 +21,8 @@ Template.characterSideList.helpers({
 Template.characterSideList.events({
 	"tap .singleLineItem": function(event, instance) {
 		Router.go("characterSheet", {_id: this._id});
-	}
+	},
+	"tap core-item": function() {
+		Router.go("characterList");
+	},
 });

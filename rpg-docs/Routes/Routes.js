@@ -4,21 +4,12 @@ Router.configure({
 });
 
 Router.map(function() {
-	/*
-	this.route("home", {
-		path: "/",
-		waitOn: function(){
-			return Meteor.subscribe("characterList", Meteor.userId());
-		},
-		data: {
-			characters: function(){
-				return Characters.find({}, {fields: {_id: 1}});
-			}
-		}
-	});*/ //add a home route and change characterList route
+	this.route("/", {
+		name: "home",
+	});
 
 	this.route("characterList", {
-		path: "/",
+		path: "/characterList",
 		waitOn: function(){
 			return Meteor.subscribe("characterList", Meteor.userId());
 		},

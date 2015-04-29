@@ -13,7 +13,7 @@ Template.layout.helpers({
 });
 
 Template.layout.events({
-	"tap #charactersMenuButton": function(event, instance){
+	"tap #homeNav": function(event, instance){
 		Router.go("/");
 	},
 	"tap #profileLink": function(event, instance){

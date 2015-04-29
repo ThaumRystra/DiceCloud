@@ -1,20 +1,11 @@
 <template name="home">
-	<div class="scroll-y" fit>
-		<div flex horizontal wrap class="padded">
-			{{# each characters}}
-				{{#with characterDetails}}
-					{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
-				{{/with}}
-			{{/each}}
-			<div class="fab-buffer"></div>
+	<core-toolbar class="blue-grey white-text">
+		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+		<div flex>
+			DiceCloud
 		</div>
-		<paper-fab id="addCharacter" 
-				   class="floatyButton" 
-				   icon="add" 
-				   title="Add" 
-				   role="button" 
-				   tabindex="0" 
-				   aria-label="Add" 
-				   hero-id="main"></paper-fab>
+	</core-toolbar>
+	<div class="padded scroll-y white" fit>
+		{{> guide}}
 	</div>
 </template>

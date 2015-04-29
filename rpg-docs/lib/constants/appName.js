@@ -1,1 +1,1 @@
-appName = "Dice Cloud";
+appName = "Dicecloud";

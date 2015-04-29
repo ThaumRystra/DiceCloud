@@ -3,7 +3,7 @@ Template.effectsEditList.helpers({
 		var selector = {
 			"parent.id": this.parentId,
 			"parent.collection": this.parentCollection,
-			"charId": this.charId
+			"charId": this.charId,
 		};
 		if (this.parentGroup){
 			selector["parent.group"] = this.parentGroup;
@@ -23,10 +23,11 @@ Template.effectsEditList.events({
 			charId: this.charId,
 			parent: {
 				id: this.parentId,
-				collection: this.parentCollection
+				collection: this.parentCollection,
+				group: this.parentGroup,
 			},
 			operation: "add",
-			enabled: this.enabled
+			enabled: this.enabled,
 		});
 	},
 });

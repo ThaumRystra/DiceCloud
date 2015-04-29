@@ -63,6 +63,10 @@ paper-button {
 	letter-spacing: 0.010;
 }
 
+core-item {
+	cursor: pointer;
+}
+
 .listRow {
 	height: 32px;
 }
