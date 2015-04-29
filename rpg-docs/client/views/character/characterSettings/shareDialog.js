@@ -22,7 +22,7 @@ Template.shareDialog.helpers({
 });
 
 Template.shareDialog.events({
-	"input #userNameOrEmailInput, change #userNameOrEmailInput":
+	"input #userNameOrEmailInput":
 	function(event, instance){
 		var userName = instance.find("#userNameOrEmailInput").value;
 		instance.userId.set(undefined);

@@ -1,8 +1,8 @@
 <template name="shareDialog">
 	<div>
 		<div>
-			{{#if writers.count}}
-				<div class="subhead">
+			{{#if readers.count}}
+				<div style="font-weight: 500;">
 					Can View
 				</div>
 				{{#each readers}}
@@ -10,7 +10,7 @@
 				{{/each}}
 			{{/if}}
 			{{#if writers.count}}
-				<div class="subhead">
+				<div style="font-weight: 500;">
 					Can Edit
 				</div>
 				{{#each writers}}
