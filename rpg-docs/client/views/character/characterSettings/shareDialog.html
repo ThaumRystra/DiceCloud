@@ -1,12 +1,15 @@
 <template name="shareDialog">
-	<div>
+	<div style="width: 360px;">
 		<div>
 			{{#if readers.count}}
 				<div style="font-weight: 500;">
 					Can View
 				</div>
 				{{#each readers}}
-					{{username}}<br>
+					<div layout horizontal center>
+						<div flex>{{username}}</div>
+						<paper-icon-button class="deleteShare" icon="delete"></paper-icon-button>
+					</div>
 				{{/each}}
 			{{/if}}
 			{{#if writers.count}}
@@ -14,18 +17,26 @@
 					Can Edit
 				</div>
 				{{#each writers}}
-					{{username}}<br>
+					<div layout horizontal center>
+						<div flex>{{username}}</div>
+						<paper-icon-button class="deleteShare" icon="delete"></paper-icon-button>
+					</div>
 				{{/each}}
 			{{/if}}
 		</div>
-		<paper-input id="userNameOrEmailInput" label="Username or email" floatinglabel></paper-input><br>
-		{{#if userFindError}}<p style="color: red;">{{userFindError}}</p>{{/if}}
+		<div layout horizontal center>
+			<paper-input flex id="userNameOrEmailInput" label="Username or email" floatinglabel></paper-input>
+			<paper-button id="shareButton"
+						  class="red-button"
+						  style="width: 80px; height: 37px; margin-top: 16px;"
+						  raised
+						  disabled={{shareButtonDisabled}}>Share</paper-button>
+		</div>
+		<p style="color: red;">{{userFindError}}</p>
 		<paper-radio-group id="accessLevelMenu" selected="read">
 			<paper-radio-button name="read" label="View Only"></paper-radio-button>
 			<paper-radio-button name="write" label="Can Edit"></paper-radio-button>
 		</paper-radio-group>
-		<br>
-		<paper-button id="shareButton" class="red-button" raised disabled={{shareButtonDisabled}}>Share</paper-button>
 	</div>
 	<paper-button id="doneButton" affirmative> Done </paper-button>
 </template>

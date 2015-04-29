@@ -53,4 +53,9 @@ Template.shareDialog.events({
 			});
 		}
 	},
+	"tap .deleteShare": function(event, instance) {
+		Characters.update(instance.data._id, {
+			$pull: {writers: this._id, readers: this._id}
+		});
+	},
 });
