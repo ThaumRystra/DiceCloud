@@ -1,0 +1,10 @@
+<template name="characterSideList">
+	{{#if characters.count}}
+		<div class="list-subhead">Characters</div>
+		<div>
+			{{#each characters}}
+				<div class="singleLineItem">{{name}}</div>
+			{{/each}}
+		</div>
+	{{/if}}
+</template>

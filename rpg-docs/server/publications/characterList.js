@@ -1,4 +1,5 @@
-Meteor.publish("characterList", function(userId){
+Meteor.publish("characterList", function(){
+	var userId = this.userId;
 	if (!userId) {
 		this.ready();
 		return;

@@ -1,5 +1,5 @@
 #accountSummary {
-	padding-top: 32px;
+	padding: 16px;
 	min-height: 146px;
 	background-image: url(/png/paper-dice-crown.png);
   	background-repeat: no-repeat;
@@ -10,4 +10,8 @@
 
 #mainContentSection {
 	display: initial !important;
+}
+
+#navPanel {
+	padding: 16px;
 }
