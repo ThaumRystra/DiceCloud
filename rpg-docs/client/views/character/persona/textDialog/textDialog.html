@@ -2,10 +2,14 @@
 	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true" startEditing=startEditing}}
 		<div class="prewrap">{{value}}</div>
 	{{else}}
-		<paper-input-decorator label={{title}} floatinglabel layout vertical>
-			<paper-autogrow-textarea>
-				<textarea id="textInput" placeholder value={{value}}></textarea>
-			</paper-autogrow-textarea>
-		</paper-input-decorator>
+		{{> textDialogEdit}}
 	{{/baseDialog}}
+</template>
+
+<template name="textDialogEdit">
+	<paper-input-decorator label={{title}} floatinglabel layout vertical>
+		<paper-autogrow-textarea>
+			<textarea id="textInput" placeholder value={{value}}></textarea>
+		</paper-autogrow-textarea>
+	</paper-input-decorator>
 </template>

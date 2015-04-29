@@ -2,13 +2,17 @@
 	{{#baseDialog title=name class="deep-purple white-text" hideColor="true" hideDelete="true" startEditing=startEditing}}
 		{{alignment}} {{gender}} {{race}}
 	{{else}}
-		<!--Name-->
-		<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input><br>
-		<!--Alignment-->
-		<paper-input id="alignmentInput" label="Alignment" floatinglabel value={{alignment}}></paper-input><br>
-		<!--Gender-->
-		<paper-input id="genderInput" label="Gender" floatinglabel value={{gender}}></paper-input><br>
-		<!--Race-->
-		<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input><br>
+		{{> personaDetailsEdit}}
 	{{/baseDialog}}
+</template>
+
+<template name="personaDetailsEdit">
+	<!--Name-->
+	<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input><br>
+	<!--Alignment-->
+	<paper-input id="alignmentInput" label="Alignment" floatinglabel value={{alignment}}></paper-input><br>
+	<!--Gender-->
+	<paper-input id="genderInput" label="Gender" floatinglabel value={{gender}}></paper-input><br>
+	<!--Race-->
+	<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input><br>
 </template>
