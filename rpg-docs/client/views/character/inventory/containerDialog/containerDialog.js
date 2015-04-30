@@ -4,11 +4,7 @@ Template.containerDialog.helpers({
 	}
 });
 
-Template.containerEdit.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
-Template.containerEdit.events({
+Template.containerDialog.events({
 	"color-change": function(event, instance){
 		Containers.update(instance.data.containerId, {$set: {color: event.color}});
 	},
@@ -20,8 +16,15 @@ Template.containerEdit.events({
 		);
 		GlobalUI.closeDetail();
 	},
+});
+
+Template.containerEdit.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
+Template.containerEdit.events({
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
-	"change #containerNameInput, input #containerNameInput": function(event){
+	"change #containerNameInput": function(event){
 		var name = Template.instance().find("#containerNameInput").value;
 		Containers.update(this._id, {$set: {name: name}});
 	},
