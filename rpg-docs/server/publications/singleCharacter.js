@@ -1,4 +1,5 @@
-Meteor.publish("singleCharacter", function(characterId, userId){
+Meteor.publish("singleCharacter", function(characterId){
+	userId = this.userId;
 	var char = Characters.findOne({
 		_id: characterId,
 		$or: [
