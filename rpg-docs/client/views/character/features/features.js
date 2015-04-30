@@ -85,19 +85,6 @@ Template.features.events({
 		var featureId = this._id;
 		Features.update(featureId, {$set: {used: 0}});
 	},
-	"tap #proficiencies": function(event){
-		var charId = this._id;
-		GlobalUI.setDetail({
-			template: "textDialog",
-			data:     {
-				charId: charId,
-				field: "proficiencies",
-				title: "Proficiencies",
-				color: "q",
-			},
-			heroId:   this._id + "proficiencies",
-		});
-	},
 	"tap .enabledCheckbox": function(event){
 		event.stopPropagation();
 	},
