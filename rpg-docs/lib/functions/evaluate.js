@@ -9,23 +9,27 @@ evaluate = function(charId, string){
 		}
 		//ability modifiers
 		var abilityMods = [
-			"STRENGTHMOD",
-			"DEXTERITYMOD",
-			"CONSTITUTIONMOD",
-			"INTELLIGENCEMOD",
-			"WISDOMMOD",
-			"CHARISMAMOD",
+			"strengthMod",
+			"dexterityMod",
+			"constitutionMod",
+			"intelligenceMod",
+			"wisdomMod",
+			"charismaMod",
 		];
-		if (_.contains(abilityMods, sub.toUpperCase())){
+		if (_.contains(abilityMods, sub)){
 			var slice = sub.slice(0, -3);
-			return char.abilityMod(slice);
+			try {
+				return char.abilityMod(slice);
+			} catch (e){
+				return sub;
+			}
 		}
 		//class levels
 		if (/\w+levels?\b/gi.test(sub)){
 			//strip out "level"
 			var className = sub.replace(/levels?\b/gi, "");
 			var cls = Classes.findOne({charId: charId, name: className});
-			return cls && cls.level;
+			return cls && cls.level || sub;
 		}
 		//character level
 		if (sub.toUpperCase()  === "LEVEL"){
