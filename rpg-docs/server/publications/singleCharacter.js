@@ -1,5 +1,6 @@
 Meteor.publish("singleCharacter", function(characterId){
 	userId = this.userId;
+	if (!userId) return [];
 	var char = Characters.findOne({
 		_id: characterId,
 		$or: [
@@ -30,5 +31,7 @@ Meteor.publish("singleCharacter", function(characterId){
 				{fields: {username: 1}}
 			),
 		];
+	} else {
+		return [];
 	}
 });
