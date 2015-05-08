@@ -1,0 +1,11 @@
+<template name="notFound">
+	<div layout vertical center center-justified fit>
+		<h2>The data for the page you requested could not be found.</h2>
+		{{#if currentUser}}
+			<h2>It might not exist, or you might not have permission to view it.</h2>
+		{{else}}
+			<h2>Perhaps you need to sign in first:</h2>
+			{{atForm}}
+		{{/if}}
+	</div>
+</template>

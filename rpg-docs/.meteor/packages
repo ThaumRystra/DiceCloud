@@ -20,3 +20,7 @@ mike:mocha
 dburles:mongo-collection-instances
 percolate:migrations
 ecwyne:mathjs
+useraccounts:polymer
+accounts-google
+splendido:accounts-meld
+email

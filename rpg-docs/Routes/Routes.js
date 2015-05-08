@@ -3,6 +3,12 @@ Router.configure({
 	layoutTemplate: "layout",
 });
 
+Router.plugin("ensureSignedIn", {
+	except: ["home", "atSignIn", "atSignUp", "atForgotPassword", "notFound"]
+});
+
+Router.plugin("dataNotFound", {notFoundTemplate: "notFound"});
+
 Router.map(function() {
 	this.route("/", {
 		name: "home",
