@@ -1,21 +1,45 @@
 AccountsTemplates.configure({
 	//behaviour
+	confirmPassword: true,
+	enablePasswordChange: true,
+	enforceEmailVerification: true,
+	overrideLoginErrors: false,
 	sendVerificationEmail: true,
+	lowercaseUsername: true,
 	//appearance
 	continuousValidation: true,
 	negativeValidation: true,
 	negativeFeedback: true,
 	showValidating: true,
 	showAddRemoveServices: true,
+	showForgotPasswordLink: true,
+	showResendVerificationEmailLink: true,
 });
 
-AccountsTemplates.configureRoute("enrollAccount");
-AccountsTemplates.configureRoute("forgotPwd");
-AccountsTemplates.configureRoute("resetPwd");
-AccountsTemplates.configureRoute("signIn");
-AccountsTemplates.configureRoute("signUp");
-AccountsTemplates.configureRoute("verifyEmail");
-AccountsTemplates.configureRoute("resendVerificationEmail");
+AccountsTemplates.configureRoute("changePwd", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("enrollAccount", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("forgotPwd", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("resetPwd", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("signIn", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("signUp", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("verifyEmail", {
+	template: "titledAtForm",
+});
+AccountsTemplates.configureRoute("resendVerificationEmail", {
+	template: "titledAtForm",
+});
 
 if (Meteor.isServer){
 	Meteor.methods({

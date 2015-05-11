@@ -1,44 +1,23 @@
-Schema = {};
-
-Schema.User = new SimpleSchema({
-	username: {
-		type: String,
-		regEx: /^[a-z0-9A-Z_]{3,15}$/,
-		optional: true,
-	},
-	emails: {
-		type: [Object],
-		// this must be optional if you also use other login services like facebook,
-		// but if you use only accounts-password, then it can be required
-		optional: true,
-	},
-	"emails.$.address": {
-		type: String,
-		regEx: SimpleSchema.RegEx.Email,
-	},
-	"emails.$.verified": {
-		type: Boolean
-	},
-	createdAt: {
-		type: Date
-	},
-	services: {
-		type: Object,
-		optional: true,
-		blackbox: true,
-	},
-	roles: {
-		type: [String],
-		optional: true,
-	},
-});
-
-Meteor.users.attachSchema(Schema.User);
-
 Meteor.users.allow({
 	update: function(userId, doc, fields, modifier) {
-		return userId === doc._id &&
-			fields.length === 1 &&
-			fields[0] === "username";
+		if (
+			doc._id === userId &&
+			_.contains(fields, "username") &&
+			_.contains(fields, "profile") &&
+			fields.length === 2 &&
+			_.keys(modifier).length === 1 &&
+			modifier.$set &&
+			modifier.$set["profile.username"] &&
+			modifier.$set.username &&
+			_.keys(modifier.$set).length === 2
+		){
+			var expectedUsername = modifier.$set["profile.username"];
+			expectedUsername = expectedUsername.toLowerCase().replace(/\s+/gm, "");
+			if (modifier.$set.username !== expectedUsername){
+				return false;
+			}
+			var foundUser = Meteor.call("getUserId", expectedUsername);
+			return !foundUser || foundUser === userId;
+		}
 	}
 });

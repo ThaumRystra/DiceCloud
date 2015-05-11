@@ -1,3 +1,12 @@
+Template.profile.helpers({
+	profileName: function() {
+		var user = Meteor.user();
+		return user.profile && user.profile.username ||
+			user.username ||
+			"Tap to set username";
+	}
+});
+
 Template.profile.events({
 	"tap #username": function(){
 		if (this._id === Meteor.userId()){

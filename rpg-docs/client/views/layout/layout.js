@@ -9,7 +9,11 @@ Template.layout.destroyed = function() {
 Template.layout.helpers({
 	notSelected: function(){
 		return Session.get("global.ui.detailShow") ? "not-selected" : null;
-	}
+	},
+	profileLink: function() {
+		var user = Meteor.user();
+		return user.profile && user.profile.username || user.username || "My Account";
+	},
 });
 
 Template.layout.events({

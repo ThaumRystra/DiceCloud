@@ -1,13 +1,13 @@
 <template name="layout">
-
 	<core-drawer-panel>
 		<core-header-panel drawer navigation flex mode="seamed" class="white">
 			<div id="accountSummary">
-				{{> loginButtons}}
 				{{#if currentUser}}
 					<div id="profileLink" style="text-decoration: underline; cursor: pointer;">
-						My account
+						{{profileLink}}
 					</div>
+				{{else}}
+					<a href="/sign-in" style="color: white;">Sign in</a>
 				{{/if}}
 			</div>
 			<div id="navPanel">

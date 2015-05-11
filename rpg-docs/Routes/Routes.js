@@ -62,4 +62,8 @@ Router.map(function() {
 			document.title = appName + " Account";
 		},
 	});
+
+	this.route("/loginButtons", {
+		name: "loginButtons",
+	})
 });

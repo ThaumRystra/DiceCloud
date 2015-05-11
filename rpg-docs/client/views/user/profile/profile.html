@@ -3,11 +3,7 @@
 		<core-toolbar class="blue-grey white-text">
 			<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
 			<div id="username" class="clickable" flex>
-				{{#if username}}
-					{{username}}
-				{{else}}
-					Tap to set username
-				{{/if}}
+				{{profileName}}
 			</div>
 		</core-toolbar>
 		<div id="userProfile" class="padded">
@@ -20,5 +16,7 @@
 				{{/each}}
 			</div>
 		</div>
+		{{> atForm}}
+		{{> atNavButton }}
 	{{/with}}
 </template>
