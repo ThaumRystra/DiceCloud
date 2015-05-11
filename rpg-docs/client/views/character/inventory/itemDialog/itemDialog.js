@@ -81,13 +81,10 @@ Template.itemEdit.events({
 	},
 	"change #equippedInput": function(event){
 		var equipped = Template.instance().find("#equippedInput").checked;
-		var item = Items.findOne(this._id);
-		if (item){
-			if (equipped){
-				item.equip();
-			} else {
-				item.unequip();
-			}
+		if (equipped){
+			Meteor.call("equipItem", this._id, this.charId);
+		} else {
+			Meteor.call("unequipItem", this._id, this.charId);
 		}
 	},
 	"change #attunementCheckbox": function(event){
@@ -107,7 +104,6 @@ Template.containerDropdown.events({
 		var detail = event.originalEvent.detail;
 		if (!detail.isSelected) return;
 		var containerId = detail.item.getAttribute("name");
-		var item = Items.findOne(Template.currentData()._id);
-		item.moveToContainer(containerId);
+		Meteor.call("moveItemToContainer", Template.currentData()._id, containerId);
 	}
 });

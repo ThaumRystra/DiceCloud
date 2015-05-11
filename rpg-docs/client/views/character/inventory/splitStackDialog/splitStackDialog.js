@@ -7,13 +7,12 @@ Template.splitStackDialog.helpers({
 
 Template.splitStackDialog.events({
 	"tap #moveButton": function(event, instance){
-		var item = Items.findOne(this.id);
-		if (item){
-			item.splitToParent(
-				{collection: this.parentCollection , id: this.parentId},
-				+instance.find("#quantityInput").value
-			);
-		}
+		Meteor.call(
+			"splitItemToParent",
+			this.id,
+			+instance.find("#quantityInput").value,
+			{collection: this.parentCollection , id: this.parentId}
+		);
 	},
 	"tap #oneButton":function(event, instance){
 		instance.find("#quantityInput").value = 1;

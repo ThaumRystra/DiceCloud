@@ -1,3 +1,14 @@
+Meteor.methods({
+	canWriteCharacter: function(charId) {
+		var userId = this.userId;
+		var char = Characters.findOne(
+			charId,
+			{fields: {owner: 1, writers: 1}}
+		);
+		return (userId && char.owner === userId || _.contains(char.writers, userId));
+	},
+});
+
 CHARACTER_SUBSCHEMA_ALLOW = {
 	// the user must be logged in, and the user must be a writer of the character
 	insert: function(userId, doc) {

@@ -174,71 +174,93 @@ Template.inventoryItem.helpers({
 
 Template.layout.events({
 	"dragstart .inventoryItem": function(event, instance){
+		event.originalEvent.dataTransfer.setData("dicecloud-id/items", this._id);
 		Session.set("inventory.dragItemId", this._id);
-		Session.set("inventory.dragItemOriginalContainer", this.container);
-		Session.set("inventory.dragItemOriginalCharacter", this.charId);
+	},
+	"dragover .itemContainer, dragenter .itemContainer":
+	function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			event.preventDefault();
+		}
+	},
+	"dragover .equipmentContainer, dragenter .equipmentContainer":
+	function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			event.preventDefault();
+		}
+	},
+	"dragover .carriedContainer, dragenter .carriedContainer":
+	function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			event.preventDefault();
+		}
+	},
+	"dragover .characterRepresentative, dragenter .characterRepresentative":
+	function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			event.preventDefault();
+		}
 	},
 	"dragend .inventoryItem": function(event, instance){
-		resetInvetorySession(); //this is a valid drop zone
+		Session.set("inventory.dragItemId", null);
 	},
-	"dragover .itemContainer": function(event, instance){
-		event.preventDefault();
-	},
-	"dragover .equipmentContainer": function(event, instance){
-		event.preventDefault();
-	},
-	"dragover .carriedContainer": function(event, instance){
-		event.preventDefault();
-	},
-	"drop .itemContainer": function(event, instacne){
-		var item = Items.findOne(Session.get("inventory.dragItemId"));
+	"drop .itemContainer": function(event, instance){
+		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
 		if (event.ctrlKey){
 			//split the stack to the container
 			GlobalUI.showDialog({
 				template: "splitStackDialog",
 				data: {
-					id: item._id,
+					id: itemId,
 					parentCollection: "Containers",
 					parentId: this._id,
 				},
 			});
 		} else {
 			//move item to the container
-			item.moveToContainer(this._id);
+			Meteor.call("moveItemToContainer", itemId, this._id);
 		}
-		resetInvetorySession();
+		Session.set("inventory.dragItemId", null);
 	},
 	"drop .equipmentContainer": function(event, instance){
-		var charId = Session.get("inventory.dragItemOriginalCharacter");
-		var item = Items.findOne(Session.get("inventory.dragItemId"));
-		item.equip(charId);
-		resetInvetorySession();
+		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
+		Meteor.call("equipItem", itemId, this._id);
+		Session.set("inventory.dragItemId", null);
 	},
 	"drop .carriedContainer": function(event, instance){
-		var charId = Session.get("inventory.dragItemOriginalCharacter");
-		var item = Items.findOne(Session.get("inventory.dragItemId"));
+		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
 		if (event.ctrlKey){
 			//split the stack to the container
 			GlobalUI.showDialog({
 				template: "splitStackDialog",
 				data: {
-					id: item._id,
+					id: itemId,
 					parentCollection: "Characters",
 					parentId: this._id,
 				},
 			});
 		} else {
 			//move item to the character
-			item.moveToCharacter(this._id);
+			Meteor.call("moveItemToCharacter", itemId, this._id);
 		}
-		resetInvetorySession();
+		Session.set("inventory.dragItemId", null);
+	},
+	"drop .characterRepresentative": function(event, instance) {
+		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
+		if (event.ctrlKey){
+			//split the stack to the container
+			GlobalUI.showDialog({
+				template: "splitStackDialog",
+				data: {
+					id: itemId,
+					parentCollection: "Characters",
+					parentId: this._id,
+				},
+			});
+		} else {
+			//move item to the character
+			Meteor.call("moveItemToCharacter", itemId, this._id);
+		}
+		Session.set("inventory.dragItemId", null);
 	},
 });
-
-var resetInvetorySession = function(){
-	_.defer(function(){
-		Session.set("inventory.dragItemId", null);
-		Session.set("inventory.dragItemOriginalContainer", null);
-		Session.set("inventory.dragItemOriginalCharacter", null);
-	});
-};

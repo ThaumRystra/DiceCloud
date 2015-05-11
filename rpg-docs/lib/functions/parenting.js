@@ -76,14 +76,12 @@ makeChild = function(collection, inheritedKeys){
 		}
 	});
 
-	if (Meteor.isClient) {
-		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
-			if (modifier && modifier.$set && modifier.$set.parent){
-				//when we change parents, inherit its properties
-				inheritParentProperties(doc, collection);
-			}
-		});
-	}
+	collection.after.update(function(userId, doc, fieldNames, modifier, options) {
+		if (modifier && modifier.$set && modifier.$set.parent){
+			//when we change parents, inherit its properties
+			inheritParentProperties(doc, collection);
+		}
+	});
 
 	collection.softRemoveNode = collection.softRemoveNode || function(id){
 		collection.softRemove(id);
@@ -102,14 +100,12 @@ makeParent = function(collection, donatedKeys){
 	donatedKeys = joinWithDefaultKeys(donatedKeys);
 	var collectionName = collection._collection.name;
 	//after changing, push the changes to all children
-	if (Meteor.isClient) {
-		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
-			modifier = limitModifierToKeys(modifier, donatedKeys);
-			doc = _.pick(doc, ["_id", "charId"]);
-			if (!modifier) return;
-			Meteor.call("updateChildren", doc, modifier, true);
-		});
-	}
+	collection.after.update(function(userId, doc, fieldNames, modifier, options) {
+		modifier = limitModifierToKeys(modifier, donatedKeys);
+		doc = _.pick(doc, ["_id", "charId"]);
+		if (!modifier) return;
+		Meteor.call("updateChildren", doc, modifier, true);
+	});
 	collection.softRemoveNode = function(id){
 		Meteor.call("softRemoveNode", collectionName, id);
 	};

@@ -19,6 +19,159 @@ Schemas.Item = new SimpleSchema({
 
 Items.attachSchema(Schemas.Item);
 
+var checkMovePermission = function(itemId, parent) {
+	var item = Items.findOne(itemId);
+	if (!item)
+		throw new Meteor.Error("No such item",
+							   "An item could not be found to move");
+	//handle permissions
+	var permission = Meteor.call("canWriteCharacter", item.charId);
+	if (!permission){
+		throw new Meteor.Error("Access denied",
+							   "Not permitted to move items from this character");
+	}
+	if (parent.collection === "Characters"){
+		permission = Meteor.call("canWriteCharacter", parent.id);
+		if (!permission){
+			throw new Meteor.Error("Access denied",
+								   "Not permitted to move items to this character");
+		}
+	} else {
+		var parentCollectionObject = global[parent.collection];
+		var parentObject = null;
+		if (parentCollectionObject)
+			parentObject = parentCollectionObject.findOne(
+				parent.id, {fields: {_id: 1, charId: 1}}
+			);
+		if (!parentObject) throw new Meteor.Error(
+			"Invalid parent",
+			"The destination parent " + parent.id +
+			" does not exist in the collection " + parent.collection
+		);
+		if (parentObject.charId){
+			permission = Meteor.call("canWriteCharacter", parentObject.charId);
+			if (!permission){
+				throw new Meteor.Error("Access denied",
+									   "Not permitted to move items to this character");
+			}
+		}
+	}
+};
+
+var moveItem = function(itemId, enable, parentCollection, parentId) {
+	var item = Items.findOne(itemId);
+	if (!item) return;
+	parentCollection = parentCollection || item.parent.collection;
+	parentId = parentId || item.parent.id;
+
+	if (Meteor.isServer) {
+		checkMovePermission(itemId, {collection: parentCollection, id: parentId});
+	}
+
+	//update the item provided the update will actually change something
+	if (
+		item.parent.collection !== parentCollection ||
+		item.parent.id !== parentId ||
+		item.enabled !== enable
+	){
+		var setter = {$set: {
+			"parent.collection": parentCollection,
+			"parent.id": parentId,
+			enabled: enable,
+		}};
+		if (parentCollection === "Characters"){
+			setter.$set.charId = parentId;
+		}
+		Items.update(itemId, setter);
+	}
+};
+
+Meteor.methods({
+	moveItemToParent: function(itemId, parent) {
+		check(itemId, String);
+		check(parent, {collection: String, id: String});
+		moveItem(itemId, false, parent.collection, parent.id);
+	},
+	moveItemToCharacter: function(itemId, charId) {
+		check(itemId, String);
+		check(charId, String);
+		moveItem(itemId, false, "Characters", charId);
+	},
+	moveItemToContainer: function(itemId, containerId) {
+		check(itemId, String);
+		check(containerId, String);
+		moveItem(itemId, false, "Containers", containerId);
+	},
+	equipItem: function(itemId, charId){
+		check(itemId, String);
+		check(charId, String);
+		moveItem(itemId, true, "Characters", charId);
+	},
+	unequipItem: function(itemId, charId){
+		check(itemId, String);
+		check(charId, String);
+		moveItem(itemId, false, "Characters", charId);
+	},
+	splitItemToParent: function(itemId, moveQuantity, parent){
+		check(itemId, String);
+		check(moveQuantity, Number);
+		check(parent, {id: String, collection: String});
+
+		//get the item
+		var item = Items.findOne(itemId);
+		if (!item) return;
+
+		//don't bother moving nothing
+		if (moveQuantity <= 0 || item.quantity <= 0){
+			return;
+		}
+		//ensure we are only moving up to the current stack size
+		if (item.quantity < moveQuantity){
+			moveQuantity = this.quantity;
+		}
+
+		if (Meteor.isServer) {
+			checkMovePermission(itemId, parent);
+		}
+
+		//create a new item stack
+		var newStack = _.omit(EJSON.clone(item), "_id");
+		newStack.parent = parent;
+		if (newStack.parent.collection === "Characters"){
+			newStack.charId = newStack.parent.id;
+		}
+		newStack.quantity = moveQuantity;
+
+		//find out if we have an exact replica in the destination
+		var query = _.omit(newStack, ["parent", "quantity"]);
+		query["parent.collection"] = newStack.parent.collection;
+		query["parent.id"] = newStack.parent.id;
+		var existingStack = Items.findOne(query);
+		if (existingStack){
+			//increase the existing stack's size
+			Items.update(
+				existingStack._id,
+				{$inc: {quantity: moveQuantity}}
+			);
+		} else {
+			//insert the new stack
+			Items.insert(newStack, function(err, id){
+				if (err) throw err;
+				//copy the children also
+				Meteor.call("cloneChildren", item._id, {collection: "Items", id: id});
+			});
+		}
+
+		//reduce the old stack's size
+		var oldQuantity = item.quantity - moveQuantity;
+		if (oldQuantity === 0){
+			Items.remove(itemId);
+		} else {
+			Items.update(itemId, {$set: {quantity: oldQuantity}});
+		}
+	},
+});
+
 Items.helpers({
 	totalValue: function(){
 		return this.value * this.quantity;
@@ -31,103 +184,6 @@ Items.helpers({
 			return this.plural;
 		} else {
 			return this.name;
-		}
-	},
-	equip: function(characterId){
-		var charId = characterId || this.charId;
-		if (!charId || !Characters.findOne(charId)) throw "Invalid character";
-		if (this.parent.collection === "Characters" &&
-			this.parent.id === charId &&
-			this.enabled) {
-			return;
-		}
-		Items.update(
-			this._id,
-			{$set: {
-				"parent.collection": "Characters",
-				"parent.id": charId,
-				enabled: true,
-			}}
-		);
-	},
-	unequip: function(){
-		if (!this.enabled) return;
-		Items.update(this._id, {$set: {enabled: false}});
-	},
-	moveToContainer: function(containerId){
-		if (!containerId || !Containers.findOne(containerId)){
-			throw "Invalid container";
-		}
-		if (this.parent.collection === "Containers" &&
-			this.parent.id === containerId &&
-			!this.enabled) return;
-		Items.update(
-			this._id,
-			{$set: {
-				"parent.collection": "Containers",
-				"parent.id": containerId,
-				enabled: false,
-			}}
-		);
-	},
-	moveToCharacter: function(characterId){
-		if (!characterId || !Characters.findOne(characterId)) {
-			throw "Invalid character";
-		}
-		if (this.parent.collection === "Characters" &&
-			this.parent.id === characterId &&
-			!this.enabled) return;
-		Items.update(
-			this._id,
-			{$set: {
-				"parent.collection": "Characters",
-				"parent.id": characterId,
-				charId: characterId,
-				enabled: false,
-			}}
-		);
-	},
-	splitToParent: function(parent, moveQuantity){
-		check(parent, {id: String, collection: String});
-		check(moveQuantity, Number);
-		var parentCollection = Meteor.isClient ?
-			window[parent.collection] : global[parent.collection];
-		if (!parent.id || !parentCollection.findOne(parent.id)){
-			throw "Invalid parent";
-		}
-		var oldStack = this;
-		//we can only move as much as we have, leaving 0 behind at worst
-		if (oldStack.quantity < moveQuantity) moveQuantity = oldStack.quantity;
-		var oldQuantity = oldStack.quantity - moveQuantity;
-
-		var newStack = _.pick(oldStack, Schemas.Item.objectKeys());
-		newStack.parent = parent;
-		newStack.quantity = moveQuantity;
-
-		var existingStack = Items.findOne(_.omit(newStack, "quantity"));
-		var updateStackSize = function(){
-			if (oldQuantity > 0){
-				Items.update(oldStack._id, {$set: {quantity: oldQuantity}});
-			} else {
-				Items.remove(oldStack._id);
-			}
-		};
-		if (existingStack){
-			Items.update(
-				existingStack._id,
-				{$inc: {quantity: moveQuantity}},
-				{},
-				function(){
-					updateStackSize();
-				}
-			);
-		} else {
-			Items.insert(newStack, function(err, id){
-				if (err) throw err;
-				updateStackSize();
-				//copy the children also
-				Meteor.call("cloneChildren", oldStack._id, {collection: "Items", id: id});
-			});
 		}
 	},
 });
