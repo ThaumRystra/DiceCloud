@@ -74,15 +74,14 @@ var moveItem = function(itemId, enable, parentCollection, parentId) {
 		item.parent.id !== parentId ||
 		item.enabled !== enable
 	){
-		var setter = {$set: {
-			"parent.collection": parentCollection,
-			"parent.id": parentId,
-			enabled: enable,
-		}};
-		if (parentCollection === "Characters"){
-			setter.$set.charId = parentId;
-		}
-		Items.update(itemId, setter);
+		Items.update(
+			itemId,
+			{$set: {
+				"parent.collection": parentCollection,
+				"parent.id": parentId,
+				enabled: enable,
+			}}
+		);
 	}
 };
 
@@ -137,15 +136,13 @@ Meteor.methods({
 		//create a new item stack
 		var newStack = _.omit(EJSON.clone(item), "_id");
 		newStack.parent = parent;
-		if (newStack.parent.collection === "Characters"){
-			newStack.charId = newStack.parent.id;
-		}
 		newStack.quantity = moveQuantity;
 
 		//find out if we have an exact replica in the destination
 		var query = _.omit(newStack, ["parent", "quantity"]);
 		query["parent.collection"] = newStack.parent.collection;
 		query["parent.id"] = newStack.parent.id;
+		query._id = {$ne: itemId}; //make sure we don't join it to itself
 		var existingStack = Items.findOne(query);
 		if (existingStack){
 			//increase the existing stack's size
