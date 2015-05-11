@@ -4,7 +4,18 @@ Router.configure({
 });
 
 Router.plugin("ensureSignedIn", {
-	except: ["home", "atSignIn", "atSignUp", "atForgotPassword", "notFound"]
+	except: [
+		"home",
+		"atSignIn",
+		"atSignUp",
+		"atForgotPassword",
+		"atResetPwd",
+		"atEnrollAccount",
+		"atVerifyEmail",
+		"atresendVerificationEmail",
+		"loginButtons",
+		"notFound",
+	]
 });
 
 Router.plugin("dataNotFound", {notFoundTemplate: "notFound"});
