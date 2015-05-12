@@ -1,0 +1,28 @@
+<template name="feedback">
+	<div class="feedback">
+		<div layout horizontal>
+			<paper-input id="feedbackTitle" label="Title" floatinglabel></paper-input>
+			<paper-dropdown-menu class="typeDropdown" label="Operation" flex>
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu typeMenu" selected="general">
+						<paper-item name="general">General Feedback</paper-item>
+						<paper-item name="bug">Bug</paper-item>
+						<paper-item name="change">Suggested Change</paper-item>
+						<paper-item name="feature">Feature Request</paper-item>
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+		</div>
+		<div layout horizontal center>
+			<div>Importance</div>
+			<paper-slider id="severity" max=10 pin value=5 snap></paper-slider>
+		</div>
+		<paper-input-decorator label="Description" floatinglabel layout vertical>
+			<paper-autogrow-textarea>
+				<textarea id="feedbackDescription"></textarea>
+			</paper-autogrow-textarea>
+		</paper-input-decorator>
+	</div>
+	<paper-button id="cancelButton" affirmative>Cancel</paper-button>
+	<paper-button id="sendButton"   affirmative>Send  </paper-button>
+</template>

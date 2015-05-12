@@ -1,3 +1,7 @@
+Template.layout.onCreated(function() {
+	this.subscribe("user");
+});
+
 Template.layout.rendered = function() {
 	$(window).on("popstate", GlobalUI.popStateHandler);
 };
@@ -22,5 +26,12 @@ Template.layout.events({
 	},
 	"tap #profileLink": function(event, instance){
 		Router.go("profile");
+	},
+	"tap #feedback": function(event, instance) {
+		GlobalUI.showDialog({
+			heading: "Feedback",
+			template: "feedback",
+			fullOnMobile: true,
+		});
 	},
 });
