@@ -8,10 +8,12 @@ Schemas.Report = new SimpleSchema({
 	title: {
 		type: String,
 		trim: false,
+		optional: true,
 	},
 	description: {
 		type: String,
 		trim: false,
+		optional: true,
 	},
 	type: {
 		type: String,

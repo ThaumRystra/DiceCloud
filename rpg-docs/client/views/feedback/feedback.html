@@ -1,7 +1,9 @@
 <template name="feedback">
-	<div class="feedback">
-		<div layout horizontal>
+	<div class="feedback" style="min-width: 300px; min-height: 370px">
+		<div>
 			<paper-input id="feedbackTitle" label="Title" floatinglabel></paper-input>
+		</div>
+		<div>
 			<paper-dropdown-menu class="typeDropdown" label="Operation" flex>
 				<paper-dropdown layered class="dropdown">
 					<core-menu class="menu typeMenu" selected="general">
@@ -15,10 +17,10 @@
 		</div>
 		<div layout horizontal center>
 			<div>Importance</div>
-			<paper-slider id="severity" max=10 pin value=5 snap></paper-slider>
+			<paper-slider id="severity" max=10 min=1 value=5 snap></paper-slider>
 		</div>
 		<paper-input-decorator label="Description" floatinglabel layout vertical>
-			<paper-autogrow-textarea>
+			<paper-autogrow-textarea rows=10 maxRows=10>
 				<textarea id="feedbackDescription"></textarea>
 			</paper-autogrow-textarea>
 		</paper-input-decorator>
