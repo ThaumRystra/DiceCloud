@@ -23,6 +23,9 @@ Router.plugin("dataNotFound", {notFoundTemplate: "notFound"});
 Router.map(function() {
 	this.route("/", {
 		name: "home",
+		onAfterAction: function() {
+			document.title = appName;
+		},
 	});
 
 	this.route("characterList", {
@@ -74,7 +77,20 @@ Router.map(function() {
 		},
 	});
 
-	this.route("/loginButtons", {
-		name: "loginButtons",
-	})
+	this.route("/changelog", {
+		name: "changeLog",
+		waitOn: function() {
+			return [
+				Meteor.subscribe("changeLog"),
+			]
+		},
+		data: {
+			changeLogs: function() {
+				return ChangeLogs.find({}, {sort: {version: -1}});
+			}
+		},
+		onAfterAction: function() {
+			document.title = appName;
+		},
+	});
 });

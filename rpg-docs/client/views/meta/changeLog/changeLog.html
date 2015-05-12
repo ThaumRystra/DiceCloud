@@ -1,0 +1,20 @@
+<template name="changeLog">
+	<core-toolbar class="blue-grey white-text">
+		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+		<div flex>
+			Change Log
+		</div>
+	</core-toolbar>
+	<div class="changeLog scroll-y" fit>
+		{{#each changeLogs}}
+			<paper-shadow class="white padded" style="margin: 8px;">
+				<h2>{{version}}</h2>
+				<ul>
+				{{#each changes}}
+					<li>{{this}}</li>
+				{{/each}}
+				</ul>
+			</paper-shadow>
+		{{/each}}
+	</div>
+</template>

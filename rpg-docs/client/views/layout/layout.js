@@ -34,4 +34,7 @@ Template.layout.events({
 			fullOnMobile: true,
 		});
 	},
+	"tap #changeLog": function(event, instance) {
+		Router.go("changeLog");
+	},
 });
