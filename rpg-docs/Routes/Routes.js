@@ -53,7 +53,7 @@ Router.map(function() {
 		data: function() {
 			var data = Characters.findOne(
 				{_id: this.params._id},
-				{fields: {_id: 1, name: 1, color: 1}}
+				{fields: {_id: 1, name: 1, color: 1, writers: 1, readers: 1}}
 			);
 			return data;
 		},

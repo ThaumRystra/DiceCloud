@@ -104,14 +104,16 @@
 			</div>
 			<div class="fab-buffer"></div>
 		</div>
-		<paper-fab id="addFeature" 
-				   class="floatyButton" 
-				   icon="add" 
-				   title="Add" 
-				   role="button" 
-				   tabindex="0" 
-				   aria-label="Add" 
-				   hero-id="main"></paper-fab>
+		{{#if canEditCharacter _id}}
+			<paper-fab id="addFeature" 
+					   class="floatyButton" 
+					   icon="add" 
+					   title="Add" 
+					   role="button" 
+					   tabindex="0" 
+					   aria-label="Add" 
+					   hero-id="main"></paper-fab>
+		{{/if}}
 	</div>
 </template>
 

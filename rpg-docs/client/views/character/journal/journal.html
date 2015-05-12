@@ -68,6 +68,7 @@
 			<div class="fab-buffer"></div>
 		</div>
 	</div>
+	{{#if canEditCharacter _id}}
 	<paper-fab id="addNote" 
 				   class="floatyButton" 
 				   icon="add" 
@@ -75,4 +76,5 @@
 				   role="button" 
 				   tabindex="0" 
 				   hero-id="main"></paper-fab>
+	{{/if}}
 </template>

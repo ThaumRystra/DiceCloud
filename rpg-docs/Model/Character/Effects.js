@@ -61,7 +61,6 @@ Effects.attachSchema(Schemas.Effect);
 if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 	Effects.insert({
 		charId: char._id,
-		type: "inate",
 		name: "Constitution modifier for each level",
 		stat: "hitPoints",
 		operation: "add",
@@ -69,11 +68,11 @@ if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 		parent: {
 			id: char._id,
 			collection: "Characters",
+			group: "Inate",
 		},
 	});
 	Effects.insert({
 		charId: char._id,
-		type: "inate",
 		name: "Proficiency bonus by level",
 		stat: "proficiencyBonus",
 		operation: "add",
@@ -81,11 +80,11 @@ if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 		parent: {
 			id: char._id,
 			collection: "Characters",
+			group: "Inate",
 		},
 	});
 	Effects.insert({
 		charId: char._id,
-		type: "inate",
 		name: "Dexterity Armor Bonus",
 		stat: "armor",
 		operation: "add",
@@ -93,11 +92,11 @@ if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 		parent: {
 			id: char._id,
 			collection: "Characters",
+			group: "Inate",
 		},
 	});
 	Effects.insert({
 		charId: char._id,
-		type: "inate",
 		name: "Natural Armor",
 		stat: "armor",
 		operation: "base",
@@ -105,6 +104,7 @@ if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 		parent: {
 			id: char._id,
 			collection: "Characters",
+			group: "Inate",
 		},
 	});
 });

@@ -13,7 +13,7 @@ var getTab = function(charId){
 Template.characterSheet.helpers({
 	selectedTab: function(){
 		return getTab(this._id);
-	}
+	},
 });
 
 Template.characterSheet.events({

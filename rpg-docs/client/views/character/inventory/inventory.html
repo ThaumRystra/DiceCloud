@@ -77,10 +77,12 @@
 			</div>
 			<div class="fab-buffer"></div>
 		</div>
-		<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
-			<paper-fab-menu-item id="addItem" icon="note-add" color="#d23f31" tooltip="Item"></paper-fab-menu-item>
-			<paper-fab-menu-item id="addContainer" icon="work" color="#d23f31" tooltip="Container"></paper-fab-menu-item>
-		</paper-fab-menu>
+		{{#if canEditCharacter _id}}
+			<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
+				<paper-fab-menu-item id="addItem" icon="note-add" color="#d23f31" tooltip="Item"></paper-fab-menu-item>
+				<paper-fab-menu-item id="addContainer" icon="work" color="#d23f31" tooltip="Container"></paper-fab-menu-item>
+			</paper-fab-menu>
+		{{/if}}
 	</div>
 </template>
 

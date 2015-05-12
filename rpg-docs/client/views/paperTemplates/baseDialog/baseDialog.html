@@ -20,12 +20,12 @@
 									   aria-label="Delete Feature"
 									   noink></paper-icon-button>
 			{{else}}
-				{{#unless hideEdit}}
+				{{#if showEdit}}
 					<paper-icon-button id="editButton"
 									   icon="create"
 									   aria-label="Delete Feature"
 									   noink></paper-icon-button>
-				{{/unless}}
+				{{/if}}
 			{{/if}}
 		</core-toolbar>
 		<div class="detailContent">

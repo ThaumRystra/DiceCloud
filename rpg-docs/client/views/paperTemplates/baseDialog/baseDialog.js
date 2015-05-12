@@ -11,6 +11,18 @@ Template.baseDialog.helpers({
 	editing: function(){
 		return Template.instance().editing.get();
 	},
+	showEdit: function() {
+		if (this.hideEdit) return false;
+		var charId = Template.parentData().charId;
+		if (charId){
+			var char = Characters.findOne(charId);
+			var userId = Meteor.userId();
+			if (char && userId)
+				return char.owner === userId ||
+					_.contains(char.writers, userId);
+		}
+		return true;
+	},
 });
 
 Template.baseDialog.events({
