@@ -140,7 +140,12 @@ Template.attributeDialogView.helpers({
 		return char.attributeValue(this.statName);
 	},
 	sourceName: function(){
-		if (this.parent.collection === "Characters") return this.name;
+		if (this.parent.group === "racial"){
+			return this.getParent().race;
+		}
+		if (this.parent.collection === "Characters"){
+			return this.name;
+		}
 		return this.getParent().name;
 	},
 	operationName: function(){

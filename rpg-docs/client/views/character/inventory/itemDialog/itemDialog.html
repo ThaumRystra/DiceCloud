@@ -10,7 +10,7 @@
 
 <template name="itemDetails">
 	<div layout horizontal wrap center justified class="headline">
-		{{#if weight}}<div class="sideMargin">{{totalWeight}}lbs</div>{{/if}}
+		{{#if weight}}<div class="sideMargin">{{round totalWeight}}lbs</div>{{/if}}
 		{{#if value}}<div>{{valueString totalValue}}</div>{{/if}}
 	</div>
 	<div layout horizontal wrap class="caption">

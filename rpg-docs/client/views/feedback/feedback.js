@@ -9,7 +9,6 @@ Template.feedback.events({
 			url: window.location.href,
 			session: _.pairs(Session.keys),
 		};
-		console.log(report);
 		Meteor.call("insertReport", report);
 	}
 });
