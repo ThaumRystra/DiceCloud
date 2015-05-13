@@ -25,6 +25,7 @@ ecwyne:mathjs@0.25.0
 ejson@1.0.6
 email@1.0.6
 fastclick@1.0.3
+fourseven:scss@2.1.1
 geojson-utils@1.0.3
 google@1.1.5
 html-tools@1.0.4
@@ -97,5 +98,6 @@ velocity:meteor-internals@1.1.0_7
 velocity:shim@0.1.0
 webapp@1.2.0
 webapp-hashing@1.0.3
+wolves:bourbon@1.0.0
 zimme:collection-behaviours@1.0.4
 zimme:collection-softremovable@1.0.4

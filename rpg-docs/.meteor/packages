@@ -24,3 +24,5 @@ useraccounts:polymer
 accounts-google
 splendido:accounts-meld
 email
+fourseven:scss@2.1.1
+wolves:bourbon
