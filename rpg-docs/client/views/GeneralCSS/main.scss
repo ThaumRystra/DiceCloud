@@ -1,0 +1,99 @@
+@import "bourbon/bourbon";
+@import "colors";
+	
+$thickColumnWidth: 304px;
+$thinColumnWidth: 200px;
+
+//apply a natural box layout model to all elements, but allowing components to change
+html {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	-moz-box-sizing: inherit;
+	-webkit-box-sizing: inherit;
+	box-sizing: inherit;
+}
+
+//Column layouts of cards
+.column-container {
+	-moz-column-fill: balance;
+	column-fill: balance;
+	-ms-column-gap: 8px;
+	-moz-column-gap: 8px;
+	-webkit-column-gap: 8px;
+	column-gap: 8px;
+	-moz-column-width: thickColumnWidth;
+	-ms-column-width: thickColumnWidth;
+	-webkit-column-width: thickColumnWidth;
+	column-width: thickColumnWidth;
+	padding: 8px;
+	
+	&.thin {
+		-ms-column-count: 4;
+		-moz-column-count: 4;
+		-webkit-column-count: 4;
+		column-count: 4;
+		-ms-column-width: 200px;
+		-moz-column-width: 200px;
+		-webkit-column-width: 200px;
+		column-width: 200px;
+	}
+}
+
+//Cards
+.card {
+	background: white;
+	border-radius: 2px;
+	
+	.column-container & {
+		margin-bottom: 8px;
+	}
+	
+	.top {
+		cursor: pointer;
+		padding: 16px;
+	}
+	.bottom {
+		padding: 16px;
+		&.list {
+			padding: 0 0 16px 0;
+		}
+	}
+}
+
+/*
+List items
+*/
+.item-slot {
+	background-color: rgb(232, 232, 232);
+	background-color: rgba(0, 0, 0, 0.1);	
+}
+
+.item {
+	height: 40px;
+	margin: 1px;
+	&.small {
+		height: 32px;
+	}
+	&.tall {
+		height: 56px;
+	}
+	&[hero], &:active{
+		box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.37);
+		z-index: 10;
+	}
+}
+
+/*
+Buttons
+*/
+paper-button {
+	color: #000;
+	color: rgba(0,0,0,0.87);
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: 0.010;
+	text-transform: uppercase;
+}
