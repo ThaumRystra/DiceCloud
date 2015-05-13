@@ -72,8 +72,9 @@ List items
 }
 
 .item {
+	background: white;
 	height: 40px;
-	margin: 1px;
+	margin: 1px 0 1px 0;
 	&.small {
 		height: 32px;
 	}

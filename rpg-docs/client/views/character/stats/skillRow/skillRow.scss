@@ -1,0 +1,24 @@
+.skill-row {
+	core-icon {
+		color: rgba(0,0,0,0.54);
+	}
+	.skill-mod{
+		width: 45px;
+		text-align: center;
+		&.fail {
+			color: #D50000;
+		}
+		&.advantage{
+			background-image: url(/png/advantage/greenUp.png);
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+		&.disadvantage{
+			background-image: url(/png/advantage/redDown.png);
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	}
+}

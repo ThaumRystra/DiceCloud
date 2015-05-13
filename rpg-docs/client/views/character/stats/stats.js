@@ -23,7 +23,7 @@ Template.stats.events({
 			heroId:   charId + this.ability,
 		});
 	},
-	"tap .skillRow": function(event, instance){
+	"tap .skill-row": function(event, instance){
 		var skill = this.skill;
 		var charId = instance.data._id;
 		GlobalUI.setDetail({
