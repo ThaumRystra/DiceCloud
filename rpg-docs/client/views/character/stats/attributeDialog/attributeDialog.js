@@ -106,27 +106,27 @@ Template.attributeDialogView.helpers({
 	},
 	baseEffects: function(){
 		return Effects.find(
-			{charId: this.charId, stat: this.statName, operation: "base"}
+			{charId: this.charId, stat: this.statName, operation: "base", enabled: true}
 		);
 	},
 	addEffects: function(){
 		return Effects.find(
-			{charId: this.charId, stat: this.statName, operation: "add"}
+			{charId: this.charId, stat: this.statName, operation: "add", enabled: true}
 		);
 	},
 	mulEffects: function(){
 		return Effects.find(
-			{charId: this.charId, stat: this.statName, operation: "mul"}
+			{charId: this.charId, stat: this.statName, operation: "mul", enabled: true}
 		);
 	},
 	minEffects: function(){
 		return Effects.find(
-			{charId: this.charId, stat: this.statName, operation: "min"}
+			{charId: this.charId, stat: this.statName, operation: "min", enabled: true}
 		);
 	},
 	maxEffects: function(){
 		return Effects.find(
-			{charId: this.charId, stat: this.statName, operation: "max"}
+			{charId: this.charId, stat: this.statName, operation: "max", enabled: true}
 		);
 	},
 	attributeBase: function(){

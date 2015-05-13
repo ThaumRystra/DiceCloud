@@ -132,6 +132,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "add",
+			enabled: true,
 		});
 	},
 	mulEffects: function(){
@@ -139,6 +140,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "mul",
+			enabled: true,
 		});
 	},
 	minEffects: function(){
@@ -146,6 +148,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "min",
+			enabled: true,
 		});
 	},
 	maxEffects: function(){
@@ -153,6 +156,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "max",
+			enabled: true,
 		});
 	},
 	advEffects: function(){
@@ -160,6 +164,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "advantage",
+			enabled: true,
 		});
 	},
 	dadvEffects: function(){
@@ -167,6 +172,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "disadvantage",
+			enabled: true,
 		});
 	},
 	conditionalEffects: function(){
@@ -174,6 +180,7 @@ Template.skillDialogView.helpers({
 			charId: this.charId,
 			stat: this.skillName,
 			operation: "conditional",
+			enabled: true,
 		});
 	},
 	ability: function(){
