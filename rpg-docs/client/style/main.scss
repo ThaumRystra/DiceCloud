@@ -10,10 +10,33 @@ html {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
+
 *, *:before, *:after {
 	-moz-box-sizing: inherit;
 	-webkit-box-sizing: inherit;
 	box-sizing: inherit;
+}
+
+root {
+	display: block;
+}
+
+body {
+	font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+//Horizontal rule
+hr {
+	background-color: #444;
+	opacity: 0.12;
+	border-width: 0;
+	color: #444;
+	height: 1px;
+	line-height: 0;
+	margin: 16px -16px;
+	text-align: center;
 }
 
 //Column layouts of cards
@@ -49,41 +72,38 @@ html {
 	
 	.column-container & {
 		margin-bottom: 8px;
+		width: 100%;
+		//hack to stop flickering
+		-webkit-backface-visibility: hidden;
+		-webkit-transform: translateX(0);
+		//stop breaking over column divide
+		-webkit-column-break-inside: avoid;
+		page-break-inside: avoid;
+		break-inside: avoid;
+		//Fixes extra margin at top of columns
+		display: inline-block;
 	}
 	
 	.top {
 		cursor: pointer;
 		padding: 16px;
+		border-radius: 2px 2px 0 0;
 	}
 	.bottom {
 		padding: 16px;
+		border-radius: 0 0 2px 2px;
 		&.list {
 			padding: 0 0 16px 0;
 		}
 	}
-}
-
-/*
-List items
-*/
-.item-slot {
-	background-color: rgb(232, 232, 232);
-	background-color: rgba(0, 0, 0, 0.1);	
-}
-
-.item {
-	background: white;
-	height: 40px;
-	margin: 1px 0 1px 0;
-	&.small {
-		height: 32px;
+	.left {
+		padding: 16px;
+		border-radius: 2px 0 0 2px;
+		text-align: center;
 	}
-	&.tall {
-		height: 56px;
-	}
-	&[hero], &:active{
-		box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.37);
-		z-index: 10;
+	.right {
+		padding: 16px;
+		border-radius: 0 2px 2px 0;
 	}
 }
 

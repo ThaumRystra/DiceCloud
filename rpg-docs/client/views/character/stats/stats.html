@@ -3,7 +3,7 @@
 		<div class="resourceCards" layout horizontal wrap>
 			{{> healthCard}}
 		</div>
-		<div id="stats" class="containers" >
+		<div id="stats" class="column-container" >
 			<!--Ability Scores-->
 			{{> abilityMiniCard ability="strength" title="Strength" color="red"}}
 			{{> abilityMiniCard ability="dexterity" title="Dexterity" color="indigo"}}
@@ -27,7 +27,7 @@
 			{{>hitDice name="d10HitDice" diceNum="10" char=this}}
 			{{>hitDice name="d12HitDice" diceNum="12" char=this}}
 			<!--Saving Throws-->
-			<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+			<paper-shadow class="card"  hero-id="main" {{detailHero}}>
 				<div class="containerTop whiteTop" layout horizontal center>
 					<div class="containerName subhead" hero-id="title" flex>Saving Throws</div>
 				</div>
@@ -41,7 +41,7 @@
 				</div>
 			</paper-shadow>
 			<!--Skills-->
-			<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
+			<paper-shadow class="card"  hero-id="main" {{detailHero}}>
 				<div class="containerTop whiteTop" layout horizontal center>
 					<div class="containerName subhead" hero-id="title" flex>Skills</div>
 				</div>
@@ -71,8 +71,8 @@
 </template>
 
 <template name="statCard">
-	<paper-shadow class="card container statCard" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
-		<div class="containerLeft {{color}}"
+	<paper-shadow class="card statCard" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
+		<div class="left display1 white-text {{color}}"
 			 hero-id="toolbar" {{detailHero stat ../_id}}>
 			{{#if isSkill}}
 				{{../skillMod stat}}
@@ -80,9 +80,8 @@
 				{{prefix}}{{../attributeValue stat}}
 			{{/if}}
 		</div>
-		<div class="containerRight" flex horizontal layout center>
+		<div class="right subhead" flex horizontal layout center>
 			{{name}}
 		</div>
-		<paper-ripple fit></paper-ripple>
 	</paper-shadow>
 </template>

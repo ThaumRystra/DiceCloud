@@ -25,7 +25,7 @@ Template.hitDice.events({
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .containerRight": function() {
+	"tap .right": function() {
 		var charId = Template.parentData()._id;
 		var title = "d" + this.diceNum + " Hit Dice";
 		GlobalUI.setDetail({

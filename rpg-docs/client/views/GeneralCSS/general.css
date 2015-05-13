@@ -1,28 +1,5 @@
-root {
-	display: block;
-}
-
-body {
-	font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial;
-	margin: 0;
-	overflow-x: hidden;
-}
-
-body.core-narrow {
-	padding: 8px;
-}
-
 body /deep/ core-menu {
 	overflow-x: hidden !important;
-}
-
-.calculatedValue {
-	color: #021C33;
-	font-weight: bold;
-}
-
-* {
-	box-sizing: border-box;
 }
 
 td {
@@ -43,60 +20,8 @@ table {
 	text-align: left;
 }
 
-hr {
-	background-color: #444;
-	opacity: 0.12;
-	border-width: 0;
-	color: #444;
-	height: 1px;
-	line-height: 0;
-	margin: 0 -16px;
-	text-align: center;
-}
-
-paper-button {
-	font-size: 14px;
-	font-weight: 400;
-	text-transform: uppercase;
-	color: #000;
-	color: rgba(0,0,0,0.87);
-	letter-spacing: 0.010;
-}
-
 core-item {
 	cursor: pointer;
-}
-
-.listRow {
-	height: 32px;
-}
-
-.card {
-	margin-bottom: 8px;
-	/*hack to stop flickering*/
-	-webkit-backface-visibility: hidden;
-	-webkit-transform: translateX(0);
-	/*stop divs breaking over divide*/
-	-webkit-column-break-inside: avoid;
-	page-break-inside: avoid;
-	break-inside: avoid;
-	/*Fixes extra margin at top of columns*/
-	display: inline-block;
-
-	width: 100%;
-
-	font-size: 14px;
-	border-radius: 2px;
-	background-color: white;
-}
-
-.card.double {
-	padding: 0;
-}
-
-.card paper-button {
-	font-size: 14px;
-	letter-spacing: 0.01em;
 }
 
 .cardHeader {
@@ -109,10 +34,6 @@ core-item {
 }
 
 .clickable, .statCard, .abilityMiniCard {
-	cursor: pointer;
-}
-
-.skillRow {
 	cursor: pointer;
 }
 

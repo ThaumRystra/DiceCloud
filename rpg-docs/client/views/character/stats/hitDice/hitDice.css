@@ -1,0 +1,15 @@
+.hit-dice paper-icon-button {
+	display: block;
+	height: 32px;
+	padding: 0;
+	width: 32px;
+}
+
+.hit-dice paper-icon-button[disabled] {
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.hit-dice paper-icon-button /deep/ core-icon {
+	height: 32px;
+	width: 32px;
+}
