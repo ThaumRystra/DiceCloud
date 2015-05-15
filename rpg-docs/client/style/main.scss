@@ -1,9 +1,6 @@
 @import "bourbon/bourbon";
 @import "colors";
 
-$thickColumnWidth: 304px;
-$thinColumnWidth: 240px;
-
 //apply a natural box layout model to all elements
 *, *:before, *:after {
 	-moz-box-sizing: border-box;
@@ -41,93 +38,6 @@ hr {
 	right: 24px;
 }
 
-//Column layouts of cards
-.column-container {
-	@include column-fill(balance);
-	@include column-gap(8px);
-	@include column-width($thickColumnWidth);
-	padding: 8px;
-
-	&.thin-columns {
-		@include column-count(4);
-		@include column-width($thinColumnWidth);
-	}
-}
-
-//Cards
-.card {
-	background: white;
-	border-radius: 2px;
-
-	.column-container & {
-		margin-bottom: 8px;
-		width: 100%;
-		//hack to stop flickering
-		-webkit-backface-visibility: hidden;
-		-webkit-transform: translateX(0);
-		//stop breaking over column divide
-		-webkit-column-break-inside: avoid;
-		page-break-inside: avoid;
-		break-inside: avoid;
-		//Fixes extra margin at top of columns
-		display: inline-block;
-	}
-
-	.top {
-		cursor: pointer;
-		padding: 16px;
-		border-radius: 2px 2px 0 0;
-		&.white {
-			cursor: auto;
-			padding: 16px;
-			border-bottom: rgba(0,0,0,0.12) solid 1px;
-		}
-		paper-checkbox::shadow #ink[checked] {
-			color: #ffffff;
-		}
-		paper-checkbox::shadow #ink {
-			color: #ffffff;
-		}
-		paper-checkbox::shadow #checkbox.checked {
-			background-color: #ffffff;
-			background-color: rgba(255,255,255,0.27);
-			border-color: #ffffff;
-			border-color: rgba(255,255,255,0.27);
-		}
-		paper-checkbox::shadow #checkbox {
-			border-color: #ffffff;
-			border-color: rgba(255,255,255,0.54);
-		}
-	}
-	.bottom {
-		padding: 16px;
-		border-radius: 0 0 2px 2px;
-		&.list {
-			padding: 0 0 16px 0;
-			.subhead {
-				color: rgba(0,0,0,0.54);
-				font-size: 14px;
-				font-weight: 500;
-				letter-spacing: 0.010em;
-				padding: 12px 16px 12px 16px;
-			}
-		}
-		&.text {
-			white-space: pre-wrap;
-		}
-	}
-	.left {
-		padding: 16px;
-		border-radius: 2px 0 0 2px;
-		text-align: center;
-		min-width: 72px;
-	}
-	.right {
-		padding: 16px;
-		border-radius: 0 2px 2px 0;
-	}
-}
-
 //Buttons
 paper-button {
 	color: #000;
@@ -145,4 +55,8 @@ paper-button {
 
 .clickable, core-item, paper-tab {
 	cursor: pointer;
+}
+
+.fab-buffer {
+    height: 100px;
 }
