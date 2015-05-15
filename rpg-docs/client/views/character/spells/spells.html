@@ -128,20 +128,19 @@
 		</div>
 	</div>
 	{{#if canEditCharacter _id}}
-		<paper-fab-menu id="inventoryAddMenu"
-						icon="add"
-						closeIcon="close"
-						duration="0.3">
-			<paper-fab-menu-item id="addSpell"
-								 icon="note-add"
-								 color="#d23f31"
-								 tooltip="Spell">
-			</paper-fab-menu-item>
-			<paper-fab-menu-item id="addSpellList"
-								 icon="work"
-								 color="#d23f31"
-								 tooltip="Spell List">
-			</paper-fab-menu-item>
-		</paper-fab-menu>
+		{{#fabMenu}}
+			<core-tooltip label="New spell list" position="left">
+				<paper-fab icon="work"
+						   class="addSpellList"
+						   mini>
+				</paper-fab>
+			</core-tooltip>
+			<core-tooltip label="New spell" position="left">
+				<paper-fab icon="note-add"
+						   class="addSpell"
+						   mini>
+				</paper-fab>
+			</core-tooltip>
+		{{/fabMenu}}
 	{{/if}}
 </template>

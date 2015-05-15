@@ -103,7 +103,7 @@ Template.inventory.helpers({
 });
 
 Template.inventory.events({
-	"tap #addItem": function(event){
+	"tap .addItem": function(event){
 		var charId = this._id;
 		Items.insert({
 			charId: charId,
@@ -120,7 +120,7 @@ Template.inventory.events({
 			});
 		});
 	},
-	"tap #addContainer": function(event){
+	"tap .addContainer": function(event){
 		var containerId = Containers.insert({
 			name: "New Container",
 			isCarried: true,
