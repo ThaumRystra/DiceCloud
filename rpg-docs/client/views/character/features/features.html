@@ -1,7 +1,7 @@
 <template name="features">
 	<div fit>
 		<div class="scroll-y" fit>
-			<div class="containers">
+			<div class="column-container">
 				<!--expertiseDice-->
 				{{>resource name="expertiseDice" title="Expertise Dice" color="teal" char=this}}
 				<!--ki-->
@@ -14,22 +14,22 @@
 				{{>resource name="superiorityDice" title="Superiority Dice" color="teal" char=this}}
 				
 				<!--Attacks-->
-				<paper-shadow class="card container"  hero-id="main" {{detailHero}}>
-					<div class="whiteTop" hero-id="toolbar" layout horizontal center {{detailHero}}>
-						<div flex>
-							<div class="containerName subhead">Attacks</div>
-						</div>
-						<!--<paper-icon-button class="black54" id="addAttackButton" icon="add"></paper-icon-button>-->
+				<paper-shadow class="card">
+					<div class="top white">
+						Attacks
 					</div>
-					<div class="containerMain listPadded">
+					<div class="bottom list">
 						{{#each attacks}}
-							<div class="itemSlot">
-								<paper-item class="white attack" hero-id="main" {{detailHero}}>
-									<div layout horizontal class="fullwidth">
-										<div class="headline rightPadded" layout horizontal center>
+							<div class="item-slot">
+								<div class="flexible attack item"
+											hero-id="main" {{detailHero}}>
+									<div layout horizontal>
+										<div class="headline"
+											 style="margin-right: 16px;"
+											 layout horizontal center>
 											{{evaluateSigned ../_id attackBonus}}
 										</div>
-										<div layout vertical flex>
+										<div flex layout vertical>
 											<div class="body2">
 												{{name}}
 											</div>
@@ -43,34 +43,32 @@
 											{{/if}}
 										</div>
 									</div>
-								</paper-item>
+								</div>
 							</div>
 						{{/each}}
 					</div>
 				</paper-shadow>
 
 				<!--Proficiencies-->
-				<paper-shadow class="card container"  hero-id="main" {{detailHero "proficiencies"}}>
-					<div id="proficiencies"
-						 class="whiteTop"
-						 layout horizontal center>
-						<div class="containerName subhead">Proficiencies</div>
+				<paper-shadow class="card">
+					<div class="white top">
+						Proficiencies
 					</div>
-					<div flex class="containerMain listPadded">
+					<div flex class="bottom list">
 						{{#if weaponProfs.count}}
-							<div class="list-subhead" layout horizontal center>Weapons</div>
+							<div class="subhead">Weapons</div>
 						{{/if}}
 						{{#each weaponProfs}}
 							{{> proficiencyListItem}}
 						{{/each}}
 						{{#if armorProfs.count}}
-							<div class="list-subhead" layout horizontal center>Armor</div>
+							<div class="subhead">Armor</div>
 						{{/if}}
 						{{#each armorProfs}}
 							{{> proficiencyListItem}}
 						{{/each}}
 						{{#if toolProfs.count}}
-							<div class="list-subhead" layout horizontal center>Tools</div>
+							<div class="subhead">Tools</div>
 						{{/if}}
 						{{#each toolProfs}}
 							{{> proficiencyListItem}}
@@ -80,23 +78,42 @@
 
 				<!--features-->
 				{{#each features}}
-					<paper-shadow class="card container featureCard"  hero-id="main" {{detailHero}}>
-						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
-							<paper-ripple fit></paper-ripple>
-							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
-							{{#if hasUses}}<div class="subhead" style="margin-right: 8px">{{usesLeft}}/{{usesValue}}</div>{{/if}}
-							<paper-ripple fit></paper-ripple>
+					<paper-shadow class="card featureCard"
+								  hero-id="main" {{detailHero}}>
+						<div class="top {{colorClass}} subhead" 
+							 layout horizontal 
+							 hero-id="toolbar" {{detailHero}}>
+							<div flex hero-id="title" {{detailHero}}>
+								{{name}}
+							</div>
+							{{#if hasUses}}
+								<div style="margin-right: 8px">
+									{{usesLeft}}/{{usesValue}}
+								</div>
+							{{/if}}
 							{{#if canEnable}}
-								<core-tooltip label="Feature enabled" position="left">
-									<paper-checkbox class="enabledCheckbox" checked={{enabled}}></paper-checkbox>
+								<core-tooltip label="Feature enabled"
+											  position="left">
+									<paper-checkbox class="enabledCheckbox" 
+													checked={{enabled}}>
+									</paper-checkbox>
 								</core-tooltip>
 							{{/if}}
 						</div>
-						{{#if description}}<div flex class="containerMain body1 featureDescription">{{description}}</div>{{/if}}
+						{{#if description}}
+							<div flex class="bottom text"
+								 >{{description}}</div>
+						{{/if}}
 						{{#if hasUses}}
-							<div class="containerFoot" layout horizontal center end-justified>
-								<paper-button class="useFeature" disabled={{noUsesLeft}}>Use</paper-button>
-								<paper-button class="resetFeature" disabled={{usesFull}}>Reset</paper-button>
+							<div layout horizontal center end-justified>
+								<paper-button class="useFeature" 
+											  disabled={{noUsesLeft}}>
+									Use
+								</paper-button>
+								<paper-button class="resetFeature" 
+											  disabled={{usesFull}}>
+									Reset
+								</paper-button>
 							</div>
 						{{/if}}
 					</paper-shadow>
@@ -119,18 +136,28 @@
 
 <template name="resource">
 	{{#if char.attributeBase name}}
-		<paper-shadow class="card container" hero-id="main" {{detailHero name char._id}} layout horizontal>
-			<div class="containerLeft {{getColor}}" hero-id="toolbar" {{detailHero name char._id}} >
-				<div class="resourceButtons">
-					<paper-icon-button class="resourceUp" icon="arrow-drop-up" disabled={{cantIncrement}}></paper-icon-button>
-					<paper-icon-button class="resourceDown" icon="arrow-drop-down" disabled={{cantDecrement}}></paper-icon-button>
+		<paper-shadow class="card" 
+					  hero-id="main" {{detailHero name char._id}}
+					  layout horizontal>
+			<div class="left {{getColor}} display1 white-text" 
+				 hero-id="toolbar" {{detailHero name char._id}}
+				 layout horizontal center>
+				<div style="margin-right: 8px;">
+					<paper-icon-button class="resourceUp" 
+									   icon="arrow-drop-up" 
+									   disabled={{cantIncrement}}>
+					</paper-icon-button>
+					<paper-icon-button class="resourceDown"
+									   icon="arrow-drop-down"
+									   disabled={{cantDecrement}}>
+					</paper-icon-button>
 				</div>
-				<div class="resourceValue">{{char.attributeValue name}}</div>
-				<!--<div class="resourceMax">{{char.attributeBase name}}</div>-->
+				<div>{{char.attributeValue name}}</div>
+				<!--<div>/{{char.attributeBase name}}</div>-->
 			</div>
-			<div class="containerRight clickable" flex relative horizontal layout center>
+			<div class="right clickable" 
+				 flex layout horizontal center>
 				{{title}}
-				<paper-ripple fit></paper-ripple>
 			</div>
 		</paper-shadow>
 	{{/if}}

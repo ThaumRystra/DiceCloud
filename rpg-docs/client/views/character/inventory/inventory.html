@@ -1,73 +1,95 @@
 <template name="inventory">
 	<div fit>
 		<div id="inventory" class="scroll-y" fit>
-			<div class="containers">
+			<div class="column-container">
 				<!--Net Worth-->
-				<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
-					<div class="indigo white-text subhead padded leftRound" layout horizontal center>
+				<paper-shadow class="card" layout horizontal>
+					<div class="indigo white-text subhead left">
 						Net Worth
 					</div>
-					<div class="padded" layout horizontal center>
+					<div class="right" flex>
 						{{valueString netWorth}}
 					</div>
 				</paper-shadow>
 				<!--Weight Carried-->
-				<paper-shadow class="card container" hero-id="main" {{detailHero}} layout horizontal>
-					<div class="green white-text subhead padded leftRound" layout horizontal center>
+				<paper-shadow class="card" layout horizontal>
+					<div class="green white-text subhead left">
 						Weight Carried
 					</div>
-					<div class="padded" layout horizontal center>
+					<div class="right" flex>
 						{{round weightCarried}}lbs
 					</div>
 				</paper-shadow>
 				<!--Equipment-->
-				<paper-shadow class="card container equipmentContainer">
-					<div class="equipmentTop" layout horizontal center>
-						<div class="containerName subhead" flex>
+				<paper-shadow class="card equipmentContainer">
+					<div class="white top" layout horizontal center>
+						<div class="subhead" flex>
 							Equipment
 						</div>
-						<div class="caption" style="margin-right: 8px">{{valueString equipmentValue}}</div>
-						<div class="caption">{{round equipmentWeight}}lbs</div>
+						<div class="caption" style="margin-right: 8px">
+							{{valueString equipmentValue}}
+						</div>
+						<div class="caption">
+							{{round equipmentWeight}}lbs
+						</div>
 					</div>
-					<div flex class="equipmentMain">
+					<div flex class="bottom list">
 						{{#if attuned.count}}
-							<div class="list-subhead" layout horizontal center>Attuned</div>
+							<div class="subhead">Attuned</div>
 						{{/if}}
 						{{#each attuned}}
 							{{>inventoryItem}}
 						{{/each}}
-						{{#if attuned.count}}<div class="list-subhead" layout horizontal center>Equipment</div>{{/if}}
+						{{#if attuned.count}}
+							<div class="subhead">Equipment</div>
+						{{/if}}
 						{{#each equipment}}
 							{{>inventoryItem}}
 						{{/each}}
 					</div>
 				</paper-shadow>
 				<!--Carried Items-->
-				<paper-shadow class="card container carriedContainer">
-					<div class="equipmentTop" layout horizontal center>
-						<div class="containerName subhead" flex>
+				<paper-shadow class="card carriedContainer">
+					<div class="white top" layout horizontal center>
+						<div class="subhead">
 							Carried
 						</div>
-						<div class="caption" style="margin-right: 8px">{{valueString carriedValue}}</div>
-						<div class="caption">{{round carriedWeight}}lbs</div>
+						<div class="caption" style="margin-right: 8px">
+							{{valueString carriedValue}}
+						</div>
+						<div class="caption">
+							{{round carriedWeight}}lbs
+						</div>
 					</div>
-					<div flex class="containerMain">
+					<div flex class="bottom list">
 						{{#each carriedItems}}
 							{{>inventoryItem}}
 						{{/each}}
 					</div>
 				</paper-shadow>
 				{{#each containers}}
-					<paper-shadow class="card container itemContainer"  hero-id="main" {{detailHero}} style="order: {{containerOrder}};">
-						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
-							<div class="containerName subhead" hero-id="title" flex {{detailHero}}>{{name}}</div>
-							<div class="caption" style="margin-right: 8px">{{valueString totalValue}}</div>
-							<div class="caption" style="margin-right: 8px">{{round totalWeight}}lbs</div>
+					<paper-shadow class="card itemContainer" 
+								  hero-id="main" {{detailHero}}>
+						<div class="top {{colorClass}}"
+							 hero-id="toolbar" {{detailHero}}
+							 layout horizontal center>
+							<div class="subhead" flex
+								 hero-id="title" {{detailHero}}>
+								{{name}}
+							</div>
+							<div class="caption" style="margin-right: 8px">
+								{{valueString totalValue}}
+							</div>
+							<div class="caption" style="margin-right: 8px">
+								{{round totalWeight}}lbs
+							</div>
 							<core-tooltip label="Container carried" position="left">
-								<paper-checkbox class="carriedCheckbox" checked={{isCarried}}></paper-checkbox>
+								<paper-checkbox class="carriedCheckbox"
+												checked={{isCarried}}>
+								</paper-checkbox>
 							</core-tooltip>
 						</div>
-						<div flex class="containerMain">
+						<div class="bottom list">
 							{{#each items ../_id _id}}
 								{{>inventoryItem}}
 							{{/each}}
@@ -78,17 +100,31 @@
 			<div class="fab-buffer"></div>
 		</div>
 		{{#if canEditCharacter _id}}
-			<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
-				<paper-fab-menu-item id="addItem" icon="note-add" color="#d23f31" tooltip="Item"></paper-fab-menu-item>
-				<paper-fab-menu-item id="addContainer" icon="work" color="#d23f31" tooltip="Container"></paper-fab-menu-item>
+			<paper-fab-menu id="inventoryAddMenu" 
+							icon="add" 
+							closeIcon="close" 
+							duration="0.3">
+				<paper-fab-menu-item id="addItem"
+									 icon="note-add"
+									 color="#d23f31"
+									 tooltip="Item">
+				</paper-fab-menu-item>
+				<paper-fab-menu-item id="addContainer"
+									 icon="work"
+									 color="#d23f31"
+									 tooltip="Container">
+				</paper-fab-menu-item>
 			</paper-fab-menu>
 		{{/if}}
 	</div>
 </template>
 
 <template name="inventoryItem">
-	<div class="itemSlot">
-		<paper-item class="inventoryItem {{hidden}}" hero-id="main" noink {{detailHero}} layout horizontal draggable="true">
+	<div class="item-slot">
+		<paper-item class="item inventoryItem {{hidden}}" noink
+					hero-id="main" {{detailHero}}
+					layout horizontal
+					draggable="true">
 			{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
 		</paper-item>
 	</div>

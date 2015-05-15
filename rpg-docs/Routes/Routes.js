@@ -12,7 +12,7 @@ Router.plugin("ensureSignedIn", {
 		"atResetPwd",
 		"atEnrollAccount",
 		"atVerifyEmail",
-		"atresendVerificationEmail",
+		"atResendVerificationEmail",
 		"loginButtons",
 		"notFound",
 	]

@@ -1,5 +1,5 @@
 <template name="layout">
-	<core-drawer-panel responsiveWidth="900px">
+	<core-drawer-panel responsiveWidth="905px">
 		<core-header-panel drawer navigation flex mode="seamed" class="white">
 			<div id="accountSummary">
 				{{#if currentUser}}
@@ -33,7 +33,9 @@
 			<section id="detailSection">
 				<div id="detailScreenFiller">
 					<div id="screenDim" cross-fade></div>
-					<paper-shadow id="globalDetail" z="5" animated hero hero-id="main">
+					<paper-shadow id="globalDetail" class="card" z="5"
+								  animated hero hero-id="main"
+								  layout vertical>
 						{{#if globalDetailTemplate}}
 							{{> UI.dynamic template=globalDetailTemplate data=globalDetailData}}
 						{{/if}}

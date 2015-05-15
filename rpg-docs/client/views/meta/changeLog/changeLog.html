@@ -6,15 +6,22 @@
 		</div>
 	</core-toolbar>
 	<div class="changeLog scroll-y" fit>
-		{{#each changeLogs}}
-			<paper-shadow class="white padded" style="margin: 8px;">
-				<h2>{{version}}</h2>
-				<ul>
-				{{#each changes}}
-					<li>{{this}}</li>
+		<div layout vertical center>
+			<div layout vertical style="max-width: 800px; padding: 4px;">
+				{{#each changeLogs}}
+					<paper-shadow class="card" 
+								  style="margin: 4px;
+										 padding: 16px;"
+								  layout vertical>
+						<h2>{{version}}</h2>
+						<ul>
+							{{#each changes}}
+							<li>{{this}}</li>
+							{{/each}}
+						</ul>
+					</paper-shadow>
 				{{/each}}
-				</ul>
-			</paper-shadow>
-		{{/each}}
+			</div>
+		</div>
 	</div>
 </template>

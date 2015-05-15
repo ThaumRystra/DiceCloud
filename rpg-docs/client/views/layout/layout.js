@@ -23,9 +23,11 @@ Template.layout.helpers({
 Template.layout.events({
 	"tap #homeNav": function(event, instance){
 		Router.go("/");
+		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #profileLink": function(event, instance){
 		Router.go("profile");
+		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #feedback": function(event, instance) {
 		GlobalUI.showDialog({
@@ -33,8 +35,10 @@ Template.layout.events({
 			template: "feedback",
 			fullOnMobile: true,
 		});
+		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #changeLog": function(event, instance) {
 		Router.go("changeLog");
+		instance.find("core-drawer-panel").closeDrawer();
 	},
 });

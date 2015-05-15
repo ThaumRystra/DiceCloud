@@ -85,7 +85,6 @@ makeChild = function(collection, inheritedKeys){
 	collection.after.update(function(userId, doc, fieldNames, modifier, options) {
 		if (modifier && modifier.$set && modifier.$set["parent.id"]){
 			//when we change parents, inherit its properties
-			console.log("re-inheriting")
 			inheritParentProperties(doc, collection);
 		}
 	});

@@ -30,7 +30,12 @@ Template.hitDice.events({
 		var title = "d" + this.diceNum + " Hit Dice";
 		GlobalUI.setDetail({
 			template: "attributeDialog",
-			data:     {name: title, statName: this.name, charId: charId},
+			data:     {
+				name: title,
+				statName: this.name,
+				charId: charId,
+				color: "green",
+			},
 			heroId:   charId + this.name,
 		});
 	},

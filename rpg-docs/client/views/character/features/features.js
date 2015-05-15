@@ -65,7 +65,7 @@ Template.features.events({
 			}
 		});
 	},
-	"tap .featureCard .containerTop": function(event){
+	"tap .featureCard .top": function(event){
 		var featureId = this._id;
 		var charId = Template.parentData()._id;
 		GlobalUI.setDetail({
@@ -128,7 +128,7 @@ Template.resource.events({
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .containerRight": function(event, instance) {
+	"tap .right": function(event, instance) {
 		GlobalUI.setDetail({
 			template: "attributeDialog",
 			data:     {name: this.title, statName: this.name, charId: this.char._id},

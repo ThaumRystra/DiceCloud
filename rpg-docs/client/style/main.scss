@@ -1,20 +1,14 @@
 @import "bourbon/bourbon";
 @import "colors";
-	
-$thickColumnWidth: 304px;
-$thinColumnWidth: 200px;
 
-//apply a natural box layout model to all elements, but allowing components to change
-html {
+$thickColumnWidth: 304px;
+$thinColumnWidth: 240px;
+
+//apply a natural box layout model to all elements
+*, *:before, *:after {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-}
-
-*, *:before, *:after {
-	-moz-box-sizing: inherit;
-	-webkit-box-sizing: inherit;
-	box-sizing: inherit;
 }
 
 root {
@@ -25,6 +19,7 @@ body {
 	font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial;
 	margin: 0;
 	overflow-x: hidden;
+	background-color: #E0E0E0;
 }
 
 //Horizontal rule
@@ -39,29 +34,23 @@ hr {
 	text-align: center;
 }
 
+//FABs
+.floatyButton {
+	position: absolute;
+	bottom: 24px;
+	right: 24px;
+}
+
 //Column layouts of cards
 .column-container {
-	-moz-column-fill: balance;
-	column-fill: balance;
-	-ms-column-gap: 8px;
-	-moz-column-gap: 8px;
-	-webkit-column-gap: 8px;
-	column-gap: 8px;
-	-moz-column-width: thickColumnWidth;
-	-ms-column-width: thickColumnWidth;
-	-webkit-column-width: thickColumnWidth;
-	column-width: thickColumnWidth;
+	@include column-fill(balance);
+	@include column-gap(8px);
+	@include column-width($thickColumnWidth);
 	padding: 8px;
-	
-	&.thin {
-		-ms-column-count: 4;
-		-moz-column-count: 4;
-		-webkit-column-count: 4;
-		column-count: 4;
-		-ms-column-width: 200px;
-		-moz-column-width: 200px;
-		-webkit-column-width: 200px;
-		column-width: 200px;
+
+	&.thin-columns {
+		@include column-count(4);
+		@include column-width($thinColumnWidth);
 	}
 }
 
@@ -69,7 +58,7 @@ hr {
 .card {
 	background: white;
 	border-radius: 2px;
-	
+
 	.column-container & {
 		margin-bottom: 8px;
 		width: 100%;
@@ -83,23 +72,55 @@ hr {
 		//Fixes extra margin at top of columns
 		display: inline-block;
 	}
-	
+
 	.top {
 		cursor: pointer;
 		padding: 16px;
 		border-radius: 2px 2px 0 0;
+		&.white {
+			cursor: auto;
+			padding: 16px;
+			border-bottom: rgba(0,0,0,0.12) solid 1px;
+		}
+		paper-checkbox::shadow #ink[checked] {
+			color: #ffffff;
+		}
+		paper-checkbox::shadow #ink {
+			color: #ffffff;
+		}
+		paper-checkbox::shadow #checkbox.checked {
+			background-color: #ffffff;
+			background-color: rgba(255,255,255,0.27);
+			border-color: #ffffff;
+			border-color: rgba(255,255,255,0.27);
+		}
+		paper-checkbox::shadow #checkbox {
+			border-color: #ffffff;
+			border-color: rgba(255,255,255,0.54);
+		}
 	}
 	.bottom {
 		padding: 16px;
 		border-radius: 0 0 2px 2px;
 		&.list {
 			padding: 0 0 16px 0;
+			.subhead {
+				color: rgba(0,0,0,0.54);
+				font-size: 14px;
+				font-weight: 500;
+				letter-spacing: 0.010em;
+				padding: 12px 16px 12px 16px;
+			}
+		}
+		&.text {
+			white-space: pre-wrap;
 		}
 	}
 	.left {
 		padding: 16px;
 		border-radius: 2px 0 0 2px;
 		text-align: center;
+		min-width: 72px;
 	}
 	.right {
 		padding: 16px;
@@ -107,9 +128,7 @@ hr {
 	}
 }
 
-/*
-Buttons
-*/
+//Buttons
 paper-button {
 	color: #000;
 	color: rgba(0,0,0,0.87);
@@ -117,4 +136,13 @@ paper-button {
 	font-weight: 400;
 	letter-spacing: 0.010;
 	text-transform: uppercase;
+}
+
+//Style shortcuts
+.scroll-y {
+	overflow-y: auto;
+}
+
+.clickable, core-item, paper-tab {
+	cursor: pointer;
 }

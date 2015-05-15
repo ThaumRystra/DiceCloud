@@ -170,7 +170,7 @@ Template.spells.events({
 			heroId:   charId + stat,
 		});
 	},
-	"tap .containerTop": function(event){
+	"tap .spellList .top": function(event){
 		GlobalUI.setDetail({
 			template: "spellListDialog",
 			data:     {spellListId: this._id, charId: this.charId},

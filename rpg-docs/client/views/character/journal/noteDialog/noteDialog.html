@@ -3,16 +3,28 @@
 		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
 			<div class="prewrap">{{description}}</div>
 		{{else}}
-			<!--Name-->
-			<div horizontal layout>
-				<paper-input id="noteNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
-			</div>
-			<!--Description-->
-			<paper-input-decorator label="Description" floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="noteDescriptionInput" value={{description}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
+			{{> noteDialogEdit}}
 		{{/baseDialog}}
 	{{/with}}
+</template>
+
+<template name="noteDialogEdit">
+	<!--Name-->
+	<div horizontal layout>
+		<paper-input id="noteNameInput"
+					 label="Name"
+					 floatinglabel
+					 value={{name}}
+					 flex>
+		</paper-input>
+	</div>
+	<!--Description, formatting this nicely breaks it, leave it as is-->
+	<paper-input-decorator label="Description"
+						   floatinglabel
+						   layout vertical>
+		<paper-autogrow-textarea>
+			<textarea id="noteDescriptionInput"
+					  value={{description}}></textarea>
+		</paper-autogrow-textarea>
+	</paper-input-decorator>
 </template>

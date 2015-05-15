@@ -1,84 +1,120 @@
 <template name="spells">
 	<div fit>
 		<div id="spells" class="scroll-y" fit>
-			<div class="spellsContainer" layout horizontal start wrap>
+			<div style="padding: 4px;" 
+				 layout horizontal start wrap>
 				{{#if hasSlots}}
-					<paper-shadow class="card container spellSlotContainer"  hero-id="main" {{detailHero}}>
-						<div class="containerTop whiteTop" layout horizontal center>
-							<div class="containerName subhead" hero-id="title" flex>Spell Slots</div>
+					<paper-shadow class="card"
+								  style="margin: 4px;"
+								  hero-id="main" {{detailHero}}>
+						<div class="white top subhead"
+							 layout horizontal center>
+							Spell Slots
 						</div>
-						<div flex class="containerMain">
+						<div class="bottom list">
 							{{#each levels}}{{#if showSlots ..}}
-								<div class="itemSlot">
-									<paper-item class="inventoryItem spellSlot" hero-id="main" {{detailHero slotStatName ../_id}} layout horizontal>
-										<div class="slotName">
+								<div class="item-slot">
+									<div class="item spellSlot"
+												hero-id="main" {{detailHero slotStatName ../_id}}
+												layout horizontal center>
+										<div style="margin-right: 16px">
 											{{name}}
 										</div>
 										<div flex layout horizontal center>
 											{{#each slotBubbles ..}}
-												<paper-icon-button class="slotBubble" icon={{icon}} disabled={{disabled}}></paper-icon-button>
+												<paper-icon-button class="slotBubble"
+																   icon={{icon}}
+																   disabled={{disabled}}>
+												</paper-icon-button>
 											{{/each}}
 										</div>
-									</paper-item>
+									</div>
 								</div>
 							{{/if}}{{/each}}
 						</div>
 					</paper-shadow>
 				{{/if}}
 				{{#each spellLists}}
-					<paper-shadow class="card container spellList"  hero-id="main" {{detailHero}} flex>
-						<div class="containerTop {{colorClass}}" hero-id="toolbar" layout horizontal center {{detailHero}}>
+					<paper-shadow class="card spellList" flex
+								  hero-id="main" {{detailHero}}
+								  style="margin: 4px;">
+						<div class="top {{colorClass}}"
+							 hero-id="toolbar" {{detailHero}}
+							 layout horizontal center>
 							<div flex>
-								<div class="containerName subhead">{{name}}</div>
+								<div class="subhead">{{name}}</div>
 								<div class="caption">
 									{{#if saveDC}}
-										Save DC: {{evaluate charId saveDC}}
-										<div style="width: 16px; display: inline-block;"></div>
+										<span style="margin-right: 16px;">
+											Save DC: {{evaluate charId saveDC}}
+										</span>
 									{{/if}}
 									{{#if attackBonus}}
-										Attack Bonus: {{evaluateSigned charId attackBonus}}
+										<span>
+											Attack Bonus: {{evaluateSigned charId attackBonus}}
+										</span>
 									{{/if}}
 								</div>
 							</div>
 							{{#if settings.showUnprepared}}
-								{{#if maxPrepared}}<div class="subhead">{{numPrepared}} / {{evaluate charId maxPrepared}}</div>{{/if}}
-								<core-tooltip label="Done" position="left">
-									<paper-icon-button class="finishPrep" icon="done"></paper-icon-button>
-							</core-tooltip>
+								{{#if maxPrepared}}
+									<div class="subhead">
+										{{numPrepared}} / {{evaluate charId maxPrepared}}
+									</div>
+								{{/if}}
+								<core-tooltip label="Done"
+											  position="left">
+									<paper-icon-button class="finishPrep"
+													   icon="done">
+									</paper-icon-button>
+								</core-tooltip>
 							{{else}}
-								<core-tooltip label="Change prepared spells" position="left">
-									<paper-icon-button class="prepSpells" icon="book"></paper-icon-button>
+								<core-tooltip label="Change prepared spells"
+											  position="left">
+									<paper-icon-button class="prepSpells"
+													   icon="book">
+									</paper-icon-button>
 								</core-tooltip>
 							{{/if}}
 						</div>
-						<div class="containerMain">
+						<div class="bottom list column-container">
 							{{#each levels}}
 								<div class="spellLevel">
 									{{#if spellCount .. ../../_id}}
-										<div class="list-subhead" layout horizontal center>
+										<div class="subhead">
 											{{name}}
 										</div>
 									{{/if}}
 									{{#each spells ../_id ../../_id}}
 										{{#if showSpell ../../settings.showUnprepared}}
-											<div class="itemSlot">
-												<paper-item class="inventoryItem spell" hero-id="main" {{detailHero}} 
-															layout horizontal center>
-														<!--disabled={{cantCast ../level ../../..}} to grey out spells above highest usable slot-->
+											<div class="item-slot">
+												<div class="tall spell item"
+													 hero-id="main" {{detailHero}}
+													 layout horizontal center>
 													<core-icon icon="social:whatshot" 
-															   style="color: {{hexColor color}};"
+															   style="color: {{hexColor color}};
+																	  margin-right: 16px;"
 															   ></core-icon>
 													<div flex layout vertical>
 														<div>{{name}}</div>
 														<div class="caption">
-															{{school}} {{castingTime}}
-															{{#if ritual}}(ritual){{/if}}{{#if spellComponents}} - {{spellComponents}}{{/if}}
+															{{school}}
+															{{castingTime}}
+															{{#if ritual}}
+																(ritual)
+															{{/if}}
+															{{#if spellComponents}}
+																- {{spellComponents}}
+															{{/if}}
 														</div>
 													</div>
 													{{#if ../../settings.showUnprepared}}
-														<paper-checkbox class="preparedCheckbox" checked={{isPrepared}} disabled={{cantUnprepare}}></paper-checkbox>
+														<paper-checkbox class="preparedCheckbox"
+																		checked={{isPrepared}}
+																		disabled={{cantUnprepare}}>
+														</paper-checkbox>
 													{{/if}}
-												</paper-item>
+												</div>
 											</div>
 										{{/if}}
 									{{/each}}
@@ -92,9 +128,20 @@
 		</div>
 	</div>
 	{{#if canEditCharacter _id}}
-		<paper-fab-menu id="inventoryAddMenu" icon="add" closeIcon="close" duration="0.3">
-			<paper-fab-menu-item id="addSpell" icon="note-add" color="#d23f31" tooltip="Spell"></paper-fab-menu-item>
-			<paper-fab-menu-item id="addSpellList" icon="work" color="#d23f31" tooltip="Spell List"></paper-fab-menu-item>
+		<paper-fab-menu id="inventoryAddMenu"
+						icon="add"
+						closeIcon="close"
+						duration="0.3">
+			<paper-fab-menu-item id="addSpell"
+								 icon="note-add"
+								 color="#d23f31"
+								 tooltip="Spell">
+			</paper-fab-menu-item>
+			<paper-fab-menu-item id="addSpellList"
+								 icon="work"
+								 color="#d23f31"
+								 tooltip="Spell List">
+			</paper-fab-menu-item>
 		</paper-fab-menu>
 	{{/if}}
 </template>

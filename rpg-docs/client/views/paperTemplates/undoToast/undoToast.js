@@ -9,6 +9,10 @@ Template.undoToast.events({
 			);
 			return;
 		}
-		collection.restoreNode(this.id);
+		if (collection.restoreNode){
+			collection.restoreNode(this.id);
+		} else {
+			collection.restore(this.id);
+		}
 	}
 });

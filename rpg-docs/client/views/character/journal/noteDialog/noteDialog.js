@@ -1,5 +1,7 @@
-Template.noteDialog.onRendered(function(){
-	updatePolymerInputs(this);
+Template.noteDialog.helpers({
+	note: function(){
+		return Notes.findOne(this.noteId);
+	}
 });
 
 Template.noteDialog.events({
@@ -11,6 +13,13 @@ Template.noteDialog.events({
 		GlobalUI.deletedToast(instance.data.noteId, "Notes", "Note");
 		GlobalUI.closeDetail();
 	},
+});
+
+Template.noteDialogEdit.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
+Template.noteDialogEdit.events({
 	"change #noteNameInput, input #noteNameInput": function(event){
 		var value = event.currentTarget.value;
 		Notes.update(this._id, {$set: {name: value}});
@@ -19,10 +28,4 @@ Template.noteDialog.events({
 		var value = event.currentTarget.value;
 		Notes.update(this._id, {$set: {description: value}});
 	},
-});
-
-Template.noteDialog.helpers({
-	note: function(){
-		return Notes.findOne(this.noteId);
-	}
 });

@@ -2,19 +2,21 @@
 	<paper-shadow class="card container healthCard" 
 				  hero-id="main" {{detailHero "hitPoints" _id}} 
 				  layout horizontal wrap>
-		<div class="green white-text subhead padded leftRound" 
+		<div class="green white-text subhead left" 
 			 hero-id="toolbar" {{detailHero "hitPoints" _id}}
-			 layout vertical center>
+			 layout vertical center center-justified>
 			<div class="hitPointTitle clickable">Hit Points</div>
 			<paper-icon-button class="white54" id="addTempHP" icon="add"></paper-icon-button>
 		</div>
-		<div class="padded" flex layout vertical center-justified style="min-width: 180px;">
-			<paper-slider id="hitPointSlider"
-						  value={{attributeValue "hitPoints"}}
-						  max={{attributeBase "hitPoints"}} 
-						  editable pin
-						  role="slider"
-						  ></paper-slider>
+		<div class="right" flex layout vertical center-justified style="min-width: 180px;">
+			<div layout horizontal>
+				<paper-slider id="hitPointSlider"
+							  value={{attributeValue "hitPoints"}}
+							  max={{attributeBase "hitPoints"}} 
+							  editable pin
+							  role="slider"
+							  ></paper-slider>
+			</div>
 			{{#each tempHitPoints}}
 				<div>
 					{{name}}

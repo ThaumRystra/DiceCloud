@@ -1,9 +1,9 @@
 <template name="stats">
 	<div class="scroll-y" fit>
-		<div class="resourceCards" layout horizontal wrap>
+		<div style="padding: 8px 8px 0 8px">
 			{{> healthCard}}
 		</div>
-		<div id="stats" class="column-container" >
+		<div class="column-container thin-columns" >
 			<!--Ability Scores-->
 			{{> abilityMiniCard ability="strength" title="Strength" color="red"}}
 			{{> abilityMiniCard ability="dexterity" title="Dexterity" color="indigo"}}
@@ -27,11 +27,11 @@
 			{{>hitDice name="d10HitDice" diceNum="10" char=this}}
 			{{>hitDice name="d12HitDice" diceNum="12" char=this}}
 			<!--Saving Throws-->
-			<paper-shadow class="card"  hero-id="main" {{detailHero}}>
-				<div class="containerTop whiteTop" layout horizontal center>
-					<div class="containerName subhead" hero-id="title" flex>Saving Throws</div>
+			<paper-shadow class="card">
+				<div class="top white subhead">
+					Saving Throws
 				</div>
-				<div flex class="containerMain">
+				<div flex class="bottom list">
 					{{> skillRow name="Strength" skill="strengthSave"}}
 					{{> skillRow name="Dexterity" skill="dexteritySave"}}
 					{{> skillRow name="Constitution" skill="constitutionSave"}}
@@ -41,11 +41,11 @@
 				</div>
 			</paper-shadow>
 			<!--Skills-->
-			<paper-shadow class="card"  hero-id="main" {{detailHero}}>
-				<div class="containerTop whiteTop" layout horizontal center>
-					<div class="containerName subhead" hero-id="title" flex>Skills</div>
+			<paper-shadow class="card">
+				<div class="top white subhead">
+					Skills
 				</div>
-				<div flex class="containerMain">
+				<div flex class="bottom list">
 					{{> skillRow name="Acrobatics" skill="acrobatics"}}
 					{{> skillRow name="Animal Handling" skill="animalHandling"}}
 					{{> skillRow name="Arcana" skill="arcana"}}
@@ -71,7 +71,7 @@
 </template>
 
 <template name="statCard">
-	<paper-shadow class="card statCard" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
+	<paper-shadow class="card statCard clickable" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
 		<div class="left display1 white-text {{color}}"
 			 hero-id="toolbar" {{detailHero stat ../_id}}>
 			{{#if isSkill}}

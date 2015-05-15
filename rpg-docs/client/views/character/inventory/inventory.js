@@ -145,7 +145,7 @@ Template.inventory.events({
 			heroId:   itemId,
 		});
 	},
-	"tap .containerTop": function(event){
+	"tap .itemContainer .top": function(event){
 		GlobalUI.setDetail({
 			template: "containerDialog",
 			data:     {containerId: this._id, charId: this.charId},

@@ -1,8 +1,11 @@
 <template name="proficiencyListItem">
-	<div class="itemSlot">
-		<paper-item noink class="white proficiencyItem" hero-id="main" {{detailHero}}>
-			<core-icon icon="{{profIcon}}" class="black54"></core-icon>
-			<div class="sideMargin">{{getName}}</div>
-		</paper-item>
+	<div class="item-slot">
+		<div class="proficiency item small"
+			 hero-id="main" {{detailHero}}
+			 layout horizontal center>
+			<core-icon icon="{{profIcon}}"
+					   style="margin-right: 16px;"></core-icon>
+			<div flex>{{getName}}</div>
+		</div>
 	</div>
 </template>

@@ -1,7 +1,7 @@
 <template name="persona">
 	<div fit>
 		<div id="persona" class="scroll-y" fit>
-			<div class="containers">
+			<div class="column-container">
 				{{#with characterDetails}}
 					{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
 				{{/with}}
@@ -11,11 +11,11 @@
 				{{> containerCard characterField "bonds" "Bonds"}}
 				{{> containerCard characterField "flaws" "Flaws"}}
 				{{> containerCard characterField "backstory" "Background"}}
-				<paper-shadow class="card container">
-					<div class="containerTop whiteTop" layout horizontal center>
-						<div class="containerName subhead" flex>Languages</div>
+				<paper-shadow class="card">
+                    <div class="white top subhead">
+                      Languages
 					</div>
-					<div flex class="containerMain listPadded">
+					<div class="bottom list">
 						{{#each languages}}
 							{{> proficiencyListItem}}
 						{{/each}}
@@ -31,10 +31,15 @@
 </template>
 
 <template name="containerCardHelper">
-	<paper-shadow class="card container {{class}}"  hero-id="main" {{detailHero field ../_id}}>
-		<div class="containerTop {{colorClass}} {{topClass}}" hero-id="toolbar" layout horizontal center {{detailHero field ../_id}}>
-			<div class="containerName subhead" hero-id="title" flex {{detailHero field ../_id}}>{{title}}</div>
+	<paper-shadow class="card {{class}}"
+                  hero-id="main" {{detailHero field ../_id}}>
+        <div class="top subhead {{colorClass}} {{topClass}}"
+             hero-id="toolbar" {{detailHero field ../_id}}>
+			<div class="subhead" flex
+                 hero-id="title" {{detailHero field ../_id}}>
+              {{title}}
+          </div>
 		</div>
-		<div flex class="containerMain prewrap">{{> UI.contentBlock}}</div>
+		<div class="bottom text">{{> UI.contentBlock}}</div>
 	</paper-shadow>
 </template>

@@ -1,0 +1,20 @@
+.card .left paper-icon-button {
+	display: block;
+	height: 32px;
+	padding: 0;
+	width: 32px;
+}
+
+.card .left paper-icon-button[disabled] {
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.card .left paper-icon-button /deep/ core-icon {
+	height: 32px;
+	width: 32px;
+}
+
+/*fix paper-dropdowns*/
+body /deep/ core-menu {
+	overflow-x: hidden !important;
+}

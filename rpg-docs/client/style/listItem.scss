@@ -21,8 +21,17 @@ List items
 	&.tall {
 		height: 56px;
 	}
+	&.flexible {
+		height: auto;
+		padding-top: 16px;
+		padding-bottom: 16px;
+	}
 	&[hero], &:active{
 		box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.37);
 		z-index: 10;
+	}
+	core-icon, paper-icon-button {
+		color: #747474;
+		color: rgba(0,0,0,0.54);
 	}
 }

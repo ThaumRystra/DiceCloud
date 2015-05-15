@@ -1,39 +1,44 @@
 <template name="baseDialog">
-	<core-header-panel fit>
-		<core-toolbar class={{class}} hero-id="toolbar" hero>
-			<paper-icon-button id="backButton" role="button" tabindex="0" icon="arrow-back" aria-label="close"></paper-icon-button>
-			<div flex>{{title}}</div>
-			{{#if editing}}
-				{{#unless hideDelete}}
-					<paper-icon-button id="deleteButton"
-									   role="button"
-									   tabindex="0"
-									   icon="delete"
-									   aria-label="Delete Feature"
-									   noink></paper-icon-button>
-				{{/unless}}
-				{{#unless hideColor}}
-					{{> colorDropdown}}
-				{{/unless}}
-					<paper-icon-button id="doneEditingButton"
-									   icon="done"
-									   aria-label="Delete Feature"
-									   noink></paper-icon-button>
-			{{else}}
-				{{#if showEdit}}
-					<paper-icon-button id="editButton"
-									   icon="create"
-									   aria-label="Delete Feature"
-									   noink></paper-icon-button>
-				{{/if}}
-			{{/if}}
-		</core-toolbar>
-		<div class="detailContent">
-			{{#unless editing}}
-				{{> UI.contentBlock}}
-			{{else}}
-				{{> UI.elseBlock}}
+	<div class="{{class}} top subhead"
+		 style="height: 72px;"
+		 hero-id="toolbar" hero
+		 layout horizontal center>
+		<paper-icon-button id="backButton" 
+						   icon="arrow-back">
+		</paper-icon-button>
+		<div flex>{{title}}</div>
+		{{#if editing}}
+			{{#unless hideDelete}}
+				<paper-icon-button id="deleteButton"
+								   role="button"
+								   tabindex="0"
+								   icon="delete"
+								   aria-label="Delete Feature"
+								   noink></paper-icon-button>
 			{{/unless}}
-		</div>
-	</core-header-panel>
+			{{#unless hideColor}}
+				{{> colorDropdown}}
+			{{/unless}}
+			<paper-icon-button id="doneEditingButton"
+							   icon="done"
+							   aria-label="Delete Feature"
+							   noink></paper-icon-button>
+		{{else}}
+			{{#if showEdit}}
+				<paper-icon-button id="editButton"
+								   icon="create"
+								   aria-label="Delete Feature"
+								   noink></paper-icon-button>
+			{{/if}}
+		{{/if}}
+	</div>
+	<div class="bottom scroll-y"
+		 style="padding: 24px"
+		 flex>
+		{{#unless editing}}
+			{{> UI.contentBlock}}
+		{{else}}
+			{{> UI.elseBlock}}
+		{{/unless}}
+	</div>
 </template>

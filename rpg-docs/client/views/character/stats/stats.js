@@ -4,13 +4,23 @@ Template.stats.events({
 		if (this.isSkill){
 			GlobalUI.setDetail({
 				template: "skillDialog",
-				data:     {name: this.name, skillName: this.stat, charId: charId},
+				data:     {
+					name: this.name,
+					skillName: this.stat,
+					charId: charId,
+					color: this.color,
+				},
 				heroId:   charId + this.stat,
 			});
 		} else {
 			GlobalUI.setDetail({
 				template: "attributeDialog",
-				data:     {name: this.name, statName: this.stat, charId: charId},
+				data:     {
+					name: this.name,
+					statName: this.stat,
+					charId: charId,
+					color: this.color,
+				},
 				heroId:   charId + this.stat,
 			});
 		}
@@ -19,7 +29,12 @@ Template.stats.events({
 		var charId = Template.parentData()._id;
 		GlobalUI.setDetail({
 			template: "attributeDialog",
-			data:     {name: this.title, statName: this.ability, charId: charId},
+			data:     {
+				name: this.title,
+				statName: this.ability,
+				charId: charId,
+				color: this.color,
+			},
 			heroId:   charId + this.ability,
 		});
 	},
@@ -27,15 +42,24 @@ Template.stats.events({
 		var skill = this.skill;
 		var charId = instance.data._id;
 		GlobalUI.setDetail({
-				template: "skillDialog",
-				data:     {name: this.name, skillName: skill, charId: charId},
-				heroId:   charId + skill,
-			});
+			template: "skillDialog",
+			data:     {
+				name: this.name,
+				skillName: skill,
+				charId: charId,
+			},
+			heroId:   charId + skill,
+		});
 	},
 	"tap .hitPointTitle": function(event, instance) {
 		GlobalUI.setDetail({
 			template: "attributeDialog",
-			data:     {name: "Hit Points", statName: "hitPoints", charId: this._id},
+			data:     {
+				name: "Hit Points",
+				statName: "hitPoints",
+				charId: this._id,
+				color: "green",
+			},
 			heroId:   this._id + "hitPoints",
 		});
 	},

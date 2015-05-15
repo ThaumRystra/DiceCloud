@@ -93,6 +93,14 @@ var abilities = {
 	charisma: {name: "Charisma"},
 };
 
+Template.skillDialog.helpers({
+	color: function(){
+		if (this.color) return this.color + " white-text";
+		var char = Characters.findOne(this.charId, {fields: {color: 1}});
+		if (char) return getColorClass(char.color);
+	},
+});
+
 Template.skillDialogView.helpers({
 	or: function(a, b, c){
 		return a || b || c;
