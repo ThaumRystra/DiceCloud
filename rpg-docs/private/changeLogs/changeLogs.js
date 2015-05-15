@@ -68,3 +68,11 @@ ChangeLogs.insert({
 		"Fixed the styling and rounding of some of the detail boxes",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.3.0",
+	changes: [
+		"Refactored character sheet user interface.",
+		"Removed a lot of unneeded effects and webcomponents, should result in significantly improved performance on low-powered devices.",
+	],
+});
