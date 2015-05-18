@@ -38,7 +38,7 @@
 				</tr>
 				<tr>
 					<td>Standing long jump</td>
-					<td>{{evaluate charId "round(strength/2)"}} feet</td>
+					<td>{{evaluate charId "floor(strength/2)"}} feet</td>
 				</tr>
 				<tr>
 					<td>Running high jump</td>
@@ -51,10 +51,10 @@
 				</tr>
 				<tr>
 					<td>Standing high jump</td>
-					<td>{{evaluate charId "round((3 + strengthMod)/2)"}} feet</td>
+					<td>{{evaluate charId "floor((3 + strengthMod)/2)"}} feet</td>
 					<td class="caption">
 						Can reach a ledge as high as
-						{{evaluate charId "round((3 + strengthMod)/2)"}} feet
+						{{evaluate charId "floor((3 + strengthMod)/2)"}} feet
 						+ 1.5&times; your height
 					</td>
 				</tr>
