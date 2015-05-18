@@ -121,11 +121,24 @@
 
 <template name="inventoryItem">
 	<div class="item-slot">
-		<paper-item class="item inventoryItem {{hidden}}" noink
+		<div class="item {{hidden}} inventoryItem"
 					hero-id="main" {{detailHero}}
-					layout horizontal
+					layout horizontal center
 					draggable="true">
-			{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
-		</paper-item>
+			<div flex class="itemName">
+				{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
+			</div>
+			{{#if settings.showIncrement}}
+			<div class="incrementButtons">
+				<paper-icon-button class="addItemQuantity"
+								   icon="add"
+								   style="margin-right: -8px"></paper-icon-button>
+				<paper-icon-button class="subItemQuantity"
+								   disabled={{lt1 quantity}}
+								   icon="remove"
+								   style="margin-right: -8px"></paper-icon-button>
+			</div>
+			{{/if}}
+		</div>
 	</div>
 </template>

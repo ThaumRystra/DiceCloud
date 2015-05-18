@@ -50,7 +50,7 @@ Template.itemEdit.onRendered(function(){
 Template.itemEdit.helpers({
 	ne1: function(num){
 		return num != 1;
-	}
+	},
 });
 
 Template.itemEdit.events({
@@ -86,6 +86,10 @@ Template.itemEdit.events({
 		} else {
 			Meteor.call("unequipItem", this._id, this.charId);
 		}
+	},
+	"change #incrementCheckbox": function(event){
+		var value = event.currentTarget.checked;
+		Items.update(this._id, {$set: {"settings.showIncrement": value}});
 	},
 	"change #attunementCheckbox": function(event){
 		var value = event.currentTarget.checked;

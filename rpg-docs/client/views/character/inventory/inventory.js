@@ -145,6 +145,17 @@ Template.inventory.events({
 			heroId:   itemId,
 		});
 	},
+	"tap .incrementButtons": function(event) {
+		event.stopPropagation();
+	},
+	"tap .addItemQuantity": function(event) {
+		var itemId = this._id;
+		Items.update(itemId, {$set: {quantity: this.quantity + 1}});
+	},
+	"tap .subItemQuantity": function(event) {
+		var itemId = this._id;
+		Items.update(itemId, {$set: {quantity: this.quantity - 1}});
+	},
 	"tap .itemContainer .top": function(event){
 		GlobalUI.setDetail({
 			template: "containerDialog",
@@ -166,6 +177,9 @@ Template.inventory.events({
 Template.inventoryItem.helpers({
 	ne1: function(num){
 		return num !== 1;
+	},
+	lt1: function(num) {
+		return num < 1;
 	},
 	hidden: function(){
 		return Session.equals("inventory.dragItemId", this._id) ? "hidden" : null;

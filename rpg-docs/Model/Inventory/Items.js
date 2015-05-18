@@ -10,6 +10,7 @@ Schemas.Item = new SimpleSchema({
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	enabled:    {type: Boolean, defaultValue: false},
 	requiresAttunement: {type: Boolean, defaultValue: false},
+	"settings.showIncrement": {type: Boolean, defaultValue: false},
 	color:      {
 		type: String,
 		allowedValues: _.pluck(colorOptions, "key"),
