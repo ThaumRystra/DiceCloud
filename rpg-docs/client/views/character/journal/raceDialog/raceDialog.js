@@ -13,5 +13,9 @@ Template.raceDialog.helpers({
 	race: function(){
 		var char = Characters.findOne(this.charId, {fields: {race: 1}});
 		return char && char.race;
-	}
+	},
+	color: function() {
+		var char = Characters.findOne(this.charId, {fields: {color: 1}});
+		if (char) return getColorClass(char.color);
+	},
 });

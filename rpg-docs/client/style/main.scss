@@ -146,3 +146,15 @@ paper-button {
 .clickable, core-item, paper-tab {
 	cursor: pointer;
 }
+
+.pre-wrap, .prewrap{
+	white-space: pre-wrap;
+}
+
+.padded {
+	padding: 8px;
+}
+
+.fullwidth {
+	width: 100%;
+}

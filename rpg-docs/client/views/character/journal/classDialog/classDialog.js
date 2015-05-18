@@ -3,6 +3,9 @@ Template.classDialog.onRendered(function(){
 });
 
 Template.classDialog.events({
+	"color-change": function(event, instance){
+		Classes.update(instance.data.classId, {$set: {color: event.color}});
+	},
 	"tap #deleteButton": function(event, instance){
 		Classes.softRemoveNode(instance.data.classId);
 		GlobalUI.deletedToast(instance.data.classId, "Classes", "Class");

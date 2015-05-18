@@ -34,7 +34,7 @@
 												{{name}}
 											</div>
 											<div>
-												{{damageDice}}&nbsp;{{{evaluateSignedSpaced ../_id damageBonus}}}&nbsp;{{damageType}}
+												{{evaluateString ../_id damage}}&nbsp;{{damageType}}
 											</div>
 											{{#if details}}
 												<div class="caption">
@@ -102,7 +102,7 @@
 						</div>
 						{{#if description}}
 							<div flex class="bottom text"
-								 >{{description}}</div>
+								 >{{evaluateString charId description}}</div>
 						{{/if}}
 						{{#if hasUses}}
 							<div layout horizontal center end-justified>

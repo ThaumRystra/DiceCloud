@@ -27,7 +27,7 @@
 </template>
 
 <template name="containerCard">
-	{{#containerCardHelper this}}{{body}}{{/containerCardHelper}}
+	{{#containerCardHelper this}}{{evaluateString _id body}}{{/containerCardHelper}}
 </template>
 
 <template name="containerCardHelper">

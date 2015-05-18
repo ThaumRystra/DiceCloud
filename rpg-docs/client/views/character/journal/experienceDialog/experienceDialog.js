@@ -1,6 +1,11 @@
 Template.experienceDialog.helpers({
-	feature: function(){
-		return Features.findOne(this.featureId);
+	experience: function(){
+		Experiences.findOne(this.experienceId);
+		return Experiences.findOne(this.experienceId);
+	},
+	color: function() {
+		var char = Characters.findOne(this.charId, {fields: {color: 1}});
+		if (char) return getColorClass(char.color);
 	},
 });
 
@@ -26,11 +31,4 @@ Template.experienceDialog.events({
 		var value = event.currentTarget.value;
 		Experiences.update(this._id, {$set: {description: value}});
 	},
-});
-
-Template.experienceDialog.helpers({
-	experience: function(){
-		Experiences.findOne(this.experienceId);
-		return Experiences.findOne(this.experienceId);
-	}
 });

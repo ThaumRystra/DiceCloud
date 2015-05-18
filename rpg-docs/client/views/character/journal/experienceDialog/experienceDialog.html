@@ -1,12 +1,12 @@
 <template name="experienceDialog">
 	{{#with experience}}
-		{{#baseDialog title=name class=colorClass hideColor="true" startEditing=../startEditing}}
+		{{#baseDialog title=name class=color hideColor="true" startEditing=../startEditing}}
 			<div horizontal layout center-justified class= "display2">
 				{{value}}
 			</div>
 			{{#if description}}
 				<hr class="vertMargin">
-				<div class="prewrap">{{description}}</div>
+				<div class="pre-wrap">{{description}}</div>
 			{{/if}}
 		{{else}}
 			<div horizontal layout>
