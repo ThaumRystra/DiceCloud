@@ -83,3 +83,13 @@ ChangeLogs.insert({
 		"Re-implemented floating action button menu component to move away from the broken third party implementation.",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.4.0",
+	changes: [
+		"Changed attacks to use arbitrary strings with inline calculations",
+		"Added item increment and decrement buttons",
+		"fixed incorrect line breaks and formatting in dialogs",
+		"Added calculated values for jumping and carrying to the strength detail box",
+	],
+});
