@@ -76,3 +76,10 @@ ChangeLogs.insert({
 		"Removed a lot of unneeded effects and webcomponents, should result in significantly improved performance on low-powered devices.",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.3.1",
+	changes: [
+		"Re-implemented floating action button menu component to move away from the broken third party implementation.",
+	],
+});

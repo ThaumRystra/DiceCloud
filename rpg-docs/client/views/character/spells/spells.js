@@ -184,7 +184,7 @@ Template.spells.events({
 			heroId:   this._id,
 		});
 	},
-	"tap #addSpellList": function(event){
+	"tap .addSpellList": function(event){
 		var charId = this.charId;
 		SpellLists.insert({
 			name: "New SpellList",
@@ -201,7 +201,7 @@ Template.spells.events({
 			}
 		});
 	},
-	"tap #addSpell": function(event){
+	"tap .addSpell": function(event){
 		var charId = this.charId;
 		var listId = SpellLists.findOne({charId: this._id})._id;
 		Spells.insert({

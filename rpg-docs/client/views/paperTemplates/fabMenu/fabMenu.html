@@ -1,0 +1,8 @@
+<template name="fabMenu">
+	<paper-fab class="floatyButton expand-menu {{#if active}}active{{/if}}" 
+			   icon="add"></paper-fab>
+	<div class="{{#if active}}active{{/if}} mini-holder"
+		 layout vertical center>
+		{{> UI.contentBlock}}
+	</div>
+</template>
