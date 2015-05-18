@@ -6,7 +6,7 @@ Meteor.methods({
 		var user = Meteor.users.findOne(this.userId);
 		if (!user){
 			throw new Meteor.Error(
-				"logged-out", 
+				"logged-out",
 				"The user must be logged in to migrate the database"
 			);
 		}
@@ -18,7 +18,7 @@ Meteor.methods({
 				"The user must be an administrator to migrate the database"
 			);
 		}
-	}
+	},
 });
 
 Migrations.add({
@@ -54,6 +54,36 @@ Migrations.add({
 		Characters.update(
 			{},
 			{$unset: {languages: "", proficiencies: ""}},
+			{validate: false, multi: true}
+		);
+	},
+});
+
+Migrations.add({
+	version: 2,
+	name: "Converts attacks from damage dice and damage bonus to a string with curly bracket calculations, adds settings.showIncrement to items",
+	up: function() {
+		//update attacks
+		Attacks.find({}).forEach(function(attack) {
+			var newDamage = attack.damageDice +
+				" + {" + attack.damageBonus + "}";
+			Attacks.update(
+				attack._id,
+				{
+					$unset: {
+						damageBonus: "",
+						damageDice: "",
+					},
+					$set: {
+						damage: newDamage
+					},
+				},
+				{validate: false});
+		});
+		//update Items
+		Items.update(
+			{settings: undefined},
+			{$set: {"settings.showIncrement" : false}},
 			{validate: false, multi: true}
 		);
 	},
