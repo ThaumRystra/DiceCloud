@@ -15,21 +15,11 @@
 							 value={{details}}></paper-input>
 			</div>
 			<div layout horizontal>
-				<!--DamageType-->
-				<paper-dropdown-menu id="damageDiceDropdown" label="Damage Dice">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{damageDice}}>
-							{{#each DAMAGE_DICE}}
-								<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
-				</paper-dropdown-menu>
 				<!--damageBonus-->
 				<paper-input id="damageInput"
-							 label="Damage Bonus"
+							 label="Damage"
 							 floatinglabel
-							 value={{damageBonus}}
+							 value={{damage}}
 							 flex></paper-input>
 				<!--DamageType-->
 				<paper-dropdown-menu id="damageTypeDropdown" label="Damage Type">

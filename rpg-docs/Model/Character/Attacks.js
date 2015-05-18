@@ -24,17 +24,11 @@ Schemas.Attack = new SimpleSchema({
 		optional: true,
 		trim: false,
 	},
-	damageBonus: {
+	damage: {
 		type: String,
-		defaultValue: "strengthMod",
+		defaultValue: "1d8 + {strengthMod}",
 		optional: true,
 		trim: false,
-	},
-	damageDice: {
-		type: String,
-		optional: true,
-		defaultValue: "1d8",
-		allowedValues: DAMAGE_DICE,
 	},
 	damageType: {
 		type: String,
