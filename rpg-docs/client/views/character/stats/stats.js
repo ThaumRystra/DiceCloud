@@ -27,8 +27,10 @@ Template.stats.events({
 	},
 	"tap .abilityMiniCard": function(event, instance){
 		var charId = Template.parentData()._id;
+		var template = "attributeDialog";
+		if (this.ability === "strength") template = "strengthDialog";
 		GlobalUI.setDetail({
-			template: "attributeDialog",
+			template: template,
 			data:     {
 				name: this.title,
 				statName: this.ability,

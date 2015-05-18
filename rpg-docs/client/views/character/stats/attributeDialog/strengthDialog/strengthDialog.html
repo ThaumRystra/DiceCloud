@@ -1,0 +1,64 @@
+<template name="strengthDialog">
+	{{#baseDialog title=name class=color hideEdit=true}}
+		{{> attributeDialogView}}
+		<hr class="vertMargin">
+		<div>
+			<div class="title padded">Carrying</div>
+			<table class="strengthTable">
+				<tr>
+					<td>Encumbered</td>
+					<td>{{evaluate charId "strength * 5"}}lbs</td>
+					<td class="caption">Speed drops by 10 feet</td>
+				</tr>
+				<tr>
+					<td>Heavily encumbered</td>
+					<td>{{evaluate charId "strength * 10"}}lbs</td>
+					<td class="caption">
+						Speed drops by 20 feet, disadvantage on strength,
+						dexterity and constitution ability checks, attack
+						rolls and saving throws
+					</td>
+				</tr>
+				<tr>
+					<td>Maximum carrying capacity</td>
+					<td>{{evaluate charId "strength * 15"}}lbs</td>
+					<td class="caption">Speed drops to 5 feet</td>
+				</tr>
+				<tr>
+					<td>Push, drag or lift maximum</td>
+					<td>{{evaluate charId "strength * 30"}}lbs</td>
+					<td class="caption">You can't move more than this weight</td>
+				</tr>
+			</table>
+			<div class="title padded">Jumping</div>
+			<table class="strengthTable">
+				<tr>
+					<td>Running long jump</td>
+					<td>{{evaluate charId "strength"}} feet</td>
+				</tr>
+				<tr>
+					<td>Standing long jump</td>
+					<td>{{evaluate charId "round(strength/2)"}} feet</td>
+				</tr>
+				<tr>
+					<td>Running high jump</td>
+					<td>{{evaluate charId "3 + strengthMod"}} feet</td>
+					<td class="caption">
+						Can reach a ledge as high as
+						{{evaluate charId "3 + strengthMod"}} feet
+						+ 1.5&times; your height
+					</td>
+				</tr>
+				<tr>
+					<td>Standing high jump</td>
+					<td>{{evaluate charId "round((3 + strengthMod)/2)"}} feet</td>
+					<td class="caption">
+						Can reach a ledge as high as
+						{{evaluate charId "round((3 + strengthMod)/2)"}} feet
+						+ 1.5&times; your height
+					</td>
+				</tr>
+			</table>
+		</div>
+	{{/baseDialog}}
+</template>
