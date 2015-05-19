@@ -93,3 +93,17 @@ ChangeLogs.insert({
 		"Added calculated values for jumping and carrying to the strength detail box",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.4.1",
+	changes: [
+		"Fixed strength jumping calculations not rounding down correctly",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.4.2",
+	changes: [
+		"Fixed attack migrations from 0.3 -> 0.4",
+	],
+});
