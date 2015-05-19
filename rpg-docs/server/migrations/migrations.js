@@ -65,20 +65,22 @@ Migrations.add({
 	up: function() {
 		//update attacks
 		Attacks.find({}).forEach(function(attack) {
-			var newDamage = attack.damageDice +
-				" + {" + attack.damageBonus + "}";
-			Attacks.update(
-				attack._id,
-				{
-					$unset: {
-						damageBonus: "",
-						damageDice: "",
+			if (!attack.damage && attack.damageDice && attack.damageBonus){
+				var newDamage = attack.damageDice +
+					" + {" + attack.damageBonus + "}";
+				Attacks.update(
+					attack._id,
+					{
+						$unset: {
+							damageBonus: "",
+							damageDice: "",
+						},
+						$set: {
+							damage: newDamage
+						},
 					},
-					$set: {
-						damage: newDamage
-					},
-				},
-				{validate: false});
+					{validate: false});
+			}
 		});
 		//update Items
 		Items.update(
