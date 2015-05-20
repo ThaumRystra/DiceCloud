@@ -136,6 +136,14 @@ Template.inventory.events({
 			heroId:   containerId,
 		});
 	},
+	"tap .weightCarried": function(event) {
+		var charId = this._id;
+		GlobalUI.setDetail({
+			template: "carryDialog",
+			data:     {charId: charId, color: "green"},
+			heroId:   charId + "weightCarried",
+		});
+	},
 	"tap .inventoryItem": function(event){
 		var itemId = this._id;
 		var charId = Template.parentData()._id;

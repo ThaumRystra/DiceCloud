@@ -4,32 +4,7 @@
 		<hr class="vertMargin">
 		<div>
 			<div class="title padded">Carrying</div>
-			<table class="strengthTable">
-				<tr>
-					<td>Encumbered</td>
-					<td>{{evaluate charId "strength * 5"}}lbs</td>
-					<td class="caption">Speed drops by 10 feet</td>
-				</tr>
-				<tr>
-					<td>Heavily encumbered</td>
-					<td>{{evaluate charId "strength * 10"}}lbs</td>
-					<td class="caption">
-						Speed drops by 20 feet, disadvantage on strength,
-						dexterity and constitution ability checks, attack
-						rolls and saving throws
-					</td>
-				</tr>
-				<tr>
-					<td>Maximum carrying capacity</td>
-					<td>{{evaluate charId "strength * 15"}}lbs</td>
-					<td class="caption">Speed drops to 5 feet</td>
-				</tr>
-				<tr>
-					<td>Push, drag or lift maximum</td>
-					<td>{{evaluate charId "strength * 30"}}lbs</td>
-					<td class="caption">You can't move more than this weight</td>
-				</tr>
-			</table>
+			{{> carryCapacityTable}}
 			<div class="title padded">Jumping</div>
 			<table class="strengthTable">
 				<tr>

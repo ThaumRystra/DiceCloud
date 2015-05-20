@@ -3,21 +3,31 @@
 		<div id="inventory" class="scroll-y" fit>
 			<div class="column-container">
 				<!--Net Worth-->
-				<paper-shadow class="card" layout horizontal>
-					<div class="indigo white-text subhead left">
-						Net Worth
-					</div>
-					<div class="right" flex>
-						{{valueString netWorth}}
+				<paper-shadow class="card">
+					<div class="white top" layout horizontal center>
+						<div class="subhead" flex>
+							Net Worth
+						</div>
+						<div>
+							{{valueString netWorth}}
+						</div>
 					</div>
 				</paper-shadow>
 				<!--Weight Carried-->
-				<paper-shadow class="card" layout horizontal>
-					<div class="green white-text subhead left">
-						Weight Carried
+				<paper-shadow class="card weightCarried"
+							  hero-id="main" {{detailHero "weightCarried" _id}}>
+					<div class="top green white-text"
+						 hero-id="toolbar" {{detailHero "weightCarried" _id}}
+						 layout horizontal center>
+						<div class="subhead" flex>
+							Weight Carried
+						</div>
+						<div>
+							{{round weightCarried}}lbs
+						</div>
 					</div>
-					<div class="right" flex>
-						{{round weightCarried}}lbs
+					<div class="bottom green" style="padding: 0;">
+						{{> carryCapacityBar}}
 					</div>
 				</paper-shadow>
 				<!--Equipment-->
@@ -51,7 +61,7 @@
 				<!--Carried Items-->
 				<paper-shadow class="card carriedContainer">
 					<div class="white top" layout horizontal center>
-						<div class="subhead">
+						<div class="subhead" flex>
 							Carried
 						</div>
 						<div class="caption" style="margin-right: 8px">
