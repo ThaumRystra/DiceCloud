@@ -179,7 +179,38 @@ var attributeBase = function(charId, statName){
 		{charId: charId, stat: statName, enabled: true}
 	).fetch();
 	effects = _.groupBy(effects, "operation");
-	var value = _.contains(DAMAGE_MULTIPLIERS, statName) ? 1 : 0;
+	var isMultiplier = _.contains(DAMAGE_MULTIPLIERS, statName);
+	var value = 0;
+
+	//if it's a damage multiplier, we treat it specially
+	if (isMultiplier){
+		var resistCount = 0;
+		var vulnCount = 0;
+		var multiplierEvaluationFail = false;
+		_.each(effects.mul, function(effect){
+			var val = evaluateEffect(charId, effect);
+			if (val === 0.5){ //resistance
+				resistCount += 1;
+			} else if (val === 2){ //vulnerability
+				vulnCount += 1;
+			} else if (val === 0){ //imunity
+				return 0; //imunity is absolute
+			} else {
+				multiplierEvaluationFail = true;
+			}
+		});
+		if (multiplierEvaluationFail){
+			//we can't work it out correctly, set the value to 1
+			//and try work it out using regular maths below
+			value = 1;
+		} else if (resistCount && !vulnCount){
+			return 0.5;
+		} else if (!resistCount && vulnCount){
+			return 2;
+		} else {
+			return 1;
+		}
+	}
 
 	//start with the highest base value
 	_.each(effects.base, function(effect){
