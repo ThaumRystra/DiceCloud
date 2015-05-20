@@ -15,6 +15,7 @@ Meteor.publish("singleCharacter", function(characterId){
 			//get all the assets for this character including soft deleted ones
 			Actions.find           ({charId: characterId}, {removed: true}),
 			Attacks.find           ({charId: characterId}, {removed: true}),
+			Buffs.find             ({charId: characterId}, {removed: true}),
 			Classes.find           ({charId: characterId}, {removed: true}),
 			Containers.find        ({charId: characterId}, {removed: true}),
 			Effects.find           ({charId: characterId}, {removed: true}),

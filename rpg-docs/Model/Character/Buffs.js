@@ -1,28 +1,51 @@
 Buffs = new Mongo.Collection("buffs");
 
-//buffs are temporary once applied and store things which expire and their expiry time
 Schemas.Buff = new SimpleSchema({
-	//buff id
-	_id: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		autoValue: function(){
-			if (!this.isSet) return Random.id();
-		},
-	},
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 	},
-	//expiry time
-	expiry:     {type: Number, optional: true},
-	duration:	{type: Number},
+	name: {
+		type: String,
+		trim: false,
+	},
+	description: {
+		type: String,
+		optional: true,
+		trim: false,
+	},
+	enabled: {
+		type: Boolean,
+		defaultValue: true,
+	},
+	type: {
+		type: String,
+		allowedValues: [
+			"inate",
+			"custom",
+		],
+	},
+	"lifeTime.total": {
+		type: Number,
+		defaultValue: 0, //0 is infinite
+		min: 0,
+	},
+	"lifeTime.spent": {
+		type: Number,
+		defaultValue: 0,
+		min: 0,
+	},
+	color: {
+		type: String,
+		allowedValues: _.pluck(colorOptions, "key"),
+		defaultValue: "q",
+	},
 });
 
 Buffs.attachSchema(Schemas.Buff);
 
 Buffs.attachBehaviour("softRemovable");
-makeParent(Buffs, "name"); //parents of effects and attacks
+makeParent(Buffs, ["name", "enabled"]); //parents of effects
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);
