@@ -1,6 +1,9 @@
-Template.characterSheet.created = function(){
+Template.characterSheet.onCreated(function() {
+	//default to the first tab
 	Session.setDefault(this.data._id + ".selectedTab", "stats");
-};
+	//watch this character and make sure their encumbrance is updated
+	trackEncumbranceConditions(this.data._id, this);
+});
 
 var setTab = function(charId, tab){
 	return Session.set(charId + ".selectedTab", tab);
@@ -38,6 +41,13 @@ Template.characterSheet.events({
 			heading: "Share " + this.name,
 			data: this,
 			template: "shareDialog",
+		});
+	},
+	"tap #characterSettings": function(event, instance){
+		GlobalUI.showDialog({
+			heading: this.name + " Settings",
+			data: this,
+			template: "characterSettings",
 		});
 	},
 });

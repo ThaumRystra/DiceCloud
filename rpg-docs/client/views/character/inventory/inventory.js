@@ -61,6 +61,18 @@ Template.inventory.helpers({
 		});
 		return weight;
 	},
+	encumberedBuffs: function(){
+		return Buffs.find({
+			charId: this._id,
+			type: "inate",
+			name: {$in: [
+				"Encumbered",
+				"Heavily encumbered",
+				"Over encumbered",
+				"Can't move load",
+			]},
+		});
+	},
 	equipmentValue: function(){
 		var value = 0;
 		Items.find(
@@ -142,6 +154,15 @@ Template.inventory.events({
 			template: "carryDialog",
 			data:     {charId: charId, color: "green"},
 			heroId:   charId + "weightCarried",
+		});
+	},
+	"tap .buff": function(event){
+		var buffId = this._id;
+		var charId = Template.parentData()._id;
+		GlobalUI.setDetail({
+			template: "buffDialog",
+			data:     {buffId: buffId, charId: charId},
+			heroId:   buffId,
 		});
 	},
 	"tap .inventoryItem": function(event){

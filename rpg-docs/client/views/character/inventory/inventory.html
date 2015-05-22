@@ -14,9 +14,9 @@
 					</div>
 				</paper-shadow>
 				<!--Weight Carried-->
-				<paper-shadow class="card weightCarried"
+				<paper-shadow class="card"
 							  hero-id="main" {{detailHero "weightCarried" _id}}>
-					<div class="top green white-text"
+					<div class="top green white-text weightCarried"
 						 hero-id="toolbar" {{detailHero "weightCarried" _id}}
 						 layout horizontal center>
 						<div class="subhead" flex>
@@ -29,6 +29,25 @@
 					<div class="bottom green" style="padding: 0;">
 						{{> carryCapacityBar}}
 					</div>
+					{{#if encumberedBuffs.count}}
+					<div class="bottom list">
+						{{#each encumberedBuffs}}
+						<div class="item-slot">
+							<div class="item buff"
+								 hero-id="main" {{detailHero}}
+								 layout horizontal center
+								 draggable="true">
+								<div flex>
+									<core-icon icon="work"
+											   style="margin-right: 16px">
+									</core-icon>
+									{{name}}
+								</div>
+							</div>
+						</div>
+						{{/each}}
+					</div>
+					{{/if}}
 				</paper-shadow>
 				<!--Equipment-->
 				<paper-shadow class="card equipmentContainer">

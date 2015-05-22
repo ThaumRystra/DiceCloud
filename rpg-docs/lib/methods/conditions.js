@@ -1,22 +1,30 @@
+var checkWritePermission = function(charId) {
+	if (!Meteor.call("canWriteCharacter", charId)){
+		throw new Meteor.Error(
+			"Access denied",
+			"You do not have permission to edit the assets of this character"
+		);
+	}
+};
+
+var getCondition = function(conditionName) {
+	//get condition from constant
+	var condition = CONDITIONS[conditionName];
+	//check that condition exists
+	if (!condition) {
+		throw new Meteor.Error(
+			"Invalid condition",
+			conditionName + " is not a known condition"
+		);
+	}
+	return condition;
+};
+
 Meteor.methods({
 	giveCondition: function(charId, conditionName) {
-		//check permission
-		if (!Meteor.call("canWriteCharacter", charId)){
-			throw new Meteor.Error(
-				"Access denied",
-				"You do not have permission to edit the assets of this character"
-			);
-		}
-		//get condition from constant
-		var condition = CONDITIONS[conditionName];
-		//check that condition exists
-		if (!condition) {
-			throw new Meteor.Error(
-				"Invalid condition",
-				conditionName + " is not a known condition"
-			);
-		}
-		//extend the buff
+		checkWritePermission(charId);
+		var condition = getCondition(conditionName);
+		//create the buff
 		var buff = _.extend(
 			{charId: charId, type: "inate"}, condition.buff
 		);
@@ -26,29 +34,107 @@ Meteor.methods({
 		if (existingBuffs) return;
 		//remove exclusive conditions
 		_.each(condition.exclusiveConditions, function(exCond) {
-			Buffs.remove(exCond);
+			Meteor.call("removeCondition", charId, exCond);
 		});
 		//insert the buff
 		var buffId = Buffs.insert(buff);
 		//extend and insert each effect
 		_.each(condition.effects, function(effect) {
-			effect = _.extend(
-				effect, {
-					charId: charId,
-					parent: {
-						id: buffId,
-						collection: "Buffs",
-					},
+			var newEffect = {
+				stat: effect.stat,
+				operation: effect.operation,
+				value: effect.value,
+				charId: charId,
+				parent: {
+					id: buffId,
+					collection: "Buffs",
+				},
+				enabled: true,
+			};
+			//we know these effects are right,
+			//skip after hooks, skip validation
+			Effects.direct.insert(
+				newEffect,
+				{
+					validate: false,
+					filter: false,
+					autoConvert: false,
+					removeEmptyStrings: false,
 				}
 			);
-			Effects.insert(effect);
 		});
 		//recurse for subConditions
 		_.each(condition.subConditions, function(subCondition) {
 			Meteor.call("giveCondition", charId, subCondition);
 		});
-	}
+	},
+	removeCondition: function(charId, conditionName) {
+		checkWritePermission(charId);
+		var condition = getCondition(conditionName);
+		//remove the buff
+		var buff = _.extend(
+			{charId: charId, type: "inate"}, condition.buff
+		);
+		Buffs.remove(buff);
+		//dont remove the effects, they get removed automatically through parenting
+	},
 });
+
+trackEncumbranceConditions = function(charId, templateInstance) {
+	templateInstance.autorun(function() {
+		//get weight
+		var weight = 0;
+		Containers.find(
+			{charId: charId, isCarried: true},
+			{fields: {weight: 1}}
+		).forEach(function(container){
+			weight += container.totalWeight();
+		});
+		Items.find(
+			{charId: charId, "parent.id": charId},
+			{fields: {weight : 1, quantity: 1}}
+		).forEach(function(item){
+			weight += item.totalWeight();
+		});
+		var character = Characters.findOne(
+			charId,
+			{fields: {strength: 1, "settings": 1}}
+		);
+		var strength = character.attributeValue("strength");
+		var give = function(condition) {
+			Meteor.call("giveCondition", charId, condition);
+		};
+		var remove = function(condition) {
+			Meteor.call("removeCondition", charId, condition);
+		};
+		//variant encumbrance rules
+		if (weight > strength * 10 &&
+			character.settings.useVariantEncumbrance) {
+			give("encumbered2");
+			remove("encumbered");
+		} else if (weight > strength * 5 &&
+				   character.settings.useVariantEncumbrance){
+			give("encumbered");
+			remove("encumbered2");
+		} else {
+			remove("encumbered");
+			remove("encumbered2");
+		}
+		//normal encumbrance rules
+		if (weight > strength * 30 &&
+			character.settings.useStandardEncumbrance){
+			give("encumbered4");
+			remove("encumbered3");
+		} else if (weight > strength * 15 &&
+				   character.settings.useStandardEncumbrance) {
+			give("encumbered3");
+			remove("encumbered4");
+		} else {
+			remove("encumbered3");
+			remove("encumbered4");
+		}
+	});
+};
 
 CONDITIONS = {
 	//Conditions
@@ -315,25 +401,16 @@ CONDITIONS = {
 	encumbered: {
 		buff: {
 			name: "Encumbered",
-			description: "Encumbered characters move 10 feet slower",
+			description: "Encumbered characters move 10 feet slower.",
 		},
 		effects: [
-			{
-				stat: "speed",
-				operation: "add",
-				value: -10,
-			}
-		],
-		exclusiveConditions: [
-			"heavilyEncumbered",
-			"overEncumbered",
-			"cantLift",
+			{stat: "speed", operation: "add", value: -10}
 		],
 	},
-	heavilyEncumbered: {
+	encumbered2: {
 		buff: {
 			name: "Heavily encumbered",
-			description: "Heavily encumbered characters move 20 feet slower and have disadvantage on ability checks, attack rolls, and saving thows that use Strength, Dexterity, or Constitution",
+			description: "Heavily encumbered characters move 20 feet slower and have disadvantage on ability checks, attack rolls, and saving thows that use Strength, Dexterity, or Constitution.",
 		},
 		effects: [
 			{stat: "speed", operation: "add", value: -20},
@@ -346,54 +423,23 @@ CONDITIONS = {
 			{stat: "stealth", operation: "disadvantage", value: 1},
 			{stat: "initiative", operation: "disadvantage", value: 1},
 		],
-		exclusiveConditions: [
-			"encumbered",
-			"overEncumbered",
-			"cantLift",
-		],
 	},
-	overEncumbered: {
+	encumbered3: {
 		buff: {
 			name: "Over encumbered",
-			description: "Characters that can only just lift, push or drag their current load can only move at 5 feet and have disadvantage on ability checks, attack rolls, and saving thows that use Strength, Dexterity, or Constitution",
+			description: "Characters that can only just lift, push or drag their current load move at 5 feet.",
 		},
 		effects: [
 			{stat: "speed", operation: "max", value: 5},
-			{stat: "strengthSave", operation: "disadvantage", value: 1},
-			{stat: "dexteritySave", operation: "disadvantage", value: 1},
-			{stat: "constitutionSave", operation: "disadvantage", value: 1},
-			{stat: "athletics", operation: "disadvantage", value: 1},
-			{stat: "acrobatics", operation: "disadvantage", value: 1},
-			{stat: "sleightOfHand", operation: "disadvantage", value: 1},
-			{stat: "stealth", operation: "disadvantage", value: 1},
-			{stat: "initiative", operation: "disadvantage", value: 1},
-		],
-		exclusiveConditions: [
-			"encumbered",
-			"heavilyEncumbered",
-			"cantLift",
 		],
 	},
-	cantLift: {
+	encumbered4: {
 		buff: {
 			name: "Can't move load",
-			description: "This character cannot lift, push, or drag more than {30 * strength} pounds. Characters attempting to carry more than what they can lift, push, or drag can't move and have disadvantage on ability checks, attack rolls, and saving thows that use Strength, Dexterity, or Constitution",
+			description: "Characters attempting to carry more than what they can lift, push, or drag can't move.",
 		},
 		effects: [
 			{stat: "speed", operation: "max", value: 0},
-			{stat: "strengthSave", operation: "disadvantage", value: 1},
-			{stat: "dexteritySave", operation: "disadvantage", value: 1},
-			{stat: "constitutionSave", operation: "disadvantage", value: 1},
-			{stat: "athletics", operation: "disadvantage", value: 1},
-			{stat: "acrobatics", operation: "disadvantage", value: 1},
-			{stat: "sleightOfHand", operation: "disadvantage", value: 1},
-			{stat: "stealth", operation: "disadvantage", value: 1},
-			{stat: "initiative", operation: "disadvantage", value: 1},
-		],
-		exclusiveConditions: [
-			"encumbered",
-			"heavilyEncumbered",
-			"overEncumbered",
 		],
 	},
 };

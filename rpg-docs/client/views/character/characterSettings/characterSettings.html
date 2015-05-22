@@ -1,3 +1,13 @@
 <template name="characterSettings">
-
+	{{#with character}}
+	<div>
+		<div layout horizontal>
+			<div>Use variant encumbrance </div>
+			<paper-toggle-button id="variantEncumbrance"
+								 checked={{settings.useVariantEncumbrance}}
+								 touch-action="pan-y">
+			</paper-toggle-button>
+		</div>
+	</div>
+	{{/with}}
 </template>

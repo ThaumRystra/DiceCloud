@@ -90,3 +90,21 @@ Migrations.add({
 		);
 	},
 });
+
+Migrations.add({
+	version: 3,
+	name: "Converts attacks from damage dice and damage bonus to a string with curly bracket calculations, adds settings.showIncrement to items",
+	up: function() {
+		//update characters
+		Characters.update(
+			{"settings.useVariantEncumbrance": undefined},
+			{$set: {"settings.useVariantEncumbrance" : false}},
+			{validate: false, multi: true}
+		);
+		Characters.update(
+			{"settings.useStandardEncumbrance": undefined},
+			{$set: {"settings.useStandardEncumbrance" : true}},
+			{validate: false, multi: true}
+		);
+	},
+});

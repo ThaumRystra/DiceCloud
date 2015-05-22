@@ -168,26 +168,26 @@ Schemas.Character = new SimpleSchema({
 		defaultValue: "q",
 	},
 	//TODO add per-character settings
-	"settings.experiencesInc": {type: Number, defaultValue: 20}, //how many experiences to load at a time in XP table
+	//how many experiences to load at a time in XP table
+	"settings.experiencesInc": {type: Number, defaultValue: 20},
+	//slowed down by carrying too much?
+	"settings.useVariantEncumbrance": {type: Boolean, defaultValue: false},
+	"settings.useStandardEncumbrance": {type: Boolean, defaultValue: true},
 });
 
 Characters.attachSchema(Schemas.Character);
 
 var attributeBase = function(charId, statName){
 	check(statName, String);
-	var effects = Effects.find(
-		{charId: charId, stat: statName, enabled: true}
-	).fetch();
-	effects = _.groupBy(effects, "operation");
-	var isMultiplier = _.contains(DAMAGE_MULTIPLIERS, statName);
-	var value = 0;
-
 	//if it's a damage multiplier, we treat it specially
-	if (isMultiplier){
+	if (_.contains(DAMAGE_MULTIPLIERS, statName)){
+		var effects = Effects.find(
+			{charId: charId, stat: statName, enabled: true, operation: "mul"}
+		).fetch();
 		var resistCount = 0;
 		var vulnCount = 0;
 		var multiplierEvaluationFail = false;
-		_.each(effects.mul, function(effect){
+		_.each(effects, function(effect){
 			var val = evaluateEffect(charId, effect);
 			if (val === 0.5){ //resistance
 				resistCount += 1;
@@ -212,8 +212,12 @@ var attributeBase = function(charId, statName){
 		}
 	}
 
+	var value = 0;
+
 	//start with the highest base value
-	_.each(effects.base, function(effect){
+	Effects.find(
+		{charId: charId, stat: statName, enabled: true, operation: "base"}
+	).forEach(function(effect){
 		var efv = evaluateEffect(charId, effect);
 		if (efv > value){
 			value = efv;
@@ -221,23 +225,31 @@ var attributeBase = function(charId, statName){
 	});
 
 	//add all the add values
-	_.each(effects.add, function(effect){
+	Effects.find(
+		{charId: charId, stat: statName, enabled: true, operation: "add"}
+	).forEach(function(effect){
 		value += evaluateEffect(charId, effect);
 	});
 
 	//multiply all the mul values
-	_.each(effects.mul, function(effect){
+	Effects.find(
+		{charId: charId, stat: statName, enabled: true, operation: "mul"}
+	).forEach(function(effect){
 		value *= evaluateEffect(charId, effect);
 	});
 
 	//ensure value is >= all mins
-	_.each(effects.min, function(effect){
+	Effects.find(
+		{charId: charId, stat: statName, enabled: true, operation: "min"}
+	).forEach(function(effect){
 		var min = evaluateEffect(charId, effect);
 		value = value > min ? value : min;
 	});
 
 	//ensure value is <= all maxes
-	_.each(effects.max, function(effect){
+	Effects.find(
+		{charId: charId, stat: statName, enabled: true, operation: "max"}
+	).forEach(function(effect){
 		var max = evaluateEffect(charId, effect);
 		value = value < max ? value : max;
 	});
