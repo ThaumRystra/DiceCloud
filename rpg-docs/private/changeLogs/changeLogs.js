@@ -114,8 +114,14 @@ ChangeLogs.insert({
 		"Fixed a bug that caused multiple resistances or vulnerabilities to combine incorrectly",
 		"Added encumbrance effects that automatically apply when carrying too much load",
 		"Added a bunch of UI elements to make your character's current load clear",
-		"Character data is now chached, swapping between two characters should be faster",
 		"Floating button menus now close as expected when you click a sub-button",
 		"Base values in attribute summaries no longer look like added values"
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.5.1",
+	changes: [
+		"Characters are now cached and should take much faster to load when swapping between them",
 	],
 });

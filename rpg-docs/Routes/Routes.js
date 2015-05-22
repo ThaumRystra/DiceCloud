@@ -31,7 +31,7 @@ Router.map(function() {
 	this.route("characterList", {
 		path: "/characterList",
 		waitOn: function(){
-			return Meteor.subscribe("characterList", Meteor.userId());
+			return subsManager.subscribe("characterList", Meteor.userId());
 		},
 		data: {
 			characters: function(){
@@ -47,7 +47,7 @@ Router.map(function() {
 		path: "/character/:_id",
 		waitOn: function(){
 			return [
-				Meteor.subscribe("singleCharacter", this.params._id, Meteor.userId()),
+				subsManager.subscribe("singleCharacter", this.params._id, Meteor.userId()),
 			];
 		},
 		data: function() {
@@ -81,7 +81,7 @@ Router.map(function() {
 		name: "changeLog",
 		waitOn: function() {
 			return [
-				Meteor.subscribe("changeLog"),
+				subsManager.subscribe("changeLog"),
 			]
 		},
 		data: {
