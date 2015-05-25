@@ -129,6 +129,7 @@ ChangeLogs.insert({
 ChangeLogs.insert({
 	version: "0.5.2",
 	changes: [
+		"Opened the beta up to the general public",
 		"Added performance monitoring",
 	],
 });
