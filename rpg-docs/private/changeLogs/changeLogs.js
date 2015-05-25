@@ -125,3 +125,10 @@ ChangeLogs.insert({
 		"Characters are now cached and should take much faster to load when swapping between them",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.5.2",
+	changes: [
+		"Added performance monitoring",
+	],
+});
