@@ -46,6 +46,12 @@ Meteor.methods({
 		});
 		report.owner = this.userId;
 		Reports.insert(report);
+		Email.send({
+			from: "reports@dicecloud.com",
+			to: "stefan.zermatten@gmail.com",
+			subject: "DiceCloud feedback - " + report.title,
+			text: JSON.stringify(report, null, '\t'),
+		});
 	},
 	deleteReport: function(id) {
 		var user = Meteor.users.findOne(this.userId);
