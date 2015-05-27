@@ -57,40 +57,40 @@ var stats = {
 	"d12HitDice":{"name":"d12 Hit Dice"},
 	"acidMultiplier":{"name":"Acid damage", "group": "Weakness/Resistance"},
 	"bludgeoningMultiplier":{
-		"name":"Bludgeoning damage", "group": "Weakness/Resistance"
+		"name":"Bludgeoning damage", "group": "Weakness/Resistance",
 	},
 	"coldMultiplier":{
-		"name":"Cold damage", "group": "Weakness/Resistance"
+		"name":"Cold damage", "group": "Weakness/Resistance",
 	},
 	"fireMultiplier":{
-		"name":"Fire damage", "group": "Weakness/Resistance"
+		"name":"Fire damage", "group": "Weakness/Resistance",
 	},
 	"forceMultiplier":{
-		"name":"Force damage", "group": "Weakness/Resistance"
+		"name":"Force damage", "group": "Weakness/Resistance",
 	},
 	"lightningMultiplier":{
-		"name":"Lightning damage", "group": "Weakness/Resistance"
+		"name":"Lightning damage", "group": "Weakness/Resistance",
 	},
 	"necroticMultiplier":{
-		"name":"Necrotic damage", "group": "Weakness/Resistance"
+		"name":"Necrotic damage", "group": "Weakness/Resistance",
 	},
 	"piercingMultiplier":{
-		"name":"Piercing damage", "group": "Weakness/Resistance"
+		"name":"Piercing damage", "group": "Weakness/Resistance",
 	},
 	"poisonMultiplier":{
-		"name":"Poison damage", "group": "Weakness/Resistance"
+		"name":"Poison damage", "group": "Weakness/Resistance",
 	},
 	"psychicMultiplier":{
-		"name":"Psychic damage", "group": "Weakness/Resistance"
+		"name":"Psychic damage", "group": "Weakness/Resistance",
 	},
 	"radiantMultiplier":{
-		"name":"Radiant damage", "group": "Weakness/Resistance"
+		"name":"Radiant damage", "group": "Weakness/Resistance",
 	},
 	"slashingMultiplier":{
-		"name":"Slashing damage", "group": "Weakness/Resistance"
+		"name":"Slashing damage", "group": "Weakness/Resistance",
 	},
 	"thunderMultiplier":{
-		"name":"Thunder damage", "group": "Weakness/Resistance"
+		"name":"Thunder damage", "group": "Weakness/Resistance",
 	},
 };
 
@@ -110,8 +110,8 @@ var operations = {
 Template.effectView.helpers({
 	sourceName: function(){
 		var id = this.parent.id;
-		if(!id) return;
-		switch(this.parent.collection){
+		if (!id) return;
+		switch (this.parent.collection){
 			case "Features":
 				return "Feature - " + Features.findOne(id, {fields: {name: 1}}).name;
 			case "Classes":
@@ -130,33 +130,39 @@ Template.effectView.helpers({
 		return stats[this.stat] && stats[this.stat].name || "No Stat";
 	},
 	operationName: function(){
-		if(this.operation === "proficiency" ||
+		if (this.operation === "proficiency" ||
 		   this.operation === "conditional") return null;
-		if(stats[this.stat].group === "Weakness/Resistance") return null;
-		if(this.operation === "add" && evaluateEffect(this.charId, this) < 0) return null;
-		return operations[this.operation] && operations[this.operation].name || "No Operation";
+		if (stats[this.stat] && stats[this.stat].group === "Weakness/Resistance")
+			return null;
+		if (this.operation === "add" && evaluateEffect(this.charId, this) < 0)
+			return null;
+		return operations[this.operation] &&
+			operations[this.operation].name || "No Operation";
 	},
 	statValue: function(){
-		if(this.operation === "advantage" ||
+		if (this.operation === "advantage" ||
 		   this.operation === "disadvantage" ||
 		   this.operation === "fail"){
 			return null;
 		}
-		if(this.operation === "proficiency"){
-			if(this.value == 0.5 || this.calculation == 0.5) return "Half Proficiency";
-			if(this.value == 1   || this.calculation == 1)   return "Proficiency";
-			if(this.value == 2   || this.calculation == 2)   return "Double Proficiency";
+		if (this.operation === "proficiency"){
+			if (this.value == 0.5 || this.calculation == 0.5)
+				return "Half Proficiency";
+			if (this.value == 1   || this.calculation == 1)
+				return "Proficiency";
+			if (this.value == 2   || this.calculation == 2)
+				return "Double Proficiency";
 		}
-		if(this.operation === "conditional"){
+		if (this.operation === "conditional"){
 			return this.calculation || this.value;
 		}
-		if(stats[this.stat].group === "Weakness/Resistance"){
-			if(this.value === 0.5) return "Resistance";
-			if(this.value === 2)   return "Vulnerability";
-			if(this.value === 0)   return "Immunity";
+		if (stats[this.stat].group === "Weakness/Resistance"){
+			if (this.value === 0.5) return "Resistance";
+			if (this.value === 2)   return "Vulnerability";
+			if (this.value === 0)   return "Immunity";
 		}
 		var value = evaluateEffect(this.charId, this);
-		if(_.isNumber(value)) return value;
+		if (_.isNumber(value)) return value;
 		return this.calculation || this.value;
-	}
+	},
 });
