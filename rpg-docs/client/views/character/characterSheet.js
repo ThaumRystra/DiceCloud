@@ -17,6 +17,10 @@ Template.characterSheet.helpers({
 	selectedTab: function(){
 		return getTab(this._id);
 	},
+	hideSpellcasting: function() {
+		var char = Characters.findOne(this._id);
+		return char && char.settings.hideSpellcasting;
+	}
 });
 
 Template.characterSheet.events({

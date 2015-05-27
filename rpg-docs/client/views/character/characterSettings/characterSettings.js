@@ -14,4 +14,13 @@ Template.characterSettings.events({
 			);
 		}
 	},
+	"change #hideSpellcasting": function(event, instance){
+		var value = instance.find("#hideSpellcasting").checked;
+		if (this.settings.hideSpellcasting !== value){
+			Characters.update(
+				this._id,
+				{$set: {"settings.hideSpellcasting": value}}
+			);
+		}
+	},
 });

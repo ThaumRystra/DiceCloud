@@ -31,7 +31,9 @@
 				<paper-tab name="stats">Stats</paper-tab>
 				<paper-tab name="features">Features</paper-tab>
 				<paper-tab name="inventory">Inventory</paper-tab>
+				{{#unless hideSpellcasting}}
 				<paper-tab name="spells">Spells</paper-tab>
+				{{/unless}}
 				<paper-tab name="persona">Persona</paper-tab>
 				<paper-tab name="journal">Journal</paper-tab>
 			</paper-tabs>
@@ -42,7 +44,9 @@
 			<section flex name="stats">{{> stats}}</section>
 			<section flex name="features">{{> features}}</section>
 			<section flex name="inventory">{{> inventory}}</section>
+			{{#unless hideSpellcasting}}
 			<section flex name="spells">{{> spells}}</section>
+			{{/unless}}
 			<section flex name="persona">{{> persona}}</section>
 			<section flex name="journal">{{> journal}}</section>
 		</core-animated-pages>

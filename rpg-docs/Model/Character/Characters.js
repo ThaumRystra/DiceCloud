@@ -159,6 +159,7 @@ Schemas.Character = new SimpleSchema({
 	deathSave:      {type: Schemas.DeathSave},
 
 	//permissions
+	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id},
 	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
 	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
@@ -173,6 +174,8 @@ Schemas.Character = new SimpleSchema({
 	//slowed down by carrying too much?
 	"settings.useVariantEncumbrance": {type: Boolean, defaultValue: false},
 	"settings.useStandardEncumbrance": {type: Boolean, defaultValue: true},
+	//hide spellcasting
+	"settings.hideSpellcasting": {type: Boolean, defaultValue: false},
 });
 
 Characters.attachSchema(Schemas.Character);
