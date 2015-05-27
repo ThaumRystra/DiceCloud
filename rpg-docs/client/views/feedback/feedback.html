@@ -25,6 +25,13 @@
 			</paper-autogrow-textarea>
 		</paper-input-decorator>
 	</div>
-	<paper-button id="cancelButton" affirmative>Cancel</paper-button>
-	<paper-button id="sendButton"   affirmative>Send  </paper-button>
+	<paper-button id="cancelButton"
+				  affirmative>
+		Cancel
+	</paper-button>
+	<paper-button id="sendButton"
+				  affirmative
+				  disabled={{invalid}}>
+		Send
+	</paper-button>
 </template>

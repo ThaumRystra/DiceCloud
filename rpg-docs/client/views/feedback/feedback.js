@@ -1,4 +1,23 @@
+Template.feedback.onCreated(function() {
+	this.title = new ReactiveVar("");
+	this.description = new ReactiveVar("");
+});
+
+Template.feedback.helpers({
+	invalid: function() {
+		var inst = Template.instance();
+		return !inst.title.get() ||
+			!inst.description.get();
+	}
+});
+
 Template.feedback.events({
+	"input #feedbackTitle": function(event, instance) {
+		instance.title.set(instance.find("#feedbackTitle").value);
+	},
+	"input #feedbackDescription": function(event, instance) {
+		instance.description.set(instance.find("#feedbackDescription").value);
+	},
 	"tap #sendButton": function(event, instance) {
 		var report = {};
 		report.title = instance.find("#feedbackTitle").value;

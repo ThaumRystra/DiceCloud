@@ -50,7 +50,7 @@ Meteor.methods({
 			from: "reports@dicecloud.com",
 			to: "stefan.zermatten@gmail.com",
 			subject: "DiceCloud feedback - " + report.title,
-			text: JSON.stringify(report, null, '\t'),
+			text: JSON.stringify(_.omit(report, "metaData"), null, '\t'),
 		});
 	},
 	deleteReport: function(id) {
