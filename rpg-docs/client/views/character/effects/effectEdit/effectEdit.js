@@ -93,24 +93,17 @@ var skillOperations = [
 	{name: "Conditional Benefit", operation: "conditional"}
 ];
 
-Template.effectEdit.created = function(){
-	var statGroup = statsDict[this.data.stat] && statsDict[this.data.stat].group;
-	this.selectedStatGroup = new ReactiveVar(statGroup);
-};
-
 Template.effectEdit.helpers({
-	selectedStatGroup: function(){
-		return Template.instance().selectedStatGroup.get();
-	},
 	statGroups: function(){
 		return statGroupNames;
 	},
 	stats: function(){
-		var group = Template.instance().selectedStatGroup.get();
+		var group = this;
 		return statGroups[group];
 	},
 	operations: function(){
-		var group = Template.instance().selectedStatGroup.get();
+		var stat = statsDict[this.stat];
+		var group = stat && stat.group;
 		if (group === "Weakness/Resistance") return null;
 		if (group === "Saving Throws" || group === "Skills"){
 			return skillOperations;
@@ -120,7 +113,8 @@ Template.effectEdit.helpers({
 	},
 	effectValueTemplate: function(){
 		//resistance/vulnerability template
-		var group = Template.instance().selectedStatGroup.get();
+		var stat = statsDict[this.stat];
+		var group = stat && stat.group;
 		if (group === "Weakness/Resistance") return "multiplierEffectValue";
 
 		var op = this.operation;
@@ -143,25 +137,6 @@ Template.effectEdit.events({
 	"tap .deleteEffect": function(event){
 		Effects.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Effects", "Effect");
-	},
-	"core-select .statGroupDropDown": function(event, instance){
-		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
-		var groupName = detail.item.getAttribute("name");
-		var oldName = Template.instance().selectedStatGroup.get();
-		if (oldName != groupName){
-			instance.selectedStatGroup.set(groupName);
-			if (groupName === "Weakness/Resistance"){
-				Effects.update(this._id, {$set: {
-					value: 0.5,
-					calculation: "",
-					operation: "mul"}, $unset: {stat: ""}});
-			} else {
-				Effects.update(this._id,
-							   {$set: {operation: "add"},
-								$unset: {stat: "", value: "", calculation: ""}});
-			}
-		}
 	},
 	"core-select .statDropDown": function(event){
 		var detail = event.originalEvent.detail;

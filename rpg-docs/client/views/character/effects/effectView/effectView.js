@@ -156,7 +156,7 @@ Template.effectView.helpers({
 		if (this.operation === "conditional"){
 			return this.calculation || this.value;
 		}
-		if (stats[this.stat].group === "Weakness/Resistance"){
+		if (stats[this.stat] && stats[this.stat].group === "Weakness/Resistance"){
 			if (this.value === 0.5) return "Resistance";
 			if (this.value === 2)   return "Vulnerability";
 			if (this.value === 0)   return "Immunity";

@@ -1,21 +1,13 @@
-body /deep/ #statGroupDropDown {
-	width: 120px;
+html /deep/ .operationDropDown {
+	width: 152px;
 }
 
-body /deep/ #statDropDown {
-	width: 120px;
+html /deep/ .statDropDown {
+	width: 152px;
 }
 
-body /deep/ #operationDropDown {
-	width: 100px;
-}
-
-body /deep/ #damageMultiplierDropDown {
-	width: 120px;
-}
-
-body /deep/ #proficiencyDropDown {
-	width: 120px;
+html /deep/ .damageMultiplierDropDown {
+	width: 152px;
 }
 
 html /deep/ .effectEdit paper-input {
@@ -24,6 +16,7 @@ html /deep/ .effectEdit paper-input {
 }
 
 html /deep/ .effectEdit {
+	height: 64px;
 	display: flex;
 	align-items: flex-end;
 }

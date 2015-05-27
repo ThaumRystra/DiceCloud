@@ -1,27 +1,23 @@
 <template name="effectEdit">
 	<div class="effectEdit" layout horizontal center>
-		<paper-dropdown-menu class="statGroupDropDown" label="Stat Group" flex>
-			<paper-dropdown layered class="dropdown">
-				<core-menu class="menu statGroupMenu" selected={{selectedStatGroup}}>
-					{{#each statGroups}}
-						<paper-item class="statGroupSelect" name={{this}}>{{this}}</paper-item>
-					{{/each}}
-				</core-menu>
-			</paper-dropdown>
-		</paper-dropdown-menu>
-		{{#if stats}}
-			<paper-dropdown-menu class="statDropDown" label="Stat" flex>
-				<paper-dropdown layered class="dropdown">
-					<core-menu class="menu statMenu"  selected={{stat}} on-tap="onStatMenuTap">
-						{{#each stats}}
-							<paper-item name={{stat}}>{{name}}</paper-item>
+		<paper-dropdown-menu class="statDropDown"
+							 label="Stat">
+			<paper-dropdown layered
+							class="dropdown">
+					<core-menu class="menu statMenu" selected={{stat}}>
+						{{#each statGroups}}
+							<div style="font-weight: bold;
+										margin-top: 16px;">{{this}}</div>
+							{{#each stats}}
+								<paper-item name={{stat}}>{{name}}</paper-item>
+							{{/each}}
 						{{/each}}
 					</core-menu>
-				</paper-dropdown>
-			</paper-dropdown-menu>
-		{{/if}}
+			</paper-dropdown>
+		</paper-dropdown-menu>
 		{{#if operations}}
-			<paper-dropdown-menu class="operationDropDown" label="Operation" flex>
+			<paper-dropdown-menu class="operationDropDown"
+								 label="Operation">
 				<paper-dropdown layered class="dropdown">
 					<core-menu class="menu operationMenu" selected={{operation}}>
 						{{#each operations}}
@@ -31,24 +27,39 @@
 				</paper-dropdown>
 			</paper-dropdown-menu>
 		{{/if}}
-		{{> Template.dynamic template=effectValueTemplate}}
-		<paper-icon-button class="deleteEffect" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
+		{{#if effectValueTemplate}}
+			{{> Template.dynamic template=effectValueTemplate}}
+		{{else}}
+			<div flex></div>
+		{{/if}}
+		<paper-icon-button class="deleteEffect"
+						   icon="delete">
+		</paper-icon-button>
 		<br>
 	</div>
 </template>
 
 <template name="regularEffectValue">
-	<paper-input class="effectValueInput" label="Value" floatinglabel value={{effectValue}} flex></paper-input>
+	<paper-input class="effectValueInput" 
+				 label="Value" 
+				 floatinglabel 
+				 value={{effectValue}} 
+				 flex>
+	</paper-input>
 </template>
 
 <template name="multiplierEffectValue">
-	<paper-dropdown-menu class="damageMultiplierDropDown" label="Damage Multiplier" flex>
-		<paper-dropdown layered class="dropdown">
-			<core-menu class="menu multiplierMenu" selected={{value}}>
+	<paper-dropdown-menu class="damageMultiplierDropDown"
+						 label="Damage Multiplier">
+		<paper-dropdown layered
+						class="dropdown">
+			<core-menu class="menu multiplierMenu"
+					   selected={{value}}>
 				<paper-item name="0.5">Resistance</paper-item>
 				<paper-item name="2">Vulnerability</paper-item>
 				<paper-item name="0">Immunity</paper-item>
 			</core-menu>
 		</paper-dropdown>
 	</paper-dropdown-menu>
+	<div flex></div>
 </template>
