@@ -133,3 +133,14 @@ ChangeLogs.insert({
 		"Added performance monitoring",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.5.2",
+	changes: [
+		"Prevented a harmless error caused by effects which have no stat set",
+		"Added the ability to hide the spells tab",
+		"Feedback forms now give me push notifications",
+		"Feedback forms now won't send unless properly filled out",
+		"Overhauled how effects' stats are chosen",
+	],
+});
