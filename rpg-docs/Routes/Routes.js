@@ -6,6 +6,7 @@ Router.configure({
 Router.plugin("ensureSignedIn", {
 	except: [
 		"home",
+		"characterSheet",
 		"atSignIn",
 		"atSignUp",
 		"atForgotPassword",

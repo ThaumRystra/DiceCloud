@@ -1,0 +1,12 @@
+.intro {
+	.fullwidth {
+		width: 100%;
+		padding: 16px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		p, h1 {
+			max-width: 450px;
+		}
+	}
+}

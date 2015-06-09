@@ -14,10 +14,11 @@ Template.baseDialog.helpers({
 	showEdit: function() {
 		if (this.hideEdit) return false;
 		var charId = Template.parentData().charId;
+		var userId = Meteor.userId();
+		if (!userId) return false;
 		if (charId){
 			var char = Characters.findOne(charId);
-			var userId = Meteor.userId();
-			if (char && userId)
+			if (char)
 				return char.owner === userId ||
 					_.contains(char.writers, userId);
 		}
