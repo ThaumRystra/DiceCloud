@@ -51,6 +51,9 @@ Meteor.methods({
 			user.emails &&
 			user.emails[0] &&
 			user.emails[0].address ||
+			user.services &&
+			user.services.google &&
+			user.services.google.email ||
 			"reports@dicecloud.com";
 		var bodyText = "Report ID: " + id +
 			"\nSeverity: " + report.severity +
