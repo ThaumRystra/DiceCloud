@@ -151,3 +151,10 @@ ChangeLogs.insert({
 		"Fixed rounding error on net worth calculation",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.5.5",
+	changes: [
+		"Fixed reports from google users not correctly storing the reply-to email address",
+	],
+});
