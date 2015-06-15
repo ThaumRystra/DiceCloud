@@ -4,18 +4,9 @@ Router.configure({
 });
 
 Router.plugin("ensureSignedIn", {
-	except: [
-		"home",
-		"characterSheet",
-		"atSignIn",
-		"atSignUp",
-		"atForgotPassword",
-		"atResetPwd",
-		"atEnrollAccount",
-		"atVerifyEmail",
-		"atResendVerificationEmail",
-		"loginButtons",
-		"notFound",
+	only: [
+		"profile",
+		"characterList",
 	]
 });
 
@@ -90,6 +81,13 @@ Router.map(function() {
 				return ChangeLogs.find({}, {sort: {version: -1}});
 			}
 		},
+		onAfterAction: function() {
+			document.title = appName;
+		},
+	});
+
+	this.route("/guide", {
+		name: "guide",
 		onAfterAction: function() {
 			document.title = appName;
 		},

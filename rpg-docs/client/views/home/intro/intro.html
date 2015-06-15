@@ -1,53 +1,89 @@
 <template name="intro">
 	<div class="intro">
-		<div class="fullwidth">
-			<h1>
-				Online, realtime, unofficial D&amp;D 5e app.
-			</h1>
-			<p>
+		<div class="section white-text" style="background: #282828">
+			<div class="display2">
+				Dice Cloud
+			</div>
+			<img style="width:130px; height:130px; background-color: #282828;"
+						src="/crown-dice-logo-cropped-transparent.png">
+			<div class="display1">
+				Unofficial Online Realtime D&amp;D 5e App
+			</div>
+			<h2>
 				Spend less time shuffling paper and more time playing the game
-			</p>
+			</h2>
+			{{#unless currentUser}}
+			<div layout horizontal around-justified wrap>
+				<paper-button class="red white-text signInButton"
+							  style="margin: 16px;"
+							  raised>
+					Sign In
+				</paper-button>
+				<paper-button class="red white-text signUpButton"
+							  style="margin: 16px;"
+							  raised>
+					Sign Up
+				</paper-button>
+			</div>
+			{{else}}
+			<div style="padding-bottom: 0;"></div>
+			{{/unless}}
 		</div>
-		<div class="fullwidth">
-			<h1>Open Beta</h1>
-			<p>Free to use, updates almost every week</p>
+		<div class="section" style="background-color: #e9e9e9;">
+			<div>
+				<div class="display1">Character Sheet Open Beta</div>
+				<h2 style="margin-bottom: 16px;">
+					Check out the example characters
+				</h2>
+				<div layout horizontal around-justified wrap>
+					<paper-shadow class="card characterCard ssArcher clickable"
+								  z="2">
+						<div class="top subhead green white-text">
+							<div class="subhead" flex>
+								Starter Set Archer
+							</div>
+						</div>
+						<div class="bottom text">Lawful Good Human</div>
+					</paper-shadow>
+				</div>
+			</div>
 		</div>
-		<div class="fullwidth">
-			<h1>See it in action</h1>
-			<a href="/character/yBWwt5XQTTHZiRQxq">Starter Set Archer</a>
-		</div>
-		<div class="fullwidth">
-			<h1>Check out the guide</h1>
-			<p>Learn how your class gives you features, those features have effects, and those effects determine your stats.</p>
-		</div>
-		<div class="fullwidth">
-			<h1>
-				Discuss
-			</h1>
-			<p>
-				On the official 
-				<a href="http://reddit.com/r/dicecloud">
-					DiceCloud subreddit
-				</a>
-			</p>
-		</div>
-		<div class="fullwidth">
-			<h1>
-				Get involved
-			</h1>
-			<p>Shape upcoming features and track bugs on the 
-				<a href="https://trello.com/b/94M0SCnq/dicecloud-roadmap">
-					DiceCloud Trello board
-				</a>
-			</p>
-		</div>
-		<div class="fullwidth">
-			<h1>
-				Send feedback instantly
-			</h1>
-			<p>
-				Use the feedback button in the sidebar to drop the developer a direct message
-			</p>
+		<div class="section white-text" style="background: #282828">
+			<div class="columns" layout horizontal around-justified wrap>
+				<div>
+					<h1>Check out the guide</h1>
+					<p>
+						Learn how your class gives you features, those features have effects,
+						and those effects determine your stats.
+						<paper-button class="guideButton">View Guide</paper-button>
+					</p>
+				</div>
+				<div>
+					<h1>
+						Discuss
+					</h1>
+					<p>
+						On the official subreddit
+						<paper-button class="redditButton">
+							<a href="http://www.reddit.com/r/dicecloud/">
+								/r/dicecloud
+							</a>
+						</paper-button>
+					</p>
+				</div>
+				<div>
+					<h1>
+						Get involved
+					</h1>
+					<p>Shape upcoming features and track bugs on the Dice Cloud Trello board
+						<paper-button class="trelloButton">
+							<a href="https://trello.com/b/94M0SCnq/dicecloud-roadmap">
+								Trello Roadmap
+							</a>
+						</paper-button>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>

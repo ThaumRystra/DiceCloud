@@ -1,28 +1,9 @@
-<template name="home">	
-	<core-toolbar class="medium-tall {{colorClass}}">
+<template name="home">
+	<core-toolbar class="app-grey white-text">
 		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
 		<div flex>
-			DiceCloud
-		</div>
-		<div class="bottom fit" horizontal layout>
-			<paper-tabs flex horizontal center layout selected={{selectedTab}} class="grey white-text homeTabs">
-				<paper-tab name="stats">Home</paper-tab>
-				<paper-tab name="features">Guide</paper-tab>
-			</paper-tabs>
+			Home
 		</div>
 	</core-toolbar>
-	<div fit>
-		<core-animated-pages class="tabPages" selected={{selectedTab}} transitions="slide-from-right" fit>
-			<section flex name="stats">
-				<div class="scroll-y" fit>
-					{{> intro}}
-				</div>
-			</section>
-			<section flex name="features">
-				<div class="scroll-y" fit>
-					{{> guide}}
-				</div>
-			</section>
-		</core-animated-pages>
-	</div>
+	{{> intro}}
 </template>
