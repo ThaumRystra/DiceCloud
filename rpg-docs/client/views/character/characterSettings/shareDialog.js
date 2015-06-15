@@ -3,6 +3,10 @@ Template.shareDialog.onCreated(function(){
 });
 
 Template.shareDialog.helpers({
+	viewPermission: function() {
+		var char = Characters.findOne(this._id, {fields: {settings: 1}});
+		return char.settings.viewPermission || "whitelist";
+	},
 	readers: function(){
 		var char = Characters.findOne(this._id, {fields: {readers: 1}});
 		return Meteor.users.find({_id: {$in: char.readers}});
@@ -19,9 +23,20 @@ Template.shareDialog.helpers({
 			return "User not found";
 		}
 	},
+	getUserName: function() {
+		return this.username || "user: " + this._id;
+	}
 });
 
 Template.shareDialog.events({
+	"core-select .visibilityDropdown": function(event){
+		var detail = event.originalEvent.detail;
+		if (!detail.isSelected) return;
+		var value = detail.item.getAttribute("name");
+		var char = Characters.findOne(this._id, {fields: {settings: 1}});
+		if (value == char.settings.viewPermission) return;
+		Characters.update(this._id, {$set: {"settings.viewPermission": value}});
+	},
 	"input #userNameOrEmailInput":
 	function(event, instance){
 		var userName = instance.find("#userNameOrEmailInput").value;

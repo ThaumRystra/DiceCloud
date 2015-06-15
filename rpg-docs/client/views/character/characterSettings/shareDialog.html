@@ -1,5 +1,17 @@
 <template name="shareDialog">
 	<div style="width: 360px;">
+		<div layout horizontal center>
+			<div>Who can view this character: </div>
+			<paper-dropdown-menu class="visibilityDropdown"
+								 label="Visibility">
+				<paper-dropdown layered class="dropdown">
+					<core-menu class="menu visibilityMenu" selected={{viewPermission}}>
+						<paper-item name="whitelist">Only people I share with</paper-item>
+						<paper-item name="public">Anyone with link</paper-item>
+					</core-menu>
+				</paper-dropdown>
+			</paper-dropdown-menu>
+		</div>
 		<div>
 			{{#if readers.count}}
 				<div style="font-weight: 500;">
@@ -7,7 +19,7 @@
 				</div>
 				{{#each readers}}
 					<div layout horizontal center>
-						<div flex>{{username}}</div>
+						<div flex>{{getUserName}}</div>
 						<paper-icon-button class="deleteShare" icon="delete"></paper-icon-button>
 					</div>
 				{{/each}}

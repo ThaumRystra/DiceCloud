@@ -1,25 +1,15 @@
 Template.home.helpers({
-	characterDetails: function(){
-		var char = Characters.findOne(
-			this._id,
-			{fields: {name: 1, gender: 1, alignment: 1, race:1}}
-		);
-		char.title = char.name;
-		char.field = "base";
-		char.color = "d";
-		char.class = "characterCard";
-		return char;
-	}
+	selectedTab: function(){
+		return Session.get("homePage.selectedTab");
+	},
 });
 
 Template.home.events({
-	"tap .characterCard": function(event, instance){
-		Router.go("characterSheet", {_id: this._id});
+	"core-animated-pages-transition-end .tabPages": function(event) {
+		event.stopPropagation();
 	},
-	"tap #addCharacter": function(event, template) {
-		Characters.insert({owner: Meteor.userId()});
-	},
-	"tap #deleteChar": function(event, template){
-		Characters.remove(this._id);
+	"tap .homeTabs paper-tab": function(event, instance){
+		Session.set("homePage.selectedTab",
+					event.currentTarget.getAttribute("name"));
 	},
 });
