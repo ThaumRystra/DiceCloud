@@ -176,6 +176,12 @@ Schemas.Character = new SimpleSchema({
 	"settings.useStandardEncumbrance": {type: Boolean, defaultValue: true},
 	//hide spellcasting
 	"settings.hideSpellcasting": {type: Boolean, defaultValue: false},
+	//show to anyone with link
+	"settings.viewPermission": {
+		type: String,
+		defaultValue: "whitelist",
+		allowedValues: ["whitelist", "public"],
+	},
 });
 
 Characters.attachSchema(Schemas.Character);

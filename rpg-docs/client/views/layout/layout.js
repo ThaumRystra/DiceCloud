@@ -41,4 +41,8 @@ Template.layout.events({
 		Router.go("changeLog");
 		instance.find("core-drawer-panel").closeDrawer();
 	},
+	"tap #guide": function(event, instance) {
+		Router.go("guide");
+		instance.find("core-drawer-panel").closeDrawer();
+	},
 });

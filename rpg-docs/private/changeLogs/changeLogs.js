@@ -158,3 +158,12 @@ ChangeLogs.insert({
 		"Fixed reports from google users not correctly storing the reply-to email address",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.5.5",
+	changes: [
+		"Changed front page",
+		"Moved to a darker style",
+		"Added support for letting characters be viewed by \"anyone with the link\"",
+	],
+});
