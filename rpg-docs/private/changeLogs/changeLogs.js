@@ -160,10 +160,19 @@ ChangeLogs.insert({
 });
 
 ChangeLogs.insert({
-	version: "0.5.5",
+	version: "0.5.6",
 	changes: [
 		"Changed front page",
 		"Moved to a darker style",
 		"Added support for letting characters be viewed by \"anyone with the link\"",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.5.7",
+	changes: [
+		"Added proficiencies to backgrounds",
+		"Added attacks to spells",
+		"Added a move item dialog to mobile devices, but it can't be accessed yet, because long-presses are broken",
 	],
 });
