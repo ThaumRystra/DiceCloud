@@ -174,6 +174,20 @@ Template.inventory.events({
 			heroId:   itemId,
 		});
 	},
+	"hold .inventoryItem": function(event, instance) {
+		var itemId = this._id;
+		var charId = Template.parentData()._id;
+		var containerId = this.parent.id;
+		GlobalUI.showDialog({
+			template: "moveItemDialog",
+			data:     {
+				charId: charId,
+				itemId: itemId,
+				containerId: containerId,
+			},
+			heading:   "Move " + this.pluralName(),
+		});
+	},
 	"tap .incrementButtons": function(event) {
 		event.stopPropagation();
 	},

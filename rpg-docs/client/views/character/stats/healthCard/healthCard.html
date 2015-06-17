@@ -10,24 +10,24 @@
 		</div>
 		<div class="right" flex layout vertical center-justified style="min-width: 180px;">
 			<div layout horizontal>
-				<paper-slider id="hitPointSlider"
+				<paper-diff-slider id="hitPointSlider"
 							  value={{attributeValue "hitPoints"}}
 							  max={{attributeBase "hitPoints"}} 
 							  editable pin
 							  role="slider"
-							  ></paper-slider>
+							  ></paper-diff-slider>
 			</div>
 			{{#each tempHitPoints}}
 				<div>
 					{{name}}
 					<div layout horizontal>
-					<paper-slider class="tempHitPointSlider"
+					<paper-diff-slider class="tempHitPointSlider"
 							  value={{left}}
 							  max={{maximum}}
 							  editable pin
 							  role="slider"
 							  flex
-							  ></paper-slider>
+							  ></paper-diff-slider>
 					{{#unless left}}{{#unless deleteOnZero}}
 						<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
 					{{/unless}}{{/unless}}
