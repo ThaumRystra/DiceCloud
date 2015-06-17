@@ -8,55 +8,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!--
-`paper-slider` allows user to select a value from a range of values by
+`paper-diff-slider` allows user to select a value from a range of values by
 moving the slider thumb.  The interactive nature of the slider makes it a 
 great choice for settings that reflect intensity levels, such as volume, 
 brightness, or color saturation.
 
 Example:
 
-    <paper-slider></paper-slider>
+    <paper-diff-slider></paper-diff-slider>
 
 Use `min` and `max` to specify the slider range.  Default is 0 to 100.
 
 Example:
 
-    <paper-slider min="10" max="200" value="110"></paper-slider>
+    <paper-diff-slider min="10" max="200" value="110"></paper-diff-slider>
 
 Styling slider:
 
 To change the slider progress bar color:
 
-    paper-slider::shadow #sliderBar::shadow #activeProgress {
+    paper-diff-slider::shadow #sliderBar::shadow #activeProgress {
       background-color: #0f9d58;
     }
 
 To change the slider knob color:
 
-    paper-slider::shadow #sliderKnobInner {
+    paper-diff-slider::shadow #sliderKnobInner {
       background-color: #0f9d58;
     }
 
 To change the slider pin color:
 
-    paper-slider::shadow #sliderKnobInner::before {
+    paper-diff-slider::shadow #sliderKnobInner::before {
       background-color: #0f9d58;
     }
 
 To change the slider pin's font color:
 
-    paper-slider::shadow #sliderKnob > #sliderKnobInner::after {
+    paper-diff-slider::shadow #sliderKnob > #sliderKnobInner::after {
       color: #0f9d58
     }
 
 To change the slider secondary progress bar color:
 
-    paper-slider::shadow #sliderBar::shadow #secondaryProgress {
+    paper-diff-slider::shadow #sliderBar::shadow #secondaryProgress {
       background-color: #0f9d58;
     }
 
 @group Paper Elements
-@element paper-slider
+@element paper-diff-slider
 @extends core-range
 @homepage github.io
 -->
@@ -65,10 +65,10 @@ To change the slider secondary progress bar color:
 <link rel="import" href="../../components/paper-progress/paper-progress.html">
 <link rel="import" href="../../components/paper-input/paper-input.html">
 
-<polymer-element name="paper-slider" extends="core-range" attributes="snaps pin disabled secondaryProgress editable immediateValue" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100">
+<polymer-element name="paper-diff-slider" extends="core-range" attributes="snaps pin disabled secondaryProgress editable immediateValue" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100">
 <template>
 
-  <link rel="stylesheet" href="paper-slider.css">
+  <link rel="stylesheet" href="paper-diff-slider.css">
 
   <template if="{{!disabled}}">
     <core-a11y-keys target="{{}}" keys="left down pagedown home" on-keys-pressed="{{decrementKey}}"></core-a11y-keys>
@@ -109,7 +109,7 @@ To change the slider secondary progress bar color:
 </template>
 <script>
 
-  Polymer('paper-slider', {
+  Polymer('paper-diff-slider', {
 
     /**
      * Fired when the slider's value changes.

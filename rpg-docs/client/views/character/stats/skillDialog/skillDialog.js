@@ -212,7 +212,15 @@ Template.skillDialogView.helpers({
 		return Characters.findOne(this.charId, {fields:{_id: 1}});
 	},
 	sourceName: function(){
-		if (this.parent.collection === "Characters") return "inate";
+		if (this.parent.collection === "Characters"){
+			if (this.parent.group === "racial"){
+				return Characters.findOne(this.charId, {fields:{race: 1}}).race || "Race";
+			}
+			if (this.parent.group === "background"){
+				return "Background";
+			}
+			return "Innate";
+		}
 		return this.getParent().name;
 	},
 	operationName: function(){

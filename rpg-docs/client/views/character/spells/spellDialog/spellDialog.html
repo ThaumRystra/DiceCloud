@@ -27,6 +27,7 @@
 		</div>
 	</div>
 	<div class="pre-wrap">{{evaluateString charId description}}</div>
+	{{> attacksViewList charId=charId parentId=_id}}
 </template>
 
 <template name="spellEdit">
@@ -126,4 +127,5 @@
 			<textarea id="descriptionInput" placeholder value={{description}}></textarea>
 		</paper-autogrow-textarea>
 	</paper-input-decorator>
+	{{> attackEditList  parentId=_id parentCollection="Spells" charId=charId enabled=true name=name}}
 </template>

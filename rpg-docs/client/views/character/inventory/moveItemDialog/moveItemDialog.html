@@ -1,0 +1,49 @@
+<template name="moveItemDialog">
+	<div class="moveItemDialog">
+		<paper-tabs selected="{{selectedTab}}">
+			<paper-tab name="containers"
+					   class="clickable">
+				Containers
+			</paper-tab>
+			<paper-tab name="characters"
+					   class="clickable">
+				Characters
+			</paper-tab>
+		</paper-tabs>
+		<core-animated-pages selected="{{selectedTab}}"
+							 transitions="slide-from-right"
+							 style="width: 250px;
+									height: 200px;
+									overflow-y: auto;
+									overflow-x: hidden;">
+			<section name="containers">
+				<core-menu id="containerMenu" style="margin: 0;">
+					{{#each containers}}
+						<paper-item name={{_id}}
+									layout horizontal center>
+							<core-icon icon="image:brightness-1"
+									   style="color: {{hexColor color}};
+											  margin-right: 16px;">
+							</core-icon>
+							<div>{{name}}</div>
+						</paper-item>
+					{{/each}}
+				</core-menu>
+			</section>
+			<section name="characters">
+				<core-menu id="characterMenu"  style="margin: 0;">
+					{{#each characters}}
+					<paper-item name={{_id}}
+								layout horizontal center>
+						<div class="item small">
+							{{name}}
+						</div>
+					</paper-item>
+					{{/each}}
+				</core-menu>
+			</section>
+		</core-animated-pages>
+	</div>
+	<paper-button id="cancelButton" affirmative> Cancel </paper-button>
+	<paper-button id="moveButton" affirmative> Move </paper-button>
+</template>

@@ -20,6 +20,11 @@ openParentDialog = function(parent, charId, heroId) {
 			template: "itemDialog",
 			data:     {itemId: parent.id},
 		};
+	} else if (parent.collection === "Spells") {
+		detail = {
+			template: "spellDialog",
+			data:     {spellId: parent.id},
+		};
 	}
 	detail.heroId = heroId;
 	detail.charId = charId;
