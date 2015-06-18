@@ -106,9 +106,7 @@ Template.skillDialogView.helpers({
 		return a || b || c;
 	},
 	profIcon: function(){
-		var char = Characters.findOne(this.charId);
-		if (!char) return;
-		var prof = char.proficiency(this.skillName);
+		var prof = Characters.calculate.proficiency(this.charId, this.skillName);
 		if (prof > 0 && prof < 1) return "image:brightness-2";
 		if (prof === 1) return "image:brightness-1";
 		if (prof > 1) return "av:album";
@@ -123,13 +121,13 @@ Template.skillDialogView.helpers({
 	profBonus: function(){
 		var char = Characters.findOne(this.charId);
 		if (!char) return;
-		return char.proficiency(this.skillName) *
-			char.attributeValue("proficiencyBonus");
+		var prof = Characters.calculate.proficiency(this.charId, this.skillName);
+		var proficiencyBonus = 
+			Characters.calculate.attributeValue(this.charId, "proficiencyBonus");
+		return prof * proficiencyBonus;
 	},
 	proficiencyValue: function(){
-		var char = Characters.findOne(this.charId);
-		if (!char) return;
-		var prof = char.proficiency(this.skillName);
+		var prof = Characters.calculate.proficiency(this.charId, this.skillName);
 		if (prof == 0.5) return "Half Proficiency";
 		if (prof == 1)   return "Proficient";
 		if (prof == 2)   return "Double Proficiency";
@@ -199,22 +197,15 @@ Template.skillDialogView.helpers({
 		return skill.ability;
 	},
 	abilityName: function(){
-		var opts = {fields: {}};
-		opts.fields[this.skillName] = 1;
-		var char = Characters.findOne(this.charId, opts);
-		if (!char) return;
-		var skill = char[this.skillName];
+		var skill = Characters.calculate.getField(this.charId, this.skillName);
 		if (!skill) return;
 		var ability = skill.ability;
 		return abilities[ability] && abilities[ability].name;
 	},
-	char: function(){
-		return Characters.findOne(this.charId, {fields:{_id: 1}});
-	},
 	sourceName: function(){
 		if (this.parent.collection === "Characters"){
 			if (this.parent.group === "racial"){
-				return Characters.findOne(this.charId, {fields:{race: 1}}).race || "Race";
+				return Characters.calculate.getField(this.charId, "race") || "Race";
 			}
 			if (this.parent.group === "background"){
 				return "Background";

@@ -257,8 +257,16 @@ var attributeBase = function(charId, statName){
 };
 
 if (Meteor.isClient) {
-	Template.registerHelper("charCalculate", function(func, charId, input) {
-		return Characters.calculate[func](charId, input);
+	Template.registerHelper("characterCalculate", function(func, charId, input) {
+		try {
+			return Characters.calculate[func](charId, input);
+		} catch (e){
+			if (!Characters.calculate[func]){
+				throw new Error(func + "is not a function name");
+			} else {
+				throw e;
+			}
+		}
 	});
 }
 
@@ -311,15 +319,15 @@ Characters.calculate = {
 	attributeValue: memoize(function(charId, attributeName){
 		var attribute = Characters.calculate.getField(charId, attributeName);
 		//base value
-		var value = Characters.calculate.attributeBase(attributeName);
+		var value = Characters.calculate.attributeBase(charId, attributeName);
 		//plus adjustment
 		value += attribute.adjustment;
 		return value;
 	}),
-	attributeBase: preventLoop(memoize(function(charId, attributeName){
+	attributeBase: memoize(preventLoop(function(charId, attributeName){
 		return attributeBase(charId, attributeName);
 	})),
-	skillMod: preventLoop(memoize(function(charId, skillName){
+	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
 		//get the final value of the ability score
 		var ability = Characters.calculate.attributeValue(charId, skill.ability);
@@ -369,7 +377,7 @@ Characters.calculate = {
 			{charId: charId, name: skillName, enabled: true},
 			{sort: {value: -1}}
 		);
-		return prof && prof.value;
+		return prof && prof.value || 0;
 	}),
 	passiveSkill: memoize(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
@@ -435,7 +443,11 @@ Characters.calculate = {
 
 var depreciated = function() {
 	var err = new Error();
-	console.log("this function has been superceeded", {stacktrace: err.stack});
+	var name = "";
+	if(Template.instance()){
+		name = Template.instance().view.name;
+	}
+	console.log("this function has been depreciated", {viewName: name, stacktrace: err.stack});
 };
 
 //functions and calculated values.

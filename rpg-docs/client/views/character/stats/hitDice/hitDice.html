@@ -18,10 +18,10 @@
 				</div>
 				<div class="resourceValue" layout vertical center>
 					<div>
-						{{../attributeValue name}}
+						{{characterCalculate "attributeValue" ../_id name}}
 					</div>
 					<div class="title white-text">
-						d{{diceNum}} {{../abilityMod "constitution"}}
+						d{{diceNum}} {{characterCalculate "abilityMod" ../_id "constitution"}}
 					</div>
 				</div>
 			</div>

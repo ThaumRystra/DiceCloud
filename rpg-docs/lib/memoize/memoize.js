@@ -24,7 +24,7 @@ function CacheObject(func, address, args, cache, context){
 			if (!computation.firstRun && !self.dep.hasDependents()){
 				computation.stop();
 				delete cache[address];
-				console.log("Nothing depends on '" + address + "', deleting");
+				return;
 			}
 			//call the expensive function
 			var newValue = func.apply(context, args);

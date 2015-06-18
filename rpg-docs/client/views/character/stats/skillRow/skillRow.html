@@ -8,7 +8,9 @@
 			{{#if failSkill}}
 				<div class="fail skill-mod">fail</div>
 			{{else}}
-				<div class="{{advantage}} skill-mod">{{../skillMod skill}}</div>
+				<div class="{{advantage}} skill-mod">
+					{{characterCalculate "skillMod" ../_id skill}}
+				</div>
 			{{/if}}
 			<div flex>
 				{{name}}
@@ -16,7 +18,7 @@
 					*
 				{{/if}}
 				{{#if showPassive}}
-					({{../passiveSkill skill}})
+					({{characterCalculate "passiveSkill" ../_id skill}})
 				{{/if}}
 			</div>
 		</div>
