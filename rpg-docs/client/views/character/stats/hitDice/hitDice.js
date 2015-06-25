@@ -1,25 +1,28 @@
 Template.hitDice.helpers({
 	cantIncrement: function(){
-		var valueSmallerThanBase = this.char.attributeValue(this.name) <
-			this.char.attributeBase(this.name);
-		return !valueSmallerThanBase;
+		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		var base = Characters.calculate.attributeBase(this.char._id, this.name);
+		return value >= base;
 	},
 	cantDecrement: function(){
-		var valuePositive = this.char.attributeValue(this.name) > 0;
-		return !valuePositive;
+		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		return value <= 0;
 	},
 });
 
 Template.hitDice.events({
 	"tap .resourceUp": function(event){
-		if (this.char.attributeValue(this.name) < this.char.attributeBase(this.name)){
+		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		var base = Characters.calculate.attributeBase(this.char._id, this.name);
+		if (value < base){
 			var modifier = {$inc: {}};
 			modifier.$inc[this.name + ".adjustment"] = 1;
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
 	"tap .resourceDown": function(event){
-		if (this.char.attributeValue(this.name) > 0){
+		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		if (value > 0){
 			var modifier = {$inc: {}};
 			modifier.$inc[this.name + ".adjustment"] = -1;
 			Characters.update(this.char._id, modifier, {validate: false});

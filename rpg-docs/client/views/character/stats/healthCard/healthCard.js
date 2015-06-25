@@ -3,7 +3,7 @@ Template.healthCard.helpers({
 		return TemporaryHitPoints.find({charId: this._id});
 	},
 	showDeathSave: function(){
-		return this.attributeValue("hitPoints") <= 0;
+		return Characters.calculate.attributeValue(this._id, "hitPoints") <= 0;
 	},
 	deathSaveObject: function(){
 		var char = Characters.findOne(this._id, {fields: {deathSave: 1}});
@@ -27,21 +27,20 @@ Template.healthCard.helpers({
 		return this.fail >= 3;
 	},
 	multipliers: function(){
-		var char = Characters.findOne(this._id, {fields: {_id: 1}});
 		var multipliers = [
-			{name: "Acid",        value: char.attributeValue("acidMultiplier", 1)},
-			{name: "Bludgeoning", value: char.attributeValue("bludgeoningMultiplier", 1)},
-			{name: "Cold",        value: char.attributeValue("coldMultiplier", 1)},
-			{name: "Fire",        value: char.attributeValue("fireMultiplier", 1)},
-			{name: "Force",       value: char.attributeValue("forceMultiplier", 1)},
-			{name: "Lightning",   value: char.attributeValue("lightningMultiplier", 1)},
-			{name: "Necrotic",    value: char.attributeValue("necroticMultiplier", 1)},
-			{name: "Piercing",    value: char.attributeValue("piercingMultiplier", 1)},
-			{name: "Poison",      value: char.attributeValue("poisonMultiplier", 1)},
-			{name: "Psychic",     value: char.attributeValue("psychicMultiplier", 1)},
-			{name: "Radiant",     value: char.attributeValue("radiantMultiplier", 1)},
-			{name: "Slashing",    value: char.attributeValue("slashingMultiplier", 1)},
-			{name: "Thunder",     value: char.attributeValue("thunderMultiplier", 1)},
+			{name: "Acid",        value: Characters.calculate.attributeValue(this._id, "acidMultiplier")},
+			{name: "Bludgeoning", value: Characters.calculate.attributeValue(this._id, "bludgeoningMultiplier")},
+			{name: "Cold",        value: Characters.calculate.attributeValue(this._id, "coldMultiplier")},
+			{name: "Fire",        value: Characters.calculate.attributeValue(this._id, "fireMultiplier")},
+			{name: "Force",       value: Characters.calculate.attributeValue(this._id, "forceMultiplier")},
+			{name: "Lightning",   value: Characters.calculate.attributeValue(this._id, "lightningMultiplier")},
+			{name: "Necrotic",    value: Characters.calculate.attributeValue(this._id, "necroticMultiplier")},
+			{name: "Piercing",    value: Characters.calculate.attributeValue(this._id, "piercingMultiplier")},
+			{name: "Poison",      value: Characters.calculate.attributeValue(this._id, "poisonMultiplier")},
+			{name: "Psychic",     value: Characters.calculate.attributeValue(this._id, "psychicMultiplier")},
+			{name: "Radiant",     value: Characters.calculate.attributeValue(this._id, "radiantMultiplier")},
+			{name: "Slashing",    value: Characters.calculate.attributeValue(this._id, "slashingMultiplier")},
+			{name: "Thunder",     value: Characters.calculate.attributeValue(this._id, "thunderMultiplier")},
 		];
 		multipliers = _.groupBy(multipliers, "value");
 		return {
@@ -55,7 +54,8 @@ Template.healthCard.helpers({
 Template.healthCard.events({
 	"change #hitPointSlider": function(event){
 		var value = event.currentTarget.value;
-		var adjustment = value - this.attributeBase("hitPoints");
+		var base = Characters.calculate.attributeBase(this._id, "hitPoints")
+		var adjustment = value - base;
 		Characters.update(this._id, {$set: {"hitPoints.adjustment": adjustment}});
 		//reset the death saves if we are gaining HP
 		if (value > 0)

@@ -84,32 +84,28 @@ Template.spells.helpers({
 	},
 	cantCast: function(level, char){
 		for (var i = level; i <= 9; i++){
-			if (char.attributeValue("level" + i + "SpellSlots") > 0){
+			if (Characters.calculate.attributeValue(char._id, "level" + i + "SpellSlots") > 0){
 				return false;
 			}
 		}
 		return true;
 	},
-	baseSlots: function(char){
-		return char.attributeBase("level" + this.level + "SpellSlots");
-	},
-	slots: function(char){
-		return char.attributeValue("level" + this.level + "SpellSlots");
-	},
 	showSlots: function(char){
-		return this.level && char.attributeBase("level" + this.level + "SpellSlots");
+		return this.level && Characters.calculate.attributeBase(
+			char._id, "level" + this.level + "SpellSlots"
+		);
 	},
 	hasSlots: function(){
 		for (var i = 1; i <= 9; i += 1){
-			if (this.attributeBase("level" + i + "SpellSlots")){
+			if (Characters.calculate.attributeBase(this._id, "level" + i + "SpellSlots")){
 				return true;
 			}
 		}
 		return false;
 	},
 	slotBubbles: function(char){
-		var baseSlots = char.attributeBase("level" + this.level + "SpellSlots");
-		var currentSlots = char.attributeValue("level" + this.level + "SpellSlots");
+		var baseSlots = Characters.calculate.attributeBase(char._id, "level" + this.level + "SpellSlots");
+		var currentSlots = Characters.calculate.attributeValue(char._id, "level" + this.level + "SpellSlots");
 		var slotsUsed = baseSlots - currentSlots;
 		var bubbles = [];
 		var i;
@@ -143,15 +139,15 @@ Template.spells.events({
 			var char = Characters.findOne(this.charId);
 			if (event.currentTarget.icon === "radio-button-off"){
 				if (
-					char.attributeValue(this.attribute) <
-					char.attributeBase(this.attribute)
+					Characters.calculate.attributeValue(char._id, this.attribute) <
+					Characters.calculate.attributeBase(char._id, this.attribute)
 				){
 					modifier = {$inc: {}};
 					modifier.$inc[this.attribute + ".adjustment"] = 1;
 					Characters.update(this.charId, modifier, {validate: false});
 				}
 			} else {
-				if (char.attributeValue(this.attribute) > 0){
+				if (Characters.calculate.attributeValue(char._id, this.attribute) > 0){
 					modifier = {$inc: {}};
 					modifier.$inc[this.attribute + ".adjustment"] = -1;
 					Characters.update(this.charId, modifier, {validate: false});

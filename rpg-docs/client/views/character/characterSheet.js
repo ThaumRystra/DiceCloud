@@ -20,7 +20,7 @@ Template.characterSheet.helpers({
 	hideSpellcasting: function() {
 		var char = Characters.findOne(this._id);
 		return char && char.settings.hideSpellcasting;
-	}
+	},
 });
 
 Template.characterSheet.events({

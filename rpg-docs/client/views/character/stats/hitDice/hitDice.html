@@ -1,5 +1,5 @@
 <template name="hitDice">
-	{{#if ../attributeBase name}}
+	{{#if characterCalculate "attributeBase" ../_id name}}
 		<paper-shadow class="card hit-dice" hero-id="main" 
 					  {{detailHero name ../_id}} 
 					  layout horizontal>

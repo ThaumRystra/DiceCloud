@@ -75,7 +75,7 @@
 		<div class="left display1 white-text {{color}}"
 			 hero-id="toolbar" {{detailHero stat ../_id}}>
 			{{#if isSkill}}
-				{{characterCalculate "skillMod" ../_id stat}}
+				{{prefix}}{{skillMod}}
 			{{else}}
 				{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
 			{{/if}}

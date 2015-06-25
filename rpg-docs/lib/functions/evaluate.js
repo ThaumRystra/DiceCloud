@@ -40,7 +40,6 @@ evaluate = function(charId, string){
 		var result = math.eval(string);
 		return result;
 	} catch (e){
-		console.log("Failed to evaluate ", string);
 		return string;
 	}
 };

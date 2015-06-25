@@ -3,16 +3,16 @@ Characters = new Mongo.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings
-	name:         {type: String, defaultValue: "", trim: false},
-	alignment:    {type: String, defaultValue: "", trim: false},
-	gender:       {type: String, defaultValue: "", trim: false},
-	race:         {type: String, defaultValue: "", trim: false},
-	description:  {type: String, defaultValue: "", trim: false},
-	personality:  {type: String, defaultValue: "", trim: false},
-	ideals:       {type: String, defaultValue: "", trim: false},
-	bonds:        {type: String, defaultValue: "", trim: false},
-	flaws:        {type: String, defaultValue: "", trim: false},
-	backstory:    {type: String, defaultValue: "", trim: false},
+	name:         {type: String, defaultValue: "", trim: false, optional: true},
+	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
+	gender:       {type: String, defaultValue: "", trim: false, optional: true},
+	race:         {type: String, defaultValue: "", trim: false, optional: true},
+	description:  {type: String, defaultValue: "", trim: false, optional: true},
+	personality:  {type: String, defaultValue: "", trim: false, optional: true},
+	ideals:       {type: String, defaultValue: "", trim: false, optional: true},
+	bonds:        {type: String, defaultValue: "", trim: false, optional: true},
+	flaws:        {type: String, defaultValue: "", trim: false, optional: true},
+	backstory:    {type: String, defaultValue: "", trim: false, optional: true},
 
 	//attributes
 	//ability scores
@@ -442,12 +442,17 @@ Characters.calculate = {
 };
 
 var depreciated = function() {
-	var err = new Error();
+	//var err = new Error("this function has been depreciated");
 	var name = "";
-	if(Template.instance()){
+	if (Template.instance()){
 		name = Template.instance().view.name;
 	}
-	console.log("this function has been depreciated", {viewName: name, stacktrace: err.stack});
+	var logString = "this function has been depreciated \n";
+	if (name){
+		logString += "View: " + name + "\n\n";
+	}
+	//logString += err.stack + "\n\n---------------------\n\n";
+	console.log(logString);
 };
 
 //functions and calculated values.
@@ -458,194 +463,62 @@ Characters.helpers({
 	//will set up dependencies on just that field
 	getField : function(fieldName){
 		depreciated();
-		var fieldSelector = {};
-		fieldSelector[fieldName] = 1;
-		var char = Characters.findOne(this._id, {fields: fieldSelector});
-		var field = char[fieldName];
-		if (field === undefined){
-			throw new Meteor.Error(
-				"getField failed",
-				"getField could not find field " +
-				fieldName +
-				" in character " +
-				char._id
-			);
-		}
-		return field;
+		return Characters.calculate.getField(this._id, fieldName);
 	},
 	//returns the value of a field
 	fieldValue : function(fieldName){
 		depreciated();
-		if (!Schemas.Character.schema(fieldName)){
-			throw new Meteor.Error(
-				"Field not found",
-				"Character's schema does not contain a field called: " + fieldName
-			);
-		}
-		//duck typing to get the right value function
-		//.ability implies skill
-		if (Schemas.Character.schema(fieldName + ".ability")){
-			return this.skillMod(fieldName);
-		}
-		//adjustment implies attribute
-		if (Schemas.Character.schema(fieldName + ".adjustment")){
-			return this.attributeValue(fieldName);
-		}
-		//fall back to just returning the field itself
-		return this.getField(fieldName);
+		return Characters.calculate.fieldValue(this._id, fieldName);
 	},
-
 	attributeValue: function(attributeName){
 		depreciated();
-		var charId = this._id;
-		var attribute = this.getField(attributeName);
-		//base value
-		var value = this.attributeBase(attributeName);
-		//plus adjustment
-		value += attribute.adjustment;
-		return value;
+		return Characters.calculate.attributeValue(this._id, attributeName);
 	},
-
-	attributeBase: preventLoop(function(attributeName){
+	attributeBase: function(attributeName){
 		depreciated();
-		var charId = this._id;
-		//base value
-		return attributeBase(charId, attributeName);
-	}),
-
-	skillMod: preventLoop(function(skillName){
+		return Characters.calculate.attributeBase(this._id, attributeName);
+	},
+	skillMod: function(skillName){
 		depreciated();
-		var charId = this._id;
-		var skill = this.getField(skillName);
-		//get the final value of the ability score
-		var ability = this.attributeValue(skill.ability);
-
-		//base modifier
-		var mod = +getMod(ability);
-
-		//multiply proficiency bonus by largest value in proficiency array
-		var prof = this.proficiency(skillName);
-
-		//add multiplied proficiency bonus to modifier
-		mod += prof * this.attributeValue("proficiencyBonus");
-
-		//apply all effects
-		var rawEffects = Effects.find(
-			{charId: charId, stat: skillName, enabled: true}
-		).fetch();
-		var effects = _.groupBy(rawEffects, "operation");
-		_.forEach(effects.add, function(effect){
-			mod += evaluateEffect(charId, effect);
-		});
-		_.forEach(effects.mul, function(effect){
-			mod *= evaluateEffect(charId, effect);
-		});
-		_.forEach(effects.min, function(effect){
-			var min = evaluateEffect(charId, effect);
-			mod = mod > min ? mod : min;
-		});
-		_.forEach(effects.max, function(effect){
-			var max = evaluateEffect(charId, effect);
-			mod = mod < max ? mod : max;
-		});
-		return signedString(mod);
-	}),
-
+		return Characters.calculate.skillMod(this._id, skillName);
+	},
 	proficiency: function(skillName){
 		depreciated();
-		var charId = this._id;
-		//return largest value in proficiency array
-		var prof = 0;
-		Proficiencies.find(
-			{charId: charId, name: skillName, enabled: true}
-		).forEach(function(proficiency){
-			var newProf = proficiency.value;
-			if (newProf > prof){
-				prof = newProf;
-			}
-		});
-		return prof;
+		return Characters.calculate.proficiency(this._id, skillName);
 	},
-
 	passiveSkill: function(skillName){
 		depreciated();
-		if (_.isString(skillName)){
-			var skill = this.getField(skillName);
-		}
-		var charId = this._id;
-		var mod = +this.skillMod(skillName);
-		var value = 10 + mod;
-		Effects.find(
-			{charId: charId, stat: skillName, enabled: true, operation: "passiveAdd"}
-		).forEach(function(effect){
-			value += evaluateEffect(charId, effect);
-		});
-		return value;
-		//TODO decide whether (dis)advantage gives (-)+5 to passive checks
+		return Characters.calculate.passiveSkill(this._id, skillName);
 	},
-
 	advantage: function(skillName){
 		depreciated();
-		var charId = this._id;
-		var advantage = Effects.find(
-			{charId: charId, stat: skillName, enabled: true, operation: "advantage"}
-		).count();
-		var disadvantage = Effects.find(
-			{charId: charId, stat: skillName, enabled: true, operation: "disadvantage"}
-		).count();
-		if (advantage && !disadvantage) return 1;
-		if (disadvantage && !advantage) return -1;
-		return 0;
+		return Characters.calculate.advantage(this._id, skillName);
 	},
-
 	abilityMod: function(attribute){
 		depreciated();
-		return signedString(getMod(this.attributeValue(attribute)));
+		return Characters.calculate.abilityMod(this._id, attribute);
 	},
-
 	passiveAbility: function(attribute){
 		depreciated();
-		var mod = +getMod(this.attributeValue(attribute));
-		return 10 + mod;
+		return Characters.calculate.passiveAbility(this._id, attribute);
 	},
-
 	xpLevel: function(){
 		depreciated();
-		var xp = this.experience();
-		for (var i = 0; i < 19; i++){
-			if (xp < XP_TABLE[i]){
-				return i;
-			}
-		}
-		if (xp > 355000) return 20;
-		return 0;
+		return Characters.calculate.xpLevel(this._id);
 	},
-
 	level: function(){
 		depreciated();
-		var level = 0;
-		Classes.find({charId: this._id}).forEach(function(cls){
-			level += cls.level;
-		});
-		return level;
+		return Characters.calculate.level(this._id);
 	},
-
 	experience: function(){
 		depreciated();
-		var xp = 0;
-		Experiences.find(
-			{charId: this._id},
-			{fields: {value: 1}}
-		).forEach(function(e){
-			xp += e.value;
-		});
-		return xp;
+		return Characters.calculate.experience(this._id);
 	},
 });
 
 //clean up all data related to that character before removing it
-Characters.after.remove(function(userId, character) {
-	if (Meteor.isServer){
+if (Meteor.isServer){
+	Characters.after.remove(function(userId, character) {
 		Actions       .remove({charId: character._id});
 		Attacks       .remove({charId: character._id});
 		Buffs         .remove({charId: character._id});
@@ -658,8 +531,8 @@ Characters.after.remove(function(userId, character) {
 		SpellLists    .remove({charId: character._id});
 		Items         .remove({charId: character._id});
 		Containers    .remove({charId: character._id});
-	}
-});
+	});
+}
 
 Characters.allow({
 	insert: function(userId, doc) {

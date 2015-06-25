@@ -1,6 +1,14 @@
 Template.skillRow.helpers({
+	skillMod: function() {
+		return signedString(
+			Characters.calculate.skillMod(
+				Template.parentData()._id, this.skill
+			)
+		);
+	},
 	profIcon: function(){
-		var prof = Template.parentData(1).proficiency(this.skill);
+		var charId = Template.parentData()._id;
+		var prof = Characters.calculate.proficiency(charId, this.skill);
 		if (prof > 0 && prof < 1) return "image:brightness-2";
 		if (prof === 1) return "image:brightness-1";
 		if (prof > 1) return "av:album";

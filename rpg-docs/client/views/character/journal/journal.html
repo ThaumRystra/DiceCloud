@@ -9,7 +9,7 @@
 						 hero-id="toolbar" {{detailHero}}
 						 layout horizontal center>
 						<div flex>Experience</div>
-						<div >{{experience}} XP</div>
+						<div >{{characterCalculate "experience" _id}} XP</div>
 						<paper-icon-button class="black54" id="addXP" icon="add"></paper-icon-button>
 					</div>
 					<div class="bottom list">
@@ -45,7 +45,7 @@
 						 layout horizontal center>
 						<div flex>
 							<div class="containerName subhead">
-								Level {{level}}
+								Level {{characterCalculate "level" _id}}
 							</div>
 							{{#if nextLevelXP}}
 								<div class="caption">
