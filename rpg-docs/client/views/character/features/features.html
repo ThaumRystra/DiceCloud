@@ -135,7 +135,7 @@
 </template>
 
 <template name="resource">
-	{{#if char.attributeBase name}}
+	{{#if characterCalculate "attributeBase" char._id name}}
 		<paper-shadow class="card" 
 					  hero-id="main" {{detailHero name char._id}}
 					  layout horizontal>
@@ -152,7 +152,7 @@
 									   disabled={{cantDecrement}}>
 					</paper-icon-button>
 				</div>
-				<div>{{char.attributeValue name}}</div>
+				<div>{{characterCalculate "attributeValue" char._id name}}</div>
 				<!--<div>/{{char.attributeBase name}}</div>-->
 			</div>
 			<div class="right clickable" 

@@ -13,7 +13,7 @@ var getFractionCarried = function(char) {
 		weight += item.totalWeight();
 	});
 	//get strength
-	var strength = char.attributeValue("strength");
+	var strength = Characters.calculate.attributeValue(char._id, "strength");
 	var capacity = strength * 15;
 	return weight / capacity;
 };

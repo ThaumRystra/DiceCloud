@@ -41,7 +41,7 @@ Template.journal.helpers({
 		return Levels.find({charId: charId, classId: this._id}, {sort: {value: 1}});
 	},
 	nextLevelXP: function(){
-		var currentLevel = this.level();
+		var currentLevel = Characters.calculate.level(this._id);
 		if (currentLevel < 20){
 			return XP_TABLE[currentLevel];
 		}

@@ -3,16 +3,16 @@ Characters = new Mongo.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings
-	name:         {type: String, defaultValue: "", trim: false},
-	alignment:    {type: String, defaultValue: "", trim: false},
-	gender:       {type: String, defaultValue: "", trim: false},
-	race:         {type: String, defaultValue: "", trim: false},
-	description:  {type: String, defaultValue: "", trim: false},
-	personality:  {type: String, defaultValue: "", trim: false},
-	ideals:       {type: String, defaultValue: "", trim: false},
-	bonds:        {type: String, defaultValue: "", trim: false},
-	flaws:        {type: String, defaultValue: "", trim: false},
-	backstory:    {type: String, defaultValue: "", trim: false},
+	name:         {type: String, defaultValue: "", trim: false, optional: true},
+	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
+	gender:       {type: String, defaultValue: "", trim: false, optional: true},
+	race:         {type: String, defaultValue: "", trim: false, optional: true},
+	description:  {type: String, defaultValue: "", trim: false, optional: true},
+	personality:  {type: String, defaultValue: "", trim: false, optional: true},
+	ideals:       {type: String, defaultValue: "", trim: false, optional: true},
+	bonds:        {type: String, defaultValue: "", trim: false, optional: true},
+	flaws:        {type: String, defaultValue: "", trim: false, optional: true},
+	backstory:    {type: String, defaultValue: "", trim: false, optional: true},
 
 	//attributes
 	//ability scores
@@ -190,91 +190,101 @@ var attributeBase = function(charId, statName){
 	check(statName, String);
 	//if it's a damage multiplier, we treat it specially
 	if (_.contains(DAMAGE_MULTIPLIERS, statName)){
-		var effects = Effects.find(
-			{charId: charId, stat: statName, enabled: true, operation: "mul"}
-		).fetch();
-		var resistCount = 0;
-		var vulnCount = 0;
-		var multiplierEvaluationFail = false;
-		_.each(effects, function(effect){
-			var val = evaluateEffect(charId, effect);
-			if (val === 0.5){ //resistance
-				resistCount += 1;
-			} else if (val === 2){ //vulnerability
-				vulnCount += 1;
-			} else if (val === 0){ //imunity
-				return 0; //imunity is absolute
-			} else {
-				multiplierEvaluationFail = true;
-			}
-		});
-		if (multiplierEvaluationFail){
-			//we can't work it out correctly, set the value to 1
-			//and try work it out using regular maths below
-			value = 1;
-		} else if (resistCount && !vulnCount){
+		var invulnerabilityCount = Effects.find({
+			charId: charId,
+			stat: statName,
+			enabled: true,
+			operation: "mul",
+			value: 0,
+		}).count();
+		if (invulnerabilityCount) return 0;
+		var resistCount = Effects.find({
+			charId: charId,
+			stat: statName,
+			enabled: true,
+			operation: "mul",
+			value: 0.5,
+		}).count();
+		var vulnCount = Effects.find({
+			charId: charId,
+			stat: statName,
+			enabled: true,
+			operation: "mul",
+			value: 2,
+		}).count();
+		if (!resistCount && !vulnCount){
+			return 1;
+		}  else if (resistCount && !vulnCount){
 			return 0.5;
-		} else if (!resistCount && vulnCount){
+		}  else if (!resistCount && vulnCount){
 			return 2;
 		} else {
 			return 1;
 		}
 	}
+	var value;
+	var base = 0;
+	var add = 0;
+	var mul = 1;
+	var min = Math.NEGATIVE_INFINITY;
+	var max = Math.POSITIVE_INFINITY;
 
-	var value = 0;
-
-	//start with the highest base value
-	Effects.find(
-		{charId: charId, stat: statName, enabled: true, operation: "base"}
-	).forEach(function(effect){
-		var efv = evaluateEffect(charId, effect);
-		if (efv > value){
-			value = efv;
+	Effects.find({
+		charId: charId,
+		stat: statName,
+		enabled: true,
+		operation: {$in: ["base", "add", "mul", "min", "max"]},
+	}).forEach(function(effect) {
+		value = evaluateEffect(charId, effect);
+		if (effect.operation === "base"){
+			if (value > base) base = value;
+		} else if (effect.operation === "add"){
+			add += value;
+		} else if (effect.operation === "mul"){
+			mul *= value;
+		} else if (effect.operation === "min"){
+			if (value > min) min = value;
+		} else if (effect.operation === "max"){
+			if (value < max) max = value;
 		}
 	});
 
-	//add all the add values
-	Effects.find(
-		{charId: charId, stat: statName, enabled: true, operation: "add"}
-	).forEach(function(effect){
-		value += evaluateEffect(charId, effect);
-	});
+	var result = (base + add) * mul;
+	if (result < min) result = min;
+	if (result > max) result = max;
 
-	//multiply all the mul values
-	Effects.find(
-		{charId: charId, stat: statName, enabled: true, operation: "mul"}
-	).forEach(function(effect){
-		value *= evaluateEffect(charId, effect);
-	});
-
-	//ensure value is >= all mins
-	Effects.find(
-		{charId: charId, stat: statName, enabled: true, operation: "min"}
-	).forEach(function(effect){
-		var min = evaluateEffect(charId, effect);
-		value = value > min ? value : min;
-	});
-
-	//ensure value is <= all maxes
-	Effects.find(
-		{charId: charId, stat: statName, enabled: true, operation: "max"}
-	).forEach(function(effect){
-		var max = evaluateEffect(charId, effect);
-		value = value < max ? value : max;
-	});
-	return value;
+	return result;
 };
 
-//functions and calculated values.
-//These functions can only rely on this._id since no other
-//field is likely to be attached to all returned characters
-Characters.helpers({
-	//returns the value stored in the field requested
-	//will set up dependencies on just that field
-	getField : function(fieldName){
+if (Meteor.isClient) {
+	Template.registerHelper("characterCalculate", function(func, charId, input) {
+		try {
+			return Characters.calculate[func](charId, input);
+		} catch (e){
+			if (!Characters.calculate[func]){
+				throw new Error(func + "is not a function name");
+			} else {
+				throw e;
+			}
+		}
+	});
+}
+
+//create a local memoize with a argument concatenating hash function
+var memoize = function(f) {
+	return Tracker.memoize(f, function() {
+		return _.reduce(arguments, function(memo, arg) {
+			return memo + arg;
+		}, "");
+	});
+};
+
+//memoize funcitons that have finds and slow loops
+Characters.calculate = {
+	getField: function(charId, fieldName) {
 		var fieldSelector = {};
 		fieldSelector[fieldName] = 1;
-		var char = Characters.findOne(this._id, {fields: fieldSelector});
+		var char = Characters.findOne(charId, {fields: fieldSelector});
 		var field = char[fieldName];
 		if (field === undefined){
 			throw new Meteor.Error(
@@ -287,8 +297,7 @@ Characters.helpers({
 		}
 		return field;
 	},
-	//returns the value of a field
-	fieldValue : function(fieldName){
+	fieldValue: function(charId, fieldName) {
 		if (!Schemas.Character.schema(fieldName)){
 			throw new Meteor.Error(
 				"Field not found",
@@ -298,102 +307,92 @@ Characters.helpers({
 		//duck typing to get the right value function
 		//.ability implies skill
 		if (Schemas.Character.schema(fieldName + ".ability")){
-			return this.skillMod(fieldName);
+			return Characters.calculate.skillMod(charId, fieldName);
 		}
 		//adjustment implies attribute
 		if (Schemas.Character.schema(fieldName + ".adjustment")){
-			return this.attributeValue(fieldName);
+			return Characters.calculate.attributeValue(charId, fieldName);
 		}
 		//fall back to just returning the field itself
-		return this.getField(fieldName);
+		return Characters.calculate.getField(charId, fieldName);
 	},
-
-	attributeValue: function(attributeName){
-		var charId = this._id;
-		var attribute = this.getField(attributeName);
+	attributeValue: memoize(function(charId, attributeName){
+		var attribute = Characters.calculate.getField(charId, attributeName);
 		//base value
-		var value = this.attributeBase(attributeName);
+		var value = Characters.calculate.attributeBase(charId, attributeName);
 		//plus adjustment
 		value += attribute.adjustment;
 		return value;
-	},
-
-	attributeBase: preventLoop(function(attributeName){
-		var charId = this._id;
-		//base value
-		return attributeBase(charId, attributeName);
 	}),
-
-	skillMod: preventLoop(function(skillName){
-		var charId = this._id;
-		var skill = this.getField(skillName);
+	attributeBase: memoize(preventLoop(function(charId, attributeName){
+		return attributeBase(charId, attributeName);
+	})),
+	skillMod: memoize(preventLoop(function(charId, skillName){
+		var skill = Characters.calculate.getField(charId, skillName);
 		//get the final value of the ability score
-		var ability = this.attributeValue(skill.ability);
+		var ability = Characters.calculate.attributeValue(charId, skill.ability);
 
 		//base modifier
 		var mod = +getMod(ability);
 
 		//multiply proficiency bonus by largest value in proficiency array
-		var prof = this.proficiency(skillName);
+		var prof = Characters.calculate.proficiency(charId, skillName);
 
 		//add multiplied proficiency bonus to modifier
-		mod += prof * this.attributeValue("proficiencyBonus");
+		mod += prof * Characters.calculate.attributeValue(charId, "proficiencyBonus");
 
 		//apply all effects
-		var rawEffects = Effects.find(
-			{charId: charId, stat: skillName, enabled: true}
-		).fetch();
-		var effects = _.groupBy(rawEffects, "operation");
-		_.forEach(effects.add, function(effect){
-			mod += evaluateEffect(charId, effect);
-		});
-		_.forEach(effects.mul, function(effect){
-			mod *= evaluateEffect(charId, effect);
-		});
-		_.forEach(effects.min, function(effect){
-			var min = evaluateEffect(charId, effect);
-			mod = mod > min ? mod : min;
-		});
-		_.forEach(effects.max, function(effect){
-			var max = evaluateEffect(charId, effect);
-			mod = mod < max ? mod : max;
-		});
-		return signedString(mod);
-	}),
+		var value;
+		var add = 0;
+		var mul = 1;
+		var min = Math.NEGATIVE_INFINITY;
+		var max = Math.POSITIVE_INFINITY;
 
-	proficiency: function(skillName){
-		var charId = this._id;
-		//return largest value in proficiency array
-		var prof = 0;
-		Proficiencies.find(
-			{charId: charId, name: skillName, enabled: true}
-		).forEach(function(proficiency){
-			var newProf = proficiency.value;
-			if (newProf > prof){
-				prof = newProf;
+		Effects.find({
+			charId: charId,
+			stat: skillName,
+			enabled: true,
+			operation: {$in: ["base", "add", "mul", "min", "max"]},
+		}).forEach(function(effect) {
+			value = evaluateEffect(charId, effect);
+			if (effect.operation === "add"){
+				add += value;
+			} else if (effect.operation === "mul"){
+				mul *= value;
+			} else if (effect.operation === "min"){
+				if (value > min) min = value;
+			} else if (effect.operation === "max"){
+				if (value < max) max = value;
 			}
 		});
-		return prof;
-	},
+		var result = (mod + add) * mul;
+		if (result < min) result = min;
+		if (result > max) result = max;
 
-	passiveSkill: function(skillName){
-		if (_.isString(skillName)){
-			var skill = this.getField(skillName);
-		}
-		var charId = this._id;
-		var mod = +this.skillMod(skillName);
+		return result;
+	})),
+	proficiency: memoize(function(charId, skillName){
+		//return largest value in proficiency array
+		var prof = Proficiencies.findOne(
+			{charId: charId, name: skillName, enabled: true},
+			{sort: {value: -1}}
+		);
+		return prof && prof.value || 0;
+	}),
+	passiveSkill: memoize(function(charId, skillName){
+		var skill = Characters.calculate.getField(charId, skillName);
+		var mod = +Characters.calculate.skillMod(charId, skillName);
 		var value = 10 + mod;
 		Effects.find(
 			{charId: charId, stat: skillName, enabled: true, operation: "passiveAdd"}
 		).forEach(function(effect){
 			value += evaluateEffect(charId, effect);
 		});
+		var advantage = Characters.calculate.advantage(charId, skillName);
+		value += 5 * advantage;
 		return value;
-		//TODO decide whether (dis)advantage gives (-)+5 to passive checks
-	},
-
-	advantage: function(skillName){
-		var charId = this._id;
+	}),
+	advantage: memoize(function(charId, skillName){
 		var advantage = Effects.find(
 			{charId: charId, stat: skillName, enabled: true, operation: "advantage"}
 		).count();
@@ -403,19 +402,18 @@ Characters.helpers({
 		if (advantage && !disadvantage) return 1;
 		if (disadvantage && !advantage) return -1;
 		return 0;
+	}),
+	abilityMod: function(charId, attribute){
+		return getMod(
+			Characters.calculate.attributeValue(charId, attribute)
+		);
 	},
-
-	abilityMod: function(attribute){
-		return signedString(getMod(this.attributeValue(attribute)));
-	},
-
-	passiveAbility: function(attribute){
-		var mod = +getMod(this.attributeValue(attribute));
+	passiveAbility: function(charId, attribute){
+		var mod = +getMod(Characters.calculate.attributeValue(charId, attribute));
 		return 10 + mod;
 	},
-
-	xpLevel: function(){
-		var xp = this.experience();
+	xpLevel: function(charId){
+		var xp = Characters.calculate.experience(charId);
 		for (var i = 0; i < 19; i++){
 			if (xp < XP_TABLE[i]){
 				return i;
@@ -424,30 +422,103 @@ Characters.helpers({
 		if (xp > 355000) return 20;
 		return 0;
 	},
-
-	level: function(){
+	level: memoize(function(charId){
 		var level = 0;
-		Classes.find({charId: this._id}).forEach(function(cls){
+		Classes.find({charId: charId}).forEach(function(cls){
 			level += cls.level;
 		});
 		return level;
-	},
-
-	experience: function(){
+	}),
+	experience: memoize(function(charId){
 		var xp = 0;
 		Experiences.find(
-			{charId: this._id},
+			{charId: charId},
 			{fields: {value: 1}}
 		).forEach(function(e){
 			xp += e.value;
 		});
 		return xp;
+	}),
+};
+
+var depreciated = function() {
+	//var err = new Error("this function has been depreciated");
+	var name = "";
+	if (Template.instance()){
+		name = Template.instance().view.name;
+	}
+	var logString = "this function has been depreciated \n";
+	if (name){
+		logString += "View: " + name + "\n\n";
+	}
+	//logString += err.stack + "\n\n---------------------\n\n";
+	console.log(logString);
+};
+
+//functions and calculated values.
+//These functions can only rely on this._id since no other
+//field is likely to be attached to all returned characters
+Characters.helpers({
+	//returns the value stored in the field requested
+	//will set up dependencies on just that field
+	getField : function(fieldName){
+		depreciated();
+		return Characters.calculate.getField(this._id, fieldName);
+	},
+	//returns the value of a field
+	fieldValue : function(fieldName){
+		depreciated();
+		return Characters.calculate.fieldValue(this._id, fieldName);
+	},
+	attributeValue: function(attributeName){
+		depreciated();
+		return Characters.calculate.attributeValue(this._id, attributeName);
+	},
+	attributeBase: function(attributeName){
+		depreciated();
+		return Characters.calculate.attributeBase(this._id, attributeName);
+	},
+	skillMod: function(skillName){
+		depreciated();
+		return Characters.calculate.skillMod(this._id, skillName);
+	},
+	proficiency: function(skillName){
+		depreciated();
+		return Characters.calculate.proficiency(this._id, skillName);
+	},
+	passiveSkill: function(skillName){
+		depreciated();
+		return Characters.calculate.passiveSkill(this._id, skillName);
+	},
+	advantage: function(skillName){
+		depreciated();
+		return Characters.calculate.advantage(this._id, skillName);
+	},
+	abilityMod: function(attribute){
+		depreciated();
+		return Characters.calculate.abilityMod(this._id, attribute);
+	},
+	passiveAbility: function(attribute){
+		depreciated();
+		return Characters.calculate.passiveAbility(this._id, attribute);
+	},
+	xpLevel: function(){
+		depreciated();
+		return Characters.calculate.xpLevel(this._id);
+	},
+	level: function(){
+		depreciated();
+		return Characters.calculate.level(this._id);
+	},
+	experience: function(){
+		depreciated();
+		return Characters.calculate.experience(this._id);
 	},
 });
 
 //clean up all data related to that character before removing it
-Characters.after.remove(function(userId, character) {
-	if (Meteor.isServer){
+if (Meteor.isServer){
+	Characters.after.remove(function(userId, character) {
 		Actions       .remove({charId: character._id});
 		Attacks       .remove({charId: character._id});
 		Buffs         .remove({charId: character._id});
@@ -460,8 +531,8 @@ Characters.after.remove(function(userId, character) {
 		SpellLists    .remove({charId: character._id});
 		Items         .remove({charId: character._id});
 		Containers    .remove({charId: character._id});
-	}
-});
+	});
+}
 
 Characters.allow({
 	insert: function(userId, doc) {

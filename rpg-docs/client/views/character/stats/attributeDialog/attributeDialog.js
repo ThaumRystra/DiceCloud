@@ -106,10 +106,8 @@ Template.attributeDialogView.helpers({
 		return a || b || c;
 	},
 	adjustment: function(){
-		var char = Characters.findOne(this.charId);
-		if (!char) return;
-		var value = char.attributeValue(this.statName);
-		var base = char.attributeBase(this.statName);
+		var value = Characters.calculate.attributeValue(this.charId, this.statName);
+		var base = Characters.calculate.attributeBase(this.charId, this.statName);
 		return value - base;
 	},
 	baseEffects: function(){
@@ -138,14 +136,10 @@ Template.attributeDialogView.helpers({
 		);
 	},
 	attributeBase: function(){
-		var char = Characters.findOne(this.charId);
-		if (!char) throw "character is " + char;
-		return char.attributeBase(this.statName);
+		return Characters.calculate.attributeBase(this.charId, this.statName);
 	},
 	attributeValue: function() {
-		var char = Characters.findOne(this.charId);
-		if (!char) throw "character is " + char;
-		return char.attributeValue(this.statName);
+		return Characters.calculate.attributeValue(this.charId, this.statName);
 	},
 	sourceName: function(){
 		if (this.parent.group === "racial"){
