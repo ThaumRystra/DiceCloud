@@ -183,7 +183,13 @@ ChangeLogs.insert({
 		"Big performance improvements: loading characters that you've viewed recently and changing effects on characters should be much faster",
 		"Spell dialogs no longer show their casting time, range, etc. if those fields aren't filled in",
 		"The settings dialog now has a done button so it can be closed on small devices",
-		"Experience dialogs should update their edit-mode inputs properly now",
 		"Container dialogs now have the weight summaries rounded down properly",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.6.1",
+	changes: [
+		"Experience dialogs should update their edit-mode inputs properly now",
 	],
 });
