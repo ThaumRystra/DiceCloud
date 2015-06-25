@@ -1,4 +1,4 @@
-Template.experienceDialog.onRendered(function(){
+Template.experienceEdit.onRendered(function(){
 	updatePolymerInputs(this);
 });
 
@@ -22,8 +22,10 @@ Template.experienceDialog.events({
 		);
 		GlobalUI.closeDetail();
 	},
-	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
-	"change #experienceNameInput, input #experienceNameInput": function(event){
+});
+
+Template.experienceEdit.events({
+	"change #experienceNameInput": function(event){
 		var value = event.currentTarget.value;
 		Experiences.update(this._id, {$set: {name: value}});
 	},

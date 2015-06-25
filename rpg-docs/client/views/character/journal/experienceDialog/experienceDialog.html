@@ -9,20 +9,24 @@
 				<div class="pre-wrap">{{description}}</div>
 			{{/if}}
 		{{else}}
-			<div horizontal layout>
-				<!--Name-->
-				<paper-input id="experienceNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
-				<!--Value-->
-				<paper-input-decorator label="Value" floatinglabel>
-					<input id="valueInput" type="number" value={{value}}>
-				</paper-input-decorator>
-			</div>
-			<!--Description-->
-			<paper-input-decorator label="Description" floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="experienceDescriptionInput" placeholder value={{description}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
+			{{> experienceEdit}}
 		{{/baseDialog}}
 	{{/with}}
+</template>
+
+<template name="experienceEdit">
+	<div horizontal layout>
+		<!--Name-->
+		<paper-input id="experienceNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
+		<!--Value-->
+		<paper-input-decorator label="Value" floatinglabel>
+			<input id="valueInput" type="number" value={{value}}>
+		</paper-input-decorator>
+	</div>
+	<!--Description-->
+	<paper-input-decorator label="Description" floatinglabel layout vertical>
+		<paper-autogrow-textarea>
+			<textarea id="experienceDescriptionInput" placeholder value={{description}}></textarea>
+		</paper-autogrow-textarea>
+	</paper-input-decorator>
 </template>
