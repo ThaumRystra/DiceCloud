@@ -1,11 +1,10 @@
 //evaluates a calculation string
 evaluate = function(charId, string){
 	if (!string) return string;
-	var char = Characters.findOne(charId, {fields: {_id: 1}});
 	string = string.replace(/\b[a-z]+\b/gi, function(sub){
 		//fields
 		if (Schemas.Character.schema(sub)){
-			return char.fieldValue(sub);
+			return Characters.calculate.fieldValue(charId, sub);
 		}
 		//ability modifiers
 		var abilityMods = [
@@ -19,7 +18,7 @@ evaluate = function(charId, string){
 		if (_.contains(abilityMods, sub)){
 			var slice = sub.slice(0, -3);
 			try {
-				return char.abilityMod(slice);
+				return Characters.calculate.abilityMod(charId, slice);
 			} catch (e){
 				return sub;
 			}
@@ -33,7 +32,7 @@ evaluate = function(charId, string){
 		}
 		//character level
 		if (sub.toUpperCase()  === "LEVEL"){
-			return char.level();
+			return Characters.calculate.level(charId);
 		}
 		return sub;
 	});
@@ -41,7 +40,6 @@ evaluate = function(charId, string){
 		var result = math.eval(string);
 		return result;
 	} catch (e){
-		console.log("Failed to evaluate ", string);
 		return string;
 	}
 };

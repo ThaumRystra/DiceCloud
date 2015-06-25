@@ -16,3 +16,9 @@ td {
 		}
 	}
 }
+
+.summaryTable  {
+	&:nth-child(3){
+		text-align: right;
+	}
+}

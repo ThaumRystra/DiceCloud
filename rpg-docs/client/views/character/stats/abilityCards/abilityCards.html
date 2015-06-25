@@ -4,8 +4,8 @@
 				  layout horizontal>
 		<div class="left white-text {{color}}"
 			 hero-id="toolbar" {{detailHero ability ../_id}}>
-			<div class="display1">{{../attributeValue ability}}</div>
-			<div class="title">{{../abilityMod ability}}</div>
+			<div class="display1">{{characterCalculate "attributeValue" ../_id ability}}</div>
+			<div class="title">{{abilityMod}}</div>
 		</div>
 		<div class="right subhead" layout horizontal center>
 			{{title}}

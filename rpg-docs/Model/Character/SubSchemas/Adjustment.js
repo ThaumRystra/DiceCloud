@@ -3,10 +3,6 @@
  * Damage, healing and resource cost/recovery are all adjustments
  */
 Schemas.Adjustment = new SimpleSchema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	//which stat the adjustment is applied to
 	stat: {
 		type: String,

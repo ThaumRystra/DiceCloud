@@ -1,13 +1,21 @@
 Template.skillRow.helpers({
+	skillMod: function() {
+		return signedString(
+			Characters.calculate.skillMod(
+				Template.parentData()._id, this.skill
+			)
+		);
+	},
 	profIcon: function(){
-		var prof = Template.parentData(1).proficiency(this.skill);
+		var charId = Template.parentData()._id;
+		var prof = Characters.calculate.proficiency(charId, this.skill);
 		if (prof > 0 && prof < 1) return "image:brightness-2";
 		if (prof === 1) return "image:brightness-1";
 		if (prof > 1) return "av:album";
 		return "radio-button-off";
 	},
 	failSkill: function(){
-		var charId = Template.parentData(1)._id;
+		var charId = Template.parentData()._id;
 		return Effects.find({
 			charId: charId,
 			stat: this.skill,
@@ -16,12 +24,13 @@ Template.skillRow.helpers({
 		}).count();
 	},
 	advantage: function(){
-		var advantage = Template.parentData(1).advantage(this.skill);
+		var charId = Template.parentData()._id;
+		var advantage = Characters.calculate.advantage(charId, this.skill);
 		if (advantage > 0) return "advantage";
 		if (advantage < 0) return "disadvantage";
 	},
 	conditionalCount: function(){
-		var charId = Template.parentData(1)._id;
+		var charId = Template.parentData()._id;
 		return Effects.find({
 			charId: charId,
 			stat: this.skill,

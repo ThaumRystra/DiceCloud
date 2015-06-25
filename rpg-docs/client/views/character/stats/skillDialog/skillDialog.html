@@ -1,4 +1,4 @@
-<!-- needs name, char, and skillName -->
+<!-- needs name, charId, and skillName -->
 <template name="skillDialog">
 	{{#baseDialog title=name class=color hideEdit=true}}
 		{{> skillDialogView}}
@@ -8,7 +8,7 @@
 <template name="skillDialogView">
 	<div layout vertical center>
 		<div class="display2">
-			{{char.skillMod skillName}}
+			{{characterCalculate "skillMod" charId skillName}}
 		</div>
 		<div class="subhead">
 			<core-icon icon="{{profIcon}}" class="black54"></core-icon>
@@ -25,9 +25,9 @@
 	<table class="summaryTable">
 		<tr>
 			<td>{{abilityName}}</td>
-			<td>{{char.abilityMod ability}}</td>
+			<td>{{characterCalculate "abilityMod" charId ability}}</td>
 		</tr>
-		{{#if char.proficiency skillName}}
+		{{#if characterCalculate "proficiency" charId skillName}}
 			<tr>
 				<td>{{proficiencyValue}}</td>
 				<td>{{signedString profBonus}}</td>
@@ -59,7 +59,7 @@
 		{{/each}}
 		<tr class="body2">
 			<td>Total</td>
-			<td>{{char.skillMod skillName}}</td>
+			<td>{{characterCalculate "skillMod" charId skillName}}</td>
 		</tr>
 	</table>
 

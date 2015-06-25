@@ -98,9 +98,9 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 		});
 		var character = Characters.findOne(
 			charId,
-			{fields: {strength: 1, "settings": 1}}
+			{fields: {"settings": 1}}
 		);
-		var strength = character.attributeValue("strength");
+		var strength = Characters.calculate.attributeValue(charId, "strength");
 		var give = function(condition) {
 			Meteor.call("giveCondition", charId, condition);
 		};

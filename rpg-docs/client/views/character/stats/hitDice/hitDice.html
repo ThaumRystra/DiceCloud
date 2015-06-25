@@ -1,5 +1,5 @@
 <template name="hitDice">
-	{{#if ../attributeBase name}}
+	{{#if characterCalculate "attributeBase" ../_id name}}
 		<paper-shadow class="card hit-dice" hero-id="main" 
 					  {{detailHero name ../_id}} 
 					  layout horizontal>
@@ -18,10 +18,10 @@
 				</div>
 				<div class="resourceValue" layout vertical center>
 					<div>
-						{{../attributeValue name}}
+						{{characterCalculate "attributeValue" ../_id name}}
 					</div>
 					<div class="title white-text">
-						d{{diceNum}} {{../abilityMod "constitution"}}
+						d{{diceNum}} {{characterCalculate "abilityMod" ../_id "constitution"}}
 					</div>
 				</div>
 			</div>

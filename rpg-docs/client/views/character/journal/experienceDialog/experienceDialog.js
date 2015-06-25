@@ -1,3 +1,7 @@
+Template.experienceDialog.onRendered(function(){
+	updatePolymerInputs(this);
+});
+
 Template.experienceDialog.helpers({
 	experience: function(){
 		Experiences.findOne(this.experienceId);
