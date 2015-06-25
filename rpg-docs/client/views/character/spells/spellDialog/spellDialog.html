@@ -9,22 +9,30 @@
 </template>
 
 <template name="spellDetails">
-	<div class="caption">
+	<div class="body2">
 		Level {{level}} {{school}}, {{preparedString}}
 	</div>
-	<div class="vertMargin">
+	<div style="margin: 16px 0 16px 0;">
+		{{#if castingTime}}
 		<div>
 			<span class="body2">Casting Time: </span><span>{{castingTime}}</span>
 		</div>
+		{{/if}}
+		{{#if range}}
 		<div>
 			<span class="body2">Range: </span><span>{{range}}</span>
 		</div>
+		{{/if}}
+		{{#if getComponents}}
 		<div>
 			<span class="body2">Components: </span><span>{{getComponents}}</span>
 		</div>
+		{{/if}}
+		{{#if duration}}
 		<div>
 			<span class="body2">Duration: </span><span>{{duration}}</span>
 		</div>
+		{{/if}}
 	</div>
 	<div class="pre-wrap">{{evaluateString charId description}}</div>
 	{{> attacksViewList charId=charId parentId=_id}}
