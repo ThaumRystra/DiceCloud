@@ -193,3 +193,11 @@ ChangeLogs.insert({
 		"Experience dialogs should update their edit-mode inputs properly now",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.6.2",
+	changes: [
+		"Fixed a regression which broke min and max effects",
+	],
+});
+
