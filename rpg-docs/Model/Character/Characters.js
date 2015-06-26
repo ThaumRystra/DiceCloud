@@ -226,8 +226,8 @@ var attributeBase = function(charId, statName){
 	var base = 0;
 	var add = 0;
 	var mul = 1;
-	var min = Math.NEGATIVE_INFINITY;
-	var max = Math.POSITIVE_INFINITY;
+	var min = Number.NEGATIVE_INFINITY;
+	var max = Number.POSITIVE_INFINITY;
 
 	Effects.find({
 		charId: charId,
