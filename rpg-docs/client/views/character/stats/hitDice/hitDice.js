@@ -8,6 +8,11 @@ Template.hitDice.helpers({
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		return value <= 0;
 	},
+	conMod: function(){
+		return signedString(
+			Characters.calculate.abilityMod(this.char._id, "constitution")
+		);
+	},
 });
 
 Template.hitDice.events({
