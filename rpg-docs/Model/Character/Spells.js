@@ -62,6 +62,7 @@ Spells.attachSchema(Schemas.Spell);
 
 Spells.attachBehaviour("softRemovable");
 makeChild(Spells); //children of spell lists
+makeParent(Spells, ["name", "enabled"]); //parents of attacks
 
 Spells.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Spells.deny(CHARACTER_SUBSCHEMA_DENY);
