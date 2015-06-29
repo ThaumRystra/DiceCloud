@@ -201,3 +201,10 @@ ChangeLogs.insert({
 	],
 });
 
+ChangeLogs.insert({
+	version: "0.6.3",
+	changes: [
+		"Fixed a regression that stopped skills and attributes from rounding down correctly",
+		"Made dependency loops return NaN immediately, rather than looping indefinitely until a page refresh. Adding an effect that adds \"strength\" to Strength, won't cause Strength to constantly increase or freeze the browser, Strength just becomes NaN",
+	],
+});
