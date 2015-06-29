@@ -27,7 +27,7 @@ Router.map(function() {
 		},
 		data: {
 			characters: function(){
-				return Characters.find({}, {fields: {_id: 1}});
+				return Characters.find({}, {fields: {_id: 1}, sort: {name: 1}});
 			}
 		},
 		onAfterAction: function() {

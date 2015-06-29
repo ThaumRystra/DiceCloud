@@ -13,7 +13,10 @@ Template.characterSideList.helpers({
 					{owner: userId},
 				]
 			},
-			{fields: {name: 1}}
+			{
+				fields: {name: 1},
+				sort: {name: 1},
+			}
 		);
 	}
 });
