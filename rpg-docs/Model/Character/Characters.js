@@ -186,7 +186,7 @@ Schemas.Character = new SimpleSchema({
 
 Characters.attachSchema(Schemas.Character);
 
-var attributeBase = function(charId, statName){
+var attributeBase = preventLoop(function(charId, statName){
 	check(statName, String);
 	//if it's a damage multiplier, we treat it specially
 	if (_.contains(DAMAGE_MULTIPLIERS, statName)){
@@ -253,8 +253,8 @@ var attributeBase = function(charId, statName){
 	if (result < min) result = min;
 	if (result > max) result = max;
 
-	return result;
-};
+	return Math.floor(result);
+});
 
 if (Meteor.isClient) {
 	Template.registerHelper("characterCalculate", function(func, charId, input) {
@@ -324,9 +324,9 @@ Characters.calculate = {
 		value += attribute.adjustment;
 		return value;
 	}),
-	attributeBase: memoize(preventLoop(function(charId, attributeName){
+	attributeBase: memoize(function(charId, attributeName){
 		return attributeBase(charId, attributeName);
-	})),
+	}),
 	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
 		//get the final value of the ability score
@@ -369,7 +369,7 @@ Characters.calculate = {
 		if (result < min) result = min;
 		if (result > max) result = max;
 
-		return result;
+		return Math.floor(result);
 	})),
 	proficiency: memoize(function(charId, skillName){
 		//return largest value in proficiency array
@@ -390,7 +390,7 @@ Characters.calculate = {
 		});
 		var advantage = Characters.calculate.advantage(charId, skillName);
 		value += 5 * advantage;
-		return value;
+		return Math.floor(value);
 	}),
 	advantage: memoize(function(charId, skillName){
 		var advantage = Effects.find(
