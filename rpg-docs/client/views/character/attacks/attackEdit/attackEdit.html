@@ -3,26 +3,26 @@
 		<div layout vertical flex>
 			<div layout horizontal>
 				<!--attackBonus-->
-				<paper-input id="attackBonusInput" 
+				<paper-input class="attackBonusInput" 
 							 label="Attack Bonus"
 							 floatinglabel
 							 value={{attackBonus}}
 							 flex></paper-input>
 				<!--details-->
-				<paper-input id="detailInput"
+				<paper-input class="detailInput"
 							 label="Details"
 							 floatinglabel
 							 value={{details}}></paper-input>
 			</div>
 			<div layout horizontal>
 				<!--damageBonus-->
-				<paper-input id="damageInput"
+				<paper-input class="damageInput"
 							 label="Damage"
 							 floatinglabel
 							 value={{damage}}
 							 flex></paper-input>
 				<!--DamageType-->
-				<paper-dropdown-menu id="damageTypeDropdown" label="Damage Type">
+				<paper-dropdown-menu class="damageTypeDropdown" label="Damage Type">
 					<paper-dropdown layered class="dropdown">
 						<core-menu class="menu"  selected={{damageType}}>
 							{{#each damageTypes}}
@@ -34,6 +34,6 @@
 			</div>
 		</div>
 		<!--Delete Button-->
-		<paper-icon-button id="deleteAttack" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
+		<paper-icon-button class="deleteAttack" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
 	</div>
 </template>

@@ -107,7 +107,8 @@ Template.resource.helpers({
 		return !valuePositive;
 	},
 	getColor: function(){
-		if (this.char.attributeValue(this.name) > 0){
+		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		if (value > 0){
 			return this.color;
 		} else {
 			return "grey";
