@@ -3,7 +3,35 @@
 		<div id="persona" class="scroll-y" fit>
 			<div class="column-container">
 				{{#with characterDetails}}
-					{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
+					<paper-shadow class="card"
+								  hero-id="main" {{detailHero "details" _id}}>
+						{{#unless picture}}
+							<div class="top subhead characterField {{colorClass}}"
+								 hero-id="toolbar" {{detailHero "details" _id}}>
+								<div class="subhead" flex
+									 hero-id="title" {{detailHero "details" _id}}>
+									{{name}}
+								</div>
+							</div>
+						{{else}}
+							<core-image class="characterField clickable"
+										style="height:350px; width: 100%;
+											   background-color: #e8e8e8;"
+										sizing="cover"
+										hero-id="image" {{detailHero "details" _id}}
+										src={{picture}}></core-image>
+						{{/unless}}
+						<div class="bottom">
+							{{#if picture}}
+								<div class="title" hero-id="title" {{detailHero "details" _id}}>
+									{{name}}
+								</div>
+							{{/if}}
+							<div class="subhead">
+								{{alignment}} {{gender}} {{race}}
+							</div>
+						</div>
+					</paper-shadow>
 				{{/with}}
 				{{> containerCard characterField "description" "Description"}}
 				{{> containerCard characterField "personality" "Personality Traits"}}

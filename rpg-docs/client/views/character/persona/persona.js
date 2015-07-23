@@ -11,12 +11,12 @@ Template.persona.helpers({
 	characterDetails: function(){
 		var char = Characters.findOne(
 			this._id,
-			{fields: {name: 1, gender: 1, alignment: 1, race:1}}
+			{fields: {name: 1, gender: 1, alignment: 1, race:1, picture: 1}}
 		);
 		char.field = "details";
 		char.title = char.name;
 		char.color = "d";
-		char.topClass = "characterField";
+		char.startEditing = true;
 		return char;
 	},
 	characterField: function(field, title){
@@ -40,7 +40,7 @@ Template.persona.helpers({
 
 Template.persona.events({
 	"tap .characterField": function(event){
-		if (this.field === "details"){
+		if (this.field == "details"){
 			this.charId = Template.parentData()._id;
 			GlobalUI.setDetail({
 				template: "personaDetailsDialog",
@@ -58,6 +58,7 @@ Template.persona.events({
 					field: this.field,
 					title: this.title,
 					color: this.color,
+					startEditing: true,
 				},
 				heroId:   this._id + this.field,
 			});
