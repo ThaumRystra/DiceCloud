@@ -6,7 +6,11 @@
 			 hero-id="toolbar" {{detailHero "hitPoints" _id}}
 			 layout vertical center center-justified>
 			<div class="hitPointTitle clickable">Hit Points</div>
-			<paper-icon-button class="white54" id="addTempHP" icon="add"></paper-icon-button>
+			<paper-icon-button class="white54" 
+							   id="addTempHP" 
+							   icon="add" 
+							   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
+			</paper-icon-button>
 		</div>
 		<div class="right" flex layout vertical center-justified style="min-width: 180px;">
 			<div layout horizontal>
@@ -14,6 +18,7 @@
 								   value={{characterCalculate "attributeValue" _id "hitPoints"}}
 								   max={{characterCalculate "attributeBase" _id "hitPoints"}}
 								   editable pin
+								   disabled={{#unless canEditCharacter _id}}true{{/unless}}
 								   role="slider">
 				</paper-diff-slider>
 			</div>

@@ -112,7 +112,7 @@ Template.spells.helpers({
 		for (i = 0; i < currentSlots; i++){
 			bubbles.push({
 				icon: "radio-button-on",
-				disabled: i !== currentSlots - 1, //last full slot not disabled
+				disabled: i !== currentSlots - 1 || !canEditCharacter(char._id), //last full slot not disabled
 				attribute: "level" + this.level + "SpellSlots",
 				charId: char._id,
 			});
@@ -120,7 +120,7 @@ Template.spells.helpers({
 		for (i = 0; i < slotsUsed; i++){
 			bubbles.push({
 				icon: "radio-button-off",
-				disabled: i !== 0, //first empty slot not disabled
+				disabled: i !== 0 || !canEditCharacter(char._id), //first empty slot not disabled
 				attribute: "level" + this.level + "SpellSlots",
 				charId: char._id,
 			});

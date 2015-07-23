@@ -10,7 +10,8 @@
 						 layout horizontal center>
 						<div flex>Experience</div>
 						<div >{{characterCalculate "experience" _id}} XP</div>
-						<paper-icon-button class="black54" id="addXP" icon="add"></paper-icon-button>
+						<paper-icon-button class="black54" id="addXP" icon="add"
+										   disabled={{#unless canEditCharacter _id}}true{{/unless}}></paper-icon-button>
 					</div>
 					<div class="bottom list">
 						{{#each experiences}}
@@ -55,7 +56,8 @@
 						</div>
 						<paper-icon-button class="black54"
 										   id="addClassButton"
-										   icon="add">
+										   icon="add"
+										   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 						</paper-icon-button>
 					</div>
 					<div class="bottom list">

@@ -48,8 +48,8 @@ Template.inventory.helpers({
 			{charId: this._id},
 			{fields: {value : 1}}
 		).forEach(function(container) {
-			if(container.value) worth += container.value;
-		})
+			if (container.value) worth += container.value;
+		});
 		return worth;
 	},
 	weightCarried: function(){

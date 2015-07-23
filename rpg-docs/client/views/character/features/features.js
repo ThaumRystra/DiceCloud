@@ -3,14 +3,19 @@ Template.features.helpers({
 		var features = Features.find({charId: this._id}, {sort: {color: 1, name: 1}});
 		return features;
 	},
+	shortDescription: function() {
+		if (_.isString(this.description)){
+			return this.description.split(/[\n\r]{3,}/)[0];
+		}
+	},
 	hasUses: function(){
 		return this.usesValue() > 0;
 	},
 	noUsesLeft: function(){
-		return this.usesLeft() <= 0;
+		return this.usesLeft() <= 0 || !canEditCharacter(this.charId);
 	},
 	usesFull: function(){
-		return this.usesLeft() >= this.usesValue();
+		return this.usesLeft() >= this.usesValue() || !canEditCharacter(this.charId);
 	},
 	colorClass: function(){
 		return getColorClass(this.color);
@@ -99,12 +104,12 @@ Template.resource.helpers({
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var base = Characters.calculate.attributeBase(this.char._id, this.name);
 		var baseBigger = value < base;
-		return !baseBigger;
+		return !baseBigger || !canEditCharacter(this.char._id);
 	},
 	cantDecrement: function(){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var valuePositive = value > 0;
-		return !valuePositive;
+		return !valuePositive || !canEditCharacter(this.char._id);
 	},
 	getColor: function(){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);

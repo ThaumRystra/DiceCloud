@@ -72,6 +72,7 @@
 								<core-tooltip label="Change prepared spells"
 											  position="left">
 									<paper-icon-button class="prepSpells"
+													   disabled={{#unless canEditCharacter charId}}true{{/unless}}
 													   icon="book">
 									</paper-icon-button>
 								</core-tooltip>
