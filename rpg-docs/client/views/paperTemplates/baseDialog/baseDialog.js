@@ -9,20 +9,11 @@ Template.baseDialog.onRendered(function(){
 
 Template.baseDialog.helpers({
 	editing: function(){
-		return Template.instance().editing.get();
+		return Template.instance().editing.get() && canEditCharacter(Template.parentData().charId);
 	},
 	showEdit: function() {
 		if (this.hideEdit) return false;
-		var charId = Template.parentData().charId;
-		var userId = Meteor.userId();
-		if (!userId) return false;
-		if (charId){
-			var char = Characters.findOne(charId);
-			if (char)
-				return char.owner === userId ||
-					_.contains(char.writers, userId);
-		}
-		return true;
+		return canEditCharacter(Template.parentData().charId);
 	},
 });
 

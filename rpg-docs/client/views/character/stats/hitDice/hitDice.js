@@ -2,11 +2,11 @@ Template.hitDice.helpers({
 	cantIncrement: function(){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var base = Characters.calculate.attributeBase(this.char._id, this.name);
-		return value >= base;
+		return value >= base || !canEditCharacter(this.char._id);
 	},
 	cantDecrement: function(){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
-		return value <= 0;
+		return value <= 0 || !canEditCharacter(this.char._id);
 	},
 	conMod: function(){
 		return signedString(

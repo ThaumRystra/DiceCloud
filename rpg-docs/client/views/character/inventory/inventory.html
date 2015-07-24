@@ -35,8 +35,7 @@
 						<div class="item-slot">
 							<div class="item buff"
 								 hero-id="main" {{detailHero}}
-								 layout horizontal center
-								 draggable="true">
+								 layout horizontal center>
 								<div flex>
 									<core-icon icon="work"
 											   style="margin-right: 16px">
@@ -114,6 +113,7 @@
 							</div>
 							<core-tooltip label="Container carried" position="left">
 								<paper-checkbox class="carriedCheckbox"
+												disabled={{#unless canEditCharacter charId}}true{{/unless}}
 												checked={{isCarried}}>
 								</paper-checkbox>
 							</core-tooltip>
@@ -152,11 +152,11 @@
 		<div class="item {{hidden}} inventoryItem"
 					hero-id="main" {{detailHero}}
 					layout horizontal center
-					draggable="true">
+			 		draggable={{canEditCharacter charId}}>
 			<div flex class="itemName">
 				{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
 			</div>
-			{{#if settings.showIncrement}}
+			{{#if settings.showIncrement}}{{#if canEditCharacter charId}}
 			<div class="incrementButtons">
 				<paper-icon-button class="addItemQuantity"
 								   icon="add"
@@ -166,7 +166,7 @@
 								   icon="remove"
 								   style="margin-right: -8px"></paper-icon-button>
 			</div>
-			{{/if}}
+			{{/if}}{{/if}}
 		</div>
 	</div>
 </template>

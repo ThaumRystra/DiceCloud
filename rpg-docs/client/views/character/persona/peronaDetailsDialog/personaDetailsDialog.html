@@ -1,18 +1,36 @@
 <template name="personaDetailsDialog">
 	{{#baseDialog title=name class="deep-purple white-text" hideColor="true" hideDelete="true" startEditing=startEditing}}
-		{{alignment}} {{gender}} {{race}}
+		{{#with char}}
+			<div>{{alignment}} {{gender}} {{race}}</div>
+			<core-image style="width: 350px; height: 350px; margin-top: 8px;"
+				sizing="cover"
+				hero-id="image" hero
+				src={{picture}}></core-image>
+		{{/with}}
 	{{else}}
-		{{> personaDetailsEdit}}
+		{{#with char}}
+			{{> personaDetailsEdit}}
+		{{/with}}
 	{{/baseDialog}}
 </template>
 
 <template name="personaDetailsEdit">
-	<!--Name-->
-	<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input><br>
-	<!--Alignment-->
-	<paper-input id="alignmentInput" label="Alignment" floatinglabel value={{alignment}}></paper-input><br>
-	<!--Gender-->
-	<paper-input id="genderInput" label="Gender" floatinglabel value={{gender}}></paper-input><br>
-	<!--Race-->
-	<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input><br>
+	<div layout horizontal center-justified>
+		<div flex style="max-width: 350px;" layout vertical>
+			<!--Name-->
+			<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input>
+			<!--Alignment-->
+			<paper-input id="alignmentInput" label="Alignment" floatinglabel value={{alignment}}></paper-input>
+			<!--Gender-->
+			<paper-input id="genderInput" label="Gender" floatinglabel value={{gender}}></paper-input>
+			<!--Race-->
+			<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
+			<!--Picture-->
+			<paper-input id="pictureInput" label="Picture URL" floatinglabel value={{picture}}></paper-input>
+			<core-image style="height:350px; width: 100%; margin-top: 8px;"
+						sizing="cover"
+						hero-id="image" hero
+						src={{picture}}></core-image>
+		</div>
+	</div>
 </template>

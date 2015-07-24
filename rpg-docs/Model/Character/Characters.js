@@ -7,6 +7,7 @@ Schemas.Character = new SimpleSchema({
 	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
 	gender:       {type: String, defaultValue: "", trim: false, optional: true},
 	race:         {type: String, defaultValue: "", trim: false, optional: true},
+	picture:      {type: String, defaultValue: "", trim: true,  optional: true},
 	description:  {type: String, defaultValue: "", trim: false, optional: true},
 	personality:  {type: String, defaultValue: "", trim: false, optional: true},
 	ideals:       {type: String, defaultValue: "", trim: false, optional: true},

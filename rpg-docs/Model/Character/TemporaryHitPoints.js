@@ -5,7 +5,7 @@ Schemas.TemporaryHitPoints = new SimpleSchema({
 	name:        {type: String, optional: true},
 	maximum:     {type: Number, defaultValue: 0},
 	used:        {type: Number, defaultValue: 0},
-	deleteOnZero:{type: Boolean, defaultValue: true},
+	deleteOnZero:{type: Boolean, defaultValue: false},
 	dateAdded:   {
 		type: Date,
 		autoValue: function() {

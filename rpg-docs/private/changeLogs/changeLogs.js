@@ -219,3 +219,12 @@ ChangeLogs.insert({
 		"Skills should have correct min and max effects applied again",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.6.5",
+	changes: [
+		"Net worth now takes container values into account",
+		"Added support for character pictures",
+		"Disabled edit buttons for reada-only viewers",
+	],
+});
