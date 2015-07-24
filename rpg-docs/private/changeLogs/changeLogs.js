@@ -208,3 +208,14 @@ ChangeLogs.insert({
 		"Made dependency loops return NaN immediately, rather than looping indefinitely until a page refresh. Adding an effect that adds \"strength\" to Strength, won't cause Strength to constantly increase or freeze the browser, Strength just becomes NaN",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.6.4",
+	changes: [
+		"Hit dice now has a \"+\" between the dice and the constitution modifier",
+		"Items with multiple attacks should have the damage type editable on all attacks now",
+		"Spell attacks should now correctly inherit changes to their spell's name",
+		"Character lists should now be ordered alphabetically",
+		"Skills should have correct min and max effects applied again",
+	],
+});
