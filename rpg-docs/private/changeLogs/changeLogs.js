@@ -225,6 +225,6 @@ ChangeLogs.insert({
 	changes: [
 		"Net worth now takes container values into account",
 		"Added support for character pictures",
-		"Disabled edit buttons for reada-only viewers",
+		"Disabled edit buttons for read-only viewers",
 	],
 });
