@@ -235,3 +235,11 @@ ChangeLogs.insert({
 		"Text fields now accept github-flavor markdown formatting",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.6.7",
+	changes: [
+		"Fixed effect values not being visible on small screens",
+		"Added basic analytics",
+	],
+});
