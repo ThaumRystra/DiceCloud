@@ -1,6 +1,6 @@
 <template name="textDialog">
 	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true" startEditing=startEditing}}
-		<div class="pre-wrap">{{evaluateString charId value}}</div>
+		<div>{{#markdown}}{{evaluateString charId value}}{{/markdown}}</div>
 	{{else}}
 		{{> textDialogEdit}}
 	{{/baseDialog}}

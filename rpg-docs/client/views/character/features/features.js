@@ -5,7 +5,7 @@ Template.features.helpers({
 	},
 	shortDescription: function() {
 		if (_.isString(this.description)){
-			return this.description.split(/[\n\r]{3,}/)[0];
+			return this.description.split(/^( *[-*_]){3,} *(?:\n+|$)/m)[0];
 		}
 	},
 	hasUses: function(){

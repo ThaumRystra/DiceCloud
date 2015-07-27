@@ -29,6 +29,11 @@ core-header-panel[drawer] {
 	box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
 }
 
+//Paragraphs
+p {
+	margin-bottom: 8px;
+}
+
 //Horizontal rule
 hr {
 	background-color: #444;
@@ -37,7 +42,7 @@ hr {
 	color: #444;
 	height: 1px;
 	line-height: 0;
-	margin: 16px -16px;
+	margin: 16px 0;
 	text-align: center;
 }
 

@@ -18,8 +18,8 @@
 		{{#if requiresAttunement}}<div class="vertMargin">Requires Attunement</div>{{/if}}
 	</div>
 	{{#if description}}
-		<hr class="vertMargin">
-		<div class="pre-wrap">{{evaluateString charId description}}</div>
+		<hr style="margin: 16px 0 16px 0;">
+		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
 	{{/if}}
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> attacksViewList charId=charId parentId=_id}}

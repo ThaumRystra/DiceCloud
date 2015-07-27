@@ -6,7 +6,7 @@
 			</div>
 			{{#if description}}
 				<hr class="vertMargin">
-				<div class="pre-wrap">{{description}}</div>
+				<div>{{#markdown}}{{description}}{{/markdown}}</div>
 			{{/if}}
 		{{else}}
 			{{> experienceEdit}}

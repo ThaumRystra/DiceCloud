@@ -32,7 +32,7 @@
 	{{/if}}
 
 	{{#if description}}
-		<div class="pre-wrap">{{evaluateString charId description}}</div>
+		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
 	{{/if}}
 
 	{{> effectsViewList charId=charId parentId=_id}}

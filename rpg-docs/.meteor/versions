@@ -14,6 +14,7 @@ blaze-tools@1.0.3
 boilerplate-generator@1.0.3
 callback-hook@1.0.3
 check@1.0.5
+chuangbo:marked@0.3.5
 coffeescript@1.0.6
 dburles:collection-helpers@1.0.3
 dburles:mongo-collection-instances@0.3.3

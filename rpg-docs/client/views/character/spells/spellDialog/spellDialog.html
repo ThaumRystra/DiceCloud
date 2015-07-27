@@ -34,7 +34,7 @@
 		</div>
 		{{/if}}
 	</div>
-	<div class="pre-wrap">{{evaluateString charId description}}</div>
+	<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
 	{{> attacksViewList charId=charId parentId=_id}}
 </template>
 
