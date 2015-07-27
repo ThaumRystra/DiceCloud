@@ -228,3 +228,10 @@ ChangeLogs.insert({
 		"Disabled edit buttons for read-only viewers",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.6.6",
+	changes: [
+		"Text fields now accept github-flavor markdown formatting",
+	],
+});
