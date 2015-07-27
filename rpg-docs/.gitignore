@@ -1,5 +1,6 @@
 .meteor/local
 .meteor/meteorite
+settings.json
 public/components
 nohup.out
 dump

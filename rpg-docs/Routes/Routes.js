@@ -1,6 +1,7 @@
 Router.configure({
 	loadingTemplate: "loading",
 	layoutTemplate: "layout",
+	trackPageView: true,
 });
 
 Router.plugin("ensureSignedIn", {
