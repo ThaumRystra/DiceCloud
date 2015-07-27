@@ -225,6 +225,13 @@ ChangeLogs.insert({
 	changes: [
 		"Net worth now takes container values into account",
 		"Added support for character pictures",
-		"Disabled edit buttons for reada-only viewers",
+		"Disabled edit buttons for read-only viewers",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.6.6",
+	changes: [
+		"Text fields now accept github-flavor markdown formatting",
 	],
 });

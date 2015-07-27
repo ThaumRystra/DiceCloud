@@ -1,6 +1,6 @@
 <template name="backgroundDialog">
 	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true"}}
-		<div class="pre-wrap">{{evaluateString charId value}}</div>
+		<div>{{#markdown}}{{evaluateString charId value}}{{/markdown}}</div>
 		{{> proficiencyViewList charId=charId parentId=charId parentGroup="background"}}
 	{{else}}
 		{{> textDialogEdit}}

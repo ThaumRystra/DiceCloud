@@ -1,7 +1,7 @@
 <template name="noteDialog">
 	{{#with note}}
 		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
-			<div class="pre-wrap">{{description}}</div>
+			<div>{{#markdown}}{{description}}{{/markdown}}</div>
 		{{else}}
 			{{> noteDialogEdit}}
 		{{/baseDialog}}

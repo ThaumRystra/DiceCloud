@@ -102,8 +102,9 @@
 							{{/if}}
 						</div>
 						{{#if description}}
-							<div flex class="bottom text"
-								 >{{evaluateString charId shortDescription}}</div>
+							<div flex class="bottom">
+								{{#markdown}}{{evaluateString charId shortDescription}}{{/markdown}}
+							</div>
 						{{/if}}
 						{{#if hasUses}}
 							<div layout horizontal center end-justified>
