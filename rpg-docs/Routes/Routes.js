@@ -57,6 +57,12 @@ Router.map(function() {
 				document.title = name;
 			}
 		},
+		//analytics
+		trackPageView: false,
+		onRun: function() {
+			window.ga && window.ga("send", "pageview", "/character");
+			this.next();
+		},
 	});
 
 	this.route("loading", {
