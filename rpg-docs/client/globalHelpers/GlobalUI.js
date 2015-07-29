@@ -77,10 +77,10 @@ this.GlobalUI = (function() {
 
 	var throttleBack = _.throttle(function() {
 		history.back();
-	}, 800, {trailing: false});
+	}, 100, {trailing: false});
 
 	GlobalUI.closeDetail = function() {
-		if (!!(window.history && window.history.pushState)) {
+		if (window.history && history.pushState && history.state.detail === "opened") {
 			throttleBack();
 		} else {
 			Session.set("global.ui.detailShow", false);
