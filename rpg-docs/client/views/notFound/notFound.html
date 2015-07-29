@@ -1,10 +1,14 @@
 <template name="notFound">
-	<div layout vertical center center-justified fit>
-		<h2>The data for the page you requested could not be found.</h2>
+	<core-toolbar class="app-grey white-text">
+		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+	</core-toolbar>
+	<div layout vertical center center-justified fit 
+		 style="padding: 16px; text-align: center;">
+		<h2 style="margin-bottom: 12px;">The data for the page you requested could not be found.</h2>
 		{{#if currentUser}}
-			<h2>It might not exist, or you might not have permission to view it.</h2>
+			<h3>It might not exist, or you might not have permission to view it.</h3>
 		{{else}}
-			<h2>Perhaps you need to sign in first:</h2>
+			<h3>Perhaps you need to sign in first:</h3>
 			{{atForm}}
 		{{/if}}
 	</div>

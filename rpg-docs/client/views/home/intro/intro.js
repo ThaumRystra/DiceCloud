@@ -8,6 +8,9 @@ Template.intro.events({
 	"tap .ssArcher": function() {
 		Router.go("/character/yBWwt5XQTTHZiRQxq");
 	},
+	"tap .ssWizard": function() {
+		Router.go("/character/KxHKskm22fS2Xogah");
+	},
 	"tap .guideButton": function() {
 		Router.go("/guide");
 	},
