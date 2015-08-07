@@ -99,4 +99,12 @@ Router.map(function() {
 			document.title = appName;
 		},
 	});
+
+	this.route("/icon-list", {
+		name: "iconList",
+		template: "iconList",
+		onAfterAction: function() {
+			document.title = appName;
+		},
+	});
 });
