@@ -1,14 +1,14 @@
 <template name="healthCard">
-	<paper-shadow class="card container healthCard" 
-				  hero-id="main" {{detailHero "hitPoints" _id}} 
+	<paper-shadow class="card container healthCard"
+				  hero-id="main" {{detailHero "hitPoints" _id}}
 				  layout horizontal wrap>
-		<div class="green white-text subhead left" 
+		<div class="green white-text subhead left"
 			 hero-id="toolbar" {{detailHero "hitPoints" _id}}
 			 layout vertical center center-justified>
 			<div class="hitPointTitle clickable">Hit Points</div>
-			<paper-icon-button class="white54" 
-							   id="addTempHP" 
-							   icon="add" 
+			<paper-icon-button class="white54"
+							   id="addTempHP"
+							   icon="add"
 							   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 			</paper-icon-button>
 		</div>
@@ -33,14 +33,14 @@
 							  role="slider"
 							  flex
 							  ></paper-diff-slider>
-					{{#unless left}}{{#unless deleteOnZero}}
+					{{#unless left}}
 						<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
-					{{/unless}}{{/unless}}
+					{{/unless}}
 				</div>
 			</div>
 			{{/each}}
 			<div class="caption">
-				{{#if multipliers.immunities.length}} 
+				{{#if multipliers.immunities.length}}
 					<div>
 						Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}
 					</div>
