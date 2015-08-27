@@ -243,3 +243,12 @@ ChangeLogs.insert({
 		"Added basic analytics",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.6.8",
+	changes: [
+		"Fixed share dialog not finding user names",
+		"Fixed temporary hitpoint sliders allowing negative values",
+		"Fixed proficiencies not being disabled with their features",
+	],
+});
