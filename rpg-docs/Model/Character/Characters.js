@@ -33,6 +33,7 @@ Schemas.Character = new SimpleSchema({
 	age:              {type: Schemas.Attribute},
 	ageRate:          {type: Schemas.Attribute},
 	armor:            {type: Schemas.Attribute},
+	carryMultiplier:  {type: Schemas.Attribute},
 
 	//resources
 	level1SpellSlots: {type: Schemas.Attribute},
