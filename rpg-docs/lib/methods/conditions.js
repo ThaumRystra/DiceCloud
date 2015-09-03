@@ -101,6 +101,8 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 			{fields: {"settings": 1}}
 		);
 		var strength = Characters.calculate.attributeValue(charId, "strength");
+		var carryMultiplier = Characters.calculate
+			.attributeValue(charId, "carryMultiplier");
 		var give = function(condition) {
 			Meteor.call("giveCondition", charId, condition);
 		};
@@ -108,11 +110,11 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 			Meteor.call("removeCondition", charId, condition);
 		};
 		//variant encumbrance rules
-		if (weight > strength * 10 &&
+		if (weight > strength * 10 * carryMultiplier &&
 			character.settings.useVariantEncumbrance) {
 			give("encumbered2");
 			remove("encumbered");
-		} else if (weight > strength * 5 &&
+		} else if (weight > strength * 5 * carryMultiplier &&
 				   character.settings.useVariantEncumbrance){
 			give("encumbered");
 			remove("encumbered2");
@@ -121,11 +123,11 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 			remove("encumbered2");
 		}
 		//normal encumbrance rules
-		if (weight > strength * 30 &&
+		if (weight > strength * 30 * carryMultiplier &&
 			character.settings.useStandardEncumbrance){
 			give("encumbered4");
 			remove("encumbered3");
-		} else if (weight > strength * 15 &&
+		} else if (weight > strength * 15 * carryMultiplier &&
 				   character.settings.useStandardEncumbrance) {
 			give("encumbered3");
 			remove("encumbered4");

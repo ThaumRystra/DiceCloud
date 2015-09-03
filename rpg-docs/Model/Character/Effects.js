@@ -107,6 +107,18 @@ if (Meteor.isServer) Characters.after.insert(function(userId, char) {
 			group: "Inate",
 		},
 	});
+	Effects.insert({
+		charId: char._id,
+		name: "Natural Carrying Capacity",
+		stat: "carryMultiplier",
+		operation: "base",
+		value: "1",
+		parent: {
+			id: char._id,
+			collection: "Characters",
+			group: "Inate",
+		},
+	});
 });
 
 Effects.attachBehaviour("softRemovable");
