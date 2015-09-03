@@ -42,6 +42,7 @@ var stats = [
 	{stat: "rageDamage", name: "Rage Damage", group: "Stats"},
 	{stat: "expertiseDice", name: "Expertise Dice", group: "Stats"},
 	{stat: "superiorityDice", name: "Superiority Dice", group: "Stats"},
+	{stat: "carryMultiplier", name: "Carry Capacity Multiplier", group: "Stats"},
 	{stat: "level1SpellSlots", name: "level 1", group: "Spell Slots"},
 	{stat: "level2SpellSlots", name: "level 2", group: "Spell Slots"},
 	{stat: "level3SpellSlots", name: "level 3", group: "Spell Slots"},
