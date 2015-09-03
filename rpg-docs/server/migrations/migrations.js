@@ -115,7 +115,7 @@ Migrations.add({
 	up: function() {
 		//update characters
 
-		Characters.find().forEach(function(char){
+		Characters.find({}).forEach(function(char){
 			Characters.update(char._id, {
 				$set: {
 					carryMultiplier: {
