@@ -252,3 +252,11 @@ ChangeLogs.insert({
 		"Fixed proficiencies not being disabled with their features",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.7.0",
+	changes: [
+		"Added carry capacity multiplier as a stat with a default value of 1",
+		"Improved loading times by vulcanizing polymer imports",
+	],
+});
