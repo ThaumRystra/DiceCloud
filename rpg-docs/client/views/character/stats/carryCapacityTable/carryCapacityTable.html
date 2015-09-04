@@ -2,26 +2,26 @@
 	<table class="carryCapacityTable strengthTable">
 		<tr>
 			<td>Encumbered</td>
-			<td>&gt;{{evaluate charId "strength * 5"}}lbs</td>
+			<td>&gt;{{evaluate charId "strength * 5 * carryMultiplier"}}lbs</td>
 			<td class="caption">Variant rule, encumbered characters move 10 feet slower</td>
 		</tr>
 		<tr>
 			<td>Heavily encumbered</td>
-			<td>&gt;{{evaluate charId "strength * 10"}}lbs</td>
+			<td>&gt;{{evaluate charId "strength * 10 * carryMultiplier"}}lbs</td>
 			<td class="caption">
 				Variant rule, heavily encumbered characters move 20 feet slower and have disadvantage on ability checks, attack rolls, and saving thows that use Strength, Dexterity, or Constitution
 			</td>
 		</tr>
 		<tr>
 			<td>Over Encumbered</td>
-			<td>&gt;{{evaluate charId "strength * 15"}}lbs</td>
+			<td>&gt;{{evaluate charId "strength * 15 * carryMultiplier"}}lbs</td>
 			<td class="caption">
 				Characters that can only just lift, push or drag their current load can only move at 5 feet.
 			</td>
 		</tr>
 		<tr>
 			<td>Push, drag or lift maximum</td>
-			<td>{{evaluate charId "strength * 30"}}lbs</td>
+			<td>{{evaluate charId "strength * 30 * carryMultiplier"}}lbs</td>
 			<td class="caption"></td>
 		</tr>
 	</table>

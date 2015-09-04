@@ -14,7 +14,9 @@ var getFractionCarried = function(char) {
 	});
 	//get strength
 	var strength = Characters.calculate.attributeValue(char._id, "strength");
-	var capacity = strength * 15;
+	var carryMultiplier = Characters.calculate
+		.attributeValue(char._id, "carryMultiplier");
+	var capacity = strength * 15 * carryMultiplier;
 	return weight / capacity;
 };
 

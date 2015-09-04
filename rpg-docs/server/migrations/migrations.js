@@ -108,3 +108,45 @@ Migrations.add({
 		);
 	},
 });
+
+Migrations.add({
+	version: 4,
+	name: "Adds an effect to give characters a base carry capacity",
+	up: function() {
+		//update characters
+
+		Characters.find({}).forEach(function(char){
+			Characters.update(char._id, {
+				$set: {
+					carryMultiplier: {
+						adjustment: 0,
+						reset: "longRest",
+					}
+				}
+			});
+			var effect = Effects.findOne({
+				charId: char._id, name: "Natural Carrying Capacity"
+			});
+			if (effect) return;
+			Effects.insert({
+				charId: char._id,
+				name: "Natural Carrying Capacity",
+				stat: "carryMultiplier",
+				operation: "base",
+				value: "1",
+				parent: {
+					id: char._id,
+					collection: "Characters",
+					group: "Inate",
+				},
+			});
+			effect = Effects.findOne({
+				charId: char._id, name: "Natural Carrying Capacity"
+			});
+			if (!effect) throw "Carry capacity effect should be set by now."
+		});
+	},
+	down: function(){
+		return;
+	},
+});

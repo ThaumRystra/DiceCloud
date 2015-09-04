@@ -30,7 +30,7 @@ Schemas.Proficiency = new SimpleSchema({
 Proficiencies.attachSchema(Schemas.Proficiency);
 
 Proficiencies.attachBehaviour("softRemovable");
-makeChild(Proficiencies);
+makeChild(Proficiencies, ["enabled"]);
 
 Proficiencies.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Proficiencies.deny(CHARACTER_SUBSCHEMA_DENY);
