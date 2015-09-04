@@ -42,6 +42,7 @@ var stats = {
 	"rageDamage":{"name":"Rage Damage"},
 	"expertiseDice":{"name":"Expertise Dice"},
 	"superiorityDice":{"name":"Superiority Dice"},
+	"carryMultiplier": {"name": "Carry Capacity Multiplier"},
 	"level1SpellSlots":{"name":"level 1 Spell Slots"},
 	"level2SpellSlots":{"name":"level 2 Spell Slots"},
 	"level3SpellSlots":{"name":"level 3 Spell Slots"},
