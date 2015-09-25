@@ -260,3 +260,11 @@ ChangeLogs.insert({
 		"Improved loading times by vulcanizing polymer imports",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.7.1",
+	changes: [
+		"Fixed carry capacity effects not displaying correctly when not editing",
+		"Changed how columns are presented to fix a display issue introduced in Chrome 44",
+	],
+});
