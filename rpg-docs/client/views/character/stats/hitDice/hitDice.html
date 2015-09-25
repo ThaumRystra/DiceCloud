@@ -1,14 +1,15 @@
 <template name="hitDice">
 	{{#if characterCalculate "attributeBase" ../_id name}}
-		<paper-shadow class="card hit-dice" hero-id="main" 
-					  {{detailHero name ../_id}} 
+		<div>
+		<paper-shadow class="card hit-dice" hero-id="main"
+					  {{detailHero name ../_id}}
 					  layout horizontal>
-			<div class="left green display1 white-text" 
+			<div class="left green display1 white-text"
 				 hero-id="toolbar" {{detailHero name ../_id}}
 				 layout horizontal>
 				<div>
-					<paper-icon-button class="resourceUp" 
-									   icon="arrow-drop-up" 
+					<paper-icon-button class="resourceUp"
+									   icon="arrow-drop-up"
 									   disabled={{cantIncrement}}>
 					</paper-icon-button>
 					<paper-icon-button class="resourceDown"
@@ -29,5 +30,6 @@
 				Hit Dice
 			</div>
 		</paper-shadow>
+		</div>
 	{{/if}}
 </template>

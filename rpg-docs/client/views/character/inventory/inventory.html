@@ -3,6 +3,7 @@
 		<div id="inventory" class="scroll-y" fit>
 			<div class="column-container">
 				<!--Net Worth-->
+				<div>
 				<paper-shadow class="card">
 					<div class="white top" layout horizontal center>
 						<div class="subhead" flex>
@@ -13,7 +14,9 @@
 						</div>
 					</div>
 				</paper-shadow>
+				</div>
 				<!--Weight Carried-->
+				<div>
 				<paper-shadow class="card"
 							  hero-id="main" {{detailHero "weightCarried" _id}}>
 					<div class="top green white-text weightCarried"
@@ -48,7 +51,9 @@
 					</div>
 					{{/if}}
 				</paper-shadow>
+				</div>
 				<!--Equipment-->
+				<div>
 				<paper-shadow class="card equipmentContainer">
 					<div class="white top" layout horizontal center>
 						<div class="subhead" flex>
@@ -76,7 +81,9 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
+				</div>
 				<!--Carried Items-->
+				<div>
 				<paper-shadow class="card carriedContainer">
 					<div class="white top" layout horizontal center>
 						<div class="subhead" flex>
@@ -95,8 +102,10 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
+				</div>
 				{{#each containers}}
-					<paper-shadow class="card itemContainer" 
+					<div>
+					<paper-shadow class="card itemContainer"
 								  hero-id="main" {{detailHero}}>
 						<div class="top {{colorClass}}"
 							 hero-id="toolbar" {{detailHero}}
@@ -124,6 +133,7 @@
 							{{/each}}
 						</div>
 					</paper-shadow>
+					</div>
 				{{/each}}
 			</div>
 			<div class="fab-buffer"></div>

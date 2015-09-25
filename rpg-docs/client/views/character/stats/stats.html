@@ -27,6 +27,7 @@
 			{{>hitDice name="d10HitDice" diceNum="10" char=this}}
 			{{>hitDice name="d12HitDice" diceNum="12" char=this}}
 			<!--Saving Throws-->
+			<div>
 			<paper-shadow class="card">
 				<div class="top white subhead">
 					Saving Throws
@@ -40,7 +41,9 @@
 					{{> skillRow name="Charisma" skill="charismaSave"}}
 				</div>
 			</paper-shadow>
+			</div>
 			<!--Skills-->
+			<div>
 			<paper-shadow class="card">
 				<div class="top white subhead">
 					Skills
@@ -66,11 +69,13 @@
 					{{> skillRow name="Survival" skill="survival"}}
 				</div>
 			</paper-shadow>
+			</div>
 		</div>
 	</div>
 </template>
 
 <template name="statCard">
+	<div>
 	<paper-shadow class="card statCard clickable" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
 		<div class="left display1 white-text {{color}}"
 			 hero-id="toolbar" {{detailHero stat ../_id}}>
@@ -84,4 +89,5 @@
 			{{name}}
 		</div>
 	</paper-shadow>
+	</div>
 </template>

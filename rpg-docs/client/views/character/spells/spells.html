@@ -1,9 +1,10 @@
 <template name="spells">
 	<div fit>
 		<div id="spells" class="scroll-y" fit>
-			<div style="padding: 4px;" 
+			<div style="padding: 4px;"
 				 layout horizontal start wrap>
 				{{#if hasSlots}}
+				<div>
 					<paper-shadow class="card"
 								  style="margin: 4px;"
 								  hero-id="main" {{detailHero}}>
@@ -33,8 +34,10 @@
 							{{/if}}{{/each}}
 						</div>
 					</paper-shadow>
+				</div>
 				{{/if}}
 				{{#each spellLists}}
+				<div>
 					<paper-shadow class="card spellList" flex
 								  hero-id="main" {{detailHero}}
 								  style="margin: 4px;">
@@ -92,7 +95,7 @@
 												<div class="tall spell item"
 													 hero-id="main" {{detailHero}}
 													 layout horizontal center>
-													<core-icon icon="social:whatshot" 
+													<core-icon icon="social:whatshot"
 															   style="color: {{hexColor color}};
 																	  margin-right: 16px;"
 															   ></core-icon>
@@ -123,6 +126,7 @@
 							{{/each}}
 						</div>
 					</paper-shadow>
+				</div>
 				{{/each}}
 			</div>
 			<div class="fab-buffer"></div>

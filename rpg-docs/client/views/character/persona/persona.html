@@ -3,6 +3,7 @@
 		<div id="persona" class="scroll-y" fit>
 			<div class="column-container">
 				{{#with characterDetails}}
+				<div>
 					<paper-shadow class="card"
 								  hero-id="main" {{detailHero "details" _id}}>
 						{{#unless picture}}
@@ -32,13 +33,15 @@
 							</div>
 						</div>
 					</paper-shadow>
+				</div>
 				{{/with}}
-				{{> containerCard characterField "description" "Description"}}
-				{{> containerCard characterField "personality" "Personality Traits"}}
-				{{> containerCard characterField "ideals" "Ideals"}}
-				{{> containerCard characterField "bonds" "Bonds"}}
-				{{> containerCard characterField "flaws" "Flaws"}}
-				{{> containerCard characterField "backstory" "Background"}}
+				<div>{{> containerCard characterField "description" "Description"}}</div>
+				<div>{{> containerCard characterField "personality" "Personality Traits"}}</div>
+				<div>{{> containerCard characterField "ideals" "Ideals"}}</div>
+				<div>{{> containerCard characterField "bonds" "Bonds"}}</div>
+				<div>{{> containerCard characterField "flaws" "Flaws"}}</div>
+				<div>{{> containerCard characterField "backstory" "Background"}}</div>
+				<div>
 				<paper-shadow class="card">
                     <div class="white top subhead">
                       Languages
@@ -49,6 +52,7 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
+				</div>
 			</div>
 		</div>
 	</div>
