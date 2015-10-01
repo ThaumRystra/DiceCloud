@@ -72,7 +72,7 @@ makeChild(Attacks, ["name", "enabled"]); //children of lots of things
 Attacks.after.insert(function (userId, attack) {
 	//Check to see if this attack's parent is a spell, if so, mirror prepared state to enabled
 	if (attack.parent.collection === "Spells") {
-		var parentSpell = Spells.findOne(attack.parentId);
+		var parentSpell = Spells.findOne(attack.parent.id);
 		if (parentSpell.prepared === "unprepared") {
 			Attacks.update(attack._id, {$set: {enabled: false}});
 		} else if (parentSpell.prepared === "prepared" || "always") {
