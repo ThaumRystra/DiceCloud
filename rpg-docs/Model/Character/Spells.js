@@ -64,5 +64,21 @@ Spells.attachBehaviour("softRemovable");
 makeChild(Spells); //children of spell lists
 makeParent(Spells, ["name", "enabled"]); //parents of attacks
 
+Spells.after.update(function (userId, spell, fieldNames) {
+	//Update prepared state of spell and child attacks to be enabled or not
+	if (_.contains(fieldNames, "prepared")) {
+		var childAttacks = Attacks.find({"parent.id": spell._id}).fetch();
+		if (spell.prepared === "unprepared") {
+			_.each(childAttacks, function(attack){
+				Attacks.update(attack._id, {$set: {enabled: false}});
+			});
+		} else if (spell.prepared === "prepared" || "always") {
+			_.each(childAttacks, function(attack){
+				Attacks.update(attack._id, {$set: {enabled: true}});
+			});
+		}
+	}
+});
+
 Spells.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Spells.deny(CHARACTER_SUBSCHEMA_DENY);
