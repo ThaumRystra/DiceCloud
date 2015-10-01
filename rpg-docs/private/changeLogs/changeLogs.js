@@ -268,3 +268,10 @@ ChangeLogs.insert({
 		"Changed how columns are presented to fix a display issue introduced in Chrome 44",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.7.2",
+	changes: [
+		"Fixed spell attacks appearing on features page when the spell is not prepared",
+	],
+});
