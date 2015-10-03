@@ -3,7 +3,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
 iron:router
 accounts-password
 accounts-ui
@@ -29,3 +28,17 @@ meteorhacks:subs-manager
 meteorhacks:kadira
 chuangbo:marked
 reywood:iron-router-ga
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+ejson
+spacebars
+check
+useraccounts:iron-routing
