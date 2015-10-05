@@ -11,7 +11,6 @@ dburles:collection-helpers
 reactive-var
 underscore
 aldeed:collection2
-differential:vulcanize
 matb33:collection-hooks
 zimme:collection-softremovable
 momentjs:moment

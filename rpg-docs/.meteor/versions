@@ -30,7 +30,6 @@ ddp-rate-limiter@1.0.0
 ddp-server@1.2.1
 deps@1.0.9
 diff-sequence@1.0.1
-differential:vulcanize@2.0.1
 ecmascript@0.1.5
 ecmascript-collections@0.1.6
 ecwyne:mathjs@0.25.0
