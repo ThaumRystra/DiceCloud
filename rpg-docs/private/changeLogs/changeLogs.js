@@ -275,3 +275,14 @@ ChangeLogs.insert({
 		"Fixed spell attacks appearing on features page when the spell is not prepared",
 	],
 });
+
+
+
+ChangeLogs.insert({
+	version: "0.8.0",
+	changes: [
+		"Migrate to a new hosting provider. Server should now respond to interaction in milliseconds, rather than minutes",
+		"Redirected www.dicecloud.com to dicecloud.com",
+		"Fixed errors loggin in with Google",
+	],
+});
