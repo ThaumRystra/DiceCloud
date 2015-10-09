@@ -24,7 +24,7 @@ Template.carryCapacityBar.onCreated(function() {
 	var self = this;
 	self.carriedFraction = new ReactiveVar(0);
 	self.autorun(function() {
-		self.carriedFraction.set(getFractionCarried(self.data));
+		self.carriedFraction.set(getFractionCarried(Template.currentData()));
 	});
 });
 
