@@ -4,7 +4,7 @@ Schemas.Item = new SimpleSchema({
 	name:       {type: String, defaultValue: "New Item", trim: false},
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
-	charId:     {type: String, regEx: SimpleSchema.RegEx.Id}, //id of owner
+	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1}, //id of owner
 	quantity:	{type: Number, min: 0, defaultValue: 1},
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},

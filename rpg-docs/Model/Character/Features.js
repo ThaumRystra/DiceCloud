@@ -1,7 +1,7 @@
 Features = new Mongo.Collection("features");
 
 Schemas.Feature = new SimpleSchema({
-	charId:		  {type: String, regEx: SimpleSchema.RegEx.Id},
+	charId:		  {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:         {type: String, trim: false},
 	description:  {type: String, optional: true, trim: false},
 	uses:         {type: String, optional: true, trim: false},

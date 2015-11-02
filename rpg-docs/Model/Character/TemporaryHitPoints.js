@@ -1,7 +1,7 @@
 TemporaryHitPoints = new Mongo.Collection("temporaryHitPoints");
 
 Schemas.TemporaryHitPoints = new SimpleSchema({
-	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
+	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:        {type: String, optional: true},
 	maximum:     {type: Number, defaultValue: 0, min: 0, max: 500},
 	used:        {type: Number, defaultValue: 0, min: 0, max: 500},

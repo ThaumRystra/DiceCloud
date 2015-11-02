@@ -1,7 +1,7 @@
 Spells = new Mongo.Collection("spells");
 
 Schemas.Spell = new SimpleSchema({
-	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
+	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	prepared: {
 		type: String,
 		defaultValue: "prepared",
