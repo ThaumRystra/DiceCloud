@@ -3,7 +3,7 @@ Containers = new Mongo.Collection("containers");
 
 Schemas.Container = new SimpleSchema({
 	name:       {type: String, trim: false},
-	charId:     {type: String, regEx: SimpleSchema.RegEx.Id},
+	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	isCarried:  {type: Boolean},
 	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
 	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},

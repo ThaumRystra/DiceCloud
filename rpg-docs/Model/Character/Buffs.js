@@ -4,6 +4,7 @@ Schemas.Buff = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
+		index: 1,
 	},
 	name: {
 		type: String,

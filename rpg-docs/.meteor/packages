@@ -42,3 +42,5 @@ spacebars
 check
 useraccounts:iron-routing
 wizonesolutions:canonical
+meteorhacks:fast-render
+appcache

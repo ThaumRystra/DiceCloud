@@ -1,7 +1,7 @@
 SpellLists = new Mongo.Collection("spellLists");
 
 Schemas.SpellLists = new SimpleSchema({
-	charId:      {type: String, regEx: SimpleSchema.RegEx.Id},
+	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:        {type: String, trim: false},
 	description: {type: String, optional: true, trim: false},
 	saveDC:      {type: String, optional: true, trim: false},
