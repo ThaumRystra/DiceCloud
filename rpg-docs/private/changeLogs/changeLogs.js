@@ -292,6 +292,5 @@ ChangeLogs.insert({
 	changes: [
 		"Added fast render support, direct links to characters should load instantly",
 		"Added extra indexes to the database to improve performance",
-		"Added appcache support to improve load times on return visits",
 	],
 });
