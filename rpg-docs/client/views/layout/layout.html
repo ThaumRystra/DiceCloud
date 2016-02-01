@@ -1,5 +1,5 @@
 <template name="layout">
-	<core-drawer-panel responsiveWidth="905px">
+	<core-drawer-panel class="layout" responsiveWidth="905px">
 		<core-header-panel drawer navigation flex mode="seamed" class="white">
 			<div id="accountSummary">
 				{{#if currentUser}}
@@ -19,9 +19,9 @@
 				<core-item id="changeLog" icon="list" label="Change Log"></core-item>
 			</div>
 		</core-header-panel>
-		<core-animated-pages main 
-							 navigation 
-							 detail-pages 
+		<core-animated-pages main
+							 navigation
+							 detail-pages
 							 transitions="hero-transition cross-fade"
 							 selected={{globalDetailSelected}}>
 			<section id="mainContentSection" class={{notSelected}}>

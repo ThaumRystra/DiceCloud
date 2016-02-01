@@ -23,7 +23,7 @@ Template.characterSideList.helpers({
 
 Template.characterSideList.events({
 	"tap .singleLineItem": function(event, instance) {
-		Router.go("characterSheet", {_id: this._id});
+		//Router.go("characterSheet", {_id: this._id});
 		$("core-drawer-panel").get(0).closeDrawer();
 	},
 	"tap core-item": function() {

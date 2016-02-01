@@ -115,7 +115,7 @@ ChangeLogs.insert({
 		"Added encumbrance effects that automatically apply when carrying too much load",
 		"Added a bunch of UI elements to make your character's current load clear",
 		"Floating button menus now close as expected when you click a sub-button",
-		"Base values in attribute summaries no longer look like added values"
+		"Base values in attribute summaries no longer look like added values",
 	],
 });
 
@@ -276,8 +276,6 @@ ChangeLogs.insert({
 	],
 });
 
-
-
 ChangeLogs.insert({
 	version: "0.8.0",
 	changes: [
@@ -292,5 +290,13 @@ ChangeLogs.insert({
 	changes: [
 		"Added fast render support, direct links to characters should load instantly",
 		"Added extra indexes to the database to improve performance",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.9.1",
+	changes: [
+		"Fixed rendering issues in Chrome 49+",
+		"Made character names in the side-bar into regular links",
 	],
 });
