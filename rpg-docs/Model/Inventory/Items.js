@@ -216,7 +216,7 @@ Characters.after.insert(function(userId, char) {
 			description: "A sturdy pouch for coins",
 			color: "d",
 		});
-		Items.insert({
+		var goldId = Items.insert({
 			name: "Gold piece",
 			plural: "Gold pieces",
 			charId: char._id,
@@ -229,7 +229,7 @@ Characters.after.insert(function(userId, char) {
 				collection: "Containers",
 			},
 		});
-		Items.insert({
+		var silverId = Items.insert({
 			name: "Silver piece",
 			plural: "Silver pieces",
 			charId: char._id,
@@ -242,7 +242,7 @@ Characters.after.insert(function(userId, char) {
 				collection: "Containers",
 			},
 		});
-		Items.insert({
+		var copperId = Items.insert({
 			name: "Copper piece",
 			plural: "Copper pieces",
 			charId: char._id,
@@ -255,5 +255,8 @@ Characters.after.insert(function(userId, char) {
 				collection: "Containers",
 			},
 		});
+		Items.update(goldId, {$set: {"settings.showIncrement": true}});
+		Items.update(silverId, {$set: {"settings.showIncrement": true}});
+		Items.update(copperId, {$set: {"settings.showIncrement": true}});
 	}
 });
