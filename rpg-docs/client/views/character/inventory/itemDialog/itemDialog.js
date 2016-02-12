@@ -57,7 +57,11 @@ Template.itemEdit.events({
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
 	"change #itemNameInput": function(event){
 		var name = Template.instance().find("#itemNameInput").value;
-		Items.update(this._id, {$set: {name: name}});
+		if (!this.plural){
+			Items.update(this._id, {$set: {name: name, plural: name+'s'}});
+		} else {
+			Items.update(this._id, {$set: {name: name}});
+		}
 	},
 	"change #itemPluralInput": function(event){
 		var plural = Template.instance().find("#itemPluralInput").value;
