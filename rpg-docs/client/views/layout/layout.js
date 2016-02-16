@@ -22,11 +22,11 @@ Template.layout.helpers({
 
 Template.layout.events({
 	"tap #homeNav": function(event, instance){
-		Router.go("/");
+		// Router.go("/");
 		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #profileLink": function(event, instance){
-		Router.go("profile");
+		// Router.go("profile");
 		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #feedback": function(event, instance) {
@@ -38,11 +38,11 @@ Template.layout.events({
 		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #changeLog": function(event, instance) {
-		Router.go("changeLog");
+		// Router.go("changeLog");
 		instance.find("core-drawer-panel").closeDrawer();
 	},
 	"tap #guide": function(event, instance) {
-		Router.go("guide");
+		// Router.go("guide");
 		instance.find("core-drawer-panel").closeDrawer();
 	},
 });

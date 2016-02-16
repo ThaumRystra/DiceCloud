@@ -26,8 +26,8 @@ Template.characterSideList.events({
 		//Router.go("characterSheet", {_id: this._id});
 		$("core-drawer-panel").get(0).closeDrawer();
 	},
-	"tap core-item": function() {
-		Router.go("characterList");
+	"tap charList": function() {
+		// Router.go("characterList");
 		$("core-drawer-panel").get(0).closeDrawer();
 	},
 });

@@ -23,3 +23,28 @@
 .layout > core-animated-pages {
 	height: 100%;
 }
+
+.navLineItem {
+	color: black;
+	color: rgba(0, 0, 0, 0.870588);
+	cursor: pointer;
+	overflow: hidden;
+	padding: 8px 0px 8px 0px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-decoration: none;
+}
+
+.navLineItem core-icon {
+	height: 24px;
+	margin-left: 4px;
+	margin-right: 16px;
+	width: 24px;
+}
+
+.navLineItem div {
+	text-overflow: ellipsis;
+	/* Required for text-overflow to do anything */
+	white-space: nowrap;
+	overflow: hidden;
+}
