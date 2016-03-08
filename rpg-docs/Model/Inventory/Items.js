@@ -228,6 +228,9 @@ Characters.after.insert(function(userId, char) {
 				id: containerId,
 				collection: "Containers",
 			},
+			settings: {
+				showIncrement: true,
+			},
 		});
 		var silverId = Items.insert({
 			name: "Silver piece",
@@ -240,6 +243,9 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: containerId,
 				collection: "Containers",
+			},
+			settings: {
+				showIncrement: true,
 			},
 		});
 		var copperId = Items.insert({
@@ -254,9 +260,12 @@ Characters.after.insert(function(userId, char) {
 				id: containerId,
 				collection: "Containers",
 			},
+			settings: {
+				showIncrement: true,
+			},
 		});
-		Items.update(goldId, {$set: {"settings.showIncrement": true}});
-		Items.update(silverId, {$set: {"settings.showIncrement": true}});
-		Items.update(copperId, {$set: {"settings.showIncrement": true}});
+		// Items.update(goldId, {$set: {"settings.showIncrement": true}});
+		// Items.update(silverId, {$set: {"settings.showIncrement": true}});
+		// Items.update(copperId, {$set: {"settings.showIncrement": true}});
 	}
 });
