@@ -51,7 +51,6 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: featureId,
 				collection: "Features",
-				group: "stat",
 			},
 			operation: "base",
 			value: 10,
@@ -63,7 +62,6 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: featureId,
 				collection: "Features",
-				group: "stat",
 			},
 			operation: "base",
 			value: 10,
@@ -75,7 +73,6 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: featureId,
 				collection: "Features",
-				group: "stat",
 			},
 			operation: "base",
 			value: 10,
@@ -87,7 +84,6 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: featureId,
 				collection: "Features",
-				group: "stat",
 			},
 			operation: "base",
 			value: 10,
@@ -99,7 +95,6 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: featureId,
 				collection: "Features",
-				group: "stat",
 			},
 			operation: "base",
 			value: 10,
@@ -111,7 +106,6 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: featureId,
 				collection: "Features",
-				group: "stat",
 			},
 			operation: "base",
 			value: 10,
