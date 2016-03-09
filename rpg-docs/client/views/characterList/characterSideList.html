@@ -3,11 +3,12 @@
 	{{#if characters.count}}
 		<div>
 			{{#each characters}}
-				<div class="singleLineItem characterRepresentative"
+				<a href={{pathFor route="characterSheet" data=this}}
+				   class="singleLineItem characterRepresentative"
 					 layout horizontal center>
 					<core-icon icon="image:brightness-1"></core-icon>
 					<div>{{name}}</div>
-				</div>
+				</a>
 			{{/each}}
 		</div>
 	{{/if}}

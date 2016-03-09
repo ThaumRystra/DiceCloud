@@ -34,6 +34,7 @@ Router.map(function() {
 		onAfterAction: function() {
 			document.title = appName;
 		},
+		fastRender: true,
 	});
 
 	this.route("characterSheet", {
@@ -63,6 +64,7 @@ Router.map(function() {
 			window.ga && window.ga("send", "pageview", "/character");
 			this.next();
 		},
+		fastRender: true,
 	});
 
 	this.route("loading", {
@@ -91,6 +93,7 @@ Router.map(function() {
 		onAfterAction: function() {
 			document.title = appName;
 		},
+		fastRender: true,
 	});
 
 	this.route("/guide", {

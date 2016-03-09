@@ -12,8 +12,9 @@
 				{{>resource name="sorceryPoints" title="Sorcery Points" color="teal" char=this}}
 				<!--superiorityDice-->
 				{{>resource name="superiorityDice" title="Superiority Dice" color="teal" char=this}}
-				
+
 				<!--Attacks-->
+				<div>
 				<paper-shadow class="card">
 					<div class="top white">
 						Attacks
@@ -48,8 +49,10 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
+				</div>
 
 				<!--Proficiencies-->
+				<div>
 				<paper-shadow class="card">
 					<div class="white top">
 						Proficiencies
@@ -75,13 +78,15 @@
 						{{/each}}
 					</div>
 				</paper-shadow>
+				</div>
 
 				<!--features-->
 				{{#each features}}
+					<div>
 					<paper-shadow class="card featureCard"
 								  hero-id="main" {{detailHero}}>
-						<div class="top {{colorClass}} subhead" 
-							 layout horizontal 
+						<div class="top {{colorClass}} subhead"
+							 layout horizontal
 							 hero-id="toolbar" {{detailHero}}>
 							<div flex hero-id="title" {{detailHero}}>
 								{{name}}
@@ -94,7 +99,7 @@
 							{{#if canEnable}}
 								<core-tooltip label="Feature enabled"
 											  position="left">
-									<paper-checkbox class="enabledCheckbox" 
+									<paper-checkbox class="enabledCheckbox"
 													checked={{enabled}}
 													disabled={{#unless canEditCharacter charId}}true{{/unless}}>
 									</paper-checkbox>
@@ -108,29 +113,30 @@
 						{{/if}}
 						{{#if hasUses}}
 							<div layout horizontal center end-justified>
-								<paper-button class="useFeature" 
+								<paper-button class="useFeature"
 											  disabled={{noUsesLeft}}>
 									Use
 								</paper-button>
-								<paper-button class="resetFeature" 
+								<paper-button class="resetFeature"
 											  disabled={{usesFull}}>
 									Reset
 								</paper-button>
 							</div>
 						{{/if}}
 					</paper-shadow>
+					</div>
 				{{/each}}
 			</div>
 			<div class="fab-buffer"></div>
 		</div>
 		{{#if canEditCharacter _id}}
-			<paper-fab id="addFeature" 
-					   class="floatyButton" 
-					   icon="add" 
-					   title="Add" 
-					   role="button" 
-					   tabindex="0" 
-					   aria-label="Add" 
+			<paper-fab id="addFeature"
+					   class="floatyButton"
+					   icon="add"
+					   title="Add"
+					   role="button"
+					   tabindex="0"
+					   aria-label="Add"
 					   hero-id="main"></paper-fab>
 		{{/if}}
 	</div>
@@ -138,15 +144,16 @@
 
 <template name="resource">
 	{{#if characterCalculate "attributeBase" char._id name}}
-		<paper-shadow class="card" 
+	<div>
+		<paper-shadow class="card"
 					  hero-id="main" {{detailHero name char._id}}
 					  layout horizontal>
-			<div class="left {{getColor}} display1 white-text" 
+			<div class="left {{getColor}} display1 white-text"
 				 hero-id="toolbar" {{detailHero name char._id}}
 				 layout horizontal center>
 				<div style="margin-right: 8px;">
-					<paper-icon-button class="resourceUp" 
-									   icon="arrow-drop-up" 
+					<paper-icon-button class="resourceUp"
+									   icon="arrow-drop-up"
 									   disabled={{cantIncrement}}>
 					</paper-icon-button>
 					<paper-icon-button class="resourceDown"
@@ -157,10 +164,11 @@
 				<div>{{characterCalculate "attributeValue" char._id name}}</div>
 				<!--<div>/{{char.attributeBase name}}</div>-->
 			</div>
-			<div class="right clickable" 
+			<div class="right clickable"
 				 flex layout horizontal center>
 				{{title}}
 			</div>
 		</paper-shadow>
+	</div>
 	{{/if}}
 </template>

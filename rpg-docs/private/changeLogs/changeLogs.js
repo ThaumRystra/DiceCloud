@@ -115,7 +115,7 @@ ChangeLogs.insert({
 		"Added encumbrance effects that automatically apply when carrying too much load",
 		"Added a bunch of UI elements to make your character's current load clear",
 		"Floating button menus now close as expected when you click a sub-button",
-		"Base values in attribute summaries no longer look like added values"
+		"Base values in attribute summaries no longer look like added values",
 	],
 });
 
@@ -258,5 +258,45 @@ ChangeLogs.insert({
 	changes: [
 		"Added carry capacity multiplier as a stat with a default value of 1",
 		"Improved loading times by vulcanizing polymer imports",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.7.1",
+	changes: [
+		"Fixed carry capacity effects not displaying correctly when not editing",
+		"Changed how columns are presented to fix a display issue introduced in Chrome 44",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.7.2",
+	changes: [
+		"Fixed spell attacks appearing on features page when the spell is not prepared",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.8.0",
+	changes: [
+		"Migrate to a new hosting provider. Server should now respond to interaction in milliseconds, rather than minutes",
+		"Redirected www.dicecloud.com to dicecloud.com",
+		"Fixed errors loggin in with Google",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.9.0",
+	changes: [
+		"Added fast render support, direct links to characters should load instantly",
+		"Added extra indexes to the database to improve performance",
+	],
+});
+
+ChangeLogs.insert({
+	version: "0.9.1",
+	changes: [
+		"Fixed rendering issues in Chrome 49+",
+		"Made character names in the side-bar into regular links",
 	],
 });

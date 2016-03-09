@@ -3,7 +3,7 @@
 		<div id="journal" class="scroll-y" fit>
 			<div class="column-container">
 				<!--Experience Table-->
-				<paper-shadow class="card experiencesCard"
+				<div><paper-shadow class="card experiencesCard"
 							  hero-id="main" {{detailHero}}>
 					<div class="top white subhead"
 						 hero-id="toolbar" {{detailHero}}
@@ -37,9 +37,9 @@
 							</paper-button>
 						</div>
 					{{/if}}
-				</paper-shadow>
+				</paper-shadow></div>
 				<!--Class Table-->
-				<paper-shadow class="card"
+				<div><paper-shadow class="card"
 							  hero-id="main" {{detailHero}}>
 					<div class="white top"
 						 hero-id="toolbar" {{detailHero}}
@@ -78,9 +78,10 @@
 							</div>
 						{{/each}}
 					</div>
-				</paper-shadow>
+				</paper-shadow></div>
 				<!--Notes-->
 				{{#each notes}}
+				<div>
 					<paper-shadow class="card"  hero-id="main" {{detailHero}}>
 						<div class="top {{colorClass}} noteTop subhead"
 							 hero-id="toolbar" {{detailHero}}
@@ -89,18 +90,19 @@
 						</div>
 						<div class="bottom">{{#markdown}}{{description}}{{/markdown}}</div>
 					</paper-shadow>
+				</div>
 				{{/each}}
 			</div>
 			<div class="fab-buffer"></div>
 		</div>
 	</div>
 	{{#if canEditCharacter _id}}
-	<paper-fab id="addNote" 
-				   class="floatyButton" 
-				   icon="add" 
-				   title="Add" 
-				   role="button" 
-				   tabindex="0" 
+	<paper-fab id="addNote"
+				   class="floatyButton"
+				   icon="add"
+				   title="Add"
+				   role="button"
+				   tabindex="0"
 				   hero-id="main"></paper-fab>
 	{{/if}}
 </template>

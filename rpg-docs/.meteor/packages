@@ -3,7 +3,7 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
+thaum:vulcanize@0.0.5
 iron:router
 accounts-password
 accounts-ui
@@ -12,7 +12,6 @@ dburles:collection-helpers
 reactive-var
 underscore
 aldeed:collection2
-differential:vulcanize
 matb33:collection-hooks
 zimme:collection-softremovable
 momentjs:moment
@@ -29,3 +28,19 @@ meteorhacks:subs-manager
 meteorhacks:kadira
 chuangbo:marked
 reywood:iron-router-ga
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+ejson
+spacebars
+check
+useraccounts:iron-routing
+wizonesolutions:canonical
+meteorhacks:fast-render
