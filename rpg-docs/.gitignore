@@ -1,5 +1,7 @@
+.demeteorized
 .meteor/local
 .meteor/meteorite
+packages
 settings.json
 public/components
 nohup.out
