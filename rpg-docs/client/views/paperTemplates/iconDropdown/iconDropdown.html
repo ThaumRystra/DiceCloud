@@ -1,0 +1,28 @@
+<template name="iconDropdown">
+	<div class="icon-dropdown">
+		<core-dropdown-base>
+			<paper-icon-button class="icon-select-button" icon="{{selectedIcon}}">
+			</paper-icon-button>
+			<paper-dropdown class="dropdown">
+				<div class="dropdown-container" layout vertical>
+					<div class="search-div" layout horizontal center>
+						<paper-input autofocus flex label="Search icons" class="icon-search-input" value={{search}}></paper-input>
+						<core-tooltip label="Clear icon">
+							<paper-icon-button icon="delete" class="clear-button"></paper-icon-button>
+						</core-tooltip>
+					</div>
+					<div class="icon-holder" flex>
+						{{#each rpgIconNames}}
+						<core-tooltip label={{this}}>
+							<core-icon class="icon-in-list" icon="rpg:{{this}}"></core-icon>
+						</core-tooltip>
+						{{/each}}
+						{{#if noResults rpgIconNames.length}}
+						<b>{{search}}</b> did not match any icons
+						{{/if}}
+					</div>
+				</div>
+			</paper-dropdown>
+		</core-dropdown-base>
+	</div>
+</template>

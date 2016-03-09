@@ -2,17 +2,7 @@
 	<core-toolbar class="app-grey white-text">
 		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
 	</core-toolbar>
-	<style>
-		.icon-holder core-icon {
-			width: 40px;
-			height: 40px;
-		}
-	</style>
-	<div class="icon-holder">
-		{{#each rpgIconNames}}
-			<core-tooltip label={{this}}>
-				<core-icon icon="rpg:{{this}}"></core-icon>
-			</core-tooltip>
-		{{/each}}
+	<div>
+		{{> iconDropdown icon=selected}}
 	</div>
 </template>

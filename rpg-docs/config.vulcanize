@@ -4,6 +4,7 @@
     "/components/core-animated-pages/transitions/cross-fade.html",
     "/components/core-animated-pages/transitions/hero-transition.html",
     "/components/core-animated-pages/transitions/slide-from-right.html",
+    "/components/core-dropdown-base/core-dropdown-base.html",
     "/components/core-icons/av-icons.html",
     "/components/core-icons/core-icons.html",
     "/components/core-icons/editor-icons.html",
