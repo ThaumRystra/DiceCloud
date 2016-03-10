@@ -38,14 +38,14 @@ Template.iconDropdown.events({
 	"click .icon-in-list": function(event, template){
 		template.find("paper-dropdown").close();
 		var event = new CustomEvent("icon-selected", {
-			 detail: this,
+			 detail: this.toString(),
 		});
 		template.find(".icon-dropdown").dispatchEvent(event);
 	},
 	"click .clear-button": function(event, template){
 		template.find("paper-dropdown").close();
 		var event = new CustomEvent("icon-selected", {
-			 detail: undefined,
+			 detail: "",
 		});
 		template.find(".icon-dropdown").dispatchEvent(event);
 	},
