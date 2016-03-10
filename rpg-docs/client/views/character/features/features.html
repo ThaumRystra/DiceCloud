@@ -88,6 +88,9 @@
 						<div class="top {{colorClass}} subhead"
 							 layout horizontal
 							 hero-id="toolbar" {{detailHero}}>
+							{{#if icon}}
+								<core-icon class="icon" icon="rpg:{{icon}}"></core-icon>
+							{{/if}}
 							<div flex hero-id="title" {{detailHero}}>
 								{{name}}
 							</div>

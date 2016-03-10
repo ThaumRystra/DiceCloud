@@ -1,6 +1,6 @@
 <template name="featureDialog">
 	{{#with feature}}
-		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
+		{{#baseDialog title=name class=colorClass startEditing=../startEditing icon=icon}}
 			{{> featureDetails}}
 		{{else}}
 			{{> featureEdit}}
@@ -9,6 +9,13 @@
 </template>
 
 <template name="featureDetails">
+	{{#if icon}}
+		<div layout vertical center>
+			<core-icon icon="rpg:{{icon}}"
+			           style="width: 80px; height: 80px; margin-bottom: 16px;">
+			</core-icon>
+		</div>
+	{{/if}}
 	{{#if or canEnable hasUses}}
 		<div layout horizontal center justified wrap>
 			{{#if canEnable}}
@@ -42,7 +49,9 @@
 <template name="featureEdit">
 	<!--name-->
 	<paper-input id="featureNameInput" class="fullwidth" label="Name" floatinglabel value={{name}}></paper-input>
-
+	<div layout horizontal center>
+		Icon: {{> iconDropdown icon=icon}}
+	</div>
 	<hr class="vertMargin">
 
 	<div layout horizontal center style="height: 60px;">
@@ -60,7 +69,7 @@
 			<paper-toggle-button id="limitUseCheck"
 								 class="sideMargin"
 								 checked={{usesSet}}
-								 role="button" 
+								 role="button"
 								 aria-pressed="false"
 								 tabindex="0"
 								 touch-action="pan-y">
