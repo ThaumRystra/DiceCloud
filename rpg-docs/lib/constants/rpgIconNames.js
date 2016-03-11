@@ -901,7 +901,6 @@ rpgIconNames = [
 	"horned-helm",
 	"horned-skull",
 	"horse-head",
-	"horse-head",
 	"horseshoe",
 	"hospital-cross",
 	"hot-spices",
