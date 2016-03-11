@@ -41,6 +41,9 @@
 						<div class="top {{colorClass}}"
 							 hero-id="toolbar" {{detailHero}}
 							 layout horizontal center>
+							 {{#if icon}}
+ 								<core-icon icon="rpg:{{icon}}" style="margin-right: 16px;"></core-icon>
+ 							{{/if}}
 							<div flex>
 								<div class="subhead">{{name}}</div>
 								<div class="caption">
@@ -65,7 +68,8 @@
 								<core-tooltip label="Done"
 											  position="left">
 									<paper-icon-button class="finishPrep"
-													   icon="done">
+													   icon="done"
+													   style="margin: -8px;">
 									</paper-icon-button>
 								</core-tooltip>
 							{{else}}
@@ -73,29 +77,29 @@
 											  position="left">
 									<paper-icon-button class="prepSpells"
 													   disabled={{#unless canEditCharacter charId}}true{{/unless}}
-													   icon="book">
+													   icon="book"
+													   style="margin: -8px;">
 									</paper-icon-button>
 								</core-tooltip>
 							{{/if}}
 						</div>
 						<div class="bottom list column-container">
 							{{#each levels}}
+								{{#if spellCount .. ../../_id}}
 								<div class="spellLevel">
-									{{#if spellCount .. ../../_id}}
-										<div class="subhead">
-											{{name}}
-										</div>
-									{{/if}}
+									<div class="subhead">
+										{{name}}
+									</div>
 									{{#each spells ../_id ../../_id}}
 										{{#if showSpell ../../settings.showUnprepared}}
 											<div class="item-slot">
 												<div class="tall spell item"
 													 hero-id="main" {{detailHero}}
 													 layout horizontal center>
-													<core-icon icon="social:whatshot"
-															   style="color: {{hexColor color}};
-																	  margin-right: 16px;"
-															   ></core-icon>
+													<core-icon icon="{{#if icon}}rpg:{{icon}}{{else}}social:whatshot{{/if}}"
+														       style="color: {{hexColor color}};
+																      margin-right: 16px;">
+													</core-icon>
 													<div flex layout vertical>
 														<div>{{name}}</div>
 														<div class="caption">
@@ -120,6 +124,7 @@
 										{{/if}}
 									{{/each}}
 								</div>
+								{{/if}}
 							{{/each}}
 						</div>
 					</paper-shadow>

@@ -75,6 +75,10 @@ Template.spellEdit.events({
 		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {name: value}});
 	},
+	"icon-selected": function(event, template){
+		var icon = event.originalEvent.detail;
+		Spells.update(template.data._id, {$set: {icon: icon}});
+	},
 	"change #castingTimeInput": function(event){
 		var value = event.currentTarget.value;
 		Spells.update(this._id, {$set: {castingTime: value}});

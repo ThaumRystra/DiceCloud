@@ -21,6 +21,10 @@ Template.spellListDialog.events({
 		var value = event.currentTarget.value;
 		SpellLists.update(this._id, {$set: {name: value}});
 	},
+	"icon-selected": function(event, template){
+		var icon = event.originalEvent.detail;
+		SpellLists.update(template.data.spellListId, {$set: {icon: icon}});
+	},
 	"change #spellListSaveDCInput, input #spellListSaveDCInput": function(event){
 		var value = event.currentTarget.value;
 		SpellLists.update(this._id, {$set: {saveDC: value}});
