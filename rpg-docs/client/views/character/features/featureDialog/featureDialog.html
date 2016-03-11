@@ -1,6 +1,6 @@
 <template name="featureDialog">
 	{{#with feature}}
-		{{#baseDialog title=name class=colorClass startEditing=../startEditing icon=icon}}
+		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
 			{{> featureDetails}}
 		{{else}}
 			{{> featureEdit}}
