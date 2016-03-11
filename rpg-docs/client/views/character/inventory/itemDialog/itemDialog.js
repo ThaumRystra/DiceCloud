@@ -59,6 +59,10 @@ Template.itemEdit.events({
 		var name = Template.instance().find("#itemNameInput").value;
 		Items.update(this._id, {$set: {name: name}});
 	},
+	"icon-selected": function(event, template){
+		var icon = event.originalEvent.detail;
+		Items.update(template.data._id, {$set: {icon: icon}});
+	},
 	"change #itemPluralInput": function(event){
 		var plural = Template.instance().find("#itemPluralInput").value;
 		Items.update(this._id, {$set: {plural: plural}});

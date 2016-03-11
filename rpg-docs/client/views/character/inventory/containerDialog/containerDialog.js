@@ -28,6 +28,10 @@ Template.containerEdit.events({
 		var name = Template.instance().find("#containerNameInput").value;
 		Containers.update(this._id, {$set: {name: name}});
 	},
+	"icon-selected": function(event, template){
+		var icon = event.originalEvent.detail;
+		Containers.update(template.data._id, {$set: {icon: icon}});
+	},
 	"change #weightInput, input #weightInput": function(event){
 		var weight = +Template.instance().find("#weightInput").value;
 		Containers.update(this._id, {$set: {weight: weight}});
