@@ -1,3 +1,12 @@
+// if we want to add more functions, consider pulling out into its own file
+(function() {
+    math.import({
+        "if": function(pred, a, b) {
+            return (!!(pred)) ? a : b;
+        }
+    });
+})();
+
 //evaluates a calculation string
 evaluate = function(charId, string){
 	if (!string) return string;
