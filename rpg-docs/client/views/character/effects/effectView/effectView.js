@@ -99,7 +99,7 @@ var operations = {
 	base: {name: "Base Value: "},
 	proficiency: {name: "Proficiency"},
 	add: {name: "+"},
-	mul: {name: "x"},
+	mul: {name: "×"},
 	min: {name: "Min: "},
 	max: {name: "Max: "},
 	advantage: {name: "Advantage"},
