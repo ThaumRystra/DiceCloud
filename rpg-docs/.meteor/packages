@@ -22,8 +22,6 @@ useraccounts:polymer
 accounts-google
 splendido:accounts-meld
 email
-fourseven:scss@2.1.1
-wolves:bourbon
 meteorhacks:subs-manager
 meteorhacks:kadira
 chuangbo:marked
@@ -44,3 +42,5 @@ check
 useraccounts:iron-routing
 wizonesolutions:canonical
 meteorhacks:fast-render
+fourseven:scss
+wolves:bourbon

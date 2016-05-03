@@ -37,7 +37,7 @@ ecwyne:mathjs@0.25.0
 ejson@1.0.7
 email@1.0.7
 fastclick@1.0.7
-fourseven:scss@2.1.1
+fourseven:scss@3.4.3
 geojson-utils@1.0.4
 google@1.1.6
 hot-code-push@1.0.0
@@ -116,6 +116,6 @@ useraccounts:polymer@1.12.3
 webapp@1.2.2
 webapp-hashing@1.0.5
 wizonesolutions:canonical@0.0.5
-wolves:bourbon@1.2.0
+wolves:bourbon@3.1.0
 zimme:collection-behaviours@1.1.3
 zimme:collection-softremovable@1.0.4
