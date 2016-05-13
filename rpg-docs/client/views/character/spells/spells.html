@@ -97,7 +97,14 @@
 																	  margin-right: 16px;"
 															   ></core-icon>
 													<div flex layout vertical>
-														<div>{{name}}</div>
+														<div>
+															<span>{{name}}</span>
+															{{#if spellRange}}
+																<span class="caption">
+																	({{spellRange}})
+																</span>
+															{{/if}}
+														</div>
 														<div class="caption">
 															{{school}}
 															{{castingTime}}

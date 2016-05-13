@@ -69,6 +69,9 @@ Template.spells.helpers({
 		}
 		return components;
 	},
+	spellRange: function(){
+		return this.range;
+	},
 	isPrepared: function(){
 		return this.prepared === "prepared" || this.prepared === "always";
 	},
