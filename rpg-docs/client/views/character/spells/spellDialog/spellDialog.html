@@ -10,7 +10,7 @@
 
 <template name="spellDetails">
 	<div class="body2">
-		Level {{level}} {{school}}, {{preparedString}}
+        Level {{level}} {{school}} {{#if ritual}}ritual{{/if}}, {{preparedString}}
 	</div>
 	<div style="margin: 16px 0 16px 0;">
 		{{#if castingTime}}
