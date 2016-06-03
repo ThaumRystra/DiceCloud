@@ -300,3 +300,15 @@ ChangeLogs.insert({
 		"Made character names in the side-bar into regular links",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.10.0",
+	changes: [
+		"New characters now have starting ability scores of 10",
+		"Coins are incrementable by default",
+		"Fixed multiplication sign",
+		"Added \"if\" function to equations",
+		"Added ritual tag to spells in the spell list",
+		"Updated dependencies to keep up with Chrome's breaking changes",
+	],
+});
