@@ -26,7 +26,6 @@ meteorhacks:subs-manager
 meteorhacks:kadira
 chuangbo:marked
 reywood:iron-router-ga
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -44,3 +43,5 @@ wizonesolutions:canonical
 meteorhacks:fast-render
 fourseven:scss
 wolves:bourbon
+standard-minifier-css
+standard-minifier-js
