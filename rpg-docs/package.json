@@ -9,5 +9,8 @@
     "type": "git",
     "url": "https://github.com/ThaumRystra/RPG-Docs"
   },
-  "author": "Stefan Zermatten"
+  "author": "Stefan Zermatten",
+  "dependencies": {
+    "bower": "^1.7.9"
+  }
 }
