@@ -312,3 +312,10 @@ ChangeLogs.insert({
 		"Updated dependencies to keep up with Chrome's breaking changes",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.10.0",
+	changes: [
+		"Fixed invisible dropdown boxes in Chrome 52",
+	],
+});
