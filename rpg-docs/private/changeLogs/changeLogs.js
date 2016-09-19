@@ -302,7 +302,7 @@ ChangeLogs.insert({
 });
 
 ChangeLogs.insert({
-	version: "0.10.0",
+	version: "0.9.2",
 	changes: [
 		"New characters now have starting ability scores of 10",
 		"Coins are incrementable by default",
@@ -314,7 +314,7 @@ ChangeLogs.insert({
 });
 
 ChangeLogs.insert({
-	version: "0.10.0",
+	version: "0.9.3",
 	changes: [
 		"Fixed invisible dropdown boxes in Chrome 52",
 	],
