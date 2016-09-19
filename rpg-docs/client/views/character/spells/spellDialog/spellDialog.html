@@ -10,7 +10,7 @@
 
 <template name="spellDetails">
 	<div class="body2">
-		Level {{level}} {{school}}, {{preparedString}}
+        Level {{level}} {{school}} {{#if ritual}}ritual{{/if}}, {{preparedString}}
 	</div>
 	{{#if icon}}
 		<div layout vertical center>

@@ -235,6 +235,9 @@ Characters.after.insert(function(userId, char) {
 				id: containerId,
 				collection: "Containers",
 			},
+			settings: {
+				showIncrement: true,
+			},
 		});
 		Items.insert({
 			name: "Silver piece",
@@ -249,6 +252,9 @@ Characters.after.insert(function(userId, char) {
 				id: containerId,
 				collection: "Containers",
 			},
+			settings: {
+				showIncrement: true,
+			},
 		});
 		Items.insert({
 			name: "Copper piece",
@@ -262,6 +268,9 @@ Characters.after.insert(function(userId, char) {
 			parent: {
 				id: containerId,
 				collection: "Containers",
+			},
+			settings: {
+				showIncrement: true,
 			},
 		});
 	}

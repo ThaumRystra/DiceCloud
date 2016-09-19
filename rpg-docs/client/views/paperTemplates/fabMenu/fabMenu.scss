@@ -1,4 +1,4 @@
-@import "bourbon/bourbon";
+@import "{wolves:bourbon}/bourbon";
 
 .mini-holder {
 	position: absolute;
@@ -43,4 +43,3 @@
 		@include transform(rotate(405deg));
 	}
 }
-

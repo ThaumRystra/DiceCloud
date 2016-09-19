@@ -21,7 +21,6 @@
     "/components/paper-dialog/paper-action-dialog.html",
     "/components/paper-dialog/paper-dialog.html",
     "/components/paper-dialog/paper-dialog-transition.html",
-    "/components/paper-dropdown/paper-dropdown.html",
     "/components/paper-fab/paper-fab.html",
     "/components/paper-fab-menu/paper-fab-menu.html",
     "/components/paper-icon-button/paper-icon-button.html",
@@ -39,6 +38,7 @@
     "/components/paper-toast/paper-toast.html",
     "/components/paper-toggle-button/paper-toggle-button.html",
 
+    "/custom_components/paper-dropdown/paper-dropdown.html",
     "/custom_components/paper-dropdown-menu/paper-dropdown-menu.html",
     "/custom_components/paper-diff-slider/paper-diff-slider.html",
     "/custom_components/swipe-detect/swipe-detect.html"

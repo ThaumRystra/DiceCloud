@@ -2,9 +2,9 @@
 .meteor/local
 .meteor/meteorite
 .demeteorized
-packages
 settings.json
 public/components
 nohup.out
+node_modules
 dump
 node_modules
