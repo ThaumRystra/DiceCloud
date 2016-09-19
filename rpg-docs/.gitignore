@@ -7,3 +7,4 @@ settings.json
 public/components
 nohup.out
 dump
+node_modules
