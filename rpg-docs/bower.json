@@ -15,10 +15,10 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.5.5",
-    "core-elements": "Polymer/core-elements#~0.5.5",
-    "paper-elements": "Polymer/paper-elements#~0.5.5",
-    "paper-fab-menu": "cwdoh/paper-fab-menu#~0.4.0"
+    "paper-elements": "PolymerElements/paper-elements#~1.0.7",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.10",
+    "marked-element": "PolymerElements/marked-element#~1.2.0",
+    "app-layout": "PolymerElements/app-layout#~0.10.4"
   },
   "resolutions": {
     "core-component-page": "^0.5.0",
