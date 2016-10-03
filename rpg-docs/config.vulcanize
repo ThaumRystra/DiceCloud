@@ -1,5 +1,10 @@
 {
   "imports": [
+    "/custom_components/paper-dropdown/paper-dropdown.html",
+    "/custom_components/paper-dropdown-menu/paper-dropdown-menu.html",
+    "/custom_components/paper-diff-slider/paper-diff-slider.html",
+    "/custom_components/swipe-detect/swipe-detect.html",
+    
     "/components/core-animated-pages/core-animated-pages.html",
     "/components/core-animated-pages/transitions/cross-fade.html",
     "/components/core-animated-pages/transitions/hero-transition.html",
@@ -35,11 +40,6 @@
     "/components/paper-slider/paper-slider.html",
     "/components/paper-tabs/paper-tabs.html",
     "/components/paper-toast/paper-toast.html",
-    "/components/paper-toggle-button/paper-toggle-button.html",
-
-    "/custom_components/paper-dropdown/paper-dropdown.html",
-    "/custom_components/paper-dropdown-menu/paper-dropdown-menu.html",
-    "/custom_components/paper-diff-slider/paper-diff-slider.html",
-    "/custom_components/swipe-detect/swipe-detect.html"
+    "/components/paper-toggle-button/paper-toggle-button.html"
   ]
 }

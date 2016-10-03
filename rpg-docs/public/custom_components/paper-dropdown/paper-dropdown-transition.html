@@ -18,9 +18,9 @@ enable the optional list cascade transition.
 @extends core-transition-css
 @status unstable
 -->
-<link href="../polymer/polymer.html" rel="import">
-<link href="../core-transition/core-transition-css.html" rel="import">
-<link href="../core-animation/web-animations.html" rel="import">
+<link href="../../components/polymer/polymer.html" rel="import">
+<link href="../../components/core-transition/core-transition-css.html" rel="import">
+<link href="../../components/core-animation/web-animations.html" rel="import">
 
 <polymer-element name="paper-dropdown-transition" extends="core-transition-css">
   <template>
@@ -41,7 +41,7 @@ enable the optional list cascade transition.
          * @type number
          * @default 500
          */
-        duration: 500
+        duration: 350
 
       },
 
@@ -160,9 +160,9 @@ enable the optional list cascade transition.
             }));
           }
 
-          var group = new AnimationGroup(anims, {
+          var group = new AnimationGroup(anims/*, {
             easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-          });
+        }*/);
           this.player = document.timeline.play(group);
           this.player.onfinish = function() {
             this.fire('core-transitionend', this, node);
@@ -172,7 +172,6 @@ enable the optional list cascade transition.
           this.fire('core-transitionend', this, node);
         }
       },
-
     });
   </script>
 </polymer-element>
