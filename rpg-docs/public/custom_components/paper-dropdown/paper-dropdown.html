@@ -40,7 +40,7 @@ Style the background color of the dropdown with these selectors:
 <link href="../../components/core-dropdown/core-dropdown.html" rel="import">
 <link href="../../components/paper-shadow/paper-shadow.html" rel="import">
 
-<link href="paper-dropdown-transition.html" rel="import">
+<!--<link href="paper-dropdown-transition.html" rel="import">-->
 
 <style shim-shadowdom>
   html /deep/ paper-dropdown {
@@ -102,7 +102,7 @@ Style the background color of the dropdown with these selectors:
 
   Polymer({
     publish: { //Chrome 52 breaks this
-      transition: 'paper-dropdown-transition'
+      // transition: 'paper-dropdown-transition'
     },
     ready: function() {
       this.super();
