@@ -21,6 +21,6 @@
     "paper-fab-menu": "cwdoh/paper-fab-menu#~0.4.0"
   },
   "resolutions": {
-    "webcomponentsjs": "0.6.3"
+    "webcomponentsjs": "0.7.23"
   }
 }
