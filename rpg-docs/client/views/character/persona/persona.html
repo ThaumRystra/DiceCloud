@@ -35,12 +35,12 @@
 					</paper-shadow>
 				</div>
 				{{/with}}
-				<div>{{> containerCard characterField "description" "Description"}}</div>
-				<div>{{> containerCard characterField "personality" "Personality Traits"}}</div>
-				<div>{{> containerCard characterField "ideals" "Ideals"}}</div>
-				<div>{{> containerCard characterField "bonds" "Bonds"}}</div>
-				<div>{{> containerCard characterField "flaws" "Flaws"}}</div>
-				<div>{{> containerCard characterField "backstory" "Background"}}</div>
+				<div>{{> containerCard charId=this._id field="description"}}</div>
+				<div>{{> containerCard charId=this._id field="personality"}}</div>
+				<div>{{> containerCard charId=this._id field="ideals"}}</div>
+				<div>{{> containerCard charId=this._id field="bonds"}}</div>
+				<div>{{> containerCard charId=this._id field="flaws"}}</div>
+				<div>{{> containerCard charId=this._id field="backstory"}}</div>
 				<div>
 				<paper-shadow class="card">
                     <div class="white top subhead">
@@ -59,19 +59,33 @@
 </template>
 
 <template name="containerCard">
-	{{#containerCardHelper this}}{{evaluateString _id body}}{{/containerCardHelper}}
+	{{#let f=(characterField charId field)}}
+		{{#containerCardHelper
+			charId=charId
+			field=field
+			color=f.color
+			title=f.title
+			topClass=f.topClass
+			useMarkdown=true}}{{evaluateString _id f.body}}{{/containerCardHelper}}
+	{{/let}}
 </template>
 
 <template name="containerCardHelper">
-	<paper-shadow class="card {{class}}"
-                  hero-id="main" {{detailHero field ../_id}}>
-        <div class="top subhead {{colorClass}} {{topClass}}"
-             hero-id="toolbar" {{detailHero field ../_id}}>
-			<div class="subhead" flex
-                 hero-id="title" {{detailHero field ../_id}}>
-              {{title}}
-          </div>
+	<paper-shadow class="card {{class}}" hero-id="main"
+		{{detailHero field charId}}>
+	  <div class="top subhead {{colorClass color}} {{topClass}}" hero-id="toolbar"
+			{{detailHero field charId}}>
+			<div class="subhead" flex hero-id="title"
+				{{detailHero field charId}}>
+        {{title}}
+      </div>
 		</div>
-		<div class="bottom">{{#markdown}}{{> UI.contentBlock}}{{/markdown}}</div>
+		<div class="bottom">
+			{{#if useMarkdown}}
+				{{#markdown}}{{> UI.contentBlock}}{{/markdown}}
+			{{else}}
+				{{> UI.contentBlock}}
+			{{/if}}
+		</div>
 	</paper-shadow>
 </template>

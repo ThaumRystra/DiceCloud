@@ -1,10 +1,25 @@
 Meteor.publish("characterList", function(){
-	var userId = this.userId;
+	const userId = this.userId;
 	if (!userId) {
 		this.ready();
 		return;
 	}
-	return Characters.find(
+
+	const characterFields = {
+		name: 1,
+		race: 1,
+		alignment: 1,
+		gender: 1,
+		readers: 1,
+		writers:1,
+		owner: 1,
+		color: 1,
+	};
+	abilities.forEach(function(ability) {
+		characterFields[ability] = 1;
+	});
+
+	const characters = Characters.find(
 		{
 			$or: [
 				{readers: userId},
@@ -13,16 +28,29 @@ Meteor.publish("characterList", function(){
 			]
 		},
 		{
-			fields: {
-				name: 1,
-				race: 1,
-				alignment: 1,
-				gender: 1,
-				readers: 1,
-				writers:1,
-				owner: 1,
-				color: 1,
-			}
+			fields: characterFields,
 		}
 	);
+
+	const charIds = characters.map(function(character) {
+		return character._id;
+	});
+
+	const effects = Effects.find(
+		{
+			$and: [
+				{charId: {
+					$in: charIds
+				}},
+				{stat: {
+					$in: abilities
+				}},
+			]
+		}
+	);
+
+	return [
+		characters,
+		effects,
+	];
 });

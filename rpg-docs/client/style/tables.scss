@@ -2,7 +2,7 @@ td {
 	padding: 8px;
 }
 
-.strengthTable{
+.strengthTable {
 	width: 100%;
 	td{
 		&:nth-child(2) {
@@ -14,8 +14,20 @@ td {
 	}
 }
 
-.summaryTable  {
+.summaryTable {
 	&:nth-child(3){
 		text-align: right;
+	}
+}
+
+.characterListStatsTable {
+	.abilityScore {
+		padding-bottom: 0;
+		text-align: center;
+	}
+
+	.abilityShortname {
+		padding-top: 0;
+		text-align: center;
 	}
 }
