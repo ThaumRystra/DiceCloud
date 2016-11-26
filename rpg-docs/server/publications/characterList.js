@@ -10,10 +10,10 @@ Meteor.publish("characterList", function(){
 		race: 1,
 		alignment: 1,
 		gender: 1,
-		readers: 1,
-		writers:1,
-		owner: 1,
 		color: 1,
+		readers: 1,
+		writers: 1,
+		owner: 1,
 	};
 	abilities.forEach(function(ability) {
 		characterFields[ability] = 1;
@@ -37,16 +37,18 @@ Meteor.publish("characterList", function(){
 	});
 
 	const effects = Effects.find(
-		{
-			$and: [
-				{charId: {
-					$in: charIds
-				}},
-				{stat: {
-					$in: abilities
-				}},
-			]
-		}
+		{ $and: [
+			{charId: { $in: charIds }},
+			{stat: { $in: abilities }},
+			{enabled: true},
+		]},
+		{ fields: {
+			stat : 1,
+			operation : 1,
+			value : 1,
+			charId : 1,
+			enabled : 1,
+		}}
 	);
 
 	return [
