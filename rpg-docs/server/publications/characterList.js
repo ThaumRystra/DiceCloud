@@ -22,29 +22,22 @@ Meteor.publish("characterList", function(){
 	});
 
 	const characters = Characters.find(
-		{
-			$or: [
-				{readers: userId},
-				{writers: userId},
-				{owner: userId},
-			]
-		},
-		{
-			fields: characterFields,
-		}
+		{ $or: [
+			{readers: userId},
+			{writers: userId},
+			{owner: userId},
+		]},
+		{ fields: characterFields, }
 	);
 
 	const charIds = characters.map(function(character) {
 		return character._id;
 	});
 
-	const effectsStatFilter = abilities.slice();
-	effectsStatFilter.push("hitPoints");
-
 	const effects = Effects.find(
 		{ $and: [
 			{charId: { $in: charIds }},
-			{stat: { $in: effectsStatFilter }},
+			{stat: { $in: _.union(abilities, ["hitPoints"]) }},
 			{enabled: true},
 		]},
 		{ fields: {

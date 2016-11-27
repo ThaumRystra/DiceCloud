@@ -25,7 +25,6 @@ Template.characterList.helpers({
 
 		char.level = Characters.calculate.level(charId);
 		char.experience = Characters.calculate.experience(charId);
-		char.currentHitPoints = Characters.calculate.attributeValue(charId, "hitPoints");
 		char.maxHitPoints = Characters.calculate.attributeBase(charId, "hitPoints");
 		return char;
 	}
