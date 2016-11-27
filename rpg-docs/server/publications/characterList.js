@@ -11,6 +11,8 @@ Meteor.publish("characterList", function(){
 		alignment: 1,
 		gender: 1,
 		color: 1,
+		hitPoints: 1,
+		experience: 1,
 		readers: 1,
 		writers: 1,
 		owner: 1,
@@ -36,23 +38,46 @@ Meteor.publish("characterList", function(){
 		return character._id;
 	});
 
+	const effectsStatFilter = abilities.slice();
+	effectsStatFilter.push("hitPoints");
+
 	const effects = Effects.find(
 		{ $and: [
 			{charId: { $in: charIds }},
-			{stat: { $in: abilities }},
+			{stat: { $in: effectsStatFilter }},
 			{enabled: true},
 		]},
 		{ fields: {
 			stat : 1,
 			operation : 1,
 			value : 1,
+			calculation: 1,
 			charId : 1,
 			enabled : 1,
+		}}
+	);
+
+	const classes = Classes.find(
+		{ charId: { $in: charIds }},
+		{ fields: {
+			charId: 1,
+			name: 1,
+			level: 1,
+		}}
+	);
+
+	const experiences = Experiences.find(
+		{ charId: { $in: charIds }},
+		{ fields: {
+			charId : 1,
+			value: 1,
 		}}
 	);
 
 	return [
 		characters,
 		effects,
+		classes,
+		experiences,
 	];
 });
