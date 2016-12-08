@@ -319,3 +319,10 @@ ChangeLogs.insert({
 		"Fixed invisible dropdown boxes in Chrome 52",
 	],
 });
+
+ChangeLogs.insert({
+	version: "0.9.4",
+	changes: [
+		"Fixed app not working on iOS 10",
+	],
+});
