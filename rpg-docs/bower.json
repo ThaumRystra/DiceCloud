@@ -21,8 +21,6 @@
     "app-layout": "PolymerElements/app-layout#~0.10.4"
   },
   "resolutions": {
-    "core-component-page": "^0.5.0",
-    "polymer": "^0.5.0",
-    "webcomponentsjs": "^0.5.0"
+    "webcomponentsjs": "0.7.23"
   }
 }

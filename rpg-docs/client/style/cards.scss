@@ -1,18 +1,16 @@
-@import "{wolves:bourbon}/bourbon";
-
 $thickColumnWidth: 304px;
 $thinColumnWidth: 240px;
 
 //Column layout
 .column-container {
-	@include column-fill(balance);
-	@include column-gap(0px);
-	@include column-width($thickColumnWidth);
+	column-fill: balance;
+	column-gap: 0px;
+	column-width: $thickColumnWidth;
 	padding: 4px;
 
 	&.thin-columns {
-		@include column-count(4);
-		@include column-width($thinColumnWidth);
+		column-count: 4;
+		column-width: $thinColumnWidth;
 	}
 	& > div {
 		padding: 4px;

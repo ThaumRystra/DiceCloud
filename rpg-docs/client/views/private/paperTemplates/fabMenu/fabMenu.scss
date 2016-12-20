@@ -1,5 +1,3 @@
-@import "{wolves:bourbon}/bourbon";
-
 .mini-holder {
 	position: absolute;
 	padding: 4px;
@@ -9,37 +7,37 @@
 	pointer-events: none;
 	flex-direction: column-reverse !important;
 	core-tooltip{
-		@include transform(scale(0));
-		@include transition-property(transform);
-		@include transition-duration(0.3s);
-		@include transition-timing-function(ease-in-out);
+		transform: scale(0);
+		transition-property: transform;
+		transition-duration: 0.3s;
+		transition-timing-function: ease-in-out;
 		margin: 4px;
 	}
 	&.active {
 		pointer-events: auto;
 		core-tooltip{
-			@include transform(scale(1));
+			transform: scale(1);
 		}
 		core-tooltip:nth-child(2){
-			@include transition-delay(0.1s);
+			transition-delay: 0.1s;
 		}
 		core-tooltip:nth-child(3){
-			@include transition-delay(0.2s);
+			transition-delay: 0.2s;
 		}
 		core-tooltip:nth-child(4){
-			@include transition-delay(0.3s);
+			transition-delay: 0.3s;
 		}
 		core-tooltip:nth-child(5){
-			@include transition-delay(0.4s);
+			transition-delay: 0.4s;
 		}
 	}
 }
 
 .expand-menu {
 	&::shadow core-icon {
-		@include transition(transform 0.3s ease-in-out);
+		transition: transform 0.3s ease-in-out;
 	}
 	&.active::shadow core-icon{
-		@include transform(rotate(405deg));
+		transform: rotate(405deg);
 	}
 }
