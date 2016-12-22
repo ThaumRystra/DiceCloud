@@ -42,12 +42,12 @@ html /deep/ .red-button:not([disabled]) {
 	border-radius: 2px;
 }
 
-#globalDetail core-toolbar {
+#globalDetail app-toolbar {
 	border-radius: 2px 2px 0 0;
 }
 
 @media (max-width: 640px) {
-	#globalDetail core-toolbar {
+	#globalDetail app-toolbar {
 		border-radius: 0;
 	}
 }

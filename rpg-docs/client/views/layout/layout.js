@@ -20,14 +20,22 @@ Template.layout.helpers({
 	},
 });
 
+let drawerLayout;
+const closeDrawer = function(instance){
+	if (!drawerLayout) drawerLayout = instance.find("app-drawer-layout");
+	if (drawerLayout && drawerLayout.narrow){
+		drawerLayout.drawer.close();
+	}
+}
+
 Template.layout.events({
 	"tap #homeNav": function(event, instance){
 		Router.go("/");
-		instance.find("core-drawer-panel").closeDrawer();
+		closeDrawer(instance);
 	},
 	"tap #profileLink": function(event, instance){
 		Router.go("profile");
-		instance.find("core-drawer-panel").closeDrawer();
+		closeDrawer(instance);
 	},
 	"tap #feedback": function(event, instance) {
 		GlobalUI.showDialog({
@@ -35,14 +43,14 @@ Template.layout.events({
 			template: "feedback",
 			fullOnMobile: true,
 		});
-		instance.find("core-drawer-panel").closeDrawer();
+		closeDrawer(instance);
 	},
 	"tap #changeLog": function(event, instance) {
 		Router.go("changeLog");
-		instance.find("core-drawer-panel").closeDrawer();
+		closeDrawer(instance);
 	},
 	"tap #guide": function(event, instance) {
 		Router.go("guide");
-		instance.find("core-drawer-panel").closeDrawer();
+		closeDrawer(instance);
 	},
 });

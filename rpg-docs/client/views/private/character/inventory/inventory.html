@@ -4,7 +4,7 @@
 			<div class="column-container">
 				<!--Net Worth-->
 				<div>
-				<paper-shadow class="card">
+				<paper-material class="card">
 					<div class="white top" layout horizontal center>
 						<div class="subhead" flex>
 							Net Worth
@@ -13,11 +13,11 @@
 							{{valueString netWorth}}
 						</div>
 					</div>
-				</paper-shadow>
+				</paper-material>
 				</div>
 				<!--Weight Carried-->
 				<div>
-				<paper-shadow class="card"
+				<paper-material class="card"
 							  hero-id="main" {{detailHero "weightCarried" _id}}>
 					<div class="top green white-text weightCarried"
 						 hero-id="toolbar" {{detailHero "weightCarried" _id}}
@@ -40,9 +40,9 @@
 								 hero-id="main" {{detailHero}}
 								 layout horizontal center>
 								<div flex>
-									<core-icon icon="work"
+									<iron-icon icon="work"
 											   style="margin-right: 16px">
-									</core-icon>
+									</iron-icon>
 									{{name}}
 								</div>
 							</div>
@@ -50,11 +50,11 @@
 						{{/each}}
 					</div>
 					{{/if}}
-				</paper-shadow>
+				</paper-material>
 				</div>
 				<!--Equipment-->
 				<div>
-				<paper-shadow class="card equipmentContainer">
+				<paper-material class="card equipmentContainer">
 					<div class="white top" layout horizontal center>
 						<div class="subhead" flex>
 							Equipment
@@ -80,11 +80,11 @@
 							{{>inventoryItem}}
 						{{/each}}
 					</div>
-				</paper-shadow>
+				</paper-material>
 				</div>
 				<!--Carried Items-->
 				<div>
-				<paper-shadow class="card carriedContainer">
+				<paper-material class="card carriedContainer">
 					<div class="white top" layout horizontal center>
 						<div class="subhead" flex>
 							Carried
@@ -101,11 +101,11 @@
 							{{>inventoryItem}}
 						{{/each}}
 					</div>
-				</paper-shadow>
+				</paper-material>
 				</div>
 				{{#each containers}}
 					<div>
-					<paper-shadow class="card itemContainer"
+					<paper-material class="card itemContainer"
 								  hero-id="main" {{detailHero}}>
 						<div class="top {{colorClass}}"
 							 hero-id="toolbar" {{detailHero}}
@@ -132,7 +132,7 @@
 								{{>inventoryItem}}
 							{{/each}}
 						</div>
-					</paper-shadow>
+					</paper-material>
 					</div>
 				{{/each}}
 			</div>

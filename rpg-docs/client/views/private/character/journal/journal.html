@@ -3,7 +3,7 @@
 		<div id="journal" class="scroll-y" fit>
 			<div class="column-container">
 				<!--Experience Table-->
-				<div><paper-shadow class="card experiencesCard"
+				<div><paper-material class="card experiencesCard"
 							  hero-id="main" {{detailHero}}>
 					<div class="top white subhead"
 						 hero-id="toolbar" {{detailHero}}
@@ -37,9 +37,9 @@
 							</paper-button>
 						</div>
 					{{/if}}
-				</paper-shadow></div>
+				</paper-material></div>
 				<!--Class Table-->
-				<div><paper-shadow class="card"
+				<div><paper-material class="card"
 							  hero-id="main" {{detailHero}}>
 					<div class="white top"
 						 hero-id="toolbar" {{detailHero}}
@@ -78,18 +78,18 @@
 							</div>
 						{{/each}}
 					</div>
-				</paper-shadow></div>
+				</paper-material></div>
 				<!--Notes-->
 				{{#each notes}}
 				<div>
-					<paper-shadow class="card"  hero-id="main" {{detailHero}}>
+					<paper-material class="card"  hero-id="main" {{detailHero}}>
 						<div class="top {{colorClass}} noteTop subhead"
 							 hero-id="toolbar" {{detailHero}}
 							 layout horizontal center>
 							{{name}}
 						</div>
 						<div class="bottom">{{#markdown}}{{description}}{{/markdown}}</div>
-					</paper-shadow>
+					</paper-material>
 				</div>
 				{{/each}}
 			</div>

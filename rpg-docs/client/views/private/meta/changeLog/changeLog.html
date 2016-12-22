@@ -1,15 +1,15 @@
 <template name="changeLog">
-	<core-toolbar class="app-grey white-text">
-		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+	<app-toolbar class="app-grey white-text">
+		<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
 		<div flex>
 			Change Log
 		</div>
-	</core-toolbar>
+	</app-toolbar>
 	<div class="changeLog scroll-y" fit>
 		<div layout vertical center>
 			<div layout vertical style="max-width: 800px; padding: 4px;">
 				{{#each changeLogs}}
-					<paper-shadow class="card" 
+					<paper-material class="card" 
 								  style="margin: 4px;
 										 padding: 16px;"
 								  layout vertical>
@@ -19,7 +19,7 @@
 							<li>{{this}}</li>
 							{{/each}}
 						</ul>
-					</paper-shadow>
+					</paper-material>
 				{{/each}}
 			</div>
 		</div>

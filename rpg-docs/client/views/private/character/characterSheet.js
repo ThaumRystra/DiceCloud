@@ -1,4 +1,4 @@
-Template.characterSheet.onCreated(function() {
+Template.characterSheet.onRendered(function() {
 	//default to the first tab
 	Session.setDefault(this.data._id + ".selectedTab", "stats");
 	//watch this character and make sure their encumbrance is updated
@@ -24,11 +24,8 @@ Template.characterSheet.helpers({
 });
 
 Template.characterSheet.events({
-	"core-animated-pages-transition-end #tabPages": function(event) {
-		event.stopPropagation();
-	},
-	"tap #characterSheetTabs paper-tab": function(event, instance){
-		setTab(this._id, event.currentTarget.getAttribute("name"));
+	"iron-select #characterSheetTabs": function(event, instance){
+		setTab(this._id, event.target.selected);
 	},
 	"color-change": function(event, instance){
 		Characters.update(this._id, {$set: {color: event.color}});

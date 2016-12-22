@@ -4,7 +4,7 @@
 			<div style="padding: 4px;"
 				 layout horizontal start wrap>
 				{{#if hasSlots}}
-					<paper-shadow class="card"
+					<paper-material class="card"
 								  style="margin: 4px;"
 								  hero-id="main" {{detailHero}}>
 						<div class="white top subhead"
@@ -32,10 +32,10 @@
 								</div>
 							{{/if}}{{/each}}
 						</div>
-					</paper-shadow>
+					</paper-material>
 				{{/if}}
 				{{#each spellLists}}
-					<paper-shadow class="card spellList" flex
+					<paper-material class="card spellList" flex
 								  hero-id="main" {{detailHero}}
 								  style="margin: 4px;">
 						<div class="top {{colorClass}}"
@@ -92,10 +92,10 @@
 												<div class="tall spell item"
 													 hero-id="main" {{detailHero}}
 													 layout horizontal center>
-													<core-icon icon="social:whatshot"
+													<iron-icon icon="social:whatshot"
 															   style="color: {{hexColor color}};
 																	  margin-right: 16px;"
-															   ></core-icon>
+															   ></iron-icon>
 													<div flex layout vertical>
 														<div>{{name}}</div>
 														<div class="caption">
@@ -122,7 +122,7 @@
 								</div>
 							{{/each}}
 						</div>
-					</paper-shadow>
+					</paper-material>
 				{{/each}}
 			</div>
 			<div class="fab-buffer"></div>

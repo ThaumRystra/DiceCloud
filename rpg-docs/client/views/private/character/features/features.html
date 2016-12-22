@@ -15,7 +15,7 @@
 
 				<!--Attacks-->
 				<div>
-				<paper-shadow class="card">
+				<paper-material class="card">
 					<div class="top white">
 						Attacks
 					</div>
@@ -48,12 +48,12 @@
 							</div>
 						{{/each}}
 					</div>
-				</paper-shadow>
+				</paper-material>
 				</div>
 
 				<!--Proficiencies-->
 				<div>
-				<paper-shadow class="card">
+				<paper-material class="card">
 					<div class="white top">
 						Proficiencies
 					</div>
@@ -77,13 +77,13 @@
 							{{> proficiencyListItem}}
 						{{/each}}
 					</div>
-				</paper-shadow>
+				</paper-material>
 				</div>
 
 				<!--features-->
 				{{#each features}}
 					<div>
-					<paper-shadow class="card featureCard"
+					<paper-material class="card featureCard"
 								  hero-id="main" {{detailHero}}>
 						<div class="top {{colorClass}} subhead"
 							 layout horizontal
@@ -123,7 +123,7 @@
 								</paper-button>
 							</div>
 						{{/if}}
-					</paper-shadow>
+					</paper-material>
 					</div>
 				{{/each}}
 			</div>
@@ -145,7 +145,7 @@
 <template name="resource">
 	{{#if characterCalculate "attributeBase" char._id name}}
 	<div>
-		<paper-shadow class="card"
+		<paper-material class="card"
 					  hero-id="main" {{detailHero name char._id}}
 					  layout horizontal>
 			<div class="left {{getColor}} display1 white-text"
@@ -168,7 +168,7 @@
 				 flex layout horizontal center>
 				{{title}}
 			</div>
-		</paper-shadow>
+		</paper-material>
 	</div>
 	{{/if}}
 </template>

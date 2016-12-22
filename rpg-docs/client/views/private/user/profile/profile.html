@@ -1,11 +1,11 @@
 <template name="profile">
 	{{#with currentUser}}
-		<core-toolbar class="blue-grey white-text">
-			<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+		<app-toolbar class="blue-grey white-text">
+			<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
 			<div id="username" class="clickable" flex>
 				{{profileName}}
 			</div>
-		</core-toolbar>
+		</app-toolbar>
 		<div id="userProfile" class="padded">
 			<div>
 				<h2>Email</h2>

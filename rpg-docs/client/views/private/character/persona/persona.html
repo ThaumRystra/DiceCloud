@@ -4,7 +4,7 @@
 			<div class="column-container">
 				{{#with characterDetails}}
 				<div>
-					<paper-shadow class="card"
+					<paper-material class="card"
 								  hero-id="main" {{detailHero "details" _id}}>
 						{{#unless picture}}
 							<div class="top subhead characterField {{colorClass}}"
@@ -32,7 +32,7 @@
 								{{alignment}} {{gender}} {{race}}
 							</div>
 						</div>
-					</paper-shadow>
+					</paper-material>
 				</div>
 				{{/with}}
 				<div>{{> containerCard characterField "description" "Description"}}</div>
@@ -42,7 +42,7 @@
 				<div>{{> containerCard characterField "flaws" "Flaws"}}</div>
 				<div>{{> containerCard characterField "backstory" "Background"}}</div>
 				<div>
-				<paper-shadow class="card">
+				<paper-material class="card">
                     <div class="white top subhead">
                       Languages
 					</div>
@@ -51,7 +51,7 @@
 							{{> proficiencyListItem}}
 						{{/each}}
 					</div>
-				</paper-shadow>
+				</paper-material>
 				</div>
 			</div>
 		</div>
@@ -63,7 +63,7 @@
 </template>
 
 <template name="containerCardHelper">
-	<paper-shadow class="card {{class}}"
+	<paper-material class="card {{class}}"
                   hero-id="main" {{detailHero field ../_id}}>
         <div class="top subhead {{colorClass}} {{topClass}}"
              hero-id="toolbar" {{detailHero field ../_id}}>
@@ -73,5 +73,5 @@
           </div>
 		</div>
 		<div class="bottom">{{#markdown}}{{> UI.contentBlock}}{{/markdown}}</div>
-	</paper-shadow>
+	</paper-material>
 </template>

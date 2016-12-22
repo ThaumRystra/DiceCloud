@@ -46,6 +46,6 @@
 	background-color: rgba(0,0,0,0.6);
 }
 
-section:not(.core-selected):not([animate]) paper-shadow[hero] {
+section:not(.core-selected):not([animate]) paper-material[hero] {
 	visibility: hidden;
 }

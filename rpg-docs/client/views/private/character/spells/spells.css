@@ -6,7 +6,7 @@
 	height: 56px;
 }
 
-#spells .inventoryItem core-icon{
+#spells .inventoryItem iron-icon{
 	width: 32px;
 	height: 32px;
 }
@@ -18,7 +18,7 @@
 	cursor: pointer !important;
 }
 
-#spells .inventoryItem[disabled] core-icon{
+#spells .inventoryItem[disabled] iron-icon{
 	color: #ccc !important;
 	color: rgba(0,0,0,0.26) !important;
 }

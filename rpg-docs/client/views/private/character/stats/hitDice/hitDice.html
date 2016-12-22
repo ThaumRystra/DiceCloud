@@ -1,7 +1,7 @@
 <template name="hitDice">
 	{{#if characterCalculate "attributeBase" ../_id name}}
 		<div>
-		<paper-shadow class="card hit-dice" hero-id="main"
+		<paper-material class="card hit-dice" hero-id="main"
 					  {{detailHero name ../_id}}
 					  layout horizontal>
 			<div class="left green display1 white-text"
@@ -29,7 +29,7 @@
 			<div class="right clickable" flex relative horizontal layout center>
 				Hit Dice
 			</div>
-		</paper-shadow>
+		</paper-material>
 		</div>
 	{{/if}}
 </template>

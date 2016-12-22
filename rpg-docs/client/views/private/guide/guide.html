@@ -1,10 +1,10 @@
 <template name="guide">
-	<core-toolbar class="app-grey white-text">
-		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+	<app-toolbar class="app-grey white-text">
+		<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
 		<div flex>Guide</div>
-	</core-toolbar>
+	</app-toolbar>
 	<div layout vertical center>
-		<paper-shadow class="wallOfText card" style="padding: 32px; max-width: 800px;">
+		<paper-material class="wallOfText card" style="padding: 32px; max-width: 800px;">
 			<h2>Character Sheet Philosophy</h2>
 			<p>Setting up your character on Dicecloud is going to take you a little longer than just filling it in on a paper character sheet would have. The goal of using an online sheet is to make actually playing the game more streamlined, and ultimately more fun. So putting a little extra effort into setting up your character now will pay off over and over again once you're playing.</p>
 			<p>The idea is to track where each number comes from, and allow you to easily make changes on the fly.</p>
@@ -89,6 +89,6 @@
 				<li>Change your level and check that the <em>Stats</em> tab gets updated accordingly</li>
 			</ul>
 			<p>You can try all sorts of calculations in your effects and in certain other places too. For example if you had some feature that is used a number of times equal to your wisdom modifier or 1, whichever is lower, you could limit its uses to <em>min(1, wisdomMod)</em> and the character sheet will figure it out for you, and update itself if you wisdom modifier happens to change later.</p>
-		</paper-shadow>
+		</paper-material>
 	</div>
 </template>

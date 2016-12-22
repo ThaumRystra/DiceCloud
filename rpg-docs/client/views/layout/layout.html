@@ -1,33 +1,47 @@
 <template name="layout">
-	<core-drawer-panel class="layout" responsiveWidth="905px" disableSwipe>
-		<core-header-panel drawer navigation flex mode="seamed" class="white">
-			<div id="accountSummary">
-				{{#if currentUser}}
-					<div id="profileLink"
-						 style="text-decoration: underline; cursor: pointer; font-size: 16px;">
-						{{profileLink}}
-					</div>
-				{{else}}
-					<a href="/sign-in" style="color: white;">Sign in</a>
-				{{/if}}
-			</div>
-			<div id="navPanel">
-				<core-item id="homeNav" icon="home" label="Home"></core-item>
-				{{> characterSideList}}
-				<core-item id="guide" icon="social:school" label="Guide"></core-item>
-				<core-item id="feedback" icon="bug-report" label="Send Feedback"></core-item>
-				<core-item id="changeLog" icon="list" label="Change Log"></core-item>
-			</div>
-		</core-header-panel>
-		<core-animated-pages main
+	<app-drawer-layout class="layout" responsiveWidth="905px" fullbleed>
+		<app-drawer>
+			<app-header-layout mode="seamed" class="white">
+				<div id="accountSummary">
+					{{#if currentUser}}
+						<div id="profileLink"
+							 style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+							{{profileLink}}
+						</div>
+					{{else}}
+						<a href="/sign-in" style="color: white;">Sign in</a>
+					{{/if}}
+				</div>
+				<div id="navPanel">
+					<paper-icon-item id="homeNav" icon="home">
+						<iron-icon icon="home" item-icon></iron-icon>
+						Home
+					</paper-icon-item>
+					{{> characterSideList}}
+					<paper-icon-item id="guide">
+						<iron-icon icon="social:school" item-icon></iron-icon>
+						Guide
+					</paper-icon-item>
+					<paper-icon-item id="feedback">
+						<iron-icon icon="bug-report" item-icon></iron-icon>
+						Send Feedback
+					</paper-icon-item>
+					<paper-icon-item id="changeLog">
+						<iron-icon icon="list" item-icon></iron-icon>
+						Change Log
+					</paper-icon-item>
+				</div>
+			</app-header-layout>
+		</app-drawer>
+		<neon-animated-pages class="fit"
 							 navigation
 							 detail-pages
 							 transitions="hero-transition cross-fade"
 							 selected={{globalDetailSelected}}>
 			<section id="mainContentSection" class={{notSelected}}>
-				<core-header-panel fit mode="standard">
+				<app-header-layout fullbleed>
 					{{> yield}}
-				</core-header-panel>
+				</app-header-layout>
 				<div>
 					<div id="fadeDummy" cross-fade></div>
 				</div>
@@ -35,27 +49,26 @@
 			<section id="detailSection">
 				<div id="detailScreenFiller">
 					<div id="screenDim" cross-fade></div>
-					<paper-shadow id="globalDetail" class="card" z="5"
+					<paper-material id="globalDetail" class="card" z="5"
 								  animated hero hero-id="main"
 								  layout vertical>
 						{{#if globalDetailTemplate}}
 							{{> UI.dynamic template=globalDetailTemplate data=globalDetailData}}
 						{{/if}}
-					</paper-shadow>
+					</paper-material>
 				</div>
 			</section>
-		</core-animated-pages>
-	</core-drawer-panel>
+		</neon-animated-pages>
+	</app-drawer-layout>
 
-	<paper-action-dialog global-dialog backdrop
-						 transition="core-transition-center"
+	<paper-dialog global-dialog backdrop
 						 class="scrolling {{#if globalDialogFullOnMobile}}full-on-mobile{{/if}}"
 						 heading={{globalDialogHeader}}
 						 layered>
 		{{#if globalDialogTemplate}}
 			{{> UI.dynamic template=globalDialogTemplate data=globalDialogData}}
 		{{/if}}
-	</paper-action-dialog>
+	</paper-dialog>
 
 	<paper-toast global-toast duration="5000">
 		{{#if globalToastTemplate}}

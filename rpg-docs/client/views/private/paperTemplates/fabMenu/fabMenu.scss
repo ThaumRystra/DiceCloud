@@ -34,10 +34,10 @@
 }
 
 .expand-menu {
-	&::shadow core-icon {
+	&::shadow iron-icon {
 		transition: transform 0.3s ease-in-out;
 	}
-	&.active::shadow core-icon{
+	&.active::shadow iron-icon{
 		transform: rotate(405deg);
 	}
 }

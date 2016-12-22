@@ -21,6 +21,14 @@ Router.map(function() {
 		},
 	});
 
+	this.route("testContent", {
+		path: "/test",
+		onAfterAction: function() {
+			document.title = appName;
+		},
+		layoutTemplate: "testLayout",
+	});
+
 	this.route("characterList", {
 		path: "/characterList",
 		waitOn: function(){
