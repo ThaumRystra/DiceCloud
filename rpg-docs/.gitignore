@@ -1,3 +1,4 @@
+.demeteorized
 .meteor/local
 .meteor/meteorite
 .demeteorized
@@ -6,3 +7,4 @@ public/components
 nohup.out
 node_modules
 dump
+node_modules

@@ -2,6 +2,13 @@
 	{{#with spellList}}
 		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
 			<div>
+				{{#if icon}}
+					<div layout vertical center>
+						<core-icon icon="rpg:{{icon}}"
+						           style="width: 80px; height: 80px; margin-bottom: 16px;">
+						</core-icon>
+					</div>
+				{{/if}}
 				<div layout horizontal justified wrap class="subhead">
 					{{#if attackBonus}}
 						<div>
@@ -29,6 +36,9 @@
 						 label="Name"
 						 floatinglabel
 						 value={{name}}></paper-input>
+			<div layout horizontal center>
+		 		Icon: {{> iconDropdown icon=icon}}
+		 	</div>
 			<!--Save DC-->
 			<paper-input id="spellListSaveDCInput"
 						 label="Save DC"

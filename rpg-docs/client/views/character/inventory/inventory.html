@@ -110,6 +110,9 @@
 						<div class="top {{colorClass}}"
 							 hero-id="toolbar" {{detailHero}}
 							 layout horizontal center>
+							{{#if icon}}
+								<core-icon icon="rpg:{{icon}}" style="margin-right: 16px;"></core-icon>
+							{{/if}}
 							<div class="subhead" flex
 								 hero-id="title" {{detailHero}}>
 								{{name}}
@@ -163,6 +166,13 @@
 					hero-id="main" {{detailHero}}
 					layout horizontal center
 			 		draggable={{canEditCharacter charId}}>
+			{{#if icon}}
+				<core-icon icon="rpg:{{icon}}"
+				           style="fill: {{hexColor color}};">
+				</core-icon>
+			{{else}}
+				<div style="width: 24px; margin-right: 16px;"></div>
+			{{/if}}
 			<div flex class="itemName">
 				{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
 			</div>

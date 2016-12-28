@@ -72,6 +72,10 @@ Template.featureEdit.events({
 		var name = Template.instance().find("#featureNameInput").value;
 		Features.update(this._id, {$set: {name: name}});
 	},
+	"icon-selected": function(event, template){
+		var icon = event.originalEvent.detail;
+		Features.update(template.data._id, {$set: {icon: icon}});
+	},
 	"change #featureDescriptionInput": function(event){
 		var description = Template.instance().find("#featureDescriptionInput").value;
 		Features.update(this._id, {$set: {description: description}});

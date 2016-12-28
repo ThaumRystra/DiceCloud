@@ -12,6 +12,13 @@
 	<div class="body2">
         Level {{level}} {{school}} {{#if ritual}}ritual{{/if}}, {{preparedString}}
 	</div>
+	{{#if icon}}
+		<div layout vertical center>
+			<core-icon icon="rpg:{{icon}}"
+			           style="width: 80px; height: 80px; margin-bottom: 16px;">
+			</core-icon>
+		</div>
+	{{/if}}
 	<div style="margin: 16px 0 16px 0;">
 		{{#if castingTime}}
 		<div>
@@ -39,8 +46,11 @@
 </template>
 
 <template name="spellEdit">
-	<div horizontal layout>
+	<div>
 		<paper-input id="spellNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
+		<div layout horizontal center>
+			Icon: {{> iconDropdown icon=icon}}
+		</div>
 	</div>
 	<div layout horizontal justified wrap>
 		<paper-dropdown-menu id="schoolDropdown" label="School">

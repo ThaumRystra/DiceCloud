@@ -13,10 +13,16 @@ Schemas.Feature = new SimpleSchema({
 	},
 	enabled:      {type: Boolean, defaultValue: true},
 	alwaysEnabled:{type: Boolean, defaultValue: true},
-	color:   {type: String,
-			  allowedValues: _.pluck(colorOptions, "key"),
-			  defaultValue: "q",
-			 },
+	color: {
+		type: String,
+		allowedValues: _.pluck(colorOptions, "key"),
+		defaultValue: "q",
+	},
+ 	icon: {
+ 		type: String,
+ 		optional: true,
+ 		trim: false,
+ 	},
 });
 
 Features.attachSchema(Schemas.Feature);

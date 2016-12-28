@@ -1,0 +1,35 @@
+.icon-dropdown .dropdown-container {
+	width: 250px;
+	min-height: 350px;
+	overflow: hidden;
+}
+
+.icon-dropdown .icon-holder {
+	padding: 16px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.icon-dropdown .search-div {
+	padding: 8px;
+}
+
+.icon-dropdown .icon-holder core-icon {
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+}
+
+.icon-dropdown .icon-in-list {
+	margin: 3px;
+}
+
+.icon-dropdown .icon-select-button {
+	width: 56px;
+	height: 56px;
+}
+
+.icon-dropdown .icon-select-button /deep/ core-icon {
+	width: 40px;
+	height: 40px;
+}

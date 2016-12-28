@@ -13,6 +13,12 @@
 				 label="Name"
 				 floatinglabel
 				 value={{name}}></paper-input>
+	<div layout horizontal center>
+		Icon: {{> iconDropdown icon=icon}}
+	</div>
+
+	<hr class="vertMargin">
+
 	<div layout horizontal around-justified wrap>
 		<paper-input-decorator label="Weight" floatinglabel>
 			<input id="weightInput" type="number" value={{weight}}>
@@ -32,6 +38,13 @@
 </template>
 
 <template name="containerView">
+	{{#if icon}}
+		<div layout vertical center>
+			<core-icon icon="rpg:{{icon}}"
+			           style="width: 80px; height: 80px; margin-bottom: 16px;">
+			</core-icon>
+		</div>
+	{{/if}}
 	<div layout horizontal wrap center justified>
 		<table class="summaryTable fullwidth">
 			<tr><td>Container</td><td>{{round weight}}lbs</td><td>{{longValueString value}}</td></tr>

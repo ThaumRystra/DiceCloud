@@ -12,6 +12,11 @@ Schemas.SpellLists = new SimpleSchema({
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
 	},
+	icon: {
+		type: String,
+		optional: true,
+		trim: false,
+	},
 	"settings.showUnprepared": {type: Boolean, defaultValue: true},
 });
 

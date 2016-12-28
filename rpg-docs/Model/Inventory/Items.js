@@ -16,6 +16,11 @@ Schemas.Item = new SimpleSchema({
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
 	},
+	icon: {
+		type: String,
+		optional: true,
+		trim: false,
+	},
 });
 
 Items.attachSchema(Schemas.Item);
@@ -215,6 +220,7 @@ Characters.after.insert(function(userId, char) {
 			isCarried: true,
 			description: "A sturdy pouch for coins",
 			color: "d",
+			icon: "cash",
 		});
 		Items.insert({
 			name: "Gold piece",
@@ -224,6 +230,7 @@ Characters.after.insert(function(userId, char) {
 			weight: 0.02,
 			value: 1,
 			color: "n",
+			icon: "crown-coin",
 			parent: {
 				id: containerId,
 				collection: "Containers",
@@ -240,6 +247,7 @@ Characters.after.insert(function(userId, char) {
 			weight: 0.02,
 			value: 0.1,
 			color: "q",
+			icon: "crown-coin",
 			parent: {
 				id: containerId,
 				collection: "Containers",
@@ -256,6 +264,7 @@ Characters.after.insert(function(userId, char) {
 			weight: 0.02,
 			value: 0.01,
 			color: "s",
+			icon: "crown-coin",
 			parent: {
 				id: containerId,
 				collection: "Containers",
