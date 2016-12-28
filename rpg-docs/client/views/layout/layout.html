@@ -12,11 +12,20 @@
 				{{/if}}
 			</div>
 			<div id="navPanel">
-				<core-item id="homeNav" icon="home" label="Home"></core-item>
+				<a href={{pathFor route="home" data=this}} class="navLineItem" layout horizontal center>
+					<core-icon id="homeNav" icon="home" label="Home"></core-icon>
+					<div>Home</div>
+				</a>
 				{{> characterSideList}}
-				<core-item id="guide" icon="social:school" label="Guide"></core-item>
+				<a href={{pathFor route="guide" data=this}} class="navLineItem" layout horizontal center>
+					<core-icon id="guide" icon="social:school" label="Guide"></core-icon>
+					<div>Guide</div>
+				</a>
 				<core-item id="feedback" icon="bug-report" label="Send Feedback"></core-item>
-				<core-item id="changeLog" icon="list" label="Change Log"></core-item>
+				<a href={{pathFor route="changeLog" data=this}} class="navLineItem" layout horizontal center>
+					<core-icon id="changeLog" icon="list" label="Change Log"></core-icon>
+					<div>Change Log</div>
+				</a>
 			</div>
 		</core-header-panel>
 		<core-animated-pages main

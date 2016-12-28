@@ -1,5 +1,12 @@
 <template name="characterSideList">
-	<core-item icon="social:people" label="Characters"></core-item>
+	<div>
+		<a href={{pathFor route="characterList" data=this}} 
+			 class="navLineItem" 
+			 layout horizontal center>
+			<core-icon icon="social:people"></core-icon>
+			<div>Characters</div>
+		</a>
+	</div>
 	{{#if characters.count}}
 		<div>
 			{{#each characters}}
