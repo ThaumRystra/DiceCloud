@@ -1,12 +1,31 @@
 Template.characterList.helpers({
-	characterDetails: function(){
+	characterDetails: function(charId){
 		var char = Characters.findOne(
-			this._id,
-			{fields: {name: 1, gender: 1, alignment: 1, race:1, color: 1}}
+			charId,
+			{fields: {name: 1, gender: 1, alignment: 1, race:1, color: 1, hitPoints: 1, experience: 1}}
 		);
+		char.charId = charId;
 		char.title = char.name;
 		char.field = "base";
 		char.class = "characterCard";
+
+		// Add ability scores to the character
+		abilities.forEach(function(ability) {
+			char[ability] = Characters.calculate.attributeValue(charId, ability);
+		});
+
+		// Add list of classes to the character
+		const classNames = Classes.find(
+			{charId: charId},
+			{fields: {name: 1}}
+		).map(function (c) {
+			return c.name;
+		});
+		char.classSummary = classNames.join(" | ");
+
+		char.level = Characters.calculate.level(charId);
+		char.experience = Characters.calculate.experience(charId);
+		char.maxHitPoints = Characters.calculate.attributeBase(charId, "hitPoints");
 		return char;
 	}
 });

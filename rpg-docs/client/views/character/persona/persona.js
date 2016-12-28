@@ -7,6 +7,15 @@ var colorMap = {
 	backstory: "j",
 };
 
+var titleMap = {
+	description: "Description",
+	personality: "Personality Traits",
+	ideals: "Ideals",
+	bonds: "Bonds",
+	flaws: "Flaws",
+	backstory: "Background",
+}
+
 Template.persona.helpers({
 	characterDetails: function(){
 		var char = Characters.findOne(
@@ -18,20 +27,6 @@ Template.persona.helpers({
 		char.color = "d";
 		char.startEditing = true;
 		return char;
-	},
-	characterField: function(field, title){
-		var fieldSelector = {fields: {}};
-		fieldSelector.fields[field] = 1;
-		var char = Characters.findOne(this._id, fieldSelector);
-		var color = colorMap[field];
-		return {
-			_id: char._id,
-			title: title,
-			field: field,
-			color: color,
-			body: char[field],
-			topClass: "characterField",
-		};
 	},
 	languages: function(){
 		return Proficiencies.find({charId: this._id, type: "language"});
@@ -60,8 +55,26 @@ Template.persona.events({
 					color: this.color,
 					startEditing: true,
 				},
-				heroId:   this._id + this.field,
+				heroId: this._id + this.field,
 			});
 		}
 	}
 });
+
+Template.containerCard.helpers({
+	characterField: function(charId, field){
+		var fieldSelector = {fields: {}};
+		fieldSelector.fields[field] = 1;
+		var char = Characters.findOne(charId, fieldSelector);
+		var color = colorMap[field];
+		var title = titleMap[field];
+		return {
+			_id: charId,
+			title: title,
+			field: field,
+			color: color,
+			body: char[field],
+			topClass: "characterField",
+		};
+	}
+})

@@ -9,10 +9,12 @@
 			{{#if currentUser}}
 				{{#if characters.count}}
 					<div layout horizontal wrap class="characterCards">
-						{{# each characters}}
-							{{#with characterDetails}}
-								{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
-							{{/with}}
+						{{#each character in characters}}
+							{{#let char = (characterDetails character._id)}}
+								{{#containerCardHelper char}}
+									{{> characterListStats char=char}}
+								{{/containerCardHelper}}
+							{{/let}}
 						{{/each}}
 						{{> gridPadding class="characterCard" num=12}}
 					</div>
@@ -35,5 +37,40 @@
 				   tabindex="0"
 				   aria-label="Add"
 				   hero-id="main"></paper-fab>
+	</div>
+</template>
+
+<template name="characterListStats">
+	<!-- TODO: Display portrait -->
+	<div layout vertical center>
+		<div class="characterLine">{{char.alignment}} {{char.gender}} {{char.race}}</div>
+		<div class="characterLine">{{char.classSummary}}</div>
+		<div class="characterLine">Level {{char.level}} ({{char.experience}} XP)</div>
+		<div class="characterLine">{{char.maxHitPoints}} HP</div>
+		{{#each class in char.classes}}
+			<div>{{class.name}} {{class.level}}</div>
+		{{/each}}
+		<table class="characterListStatsTable">
+			<thead class="title">
+				<tr>
+					<td class="abilityScore">{{char.strength}}</td>
+					<td class="abilityScore">{{char.dexterity}}</td>
+					<td class="abilityScore">{{char.constitution}}</td>
+					<td class="abilityScore">{{char.intelligence}}</td>
+					<td class="abilityScore">{{char.wisdom}}</td>
+					<td class="abilityScore">{{char.charisma}}</td>
+				</tr>
+			</thead>
+			<tbody class="caption">
+				<tr>
+					<td class="abilityShortname">STR</td>
+					<td class="abilityShortname">DEX</td>
+					<td class="abilityShortname">CON</td>
+					<td class="abilityShortname">INT</td>
+					<td class="abilityShortname">WIS</td>
+					<td class="abilityShortname">CHA</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </template>

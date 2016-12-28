@@ -8,3 +8,8 @@
 	min-width: 272px;
 	flex-grow: 1;
 }
+
+.characterLine {
+	padding: 4px;
+	text-align: center;
+}
