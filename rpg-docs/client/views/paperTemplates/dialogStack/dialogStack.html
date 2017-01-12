@@ -1,0 +1,26 @@
+<!--
+	Dialog stack should be placed last in the root layout template
+	It creates a stack of dialogs that can be closed individually
+-->
+<template name="dialogStack">
+	<div class="fit dialog-stack layout vertical center center-justified" style={{dialogStackStyle}}>
+		<div class="dialog-sizer">
+			{{#each dialogs}}
+				<div class="dialog" style={{dialogStyle @index}}>
+					{{> UI.dynamic template=template data=data}}
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</template>
+
+<template name="testDialog">
+		<paper-toolbar>
+			Test dialog {{data}}
+		</paper-toolbar>
+		<div>
+			<div class="testButton"
+			     style="height: 200px; width: 100px; background: red; border-radius: 30px;">
+			 </div>
+		</div>
+</template>
