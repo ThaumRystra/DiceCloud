@@ -43,3 +43,5 @@ standard-minifier-js@1.2.1
 shell-server
 fourseven:scss
 seba:minifiers-autoprefixer
+nikogosovd:multiple-uihooks
+templates:array
