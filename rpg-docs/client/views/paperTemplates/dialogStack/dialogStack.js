@@ -20,8 +20,8 @@ popDialogStack = function(result){
 };
 
 Template.dialogStack.helpers({
-	dialogStackStyle(){
-		if (!dialogs.get().length) return "display: none;";
+	dialogStackClass(){
+		if (!dialogs.get().length) return "hide";
 	},
 	dialogs(){
 		return dialogs.get();
@@ -45,51 +45,91 @@ Template.dialogStack.events({
 	},
 });
 
+const heroAnimate = ({from, to, duration, useClone, callback}) => {
+	if (!from) throw "From element must be defined";
+	if (!to) throw "To element must be defined";
+	duration = duration || 400;
+	// Get the bounding rectangles of both elements
+	const toRect = to.getBoundingClientRect();
+	const fromRect = from.getBoundingClientRect();
+	let originalNode, originalVis;
+	if (useClone){
+		originalNode = to;
+		to = originalNode.cloneNode(true);
+		originalNode.parentNode.insertBefore(to, originalNode);
+		to.style.position = "fixed";
+		to.style.zIndex = "9999";
+		originalVis = originalNode.style.visibility;
+		originalNode.style.visibility = "hidden";
+	}
+	// Get how they have changed
+	const deltaLeft = fromRect.left - toRect.left;
+	const deltaTop = fromRect.top - toRect.top;
+	const deltaWidth = fromRect.width / toRect.width;
+	const deltaHeight = fromRect.height / toRect.height;
+	// Make the "to" element imitate the "from" element
+	to.style.transition = "none";
+	to.style.transform = `translate(${deltaLeft}px, ${deltaTop}px) ` +
+		`scale(${deltaWidth}, ${deltaHeight})`;
+	to.style.background = $(from).css("background");
+	to.style.boxShadow = $(from).css("box-shadow");
+	// Imitate the border radius after transform
+	// Only supports border radius defined like "20px" or "100%"
+	let radius = $(from).css("border-radius");
+	if (/^\d+\.?\d*px$/.test(radius)){
+		//The radius is defined in pixel units, so get the radius as a number
+		const rad = +radius.match(/\d+\.?\d*/)[0];
+		// Set the x and y radius of the "to" element, compensating for scale
+		to.style.borderRadius = `${rad/deltaWidth}px / ${rad/deltaHeight}px`;
+	} else if (/^\d+\.?\d*%$/.test(radius)) {
+		//The radius is defined as a percentage, so just use it as is
+		to.style.borderRadius = radius;
+	}
+	// Don't animate to the imitation position
+	to.style.transition = "none";
+	// We calculate everything from the top left, so use that as origin
+	to.style.transformOrigin = "top left";
+
+	// Next frame, undo the imitation, let "to" animate into its place
+	_.defer(() => {
+		to.style.transition = `all ${duration/1000}s ease, box-shadow ${duration/1000}s linear 0.1s`;
+		to.style.transform = "";
+		to.style.borderRadius = "";
+		to.style.background = "";
+		to.style.boxShadow = "";
+	});
+	// Clean up after the animation is done and call our callback
+	_.delay(() => {
+		to.style.transition = "";
+		to.style.transformOrigin = "";
+		if (useClone){
+			originalNode.style.visibility = originalVis;
+			to.remove();
+		}
+		if (callback) callback();
+	}, duration);
+};
+
 Template.dialogStack.uihooks({
 	".dialog": {
 		container: ".dialog-sizer",
 		insert: function(node, next, tpl) {
       		$(node).insertBefore(next);
-
 			const data = Blaze.getData(node);
 			if (data.element){
 				data.element.style.visibility = "hidden";
-				const toRect = node.getBoundingClientRect();
-				const fromRect = data.element.getBoundingClientRect();
-				const deltaLeft = fromRect.left - toRect.left;
-				const deltaTop = fromRect.top - toRect.top;
-				const deltaWidth = fromRect.width / toRect.width;
-				const deltaHeight = fromRect.height / toRect.height;
-				node.style.transition = "none";
-				node.style.transform = `translate(${deltaLeft}px, ${deltaTop}px) ` +
-					`scale(${deltaWidth}, ${deltaHeight})`;
-				node.style.borderRadius = $(data.element).css("border-radius");
+				// Store the reference to the element on the DOM node itself,
+				// since Blaze won't keep the data around for the remove hook
 				node["data-element"] = data.element;
-				_.defer(() => {
-					node.style.transition = "";
-					node.style.transform = "";
-					node.style.borderRadius = "";
-				});
+				heroAnimate({from: data.element, to: node});
 			}
 		},
 		remove: function(node, tpl) {
-			//TODO maybe make the element transform to the dialog size
-			//     and then return to its place?
 			const element = node["data-element"];
 			if (element){
-				const toRect = node.getBoundingClientRect();
-				const fromRect = element.getBoundingClientRect();
-				let deltaLeft = fromRect.left - toRect.left;
-				let deltaTop = fromRect.top - toRect.top;
-				const deltaWidth = fromRect.width / toRect.width;
-				const deltaHeight = fromRect.height / toRect.height;
-				node.style.transform = `translate(${deltaLeft}px, ${deltaTop}px) ` +
-					`scale(${deltaWidth}, ${deltaHeight})`;
-				node.style.borderRadius = $(element).css("border-radius");
-				_.delay(() => {
-					element.style.visibility = "";
-					node.remove();
-				}, 500);
+				element.style.visibility = "";
+				heroAnimate({from: node, to: element, useClone: true});
+				node.remove();
 			} else {
 				node.remove();
 			}
@@ -100,5 +140,5 @@ Template.dialogStack.uihooks({
 Template.testDialog.events({
 	"click .testButton": function(event, template){
 		pushDialogStack({template: "testDialog", element: event.currentTarget, data: Random.id()});
-	}
+	},
 })
