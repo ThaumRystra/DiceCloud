@@ -38,10 +38,17 @@ Template.layout.events({
 		closeDrawer(instance);
 	},
 	"tap #feedback": function(event, instance) {
-		GlobalUI.showDialog({
-			heading: "Feedback",
+		pushDialogStack({
 			template: "feedback",
-			fullOnMobile: true,
+			element: event.currentTarget,
+			callback: function(report){
+				if (!report) return;
+				Meteor.call("insertReport", report, function(e, result){
+					GlobalUI.toast({
+						text: e && e.details || "Feedback submitted"
+					});
+				});
+			}
 		});
 		closeDrawer(instance);
 	},

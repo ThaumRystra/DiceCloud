@@ -16,6 +16,10 @@
 	padding: 16px;
 }
 
+#navPanel paper-icon-item {
+	background: white;
+}
+
 .layout > core-header-panel {
 	height: 100%;
 }
