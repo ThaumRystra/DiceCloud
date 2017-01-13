@@ -3,13 +3,11 @@ this.GlobalUI = (function() {
 
 	GlobalUI.dialog = {};
 
-	GlobalUI.toast = function(opts) {
-		var toast;
-		toast = $("[global-toast]")[0];
-		toast.text = opts.text;
-		Session.set("global.ui.toastTemplate", opts.template);
-		Session.set("global.ui.toastData", opts.data);
-		return toast.show();
+	GlobalUI.toast = function(text) {
+		if (!GlobalUI._toast)
+		 	GlobalUI._toast = $("#global-toast")[0];
+		GlobalUI._toast.text = text;
+		return GlobalUI._toast.show();
 	};
 
 	GlobalUI.deletedToast = function(id, collection, itemName) {
