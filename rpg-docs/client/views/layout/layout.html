@@ -33,52 +33,10 @@
 				</div>
 			</app-header-layout>
 		</app-drawer>
-		<neon-animated-pages class="fit"
-							 navigation
-							 detail-pages
-							 transitions="hero-transition cross-fade"
-							 selected={{globalDetailSelected}}>
-			<section id="mainContentSection" class={{notSelected}}>
-				<app-header-layout fullbleed>
-					{{> yield}}
-				</app-header-layout>
-				<div>
-					<div id="fadeDummy" cross-fade></div>
-				</div>
-			</section>
-			<section id="detailSection">
-				<div id="detailScreenFiller">
-					<div id="screenDim" cross-fade></div>
-					<paper-material id="globalDetail" class="card" z="5"
-								  animated hero hero-id="main"
-								  layout vertical>
-						{{#if globalDetailTemplate}}
-							{{> UI.dynamic template=globalDetailTemplate data=globalDetailData}}
-						{{/if}}
-					</paper-material>
-				</div>
-			</section>
-		</neon-animated-pages>
+		<app-header-layout fullbleed>
+			{{> yield}}
+		</app-header-layout>
 	</app-drawer-layout>
-
-	<paper-dialog global-dialog backdrop
-						 class="scrolling {{#if globalDialogFullOnMobile}}full-on-mobile{{/if}}"
-						 heading={{globalDialogHeader}}
-						 layered>
-		{{#if globalDialogTemplate}}
-			{{> UI.dynamic template=globalDialogTemplate data=globalDialogData}}
-		{{/if}}
-	</paper-dialog>
-
-	<paper-toast global-toast duration="5000">
-		{{#if globalToastTemplate}}
-			{{> UI.dynamic template=globalToastTemplate data=globalToastData}}
-		{{else}}
-			<div>
-				No Toast template defined
-			</div>
-		{{/if}}
-	</paper-toast>
-	<div class="is this thing on?"></div>
+	<paper-toast id="global-toast" duration="5000"></paper-toast>
 	{{> dialogStack}}
 </template>

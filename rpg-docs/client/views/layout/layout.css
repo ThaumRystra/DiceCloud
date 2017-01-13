@@ -18,6 +18,7 @@
 
 #navPanel paper-icon-item {
 	background: white;
+	cursor: pointer;
 }
 
 .layout > core-header-panel {

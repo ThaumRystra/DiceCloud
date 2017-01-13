@@ -1,16 +1,13 @@
 <template name="intro">
 	<div class="intro">
 		<div class="section white-text" style="background: #282828">
-			<div class="display2">
-				Dice Cloud
-			</div>
 			<img style="width:130px; height:130px; background-color: #282828;"
 						src="/crown-dice-logo-cropped-transparent.png">
 			<div class="display1">
-				Unofficial Online Realtime D&amp;D 5e App
+				Realtime D&amp;D 5e Character Tracker
 			</div>
 			<h2>
-				Spend less time shuffling paper and more time playing the game
+				Spend less time shuffling paper and more time playing
 			</h2>
 			{{#unless currentUser}}
 			<div layout horizontal around-justified wrap>
@@ -31,11 +28,11 @@
 		</div>
 		<div class="section" style="background-color: #e9e9e9;">
 			<div>
-				<div class="display1">Character Sheet Open Beta</div>
+				<div class="display1">Character Sheets</div>
 				<h2 style="margin-bottom: 16px;">
 					Check out the example characters
 				</h2>
-				<div layout horizontal around-justified wrap>
+				<div class="layout horizontal around-justified wrap">
 					<paper-material class="card characterCard ssArcher clickable"
 								  z="2">
 						<div class="top subhead green white-text">
@@ -58,9 +55,9 @@
 			</div>
 		</div>
 		<div class="section white-text" style="background: #282828">
-			<div class="columns" layout horizontal around-justified wrap>
+			<div class="columns layout horizontal around-justified wrap">
 				<div>
-					<h1>Check out the guide</h1>
+					<h1>Guide</h1>
 					<p>
 						Learn how your class gives you features, those features have effects,
 						and those effects determine your stats.
@@ -84,7 +81,7 @@
 					<h1>
 						Get involved
 					</h1>
-					<p>Shape upcoming features and track bugs on the Dice Cloud Trello board
+					<p>Shape upcoming features and track bugs on the DiceCloud Trello board
 						<paper-button class="trelloButton">
 							<a href="https://trello.com/b/94M0SCnq/dicecloud-roadmap">
 								Trello Roadmap
