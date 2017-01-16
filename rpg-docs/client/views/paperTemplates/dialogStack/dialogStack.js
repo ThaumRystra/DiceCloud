@@ -52,7 +52,8 @@ const heroAnimate = ({from, to, duration, useClone, callback}) => {
 	// Get the bounding rectangles of both elements
 	const toRect = to.getBoundingClientRect();
 	const fromRect = from.getBoundingClientRect();
-	let originalNode, originalVis;
+	let originalNode;
+	let originalVis;
 	if (useClone){
 		originalNode = to;
 		to = originalNode.cloneNode(true);
@@ -80,7 +81,7 @@ const heroAnimate = ({from, to, duration, useClone, callback}) => {
 		//The radius is defined in pixel units, so get the radius as a number
 		const rad = +radius.match(/\d+\.?\d*/)[0];
 		// Set the x and y radius of the "to" element, compensating for scale
-		to.style.borderRadius = `${rad/deltaWidth}px / ${rad/deltaHeight}px`;
+		to.style.borderRadius = `${rad / deltaWidth}px / ${rad / deltaHeight}px`;
 	} else if (/^\d+\.?\d*%$/.test(radius)) {
 		//The radius is defined as a percentage, so just use it as is
 		to.style.borderRadius = radius;
@@ -92,7 +93,8 @@ const heroAnimate = ({from, to, duration, useClone, callback}) => {
 
 	// Next frame, undo the imitation, let "to" animate into its place
 	_.defer(() => {
-		to.style.transition = `all ${duration/1000}s ease, box-shadow ${duration/1000}s linear 0.1s`;
+		to.style.transition = `all ${duration / 1000}s ease, ` +
+								`box-shadow ${duration / 1000}s linear 0.1s`;
 		to.style.transform = "";
 		to.style.borderRadius = "";
 		to.style.background = "";
@@ -114,7 +116,7 @@ Template.dialogStack.uihooks({
 	".dialog": {
 		container: ".dialog-sizer",
 		insert: function(node, next, tpl) {
-      		$(node).insertBefore(next);
+			$(node).insertBefore(next);
 			const data = Blaze.getData(node);
 			if (data.element){
 				data.element.style.visibility = "hidden";
@@ -133,12 +135,16 @@ Template.dialogStack.uihooks({
 			} else {
 				node.remove();
 			}
-		}
+		},
 	}
 });
 
 Template.testDialog.events({
 	"click .testButton": function(event, template){
-		pushDialogStack({template: "testDialog", element: event.currentTarget, data: Random.id()});
+		pushDialogStack({
+			template: "testDialog",
+			element: event.currentTarget,
+			data: Random.id(),
+		});
 	},
 })
