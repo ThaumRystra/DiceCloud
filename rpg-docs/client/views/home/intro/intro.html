@@ -11,16 +11,20 @@
 			</h2>
 			{{#unless currentUser}}
 			<div layout horizontal around-justified wrap>
-				<paper-button class="red white-text signInButton"
-							  style="margin: 16px;"
-							  raised>
-					Sign In
-				</paper-button>
-				<paper-button class="red white-text signUpButton"
-							  style="margin: 16px;"
-							  raised>
-					Sign Up
-				</paper-button>
+				<a href="/sign-in">
+					<paper-button class="red white-text signInButton"
+								  style="margin: 16px;"
+								  raised>
+						Sign In
+					</paper-button>
+				</a>
+				<a href="/sign-up">
+					<paper-button class="red white-text signUpButton"
+								  style="margin: 16px;"
+								  raised>
+						Sign Up
+					</paper-button>
+				</a>
 			</div>
 			{{else}}
 			<div style="padding-bottom: 0;"></div>
@@ -33,24 +37,28 @@
 					Check out the example characters
 				</h2>
 				<div class="layout horizontal around-justified wrap">
-					<paper-material class="card characterCard ssArcher clickable"
-								  z="2">
-						<div class="top subhead green white-text">
-							<div class="subhead" flex>
-								Starter Set Archer
+					<a href="/character/yBWwt5XQTTHZiRQxq">
+						<paper-material class="card characterCard ssArcher clickable"
+									  elevation="2" style="margin: 16px;">
+							<div class="top subhead green white-text">
+								<div class="subhead" flex>
+									Starter Set Archer
+								</div>
 							</div>
-						</div>
-						<div class="bottom text">Lawful Good Human</div>
-					</paper-material>
-					<paper-material class="card characterCard ssWizard clickable"
-								  z="2">
-						<div class="top subhead deep-purple white-text">
-							<div class="subhead" flex>
-								Starter Set Wizard
+							<div class="bottom text">Lawful Good Human</div>
+						</paper-material>
+					</a>
+					<a href="/character/KxHKskm22fS2Xogah">
+						<paper-material class="card characterCard ssWizard clickable"
+									  elevation="2" style="margin: 16px;">
+							<div class="top subhead deep-purple white-text">
+								<div class="subhead" flex>
+									Starter Set Wizard
+								</div>
 							</div>
-						</div>
-						<div class="bottom text">Chaotic Good High Elf</div>
-					</paper-material>
+							<div class="bottom text">Chaotic Good High Elf</div>
+						</paper-material>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -61,7 +69,11 @@
 					<p>
 						Learn how your class gives you features, those features have effects,
 						and those effects determine your stats.
-						<paper-button class="guideButton">View Guide</paper-button>
+						<a href="/guide">
+							<paper-button class="guideButton">
+								View Guide
+							</paper-button>
+						</a>
 					</p>
 				</div>
 				<div>
@@ -70,11 +82,11 @@
 					</h1>
 					<p>
 						On the official subreddit
-						<paper-button class="redditButton">
-							<a href="http://www.reddit.com/r/dicecloud/">
-								/r/dicecloud
-							</a>
-						</paper-button>
+						<a href="http://www.reddit.com/r/dicecloud/">
+							<paper-button class="redditButton">
+									/r/dicecloud
+							</paper-button>
+						</a>
 					</p>
 				</div>
 				<div>
@@ -82,11 +94,11 @@
 						Get involved
 					</h1>
 					<p>Shape upcoming features and track bugs on the DiceCloud Trello board
-						<paper-button class="trelloButton">
-							<a href="https://trello.com/b/94M0SCnq/dicecloud-roadmap">
-								Trello Roadmap
-							</a>
-						</paper-button>
+						<a href="https://trello.com/b/94M0SCnq/dicecloud-roadmap">
+							<paper-button class="trelloButton">
+									Trello Roadmap
+							</paper-button>
+						</a>
 					</p>
 				</div>
 			</div>

@@ -1,27 +1,30 @@
 <template name="changeLog">
-	<app-toolbar class="app-grey white-text">
-		<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-		<div flex>
-			Change Log
-		</div>
-	</app-toolbar>
-	<div class="changeLog scroll-y" fit>
-		<div layout vertical center>
-			<div layout vertical style="max-width: 800px; padding: 4px;">
-				{{#each changeLogs}}
-					<paper-material class="card" 
-								  style="margin: 4px;
-										 padding: 16px;"
-								  layout vertical>
-						<h2>{{version}}</h2>
-						<ul>
-							{{#each changes}}
-							<li>{{this}}</li>
-							{{/each}}
-						</ul>
-					</paper-material>
-				{{/each}}
+	<app-header-layout has-scrolling-region fullbleed>
+		<app-header class="app-grey white-text" fixed effects="waterfall">
+			<app-toolbar class="app-grey white-text">
+				<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+				<div flex>
+					Change Log
+				</div>
+			</app-toolbar>
+		</app-header>
+		<div class="changeLog">
+			<div class="layout vertical center">
+				<div class="layout vertical" style="max-width: 800px; padding: 4px;">
+					{{#each changeLogs}}
+						<paper-material class="card layout vertical"
+									  style="margin: 4px;
+											 padding: 16px;">
+							<h2>{{version}}</h2>
+							<ul>
+								{{#each changes}}
+									<li>{{this}}</li>
+								{{/each}}
+							</ul>
+						</paper-material>
+					{{/each}}
+				</div>
 			</div>
 		</div>
-	</div>
+	</app-header-layout>
 </template>
