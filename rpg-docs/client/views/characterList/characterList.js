@@ -1,20 +1,26 @@
 Template.characterList.helpers({
-	characterDetails: function(){
-		var char = Characters.findOne(
-			this._id,
-			{fields: {name: 1, gender: 1, alignment: 1, race:1, color: 1}}
+	characters(){
+		var userId = Meteor.userId();
+		return Characters.find(
+			{
+				$or: [
+					{readers: userId},
+					{writers: userId},
+					{owner: userId},
+				]
+			},
+			{
+				fields: {name: 1, picture: 1, color: 1, race: 1, alignment: 1, gender: 1},
+				sort: {name: 1},
+			}
 		);
-		char.title = char.name;
-		char.field = "base";
-		char.class = "characterCard";
-		return char;
-	}
-});
+	},
+	initials(name){
+		return name.replace(/[^A-Z]/g, "");
+	},
+})
 
 Template.characterList.events({
-	"tap .characterCard": function(event, instance){
-		Router.go("characterSheet", {_id: this._id});
-	},
 	"tap .addCharacter": function(event, template) {
 		GlobalUI.showDialog({
 			heading: "New Character",

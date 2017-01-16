@@ -22,6 +22,7 @@ Meteor.publish("characterList", function(){
 				writers:1,
 				owner: 1,
 				color: 1,
+				picture: 1,
 			}
 		}
 	);

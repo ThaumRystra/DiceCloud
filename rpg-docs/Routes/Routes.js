@@ -34,13 +34,8 @@ Router.map(function() {
 		waitOn: function(){
 			return subsManager.subscribe("characterList", Meteor.userId());
 		},
-		data: {
-			characters: function(){
-				return Characters.find({}, {fields: {_id: 1}, sort: {name: 1}});
-			}
-		},
 		onAfterAction: function() {
-			document.title = appName;
+			document.title = appName + " - Characters";
 		},
 		fastRender: true,
 	});

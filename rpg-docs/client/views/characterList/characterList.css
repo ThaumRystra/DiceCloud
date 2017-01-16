@@ -1,10 +1,32 @@
-.characterCards {
-	padding: 4px;
+.character-card{
+	background-color: #fff;
+	height: 300px;
+	min-width: 250px;
+	max-width: 500px;
+	flex-basis: 300px;
+	margin: 4px;
+	position: relative;
 }
 
-.characterCard{
-	width: 272px;
-	margin: 4px;
-	min-width: 272px;
-	flex-grow: 1;
+.character-card .image {
+	position: relative;
+}
+
+.character-card .initials {
+	font-size: 100px;
+	color: rgba(255,255,255,0.1);
+	background: linear-gradient(-8deg, rgba(0,0,0,0.7), rgba(0,0,0,0));
+}
+
+.character-card paper-item {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.character-card .name {
+	font-weight: 500;
+}
+
+.character-card paper-ripple {
+	color: #fff ;
 }

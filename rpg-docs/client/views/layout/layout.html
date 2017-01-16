@@ -4,38 +4,49 @@
 			<app-header-layout mode="seamed" class="white">
 				<div id="accountSummary">
 					{{#if currentUser}}
-						<div id="profileLink"
+						<a href="profile"
 							 style="text-decoration: underline; cursor: pointer; font-size: 16px;">
 							{{profileLink}}
-						</div>
+						</a>
 					{{else}}
 						<a href="/sign-in" style="color: white;">Sign in</a>
 					{{/if}}
 				</div>
 				<div id="navPanel">
-					<paper-icon-item id="homeNav" icon="home">
-						<iron-icon icon="home" item-icon></iron-icon>
-						Home
-					</paper-icon-item>
-					{{> characterSideList}}
-					<paper-icon-item id="guide">
-						<iron-icon icon="social:school" item-icon></iron-icon>
-						Guide
-					</paper-icon-item>
+					<a href="/">
+						<paper-icon-item id="homeNav">
+							<iron-icon icon="home" item-icon></iron-icon>
+							Home
+						</paper-icon-item>
+					</a>
+					<a href="/characterList">
+						<paper-icon-item id="characters">
+							<iron-icon icon="social:people" item-icon></iron-icon>
+							Characters
+						</paper-icon-item>
+					</a>
+					<a href="/guide">
+						<paper-icon-item id="guide">
+							<iron-icon icon="social:school" item-icon></iron-icon>
+							Guide
+						</paper-icon-item>
+					</a>
 					<paper-icon-item id="feedback">
 						<iron-icon icon="bug-report" item-icon></iron-icon>
 						Send Feedback
 					</paper-icon-item>
-					<paper-icon-item id="changeLog">
-						<iron-icon icon="list" item-icon></iron-icon>
-						Change Log
-					</paper-icon-item>
+					<a href="changeLog">
+						<paper-icon-item id="changeLog">
+							<iron-icon icon="list" item-icon></iron-icon>
+							Change Log
+						</paper-icon-item>
+					</a>
+					<hr style="margin: 16px 0 24px 0;">
+					{{> characterSideList}}
 				</div>
 			</app-header-layout>
 		</app-drawer>
-		<app-header-layout fullbleed>
-			{{> yield}}
-		</app-header-layout>
+		{{> yield}}
 	</app-drawer-layout>
 	<paper-toast id="global-toast" duration="5000"></paper-toast>
 	{{> dialogStack}}

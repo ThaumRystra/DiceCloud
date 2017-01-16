@@ -18,7 +18,7 @@ Template.characterSideList.helpers({
 				sort: {name: 1},
 			}
 		);
-	}
+	},
 });
 
 Template.characterSideList.events({

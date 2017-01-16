@@ -29,15 +29,10 @@ const closeDrawer = function(instance){
 }
 
 Template.layout.events({
-	"tap #homeNav": function(event, instance){
-		Router.go("/");
+	"click app-drawer a": function(event, instance){
 		closeDrawer(instance);
 	},
-	"tap #profileLink": function(event, instance){
-		Router.go("profile");
-		closeDrawer(instance);
-	},
-	"tap #feedback": function(event, instance) {
+	"click #feedback": function(event, instance) {
 		pushDialogStack({
 			template: "feedback",
 			element: event.currentTarget,
@@ -48,16 +43,8 @@ Template.layout.events({
 						text: e && e.details || "Feedback submitted"
 					});
 				});
-			}
+			},
 		});
-		closeDrawer(instance);
-	},
-	"tap #changeLog": function(event, instance) {
-		Router.go("changeLog");
-		closeDrawer(instance);
-	},
-	"tap #guide": function(event, instance) {
-		Router.go("guide");
 		closeDrawer(instance);
 	},
 });
