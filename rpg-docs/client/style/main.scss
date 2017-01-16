@@ -18,16 +18,6 @@ body {
 	background-color: #E0E0E0;
 }
 
-//fix tabs and core-toolbar having box shadow
-core-toolbar {
-	box-shadow: none;
-}
-
-//give drawer panel a shadow always
-core-header-panel[drawer] {
-	box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
-}
-
 //Paragraphs
 p {
 	margin-bottom: 8px;
@@ -75,6 +65,10 @@ paper-icon-item::shadow #contentIcon {
 	position: fixed;
 	bottom: 24px;
 	right: 24px;
+}
+
+paper-fab {
+	background-color: #d13b2e;
 }
 
 //Buttons

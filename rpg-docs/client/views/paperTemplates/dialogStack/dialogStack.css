@@ -50,3 +50,11 @@
 	background: red;
 	border-radius: 30px;
 }
+
+.dialog-stack .dialog .form {
+	padding: 24px;
+}
+
+.dialog-stack .dialog .buttons {
+	padding: 8px 8px 8px 24px;
+}

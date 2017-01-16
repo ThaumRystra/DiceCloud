@@ -22,9 +22,15 @@ Template.characterList.helpers({
 
 Template.characterList.events({
 	"tap .addCharacter": function(event, template) {
-		GlobalUI.showDialog({
-			heading: "New Character",
+		pushDialogStack({
 			template: "newCharacterDialog",
-		});
+			element: event.currentTarget,
+			callback(character){
+				if (!character) return;
+				character.owner = Meteor.userId();
+				let _id = Characters.insert(character);
+				Router.go("characterSheet", {_id});
+			},
+		})
 	},
 });
