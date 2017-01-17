@@ -6,23 +6,23 @@
 	bottom: 0;
 	left: 0;
 	visibility: visible;
-	transition: visibility 0s linear;
+	transition: visibility 0s;
 }
 
 .dialog-stack.hide {
 	visibility: hidden;
-  	transition: visibility 0s linear 0.4s;
+  	transition: visibility 0s linear 400ms;
 }
 
 .dialog-stack .backdrop {
 	background: rgba(0,0,0,0.4);
 	opacity: 1;
-	transition: opacity 0.4s linear;
+	transition: opacity 400ms linear;
 }
 
 .dialog-stack.hide .backdrop {
 	opacity: 0;
-	transition: opacity 0.2s linear;
+	transition: opacity 200ms linear;
 }
 
 .dialog-stack .dialog-sizer {
@@ -39,9 +39,9 @@
 	box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
 				0 3px 14px 2px rgba(0, 0, 0, 0.12),
 				0 5px 5px -3px rgba(0, 0, 0, 0.4);
-	transition: all 0.4s ease;
 	overflow: hidden;
 	border-radius: 2px;
+	transform-origin: top left;
 }
 
 .dialog-stack .dialog .testButton {
