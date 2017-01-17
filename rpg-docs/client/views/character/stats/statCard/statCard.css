@@ -1,0 +1,16 @@
+.stat-card {
+	min-width: 75px;
+	text-align: center;
+	cursor: pointer;
+	-webkit-margin-collapse: separate;
+	background: #fff;
+}
+
+.stat-card .title {
+	padding: 16px;
+}
+
+.stat-card .numbers {
+	min-width: 72px;
+	padding: 16px;
+}

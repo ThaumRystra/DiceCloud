@@ -29,7 +29,7 @@
 			<!--Saving Throws-->
 			<div>
 			<paper-material class="card">
-				<div class="top white subhead">
+				<div class="top white paper-font-subhead">
 					Saving Throws
 				</div>
 				<div flex class="bottom list">
@@ -45,7 +45,7 @@
 			<!--Skills-->
 			<div>
 			<paper-material class="card">
-				<div class="top white subhead">
+				<div class="top white paper-font-subhead">
 					Skills
 				</div>
 				<div flex class="bottom list">
@@ -71,23 +71,5 @@
 			</paper-material>
 			</div>
 		</div>
-	</div>
-</template>
-
-<template name="statCard">
-	<div>
-	<paper-material class="card statCard clickable" hero-id="main" {{detailHero stat ../_id}} layout horizontal>
-		<div class="left display1 white-text {{color}}"
-			 hero-id="toolbar" {{detailHero stat ../_id}}>
-			{{#if isSkill}}
-				{{prefix}}{{skillMod}}
-			{{else}}
-				{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
-			{{/if}}
-		</div>
-		<div class="right subhead" flex horizontal layout center>
-			{{name}}
-		</div>
-	</paper-material>
 	</div>
 </template>

@@ -1,16 +1,17 @@
 <template name="abilityMiniCard">
 	<div>
-	<paper-material class="card abilityMiniCard clickable"
-				  hero-id="main" {{detailHero ability ../_id}}
-				  layout horizontal>
-		<div class="left white-text {{color}}"
-			 hero-id="toolbar" {{detailHero ability ../_id}}>
-			<div class="display1">{{characterCalculate "attributeValue" ../_id ability}}</div>
-			<div class="title">{{abilityMod}}</div>
-		</div>
-		<div class="right subhead" layout horizontal center>
-			{{title}}
-		</div>
-	</paper-material>
+		<paper-material class="ability-mini-card layout horizontal">
+			<div class="numbers">
+				<div class="paper-font-display1 stat">
+					{{characterCalculate "attributeValue" ../_id ability}}
+				</div>
+				<div class="paper-font-subhead modifier">
+					{{abilityMod}}
+				</div>
+			</div>
+			<div class="paper-font-subhead title flex layout horizontal center">
+				{{title}}
+			</div>
+		</paper-material>
 	</div>
 </template>

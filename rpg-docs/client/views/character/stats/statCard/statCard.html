@@ -1,0 +1,16 @@
+<template name="statCard">
+	<div>
+		<paper-material class="ability-mini-card layout horizontal">
+			<div class="numbers paper-font-display1">
+					{{#if isSkill}}
+						{{prefix}}{{skillMod}}
+					{{else}}
+						{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
+					{{/if}}
+			</div>
+			<div class="paper-font-subhead title flex layout horizontal center">
+				{{name}}
+			</div>
+		</paper-material>
+	</div>
+</template>

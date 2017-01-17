@@ -3,7 +3,7 @@ List items
 */
 .item-slot {
 	background-color: rgb(232, 232, 232);
-	background-color: rgba(0, 0, 0, 0.1);	
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 .item {
@@ -30,7 +30,7 @@ List items
 		box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.37);
 		z-index: 10;
 	}
-	core-icon, paper-icon-button {
+	iron-icon, paper-icon-button {
 		color: #747474;
 		color: rgba(0,0,0,0.54);
 	}

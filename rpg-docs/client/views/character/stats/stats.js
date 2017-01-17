@@ -1,8 +1,8 @@
 Template.stats.events({
-	"tap .statCard": function(event, instance){
+	"click .statCard": function(event, instance){
 		var charId = instance.data._id;
 		if (this.isSkill){
-			GlobalUI.setDetail({
+			pushDialogStack({
 				template: "skillDialog",
 				data:     {
 					name: this.name,
@@ -10,10 +10,10 @@ Template.stats.events({
 					charId: charId,
 					color: this.color,
 				},
-				heroId:   charId + this.stat,
+				element: event.currentTarget,
 			});
 		} else {
-			GlobalUI.setDetail({
+			pushDialogStack({
 				template: "attributeDialog",
 				data:     {
 					name: this.name,
@@ -21,15 +21,15 @@ Template.stats.events({
 					charId: charId,
 					color: this.color,
 				},
-				heroId:   charId + this.stat,
+				element: event.currentTarget,
 			});
 		}
 	},
-	"tap .abilityMiniCard": function(event, instance){
+	"click .ability-mini-card": function(event, instance){
 		var charId = Template.parentData()._id;
 		var template = "attributeDialog";
 		if (this.ability === "strength") template = "strengthDialog";
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: template,
 			data:     {
 				name: this.title,
@@ -37,24 +37,24 @@ Template.stats.events({
 				charId: charId,
 				color: this.color,
 			},
-			heroId:   charId + this.ability,
+			element: event.currentTarget,
 		});
 	},
 	"tap .skill-row": function(event, instance){
 		var skill = this.skill;
 		var charId = instance.data._id;
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "skillDialog",
 			data:     {
 				name: this.name,
 				skillName: skill,
 				charId: charId,
 			},
-			heroId:   charId + skill,
+			element: event.currentTarget,
 		});
 	},
 	"tap .hitPointTitle": function(event, instance) {
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "attributeDialog",
 			data:     {
 				name: "Hit Points",
@@ -62,17 +62,7 @@ Template.stats.events({
 				charId: this._id,
 				color: "green",
 			},
-			heroId:   this._id + "hitPoints",
+			element: event.currentTarget.parentElement.parentElement,
 		});
-	},
-});
-
-Template.statCard.helpers({
-	skillMod: function() {
-		return signedString(
-			Characters.calculate.skillMod(
-				Template.parentData()._id, this.stat
-			)
-		);
 	},
 });

@@ -1,9 +1,6 @@
 <template name="skillRow">
 	<div class="item-slot">
-		<div class="skill-row item small" 
-			 hero-id="main" 
-			 {{detailHero skill ../_id}} 
-			 layout horizontal center>
+		<div class="skill-row item small layout horizontal center">
 			<iron-icon icon="{{profIcon}}"></iron-icon>
 			{{#if failSkill}}
 				<div class="fail skill-mod">fail</div>
