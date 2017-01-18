@@ -31,24 +31,27 @@ Template.characterSheet.events({
 		Characters.update(this._id, {$set: {color: event.color}});
 	},
 	"tap #deleteCharacter": function(event, instance){
-		GlobalUI.showDialog({
-			heading: "Delete " + this.name,
+		const menu = instance.find(".character-menu");
+		pushDialogStack({
 			data: this,
 			template: "deleteCharacterConfirmation",
+			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
 	"tap #shareCharacter": function(event, instance){
-		GlobalUI.showDialog({
-			heading: "Share " + this.name,
+		const menu = instance.find(".character-menu");
+		pushDialogStack({
 			data: this,
 			template: "shareDialog",
+			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
 	"tap #characterSettings": function(event, instance){
-		GlobalUI.showDialog({
-			heading: this.name + " Settings",
+		const menu = instance.find(".character-menu");
+		pushDialogStack({
 			data: this,
 			template: "characterSettings",
+			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
 });

@@ -1,24 +1,10 @@
-<template name="colorDropdownOld">
-	<paper-dropdown-menu class="colorDropdown {{colorClass color}}" label="Color">
-		<paper-dropdown layered class="dropdown">
-			<core-menu class="menu"  selected={{color}}>
-				{{#each colors}}
-					<paper-item name={{key}} class="containerMenuItem {{colorClass key}}">{{className}}</paper-item>
-				{{/each}}
-			</core-menu>
-		</paper-dropdown>
-	</paper-dropdown-menu>
-</template>
-
 <template name="colorDropdown">
-	<paper-menu-button id="colorDropdown">
-		<paper-icon-button icon="editor:format-paint" noink></paper-icon-button>
-		<paper-dropdown class="dropdown" halign="right">
-			<core-menu class="menu">
-				{{#each colors}}
-					<paper-item name={{key}} class="colorMenuItem {{colorClass key}}">{{className}}</paper-item>
-				{{/each}}
-			</core-menu>
-		</paper-dropdown>
+	<paper-menu-button class="colorDropdown" horizontal-align="right" dynamic-align>
+		<paper-icon-button icon="editor:format-paint" class="dropdown-trigger" tabindex="-1"></paper-icon-button>
+		<paper-menu class="dropdown-content" attr-for-selected="name" selected={{color}}>
+			{{#each colors}}
+				<paper-item name={{key}} class="colorMenuItem {{colorClass key}}">{{className}}</paper-item>
+			{{/each}}
+		</paper-menu>
 	</paper-menu-button>
 </template>

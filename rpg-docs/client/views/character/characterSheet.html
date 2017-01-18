@@ -2,30 +2,32 @@
 	<app-header-layout has-scrolling-region fullbleed>
 		<app-header fixed>
 			<app-toolbar class="medium-tall {{colorClass}}">
-				<paper-icon-button icon="menu" drawer-toggle top-item></paper-icon-button>
-				<div class="flex" top-item>
-					{{name}}
+				<div top-item class="layout horizontal center">
+					<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+					<div class="flex character-name">
+						{{name}}
+					</div>
+					{{#if canEditCharacter _id}}
+						{{> colorDropdown}}
+						<paper-menu-button class="character-menu" horizontal-align="right">
+							<paper-icon-button icon="more-vert"  class="dropdown-trigger" tabindex="-1"></paper-icon-button>
+							<paper-menu class="dropdown-content black87">
+								<paper-icon-item id="deleteCharacter">
+									<iron-icon icon="delete" item-icon></iron-icon>
+									Delete
+								</paper-icon-item>
+								<paper-icon-item id="shareCharacter">
+									<iron-icon icon="social:share" item-icon></iron-icon>
+									Share
+								</paper-icon-item>
+								<paper-icon-item id="characterSettings">
+									<iron-icon icon="settings" item-icon></iron-icon>
+									Settings
+								</paper-icon-item>
+							</paper-menu>
+						</paper-menu-button>
+					{{/if}}
 				</div>
-				{{#if canEditCharacter _id}}
-					{{> colorDropdown}}
-					<paper-menu-button top-item>
-						<paper-icon-button icon="more-vert"  class="dropdown-trigger"></paper-icon-button>
-						<paper-menu class="dropdown-content" halign="right">
-							<paper-icon-item id="deleteCharacter">
-								<iron-icon icon="delete" item-icon></iron-icon>
-								Delete
-							</paper-icon-item>
-							<paper-icon-item id="shareCharacter">
-								<iron-icon icon="social:share" item-icon></iron-icon>
-								Share
-							</paper-icon-item>
-							<paper-icon-item id="characterSettings">
-								<iron-icon icon="settings" item-icon></iron-icon>
-								Settings
-							</paper-icon-item>
-						</paper-menu>
-					</paper-menu-button>
-				{{/if}}
 				<div bottom-item>
 					<paper-tabs id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}" attr-for-selected="name">
 						<paper-tab name="stats">Stats</paper-tab>

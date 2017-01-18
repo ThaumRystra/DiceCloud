@@ -5,9 +5,10 @@ Template.colorDropdown.helpers({
 });
 
 Template.colorDropdown.events({
-	"tap .colorMenuItem": function(event, instance){
+	"click paper-item": function(event, instance){
+		instance.find(".colorDropdown").close();
 		var color = event.currentTarget.getAttribute("name");
-		instance.$("#colorDropdown").trigger({
+		instance.$(".colorDropdown").trigger({
 			type: "color-change",
 			color: color,
 		});

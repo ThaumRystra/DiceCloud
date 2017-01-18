@@ -26,3 +26,14 @@ paper-tabs.transparent-brown {
 app-toolbar.medium-tall {
 	height: 108px;
 }
+
+.character-name {
+	padding-left: 16px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.character-menu paper-item{
+	cursor: pointer;
+}

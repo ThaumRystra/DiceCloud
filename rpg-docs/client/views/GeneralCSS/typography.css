@@ -1,41 +1,64 @@
+.white-text {
+	color: #dedede;
+	color: rgba(255,255,255,0.87);
+}
+
 .white-text .paper-font-display2{
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
 }
 
 .white-text .paper-font-display1, .white-text.paper-font-display1{
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
 }
 
 .white-text h1, .white-text .paper-font-headline, .white-text.paper-font-headline{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
 .white-text h2, .white-text .paper-font-title, .white-text.paper-font-title{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
 .white-text h3, .white-text .paper-font-subhead{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
 .white-text .paper-font-body2{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
 .white-text p, .white-text .paper-font-body1{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
 .white-text .paper-font-caption{
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
 }
 
 .black54 {
-	color: #444;
+	color: #757575;
 	color: rgba(0,0,0,0.54);
 }
 
 .white54 {
-	color: #eee;
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
+}
+
+.black87 {
+	color: #212121;
+	color: rgba(0,0,0,0.87);
+}
+
+.white87 {
+	color: #dedede;
+	color: rgba(255,255,255,0.87);
 }

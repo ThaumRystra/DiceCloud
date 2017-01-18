@@ -1,5 +1,12 @@
 Template.shareDialog.onCreated(function(){
 	this.userId = new ReactiveVar();
+	this.autorun(() => {
+		var char = Characters.findOne(Template.currentData()._id, {
+			fields: {readers: 1, writers: 1}
+		});
+		if (!char) return;
+		this.subscribe("userNames", _.union(char.readers, char.writers));
+	});
 });
 
 Template.shareDialog.helpers({
@@ -9,11 +16,16 @@ Template.shareDialog.helpers({
 	},
 	readers: function(){
 		var char = Characters.findOne(this._id, {fields: {readers: 1}});
-		return Meteor.users.find({_id: {$in: char.readers}});
+		return char.readers;
 	},
 	writers: function(){
 		var char = Characters.findOne(this._id, {fields: {writers: 1}});
-		return Meteor.users.find({_id: {$in: char.writers}});
+		//Meteor.users.find({_id: {$in: char.writers}});
+		return char.writers
+	},
+	username: function(id){
+		const user = Meteor.users.findOne(id);
+		return user && user.username || "user: " + id;
 	},
 	shareButtonDisabled: function(){
 		return !Template.instance().userId.get();
@@ -23,13 +35,10 @@ Template.shareDialog.helpers({
 			return "User not found";
 		}
 	},
-	getUserName: function() {
-		return this.username || "user: " + this._id;
-	}
 });
 
 Template.shareDialog.events({
-	"core-select .visibilityDropdown": function(event){
+	"change .visibilityDropdown": function(event){
 		var detail = event.originalEvent.detail;
 		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
@@ -70,7 +79,7 @@ Template.shareDialog.events({
 	},
 	"tap .deleteShare": function(event, instance) {
 		Characters.update(instance.data._id, {
-			$pull: {writers: this._id, readers: this._id}
+			$pull: {writers: this.id, readers: this.id}
 		});
 	},
 });
