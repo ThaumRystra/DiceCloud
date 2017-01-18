@@ -22,21 +22,21 @@
 			{{#each tempHitPoints}}
 				<div>
 					{{name}}
-					<div class="layout horizontal">
-					<paper-diff-slider class="tempHitPointSlider"
+				</div>
+				<div class="layout horizontal center">
+					<div style="height: 40px; width: 40px;">
+						{{#unless left}}
+							<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
+						{{/unless}}
+					</div>
+					<paper-diff-slider class="tempHitPointSlider flex"
 							  value={{left}}
 							  max={{maximum}}
 							  editable pin
-							  role="slider"
-							  flex
 							  ></paper-diff-slider>
-					{{#unless left}}
-						<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
-					{{/unless}}
 				</div>
-			</div>
 			{{/each}}
-			<div class="caption">
+			<div class="paper-font-caption">
 				{{#if multipliers.immunities.length}}
 					<div>
 						Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}
@@ -68,15 +68,12 @@
 									<paper-icon-button class="slotBubble failBubble" icon={{failIcon 3}} disabled={{failDisabled 3}}></paper-icon-button>
 								</div>
 							</div>
-							<div class="layout horizontal center center-justified" style="min-width: 94px">
+							<div class="layout horizontal center center-justified" style="width: 94px">
 								{{#if dead}}
 									DEAD
 								{{else}}
-									{{#if stable}}
-										<paper-button id="stableButton">Stable</paper-button>
-									{{else}}
-										<paper-button id="unstableButton">Unstable</paper-button>
-									{{/if}}
+								<paper-button id="stableButton" class="{{#if stable}}stable{{/if}}">
+								</paper-button>
 								{{/if}}
 							</div>
 							<div layout vertical center>

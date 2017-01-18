@@ -29,6 +29,8 @@
 	position: relative;
 	height: 80%;
 	width: 80%;
+	max-width: 800px;
+	max-height: 600px;
 }
 
 .dialog-stack .dialog {

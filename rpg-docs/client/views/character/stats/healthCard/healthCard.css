@@ -3,24 +3,20 @@
 	margin-right: 8px;
 }
 
-/*Slider knob color*/
-#hitPointSlider::shadow #sliderKnobInner {
-	background-color: #0f9d58;
+.healthCard #stableButton {
+	color: #b71c1c;
+	transition: color 0.4s ease;
+	width: 100%
 }
 
-/*Slider pin*/
-#hitPointSlider::shadow #sliderKnobInner::before {
-	background-color: #0f9d58;
-	height: 32px;
-	width: 32px;
+.healthCard #stableButton:before {
+	content: "Unstable";
 }
 
-/*Slider pin text*/
-#hitPointSlider::shadow #sliderKnob > #sliderKnobInner::after {
-	font-size: 16px;
+.healthCard #stableButton.stable {
+	color: #1b5e20;
 }
 
-/*Slider bar*/
-#hitPointSlider::shadow #sliderBar::shadow #activeProgress {
-	background-color: #0f9d58;
+.healthCard #stableButton.stable:before{
+	content: "Stable";
 }

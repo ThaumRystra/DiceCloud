@@ -10,12 +10,12 @@ Template.healthCard.helpers({
 		return char && char.deathSave;
 	},
 	failIcon: function(num){
-		if (num <= this.fail) return "radio-button-on";
-		else return "radio-button-off";
+		if (num <= this.fail) return "radio-button-checked";
+		else return "radio-button-unchecked";
 	},
 	passIcon: function(num){
-		if (num <= this.pass) return "radio-button-on";
-		else return "radio-button-off";
+		if (num <= this.pass) return "radio-button-checked";
+		else return "radio-button-unchecked";
 	},
 	failDisabled: function(num){
 		return !(num === this.fail || num - 1 === this.fail);
@@ -27,6 +27,7 @@ Template.healthCard.helpers({
 		return this.fail >= 3;
 	},
 	multipliers: function(){
+		// jscs:disable maximumLineLength
 		var multipliers = [
 			{name: "Acid",        value: Characters.calculate.attributeValue(this._id, "acidMultiplier")},
 			{name: "Bludgeoning", value: Characters.calculate.attributeValue(this._id, "bludgeoningMultiplier")},
@@ -42,6 +43,7 @@ Template.healthCard.helpers({
 			{name: "Slashing",    value: Characters.calculate.attributeValue(this._id, "slashingMultiplier")},
 			{name: "Thunder",     value: Characters.calculate.attributeValue(this._id, "thunderMultiplier")},
 		];
+		// jscs:enable maximumLineLength
 		multipliers = _.groupBy(multipliers, "value");
 		return {
 			"immunities": multipliers["0"] || [],
@@ -54,7 +56,7 @@ Template.healthCard.helpers({
 Template.healthCard.events({
 	"change #hitPointSlider": function(event){
 		var value = event.currentTarget.value;
-		var base = Characters.calculate.attributeBase(this._id, "hitPoints")
+		var base = Characters.calculate.attributeBase(this._id, "hitPoints");
 		var adjustment = value - base;
 		Characters.update(this._id, {$set: {"hitPoints.adjustment": adjustment}});
 		//reset the death saves if we are gaining HP
@@ -73,39 +75,42 @@ Template.healthCard.events({
 		var used = this.maximum - value;
 		TemporaryHitPoints.update(this._id, {$set: {"used": used}});
 	},
-	"tap .deleteTHP": function(event){
+	"click .deleteTHP": function(event){
 		TemporaryHitPoints.remove(this._id);
 	},
-	"tap #addTempHP": function(event){
-		GlobalUI.showDialog({
+	"click #addTempHP": function(event){
+		pushDialogStack({
 			template: "addTHPDialog",
 			data: {charId: this._id},
+			element: event.currentTarget.parentElement,
 		});
 	},
-	"tap .failBubble": function(event){
+	"click .failBubble": function(event){
 		if (event.currentTarget.disabled) return;
 		var char = Template.parentData();
-		if (event.currentTarget.icon === "radio-button-off"){
+		if (event.currentTarget.icon === "radio-button-unchecked"){
 			Characters.update(char._id, {$set: {"deathSave.fail": this.fail + 1}});
 		} else {
 			Characters.update(char._id, {$set: {"deathSave.fail": this.fail - 1}});
 		}
 	},
-	"tap .passBubble": function(event){
+	"click .passBubble": function(event){
 		if (event.currentTarget.disabled) return;
 		var char = Template.parentData();
-		if (event.currentTarget.icon === "radio-button-off"){
+		if (event.currentTarget.icon === "radio-button-unchecked"){
 			Characters.update(char._id, {$set: {"deathSave.pass": this.pass + 1}});
 		} else {
 			Characters.update(char._id, {$set: {"deathSave.pass": this.pass - 1}});
 		}
 	},
-	"tap #stableButton": function(event){
-		var char = Template.parentData();
-		Characters.update(char._id, {$set: {"deathSave.stable": false}});
-	},
-	"tap #unstableButton": function(event){
-		var char = Template.parentData();
-		Characters.update(char._id, {$set: {"deathSave.stable": true}});
+	"click #stableButton": function(event){
+		var char = Characters.findOne(Template.parentData()._id, {
+			fields: {deathSave: 1}
+		});
+		Characters.update(char._id, {
+			$set: {
+				"deathSave.stable": !char.deathSave.stable
+			}
+		});
 	},
 });
