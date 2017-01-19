@@ -9,6 +9,13 @@ Template.shareDialog.onCreated(function(){
 	});
 });
 
+Template.shareDialog.onRendered(function(){
+	// Polymer not mirroring selected attribute properly
+	this.$("paper-listbox").each(function(){
+		this.selected = this.getAttribute("selected");
+	});
+});
+
 Template.shareDialog.helpers({
 	viewPermission: function() {
 		var char = Characters.findOne(this._id, {fields: {settings: 1}});
@@ -38,9 +45,8 @@ Template.shareDialog.helpers({
 });
 
 Template.shareDialog.events({
-	"change .visibilityDropdown": function(event){
+	"iron-select .visibilityDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		var char = Characters.findOne(this._id, {fields: {settings: 1}});
 		if (value == char.settings.viewPermission) return;
@@ -59,7 +65,7 @@ Template.shareDialog.events({
 			}
 		});
 	},
-	"tap #shareButton": function(event, instance){
+	"click #shareButton": function(event, instance){
 		var self = this;
 		var permission = instance.find("#accessLevelMenu").selected;
 		if (!permission) throw "no permission set";
@@ -77,9 +83,12 @@ Template.shareDialog.events({
 			});
 		}
 	},
-	"tap .deleteShare": function(event, instance) {
+	"click .deleteShare": function(event, instance) {
 		Characters.update(instance.data._id, {
 			$pull: {writers: this.id, readers: this.id}
 		});
+	},
+	"click .doneButton": function(event, instance){
+		popDialogStack();
 	},
 });

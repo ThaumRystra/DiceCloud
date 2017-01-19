@@ -14,31 +14,42 @@ AccountsTemplates.configure({
 	showAddRemoveServices: true,
 	showForgotPasswordLink: true,
 	showResendVerificationEmailLink: true,
+	texts: {
+		resendVerificationEmailLink_link: "Resend email verification",
+	},
 });
 
 AccountsTemplates.configureRoute("changePwd", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("enrollAccount", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("forgotPwd", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("resetPwd", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("signIn", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("signUp", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("verifyEmail", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 AccountsTemplates.configureRoute("resendVerificationEmail", {
 	template: "titledAtForm",
+    layoutTemplate: 'layout',
 });
 
 if (Meteor.isServer){

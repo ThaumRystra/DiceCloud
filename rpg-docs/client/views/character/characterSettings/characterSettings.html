@@ -1,27 +1,24 @@
 <template name="characterSettings">
 	{{#with character}}
-	<div style="height: 100px;">
-		<table style="width: 100%;">
-			<tr>
-				<td>Hide Spells tab</td>
-				<td>
-					<paper-toggle-button id="hideSpellcasting"
-										 checked={{settings.hideSpellcasting}}
-										 touch-action="pan-y">
-					</paper-toggle-button>
-				</td>
-			</tr>
-			<tr>
-				<td>Use variant encumbrance</td>
-				<td>
-					<paper-toggle-button id="variantEncumbrance"
-										 checked={{settings.useVariantEncumbrance}}
-										 touch-action="pan-y">
-					</paper-toggle-button>
-				</td>
-			</tr>
-		</table>
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="feedback flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>Character Settings</div>
+				</app-toolbar>
+			</app-header>
+			<div class="form flex">
+				<paper-toggle-button id="hideSpellcasting" checked={{settings.hideSpellcasting}}>
+					Hide Spells tab
+				</paper-toggle-button>
+				<paper-toggle-button id="variantEncumbrance" checked={{settings.useVariantEncumbrance}}>
+					Use variant encumbrance
+				</paper-toggle-button>
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="doneButton"> Done </paper-button>
+		</div>
 	</div>
 	{{/with}}
-	<paper-button id="doneButton" affirmative> Done </paper-button>
 </template>

@@ -443,13 +443,13 @@ Characters.calculate = {
 	}),
 };
 
-var depreciated = function() {
-	//var err = new Error("this function has been depreciated");
+var deprecated = function() {
+	//var err = new Error("this function has been deprecated");
 	var name = "";
 	if (Template.instance()){
 		name = Template.instance().view.name;
 	}
-	var logString = "this function has been depreciated \n";
+	var logString = "this function has been deprecated \n";
 	if (name){
 		logString += "View: " + name + "\n\n";
 	}
@@ -464,56 +464,56 @@ Characters.helpers({
 	//returns the value stored in the field requested
 	//will set up dependencies on just that field
 	getField : function(fieldName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.getField(this._id, fieldName);
 	},
 	//returns the value of a field
 	fieldValue : function(fieldName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.fieldValue(this._id, fieldName);
 	},
 	attributeValue: function(attributeName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.attributeValue(this._id, attributeName);
 	},
 	attributeBase: function(attributeName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.attributeBase(this._id, attributeName);
 	},
 	skillMod: function(skillName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.skillMod(this._id, skillName);
 	},
 	proficiency: function(skillName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.proficiency(this._id, skillName);
 	},
 	passiveSkill: function(skillName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.passiveSkill(this._id, skillName);
 	},
 	advantage: function(skillName){
-		depreciated();
+		deprecated();
 		return Characters.calculate.advantage(this._id, skillName);
 	},
 	abilityMod: function(attribute){
-		depreciated();
+		deprecated();
 		return Characters.calculate.abilityMod(this._id, attribute);
 	},
 	passiveAbility: function(attribute){
-		depreciated();
+		deprecated();
 		return Characters.calculate.passiveAbility(this._id, attribute);
 	},
 	xpLevel: function(){
-		depreciated();
+		deprecated();
 		return Characters.calculate.xpLevel(this._id);
 	},
 	level: function(){
-		depreciated();
+		deprecated();
 		return Characters.calculate.level(this._id);
 	},
 	experience: function(){
-		depreciated();
+		deprecated();
 		return Characters.calculate.experience(this._id);
 	},
 });

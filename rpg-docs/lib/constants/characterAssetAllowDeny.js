@@ -5,6 +5,7 @@ Meteor.methods({
 			charId,
 			{fields: {owner: 1, writers: 1}}
 		);
+		if (!char) return true;
 		return (userId && char.owner === userId || _.contains(char.writers, userId));
 	},
 });
@@ -30,6 +31,7 @@ CHARACTER_SUBSCHEMA_ALLOW = {
 			doc.charId,
 			{fields: {owner: 1, writers: 1}}
 		);
+		if (!char) return true;
 		return userId && char.owner === userId || _.contains(char.writers, userId);
 	},
 	fetch: ["charId"],

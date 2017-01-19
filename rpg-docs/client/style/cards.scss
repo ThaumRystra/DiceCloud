@@ -35,22 +35,6 @@ $thinColumnWidth: 240px;
 			padding: 16px;
 			border-bottom: rgba(0,0,0,0.12) solid 1px;
 		}
-		paper-checkbox::shadow #ink[checked] {
-			color: #ffffff;
-		}
-		paper-checkbox::shadow #ink {
-			color: #ffffff;
-		}
-		paper-checkbox::shadow #checkbox.checked {
-			background-color: #ffffff;
-			background-color: rgba(255,255,255,0.27);
-			border-color: #ffffff;
-			border-color: rgba(255,255,255,0.27);
-		}
-		paper-checkbox::shadow #checkbox {
-			border-color: #ffffff;
-			border-color: rgba(255,255,255,0.54);
-		}
 	}
 	.bottom {
 		padding: 16px;

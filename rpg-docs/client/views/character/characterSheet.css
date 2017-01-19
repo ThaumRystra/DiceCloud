@@ -34,6 +34,6 @@ app-toolbar.medium-tall {
 	text-overflow: ellipsis;
 }
 
-.character-menu paper-item{
+.character-menu paper-icon-item{
 	cursor: pointer;
 }

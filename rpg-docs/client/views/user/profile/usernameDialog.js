@@ -4,7 +4,7 @@ var getUsername = function() {
 };
 
 Template.usernameDialog.onCreated(function() {
-	this.errorMessage = new ReactiveVar("");
+	this.errorMessage = new ReactiveVar();
 	this.username = new ReactiveVar(getUsername());
 });
 
@@ -32,12 +32,13 @@ Template.usernameDialog.events({
 				if (userId && userId !== Meteor.userId())
 					instance.errorMessage.set("This username is taken");
 				else
-					instance.errorMessage.set("");
+					instance.errorMessage.set();
 			});
 		}
 	},
-	"tap #changeButton": function(event, instance){
+	"click #changeButton": function(event, instance){
 		var username = instance.find("#usernameInput").value;
+		popDialogStack();
 		username = username.trim().replace(/\s+/gm, " ");
 		var profileName = username;
 		username = username.toLowerCase().replace(/\s+/gm, "");
@@ -45,5 +46,8 @@ Template.usernameDialog.events({
 			Meteor.userId(),
 			{$set: {username: username, "profile.username": profileName}}
 		);
+	},
+	"click #cancelButton": function(event, instance){
+		popDialogStack();
 	},
 });

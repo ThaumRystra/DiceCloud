@@ -1,6 +1,6 @@
 <template name="colorDropdown">
 	<paper-menu-button class="colorDropdown" horizontal-align="right" dynamic-align>
-		<paper-icon-button icon="editor:format-paint" class="dropdown-trigger" tabindex="-1"></paper-icon-button>
+		<paper-icon-button icon="editor:format-paint" class="dropdown-trigger"></paper-icon-button>
 		<paper-menu class="dropdown-content" attr-for-selected="name" selected={{color}}>
 			{{#each colors}}
 				<paper-item name={{key}} class="colorMenuItem {{colorClass key}}">{{className}}</paper-item>

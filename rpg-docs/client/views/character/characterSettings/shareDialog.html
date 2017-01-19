@@ -1,54 +1,65 @@
 <template name="shareDialog">
-	<div>
-		 <paper-dropdown-menu class="visibilityDropdown" label="Who can view this character">
-			<paper-listbox class="dropdown-content" selected={{viewPermission}} attr-for-selected="name">
-				<paper-item name="whitelist">Only people I share with</paper-item>
-				<paper-item name="public">Anyone with link</paper-item>
-			</paper-listbox>
-		</paper-dropdown-menu>
-		<div>
-			{{#if readers.length}}
-				<div class="paper-font-subhead">
-					Can View
-				</div>
-				{{#each id in readers}}
-					<div class="layout horizontal center">
-						{{#with id=id}}
-							<paper-icon-button class="deleteShare" icon="delete">
-							</paper-icon-button>
-						{{/with}}
-						<div class="flex">{{username id}}</div>
-					</div>
-				{{/each}}
-			{{/if}}
-			{{#if writers.length}}
-				<div class="paper-font-subhead">
-					Can Edit
-				</div>
-				{{#each id in writers}}
-					<div class="layout horizontal center">
-						{{#with id=id}}
-							<paper-icon-button class="deleteShare" icon="delete">
-							</paper-icon-button>
-						{{/with}}
-						<div class="flex">{{username id}}</div>
-					</div>
-				{{/each}}
-			{{/if}}
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="feedback flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>Share</div>
+				</app-toolbar>
+			</app-header>
+			<div class="form flex">
+				<paper-dropdown-menu label="Who can view this character">
+		   			<paper-listbox class="visibilityDropdown dropdown-content" selected={{viewPermission}} attr-for-selected="name">
+		   				<paper-item name="whitelist">Only people I share with</paper-item>
+		   				<paper-item name="public">Anyone with link</paper-item>
+		   			</paper-listbox>
+		   		</paper-dropdown-menu>
+				<div class="layout horizontal center wrap">
+		   			<paper-input class="flex" id="userNameOrEmailInput" label="Share with username or email" floatinglabel></paper-input>
+		   			<paper-button id="shareButton"
+		   						  class="red-button"
+		   						  style="width: 80px; height: 37px; margin-top: 16px;"
+		   						  raised
+		   						  disabled={{shareButtonDisabled}}>Share</paper-button>
+		   			<paper-radio-group id="accessLevelMenu" selected="read">
+		   				<paper-radio-button name="read">View Only</paper-radio-button>
+		   				<paper-radio-button name="write">Can Edit</paper-radio-button>
+		   			</paper-radio-group>
+		   		</div>
+		   		<p style="color: red;">{{userFindError}}</p>
+		   		<div>
+		   			{{#if readers.length}}
+		   				<div class="paper-font-subhead">
+		   					Can View
+		   				</div>
+		   				{{#each id in readers}}
+		   					<div class="layout horizontal center">
+		   						{{#with id=id}}
+		   							<paper-icon-button class="deleteShare" icon="delete">
+		   							</paper-icon-button>
+		   						{{/with}}
+		   						<div class="flex">{{username id}}</div>
+		   					</div>
+		   				{{/each}}
+		   			{{/if}}
+		   			{{#if writers.length}}
+		   				<div class="paper-font-subhead">
+		   					Can Edit
+		   				</div>
+		   				{{#each id in writers}}
+		   					<div class="layout horizontal center">
+		   						{{#with id=id}}
+		   							<paper-icon-button class="deleteShare" icon="delete">
+		   							</paper-icon-button>
+		   						{{/with}}
+		   						<div class="flex">{{username id}}</div>
+		   					</div>
+		   				{{/each}}
+		   			{{/if}}
+		   		</div>
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="doneButton"> Done </paper-button>
 		</div>
-		<div class="layout horizontal center">
-			<paper-input flex id="userNameOrEmailInput" label="Share with username or email" floatinglabel></paper-input>
-			<paper-button id="shareButton"
-						  class="red-button"
-						  style="width: 80px; height: 37px; margin-top: 16px;"
-						  raised
-						  disabled={{shareButtonDisabled}}>Share</paper-button>
-		</div>
-		<p style="color: red;">{{userFindError}}</p>
-		<paper-radio-group id="accessLevelMenu" selected="read">
-			<paper-radio-button name="read">View Only</paper-radio-button>
-			<paper-radio-button name="write">Can Edit</paper-radio-button>
-		</paper-radio-group>
 	</div>
-	<paper-button id="doneButton" affirmative> Done </paper-button>
 </template>

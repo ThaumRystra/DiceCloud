@@ -7,13 +7,13 @@ Template.newCharacterDialog.onCreated(function(){
 		race:      {type: String, optional: true},
 	});
 	this.context = this.schema.newContext();
-	this.context.runOnce = false;
+	this.context.runOnce = new ReactiveVar(false);
 });
 
 Template.newCharacterDialog.helpers({
 	invalid(){
 		let context = Template.instance().context;
-		let valid = context.isValid() && context.runOnce;
+		let valid = context.isValid() && context.runOnce.get();
 		return !valid;
 	},
 	errorAtts(key){
@@ -29,10 +29,11 @@ Template.newCharacterDialog.helpers({
 
 changeFunction = function(field){
 	return _.debounce(function(event, instance){
+		console.log({field, event})
 		instance.character[field] = event.currentTarget.value;
 		instance.schema.clean(instance.character);
 		instance.context.validate(instance.character);
-		if (!instance.context.runOnce) instance.context.runOnce = true;
+		if (!instance.context.runOnce.get()) instance.context.runOnce.set(true);
 	}, 200);
 };
 
