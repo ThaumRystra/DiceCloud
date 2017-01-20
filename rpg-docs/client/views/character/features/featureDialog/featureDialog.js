@@ -31,11 +31,11 @@ Template.featureDetails.helpers({
 });
 
 Template.featureDetails.events({
-	"tap .useFeature": function(event){
+	"click .useFeature": function(event){
 		var featureId = this._id;
 		Features.update(featureId, {$inc: {used: 1}});
 	},
-	"tap .resetFeature": function(event){
+	"click .resetFeature": function(event){
 		var featureId = this._id;
 		Features.update(featureId, {$set: {used: 0}});
 	},
@@ -44,10 +44,6 @@ Template.featureDetails.events({
 		var enabled = !this.enabled;
 		Features.update(this._id, {$set: {enabled: enabled}});
 	},
-});
-
-Template.featureEdit.onRendered(function(){
-	updatePolymerInputs(this);
 });
 
 Template.featureEdit.helpers({
@@ -67,32 +63,53 @@ Template.featureEdit.helpers({
 	},
 });
 
+const debounce = (f) => _.debounce(f, 300);
+
 Template.featureEdit.events({
-	"change #featureNameInput": function(event){
-		var name = Template.instance().find("#featureNameInput").value;
-		Features.update(this._id, {$set: {name: name}});
-	},
-	"change #featureDescriptionInput": function(event){
-		var description = Template.instance().find("#featureDescriptionInput").value;
-		Features.update(this._id, {$set: {description: description}});
-	},
-	"change #limitUseCheck": function(event){
+	"input #featureNameInput": debounce(function(event){
+		var name = event.currentTarget.value;
+		Features.update(this._id, {
+			$set: {name: name}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"input #featureDescriptionInput": debounce(function(event){
+		var description = event.currentTarget.value;
+		Features.update(this._id, {
+			$set: {description: description}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"change #limitUseCheck": debounce(function(event){
 		var currentUses = this.uses;
 		var featureId = this._id;
 		if (event.target.checked && !_.isString(currentUses)){
-			Features.update(featureId, {$set: {uses: ""}}, {removeEmptyStrings: false});
+			Features.update(featureId, {
+				$set: {uses: ""}
+			}, {
+				removeEmptyStrings: false
+			});
 		} else if (!event.target.checked && _.isString(currentUses)){
-			Features.update(featureId, {$unset: {uses: ""}});
+			Features.update(featureId, {
+				$unset: {uses: ""}
+			});
 		}
-	},
-	"change #usesInput, input #quantityInput": function(event){
-		var value = event.target.value;
+	}),
+	"input #usesInput, input #quantityInput": debounce(function(event){
+		var value = event.currentTarget.value;
 		var featureId = this._id;
-		Features.update(featureId, {$set: {uses: value}});
-	},
-	"core-select #enabledDropdown": function(event){
+		Features.update(featureId, {
+			$set: {uses: value}
+		}, {
+			removeEmptyStrings: false,
+		});
+	}),
+	"iron-select .enabled-dropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		var setter;
 		if (value === "enabled"){

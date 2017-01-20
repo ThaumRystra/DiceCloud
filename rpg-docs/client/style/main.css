@@ -55,6 +55,8 @@ paper-icon-item::shadow #contentIcon {
 	position: fixed;
 	bottom: 24px;
 	right: 24px;
+	/* stop the fab from flashing during animation */
+	transform: translateZ(0);
 }
 
 paper-fab {
@@ -73,6 +75,11 @@ paper-button {
 	font-weight: 400;
 	letter-spacing: 0.010;
 	text-transform: uppercase;
+}
+
+dicecloud-selector paper-item {
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 /*Style shortcuts*/

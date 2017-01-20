@@ -30,24 +30,21 @@ Template.characterSheet.events({
 	"color-change": function(event, instance){
 		Characters.update(this._id, {$set: {color: event.color}});
 	},
-	"tap #deleteCharacter": function(event, instance){
-		const menu = instance.find(".character-menu");
+	"click #deleteCharacter": function(event, instance){
 		pushDialogStack({
 			data: this,
 			template: "deleteCharacterConfirmation",
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
-	"tap #shareCharacter": function(event, instance){
-		const menu = instance.find(".character-menu");
+	"click #shareCharacter": function(event, instance){
 		pushDialogStack({
 			data: this,
 			template: "shareDialog",
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
-	"tap #characterSettings": function(event, instance){
-		const menu = instance.find(".character-menu");
+	"click #characterSettings": function(event, instance){
 		pushDialogStack({
 			data: this,
 			template: "characterSettings",

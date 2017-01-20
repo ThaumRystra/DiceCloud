@@ -2,7 +2,7 @@ dialogs = new ReactiveArray();
 const offset = 16;
 const duration = 400;
 
-pushDialogStack = function({template, data, element, callback}){
+pushDialogStack = function({template, data, element, returnElement, callback}){
 	// Generate a new _id so that Blaze knows how to shuffle the array
 	const _id = Random.id();
 	dialogs.push({
@@ -10,6 +10,7 @@ pushDialogStack = function({template, data, element, callback}){
 		template,
 		data,
 		element,
+		returnElement,
 		callback,
 	});
 };
@@ -19,11 +20,6 @@ popDialogStack = function(result){
 	if (!dialog) return;
 	dialog.callback && dialog.callback(result);
 };
-
-let cloneHolder;
-Template.dialogStack.onRendered(function(){
-	cloneHolder = this.find(".clone-holder");
-});
 
 Template.dialogStack.helpers({
 	dialogStackClass(){
@@ -43,13 +39,8 @@ Template.dialogStack.helpers({
 });
 
 Template.dialogStack.events({
-	"click .dialog-stack": function(event){
-		popDialogStack();
-	},
-	"click .dialog-sizer": function(event){
-		// Returning false from an event handler is the same as calling both
-		// stopImmediatePropagation and preventDefault on the event.
-		return false;
+	"click .dialog-stack .backdrop": function(event){
+		if (event.target === event.currentTarget) popDialogStack();
 	},
 });
 
@@ -76,10 +67,11 @@ const imitate = (
 	element.style.borderRadius = transformedRadius($(source).css("border-radius"));
 }
 
-const dialogOpenAnimation = ({element, dialog}) => {
+const dialogOpenAnimation = ({element, returnElement, dialog}) => {
 	const dialogRect = dialog.getBoundingClientRect();
 	const elementRect = element.getBoundingClientRect();
 	element.style.visibility = "hidden";
+	if (returnElement) returnElement.style.visibility = "hidden";
 	// Get how must the element change to become the dialog
 	const deltaLeft = elementRect.left - dialogRect.left;
 	const deltaTop = elementRect.top - dialogRect.top;
@@ -103,7 +95,22 @@ const dialogOpenAnimation = ({element, dialog}) => {
 	}, duration);
 }
 
-const dialogCloseAnimation = ({element, dialog, callback}) => {
+const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
+	// We are returning to a different element
+	// pop the original element back in and use the returnElement in its place
+	if (returnElement){
+		let originalElement = element;
+		element = returnElement;
+		originalElement.style.visibility = "";
+		originalElement.style.transform = "scale(0)";
+		_.defer(() => {
+			originalElement.style.transition = `transform ${duration}ms ease`;
+			originalElement.style.transform = "";
+		});
+		_.delay(() => {
+			originalElement.style.transition = "";
+		}, duration);
+	}
 	// Reset the dialog if it is mid-transition
 	dialog.style.transition = "none";
 	dialog.style.transform = "none";
@@ -171,18 +178,22 @@ Template.dialogStack.uihooks({
 			if (data.element){
 				// Store the reference to the element on the DOM node itself,
 				// since Blaze won't keep the data around for the remove hook
-				node["data-element"] = data.element;
+				node._dialogStackElement = data.element;
+				node._dialogStackReturnElement = data.returnElement;
 				dialogOpenAnimation({
 					element: data.element,
+					returnElement: data.returnElement,
 					dialog: node,
 				});
 			}
 		},
 		remove: function(node, tpl) {
-			const element = node["data-element"];
+			const element = node._dialogStackElement;
+			const returnElement = node._dialogStackReturnElement;
 			if (element){
 				dialogCloseAnimation({
 					element,
+					returnElement,
 					dialog: node,
 					callback(){
 						node.remove();

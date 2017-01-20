@@ -8,10 +8,10 @@
 			</app-header>
 			<div class="form flex">
 				<paper-dropdown-menu label="Who can view this character">
-		   			<paper-listbox class="visibilityDropdown dropdown-content" selected={{viewPermission}} attr-for-selected="name">
+		   			<dicecloud-selector class="visibilityDropdown dropdown-content" selected={{viewPermission}}>
 		   				<paper-item name="whitelist">Only people I share with</paper-item>
 		   				<paper-item name="public">Anyone with link</paper-item>
-		   			</paper-listbox>
+		   			</dicecloud-selector>
 		   		</paper-dropdown-menu>
 				<div class="layout horizontal center wrap">
 		   			<paper-input class="flex" id="userNameOrEmailInput" label="Share with username or email" floatinglabel></paper-input>

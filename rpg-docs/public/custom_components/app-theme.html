@@ -4,12 +4,15 @@
 <link rel="import" href="../components/paper-styles/classes/global.html">
 
 <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning">
-	--primary-color: #424242;
-	--light-primary-color: #666;
-	--dark-primary-color: #222;
-	--accent-color: #d13b2e;
-	--light-accent-color: #ff5a4b;
-	--dark-accent-color: #ad2a1f;
+	:root {
+		--primary-color: #424242;
+		--light-primary-color: #666;
+		--dark-primary-color: #222;
+
+		--accent-color: #d13b2e;
+		--light-accent-color: #ff5a4b;
+		--dark-accent-color: #ad2a1f;
+	}
 	paper-item.short {
 		--paper-item-min-height: 32px;
 	}
@@ -21,5 +24,18 @@
 		font-weight: inherit;
 		letter-spacing: inherit;
 		line-height: inherit;
+	}
+	#accountSummary{
+		--app-header-background-front-layer: {
+			background-image: url(/png/paper-dice-crown.png);
+		};
+	}
+	.card .top paper-checkbox {
+		--paper-checkbox-unchecked-color: #757575;
+		--paper-checkbox-unchecked-color: rgba(255,255,255,0.54);
+		--paper-checkbox-unchecked-ink-color: #fff;
+		--paper-checkbox-checked-color: #606060;
+		--paper-checkbox-checked-color: rgba(255,255,255,0.30);
+		--paper-checkbox-checked-ink-color: #fff;
 	}
 </style>

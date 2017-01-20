@@ -43,54 +43,45 @@ Template.features.helpers({
 });
 
 Template.features.events({
-	"tap #addFeature": function(event){
+	"click #addFeature": function(event, instance){
 		var featureId = Features.insert({
 			name: "New Feature",
 			charId: this._id,
 			enabled: true,
 			alwaysEnabled: true,
 		});
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: this._id, startEditing: true},
-			heroId:   featureId,
+			element: event.currentTarget,
+			returnElement: instance.find(`.featureCard[data-id='${featureId}']`),
 		});
 	},
-	"tap #addAttackButton": function(event){
-		var charId = this._id;
-		Attacks.insert({
-			charId: charId
-		}, function(error, id){
-			if (!error){
-				GlobalUI.setDetail({
-					template: "attackDialog",
-					data:     {attackId: id, charId: charId},
-					heroId:   id,
-				});
-			}
-		});
-	},
-	"tap .featureCard .top": function(event){
+	"click .featureCard .top": function(event){
 		var featureId = this._id;
 		var charId = Template.parentData()._id;
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: charId},
-			heroId:   featureId,
+			element:   event.currentTarget.parentElement,
 		});
 	},
-	"tap .attack": function(event){
-		openParentDialog(this.parent, this.charId, this._id);
+	"click .attack": function(event){
+		openParentDialog({
+			parent: this.parent,
+			charId: this.charId,
+			element: event.currentTarget,
+		});
 	},
-	"tap .useFeature": function(event){
+	"click .useFeature": function(event){
 		var featureId = this._id;
 		Features.update(featureId, {$inc: {used: 1}});
 	},
-	"tap .resetFeature": function(event){
+	"click .resetFeature": function(event){
 		var featureId = this._id;
 		Features.update(featureId, {$set: {used: 0}});
 	},
-	"tap .enabledCheckbox": function(event){
+	"click .enabledCheckbox": function(event){
 		event.stopPropagation();
 	},
 	"change .enabledCheckbox": function(event){
@@ -122,7 +113,7 @@ Template.resource.helpers({
 });
 
 Template.resource.events({
-	"tap .resourceUp": function(event){
+	"click .resourceUp": function(event){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var base = Characters.calculate.attributeBase(this.char._id, this.name);
 		if (value < base){
@@ -131,7 +122,7 @@ Template.resource.events({
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .resourceDown": function(event){
+	"click .resourceDown": function(event){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		if (value > 0){
 			var modifier = {$inc: {}};
@@ -139,11 +130,11 @@ Template.resource.events({
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .right": function(event, instance) {
-		GlobalUI.setDetail({
+	"click .right": function(event, instance) {
+		pushDialogStack({
 			template: "attributeDialog",
 			data:     {name: this.title, statName: this.name, charId: this.char._id},
-			heroId:   this.char._id + this.name,
+			element: event.currentTarget.parentElement,
 		});
 	},
 });

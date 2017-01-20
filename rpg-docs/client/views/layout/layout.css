@@ -1,10 +1,5 @@
 #accountSummary {
-	padding: 16px;
 	min-height: 146px;
-	background-image: url(/png/paper-dice-crown.png);
-  	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center center;
 	color: white;
 }
 
