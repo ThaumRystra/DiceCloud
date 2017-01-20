@@ -1,0 +1,22 @@
+.skill-row .skill-mod{
+	width: 45px;
+	text-align: center;
+}
+
+.skill-row .skill-mod.fail {
+	color: #D50000;
+}
+
+.skill-row .skill-mod.advantage{
+	background-image: url(/png/advantage/greenUp.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.skill-row .skill-mod.disadvantage{
+	background-image: url(/png/advantage/redDown.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}

@@ -1,6 +1,4 @@
-@import "colors";
-
-//apply a natural box layout model to all elements
+/*apply a natural box layout model to all elements*/
 *, *:before, *:after {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -18,7 +16,7 @@ body {
 	background-color: #E0E0E0;
 }
 
-//Paragraphs
+/*Paragraphs*/
 p {
 	margin-bottom: 8px;
 }
@@ -52,7 +50,7 @@ paper-icon-item::shadow #contentIcon {
     flex-shrink: 0;
 }
 
-//FABs
+/*FABs*/
 .floatyButton {
 	position: fixed;
 	bottom: 24px;
@@ -67,7 +65,7 @@ paper-fab.keyboard-focus {
     background: #630c05;
 }
 
-//Buttons
+/*Buttons*/
 paper-button {
 	color: #000;
 	color: rgba(0,0,0,0.87);
@@ -77,7 +75,7 @@ paper-button {
 	text-transform: uppercase;
 }
 
-//Style shortcuts
+/*Style shortcuts*/
 .scroll-y {
 	overflow-y: auto;
 }

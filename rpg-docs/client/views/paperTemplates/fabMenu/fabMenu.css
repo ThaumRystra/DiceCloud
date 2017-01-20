@@ -1,0 +1,41 @@
+.mini-holder {
+	position: absolute;
+	padding: 4px;
+	bottom: 80px;
+	right: 24px;
+	width: 56px;
+	pointer-events: none;
+	flex-direction: column-reverse !important;
+}
+
+.mini-holder core-tooltip{
+	transform: scale(0);
+	transition-property: transform;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in-out;
+	margin: 4px;
+}
+
+.mini-holder.active core-tooltip{
+	transform: scale(1);
+}
+
+.mini-holder.active {
+	pointer-events: auto;
+}
+
+.mini-holder.active core-tooltip:nth-child(2){
+	transition-delay: 0.1s;
+}
+
+.mini-holder.active core-tooltip:nth-child(3){
+	transition-delay: 0.2s;
+}
+
+.mini-holder.active core-tooltip:nth-child(4){
+	transition-delay: 0.3s;
+}
+
+.mini-holder.active core-tooltip:nth-child(5){
+	transition-delay: 0.4s;
+}
