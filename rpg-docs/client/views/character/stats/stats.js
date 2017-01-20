@@ -1,10 +1,10 @@
 Template.stats.events({
-	"click .statCard": function(event, instance){
+	"click .stat-card": function(event, instance){
 		var charId = instance.data._id;
 		if (this.isSkill){
 			pushDialogStack({
 				template: "skillDialog",
-				data:     {
+				data: {
 					name: this.name,
 					skillName: this.stat,
 					charId: charId,
@@ -15,7 +15,7 @@ Template.stats.events({
 		} else {
 			pushDialogStack({
 				template: "attributeDialog",
-				data:     {
+				data: {
 					name: this.name,
 					statName: this.stat,
 					charId: charId,
@@ -31,7 +31,7 @@ Template.stats.events({
 		if (this.ability === "strength") template = "strengthDialog";
 		pushDialogStack({
 			template: template,
-			data:     {
+			data: {
 				name: this.title,
 				statName: this.ability,
 				charId: charId,
@@ -45,7 +45,7 @@ Template.stats.events({
 		var charId = instance.data._id;
 		pushDialogStack({
 			template: "skillDialog",
-			data:     {
+			data: {
 				name: this.name,
 				skillName: skill,
 				charId: charId,
@@ -56,7 +56,7 @@ Template.stats.events({
 	"tap .hitPointTitle": function(event, instance) {
 		pushDialogStack({
 			template: "attributeDialog",
-			data:     {
+			data: {
 				name: "Hit Points",
 				statName: "hitPoints",
 				charId: this._id,

@@ -6,11 +6,11 @@
 </template>
 
 <template name="skillDialogView">
-	<div layout vertical center>
-		<div class="display2">
+	<div class="layout vertical center">
+		<div class="paper-font-display2">
 			{{characterCalculate "skillMod" charId skillName}}
 		</div>
-		<div class="subhead">
+		<div class="paper-font-subhead">
 			<iron-icon icon="{{profIcon}}" class="black54"></iron-icon>
 			{{#if profSource}}
 				{{proficiencyValue}} - {{#with profSource}}{{sourceName}}{{/with}}
@@ -21,55 +21,56 @@
 	</div>
 
 	<hr class="vertMargin">
-
-	<table class="summaryTable">
-		<tr>
-			<td>{{abilityName}}</td>
-			<td>{{characterCalculate "abilityMod" charId ability}}</td>
-		</tr>
-		{{#if characterCalculate "proficiency" charId skillName}}
+	<div class="layout vertical center">
+		<table class="summaryTable">
 			<tr>
-				<td>{{proficiencyValue}}</td>
-				<td>{{signedString profBonus}}</td>
+				<td>{{abilityName}}</td>
+				<td>{{characterCalculate "abilityMod" charId ability}}</td>
 			</tr>
-		{{/if}}
-		{{#each addEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>{{signedString statValue}}</td>
+			{{#if characterCalculate "proficiency" charId skillName}}
+				<tr>
+					<td>{{proficiencyValue}}</td>
+					<td>{{signedString profBonus}}</td>
+				</tr>
+			{{/if}}
+			{{#each addEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>{{signedString statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each mulEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>&times;{{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each minEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>Min: {{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each maxEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>Max: {{statValue}}</td>
+				</tr>
+			{{/each}}
+			<tr class="paper-font-body2">
+				<td>Total</td>
+				<td>{{characterCalculate "skillMod" charId skillName}}</td>
 			</tr>
-		{{/each}}
-		{{#each mulEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>&times;{{statValue}}</td>
-			</tr>
-		{{/each}}
-		{{#each minEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>Min: {{statValue}}</td>
-			</tr>
-		{{/each}}
-		{{#each maxEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>Max: {{statValue}}</td>
-			</tr>
-		{{/each}}
-		<tr class="body2">
-			<td>Total</td>
-			<td>{{characterCalculate "skillMod" charId skillName}}</td>
-		</tr>
-	</table>
+		</table>
+	</div>
 
 	{{#if or advEffects.count dadvEffects.count conditionalEffects.count}}
 		<hr class="vertMargin">
 	{{/if}}
 
-	<div class="spaceAfter" horizontal center layout>
+	<div class="spaceAfter horizontal center layout">
 		{{#if advEffects.count}}
-			<div class="body2" style="width: 100px;">
+			<div class="paper-font-body2" style="width: 100px;">
 				Advantage
 			</div>
 			<div flex>
@@ -79,9 +80,9 @@
 			</div>
 		{{/if}}
 	</div>
-	<div class="spaceAfter" horizontal center layout>
+	<div class="spaceAfter horizontal center layout">
 		{{#if dadvEffects.count}}
-			<div class="body2" style="width: 100px;">
+			<div class="paper-font-body2" style="width: 100px;">
 				Disadvantage
 			</div>
 			<div flex>
@@ -94,7 +95,7 @@
 	<!--Conditional Benefits-->
 	{{#each conditionalEffects}}
 		<div class="spaceAfter">
-			<div class="body2">{{sourceName}}</div>
+			<div class="paper-font-body2">{{sourceName}}</div>
 			<div>*{{statValue}}</div>
 		</div>
 	{{/each}}

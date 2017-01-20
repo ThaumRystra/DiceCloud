@@ -11,23 +11,21 @@
 					{{#if characters.count}}
 						<div class="character-list layout horizontal wrap">
 							{{# each characters}}
-								<a class="character-card flex layout vertical" href="/character/{{_id}}">
-									<div class="flex image">
-										<iron-image class="fit {{colorClass}}"
-													sizing="cover" preload fade src={{picture}}>
-										</iron-image>
-										{{#unless picture}}
-											<div class="fit initials layout vertical center center-justified">
-												{{initials name}}
-											</div>
-										{{/unless}}
-									</div>
+								<a class="character-card flex layout vertical end-justified" href="/character/{{_id}}">
+									<iron-image class="fit {{colorClass}}"
+												sizing="cover" preload fade src={{picture}}>
+									</iron-image>
+									{{#unless picture}}
+										<div class="fit initials layout vertical center center-justified">
+											{{initials name}}
+										</div>
+									{{/unless}}
 									<paper-item>
 										<paper-item-body two-lines>
-											<div class="name">
+											<div class="name white87">
 												{{name}}
 											</div>
-											<div secondary>
+											<div secondary style="color: #8a8a8a; color: rgba(255,255,255,0.87);">
 												{{alignment}} {{gender}} {{race}}
 											</div>
 										</paper-item-body>

@@ -9,7 +9,7 @@
 }
 
 .character-card .image {
-	position: relative;
+
 }
 
 .character-card .initials {
@@ -19,8 +19,11 @@
 }
 
 .character-card paper-item {
-	margin-top: 8px;
-	margin-bottom: 8px;
+	padding-top: 16px;
+	padding-bottom: 16px;
+	height: 76px;
+	background-color: #545454;
+	background-color: rgba(0,0,0,0.3);
 }
 
 .character-card .name {
