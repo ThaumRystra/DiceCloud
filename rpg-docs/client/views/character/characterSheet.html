@@ -29,7 +29,7 @@
 					{{/if}}
 				</div>
 				<div bottom-item>
-					<paper-tabs id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}" attr-for-selected="name">
+					<paper-tabs id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
 						<paper-tab name="stats">Stats</paper-tab>
 						<paper-tab name="features">Features</paper-tab>
 						<paper-tab name="inventory">Inventory</paper-tab>
@@ -43,7 +43,7 @@
 			</app-toolbar>
 		</app-header>
 		<div>
-			<neon-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right" attr-for-selected="name">
+			<neon-animated-pages id="tabPages" selected={{selectedTab}}>
 				<div name="stats">{{> stats}}</div>
 				<div name="features">{{> features}}</div>
 				<div name="inventory">{{> inventory}}</div>

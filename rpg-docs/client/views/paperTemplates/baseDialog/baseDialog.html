@@ -1,40 +1,38 @@
 <template name="baseDialog">
-	<app-header-layout has-scrolling-region class="fit base-dialog">
-		<app-header fixed effects="waterfall">
-			<app-toolbar class={{class}}>
-				<paper-icon-button id="backButton"
-								   icon="arrow-back">
-				</paper-icon-button>
-				<div main-title>{{title}}</div>
-				{{#if editing}}
-					{{#unless hideDelete}}
-						<paper-icon-button id="deleteButton"
-										   role="button"
-										   tabindex="0"
-										   icon="delete">
-						</paper-icon-button>
-					{{/unless}}
-					{{#unless hideColor}}
-						{{> colorDropdown}}
-					{{/unless}}
-					<paper-icon-button id="doneEditingButton"
-									   icon="done">
+	<div class="fit base-dialog layout vertical">
+		<app-toolbar class={{class}}>
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
+			</paper-icon-button>
+			<div main-title>{{title}}</div>
+			{{#if editing}}
+				{{#unless hideDelete}}
+					<paper-icon-button id="deleteButton"
+									   role="button"
+									   tabindex="0"
+									   icon="delete">
 					</paper-icon-button>
-				{{else}}
-					{{#if showEdit}}
-						<paper-icon-button id="editButton"
-										   icon="create">
-						</paper-icon-button>
-					{{/if}}
+				{{/unless}}
+				{{#unless hideColor}}
+					{{> colorDropdown}}
+				{{/unless}}
+				<paper-icon-button id="doneEditingButton"
+								   icon="done">
+				</paper-icon-button>
+			{{else}}
+				{{#if showEdit}}
+					<paper-icon-button id="editButton"
+									   icon="create">
+					</paper-icon-button>
 				{{/if}}
-			</app-toolbar>
-		</app-header>
-		<div class="form">
+			{{/if}}
+		</app-toolbar>
+		<div class="form flex scroll-y">
 			{{#unless editing}}
 				{{> UI.contentBlock}}
 			{{else}}
 				{{> UI.elseBlock}}
 			{{/unless}}
 		</div>
-	</app-header-layout>
+	</div>
 </template>

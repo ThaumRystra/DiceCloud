@@ -23,10 +23,11 @@
 	text-align: center;
 }
 
-.intro .section paper-button {
-	color: #FF5252;
-}
-
 .intro paper-button {
 	min-width: 200px;
+}
+
+
+.intro paper-button:not([raised]) {
+	color: #d13b2e;
 }

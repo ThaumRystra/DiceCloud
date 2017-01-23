@@ -1,10 +1,8 @@
 <!--needs to be given charId, parentId and parentCollection-->
 <template name="proficiencyEditList">
 	{{#if proficiencies.count}}
-		<hr class="vertMargin">
-
 		<div id="proficiencies">
-			<h2>Proficiencies</h2>
+			<div class="paper-font-title">Proficiencies</div>
 			{{#each proficiencies}}
 				{{>proficiencyEdit}}
 			{{/each}}

@@ -51,27 +51,24 @@ Template.proficiencyEdit.helpers({
 });
 
 Template.proficiencyEdit.events({
-	"tap .deleteProficiency": function(event){
+	"click .deleteProficiency": function(event){
 		Proficiencies.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Proficiencies", "Proficiency");
 	},
-	"core-select .typeDropDown": function(event){
+	"iron-select .typeDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var type = detail.item.getAttribute("name");
 		if (type == this.type) return;
 		Proficiencies.update(this._id, {$set: {type: type}});
 	},
-	"core-select .valueDropDown": function(event){
+	"iron-select .valueDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
 		Proficiencies.update(this._id, {$set: {value: value}});
 	},
-	"core-select .nameDropDown": function(event){
+	"iron-select .nameDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var name = detail.item.getAttribute("name");
 		if (name == this.name) return;
 		Proficiencies.update(this._id, {$set: {name: name}});

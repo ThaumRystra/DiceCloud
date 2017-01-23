@@ -1,22 +1,15 @@
-html /deep/ .operationDropDown {
+.effectEdit .operationDropDown {
 	width: 152px;
 }
 
-html /deep/ .statDropDown {
+.effectEdit .statDropDown {
 	width: 152px;
 }
 
-html /deep/ .damageMultiplierDropDown {
+.effectEdit .damageMultiplierDropDown {
 	width: 152px;
 }
 
-html /deep/ .effectEdit paper-input {
-	position: relative;
-	bottom: 5px;
-}
-
-html /deep/ .effectEdit {
-	height: 64px;
-	display: flex;
-	align-items: flex-end;
+.effectEdit .deleteEffect {
+	flex-shrink: 0;
 }

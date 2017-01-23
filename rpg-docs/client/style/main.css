@@ -67,6 +67,12 @@ paper-fab.keyboard-focus {
     background: #630c05;
 }
 
+.red-button:not([disabled]) {
+	background: #d23f31;
+	color: #fff;
+	margin-top: 16px;
+}
+
 /*Buttons*/
 paper-button {
 	color: #000;

@@ -5,12 +5,13 @@
 				<app-header id="accountSummary" effects="waterfall parallax-background" condenses fixed>
 					<app-toolbar>
 						{{#if currentUser}}
-							<a href="/account"
-								 style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+							<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
 								{{profileLink}}
 							</a>
 						{{else}}
-							<a href="/sign-in" style="color: white; text-decoration: underline;">Sign in</a>
+							<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+								Sign in
+							</a>
 						{{/if}}
 					</app-toolbar>
 				</app-header>

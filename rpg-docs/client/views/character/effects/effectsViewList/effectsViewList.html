@@ -1,9 +1,8 @@
 <!--needs to be given charId, (parentId or stat) and type-->
 <template name="effectsViewList">
 	{{#if effects.count}}
-		<hr style="margin: 16px 0 16px 0;">
 		<div class="effects">
-			<h2 class="spaceAfter">Effects</h2>
+			<div class="spaceAfter paper-font-title">Effects</div>
 			<table class="wideTable">
 				{{#each effects}}
 					{{>effectView}}

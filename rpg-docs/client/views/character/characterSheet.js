@@ -1,6 +1,6 @@
 Template.characterSheet.onRendered(function() {
-	//default to the first tab
-	Session.setDefault(this.data._id + ".selectedTab", "stats");
+	//default to the stats tab
+	Session.setDefault(this.data._id + ".selectedTab", "0");
 	//watch this character and make sure their encumbrance is updated
 	trackEncumbranceConditions(this.data._id, this);
 });
