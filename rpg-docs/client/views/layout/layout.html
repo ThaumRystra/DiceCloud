@@ -51,6 +51,8 @@
 		</app-drawer>
 		{{> yield}}
 	</app-drawer-layout>
-	<paper-toast id="global-toast" duration="5000"></paper-toast>
+	<paper-toast id="global-toast" duration="5000">
+		{{> Template.dynamic template=globalToastTemplate data=globalToastData }}
+	</paper-toast>
 	{{> dialogStack}}
 </template>

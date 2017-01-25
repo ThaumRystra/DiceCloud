@@ -11,7 +11,7 @@ Template.featureDialog.events({
 	"tap #deleteButton": function(event, instance){
 		Features.softRemoveNode(instance.data.featureId);
 		GlobalUI.deletedToast(instance.data.featureId, "Features", "Feature");
-		GlobalUI.closeDetail();
+		popDialogStack();
 	},
 });
 
