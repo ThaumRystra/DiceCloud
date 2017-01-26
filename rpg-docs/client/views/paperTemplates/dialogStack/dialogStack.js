@@ -71,6 +71,7 @@ const dialogOpenAnimation = ({element, returnElement, dialog}) => {
 	const dialogRect = dialog.getBoundingClientRect();
 	const elementRect = element.getBoundingClientRect();
 	element.style.visibility = "hidden";
+	returnElement = _.isFunction(returnElement) ? returnElement() : returnElement;
 	if (returnElement) returnElement.style.visibility = "hidden";
 	// Get how must the element change to become the dialog
 	const deltaLeft = elementRect.left - dialogRect.left;
@@ -98,9 +99,11 @@ const dialogOpenAnimation = ({element, returnElement, dialog}) => {
 const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	// We are returning to a different element
 	// pop the original element back in and use the returnElement in its place
-	if (returnElement){
+	returnElement = _.isFunction(returnElement) ? returnElement() : returnElement;
+	if (returnElement && returnElement !== element){
 		let originalElement = element;
 		element = returnElement;
+		originalElement.style.transition = "";
 		originalElement.style.visibility = "";
 		originalElement.style.transform = "scale(0)";
 		_.defer(() => {

@@ -115,7 +115,7 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 			give("encumbered2");
 			remove("encumbered");
 		} else if (weight > strength * 5 * carryMultiplier &&
-				   character.settings.useVariantEncumbrance){
+					character.settings.useVariantEncumbrance){
 			give("encumbered");
 			remove("encumbered2");
 		} else {
@@ -128,7 +128,7 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 			give("encumbered4");
 			remove("encumbered3");
 		} else if (weight > strength * 15 * carryMultiplier &&
-				   character.settings.useStandardEncumbrance) {
+				character.settings.useStandardEncumbrance) {
 			give("encumbered3");
 			remove("encumbered4");
 		} else {
@@ -138,6 +138,7 @@ trackEncumbranceConditions = function(charId, templateInstance) {
 	});
 };
 
+// jscs:disable maximumLineLength
 CONDITIONS = {
 	//Conditions
 	blind: {

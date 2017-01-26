@@ -91,9 +91,11 @@ Template.inventory.helpers({
 	},
 	equipmentWeight: function(){
 		var weight = 0;
-		Items.find({charId: this._id, enabled: true},
-				   {fields: {weight : 1, quantity: 1}}
-				  ).forEach(function(item){
+		Items.find({
+			charId: this._id, enabled: true,
+		}, {
+			fields: {weight : 1, quantity: 1}
+		}).forEach(function(item){
 			weight += item.totalWeight();
 		});
 		return weight;
@@ -121,101 +123,88 @@ Template.inventory.helpers({
 });
 
 Template.inventory.events({
-	"tap .addItem": function(event){
+	"click .addItem": function(event, instance){
 		var charId = this._id;
-		Items.insert({
+		var itemId = Items.insert({
 			charId: charId,
 			parent:{
 				id: charId,
 				collection: "Characters",
 			},
-		}, function(err, itemId){
-			if (err) throw err;
-			GlobalUI.setDetail({
-				template: "itemDialog",
-				data:     {itemId: itemId, charId: charId, startEditing: true},
-				heroId:   itemId,
-			});
+		});
+		pushDialogStack({
+			template: "itemDialog",
+			data:     {itemId: itemId, charId: charId, startEditing: true},
+			element:   event.currentTarget,
+			returnElement: () => $(`[data-id='${itemId}']`).get(0),
 		});
 	},
-	"tap .addContainer": function(event){
+	"click .addContainer": function(event, instance){
 		var containerId = Containers.insert({
 			name: "New Container",
 			isCarried: true,
 			charId: this._id,
 		});
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "containerDialog",
 			data:     {
 				containerId: containerId,
 				charId: this.charId,
 				startEditing: true,
 			},
-			heroId:   containerId,
+			element:   event.currentTarget,
+			returnElement: instance.find(`.itemContainer[data-id='${containerId}']`),
 		});
 	},
-	"tap .weightCarried": function(event) {
+	"click .weightCarried": function(event, instance) {
 		var charId = this._id;
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "carryDialog",
 			data:     {charId: charId, color: "green"},
-			heroId:   charId + "weightCarried",
+			element:  event.currentTarget.parentElement,
 		});
 	},
-	"tap .buff": function(event){
+	"click .buff": function(event, instance){
 		var buffId = this._id;
 		var charId = Template.parentData()._id;
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "buffDialog",
 			data:     {buffId: buffId, charId: charId},
-			heroId:   buffId,
+			element:   event.currentTarget,
 		});
 	},
-	"tap .inventoryItem": function(event){
+	"click .inventoryItem": function(event, instance){
 		var itemId = this._id;
 		var charId = Template.parentData()._id;
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "itemDialog",
 			data:     {itemId: itemId, charId: charId},
-			heroId:   itemId,
+			element:   event.currentTarget,
+			returnElement: () => $(`[data-id='${itemId}']`).get(0),
 		});
 	},
-	"hold .inventoryItem": function(event, instance) {
-		var itemId = this._id;
-		var charId = Template.parentData()._id;
-		var containerId = this.parent.id;
-		GlobalUI.showDialog({
-			template: "moveItemDialog",
-			data:     {
-				charId: charId,
-				itemId: itemId,
-				containerId: containerId,
-			},
-			heading:   "Move " + this.pluralName(),
-		});
-	},
-	"tap .incrementButtons": function(event) {
+	"click .incrementButtons": function(event, instance) {
 		event.stopPropagation();
 	},
-	"tap .addItemQuantity": function(event) {
+	"click .addItemQuantity": function(event, instance) {
 		var itemId = this._id;
 		Items.update(itemId, {$set: {quantity: this.quantity + 1}});
 	},
-	"tap .subItemQuantity": function(event) {
+	"click .subItemQuantity": function(event, instance) {
 		var itemId = this._id;
 		Items.update(itemId, {$set: {quantity: this.quantity - 1}});
 	},
-	"tap .itemContainer .top": function(event){
-		GlobalUI.setDetail({
+	"click .itemContainer .top": function(event, instance){
+		pushDialogStack({
 			template: "containerDialog",
 			data:     {containerId: this._id, charId: this.charId},
-			heroId:   this._id,
+			element:   event.currentTarget.parentElement,
 		});
 	},
-	"tap .carriedCheckbox": function(event){
+	"click .carriedCheckbox": function(event, instance){
 		event.stopPropagation();
 	},
-	"change .carriedCheckbox": function(event){
+	"change .carriedCheckbox": function(event, instance){
 		var carried;
 		if (this.isCarried) carried = false;
 		else carried = true;
@@ -271,7 +260,7 @@ Template.layout.events({
 		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
 		if (event.ctrlKey){
 			//split the stack to the container
-			GlobalUI.showDialog({
+			pushDialogStack({
 				template: "splitStackDialog",
 				data: {
 					id: itemId,
@@ -294,12 +283,11 @@ Template.layout.events({
 		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
 		if (event.ctrlKey){
 			//split the stack to the container
-			GlobalUI.showDialog({
+			pushDialogStack({
 				template: "splitStackDialog",
 				data: {
 					id: itemId,
 					parentCollection: "Characters",
-					parentId: this._id,
 				},
 			});
 		} else {
@@ -312,7 +300,7 @@ Template.layout.events({
 		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
 		if (event.ctrlKey){
 			//split the stack to the container
-			GlobalUI.showDialog({
+			pushDialogStack({
 				template: "splitStackDialog",
 				data: {
 					id: itemId,

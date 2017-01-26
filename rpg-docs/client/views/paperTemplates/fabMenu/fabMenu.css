@@ -1,5 +1,5 @@
 .mini-holder {
-	position: absolute;
+	position: fixed;
 	padding: 4px;
 	bottom: 80px;
 	right: 24px;
@@ -8,7 +8,7 @@
 	flex-direction: column-reverse !important;
 }
 
-.mini-holder core-tooltip{
+.mini-holder > div{
 	transform: scale(0);
 	transition-property: transform;
 	transition-duration: 0.3s;
@@ -16,7 +16,7 @@
 	margin: 4px;
 }
 
-.mini-holder.active core-tooltip{
+.mini-holder.active > div {
 	transform: scale(1);
 }
 
@@ -24,18 +24,18 @@
 	pointer-events: auto;
 }
 
-.mini-holder.active core-tooltip:nth-child(2){
+.mini-holder.active > div:nth-child(2){
 	transition-delay: 0.1s;
 }
 
-.mini-holder.active core-tooltip:nth-child(3){
+.mini-holder.active > div:nth-child(3){
 	transition-delay: 0.2s;
 }
 
-.mini-holder.active core-tooltip:nth-child(4){
+.mini-holder.active > div:nth-child(4){
 	transition-delay: 0.3s;
 }
 
-.mini-holder.active core-tooltip:nth-child(5){
+.mini-holder.active > div:nth-child(5){
 	transition-delay: 0.4s;
 }

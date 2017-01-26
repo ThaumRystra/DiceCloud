@@ -18,26 +18,40 @@ Template.containerDialog.events({
 	},
 });
 
-Template.containerEdit.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
 Template.containerEdit.events({
 	//TODO validate input (integer, non-negative, etc) for these inputs and give validation errors
-	"change #containerNameInput": function(event){
+	"input #containerNameInput": function(event){
 		var name = Template.instance().find("#containerNameInput").value;
-		Containers.update(this._id, {$set: {name: name}});
+		Containers.update(this._id, {
+			$set: {name: name}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
 	},
 	"change #weightInput, input #weightInput": function(event){
 		var weight = +Template.instance().find("#weightInput").value;
-		Containers.update(this._id, {$set: {weight: weight}});
+		Containers.update(this._id, {
+			$set: {weight: weight}
+		}, {
+			removeEmptyStrings: false,
+		});
 	},
 	"change #valueInput, input #valueInput": function(event){
 		var value = +Template.instance().find("#valueInput").value;
-		Containers.update(this._id, {$set: {value: value}});
+		Containers.update(this._id, {
+			$set: {value: value}
+		}, {
+			removeEmptyStrings: false,
+		});
 	},
-	"change #containerDescriptionInput": function(event, instance){
+	"input #containerDescriptionInput": function(event, instance){
 		var description = instance.find("#containerDescriptionInput").value;
-		Containers.update(this._id, {$set: {description: description}});
+		Containers.update(this._id, {
+			$set: {description: description}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
 	},
 });

@@ -15,7 +15,7 @@ var damageTypes = [
 ];
 
 Template.attackEdit.events({
-	"tap .deleteAttack": function(event, instance) {
+	"click .deleteAttack": function(event, instance) {
 		Attacks.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Attacks", "Attack");
 	},
@@ -31,9 +31,8 @@ Template.attackEdit.events({
 		var value = event.currentTarget.value;
 		Attacks.update(this._id, {$set: {details: value}});
 	},
-	"core-select .damageTypeDropdown": function(event) {
+	"iron-select .damageTypeDropdown": function(event) {
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		if (value == this.damageType) return;
 		Attacks.update(this._id, {$set: {damageType: value}});
@@ -43,8 +42,5 @@ Template.attackEdit.events({
 Template.attackEdit.helpers({
 	damageTypes: function() {
 		return damageTypes;
-	},
-	DAMAGE_DICE: function() {
-		return DAMAGE_DICE;
 	},
 });

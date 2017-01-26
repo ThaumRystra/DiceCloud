@@ -1,16 +1,16 @@
 <template name="carryDialog">
 	{{#baseDialog title="Weight Carried" class=color hideEdit=true}}
-	<div layout horizontal center-justified end>
-		<div class="display2">
+	<div class="layout horizontal center-justified end">
+		<div class="paper-font-display2">
 			{{round carriedWeight 1}}
 		</div>
-		<div class="display1">
+		<div class="paper-font-display1">
 			lbs
 		</div>
 	</div>
 
 	<hr class="vertMargin">
-	
+
 	{{> carryCapacityTable}}
 
 	{{/baseDialog}}

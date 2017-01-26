@@ -9,11 +9,11 @@
 </template>
 
 <template name="itemDetails">
-	<div layout horizontal wrap center justified class="headline">
+	<div class="paper-font-headline layout horizontal wrap center justified">
 		{{#if weight}}<div class="sideMargin">{{round totalWeight}}lbs</div>{{/if}}
 		{{#if value}}<div>{{valueString totalValue}}</div>{{/if}}
 	</div>
-	<div layout horizontal wrap class="caption">
+	<div class="paper-font-caption layout horizontal wrap">
 		{{#if enabled}}<div class="vertMargin" style="margin-right: 16px">Equipped</div>{{/if}}
 		{{#if requiresAttunement}}<div class="vertMargin">Requires Attunement</div>{{/if}}
 	</div>
@@ -26,74 +26,47 @@
 </template>
 
 <template name="itemEdit">
-	<paper-input class="fullwidth" id="itemNameInput" label="Name" floatinglabel value={{name}}></paper-input>
-	<div layout horizontal wrap>
-		<paper-input-decorator label="Quantity"
-							   floatinglabel
-							   style="width: 80px">
-			<input id="quantityInput"
-				   type="number"
-				   value={{quantity}}>
-		</paper-input-decorator>
+	<paper-input class="fullwidth" id="itemNameInput" label="Name" value={{name}}></paper-input>
+	<div class="layout horizontal center wrap">
+		<paper-input id="quantityInput" type="number" label="Quantity" style="width: 80px" value={{quantity}}>
+		</paper-input>
 		{{# if ne1 quantity}}
-		<paper-input flex id="itemPluralInput" 
-					 label="Plural Name" 
-					 floatinglabel
-					 value={{plural}}></paper-input>
+			<paper-input class="flex" id="itemPluralInput" label="Plural Name" value={{plural}} style="flex-basis: 182px;">
+			</paper-input>
+		{{else}}
+			<div class="flex" style="flex-basis: 182px;">
+			</div>
 		{{/if}}
-	</div>
-	<div center horizontal layout>
-		<div class="padded">Show increment buttons</div>
-		<paper-checkbox id="incrementCheckbox"
-						checked={{settings.showIncrement}}>
+		<paper-checkbox id="incrementCheckbox" checked={{settings.showIncrement}}>
+			Show increment buttons
 		</paper-checkbox>
 	</div>
 
-	<hr class="vertMargin">
-
-	<div layout horizontal wrap justified>
-		<div center horizontal layout>
-			<div class="padded">Container</div>
-			{{> containerDropdown}}
-		</div>
-		<div center horizontal layout>
-			<div class="padded">Equipped</div>
-			<paper-toggle-button id="equippedInput"
-								 checked={{enabled}}
-								 role="button"
-								 aria-pressed="false"
-								 tabindex="0"
-								 touch-action="pan-y">
-			</paper-toggle-button>
-		</div>
-		<div center horizontal layout>
-			<div class="padded">Requires Attunement</div>
-			<paper-checkbox id="attunementCheckbox"
-							checked={{requiresAttunement}}>
-			</paper-checkbox>
-		</div>
+	<div class="layout horizontal center wrap justified" style="margin-top: 16px;">
+		{{> containerDropdown}}
+		<paper-toggle-button id="equippedInput" checked={{enabled}}>
+			Equipped
+		</paper-toggle-button>
+		<paper-checkbox id="attunementCheckbox" checked={{requiresAttunement}}>
+			Requires Attunement
+		</paper-checkbox>
 	</div>
 
-	<hr class="vertMargin">
-
-	<div layout horizontal around-justified>
-		<paper-input-decorator label="Weight Each (lbs)" floatinglabel>
-			<input id="weightInput" type="number" value={{weight}}>
-		</paper-input-decorator>
+	<div class="layout horizontal around-justified" style="margin-top: 16px;">
+		<paper-input id="weightInput" type="number" value={{weight}} label="Weight Each (lbs)">
+		</paper-input>
 		<!--Value-->
-		<paper-input-decorator label="Value Each (GP)" floatinglabel>
-			<input id="valueInput" type="number" value={{value}}>
-		</paper-input-decorator>
+		<paper-input id="valueInput" type="number" value={{value}} label="Value Each (GP)">
+		</paper-input>
 	</div>
-
-	<hr class="vertMargin">
 
 	<!--Description-->
-	<paper-input-decorator label="Description" floatinglabel layout vertical>
-		<paper-autogrow-textarea>
-			<textarea id="itemDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-		</paper-autogrow-textarea>
-	</paper-input-decorator>
+	<paper-textarea id="itemDescriptionInput" label="Description" value={{description}}>
+		<div suffix>
+			<paper-tooltip position="left" animation-delay="0">This field accepts formulae in {curly brackets}</paper-tooltip>
+			<iron-icon icon="dicecloud:code-braces"></iron-icon>
+		</div>
+	</paper-textarea>
 	<!--Effects-->
 	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
 	<!--Attacks-->
@@ -101,13 +74,11 @@
 </template>
 
 <template name="containerDropdown">
-	<paper-dropdown-menu id="containerDropDown" label="Container">
-		<paper-dropdown layered class="dropdown">
-			<core-menu class="menu"  selected={{parent.id}}>
-				{{#each containers}}
-					<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
-				{{/each}}
-			</core-menu>
-		</paper-dropdown>
+	<paper-dropdown-menu label="Container">
+		<dicecloud-selector class="dropdown-content" id="containerDropDown" selected={{parent.id}}>
+			{{#each containers}}
+				<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
+			{{/each}}
+		</dicecloud-selector>
 	</paper-dropdown-menu>
 </template>

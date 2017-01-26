@@ -2,7 +2,7 @@ Template.characterSheet.onRendered(function() {
 	//default to the stats tab
 	Session.setDefault(this.data._id + ".selectedTab", "0");
 	//watch this character and make sure their encumbrance is updated
-	trackEncumbranceConditions(this.data._id, this);
+	//trackEncumbranceConditions(this.data._id, this);
 });
 
 var setTab = function(charId, tab){
