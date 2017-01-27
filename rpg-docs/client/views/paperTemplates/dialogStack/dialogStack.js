@@ -30,7 +30,7 @@ Template.dialogStack.helpers({
 	},
 	dialogStyle(index){
 		const length = dialogs.get().length;
-		if (!length) return;
+		if (index >= length) return;
 		const num = length - 1;
 		const left = (num - index) * -offset;
 		const top =  (num - index) * -offset;
@@ -64,10 +64,36 @@ const imitate = (
 		`scale(${deltaWidth}, ${deltaHeight})`;
 	element.style.background = $(source).css("background");
 	// Imitate the border radius after transform
-	element.style.borderRadius = transformedRadius($(source).css("border-radius"));
+	const border = $(source).css("border-radius")
+	const rad = transformedRadius(border, deltaWidth, deltaHeight);
+	element.style.borderRadius = rad
+}
+
+const shrinkAnimation = ({element, reverse}) => {
+	element.css({
+		transform: reverse ? "scale(0) translateZ(0)" : "",
+	});
+	const fraction = duration / 4;
+	_.defer(() => element.css({
+		transition: reverse ?
+			`transform ${fraction}ms ease ${duration - fraction}ms` :
+			`transform ${fraction}ms ease`
+		,
+		transform: reverse ? "" : "scale(0) translateZ(0)",
+	}));
+	_.delay(() => element.css({
+		transition: "",
+	}), duration);
 }
 
 const dialogOpenAnimation = ({element, returnElement, dialog}) => {
+	// hide all floaty buttons when we open the first dialog
+	if (dialogs._array.length === 1) {
+		shrinkAnimation({
+			element: $(".mini-holder paper-fab, .floatyButton")
+		});
+	}
+
 	const dialogRect = dialog.getBoundingClientRect();
 	const elementRect = element.getBoundingClientRect();
 	element.style.visibility = "hidden";
@@ -97,6 +123,12 @@ const dialogOpenAnimation = ({element, returnElement, dialog}) => {
 }
 
 const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
+	// unhide all floaty buttons when we close the last dialog
+	if (!dialogs._array.length) shrinkAnimation({
+		element: $(".mini-holder paper-fab, .floatyButton"),
+		reverse: true,
+	});
+
 	// We are returning to a different element
 	// pop the original element back in and use the returnElement in its place
 	returnElement = _.isFunction(returnElement) ? returnElement() : returnElement;
@@ -105,7 +137,7 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 		element = returnElement;
 		originalElement.style.transition = "";
 		originalElement.style.visibility = "";
-		originalElement.style.transform = "scale(0)";
+		originalElement.style.transform = "scale(0) translateZ(0px)";
 		_.defer(() => {
 			originalElement.style.transition = `transform ${duration}ms ease`;
 			originalElement.style.transform = "";
@@ -123,6 +155,7 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	// Get the original bounding rectangles of both elements
 	const dialogRect = dialog.getBoundingClientRect();
 	const elementRect = element.getBoundingClientRect();
+
 	// Set up a clone of the original element
 	// This lets us have a fixed position element which isn't clipped
 	clone = element.cloneNode(true);
@@ -132,17 +165,24 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	clone.style.width = elementRect.width + "px";
 	clone.style.height = elementRect.height + "px";
 	clone.style.visibility = "";
-	clone.style.zIndex = 9999;
+	clone.style.zIndex = 2;
+
+	// Compensate for stack moving at the same time if we are many dialogs deep
+	const stackCompensation = dialogs._array.length ? 16 : 0;
+
 	// Insert clone before its progenitor so it can inherit css correctly
 	element.parentNode.insertBefore(clone, element);
+
 	// Polymer messes up fixed positioning, measure and compensate
 	startingRect = clone.getBoundingClientRect();
-	clone.style.top = elementRect.top - startingRect.top + "px";
-	clone.style.left = elementRect.left - startingRect.left + "px";
+	clone.style.top = (elementRect.top - startingRect.top + stackCompensation) +
+						"px";
+	clone.style.left = (elementRect.left - startingRect.left + stackCompensation) +
+						"px";
 
 	// How must the original dialog change to become the element
-	const deltaLeft = dialogRect.left - elementRect.left;
-	const deltaTop = dialogRect.top - elementRect.top;
+	const deltaLeft = dialogRect.left - elementRect.left - stackCompensation;
+	const deltaTop = dialogRect.top - elementRect.top - stackCompensation;
 	const deltaWidth = dialogRect.width / elementRect.width;
 	const deltaHeight = dialogRect.height / elementRect.height;
 
@@ -159,7 +199,7 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 		clone.style.background = "";
 		// Make the dialog follow the clone in and fade away
 		dialog.style.transition = `all ${duration}ms ease, ` +
-									`opacity ${duration * 0.75}ms ease-in`;
+									`opacity ${duration / 2}ms linear`;
 		dialog.style.opacity = 0;
 		imitate(dialog, element, -deltaLeft,
 			-deltaTop, 1 / deltaWidth, 1 / deltaHeight);

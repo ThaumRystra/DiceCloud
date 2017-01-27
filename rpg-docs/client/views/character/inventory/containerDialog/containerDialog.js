@@ -14,7 +14,7 @@ Template.containerDialog.events({
 			instance.data.containerId,
 			"Containers", "Container and contents"
 		);
-		GlobalUI.closeDetail();
+		popDialogStack();
 	},
 });
 

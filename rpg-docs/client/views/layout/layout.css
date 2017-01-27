@@ -16,10 +16,6 @@
 	cursor: pointer;
 }
 
-.layout > core-header-panel {
-	height: 100%;
-}
-
-.layout > core-animated-pages {
-	height: 100%;
+app-drawer-layout.layout {
+	z-index: 0;
 }
