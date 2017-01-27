@@ -44,3 +44,5 @@ shell-server
 seba:minifiers-autoprefixer
 nikogosovd:multiple-uihooks
 templates:array
+ecmascript
+es5-shim

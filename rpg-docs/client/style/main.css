@@ -56,7 +56,8 @@ paper-icon-item::shadow #contentIcon {
 	bottom: 24px;
 	right: 24px;
 	/* stop the fab from flashing during animation */
-	transform: translateZ(0);
+	transform: scale(1) translateZ(0px);
+	z-index: 3;
 }
 
 paper-fab {
