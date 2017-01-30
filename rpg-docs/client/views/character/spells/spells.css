@@ -67,17 +67,15 @@
 	margin: 4px;
 }
 
-.spellList .containerMain {
-	-ms-column-width: 300px;
-	-webkit-column-width: 300px;
-	-moz-column-width: 300px;
+.spellList.card .bottom.list {
 	column-width: 300px;
-	-ms-column-gap: 8px;
-	-webkit-column-gap: 8px;
-	-moz-column-gap: 8px;
 	column-gap: 8px;
-	-moz-column-fill: balance;
 	column-fill: balance;
+	padding: 16px 4px;
+}
+
+.spellList .bottom .paper-font-subhead {
+	margin-left: 16px;
 }
 
 .spellLevel {

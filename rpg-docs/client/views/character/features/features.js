@@ -54,7 +54,7 @@ Template.features.events({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: this._id, startEditing: true},
 			element: event.currentTarget,
-			returnElement: instance.find(`.featureCard[data-id='${featureId}']`),
+			returnElement: () => instance.find(`.featureCard[data-id='${featureId}']`),
 		});
 	},
 	"click .featureCard .top": function(event){

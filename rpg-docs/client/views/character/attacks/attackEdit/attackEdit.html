@@ -5,10 +5,7 @@
 				<!--attackBonus-->
 				<paper-input class="attackBonusInput flex" label="Attack Bonus" value={{attackBonus}}
 							style="flex-basis: 200px; margin-right: 16px;">
-					<div suffix>
-						<paper-tooltip position="left" animation-delay="0">This is a formula field</paper-tooltip>
-						<iron-icon icon="lightbulb-outline"></iron-icon>
-					</div>
+					{{> formulaSuffix}}
 				</paper-input>
 				<!--details-->
 				<paper-input class="detailInput" label="Details" value={{details}} style="flex-basis: 200px;">
@@ -18,10 +15,7 @@
 				<!--damageBonus-->
 				<paper-input class="damageInput flex" label="Damage" value={{damage}}
 							style="flex-basis: 200px; margin-right: 16px;">
-					<div suffix>
-						<paper-tooltip position="left" animation-delay="0">This field accepts formulae in {curly brackets}</paper-tooltip>
-						<iron-icon icon="dicecloud:code-braces"></iron-icon>
-					</div>
+					{{> bracketSuffix}}
 				</paper-input>
 				<!--DamageType-->
 				<paper-dropdown-menu label="Damage Type" dynamic-align>

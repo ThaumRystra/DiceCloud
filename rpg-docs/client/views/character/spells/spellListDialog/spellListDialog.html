@@ -2,10 +2,10 @@
 	{{#with spellList}}
 		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
 			<div>
-				<div layout horizontal justified wrap class="subhead">
+				<div class="paper-font-subhead layout horizontal justified wrap">
 					{{#if attackBonus}}
 						<div>
-							Attack Bonus: {{evaluate charId attackBonus}}
+							Attack Bonus: {{evaluateSigned charId attackBonus}}
 						</div>
 					{{/if}}
 					{{#if saveDC}}
@@ -15,7 +15,7 @@
 					{{/if}}
 					{{#if maxPrepared}}
 						<div>
-							Max Prepared: {{evaluateSigned charId maxPrepared}}
+							Max Prepared Spells: {{evaluate charId maxPrepared}}
 						</div>
 					{{/if}}
 				</div>
@@ -23,36 +23,26 @@
 				<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
 			</div>
 		{{else}}
+		<div class="layout vertical">
 			<!--Name-->
-			<paper-input id="spellListNameInput"
-						 class="fullwidth"
-						 label="Name"
-						 floatinglabel
-						 value={{name}}></paper-input>
+			<paper-input id="spellListNameInput" label="Name" value={{name}}>
+			</paper-input>
 			<!--Save DC-->
-			<paper-input id="spellListSaveDCInput"
-						 label="Save DC"
-						 floatinglabel
-						 value={{saveDC}}
-						 style="width: 100%;"></paper-input><br>
+			<paper-input id="spellListSaveDCInput" label="Save DC" value={{saveDC}}>
+				{{> formulaSuffix}}
+			</paper-input>
 			<!--Attack Bonus-->
-			<paper-input id="spellListAttackBonusInput"
-						 label="Attack Bonus"
-						 floatinglabel
-						 value={{attackBonus}}
-						 style="width: 100%;"></paper-input><br>
+			<paper-input id="spellListAttackBonusInput" label="Attack Bonus" value={{attackBonus}}>
+				{{> formulaSuffix}}
+			</paper-input>
 			<!--Max Prepared-->
-			<paper-input id="spellListMaxPreparedInput"
-						 label="Maximum Prepared Spells"
-						 floatinglabel
-						 value={{maxPrepared}}
-						 style="width: 100%;"></paper-input><br>
+			<paper-input id="spellListMaxPreparedInput" label="Maximum Prepared Spells" value={{maxPrepared}}>
+				{{> formulaSuffix}}
+			</paper-input>
 			<!--Description-->
-			<paper-input-decorator label="Description" floatinglabel layout vertical>
-				<paper-autogrow-textarea>
-					<textarea id="spellListDescriptionInput" placeholder value={{description}}></textarea>
-				</paper-autogrow-textarea>
-			</paper-input-decorator>
+			<paper-textarea id="spellListDescriptionInput" label="Description" value={{description}}>
+			</paper-textarea>
+		</div>
 		{{/baseDialog}}
 	{{/with}}
 </template>
