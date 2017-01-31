@@ -16,7 +16,7 @@ colorOptions = [
 	{key: "o", className: "orange", whiteText: false, color: "#FF9800"},
 	{key: "p", className: "deep-orange", whiteText: true, color: "#FF5722"},
 	{key: "q", className: "grey", whiteText: true, color: "#9E9E9E"}, //spec says no white text
-	//{key: "r", className: "blue-grey", whiteText: true, color: "#607D8B"},
+	{key: "r", className: "blue-grey", whiteText: true, color: "#607D8B"},
 	{key: "s", className: "brown", whiteText: true, color: "#795548"},
 	{key: "t", className: "black", whiteText: true, color: "#000000"},
 ];
