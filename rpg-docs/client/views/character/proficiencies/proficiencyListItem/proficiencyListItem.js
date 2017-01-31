@@ -14,7 +14,11 @@ Template.proficiencyListItem.helpers({
 });
 
 Template.proficiencyListItem.events({
-	"tap .proficiency": function(event, instance){
-		openParentDialog(this.parent, this.charId, this._id);
+	"click .proficiency": function(event, instance){
+		openParentDialog({
+			parent: this.parent,
+			charId: this.charId,
+			element: event.currentTarget,
+		});
 	}
 });

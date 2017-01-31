@@ -1,74 +1,63 @@
 <template name="persona">
-	<div fit>
-		<div id="persona" class="scroll-y" fit>
-			<div class="column-container">
-				{{#with characterDetails}}
-				<div>
-					<paper-material class="card"
-								  hero-id="main" {{detailHero "details" _id}}>
-						{{#unless picture}}
-							<div class="top subhead characterField {{colorClass}}"
-								 hero-id="toolbar" {{detailHero "details" _id}}>
-								<div class="subhead" flex
-									 hero-id="title" {{detailHero "details" _id}}>
-									{{name}}
-								</div>
-							</div>
-						{{else}}
-							<core-image class="characterField clickable"
-										style="height:350px; width: 100%;
-											   background-color: #e8e8e8;"
-										sizing="cover"
-										hero-id="image" {{detailHero "details" _id}}
-										src={{picture}}></core-image>
-						{{/unless}}
-						<div class="bottom">
-							{{#if picture}}
-								<div class="title" hero-id="title" {{detailHero "details" _id}}>
-									{{name}}
-								</div>
-							{{/if}}
-							<div class="subhead">
-								{{alignment}} {{gender}} {{race}}
+	<div class="column-container animation-slider">
+		{{#with characterDetails}}
+			<div>
+				<paper-material class="card">
+					{{#unless picture}}
+						<div class="top paper-font-subhead characterField {{colorClass}}">
+							<div class="paper-font-subhead flex">
+								{{name}}
 							</div>
 						</div>
-					</paper-material>
-				</div>
-				{{/with}}
-				<div>{{> containerCard characterField "description" "Description"}}</div>
-				<div>{{> containerCard characterField "personality" "Personality Traits"}}</div>
-				<div>{{> containerCard characterField "ideals" "Ideals"}}</div>
-				<div>{{> containerCard characterField "bonds" "Bonds"}}</div>
-				<div>{{> containerCard characterField "flaws" "Flaws"}}</div>
-				<div>{{> containerCard characterField "backstory" "Background"}}</div>
-				<div>
-				<paper-material class="card">
-                    <div class="white top subhead">
-                      Languages
-					</div>
-					<div class="bottom list">
-						{{#each languages}}
-							{{> proficiencyListItem}}
-						{{/each}}
+					{{else}}
+						<iron-image class="characterField clickable"
+									style="height:350px; width: 100%;
+										   background-color: #424242;"
+									sizing="contain"
+									src={{picture}}></iron-image>
+					{{/unless}}
+					<div class="bottom">
+						{{#if picture}}
+							<div class="paper-font-title">
+								{{name}}
+							</div>
+						{{/if}}
+						<div class="paper-font-subhead">
+							{{alignment}} {{gender}} {{race}}
+						</div>
 					</div>
 				</paper-material>
-				</div>
 			</div>
+		{{/with}}
+		<div>{{> containerCard characterField "description" "Description"}}</div>
+		<div>{{> containerCard characterField "personality" "Personality Traits"}}</div>
+		<div>{{> containerCard characterField "ideals" "Ideals"}}</div>
+		<div>{{> containerCard characterField "bonds" "Bonds"}}</div>
+		<div>{{> containerCard characterField "flaws" "Flaws"}}</div>
+		<div>{{> containerCard characterField "backstory" "Background"}}</div>
+		<div>
+		<paper-material class="card">
+            <div class="white top paper-font-subhead">
+              Languages
+			</div>
+			<div class="bottom list">
+				{{#each languages}}
+					{{> proficiencyListItem}}
+				{{/each}}
+			</div>
+		</paper-material>
 		</div>
 	</div>
 </template>
 
 <template name="containerCard">
-	{{#containerCardHelper this}}{{evaluateString _id body}}{{/containerCardHelper}}
+	{{#containerCardHelper this}}{{evaluateShortString _id body}}{{/containerCardHelper}}
 </template>
 
 <template name="containerCardHelper">
-	<paper-material class="card {{class}}"
-                  hero-id="main" {{detailHero field ../_id}}>
-        <div class="top subhead {{colorClass}} {{topClass}}"
-             hero-id="toolbar" {{detailHero field ../_id}}>
-			<div class="subhead" flex
-                 hero-id="title" {{detailHero field ../_id}}>
+	<paper-material class="card {{class}}">
+        <div class="top paper-font-subhead {{colorClass}} {{topClass}}">
+			<div class="paper-font-subhead flex">
               {{title}}
           </div>
 		</div>

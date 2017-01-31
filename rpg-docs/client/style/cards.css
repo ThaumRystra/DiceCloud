@@ -45,7 +45,7 @@
 	padding: 16px 0;
 }
 
-.card .bottom.list .subhead {
+.card .bottom.list .paper-font-subhead {
 	color: rgba(0,0,0,0.54);
 	font-size: 14px;
 	font-weight: 500;
@@ -78,4 +78,8 @@
 
 .card .left paper-icon-button[disabled] {
 	color: rgba(255, 255, 255, 0.2);
+}
+
+.card img, .card iron-image {
+	max-width: 100%;
 }

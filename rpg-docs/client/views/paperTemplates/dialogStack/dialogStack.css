@@ -85,3 +85,7 @@
 .dialog-stack .dialog .buttons {
 	padding: 8px 8px 8px 24px;
 }
+
+.dialog-stack .dialog img, .dialog-stack .dialog iron-image {
+	max-width: 100%;
+}

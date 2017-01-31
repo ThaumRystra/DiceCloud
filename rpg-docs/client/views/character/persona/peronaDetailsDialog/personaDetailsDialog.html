@@ -2,10 +2,9 @@
 	{{#baseDialog title=name class="deep-purple white-text" hideColor="true" hideDelete="true" startEditing=startEditing}}
 		{{#with char}}
 			<div>{{alignment}} {{gender}} {{race}}</div>
-			<core-image style="width: 350px; height: 350px; margin-top: 8px;"
-				sizing="cover"
-				hero-id="image" hero
-				src={{picture}}></core-image>
+			<iron-image style="width: 350px; height: 350px; margin-top: 8px;"
+				sizing="contain"
+				src={{picture}}></iron-image>
 		{{/with}}
 	{{else}}
 		{{#with char}}
@@ -15,22 +14,21 @@
 </template>
 
 <template name="personaDetailsEdit">
-	<div layout horizontal center-justified>
-		<div flex style="max-width: 350px;" layout vertical>
+	<div class="layout horizontal center-justified">
+		<div class="flex layout vertical" style="max-width: 400px;">
 			<!--Name-->
-			<paper-input id="nameInput" label="Name" floatinglabel value={{name}}></paper-input>
+			<paper-input id="nameInput" label="Name" value={{name}}></paper-input>
 			<!--Alignment-->
-			<paper-input id="alignmentInput" label="Alignment" floatinglabel value={{alignment}}></paper-input>
+			<paper-input id="alignmentInput" label="Alignment" value={{alignment}}></paper-input>
 			<!--Gender-->
-			<paper-input id="genderInput" label="Gender" floatinglabel value={{gender}}></paper-input>
+			<paper-input id="genderInput" label="Gender" value={{gender}}></paper-input>
 			<!--Race-->
-			<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
+			<paper-input id="raceInput" label="Race" value={{race}}></paper-input>
 			<!--Picture-->
-			<paper-input id="pictureInput" label="Picture URL" floatinglabel value={{picture}}></paper-input>
-			<core-image style="height:350px; width: 100%; margin-top: 8px;"
-						sizing="cover"
-						hero-id="image" hero
-						src={{picture}}></core-image>
+			<paper-input id="pictureInput" label="Picture URL" value={{picture}}></paper-input>
+			<iron-image style="margin-top: 8px; width: 100%; height: 400px;"
+						sizing="contain"
+						src={{picture}}></iron-image>
 		</div>
 	</div>
 </template>
