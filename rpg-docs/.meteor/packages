@@ -46,3 +46,4 @@ nikogosovd:multiple-uihooks
 templates:array
 ecmascript
 es5-shim
+differential:vulcanize

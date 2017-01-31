@@ -35,6 +35,7 @@ ddp-rate-limiter@1.0.6
 ddp-server@1.2.10
 deps@1.0.12
 diff-sequence@1.0.7
+differential:vulcanize@3.0.0
 ecmascript@0.6.1
 ecmascript-runtime@0.3.15
 ecwyne:mathjs@0.25.0
