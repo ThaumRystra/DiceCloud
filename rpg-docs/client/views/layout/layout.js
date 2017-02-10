@@ -2,18 +2,7 @@ Template.layout.onCreated(function() {
 	this.subscribe("user");
 });
 
-Template.layout.rendered = function() {
-	$(window).on("popstate", GlobalUI.popStateHandler);
-};
-
-Template.layout.destroyed = function() {
-	$(window).off("popstate", GlobalUI.popStateHandler);
-};
-
-Template.layout.helpers({
-	notSelected: function(){
-		return Session.get("global.ui.detailShow") ? "not-selected" : null;
-	},
+Template.appDrawer.helpers({
 	profileLink: function() {
 		var user = Meteor.user();
 		return user.profile && user.profile.username || user.username || "My Account";
@@ -22,17 +11,18 @@ Template.layout.helpers({
 
 let drawerLayout;
 const closeDrawer = function(instance){
-	if (!drawerLayout) drawerLayout = instance.find("app-drawer-layout");
+	if (!drawerLayout) drawerLayout = $("app-drawer-layout")[0];
 	if (drawerLayout && drawerLayout.narrow){
 		drawerLayout.drawer.close();
 	}
 }
 
-Template.layout.events({
+Template.appDrawer.events({
 	"click app-drawer a": function(event, instance){
 		closeDrawer(instance);
 	},
-	"click #feedback": function(event, instance) {
+	"click .feedback": function(event, instance) {
+		console.log("feedback clicked");
 		pushDialogStack({
 			template: "feedback",
 			element: event.currentTarget,

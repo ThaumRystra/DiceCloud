@@ -1,53 +1,7 @@
 <template name="layout">
 	<app-drawer-layout class="layout" responsive-width="905px" fullbleed>
 		<app-drawer>
-			<app-header-layout class="white" has-scrolling-region>
-				<app-header id="accountSummary" effects="waterfall parallax-background" condenses fixed>
-					<app-toolbar>
-						{{#if currentUser}}
-							<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
-								{{profileLink}}
-							</a>
-						{{else}}
-							<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
-								Sign in
-							</a>
-						{{/if}}
-					</app-toolbar>
-				</app-header>
-				<div id="navPanel">
-					<a href="/" tabindex="-1">
-						<paper-icon-item id="homeNav">
-							<iron-icon icon="home" item-icon></iron-icon>
-							Home
-						</paper-icon-item>
-					</a>
-					<a href="/characterList" tabindex="-1">
-						<paper-icon-item id="characters">
-							<iron-icon icon="social:people" item-icon></iron-icon>
-							Characters
-						</paper-icon-item>
-					</a>
-					<a href="/guide" tabindex="-1">
-						<paper-icon-item id="guide">
-							<iron-icon icon="social:school" item-icon></iron-icon>
-							Guide
-						</paper-icon-item>
-					</a>
-					<paper-icon-item id="feedback">
-						<iron-icon icon="bug-report" item-icon></iron-icon>
-						Send Feedback
-					</paper-icon-item>
-					<a href="changeLog" tabindex="-1">
-						<paper-icon-item id="changeLog">
-							<iron-icon icon="list" item-icon></iron-icon>
-							Change Log
-						</paper-icon-item>
-					</a>
-					<hr style="margin: 16px 0 24px 0;">
-					{{> characterSideList}}
-				</div>
-			</app-header-layout>
+			{{> appDrawer}}
 		</app-drawer>
 		{{> yield}}
 	</app-drawer-layout>
@@ -55,4 +9,54 @@
 		{{> Template.dynamic template=globalToastTemplate data=globalToastData }}
 	</paper-toast>
 	{{> dialogStack}}
+</template>
+
+<template name="appDrawer">
+	<app-header-layout class="white" has-scrolling-region>
+		<app-header id="accountSummary" effects="waterfall parallax-background" condenses fixed>
+			<app-toolbar>
+				{{#if currentUser}}
+					<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+						{{profileLink}}
+					</a>
+				{{else}}
+					<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+						Sign in
+					</a>
+				{{/if}}
+			</app-toolbar>
+		</app-header>
+		<div id="navPanel">
+			<a href="/" tabindex="-1">
+				<paper-icon-item id="homeNav">
+					<iron-icon icon="home" item-icon></iron-icon>
+					Home
+				</paper-icon-item>
+			</a>
+			<a href="/characterList" tabindex="-1">
+				<paper-icon-item id="characters">
+					<iron-icon icon="social:people" item-icon></iron-icon>
+					Characters
+				</paper-icon-item>
+			</a>
+			<a href="/guide" tabindex="-1">
+				<paper-icon-item id="guide">
+					<iron-icon icon="social:school" item-icon></iron-icon>
+					Guide
+				</paper-icon-item>
+			</a>
+			<paper-icon-item class="feedback">
+				<iron-icon icon="bug-report" item-icon></iron-icon>
+				Send Feedback
+			</paper-icon-item>
+			<a href="changeLog" tabindex="-1">
+				<paper-icon-item id="changeLog">
+					<iron-icon icon="list" item-icon></iron-icon>
+					Change Log
+				</paper-icon-item>
+			</a>
+			<hr style="margin: 16px 0 24px 0;">
+			{{> characterSideList}}
+		</div>
+	</app-header-layout>
 </template>

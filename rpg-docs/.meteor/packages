@@ -38,7 +38,6 @@ spacebars
 check@1.2.4
 useraccounts:iron-routing
 wizonesolutions:canonical
-meteorhacks:fast-render
 standard-minifier-js@1.2.1
 shell-server
 seba:minifiers-autoprefixer

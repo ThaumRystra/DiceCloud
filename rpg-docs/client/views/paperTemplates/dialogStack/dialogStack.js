@@ -88,10 +88,11 @@ const shrinkAnimation = ({element, reverse}) => {
 
 const dialogOpenAnimation = ({element, returnElement, dialog}) => {
 	// hide all floaty buttons when we open the first dialog
+	let fabs = $(".mini-holder paper-fab, .floatyButton").filter(
+		(index, el) => el !== element && el !== returnElement
+	);
 	if (dialogs._array.length === 1) {
-		shrinkAnimation({
-			element: $(".mini-holder paper-fab, .floatyButton")
-		});
+		shrinkAnimation({element: fabs});
 	}
 
 	const dialogRect = dialog.getBoundingClientRect();
@@ -124,10 +125,12 @@ const dialogOpenAnimation = ({element, returnElement, dialog}) => {
 
 const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	// unhide all floaty buttons when we close the last dialog
-	if (!dialogs._array.length) shrinkAnimation({
-		element: $(".mini-holder paper-fab, .floatyButton"),
-		reverse: true,
-	});
+	let fabs = $(".mini-holder paper-fab, .floatyButton").filter(
+		(index, el) => el !== element && el !== returnElement
+	);
+	if (dialogs._array.length === 1) {
+		shrinkAnimation({element: fabs, revese: true});
+	}
 
 	// We are returning to a different element
 	// pop the original element back in and use the returnElement in its place
@@ -212,10 +215,9 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	}, duration);
 };
 
-Template.dialogStack.uihooks({
-	".dialog": {
-		container: ".dialog-sizer",
-		insert: function(node, next, tpl) {
+Template.dialogStack.onRendered(function(){
+	$(".dialog-sizer")[0]._uihooks = {
+		insertElement: function(node, next) {
 			$(node).insertBefore(next);
 			const data = Blaze.getData(node);
 			if (data.element){
@@ -230,7 +232,7 @@ Template.dialogStack.uihooks({
 				});
 			}
 		},
-		remove: function(node, tpl) {
+		removeElement: function(node) {
 			const element = node._dialogStackElement;
 			const returnElement = node._dialogStackReturnElement;
 			if (element){

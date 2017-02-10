@@ -4,28 +4,32 @@ Template.characterSheet.onRendered(function() {
 	Session.setDefault(this.data._id + ".selectedTab", "0");
 
 	// Keep the header's scroll target up to date with the currently selected tab
-	const header = this.find("app-header");
+	let header;
 	this.autorun(() => {
 		const tab = getTab(Template.currentData()._id);
+		header = header || this.find("app-header");
+		if (!header) return;
 		Tracker.afterFlush(() => {
 			header.scrollTarget = this.find("#tabPages .iron-selected");
-			header._scrollHandler();
+			header._scrollHandler && header._scrollHandler();
 		});
 	});
 
-	// Store all the tab page components for use in animations
-	tabPages = _.times(6, (n) =>
-		this.$(`.tab-page:nth-child(${n + 1})`)
-	);
-	tabSliders = _.times(6, (n) =>
-		tabPages[n].find(".animation-slider")
-	);
-	tabFabs = _.times(6, (n) =>
-		tabPages[n].find(".floatyButton")
-	);
-	tabFabMenus = _.times(6, (n) =>
-		tabPages[n].find(".mini-holder")
-	);
+	_.defer(() => {
+		// Store all the tab page components for use in animations
+		tabPages = _.times(6, (n) =>
+			this.$(`.tab-page:nth-child(${n + 1})`)
+		);
+		tabSliders = _.times(6, (n) =>
+			tabPages[n].find(".animation-slider")
+		);
+		tabFabs = _.times(6, (n) =>
+			tabPages[n].find(".floatyButton")
+		);
+		tabFabMenus = _.times(6, (n) =>
+			tabPages[n].find(".mini-holder")
+		);
+	})
 
 	//watch this character and make sure their encumbrance is updated
 	//trackEncumbranceConditions(this.data._id, this);
@@ -175,6 +179,7 @@ Template.characterSheet.events({
 		setTab(this._id, event.target.selected);
 	},
 	"color-change": function(event, instance){
+		console.log("character color change")
 		Characters.update(this._id, {$set: {color: event.color}});
 	},
 	"click #deleteCharacter": function(event, instance){

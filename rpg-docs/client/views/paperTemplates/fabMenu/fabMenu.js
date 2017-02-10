@@ -7,12 +7,14 @@ Template.fabMenu.onRendered(function(){
 	// Do a spin animation to turn the + icon into a x when active
 	this.autorun(() => {
 		const active = this.active.get();
-		const iconStyle = active ?
-			"transition: transform 0.3s ease; transform: rotate(225deg);" :
-			"transition: transform 0.3s ease;";
-		fab.updateStyles({
-			["--paper-fab-iron-icon"]: iconStyle,
-		});
+		if (fab && fab.updateStyles){
+			const iconStyle = active ?
+				"transition: transform 0.3s ease; transform: rotate(225deg);" :
+				"transition: transform 0.3s ease;";
+			fab.updateStyles({
+				["--paper-fab-iron-icon"]: iconStyle,
+			});
+		}
 	})
 });
 
