@@ -45,6 +45,7 @@
 
 	"/custom_components/dicecloud-icons/dicecloud-icons.html",
 	"/custom_components/dicecloud-selector/dicecloud-selector.html",
+	"/custom_components/dicecloud-wrapper/dicecloud-wrapper.html",
 	"/custom_components/paper-checkbox/paper-checkbox.html",
 	"/custom_components/paper-diff-slider/paper-diff-slider.html",
 	"/custom_components/app-theme.html"

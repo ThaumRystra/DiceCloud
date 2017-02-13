@@ -8,7 +8,9 @@
 	<paper-toast id="global-toast" duration="5000">
 		{{> Template.dynamic template=globalToastTemplate data=globalToastData }}
 	</paper-toast>
-	{{> dialogStack}}
+	<dicecloud-wrapper>
+		{{> dialogStack}}
+	</dicecloud-wrapper>
 </template>
 
 <template name="appDrawer">

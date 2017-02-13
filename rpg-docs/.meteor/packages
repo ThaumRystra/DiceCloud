@@ -39,10 +39,10 @@ check@1.2.4
 useraccounts:iron-routing
 wizonesolutions:canonical
 standard-minifier-js@1.2.1
-shell-server
+shell-server@0.2.1
 seba:minifiers-autoprefixer
 nikogosovd:multiple-uihooks
 templates:array
-ecmascript
-es5-shim
+ecmascript@0.6.1
+es5-shim@4.6.15
 differential:vulcanize
