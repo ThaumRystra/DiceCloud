@@ -128,8 +128,8 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	let fabs = $(".mini-holder paper-fab, .floatyButton").filter(
 		(index, el) => el !== element && el !== returnElement
 	);
-	if (dialogs._array.length === 1) {
-		shrinkAnimation({element: fabs, revese: true});
+	if (dialogs._array.length === 0) {
+		shrinkAnimation({element: fabs, reverse: true});
 	}
 
 	// We are returning to a different element
