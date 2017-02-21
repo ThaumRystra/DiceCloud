@@ -23,5 +23,8 @@
     "app-elements": "PolymerElements/app-elements#^0.10.1",
     "marked-element": "PolymerElements/marked-element#^1.2.0",
     "paper-swatch-picker": "PolymerElements/paper-swatch-picker#~1.0.2"
+  },
+  "resolutions": {
+    "webcomponentsjs": "0.7.24"
   }
 }
