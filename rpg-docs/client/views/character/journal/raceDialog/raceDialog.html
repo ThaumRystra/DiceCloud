@@ -1,12 +1,12 @@
 <template name="raceDialog">
 	{{#baseDialog title="Race" class=color hideColor="true" hideDelete="true" startEditing=startEditing}}
-		<div horizontal layout center-justified class= "display2">
+		<div class="horizontal layout center-justified paper-font-display2">
 			{{race}}
 		</div>
 		{{> effectsViewList charId=charId parentId=charId parentGroup="racial"}}
 		{{> proficiencyViewList charId=charId parentId=charId parentGroup="racial"}}
 	{{else}}
-		<paper-input id="raceInput" label="Race" floatinglabel value={{race}}></paper-input>
+		<paper-input id="raceInput" label="Race" value={{race}}></paper-input>
 		{{> effectsEditList parentId=charId parentCollection="Characters" charId=charId parentGroup="racial"}}
 		{{> proficiencyEditList parentId=charId parentCollection="Characters" charId=charId parentGroup="racial"}}
 	{{/baseDialog}}

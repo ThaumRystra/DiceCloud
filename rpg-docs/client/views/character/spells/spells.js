@@ -11,13 +11,17 @@ var spellLevels = [
 	{name: "Level 9",  level: 9},
 ];
 
+const showUnprepared = (listId) => {
+	return Session.get(`showUnprepared.${listId}`);
+}
+
 Template.spells.helpers({
 	spellLists: function(){
 		return SpellLists.find({charId: this._id}, {sort: {color: 1, name: 1}});
 	},
 	spellCount: function(list, charId){
-		if (!list || !list.settings) return;
-		if (list.settings.showUnprepared){
+		if (!list) return;
+		if (showUnprepared(list._id)){
 			return Spells.find(
 				{charId: charId, "parent.id": list._id, level: this.level},
 				{fields: {_id: 1, level: 1}}
@@ -42,6 +46,9 @@ Template.spells.helpers({
 	},
 	levels: function(){
 		return spellLevels;
+	},
+	showUnprepared: function(listId){
+		return showUnprepared(listId);
 	},
 	numPrepared: function(){
 		return Spells.find({
@@ -72,8 +79,8 @@ Template.spells.helpers({
 	isPrepared: function(){
 		return this.prepared === "prepared" || this.prepared === "always";
 	},
-	showSpell: function(listShowPrepped){
-		if (listShowPrepped) {
+	showSpell: function(listId){
+		if (showUnprepared(listId)) {
 			return true;
 		} else {
 			return this.prepared === "prepared" || this.prepared === "always";
@@ -84,7 +91,9 @@ Template.spells.helpers({
 	},
 	cantCast: function(level, char){
 		for (var i = level; i <= 9; i++){
-			if (Characters.calculate.attributeValue(char._id, "level" + i + "SpellSlots") > 0){
+			if (Characters.calculate.attributeValue(
+				char._id, "level" + i + "SpellSlots"
+			) > 0){
 				return false;
 			}
 		}
@@ -97,21 +106,27 @@ Template.spells.helpers({
 	},
 	hasSlots: function(){
 		for (var i = 1; i <= 9; i += 1){
-			if (Characters.calculate.attributeBase(this._id, "level" + i + "SpellSlots")){
+			if (Characters.calculate.attributeBase(
+				this._id, "level" + i + "SpellSlots"
+			)){
 				return true;
 			}
 		}
 		return false;
 	},
 	slotBubbles: function(char){
-		var baseSlots = Characters.calculate.attributeBase(char._id, "level" + this.level + "SpellSlots");
-		var currentSlots = Characters.calculate.attributeValue(char._id, "level" + this.level + "SpellSlots");
+		var baseSlots = Characters.calculate.attributeBase(
+			char._id, "level" + this.level + "SpellSlots"
+		);
+		var currentSlots = Characters.calculate.attributeValue(
+			char._id, "level" + this.level + "SpellSlots"
+		);
 		var slotsUsed = baseSlots - currentSlots;
 		var bubbles = [];
 		var i;
 		for (i = 0; i < currentSlots; i++){
 			bubbles.push({
-				icon: "radio-button-on",
+				icon: "radio-button-checked",
 				disabled: i !== currentSlots - 1 || !canEditCharacter(char._id), //last full slot not disabled
 				attribute: "level" + this.level + "SpellSlots",
 				charId: char._id,
@@ -119,7 +134,7 @@ Template.spells.helpers({
 		}
 		for (i = 0; i < slotsUsed; i++){
 			bubbles.push({
-				icon: "radio-button-off",
+				icon: "radio-button-unchecked",
 				disabled: i !== 0 || !canEditCharacter(char._id), //first empty slot not disabled
 				attribute: "level" + this.level + "SpellSlots",
 				charId: char._id,
@@ -133,11 +148,11 @@ Template.spells.helpers({
 });
 
 Template.spells.events({
-	"tap .slotBubble": function(event){
+	"click .slotBubble": function(event){
 		var modifier;
 		if (!event.currentTarget.disabled){
 			var char = Characters.findOne(this.charId);
-			if (event.currentTarget.icon === "radio-button-off"){
+			if (event.currentTarget.icon === "radio-button-unchecked"){
 				if (
 					Characters.calculate.attributeValue(char._id, this.attribute) <
 					Characters.calculate.attributeBase(char._id, this.attribute)
@@ -156,51 +171,49 @@ Template.spells.events({
 		}
 		event.stopPropagation();
 	},
-	"tap .spellSlot": function(event, instance) {
+	"click .spellSlot": function(event, instance) {
 		var name = "Level " + this.level + " Spell Slots";
 		var stat = "level" + this.level + "SpellSlots";
 		var charId = instance.data._id;
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "attributeDialog",
 			data:     {name: name, statName: stat, charId: charId},
-			heroId:   charId + stat,
+			element: event.currentTarget,
 		});
 	},
-	"tap .spellList .top": function(event){
-		GlobalUI.setDetail({
+	"click .spellList .top": function(event){
+		pushDialogStack({
 			template: "spellListDialog",
 			data:     {spellListId: this._id, charId: this.charId},
-			heroId:   this._id,
+			element: event.currentTarget.parentElement,
 		});
 	},
-	"tap .spell": function(event){
-		GlobalUI.setDetail({
+	"click .spell": function(event){
+		pushDialogStack({
 			template: "spellDialog",
 			data:     {spellId: this._id, charId: this.charId},
-			heroId:   this._id,
+			element: event.currentTarget,
 		});
 	},
-	"tap .addSpellList": function(event){
+	"click .addSpellList": function(event, instance){
 		var charId = this.charId;
-		SpellLists.insert({
+		var id = SpellLists.insert({
 			name: "New SpellList",
 			charId: this._id,
 			saveDC: "8 + intelligenceMod + proficiencyBonus",
 			attackBonus: "intelligenceMod + proficiencyBonus",
-		}, function(error, id){
-			if (!error){
-				GlobalUI.setDetail({
-					template: "spellListDialog",
-					data:     {spellListId: id, charId: charId, startEditing: true},
-					heroId:   id,
-				});
-			}
+		});
+		pushDialogStack({
+			template: "spellListDialog",
+			data:     {spellListId: id, charId: charId, startEditing: true},
+			element: event.currentTarget,
+			returnElement: () => instance.find(`.spellList[data-id='${id}']`),
 		});
 	},
-	"tap .addSpell": function(event){
+	"click .addSpell": function(event, instance){
 		var charId = this.charId;
 		var listId = SpellLists.findOne({charId: this._id})._id;
-		Spells.insert({
+		var id = Spells.insert({
 			name: "New Spell",
 			charId: this._id,
 			parent: {
@@ -208,17 +221,15 @@ Template.spells.events({
 				collection: "SpellLists",
 			},
 			prepared: "prepared",
-		}, function(error, id){
-			if (!error){
-				GlobalUI.setDetail({
-					template: "spellDialog",
-					data:     {spellId: id, charId: charId, startEditing: true},
-					heroId:   id,
-				});
-			}
+		});
+		pushDialogStack({
+			template: "spellDialog",
+			data:     {spellId: id, charId: charId, startEditing: true},
+			element: event.currentTarget,
+			returnElement: () => instance.find(`.spell[data-id='${id}']`),
 		});
 	},
-	"tap .preparedCheckbox": function(event){
+	"click .preparedCheckbox": function(event){
 		event.stopPropagation();
 	},
 	"change .preparedCheckbox": function(event){
@@ -228,12 +239,12 @@ Template.spells.events({
 		else if (this.prepared === "prepared" && !value)
 			Spells.update(this._id, {$set: {prepared: "unprepared"}});
 	},
-	"tap .prepSpells": function(event){
-		SpellLists.update(this._id, {$set: {"settings.showUnprepared": true}});
+	"click .prepSpells": function(event){
+		Session.set(`showUnprepared.${this._id}`, true);
 		event.stopPropagation();
 	},
-	"tap .finishPrep": function(event){
-		SpellLists.update(this._id, {$set: {"settings.showUnprepared": false}});
+	"click .finishPrep": function(event){
+		Session.set(`showUnprepared.${this._id}`, false);
 		event.stopPropagation();
 	},
 });

@@ -1,147 +1,145 @@
 <template name="spells">
-	<div fit>
-		<div id="spells" class="scroll-y" fit>
-			<div style="padding: 4px;"
-				 layout horizontal start wrap>
-				{{#if hasSlots}}
-					<paper-shadow class="card"
-								  style="margin: 4px;"
-								  hero-id="main" {{detailHero}}>
-						<div class="white top subhead"
-							 layout horizontal center>
-							Spell Slots
-						</div>
-						<div class="bottom list">
-							{{#each levels}}{{#if showSlots ..}}
-								<div class="item-slot">
-									<div class="item spellSlot"
-												hero-id="main" {{detailHero slotStatName ../_id}}
-												layout horizontal center>
-										<div style="margin-right: 16px">
-											{{name}}
-										</div>
-										<div flex layout horizontal center>
-											{{#each slotBubbles ..}}
-												<paper-icon-button class="slotBubble"
-																   icon={{icon}}
-																   disabled={{disabled}}>
-												</paper-icon-button>
-											{{/each}}
-										</div>
+	<div id="spells" class="animation-slider">
+		<div style="padding: 4px;"
+			 class="layout horizontal start wrap">
+			{{#if hasSlots}}
+				<paper-material class="card"
+							  style="margin: 4px;">
+					<div class="white top subhead layout horizontal center">
+						Spell Slots
+					</div>
+					<div class="bottom list">
+						{{#each levels}}{{#if showSlots ..}}
+							<div class="item-slot">
+								<div class="item spellSlot layout horizontal center">
+									<div style="margin-right: 16px">
+										{{name}}
 									</div>
-								</div>
-							{{/if}}{{/each}}
-						</div>
-					</paper-shadow>
-				{{/if}}
-				{{#each spellLists}}
-					<paper-shadow class="card spellList" flex
-								  hero-id="main" {{detailHero}}
-								  style="margin: 4px;">
-						<div class="top {{colorClass}}"
-							 hero-id="toolbar" {{detailHero}}
-							 layout horizontal center>
-							<div flex>
-								<div class="subhead">{{name}}</div>
-								<div class="caption">
-									{{#if saveDC}}
-										<span style="margin-right: 16px;">
-											Save DC: {{evaluate charId saveDC}}
-										</span>
-									{{/if}}
-									{{#if attackBonus}}
-										<span>
-											Attack Bonus: {{evaluateSigned charId attackBonus}}
-										</span>
-									{{/if}}
+									<div class="flex layout horizontal center">
+										{{#each slotBubbles ..}}
+											<paper-icon-button class="slotBubble"
+															   icon={{icon}}
+															   disabled={{disabled}}>
+											</paper-icon-button>
+										{{/each}}
+									</div>
 								</div>
 							</div>
-							{{#if settings.showUnprepared}}
-								{{#if maxPrepared}}
-									<div class="subhead">
-										{{numPrepared}} / {{evaluate charId maxPrepared}}
+						{{/if}}{{/each}}
+					</div>
+				</paper-material>
+			{{/if}}
+			{{#each spellLists}}
+				<paper-material class="card spellList flex" data-id={{_id}} style="margin: 4px;">
+					<div class="top {{colorClass}} layout horizontal center">
+						<div class="flex">
+							<div class="paper-font-subhead">{{name}}</div>
+							<div class="paper-font-caption">
+								{{#if saveDC}}
+									<span style="margin-right: 16px;">
+										Save DC: {{evaluate charId saveDC}}
+									</span>
+								{{/if}}
+								{{#if attackBonus}}
+									<span>
+										Attack Bonus: {{evaluateSigned charId attackBonus}}
+									</span>
+								{{/if}}
+							</div>
+						</div>
+						{{#if showUnprepared _id}}
+							{{#if maxPrepared}}
+								<div class="paper-font-subhead">
+									{{numPrepared}} / {{evaluate charId maxPrepared}}
+								</div>
+							{{/if}}
+							<div>
+								<paper-tooltip position="left">
+									Done
+			  					</paper-tooltip>
+								<paper-icon-button class="finishPrep" icon="done">
+								</paper-icon-button>
+							</div>
+						{{else}}
+							<div>
+								<paper-tooltip position="left">
+									Change prepared spells
+	  							</paper-tooltip>
+								<paper-icon-button class="prepSpells"
+												   disabled={{#unless canEditCharacter charId}}true{{/unless}}
+												   icon="book">
+								</paper-icon-button>
+							</div>
+						{{/if}}
+					</div>
+					<div class="bottom list">
+						{{#each levels}}
+							<div class="spellLevel">
+								{{#if spellCount .. ../../_id}}
+									<div class="paper-font-subhead">
+										{{name}}
 									</div>
 								{{/if}}
-								<core-tooltip label="Done"
-											  position="left">
-									<paper-icon-button class="finishPrep"
-													   icon="done">
-									</paper-icon-button>
-								</core-tooltip>
-							{{else}}
-								<core-tooltip label="Change prepared spells"
-											  position="left">
-									<paper-icon-button class="prepSpells"
-													   disabled={{#unless canEditCharacter charId}}true{{/unless}}
-													   icon="book">
-									</paper-icon-button>
-								</core-tooltip>
-							{{/if}}
-						</div>
-						<div class="bottom list column-container">
-							{{#each levels}}
-								<div class="spellLevel">
-									{{#if spellCount .. ../../_id}}
-										<div class="subhead">
-											{{name}}
+								{{#each spells ../_id ../../_id}}
+									{{#if showSpell ../../_id}}
+										<div class="item-slot">
+											<div class="tall spell item layout horizontal center" data-id={{_id}}>
+												<iron-icon icon="social:whatshot"
+														   style="color: {{hexColor color}};
+																  margin-right: 16px;"
+														   ></iron-icon>
+												<div class="flex layout vertical">
+													<div>{{name}}</div>
+													<div class="paper-font-caption">
+														{{school}}
+														{{castingTime}}
+														{{#if ritual}}
+															(ritual)
+														{{/if}}
+														{{#if spellComponents}}
+															- {{spellComponents}}
+														{{/if}}
+													</div>
+												</div>
+												{{#if showUnprepared ../../_id}}
+													<paper-checkbox class="preparedCheckbox"
+																	checked={{isPrepared}}
+																	disabled={{cantUnprepare}}>
+													</paper-checkbox>
+												{{/if}}
+											</div>
 										</div>
 									{{/if}}
-									{{#each spells ../_id ../../_id}}
-										{{#if showSpell ../../settings.showUnprepared}}
-											<div class="item-slot">
-												<div class="tall spell item"
-													 hero-id="main" {{detailHero}}
-													 layout horizontal center>
-													<core-icon icon="social:whatshot"
-															   style="color: {{hexColor color}};
-																	  margin-right: 16px;"
-															   ></core-icon>
-													<div flex layout vertical>
-														<div>{{name}}</div>
-														<div class="caption">
-															{{school}}
-															{{castingTime}}
-															{{#if ritual}}
-																(ritual)
-															{{/if}}
-															{{#if spellComponents}}
-																- {{spellComponents}}
-															{{/if}}
-														</div>
-													</div>
-													{{#if ../../settings.showUnprepared}}
-														<paper-checkbox class="preparedCheckbox"
-																		checked={{isPrepared}}
-																		disabled={{cantUnprepare}}>
-														</paper-checkbox>
-													{{/if}}
-												</div>
-											</div>
-										{{/if}}
-									{{/each}}
-								</div>
-							{{/each}}
-						</div>
-					</paper-shadow>
-				{{/each}}
-			</div>
-			<div class="fab-buffer"></div>
+								{{/each}}
+							</div>
+						{{/each}}
+					</div>
+				</paper-material>
+			{{/each}}
 		</div>
+		<div class="fab-buffer"></div>
 	</div>
 	{{#if canEditCharacter _id}}
 		{{#fabMenu}}
-			<core-tooltip label="New spell list" position="left">
+			<div>
+				<paper-tooltip position="left">
+					New spell list
+				</paper-tooltip>
 				<paper-fab icon="work"
 						   class="addSpellList"
 						   mini>
 				</paper-fab>
-			</core-tooltip>
-			<core-tooltip label="New spell" position="left">
+
+			</div>
+			<div>
+				<paper-tooltip position="left">
+					New spell
+				</paper-tooltip>
 				<paper-fab icon="note-add"
-						   class="addSpell"
-						   mini>
+					class="addSpell"
+					mini>
 				</paper-fab>
-			</core-tooltip>
+			</div>
 		{{/fabMenu}}
 	{{/if}}
 </template>

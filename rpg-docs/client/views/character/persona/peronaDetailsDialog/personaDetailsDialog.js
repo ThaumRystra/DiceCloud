@@ -1,7 +1,3 @@
-Template.personaDetailsEdit.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
 Template.personaDetailsDialog.helpers({
 	char: function() {
 		return Characters.findOne(
@@ -11,25 +7,20 @@ Template.personaDetailsDialog.helpers({
 	}
 });
 
+inputHandler = (field) => _.debounce(function(event){
+	var input = event.currentTarget.value;
+	Characters.update(this._id, {
+		$set: {[field]: input}
+	}, {
+		removeEmptyStrings: false,
+		trimStrings: false,
+	});
+}, 300);
+
 Template.personaDetailsEdit.events({
-	"change #nameInput": function(event){
-		var input = event.currentTarget.value;
-		Characters.update(this._id, {$set: {name: input}});
-	},
-	"change #alignmentInput": function(event){
-		var input = event.currentTarget.value;
-		Characters.update(this._id, {$set: {alignment: input}});
-	},
-	"change #genderInput": function(event){
-		var input = event.currentTarget.value;
-		Characters.update(this._id, {$set: {gender: input}});
-	},
-	"change #raceInput": function(event){
-		var input = event.currentTarget.value;
-		Characters.update(this._id, {$set: {race: input}});
-	},
-	"change #pictureInput": function(event){
-		var input = event.currentTarget.value;
-		Characters.update(this._id, {$set: {picture: input}});
-	},
+	"input #nameInput, change #nameInput": inputHandler("name"),
+	"input #alignmentInput, change #alignmentInput": inputHandler("alignment"),
+	"input #genderInput, change #genderInput": inputHandler("gender"),
+	"input #raceInput, change #raceInput": inputHandler("race"),
+	"input #pictureInput, change #pictureInput": inputHandler("picture"),
 });

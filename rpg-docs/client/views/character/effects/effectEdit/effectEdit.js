@@ -1,4 +1,5 @@
 //TODO add dexterity armor
+// jscs:disable maximumLineLength
 var stats = [
 	{stat: "strength", name: "Strength", group: "Ability Scores"},
 	{stat: "dexterity", name: "Dexterity", group: "Ability Scores"},
@@ -68,8 +69,10 @@ var stats = [
 	{stat: "psychicMultiplier", name: "Psychic", group: "Weakness/Resistance"},
 	{stat: "radiantMultiplier", name: "Radiant", group: "Weakness/Resistance"},
 	{stat: "slashingMultiplier", name: "Slashing", group: "Weakness/Resistance"},
-	{stat: "thunderMultiplier", name: "Thunder", group: "Weakness/Resistance"}
+	{stat: "thunderMultiplier", name: "Thunder", group: "Weakness/Resistance"},
 ];
+
+// jscs:enable maximumLineLength
 
 var statsDict = _.indexBy(stats, "stat");
 var statGroups = _.groupBy(stats, "group");
@@ -80,7 +83,7 @@ var attributeOperations = [
 	{name: "Add", operation: "add"},
 	{name: "Multiply", operation: "mul"},
 	{name: "Min", operation: "min"},
-	{name: "Max", operation: "max"}
+	{name: "Max", operation: "max"},
 ];
 var skillOperations = [
 	{name: "Add", operation: "add"},
@@ -91,7 +94,7 @@ var skillOperations = [
 	{name: "Disadvantage", operation: "disadvantage"},
 	{name: "Passive Bonus", operation: "passiveAdd"},
 	{name: "Automatically Fail", operation: "fail"},
-	{name: "Conditional Benefit", operation: "conditional"}
+	{name: "Conditional Benefit", operation: "conditional"},
 ];
 
 Template.effectEdit.helpers({
@@ -125,7 +128,7 @@ Template.effectEdit.helpers({
 
 		//default template
 		return "regularEffectValue";
-	}
+	},
 });
 
 Template.regularEffectValue.helpers({
@@ -135,33 +138,30 @@ Template.regularEffectValue.helpers({
 });
 
 Template.effectEdit.events({
-	"tap .deleteEffect": function(event){
+	"click .deleteEffect": function(event){
 		Effects.softRemoveNode(this._id);
 		GlobalUI.deletedToast(this._id, "Effects", "Effect");
 	},
-	"core-select .statDropDown": function(event){
+	"iron-select .statDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var statName = detail.item.getAttribute("name");
 		if (statName == this.stat) return;
 		Effects.update(this._id, {$set: {stat: statName}});
 	},
-	"core-select .operationDropDown": function(event){
+	"iron-select .operationDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var opName = detail.item.getAttribute("name");
 		if (opName == this.operation) return;
 		Effects.update(this._id, {$set: {operation: opName}});
 	},
-	"core-select .damageMultiplierDropDown": function(event){
+	"iron-select .damageMultiplierDropDown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
 		Effects.update(this._id, {$set: {
 			value: value,
 			calculation: "",
-			operation: "mul"
+			operation: "mul",
 		}});
 	},
 	"change .effectValueInput": function(event){
@@ -174,5 +174,5 @@ Template.effectEdit.events({
 			if (this.calculation === value) return;
 			Effects.update(this._id, {$set: {value: "", calculation: value}});
 		}
-	}
+	},
 });

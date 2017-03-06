@@ -1,36 +1,30 @@
 <template name="effectEdit">
-	<div class="effectEdit" layout horizontal center>
-		<paper-dropdown-menu class="statDropDown"
-							 label="Stat">
-			<paper-dropdown layered
-							class="dropdown">
-					<core-menu class="menu statMenu" selected={{stat}}>
-						{{#each statGroups}}
-							<div style="font-weight: bold;
-										margin-top: 16px;">{{this}}</div>
-							{{#each stats}}
-								<paper-item name={{stat}}>{{name}}</paper-item>
-							{{/each}}
-						{{/each}}
-					</core-menu>
-			</paper-dropdown>
+	<div class="effectEdit layout horizontal center">
+		<paper-dropdown-menu label="Stat" class="statDropDown" dynamic-align>
+			<dicecloud-selector class="statMenu dropdown-content" selected={{stat}} selectable="paper-item">
+				{{#each statGroups}}
+					<div style="font-weight: bold; margin-top: 16px; padding-left: 8px;">
+						{{this}}
+					</div>
+					{{#each stats}}
+						<paper-item name={{stat}}>{{name}}</paper-item>
+					{{/each}}
+				{{/each}}
+			</dicecloud-selector>
 		</paper-dropdown-menu>
 		{{#if operations}}
-			<paper-dropdown-menu class="operationDropDown"
-								 label="Operation">
-				<paper-dropdown layered class="dropdown">
-					<core-menu class="menu operationMenu" selected={{operation}}>
-						{{#each operations}}
-							<paper-item name={{operation}}>{{name}}</paper-item>
-						{{/each}}
-					</core-menu>
-				</paper-dropdown>
+			<paper-dropdown-menu class="operationDropDown" label="Operation" dynamic-align>
+				<dicecloud-selector class="dropdown-content operationMenu" selected={{operation}}>
+					{{#each operations}}
+						<paper-item name={{operation}}>{{name}}</paper-item>
+					{{/each}}
+				</dicecloud-selector>
 			</paper-dropdown-menu>
 		{{/if}}
 		{{#if effectValueTemplate}}
 			{{> Template.dynamic template=effectValueTemplate}}
 		{{else}}
-			<div flex></div>
+			<div class="flex"></div>
 		{{/if}}
 		<paper-icon-button class="deleteEffect"
 						   icon="delete">
@@ -40,27 +34,22 @@
 </template>
 
 <template name="regularEffectValue">
-	<paper-input class="effectValueInput" 
-				 label="Value" 
-				 floatinglabel 
-				 value={{effectValue}} 
-				 flex
+	<paper-input class="effectValueInput flex"
+				 label="Value"
+				 floatinglabel
+				 value={{effectValue}}
 				 style="flex-basis: 100px;">
 	</paper-input>
 </template>
 
 <template name="multiplierEffectValue">
-	<paper-dropdown-menu class="damageMultiplierDropDown"
-						 label="Damage Multiplier">
-		<paper-dropdown layered
-						class="dropdown">
-			<core-menu class="menu multiplierMenu"
+	<paper-dropdown-menu class="damageMultiplierDropDown" label="Damage Multiplier" dynamic-align>
+			<dicecloud-selector class="menu multiplierMenu dropdown-content"
 					   selected={{value}}>
 				<paper-item name="0.5">Resistance</paper-item>
 				<paper-item name="2">Vulnerability</paper-item>
 				<paper-item name="0">Immunity</paper-item>
-			</core-menu>
-		</paper-dropdown>
+			</dicecloud-selector>
 	</paper-dropdown-menu>
-	<div flex></div>
+	<div class="flex"></div>
 </template>

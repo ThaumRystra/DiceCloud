@@ -1,36 +1,38 @@
 <template name="spellDialog">
-	{{#with spell}}
-		{{#baseDialog title=name class=colorClass  startEditing=../startEditing}}
-			{{> spellDetails}}
-		{{else}}
-			{{> spellEdit}}
-		{{/baseDialog}}
-	{{/with}}
+	<div class="spell-dialog">
+		{{#with spell}}
+			{{#baseDialog title=name class=colorClass  startEditing=../startEditing}}
+				{{> spellDetails}}
+			{{else}}
+				{{> spellEdit}}
+			{{/baseDialog}}
+		{{/with}}
+	</div>
 </template>
 
 <template name="spellDetails">
-	<div class="body2">
+	<div class="paper-font-body2">
         Level {{level}} {{school}} {{#if ritual}}ritual{{/if}}, {{preparedString}}
 	</div>
 	<div style="margin: 16px 0 16px 0;">
 		{{#if castingTime}}
 		<div>
-			<span class="body2">Casting Time: </span><span>{{castingTime}}</span>
+			<span class="paper-font-body2">Casting Time: </span><span>{{castingTime}}</span>
 		</div>
 		{{/if}}
 		{{#if range}}
 		<div>
-			<span class="body2">Range: </span><span>{{range}}</span>
+			<span class="paper-font-body2">Range: </span><span>{{range}}</span>
 		</div>
 		{{/if}}
 		{{#if getComponents}}
 		<div>
-			<span class="body2">Components: </span><span>{{getComponents}}</span>
+			<span class="paper-font-body2">Components: </span><span>{{getComponents}}</span>
 		</div>
 		{{/if}}
 		{{#if duration}}
 		<div>
-			<span class="body2">Duration: </span><span>{{duration}}</span>
+			<span class="paper-font-body2">Duration: </span><span>{{duration}}</span>
 		</div>
 		{{/if}}
 	</div>
@@ -39,101 +41,78 @@
 </template>
 
 <template name="spellEdit">
-	<div horizontal layout>
-		<paper-input id="spellNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
-	</div>
-	<div layout horizontal justified wrap>
-		<paper-dropdown-menu id="schoolDropdown" label="School">
-			<paper-dropdown layered class="dropdown">
-				<core-menu class="menu"  selected={{school}}>
-					{{#each magicSchools}}
-					<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
-					{{/each}}
-				</core-menu>
-			</paper-dropdown>
-		</paper-dropdown-menu>
-		<paper-dropdown-menu id="levelDropdown" label="Level">
-			<paper-dropdown layered class="dropdown">
-				<core-menu class="menu"  selected={{level}}>
-					{{#each spellLevels}}
-					<paper-item name={{level}} class="containerMenuItem">{{name}}</paper-item>
-					{{/each}}
-				</core-menu>
-			</paper-dropdown>
-		</paper-dropdown-menu>
+	<div class="horizontal layout wrap">
+		<paper-input id="spellNameInput" label="Name" class="flex" value={{name}}></paper-input>
 		<paper-dropdown-menu id="listDropdown" label="Spell List">
-			<paper-dropdown layered class="dropdown">
-				<core-menu class="menu"  selected={{parent.id}}>
-					{{#each spellLists}}
+			<dicecloud-selector class="dropdown-content"  selected={{parent.id}}>
+				{{#each spellLists}}
 					<paper-item name={{_id}} class="containerMenuItem">{{name}}</paper-item>
-					{{/each}}
-				</core-menu>
-			</paper-dropdown>
+				{{/each}}
+			</dicecloud-selector>
 		</paper-dropdown-menu>
-		<paper-dropdown-menu id="preparedDropdown" label="School">
-			<paper-dropdown layered class="dropdown">
-				<core-menu class="menu"  selected={{prepared}}>
-					{{#each preparedOptions}}
+	</div>
+	<div class="layout horizontal center justified wrap">
+		<paper-dropdown-menu id="levelDropdown" label="Level">
+			<dicecloud-selector class="dropdown-content" selected={{level}}>
+				{{#each spellLevels}}
+					<paper-item name={{level}} class="containerMenuItem">{{name}}</paper-item>
+				{{/each}}
+			</dicecloud-selector>
+		</paper-dropdown-menu>
+		<paper-dropdown-menu id="schoolDropdown" label="School">
+			<dicecloud-selector class="dropdown-content" selected={{school}}>
+				{{#each magicSchools}}
+					<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
+				{{/each}}
+			</dicecloud-selector>
+		</paper-dropdown-menu>
+		<paper-dropdown-menu id="preparedDropdown" label="Prepared">
+			<dicecloud-selector class="dropdown-content" selected={{prepared}}>
+				{{#each preparedOptions}}
 					<paper-item name={{value}} class="containerMenuItem">{{name}}</paper-item>
-					{{/each}}
-				</core-menu>
-			</paper-dropdown>
+				{{/each}}
+			</dicecloud-selector>
 		</paper-dropdown-menu>
+		<paper-checkbox id="ritualCheckbox" class="sideMargin" checked={{ritual}}>
+			Ritual
+		</paper-checkbox>
 	</div>
-
-	<hr class="vertMargin">
-
-	<div horizontal layout center justified wrap>
-		<div layout horizontal center>
-			<span>Verbal:</span>
-			<paper-checkbox id="verbalCheckbox" class="sideMargin" checked={{components.verbal}}></paper-checkbox>
-		</div>
-		<div layout horizontal center>
-			<span>Somatic:</span>
-			<paper-checkbox id="somaticCheckbox" class="sideMargin" checked={{components.somatic}}></paper-checkbox>
-		</div>
-		<div layout horizontal center>
-			<span>Concentration:</span>
-			<paper-checkbox id="concentrationCheckbox" class="sideMargin" checked={{components.concentration}}></paper-checkbox>
-		</div>
-		<div layout horizontal center>
-			<span>Ritual: </span>
-			<paper-checkbox id="ritualCheckbox" class="sideMargin" checked={{ritual}}></paper-checkbox>
-		</div>
-	</div>
-	<div layout horizontal center>
-		<div>Material: </div>
-		<paper-input id="materialInput" class="sideMargin" label="Material Components" floatinglabel value={{components.material}} flex></paper-input>
-	</div>
-
-	<hr class="vertMargin">
-
-	<div layout horizontal justified wrap>
+	<div class="layout horizontal center justified wrap">
 		<paper-input id="castingTimeInput"
 					 label="Casting Time"
 					 value={{castingTime}}
-					 floatinglabel
-					 flex></paper-input>
+					 class="flex"
+					 ></paper-input>
 		<paper-input id="rangeInput"
-					 class="sideMargin"
+					 class="sideMargin flex"
 					 label="Range"
 					 value={{range}}
-					 floatinglabel
-					 flex></paper-input>
+					 ></paper-input>
+	</div>
+
+	<div class="horizontal layout center justified wrap">
+		<paper-checkbox id="verbalCheckbox" class="sideMargin" checked={{components.verbal}}>
+			Verbal
+		</paper-checkbox>
+		<paper-checkbox id="somaticCheckbox" class="sideMargin" checked={{components.somatic}}>
+			Somatic
+		</paper-checkbox>
+		<paper-input id="materialInput" class="sideMargin flex" label="Material Components" value={{components.material}}>
+		</paper-input>
+	</div>
+	<div class="horizontal laout center justified wrap">
 		<paper-input id="durationInput"
 					 label="Duration"
 					 value={{duration}}
-					 floatinglabel
-					 flex></paper-input>
+					 class="flex"
+					 ></paper-input>
+		<paper-checkbox id="concentrationCheckbox" class="sideMargin" checked={{components.concentration}}>
+			Concentration
+		</paper-checkbox>
 	</div>
 
-	<hr class="vertMargin">
-
 	<!--Description-->
-	<paper-input-decorator label="Description" floatinglabel layout vertical>
-		<paper-autogrow-textarea>
-			<textarea id="descriptionInput" placeholder value={{description}}></textarea>
-		</paper-autogrow-textarea>
-	</paper-input-decorator>
+	<paper-textarea id="descriptionInput" label="Description" value="{{description}}">
+	</paper-textarea>
 	{{> attackEditList  parentId=_id parentCollection="Spells" charId=charId enabled=true name=name}}
 </template>

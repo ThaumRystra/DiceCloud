@@ -1,13 +1,13 @@
 <template name="characterSideList">
-	<core-item icon="social:people" label="Characters"></core-item>
 	{{#if characters.count}}
-		<div>
+		<div class="side-list">
 			{{#each characters}}
-				<a href={{pathFor route="characterSheet" data=this}}
-				   class="singleLineItem characterRepresentative"
-					 layout horizontal center>
-					<core-icon icon="image:brightness-1"></core-icon>
-					<div>{{name}}</div>
+				<a href={{pathFor route="characterSheet" data=this}} tabindex="-1" class="side-list-character">
+					<paper-item class="short">
+						<div class="character-name">
+							{{name}}
+						</div>
+					</paper-item>
 				</a>
 			{{/each}}
 		</div>

@@ -1,12 +1,16 @@
 <template name="loading">
-	<core-toolbar class="app-grey white-text">
-		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
-	</core-toolbar>
-    <div fit layout vertical center center-justified>
-		<paper-spinner class="bigSpinner" active></paper-spinner>
-		<div class="subhead" 
-			 style="margin-left: 16px;
-					margin-right: 16px;
-					text-align: center;">{{randomHint}}</div>
-	</div>
+	<app-header-layout has-scrolling-region fullbleed>
+		<app-header class="app-grey white-text" fixed>
+			<app-toolbar>
+				<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+			</app-toolbar>
+		</app-header>
+		<div class="fit layout vertical center center-justified">
+			<paper-spinner class="bigSpinner" active></paper-spinner>
+			<div class="paper-font-subhead"
+				 style="margin-left: 16px;
+						margin-right: 16px;
+						text-align: center;">{{randomHint}}</div>
+		</div>
+	</app-header-layout>
 </template>

@@ -1,39 +1,55 @@
 <template name="characterList">
-	<core-toolbar class="app-grey white-text">
-		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
-		<div flex>
-			Characters
-		</div>
-	</core-toolbar>
-	<div class="scroll-y" fit>
-			{{#if currentUser}}
-				{{#if characters.count}}
-					<div layout horizontal wrap class="characterCards">
-						{{# each characters}}
-							{{#with characterDetails}}
-								{{#containerCardHelper this}}{{alignment}} {{gender}} {{race}}{{/containerCardHelper}}
-							{{/with}}
-						{{/each}}
-						{{> gridPadding class="characterCard" num=12}}
-					</div>
+	<app-header-layout has-scrolling-region fullbleed>
+		<app-header class="app-grey white-text" fixed effects="waterfall">
+			<app-toolbar>
+				<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+				<div style="font-weight: 300;">Characters</div>
+			</app-toolbar>
+		</app-header>
+		<div class="padded">
+				{{#if currentUser}}
+					{{#if characters.count}}
+						<div class="character-list layout horizontal wrap">
+							{{# each characters}}
+								<a class="character-card flex layout vertical end-justified" href="/character/{{_id}}">
+									<iron-image class="fit {{colorClass}}"
+												sizing="cover" preload fade src={{picture}}>
+									</iron-image>
+									{{#unless picture}}
+										<div class="fit initials layout vertical center center-justified">
+											{{initials name}}
+										</div>
+									{{/unless}}
+									<paper-item>
+										<paper-item-body two-lines>
+											<div class="name white87">
+												{{name}}
+											</div>
+											<div secondary style="color: #8a8a8a; color: rgba(255,255,255,0.87);">
+												{{alignment}} {{gender}} {{race}}
+											</div>
+										</paper-item-body>
+									</paper-item>
+									<paper-ripple></paper-ripple>
+								</a>
+							{{/each}}
+							{{> gridPadding class="character-card flex layout vertical" num=12}}
+						</div>
+					{{else}}
+						<div layout vertical center center-justified class="padded">
+							<div>You don't seem to have any characters yet</div>
+							<paper-button class="addCharacter red-button" raised>Add Character</paper-button>
+						</div>
+					{{/if}}
 				{{else}}
 					<div layout vertical center center-justified class="padded">
-						<div>You don't seem to have any characters :(</div>
-						<paper-button class="addCharacter red-button" raised>Add Character</paper-button>
+						<div>You must sign in to view your characters</div>
 					</div>
 				{{/if}}
-			{{else}}
-				<div layout vertical center center-justified class="padded">
-					<div>You must sign in to view your characters</div>
-				</div>
-			{{/if}}
-		<div class="fab-buffer"></div>
-		<paper-fab class="floatyButton addCharacter"
-				   icon="add"
-				   title="Add"
-				   role="button"
-				   tabindex="0"
-				   aria-label="Add"
-				   hero-id="main"></paper-fab>
-	</div>
+			<div class="fab-buffer"></div>
+			<paper-fab class="floatyButton addCharacter"
+					   icon="add"
+					   title="Add"></paper-fab>
+		</div>
+	</app-header-layout>
 </template>

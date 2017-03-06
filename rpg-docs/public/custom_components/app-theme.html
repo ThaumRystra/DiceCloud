@@ -1,0 +1,63 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../components/paper-styles/classes/typography.html">
+<link rel="import" href="../components/paper-styles/classes/global.html">
+
+<style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning">
+	:root {
+		--primary-color: #d13b2e;
+		--light-primary-color: #ff5a4b;
+		--dark-primary-color: #ad2a1f;
+
+		--accent-color: #d13b2e;
+		--light-accent-color: #ff5a4b;
+		--dark-accent-color: #ad2a1f;
+	}
+	paper-item.short {
+		--paper-item-min-height: 32px;
+	}
+	paper-button[raised] {
+		background-color: var(--accent-color);
+		color: #dedede;
+		color: rgba(255,255,255,0.87);
+	}
+	paper-tabs {
+		--paper-tabs-selection-bar-color: var(--accent-color);
+	}
+	paper-tab {
+		--paper-tab-ink: var(--light-accent-color);
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+		text-transform: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		letter-spacing: inherit;
+		line-height: inherit;
+	}
+	#accountSummary{
+		--app-header-background-front-layer: {
+			background-image: url(/png/paper-dice-crown.png);
+		};
+	}
+	.card .top paper-checkbox {
+		--paper-checkbox-unchecked-color: #757575;
+		--paper-checkbox-unchecked-color: rgba(255,255,255,0.54);
+		--paper-checkbox-unchecked-ink-color: #fff;
+		--paper-checkbox-checked-color: #606060;
+		--paper-checkbox-checked-color: rgba(255,255,255,0.30);
+		--paper-checkbox-checked-ink-color: #fff;
+	}
+	paper-input > iron-icon {
+		--iron-icon-width: 23px;
+		--iron-icon-height: 23px;
+	}
+	paper-swatch-picker {
+		--paper-swatch-picker-color-size: 24px;
+		--paper-swatch-picker-icon: {
+			color: #dedede !important;
+			color: rgba(255,255,255,0.87) !important;
+		}
+	}
+</style>

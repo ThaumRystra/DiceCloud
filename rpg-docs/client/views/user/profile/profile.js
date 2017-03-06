@@ -8,15 +8,15 @@ Template.profile.helpers({
 });
 
 Template.profile.events({
-	"tap #username": function(){
+	"click .username-edit": function(event, instance){
 		if (this._id === Meteor.userId()){
-			GlobalUI.showDialog({
-				heading: "Change Username",
+			pushDialogStack({
 				template: "usernameDialog",
+				element: event.currentTarget,
 			});
 		}
 	},
-	"tap #verifyEmail": function(event, instance){
+	"click #at-resend-verification-email": function(event, instance){
 		if (!Meteor.user()) return;
 		Accounts.sendVerificationEmail(Meteor.userId(), this.address);
 		GlobalUI.toast({

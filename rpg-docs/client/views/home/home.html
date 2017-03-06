@@ -1,9 +1,15 @@
 <template name="home">
-	<core-toolbar class="app-grey white-text">
-		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
-		<div flex>
-			Home
-		</div>
-	</core-toolbar>
-	{{> intro}}
+	<app-header-layout has-scrolling-region fullbleed>
+		<app-header class="app-grey white-text home-header" fixed condenses effects="waterfall resize-title">
+			<app-toolbar>
+				<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+				<div condensed-title  style="font-weight: 300;">DiceCloud</div>
+			</app-toolbar>
+			<app-toolbar class="middle"></app-toolbar>
+			<app-toolbar class="bottom">
+				<div main-title class="paper-font-display2" style="font-weight: 300;">DiceCloud</div>
+			</app-toolbar>
+		</app-header>
+		{{> intro}}
+	</app-header-layout>
 </template>

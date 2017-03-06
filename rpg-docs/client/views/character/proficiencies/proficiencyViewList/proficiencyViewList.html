@@ -1,8 +1,9 @@
 <template name="proficiencyViewList">
 	{{#if proficiencies.count}}
-		<hr class="vertMargin">
 		<div class="proficiencies">
-			<h2 style="margin-bottom: 8px;">Proficiencies</h2>
+			<div class="paper-font-title" style="margin-bottom: 8px;">
+				Proficiencies
+			</div>
 			{{#each proficiencies}}
 				{{> proficiencyView}}
 			{{/each}}

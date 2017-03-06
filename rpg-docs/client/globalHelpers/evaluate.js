@@ -23,3 +23,11 @@ Template.registerHelper("evaluateSignedSpaced", function(charId, string) {
 Template.registerHelper("evaluateString", function(charId, string) {
 	return evaluateString(charId, string);
 });
+
+Template.registerHelper("evaluateShortString", function(charId, string) {
+	if (_.isString(string)){
+		return evaluateString(
+			charId, string.split(/^( *[-*_]){3,} *(?:\n+|$)/m)[0]
+		);
+	}
+});

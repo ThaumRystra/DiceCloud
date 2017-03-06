@@ -27,10 +27,6 @@ Meteor.publish("singleCharacter", function(characterId){
 			SpellLists.find        ({charId: characterId}, {removed: true}),
 			TemporaryHitPoints.find({charId: characterId}, {removed: true}),
 			Proficiencies.find     ({charId: characterId}, {removed: true}),
-			Meteor.users.find      (
-				{_id: {$in: _.union(char.readers, char.writers)}},
-				{fields: {username: 1}}
-			),
 		];
 	} else {
 		return [];

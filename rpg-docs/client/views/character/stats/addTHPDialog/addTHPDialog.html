@@ -1,14 +1,28 @@
 <!-- data just needs charId -->
 <template name="addTHPDialog">
-	<div style="width: 200px; height: 150px;">
-		<paper-input id="nameInput" label="Label"></paper-input>
-		<paper-input-decorator label="Quantity" floatinglabel>
-			<input autoFocus id="quantityInput" type="number" value="10">
-		</paper-input-decorator>
-		<div layout horizontal justify-center>
-			Delete when zero <paper-checkbox id="deleteWhenZeroCheckbox" checked style="margin-left: 8px;"></paper-checkbox>
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="new-character-dialog flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>Add Hitpoint Slider</div>
+				</app-toolbar>
+			</app-header>
+			<div class="form">
+				<paper-input id="quantityInput" label="Hitpoint maximum" autofocus type="number" value="" min="0" allowed-pattern="[0-9]">
+				</paper-input>
+				<paper-input id="nameInput" label="Label"></paper-input>
+				<paper-checkbox id="deleteWhenZeroCheckbox">
+					Delete when zero
+				</paper-checkbox>
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="cancelButton">
+				Cancel
+			</paper-button>
+			<paper-button class="addButton" disabled={{invalid}}>
+				Add
+			</paper-button>
 		</div>
 	</div>
-	<paper-button id="cancelButton" affirmative> Cancel </paper-button>
-	<paper-button id="addButton"    affirmative> Add    </paper-button>
 </template>

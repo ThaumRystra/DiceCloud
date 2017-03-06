@@ -1,7 +1,3 @@
-Template.experienceEdit.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
 Template.experienceDialog.helpers({
 	experience: function(){
 		Experiences.findOne(this.experienceId);
@@ -20,21 +16,40 @@ Template.experienceDialog.events({
 			instance.data.experienceId,
 			"Experiences", "Experience"
 		);
-		GlobalUI.closeDetail();
+		popDialogStack();
 	},
 });
 
+const debounce = (f) => _.debounce(f, 300);
+
 Template.experienceEdit.events({
-	"change #experienceNameInput": function(event){
+	"input #experienceNameInput, change #experienceNameInput":
+	debounce(function(event){
 		var value = event.currentTarget.value;
-		Experiences.update(this._id, {$set: {name: value}});
-	},
-	"change #valueInput": function(event){
+		Experiences.update(this._id, {
+			$set: {name: value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"input #valueInput, change #valueInput":
+	debounce(function(event){
 		var value = +event.currentTarget.value;
-		Experiences.update(this._id, {$set: {value: value}});
-	},
-	"change #experienceDescriptionInput": function(event){
+		Experiences.update(this._id, {
+			$set: {value: value}
+		}, {
+			removeEmptyStrings: false,
+		});
+	}),
+	"input #experienceDescriptionInput":
+	debounce(function(event){
 		var value = event.currentTarget.value;
-		Experiences.update(this._id, {$set: {description: value}});
-	},
+		Experiences.update(this._id, {
+			$set: {description: value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
 });

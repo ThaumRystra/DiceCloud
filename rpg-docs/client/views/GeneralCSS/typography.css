@@ -1,113 +1,64 @@
-.display2 {
-	font-size: 45px;
-	font-weight: 400;
-	color: #000;
-	color: rgba(0,0,0,0.54);
-	letter-spacing: 0;
+.white-text {
+	color: #dedede;
+	color: rgba(255,255,255,0.87);
 }
 
-.white-text .display2{
+.white-text .paper-font-display2{
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
 }
 
-.display1 {
-	font-size: 34px;
-	font-weight: 400;
-	color: #000;
-	color: rgba(0,0,0,0.54);
-	letter-spacing: 0;
-}
-
-.white-text .display1, .white-text.display1{
+.white-text .paper-font-display1, .white-text.paper-font-display1{
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
 }
 
-h1, .headline {
-	font-size: 24px;
-	font-weight: 400;
-	margin: 0;
-	color: #000;
-	color: rgba(0,0,0,0.87);
-	letter-spacing: 0;
-}
-
-.white-text h1, .white-text .headline, .white-text.headline{
+.white-text h1, .white-text .paper-font-headline, .white-text.paper-font-headline{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
-h2, .title {
-	font-size: 20px;
-	font-weight: 500;
-	margin: 0;
-	color: #000;
-	color: rgba(0,0,0,0.87);
-	letter-spacing: 0.005em;
-}
-
-.white-text h2, .white-text .title, .white-text.title{
+.white-text h2, .white-text .paper-font-title, .white-text.paper-font-title{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
-h3, .subhead {
-	font-size: 16px;
-	font-weight: 400;
-	margin: 0;
-	color: #000;
-	color: rgba(0,0,0,0.87);
-	letter-spacing: 0.010em;
-}
-
-.white-text h3, .white-text .subhead{
+.white-text h3, .white-text .paper-font-subhead{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
-.body2 {
-	font-size: 14px;
-	font-weight: 500;
-	color: #000;
-	color: rgba(0,0,0,0.87);
-	letter-spacing: 0.010em;
-}
-
-.white-text .body2{
+.white-text .paper-font-body2{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
-p, .body1, body {
-	font-size: 14px;
-	font-weight: 400;
-	margin: 0;
-	color: #000;
-	color: rgba(0,0,0,0.87);
-	letter-spacing: 0.010em;
-}
-
-.white-text p, .white-text .body1{
+.white-text p, .white-text .paper-font-body1{
+	color: #dedede;
 	color: rgba(255,255,255,0.87);
 }
 
-.caption{
-	font-size: 12px;
-	font-weight: 400;
-	color: #000;
-	color: rgba(0,0,0,0.54);
-	letter-spacing: 0.020em;
-}
-
-.white-text .caption{
+.white-text .paper-font-caption{
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
-}
-
-html /deep/ .white-text{
-	color: #fff;
 }
 
 .black54 {
-	color: #444;
+	color: #757575;
 	color: rgba(0,0,0,0.54);
 }
 
 .white54 {
-	color: #eee;
+	color: #8a8a8a;
 	color: rgba(255,255,255,0.54);
+}
+
+.black87 {
+	color: #212121;
+	color: rgba(0,0,0,0.87);
+}
+
+.white87 {
+	color: #dedede;
+	color: rgba(255,255,255,0.87);
 }

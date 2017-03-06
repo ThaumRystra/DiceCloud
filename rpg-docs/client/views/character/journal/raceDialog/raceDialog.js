@@ -1,12 +1,13 @@
-Template.raceDialog.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
 Template.raceDialog.events({
-	"change #raceInput": function(event){
+	"input #raceInput, change #raceInput": _.debounce(function(event){
 		var value = event.currentTarget.value;
-		Characters.update(this.charId, {$set: {race: value}});
-	}
+		Characters.update(this.charId, {
+			$set: {race: value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}, 300),
 });
 
 Template.raceDialog.helpers({

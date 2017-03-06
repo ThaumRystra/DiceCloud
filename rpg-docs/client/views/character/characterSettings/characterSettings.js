@@ -23,4 +23,7 @@ Template.characterSettings.events({
 			);
 		}
 	},
+	"click .doneButton": function(event, instance){
+		popDialogStack();
+	},
 });

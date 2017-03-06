@@ -1,39 +1,33 @@
 <template name="attackEdit">
-	<div layout horizontal>
-		<div layout vertical flex>
-			<div layout horizontal>
+	<div class="layout horizontal">
+		<div class="layout vertical flex">
+			<div class="layout horizontal wrap">
 				<!--attackBonus-->
-				<paper-input class="attackBonusInput" 
-							 label="Attack Bonus"
-							 floatinglabel
-							 value={{attackBonus}}
-							 flex></paper-input>
+				<paper-input class="attackBonusInput flex" label="Attack Bonus" value={{attackBonus}}
+							style="flex-basis: 200px; margin-right: 16px;">
+					{{> formulaSuffix}}
+				</paper-input>
 				<!--details-->
-				<paper-input class="detailInput"
-							 label="Details"
-							 floatinglabel
-							 value={{details}}></paper-input>
+				<paper-input class="detailInput" label="Details" value={{details}} style="flex-basis: 200px;">
+				</paper-input>
 			</div>
-			<div layout horizontal>
+			<div class="layout horizontal wrap">
 				<!--damageBonus-->
-				<paper-input class="damageInput"
-							 label="Damage"
-							 floatinglabel
-							 value={{damage}}
-							 flex></paper-input>
+				<paper-input class="damageInput flex" label="Damage" value={{damage}}
+							style="flex-basis: 200px; margin-right: 16px;">
+					{{> bracketSuffix}}
+				</paper-input>
 				<!--DamageType-->
-				<paper-dropdown-menu class="damageTypeDropdown" label="Damage Type">
-					<paper-dropdown layered class="dropdown">
-						<core-menu class="menu"  selected={{damageType}}>
-							{{#each damageTypes}}
-								<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
-							{{/each}}
-						</core-menu>
-					</paper-dropdown>
+				<paper-dropdown-menu label="Damage Type" dynamic-align>
+					<dicecloud-selector class="dropdown-content damageTypeDropdown" selected={{damageType}}>
+						{{#each damageTypes}}
+							<paper-item name={{this}} class="containerMenuItem">{{this}}</paper-item>
+						{{/each}}
+					</dicecloud-selector>
 				</paper-dropdown-menu>
 			</div>
 		</div>
 		<!--Delete Button-->
-		<paper-icon-button class="deleteAttack" role="button" tabindex="0" icon="delete" aria-label="Delete"></paper-icon-button>
+		<paper-icon-button class="deleteAttack" icon="delete"></paper-icon-button>
 	</div>
 </template>

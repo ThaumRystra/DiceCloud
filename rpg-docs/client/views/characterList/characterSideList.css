@@ -1,23 +1,9 @@
-.singleLineItem {
-	color: black;
-	color: rgba(0, 0, 0, 0.870588);
-	cursor: pointer;
-	overflow: hidden;
-	padding: 8px 0 8px 16px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	text-decoration: none;
-}
+/*
+	prevent character names from wrapping
+ */
 
-.singleLineItem core-icon {
-	height: 8px;
-	margin-right: 8px;
-	width: 8px;
-}
-
-.singleLineItem div {
-	text-overflow: ellipsis;
-	/* Required for text-overflow to do anything */
+.character-name {
 	white-space: nowrap;
 	overflow: hidden;
+	text-overflow: ellipsis;
 }

@@ -1,7 +1,7 @@
 <template name="noteDialog">
 	{{#with note}}
 		{{#baseDialog title=name class=colorClass startEditing=../startEditing}}
-			<div>{{#markdown}}{{description}}{{/markdown}}</div>
+			<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
 		{{else}}
 			{{> noteDialogEdit}}
 		{{/baseDialog}}
@@ -10,21 +10,13 @@
 
 <template name="noteDialogEdit">
 	<!--Name-->
-	<div horizontal layout>
+	<div class="horizontal layout">
 		<paper-input id="noteNameInput"
 					 label="Name"
-					 floatinglabel
 					 value={{name}}
-					 flex>
+					 class="flex">
 		</paper-input>
 	</div>
 	<!--Description, formatting this nicely breaks it, leave it as is-->
-	<paper-input-decorator label="Description"
-						   floatinglabel
-						   layout vertical>
-		<paper-autogrow-textarea>
-			<textarea id="noteDescriptionInput"
-					  value={{description}}></textarea>
-		</paper-autogrow-textarea>
-	</paper-input-decorator>
+	<paper-textarea id="noteDescriptionInput" label="Description" value={{description}}></paper-textarea>
 </template>

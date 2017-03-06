@@ -1,45 +1,42 @@
 <template name="healthCard">
-	<paper-shadow class="card container healthCard"
-				  hero-id="main" {{detailHero "hitPoints" _id}}
-				  layout horizontal wrap>
-		<div class="green white-text subhead left"
-			 hero-id="toolbar" {{detailHero "hitPoints" _id}}
-			 layout vertical center center-justified>
-			<div class="hitPointTitle clickable">Hit Points</div>
+	<paper-material class="card container healthCard layout horizontal wrap">
+		<div class="green white-text subhead left layout vertical center center-justified">
+			<div class="hitPointTitle clickable">
+				Hit Points
+			</div>
 			<paper-icon-button class="white54"
 							   id="addTempHP"
 							   icon="add"
 							   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 			</paper-icon-button>
 		</div>
-		<div class="right" flex layout vertical center-justified style="min-width: 180px;">
-			<div layout horizontal>
+		<div class="right flex layout vertical center-justified" style="min-width: 180px;">
+			<div class="layout horizontal">
 				<paper-diff-slider id="hitPointSlider"
 								   value={{characterCalculate "attributeValue" _id "hitPoints"}}
 								   max={{characterCalculate "attributeBase" _id "hitPoints"}}
 								   editable pin
-								   disabled={{#unless canEditCharacter _id}}true{{/unless}}
-								   role="slider">
+								   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 				</paper-diff-slider>
 			</div>
 			{{#each tempHitPoints}}
 				<div>
 					{{name}}
-					<div layout horizontal>
-					<paper-diff-slider class="tempHitPointSlider"
+				</div>
+				<div class="layout horizontal center">
+					<div style="height: 40px; width: 40px;">
+						{{#unless left}}
+							<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
+						{{/unless}}
+					</div>
+					<paper-diff-slider class="tempHitPointSlider flex"
 							  value={{left}}
 							  max={{maximum}}
 							  editable pin
-							  role="slider"
-							  flex
 							  ></paper-diff-slider>
-					{{#unless left}}
-						<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
-					{{/unless}}
 				</div>
-			</div>
 			{{/each}}
-			<div class="caption">
+			<div class="paper-font-caption">
 				{{#if multipliers.immunities.length}}
 					<div>
 						Immune:     {{#each multipliers.immunities}}  {{name}} {{/each}}
@@ -58,33 +55,30 @@
 			</div>
 			{{#if showDeathSave}}
 				{{#with deathSaveObject}}
-					<div class="padded" layout vertical center>
-						<div class="subhead">
+					<div class="padded layout vertical center">
+						<div class="paper-font-subhead">
 							Death Saves
 						</div>
-						<div layout horizontal>
-							<div layout vertical center>
+						<div class="layout horizontal">
+							<div class="layout vertical center">
 								<div class="caption">Fail</div>
-								<div layout horizontal center-justified wrap reverse>
+								<div class="layout horizontal center-justified wrap reverse">
 									<paper-icon-button class="slotBubble failBubble" icon={{failIcon 1}} disabled={{failDisabled 1}}></paper-icon-button>
 									<paper-icon-button class="slotBubble failBubble" icon={{failIcon 2}} disabled={{failDisabled 2}}></paper-icon-button>
 									<paper-icon-button class="slotBubble failBubble" icon={{failIcon 3}} disabled={{failDisabled 3}}></paper-icon-button>
 								</div>
 							</div>
-							<div layout horizontal center center-justified style="min-width: 94px">
+							<div class="layout horizontal center center-justified" style="width: 94px">
 								{{#if dead}}
 									DEAD
 								{{else}}
-									{{#if stable}}
-										<paper-button id="stableButton">Stable</paper-button>
-									{{else}}
-										<paper-button id="unstableButton">Unstable</paper-button>
-									{{/if}}
+								<paper-button id="stableButton" class="{{#if stable}}stable{{/if}}">
+								</paper-button>
 								{{/if}}
 							</div>
 							<div layout vertical center>
-								<div class="caption">Pass</div>
-								<div layout horizontal center-justified wrap>
+								<div class="paper-font-caption">Pass</div>
+								<div class="layout horizontal center-justified wrap">
 									<paper-icon-button class="slotBubble passBubble" icon={{passIcon 1}} disabled={{passDisabled 1}}></paper-icon-button>
 									<paper-icon-button class="slotBubble passBubble" icon={{passIcon 2}} disabled={{passDisabled 2}}></paper-icon-button>
 									<paper-icon-button class="slotBubble passBubble" icon={{passIcon 3}} disabled={{passDisabled 3}}></paper-icon-button>
@@ -95,5 +89,5 @@
 				{{/with}}
 			{{/if}}
 		</div>
-	</paper-shadow>
+	</paper-material>
 </template>

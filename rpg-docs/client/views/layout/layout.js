@@ -2,47 +2,39 @@ Template.layout.onCreated(function() {
 	this.subscribe("user");
 });
 
-Template.layout.rendered = function() {
-	$(window).on("popstate", GlobalUI.popStateHandler);
-};
-
-Template.layout.destroyed = function() {
-	$(window).off("popstate", GlobalUI.popStateHandler);
-};
-
-Template.layout.helpers({
-	notSelected: function(){
-		return Session.get("global.ui.detailShow") ? "not-selected" : null;
-	},
+Template.appDrawer.helpers({
 	profileLink: function() {
 		var user = Meteor.user();
 		return user.profile && user.profile.username || user.username || "My Account";
 	},
 });
 
-Template.layout.events({
-	"tap #homeNav": function(event, instance){
-		Router.go("/");
-		instance.find("core-drawer-panel").closeDrawer();
+let drawerLayout;
+const closeDrawer = function(instance){
+	if (!drawerLayout) drawerLayout = $("app-drawer-layout")[0];
+	if (drawerLayout && drawerLayout.narrow){
+		drawerLayout.drawer.close();
+	}
+}
+
+Template.appDrawer.events({
+	"click app-drawer a": function(event, instance){
+		closeDrawer(instance);
 	},
-	"tap #profileLink": function(event, instance){
-		Router.go("profile");
-		instance.find("core-drawer-panel").closeDrawer();
-	},
-	"tap #feedback": function(event, instance) {
-		GlobalUI.showDialog({
-			heading: "Feedback",
+	"click .feedback": function(event, instance) {
+		console.log("feedback clicked");
+		pushDialogStack({
 			template: "feedback",
-			fullOnMobile: true,
+			element: event.currentTarget,
+			callback: function(report){
+				if (!report) return;
+				Meteor.call("insertReport", report, function(e, result){
+					GlobalUI.toast({
+						text: e && e.details || "Feedback submitted"
+					});
+				});
+			},
 		});
-		instance.find("core-drawer-panel").closeDrawer();
-	},
-	"tap #changeLog": function(event, instance) {
-		Router.go("changeLog");
-		instance.find("core-drawer-panel").closeDrawer();
-	},
-	"tap #guide": function(event, instance) {
-		Router.go("guide");
-		instance.find("core-drawer-panel").closeDrawer();
+		closeDrawer(instance);
 	},
 });

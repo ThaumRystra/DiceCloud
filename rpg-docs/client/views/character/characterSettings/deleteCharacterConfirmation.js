@@ -18,11 +18,14 @@ Template.deleteCharacterConfirmation.events({
 		var canDel = instance.find("#nameInput").value === this.name;
 		instance.canDelete.set(canDel);
 	},
-	"tap #deleteButton": function(event, instance) {
+	"click #deleteButton": function(event, instance) {
 		if (instance.find("#nameInput").value === this.name) {
-			GlobalUI.closeDialog();
-			Router.go("/");
+			popDialogStack();
+			Router.go("/characterList");
 			Characters.remove(this._id);
 		}
-	}
+	},
+	"click .cancelButton": function(event, instance){
+		popDialogStack();
+	},
 });

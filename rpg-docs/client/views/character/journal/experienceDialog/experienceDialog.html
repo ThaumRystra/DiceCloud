@@ -1,7 +1,7 @@
 <template name="experienceDialog">
 	{{#with experience}}
 		{{#baseDialog title=name class=color hideColor="true" startEditing=../startEditing}}
-			<div horizontal layout center-justified class= "display2">
+			<div  class="horizontal layout center-justified paper-font-display2">
 				{{value}}
 			</div>
 			{{#if description}}
@@ -15,18 +15,12 @@
 </template>
 
 <template name="experienceEdit">
-	<div horizontal layout>
+	<div class="horizontal layout">
 		<!--Name-->
-		<paper-input id="experienceNameInput" label="Name" floatinglabel value={{name}} flex></paper-input>
+		<paper-input id="experienceNameInput" label="Name" value={{name}} class="flex"></paper-input>
 		<!--Value-->
-		<paper-input-decorator label="Value" floatinglabel>
-			<input id="valueInput" type="number" value={{value}}>
-		</paper-input-decorator>
+		<paper-input id="valueInput" type="number" value={{value}} label="Value"></paper-input>
 	</div>
 	<!--Description-->
-	<paper-input-decorator label="Description" floatinglabel layout vertical>
-		<paper-autogrow-textarea>
-			<textarea id="experienceDescriptionInput" placeholder value={{description}}></textarea>
-		</paper-autogrow-textarea>
-	</paper-input-decorator>
+	<paper-textarea id="experienceDescriptionInput" label="Description" value={{description}}></paper-textarea>
 </template>

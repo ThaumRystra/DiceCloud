@@ -6,7 +6,7 @@
 	height: 56px;
 }
 
-#spells .inventoryItem core-icon{
+#spells .inventoryItem iron-icon{
 	width: 32px;
 	height: 32px;
 }
@@ -18,7 +18,7 @@
 	cursor: pointer !important;
 }
 
-#spells .inventoryItem[disabled] core-icon{
+#spells .inventoryItem[disabled] iron-icon{
 	color: #ccc !important;
 	color: rgba(0,0,0,0.26) !important;
 }
@@ -67,17 +67,15 @@
 	margin: 4px;
 }
 
-.spellList .containerMain {
-	-ms-column-width: 300px;
-	-webkit-column-width: 300px;
-	-moz-column-width: 300px;
+.spellList.card .bottom.list {
 	column-width: 300px;
-	-ms-column-gap: 8px;
-	-webkit-column-gap: 8px;
-	-moz-column-gap: 8px;
 	column-gap: 8px;
-	-moz-column-fill: balance;
 	column-fill: balance;
+	padding: 16px 4px;
+}
+
+.spellList .bottom .paper-font-subhead {
+	margin-left: 16px;
 }
 
 .spellLevel {

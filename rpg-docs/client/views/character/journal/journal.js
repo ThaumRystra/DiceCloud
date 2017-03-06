@@ -53,101 +53,93 @@ Template.journal.helpers({
 });
 
 Template.journal.events({
-	"tap .noteTop": function(event){
-		GlobalUI.setDetail({
+	"click .noteTop": function(event){
+		pushDialogStack({
 			template: "noteDialog",
 			data:     {noteId: this._id, charId: this.charId},
-			heroId:   this._id,
+			element:  event.currentTarget.parentElement,
 		});
 	},
-	"tap .experience": function(event){
-		GlobalUI.setDetail({
+	"click .experience": function(event){
+		pushDialogStack({
 			template: "experienceDialog",
 			data: {experienceId: this._id, charId: this.charId},
-			heroId: this._id,
+			element: event.currentTarget,
 		});
 	},
-	"tap .class": function(event){
-		GlobalUI.setDetail({
+	"click .class": function(event){
+		pushDialogStack({
 			template: "classDialog",
 			data: {classId: this._id, charId: this.charId},
-			heroId: this._id,
+			element: event.currentTarget,
 		});
 	},
-	"tap .race": function(event){
-		GlobalUI.setDetail({
+	"click .race": function(event){
+		pushDialogStack({
 			template: "raceDialog",
 			data: {charId: this._id},
-			heroId: this._id + "race",
+			element: event.currentTarget,
 		});
 	},
-	"tap #addNote": function(event){
+	"click #addNote": function(event, instance){
 		var charId = this._id;
-		Notes.insert({
+		var noteId = Notes.insert({
 			name: "New Note",
 			charId: charId,
-		}, function(error, id){
-			if (!error){
-				GlobalUI.setDetail({
-					template: "noteDialog",
-					data:     {noteId: id, charId: charId, startEditing: true},
-					heroId:   id,
-				});
-			}
+		});
+		pushDialogStack({
+			template: "noteDialog",
+			data:     {noteId: noteId, charId: charId, startEditing: true},
+			element:  event.currentTarget,
+			returnElement: () => instance.find(`.note[data-id='${noteId}']`),
 		});
 	},
-	"tap #addXP": function(event){
+	"click #addXP": function(event, instance){
 		var charId = this._id;
-		Experiences.insert({
+		var expId = Experiences.insert({
 			charId: charId
-		}, function(error, id){
-			if (!error){
-				GlobalUI.setDetail({
-					template: "experienceDialog",
-					data: {experienceId: id, charId: charId, startEditing: true},
-					heroId: id,
-				});
-			}
+		});
+		pushDialogStack({
+			template: "experienceDialog",
+			data: {experienceId: expId, charId: charId, startEditing: true},
+			element: event.currentTarget,
+			returnElement: () => instance.find(`.experience[data-id='${expId}']`),
 		});
 	},
-	"tap #addClassButton":function(event){
+	"click #addClassButton":function(event, instance){
 		var charId = this._id;
-		Classes.insert({
+		var classId = Classes.insert({
 			charId: charId,
 			name: "new Class",
 			level: 1,
-		}, function(error, id){
-			if (!error){
-				GlobalUI.setDetail({
-					template: "classDialog",
-					data: {classId: id, charId: charId, startEditing: true},
-					heroId: id,
-				});
-			}
+		});
+		pushDialogStack({
+			template: "classDialog",
+			data: {classId: classId, charId: charId, startEditing: true},
+			element: event.currentTarget,
+			returnElement: () => instance.find(`.class[data-id='${classId}']`),
 		});
 	},
-	"tap #moreExperiences": function(event){
-		var inst = Template.instance();
-		inst.experiencesLimit.set(
-			inst.experiencesLimit.get() +
+	"click #moreExperiences": function(event, instance){
+		instance.experiencesLimit.set(
+			instance.experiencesLimit.get() +
 			(this.settings && this.settings.experiencesInc || 10)
 		);
 	},
-	"tap #lessExperiences": function(event){
-		var inst = Template.instance();
-		inst.experiencesLimit.set(
+	"click #lessExperiences": function(event, instance){
+		instance.experiencesLimit.set(
 			this.settings && this.settings.experiencesInc || 10
 		);
-		//scroll to the top of the div
-		inst.$(".scroll-y").animate({
+		// Scroll to the top of the div
+		instance.$(".scroll-y").animate({
 			scrollTop: (
-				inst.$(".scroll-y").scrollTop() +
-				inst.$(".experiencesCard").position().top -
+				instance.$(".scroll-y").scrollTop() +
+				instance.$(".experiencesCard").position().top -
 				8
 			)
 		}, 300);
-		//HACK giggle the columns :( to workaround chrome bug that stops .containers height from updating
-		var cs = inst.$(".containers").removeClass("containers");
+		// HACK jiggle the columns :( to workaround chrome bug that stops .containers height from updating
+		var cs = instance.$(".containers").removeClass("containers");
 		_.defer(function(){cs.addClass("containers");});
 	},
 });

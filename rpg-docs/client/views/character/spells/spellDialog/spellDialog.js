@@ -24,7 +24,7 @@ Template.spellDialog.events({
 	"tap #deleteButton": function(event, instance){
 		Spells.softRemoveNode(instance.data.spellId);
 		GlobalUI.deletedToast(instance.data.spellId, "Spells", "Spell");
-		GlobalUI.closeDetail();
+		popDialogStack();
 	},
 });
 
@@ -47,10 +47,6 @@ Template.spellDetails.helpers({
 	},
 });
 
-Template.spellEdit.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
 Template.spellEdit.helpers({
 	spellLists: function(){
 		return SpellLists.find({charId: this.charId}, {fields: {name: 1}});
@@ -70,55 +66,92 @@ Template.spellEdit.helpers({
 	},
 });
 
+const debounce = (f) => _.debounce(f, 300);
+
 Template.spellEdit.events({
-	"change #spellNameInput, input #spellNameInput": function(event){
+	"change #spellNameInput, input #spellNameInput": debounce(function(event){
+		const input = event.currentTarget;
+		var value = input.value;
+		if (!value){
+			input.invalid = true;
+			input.errorMessage = "Name is required";
+		} else {
+			input.invalid = false;
+			Spells.update(this._id, {
+				$set: {name: value}
+			}, {
+				removeEmptyStrings: false,
+				trimStrings: false,
+			});
+		}
+	}),
+	"change #castingTimeInput, input #castingTimeInput": debounce(function(event){
 		var value = event.currentTarget.value;
-		Spells.update(this._id, {$set: {name: value}});
-	},
-	"change #castingTimeInput": function(event){
+		Spells.update(this._id, {
+			$set: {castingTime: value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"change #rangeInput, input #rangeInput": debounce(function(event){
 		var value = event.currentTarget.value;
-		Spells.update(this._id, {$set: {castingTime: value}});
-	},
-	"change #rangeInput": function(event){
+		Spells.update(this._id, {
+			$set: {range: value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"change #durationInput, input #durationInput": debounce(function(event){
 		var value = event.currentTarget.value;
-		Spells.update(this._id, {$set: {range: value}});
-	},
-	"change #durationInput": function(event){
+		Spells.update(this._id, {
+			$set: {duration: value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"change #materialInput, input #materialInput": debounce(function(event){
 		var value = event.currentTarget.value;
-		Spells.update(this._id, {$set: {duration: value}});
-	},
-	"change #materialInput": function(event){
+		Spells.update(this._id, {
+			$set: {"components.material": value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"input #descriptionInput": debounce(function(event){
 		var value = event.currentTarget.value;
-		Spells.update(this._id, {$set: {"components.material": value}});
-	},
-	"change #descriptionInput": function(event){
-		var value = event.currentTarget.value;
-		Spells.update(this._id, {$set: {"description": value}});
-	},
-	"core-select #listDropdown": function(event){
+		Spells.update(this._id, {
+			$set: {"description": value}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}),
+	"iron-select #listDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		if (value == this.parent.id) return;
-		Spells.update(this._id, {$set: {"parent.id": value}});
+		Spells.update(this._id, {
+			$set: {"parent.id": value}
+		});
 	},
-	"core-select #levelDropdown": function(event){
+	"iron-select #levelDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		if (value == this.level) return;
 		Spells.update(this._id, {$set: {level: value}});
 	},
-	"core-select #schoolDropdown": function(event){
+	"iron-select #schoolDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		if (value == this.school) return;
 		Spells.update(this._id, {$set: {school: value}});
 	},
-	"core-select #preparedDropdown": function(event){
+	"iron-select #preparedDropdown": function(event){
 		var detail = event.originalEvent.detail;
-		if (!detail.isSelected) return;
 		var value = detail.item.getAttribute("name");
 		if (value == this.school) return;
 		Spells.update(this._id, {$set: {prepared: value}});

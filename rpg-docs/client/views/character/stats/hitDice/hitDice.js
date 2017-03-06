@@ -16,7 +16,7 @@ Template.hitDice.helpers({
 });
 
 Template.hitDice.events({
-	"tap .resourceUp": function(event){
+	"click .resourceUp": function(event){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var base = Characters.calculate.attributeBase(this.char._id, this.name);
 		if (value < base){
@@ -25,7 +25,7 @@ Template.hitDice.events({
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .resourceDown": function(event){
+	"click .resourceDown": function(event){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		if (value > 0){
 			var modifier = {$inc: {}};
@@ -33,10 +33,10 @@ Template.hitDice.events({
 			Characters.update(this.char._id, modifier, {validate: false});
 		}
 	},
-	"tap .right": function() {
+	"click .right": function(event, template) {
 		var charId = Template.parentData()._id;
 		var title = "d" + this.diceNum + " Hit Dice";
-		GlobalUI.setDetail({
+		pushDialogStack({
 			template: "attributeDialog",
 			data:     {
 				name: title,
@@ -44,7 +44,7 @@ Template.hitDice.events({
 				charId: charId,
 				color: "green",
 			},
-			heroId:   charId + this.name,
+			element: event.currentTarget.parentElement,
 		});
 	},
 });

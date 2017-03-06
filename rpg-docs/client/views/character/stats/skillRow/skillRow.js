@@ -12,7 +12,7 @@ Template.skillRow.helpers({
 		if (prof > 0 && prof < 1) return "image:brightness-2";
 		if (prof === 1) return "image:brightness-1";
 		if (prof > 1) return "av:album";
-		return "radio-button-off";
+		return "radio-button-unchecked";
 	},
 	failSkill: function(){
 		var charId = Template.parentData()._id;

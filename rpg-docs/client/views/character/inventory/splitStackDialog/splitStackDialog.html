@@ -1,13 +1,29 @@
 <!-- data needs to include id of item, parentCollection, parentId -->
 <template name="splitStackDialog">
-	<div style="width: 300px; height: 110px;">
-		<paper-input-decorator label="Quantity" floatinglabel>
-			<input autoFocus id="quantityInput" type="number" value={{quantity}}>
-		</paper-input-decorator>
-		<paper-button id="oneButton">  One  </paper-button>
-		<paper-button id="halfButton"> Half </paper-button>
-		<paper-button id="allButton">  All  </paper-button>
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="feedback flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+					Split Stack
+				</app-toolbar>
+			</app-header>
+			<div class="form flex">
+				<paper-input autoFocus label="Quantity" id="quantityInput" type="number" value={{quantity}}>
+				</paper-input>
+				<div class="layout horizontal justified">
+					<paper-button id="oneButton">  One  </paper-button>
+					<paper-button id="halfButton"> Half </paper-button>
+					<paper-button id="allButton">  All  </paper-button>
+				</div>
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button id="cancelButton">
+				Cancel
+			</paper-button>
+			<paper-button id="moveButton">
+				move
+			</paper-button>
+		</div>
 	</div>
-	<paper-button id="cancelButton" affirmative> Cancel </paper-button>
-	<paper-button id="moveButton" affirmative>   Move    </paper-button>
 </template>

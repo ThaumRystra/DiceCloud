@@ -6,12 +6,12 @@
 </template>
 
 <template name="attributeDialogView">
-	<div layout horizontal center-justified end>
-		<div class="display2">
+	<div class="layout horizontal center-justified end">
+		<div class="paper-font-display2">
 			{{attributeValue}}
 		</div>
 		{{#if adjustment}}
-			<div class="display1">
+			<div class="paper-font-display1">
 				/{{attributeBase}}
 			</div>
 		{{/if}}
@@ -19,50 +19,52 @@
 
 	<hr class="vertMargin">
 
-	<table class="summaryTable">
-		{{#each baseEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>Base: {{statValue}}</td>
+	<div class="layout vertical center">
+		<table class="summaryTable">
+			{{#each baseEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>Base: {{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each addEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>{{signedString statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each mulEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>&times; {{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each minEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>Min: {{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#each maxEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>Max: {{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#if adjustment}}
+				<tr class="paper-font-body2">
+					<td>Base Value</td>
+					<td>{{attributeBase}}</td>
+				</tr>
+				<tr>
+					<td>Adjustment</td>
+					<td>{{signedString adjustment}}</td>
+				</tr>
+			{{/if}}
+			<tr class="paper-font-body2">
+				<td>Total</td>
+				<td>{{attributeValue}}</td>
 			</tr>
-		{{/each}}
-		{{#each addEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>{{signedString statValue}}</td>
-			</tr>
-		{{/each}}
-		{{#each mulEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>&times; {{statValue}}</td>
-			</tr>
-		{{/each}}
-		{{#each minEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>Min: {{statValue}}</td>
-			</tr>
-		{{/each}}
-		{{#each maxEffects}}
-			<tr>
-				<td>{{sourceName}}</td>
-				<td>Max: {{statValue}}</td>
-			</tr>
-		{{/each}}
-		{{#if adjustment}}
-			<tr class="body2">
-				<td>Base Value</td>
-				<td>{{attributeBase}}</td>
-			</tr>
-			<tr>
-				<td>Adjustment</td>
-				<td>{{signedString adjustment}}</td>
-			</tr>
-		{{/if}}
-		<tr class="body2">
-			<td>Total</td>
-			<td>{{attributeValue}}</td>
-		</tr>
-	</table>
+		</table>
+	</div>
 </template>

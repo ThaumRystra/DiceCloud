@@ -13,7 +13,7 @@
 	"disallowMixedSpacesAndTabs": "smart",
 	"disallowTrailingWhitespace": true,
 	"disallowSpaceAfterPrefixUnaryOperators": true,
-	"disallowMultipleVarDecl": true,
+	"disallowMultipleVarDecl": false,
 	"disallowNewlineBeforeBlockStatements": true,
 	"disallowKeywordsOnNewLine": ["else"],
 

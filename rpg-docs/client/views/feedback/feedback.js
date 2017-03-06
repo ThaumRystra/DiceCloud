@@ -18,16 +18,19 @@ Template.feedback.events({
 	"input #feedbackDescription": function(event, instance) {
 		instance.description.set(instance.find("#feedbackDescription").value);
 	},
-	"tap #sendButton": function(event, instance) {
+	"click #sendButton": function(event, instance) {
 		var report = {};
 		report.title = instance.find("#feedbackTitle").value;
 		report.severity = instance.find("#severity").value;
-		report.type = instance.find(".typeMenu").selected;
+		report.type = instance.find(".typeMenu").value;
 		report.description = instance.find("#feedbackDescription").value;
 		report.metaData = {
 			url: window.location.href,
 			session: _.pairs(Session.keys),
 		};
-		Meteor.call("insertReport", report);
-	}
+		popDialogStack(report);
+	},
+	"click #cancelButton": function(event, template){
+		popDialogStack();
+	},
 });

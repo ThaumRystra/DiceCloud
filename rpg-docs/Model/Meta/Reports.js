@@ -17,8 +17,8 @@ Schemas.Report = new SimpleSchema({
 	},
 	type: {
 		type: String,
-		allowedValues: ["bug", "change", "feature", "general"],
-		defaultValue: "bug",
+		allowedValues: ["General Feedback", "Bug", "Suggested Change", "Feature Request"],
+		defaultValue: "General Feedback",
 	},
 	//the immediate impact of doing this action (eg. -1 rages)
 	severity: {

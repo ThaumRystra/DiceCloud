@@ -1,169 +1,160 @@
 <template name="inventory">
-	<div fit>
-		<div id="inventory" class="scroll-y" fit>
-			<div class="column-container">
-				<!--Net Worth-->
-				<div>
-				<paper-shadow class="card">
-					<div class="white top" layout horizontal center>
-						<div class="subhead" flex>
-							Net Worth
-						</div>
-						<div>
-							{{valueString netWorth}}
-						</div>
+	<div id="inventory" class="animation-slider">
+		<div class="column-container">
+			<!--Net Worth-->
+			<div>
+			<paper-material class="card">
+				<div class="white top layout horizontal center">
+					<div class="paper-font-subhead flex">
+						Net Worth
 					</div>
-				</paper-shadow>
-				</div>
-				<!--Weight Carried-->
-				<div>
-				<paper-shadow class="card"
-							  hero-id="main" {{detailHero "weightCarried" _id}}>
-					<div class="top green white-text weightCarried"
-						 hero-id="toolbar" {{detailHero "weightCarried" _id}}
-						 layout horizontal center>
-						<div class="subhead" flex>
-							Weight Carried
-						</div>
-						<div>
-							{{round weightCarried}}lbs
-						</div>
-					</div>
-					<div class="bottom green" style="padding: 0;">
-						{{> carryCapacityBar}}
-					</div>
-					{{#if encumberedBuffs.count}}
-					<div class="bottom list">
-						{{#each encumberedBuffs}}
-						<div class="item-slot">
-							<div class="item buff"
-								 hero-id="main" {{detailHero}}
-								 layout horizontal center>
-								<div flex>
-									<core-icon icon="work"
-											   style="margin-right: 16px">
-									</core-icon>
-									{{name}}
-								</div>
-							</div>
-						</div>
-						{{/each}}
-					</div>
-					{{/if}}
-				</paper-shadow>
-				</div>
-				<!--Equipment-->
-				<div>
-				<paper-shadow class="card equipmentContainer">
-					<div class="white top" layout horizontal center>
-						<div class="subhead" flex>
-							Equipment
-						</div>
-						<div class="caption" style="margin-right: 8px">
-							{{valueString equipmentValue}}
-						</div>
-						<div class="caption">
-							{{round equipmentWeight}}lbs
-						</div>
-					</div>
-					<div flex class="bottom list">
-						{{#if attuned.count}}
-							<div class="subhead">Attuned</div>
-						{{/if}}
-						{{#each attuned}}
-							{{>inventoryItem}}
-						{{/each}}
-						{{#if attuned.count}}
-							<div class="subhead">Equipment</div>
-						{{/if}}
-						{{#each equipment}}
-							{{>inventoryItem}}
-						{{/each}}
-					</div>
-				</paper-shadow>
-				</div>
-				<!--Carried Items-->
-				<div>
-				<paper-shadow class="card carriedContainer">
-					<div class="white top" layout horizontal center>
-						<div class="subhead" flex>
-							Carried
-						</div>
-						<div class="caption" style="margin-right: 8px">
-							{{valueString carriedValue}}
-						</div>
-						<div class="caption">
-							{{round carriedWeight}}lbs
-						</div>
-					</div>
-					<div flex class="bottom list">
-						{{#each carriedItems}}
-							{{>inventoryItem}}
-						{{/each}}
-					</div>
-				</paper-shadow>
-				</div>
-				{{#each containers}}
 					<div>
-					<paper-shadow class="card itemContainer"
-								  hero-id="main" {{detailHero}}>
-						<div class="top {{colorClass}}"
-							 hero-id="toolbar" {{detailHero}}
-							 layout horizontal center>
-							<div class="subhead" flex
-								 hero-id="title" {{detailHero}}>
+						{{valueString netWorth}}
+					</div>
+				</div>
+			</paper-material>
+			</div>
+			<!--Weight Carried-->
+			<div>
+			<paper-material class="card">
+				<div class="top green white-text weightCarried layout horizontal center">
+					<div class="paper-font-subhead" flex>
+						Weight Carried
+					</div>
+					<div>
+						{{round weightCarried}}lbs
+					</div>
+				</div>
+				<div class="bottom green" style="padding: 0;">
+					{{> carryCapacityBar}}
+				</div>
+				{{#if encumberedBuffs.count}}
+				<div class="bottom list">
+					{{#each encumberedBuffs}}
+					<div class="item-slot">
+						<div class="item buff layout horizontal center">
+							<div class="flex">
+								<iron-icon icon="work"
+										   style="margin-right: 16px">
+								</iron-icon>
 								{{name}}
 							</div>
-							<div class="caption" style="margin-right: 8px">
-								{{valueString totalValue}}
-							</div>
-							<div class="caption" style="margin-right: 8px">
-								{{round totalWeight}}lbs
-							</div>
-							<core-tooltip label="Container carried" position="left">
-								<paper-checkbox class="carriedCheckbox"
-												disabled={{#unless canEditCharacter charId}}true{{/unless}}
-												checked={{isCarried}}>
-								</paper-checkbox>
-							</core-tooltip>
 						</div>
-						<div class="bottom list">
-							{{#each items ../_id _id}}
-								{{>inventoryItem}}
-							{{/each}}
-						</div>
-					</paper-shadow>
 					</div>
-				{{/each}}
+					{{/each}}
+				</div>
+				{{/if}}
+			</paper-material>
 			</div>
-			<div class="fab-buffer"></div>
+			<!--Equipment-->
+			<div>
+			<paper-material class="card equipmentContainer">
+				<div class="white top layout horizontal center">
+					<div class="paper-font-subhead flex">
+						Equipment
+					</div>
+					<div class="paper-font-caption" style="margin-right: 8px">
+						{{valueString equipmentValue}}
+					</div>
+					<div class="paper-font-caption">
+						{{round equipmentWeight}}lbs
+					</div>
+				</div>
+				<div flex class="bottom list">
+					{{#if attuned.count}}
+						<div class="paper-font-subhead">Attuned</div>
+					{{/if}}
+					{{#each attuned}}
+						{{>inventoryItem}}
+					{{/each}}
+					{{#if attuned.count}}
+						<div class="paper-font-subhead">Equipment</div>
+					{{/if}}
+					{{#each equipment}}
+						{{>inventoryItem}}
+					{{/each}}
+				</div>
+			</paper-material>
+			</div>
+			<!--Carried Items-->
+			<div>
+			<paper-material class="card carriedContainer">
+				<div class="white top layout horizontal center">
+					<div class="paper-font-subhead flex">
+						Carried
+					</div>
+					<div class="paper-font-caption" style="margin-right: 8px">
+						{{valueString carriedValue}}
+					</div>
+					<div class="paper-font-caption">
+						{{round carriedWeight}}lbs
+					</div>
+				</div>
+				<div flex class="bottom list">
+					{{#each carriedItems}}
+						{{>inventoryItem}}
+					{{/each}}
+				</div>
+			</paper-material>
+			</div>
+			{{#each containers}}
+				<div>
+				<paper-material class="card itemContainer" data-id={{_id}}>
+					<div class="top {{colorClass}} layout horizontal center">
+						<div class="paper-font-subhead flex">
+							{{name}}
+						</div>
+						<div class="paper-font-caption" style="margin-right: 8px">
+							{{valueString totalValue}}
+						</div>
+						<div class="paper-font-caption" style="margin-right: 8px">
+							{{round totalWeight}}lbs
+						</div>
+						<div>
+							<paper-checkbox class="carriedCheckbox"
+											disabled={{#unless canEditCharacter charId}}true{{/unless}}
+											checked={{isCarried}}>
+							</paper-checkbox>
+							<paper-tooltip position="left"> Container carried</paper-tooltip>
+						</div>
+					</div>
+					<div class="bottom list">
+						{{#each items ../_id _id}}
+							{{>inventoryItem}}
+						{{/each}}
+					</div>
+				</paper-material>
+				</div>
+			{{/each}}
 		</div>
-		{{#if canEditCharacter _id}}
-			{{#fabMenu}}
-				<core-tooltip label="New container" position="left">
-					<paper-fab icon="work"
-							   class="addContainer"
-							   mini>
-					</paper-fab>
-				</core-tooltip>
-				<core-tooltip label="New item" position="left">
-					<paper-fab icon="note-add"
-							   class="addItem"
-							   mini>
-					</paper-fab>
-				</core-tooltip>
-			{{/fabMenu}}
-		{{/if}}
+		<div class="fab-buffer"></div>
 	</div>
+	{{#if canEditCharacter _id}}
+		{{#fabMenu}}
+			<div>
+				<paper-fab icon="work"
+						   class="addContainer"
+						   mini>
+				</paper-fab>
+				<paper-tooltip position="left"> New container </paper-tooltip>
+			</div>
+			<div>
+				<paper-fab icon="note-add"
+						   class="addItem"
+						   mini>
+				</paper-fab>
+				<paper-tooltip position="left"> New item </paper-tooltip>
+			</div>
+		{{/fabMenu}}
+	{{/if}}
 </template>
 
 <template name="inventoryItem">
 	<div class="item-slot">
-		<div class="item {{hidden}} inventoryItem"
-					hero-id="main" {{detailHero}}
-					layout horizontal center
-			 		draggable={{canEditCharacter charId}}>
-			<div flex class="itemName">
+		<div class="item {{hidden}} inventoryItem layout horizontal center"
+	 		 draggable={{canEditCharacter charId}}
+			 data-id={{_id}}>
+			<div class="itemName flex">
 				{{#if ne1 quantity}}{{quantity}}&nbsp;{{/if}}{{pluralName}}
 			</div>
 			{{#if settings.showIncrement}}{{#if canEditCharacter charId}}

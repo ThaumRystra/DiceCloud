@@ -1,10 +1,5 @@
 #accountSummary {
-	padding: 16px;
 	min-height: 146px;
-	background-image: url(/png/paper-dice-crown.png);
-  	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center center;
 	color: white;
 }
 
@@ -16,10 +11,32 @@
 	padding: 16px;
 }
 
-.layout > core-header-panel {
-	height: 100%;
+#navPanel paper-icon-item {
+	background: white;
+	cursor: pointer;
 }
 
-.layout > core-animated-pages {
+app-drawer-layout.layout {
+	z-index: 0;
+}
+
+#accountSummary > #background {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+}
+
+#accountSummary > #background > #backgroundFrontLayer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 	height: 100%;
+	pointer-events: none;
+	background-size: cover;
+	background-image: url(/png/paper-dice-crown.png);
 }

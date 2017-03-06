@@ -1,3 +1,7 @@
+Template.splitStackDialog.onRendered(function(){
+	this.find("#quantityInput").focus();
+});
+
 Template.splitStackDialog.helpers({
 	quantity: function(){
 		var item = Items.findOne(this.id);
@@ -6,22 +10,26 @@ Template.splitStackDialog.helpers({
 });
 
 Template.splitStackDialog.events({
-	"tap #moveButton": function(event, instance){
+	"click #moveButton": function(event, instance){
 		Meteor.call(
 			"splitItemToParent",
 			this.id,
 			+instance.find("#quantityInput").value,
 			{collection: this.parentCollection , id: this.parentId}
 		);
+		popDialogStack();
 	},
-	"tap #oneButton":function(event, instance){
+	"click #cancelButton": function(event, instance){
+		popDialogStack();
+	},
+	"click #oneButton":function(event, instance){
 		instance.find("#quantityInput").value = 1;
 	},
-	"tap #halfButton":function(event, instance){
+	"click #halfButton":function(event, instance){
 		var val = Math.round(Items.findOne(this.id).quantity / 2);
 		instance.find("#quantityInput").value = val;
 	},
-	"tap #allButton":function(event, instance){
+	"click #allButton":function(event, instance){
 		instance.find("#quantityInput").value = Items.findOne(this.id).quantity;
 	},
 });

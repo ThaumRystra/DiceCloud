@@ -1,108 +1,91 @@
 <template name="journal">
-	<div fit>
-		<div id="journal" class="scroll-y" fit>
-			<div class="column-container">
-				<!--Experience Table-->
-				<div><paper-shadow class="card experiencesCard"
-							  hero-id="main" {{detailHero}}>
-					<div class="top white subhead"
-						 hero-id="toolbar" {{detailHero}}
-						 layout horizontal center>
-						<div flex>Experience</div>
-						<div >{{characterCalculate "experience" _id}} XP</div>
-						<paper-icon-button class="black54" id="addXP" icon="add"
-										   disabled={{#unless canEditCharacter _id}}true{{/unless}}></paper-icon-button>
-					</div>
-					<div class="bottom list">
-						{{#each experiences}}
-							<div class="item-slot">
-								<div class="item experience"
-									 hero-id="main" {{detailHero}}
-									 layout horizontal center>
-									<div flex>{{name}}</div>
-									<div class="xpValue">{{value}}</div>
-								</div>
-							</div>
-						{{/each}}
-					</div>
-					{{#if moreExperiencesOrCollapse}}
-						<div layout horizontal center end-justified>
-							<paper-button id="moreExperiences"
-										  disabled={{notMoreExperiences}}>
-								Load More
-							</paper-button>
-							<paper-button id="lessExperiences"
-										  disabled={{cantCollapse}}>
-								Collapse
-							</paper-button>
-						</div>
-					{{/if}}
-				</paper-shadow></div>
-				<!--Class Table-->
-				<div><paper-shadow class="card"
-							  hero-id="main" {{detailHero}}>
-					<div class="white top"
-						 hero-id="toolbar" {{detailHero}}
-						 layout horizontal center>
-						<div flex>
-							<div class="containerName subhead">
-								Level {{characterCalculate "level" _id}}
-							</div>
-							{{#if nextLevelXP}}
-								<div class="caption">
-									Next Level: {{nextLevelXP}}XP
-								</div>
-							{{/if}}
-						</div>
-						<paper-icon-button class="black54"
-										   id="addClassButton"
-										   icon="add"
-										   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
-						</paper-icon-button>
-					</div>
-					<div class="bottom list">
-						<div class="item-slot">
-							<div class="item race"
-								 hero-id="main" {{detailHero "race" _id}}
-								 layout horizontal center>
-								{{race}}
-							</div>
-						</div>
-						{{#each classes}}
-							<div class="item-slot">
-								<div class="item class"
-									 hero-id="main" {{detailHero}}
-									 layout horizontal center>
-									{{name}}&nbsp;{{level}}
-								</div>
-							</div>
-						{{/each}}
-					</div>
-				</paper-shadow></div>
-				<!--Notes-->
-				{{#each notes}}
-				<div>
-					<paper-shadow class="card"  hero-id="main" {{detailHero}}>
-						<div class="top {{colorClass}} noteTop subhead"
-							 hero-id="toolbar" {{detailHero}}
-							 layout horizontal center>
-							{{name}}
-						</div>
-						<div class="bottom">{{#markdown}}{{description}}{{/markdown}}</div>
-					</paper-shadow>
+	<div class="column-container  animation-slider">
+		<!--Experience Table-->
+		<div>
+			<paper-material class="card experiencesCard">
+				<div class="top white subhead layout horizontal center">
+					<div class="flex">Experience</div>
+					<div>{{characterCalculate "experience" _id}} XP</div>
+					<paper-icon-button class="black54" id="addXP" icon="add"
+									   disabled={{#unless canEditCharacter _id}}true{{/unless}}></paper-icon-button>
 				</div>
-				{{/each}}
-			</div>
-			<div class="fab-buffer"></div>
+				<div class="bottom list">
+					{{#each experiences}}
+						<div class="item-slot">
+							<div class="item experience layout horizontal center" data-id={{_id}}>
+								<div class="flex">{{name}}</div>
+								<div class="xpValue">{{value}}</div>
+							</div>
+						</div>
+					{{/each}}
+				</div>
+				{{#if moreExperiencesOrCollapse}}
+					<div class="layout horizontal center end-justified">
+						<paper-button id="moreExperiences" disabled={{notMoreExperiences}}>
+							Load More
+						</paper-button>
+						<paper-button id="lessExperiences" disabled={{cantCollapse}}>
+							Collapse
+						</paper-button>
+					</div>
+				{{/if}}
+			</paper-material>
 		</div>
+		<!--Class Table-->
+		<div>
+			<paper-material class="card">
+				<div class="white top layout horizontal center">
+					<div class="flex">
+						<div class="containerName paper-font-subhead">
+							Level {{characterCalculate "level" _id}}
+						</div>
+						{{#if nextLevelXP}}
+							<div class="paper-font-caption">
+								Next Level: {{nextLevelXP}}XP
+							</div>
+						{{/if}}
+					</div>
+					<paper-icon-button class="black54"
+									   id="addClassButton"
+									   icon="add"
+									   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
+					</paper-icon-button>
+				</div>
+				<div class="bottom list">
+					<div class="item-slot">
+						<div class="item race layout horizontal center">
+							{{race}}
+						</div>
+					</div>
+					{{#each classes}}
+						<div class="item-slot">
+							<div class="item class layout horizontal center" data-id={{_id}}>
+								{{name}}&nbsp;{{level}}
+							</div>
+						</div>
+					{{/each}}
+				</div>
+			</paper-material>
+		</div>
+		<!--Notes-->
+		{{#each notes}}
+			<div>
+				<paper-material class="card note" data-id={{_id}}>
+					<div class="top {{colorClass}} noteTop paper-font-subhead layout horizontal center">
+						{{name}}
+					</div>
+					<div class="bottom">
+						{{#markdown}}{{evaluateShortString charId description}}{{/markdown}}
+					</div>
+				</paper-material>
+			</div>
+		{{/each}}
 	</div>
+	<div class="fab-buffer"></div>
 	{{#if canEditCharacter _id}}
-	<paper-fab id="addNote"
+		<paper-fab id="addNote"
 				   class="floatyButton"
 				   icon="add"
-				   title="Add"
-				   role="button"
-				   tabindex="0"
-				   hero-id="main"></paper-fab>
+				   title="Add"></paper-fab>
 	{{/if}}
 </template>

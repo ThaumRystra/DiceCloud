@@ -1,9 +1,8 @@
 <!--needs to be given charId, parentId and parentCollection-->
 <template name="effectsEditList">
 	{{#if effects.count}}
-		<hr class="vertMargin">
 		<div id="effects">
-			<h2>Effects</h2>
+			<div class="paper-font-title">Effects</div>
 			{{#each effects}}
 				{{>effectEdit}}
 			{{/each}}

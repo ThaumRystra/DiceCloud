@@ -1,44 +1,38 @@
 <template name="baseDialog">
-	<div class="{{class}} top subhead"
-		 style="height: 72px;"
-		 hero-id="toolbar" hero
-		 layout horizontal center>
-		<paper-icon-button id="backButton" 
-						   icon="arrow-back">
-		</paper-icon-button>
-		<div flex>{{title}}</div>
-		{{#if editing}}
-			{{#unless hideDelete}}
-				<paper-icon-button id="deleteButton"
-								   role="button"
-								   tabindex="0"
-								   icon="delete"
-								   aria-label="Delete Feature">
-				</paper-icon-button>
-			{{/unless}}
-			{{#unless hideColor}}
-				{{> colorDropdown}}
-			{{/unless}}
-			<paper-icon-button id="doneEditingButton"
-							   icon="done"
-							   aria-label="Delete Feature">
+	<div class="fit base-dialog layout vertical">
+		<app-toolbar class={{class}}>
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
 			</paper-icon-button>
-		{{else}}
-			{{#if showEdit}}
-				<paper-icon-button id="editButton"
-								   icon="create"
-								   aria-label="Delete Feature">
+			<div main-title>{{title}}</div>
+			{{#if editing}}
+				{{#unless hideDelete}}
+					<paper-icon-button id="deleteButton"
+									   role="button"
+									   tabindex="0"
+									   icon="delete">
+					</paper-icon-button>
+				{{/unless}}
+				{{#unless hideColor}}
+					{{> colorDropdown}}
+				{{/unless}}
+				<paper-icon-button id="doneEditingButton"
+								   icon="done">
 				</paper-icon-button>
+			{{else}}
+				{{#if showEdit}}
+					<paper-icon-button id="editButton"
+									   icon="create">
+					</paper-icon-button>
+				{{/if}}
 			{{/if}}
-		{{/if}}
-	</div>
-	<div class="bottom scroll-y"
-		 style="padding: 24px"
-		 flex>
-		{{#unless editing}}
-			{{> UI.contentBlock}}
-		{{else}}
-			{{> UI.elseBlock}}
-		{{/unless}}
+		</app-toolbar>
+		<div class="form flex scroll-y">
+			{{#unless editing}}
+				{{> UI.contentBlock}}
+			{{else}}
+				{{> UI.elseBlock}}
+			{{/unless}}
+		</div>
 	</div>
 </template>

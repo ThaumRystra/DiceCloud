@@ -2,14 +2,6 @@
 	cursor: pointer;
 }
 
-.features {
-	display: flex !important;
-	justify-content: center;
-	align-items: stretch;
-	flex-wrap: wrap;
-	padding: 4px;
-}
-
 .featureCardTop {
 	margin-bottom: 8px;
 }
@@ -18,7 +10,7 @@
 	white-space: pre-line;
 }
 
-.resourceCards paper-shadow.healthCard {
+.resourceCards paper-material.healthCard {
 	width: 100%;
 }
 

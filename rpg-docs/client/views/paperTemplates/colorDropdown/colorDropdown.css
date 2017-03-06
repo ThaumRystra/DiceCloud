@@ -1,9 +1,4 @@
-html /deep/ .colorDropdown paper-item{
-	width: 150px;
-}
-
-html /deep/ .colorDropdown {
-	top: 18px;
-	padding: 0.5em 0 0.25em 16px;
-	width: 150px;
+.colorDropdown paper-item {
+    width: 150px;
+	cursor: pointer;
 }

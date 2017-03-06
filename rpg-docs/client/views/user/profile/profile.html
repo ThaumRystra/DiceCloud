@@ -1,22 +1,47 @@
 <template name="profile">
 	{{#with currentUser}}
-		<core-toolbar class="blue-grey white-text">
-			<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
-			<div id="username" class="clickable" flex>
-				{{profileName}}
-			</div>
-		</core-toolbar>
-		<div id="userProfile" class="padded">
-			<div>
-				<h2>Email</h2>
-				{{#each emails}}
-					<div layout horizontal>
-						<p>{{address}}</p>
+		<app-header-layout has-scrolling-region fullbleed class="profile">
+			<app-header class="app-grey white-text" fixed effects="waterfall">
+				<app-toolbar class="app-grey white-text">
+					<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+					<div flex>Account</div>
+				</app-toolbar>
+			</app-header>
+			<div class="layout vertical center">
+				<paper-material style="margin-top: 8px; padding: 16px; background: #fff;">
+					<table>
+						<tr>
+							<td>Username</td>
+							<td>{{profileName}}</td>
+							<td>
+								<paper-icon-button icon="create"  class="username-edit" style="background: #fff;">
+								</paper-icon-button>
+							</td>
+						</tr>
+						<tr>
+							<td>Email</td>
+							<td class="layout vertical">
+								{{#each emails}}
+									<div>
+										{{address}}
+										{{#if verified}}
+											<span>
+												<iron-icon icon="check"></iron-icon>
+												<paper-tooltip>Verified</paper-tooltip>
+											</span>
+										{{/if}}
+									</div>
+								{{/each}}
+							</td>
+							<td></td>
+						</tr>
+					</table>
+					<div style="max-width: 250px">
+						{{> atForm}}
 					</div>
-				{{/each}}
+					{{> atNavButton }}
+				</paper-material>
 			</div>
-		</div>
-		{{> atForm}}
-		{{> atNavButton }}
+		</app-header-layout>
 	{{/with}}
 </template>

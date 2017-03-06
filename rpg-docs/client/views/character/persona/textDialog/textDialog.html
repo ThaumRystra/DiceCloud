@@ -1,5 +1,5 @@
 <template name="textDialog">
-	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true" startEditing=startEditing}}
+	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true"}}
 		<div>{{#markdown}}{{evaluateString charId value}}{{/markdown}}</div>
 	{{else}}
 		{{> textDialogEdit}}
@@ -7,9 +7,6 @@
 </template>
 
 <template name="textDialogEdit">
-	<paper-input-decorator label={{title}} floatinglabel layout vertical>
-		<paper-autogrow-textarea>
-			<textarea id="textInput" placeholder value={{value}}></textarea>
-		</paper-autogrow-textarea>
-	</paper-input-decorator>
+	<paper-textarea label={{title}} id="textInput" value={{value}}>
+	</paper-textarea>
 </template>

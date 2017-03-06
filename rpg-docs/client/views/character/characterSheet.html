@@ -1,54 +1,58 @@
 <template name="characterSheet">
-	<!--<div tool horizontal layout flex end-justified class="bottom">Title-bottom</div>-->
-	<core-toolbar class="medium-tall {{colorClass}}">
-		<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
-		<div flex>
-			{{name}}
-		</div>
-		{{#if canEditCharacter _id}}
-			<div>
-				{{> colorDropdown}}
-			</div>
-			<paper-menu-button>
-				<paper-icon-button icon="more-vert" noink></paper-icon-button>
-				<paper-dropdown class="dropdown" halign="right">
-					<core-menu class="menu" style="color: black; color: rgba(0,0,0,0.87);">
-						<paper-item id="deleteCharacter">
-							<core-icon icon="delete"></core-icon>Delete
-						</paper-item>
-						<paper-item id="shareCharacter">
-							<core-icon icon="social:share"></core-icon>Share
-						</paper-item>
-						<paper-item id="characterSettings">
-							<core-icon icon="settings"></core-icon>Settings
-						</paper-item>
-					</core-menu>
-				</paper-dropdown>
-			</paper-menu-button>
-		{{/if}}
-		<div class="bottom fit" horizontal layout>
-			<paper-tabs flex horizontal center layout id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
-				<paper-tab name="stats">Stats</paper-tab>
-				<paper-tab name="features">Features</paper-tab>
-				<paper-tab name="inventory">Inventory</paper-tab>
+	<div class="fit layout vertical character-sheet">
+		<app-header fixed effects="waterfall">
+			<app-toolbar class="medium-tall {{colorClass}}">
+				<div top-item class="layout horizontal center">
+					<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+					<div class="flex character-name">
+						{{name}}
+					</div>
+					{{#if canEditCharacter _id}}
+						{{> colorDropdown}}
+						<paper-menu-button class="character-menu" horizontal-align="right">
+							<paper-icon-button icon="more-vert"  class="dropdown-trigger"></paper-icon-button>
+							<paper-menu class="dropdown-content black87">
+								<paper-icon-item id="deleteCharacter">
+									<iron-icon icon="delete" item-icon></iron-icon>
+									Delete
+								</paper-icon-item>
+								<paper-icon-item id="shareCharacter">
+									<iron-icon icon="social:share" item-icon></iron-icon>
+									Share
+								</paper-icon-item>
+								<paper-icon-item id="characterSettings">
+									<iron-icon icon="settings" item-icon></iron-icon>
+									Settings
+								</paper-icon-item>
+							</paper-menu>
+						</paper-menu-button>
+					{{/if}}
+				</div>
+				<div bottom-item>
+					<paper-tabs id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
+						<paper-tab name="stats">Stats</paper-tab>
+						<paper-tab name="features">Features</paper-tab>
+						<paper-tab name="inventory">Inventory</paper-tab>
+						{{#unless hideSpellcasting}}
+						<paper-tab name="spells">Spells</paper-tab>
+						{{/unless}}
+						<paper-tab name="persona">Persona</paper-tab>
+						<paper-tab name="journal">Journal</paper-tab>
+					</paper-tabs>
+				</div>
+			</app-toolbar>
+		</app-header>
+		<div class="flex" style="position: relative;">
+			<iron-pages id="tabPages" class="fit" selected={{selectedTab}}>
+				<div name="stats" class="tab-page fit">{{> stats}}</div>
+				<div name="features" class="tab-page fit">{{> features}}</div>
+				<div name="inventory" class="tab-page fit">{{> inventory}}</div>
 				{{#unless hideSpellcasting}}
-				<paper-tab name="spells">Spells</paper-tab>
+				<div name="spells" class="tab-page fit">{{> spells}}</div>
 				{{/unless}}
-				<paper-tab name="persona">Persona</paper-tab>
-				<paper-tab name="journal">Journal</paper-tab>
-			</paper-tabs>
+				<div name="persona" class="tab-page fit">{{> persona}}</div>
+				<div name="journal" class="tab-page fit">{{> journal}}</div>
+			</iron-pages>
 		</div>
-	</core-toolbar>
-	<div fit>
-		<core-animated-pages id="tabPages" selected={{selectedTab}} transitions="slide-from-right" fit>
-			<section flex name="stats">{{> stats}}</section>
-			<section flex name="features">{{> features}}</section>
-			<section flex name="inventory">{{> inventory}}</section>
-			{{#unless hideSpellcasting}}
-			<section flex name="spells">{{> spells}}</section>
-			{{/unless}}
-			<section flex name="persona">{{> persona}}</section>
-			<section flex name="journal">{{> journal}}</section>
-		</core-animated-pages>
 	</div>
 </template>

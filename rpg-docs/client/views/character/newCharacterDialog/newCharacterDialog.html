@@ -1,40 +1,27 @@
 <template name="newCharacterDialog">
-	<div>
-		<paper-input id="nameInput" label="Name"></paper-input><br>
-		<paper-input id="genderInput" label="Gender"></paper-input><br>
-		<paper-input id="raceInput" label="Race"></paper-input>
-		<!--
-		<div>
-			<div layout horizontal center-justified>
-				{{pointsUsed}}/<paper-input-decorator><input type="number" value="27"></paper-input-decorator>
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="new-character-dialog flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>New Character</div>
+				</app-toolbar>
+			</app-header>
+			<div class="form">
+				<p>
+					Input the basics of your character, but don't worry, you can always change these values later
+				</p>
+				<paper-input class="nameInput" label="Name" {{errorAtts "name"}}></paper-input><br>
+				<paper-input class="genderInput" label="Gender" {{errorAtts "gender"}}></paper-input><br>
+				<paper-input class="raceInput" label="Race" {{errorAtts "race"}}></paper-input>
 			</div>
-			<div layout horizontal wrap>
-				<div>Strength</div>
-				<paper-slider id="strSlider" min="8" max="15" value="8" secondaryProgress={{secondaryProgress}}></paper-slider>
-			</div>
-			<div layout horizontal wrap>
-				<div>Dexterity</div>
-				<paper-slider id="dexSlider" min="8" max="15" value="8" secondaryProgress={{secondaryProgress}}></paper-slider>
-			</div>
-			<div layout horizontal wrap>
-				<div>Constitution</div>
-				<paper-slider id="conSlider" min="8" max="15" value="8" secondaryProgress={{secondaryProgress}}></paper-slider>
-			</div>
-			<div layout horizontal wrap>
-				<div>Intelligence</div>
-				<paper-slider id="intSlider" min="8" max="15" value="8" secondaryProgress={{secondaryProgress}}></paper-slider>
-			</div>
-			<div layout horizontal wrap>
-				<div>Wisdom</div>
-				<paper-slider id="wisSlider" min="8" max="15" value="8" secondaryProgress={{secondaryProgress}}></paper-slider>
-			</div>
-			<div layout horizontal wrap>
-				<div>Charisma</div>
-				<paper-slider id="chaSlider" min="8" max="15" value="8" secondaryProgress={{secondaryProgress}}></paper-slider>
-			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="cancelButton">
+				Cancel
+			</paper-button>
+			<paper-button class="addButton" disabled={{invalid}}>
+				Add
+			</paper-button>
 		</div>
-		-->
 	</div>
-	<paper-button id="cancelButton" affirmative> Cancel </paper-button>
-	<paper-button id="addButton"    affirmative> Add    </paper-button>
 </template>

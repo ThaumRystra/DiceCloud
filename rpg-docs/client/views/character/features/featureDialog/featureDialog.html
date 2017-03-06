@@ -10,10 +10,9 @@
 
 <template name="featureDetails">
 	{{#if or canEnable hasUses}}
-		<div layout horizontal center justified wrap>
+		<div class="layout horizontal center justified wrap">
 			{{#if canEnable}}
-				<div>enabled:</div>
-				<paper-checkbox class="sideMargin" checked={{enabled}}></paper-checkbox>
+				<paper-checkbox class="sideMargin" checked={{enabled}}>enabled</paper-checkbox>
 			{{/if}}
 			{{#if hasUses}}
 				<div class="subhead" style="margin-right: 16px">
@@ -21,7 +20,7 @@
 				</div>
 			{{/if}}
 			{{#if hasUses}}
-				<div layout horizontal>
+				<div class="layout horizontal">
 					<paper-button class="useFeature" disabled={{noUsesLeft}}>Use</paper-button>
 					<paper-button class="resetFeature" disabled={{usesFull}}>Reset</paper-button>
 				</div>
@@ -41,44 +40,36 @@
 
 <template name="featureEdit">
 	<!--name-->
-	<paper-input id="featureNameInput" class="fullwidth" label="Name" floatinglabel value={{name}}></paper-input>
+	<paper-input id="featureNameInput" class="fullwidth" label="Name" value={{name}}></paper-input>
 
-	<hr class="vertMargin">
-
-	<div layout horizontal center style="height: 60px;">
-		<paper-dropdown-menu id="enabledDropdown" label="Enable Feature">
-			<paper-dropdown layered class="dropdown">
-				<core-menu id="enabledMenu" class="menu"  selected={{enabledSelection}} on-tap="onStatMenuTap">
-					<paper-item name="alwaysEnabled"> Always Enabled </paper-item>
-					<paper-item name="enabled">       Enabled        </paper-item>
-					<paper-item name="disabled">      Disabled       </paper-item>
-				</core-menu>
-			</paper-dropdown>
+	<div class="layout horizontal center wrap justified">
+		<paper-dropdown-menu class=flex label="Enable Feature" style="flex-basis: 150px; max-width: 200px;">
+			<dicecloud-selector selected={{enabledSelection}} class="dropdown-content enabled-dropdown">
+				<paper-item name="alwaysEnabled" style="width: 150px;">
+					Always Enabled
+				</paper-item>
+				<paper-item name="enabled">
+					Enabled
+				</paper-item>
+				<paper-item name="disabled">
+					Disabled
+				</paper-item>
+			</dicecloud-selector>
 		</paper-dropdown-menu>
-		<div layout horizontal center class="sideMargin">
-			<div>Limit Uses: </div>
-			<paper-toggle-button id="limitUseCheck"
-								 class="sideMargin"
-								 checked={{usesSet}}
-								 role="button" 
-								 aria-pressed="false"
-								 tabindex="0"
-								 touch-action="pan-y">
-			</paper-toggle-button>
-		</div>
+		<paper-toggle-button id="limitUseCheck" checked={{usesSet}} style="margin: 0 16px; height: 62px;">
+			 Limit uses
+		</paper-toggle-button>
 		{{#if usesSet}}
-			<paper-input flex id="usesInput" label="Uses" floatinglabel value={{uses}}></paper-input>
+			<paper-input id="usesInput" type="number" allowed-pattern="[0-9]" class="flex"
+						label="Uses" value={{uses}} style="flex-basis: 100px; max-width: 200px">
+			</paper-input>
+		{{else}}
+			<div class="flex" style="flex-basis: 100px; max-width: 200px"></div>
 		{{/if}}
 	</div>
 
-	<hr class="vertMargin">
-
 	<!--description-->
-	<paper-input-decorator label="Description" floatinglabel layout vertical>
-		<paper-autogrow-textarea>
-			<textarea id="featureDescriptionInput" placeholder aria-label="Description" value={{description}}></textarea>
-		</paper-autogrow-textarea>
-	</paper-input-decorator>
+	<paper-textarea label="Description" id="featureDescriptionInput" value={{description}}></paper-textarea>
 
 	{{> effectsEditList parentId=_id parentCollection="Features" charId=charId name=name enabled=enabled}}
 	{{> proficiencyEditList parentId=_id parentCollection="Features" charId=charId enabled=enabled}}

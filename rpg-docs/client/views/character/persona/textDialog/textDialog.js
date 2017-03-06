@@ -7,10 +7,6 @@ Template.textDialog.helpers({
 	}
 });
 
-Template.textDialogEdit.onRendered(function(){
-	updatePolymerInputs(this);
-});
-
 Template.textDialogEdit.helpers({
 	value: function(){
 		var fieldSelector = {fields: {}};
@@ -21,10 +17,13 @@ Template.textDialogEdit.helpers({
 });
 
 Template.textDialogEdit.events({
-	"change #textInput": function(event){
+	"input #textInput": _.debounce(function(event){
 		var input = event.currentTarget.value;
-		var setter = {$set: {}};
-		setter.$set[this.field] = input;
-		Characters.update(this.charId, setter);
-	}
+		Characters.update(this.charId, {
+			$set: {[this.field]: input}
+		}, {
+			removeEmptyStrings: false,
+			trimStrings: false,
+		});
+	}, 300),
 });

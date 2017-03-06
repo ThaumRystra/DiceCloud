@@ -16,7 +16,6 @@ Template.persona.helpers({
 		char.field = "details";
 		char.title = char.name;
 		char.color = "d";
-		char.startEditing = true;
 		return char;
 	},
 	characterField: function(field, title){
@@ -39,28 +38,27 @@ Template.persona.helpers({
 });
 
 Template.persona.events({
-	"tap .characterField": function(event){
+	"click .characterField": function(event){
 		if (this.field == "details"){
 			this.charId = Template.parentData()._id;
-			GlobalUI.setDetail({
+			pushDialogStack({
 				template: "personaDetailsDialog",
 				data:     this,
-				heroId:   this._id + this.field,
+				element: event.currentTarget.parentElement,
 			});
 		} else {
 			var template = "textDialog";
 			if (this.field === "backstory") template = "backgroundDialog";
 			var charId = Template.parentData()._id;
-			GlobalUI.setDetail({
+			pushDialogStack({
 				template: template,
 				data: {
 					charId: charId,
 					field: this.field,
 					title: this.title,
 					color: this.color,
-					startEditing: true,
 				},
-				heroId:   this._id + this.field,
+				element: event.currentTarget.parentElement,
 			});
 		}
 	}
