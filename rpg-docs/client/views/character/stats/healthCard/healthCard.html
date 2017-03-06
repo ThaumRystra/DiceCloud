@@ -13,8 +13,6 @@
 		<div class="right flex layout vertical center-justified" style="min-width: 180px;">
 			<div class="layout horizontal">
 				<paper-diff-slider id="hitPointSlider"
-								   value={{characterCalculate "attributeValue" _id "hitPoints"}}
-								   max={{characterCalculate "attributeBase" _id "hitPoints"}}
 								   editable pin
 								   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 				</paper-diff-slider>

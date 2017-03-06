@@ -1,3 +1,26 @@
+const currentId = () => Template.currentData()._id;
+
+// Use binding to ensure max is always set before value to prevent value clamping poorly
+Template.healthCard.binding({
+	"#hitPointSlider": {
+		max: () => Characters.calculate.attributeBase(currentId() , "hitPoints"),
+		value: () => Characters.calculate.attributeValue(currentId() , "hitPoints"),
+	}
+});
+
+// Reset the old value between characters so that we don't get red health lost
+// bar when changing character
+Template.healthCard.onRendered(function(){
+	let oldId = Template.currentData()._id;
+	this.autorun(() => {
+		const id = Template.currentData()._id;
+		if (oldId !== id){
+			this.find("#hitPointSlider").resetOldValue();
+			oldId = id;
+		}
+	});
+});
+
 Template.healthCard.helpers({
 	tempHitPoints: function(){
 		return TemporaryHitPoints.find({charId: this._id});
