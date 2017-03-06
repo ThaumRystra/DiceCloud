@@ -1,3 +1,5 @@
+// jscs:disable maximumLineLength
+
 ChangeLogs.insert({
 	version: "0.2.0 - First public release",
 	changes: [
@@ -324,5 +326,14 @@ ChangeLogs.insert({
 	version: "0.9.4",
 	changes: [
 		"Fixed app not working on iOS 10",
+	],
+});
+
+ChangeLogs.insert({
+	version: "1.0.0",
+	changes: [
+		"Migrated app from experimental Polymer impementation to stable implemenation",
+		"Replaced character cards with portrait cards",
+		"Replaced old user interface bugs with entirely new bugs",
 	],
 });
