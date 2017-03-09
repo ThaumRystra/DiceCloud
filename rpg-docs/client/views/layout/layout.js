@@ -18,11 +18,10 @@ const closeDrawer = function(instance){
 }
 
 Template.appDrawer.events({
-	"click app-drawer a": function(event, instance){
+	"click a": function(event, instance){
 		closeDrawer(instance);
 	},
 	"click .feedback": function(event, instance) {
-		console.log("feedback clicked");
 		pushDialogStack({
 			template: "feedback",
 			element: event.currentTarget,
