@@ -337,3 +337,11 @@ ChangeLogs.insert({
 		"Replaced old user interface bugs with entirely new bugs",
 	],
 });
+
+ChangeLogs.insert({
+	version: "1.0.1",
+	changes: [
+		"Fixed drawer being hidden by character sheet cards and headers",
+		"Fixed dragging items to characters in the drawer",
+	],
+});
