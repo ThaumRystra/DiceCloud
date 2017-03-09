@@ -2,7 +2,7 @@
 	{{#if characters.count}}
 		<div class="side-list">
 			{{#each characters}}
-				<a href={{pathFor route="characterSheet" data=this}} tabindex="-1" class="side-list-character">
+				<a href={{pathFor route="characterSheet" data=this}} tabindex="-1" class="side-list-character characterRepresentative">
 					<paper-item class="short">
 						<div class="character-name">
 							{{name}}
