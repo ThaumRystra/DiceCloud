@@ -1,6 +1,6 @@
 <template name="itemDialog">
 	{{#with item}}
-		{{#baseDialog title=itemHeading class=colorClass startEditing=../startEditing}}
+		{{#baseDialog title=itemHeading class=colorClass startEditing=../startEditing showLibrary=true}}
 			{{> itemDetails}}
 		{{else}}
 			{{> itemEdit}}

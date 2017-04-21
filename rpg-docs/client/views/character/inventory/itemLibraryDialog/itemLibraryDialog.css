@@ -1,0 +1,7 @@
+.item-library-dialog .item.selected {
+	background-color: #e4e4e4;
+}
+
+.item-library-dialog .paper-font-subhead {
+	color: rgba(0,0,0,0.54);
+}
