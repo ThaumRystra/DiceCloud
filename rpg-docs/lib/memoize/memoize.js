@@ -28,7 +28,7 @@ function CacheObject(func, address, args, cache, context){
 				return;
 			}
 			//if we haven't run this before this flush, reset the counter after the flush
-			if(self.numRun === 0){
+			if (self.numRun === 0){
 				Tracker.afterFlush(function(){
 					self.numRun = 0;
 				});
@@ -38,10 +38,10 @@ function CacheObject(func, address, args, cache, context){
 			//even if we don't use its value, we need to track its dependencies
 			var newValue = func.apply(context, args);
 			//prevent dependency loops, the memoized function shouldn't re-run
-			//more than once per flush
-			if (self.numRun > 1){
+			//more than 10 times per flush
+			if (self.numRun > 10){
 				newValue = NaN;
-				if(_.isNaN(self.currentValue)) return;
+				if (_.isNaN(self.currentValue)) return;
 			}
 			//if the value changed, store the new value
 			if (self.currentValue !== newValue){

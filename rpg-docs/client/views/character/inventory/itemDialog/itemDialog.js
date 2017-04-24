@@ -33,21 +33,6 @@ Template.itemDialog.events({
 	"click #doneEditingButton": function(event, instance){
 		instance.editing.set(false);
 	},
-	"click #libraryButton": function(event, instance){
-		pushDialogStack({
-			template: "itemLibraryDialog",
-			element: event.currentTarget,
-			callback: function(result){
-				if (!result) return;
-				delete result.parent;
-				delete result._id;
-				delete result.charId;
-				result.quantity = 1;
-				Items.update(instance.data.itemId, {$set: result});
-				//TODO Replace the effects with the effects of the library item
-			},
-		})
-	},
 	"color-change": function(event, instance){
 		Items.update(instance.data.itemId, {$set: {color: event.color}});
 	},

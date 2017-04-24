@@ -1,24 +1,30 @@
+const librarySubs = new SubsManager();
+
 Template.itemLibraryDialog.onCreated(function(){
 	this.selectedItem = new ReactiveVar();
 	this.searchTerm = new ReactiveVar();
+	this.ready = new ReactiveVar();
+	this.autorun(() => {
+		var handle = librarySubs.subscribe("standardLibraries");
+		this.ready.set(handle.ready());
+	});
 });
 
 Template.itemLibraryDialog.helpers({
+	ready(){
+		return Template.instance().ready.get();
+	},
 	categories(){
 		return [
 			{name: "Weapons", key: "weapons"},
 			{name: "Armor", key: "armor"},
-			{name: "Adventuring Equipment", key: "adventuringEquipment"},
-			{name: "Tools", key: "tools"},
+			{name: "Adventuring Gear", key: "adventuringGear"},
 		];
 	},
-	itemsInCategory(category){
-		//TODO return a cursor of all library items in the category
-		// As a dummy function returns a random 2 items
-		let count = Items.find({}).count();
-		return Items.find({}, {
-			limit: 5,
-			skip: Math.floor(Math.random() * (count - 5)),
+	itemsInCategory(categoryKey){
+		return LibraryItems.find({
+			library: "SRDLibraryGA3XWsd",
+			"settings.category": categoryKey,
 		});
 	},
 	isSelected(item){
@@ -30,10 +36,12 @@ Template.itemLibraryDialog.helpers({
 	},
 	searchItems(){
 		const searchTerm = Template.instance().searchTerm.get();
-		//TODO return something relevant to the search terms
-		return Items.find({name: {
-			$regex: new RegExp(".*" + searchTerm + ".*", "gi")
-		}});
+		return LibraryItems.find({
+			library: "SRDLibraryGA3XWsd",
+			name: {
+				$regex: new RegExp(".*" + searchTerm + ".*", "gi")
+			},
+		});
 	},
 });
 

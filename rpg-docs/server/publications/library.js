@@ -1,5 +1,9 @@
 Meteor.publish("standardLibraries", function(){
-	return Items.find({charId: {$in: [
-		"SRDLibrary",
-	]}});
+	const standardLibraryIds = [
+		"SRDLibraryGA3XWsd",
+	];
+	return [
+		LibraryItems.find({library: {$in: standardLibraryIds}}),
+		Libraries.find({_id: {$in: standardLibraryIds}}),
+	];
 });

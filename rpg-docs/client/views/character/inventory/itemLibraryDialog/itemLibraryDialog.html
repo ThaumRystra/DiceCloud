@@ -10,26 +10,32 @@
 			</paper-input>
 		</app-toolbar>
 		<div class="flex scroll-y">
-			<div class="items" style="padding:8px">
-				{{#if searchTerm}}
-					{{#if searchItems.count}}
-						{{#each item in searchItems}}
-							{{>libraryItem item=item selected=(isSelected item)}}
-						{{/each}}
+			{{#if ready}}
+				<div class="items" style="padding:8px">
+					{{#if searchTerm}}
+						{{#if searchItems.count}}
+							{{#each item in searchItems}}
+								{{>libraryItem item=item selected=(isSelected item)}}
+							{{/each}}
+						{{else}}
+							No items match "{{searchTerm}}"
+						{{/if}}
 					{{else}}
-						No items match "{{searchTerm}}"
-					{{/if}}
-				{{else}}
-					{{#each category in categories}}
-						<div class="paper-font-subhead">
-							{{category.name}}
-						</div>
-						{{#each item in itemsInCategory category.value}}
-							{{>libraryItem item=item selected=(isSelected item)}}
+						{{#each category in categories}}
+							<div class="paper-font-subhead">
+								{{category.name}}
+							</div>
+							{{#each item in (itemsInCategory category.key)}}
+								{{>libraryItem item=item selected=(isSelected item)}}
+							{{/each}}
 						{{/each}}
-					{{/each}}
-				{{/if}}
-			</div>
+					{{/if}}
+				</div>
+			{{else}}
+				<div class="fit layout vertical center center-justified">
+					<paper-spinner active></paper-spinner>
+				</div>
+			{{/if}}
 		</div>
 		<div class="layout horizontal end-justified">
 			<paper-button class="cancelButton">Cancel</paper-button>
@@ -43,12 +49,6 @@
 		<paper-ripple></paper-ripple>
 		<div class="itemName flex">
 			{{item.name}}
-		</div>
-		<div style="margin: 0 8px">
-			{{item.weight}}
-		</div>
-		<div style="margin: 0 8px">
-			{{item.value}}
 		</div>
 	</div>
 </template>
