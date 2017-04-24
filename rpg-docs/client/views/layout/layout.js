@@ -36,4 +36,10 @@ Template.appDrawer.events({
 		});
 		closeDrawer(instance);
 	},
+	"click .patreon": function(event, instance){
+		ga("send", "event", "externalLink", "patreon");
+	},
+	"click .github": function(event, instance){
+		ga("send", "event", "externalLink", "github");
+	},
 });
