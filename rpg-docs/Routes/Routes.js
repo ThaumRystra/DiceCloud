@@ -62,6 +62,17 @@ Router.map(function() {
 		fastRender: true,
 	});
 
+	this.route("library", {
+		path: "/library",
+		waitOn: function(){
+			return subsManager.subscribe("standardLibraries");
+		},
+		onAfterAction: function() {
+			document.title = appName + " - Library";
+		},
+		fastRender: true,
+	});
+
 	this.route("loading", {
 		path: "/loading"
 	});

@@ -139,6 +139,43 @@ Template.inventory.events({
 			returnElement: () => $(`[data-id='${itemId}']`).get(0),
 		});
 	},
+	"click .libraryItem": function(event, instance){
+		var charId = this._id;
+		var itemId = Items.insert({
+			charId: charId,
+			parent:{
+				id: charId,
+				collection: "Characters",
+			},
+		});
+		pushDialogStack({
+			template: "itemLibraryDialog",
+			element: event.currentTarget,
+			callback: (result) => {
+				if (!result) {
+					Items.remove(itemId);
+					return;
+				}
+				// Make the library item into a regular item
+				let item = _.omit(result, "library", "attacks", "effects");
+				delete item.settings.category;
+				// Update the item to match library item
+				Items.update(itemId, {$set: item});
+				// Copy over attacks and effects
+				_.each(result.attacks, (attack) => {
+					attack.charId = charId;
+					attack.parent = {id: itemId, collection: "Items"};
+					Attacks.insert(attack);
+				});
+				_.each(result.effects, (effect) => {
+					effect.charId = charId;
+					effect.parent = {id: itemId, collection: "Items"};
+					Effects.insert(effect);
+				});
+			},
+			returnElement: () => $(`[data-id='${itemId}']`).get(0),
+		})
+	},
 	"click .addContainer": function(event, instance){
 		var containerId = Containers.insert({
 			name: "New Container",

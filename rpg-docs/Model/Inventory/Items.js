@@ -24,18 +24,18 @@ var checkMovePermission = function(itemId, parent) {
 	var item = Items.findOne(itemId);
 	if (!item)
 		throw new Meteor.Error("No such item",
-							   "An item could not be found to move");
+		"An item could not be found to move");
 	//handle permissions
 	var permission = Meteor.call("canWriteCharacter", item.charId);
 	if (!permission){
 		throw new Meteor.Error("Access denied",
-							   "Not permitted to move items from this character");
+		"Not permitted to move items from this character");
 	}
 	if (parent.collection === "Characters"){
 		permission = Meteor.call("canWriteCharacter", parent.id);
 		if (!permission){
 			throw new Meteor.Error("Access denied",
-								   "Not permitted to move items to this character");
+			"Not permitted to move items to this character");
 		}
 	} else {
 		var parentCollectionObject = global[parent.collection];
@@ -53,7 +53,7 @@ var checkMovePermission = function(itemId, parent) {
 			permission = Meteor.call("canWriteCharacter", parentObject.charId);
 			if (!permission){
 				throw new Meteor.Error("Access denied",
-									   "Not permitted to move items to this character");
+				"Not permitted to move items to this character");
 			}
 		}
 	}

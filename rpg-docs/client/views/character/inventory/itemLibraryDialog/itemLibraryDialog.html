@@ -1,0 +1,54 @@
+<template name="itemLibraryDialog">
+	<div class="fit item-library-dialog layout vertical">
+		<app-toolbar class="app-grey white-text">
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
+			</paper-icon-button>
+			<div main-title>Items</div>
+			<paper-input label="Search" class="search-input">
+				<iron-icon icon="search" prefix></iron-icon>
+			</paper-input>
+		</app-toolbar>
+		<div class="flex scroll-y">
+			{{#if ready}}
+				<div class="items" style="padding:8px">
+					{{#if searchTerm}}
+						{{#if searchItems.count}}
+							{{#each item in searchItems}}
+								{{>libraryItem item=item selected=(isSelected item)}}
+							{{/each}}
+						{{else}}
+							No items match "{{searchTerm}}"
+						{{/if}}
+					{{else}}
+						{{#each category in categories}}
+							<div class="paper-font-subhead">
+								{{category.name}}
+							</div>
+							{{#each item in (itemsInCategory category.key)}}
+								{{>libraryItem item=item selected=(isSelected item)}}
+							{{/each}}
+						{{/each}}
+					{{/if}}
+				</div>
+			{{else}}
+				<div class="fit layout vertical center center-justified">
+					<paper-spinner active></paper-spinner>
+				</div>
+			{{/if}}
+		</div>
+		<div class="layout horizontal end-justified">
+			<paper-button class="cancelButton">Cancel</paper-button>
+			<paper-button class="okButton">OK</paper-button>
+		</div>
+	</div>
+</template>
+
+<template name="libraryItem">
+	<div class="item library-item layout horizontal center {{#if selected}}selected{{/if}}">
+		<paper-ripple></paper-ripple>
+		<div class="itemName flex">
+			{{item.name}}
+		</div>
+	</div>
+</template>
