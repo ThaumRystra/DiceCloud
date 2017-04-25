@@ -60,8 +60,8 @@
 			 Limit uses
 		</paper-toggle-button>
 		{{#if usesSet}}
-			<paper-input id="usesInput" type="number" allowed-pattern="[0-9]" class="flex"
-						label="Uses" value={{uses}} style="flex-basis: 100px; max-width: 200px">
+			<paper-input id="usesInput" class="flex" label="Uses" value={{uses}} style="flex-basis: 100px; max-width: 200px">
+				{{> formulaSuffix}}
 			</paper-input>
 		{{else}}
 			<div class="flex" style="flex-basis: 100px; max-width: 200px"></div>
