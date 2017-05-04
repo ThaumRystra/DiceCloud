@@ -10,32 +10,46 @@
 			</paper-input>
 		</app-toolbar>
 		<div class="flex scroll-y">
-			{{#if ready}}
-				<div class="items" style="padding:8px">
-					{{#if searchTerm}}
-						{{#if searchItems.count}}
-							{{#each item in searchItems}}
-								{{>libraryItem item=item selected=(isSelected item)}}
-							{{/each}}
-						{{else}}
+			<div class="items" style="padding:8px">
+				{{#if searchTerm}}
+					{{#if searchItems.count}}
+						<table style="width: 100%">
+							<tbody>
+								{{#each item in searchItems}}
+									{{>libraryItem item=item selected=(isSelected item)}}
+								{{/each}}
+							</tbody>
+						</table>
+					{{else}}{{#if searchReady}}
 							No items match "{{searchTerm}}"
-						{{/if}}
-					{{else}}
-						{{#each category in categories}}
-							<div class="paper-font-subhead">
-								{{category.name}}
-							</div>
-							{{#each item in (itemsInCategory category.key)}}
-								{{>libraryItem item=item selected=(isSelected item)}}
-							{{/each}}
-						{{/each}}
-					{{/if}}
-				</div>
-			{{else}}
-				<div class="fit layout vertical center center-justified">
-					<paper-spinner active></paper-spinner>
-				</div>
-			{{/if}}
+					{{/if}}{{/if}}
+					{{#unless searchReady}}
+						<div class="layout vertical center" style="width: 100%; padding: 16px;">
+							<paper-spinner active></paper-spinner>
+						</div>
+					{{/unless}}
+				{{else}}
+					{{#each categories}}
+						<div class="paper-font-body2 category-header clickable">
+							<iron-icon icon="chevron-right" class="{{#if isOpen key}}open{{/if}}">
+							</iron-icon>
+							{{name}}
+						</div>
+						<iron-collapse opened={{isOpen key}}>
+							<table style="width: 100%">
+								<tbody>
+									{{#each item in (itemsInCategory key)}}
+										{{>libraryItem item=item selected=(isSelected item)}}
+									{{/each}}
+								</tbody>
+							</table>
+							{{#unless ready key}}
+								<paper-spinner active></paper-spinner>
+							{{/unless}}
+						</iron-collapse>
+					{{/each}}
+				{{/if}}
+			</div>
 		</div>
 		<div class="layout horizontal end-justified">
 			<paper-button class="cancelButton">Cancel</paper-button>
@@ -45,10 +59,18 @@
 </template>
 
 <template name="libraryItem">
-	<div class="item library-item layout horizontal center {{#if selected}}selected{{/if}}">
-		<paper-ripple></paper-ripple>
-		<div class="itemName flex">
+	<tr class="item library-item {{#if selected}}selected{{/if}}">
+		<td class="itemName">
 			{{item.name}}
-		</div>
-	</div>
+			<paper-ripple></paper-ripple>
+		</td>
+		<td>
+			{{item.weight}} lb.
+			<paper-ripple></paper-ripple>
+ 		</td>
+		<td>
+			{{valueString item.value}}
+			<paper-ripple></paper-ripple>
+		</td>
+	</tr>
 </template>
