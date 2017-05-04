@@ -8,6 +8,7 @@
 	"/components/app-layout/app-scroll-effects/effects/parallax-background.html",
 	"/components/app-layout/app-scroll-effects/effects/resize-title.html",
 
+    "/components/iron-collapse/iron-collapse.html",
 	"/components/iron-icon/iron-icon.html",
 	"/components/iron-icons/av-icons.html",
 	"/components/iron-icons/editor-icons.html",

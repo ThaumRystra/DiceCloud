@@ -2,6 +2,22 @@
 	background-color: #e4e4e4;
 }
 
-.item-library-dialog .paper-font-subhead {
-	color: rgba(0,0,0,0.54);
+.item-library-dialog .category-header {
+	font-size: 16px;
+}
+
+.item-library-dialog .category-header iron-icon {
+	transition: transform 0.3s ease;
+}
+
+.item-library-dialog .category-header iron-icon.open {
+	transform: rotate(90deg);
+}
+
+.item-library-dialog table {
+	border-collapse: collapse;
+}
+
+.item-library-dialog .library-item td {
+	position: relative;
 }
