@@ -7,10 +7,6 @@
 	display: initial !important;
 }
 
-#navPanel {
-	padding: 16px;
-}
-
 #navPanel paper-icon-item {
 	background: white;
 	cursor: pointer;
