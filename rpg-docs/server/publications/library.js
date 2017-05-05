@@ -14,3 +14,12 @@ Meteor.publish("standardLibraryItems", function(categoryKey){
 		sort: {name: 1},
 	});
 });
+
+Meteor.publish("standardLibrarySpells", function(level){
+	return LibrarySpells.find({
+		library: {$in: standardLibraryIds},
+		level,
+	}, {
+		sort: {name: 1},
+	});
+});

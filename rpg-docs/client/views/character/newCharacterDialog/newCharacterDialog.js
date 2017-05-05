@@ -29,7 +29,6 @@ Template.newCharacterDialog.helpers({
 
 changeFunction = function(field){
 	return _.debounce(function(event, instance){
-		console.log({field, event})
 		instance.character[field] = event.currentTarget.value;
 		instance.schema.clean(instance.character);
 		instance.context.validate(instance.character);

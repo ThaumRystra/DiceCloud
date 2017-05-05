@@ -1,0 +1,23 @@
+.spell-library-dialog .spell.selected {
+	background-color: #e4e4e4;
+}
+
+.spell-library-dialog .category-header {
+	font-size: 16px;
+}
+
+.spell-library-dialog .category-header iron-icon {
+	transition: transform 0.3s ease;
+}
+
+.spell-library-dialog .category-header iron-icon.open {
+	transform: rotate(90deg);
+}
+
+.spell-library-dialog table {
+	border-collapse: collapse;
+}
+
+.spell-library-dialog .library-spell td {
+	position: relative;
+}

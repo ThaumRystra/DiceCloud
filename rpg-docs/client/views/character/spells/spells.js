@@ -211,8 +211,17 @@ Template.spells.events({
 		});
 	},
 	"click .addSpell": function(event, instance){
-		var charId = this.charId;
-		var listId = SpellLists.findOne({charId: this._id})._id;
+		var charId = this._id;
+		var list = SpellLists.findOne({charId});
+		var listId = list && list._id
+		if (!listId){
+			listId = SpellLists.insert({
+				name: "New SpellList",
+				charId: charId,
+				saveDC: "8 + intelligenceMod + proficiencyBonus",
+				attackBonus: "intelligenceMod + proficiencyBonus",
+			});
+		}
 		var id = Spells.insert({
 			name: "New Spell",
 			charId: this._id,
@@ -228,6 +237,48 @@ Template.spells.events({
 			element: event.currentTarget,
 			returnElement: () => instance.find(`.spell[data-id='${id}']`),
 		});
+	},
+	"click .librarySpell": function(event, instance){
+		var charId = this._id;
+		var spellId = Random.id();
+		var list = SpellLists.findOne({charId});
+		var listId = list && list._id
+		pushDialogStack({
+			template: "spellLibraryDialog",
+			element: event.currentTarget,
+			callback: (result) => {
+				if (!result) return;
+				if (!listId){
+					listId = SpellLists.insert({
+						name: "New SpellList",
+						charId: charId,
+						saveDC: "8 + intelligenceMod + proficiencyBonus",
+						attackBonus: "intelligenceMod + proficiencyBonus",
+					});
+				}
+				// Make the library spell into a regular spell
+				let spell = _.omit(result, "library", "attacks", "effects");
+				spell.charId = charId;
+				spell.parent = {
+					id: listId,
+					collection: "SpellLists",
+				};
+				spell.prepared = "prepared";
+				Spells.insert(spell);
+				// Copy over attacks and effects
+				_.each(result.attacks, (attack) => {
+					attack.charId = charId;
+					attack.parent = {id: spellId, collection: "Spells"};
+					Attacks.insert(attack);
+				});
+				_.each(result.effects, (effect) => {
+					effect.charId = charId;
+					effect.parent = {id: spellId, collection: "Spells"};
+					Effects.insert(effect);
+				});
+			},
+			returnElement: () => $(`[data-id='${spellId}']`).get(0),
+		})
 	},
 	"click .preparedCheckbox": function(event){
 		event.stopPropagation();

@@ -10,3 +10,8 @@ _.each(items, (item) => {
 	item.library = "SRDLibraryGA3XWsd"
 	LibraryItems.insert(item)
 });
+
+_.each(spells, (spell) => {
+	spell.library = "SRDLibraryGA3XWsd"
+	LibrarySpells.insert(spell)
+});
