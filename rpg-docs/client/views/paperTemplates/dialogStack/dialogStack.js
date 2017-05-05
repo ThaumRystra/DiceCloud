@@ -174,7 +174,7 @@ const dialogCloseAnimation = ({element, returnElement, dialog, callback}) => {
 	const stackCompensation = dialogs._array.length ? 16 : 0;
 
 	// Insert clone before its progenitor so it can inherit css correctly
-	element.parentNode.insertBefore(clone, element);
+	element.parentNode && element.parentNode.insertBefore(clone, element);
 
 	// Polymer messes up fixed positioning, measure and compensate
 	startingRect = clone.getBoundingClientRect();
