@@ -753,7 +753,7 @@
 		"duration": "Concentration, up to 1 hour",
 		"level": 7,
 		"range": "90 feet",
-		"school": "Conjuation",
+		"school": "Conjuration",
 		"ritual": false,
 		"name": "Conjure Celestial",
 		"components": {
