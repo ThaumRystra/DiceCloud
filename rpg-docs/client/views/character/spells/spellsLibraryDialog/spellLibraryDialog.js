@@ -53,7 +53,7 @@ Template.spellLibraryDialog.helpers({
 	spellsInCategory(categoryKey){
 		return LibrarySpells.find({
 			library: "SRDLibraryGA3XWsd",
-			"settings.category": categoryKey,
+			level: categoryKey,
 		}, {
 			sort: {name: 1},
 		});

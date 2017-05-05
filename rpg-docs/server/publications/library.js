@@ -16,7 +16,7 @@ Meteor.publish("standardLibraryItems", function(categoryKey){
 });
 
 Meteor.publish("standardLibrarySpells", function(level){
-	return LibraryItems.find({
+	return LibrarySpells.find({
 		library: {$in: standardLibraryIds},
 		level,
 	}, {
