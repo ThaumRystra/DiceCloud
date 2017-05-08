@@ -258,6 +258,7 @@ Template.spells.events({
 				}
 				// Make the library spell into a regular spell
 				let spell = _.omit(result, "library", "attacks", "effects");
+				spell._id = spellId;
 				spell.charId = charId;
 				spell.parent = {
 					id: listId,
