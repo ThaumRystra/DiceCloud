@@ -1,45 +1,53 @@
 <template name="effectEdit">
-	<div class="effectEdit layout horizontal center">
-		<paper-dropdown-menu label="Stat" class="statDropDown" dynamic-align>
-			<dicecloud-selector class="statMenu dropdown-content" selected={{stat}} selectable="paper-item">
-				{{#each statGroups}}
-					<div style="font-weight: bold; margin-top: 16px; padding-left: 8px;">
-						{{this}}
-					</div>
-					{{#each stats}}
-						<paper-item name={{stat}}>{{name}}</paper-item>
-					{{/each}}
-				{{/each}}
-			</dicecloud-selector>
-		</paper-dropdown-menu>
-		{{#if operations}}
-			<paper-dropdown-menu class="operationDropDown" label="Operation" dynamic-align>
-				<dicecloud-selector class="dropdown-content operationMenu" selected={{operation}}>
-					{{#each operations}}
-						<paper-item name={{operation}}>{{name}}</paper-item>
+	{{#with effect}}
+	{{#baseEditDialog hideColor=true title="Effect"}}
+		<div class="fit layout vertical effectEdit" style="padding: 24px;">
+			<table class="paper-font-display1 effect-table-view">
+				<tr>
+					{{> effectView}}
+				</tr>
+			</table>
+			<hr class="vertMargin" style="width: 100%;">
+			{{#if showEffectValueInput}}
+				<paper-input class="effectValueInput"
+							 label="Value"
+							 floatinglabel
+							 value={{effectValue}}>
+				</paper-input>
+			{{else}}
+				<div style="height: 62px;"></div>
+			{{/if}}
+			<div class="effectEdit layout horizontal flex">
+				<dicecloud-selector class="statMenu flex" selected={{stat}} selectable="paper-item" style="height: 100%; overflow-y: auto;">
+					{{#each statGroups}}
+						<div style="font-weight: bold; margin-top: 16px; padding-left: 8px;">
+							{{this}}
+						</div>
+						{{#each stats}}
+							<paper-item name={{stat}}>{{name}}</paper-item>
+						{{/each}}
 					{{/each}}
 				</dicecloud-selector>
-			</paper-dropdown-menu>
-		{{/if}}
-		{{#if effectValueTemplate}}
-			{{> Template.dynamic template=effectValueTemplate}}
-		{{else}}
-			<div class="flex"></div>
-		{{/if}}
-		<paper-icon-button class="deleteEffect"
-						   icon="delete">
-		</paper-icon-button>
-		<br>
-	</div>
-</template>
-
-<template name="regularEffectValue">
-	<paper-input class="effectValueInput flex"
-				 label="Value"
-				 floatinglabel
-				 value={{effectValue}}
-				 style="flex-basis: 100px;">
-	</paper-input>
+				{{#if operations}}
+					<dicecloud-selector class="operationMenu flex" selected={{operation}}  style="height: 100%; overflow-y: auto;">
+						{{#each operations}}
+							<paper-item name={{operation}}>{{name}}</paper-item>
+						{{/each}}
+					</dicecloud-selector>
+				{{else}} {{#if showMultiplierOperations}}
+					<dicecloud-selector class="multiplierMenu flex"
+							   selected={{value}}>
+						<paper-item name="0.5">Resistance</paper-item>
+						<paper-item name="2">Vulnerability</paper-item>
+						<paper-item name="0">Immunity</paper-item>
+					</dicecloud-selector>
+				{{else}}
+					<div class="flex" style="height: 100%;"></div>
+				{{/if}} {{/if}}
+			</div>
+		</div>
+	{{/baseEditDialog}}
+	{{/with}}
 </template>
 
 <template name="multiplierEffectValue">
@@ -51,5 +59,4 @@
 				<paper-item name="0">Immunity</paper-item>
 			</dicecloud-selector>
 	</paper-dropdown-menu>
-	<div class="flex"></div>
 </template>

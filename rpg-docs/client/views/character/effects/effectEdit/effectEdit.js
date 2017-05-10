@@ -97,7 +97,19 @@ var skillOperations = [
 	{name: "Conditional Benefit", operation: "conditional"},
 ];
 
+Template.effectEdit.onRendered(function(){
+	_.defer(() => {
+		const statElement = this.find(".statMenu .iron-selected");
+		statElement && statElement.scrollIntoView();
+		const opElement = this.find(".operationMenu .iron-selected");
+		opElement && opElement.scrollIntoView();
+	});
+});
+
 Template.effectEdit.helpers({
+	effect: function(){
+		return Effects.findOne(this.id);
+	},
 	statGroups: function(){
 		return statGroupNames;
 	},
@@ -115,46 +127,77 @@ Template.effectEdit.helpers({
 			return attributeOperations;
 		}
 	},
-	effectValueTemplate: function(){
-		//resistance/vulnerability template
+	showMultiplierOperations: function(){
+		var stat = statsDict[this.stat];
+		return stat && stat.group === "Weakness/Resistance"
+	},
+	showEffectValueInput: function(){
 		var stat = statsDict[this.stat];
 		var group = stat && stat.group;
-		if (group === "Weakness/Resistance") return "multiplierEffectValue";
-
+		if (
+			group === "Weakness/Resistance"
+		) return false;
 		var op = this.operation;
-		if (!op) return null;
-		//operations that don't need templates
-		if (op === "advantage" || op === "disadvantage" || op === "fail") return null;
-
-		//default template
-		return "regularEffectValue";
+		if (
+			!op ||
+			op === "advantage" ||
+			op === "disadvantage" ||
+			op === "fail"
+		) return false;
+		return true;
 	},
-});
-
-Template.regularEffectValue.helpers({
 	effectValue: function(){
 		return this.calculation || this.value;
-	}
+	},
 });
 
 Template.effectEdit.events({
-	"click .deleteEffect": function(event){
-		Effects.softRemoveNode(this._id);
-		GlobalUI.deletedToast(this._id, "Effects", "Effect");
+	"click #deleteButton": function(event, instance){
+		Effects.softRemoveNode(instance.data.id);
+		GlobalUI.deletedToast(instance.data.id, "Effects", "Effect");
+		popDialogStack();
 	},
-	"iron-select .statDropDown": function(event){
+	"iron-select .statMenu": function(event){
 		var detail = event.originalEvent.detail;
 		var statName = detail.item.getAttribute("name");
 		if (statName == this.stat) return;
-		Effects.update(this._id, {$set: {stat: statName}});
+		var setter = {stat: statName};
+		var group = Blaze.getData(detail.item).group;
+		var effect = Effects.findOne(this._id);
+		if (group === "Saving Throws" || group === "Skills"){
+			// Skills must have a valid skill operation
+			if (!_.contains(
+				_.map(skillOperations, ao => ao.operation),
+				effect.operation
+			)){
+				setter.operation = "add";
+			}
+		} else if (group !== "Weakness/Resistance"){
+			// Attributes must have a valid attribute operation
+			if (!_.contains(
+				_.map(attributeOperations, ao => ao.operation),
+				effect.operation
+			)){
+				setter.operation = "base";
+			}
+		} else {
+			// Weakness/Resistance must have a mul operation and value
+			if (effect.operation !== "mul"){
+				setter.operation = "mul";
+			}
+			if (!_.contains([0, 0.5, 2], effect.value)){
+				setter.value = 0.5;
+			}
+		}
+		Effects.update(this._id, {$set: setter});
 	},
-	"iron-select .operationDropDown": function(event){
+	"iron-select .operationMenu": function(event){
 		var detail = event.originalEvent.detail;
 		var opName = detail.item.getAttribute("name");
 		if (opName == this.operation) return;
 		Effects.update(this._id, {$set: {operation: opName}});
 	},
-	"iron-select .damageMultiplierDropDown": function(event){
+	"iron-select .multiplierMenu": function(event){
 		var detail = event.originalEvent.detail;
 		var value = +detail.item.getAttribute("name");
 		if (value == this.value) return;
@@ -164,15 +207,25 @@ Template.effectEdit.events({
 			operation: "mul",
 		}});
 	},
-	"change .effectValueInput": function(event){
+	"change .effectValueInput, input .effectValueInput":
+	_.debounce(function(event){
 		var value = event.currentTarget.value;
-		var numValue = +value;
+		var numValue = value === "" ? NaN : +value;
 		if (_.isFinite(numValue)){
 			if (this.value === numValue) return;
-			Effects.update(this._id, {$set: {value: numValue, calculation: ""}});
+			Effects.update(this._id, {
+				$set: {value: numValue},
+				$unset: {calculation: ""},
+			});
 		} else if (_.isString(value)){
 			if (this.calculation === value) return;
-			Effects.update(this._id, {$set: {value: "", calculation: value}});
+			Effects.update(this._id, {
+				$set: {calculation: value},
+				$unset: {value: ""},
+			}, {
+				removeEmptyStrings: false,
+				trimStrings: false,
+			});
 		}
-	},
+	}, 400),
 });

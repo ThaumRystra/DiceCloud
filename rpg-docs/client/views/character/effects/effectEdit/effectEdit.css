@@ -13,3 +13,13 @@
 .effectEdit .deleteEffect {
 	flex-shrink: 0;
 }
+
+.effectEdit .effect-table-view {
+	align-self: center;
+	color: #757575;
+	color: rgba(0,0,0,0.54);
+}
+
+.effectEdit .iron-selected {
+	color: #ad2a1f;
+}

@@ -1,0 +1,23 @@
+<template name="baseEditDialog">
+	<div class="fit base-dialog layout vertical">
+		<app-toolbar class={{class}}>
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
+			</paper-icon-button>
+			<div main-title>{{title}}</div>
+			{{#unless hideDelete}}
+				<paper-icon-button id="deleteButton"
+								   role="button"
+								   tabindex="0"
+								   icon="delete">
+				</paper-icon-button>
+			{{/unless}}
+			{{#unless hideColor}}
+				{{> colorDropdown}}
+			{{/unless}}
+		</app-toolbar>
+		<div class="form flex scroll-y" style="position: relative;">
+			{{> UI.contentBlock}}
+		</div>
+	</div>
+</template>
