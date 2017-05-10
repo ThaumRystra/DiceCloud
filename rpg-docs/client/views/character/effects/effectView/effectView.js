@@ -1,4 +1,3 @@
-//TODO add dexterity armor
 var stats = {
 	"strength":{"name":"Strength"},
 	"dexterity":{"name":"Dexterity"},
@@ -131,8 +130,10 @@ Template.effectView.helpers({
 		return stats[this.stat] && stats[this.stat].name || "No Stat";
 	},
 	operationName: function(){
-		if (this.operation === "proficiency" ||
-		   this.operation === "conditional") return null;
+		if (
+			this.operation === "proficiency" ||
+			this.operation === "conditional"
+		) return null;
 		if (stats[this.stat] && stats[this.stat].group === "Weakness/Resistance")
 			return null;
 		if (this.operation === "add" && evaluateEffect(this.charId, this) < 0)
@@ -141,9 +142,11 @@ Template.effectView.helpers({
 			operations[this.operation].name || "No Operation";
 	},
 	statValue: function(){
-		if (this.operation === "advantage" ||
-		   this.operation === "disadvantage" ||
-		   this.operation === "fail"){
+		if (
+			this.operation === "advantage" ||
+			this.operation === "disadvantage" ||
+			this.operation === "fail"
+		){
 			return null;
 		}
 		if (this.operation === "proficiency"){

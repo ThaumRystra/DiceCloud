@@ -1,13 +1,13 @@
 RPG Docs
 ========
 
-This is the repo for [DiceCloud](dicecloud.com). The currently deployed version should always be the latest release of the master branch.
+This is the repo for [DiceCloud](dicecloud.com).
 
 Getting started
 ---------------
 
-`git clone https://github.com/ThaumRystra/RPG-Docs RPG-Docs`  
-`cd RPG-Docs`  
+`git clone https://github.com/ThaumRystra/DiceCloud1 dicecloud`  
+`cd dicecloud`  
 `cd rpg-docs`  
 `bower install`  
 `meteor`

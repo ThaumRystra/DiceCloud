@@ -13,12 +13,74 @@ pushDialogStack = function({template, data, element, returnElement, callback}){
 		returnElement,
 		callback,
 	});
+
+	updateHistory();
 };
 
 popDialogStack = function(result){
+	if (history && history.state && history.state.openDialogs){
+		history.back();
+	} else {
+		popDialogStackAction();
+	}
+}
+
+window.onpopstate = function(event){
+	let state = event.state;
+	let numDialogs = dialogs._array.length;
+	if (_.isFinite(state.openDialogs) && numDialogs > state.openDialogs){
+		popDialogStackAction();
+	}
+}
+
+popDialogStackAction = function(result){
 	const dialog = dialogs.pop();
+	updateHistory();
 	if (!dialog) return;
 	dialog.callback && dialog.callback(result);
+};
+
+let updateHistory = function(){
+	// history should looks like: [{openDialogs: 0}, {openDialogs: n}] where
+	// n is the number of open dialogs
+
+	// If we can't access the history object, give up
+	if (!history) return;
+	// Make sure that there is a state tracking open dialogs
+	// replace the state without bashing it in the process
+	if (!history.state || !_.isFinite(history.state.openDialogs)){
+		let newState = _.clone(history.state)  || {};
+		newState.openDialogs = 0;
+		history.replaceState(newState, "");
+	}
+
+	const numDialogs = dialogs._array.length;
+	const stateDialogs = history.state.openDialogs;
+
+	// If the number of dialogs and state dialogs are equal, we don't need to do
+	// anything
+	if (numDialogs === stateDialogs) return;
+
+	if (stateDialogs > 0){
+		// On a dialog count
+		if (numDialogs === 0){
+			// but shouldn't be
+			history.back();
+		} else {
+			// but should replace with correct count
+			let newState = _.clone(history.state) || {};
+			newState.openDialogs = dialogs._array.length;
+			history.replaceState(newState, "");
+		}
+	} else if (numDialogs > 0 && stateDialogs === 0){
+		// On the zero state, push a dialog count
+		history.pushState({openDialogs: numDialogs}, "");
+	} else {
+		console.warn(
+			"History could not be updated correctly, unexpected case",
+			{stateDialogs, numDialogs},
+		)
+	}
 };
 
 Template.dialogStack.helpers({

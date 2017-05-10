@@ -2,11 +2,14 @@ Template.effectsViewList.helpers({
 	effects: function(){
 		var selector = {
 			"parent.id": this.parentId,
-			"charId": this.charId
+			"charId": this.charId,
 		};
 		if (this.parentGroup){
 			selector["parent.group"] = this.parentGroup;
 		}
-		return Effects.find(selector, {fields: {parent: 0}});
+		let effects =  Effects.find(selector, {
+			fields: {parent: 0},
+		}).fetch();
+		return _.sortBy(effects, effect => statOrder[effect.stat] || 999);
 	}
 });

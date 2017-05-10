@@ -1,11 +1,19 @@
 <!--needs to be given charId, parentId and parentCollection-->
 <template name="effectsEditList">
-	{{#if effects.count}}
-		<div id="effects">
+	{{#if effects.length}}
+		<div class="effectsEditList">
 			<div class="paper-font-title">Effects</div>
-			{{#each effects}}
-				{{>effectEdit}}
-			{{/each}}
+			<table class="wideTable" style="width: 100%;">
+				{{#each effects}}
+					<tr class="effect" data-id={{_id}}>
+						{{>effectView}}
+						<td>
+							<paper-icon-button class="edit-effect" icon="create">
+							</paper-icon-button>
+						</td>
+					</tr>
+				{{/each}}
+			</table>
 		</div>
 	{{/if}}
 	<paper-button id="addEffectButton" class="red-button"  raised>Add Effect</paper-button>

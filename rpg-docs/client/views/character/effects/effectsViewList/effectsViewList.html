@@ -1,11 +1,11 @@
 <!--needs to be given charId, (parentId or stat) and type-->
 <template name="effectsViewList">
-	{{#if effects.count}}
+	{{#if effects.length}}
 		<div class="effects">
 			<div class="spaceAfter paper-font-title">Effects</div>
 			<table class="wideTable">
 				{{#each effects}}
-					{{>effectView}}
+					<tr>{{>effectView}}</tr>
 				{{/each}}
 			</table>
 		</div>
