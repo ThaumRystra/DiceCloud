@@ -17,11 +17,14 @@ pushDialogStack = function({template, data, element, returnElement, callback}){
 	updateHistory();
 };
 
+var currentResult;
+
 popDialogStack = function(result){
 	if (history && history.state && history.state.openDialogs){
+		currentResult = result;
 		history.back();
 	} else {
-		popDialogStackAction();
+		popDialogStackAction(result);
 	}
 }
 
@@ -29,7 +32,8 @@ window.onpopstate = function(event){
 	let state = event.state;
 	let numDialogs = dialogs._array.length;
 	if (_.isFinite(state.openDialogs) && numDialogs > state.openDialogs){
-		popDialogStackAction();
+		popDialogStackAction(currentResult);
+		currentResult = undefined;
 	}
 }
 
