@@ -25,10 +25,10 @@ Template.fabMenu.helpers({
 });
 
 Template.fabMenu.events({
-	"tap .expand-menu": function(event, instance) {
+	"click .expand-menu": function(event, instance) {
 		instance.active.set(!instance.active.get());
 	},
-	"tap .mini-holder paper-fab": function(event, instance) {
+	"click .mini-holder paper-fab": function(event, instance) {
 		instance.active.set(false);
 	},
 });
