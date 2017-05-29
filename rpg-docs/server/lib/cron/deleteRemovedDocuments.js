@@ -38,7 +38,7 @@ Meteor.startup(() => {
 		deleteOldSoftRemovedDocs() {
 			const user = Meteor.users.findOne(this.userId);
 			if (user && _.contains(user.roles, "admin")){
-				deleteOldSoftRemovedDocs();
+				return deleteOldSoftRemovedDocs();
 			}
 		},
 	});
