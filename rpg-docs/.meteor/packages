@@ -47,3 +47,4 @@ ecmascript@0.6.1
 es5-shim@4.6.15
 differential:vulcanize
 reactive-dict
+percolate:synced-cron
