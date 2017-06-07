@@ -691,7 +691,7 @@
 		"level": 1,
 		"range": "Self",
 		"school": "Divination",
-		"ritual": false,
+		"ritual": true,
 		"name": "Comprehend Languages",
 		"components": {
 			"verbal": true,
@@ -4240,7 +4240,7 @@
 	},
 	{
 		"castingTime": "1 action",
-		"description": "A creature of your choice that you can see with range perceives everything as ilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for this duration. A creature with an Intelligence score of 4 or less isn’t affected.\n   At the end of each of its turns, and each time it takes damage, the target can make another Wisdom saving throw. The target has an advantage on the saving throw if it’s triggered by damage. On a success, the spell ends.",
+		"description": "A creature of your choice that you can see with range perceives everything as hilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for this duration. A creature with an Intelligence score of 4 or less isn’t affected.\n   At the end of each of its turns, and each time it takes damage, the target can make another Wisdom saving throw. The target has an advantage on the saving throw if it’s triggered by damage. On a success, the spell ends.",
 		"duration": "Concentration, up to 1 minute",
 		"level": 1,
 		"range": "30 feet",
