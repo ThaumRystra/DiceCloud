@@ -21,10 +21,15 @@
 	max-width: 300px;
 	padding: 16px;
 	text-align: center;
+    min-width: 0;
+}
+
+.intro .section .columns {
+	max-width: 100%;
 }
 
 .intro paper-button {
-	min-width: 200px;
+	flex-basis: 200px;
 }
 
 
