@@ -23,6 +23,7 @@
 .card {
 	background: white;
 	border-radius: 2px;
+	position: initial;
 }
 
 .card .top {
