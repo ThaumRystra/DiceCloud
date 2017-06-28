@@ -1,3 +1,7 @@
+body .paper-font-display4, body .paper-font-display3, body .paper-font-title, body .paper-font-caption{
+    white-space: normal;
+}
+
 .white-text {
 	color: #dedede;
 	color: rgba(255,255,255,0.87);
