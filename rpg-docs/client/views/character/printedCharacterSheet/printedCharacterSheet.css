@@ -1,0 +1,37 @@
+.printed {
+	background: #fff;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 99;
+}
+
+.printed > .page {
+	width: 100%;
+	padding: 1cm;
+	page-break-inside: avoid;
+	page-break-after: always;
+}
+
+.printed .shrink-to-fit {
+	white-space: nowrap;
+    overflow: hidden;
+}
+
+@media screen {
+	.printed {
+		display: none;
+	}
+}
+
+@media print {
+	.character-sheet {
+		display: none;
+	}
+	app-drawer {
+		display: none;
+	}
+
+}

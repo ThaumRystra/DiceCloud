@@ -1,4 +1,7 @@
 <template name="characterSheet">
+	{{#if printing}}
+		{{> printedCharacterSheet}}
+	{{/if}}
 	<div class="fit layout vertical character-sheet">
 		<app-header fixed effects="waterfall">
 			<app-toolbar class="medium-tall {{colorClass}}">

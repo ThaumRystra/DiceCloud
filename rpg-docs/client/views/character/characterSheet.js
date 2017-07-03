@@ -165,6 +165,9 @@ var getTab = function(charId){
 };
 
 Template.characterSheet.helpers({
+	printing: function(){
+		return Session.get("isPrinting");
+	},
 	selectedTab: function(){
 		return getTab(this._id);
 	},

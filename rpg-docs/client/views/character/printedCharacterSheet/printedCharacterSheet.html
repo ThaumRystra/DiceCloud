@@ -1,0 +1,116 @@
+<template name="printedCharacterSheet">
+	<div class="printed">
+		<div class="page">
+			<div class="layout vertical">
+				<div class="layout horizontal">
+					<div class="characterName paper-font-title">
+						{{name}}
+					</div>
+					<div>
+						<div>
+							{{#each classes}}
+								<span style="margin-right: 16px;">
+									{{name}}&nbsp;{{level}}
+								</span>
+							{{/each}}
+						</div>
+						<div>
+							{{alignment}} {{gender}} {{race}}
+						</div>
+					</div>
+				</div>
+				<div class="layout horizontal">
+					<div class="col1 padded flex layout vertical">
+						<div class="layout horizontal">
+							<div class="abilities padded layout vertical justified">
+								{{> printedAbility ability="strength"     title="Strength"     color="red"}}
+								{{> printedAbility ability="dexterity"    title="Dexterity"    color="indigo"}}
+								{{> printedAbility ability="constitution" title="Constitution" color="green"}}
+								{{> printedAbility ability="intelligence" title="Intelligence" color="deep-orange"}}
+								{{> printedAbility ability="wisdom"       title="Wisdom"       color="purple"}}
+								{{> printedAbility ability="charisma"     title="Charisma"     color="pink"}}
+							</div>
+							<div class="padded flex layout vertical">
+								<div class="proficiencyBonus">
+									{{> printedLongStat stat="proficiencyBonus" name="Proficiency Bonus" prefix="+"}}
+								</div>
+								<div class="saves">
+									<div class="paper-font-subhead">
+										Saving Throws
+									</div>
+									<div>
+										{{> printedSkillRow name="Strength"     skill="strengthSave"}}
+										{{> printedSkillRow name="Dexterity"    skill="dexteritySave"}}
+										{{> printedSkillRow name="Constitution" skill="constitutionSave"}}
+										{{> printedSkillRow name="Intelligence" skill="intelligenceSave"}}
+										{{> printedSkillRow name="Wisdom"       skill="wisdomSave"}}
+										{{> printedSkillRow name="Charisma"     skill="charismaSave"}}
+									</div>
+								</div>
+								<div class="skills">
+									<div class="paper-font-subhead">
+										Skills
+									</div>
+									<div>
+										{{> printedSkillRow name="Acrobatics"      skill="acrobatics"}}
+										{{> printedSkillRow name="Animal Handling" skill="animalHandling"}}
+										{{> printedSkillRow name="Arcana"          skill="arcana"}}
+										{{> printedSkillRow name="Athletics"       skill="athletics"}}
+										{{> printedSkillRow name="Deception"       skill="deception"}}
+										{{> printedSkillRow name="History"         skill="history"}}
+										{{> printedSkillRow name="Insight"         skill="insight"}}
+										{{> printedSkillRow name="Intimidation"    skill="intimidation"}}
+										{{> printedSkillRow name="Investigation"   skill="investigation"}}
+										{{> printedSkillRow name="Medicine"        skill="medicine"}}
+										{{> printedSkillRow name="Nature"          skill="nature"}}
+										{{> printedSkillRow name="Perception"      skill="perception" showPassive="true"}}
+										{{> printedSkillRow name="Performance"     skill="performance"}}
+										{{> printedSkillRow name="Persuasion"      skill="persuasion"}}
+										{{> printedSkillRow name="Religion"        skill="religion"}}
+										{{> printedSkillRow name="Sleight of Hand" skill="sleightOfHand"}}
+										{{> printedSkillRow name="Stealth"         skill="stealth"}}
+										{{> printedSkillRow name="Survival"        skill="survival"}}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="proficiencies">
+
+						</div>
+					</div>
+					<div class="col2 padded flex">
+						<div class="layout vertical">
+							<div class="layout horizontal justified">
+								<div class="armor">
+									{{> printedSquareStat stat="armor" name="Armor Class" color="teal"}}
+								</div>
+								<div class="inititive">
+									{{> printedSquareStat stat="initiative" name="Initiative" color="teal"}}
+								</div>
+								<div class="speed">
+									{{> printedSquareStat stat="speed" name="Speed" color="teal"}}
+								</div>
+							</div>
+							<div class="hitpoints padded layout vertical">
+								<div>Hit Points</div>
+								<div style="width: 3cm; height: 2cm;">
+									<!-- Space for writing-->
+								</div>
+								<div class="layout horizontal end-justified">
+									/{{characterCalculate "attributeValue" _id "hitPoints"}}
+								</div>
+							</div>
+							<div class="tempHitpoints"></div>
+							<div class="layout horizontal">
+								<div class="hitDice"></div>
+								<div class="deathSaves"></div>
+							</div>
+						</div>
+						<div class="attacks"></div>
+						<div class="persona"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
