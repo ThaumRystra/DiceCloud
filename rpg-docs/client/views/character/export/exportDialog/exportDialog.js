@@ -30,16 +30,31 @@ Template.exportDialog.events({
 	},
 	"click #copyExportButton": function(event, template){
 		var copyTextarea = template.find(".iiexport");
-		copyTextarea && copyTextarea.select();
+		copyTextarea.select();
+		var msg;
 		try {
 			var successful = document.execCommand("copy");
-			var msg = successful ? "successful" : "unsuccessful";
-			console.log("Copying text command was " + msg);
+			var msg = successful ? "JSON copied to clipboard" : "Unable to copy JSON";
 		} catch (err) {
-			console.log("Oops, unable to copy");
+			msg = "Unable to copy JSON";
+		} finally {
+			clearSelection();
+			GlobalUI.toast(msg);
 		}
 	},
 	"click .doneButton": function(event, instance){
 		popDialogStack();
 	},
-})
+});
+
+var clearSelection = function(){
+	if (window.getSelection) {
+		if (window.getSelection().empty) {  // Chrome
+			window.getSelection().empty();
+		} else if (window.getSelection().removeAllRanges) {  // Firefox
+			window.getSelection().removeAllRanges();
+		}
+	} else if (document.selection) {  // IE?
+		document.selection.empty();
+	}
+};
