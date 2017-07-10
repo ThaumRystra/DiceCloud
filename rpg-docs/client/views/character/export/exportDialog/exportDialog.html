@@ -1,0 +1,29 @@
+<template name="exportDialog">
+	<div class="fit layout vertical">
+		{{#with character}}
+			<app-header-layout has-scrolling-region class="export flex">
+				<app-header fixed effects="waterfall">
+					<app-toolbar>
+					  <div main-title>Export Character to Improved Initiative</div>
+					</app-toolbar>
+				</app-header>
+				<div class="form flex layout vertical">
+					<paper-toggle-button id="exportFeatures" checked={{settings.exportFeatures}}>
+						Features
+					</paper-toggle-button>
+					<paper-toggle-button id="exportAttacks" checked={{settings.exportAttacks}}>
+						Attacks
+					</paper-toggle-button>
+					<paper-toggle-button id="exportDescription" checked={{settings.exportDescription}}>
+						Description
+					</paper-toggle-button>
+					<paper-textarea class="flex iiexport" label="JSON" value={{improvedInitiativeJson}}></paper-textarea>
+					<paper-button id="copyExportButton" class="red-button" raised>Copy to Clipboard</paper-button>
+				</div>
+			</app-header-layout>
+			<div class="buttons layout horizontal end-justified">
+				<paper-button class="doneButton"> Done </paper-button>
+			</div>
+		{{/with}}
+	</div>
+</template>
