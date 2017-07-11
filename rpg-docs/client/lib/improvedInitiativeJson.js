@@ -49,7 +49,10 @@ improvedInitiativeJson = function(charId, options){
 			{"Name": "Cha", "Modifier": skillMod("charismaSave")},
 		],
 		"Skills": getSkills(charId),
-		"Senses": [],
+		"Senses": [
+			"passive Perception " +
+			Characters.calculate.passiveSkill(charId, "perception")
+		],
 		"Languages": getLanguages(charId),
 		"Challenge": "",
 		"Traits": options.features ? getTraits(charId) : [],
