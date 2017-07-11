@@ -49,7 +49,10 @@ improvedInitiativeJson = function(charId, options){
 			{"Name": "Cha", "Modifier": skillMod("charismaSave")},
 		],
 		"Skills": getSkills(charId),
-		"Senses": [],
+		"Senses": [
+			"passive Perception " +
+			Characters.calculate.passiveSkill(charId, "perception")
+		],
 		"Languages": getLanguages(charId),
 		"Challenge": "",
 		"Traits": options.features ? getTraits(charId) : [],
@@ -116,10 +119,11 @@ var getDamageMods = function(charId){
 	];
 	// jscs:enable maximumLineLength
 	multipliers = _.groupBy(multipliers, "value");
+	var names = o => o.name;
 	return {
-		"immunities": multipliers["0"] || [],
-		"resistances": multipliers["0.5"] || [],
-		"weaknesses": multipliers["2"] || [],
+		"immunities": _.map(multipliers["0"], names),
+		"resistances": _.map(multipliers["0.5"], names),
+		"vulnerabilities": _.map(multipliers["2"], names),
 	};
 }
 
