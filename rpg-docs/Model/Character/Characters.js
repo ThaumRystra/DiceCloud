@@ -4,7 +4,7 @@ Characters = new Mongo.Collection("characters");
 Schemas.Character = new SimpleSchema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
-	urlName:      {type: String, defaultValue: "", trim: false, optional: true},
+	urlName:      {type: String, defaultValue: "-", trim: false, optional: true},
 	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
 	gender:       {type: String, defaultValue: "", trim: false, optional: true},
 	race:         {type: String, defaultValue: "", trim: false, optional: true},
@@ -546,6 +546,9 @@ if (Meteor.isServer){
 			var urlName = getSlug(doc.name, {maintainCase: true}) || "-";
 			Characters.update(doc._id, {$set: {urlName}});
 		}
+	});
+	Characters.before.insert(function(userId, doc) {
+		doc.urlName = getSlug(doc.name, {maintainCase: true}) || "-";
 	});
 }
 

@@ -43,7 +43,7 @@ Router.map(function() {
 			var _id = this.params._id
 			var character = Characters.findOne(_id);
 			var urlName = character && character.urlName;
-			var path = `\/character\/${_id}\/${urlName}`;
+			var path = `\/character\/${_id}\/${urlName || "-"}`;
 			Router.go(path,{},{replaceState:true});
 		},
 	});
