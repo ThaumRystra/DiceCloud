@@ -2,7 +2,7 @@ Classes = new Mongo.Collection("classes");
 
 Schemas.Class = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	name:		 {type: String, trim: false},
+	name:		 {type: String, optional: true, trim: false},
 	level:		 {type: Number},
 	createdAt: {
 		type: Date,
