@@ -11,7 +11,7 @@
 evaluate = function(charId, string, opts){
     var spellListId = opts && opts.spellListId;
 	if (!string) return string;
-	string = string.replace(/\b[a-z]+\b/gi, function(sub){
+	string = string.replace(/\b[a-z,1-9]+\b/gi, function(sub){
 		//fields
 		if (Schemas.Character.schema(sub)){
 			return Characters.calculate.fieldValue(charId, sub);
