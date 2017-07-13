@@ -257,7 +257,10 @@ var attributeBase = preventLoop(function(charId, statName){
 	var result = (base + add) * mul;
 	if (result < min) result = min;
 	if (result > max) result = max;
-
+	// Don't round carry multiplier
+	if (statName === "carryMultiplier"){
+		return result;
+	}
 	return Math.floor(result);
 });
 
