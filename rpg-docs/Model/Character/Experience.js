@@ -2,7 +2,7 @@ Experiences = new Mongo.Collection("experience");
 
 Schemas.Experience = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	name:		 {type: String, defaultValue: "New Experience", trim: false},
+	name:		 {type: String, optional: true, trim: false, defaultValue: "New Experience"},
 	description: {type: String, optional: true, trim: false},
 	value:       {type: Number, defaultValue: 0},
 	dateAdded:   {

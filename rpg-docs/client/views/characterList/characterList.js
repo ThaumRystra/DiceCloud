@@ -10,7 +10,15 @@ Template.characterList.helpers({
 				]
 			},
 			{
-				fields: {name: 1, picture: 1, color: 1, race: 1, alignment: 1, gender: 1},
+				fields: {
+					name: 1,
+					urlName: 1,
+					picture: 1,
+					color: 1,
+					race: 1,
+					alignment: 1,
+					gender: 1,
+				},
 				sort: {name: 1},
 			}
 		);

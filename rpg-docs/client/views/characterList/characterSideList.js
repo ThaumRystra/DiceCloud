@@ -14,7 +14,7 @@ Template.characterSideList.helpers({
 				]
 			},
 			{
-				fields: {name: 1},
+				fields: {name: 1, urlName: 1},
 				sort: {name: 1},
 			}
 		);

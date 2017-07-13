@@ -125,7 +125,7 @@ Migrations.add({
 				}
 			});
 			var effect = Effects.findOne({
-				charId: char._id, name: "Natural Carrying Capacity"
+				charId: char._id, name: "Natural Carrying Capacity",
 			});
 			if (effect) return;
 			Effects.insert({
@@ -141,9 +141,25 @@ Migrations.add({
 				},
 			});
 			effect = Effects.findOne({
-				charId: char._id, name: "Natural Carrying Capacity"
+				charId: char._id, name: "Natural Carrying Capacity",
 			});
 			if (!effect) throw "Carry capacity effect should be set by now."
+		});
+	},
+	down: function(){
+		return;
+	},
+});
+
+Migrations.add({
+	version: 5,
+	name: "Gives all characters a URL name",
+	up: function() {
+		//update characters
+		Characters.find({}).forEach(function(char){
+			if (char.urlName) return;
+			var urlName = getSlug(char.name, {maintainCase: true});
+			Characters.update(char._id, {$set: {urlName}});
 		});
 	},
 	down: function(){
