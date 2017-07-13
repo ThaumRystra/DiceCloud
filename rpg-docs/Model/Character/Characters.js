@@ -4,6 +4,7 @@ Characters = new Mongo.Collection("characters");
 Schemas.Character = new SimpleSchema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
+	urlName:      {type: String, defaultValue: "", trim: false, optional: true},
 	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
 	gender:       {type: String, defaultValue: "", trim: false, optional: true},
 	race:         {type: String, defaultValue: "", trim: false, optional: true},
@@ -539,6 +540,12 @@ if (Meteor.isServer){
 		SpellLists    .remove({charId: character._id});
 		Items         .remove({charId: character._id});
 		Containers    .remove({charId: character._id});
+	});
+	Characters.after.update(function(userId, doc, fieldNames, modifier, options) {
+		if (_.contains(fieldNames, "name")){
+			var urlName = getSlug(doc.name, {maintainCase: true});
+			Characters.update(doc._id, {$set: {urlName}});
+		}
 	});
 }
 

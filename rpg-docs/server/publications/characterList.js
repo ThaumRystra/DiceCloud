@@ -15,6 +15,7 @@ Meteor.publish("characterList", function(){
 		{
 			fields: {
 				name: 1,
+				urlName: 1,
 				race: 1,
 				alignment: 1,
 				gender: 1,

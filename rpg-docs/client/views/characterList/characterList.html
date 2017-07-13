@@ -11,7 +11,7 @@
 					{{#if characters.count}}
 						<div class="character-list layout horizontal wrap">
 							{{# each characters}}
-								<a class="character-card flex layout vertical end-justified" href="/character/{{_id}}">
+								<a class="character-card flex layout vertical end-justified" href="{{pathFor route="characterSheet" data=this}}">
 									<iron-image class="fit {{colorClass}}"
 												sizing="cover" preload fade src={{picture}}>
 									</iron-image>
