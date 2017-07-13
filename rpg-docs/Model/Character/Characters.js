@@ -543,7 +543,7 @@ if (Meteor.isServer){
 	});
 	Characters.after.update(function(userId, doc, fieldNames, modifier, options) {
 		if (_.contains(fieldNames, "name")){
-			var urlName = getSlug(doc.name, {maintainCase: true});
+			var urlName = getSlug(doc.name, {maintainCase: true}) || "-";
 			Characters.update(doc._id, {$set: {urlName}});
 		}
 	});

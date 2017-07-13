@@ -28,7 +28,7 @@ Migrations.add({
 		//update characters
 		Characters.find({}).forEach(function(char){
 			if (char.urlName) return;
-			var urlName = getSlug(char.name, {maintainCase: true});
+			var urlName = getSlug(char.name, {maintainCase: true}) || "-";
 			Characters.update(char._id, {$set: {urlName}});
 		});
 	},
