@@ -33,7 +33,7 @@ Template.effectsEditList.events({
 			template: "effectEdit",
 			data: {id: effectId},
 			element: event.currentTarget,
-			returnElement: instance.find(`tr.effect[data-id='${effectId}']`),
+			returnElement: () => instance.find(`tr.effect[data-id='${effectId}']`),
 		});
 	},
 	"tap .edit-effect": function(event, template){
