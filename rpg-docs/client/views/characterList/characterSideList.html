@@ -1,15 +1,31 @@
 <template name="characterSideList">
-	{{#if characters.count}}
-		<div class="side-list">
-			{{#each characters}}
-				<a href={{characterPath this}} tabindex="-1" class="side-list-character characterRepresentative">
-					<paper-item class="short">
-						<div class="character-name">
-							{{name}}
-						</div>
-					</paper-item>
-				</a>
-			{{/each}}
-		</div>
-	{{/if}}
+	<div class="side-list">
+		{{#each charactersWithNoParty}}
+			<a href={{characterPath this}} tabindex="-1" class="side-list-character characterRepresentative">
+				<paper-item class="short">
+					<div class="character-name">
+						{{name}}
+					</div>
+				</paper-item>
+			</a>
+		{{/each}}
+		{{#each parties}}
+			<div class="paper-font-subhead partyHead">
+				<iron-icon icon="chevron-right" class="{{#if isOpen _id}}open{{/if}}">
+				</iron-icon>
+				{{name}}
+			</div>
+			<iron-collapse opened={{isOpen _id}}>
+				{{#each charactersInParty}}
+					<a href={{characterPath this}} tabindex="-1" class="side-list-character characterRepresentative">
+						<paper-item class="short">
+							<div class="character-name">
+								{{name}}
+							</div>
+						</paper-item>
+					</a>
+				{{/each}}
+			</iron-collapse>
+		{{/each}}
+	</div>
 </template>
