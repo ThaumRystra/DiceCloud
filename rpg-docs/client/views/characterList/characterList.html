@@ -10,31 +10,27 @@
 				{{#if currentUser}}
 					{{#if characters.count}}
 						<div class="character-list layout horizontal wrap">
-							{{# each characters}}
-								<a class="character-card flex layout vertical end-justified" href="{{characterPath this}}">
-									<iron-image class="fit {{colorClass}}"
-												sizing="cover" preload fade src={{picture}}>
-									</iron-image>
-									{{#unless picture}}
-										<div class="fit initials layout vertical center center-justified">
-											{{initials name}}
-										</div>
-									{{/unless}}
-									<paper-item>
-										<paper-item-body two-lines>
-											<div class="name white87">
-												{{name}}
-											</div>
-											<div secondary style="color: #8a8a8a; color: rgba(255,255,255,0.87);">
-												{{alignment}} {{gender}} {{race}}
-											</div>
-										</paper-item-body>
-									</paper-item>
-									<paper-ripple></paper-ripple>
-								</a>
+							{{# each charactersWithNoParty}}
+								{{> characterCard}}
 							{{/each}}
 							{{> gridPadding class="character-card flex layout vertical" num=12}}
 						</div>
+						{{# each party in parties}}
+							<div class="party" data-id={{party._id}}>
+								{{#with party}}
+									<div class="partyHeader clickable paper-font-title padded">
+										{{name}}
+										<iron-icon icon="create"></iron-icon>
+									</div>
+								{{/with}}
+								<div class="character-list layout horizontal wrap">
+									{{# each charactersInParty party._id}}
+										{{> characterCard}}
+									{{/each}}
+									{{> gridPadding class="character-card flex layout vertical" num=12}}
+								</div>
+							</div>
+						{{/each}}
 					{{else}}
 						<div layout vertical center center-justified class="padded">
 							<div>You don't seem to have any characters yet</div>
@@ -47,9 +43,46 @@
 					</div>
 				{{/if}}
 			<div class="fab-buffer"></div>
-			<paper-fab class="floatyButton addCharacter"
-					   icon="add"
-					   title="Add"></paper-fab>
+			{{#fabMenu}}
+				<div>
+					<paper-fab icon="social:group"
+							   class="addParty"
+							   mini>
+					</paper-fab>
+					<paper-tooltip position="left"> New Party </paper-tooltip>
+				</div>
+				<div>
+					<paper-fab icon="face"
+							   class="addCharacter"
+							   mini>
+					</paper-fab>
+					<paper-tooltip position="left"> New Character </paper-tooltip>
+				</div>
+			{{/fabMenu}}
 		</div>
 	</app-header-layout>
+</template>
+
+<template name="characterCard">
+	<a class="character-card flex layout vertical end-justified" href="{{characterPath this}}">
+		<iron-image class="fit {{colorClass}}"
+					sizing="cover" preload fade src={{picture}}>
+		</iron-image>
+		{{#unless picture}}
+			<div class="fit initials layout vertical center center-justified">
+				{{initials name}}
+			</div>
+		{{/unless}}
+		<paper-item>
+			<paper-item-body two-lines>
+				<div class="name white87">
+					{{name}}
+				</div>
+				<div secondary style="color: #8a8a8a; color: rgba(255,255,255,0.87);">
+					{{alignment}} {{gender}} {{race}}
+				</div>
+			</paper-item-body>
+		</paper-item>
+		<paper-ripple></paper-ripple>
+	</a>
 </template>

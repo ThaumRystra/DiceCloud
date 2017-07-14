@@ -8,8 +8,16 @@
 	position: relative;
 }
 
-.character-card .image {
+.partyHeader {
+	display: inline-block;
+}
 
+.partyHeader iron-icon {
+	visibility: hidden;
+}
+
+.partyHeader:hover	iron-icon{
+	visibility: initial;
 }
 
 .character-card .initials {
