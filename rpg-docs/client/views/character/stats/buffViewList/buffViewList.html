@@ -1,0 +1,14 @@
+<template name="buffViewList">
+	{{if buffs.count}}
+	<paper-material class="card">
+		<div class="top white paper-font-subhead">
+			Conditions
+		</div>
+		<div flex class="bottom list">
+			{{#each buffs}}
+				{{>buff}}
+			{{/each}}
+		</div>
+	</paper-material>
+	{{/if}}
+</template>
