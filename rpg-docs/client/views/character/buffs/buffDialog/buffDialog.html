@@ -1,6 +1,8 @@
 <template name="buffDialog">
 	{{#with buff}}
-		{{#baseDialog title=name class=colorClass hideEdit=true}}
+		{{#baseDialog title=name class=colorClass hideColor=true}}
+			{{> buffDetails}}
+		{{else}}
 			{{> buffDetails}}
 		{{/baseDialog}}
 	{{/with}}
@@ -8,8 +10,8 @@
 
 <template name="buffDetails">
 	{{#if description}}
-		<div class="pre-wrap">{{evaluateString charId description}}</div>
+		<hr style="margin: 16px 0 16px 0;">
+		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
 	{{/if}}
-
 	{{> effectsViewList charId=charId parentId=_id}}
 </template>

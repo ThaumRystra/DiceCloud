@@ -1,0 +1,17 @@
+<template name="buffViewList">
+	<div>
+		<paper-material class="card">
+			<div class="top white subhead layout horizontal center">
+					<div class="flex">Conditions</div>
+					{{#if canEditCharacter _id}}
+					<paper-icon-button class="black54" id="addBuff" icon="add"></paper-icon-button>
+					{{/if}}
+				</div>
+			<div flex class="bottom list">
+				{{#each buffs}}
+					{{>buffView}}
+				{{/each}}
+			</div>
+		</paper-material>
+	</div>
+</template>
