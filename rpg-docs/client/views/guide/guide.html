@@ -7,93 +7,111 @@
 			</app-toolbar>
 		</app-header>
 		<div class="layout vertical center">
-			<paper-material class="wallOfText card" style="padding: 32px; max-width: 800px;">
-				<h2>Character Sheet Philosophy</h2>
-				<p>Setting up your character on DiceCloud is going to take you a little longer than just filling it in on a paper character sheet would have. The goal of using an online sheet is to make actually playing the game more streamlined, and ultimately more fun. So putting a little extra effort into setting up your character now will pay off over and over again once you're playing.</p>
-				<p>The idea is to track where each number comes from, and allow you to easily make changes on the fly.</p>
-				<p>Let's look at a hypothetical example.</p>
-				<p>You need to swim through a sunken section of dungeon to fetch the quest's Thing.<br>You'll need to take off your magical Plate Armor of +1 Constitution to swim without sinking, of course. Taking it off will change your armor class, your speed and your constitution, which in turn changes your hit points and your constitution saving throw. Working out all those changes in the middle of a game will drag the game to a halt. <br> Fortunately you have a digital character sheet, so it's a matter of dragging your Plate Armor +1 Con from your "equipment" box to your "backpack" box and you're done. Your hitpoints change correctly, your saving throws are up to date, your armor class goes back to reflecting the fact that you have natural armor from being a dragonborn. Your character sheet keeps up and you ultimately get more time to play the game. Huzzah!</p>
-				<h2>Creating a Character</h2>
-				<ul>
-					<li>In the <a href={{pathFor route="characterList"}}>character list</a>, click the plus button, floating in the bottom right corner.</li>
-					<li>Give your character a name, gender and race - these can all be changed later if you change your mind. Then click the Add button.</li>
-					<li>Your new character should open, with your ability scores at a default of 10, but most other attributes at zero.</li>
-				</ul>
+			<paper-material class="wallOfText card" style="padding: 32px; max-width: 800px;"> {{#markdown}}
+## Character Sheet Philosophy
 
-				<h2>Adding Racial Effects</h2>
-				<p>You have already given your character a race, but you haven't yet specified what that race does for your character, so let's do that.</p>
-				<ul>
-					<li>Click the Journal tab.</li>
-					<li>In the card that displays your level, click on your race to open the racial dialog box.</li>
-					<li>Click the edit button (the pencil icon) in the top corner of the racial dialog.</li>
-				</ul>
-				<p>In the edit mode of the racial dialog you can change your race's name and add effects and proficiencies your race gives you. We will only be adding the base traits our race gives us, specific features can go in the features tab so we can more easily reference them later.</p>
-				<p>Let's add some of the effects all races will give.</p>
-				<ul>
-					<li>Click the Add Effect button; a new window will open - this is the effect edit dialog.</li>
-					<li>In the left menu, scroll down to "Stats" and choose "Speed".</li>
-					<li>The right menu let's us choose how to effect that stat. Choose "Base Value", since our character's base speed comes from their race.</li>
-					<li>Finally, input the value for our characters speed, it'll probably be 30 unless you chose a slower race, such as a dwarf.</li>
-					<li>Close the Race dialog and navigate to the Stats tab.</li>
-					<li>The speed card should now correctly display the character's speed.</li>
-					<li>Click the speed card to see how that value was calculated.</li>
-					<li>Currently there is only one number effecting the total, the speed from our race, but as more effects from different sources start impacting our character's speed, they will show up here.</li>
-				</ul>
-				<p>You can now also add any other <em>stat changes</em> given yo you by your race, for example a human's +1 to each ability score, or an elf's +2 Dexterity.</p>
+Setting up your character on DiceCloud is going to take you a little longer than just filling it in on a paper character sheet would have. The goal of using an online sheet is to make actually playing the game more streamlined, and ultimately more fun. So putting a little extra effort into setting up your character now will pay off over and over again once you're playing.
 
-				<h2>Adding your ability scores</h2>
-				<p>Your character's ability scores are currently all 10 by default - which means that they're no better than your average commoner! Whether you roll your abilities, point-buy them, or just use the standard set of values, you'll need to update them.</p>
-				<ul>
-					<li>Navigate to the <em>Features</em> tab.</li>
-					<li>Select the <em>Base Ability Scores</em> feature, which was added automatically.</li>
-					<li>Click the edit button (the pencil icon) in the top right corner.</li>
-					<li>Click the pencil icon to the right of your character's Strength to open the effect edit dialog.</li>
-					<li>Input your character's rolled or point-bought strength, <em>without</em> the racial modifier.</li>
-					<li>Notice that the operation is <em>Base Value</em> by default - this is what we want, as it is the character's <em>base</em> Strength score.</li>
-					<li>Repeat for the rest of your ability scores.</li>
-				</ul>
-				<p>You can now check that your ability scores appear on your <em>Stats</em> page and that your skills that use them have their values calculated accordingly.</p>
-				<p>We didn't include your character's racial ability modifiers in the feature, so you should go back to your character's  racial dialog and add them in there as effects. Remember to use the add operation, rather than base value, since your race adds to your ability scores.</p>
-				<p>By separating the source of your character's stats you can easily check how your character got their ability scores and stats, even after 20 levels, without getting confused or making mistakes.</p>
+The idea is to track where each number comes from, and allow you to easily make changes on the fly.
+Let's look at a hypothetical example.
 
-				<h2>Adding a Class</h2>
-				<p>Currently your character is at level 0, because they don't have any class levels. Let's fix that.</p>
-				<ul>
-					<li>Click the plus button in the card that currently says "Level 0"</li>
-					<li>A new class has now been added, name the class in the Class Name input and leave the level as 1.</li>
-				</ul>
-				<p>We now have a class, let's add the saving throw proficiencies it gives us.</p>
-				<ul>
-					<li>Click the Add Proficiency button</li>
-					<li>Click the dropdown box that currently has "Skill" selected, and choose "Saving Throw" instead</li>
-					<li>In the second dropdown choose the first saving throw your class gives you</li>
-					<li>The third dropdown let's us specify if we have half or double our proficiency bonus for this proficiency, leave it at the default "proficient" for now</li>
-				</ul>
-				<p>If you navigate back to the stat page, you will see that you now have a proficiency bonus, based on your class level, and the saving throw you are proficienct in will take your proficiency bonus into account.</p>
-				<p>One of the most important things your class gives you is your hit points, so let's go add those now.</p>
-				<ul>
-					<li>Navigate to the class dialog box by clicking on your class name in the journal tab and hitting the edit button</li>
-					<li>Click the Add Effect button</li>
-					<li>Scroll down to <em>Stats</em> on the left, and choose the <em>Hit Points</em> stat.</li>
-					<li>Choose the <em>Base Value</em> operation.</li>
-				</ul>
-				<p>Now we need to decide how many hit points our class gives us. We will assume that we take the constant hit points per level, since it's both the rule used for league play and it's statistically advantageous over rolling for hit points every level.</p>
-				<p>We could work out our hit points every level and change the effect each time, but we can do one better: we can input the calculation directly into the value field and have the character sheet figure it out for us.</p>
-				<p>Let's assume we are creating a fighter, so in the class name you typed in "Fighter" (with the capital F, but without the quote marks). A fighter gets 10 hp at first level and 6 hitpoints every level after that.</p>
-				<p>Let's rather split that into 4 bonus hit points at first level, and 6 hit points for every fighter level your character has. We can the write this as <em>4 + 6*FighterLevel</em> where the * represents multiplication.</p>
-				<p><em>Note that we don't add the constitution modifier here; that's already taken care of by default, since all characters add their constitution modifier to their hit points automatically.</em></p>
-				<ul>
-					<li>In the value field input <em>4 + 6 * FighterLevel</em> - the spaces aren't needed, but you must spell your class name exactly as it is spelt in the class name input box, capital letters and all, in our case "Fighter"</li>
-					<li>Create a new effect that sets the base value of <em>d10 Hit Dice</em> to <em>FighterLevel</em>, since we also get a number of hit dice equal to our fighter's level.</li>
-					<li>Check how your changes are reflected in the <em>Stats</em> tab.</li>
-					<li>Change your level and check that the <em>Stats</em> tab gets updated accordingly.</li>
-				</ul>
-				<p>This method of including calculations in other stats allows you to take full advantage of having a digital character sheet, as it means that you can change any one thing in your character sheet and everthing else will update automatically.</p>
-				<p>Any input field with a <iron-icon icon="lightbulb-outline"></iron-icon> light bulb icon is a <em>formula field</em>: it will compute any and all variables and functions within it. For example, the "Value" field in the effect edit dialog is a formula field, so you could set the value to 3, or FighterLevel*2, or any formula you can think of. </p>
-				<p>Any input field with a <iron-icon icon="dicecloud:code-braces"></iron-icon> curly brackets icon is a <em>smart input field</em>: you can also use formulas here, but they must be enclosed within {curly brackets}. For example, the "Damage" field of a spell or weapon is a smart input field, so you could type "1d8 + {strengthMod}" for the damage, and if your strength modifier was +3, it would display as "1d8 + 3".</p>
+You need to swim through a sunken section of dungeon to fetch the quest's Thing.  
+You'll need to take off your magical Plate Armor of +1 Constitution to swim without sinking, of course. Taking it off will change your armor class, your speed and your constitution, which in turn changes your hit points and your constitution saving throw. Working out all those changes in the middle of a game will drag the game to a halt.  
+Fortunately you have a digital character sheet, so it's a matter of dragging your Plate Armor +1 Con from your "equipment" box to your "backpack" box and you're done. Your hitpoints change correctly, your saving throws are up to date, your armor class goes back to reflecting the fact that you have natural armor from being a dragonborn. Your character sheet keeps up and you ultimately get more time to play the game. Huzzah!
 
-				<p>The full list of functions and variables can be found on the GitHub wiki, <a href="https://github.com/ThaumRystra/DiceCloud1/wiki/Function-and-Variable-List">here</a>.</p>
-			</paper-material>
+## Creating a Character
+
+ - In the [character list]({{pathFor route="characterList"}}), click the plus button, floating in the bottom right corner.  
+ - Give your character a name, gender and race - these can all be changed later if you change your mind. Then click the Add button.  
+ - Your new character should open, with your ability scores at a default of 10, but most other attributes at zero.  
+
+
+## Adding Racial Effects
+You have already given your character a race, but you haven't yet specified what that race does for your character, so let's do that.
+
+ - Click the Journal tab.  
+ - In the card that displays your level, click on your race to open the racial dialog box.  
+ - Click the edit button (the pencil icon) in the top corner of the racial dialog.  
+
+In the edit mode of the racial dialog you can change your race's name and add effects and proficiencies your race gives you. We will only be adding the base traits our race gives us, specific features can go in the features tab so we can more easily reference them later.
+
+Let's add some of the effects all races will give.
+
+ - Click the Add Effect button; a new window will open - this is the effect edit dialog.  
+ - In the left menu, scroll down to "Stats" and choose "Speed".  
+ - The right menu let's us choose how to effect that stat. Choose "Base Value", since our character's base speed comes from their race.  
+ - Finally, input the value for our characters speed, it'll probably be 30 unless you chose a slower race, such as a dwarf.  
+ - Close the Race dialog and navigate to the Stats tab.  
+ - The speed card should now correctly display the character's speed.  
+ - Click the speed card to see how that value was calculated.  
+ - Currently there is only one number effecting the total, the speed from our race, but as more effects from different sources start impacting our character's speed, they will show up here.  
+
+You can now also add any other *stat changes* given yo you by your race, for example a human's +1 to each ability score, or an elf's +2 Dexterity.
+
+## Adding your ability scores
+
+Your character's ability scores are currently all 10 by default - which means that they're no better than your average commoner! Whether you roll your abilities, point-buy them, or just use the standard set of values, you'll need to update them.
+
+ - Navigate to the *Features* tab.  
+ - Select the *Base Ability Scores* feature, which was added automatically.  
+ - Click the edit button (the pencil icon) in the top right corner.  
+ - Click the pencil icon to the right of your character's Strength to open the effect edit dialog.  
+ - Input your character's rolled or point-bought strength, *without* the racial modifier.  
+ - Notice that the operation is *Base Value* by default - this is what we want, as it is the character's *base* Strength score.  
+ - Repeat for the rest of your ability scores.  
+
+You can now check that your ability scores appear on your *Stats* page and that your skills that use them have their values calculated accordingly.
+
+We didn't include your character's racial ability modifiers in the feature, so you should go back to your character's  racial dialog and add them in there as effects. Remember to use the add operation, rather than base value, since your race adds to your ability scores.
+
+By separating the source of your character's stats you can easily check how your character got their ability scores and stats, even after 20 levels, without getting confused or making mistakes.</p>
+
+## Adding a Class
+
+Currently your character is at level 0, because they don't have any class levels. Let's fix that.
+
+ - Click the plus button in the card that currently says "Level 0"  
+ - A new class has now been added, name the class in the Class Name input and leave the level as 1.  
+
+We now have a class, let's add the saving throw proficiencies it gives us.
+
+ - Click the Add Proficiency button  
+ - Click the dropdown box that currently has "Skill" selected, and choose "Saving Throw" instead  
+ - In the second dropdown choose the first saving throw your class gives you  
+ - The third dropdown let's us specify if we have half or double our proficiency bonus for this proficiency, leave it at the default "proficient" for now  
+
+If you navigate back to the stat page, you will see that you now have a proficiency bonus, based on your class level, and the saving throw you are proficienct in will take your proficiency bonus into account.
+
+One of the most important things your class gives you is your hit points, so let's go add those now.
+
+ - Navigate to the class dialog box by clicking on your class name in the journal tab and hitting the edit button  
+ - Click the Add Effect button  
+ - Scroll down to *Stats* on the left, and choose the *Hit Points* stat.  
+ - Choose the *Base Value* operation.  
+
+Now we need to decide how many hit points our class gives us. We will assume that we take the constant hit points per level, since it's both the rule used for league play and it's statistically advantageous over rolling for hit points every level.
+
+We could work out our hit points every level and change the effect each time, but we can do one better: we can input the calculation directly into the value field and have the character sheet figure it out for us.
+
+Let's assume we are creating a fighter, so in the class name you typed in "Fighter" (with the capital F, but without the quote marks). A fighter gets 10 hp at first level and 6 hitpoints every level after that.
+
+Let's rather split that into 4 bonus hit points at first level, and 6 hit points for every fighter level your character has. We can the write this as `4 + 6*FighterLevel` where the `*` represents multiplication.
+
+*Note that we __don't add the constitution modifier here__; that's already taken care of by default, since all characters add their constitution modifier to their hit points automatically.*
+
+ - In the value field input `4 + 6*FighterLevel` - the spaces aren't needed, but you must spell your class name exactly as it is spelt in the class name input box, capital letters and all, in our case "Fighter"  
+ - Create a new effect that sets the base value of *d10 Hit Dice* to *FighterLevel*, since we also get a number of hit dice equal to our fighter's level.  
+ - Check how your changes are reflected in the *Stats* tab.  
+ - Change your level and check that the *Stats* tab gets updated accordingly.  
+
+This method of including calculations in other stats allows you to take full advantage of having a digital character sheet, as it means that you can change any one thing in your character sheet and everthing else will update automatically.
+
+Any input field with a <iron-icon icon="lightbulb-outline"></iron-icon> light bulb icon is a *formula field*: it will compute any and all variables and functions within it. For example, the "Value" field in the effect edit dialog is a formula field, so you could set the value to `3`, or `FighterLevel*2`, or any formula you can think of. 
+
+Any input field with a <iron-icon icon="dicecloud:code-braces"></iron-icon> curly brackets icon is a *smart input field*: you can also use formulas here, but they must be enclosed within {curly brackets}. For example, the "Damage" field of a spell or weapon is a smart input field, so you could type `1d8 + {strengthMod}` for the damage, and if your strength modifier was +3, it would display as "1d8 + 3".
+
+The full list of functions and variables can be found on the GitHub wiki, [here](https://github.com/ThaumRystra/DiceCloud1/wiki/Function-and-Variable-List).
+			{{/markdown}}</paper-material>
 		</div>
 	</app-header-layout>
 </template>
