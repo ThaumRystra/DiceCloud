@@ -1,6 +1,6 @@
 var childSchema = new SimpleSchema({
 	parent:              {type: Object},
-	"parent.collection": {type: String},
+	"parent.collection": {type: String, allowedValues: ["Actions", "Attacks", "Buffs", "Classes", "Characters", "Containers", "Effects", "Experiences", "Features", "Items", "Notes", "Proficiencies", "SpellLists", "Spells", "TemporaryHitPoints"]},
 	"parent.id":         {type: String, regEx: SimpleSchema.RegEx.Id},
 	"parent.group":      {type: String, optional: true},
 	"removedWith":       {
