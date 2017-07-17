@@ -1,0 +1,26 @@
+<template name="buffEdit">
+	<paper-material class="card">
+		<div class="buffEdit buff-edit small layout center">
+			<div class="top grey paper-font-subhead white-text layout horizontal">
+				<div class="flex">
+					<paper-input id="buffNameInput" class="fullwidth grey" label="Name" value={{name}}></paper-input>
+				</div>  
+				<div>
+					<paper-icon-button id="deleteBuff" role="button" tabindex="0" icon="delete"></paper-icon-button>
+				</div>
+				<div>
+					<paper-checkbox class="enabledCheckbox" id="" checked={{enabled}} disabled={{#unless canEditCharacter charId}}true{{/unless}}></paper-checkbox>
+				</div>
+			</div>
+			
+			<div class="buff-details">
+				<paper-textarea label="Description" id="buffDescriptionInput" value={{description}}>
+					{{> bracketSuffix}}
+				</paper-textarea>
+				{{> effectsEditList parentId=_id parentCollection="Buffs" charId=charId name=name enabled=enabled}}
+				{{> proficiencyEditList parentId=_id parentCollection="Buffs" charId=charId enabled=enabled}}
+				{{> attackEditList parentId=_id parentCollection="Buffs" charId=charId enable=enabled}}
+			</div>
+		</div>
+	</paper-material>
+</template>

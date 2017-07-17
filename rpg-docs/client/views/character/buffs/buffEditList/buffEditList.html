@@ -1,12 +1,13 @@
-<template name="buffViewList">
+<template name="buffEditList">
 	{{#if buffs.count}}
 		<div class="buffs">
 			<div class="paper-font-title" style="margin-bottom: 8px;">
 				Buffs
 			</div>
 			{{#each buffs}}
-				{{> buffView}}
+				{{> buffEdit}}
 			{{/each}}
 		</div>
 	{{/if}}
+	<paper-button id="addBuffButton" class="red-button" raised>Add Buff</paper-button>
 </template>

@@ -1,7 +1,21 @@
 <template name="buffView">
-	<div class="item buffView layout horizontal center">
-		<div class="flex">
-			{{name}}
+	<paper-material class="card">
+		<div class="buffView buff-view small layout center">
+			<div class="top grey paper-font-subhead white-text layout horizontal">
+				<div class="flex">{{name}}</div>  
+				<div>
+					<paper-checkbox id="enabledCheckbox" checked={{enabled}} disabled={{#unless canEditCharacter charId}}true{{/unless}}></paper-checkbox>
+				</div>
+			</div>
+			
+			<div class="buff-details">
+				{{#if description}}
+					<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
+				{{/if}}
+				{{> effectsViewList charId=charId parentId=_id}}
+				{{> proficiencyViewList charId=charId parentId=_id}}
+				{{> attacksViewList charId=charId parentId=_id}}
+			</div>
 		</div>
-	</div>
+	</paper-material>
 </template>

@@ -21,12 +21,14 @@ var getCondition = function(conditionName) {
 };
 
 Meteor.methods({
-	giveCondition: function(charId, conditionName) {
+	giveCondition: function(charId, conditionName, parent) {
+		if (typeof parent === 'undefined') parent = null; //parent is an optional argument
+
 		checkWritePermission(charId);
 		var condition = getCondition(conditionName);
 		//create the buff
 		var buff = _.extend(
-			{charId: charId, type: "inate"}, condition.buff
+			{charId: charId, type: "inate", parent: parent}, condition.buff
 		);
 
 		//make sure the character doesn't already have the buff

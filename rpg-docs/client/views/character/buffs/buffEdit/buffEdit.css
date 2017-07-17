@@ -1,0 +1,53 @@
+.buff-edit {
+	padding: 0;
+	cursor: default;
+	margin-bottom: 12px;
+}
+
+/*these are hardcoded to force them to be vertically centered. TODO: fix this in a better way*/
+.buff-edit paper-checkbox {
+	margin-top: 22px;
+	margin-bottom: 22px;
+	margin-left:12px;
+}
+.spell-dialog .buff-edit paper-checkbox { /*more specific than the style for these defined in spellDialog.css*/
+	margin-top: 22px;
+	margin-bottom: 22px;
+	margin-left:12px;
+	margin-right: 0px;
+}
+.buff-edit paper-icon-button {
+	margin-top: 11px;
+	margin-bottom: 11px;
+	margin-left:12px;
+}
+
+.card .buff-edit .top { /*the same as .card .top but without the pointer cursor*/
+	padding-top: 0;
+	padding-bottom: 0; 
+	cursor: default;
+}
+
+.buff-details {
+	margin-top: 12px;
+	margin-left: 12px;
+	margin-right: 12px;
+	padding-bottom: 12px;
+}
+
+.buff-details .paper-font-title { /*make it smaller and lighter*/
+	color: rgba(0,0,0,0.54);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.010em;
+    padding: 0px 0px 0px 6px;
+}
+
+.buff-details .effects,
+.buff-details .proficiencies {
+	font-size: 14px;
+}
+
+.buff-details .attacks {
+	font-size: 14px;
+}

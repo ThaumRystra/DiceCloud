@@ -36,6 +36,7 @@
 
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> proficiencyViewList charId=charId parentId=_id}}
+	{{> buffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="featureEdit">
@@ -69,8 +70,11 @@
 	</div>
 
 	<!--description-->
-	<paper-textarea label="Description" id="featureDescriptionInput" value={{description}}></paper-textarea>
+	<paper-textarea label="Description" id="featureDescriptionInput" value={{description}}>
+		{{> bracketSuffix}}
+	</paper-textarea>
 
 	{{> effectsEditList parentId=_id parentCollection="Features" charId=charId name=name enabled=enabled}}
 	{{> proficiencyEditList parentId=_id parentCollection="Features" charId=charId enabled=enabled}}
+	{{> buffEditList parentId=_id parentCollection="Features" charId=charId enabled=enabled}}
 </template>

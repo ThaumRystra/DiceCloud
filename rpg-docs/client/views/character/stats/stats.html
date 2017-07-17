@@ -43,7 +43,31 @@
 			</paper-material>
 			</div>
 			<!--Condtions-->
-			{{> buffViewList}}
+			<div>
+				<paper-material class="card">
+					<div class="top white subhead layout horizontal center">
+						<div class="flex">Conditions</div>
+						{{#if canEditCharacter _id}}
+						<paper-icon-button class="black54" id="addCondition" icon="add"></paper-icon-button>
+						{{/if}}
+					</div>
+					<div flex class="bottom list">
+						<div class="conditionsList">
+						{{#each conditions}}
+							{{>conditionListItem}}
+						{{/each}}
+						</div>
+						{{#if buffs.count}}
+							<div class="paper-font-subhead">Buffs</div>
+						{{/if}}
+						<div class="buffsList">
+						{{#each buffs}}
+							{{>buffListItem}}
+						{{/each}}
+						</div>
+					</div>
+				</paper-material>
+			</div>
 			<!--Skills-->
 			<div>
 			<paper-material class="card">

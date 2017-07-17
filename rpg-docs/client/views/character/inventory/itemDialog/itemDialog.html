@@ -23,6 +23,7 @@
 	{{/if}}
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> attacksViewList charId=charId parentId=_id}}
+	{{> buffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="itemEdit">
@@ -68,6 +69,8 @@
 	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
 	<!--Attacks-->
 	{{> attackEditList  parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
+	<!--Buffs-->
+	{{> buffEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped}}
 </template>
 
 <template name="containerDropdown">

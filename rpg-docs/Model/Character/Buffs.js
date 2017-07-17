@@ -22,7 +22,7 @@ Schemas.Buff = new SimpleSchema({
 	type: {
 		type: String,
 		allowedValues: [
-			"inate",
+			"inate", //this should be "innate", but changing it could be problematic
 			"custom",
 		],
 	},
@@ -41,12 +41,18 @@ Schemas.Buff = new SimpleSchema({
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
 	},
+	//the id of the feature, buff or item that created this buff
+	parent: {
+		type: Schemas.Parent,
+		optional: true,
+	},
 });
 
 Buffs.attachSchema(Schemas.Buff);
 
 Buffs.attachBehaviour("softRemovable");
-makeParent(Buffs, ["name", "enabled"]); //parents of effects
+makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies
+makeChild(Buffs, ["enabled"]); //children of lots of things
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);
