@@ -68,8 +68,11 @@
 		{{/if}}
 	</div>
 
-	<!--description-->
-	<paper-textarea label="Description" id="featureDescriptionInput" value={{description}}></paper-textarea>
+	<!--Description-->
+	<div class=description-input>
+		<paper-textarea id="featureDescriptionInput" label="Description" value={{description}}></paper-textarea>
+		{{> textareaBracketSuffix}}
+	</div>
 
 	{{> effectsEditList parentId=_id parentCollection="Features" charId=charId name=name enabled=enabled}}
 	{{> proficiencyEditList parentId=_id parentCollection="Features" charId=charId enabled=enabled}}

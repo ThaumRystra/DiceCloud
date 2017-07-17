@@ -111,8 +111,10 @@
 		</paper-checkbox>
 	</div>
 
-	<!--Description-->
-	<paper-textarea id="descriptionInput" label="Description" value="{{description}}">
-	</paper-textarea>
+	<div class=description-input>
+		<paper-textarea id="descriptionInput" label="Description" value={{description}}></paper-textarea>
+		{{> textareaBracketSuffix}}
+	</div>
+
 	{{> attackEditList  parentId=_id parentCollection="Spells" charId=charId enabled=true name=name}}
 </template>
