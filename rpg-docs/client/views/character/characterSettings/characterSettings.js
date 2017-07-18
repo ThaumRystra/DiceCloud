@@ -23,6 +23,15 @@ Template.characterSettings.events({
 			);
 		}
 	},
+	"change #swapStatAndModifier": function(event, instance){
+		var value = instance.find("#swapStatAndModifier").checked;
+		if (this.settings.swapStatAndModifier !== value){
+			Characters.update(
+				this._id,
+				{$set: {"settings.swapStatAndModifier": value}}
+			);
+		}
+	},
 	"click .doneButton": function(event, instance){
 		popDialogStack();
 	},

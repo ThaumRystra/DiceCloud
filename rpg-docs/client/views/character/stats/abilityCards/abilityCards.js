@@ -5,5 +5,10 @@ Template.abilityMiniCard.helpers({
 				Template.parentData()._id, this.ability
 			)
 		);
-	}
+	},
+	swap: function() {
+		var character = Characters.findOne({"_id": Template.parentData()._id})
+		if (character) {return character.settings.swapStatAndModifier;}
+		else {return false;}
+	},
 });
