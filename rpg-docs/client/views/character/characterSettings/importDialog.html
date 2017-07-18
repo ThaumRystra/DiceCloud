@@ -1,0 +1,23 @@
+<template name="importDialog">
+	<div class="fit layout vertical import-dialog">
+		<app-header-layout has-scrolling-region class="feedback flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>Import Character</div>
+				</app-toolbar>
+			</app-header>
+
+			<div class="form flex">
+				Importing character data will COMPLETELY OVERWRITE this character. <br>
+				This CANNOT be undone.<br>
+				To continue, type "{{name}}" into the box below.<br>
+				<paper-input id="nameInput" label="Type the characters's name here" style="width: 100%;"></paper-input>
+				<paper-button id="importButton" style={{getStyle}} disabled={{cantImport}}>Import Character</paper-button>
+				<paper-textarea label="Paste export string here." errorMessage="Paste export string here" id="dataInput"></paper-textarea>
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="cancelButton"> Cancel </paper-button>
+		</div>
+	</div>
+</template>

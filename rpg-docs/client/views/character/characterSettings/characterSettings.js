@@ -1,7 +1,7 @@
 Template.characterSettings.helpers({
 	character: function() {
 		return Characters.findOne(this._id, {fields: {settings: 1}});
-	}
+	},
 });
 
 Template.characterSettings.events({
@@ -22,6 +22,22 @@ Template.characterSettings.events({
 				{$set: {"settings.hideSpellcasting": value}}
 			);
 		}
+	},
+	"click #exportCharacterButton": function(event, instance) {
+		Meteor.call("serialiseCharacter", this._id, function(error, result) {
+			pushDialogStack({
+				template: "exportDialog",
+				data:     {data:result},
+				element:   event.currentTarget,
+			});
+		});
+	},
+	"click #importCharacterButton": function(event, instance) {
+		pushDialogStack({
+			template: "importDialog",
+			data:     {charId: this._id},
+			element:  event.currentTarget,
+		});
 	},
 	"click .doneButton": function(event, instance){
 		popDialogStack();

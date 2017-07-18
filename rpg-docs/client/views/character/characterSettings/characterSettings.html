@@ -14,6 +14,8 @@
 				<paper-toggle-button id="variantEncumbrance" checked={{settings.useVariantEncumbrance}}>
 					Use variant encumbrance
 				</paper-toggle-button>
+				<paper-button id="exportCharacterButton" class="red-button"  raised>Export Character Data</paper-button>
+				<paper-button id="importCharacterButton" class="red-button"  raised>Import Character Data</paper-button>
 			</div>
 		</app-header-layout>
 		<div class="buttons layout horizontal end-justified">
@@ -21,4 +23,16 @@
 		</div>
 	</div>
 	{{/with}}
+</template>
+
+<template name="exportDialog">
+	{{#baseDialog title="Export Character" hideEdit=true}}
+		{{>exportDialogContents data=data}}
+	{{else}}
+		{{>exportDialogContents data=data}}
+	{{/baseDialog}}
+</template>
+
+<template name="exportDialogContents">
+	<paper-textarea value={{data}} label="Copy this"></paper-textarea>
 </template>
