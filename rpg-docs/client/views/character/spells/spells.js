@@ -11,6 +11,12 @@ var spellLevels = [
 	{name: "Level 9",  level: 9},
 ];
 
+var materialNeedsGp = function(string) {
+	if (!string) return false;
+	gpRegExp = /\b[0-9]+ ?(cp|sp|gp)\b/i;
+	return gpRegExp.test(string);
+}
+
 const showUnprepared = (listId) => {
 	return Session.get(`showUnprepared.${listId}`);
 }
@@ -70,6 +76,7 @@ Template.spells.helpers({
 		}
 		if (this.components.material){
 			components += components ? ", M" : "M";
+			if (materialNeedsGp(this.components.material)) {components+="gp";}
 		}
 		if (this.components.concentration){
 			components += components ? ", C" : "C";
