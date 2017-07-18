@@ -149,7 +149,52 @@ Template.effectEdit.helpers({
 	effectValue: function(){
 		return this.calculation || this.value;
 	},
+	isGroupSelected: function(groupName, statName){
+		var stat = statsDict[statName]
+		return stat && (stat.group === groupName);
+	},
 });
+
+var setStat = function(statName, effectId){
+	var setter = {stat: statName};
+	var effect = Effects.findOne(this._id);
+	var group = statsDict[statName].group;
+	if (group === "Saving Throws" || group === "Skills"){
+		// Skills must have a valid skill operation
+		if (!_.contains(
+			_.map(skillOperations, ao => ao.operation),
+			effect.operation
+		)){
+			setter.operation = "add";
+		}
+	} else if (group !== "Weakness/Resistance"){
+		// Attributes must have a valid attribute operation
+		if (!_.contains(
+			_.map(attributeOperations, ao => ao.operation),
+			effect.operation
+		)){
+			setter.operation = "base";
+		}
+	} else {
+		// Weakness/Resistance must have a mul operation and value
+		if (effect.operation !== "mul"){
+			setter.operation = "mul";
+		}
+		if (!_.contains([0, 0.5, 2], effect.value)){
+			setter.value = 0.5;
+		}
+	}
+	Effects.update(effectId, {$set: setter});
+};
+
+var scrollAnimationId;
+var scrollElementToView = element => {
+	var scrollFunction =  function(){
+		element.scrollIntoView();
+		scrollAnimationId = requestAnimationFrame(scrollFunction);
+	};
+	return scrollFunction;
+}
 
 Template.effectEdit.events({
 	"click #deleteButton": function(event, instance){
@@ -157,39 +202,18 @@ Template.effectEdit.events({
 		GlobalUI.deletedToast(instance.data.id, "Effects", "Effect");
 		popDialogStack();
 	},
+	"click .statGroupTitle": function(event, instance){
+		var groupName = this.toString();
+		var firstStat = statGroups[groupName][0].stat;
+		setStat(firstStat, instance.data.id);
+		scrollAnimationId = requestAnimationFrame(scrollElementToView(event.target));
+		_.delay(() => cancelAnimationFrame(scrollAnimationId), 300);
+	},
 	"iron-select .statMenu": function(event){
 		var detail = event.originalEvent.detail;
 		var statName = detail.item.getAttribute("name");
 		if (statName == this.stat) return;
-		var setter = {stat: statName};
-		var group = Blaze.getData(detail.item).group;
-		var effect = Effects.findOne(this._id);
-		if (group === "Saving Throws" || group === "Skills"){
-			// Skills must have a valid skill operation
-			if (!_.contains(
-				_.map(skillOperations, ao => ao.operation),
-				effect.operation
-			)){
-				setter.operation = "add";
-			}
-		} else if (group !== "Weakness/Resistance"){
-			// Attributes must have a valid attribute operation
-			if (!_.contains(
-				_.map(attributeOperations, ao => ao.operation),
-				effect.operation
-			)){
-				setter.operation = "base";
-			}
-		} else {
-			// Weakness/Resistance must have a mul operation and value
-			if (effect.operation !== "mul"){
-				setter.operation = "mul";
-			}
-			if (!_.contains([0, 0.5, 2], effect.value)){
-				setter.value = 0.5;
-			}
-		}
-		Effects.update(this._id, {$set: setter});
+		setStat(statName, this._id);
 	},
 	"iron-select .operationMenu": function(event){
 		var detail = event.originalEvent.detail;

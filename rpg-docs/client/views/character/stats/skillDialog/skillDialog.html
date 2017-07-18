@@ -61,6 +61,18 @@
 				<td>Total</td>
 				<td>{{characterCalculate "skillMod" charId skillName}}</td>
 			</tr>
+			{{#each passiveEffects}}
+				<tr>
+					<td>{{sourceName}}</td>
+					<td>Passive Bonus: {{statValue}}</td>
+				</tr>
+			{{/each}}
+			{{#if showPassiveTotal}}
+				<tr class="paper-font-body2">
+					<td>Passive Score</td>
+					<td>{{characterCalculate "passiveSkill" charId skillName}}</td>
+				</tr>
+			{{/if}}
 		</table>
 	</div>
 

@@ -8,6 +8,7 @@ Schemas.Buff = new SimpleSchema({
 	},
 	name: {
 		type: String,
+		optional: true,
 		trim: false,
 	},
 	description: {
