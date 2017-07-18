@@ -38,6 +38,7 @@
 	</div>
 	<div>{{#markdown}}{{evaluateSpellString charId parent.id description}}{{/markdown}}</div>
 	{{> attacksViewList charId=charId parentId=_id}}
+	{{> buffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="spellEdit">
@@ -114,5 +115,5 @@
 	<!--Description-->
 	<paper-textarea id="descriptionInput" label="Description" value="{{description}}">
 	</paper-textarea>
-	{{> attackEditList  parentId=_id parentCollection="Spells" charId=charId enabled=true name=name}}
+	{{> attackEditList  parentId=_id parentCollection="Spells" charId=charId enabled=true name=name isSpell=true}}
 </template>
