@@ -24,6 +24,10 @@ Template.registerHelper("evaluateString", function(charId, string) {
 	return evaluateString(charId, string);
 });
 
+Template.registerHelper("evaluateSpellString", function(charId, spellListId, string) {
+	return evaluateSpellString(charId, spellListId, string);
+});
+
 Template.registerHelper("evaluateShortString", function(charId, string) {
 	if (_.isString(string)){
 		return evaluateString(

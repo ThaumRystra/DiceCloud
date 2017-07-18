@@ -1,7 +1,7 @@
 Items = new Mongo.Collection("items");
 
 Schemas.Item = new SimpleSchema({
-	name:       {type: String, defaultValue: "New Item", trim: false},
+	name:       {type: String, optional: true, trim: false, defaultValue: "New Item"},
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
 	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1}, //id of owner

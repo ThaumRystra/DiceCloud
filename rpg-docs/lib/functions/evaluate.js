@@ -8,9 +8,10 @@
 })();
 
 //evaluates a calculation string
-evaluate = function(charId, string){
+evaluate = function(charId, string, opts){
+    var spellListId = opts && opts.spellListId;
 	if (!string) return string;
-	string = string.replace(/\b[a-z]+\b/gi, function(sub){
+	string = string.replace(/\b[a-z,1-9]+\b/gi, function(sub){
 		//fields
 		if (Schemas.Character.schema(sub)){
 			return Characters.calculate.fieldValue(charId, sub);
@@ -43,6 +44,12 @@ evaluate = function(charId, string){
 		if (sub.toUpperCase()  === "LEVEL"){
 			return Characters.calculate.level(charId);
 		}
+        if (spellListId && sub.toUpperCase() === "DC") {
+            var list = SpellLists.findOne(spellListId);
+            if (list && list.saveDC){
+                return evaluate(charId, list.saveDC);
+            }
+        }
 		return sub;
 	});
 	try {
@@ -65,6 +72,17 @@ evaluateString = function(charId, string){
 	});
 	return result;
 };
+
+evaluateSpellString = function (charId, spellListId, string) {
+    //define brackets as curly brackets around anything that isn't a curly bracket
+	if (!string) return string;
+	var brackets = /\{[^\{\}]*\}/g;
+	var result = string.replace(brackets, function(exp){
+		exp = exp.replace(/(\{|\})/g, ""); //remove curly brackets
+		return evaluate(charId, exp, {spellListId});
+	});
+	return result;
+}
 
 //returns the value of the effect if it exists,
 //otherwise returns the result of the calculation if it exists,
