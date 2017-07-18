@@ -85,6 +85,7 @@ Meteor.methods({
 		//update current character with new character details
 		oldCharId = characterData.character._id;
 		characterData.character._id = charId;
+		characterData.character.owner = this.userId;
 		Characters.update({"_id": charId}, {$set:characterData.character});
 
 		//remove all elements of current character
