@@ -33,7 +33,7 @@ Template.importDialog.events({
 	},
 	"click #importButton": function(event, instance) {
 		if (instance.find("#nameInput").value === Characters.findOne({_id: this.charId}).name) {
-			json = instance.find("#dataInput").value;
+			json = Base64.decode(instance.find("#dataInput").value);
 
 			var jsonError = "";
 			try {JSON.parse(json)}
@@ -54,7 +54,7 @@ Template.importDialog.events({
 	},
 	"input #dataInput": debounce(function(event, instance){
 		const input = event.currentTarget;
-		var json = input.value;
+		var json = Base64.decode(input.value);
 
 		if (!json){ //if it's empty
 			input.invalid = true;
