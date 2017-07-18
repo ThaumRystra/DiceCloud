@@ -1,8 +1,42 @@
 Parties = new Mongo.Collection("parties");
 
 Schemas.Party = new SimpleSchema({
-	//each character/monster can only be in one party at a time
-	//each party can only be in a single instance at a time
+	name: {
+		type: String,
+		defaultValue: "New Party",
+		trim: false,
+		optional: true,
+	},
+	characters: {
+		type: [String],
+		regEx: SimpleSchema.RegEx.Id,
+		index: 1,
+		defaultValue: [],
+	},
+	owner: {
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
+	},
 });
 
 Parties.attachSchema(Schemas.Party);
+
+Parties.allow({
+	insert: function(userId, doc) {
+		return userId && doc.owner === userId;
+	},
+	update: function(userId, doc, fields, modifier) {
+		return userId && doc.owner === userId;
+	},
+	remove: function(userId, doc) {
+		return userId && doc.owner === userId;
+	},
+	fetch: ["owner"],
+});
+
+Parties.deny({
+	update: function(userId, docs, fields, modifier) {
+		// can't change owners
+		return _.contains(fields, "owner");
+	}
+});

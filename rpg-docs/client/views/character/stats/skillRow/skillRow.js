@@ -38,4 +38,16 @@ Template.skillRow.helpers({
 			operation: "conditional",
 		}).count();
 	},
+	isPassiveShown: function(){
+		if (this.showPassive === "forced") return true;
+		if (this.showPassive === "ifNeeded"){
+			var charId = Template.parentData()._id;
+			return Effects.find({
+				charId,
+				stat: this.skill,
+				operation: "passiveAdd",
+				enabled: true,
+			}).count();
+		}
+	},
 });

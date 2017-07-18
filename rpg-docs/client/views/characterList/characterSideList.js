@@ -1,33 +1,50 @@
 Template.characterSideList.onCreated(function() {
 	this.subscribe("characterList");
+	this.openedParties = new ReactiveVar(new Set());
 });
 
 Template.characterSideList.helpers({
-	characters: function() {
+	parties() {
+		var userId = Meteor.userId();
+		return Parties.find({owner: userId});
+	},
+	charactersInParty() {
 		var userId = Meteor.userId();
 		return Characters.find(
 			{
-				$or: [
-					{readers: userId},
-					{writers: userId},
-					{owner: userId},
-				]
+				_id: {$in: this.characters},
+				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
 			},
-			{
-				fields: {name: 1},
-				sort: {name: 1},
-			}
+			{sort: {name: 1}}
 		);
+	},
+	charactersWithNoParty() {
+		var userId = Meteor.userId();
+		var charArrays = Parties.find({owner: userId}).map(p => p.characters);
+		var partyChars = _.uniq(_.flatten(charArrays));
+		return Characters.find(
+			{
+				_id: {$nin: partyChars},
+				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
+			},
+			{sort: {name: 1}}
+		);
+	},
+	isOpen(id) {
+		var openedParties = Template.instance().openedParties.get();
+		console.log(openedParties);
+		return openedParties.has(id);
 	},
 });
 
 Template.characterSideList.events({
-	"tap .singleLineItem": function(event, instance) {
-		//Router.go("characterSheet", {_id: this._id});
-		$("core-drawer-panel").get(0).closeDrawer();
-	},
-	"tap core-item": function() {
-		Router.go("characterList");
-		$("core-drawer-panel").get(0).closeDrawer();
+	"click .partyHead": function(event, instance){
+		var openedParties = instance.openedParties.get();
+		if (openedParties.has(this._id)){
+			openedParties.delete(this._id);
+		} else {
+			openedParties.add(this._id);
+		}
+		instance.openedParties.set(openedParties);
 	},
 });

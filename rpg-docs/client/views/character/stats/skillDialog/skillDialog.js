@@ -122,7 +122,7 @@ Template.skillDialogView.helpers({
 		var char = Characters.findOne(this.charId);
 		if (!char) return;
 		var prof = Characters.calculate.proficiency(this.charId, this.skillName);
-		var proficiencyBonus = 
+		var proficiencyBonus =
 			Characters.calculate.attributeValue(this.charId, "proficiencyBonus");
 		return prof * proficiencyBonus;
 	},
@@ -188,6 +188,23 @@ Template.skillDialogView.helpers({
 			operation: "conditional",
 			enabled: true,
 		});
+	},
+	passiveEffects: function(){
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "passiveAdd",
+			enabled: true,
+		});
+	},
+	showPassiveTotal: function(){
+		if (this.skillName === "perception") return true;
+		return Effects.find({
+			charId: this.charId,
+			stat: this.skillName,
+			operation: "passiveAdd",
+			enabled: true,
+		}).count();
 	},
 	ability: function(){
 		var opts = {fields: {}};

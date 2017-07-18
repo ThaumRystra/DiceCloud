@@ -24,7 +24,7 @@ Router.map(function() {
 	this.route("characterList", {
 		path: "/characterList",
 		waitOn: function(){
-			return subsManager.subscribe("characterList", Meteor.userId());
+			return subsManager.subscribe("characterList");
 		},
 		onAfterAction: function() {
 			document.title = appName + " - Characters";
@@ -32,11 +32,27 @@ Router.map(function() {
 		fastRender: true,
 	});
 
-	this.route("characterSheet", {
-		path: "/character/:_id",
+	this.route("characterSheetNaked", {
+		path: "/character/:_id/",
 		waitOn: function(){
 			return [
-				subsManager.subscribe("singleCharacter", this.params._id, Meteor.userId()),
+				subsManager.subscribe("singleCharacter", this.params._id),
+			];
+		},
+		action: function(){
+			var _id = this.params._id
+			var character = Characters.findOne(_id);
+			var urlName = character && character.urlName;
+			var path = `\/character\/${_id}\/${urlName || "-"}`;
+			Router.go(path,{},{replaceState:true});
+		},
+	});
+
+	this.route("characterSheet", {
+		path: "/character/:_id/:urlName",
+		waitOn: function(){
+			return [
+				subsManager.subscribe("singleCharacter", this.params._id),
 			];
 		},
 		data: function() {

@@ -11,10 +11,12 @@ Schemas.Action = new SimpleSchema({
 	},
 	name: {
 		type: String,
+		optional: true,
 		trim: false,
 	},
 	description: {
 		type: String,
+		optional: true,
 		trim: false,
 	},
 	type: {

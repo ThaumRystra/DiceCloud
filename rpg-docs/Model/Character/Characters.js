@@ -4,6 +4,7 @@ Characters = new Mongo.Collection("characters");
 Schemas.Character = new SimpleSchema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
+	urlName:      {type: String, defaultValue: "-", trim: false, optional: true},
 	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
 	gender:       {type: String, defaultValue: "", trim: false, optional: true},
 	race:         {type: String, defaultValue: "", trim: false, optional: true},
@@ -184,6 +185,9 @@ Schemas.Character = new SimpleSchema({
 		defaultValue: "whitelist",
 		allowedValues: ["whitelist", "public"],
 	},
+	"settings.exportFeatures": {type: Boolean, defaultValue: true},
+	"settings.exportAttacks": {type: Boolean, defaultValue: true},
+	"settings.exportDescription": {type: Boolean, defaultValue: true},
 });
 
 Characters.attachSchema(Schemas.Character);
@@ -254,7 +258,10 @@ var attributeBase = preventLoop(function(charId, statName){
 	var result = (base + add) * mul;
 	if (result < min) result = min;
 	if (result > max) result = max;
-
+	// Don't round carry multiplier
+	if (statName === "carryMultiplier"){
+		return result;
+	}
 	return Math.floor(result);
 });
 
@@ -533,6 +540,15 @@ if (Meteor.isServer){
 		SpellLists    .remove({charId: character._id});
 		Items         .remove({charId: character._id});
 		Containers    .remove({charId: character._id});
+	});
+	Characters.after.update(function(userId, doc, fieldNames, modifier, options) {
+		if (_.contains(fieldNames, "name")){
+			var urlName = getSlug(doc.name, {maintainCase: true}) || "-";
+			Characters.update(doc._id, {$set: {urlName}});
+		}
+	});
+	Characters.before.insert(function(userId, doc) {
+		doc.urlName = getSlug(doc.name, {maintainCase: true}) || "-";
 	});
 }
 
