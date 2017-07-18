@@ -15,6 +15,22 @@ Template.proficiencyListItem.helpers({
 
 Template.proficiencyListItem.events({
 	"click .proficiency": function(event, instance){
+		if (this.parent.collection == "Characters") {
+			if (this.parent.group == "background") {
+				pushDialogStack({
+					template: "backgroundDialog",
+					data: {
+						"charId": this.charId,
+						"field":"background",
+						"title":"Background",
+						"color":"j",
+					},
+					element: event.currentTarget,
+				})
+				return;
+			}
+		}
+
 		openParentDialog({
 			parent: this.parent,
 			charId: this.charId,
