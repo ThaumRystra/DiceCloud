@@ -5,3 +5,7 @@
 .wallOfText p{
 	margin-top: 8px;
 }
+
+.wallOfText a{
+	color:#d13b2e;
+}
