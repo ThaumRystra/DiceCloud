@@ -1,3 +1,21 @@
+var removeDuplicateProficiencies = function(proficiencies) {
+	dict = {};
+	proficiencies.forEach(function(prof) {
+		if (prof.name in dict) { //if we have already gone over another proficiency for the same thing
+			if (dict[prof.name].value < prof.value) {
+				dict[prof.name] = prof; //then take the new one if it's higher, otherwise leave it
+			}
+		} else {
+			dict[prof.name] = prof; //if it wasn't already there, store it
+		}
+	});
+	profs = []
+	_.forEach(dict, function(prof) {
+		profs.push(prof);
+	})
+	return profs;
+};
+
 Template.features.helpers({
 	features: function(){
 		var features = Features.find({charId: this._id}, {sort: {color: 1, name: 1}});
@@ -27,13 +45,16 @@ Template.features.helpers({
 		return !this.alwaysEnabled;
 	},
 	weaponProfs: function(){
-		return Proficiencies.find({charId: this._id, type: "weapon"});
+		var profs = Proficiencies.find({charId: this._id, type: "weapon"});
+		return removeDuplicateProficiencies(profs);
 	},
 	armorProfs: function(){
-		return Proficiencies.find({charId: this._id, type: "armor"});
+		var profs = Proficiencies.find({charId: this._id, type: "armor"});
+		return removeDuplicateProficiencies(profs);
 	},
 	toolProfs: function(){
-		return Proficiencies.find({charId: this._id, type: "tool"});
+		var profs = Proficiencies.find({charId: this._id, type: "tool"});
+		return removeDuplicateProficiencies(profs);
 	},
 });
 

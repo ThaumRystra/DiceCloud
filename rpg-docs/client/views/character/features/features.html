@@ -55,19 +55,19 @@
 						Proficiencies
 					</div>
 					<div flex class="bottom list">
-						{{#if weaponProfs.count}}
+						{{#if weaponProfs.length}}
 							<div class="paper-font-subhead">Weapons</div>
 						{{/if}}
 						{{#each weaponProfs}}
 							{{> proficiencyListItem}}
 						{{/each}}
-						{{#if armorProfs.count}}
+						{{#if armorProfs.length}}
 							<div class="paper-font-subhead">Armor</div>
 						{{/if}}
 						{{#each armorProfs}}
 							{{> proficiencyListItem}}
 						{{/each}}
-						{{#if toolProfs.count}}
+						{{#if toolProfs.length}}
 							<div class="paper-font-subhead">Tools</div>
 						{{/if}}
 						{{#each toolProfs}}
