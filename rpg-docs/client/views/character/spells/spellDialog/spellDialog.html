@@ -36,7 +36,7 @@
 		</div>
 		{{/if}}
 	</div>
-	<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
+	<div>{{#markdown}}{{evaluateSpellString charId parent.id description}}{{/markdown}}</div>
 	{{> attacksViewList charId=charId parentId=_id}}
 </template>
 

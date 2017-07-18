@@ -9,6 +9,7 @@ Schemas.Spell = new SimpleSchema({
 	},
 	name: {
 		type: String,
+		optional: true,
 		trim: false,
 		defaultValue: "New Spell",
 	},
