@@ -2,12 +2,21 @@
 	<div>
 		<paper-material class="ability-mini-card layout horizontal">
 			<div class="numbers">
+				{{#if swap}}
+				<div class="paper-font-display1 stat">
+					{{abilityMod}}
+				</div>
+				<div class="paper-font-subhead modifier">
+					{{characterCalculate "attributeValue" ../_id ability}}
+				</div>
+				{{else}}
 				<div class="paper-font-display1 stat">
 					{{characterCalculate "attributeValue" ../_id ability}}
 				</div>
 				<div class="paper-font-subhead modifier">
 					{{abilityMod}}
 				</div>
+				{{/if}}
 			</div>
 			<div class="paper-font-subhead title flex layout horizontal center">
 				{{title}}
