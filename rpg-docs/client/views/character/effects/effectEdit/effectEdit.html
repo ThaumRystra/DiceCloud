@@ -20,26 +20,28 @@
 			<div class="effectEdit layout horizontal flex">
 				<dicecloud-selector class="statMenu flex" selected={{stat}} selectable="paper-item" style="height: 100%; overflow-y: auto;">
 					{{#each statGroups}}
-						<div style="font-weight: bold; margin-top: 16px; padding-left: 8px;">
+						<div class="statGroupTitle clickable" style="font-weight: bold; margin-top: 16px; padding-left: 8px;">
 							{{this}}
 						</div>
-						{{#each stats}}
-							<paper-item name={{stat}}>{{name}}</paper-item>
-						{{/each}}
+						<iron-collapse opened={{isGroupSelected this ../stat}}>
+							{{#each stats}}
+								<paper-item name={{stat}} class="clickable">{{name}}</paper-item>
+							{{/each}}
+						</iron-collapse>
 					{{/each}}
 				</dicecloud-selector>
 				{{#if operations}}
 					<dicecloud-selector class="operationMenu flex" selected={{operation}}  style="height: 100%; overflow-y: auto;">
 						{{#each operations}}
-							<paper-item name={{operation}}>{{name}}</paper-item>
+							<paper-item name={{operation}} class="clickable">{{name}}</paper-item>
 						{{/each}}
 					</dicecloud-selector>
 				{{else}} {{#if showMultiplierOperations}}
 					<dicecloud-selector class="multiplierMenu flex"
 							   selected={{value}}>
-						<paper-item name="0.5">Resistance</paper-item>
-						<paper-item name="2">Vulnerability</paper-item>
-						<paper-item name="0">Immunity</paper-item>
+						<paper-item name="0.5" class="clickable">Resistance</paper-item>
+						<paper-item name="2" class="clickable">Vulnerability</paper-item>
+						<paper-item name="0" class="clickable">Immunity</paper-item>
 					</dicecloud-selector>
 				{{else}}
 					<div class="flex" style="height: 100%;"></div>
