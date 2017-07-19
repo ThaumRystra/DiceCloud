@@ -2,15 +2,19 @@
 	<div class="features">
 		<div class="column-container animation-slider">
 			<!--expertiseDice-->
-			{{>resource name="expertiseDice" title="Expertise Dice" color="teal" char=this}}
+			{{>resource name="expertiseDice" title="Expertise Dice" color="teal" charId=this._id isCustom=false}}
 			<!--ki-->
-			{{>resource name="ki" title="Ki Points" color="teal" char=this}}
+			{{>resource name="ki" title="Ki Points" color="teal" charId=this._id isCustom=false}}
 			<!--rages-->
-			{{>resource name="rages" title="Rages" color="teal" char=this}}
+			{{>resource name="rages" title="Rages" color="teal" charId=this._id isCustom=false}}
 			<!--sorceryPoints-->
-			{{>resource name="sorceryPoints" title="Sorcery Points" color="teal" char=this}}
+			{{>resource name="sorceryPoints" title="Sorcery Points" color="teal" charId=this._id isCustom=false}}
 			<!--superiorityDice-->
-			{{>resource name="superiorityDice" title="Superiority Dice" color="teal" char=this}}
+			{{>resource name="superiorityDice" title="Superiority Dice" color="teal" charId=this._id isCustom=false}}
+			<!-- custom resources -->
+			{{#each res in customResources}}
+				{{>resource name=res._id title=res.displayName color="cyan" charId=this._id isCustom=true}}
+			{{/each}}
 
 			<!--Attacks-->
 			<div>
@@ -132,7 +136,7 @@
 </template>
 
 <template name="resource">
-	{{#if characterCalculate "attributeBase" char._id name}}
+	{{#if characterCalculate "attributeBase" charId name}}
 	<div>
 		<paper-material class="card layout horizontal">
 			<div class="left {{getColor}} paper-font-display1 white-text layout horizontal center">
@@ -146,7 +150,7 @@
 									   disabled={{cantDecrement}}>
 					</paper-icon-button>
 				</div>
-				<div>{{characterCalculate "attributeValue" char._id name}}</div>
+				<div>{{calculateValue}}</div>
 				<!--<div>/{{char.attributeBase name}}</div>-->
 			</div>
 			<div class="right clickable flex layout horizontal center">

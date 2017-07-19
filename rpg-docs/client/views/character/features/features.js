@@ -1,4 +1,7 @@
 Template.features.helpers({
+	customResources: function(){
+		return CustomAttributes.find({"charId": this._id, "isResource": true}, {sort: {"displayName": 1}});
+	},
 	features: function(){
 		var features = Features.find({charId: this._id}, {sort: {color: 1, name: 1}});
 		return features;
@@ -87,48 +90,83 @@ Template.features.events({
 
 Template.resource.helpers({
 	cantIncrement: function(){
-		var value = Characters.calculate.attributeValue(this.char._id, this.name);
-		var base = Characters.calculate.attributeBase(this.char._id, this.name);
+		if (this.isCustom) {
+			var value = Characters.calculate.customAttributeValue(this.charId, this.name);
+		} else {
+			var value = Characters.calculate.attributeValue(this.charId, this.name);
+		}
+		var base = Characters.calculate.attributeBase(this.charId, this.name);
 		var baseBigger = value < base;
-		return !baseBigger || !canEditCharacter(this.char._id);
+		return !baseBigger || !canEditCharacter(this.charId);
 	},
 	cantDecrement: function(){
-		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		if (this.isCustom) {
+			var value = Characters.calculate.customAttributeValue(this.charId, this.name);
+		} else {
+			var value = Characters.calculate.attributeValue(this.charId, this.name);
+		}
 		var valuePositive = value > 0;
-		return !valuePositive || !canEditCharacter(this.char._id);
+		return !valuePositive || !canEditCharacter(this.charId);
 	},
 	getColor: function(){
-		var value = Characters.calculate.attributeValue(this.char._id, this.name);
+		if (this.isCustom) {
+			var value = Characters.calculate.customAttributeValue(this.charId, this.name);
+		} else {
+			var value = Characters.calculate.attributeValue(this.charId, this.name);
+		}
 		if (value > 0){
 			return this.color;
 		} else {
 			return "grey";
 		}
 	},
+	calculateValue: function(){
+		if (this.isCustom) {
+			return Characters.calculate.customAttributeValue(this.charId, this.name);
+		} else {
+			return Characters.calculate.attributeValue(this.charId, this.name);
+		};
+	}
 });
 
 Template.resource.events({
 	"click .resourceUp": function(event){
-		var value = Characters.calculate.attributeValue(this.char._id, this.name);
-		var base = Characters.calculate.attributeBase(this.char._id, this.name);
+		if (this.isCustom) {
+			var value = Characters.calculate.customAttributeValue(this.charId, this.name);
+		} else {
+			var value = Characters.calculate.attributeValue(this.charId, this.name);
+		}
+		var base = Characters.calculate.attributeBase(this.charId, this.name);
 		if (value < base){
-			var modifier = {$inc: {}};
-			modifier.$inc[this.name + ".adjustment"] = 1;
-			Characters.update(this.char._id, modifier, {validate: false});
+			if (this.isCustom) {
+				CustomAttributes.update({"_id":this.name}, {$inc: {"adjustment": +1}}, {validate: false});
+			} else {
+				var modifier = {$inc: {}};
+				modifier.$inc[this.name + ".adjustment"] = +1;
+				Characters.update(this.charId, modifier, {validate: false});				
+			}
 		}
 	},
 	"click .resourceDown": function(event){
-		var value = Characters.calculate.attributeValue(this.char._id, this.name);
-		if (value > 0){
-			var modifier = {$inc: {}};
-			modifier.$inc[this.name + ".adjustment"] = -1;
-			Characters.update(this.char._id, modifier, {validate: false});
+		if (this.isCustom) {
+			var value = Characters.calculate.customAttributeValue(this.charId, this.name);
+		} else {
+			var value = Characters.calculate.attributeValue(this.charId, this.name);
+		}
+		if (value > 0){		
+			if (this.isCustom) {
+				CustomAttributes.update({"_id":this.name}, {$inc: {"adjustment": -1}}, {validate: false});
+			} else {
+				var modifier = {$inc: {}};
+				modifier.$inc[this.name + ".adjustment"] = -1;
+				Characters.update(this.charId, modifier, {validate: false});				
+			}
 		}
 	},
 	"click .right": function(event, instance) {
 		pushDialogStack({
 			template: "attributeDialog",
-			data:     {name: this.title, statName: this.name, charId: this.char._id},
+			data:     {name: this.title, statName: this.name, charId: this.charId},
 			element: event.currentTarget.parentElement,
 		});
 	},
