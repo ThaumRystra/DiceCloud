@@ -46,7 +46,7 @@ Schemas.Effect = new SimpleSchema({
 	parent: {
 		type: Schemas.Parent
 	},
-	//which stat the effect is applied to
+	//which stat the effect is applied to; can be set to the _id of a CustomAttribute instead
 	stat: {
 		type: String,
 		optional: true,

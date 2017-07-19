@@ -39,7 +39,7 @@ Template.effectsEditList.events({
 	"tap .edit-effect": function(event, template){
 		pushDialogStack({
 			template: "effectEdit",
-			data: {id: this._id},
+			data: {id: this._id, charId: this.charId},
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},

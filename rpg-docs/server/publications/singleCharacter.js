@@ -18,6 +18,7 @@ Meteor.publish("singleCharacter", function(characterId){
 			Buffs.find             ({charId: characterId}, {removed: true}),
 			Classes.find           ({charId: characterId}, {removed: true}),
 			Containers.find        ({charId: characterId}, {removed: true}),
+			CustomAttributes.find  ({charId: characterId}, {removed: true}),
 			Effects.find           ({charId: characterId}, {removed: true}),
 			Experiences.find       ({charId: characterId}, {removed: true}),
 			Features.find          ({charId: characterId}, {removed: true}),

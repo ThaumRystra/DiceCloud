@@ -76,6 +76,7 @@ var stats = [
 
 var statsDict = _.indexBy(stats, "stat");
 var statGroups = _.groupBy(stats, "group");
+statGroups["Custom Attributes"] = [];
 var statGroupNames = _.keys(statGroups);
 
 var attributeOperations = [
@@ -106,6 +107,24 @@ Template.effectEdit.onRendered(function(){
 	});
 });
 
+Template.effectEdit.onCreated(function(){
+	this.statsDict = _.clone(statsDict);
+	this.statGroups = _.clone(statGroups);
+
+	Tracker.autorun(() => {
+		var cursor = CustomAttributes.find({"charID":this.charId})
+		var customAttributes = cursor.map(function(attr) {
+			return {
+				stat : attr._id,
+				name : attr.displayName,
+				group : "Custom Attributes",
+			}
+		})
+		this.statGroups["Custom Attributes"] = customAttributes;
+		this.statsDict = _.extend(_.indexBy(customAttributes, "stat"), statsDict);
+	})
+})
+
 Template.effectEdit.helpers({
 	effect: function(){
 		return Effects.findOne(this.id);
@@ -115,10 +134,10 @@ Template.effectEdit.helpers({
 	},
 	stats: function(){
 		var group = this;
-		return statGroups[group];
+		return Template.instance().statGroups[group];
 	},
 	operations: function(){
-		var stat = statsDict[this.stat];
+		var stat = Template.instance().statsDict[this.stat];
 		var group = stat && stat.group;
 		if (group === "Weakness/Resistance") return null;
 		if (group === "Saving Throws" || group === "Skills"){
@@ -128,11 +147,11 @@ Template.effectEdit.helpers({
 		}
 	},
 	showMultiplierOperations: function(){
-		var stat = statsDict[this.stat];
+		var stat = Template.instance().statsDict[this.stat];
 		return stat && stat.group === "Weakness/Resistance"
 	},
 	showEffectValueInput: function(){
-		var stat = statsDict[this.stat];
+		var stat = Template.instance().statsDict[this.stat];
 		var group = stat && stat.group;
 		if (
 			group === "Weakness/Resistance"
@@ -150,15 +169,14 @@ Template.effectEdit.helpers({
 		return this.calculation || this.value;
 	},
 	isGroupSelected: function(groupName, statName){
-		var stat = statsDict[statName]
+		var stat = Template.instance().statsDict[statName]
 		return stat && (stat.group === groupName);
 	},
 });
 
-var setStat = function(statName, effectId){
+var setStat = function(statName, effectId, group){ //TODO: why do we use both effectId and this._id here? shouldn't they be the same?
 	var setter = {stat: statName};
 	var effect = Effects.findOne(this._id);
-	var group = statsDict[statName].group;
 	if (group === "Saving Throws" || group === "Skills"){
 		// Skills must have a valid skill operation
 		if (!_.contains(
@@ -204,16 +222,16 @@ Template.effectEdit.events({
 	},
 	"click .statGroupTitle": function(event, instance){
 		var groupName = this.toString();
-		var firstStat = statGroups[groupName][0].stat;
-		setStat(firstStat, instance.data.id);
+		var firstStat = instance.statGroups[groupName][0].stat;
+		setStat(firstStat, instance.data.id, groupName);
 		scrollAnimationId = requestAnimationFrame(scrollElementToView(event.target));
 		_.delay(() => cancelAnimationFrame(scrollAnimationId), 300);
 	},
-	"iron-select .statMenu": function(event){
+	"iron-select .statMenu": function(event, instance){
 		var detail = event.originalEvent.detail;
 		var statName = detail.item.getAttribute("name");
 		if (statName == this.stat) return;
-		setStat(statName, this._id);
+		setStat(statName, this._id, instance.statsDict[statName].group);
 	},
 	"iron-select .operationMenu": function(event){
 		var detail = event.originalEvent.detail;

@@ -106,7 +106,11 @@ Template.attributeDialogView.helpers({
 		return a || b || c;
 	},
 	adjustment: function(){
-		var value = Characters.calculate.attributeValue(this.charId, this.statName);
+		if (this.isCustom) {
+			var value = Characters.calculate.customAttributeValue(this.charId, this.statName);
+		} else {
+			var value = Characters.calculate.attributeValue(this.charId, this.statName);
+		}
 		var base = Characters.calculate.attributeBase(this.charId, this.statName);
 		return value - base;
 	},
@@ -139,7 +143,11 @@ Template.attributeDialogView.helpers({
 		return Characters.calculate.attributeBase(this.charId, this.statName);
 	},
 	attributeValue: function() {
-		return Characters.calculate.attributeValue(this.charId, this.statName);
+		if (this.isCustom) {
+			return Characters.calculate.customAttributeValue(this.charId, this.statName);
+		} else {
+			return Characters.calculate.attributeValue(this.charId, this.statName);
+		};
 	},
 	sourceName: function(){
 		if (this.parent.group === "racial"){

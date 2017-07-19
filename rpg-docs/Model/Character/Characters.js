@@ -336,6 +336,14 @@ Characters.calculate = {
 	attributeBase: memoize(function(charId, attributeName){
 		return attributeBase(charId, attributeName);
 	}),
+	customAttributeValue: memoize(function(charId, attributeId){
+		var attribute = CustomAttributes.findOne(attributeId);
+		//base value
+		var value = Characters.calculate.attributeBase(charId, attributeId);
+		//plus adjustment
+		value += attribute.adjustment;
+		return value;
+	}),
 	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
 		//get the final value of the ability score

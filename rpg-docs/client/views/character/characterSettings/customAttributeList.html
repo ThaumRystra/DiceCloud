@@ -1,0 +1,28 @@
+<!--needs to be given charId-->
+<template name="customAttributeList">
+	{{#if customAttributes.count}}
+		<div id="customAttributes">
+			<div class="paper-font-title">Custom Attributes</div>
+			{{#each attribute in customAttributes}}
+				{{>customAttributeListItem attr=attribute charId=charId}}
+			{{/each}}
+		</div>
+	{{/if}}
+	<paper-button id="addCustomAttributeButton" class="red-button" raised>Add Custom Attribute</paper-button>
+</template>
+
+<template name="customAttributeListItem">
+	<div class="layout horizontal around-justified">
+		<paper-input class="displayNameInput sideMargin flex" label="Display Name" floatinglabel value={{attr.displayName}} flex></paper-input>
+		<paper-input class="nameInput sideMargin flex" label="Code Name" floatinglabel value={{attr.name}} flex></paper-input>
+
+		<paper-dropdown-menu class="typeDropDown" label="Type">
+			<dicecloud-selector class="typeMenu dropdown-content" selected="{{#if attr.isResource}}1{{else}}0{{/if}}">
+				<paper-item name=1>Resource</paper-item>
+				<paper-item name=0>Attribute</paper-item>
+			</dicecloud-selector>
+		</paper-dropdown-menu>
+
+		<paper-icon-button class="deleteAttribute" icon="delete"></paper-icon-button>
+	</div>
+</template>
