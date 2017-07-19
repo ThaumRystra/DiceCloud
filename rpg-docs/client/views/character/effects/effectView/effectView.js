@@ -127,7 +127,10 @@ Template.effectView.helpers({
 		}
 	},
 	statName: function(){
-		return stats[this.stat] && stats[this.stat].name || "No Stat";
+		if (stats[this.stat]) { return stats[this.stat].name; }
+		var custom = CustomAttributes.findOne({"_id": this.stat});
+		if (custom && !custom.removed) { return custom.displayName; }
+		return "No Stat";
 	},
 	operationName: function(){
 		if (
