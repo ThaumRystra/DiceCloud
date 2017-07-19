@@ -18,7 +18,7 @@ Template.attackEditList.events({
 							id: this.parentId,
 							collection: this.parentCollection
 						},
-						attackBonus: spellList.attackBonus,
+						attackBonus: "attackBonus",
 						damage: "1d10",
 						damageType: "fire",
 					});
