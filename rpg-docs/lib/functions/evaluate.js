@@ -10,8 +10,15 @@
 //evaluates a calculation string
 evaluate = function(charId, string, opts){
     var spellListId = opts && opts.spellListId;
+    var customAttributes = CustomAttributes.find({"charId": charId}).map((doc) => {return doc.name});
 	if (!string) return string;
 	string = string.replace(/\b[a-z,1-9]+\b/gi, function(sub){
+		//custom attributes
+		if (_.contains(customAttributes, sub)) {
+			attributeId = CustomAttributes.findOne({"charId": charId, "name":sub})._id;
+			return Characters.calculate.customAttributeValue(charId, attributeId);
+
+		}
 		//fields
 		if (Schemas.Character.schema(sub)){
 			return Characters.calculate.fieldValue(charId, sub);

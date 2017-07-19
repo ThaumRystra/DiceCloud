@@ -265,6 +265,43 @@ var attributeBase = preventLoop(function(charId, statName){
 	return Math.floor(result);
 });
 
+var customAttributeBase = preventLoop(function(charId, attributeId){ //this might not actually need to be a separate function
+	check(attributeId, String);
+
+	var value;
+	var base = 0;
+	var add = 0;
+	var mul = 1;
+	var min = Number.NEGATIVE_INFINITY;
+	var max = Number.POSITIVE_INFINITY;
+
+	Effects.find({
+		charId: charId,
+		stat: attributeId,
+		enabled: true,
+		operation: {$in: ["base", "add", "mul", "min", "max"]},
+	}).forEach(function(effect) {
+		value = evaluateEffect(charId, effect);
+		if (effect.operation === "base"){
+			if (value > base) base = value;
+		} else if (effect.operation === "add"){
+			add += value;
+		} else if (effect.operation === "mul"){
+			mul *= value;
+		} else if (effect.operation === "min"){
+			if (value > min) min = value;
+		} else if (effect.operation === "max"){
+			if (value < max) max = value;
+		}
+	});
+
+	var result = (base + add) * mul;
+	if (result < min) result = min;
+	if (result > max) result = max;
+
+	return Math.floor(result);
+});
+
 if (Meteor.isClient) {
 	Template.registerHelper("characterCalculate", function(func, charId, input) {
 		try {
@@ -335,6 +372,17 @@ Characters.calculate = {
 	}),
 	attributeBase: memoize(function(charId, attributeName){
 		return attributeBase(charId, attributeName);
+	}),
+	customAttributeValue: memoize(function(charId, attributeId){
+		var attribute = CustomAttributes.findOne(attributeId);
+		//base value
+		var value = Characters.calculate.customAttributeBase(charId, attributeId);
+		//plus adjustment
+		value += attribute.adjustment;
+		return value;
+	}),
+	customAttributeBase: memoize(function(charId, attributeName){
+		return customAttributeBase(charId, attributeName);
 	}),
 	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
