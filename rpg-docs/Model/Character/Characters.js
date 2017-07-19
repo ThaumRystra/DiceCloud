@@ -339,13 +339,10 @@ Characters.calculate = {
 	customAttributeValue: memoize(function(charId, attributeId){
 		var attribute = CustomAttributes.findOne(attributeId);
 		//base value
-		var value = Characters.calculate.customAttributeBase(charId, attributeId);
+		var value = Characters.calculate.attributeBase(charId, attributeId);
 		//plus adjustment
 		value += attribute.adjustment;
 		return value;
-	}),
-	customAttributeBase: memoize(function(charId, attributeId){
-		return attributeBase(charId, attributeId);
 	}),
 	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
