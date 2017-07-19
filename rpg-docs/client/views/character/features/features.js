@@ -82,13 +82,6 @@ Template.features.events({
 			element:   event.currentTarget.parentElement,
 		});
 	},
-	"click .attack": function(event){
-		openParentDialog({
-			parent: this.parent,
-			charId: this.charId,
-			element: event.currentTarget,
-		});
-	},
 	"click .useFeature": function(event){
 		var featureId = this._id;
 		Features.update(featureId, {$inc: {used: 1}});
@@ -151,6 +144,45 @@ Template.resource.events({
 			template: "attributeDialog",
 			data:     {name: this.title, statName: this.name, charId: this.char._id},
 			element: event.currentTarget.parentElement,
+		});
+	},
+});
+
+Template.attackListItem.helpers({
+	evaluateAttackBonus: function(charId, attack) {
+		if (attack.parent.collection == "Spells") {
+			var spell = Spells.findOne(attack.parent.id);
+			if (spell) {
+				bonus = evaluate(charId, attack.attackBonus, {"spellListId": spell.parent.id});
+			}
+		} else {
+			var bonus = evaluate(charId, attack.attackBonus);
+		}
+
+		if (_.isFinite(bonus)) {
+			return bonus > 0 ? "+" + bonus : "" + bonus;
+		} else {
+			return bonus;
+		}
+	},
+	evaluateDamage: function(charId, attack) {
+		if (attack.parent.collection == "Spells") {
+			var spell = Spells.findOne(attack.parent.id);
+			if (spell) {
+				return evaluateSpellString(charId, spell.parent.id, attack.damage);
+			}
+		} else {
+			return evaluateString(charId, attack.damage);
+		}
+	},
+});
+
+Template.attackListItem.events({
+	"click .attack": function(event, instance){
+		openParentDialog({
+			parent: instance.data.attack.parent,
+			charId: instance.data.charId,
+			element: event.currentTarget,
 		});
 	},
 });
