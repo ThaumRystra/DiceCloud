@@ -166,7 +166,7 @@ Template.resource.events({
 	"click .right": function(event, instance) {
 		pushDialogStack({
 			template: "attributeDialog",
-			data:     {name: this.title, statName: this.name, charId: this.charId},
+			data:     {name: this.title, statName: this.name, charId: this.charId, isCustom: this.isCustom},
 			element: event.currentTarget.parentElement,
 		});
 	},

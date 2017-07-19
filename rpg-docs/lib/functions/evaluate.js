@@ -15,7 +15,7 @@ evaluate = function(charId, string, opts){
 	string = string.replace(/\b[a-z,1-9]+\b/gi, function(sub){
 		//custom attributes
 		if (_.contains(customAttributes, sub)) {
-			attributeId = CustomAttributes.findOne({"charId": charId, "name":sub})._id;
+			var attributeId = CustomAttributes.findOne({"charId": charId, "name":sub})._id;
 			return Characters.calculate.customAttributeValue(charId, attributeId);
 
 		}
