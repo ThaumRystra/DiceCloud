@@ -22,7 +22,7 @@ var getCondition = function(conditionName) {
 
 Meteor.methods({
 	giveCondition: function(charId, conditionName, parent) {
-		if (typeof parent === 'undefined') parent = null; //parent is an optional argument
+		if (typeof parent === 'undefined' || !parent) parent = {"id": charId, "collection": "Characters"}; //parent is an optional argument
 
 		checkWritePermission(charId);
 		var condition = getCondition(conditionName);
