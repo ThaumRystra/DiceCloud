@@ -7,7 +7,10 @@ Template.characterList.helpers({
 		);
 	},
 	parties() {
-		return Parties.find({owner: Meteor.userId()});
+		return Parties.find(
+			{owner: Meteor.userId()},
+			{sort: {name: 1}},
+		);
 	},
 	charactersInParty(partyId) {
 		var userId = Meteor.userId();
