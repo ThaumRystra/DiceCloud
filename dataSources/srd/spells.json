@@ -29,7 +29,15 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"attackBonus": "Dex save",
+				"details": "range 60 feet, 2 targets within 5 feet",
+				"damage": "{floor((Level+1)/6)+1}d6",
+				"damageType": "acid"
+			}
+		]
 	},
 	{
 		"castingTime": "action",
@@ -557,7 +565,14 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"details": "range 120 feet",
+				"damage": "{floor((Level+1)/6)+1}d8",
+				"damageType": "necrotic"
+			}
+		]
 	},
 	{
 		"castingTime": "action",
@@ -3300,7 +3315,15 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"attackBonus": "Con save",
+				"details": "range 10 feet",
+				"damage": "{floor((Level+1)/6)+1}d12",
+				"damageType": "poison"
+			}
+		]
 	},
 	{
 		"castingTime": "action",
@@ -3421,7 +3444,14 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"details": "range 30 feet",
+				"damage": "{floor((Level+1)/6)+1}d8",
+				"damageType": "fire"
+			}
+		]
 	},
 	{
 		"castingTime": "action",
@@ -3561,7 +3591,14 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"details": "range 60 feet, target speed reduced by 10ft on hit",
+				"damage": "{floor((Level+1)/6)+1}d8",
+				"damageType": "cold"
+			}
+		]
 	},
 	{
 		"castingTime": "1 minute",
@@ -3703,7 +3740,15 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"attackBonus": "Dex save",
+				"details": "range 60 feet, target gains no benefit from cover",
+				"damage": "{floor((Level+1)/6)+1}d8",
+				"damageType": "radiant"
+			}
+		]
 	},
 	{
 		"castingTime": "bonus action",
@@ -3892,7 +3937,14 @@
 			"somatic": true,
 			"concentration": false,
 			"material": "mistletoe, a shamrock leaf, and a club or quarterstaff"
-		}
+		},
+		"attacks": [
+			{
+				"details": "magical",
+				"damage": "{floor((Level+1)/6)+1}d8",
+				"damageType": "bludgeoning"
+			}
+		]
 	},
 	{
 		"castingTime": "action",
@@ -3907,7 +3959,14 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": false
-		}
+		},
+		"attacks": [
+			{
+				"details": "on hit, target can't take reactions",
+				"damage": "{floor((Level+1)/6)+1}d8",
+				"damageType": "lightning"
+			}
+		]
 	},
 	{
 		"castingTime": "action",
