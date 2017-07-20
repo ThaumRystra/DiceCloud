@@ -57,12 +57,15 @@
 							{{>conditionListItem}}
 						{{/each}}
 						</div>
-						{{#if buffs.count}}
-							<div class="paper-font-subhead">Buffs</div>
+						{{#if totalBuffs.count}}
+							<div class="layout horizontal">
+								<div class="paper-font-subhead flex">Buffs</div>
+								<paper-button class="viewAllBuffsButton"> View All </paper-button>
+							</div>
 						{{/if}}
 						<div class="buffsList">
-						{{#each buffs}}
-							{{>buffListItem}}
+						{{#each buff in buffs}}
+							{{>buffListItem buff=buff checkbox=false}}
 						{{/each}}
 						</div>
 					</div>

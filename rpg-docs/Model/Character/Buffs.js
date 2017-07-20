@@ -53,7 +53,7 @@ Buffs.attachSchema(Schemas.Buff);
 
 Buffs.attachBehaviour("softRemovable");
 makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies
-makeChild(Buffs, ["enabled"]); //children of lots of things
+makeChild(Buffs, ["enabled"]); //children of lots of things //perhaps make "enabled" no longer a child now that we can individually toggle buffs?
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);

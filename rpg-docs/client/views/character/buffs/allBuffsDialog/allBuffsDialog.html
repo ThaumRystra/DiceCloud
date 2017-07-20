@@ -1,0 +1,17 @@
+<template name="allBuffsDialog">
+	<div class="fit buff-library-dialog layout vertical">
+		<app-toolbar class="app-grey white-text">
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
+			</paper-icon-button>
+			<div main-title>Buffs</div>
+		</app-toolbar>
+		<div class="flex scroll-y" style="margin-top: 6px;">
+			<div class="buffsList">
+			{{#each buff in buffs}}
+				{{>buffListItem buff=buff checkbox=true}}
+			{{/each}}
+			</div>
+		</div>
+	</div>
+</template>

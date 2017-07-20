@@ -49,3 +49,7 @@
 section:not(.core-selected):not([animate]) paper-material[hero] {
 	visibility: hidden;
 }
+
+.viewAllBuffsButton {
+	margin-right: 12px;
+}

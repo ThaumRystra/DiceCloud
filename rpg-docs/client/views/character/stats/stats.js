@@ -15,6 +15,13 @@ Template.stats.helpers({
 		};
 		return Buffs.find(selector);
 	},
+	totalBuffs: function(){
+		var selector = {
+			"type" : "custom",
+			"charId": this._id,
+		};
+		return Buffs.find(selector);
+	},
 })
 
 Template.stats.events({
@@ -72,6 +79,16 @@ Template.stats.events({
 			element: event.currentTarget,
 		});
 	},
+	"click .viewAllBuffsButton": function(event, instance) {
+		var charId = instance.data._id;
+		pushDialogStack({
+			template: "allBuffsDialog",
+			data: {
+				charId: charId,
+			},
+			element: event.currentTarget,
+		});
+	},
 	"tap .hitPointTitle": function(event, instance) {
 		pushDialogStack({
 			template: "attributeDialog",
@@ -94,7 +111,7 @@ Template.stats.events({
 				}
 				else Meteor.call("giveCondition", this._id, result)
 			},
-			//returnElement: () => $(`[data-id='${itemId}']`).get(0),
+			//returnElement: () => $(`[data-id='${itemId}']`).get(0), //TODO: make this work
 		})
 	},
 });
