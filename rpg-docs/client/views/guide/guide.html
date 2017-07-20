@@ -20,6 +20,8 @@ You need to swim through a sunken section of dungeon to fetch the quest's Thing.
 You'll need to take off your magical Plate Armor of +1 Constitution to swim without sinking, of course. Taking it off will change your armor class, your speed and your constitution, which in turn changes your hit points and your constitution saving throw. Working out all those changes in the middle of a game will drag the game to a halt.  
 Fortunately you have a digital character sheet, so it's a matter of dragging your Plate Armor +1 Con from your "equipment" box to your "backpack" box and you're done. Your hitpoints change correctly, your saving throws are up to date, your armor class goes back to reflecting the fact that you have natural armor from being a dragonborn. Your character sheet keeps up and you ultimately get more time to play the game. Huzzah!
 
+---
+
 ## Creating a Character
 
  - In the [character list]({{pathFor route="characterList"}}), click the plus button, floating in the bottom right corner.  
@@ -107,11 +109,22 @@ Let's rather split that into 4 bonus hit points at first level, and 6 hit points
 
 This method of including calculations in other stats allows you to take full advantage of having a digital character sheet, as it means that you can change any one thing in your character sheet and everthing else will update automatically.
 
+---
+
+## Additional Tips
+
 Any input field with a <iron-icon icon="lightbulb-outline"></iron-icon> light bulb icon is a *formula field*: it will compute any and all variables and functions within it. For example, the "Value" field in the effect edit dialog is a formula field, so you could set the value to `3`, or `FighterLevel*2`, or any formula you can think of. 
 
 Any input field with a <iron-icon icon="dicecloud:code-braces"></iron-icon> curly brackets icon is a *smart input field*: you can also use formulas here, but they must be enclosed within {curly brackets}. For example, the "Damage" field of a spell or weapon is a smart input field, so you could type `1d8 + {strengthMod}` for the damage, and if your strength modifier was +3, it would display as "1d8 + 3".
 
 The full list of functions and variables can be found on the GitHub wiki, [here](https://github.com/ThaumRystra/DiceCloud1/wiki/Function-and-Variable-List).
+
+Any description field, as well as some others like your background or description, can be formatted with Markdown. 
+For example, having \*asterisks\* around something makes it *italic*, and a \*\*pair\*\* makes it **bold**. 
+If you need to display an actual asterisk, you can escape it with a backslash, like this: \\\*. 
+
+In addition, using three or more hyphens on their own line (like this: " --- "; this is the Markdown for a horizontal rule) will cut off the description of a feature card or any of the cards on the Persona page, so that the full description is only displayed - this is useful when having the full feature text would be annoyingly long, so you can simply display a summary on the card and have it expand into the full text.
+
 
 			{{/markdown}}</paper-material>
 		</div>
