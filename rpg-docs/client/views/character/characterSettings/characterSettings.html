@@ -25,14 +25,8 @@
 	{{/with}}
 </template>
 
-<template name="exportDialog">
+<template name="exportCharacterDialog">
 	{{#baseDialog title="Export Character" hideEdit=true}}
-		{{>exportDialogContents data=data}}
-	{{else}}
-		{{>exportDialogContents data=data}}
+		<paper-textarea value={{data}} label="Copy this"></paper-textarea>
 	{{/baseDialog}}
-</template>
-
-<template name="exportDialogContents">
-	<paper-textarea value={{data}} label="Copy this"></paper-textarea>
 </template>

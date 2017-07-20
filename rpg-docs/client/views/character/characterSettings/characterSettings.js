@@ -26,7 +26,7 @@ Template.characterSettings.events({
 	"click #exportCharacterButton": function(event, instance) {
 		Meteor.call("serialiseCharacter", this._id, function(error, result) {
 			pushDialogStack({
-				template: "exportDialog",
+				template: "exportCharacterDialog",
 				data:     {data: Base64.encode(result)}, //base64 encode to obfuscate data and discourage tampering / make it look more like actual "data"
 				element:   event.currentTarget,
 			});
