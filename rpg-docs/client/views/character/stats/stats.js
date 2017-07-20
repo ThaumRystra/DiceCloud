@@ -1,3 +1,29 @@
+Template.stats.helpers({
+	conditions: function(){
+		var selector = {
+			"type" : "inate",
+			"enabled" : true,
+			"charId": this._id,
+		};
+		return Buffs.find(selector);
+	},
+	buffs: function(){
+		var selector = {
+			"type" : "custom",
+			"enabled" : true,
+			"charId": this._id,
+		};
+		return Buffs.find(selector);
+	},
+	totalBuffs: function(){
+		var selector = {
+			"type" : "custom",
+			"charId": this._id,
+		};
+		return Buffs.find(selector);
+	},
+})
+
 Template.stats.events({
 	"click .stat-card": function(event, instance){
 		var charId = instance.data._id;
@@ -53,6 +79,16 @@ Template.stats.events({
 			element: event.currentTarget,
 		});
 	},
+	"click .viewAllBuffsButton": function(event, instance) {
+		var charId = instance.data._id;
+		pushDialogStack({
+			template: "allBuffsDialog",
+			data: {
+				charId: charId,
+			},
+			element: event.currentTarget,
+		});
+	},
 	"tap .hitPointTitle": function(event, instance) {
 		pushDialogStack({
 			template: "attributeDialog",
@@ -64,5 +100,18 @@ Template.stats.events({
 			},
 			element: event.currentTarget.parentElement.parentElement,
 		});
+	},
+	"click #addCondition": function(event, template){
+		pushDialogStack({
+			template: "conditionLibraryDialog",
+			element: event.currentTarget,
+			callback: (result) => {
+				if (!result) {
+					return;
+				}
+				else Meteor.call("giveCondition", this._id, result)
+			},
+			//returnElement: () => $(`[data-id='${itemId}']`).get(0), //TODO: make this work
+		})
 	},
 });

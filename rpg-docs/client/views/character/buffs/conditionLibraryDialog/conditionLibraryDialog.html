@@ -1,0 +1,34 @@
+<template name="conditionLibraryDialog">
+	<div class="fit condition-library-dialog layout vertical">
+		<app-toolbar class="app-grey white-text">
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
+			</paper-icon-button>
+			<div main-title>Conditions</div>
+		</app-toolbar>
+		<div class="flex scroll-y">
+			<div class="conditions" style="padding:8px">
+				<table style="width: 100%">
+					<tbody>
+						{{#each condition in conditions}}
+							{{>libraryCondition condition=condition selected=(isSelected condition)}}
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="layout horizontal end-justified">
+			<paper-button class="cancelButton">Cancel</paper-button>
+			<paper-button class="okButton">OK</paper-button>
+		</div>
+	</div>
+</template>
+
+<template name="libraryCondition">
+	<tr class="item library-condition {{#if selected}}selected{{/if}}">
+		<td class="conditionName">
+			{{conditionName condition}}
+			<paper-ripple></paper-ripple>
+		</td>
+	</tr>
+</template>

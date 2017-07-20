@@ -1,0 +1,15 @@
+<template name="buffListItem">
+	<div class="item buffListItem layout horizontal center">
+		<div>
+			{{#if checkbox}}
+			<paper-checkbox class="enabledCheckbox"
+							checked={{buff.enabled}}
+							disabled={{#unless canEditCharacter buff.charId}}true{{/unless}}>
+			</paper-checkbox>
+			{{/if}}
+		</div>
+		<div class="flex">
+			{{buff.name}}
+		</div>
+	</div>
+</template>

@@ -23,6 +23,7 @@
 	{{/if}}
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> attacksViewList charId=charId parentId=_id}}
+	{{> buffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="itemEdit">
@@ -62,15 +63,14 @@
 
 	<!--Description-->
 	<paper-textarea id="itemDescriptionInput" label="Description" value={{description}}>
-		<div suffix>
-			<paper-tooltip position="left" animation-delay="0">This field accepts formulae in {curly brackets}</paper-tooltip>
-			<iron-icon icon="dicecloud:code-braces"></iron-icon>
-		</div>
+		{{> bracketSuffix}}
 	</paper-textarea>
 	<!--Effects-->
 	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
 	<!--Attacks-->
 	{{> attackEditList  parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
+	<!--Buffs-->
+	{{> buffEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped}}
 </template>
 
 <template name="containerDropdown">

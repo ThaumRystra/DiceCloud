@@ -1,0 +1,35 @@
+/*The following has been nicked from features.css:*/
+
+/*To change the ink color for checked state:*/
+.buffListItem paper-checkbox::shadow #ink[checked] {
+	color: #000000;
+}
+
+/*To change the checkbox checked color:*/
+.buffListItem paper-checkbox::shadow #checkbox.checked {
+	background-color: #000000;
+	background-color: rgba(0,0,0,0.54);
+	border-color: #000000;
+	border-color: rgba(0,0,0,0.54);
+}
+
+/*ensure the checkmark is shown when ticked*/
+.buffListItem paper-checkbox::shadow #checkbox.checked #checkmark {
+	display: initial;
+}
+
+/*To change the ink color for unchecked state:*/
+.buffListItem paper-checkbox::shadow #ink {
+	color: #000000;
+}
+
+/*To change the checkbox unchecked color:*/
+.buffListItem paper-checkbox::shadow #checkbox {
+	border-color: #000000;
+	border-color: rgba(0,0,0,0.27);
+}
+
+/*ensure checkmark isn't shown early*/
+.buffListItem paper-checkbox::shadow #checkbox #checkmark {
+	display: none;
+}
