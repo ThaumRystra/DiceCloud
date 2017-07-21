@@ -1,10 +1,8 @@
 .textarea-bracket-suffix {
-	float: right;
-	position: absolute;
-	right: 6px;
-	bottom: 12px;
-}	
+	margin-bottom: 12px;
+}
 
-.description-input {
-	position: relative;
+.description-input > paper-textarea {
+	width: 100%;
+	width: 100% - 24px;
 }
