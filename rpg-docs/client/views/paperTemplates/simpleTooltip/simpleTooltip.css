@@ -1,0 +1,18 @@
+.simple-tooltip:hover .tooltip {
+	opacity: 0.9;
+}
+
+.tooltip {
+	opacity: 0;
+	transition: opacity 200ms ease-in;
+	font-size: 12px;
+    line-height: 1;
+    background-color: #616161;
+    color: white;
+    padding: 8px;
+    border-radius: 2px;
+	position: absolute;
+	right: calc(100% + 8px);
+	pointer-events: none;
+    white-space: nowrap;
+}

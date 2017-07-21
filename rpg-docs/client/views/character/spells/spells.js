@@ -11,6 +11,12 @@ var spellLevels = [
 	{name: "Level 9",  level: 9},
 ];
 
+var materialNeedsGp = function(string) {
+	if (!string) return false;
+	gpRegExp = /\b[0-9]+ ?(cp|sp|gp)\b/i;
+	return gpRegExp.test(string);
+}
+
 const showUnprepared = (listId) => {
 	return Session.get(`showUnprepared.${listId}`);
 }
@@ -70,6 +76,7 @@ Template.spells.helpers({
 		}
 		if (this.components.material){
 			components += components ? ", M" : "M";
+			if (materialNeedsGp(this.components.material)) {components += "gp";}
 		}
 		if (this.components.concentration){
 			components += components ? ", C" : "C";
@@ -268,6 +275,7 @@ Template.spells.events({
 				Spells.insert(spell);
 				// Copy over attacks and effects
 				_.each(result.attacks, (attack) => {
+					if (!("attackBonus" in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
 					attack.charId = charId;
 					attack.parent = {id: spellId, collection: "Spells"};
 					Attacks.insert(attack);
@@ -277,6 +285,31 @@ Template.spells.events({
 					effect.parent = {id: spellId, collection: "Spells"};
 					Effects.insert(effect);
 				});
+
+				/******[UNCOMMENT ONCE BUFFS ARE ADDED]*******
+				_.each(result.buffs, (buff) => {
+					buff.charId = charId;
+					buff.parent = {id: spellId, collection: "Spells"};
+					buffId = Buffs.insert(buff);
+
+					_.each(buff.attacks, (attack) => {
+						if (!(attackBonus in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
+						attack.charId = charId;
+						attack.parent = {id: buffId, collection: "Buffs"};
+						Attacks.insert(attack);
+					});
+					_.each(buff.effects, (effect) => {
+						effect.charId = charId;
+						effect.parent = {id: buffId, collection: "Buffs"};
+						Effects.insert(effect);
+					});
+					_.each(buff.proficiencies, (prof) => {
+						prof.charId = charId;
+						prof.parent = {id: buffId, collection: "Buffs"};
+						Proficiencies.insert(prof);
+					});
+				});
+				*******[UNCOMMENT ONCE BUFFS ARE ADDED]******/
 			},
 			returnElement: () => $(`[data-id='${spellId}']`).get(0),
 		})

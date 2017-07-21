@@ -1,3 +1,21 @@
+var removeDuplicateProficiencies = function(proficiencies) {
+	dict = {};
+	proficiencies.forEach(function(prof) {
+		if (prof.name in dict) { //if we have already gone over another proficiency for the same thing
+			if (dict[prof.name].value < prof.value) {
+				dict[prof.name] = prof; //then take the new one if it's higher, otherwise leave it
+			}
+		} else {
+			dict[prof.name] = prof; //if it wasn't already there, store it
+		}
+	});
+	profs = []
+	_.forEach(dict, function(prof) {
+		profs.push(prof);
+	})
+	return profs;
+};
+
 Template.features.helpers({
 	features: function(){
 		var features = Features.find({charId: this._id}, {sort: {color: 1, name: 1}});
@@ -27,13 +45,16 @@ Template.features.helpers({
 		return !this.alwaysEnabled;
 	},
 	weaponProfs: function(){
-		return Proficiencies.find({charId: this._id, type: "weapon"});
+		var profs = Proficiencies.find({charId: this._id, type: "weapon"});
+		return removeDuplicateProficiencies(profs);
 	},
 	armorProfs: function(){
-		return Proficiencies.find({charId: this._id, type: "armor"});
+		var profs = Proficiencies.find({charId: this._id, type: "armor"});
+		return removeDuplicateProficiencies(profs);
 	},
 	toolProfs: function(){
-		return Proficiencies.find({charId: this._id, type: "tool"});
+		var profs = Proficiencies.find({charId: this._id, type: "tool"});
+		return removeDuplicateProficiencies(profs);
 	},
 });
 
@@ -59,13 +80,6 @@ Template.features.events({
 			template: "featureDialog",
 			data:     {featureId: featureId, charId: charId},
 			element:   event.currentTarget.parentElement,
-		});
-	},
-	"click .attack": function(event){
-		openParentDialog({
-			parent: this.parent,
-			charId: this.charId,
-			element: event.currentTarget,
 		});
 	},
 	"click .useFeature": function(event){
@@ -130,6 +144,45 @@ Template.resource.events({
 			template: "attributeDialog",
 			data:     {name: this.title, statName: this.name, charId: this.char._id},
 			element: event.currentTarget.parentElement,
+		});
+	},
+});
+
+Template.attackListItem.helpers({
+	evaluateAttackBonus: function(charId, attack) {
+		if (attack.parent.collection == "Spells") {
+			var spell = Spells.findOne(attack.parent.id);
+			if (spell) {
+				bonus = evaluate(charId, attack.attackBonus, {"spellListId": spell.parent.id});
+			}
+		} else {
+			var bonus = evaluate(charId, attack.attackBonus);
+		}
+
+		if (_.isFinite(bonus)) {
+			return bonus > 0 ? "+" + bonus : "" + bonus;
+		} else {
+			return bonus;
+		}
+	},
+	evaluateDamage: function(charId, attack) {
+		if (attack.parent.collection == "Spells") {
+			var spell = Spells.findOne(attack.parent.id);
+			if (spell) {
+				return evaluateSpellString(charId, spell.parent.id, attack.damage);
+			}
+		} else {
+			return evaluateString(charId, attack.damage);
+		}
+	},
+});
+
+Template.attackListItem.events({
+	"click .attack": function(event, instance){
+		openParentDialog({
+			parent: instance.data.attack.parent,
+			charId: instance.data.charId,
+			element: event.currentTarget,
 		});
 	},
 });

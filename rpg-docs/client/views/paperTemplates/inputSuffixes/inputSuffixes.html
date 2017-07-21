@@ -1,13 +1,35 @@
 <template name="formulaSuffix">
-	<div suffix>
-		<paper-tooltip position="left" animation-delay="0">This is a formula field</paper-tooltip>
+	<div suffix style="position: relative">
 		<iron-icon icon="lightbulb-outline"></iron-icon>
+		{{# simpleTooltip}}
+			This is a formula field
+		{{/ simpleTooltip}}
 	</div>
 </template>
 
 <template name="bracketSuffix">
-	<div suffix>
-		<paper-tooltip position="left" animation-delay="0">This field accepts formulae in {curly brackets}</paper-tooltip>
+	<div suffix style="position: relative">
 		<iron-icon icon="dicecloud:code-braces"></iron-icon>
+		{{# simpleTooltip}}
+			This field accepts formulae in {curly brackets}
+		{{/ simpleTooltip}}
+	</div>
+</template>
+
+<template name="textareaBracketSuffix">
+	<div class="textarea-bracket-suffix">
+		<div class="markdown" style="position: relative">
+			<iron-icon icon="dicecloud:markdown"></iron-icon>
+			{{# simpleTooltip}}
+				This field accepts markdown formatting
+			{{/ simpleTooltip}}
+		</div>
+		<div class="brackets" style="position: relative">
+			<!--<paper-tooltip position="left" animation-delay="0">This field accepts formulae in {curly brackets}</paper-tooltip>-->
+			<iron-icon icon="dicecloud:code-braces"></iron-icon>
+			{{# simpleTooltip}}
+				This field accepts formulae in {curly brackets}
+			{{/ simpleTooltip}}
+		</div>
 	</div>
 </template>
