@@ -76,7 +76,7 @@ Template.spells.helpers({
 		}
 		if (this.components.material){
 			components += components ? ", M" : "M";
-			if (materialNeedsGp(this.components.material)) {components+="gp";}
+			if (materialNeedsGp(this.components.material)) {components += "gp";}
 		}
 		if (this.components.concentration){
 			components += components ? ", C" : "C";
@@ -275,7 +275,7 @@ Template.spells.events({
 				Spells.insert(spell);
 				// Copy over attacks and effects
 				_.each(result.attacks, (attack) => {
-					if (!(attackBonus in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
+					if (!("attackBonus" in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
 					attack.charId = charId;
 					attack.parent = {id: spellId, collection: "Spells"};
 					Attacks.insert(attack);
