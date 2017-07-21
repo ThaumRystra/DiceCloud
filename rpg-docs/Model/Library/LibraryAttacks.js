@@ -11,13 +11,11 @@ Schemas.LibraryAttacks = new SimpleSchema({
 	},
 	attackBonus: {
 		type: String,
-		defaultValue: "strengthMod + proficiencyBonus",
 		optional: true,
 		trim: false,
 	},
 	damage: {
 		type: String,
-		defaultValue: "1d8 + {strengthMod}",
 		optional: true,
 		trim: false,
 	},
