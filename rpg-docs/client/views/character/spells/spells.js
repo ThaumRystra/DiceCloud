@@ -333,3 +333,26 @@ Template.spells.events({
 		event.stopPropagation();
 	},
 });
+
+Template.layout.events({
+	"dragstart .spellItem": function(event, instance){
+		event.originalEvent.dataTransfer.setData("dicecloud-id/spells", this._id);
+		Session.set("inventory.dragSpellId", this._id);
+	},
+	"dragend .spellItem": function(event, instance){
+		Session.set("inventory.dragSpellId", null);
+	},
+
+	"dragover .spellList, dragenter .spellList":
+	function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/spells")){
+			event.preventDefault();
+		}
+	},
+	"drop .spellList": function(event, instance){
+		var spellId = event.originalEvent.dataTransfer.getData("dicecloud-id/spells");
+		//move spell to new list
+		Meteor.call("moveSpellToList", spellId, this._id);
+		Session.set("inventory.dragSpellId", null);
+	},
+});
