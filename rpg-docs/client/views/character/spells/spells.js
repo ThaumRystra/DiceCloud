@@ -337,26 +337,45 @@ Template.spells.events({
 Template.layout.events({
 	"dragstart .spellItem": function(event, instance){
 		event.originalEvent.dataTransfer.setData("dicecloud-id/spells", this._id);
-		Session.set("inventory.dragSpellId", this._id);
+		Session.set("spellLists.dragSpellId", this._id);
 	},
 	"dragend .spellItem": function(event, instance){
-		Session.set("inventory.dragSpellId", null);
+		Session.set("spellLists.dragSpellId", null);
 	},
 
-	"dragover .spellList, dragenter .spellList":
-	function(event, instance){
+	"dragover .spellList, dragenter .spellList": function(event, instance){
 		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/spells")){
 			event.preventDefault();
 		}
 	},
 	"drop .spellList": function(event, instance){
 		var spellId = event.originalEvent.dataTransfer.getData("dicecloud-id/spells");
-		//move spell to new list
 		if (event.ctrlKey){
+			//copy spell to new list
 			Meteor.call("copySpellToList", spellId, this._id);
 		} else {
+			//move spell to new list
 			Meteor.call("moveSpellToList", spellId, this._id);
 		}
-		Session.set("inventory.dragSpellId", null);
+		Session.set("spellLists.dragSpellId", null);
+	},
+
+	"dragover .characterRepresentative, dragenter .characterRepresentative": function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/spells")){
+			event.preventDefault();
+		}
+	},
+	"drop .characterRepresentative": function(event, instance) {
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/spells")){ //to prevent conflicts with item drag/drop
+			var spellId = event.originalEvent.dataTransfer.getData("dicecloud-id/spells");
+			if (event.ctrlKey){
+				//copy spell to character
+				Meteor.call("copySpellToCharacter", spellId, this._id);
+			} else {
+				//move spell to character
+				Meteor.call("moveSpellToCharacter", spellId, this._id);
+			}
+			Session.set("spellLists.dragSpellId", null);
+		}
 	},
 });

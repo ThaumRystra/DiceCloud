@@ -130,53 +130,98 @@ var checkMovePermission = function(spellId, parent, destinationOnly) {
 	}
 };
 
-var moveSpell = function(spellId, parentCollection, parentId) { //moving spells between characters is NOT YET SUPPORTED :O
+var moveSpell = function(spellId, targetCollection, targetId) {
 	var spell = Spells.findOne(spellId);
 	if (!spell) return;
-	parentCollection = parentCollection || spell.parent.collection;
-	parentId = parentId || spell.parent.id;
+	targetCollection = targetCollection || spell.parent.collection;
+	targetId = targetId || spell.parent.id;
 
 	if (Meteor.isServer) {
-		checkMovePermission(spellId, {collection: parentCollection, id: parentId}, false);
+		checkMovePermission(spellId, {collection: targetCollection, id: targetId}, false);
 	}
 
-	//update the spell provided the update will actually change something
-	if (
-		spell.parent.collection !== parentCollection ||
-		spell.parent.id !== parentId
-	){
+	if (targetCollection == "Characters") { //then we are copying the spell to a different character.
+		targetList = SpellLists.findOne({"charId": targetId});
+		targetListId = targetList && targetList._id;
+		if (!targetListId) {
+			targetListId = SpellLists.insert({ //create a spell list if we don't already have one
+				name: "New SpellList",
+				charId: targetId,
+				saveDC: "8 + intelligenceMod + proficiencyBonus",
+				attackBonus: "intelligenceMod + proficiencyBonus",
+			});
+		}
+
 		Spells.update(
 			spellId,
 			{$set: {
-				"parent.collection": parentCollection,
-				"parent.id": parentId,
+				charId: targetId,
+				"parent.collection": "SpellLists",
+				"parent.id": targetListId,
 			}}
 		);
 	}
+	else { //we are moving the spell within the same character
+		//update the spell provided the update will actually change something
+		if (
+			spell.parent.collection !== targetCollection ||
+			spell.parent.id !== targetId
+		){
+			Spells.update(
+				spellId,
+				{$set: {
+					"parent.collection": targetCollection,
+					"parent.id": targetId,
+				}}
+			);
+		}
+	}
 };
 
-var copySpell = function(spellId, parentCollection, parentId) {
+var copySpell = function(spellId, targetCollection, targetId) {
 	var spell = Spells.findOne(spellId);
 	if (!spell) return;
-	parentCollection = parentCollection || spell.parent.collection;
-	parentId = parentId || spell.parent.id;
+	targetCollection = targetCollection || spell.parent.collection;
+	targetId = targetId || spell.parent.id;
 
 	if (Meteor.isServer) {
-		checkMovePermission(spellId, {collection: parentCollection, id: parentId}, true); //we're only reading from the source character
+		checkMovePermission(spellId, {collection: targetCollection, id: targetId}, true); //we're only reading from the source character
 	}
 
 
-	if (spell.parentCollection == "Characters") { //then we are copying the spell to a different character.
-		//TODO: handle this
-	} else { //else we are copying the spell within the same character
+	if (targetCollection == "Characters") { //then we are copying the spell to a different character.
+		targetList = SpellLists.findOne({"charId": targetId});
+		targetListId = targetList && targetList._id;
+		if (!targetListId) {
+			targetListId = SpellLists.insert({ //create a spell list if we don't already have one
+				name: "New SpellList",
+				charId: targetId,
+				saveDC: "8 + intelligenceMod + proficiencyBonus",
+				attackBonus: "intelligenceMod + proficiencyBonus",
+			});
+		}
+
 		newSpell = _.clone(spell);
 		delete newSpell._id;
 		newSpellId = Spells.insert(newSpell); //add a new copy of the spell
 		Spells.update(
 			newSpellId,
 			{$set: {
-				"parent.collection": parentCollection,
-				"parent.id": parentId,
+				charId: targetId,
+				"parent.collection": "SpellLists",
+				"parent.id": targetListId,
+			}}
+		);
+	}
+	else { //else we are copying the spell within the same character
+		newSpell = _.clone(spell);
+		delete newSpell._id;
+		newSpellId = Spells.insert(newSpell); //add a new copy of the spell
+		Spells.update(
+			newSpellId,
+			{$set: {
+				"parent.collection": targetCollection,
+				"parent.id": targetId,
 			}}
 		);
 	}
@@ -193,5 +238,15 @@ Meteor.methods({
 		check(spellId, String);
 		check(spellListId, String);
 		copySpell(spellId, "SpellLists", spellListId);
+	},
+	moveSpellToCharacter: function(spellId, charId) {
+		check(spellId, String);
+		check(charId, String);
+		moveSpell(spellId, "Characters", charId);
+	},
+	copySpellToCharacter: function(spellId, charId) {
+		check(spellId, String);
+		check(charId, String);
+		copySpell(spellId, "Characters", charId);
 	},
 });
