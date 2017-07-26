@@ -87,16 +87,20 @@ Spells.deny(CHARACTER_SUBSCHEMA_DENY);
 
 
 
-var checkMovePermission = function(spellId, parent) {
+var checkMovePermission = function(spellId, parent, destinationOnly) {
 	var spell = Spells.findOne(spellId);
 	if (!spell)
 		throw new Meteor.Error("No such spell",
 		"An spell could not be found to move");
 	//handle permissions
-	var permission = Meteor.call("canWriteCharacter", spell.charId);
-	if (!permission){
-		throw new Meteor.Error("Access denied",
-		"Not permitted to move spells from this character");
+	var permission;
+
+	if (!destinationOnly) { //if we're not modifying the origin, only the destination
+		permission = Meteor.call("canWriteCharacter", spell.charId);
+		if (!permission){
+			throw new Meteor.Error("Access denied",
+			"Not permitted to move spells from this character");
+		}
 	}
 	if (parent.collection === "Characters"){
 		permission = Meteor.call("canWriteCharacter", parent.id);
@@ -126,33 +130,55 @@ var checkMovePermission = function(spellId, parent) {
 	}
 };
 
-var moveSpell = function(spellId, parentCollection, parentId) {
+var moveSpell = function(spellId, parentCollection, parentId) { //moving spells between characters is NOT YET SUPPORTED :O
 	var spell = Spells.findOne(spellId);
 	if (!spell) return;
 	parentCollection = parentCollection || spell.parent.collection;
 	parentId = parentId || spell.parent.id;
 
 	if (Meteor.isServer) {
-		checkMovePermission(spellId, {collection: parentCollection, id: parentId});
+		checkMovePermission(spellId, {collection: parentCollection, id: parentId}, false);
+	}
+
+	//update the spell provided the update will actually change something
+	if (
+		spell.parent.collection !== parentCollection ||
+		spell.parent.id !== parentId
+	){
+		Spells.update(
+			spellId,
+			{$set: {
+				"parent.collection": parentCollection,
+				"parent.id": parentId,
+			}}
+		);
+	}
+};
+
+var copySpell = function(spellId, parentCollection, parentId) {
+	var spell = Spells.findOne(spellId);
+	if (!spell) return;
+	parentCollection = parentCollection || spell.parent.collection;
+	parentId = parentId || spell.parent.id;
+
+	if (Meteor.isServer) {
+		checkMovePermission(spellId, {collection: parentCollection, id: parentId}, true); //we're only reading from the source character
 	}
 
 
-	if (spell.parentCollection == "Characters") { //then we are moving the spell to a different character.
-
-	} else { //else we are moving the spell within the same character
-		//update the spell provided the update will actually change something
-		if (
-			spell.parent.collection !== parentCollection ||
-			spell.parent.id !== parentId
-		){
-			Spells.update(
-				spellId,
-				{$set: {
-					"parent.collection": parentCollection,
-					"parent.id": parentId,
-				}}
-			);
-		}
+	if (spell.parentCollection == "Characters") { //then we are copying the spell to a different character.
+		//TODO: handle this
+	} else { //else we are copying the spell within the same character
+		newSpell = _.clone(spell);
+		delete newSpell._id;
+		newSpellId = Spells.insert(newSpell); //add a new copy of the spell
+		Spells.update(
+			newSpellId,
+			{$set: {
+				"parent.collection": parentCollection,
+				"parent.id": parentId,
+			}}
+		);
 	}
 };
 
@@ -162,5 +188,10 @@ Meteor.methods({
 		check(spellId, String);
 		check(spellListId, String);
 		moveSpell(spellId, "SpellLists", spellListId);
+	},
+	copySpellToList: function(spellId, spellListId) {
+		check(spellId, String);
+		check(spellListId, String);
+		copySpell(spellId, "SpellLists", spellListId);
 	},
 });

@@ -352,7 +352,11 @@ Template.layout.events({
 	"drop .spellList": function(event, instance){
 		var spellId = event.originalEvent.dataTransfer.getData("dicecloud-id/spells");
 		//move spell to new list
-		Meteor.call("moveSpellToList", spellId, this._id);
+		if (event.ctrlKey){
+			Meteor.call("copySpellToList", spellId, this._id);
+		} else {
+			Meteor.call("moveSpellToList", spellId, this._id);
+		}
 		Session.set("inventory.dragSpellId", null);
 	},
 });
