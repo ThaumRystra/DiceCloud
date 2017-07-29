@@ -36,3 +36,21 @@ Migrations.add({
 		return;
 	},
 });
+
+Migrations.add({
+	version: 2,
+	name: "Adds TempHP as a character attribute",
+	up: function() {
+		//update characters
+		Characters.find({}).forEach(function(char){
+			if (char.tempHP) return;
+			Characters.update(char._id, {$set: {
+				"tempHP.adjustment": 0,
+				"tempHP.reset": "longRest",
+			}});
+		});
+	},
+	down: function(){
+		return;
+	},
+});
