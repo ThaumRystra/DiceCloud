@@ -9,7 +9,7 @@
 	--paper-diff-slider-pin-color: #009688;
 }
 
-.healthCard .tempHitPointSlider {
+.healthCard .extraHitPointSlider {
 	--paper-diff-slider-active-color: #00BCD4; /* cyan */
 	--paper-diff-slider-knob-color: #00BCD4; /* these don't seem to work? */
 	--paper-diff-slider-pin-color: #00BCD4;
