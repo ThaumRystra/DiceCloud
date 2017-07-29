@@ -27,6 +27,7 @@ Schemas.Character = new SimpleSchema({
 
 	//stats
 	hitPoints:        {type: Schemas.Attribute},
+	tempHP:           {type: Schemas.Attribute},
 	experience:       {type: Schemas.Attribute},
 	proficiencyBonus: {type: Schemas.Attribute},
 	speed:            {type: Schemas.Attribute},
