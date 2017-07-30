@@ -253,8 +253,8 @@ Template.spells.events({
 		pushDialogStack({
 			template: "spellLibraryDialog",
 			element: event.currentTarget,
-			callback: (result) => {
-				if (!result) return;
+			callback: (resultArray) => {
+				if (!resultArray) return;
 				if (!listId){
 					listId = SpellLists.insert({
 						name: "New SpellList",
@@ -263,53 +263,59 @@ Template.spells.events({
 						attackBonus: "intelligenceMod + proficiencyBonus",
 					});
 				}
-				// Make the library spell into a regular spell
-				let spell = _.omit(result, "library", "attacks", "effects");
-				spell._id = spellId;
-				spell.charId = charId;
-				spell.parent = {
-					id: listId,
-					collection: "SpellLists",
-				};
-				spell.prepared = "prepared";
-				Spells.insert(spell);
-				// Copy over attacks and effects
-				_.each(result.attacks, (attack) => {
-					if (!("attackBonus" in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
-					attack.charId = charId;
-					attack.parent = {id: spellId, collection: "Spells"};
-					Attacks.insert(attack);
-				});
-				_.each(result.effects, (effect) => {
-					effect.charId = charId;
-					effect.parent = {id: spellId, collection: "Spells"};
-					Effects.insert(effect);
-				});
 
-				/******[UNCOMMENT ONCE BUFFS ARE ADDED]*******
-				_.each(result.buffs, (buff) => {
-					buff.charId = charId;
-					buff.parent = {id: spellId, collection: "Spells"};
-					buffId = Buffs.insert(buff);
-
-					_.each(buff.attacks, (attack) => {
-						if (!(attackBonus in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
+				//loop through all returned spells
+				_.each(resultArray, (rawSpell, index) =>{
+					// Make the library spell into a regular spell
+					let spell = _.omit(rawSpell, "library", "attacks", "effects");
+					if (index == 0) {
+						spell._id = spellId; //only do this for the first spell added
+					}
+					spell.charId = charId;
+					spell.parent = {
+						id: listId,
+						collection: "SpellLists",
+					};
+					spell.prepared = "prepared";
+					Spells.insert(spell);
+					// Copy over attacks and effects
+					_.each(rawSpell.attacks, (attack) => {
+						if (!("attackBonus" in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
 						attack.charId = charId;
-						attack.parent = {id: buffId, collection: "Buffs"};
+						attack.parent = {id: spellId, collection: "Spells"};
 						Attacks.insert(attack);
 					});
-					_.each(buff.effects, (effect) => {
+					_.each(rawSpell.effects, (effect) => {
 						effect.charId = charId;
-						effect.parent = {id: buffId, collection: "Buffs"};
+						effect.parent = {id: spellId, collection: "Spells"};
 						Effects.insert(effect);
 					});
-					_.each(buff.proficiencies, (prof) => {
-						prof.charId = charId;
-						prof.parent = {id: buffId, collection: "Buffs"};
-						Proficiencies.insert(prof);
+
+					/******[UNCOMMENT ONCE BUFFS ARE ADDED]*******
+					_.each(rawSpell.buffs, (buff) => {
+						buff.charId = charId;
+						buff.parent = {id: spellId, collection: "Spells"};
+						buffId = Buffs.insert(buff);
+
+						_.each(buff.attacks, (attack) => {
+							if (!(attackBonus in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
+							attack.charId = charId;
+							attack.parent = {id: buffId, collection: "Buffs"};
+							Attacks.insert(attack);
+						});
+						_.each(buff.effects, (effect) => {
+							effect.charId = charId;
+							effect.parent = {id: buffId, collection: "Buffs"};
+							Effects.insert(effect);
+						});
+						_.each(buff.proficiencies, (prof) => {
+							prof.charId = charId;
+							prof.parent = {id: buffId, collection: "Buffs"};
+							Proficiencies.insert(prof);
+						});
 					});
+					*******[UNCOMMENT ONCE BUFFS ARE ADDED]******/
 				});
-				*******[UNCOMMENT ONCE BUFFS ARE ADDED]******/
 			},
 			returnElement: () => $(`[data-id='${spellId}']`).get(0),
 		})
