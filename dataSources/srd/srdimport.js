@@ -15,6 +15,11 @@ _.each(items, (item) => {
 	LibraryItems.insert(item)
 });
 
+_.each(equipmentPacks, (pack) => {
+	pack.library = "SRDLibraryGA3XWsd"
+	LibraryEquipmentPacks.insert(pack)
+});
+
 _.each(spells, (spell) => {
 	spell.library = "SRDLibraryGA3XWsd"
 	LibrarySpells.insert(spell)
@@ -35,6 +40,20 @@ _.each(items, (item) => {
 	});
 	if (!existingItem) return;
 	_.each(item.attacks, attack => Schemas.LibraryAttacks.clean(attack));
+	LibraryItems.update(existingItem._id, {$set: item});
+});
+
+// Make sure you're subscribed to the equipment packs
+handle = Meteor.subscribe("standardLibraryItems", category)
+// Wait until the handle is ready
+handle.ready(); // must reaturn [...true]
+
+_.each(equipmentPacks, (pack) => {
+	var existingItem = LibraryItems.findOne({
+		library: "SRDLibraryGA3XWsd",
+		name: pack.name,
+	});
+	if (!existingItem) return;
 	LibraryItems.update(existingItem._id, {$set: item});
 });
 

@@ -1,0 +1,269 @@
+[
+	{
+		"name": "Burglar’s Pack",
+		"cost": 16,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": [
+			{
+				"name": "Ball bearings (bag of 1,000)",
+			},
+			{
+				"name": "10 feet of string",
+				"inLibrary": false
+			},
+			{
+				"name": "Bell",
+			},
+			{
+				"name": "Candle",
+				"quantity": 5
+			},
+			{
+				"name": "Crowbar",
+			},
+			{
+				"name": "Hammer",
+			},
+			{
+				"name": "Piton",
+				"quantity": 10
+			},
+			{
+				"name": "Lantern, hooded",
+			},
+			{
+				"name": "Oil (flask)",
+				"quantity": 2
+			},
+			{
+				"name": "Rations (1 day)",
+				"quantity": 5
+			},
+			{
+				"name": "Tinderbox",
+			},
+			{
+				"name": "Waterskin",
+			},
+			{
+				"name": "Rope, hempen (50 feet)",
+			}
+		]
+	},
+	{
+		"name": "Diplomat’s Pack",
+		"cost": 39,
+		"container": {
+			"name": "Chest"
+		},
+		"contents": [
+			{
+				"name": "Case, map or scroll",
+				"quantity": 2
+			},
+			{
+				"name": "Clothes, fine",
+			},
+			{
+				"name": "Ink (1 ounce bottle)",
+			},
+			{
+				"name": "Ink pen",
+			},
+			{
+				"name": "Lamp",
+			},
+			{
+				"name": "Oil (flask)",
+				"quantity": 2
+			},
+			{
+				"name": "Paper (one sheet)",
+				"quantity": 5
+			},
+			{
+				"name": "Perfume (vial)",
+			},
+			{
+				"name": "Sealing wax",
+			},
+			{
+				"name": "Soap",
+			}
+		]
+	},
+	{
+		"name": "Dungeoneer’s Pack",
+		"cost": 12,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": [
+			{
+				"name": "Crowbar",
+			},
+			{
+				"name": "Hammer",
+			},
+			{
+				"name": "Piton",
+				"quantity": 10
+			},
+			{
+				"name": "Torch",
+				"quantity": 10
+			},
+			{
+				"name": "Tinderbox",
+			},
+			{
+				"name": "Rations (1 day)",
+				"quantity": 10
+			},
+			{
+				"name": "Waterskin",
+			},
+			{
+				"name": "Rope, hempen (50 feet)",
+			}
+		]
+	},
+	{
+		"name": "Entertainer’s Pack",
+		"cost": 40,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": [
+			{
+				"name": "Bedroll",
+			},
+			{
+				"name": "Costume",
+				"quantity": 2
+			},
+			{
+				"name": "Candle",
+				"quantity": 5
+			},
+			{
+				"name": "Rations (1 day)",
+				"quantity": 5
+			},
+			{
+				"name": "Waterskin",
+			},
+			{
+				"name": "Disguise kit",
+			}
+		]
+	},
+	{
+		"name": "Explorer’s Pack",
+		"cost": 10,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": [
+			{
+				"name": "Bedroll",
+			},
+			{
+				"name": "Mess kit",
+			},
+			{
+				"name": "Tinderbox",
+			},
+			{
+				"name": "Torch",
+				"quantity": 10
+			},
+			{
+				"name": "Rations (1 day)",
+				"quantity": 10
+			},
+			{
+				"name": "Waterskin",
+			},
+			{
+				"name": "Rope, hempen (50 feet)",
+			}
+		]
+	},
+	{
+		"name": "Priest’s Pack",
+		"cost": 19,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": [
+			{
+				"name": "Blanket",
+			},
+			{
+				"name": "Candle",
+				"quantity": 10
+			},
+			{
+				"name": "Tinderbox",
+			},
+			{
+				"name": "Alms box",
+				"inLibrary": false
+			},
+			{
+				"name": "Incense (block)",
+				"inLibrary": false,
+				"quantity": 2
+			},
+			{
+				"name": "Censer",
+				"inLibrary": false
+			},
+			{
+				"name": "Vestements",
+				"inLibrary": false
+			},
+			{
+				"name": "Rations (1 day)",
+				"quantity": 2
+			},
+			{
+				"name": "Waterskin",
+			},
+		]
+	},
+	{
+		"name": "Scholar’s Pack",
+		"cost": 40,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": [
+			{
+				"name": "Book",
+			},
+			{
+				"name": "Ink (1 ounce bottle)",
+				"quantity": 10
+			},
+			{
+				"name": "Ink pen",
+			},
+			{
+				"name": "Parchment (one sheet)",
+				"quantity": 10
+			},
+			{
+				"name": "Little bag of sand",
+				"inLibrary": false
+			},
+			{
+				"name": "Small knife",
+				"inLibrary": false
+			},
+		]
+	}
+]
