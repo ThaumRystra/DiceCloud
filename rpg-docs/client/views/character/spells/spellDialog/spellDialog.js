@@ -29,6 +29,13 @@ Template.spellDialog.events({
 });
 
 Template.spellDetails.helpers({
+	schoolAndLevel: function(){
+		if (this.level == 0) {
+			return this.school + " cantrip";
+		} else {
+			return "Level " + this.level + " " + this.school;
+		}
+	},
 	getComponents: function(){
 		var components = "";
 		if (this.components.concentration) components += "C";
