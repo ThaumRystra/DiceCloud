@@ -141,14 +141,8 @@ Template.inventory.events({
 	},
 	"click .libraryItem": function(event, instance){
 		var charId = this._id;
-		// var itemId = Items.insert({
-		// 	charId: charId,
-		// 	parent:{
-		// 		id: charId,
-		// 		collection: "Characters",
-		// 	},
-		// });
 		var returnId = "";
+
 		pushDialogStack({
 			template: "itemLibraryDialog",
 			element: event.currentTarget,
