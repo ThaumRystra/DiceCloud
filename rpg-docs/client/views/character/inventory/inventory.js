@@ -141,39 +141,107 @@ Template.inventory.events({
 	},
 	"click .libraryItem": function(event, instance){
 		var charId = this._id;
-		var itemId = Items.insert({
-			charId: charId,
-			parent:{
-				id: charId,
-				collection: "Characters",
-			},
-		});
+		// var itemId = Items.insert({
+		// 	charId: charId,
+		// 	parent:{
+		// 		id: charId,
+		// 		collection: "Characters",
+		// 	},
+		// });
+		var returnId = "";
 		pushDialogStack({
 			template: "itemLibraryDialog",
 			element: event.currentTarget,
-			callback: (result) => {
-				if (!result) {
-					Items.remove(itemId);
+			callback: (returnObject) => {
+				if (!returnObject) return;
+
+				if (returnObject.type == "item") {
+					var result = returnObject.return;
+					//create item
+					var itemId = Items.insert({
+						charId: charId,
+						parent:{
+							id: charId,
+							collection: "Characters",
+						},
+					});
+
+					if (!result) {
+						Items.remove(itemId);
+						return;
+					}
+					// Make the library item into a regular item
+					let item = _.omit(result, "library", "attacks", "effects");
+					delete item.settings.category;
+					// Update the item to match library item
+					Items.update(itemId, {$set: item});
+					// Copy over attacks and effects
+					_.each(result.attacks, (attack) => {
+						attack.charId = charId;
+						attack.parent = {id: itemId, collection: "Items"};
+						Attacks.insert(attack);
+					});
+					_.each(result.effects, (effect) => {
+						effect.charId = charId;
+						effect.parent = {id: itemId, collection: "Items"};
+						Effects.insert(effect);
+					});
+
+					//set return ID
+					returnId = itemId;
+				}
+				else if (returnObject.type == "equipmentPack") {
+					var result = returnObject.return;
+					//create container
+					var containerId = Containers.insert({
+						name: "New Container",
+						isCarried: true,
+						charId: charId,
+					});
+
+					if (!result || !result.container) {
+						Containers.remove(containerId);
+						return;
+					}
+					// process the return object
+					// First, set up the container
+					Containers.update(containerId, {$set: result.container})
+
+					_.each(result.contents, (libraryItem)=> {
+						// Make the library item into a regular item
+						let item = _.omit(libraryItem, "library", "attacks", "effects");
+						delete item.settings.category;
+						//Set charId, set container to pack container
+						item.charId = charId
+						item.parent = {
+							id: containerId,
+							collection: "Containers"
+						};
+
+						// Insert the item
+						Items.insert(item);
+						// Copy over attacks and effects
+						_.each(libraryItem.attacks, (attack) => {
+							attack.charId = charId;
+							attack.parent = {id: itemId, collection: "Items"};
+							Attacks.insert(attack);
+						});
+						_.each(libraryItem.effects, (effect) => {
+							effect.charId = charId;
+							effect.parent = {id: itemId, collection: "Items"};
+							Effects.insert(effect);
+						});
+					});
+
+					//set return ID
+					returnId = containerId;
+				}
+				else {
+					console.log("Unknown type " + returnObject.type);
 					return;
 				}
-				// Make the library item into a regular item
-				let item = _.omit(result, "library", "attacks", "effects");
-				delete item.settings.category;
-				// Update the item to match library item
-				Items.update(itemId, {$set: item});
-				// Copy over attacks and effects
-				_.each(result.attacks, (attack) => {
-					attack.charId = charId;
-					attack.parent = {id: itemId, collection: "Items"};
-					Attacks.insert(attack);
-				});
-				_.each(result.effects, (effect) => {
-					effect.charId = charId;
-					effect.parent = {id: itemId, collection: "Items"};
-					Effects.insert(effect);
-				});
 			},
-			returnElement: () => $(`[data-id='${itemId}']`).get(0),
+			returnElement: () => $(`[data-id='${returnId}']`).get(0),
 		})
 	},
 	"click .libraryEquipmentPack": function(event, instance){
@@ -219,8 +287,7 @@ Template.inventory.events({
 						effect.parent = {id: itemId, collection: "Items"};
 						Effects.insert(effect);
 					});
-				});
-				
+				});				
 			},
 			returnElement: () => $(`[data-id='${containerId}']`).get(0),
 		});
