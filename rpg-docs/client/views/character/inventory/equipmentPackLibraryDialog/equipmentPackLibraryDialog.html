@@ -1,0 +1,34 @@
+<template name="equipmentPackLibraryDialog">
+	<div class="fit equipment-pack-library-dialog layout vertical">
+		<app-toolbar class="app-grey white-text">
+			<paper-icon-button id="backButton"
+							   icon="arrow-back">
+			</paper-icon-button>
+			<div main-title>Equipment Packs</div>
+		</app-toolbar>
+		<div class="flex scroll-y">
+			<div class="equipmentPacks" style="padding:8px">
+				<table style="width: 100%">
+					<tbody>
+						{{#each pack in equipmentPacks}}
+							{{>libraryEquipmentPack pack=pack selected=(isSelected pack)}}
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="layout horizontal end-justified">
+			<paper-button class="cancelButton">Cancel</paper-button>
+			<paper-button class="okButton">OK</paper-button>
+		</div>
+	</div>
+</template>
+
+<template name="libraryEquipmentPack">
+	<tr class="item library-equipment-pack {{#if selected}}selected{{/if}}">
+		<td class="packName">
+			{{pack.name}}
+			<paper-ripple></paper-ripple>
+		</td>
+	</tr>
+</template>

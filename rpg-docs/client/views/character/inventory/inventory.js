@@ -176,6 +176,55 @@ Template.inventory.events({
 			returnElement: () => $(`[data-id='${itemId}']`).get(0),
 		})
 	},
+	"click .libraryEquipmentPack": function(event, instance){
+		var charId = this._id;
+		var containerId = Containers.insert({
+			name: "New Container",
+			isCarried: true,
+			charId: charId,
+		});
+		pushDialogStack({
+			template: "equipmentPackLibraryDialog",
+			element: event.currentTarget,
+			callback: (result) => {
+				if (!result || !result.container) {
+					Containers.remove(containerId);
+					return;
+				}
+				// process the return object
+				// First, set up the container
+				Containers.update(containerId, {$set: result.container})
+
+				_.each(result.contents, (libraryItem)=> {
+					// Make the library item into a regular item
+					let item = _.omit(libraryItem, "library", "attacks", "effects");
+					delete item.settings.category;
+					//Set charId, set container to pack container
+					item.charId = charId
+					item.parent = {
+						id: containerId,
+						collection: "Containers"
+					};
+
+					// Insert the item
+					Items.insert(item);
+					// Copy over attacks and effects
+					_.each(libraryItem.attacks, (attack) => {
+						attack.charId = charId;
+						attack.parent = {id: itemId, collection: "Items"};
+						Attacks.insert(attack);
+					});
+					_.each(libraryItem.effects, (effect) => {
+						effect.charId = charId;
+						effect.parent = {id: itemId, collection: "Items"};
+						Effects.insert(effect);
+					});
+				});
+				
+			},
+			returnElement: () => $(`[data-id='${containerId}']`).get(0),
+		});
+	},
 	"click .addContainer": function(event, instance){
 		var containerId = Containers.insert({
 			name: "New Container",

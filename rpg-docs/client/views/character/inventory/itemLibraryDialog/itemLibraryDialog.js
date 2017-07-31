@@ -1,4 +1,4 @@
-const librarySubs = new SubsManager();
+const itemLibrarySubs = new SubsManager();
 
 const categories = [
 	{name: "Weapons", key: "weapons"},
@@ -13,11 +13,11 @@ Template.itemLibraryDialog.onCreated(function(){
 	this.categoriesOpen = new ReactiveVar([]);
 	this.readyDict = new ReactiveDict();
 	this.searchReady = new ReactiveVar();
-	librarySubs.subscribe("standardLibraries");
+	itemLibrarySubs.subscribe("standardLibraries");
 	this.autorun(() => {
 		// Subscribe to all open categories
 		_.each(this.categoriesOpen.get(), (key) => {
-			var handle = librarySubs.subscribe("standardLibraryItems", key);
+			var handle = itemLibrarySubs.subscribe("standardLibraryItems", key);
 			this.autorun(() => {
 				this.readyDict.set(key, handle.ready());
 			});
@@ -27,7 +27,7 @@ Template.itemLibraryDialog.onCreated(function(){
 		// If we are searching, subscibe to all categories
 		if (this.searchTerm.get()){
 			let handles = _.map(categories, category =>
-				librarySubs.subscribe("standardLibraryItems", category.key)
+				itemLibrarySubs.subscribe("standardLibraryItems", category.key)
 			);
 			// Ready when all handles are ready
 			this.autorun(() => {

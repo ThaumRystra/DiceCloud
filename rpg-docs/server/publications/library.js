@@ -15,6 +15,14 @@ Meteor.publish("standardLibraryItems", function(categoryKey){
 	});
 });
 
+Meteor.publish("standardLibraryEquipmentPacks", function(){
+	return LibraryEquipmentPacks.find({
+		library: {$in: standardLibraryIds}
+	}, {
+		sort: {name: 1},
+	});
+});
+
 Meteor.publish("standardLibrarySpells", function(level){
 	return LibrarySpells.find({
 		library: {$in: standardLibraryIds},
