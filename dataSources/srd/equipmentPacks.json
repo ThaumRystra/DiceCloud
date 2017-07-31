@@ -1,5 +1,13 @@
 [
 	{
+		"name": "Backpack",
+		"cost": 2,
+		"container": {
+			"name": "Backpack"
+		},
+		"contents": []
+	},
+	{
 		"name": "Burglar’s Pack",
 		"cost": 16,
 		"container": {
