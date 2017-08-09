@@ -1,0 +1,30 @@
+<!--needs to be given charId, parentId and parentCollection-->
+<template name="customBuffEditList">
+	{{#if buffs.count}}
+		<div class="buffs">
+			<div class="paper-font-title" style="margin-bottom: 8px;">
+				Buffs
+			</div>
+			<table class="wideTable" style="width: 100%;">
+				{{#each buff in buffs}}
+					{{> customBuffEditListItem buff=buff}}
+				{{/each}}
+			</table>
+		</div>
+	{{/if}}
+	<paper-button id="addBuffButton"
+				  class="red-button"
+				  raised>
+		Add Buff
+	</paper-button>
+</template>
+
+<template name="customBuffEditListItem">
+	<tr class="buff" data-id={{buff._id}}>
+		{{> customBuffView buff=buff}}
+		<td>
+			<paper-icon-button class="edit-buff" icon="create">
+			</paper-icon-button>
+		</td>
+	</tr>
+</template>

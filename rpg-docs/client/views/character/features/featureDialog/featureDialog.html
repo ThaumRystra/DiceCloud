@@ -36,6 +36,7 @@
 
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> proficiencyViewList charId=charId parentId=_id}}
+	{{> customBuffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="featureEdit">
@@ -73,4 +74,5 @@
 
 	{{> effectsEditList parentId=_id parentCollection="Features" charId=charId name=name enabled=enabled}}
 	{{> proficiencyEditList parentId=_id parentCollection="Features" charId=charId enabled=enabled}}
+	{{> customBuffEditList  parentId=_id parentCollection="Features" charId=charId}}
 </template>

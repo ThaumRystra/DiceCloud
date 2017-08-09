@@ -6,7 +6,7 @@ Template.buffDialog.helpers({
 
 Template.buffDialog.events({
 	"click #deleteButton": function(event, instance){
-		Buffs.remove(instance.data.buffId);
+		Buffs.softRemoveNode(instance.data.buffId);
 		popDialogStack();
 	},
 });
@@ -29,18 +29,15 @@ Template.buffDetails.helpers({
 			if (applierCharacter.name === myName) {
 				var charName = "your "
 			} else {
-				if (applierCharacter.charName[applierCharacter.charName.length -1] === 's') {
-					var charName = applierCharacter.charName + "' ";
+				if (applierCharacter.name[applierCharacter.name.length - 1] === 's') {
+					var charName = applierCharacter.name + "' ";
 				} else {
-					var charName = applierCharacter.charName + "'s ";
+					var charName = applierCharacter.name + "'s ";
 				}
 			}
 
-			var type = typeDict[this.appliedByDetails.collection] || "";
-			var applierThing = global[this.appliedByDetails.collection]
-							&& global[this.appliedByDetails.collection].findOne(this.appliedByDetails.id)
-							&& global[this.appliedByDetails.collection].findOne(this.appliedByDetails.id).name
-							|| "unknown ability";
+			var type = typeDict[this.appliedByDetails.collection] + " ";
+			var applierThing = this.appliedByDetails.name;
 
 			return "Applied by " + charName + type + applierThing + ".";
 		}

@@ -18,6 +18,9 @@ openParentDialog = function({
 	} else if (parent.collection === "Spells") {
 		template = "spellDialog";
 		data = {spellId: parent.id};
+	} else if (parent.collection === "Buffs") {
+		template = "buffDialog";
+		data = {buffId: parent.id};
 	}
 	pushDialogStack({template, data, element, returnElement, callback});
 };

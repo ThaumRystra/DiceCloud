@@ -1,0 +1,15 @@
+<template name="customBuffEdit">
+	{{#with buff}}
+		{{#baseEditDialog title=name hideColor=true}}
+			<!--name-->
+			<paper-input id="buffNameInput" class="fullwidth" label="Name" value={{name}}></paper-input>
+
+			<!--description-->
+			<paper-textarea label="Description" id="buffDescriptionInput" value={{description}}></paper-textarea>
+
+			{{> effectsEditList parentId=_id parentCollection="Buffs" charId=charId name=name enabled=false}}
+			{{> attackEditList parentId=_id parentCollection="Buffs" charId=charId name=name enabled=false}}
+			{{> proficiencyEditList parentId=_id parentCollection="Buffs" charId=charId enabled=false}}
+		{{/baseEditDialog}}
+	{{/with}}
+</template>
