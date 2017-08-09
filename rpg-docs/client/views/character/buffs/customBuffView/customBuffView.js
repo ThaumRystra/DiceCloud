@@ -20,7 +20,6 @@ Template.customBuffView.events({
 		else {
 			var targetId = this.buff.charId;
 			var parent = global[this.buff.parent.collection].findOne(this.buff.parent.id);
-			console.log(parent, this.buff.parent);
 			if (targetId === "default") {
 				if (this.buff.target === "others") return; //we have "Select a character" selected
 				targetId = this.buff.charId; //i.e. target self
