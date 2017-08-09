@@ -11,9 +11,9 @@ Template.applyBuffDialog.helpers({
 	},
 	writableCharacters: function() {
 		var returnArray = [];
-		Characters.find({}).forEach(function(char){ //we look through all characters we have access to
+		Characters.find({_id: {$ne: this.buff.charId}}).forEach(function(char){ //we look through all characters we have access to
 			if (canEditCharacter(char._id)) {
-				returnArray.push(char)
+				returnArray.push(char);
 			}
 		});
 		return returnArray;
