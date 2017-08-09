@@ -5,8 +5,10 @@ Template.characterSideList.onCreated(function() {
 
 Template.characterSideList.helpers({
 	parties() {
-		var userId = Meteor.userId();
-		return Parties.find({owner: userId});
+		return Parties.find(
+			{owner: Meteor.userId()},
+			{sort: {name: 1}},
+		);
 	},
 	charactersInParty() {
 		var userId = Meteor.userId();

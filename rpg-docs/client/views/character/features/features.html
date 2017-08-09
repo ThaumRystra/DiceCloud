@@ -19,30 +19,8 @@
 						Attacks
 					</div>
 					<div class="bottom list">
-						{{#each attacks}}
-							<div class="item-slot">
-								<div class="flexible attack item">
-									<div class="layout horizontal">
-										<div class="paper-font-headline layout horizontal center"
-											 style="margin-right: 16px;">
-											{{evaluateSigned ../_id attackBonus}}
-										</div>
-										<div class="flex layout vertical">
-											<div class="paper-font-body2">
-												{{name}}
-											</div>
-											<div>
-												{{evaluateString ../_id damage}}&nbsp;{{damageType}}
-											</div>
-											{{#if details}}
-												<div>
-													{{details}}
-												</div>
-											{{/if}}
-										</div>
-									</div>
-								</div>
-							</div>
+						{{#each attack in attacks}}
+							{{>attackListItem attack=attack charId=_id}}
 						{{/each}}
 					</div>
 				</paper-material>
@@ -55,19 +33,19 @@
 						Proficiencies
 					</div>
 					<div flex class="bottom list">
-						{{#if weaponProfs.count}}
+						{{#if weaponProfs.length}}
 							<div class="paper-font-subhead">Weapons</div>
 						{{/if}}
 						{{#each weaponProfs}}
 							{{> proficiencyListItem}}
 						{{/each}}
-						{{#if armorProfs.count}}
+						{{#if armorProfs.length}}
 							<div class="paper-font-subhead">Armor</div>
 						{{/if}}
 						{{#each armorProfs}}
 							{{> proficiencyListItem}}
 						{{/each}}
-						{{#if toolProfs.count}}
+						{{#if toolProfs.length}}
 							<div class="paper-font-subhead">Tools</div>
 						{{/if}}
 						{{#each toolProfs}}
@@ -155,4 +133,30 @@
 		</paper-material>
 	</div>
 	{{/if}}
+</template>
+
+<template name="attackListItem">
+	<div class="item-slot">
+		<div class="flexible attack item">
+			<div class="layout horizontal">
+				<div class="paper-font-headline layout horizontal center"
+					 style="margin-right: 16px;">
+					{{evaluateAttackBonus charId attack}}
+				</div>
+				<div class="flex layout vertical">
+					<div class="paper-font-body2">
+						{{attack.name}}
+					</div>
+					<div>
+						{{evaluateDamage charId attack}}&nbsp;{{attack.damageType}}
+					</div>
+					{{#if attack.details}}
+						<div>
+							{{attack.details}}
+						</div>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</div>
 </template>

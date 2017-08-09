@@ -185,6 +185,7 @@ Schemas.Character = new SimpleSchema({
 		defaultValue: "whitelist",
 		allowedValues: ["whitelist", "public"],
 	},
+	"settings.swapStatAndModifier": {type: Boolean, defaultValue: false},
 	"settings.exportFeatures": {type: Boolean, defaultValue: true},
 	"settings.exportAttacks": {type: Boolean, defaultValue: true},
 	"settings.exportDescription": {type: Boolean, defaultValue: true},

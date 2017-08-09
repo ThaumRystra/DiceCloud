@@ -1,15 +1,15 @@
 <template name="attackView">
 	<div class="attackView layout horizontal">
 		<div class="paper-font-headline layout horizontal center" style="margin-right: 16px;">
-			{{evaluateSigned charId attackBonus}}
+			{{evaluateAttackBonus charId attack}}
 		</div>
 		<div class="layout vertical">
 			<div>
-				{{evaluateString charId damage}}&nbsp;{{damageType}}
+				{{evaluateDamage charId attack}}&nbsp;{{damageType}}
 			</div>
-			{{#if details}}
+			{{#if attack.details}}
 			<div class="paper-font-caption">
-				{{details}}
+				{{attack.details}}
 			</div>
 			{{/if}}
 		</div>

@@ -50,6 +50,12 @@ evaluate = function(charId, string, opts){
                 return evaluate(charId, list.saveDC);
             }
         }
+        if (spellListId && sub.toUpperCase() === "ATTACKBONUS") {
+            var list = SpellLists.findOne(spellListId);
+            if (list && list.attackBonus){
+                return evaluate(charId, list.attackBonus);
+            }
+        }
 		return sub;
 	});
 	try {

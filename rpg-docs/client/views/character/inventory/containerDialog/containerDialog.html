@@ -20,9 +20,11 @@
 	</div>
 
 	<hr class="vertMargin">
-
-	<paper-textarea label="Description" id="containerDescriptionInput" value={{description}}>
-	</paper-textarea>
+	<div class="description-input layout horizontal end">
+		<paper-textarea label="Description" id="containerDescriptionInput" value={{description}}>
+		</paper-textarea>
+		{{> textareaBracketSuffix}}
+	</div>
 </template>
 
 <template name="containerView">
