@@ -532,6 +532,7 @@ if (Meteor.isServer){
 		Attacks       .remove({charId: character._id});
 		Buffs         .remove({charId: character._id});
 		Classes       .remove({charId: character._id});
+		CustomBuffs   .remove({charId: character._id});
 		Effects       .remove({charId: character._id});
 		Experiences   .remove({charId: character._id});
 		Features      .remove({charId: character._id});

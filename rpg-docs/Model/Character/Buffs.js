@@ -42,10 +42,18 @@ Schemas.Buff = new SimpleSchema({
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
 	},
-	//the id of the feature, buff or item that created this buff
-	parent: {
-		type: Schemas.Parent,
-		optional: true,
+	appliedBy: { //the charId of whoever applied the buff
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
+	},
+	appliedByDetails: {//the name and collection of the thing that applied the buff, and the character's name
+		type: Object;
+	},
+	"appliedByDetails.name": {
+		type: String,
+	},
+	"appliedByDetails.collection": {
+		type: String,
 	},
 });
 
@@ -53,7 +61,6 @@ Buffs.attachSchema(Schemas.Buff);
 
 Buffs.attachBehaviour("softRemovable");
 makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies
-makeChild(Buffs, ["enabled"]); //children of lots of things
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);
