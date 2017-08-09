@@ -1,18 +1,22 @@
 Template.buffViewList.helpers({
+	conditions: function(){
+		var selector = {
+			"charId": this._id,
+			"type": "inate",
+		};
+		return Buffs.find(selector);
+	},
 	buffs: function(){
 		var selector = {
-			// "parent.id": this.parentId,
 			"charId": this._id,
+			"type": "custom",
 		};
-		// if (this.parentGroup){
-		// 	selector["parent.group"] = this.parentGroup;
-		// }
 		return Buffs.find(selector);
 	}
 });
 
 Template.buffViewList.events({
-	"click #addBuff": function(event, template){
+	"click #addCondition": function(event, template){
 		pushDialogStack({
 			template: "conditionLibraryDialog",
 			element: event.currentTarget,

@@ -4,13 +4,24 @@
 			<div class="top white subhead layout horizontal center">
 					<div class="flex">Conditions</div>
 					{{#if canEditCharacter _id}}
-					<paper-icon-button class="black54" id="addBuff" icon="add"></paper-icon-button>
+					<paper-icon-button class="black54" id="addCondition" icon="add"></paper-icon-button>
 					{{/if}}
 				</div>
 			<div flex class="bottom list">
-				{{#each buffs}}
+				{{#each conditions}}
 					{{>buffView}}
 				{{/each}}
+
+				{{#if buffs.count}}
+					<div class="buffs">
+						<div class="paper-font-title" style="margin-bottom: 8px;">
+							Buffs
+						</div>
+						{{#each buffs}}
+							{{> buffView}}
+						{{/each}}
+					</div>
+				{/if}}
 			</div>
 		</paper-material>
 	</div>
