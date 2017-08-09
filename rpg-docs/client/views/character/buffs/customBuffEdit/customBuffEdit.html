@@ -4,6 +4,22 @@
 			<!--name-->
 			<paper-input id="buffNameInput" class="fullwidth" label="Name" value={{name}}></paper-input>
 
+			<div class="layout horizontal center wrap justified">
+				<paper-dropdown-menu class=flex label="Target" style="flex-basis: 150px; max-width: 200px;">
+					<dicecloud-selector selected={{target}} class="dropdown-content target-dropdown">
+						<paper-item name="self" style="width: 150px;">
+							Self only
+						</paper-item>
+						<paper-item name="others">
+							Others only
+						</paper-item>
+						<paper-item name="both">
+							Both
+						</paper-item>
+					</dicecloud-selector>
+				</paper-dropdown-menu>
+			</div>
+
 			<!--description-->
 			<paper-textarea label="Description" id="buffDescriptionInput" value={{description}}></paper-textarea>
 

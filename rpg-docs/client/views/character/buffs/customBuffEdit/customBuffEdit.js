@@ -32,4 +32,10 @@ Template.customBuffEdit.events({
 			trimStrings: false,
 		});
 	}),
+	"iron-select .target-dropdown": function(event){
+		var detail = event.originalEvent.detail;
+		var value = detail.item.getAttribute("name");
+		if (value === this.target) return;
+		CustomBuffs.update(this._id, {$set: {target: value}});
+	},
 });

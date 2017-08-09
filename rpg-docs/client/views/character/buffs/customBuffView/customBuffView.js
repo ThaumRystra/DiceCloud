@@ -66,7 +66,6 @@ Template.customBuffView.events({
 
 				Proficiencies.insert(temp);
 			});
-			popDialogStack();
 		}
 	},
 });
