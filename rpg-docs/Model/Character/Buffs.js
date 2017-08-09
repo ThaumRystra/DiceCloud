@@ -46,8 +46,9 @@ Schemas.Buff = new SimpleSchema({
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 	},
-	appliedByDetails: {//the name and collection of the thing that applied the buff, and the character's name
+	appliedByDetails: {//the name and collection of the thing that applied the buff
 		type: Object,
+		optional: true,
 	},
 	"appliedByDetails.name": {
 		type: String,

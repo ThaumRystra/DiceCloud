@@ -9,8 +9,8 @@
 				</div>
 			<div flex class="bottom list">
 				<div class="conditionsList">
-					{{#each conditions}}
-						{{>buffListItem}}
+					{{#each condition in conditions}}
+						{{>buffListItem buff=condition}}
 					{{/each}}
 				</div>
 				{{#if totalBuffs.count}}

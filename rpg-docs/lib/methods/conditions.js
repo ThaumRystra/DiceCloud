@@ -26,7 +26,12 @@ Meteor.methods({
 		var condition = getCondition(conditionName);
 		//create the buff
 		var buff = _.extend(
-			{charId: charId, type: "inate"}, condition.buff
+			{
+				charId: charId,
+				type: "inate",
+				appliedBy: charId,
+			}, 
+			condition.buff
 		);
 
 		//make sure the character doesn't already have the buff
