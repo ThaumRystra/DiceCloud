@@ -33,3 +33,19 @@ Meteor.publish("singleCharacter", function(characterId){
 		return [];
 	}
 });
+
+Meteor.publish("singleCharacterName", function(characterId){
+	userId = this.userId;
+	var char = Characters.findOne({
+		_id: characterId,
+		$or: [
+			{readers: userId},
+			{writers: userId},
+			{owner: userId},
+			{"settings.viewPermission": "public"},
+		],
+	});
+	if (char) {
+		return Characters.find(characterId, {fields:"name"});
+	}
+});

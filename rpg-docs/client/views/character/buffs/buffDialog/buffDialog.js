@@ -1,3 +1,8 @@
+Template.buffDialog.onCreated(function(){
+	var buff = Buffs.findOne(this.buffId);
+	Meteor.subscribe("singleCharacterName", buff.charId); //so we can access the names of public characters
+});
+
 Template.buffDialog.helpers({
 	buff: function(){
 		return Buffs.findOne(this.buffId);
