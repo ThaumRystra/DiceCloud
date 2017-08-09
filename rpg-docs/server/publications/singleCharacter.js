@@ -46,6 +46,6 @@ Meteor.publish("singleCharacterName", function(characterId){
 		],
 	});
 	if (char) {
-		return Characters.find(characterId, {fields:"name"});
+		return Characters.find(characterId, {fields:{"name": 1}});
 	}
 });
