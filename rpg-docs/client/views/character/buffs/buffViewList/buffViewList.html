@@ -8,20 +8,22 @@
 					{{/if}}
 				</div>
 			<div flex class="bottom list">
-				{{#each conditions}}
-					{{>buffView}}
-				{{/each}}
-
-				{{#if buffs.count}}
-					<div class="buffs">
-						<div class="paper-font-title" style="margin-bottom: 8px;">
-							Buffs
-						</div>
-						{{#each buffs}}
-							{{> buffView}}
-						{{/each}}
+				<div class="conditionsList">
+					{{#each conditions}}
+						{{>buffListItem}}
+					{{/each}}
+				</div>
+				{{#if totalBuffs.count}}
+					<div class="layout horizontal">
+						<div class="paper-font-subhead flex">Buffs</div>
+						<paper-button class="viewAllBuffsButton"> View All </paper-button>
 					</div>
-				{/if}}
+				{{/if}}
+				<div class="buffsList">
+					{{#each buff in buffs}}
+						{{>buffListItem buff=buff}}
+					{{/each}}
+				</div>
 			</div>
 		</paper-material>
 	</div>
