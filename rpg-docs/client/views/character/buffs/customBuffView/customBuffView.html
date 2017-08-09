@@ -1,6 +1,8 @@
 <template name="customBuffView">
 	<td>{{buff.name}}</td>
 	<td>
-		<paper-button class="apply-buff-button">Apply</paper-button>
+		{{#if canEditCharacter buff.charId}}
+		<paper-button class="apply-buff-button">Apply{{toSelf}}</paper-button>
+		{{/if}}
 	</td>
 </template>
