@@ -9,6 +9,9 @@
 </template>
 
 <template name="buffDetails">
+	<div>
+		{{appliedBy}}
+	</div>
 	{{#if description}}
 		<hr style="margin: 16px 0 16px 0;">
 		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
