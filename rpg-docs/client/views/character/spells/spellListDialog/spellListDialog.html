@@ -40,8 +40,11 @@
 				{{> formulaSuffix}}
 			</paper-input>
 			<!--Description-->
-			<paper-textarea id="spellListDescriptionInput" label="Description" value={{description}}>
-			</paper-textarea>
+			<div class="description-input layout horizontal end">
+				<paper-textarea id="spellListDescriptionInput" label="Description" value={{description}}>
+				</paper-textarea>
+				{{> textareaBracketSuffix}}
+			</div>
 		</div>
 		{{/baseDialog}}
 	{{/with}}
