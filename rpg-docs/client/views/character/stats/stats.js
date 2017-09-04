@@ -1,15 +1,10 @@
 Template.stats.helpers({
-	conditions: function(){
-		var selector = {
-			"charId": this._id,
-			"type": "inate",
-		};
-		return Buffs.find(selector);
+	conditions: function() {
+		return Conditions.find({charId: this._id});
 	},
-	buffs: function(){
+	buffs: function() {
 		var selector = {
 			"charId": this._id,
-			"type": "custom",
 		};
 		return Buffs.find(selector);
 	},

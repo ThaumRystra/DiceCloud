@@ -28,21 +28,19 @@ Meteor.methods({
 		var buff = _.extend(
 			{
 				charId: charId,
-				type: "inate",
-				appliedBy: charId,
 			}, 
 			condition.buff
 		);
 
 		//make sure the character doesn't already have the buff
-		var existingBuffs = Buffs.find(_.clone(buff)).count();
+		var existingBuffs = Conditions.find(_.clone(buff)).count();
 		if (existingBuffs) return;
 		//remove exclusive conditions
 		_.each(condition.exclusiveConditions, function(exCond) {
 			Meteor.call("removeCondition", charId, exCond);
 		});
 		//insert the buff
-		var buffId = Buffs.insert(buff);
+		var buffId = Conditions.insert(buff);
 		//extend and insert each effect
 		_.each(condition.effects, function(effect) {
 			var newEffect = {
@@ -53,7 +51,7 @@ Meteor.methods({
 				charId: charId,
 				parent: {
 					id: buffId,
-					collection: "Buffs",
+					collection: "Conditions",
 				},
 				enabled: true,
 			};
@@ -81,7 +79,7 @@ Meteor.methods({
 		var buff = _.extend(
 			{charId: charId, type: "inate"}, condition.buff
 		);
-		Buffs.remove(buff);
+		Conditions.remove(buff);
 		//dont remove the effects, they get removed automatically through parenting
 	},
 	getConditions: function() {

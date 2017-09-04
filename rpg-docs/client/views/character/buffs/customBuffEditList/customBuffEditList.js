@@ -34,7 +34,7 @@ Template.customBuffEditListItem.events({
 	"tap .edit-buff": function(event, template){
 		pushDialogStack({
 			template: "customBuffEdit",
-			data: {id: this.buff._id},
+			data: {buff: this.buff},
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},

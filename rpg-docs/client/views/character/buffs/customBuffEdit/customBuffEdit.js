@@ -1,9 +1,3 @@
-Template.customBuffEdit.helpers({
-	buff: function(){
-		return CustomBuffs.findOne(this.buffId);
-	},
-});
-
 const debounce = (f) => _.debounce(f, 300);
 
 Template.customBuffEdit.events({
@@ -15,7 +9,7 @@ Template.customBuffEdit.events({
 			input.errorMessage = "Name is required";
 		} else {
 			input.invalid = false;
-			CustomBuffs.update(this._id, {
+			CustomBuffs.update(this.buff._id, {
 				$set: {name: name}
 			}, {
 				removeEmptyStrings: false,
@@ -25,7 +19,7 @@ Template.customBuffEdit.events({
 	}),
 	"input #buffDescriptionInput": debounce(function(event){
 		var description = event.currentTarget.value;
-		CustomBuffs.update(this._id, {
+		CustomBuffs.update(this.buff._id, {
 			$set: {description: description}
 		}, {
 			removeEmptyStrings: false,
@@ -35,7 +29,7 @@ Template.customBuffEdit.events({
 	"iron-select .target-dropdown": function(event){
 		var detail = event.originalEvent.detail;
 		var value = detail.item.getAttribute("name");
-		if (value === this.target) return;
-		CustomBuffs.update(this._id, {$set: {target: value}});
+		if (value === this.buff.target) return;
+		CustomBuffs.update(this.buff._id, {$set: {target: value}});
 	},
 });
