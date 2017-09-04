@@ -21,32 +21,40 @@
 		"weight": 1
 	},
 	{
-		"name": "Arrows (20)",
-		"plural": "Arrows (20)",
+		"libraryName": "Arrows (20)",
+		"name": "Arrow",
+		"plural": "Arrows",
 		"description": "",
-		"value": 1,
-		"weight": 1
+		"value": 0.05,
+		"weight": 0.05,
+		"quantity": 20
 	},
 	{
-		"name": "Blowgun needles (5)",
-		"plural": "Blowgun needles (5)",
+		"libraryName": "Blowgun needles (5)",
+		"name": "Blowgun needle",
+		"plural": "Blowgun needles",
 		"description": "",
-		"value": 1,
-		"weight": 1
+		"value": 0.2,
+		"weight": 0.2,
+		"quantity": 5
 	},
 	{
-		"name": "Crossbow bolts (20)",
-		"plural": "Crossbow bolts (20)",
+		"libraryName": "Crossbow bolts (20)",
+		"name": "Crossbow bolt",
+		"plural": "Crossbow bolts",
 		"description": "",
-		"value": 1,
-		"weight": 1.5
+		"value": 0.05,
+		"weight": 0.075,
+		"quantity": 20
 	},
 	{
-		"name": "Sling bullets (20)",
-		"plural": "Sling bullets (20)",
+		"libraryName": "Sling bullets (20)",
+		"name": "Sling bullet",
+		"plural": "Sling bullets",
 		"description": "",
-		"value": 0.04,
-		"weight": 1.5
+		"value": 0.002,
+		"weight": 0.075,
+		"quantity": 20
 	},
 	{
 		"name": "Antitoxin (vial)",
@@ -651,11 +659,13 @@
 		"weight": 3
 	},
 	{
-		"name": "Spikes, iron (10)",
-		"plural": "Spikes, iron (10)",
+		"libraryName": "Spikes, iron (10)",
+		"name": "Spike, iron",
+		"plural": "Spikes, iron",
 		"description": "",
-		"value": 1,
-		"weight": 5
+		"value": 0.1,
+		"weight": 0.5,
+		"quantity": 10
 	},
 	{
 		"name": "Spyglass",

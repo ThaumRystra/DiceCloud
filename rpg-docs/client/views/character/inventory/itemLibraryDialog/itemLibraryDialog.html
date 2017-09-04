@@ -61,15 +61,15 @@
 <template name="libraryItem">
 	<tr class="item library-item {{#if selected}}selected{{/if}}">
 		<td class="itemName">
-			{{item.name}}
+			{{itemName}}
 			<paper-ripple></paper-ripple>
 		</td>
 		<td>
-			{{item.weight}} lb.
+			{{itemWeight}} lb.
 			<paper-ripple></paper-ripple>
  		</td>
 		<td>
-			{{valueString item.value}}
+			{{valueString itemValue}}
 			<paper-ripple></paper-ripple>
 		</td>
 	</tr>
