@@ -1,8 +1,19 @@
 Meteor.startup(() => {
 	const collections = [
-		Attacks, Buffs, Classes, Effects, Experiences,
-		Features, Notes, Proficiencies, SpellLists, Spells,
-		Containers, Items,
+		Attacks,
+		Buffs,
+		Classes,
+		Conditions,
+		Effects,
+		Experiences,
+		Features,
+		Notes,
+		Proficiencies,
+		SpellLists,
+		Spells,
+
+		Containers,
+		Items,
 	];
 
 	/**

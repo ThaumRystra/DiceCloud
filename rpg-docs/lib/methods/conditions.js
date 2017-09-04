@@ -22,6 +22,10 @@ var getCondition = function(conditionName) {
 
 Meteor.methods({
 	giveCondition: function(charId, conditionName) {
+		// here, the "buff" is the thing that gets inserted into the Conditions collection,
+		// and the "condition" is the template for the condition. This is to (hopefully)
+		// avoid confusion. Emphasis on "hopefully".
+
 		checkWritePermission(charId);
 		var condition = getCondition(conditionName);
 		//create the buff
@@ -30,14 +34,14 @@ Meteor.methods({
 		);
 
 		//make sure the character doesn't already have the buff
-		var existingBuffs = Buffs.find(_.clone(buff)).count();
+		var existingBuffs = Conditions.find(_.clone(buff)).count();
 		if (existingBuffs) return;
 		//remove exclusive conditions
 		_.each(condition.exclusiveConditions, function(exCond) {
 			Meteor.call("removeCondition", charId, exCond);
 		});
 		//insert the buff
-		var buffId = Buffs.insert(buff);
+		var buffId = Conditions.insert(buff);
 		//extend and insert each effect
 		_.each(condition.effects, function(effect) {
 			var newEffect = {
@@ -48,7 +52,7 @@ Meteor.methods({
 				charId: charId,
 				parent: {
 					id: buffId,
-					collection: "Buffs",
+					collection: "Conditions",
 				},
 				enabled: true,
 			};
@@ -74,9 +78,9 @@ Meteor.methods({
 		var condition = getCondition(conditionName);
 		//remove the buff
 		var buff = _.extend(
-			{charId: charId, type: "inate"}, condition.buff
+			{charId: charId}, condition.buff
 		);
-		Buffs.remove(buff);
+		Conditions.remove(buff);
 		//dont remove the effects, they get removed automatically through parenting
 	},
 	getConditions: function() {

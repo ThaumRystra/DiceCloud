@@ -529,18 +529,20 @@ Characters.helpers({
 //clean up all data related to that character before removing it
 if (Meteor.isServer){
 	Characters.after.remove(function(userId, character) {
-		Actions       .remove({charId: character._id});
-		Attacks       .remove({charId: character._id});
-		Buffs         .remove({charId: character._id});
-		Classes       .remove({charId: character._id});
-		Effects       .remove({charId: character._id});
-		Experiences   .remove({charId: character._id});
-		Features      .remove({charId: character._id});
-		Notes         .remove({charId: character._id});
-		Proficiencies .remove({charId: character._id});
-		SpellLists    .remove({charId: character._id});
-		Items         .remove({charId: character._id});
-		Containers    .remove({charId: character._id});
+		Actions            .remove({charId: character._id});
+		Attacks            .remove({charId: character._id});
+		Buffs              .remove({charId: character._id});
+		Classes            .remove({charId: character._id});
+		Conditions         .remove({charId: character._id});
+		Effects            .remove({charId: character._id});
+		Experiences        .remove({charId: character._id});
+		Features           .remove({charId: character._id});
+		Notes              .remove({charId: character._id});
+		Proficiencies      .remove({charId: character._id});
+		SpellLists         .remove({charId: character._id});
+		TemporaryHitPoints .remove({charId: character._id});
+		Items              .remove({charId: character._id});
+		Containers         .remove({charId: character._id});
 	});
 	Characters.after.update(function(userId, doc, fieldNames, modifier, options) {
 		if (_.contains(fieldNames, "name")){

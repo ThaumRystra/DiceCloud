@@ -1,14 +1,12 @@
-<template name="buffDialog">
-	{{#with buff}}
-		{{#baseDialog title=name class=colorClass hideColor=true}}
-			{{> buffDetails}}
-		{{else}}
-			{{> buffDetails}}
+<template name="conditionViewDialog">
+	{{#with condition}}
+		{{#baseDialog title=name class=colorClass hideColor=true hideEdit=true}}
+			{{> conditionDetails}}
 		{{/baseDialog}}
 	{{/with}}
 </template>
 
-<template name="buffDetails">
+<template name="conditionDetails">
 	{{#if description}}
 		<hr style="margin: 16px 0 16px 0;">
 		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>

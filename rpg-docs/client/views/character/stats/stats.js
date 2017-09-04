@@ -1,7 +1,5 @@
 Template.stats.helpers({
-	buffs: function() {
-		return Buffs.find({charId: this._id}, {sort: {name: 1}});
-	}
+	
 })
 
 Template.stats.events({
