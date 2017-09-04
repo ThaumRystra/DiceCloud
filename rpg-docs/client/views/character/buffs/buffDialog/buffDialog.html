@@ -1,6 +1,6 @@
 <template name="buffDialog">
 	{{#with buff}}
-		{{#baseDialog title=name class=colorClass hideColor=true}}
+		{{#baseDialog title=name class="white" hideColor=true startEditing=true editOnly=true}}
 			{{> buffDetails}}
 		{{else}}
 			{{> buffDetails}}
@@ -12,9 +12,10 @@
 	<div>
 		{{appliedBy}}
 	</div>
+	<hr style="margin: 16px 0 16px 0;">
 	{{#if description}}
-		<hr style="margin: 16px 0 16px 0;">
 		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
+		<hr style="margin: 16px 0 16px 0;">
 	{{/if}}
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> proficiencyViewList charId=charId parentId=_id}}
