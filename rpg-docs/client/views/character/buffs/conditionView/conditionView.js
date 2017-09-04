@@ -8,4 +8,8 @@ Template.conditionView.events({
 			element:   event.currentTarget,
 		});
 	},
+	"tap .deleteButton": function(event){
+		event.stopPropagation();
+		Conditions.remove(this.condition._id);
+	},
 });

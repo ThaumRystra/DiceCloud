@@ -14,4 +14,8 @@ Template.buffListItem.events({
 			element:   event.currentTarget,
 		});
 	},
+	"tap .deleteButton": function(event){
+		event.stopPropagation();
+		Buffs.remove(this.buff._id);
+	},
 });
