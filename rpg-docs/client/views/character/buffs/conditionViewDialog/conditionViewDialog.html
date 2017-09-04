@@ -1,6 +1,8 @@
 <template name="conditionViewDialog">
 	{{#with condition}}
-		{{#baseDialog title=name class=colorClass hideColor=true hideEdit=true}}
+		{{#baseDialog title=name class=colorClass hideColor=true}}
+			{{> conditionDetails}}
+		{{else}}
 			{{> conditionDetails}}
 		{{/baseDialog}}
 	{{/with}}
