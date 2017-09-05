@@ -56,6 +56,9 @@ Template.features.helpers({
 		var profs = Proficiencies.find({charId: this._id, type: "tool"});
 		return removeDuplicateProficiencies(profs);
 	},
+	hasCharacters: function(string){
+		return string.match(/\S/);
+	},
 });
 
 Template.features.events({
