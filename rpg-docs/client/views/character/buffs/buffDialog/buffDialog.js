@@ -34,7 +34,7 @@ Template.buffDetails.helpers({
 			if (applierCharacter.name === myName) {
 				var charName = "your "
 			} else {
-				if (applierCharacter.name[applierCharacter.name.length - 1] === 's') {
+				if (applierCharacter.name && applierCharacter.name[applierCharacter.name.length - 1] === 's') {
 					var charName = applierCharacter.name + "' ";
 				} else {
 					var charName = applierCharacter.name + "'s ";

@@ -28,16 +28,16 @@
 				<div class="bottom green" style="padding: 0;">
 					{{> carryCapacityBar}}
 				</div>
-				{{#if encumberedBuffs.count}}
+				{{#if encumberedConditions.count}}
 				<div class="bottom list">
-					{{#each encumberedBuffs}}
+					{{#each condition in encumberedConditions}}
 					<div class="item-slot">
-						<div class="item buff layout horizontal center">
+						<div class="item condition layout horizontal center">
 							<div class="flex">
 								<iron-icon icon="work"
 										   style="margin-right: 16px">
 								</iron-icon>
-								{{name}}
+								{{condition.name}}
 							</div>
 						</div>
 					</div>

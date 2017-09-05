@@ -77,7 +77,7 @@ Meteor.methods({
 		var condition = getCondition(conditionName);
 		//remove the buff
 		var buff = _.extend(
-			{charId: charId, type: "inate"}, condition.buff
+			{charId: charId}, condition.buff
 		);
 		Conditions.remove(buff);
 		//dont remove the effects, they get removed automatically through parenting

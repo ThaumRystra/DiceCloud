@@ -68,9 +68,8 @@ Template.inventory.helpers({
 		return weight;
 	},
 	encumberedBuffs: function(){
-		return Buffs.find({
+		return Conditions.find({
 			charId: this._id,
-			type: "inate",
 			name: {$in: [
 				"Encumbered",
 				"Heavily encumbered",
@@ -201,12 +200,10 @@ Template.inventory.events({
 			element:  event.currentTarget.parentElement,
 		});
 	},
-	"click .buff": function(event, instance){
-		var buffId = this._id;
-		var charId = Template.parentData()._id;
+	"click .condition": function(event, instance){
 		pushDialogStack({
-			template: "buffDialog",
-			data:     {buffId: buffId, charId: charId},
+			template: "conditionViewDialogDialog",
+			data:     {condition: this.condition},
 			element:   event.currentTarget,
 		});
 	},
