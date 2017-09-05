@@ -161,6 +161,18 @@ Template.effectEdit.helpers({
 		) return false;
 		return true;
 	},
+	showFormulaSuffix: function(){
+		var op = this.operation;
+		if (
+			!op ||
+			op === "conditional"
+		) return false;
+		return true;
+	},
+	showBracketSuffix: function(){
+		if (this.operation === "conditional") return true;
+		return false;
+	},
 	effectValue: function(){
 		return this.calculation || this.value;
 	},

@@ -13,7 +13,12 @@
 							 label="Value"
 							 floatinglabel
 							 value={{effectValue}}>
-					{{> formulaSuffix}}
+					{{#if showFormulaSuffix}}
+						{{> formulaSuffix}}
+					{{/if}}
+					{{#if showBracketSuffix}}
+						{{> bracketSuffix}}
+					{{/if}}
 				</paper-input>
 			{{else}}
 				<div style="height: 62px;"></div>

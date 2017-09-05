@@ -173,7 +173,7 @@ Template.effectView.helpers({
 				return "Double Proficiency";
 		}
 		if (this.operation === "conditional"){
-			return this.calculation || this.value;
+			return evaluateString(this.charId, this.calculation || this.value);
 		}
 		if (stats[this.stat] && stats[this.stat].group === "Weakness/Resistance"){
 			if (this.value === 0.5) return "Resistance";
