@@ -6,12 +6,15 @@ var stats = {
 	"intelligence":{"name":"Intelligence"},
 	"wisdom":{"name":"Wisdom"},
 	"charisma":{"name":"Charisma"},
+
 	"strengthSave":{"name":"Strength Save"},
 	"dexteritySave":{"name":"Dexterity Save"},
 	"constitutionSave":{"name":"Constitution Save"},
 	"intelligenceSave":{"name":"Intelligence Save"},
 	"wisdomSave":{"name":"Wisdom Save"},
 	"charismaSave":{"name":"Charisma Save"},
+	"allSaves": {"name":"All Saves"},
+
 	"acrobatics":{"name":"Acrobatics"},
 	"animalHandling":{"name":"Animal Handling"},
 	"arcana":{"name":"Arcana"},
@@ -31,6 +34,15 @@ var stats = {
 	"stealth":{"name":"Stealth"},
 	"survival":{"name":"Survival"},
 	"initiative":{"name":"Initiative"},
+
+	"allSkills": {"name":"All Skills"},
+	"strengthSkills": {"name":"All Strength Skills"},
+	"dexteritySkills": {"name":"All Dexterity Skills"},
+	"constitutionSkills": {"name":"All Constitution Skills"},
+	"intelligenceSkills": {"name":"All Intelligence Skills"},
+	"wisdomSkills": {"name":"All Wisdom Skills"},
+	"charismaSkills": {"name":"All Charisma Skills"},
+
 	"hitPoints":{"name":"Hit Points"},
 	"armor":{"name":"Armor"},
 	"dexterityArmor":{"name":"Dexterity Armor Bonus"},
@@ -42,6 +54,8 @@ var stats = {
 	"rageDamage":{"name":"Rage Damage"},
 	"expertiseDice":{"name":"Expertise Dice"},
 	"superiorityDice":{"name":"Superiority Dice"},
+	"carryMultiplier": {"name": "Carry Capacity Multiplier"},
+
 	"level1SpellSlots":{"name":"level 1 Spell Slots"},
 	"level2SpellSlots":{"name":"level 2 Spell Slots"},
 	"level3SpellSlots":{"name":"level 3 Spell Slots"},
@@ -51,10 +65,12 @@ var stats = {
 	"level7SpellSlots":{"name":"level 7 Spell Slots"},
 	"level8SpellSlots":{"name":"level 8 Spell Slots"},
 	"level9SpellSlots":{"name":"level 9 Spell Slots"},
+
 	"d6HitDice":{"name":"d6 Hit Dice"},
 	"d8HitDice":{"name":"d8 Hit Dice"},
 	"d10HitDice":{"name":"d10 Hit Dice"},
 	"d12HitDice":{"name":"d12 Hit Dice"},
+
 	"acidMultiplier":{"name":"Acid", "group": "Weakness/Resistance"},
 	"bludgeoningMultiplier":{"name":"Bludgeoning", "group": "Weakness/Resistance"},
 	"coldMultiplier":{"name":"Cold", "group": "Weakness/Resistance"},
@@ -92,6 +108,22 @@ var abilities = {
 	wisdom: {name: "Wisdom"},
 	charisma: {name: "Charisma"},
 };
+
+const skillNames = function(skillName, charId){
+	var skill = Characters.calculate.getField(charId, skillName);
+	if (!skill) return [skillName];
+
+	var isSave = !!skillName.match(/Save$/);
+	if (isSave) {
+		var groupNames = ["allSaves"];
+	} else {
+		var groupNames = [skill.ability+"Skills", "allSkills"];
+	}
+
+	var result = [skillName].concat(groupNames);
+	console.log(skillName, skill, result);
+	return result;
+}
 
 Template.skillDialog.helpers({
 	color: function(){
@@ -134,74 +166,83 @@ Template.skillDialogView.helpers({
 		return prof + "x Proficiency";
 	},
 	addEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "add",
 			enabled: true,
 		});
 	},
 	mulEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "mul",
 			enabled: true,
 		});
 	},
 	minEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "min",
 			enabled: true,
 		});
 	},
 	maxEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "max",
 			enabled: true,
 		});
 	},
 	advEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "advantage",
 			enabled: true,
 		});
 	},
 	dadvEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "disadvantage",
 			enabled: true,
 		});
 	},
 	conditionalEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "conditional",
 			enabled: true,
 		});
 	},
 	passiveEffects: function(){
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "passiveAdd",
 			enabled: true,
 		});
 	},
 	showPassiveTotal: function(){
 		if (this.skillName === "perception") return true;
+		var names=skillNames(this.skillName, this.charId);
 		return Effects.find({
 			charId: this.charId,
-			stat: this.skillName,
+			stat: {$in: names},
 			operation: "passiveAdd",
 			enabled: true,
 		}).count();

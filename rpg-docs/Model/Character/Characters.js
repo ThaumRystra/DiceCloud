@@ -193,7 +193,7 @@ Schemas.Character = new SimpleSchema({
 
 Characters.attachSchema(Schemas.Character);
 
-var attributeBase = preventLoop(function(charId, statName){
+var attributeBase = preventLoop(function(charId, statName, groupNames){
 	check(statName, String);
 	//if it's a damage multiplier, we treat it specially
 	if (_.contains(DAMAGE_MULTIPLIERS, statName)){
@@ -235,10 +235,11 @@ var attributeBase = preventLoop(function(charId, statName){
 	var mul = 1;
 	var min = Number.NEGATIVE_INFINITY;
 	var max = Number.POSITIVE_INFINITY;
+	var statNames = [statName].concat(groupNames);
 
 	Effects.find({
 		charId: charId,
-		stat: statName,
+		stat: {$in: statNames},
 		enabled: true,
 		operation: {$in: ["base", "add", "mul", "min", "max"]},
 	}).forEach(function(effect) {
@@ -351,16 +352,25 @@ Characters.calculate = {
 		//add multiplied proficiency bonus to modifier
 		mod += prof * Characters.calculate.attributeValue(charId, "proficiencyBonus");
 
+		//work out the catch-all names (e.g. "dexteritySkills" for all DEX skills etc.)
+		var isSave = !!skillName.match(/Save$/);
+		if (isSave) {
+			var groupNames = ["allSaves"];
+		} else {
+			var groupNames = [skill.ability+"Skills", "allSkills"]
+		}
+
 		//apply all effects
 		var value;
 		var add = 0;
 		var mul = 1;
 		var min = Number.NEGATIVE_INFINITY;
 		var max = Number.POSITIVE_INFINITY;
+		var statNames = [skillName].concat(groupNames);
 
 		Effects.find({
 			charId: charId,
-			stat: skillName,
+			stat: {$in: statNames},
 			enabled: true,
 			operation: {$in: ["base", "add", "mul", "min", "max"]},
 		}).forEach(function(effect) {

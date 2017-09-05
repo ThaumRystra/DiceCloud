@@ -44,6 +44,7 @@ evaluate = function(charId, string, opts){
 		if (sub.toUpperCase()  === "LEVEL"){
 			return Characters.calculate.level(charId);
 		}
+		//spell list stuff
         if (spellListId && sub.toUpperCase() === "DC") {
             var list = SpellLists.findOne(spellListId);
             if (list && list.saveDC){

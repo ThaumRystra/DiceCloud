@@ -7,12 +7,15 @@ var stats = [
 	{stat: "intelligence", name: "Intelligence", group: "Ability Scores"},
 	{stat: "wisdom", name: "Wisdom", group: "Ability Scores"},
 	{stat: "charisma", name: "Charisma", group: "Ability Scores"},
+
 	{name: "Strength Save", stat: "strengthSave", group: "Saving Throws"},
 	{name: "Dexterity Save", stat: "dexteritySave", group: "Saving Throws"},
 	{name: "Constitution Save", stat: "constitutionSave", group: "Saving Throws"},
 	{name: "Intelligence Save", stat: "intelligenceSave", group: "Saving Throws"},
 	{name: "Wisdom Save", stat: "wisdomSave", group: "Saving Throws"},
 	{name: "Charisma Save", stat: "charismaSave", group: "Saving Throws"},
+	{name: "All Saves", stat: "allSaves", group: "Saving Throws"},
+
 	{name: "Acrobatics", stat: "acrobatics", group: "Skills"},
 	{name: "Animal Handling", stat: "animalHandling", group: "Skills"},
 	{name: "Arcana", stat: "arcana", group: "Skills"},
@@ -32,6 +35,15 @@ var stats = [
 	{name: "Stealth", stat: "stealth", group: "Skills"},
 	{name: "Survival", stat: "survival", group: "Skills"},
 	{name: "Initiative", stat: "initiative", group: "Skills"},
+
+	{name: "All  Skills", stat: "allSkills", group: "Skill Groups"},
+	{name: "Strength Skills", stat: "strengthSkills", group: "Skill Groups"},
+	{name: "Dexterity Skills", stat: "dexteritySkills", group: "Skill Groups"},
+	{name: "Constitution Skills", stat: "constitutionSkills", group: "Skill Groups"},
+	{name: "Intelligence Skills", stat: "intelligenceSkills", group: "Skill Groups"},
+	{name: "Wisdom Skills", stat: "wisdomSkills", group: "Skill Groups"},
+	{name: "Charisma Skills", stat: "charismaSkills", group: "Skill Groups"},
+
 	{stat: "hitPoints", name: "Hit Points", group: "Stats"},
 	{stat: "armor", name: "Armor", group: "Stats"},
 	{stat: "dexterityArmor", name: "Dexterity Armor Bonus", group: "Stats"},
@@ -44,6 +56,7 @@ var stats = [
 	{stat: "expertiseDice", name: "Expertise Dice", group: "Stats"},
 	{stat: "superiorityDice", name: "Superiority Dice", group: "Stats"},
 	{stat: "carryMultiplier", name: "Carry Capacity Multiplier", group: "Stats"},
+
 	{stat: "level1SpellSlots", name: "level 1", group: "Spell Slots"},
 	{stat: "level2SpellSlots", name: "level 2", group: "Spell Slots"},
 	{stat: "level3SpellSlots", name: "level 3", group: "Spell Slots"},
@@ -53,10 +66,12 @@ var stats = [
 	{stat: "level7SpellSlots", name: "level 7", group: "Spell Slots"},
 	{stat: "level8SpellSlots", name: "level 8", group: "Spell Slots"},
 	{stat: "level9SpellSlots", name: "level 9", group: "Spell Slots"},
+
 	{stat: "d6HitDice", name: "d6 Hit Dice", group: "Hit Dice"},
 	{stat: "d8HitDice", name: "d8 Hit Dice", group: "Hit Dice"},
 	{stat: "d10HitDice", name: "d10 Hit Dice", group: "Hit Dice"},
 	{stat: "d12HitDice", name: "d12 Hit Dice", group: "Hit Dice"},
+
 	{stat: "acidMultiplier", name: "Acid", group: "Weakness/Resistance"},
 	{stat: "bludgeoningMultiplier", name: "Bludgeoning", group: "Weakness/Resistance"},
 	{stat: "coldMultiplier", name: "Cold", group: "Weakness/Resistance"},
@@ -121,7 +136,7 @@ Template.effectEdit.helpers({
 		var stat = statsDict[this.stat];
 		var group = stat && stat.group;
 		if (group === "Weakness/Resistance") return null;
-		if (group === "Saving Throws" || group === "Skills"){
+		if (group === "Saving Throws" || group === "Skills" || group === "Skill Groups"){
 			return skillOperations;
 		} else {
 			return attributeOperations;
@@ -159,7 +174,7 @@ var setStat = function(statName, effectId){
 	var setter = {stat: statName};
 	var effect = Effects.findOne(this._id);
 	var group = statsDict[statName].group;
-	if (group === "Saving Throws" || group === "Skills"){
+	if (group === "Saving Throws" || group === "Skills" || group === "Skill Groups"){
 		// Skills must have a valid skill operation
 		if (!_.contains(
 			_.map(skillOperations, ao => ao.operation),

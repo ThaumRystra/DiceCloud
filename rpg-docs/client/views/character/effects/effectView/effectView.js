@@ -5,12 +5,15 @@ var stats = {
 	"intelligence":{"name":"Intelligence"},
 	"wisdom":{"name":"Wisdom"},
 	"charisma":{"name":"Charisma"},
+
 	"strengthSave":{"name":"Strength Save"},
 	"dexteritySave":{"name":"Dexterity Save"},
 	"constitutionSave":{"name":"Constitution Save"},
 	"intelligenceSave":{"name":"Intelligence Save"},
 	"wisdomSave":{"name":"Wisdom Save"},
 	"charismaSave":{"name":"Charisma Save"},
+	"allSaves": {"name":"All Saves"},
+
 	"acrobatics":{"name":"Acrobatics"},
 	"animalHandling":{"name":"Animal Handling"},
 	"arcana":{"name":"Arcana"},
@@ -30,6 +33,15 @@ var stats = {
 	"stealth":{"name":"Stealth"},
 	"survival":{"name":"Survival"},
 	"initiative":{"name":"Initiative"},
+
+	"allSkills": {"name":"All Skills"},
+	"strengthSkills": {"name":"All Strength Skills"},
+	"dexteritySkills": {"name":"All Dexterity Skills"},
+	"constitutionSkills": {"name":"All Constitution Skills"},
+	"intelligenceSkills": {"name":"All Intelligence Skills"},
+	"wisdomSkills": {"name":"All Wisdom Skills"},
+	"charismaSkills": {"name":"All Charisma Skills"},
+
 	"hitPoints":{"name":"Hit Points"},
 	"armor":{"name":"Armor"},
 	"dexterityArmor":{"name":"Dexterity Armor Bonus"},
@@ -42,6 +54,7 @@ var stats = {
 	"expertiseDice":{"name":"Expertise Dice"},
 	"superiorityDice":{"name":"Superiority Dice"},
 	"carryMultiplier": {"name": "Carry Capacity Multiplier"},
+
 	"level1SpellSlots":{"name":"level 1 Spell Slots"},
 	"level2SpellSlots":{"name":"level 2 Spell Slots"},
 	"level3SpellSlots":{"name":"level 3 Spell Slots"},
@@ -51,10 +64,12 @@ var stats = {
 	"level7SpellSlots":{"name":"level 7 Spell Slots"},
 	"level8SpellSlots":{"name":"level 8 Spell Slots"},
 	"level9SpellSlots":{"name":"level 9 Spell Slots"},
+
 	"d6HitDice":{"name":"d6 Hit Dice"},
 	"d8HitDice":{"name":"d8 Hit Dice"},
 	"d10HitDice":{"name":"d10 Hit Dice"},
 	"d12HitDice":{"name":"d12 Hit Dice"},
+
 	"acidMultiplier":{"name":"Acid damage", "group": "Weakness/Resistance"},
 	"bludgeoningMultiplier":{
 		"name":"Bludgeoning damage", "group": "Weakness/Resistance",
