@@ -1,7 +1,7 @@
 <!-- data is the CustomBuff -->
 <template name="applyBuffDialog">
 	<div class="fit layout vertical">
-		<app-header-layout has-scrolling-region class="feedback flex">
+		<div class="flex">
 			<app-header fixed effects="waterfall">
 				<app-toolbar>
 					Apply Buff
@@ -26,8 +26,17 @@
 						{{/each}}
 					</dicecloud-selector>
 				</paper-dropdown-menu>
+
+				<hr style="margin: 16px 0 16px 0;">
+				{{#if buff.description}}
+					<div>{{#markdown}}{{evaluateString buff.charId buff.description}}{{/markdown}}</div>
+					<hr style="margin: 16px 0 16px 0;">
+				{{/if}}
+				{{> effectsViewList charId=buff.charId parentId=buff._id}}
+				{{> proficiencyViewList charId=buff.charId parentId=buff._id}}
+				{{> attacksViewList charId=buff.charId parentId=buff._id}}
 			</div>
-		</app-header-layout>
+		</div>
 		<div class="buttons layout horizontal end-justified">
 			<paper-button id="cancelButton">
 				Cancel
