@@ -267,6 +267,21 @@ var attributeBase = preventLoop(function(charId, statName, groupNames){
 	return Math.floor(result);
 });
 
+var skillNames = function(skillName, charId){
+	var skill = Characters.calculate.getField(charId, skillName);
+	if (!skill) return [skillName];
+
+	var isSave = !!skillName.match(/Save$/);
+	if (isSave) {
+		var groupNames = ["allSaves"];
+	} else {
+		var groupNames = [skill.ability+"Skills", "allSkills"];
+	}
+
+	var result = [skillName].concat(groupNames);
+	return result;
+}
+
 if (Meteor.isClient) {
 	Template.registerHelper("characterCalculate", function(func, charId, input) {
 		try {
@@ -394,7 +409,7 @@ Characters.calculate = {
 	proficiency: memoize(function(charId, skillName){
 		//return largest value in proficiency array
 		var prof = Proficiencies.findOne(
-			{charId: charId, name: skillName, enabled: true},
+			{charId: charId, name: {$in: skillNames(skillName, charId)}, enabled: true},
 			{sort: {value: -1}}
 		);
 		return prof && prof.value || 0;

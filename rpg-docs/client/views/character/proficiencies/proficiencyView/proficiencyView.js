@@ -5,6 +5,7 @@ var saves = {
 	intelligenceSave: "Intelligence Save",
 	wisdomSave: "Wisdom Save",
 	charismaSave: "Charisma Save",
+	allSaves: "All Saves",
 };
 
 var skills = {
@@ -27,6 +28,14 @@ var skills = {
 	stealth: "Stealth",
 	survival: "Survival",
 	initiative: "Initiative",
+
+	allSkills: "All Skills",
+	strengthSkills: "All Strength Skills",
+	dexteritySkills: "All Dexterity Skills",
+	constitutionSkills: "All Constitution Skills",
+	intelligenceSkills: "All Intelligence Skills",
+	wisdomSkills: "All Wisdom Skills",
+	charismaSkills: "All Charisma Skills",
 };
 
 Template.proficiencyView.helpers({

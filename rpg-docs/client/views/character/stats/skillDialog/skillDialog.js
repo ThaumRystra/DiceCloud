@@ -121,9 +121,8 @@ const skillNames = function(skillName, charId){
 	}
 
 	var result = [skillName].concat(groupNames);
-	console.log(skillName, skill, result);
 	return result;
-}
+};
 
 Template.skillDialog.helpers({
 	color: function(){
@@ -146,7 +145,7 @@ Template.skillDialogView.helpers({
 	},
 	profSource: function(){
 		return Proficiencies.findOne(
-			{charId: this.charId, name: this.skillName},
+			{charId: this.charId, name: {$in: skillNames(this.skillName, this.charId)}},
 			{sort: {value: -1}}
 		);
 	},
