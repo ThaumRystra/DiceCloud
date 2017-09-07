@@ -30,6 +30,16 @@
 								</paper-icon-item>
 							</paper-menu>
 						</paper-menu-button>
+					{{else}}
+						<paper-menu-button class="character-menu" horizontal-align="right">
+							<paper-icon-button icon="more-vert"  class="dropdown-trigger"></paper-icon-button>
+							<paper-menu class="dropdown-content black87">
+								<paper-icon-item id="unshareCharacter">
+									<iron-icon icon="delete" item-icon></iron-icon>
+									Unshare
+								</paper-icon-item>
+							</paper-menu>
+						</paper-menu-button>
 					{{/if}}
 				</div>
 				<div bottom-item>
