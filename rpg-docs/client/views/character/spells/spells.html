@@ -83,7 +83,9 @@
 								{{#each spells ../_id ../../_id}}
 									{{#if showSpell ../../_id}}
 										<div class="item-slot">
-											<div class="tall spell item layout horizontal center" data-id={{_id}}>
+											<div class="tall spell item layout horizontal center spellItem"
+											     data-id={{_id}}
+											     draggable={{canEditCharacter charId}}>
 												<iron-icon icon="social:whatshot"
 														   style="color: {{hexColor color}};
 																  margin-right: 16px;"
