@@ -118,6 +118,8 @@ Template.effectView.helpers({
 				return Classes.findOne(id, {fields: {name: 1}}).name;
 			case "Buffs":
 				return "Buff - " + Buffs.findOne(id, {fields: {name: 1}}).name;
+			case "Conditions":
+				return "Condition - " + Conditions.findOne(id, {fields: {name: 1}}).name;
 			case "Items":
 				return "Equipment - " + Items.findOne(id, {fields: {name: 1}}).name;
 			case "Characters":

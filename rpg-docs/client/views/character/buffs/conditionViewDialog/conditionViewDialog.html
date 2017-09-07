@@ -1,0 +1,17 @@
+<template name="conditionViewDialog">
+	{{#with condition}}
+		{{#baseDialog title=name class=colorClass hideColor=true}}
+			{{> conditionDetails}}
+		{{else}}
+			{{> conditionDetails}}
+		{{/baseDialog}}
+	{{/with}}
+</template>
+
+<template name="conditionDetails">
+	{{#if description}}
+		<hr style="margin: 16px 0 16px 0;">
+		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
+	{{/if}}
+	{{> effectsViewList charId=charId parentId=_id}}
+</template>

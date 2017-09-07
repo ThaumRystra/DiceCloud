@@ -22,6 +22,10 @@ var getCondition = function(conditionName) {
 
 Meteor.methods({
 	giveCondition: function(charId, conditionName) {
+		// here, the "buff" is the thing that gets inserted into the Conditions collection,
+		// and the "condition" is the template for the condition. This is to (hopefully)
+		// avoid confusion. Emphasis on "hopefully".
+
 		checkWritePermission(charId);
 		var condition = getCondition(conditionName);
 		//create the buff
@@ -30,24 +34,25 @@ Meteor.methods({
 		);
 
 		//make sure the character doesn't already have the buff
-		var existingBuffs = Buffs.find(_.clone(buff)).count();
+		var existingBuffs = Conditions.find(_.clone(buff)).count();
 		if (existingBuffs) return;
 		//remove exclusive conditions
 		_.each(condition.exclusiveConditions, function(exCond) {
 			Meteor.call("removeCondition", charId, exCond);
 		});
 		//insert the buff
-		var buffId = Buffs.insert(buff);
+		var buffId = Conditions.insert(buff);
 		//extend and insert each effect
 		_.each(condition.effects, function(effect) {
 			var newEffect = {
 				stat: effect.stat,
 				operation: effect.operation,
+				calculation: effect.calculation,
 				value: effect.value,
 				charId: charId,
 				parent: {
 					id: buffId,
-					collection: "Buffs",
+					collection: "Conditions",
 				},
 				enabled: true,
 			};
@@ -73,10 +78,25 @@ Meteor.methods({
 		var condition = getCondition(conditionName);
 		//remove the buff
 		var buff = _.extend(
-			{charId: charId, type: "inate"}, condition.buff
+			{charId: charId}, condition.buff
 		);
-		Buffs.remove(buff);
+		Conditions.remove(buff);
 		//dont remove the effects, they get removed automatically through parenting
+	},
+	getConditions: function() {
+		return Object.keys(CONDITIONS);
+	},
+	getConditionName: function(conditionName) {
+		//get condition from constant
+		var condition = CONDITIONS[conditionName];
+		//check that condition exists
+		if (!condition) {
+			throw new Meteor.Error(
+				"Invalid condition",
+				conditionName + " is not a known condition"
+			);
+		}
+		return condition.buff.name;
 	},
 });
 
@@ -150,7 +170,7 @@ CONDITIONS = {
 			{
 				stat: "perception",
 				operation: "conditional",
-				calculation: "You fail your perception check if it requires sight",
+				calculation: "You fail your Perception check if it requires sight",
 			}
 		],
 	},
@@ -164,7 +184,7 @@ CONDITIONS = {
 			{
 				stat: "perception",
 				operation: "conditional",
-				calculation: "You fail your perception check if it requires hearing",
+				calculation: "You fail your Perception check if it requires hearing",
 			}
 		],
 	},
@@ -207,7 +227,7 @@ CONDITIONS = {
 	paralyzed: {
 		buff: {
 			name: "Paralyzed",
-			description: "A paralyzed creature is incapacitated and can’t move or speak.\n\nAttack rolls against the creature have advantage.\n\nAny attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.",
+			description: "A paralyzed creature is **incapacitated** and can’t move or speak.\n\nAttack rolls against the creature have advantage.\n\nAny attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.",
 		},
 		effects: [
 			{
@@ -232,7 +252,7 @@ CONDITIONS = {
 	petrified: {
 		buff: {
 			name: "Petrified",
-			description: "A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.\n\nA petrified creature is incapacitated and can’t move or speak, and is unaware of its surroundings.\n\nAttack rolls against the creature have advantage.\n\nThe creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized.",
+			description: "A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.\n\nA petrified creature is **incapacitated** and can’t move or speak, and is unaware of its surroundings.\n\nAttack rolls against the creature have advantage.\n\nThe creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized.",
 		},
 		effects: (function() {
 			var effects = [
@@ -294,7 +314,7 @@ CONDITIONS = {
 	stunned: {
 		buff: {
 			name: "Stunned",
-			description: "A stunned creature is incapacitated, can’t move, and can speak only falteringly\n\nThe creature automatically fails Strength and Dexterity saving throws.\n\nAttack rolls against the creature have advantage.",
+			description: "A stunned creature is **incapacitated**, can’t move, and can speak only falteringly\n\nThe creature automatically fails Strength and Dexterity saving throws.\n\nAttack rolls against the creature have advantage.",
 		},
 		effects: [
 			{
@@ -317,7 +337,7 @@ CONDITIONS = {
 	unconscious: {
 		buff: {
 			name: "Unconscious",
-			description: "An unconscious creature is incapacitated, can’t move or speak, and is unaware of its surroundings.\n\nThe creature drops whatever it’s holding and falls prone.\n\nThe creature automatically fails Strength and Dexterity saving throws.\n\nAttack rolls against the creature have advantage.\n\nAny attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.",
+			description: "An unconscious creature is **incapacitated**, can’t move or speak, and is unaware of its surroundings.\n\nThe creature drops whatever it’s holding and falls **prone**.\n\nThe creature automatically fails Strength and Dexterity saving throws.\n\nAttack rolls against the creature have advantage.\n\nAny attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.",
 		},
 		subConditions: ["incapacitated", "prone"],
 	},

@@ -1,3 +1,7 @@
+Template.stats.helpers({
+	
+})
+
 Template.stats.events({
 	"click .stat-card": function(event, instance){
 		var charId = instance.data._id;
