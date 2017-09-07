@@ -5,7 +5,7 @@ Template.healthCard.binding({
 	"#hitPointSlider": {
 		max: () => Characters.calculate.attributeBase(currentId() , "hitPoints"),
 		value: () => Characters.calculate.attributeValue(currentId() , "hitPoints"),
-	}
+	},
 });
 
 // Reset the old value between characters so that we don't get red health lost
@@ -16,13 +16,14 @@ Template.healthCard.onRendered(function(){
 		const id = Template.currentData()._id;
 		if (oldId !== id){
 			this.find("#hitPointSlider").resetOldValue();
+			this.find("#temporaryHitPointSlider").resetOldValue();
 			oldId = id;
 		}
 	});
 });
 
 Template.healthCard.helpers({
-	tempHitPoints: function(){
+	extraHitPoints: function(){
 		return TemporaryHitPoints.find({charId: this._id});
 	},
 	showDeathSave: function(){
@@ -93,17 +94,23 @@ Template.healthCard.events({
 				}}
 			);
 	},
-	"change .tempHitPointSlider": function(event){
+	"change #temporaryHitPointSlider": function(event){ //this is the actual THP stat
+		var value = event.currentTarget.value;
+		var base = Characters.calculate.attributeBase(this._id, "tempHP");
+		var adjustment = value - base;
+		Characters.update(this._id, {$set: {"tempHP.adjustment": adjustment}});
+	},
+	"change .extraHitPointSlider": function(event){ //this is the extra bars
 		var value = event.currentTarget.value;
 		var used = this.maximum - value;
 		TemporaryHitPoints.update(this._id, {$set: {"used": used}});
 	},
-	"click .deleteTHP": function(event){
+	"click .deleteEHP": function(event){
 		TemporaryHitPoints.remove(this._id);
 	},
-	"click #addTempHP": function(event){
+	"click #addExtraHP": function(event){
 		pushDialogStack({
-			template: "addTHPDialog",
+			template: "addEHPDialog",
 			data: {charId: this._id},
 			element: event.currentTarget.parentElement,
 		});

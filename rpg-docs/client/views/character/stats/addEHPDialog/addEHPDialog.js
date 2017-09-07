@@ -1,8 +1,8 @@
-Template.addTHPDialog.onRendered(function(){
+Template.addEHPDialog.onRendered(function(){
 	this.find("#quantityInput").focus();
 });
 
-Template.addTHPDialog.events({
+Template.addEHPDialog.events({
 	"tap .addButton": function(event, instance){
 		popDialogStack();
 		var max = +instance.find("#quantityInput").value;

@@ -5,33 +5,52 @@
 				Hit Points
 			</div>
 			<paper-icon-button class="white54"
-							   id="addTempHP"
+							   id="addExtraHP"
 							   icon="add"
 							   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 			</paper-icon-button>
 		</div>
 		<div class="right flex layout vertical center-justified" style="min-width: 180px;">
+			<!-- main HP slider -->
 			<div class="layout horizontal">
 				<paper-diff-slider id="hitPointSlider"
 								   editable pin
 								   disabled={{#unless canEditCharacter _id}}true{{/unless}}>
 				</paper-diff-slider>
 			</div>
-			{{#each tempHitPoints}}
-				<div>
-					{{name}}
+			{{#if characterCalculate "attributeBase" _id "tempHP"}}
+				<!-- main THP slider -->
+				<div class="layout horizontal center {{#if extraHitPoints.count}}bottom-border{{/if}}">
+					<div class="self-center">
+						Temporary Hit Points
+					</div>
+					<paper-diff-slider id="temporaryHitPointSlider"
+									   class="flex"
+									   editable pin
+									   disabled={{#unless canEditCharacter _id}}true{{/unless}}
+									   max={{characterCalculate "attributeBase" _id "tempHP"}}
+									   value={{characterCalculate "attributeValue" _id "tempHP"}}
+									   >
+					</paper-diff-slider>
 				</div>
+			{{/if}}
+
+			{{#each extraHitPoints}}
 				<div class="layout horizontal center">
+					<div class="self-center">
+						{{name}}
+					</div>
 					<div style="height: 40px; width: 40px;">
 						{{#unless left}}
-							<paper-icon-button class="deleteTHP" icon="delete"></paper-icon-button>
+							<paper-icon-button class="deleteEHP" icon="delete"></paper-icon-button>
 						{{/unless}}
 					</div>
-					<paper-diff-slider class="tempHitPointSlider flex"
+					<paper-diff-slider class="extraHitPointSlider flex"
 							  max={{maximum}}
 							  value={{left}}
 							  editable pin
-							  ></paper-diff-slider>
+							  >
+					</paper-diff-slider>
 				</div>
 			{{/each}}
 			<div class="paper-font-caption">
