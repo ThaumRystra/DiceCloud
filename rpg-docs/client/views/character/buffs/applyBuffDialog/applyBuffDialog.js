@@ -9,19 +9,10 @@ Template.applyBuffDialog.helpers({
 	canApplyToSelf: function() {
 		return this.buff.target !== "others"; //i.e. it is "self" or "both"
 	},
-	writableCharacters: function() {
-		var returnArray = [];
-		Characters.find({_id: {$ne: this.buff.charId}}).forEach(function(char){ //we look through all characters we have access to
-			if (canEditCharacter(char._id)) {
-				returnArray.push(char);
-			}
-		});
-		return returnArray;
-	},
 });
 
 Template.applyBuffDialog.events({
-	"iron-select .target-dropdown": function(event){
+	"iron-select .characterPicker": function(event){
 		var detail = event.originalEvent.detail;
 		var value = detail.item.getAttribute("name");
 		Template.instance().selectedTarget.set(value);

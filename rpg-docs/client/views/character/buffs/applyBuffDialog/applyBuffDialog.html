@@ -1,36 +1,20 @@
 <!-- data is the CustomBuff -->
 <template name="applyBuffDialog">
-	<div class="fit layout vertical">
-		<div class="flex">
-			<app-header fixed effects="waterfall">
-				<app-toolbar>
-					Apply Buff
-				</app-toolbar>
-			</app-header>
-			<div class="form flex">
-				<paper-dropdown-menu class=flex label="Target" style="flex-basis: 150px; max-width: 200px;">
-					<dicecloud-selector selected="default" class="dropdown-content target-dropdown">
-						{{#if canApplyToSelf}}
-							<paper-item name="default" style="width: 150px;">
-								Self
-							</paper-item>
-						{{else}}
-							<paper-item name="default" style="width: 150px;">
-								Choose a character
-							</paper-item>
-						{{/if}}
-						{{#each character in writableCharacters}}
-							<paper-item name="{{character._id}}">
-								{{character.name}}
-							</paper-item>
-						{{/each}}
-					</dicecloud-selector>
-				</paper-dropdown-menu>
-
+	<div class="fit layout vertical applyBuffDialog">
+		<app-header fixed effects="waterfall">
+			<app-toolbar>
+				Apply Buff
+			</app-toolbar>
+		</app-header>
+		<div class="flex layout horizontal" style="height:100%">
+			<div class="flex" style="margin-right: 16px; height: 100%; max-width: 240px; overflow-y: auto;">
+				{{> characterPicker selfId=buff.charId includeSelf=canApplyToSelf writableOnly=true}}
+			</div>
+			<div class="flex buff-description" style="height: 100%; overflow-y: auto">
 				<hr style="margin: 16px 0 16px 0;">
 				{{#if buff.description}}
-					<div>{{#markdown}}{{evaluateString buff.charId buff.description}}{{/markdown}}</div>
-					<hr style="margin: 16px 0 16px 0;">
+				<div>{{#markdown}}{{evaluateString buff.charId buff.description}}{{/markdown}}</div>
+				<hr style="margin: 16px 0 16px 0;">
 				{{/if}}
 				{{> effectsViewList charId=buff.charId parentId=buff._id}}
 				{{> proficiencyViewList charId=buff.charId parentId=buff._id}}
