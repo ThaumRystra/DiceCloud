@@ -14,6 +14,7 @@ var saves = [
 	{name: "Intelligence Save", stat: "intelligenceSave"},
 	{name: "Wisdom Save", stat: "wisdomSave"},
 	{name: "Charisma Save", stat: "charismaSave"},
+	{name: "All Saves", stat: "allSaves"},
 ];
 
 var skills = [
@@ -36,6 +37,14 @@ var skills = [
 	{name: "Stealth", stat: "stealth"},
 	{name: "Survival", stat: "survival"},
 	{name: "Initiative", stat: "initiative"},
+
+	{name:"All Skills", stat: "allSkills"},
+	{name:"All Strength Skills", stat: "strengthSkills"},
+	{name:"All Dexterity Skills", stat: "dexteritySkills"},
+	{name:"All Constitution Skills", stat: "constitutionSkills"},
+	{name:"All Intelligence Skills", stat: "intelligenceSkills"},
+	{name:"All Wisdom Skills", stat: "wisdomSkills"},
+	{name:"All Charisma Skills", stat: "charismaSkills"},
 ];
 
 Template.proficiencyEdit.helpers({

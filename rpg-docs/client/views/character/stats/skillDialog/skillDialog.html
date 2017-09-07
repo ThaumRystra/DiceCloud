@@ -108,7 +108,7 @@
 	{{#each conditionalEffects}}
 		<div class="spaceAfter">
 			<div class="paper-font-body2">{{sourceName}}</div>
-			<div>*{{statValue}}</div>
+			<div>*{{evaluateString charId statValue}}</div>
 		</div>
 	{{/each}}
 </template>

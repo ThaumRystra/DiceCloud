@@ -1,3 +1,18 @@
+const skillNames = function(skillName, charId){
+	var skill = Characters.calculate.getField(charId, skillName);
+	if (!skill) return [skillName];
+
+	var isSave = !!skillName.match(/Save$/);
+	if (isSave) {
+		var groupNames = ["allSaves"];
+	} else {
+		var groupNames = [skill.ability+"Skills", "allSkills"];
+	}
+
+	var result = [skillName].concat(groupNames);
+	return result;
+};
+
 Template.skillRow.helpers({
 	skillMod: function() {
 		return signedString(
@@ -33,7 +48,7 @@ Template.skillRow.helpers({
 		var charId = Template.parentData()._id;
 		return Effects.find({
 			charId: charId,
-			stat: this.skill,
+			stat: {$in: skillNames(this.skill, charId)},
 			enabled: true,
 			operation: "conditional",
 		}).count();
