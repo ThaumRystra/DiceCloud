@@ -1,0 +1,15 @@
+<template name="buffListItem">
+	<div class="item buffListItem layout horizontal center">
+		<div class="flex">
+			{{buff.name}}
+		</div>
+
+		{{#if canEditCharacter buff.charId}}
+			<paper-icon-button class="deleteButton"
+							   role="button"
+							   tabindex="0"
+							   icon="delete">
+			</paper-icon-button>
+		{{/if}}
+	</div>
+</template>

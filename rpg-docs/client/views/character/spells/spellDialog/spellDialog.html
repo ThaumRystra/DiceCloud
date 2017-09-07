@@ -38,6 +38,7 @@
 	</div>
 	<div>{{#markdown}}{{evaluateSpellString charId parent.id description}}{{/markdown}}</div>
 	{{> attacksViewList charId=charId parentId=_id}}
+	{{> customBuffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="spellEdit">
@@ -111,10 +112,12 @@
 		</paper-checkbox>
 	</div>
 
+	<!--Description-->
 	<div class="description-input layout horizontal end">
 		<paper-textarea id="descriptionInput" label="Description" style="width: calc(100% - 24px)" value={{description}}></paper-textarea>
 		{{> textareaBracketSuffix}}
 	</div>
 
+	{{> customBuffEditList  parentId=_id parentCollection="Spells" charId=charId}}
 	{{> attackEditList  parentId=_id parentCollection="Spells" charId=charId enabled=true name=name isSpell=true}}
 </template>

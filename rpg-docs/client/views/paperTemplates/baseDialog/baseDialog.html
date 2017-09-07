@@ -15,10 +15,12 @@
 				{{/unless}}
 				{{#unless hideColor}}
 					{{> colorDropdown}}
+				{{/unless}} 
+				{{#unless editOnly}}
+					<paper-icon-button id="doneEditingButton"
+									   icon="done">
+					</paper-icon-button>
 				{{/unless}}
-				<paper-icon-button id="doneEditingButton"
-								   icon="done">
-				</paper-icon-button>
 			{{else}}
 				{{#if showEdit}}
 					<paper-icon-button id="editButton"

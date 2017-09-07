@@ -23,6 +23,7 @@
 	{{/if}}
 	{{> effectsViewList charId=charId parentId=_id}}
 	{{> attacksViewList charId=charId parentId=_id}}
+	{{> customBuffViewList charId=charId parentId=_id}}
 </template>
 
 <template name="itemEdit">
@@ -65,10 +66,13 @@
 		<paper-textarea id="itemDescriptionInput" label="Description" value={{description}}></paper-textarea>
 		{{> textareaBracketSuffix}}
 	</div>
+	
 	<!--Effects-->
 	{{> effectsEditList parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
 	<!--Attacks-->
 	{{> attackEditList  parentId=_id parentCollection="Items" charId=charId enabled=equipped name=name}}
+	<!-- Buffs -->
+	{{> customBuffEditList  parentId=_id parentCollection="Items" charId=charId}}
 </template>
 
 <template name="containerDropdown">

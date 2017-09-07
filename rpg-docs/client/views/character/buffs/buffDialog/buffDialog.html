@@ -1,15 +1,23 @@
 <template name="buffDialog">
 	{{#with buff}}
-		{{#baseDialog title=name class=colorClass hideEdit=true}}
+		{{#baseDialog title=name class="white" hideColor=true startEditing=true editOnly=true}}
+			{{> buffDetails}}
+		{{else}}
 			{{> buffDetails}}
 		{{/baseDialog}}
 	{{/with}}
 </template>
 
 <template name="buffDetails">
+	<div>
+		{{appliedBy}}
+	</div>
+	<hr style="margin: 16px 0 16px 0;">
 	{{#if description}}
-		<div class="pre-wrap">{{evaluateString charId description}}</div>
+		<div>{{#markdown}}{{evaluateString charId description}}{{/markdown}}</div>
+		<hr style="margin: 16px 0 16px 0;">
 	{{/if}}
-
 	{{> effectsViewList charId=charId parentId=_id}}
+	{{> proficiencyViewList charId=charId parentId=_id}}
+	{{> attacksViewList charId=charId parentId=_id}}
 </template>

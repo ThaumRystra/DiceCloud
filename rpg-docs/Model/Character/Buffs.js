@@ -23,7 +23,7 @@ Schemas.Buff = new SimpleSchema({
 	type: {
 		type: String,
 		allowedValues: [
-			"inate",
+			"inate", //this should be "innate", but changing it could be problematic
 			"custom",
 		],
 	},
@@ -42,12 +42,26 @@ Schemas.Buff = new SimpleSchema({
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
 	},
+	appliedBy: { //the charId of whoever applied the buff
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
+	},
+	appliedByDetails: {//the name and collection of the thing that applied the buff
+		type: Object,
+		optional: true,
+	},
+	"appliedByDetails.name": {
+		type: String,
+	},
+	"appliedByDetails.collection": {
+		type: String,
+	},
 });
 
 Buffs.attachSchema(Schemas.Buff);
 
 Buffs.attachBehaviour("softRemovable");
-makeParent(Buffs, ["name", "enabled"]); //parents of effects
+makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);

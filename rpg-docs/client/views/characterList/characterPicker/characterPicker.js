@@ -1,9 +1,9 @@
-Template.characterSideList.onCreated(function() {
+Template.characterPicker.onCreated(function() {
 	this.subscribe("characterList");
 	this.openedParties = new ReactiveVar(new Set());
 });
 
-Template.characterSideList.helpers({
+Template.characterPicker.helpers({
 	parties() {
 		return Parties.find(
 			{owner: Meteor.userId()},
@@ -12,25 +12,27 @@ Template.characterSideList.helpers({
 	},
 	charactersInParty() {
 		var userId = Meteor.userId();
-		return Characters.find(
-			{
-				_id: {$in: this.characters},
-				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
-			},
-			{sort: {name: 1}}
-		);
+		var selector = {
+			_id: {$in: this.characters, $ne: this.selfId},
+			$or: [{readers: userId}, {writers: userId}, {owner: userId}],
+		};
+		if (this.writableOnly) {
+			selector.$or = [{writers: userId}, {owner: userId}];
+		}
+		return Characters.find(selector,{sort: {name: 1}});
 	},
 	charactersWithNoParty() {
 		var userId = Meteor.userId();
 		var charArrays = Parties.find({owner: userId}).map(p => p.characters);
 		var partyChars = _.uniq(_.flatten(charArrays));
-		return Characters.find(
-			{
-				_id: {$nin: partyChars},
-				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
-			},
-			{sort: {name: 1}}
-		);
+		var selector = {
+			_id: {$nin: partyChars, $ne: this.selfId},
+			$or: [{readers: userId}, {writers: userId}, {owner: userId}],
+		};
+		if (this.writableOnly) {
+			selector.$or = [{writers: userId}, {owner: userId}];
+		}
+		return Characters.find(selector, {sort: {name: 1}});
 	},
 	isOpen(id) {
 		var openedParties = Template.instance().openedParties.get();
@@ -38,7 +40,7 @@ Template.characterSideList.helpers({
 	},
 });
 
-Template.characterSideList.events({
+Template.characterPicker.events({
 	"click .partyHead": function(event, instance){
 		var openedParties = instance.openedParties.get();
 		if (openedParties.has(this._id)){

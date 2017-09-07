@@ -1,3 +1,15 @@
+Template.stats.helpers({
+	conditions: function() {
+		return Conditions.find({charId: this._id});
+	},
+	buffs: function() {
+		var selector = {
+			"charId": this._id,
+		};
+		return Buffs.find(selector);
+	},
+})
+
 Template.stats.events({
 	"click .stat-card": function(event, instance){
 		var charId = instance.data._id;
@@ -64,5 +76,18 @@ Template.stats.events({
 			},
 			element: event.currentTarget.parentElement.parentElement,
 		});
+	},
+	"click #addCondition": function(event, template){
+		pushDialogStack({
+			template: "conditionLibraryDialog",
+			element: event.currentTarget,
+			callback: (result) => {
+				if (!result) {
+					return;
+				}
+				else Meteor.call("giveCondition", this._id, result)
+			},
+			//returnElement: () => $(`[data-id='${itemId}']`).get(0),
+		})
 	},
 });

@@ -1,0 +1,14 @@
+<template name="customBuffViewList">
+	{{#if buffs.count}}
+		<div class="buffs">
+			<div class="paper-font-title" style="margin-bottom: 8px;">
+				Buffs
+			</div>
+			{{#each buff in buffs}}
+				<div class="layout horizontal center">
+					{{> customBuffView buff=buff}}
+				</div>
+			{{/each}}
+		</div>
+	{{/if}}
+</template>
