@@ -1,0 +1,22 @@
+<template name="equipmentPackLibraryView">
+	<table style="width: 100%" class="equipment-pack-library">
+		<tbody>
+			{{#each pack in equipmentPacks}}
+				{{>libraryEquipmentPack pack=pack selected=(isSelected pack)}}
+			{{/each}}
+		</tbody>
+	</table>
+	{{#unless ready}}
+		<paper-spinner active></paper-spinner>
+	{{/unless}}
+</template>
+
+
+<template name="libraryEquipmentPack">
+	<tr class="item library-equipment-pack {{#if selected}}selected{{/if}}">
+		<td class="packName">
+			{{pack.name}}
+			<paper-ripple></paper-ripple>
+		</td>
+	</tr>
+</template>

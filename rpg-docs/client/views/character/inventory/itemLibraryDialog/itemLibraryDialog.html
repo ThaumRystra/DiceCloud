@@ -30,7 +30,7 @@
 					{{/unless}}
 				{{else}}
 					{{#each categories}}
-						<div class="paper-font-body2 category-header clickable">
+						<div class="paper-font-body2 category-header item-category-header clickable">
 							<iron-icon icon="chevron-right" class="{{#if isOpen key}}open{{/if}}">
 							</iron-icon>
 							{{name}}
@@ -48,6 +48,14 @@
 							{{/unless}}
 						</iron-collapse>
 					{{/each}}
+					<div class="paper-font-body2 category-header equipment-pack-category-header clickable">
+						<iron-icon icon="chevron-right" class="{{#if isEquipmentPackOpen}}open{{/if}}">
+						</iron-icon>
+						Equipment Packs
+					</div>
+					<iron-collapse opened={{isEquipmentPackOpen}}>
+						{{>equipmentPackLibraryView selected=selectedId}}
+					</iron-collapse>
 				{{/if}}
 			</div>
 		</div>
