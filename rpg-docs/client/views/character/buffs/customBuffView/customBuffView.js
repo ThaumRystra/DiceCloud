@@ -41,7 +41,16 @@ const applyBuff = function(targetId, buff) {
 
 		Proficiencies.insert(temp);
 	});
-}
+
+	let target;
+	if (targetId == buff.charId) {
+		target = "self";
+	} else {
+		target = Characters.findOne(targetId) || {};
+		target = target && target.name || "target"
+	}
+	GlobalUI.toast(`${buff.name || "Buff"} applied to ${target}`);
+};
 
 Template.customBuffView.helpers({
 	toSelf: function() {
@@ -65,8 +74,7 @@ Template.customBuffView.events({
 					applyBuff(targetId, this.buff);
 				},
 			});
-		}
-		else {
+		} else {
 			var targetId = this.buff.charId;
 			applyBuff(targetId, this.buff);
 		}

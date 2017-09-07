@@ -5,7 +5,9 @@
 				Buffs
 			</div>
 			{{#each buff in buffs}}
-				{{> customBuffView buff=buff}}
+				<div class="layout horizontal center">
+					{{> customBuffView buff=buff}}
+				</div>
 			{{/each}}
 		</div>
 	{{/if}}

@@ -14,7 +14,7 @@ Template.customBuffEditList.events({
 			this.enabled = true;
 		}
 		const customBuffId = CustomBuffs.insert({
-			name: "New Buff",
+			name: this.name || "New Buff",
 			charId: this.charId,
 			parent: {
 				id: this.parentId,
@@ -23,7 +23,7 @@ Template.customBuffEditList.events({
 		});
 		pushDialogStack({
 			template: "customBuffEdit",
-			data: {id: customBuffId},
+			data: {customBuffId},
 			element: event.currentTarget,
 			returnElement: () => instance.find(`tr.buff[data-id='${customBuffId}']`),
 		});
@@ -34,7 +34,7 @@ Template.customBuffEditListItem.events({
 	"tap .edit-buff": function(event, template){
 		pushDialogStack({
 			template: "customBuffEdit",
-			data: {buff: this.buff},
+			data: {customBuffId: this.buff._id},
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},

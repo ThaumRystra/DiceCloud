@@ -34,7 +34,6 @@ Template.characterSideList.helpers({
 	},
 	isOpen(id) {
 		var openedParties = Template.instance().openedParties.get();
-		console.log(openedParties);
 		return openedParties.has(id);
 	},
 });
