@@ -54,4 +54,8 @@ Template.containerEdit.events({
 			trimStrings: false,
 		});
 	},
+	"change #carriedToggle": function(event, instance){
+		var carried = !this.isCarried;
+		Containers.update(this._id, {$set: {isCarried: carried}});
+	}
 });

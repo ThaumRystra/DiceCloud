@@ -210,4 +210,11 @@ Template.characterSheet.events({
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
+	"click #unshareCharacter": function(event, instance){
+		pushDialogStack({
+			data: this,
+			template: "unshareCharacterConfirmation",
+			element: event.currentTarget.parentElement.parentElement,
+		});
+	},
 });

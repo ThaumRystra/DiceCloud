@@ -331,21 +331,23 @@ Template.layout.events({
 		Session.set("inventory.dragItemId", null);
 	},
 	"drop .characterRepresentative": function(event, instance) {
-		var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
-		if (event.ctrlKey){
-			//split the stack to the container
-			pushDialogStack({
-				template: "splitStackDialog",
-				data: {
-					id: itemId,
-					parentCollection: "Characters",
-					parentId: this._id,
-				},
-			});
-		} else {
-			//move item to the character
-			Meteor.call("moveItemToCharacter", itemId, this._id);
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
+			if (event.ctrlKey){
+				//split the stack to the container
+				pushDialogStack({
+					template: "splitStackDialog",
+					data: {
+						id: itemId,
+						parentCollection: "Characters",
+						parentId: this._id,
+					},
+				});
+			} else {
+				//move item to the character
+				Meteor.call("moveItemToCharacter", itemId, this._id);
+			}
+			Session.set("inventory.dragItemId", null);
 		}
-		Session.set("inventory.dragItemId", null);
 	},
 });

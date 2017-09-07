@@ -78,7 +78,7 @@
 								</div>
 							{{/if}}
 						</div>
-						{{#if description}}
+						{{#if hasCharacters (evaluateShortString charId description)}}
 							<div class="bottom flex">
 								{{#markdown}}{{evaluateShortString charId description}}{{/markdown}}
 								{{> customBuffViewList charId=charId parentId=_id}}

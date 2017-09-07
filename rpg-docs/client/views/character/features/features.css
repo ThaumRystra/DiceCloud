@@ -6,6 +6,10 @@
 	margin-bottom: 8px;
 }
 
+.card.featureCard .bottom {
+	padding-bottom: 8px;
+}
+
 .containerMain.featureDescription {
 	white-space: pre-line;
 }
