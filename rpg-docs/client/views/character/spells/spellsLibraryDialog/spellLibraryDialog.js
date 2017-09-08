@@ -14,7 +14,7 @@ const categories = [
 ];
 
 Template.spellLibraryDialog.onCreated(function(){
-	this.selectedSpell = new ReactiveVar();
+	this.selectedSpells = new ReactiveVar([]); //this holds an array of the selected spells by ID
 	this.searchTerm = new ReactiveVar();
 	this.categoriesOpen = new ReactiveVar([]);
 	this.readyDict = new ReactiveDict();
@@ -59,8 +59,8 @@ Template.spellLibraryDialog.helpers({
 		});
 	},
 	isSelected(spell){
-		const selected = Template.instance().selectedSpell.get();
-		return selected && selected._id === spell._id;
+		const selected = Template.instance().selectedSpells.get();
+		return _.contains(selected, spell._id);
 	},
 	isOpen(key){
 		const cats = Template.instance().categoriesOpen.get();
@@ -89,10 +89,30 @@ Template.spellLibraryDialog.events({
 		popDialogStack();
 	},
 	"click .okButton": function(event, template){
-		popDialogStack(template.selectedSpell.get());
+		const selectedIds = template.selectedSpells.get();
+		var returnSpells = [];
+		_.each(selectedIds, (id) => {
+			let spell = LibrarySpells.findOne(id);
+			if (spell) {
+				returnSpells.push(spell)
+			}
+		});
+		popDialogStack(returnSpells);
 	},
 	"click .library-spell": function(event, template){
-		template.selectedSpell.set(this.spell);
+		let selected = template.selectedSpells.get();
+		const spellId = this.spell._id;
+		// Toggle whether this spellId is in the array or not
+		if (_.contains(selected, spellId)){
+			selected = _.without(selected, spellId);
+		} else {
+			selected.push(spellId);
+		}
+		template.selectedSpells.set(selected);
+
+
+		console.log("selectedSpells", Template.instance().selectedSpells.get());
+		console.log("spellId", this.spell._id);
 	},
 	"click #backButton": function(event, template){
 		popDialogStack();
