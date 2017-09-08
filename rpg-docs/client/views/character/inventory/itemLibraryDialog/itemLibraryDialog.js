@@ -107,3 +107,24 @@ Template.itemLibraryDialog.events({
 		template.searchTerm.set(value);
 	},
 });
+
+Template.libraryItem.helpers({
+	itemName: function(){
+		return this.item.libraryName || this.item.name;
+	},
+	itemWeight: function(){
+		if (this.item.quantity) {
+			return this.item.weight * this.item.quantity;
+		} else {
+			return this.item.weight;
+		}
+	},
+	itemValue: function(){
+		if (this.item.quantity) {
+			return this.item.value * this.item.quantity;
+		} else {
+			return this.item.value;
+		}
+	},
+
+});

@@ -1,6 +1,7 @@
 LibraryItems = new Mongo.Collection("libraryItems");
 
 Schemas.LibraryItems = new SimpleSchema({
+	libraryName:{type: String, optional: true, trim: false},
 	name:       {type: String, defaultValue: "New Item", trim: false},
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
