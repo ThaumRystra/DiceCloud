@@ -19,7 +19,12 @@
 							{{/each}}
 						</div>
 					{{else}}{{#if searchReady}}
-							No spells match "{{searchTerm}}"
+							<p>
+								No spells match "{{searchTerm}}"
+							</p>
+							<p class="paper-font-caption">
+								DiceCloud only includes content provided by Wizards of the Coast in the official system reference document. If the spell you are looking for is not available in the system reference document, you will need to add it manually.
+							</p>
 					{{/if}}{{/if}}
 					{{#unless searchReady}}
 						<div class="layout vertical center" style="width: 100%; padding: 16px;">
