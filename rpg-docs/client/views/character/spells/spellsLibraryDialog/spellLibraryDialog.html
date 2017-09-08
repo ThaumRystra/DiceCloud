@@ -13,13 +13,11 @@
 			<div class="spells" style="padding:8px">
 				{{#if searchTerm}}
 					{{#if searchSpells.count}}
-						<table style="width: 100%">
-							<tbody>
-								{{#each spell in searchSpells}}
-									{{>librarySpell spell=spell selected=(isSelected spell)}}
-								{{/each}}
-							</tbody>
-						</table>
+						<div>
+							{{#each spell in searchSpells}}
+								{{>librarySpell spell=spell selected=(isSelected spell)}}
+							{{/each}}
+						</div>
 					{{else}}{{#if searchReady}}
 							No spells match "{{searchTerm}}"
 					{{/if}}{{/if}}
@@ -36,13 +34,11 @@
 							{{name}}
 						</div>
 						<iron-collapse opened={{isOpen key}}>
-							<table style="width: 100%">
-								<tbody>
-									{{#each spell in (spellsInCategory key)}}
-										{{>librarySpell spell=spell selected=(isSelected spell)}}
-									{{/each}}
-								</tbody>
-							</table>
+							<div>
+								{{#each spell in (spellsInCategory key)}}
+									{{>librarySpell spell=spell selected=(isSelected spell)}}
+								{{/each}}
+							</div>
 							{{#unless ready key}}
 								<paper-spinner active></paper-spinner>
 							{{/unless}}
@@ -59,10 +55,10 @@
 </template>
 
 <template name="librarySpell">
-	<tr class="spell library-spell {{#if selected}}selected{{/if}}">
-		<td class="spellName">
+	<div style="margin: ">
+		<paper-checkbox class="spell library-spell" checked={{selected}} style="padding: 2px 0 2px 16px; width: 100%;">
 			{{spell.name}}
 			<paper-ripple></paper-ripple>
-		</td>
-	</tr>
+		</paper-checkbox>
+	</div>
 </template>

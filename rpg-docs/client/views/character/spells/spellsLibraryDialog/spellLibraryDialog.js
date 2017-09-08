@@ -62,6 +62,10 @@ Template.spellLibraryDialog.helpers({
 		const selected = Template.instance().selectedSpells.get();
 		return _.contains(selected, spell._id);
 	},
+	selectedCount(){
+		const selected = Template.instance().selectedSpells.get();
+		return selected && selected.length;
+	},
 	isOpen(key){
 		const cats = Template.instance().categoriesOpen.get();
 		return _.contains(cats, key);
@@ -109,10 +113,6 @@ Template.spellLibraryDialog.events({
 			selected.push(spellId);
 		}
 		template.selectedSpells.set(selected);
-
-
-		console.log("selectedSpells", Template.instance().selectedSpells.get());
-		console.log("spellId", this.spell._id);
 	},
 	"click #backButton": function(event, template){
 		popDialogStack();

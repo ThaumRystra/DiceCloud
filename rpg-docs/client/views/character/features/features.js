@@ -57,7 +57,7 @@ Template.features.helpers({
 		return removeDuplicateProficiencies(profs);
 	},
 	hasCharacters: function(string){
-		return string.match(/\S/);
+		return string && string.match(/\S/);
 	},
 });
 
