@@ -291,7 +291,6 @@ Template.spells.events({
 						Effects.insert(effect);
 					});
 
-					/******[UNCOMMENT ONCE BUFFS ARE ADDED]*******
 					_.each(rawSpell.buffs, (buff) => {
 						buff.charId = charId;
 						buff.parent = {id: spellId, collection: "Spells"};
@@ -314,7 +313,6 @@ Template.spells.events({
 							Proficiencies.insert(prof);
 						});
 					});
-					*******[UNCOMMENT ONCE BUFFS ARE ADDED]******/
 				});
 			},
 			returnElement: () => $(`[data-id='${spellId}']`).get(0),
