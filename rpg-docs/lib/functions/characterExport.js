@@ -16,6 +16,9 @@ characterExport = function(charId){
 	var attributeValue = function(attributeName){
 		return Characters.calculate.attributeValue(charId, attributeName);
 	};
+	var abilityMod = function(attributeName){
+		return Characters.calculate.abilityMod(charId, attributeName)
+	};
 	var skillMod = function(skillName){
 		return Characters.calculate.skillMod(charId, skillName);
 	};
@@ -24,20 +27,43 @@ characterExport = function(charId){
 		"Id": char._id,
 		"Name": char.name,
 		"Source": "DiceCloud",
-		"Type": char.race,
+		"Alignment": char.alignment || "",
+		"Gender": char.gender || "",
+		"Race": char.race || "",
+		"Level": Characters.calculate.level(charId),
+		"Experience": Characters.calculate.experience(charId),
+		"Class": getClasses(charId),
 		"HPBase": baseValue("hitPoints"),
 		"HPValue": attributeValue("hitPoints"),
 		"HitDice": getHitDiceString(charId) || "",
 		"AC": attributeValue("armor"),
 		"Initiative": skillMod("initiative"),
 		"Speed": attributeValue("speed"),
+		"ProficiencyBonus": attributeValue("proficiencyBonus"),
+		"passivePerception": Characters.calculate.passiveSkill(charId, "perception"),
 
-		"Str": attributeValue("strength"),
-		"Dex": attributeValue("dexterity"),
-		"Con": attributeValue("constitution"),
-		"Cha": attributeValue("charisma"),
-		"Int": attributeValue("intelligence"),
-		"Wis": attributeValue("wisdom"),
+		"Languages": getLanguages(charId),
+		"Description": char.description || "",
+		"Backstory": char.backstory || "",
+		"Personality": char.Personality || "" ,
+		"Bonds": char.bonds || "",
+		"Ideals": char.ideals || "",
+		"Flaws": char.flaws || "",
+		"PictureURL": char.picture || "",
+
+		"Strength": attributeValue("strength"),
+		"Dexterity": attributeValue("dexterity"),
+		"Constitution": attributeValue("constitution"),
+		"intelligence": attributeValue("intelligence"),
+		"Wisdom": attributeValue("wisdom"),
+		"Charisma": attributeValue("charisma"),
+
+		"StrengthMod": abilityMod("strength"),
+		"DexterityMod": abilityMod("dexterity"),
+		"ConstitutionMod": abilityMod("constitution"),
+		"intelligenceMod": abilityMod("intelligence"),
+		"WisdomMod": abilityMod("wisdom"),
+		"CharismaMod": abilityMod("charisma"),
 
 		"DamageVulnerabilities": damageMods.vulnerabilities,
 		"DamageResistances": damageMods.resistances,
@@ -49,11 +75,23 @@ characterExport = function(charId){
 		"IntSave": skillMod("intelligenceSave"),
 		"WisSave": skillMod("wisdomSave"),
 		"ChaSave": skillMod("charismaSave"),
-		"passivePerception": Characters.calculate.passiveSkill(charId, "perception"),
-		"Languages": getLanguages(charId),
-		"Description": char.description || "",
+
+		"Level1SpellSlots": attributeValue("level1SpellSlots"),
+		"Level2SpellSlots": attributeValue("level2SpellSlots"),
+		"Level3SpellSlots": attributeValue("level3SpellSlots"),
+		"Level4SpellSlots": attributeValue("level4SpellSlots"),
+		"Level5SpellSlots": attributeValue("level5SpellSlots"),
+		"Level6SpellSlots": attributeValue("level6SpellSlots"),
+		"Level7SpellSlots": attributeValue("level7SpellSlots"),
+		"Level8SpellSlots": attributeValue("level8SpellSlots"),
+		"Level9SpellSlots": attributeValue("level9SpellSlots"),
+		"Ki": attributeValue("ki"),
+		"Rages": attributeValue("rages"),
+		"RageDamage": attributeValue("rageDamage"),
+		"SorceryPoints": attributeValue("sorceryPoints"),
 	};
 	_.extend(character, getSkills(charId));
+	_.extend(character, getAttacks(charId));
 	return character;
 }
 
@@ -144,10 +182,7 @@ var getSkills = function(charId){
 	var skills = {};
 	_.each(allSkills, skill => {
 		var value = Characters.calculate.skillMod(charId, skill.name);
-		var mod = Characters.calculate.abilityMod(charId, skill.attribute);
-		if (value !== mod){
-			skills[skill.name] = value;
-		}
+		skills[skill.name] = value;
 	});
 	return skills;
 };
@@ -159,3 +194,22 @@ var getLanguages = function(charId){
 		type: "language",
 	}).map(l => l.name).join(", ");
 };
+
+var getClasses = function(charId){
+	return Classes.find({charId}).map(c => `${c.name} ${c.level}`).join(", ");
+};
+
+var getAttacks = function(charId){
+	var attacks = {};
+	var i = 1;
+	Attacks.find(
+		{charId, enabled: true},
+		{sort: {color: 1, name: 1}}
+	).forEach(a => {
+		attacks[`Attack${i++}`] = a.name +
+			` +${evaluate(charId, a.attackBonus)} to hit, ` +
+			`${evaluateString(charId, a.damage)} ${a.damageType} damage, ` +
+			`${a.details}`;
+	});
+	return attacks;
+}
