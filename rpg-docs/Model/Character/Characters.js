@@ -283,6 +283,7 @@ if (Meteor.isClient) {
 
 //create a local memoize with a argument concatenating hash function
 var memoize = function(f) {
+	if (Meteor.isServer) return f;
 	return Tracker.memoize(f, function() {
 		return _.reduce(arguments, function(memo, arg) {
 			return memo + arg;
