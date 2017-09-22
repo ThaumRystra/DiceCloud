@@ -17,11 +17,18 @@ characterExport = function(charId){
 		return Characters.calculate.attributeValue(charId, attributeName);
 	};
 	var abilityMod = function(attributeName){
-		return Characters.calculate.abilityMod(charId, attributeName)
+		return signedString(
+			Characters.calculate.abilityMod(charId, attributeName)
+		);
 	};
 	var skillMod = function(skillName){
-		return Characters.calculate.skillMod(charId, skillName);
+		return signedString(
+			Characters.calculate.skillMod(charId, skillName)
+		);
 	};
+	var proficiency = function(skillName){
+		return Characters.calculate.proficiency(charId, skillName);
+	}
 	var damageMods = getDamageMods(charId);
 	var character = {
 		"Id": char._id,
@@ -45,7 +52,7 @@ characterExport = function(charId){
 		"Languages": getLanguages(charId),
 		"Description": char.description || "",
 		"Backstory": char.backstory || "",
-		"Personality": char.Personality || "" ,
+		"Personality": char.personality || "" ,
 		"Bonds": char.bonds || "",
 		"Ideals": char.ideals || "",
 		"Flaws": char.flaws || "",
@@ -69,12 +76,18 @@ characterExport = function(charId){
 		"DamageResistances": damageMods.resistances,
 		"DamageImmunities": damageMods.immunities,
 
-		"StrSave": skillMod("strengthSave"),
-		"DexSave": skillMod("dexteritySave"),
-		"ConSave": skillMod("constitutionSave"),
-		"IntSave": skillMod("intelligenceSave"),
-		"WisSave": skillMod("wisdomSave"),
-		"ChaSave": skillMod("charismaSave"),
+		"StrengthSave": skillMod("strengthSave"),
+		"StrengthSaveProficiency": proficiency("strengthSave"),
+		"DexteritySave": skillMod("dexteritySave"),
+		"DexteritySaveProficiency": proficiency("dexteritySave"),
+		"ConstitutionSave": skillMod("constitutionSave"),
+		"ConstitutionSaveProficiency": proficiency("constitutionSave"),
+		"intelligenceSave": skillMod("intelligenceSave"),
+		"intelligenceSaveProficiency": proficiency("intelligenceSave"),
+		"WisdomSave": skillMod("wisdomSave"),
+		"WisdomSaveProficiency": proficiency("wisdomSave"),
+		"CharismaSave": skillMod("charismaSave"),
+		"CharismaSaveProficiency": proficiency("charismaSave"),
 
 		"Level1SpellSlots": attributeValue("level1SpellSlots"),
 		"Level2SpellSlots": attributeValue("level2SpellSlots"),
@@ -89,6 +102,10 @@ characterExport = function(charId){
 		"Rages": attributeValue("rages"),
 		"RageDamage": attributeValue("rageDamage"),
 		"SorceryPoints": attributeValue("sorceryPoints"),
+
+		"DeathSavePasses": char.deathSave.pass,
+		"DeathSaveFails": char.deathSave.fail,
+		"DeathSaveStable": char.deathSave.stable,
 	};
 	_.extend(character, getSkills(charId));
 	_.extend(character, getAttacks(charId));
@@ -107,6 +124,7 @@ var getHitDiceString = function(charId){
 		(d10 ? `${d10}d10 + ` : "") +
 		(d12 ? `${d12}d12 + ` : "") +
 		con;
+	return string;
 }
 
 var getArmorString = function(charId){
@@ -181,8 +199,13 @@ var getSkills = function(charId){
 	];
 	var skills = {};
 	_.each(allSkills, skill => {
-		var value = Characters.calculate.skillMod(charId, skill.name);
-		skills[skill.name] = value;
+		var value = signedString(
+			Characters.calculate.skillMod(charId, skill.name)
+		);
+		var prof = Characters.calculate.proficiency(charId, skill.name);
+		var name = skill.name.charAt(0).toUpperCase() + skill.name.slice(1);
+		skills[name] = value;
+		skills[name + "Proficiency"] = prof;
 	});
 	return skills;
 };
@@ -212,4 +235,8 @@ var getAttacks = function(charId){
 			`${a.details}`;
 	});
 	return attacks;
-}
+};
+
+var signedString = function(number) {
+	return number >= 0 ? "+" + number : "" + number;
+};
