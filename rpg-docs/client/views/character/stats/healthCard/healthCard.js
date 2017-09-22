@@ -16,7 +16,8 @@ Template.healthCard.onRendered(function(){
 		const id = Template.currentData()._id;
 		if (oldId !== id){
 			this.find("#hitPointSlider").resetOldValue();
-			this.find("#temporaryHitPointSlider").resetOldValue();
+			var thpSlider = this.find("#temporaryHitPointSlider");
+			thpSlider && thpSlider.resetOldValue();
 			oldId = id;
 		}
 	});
