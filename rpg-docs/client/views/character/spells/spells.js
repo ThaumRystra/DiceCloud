@@ -267,9 +267,11 @@ Template.spells.events({
 				//loop through all returned spells
 				_.each(resultArray, (rawSpell, index) =>{
 					// Make the library spell into a regular spell
-					let spell = _.omit(rawSpell, "library", "attacks", "effects");
+					let spell = _.omit(rawSpell, "_id", "library", "attacks", "effects");
+					// Use the ID generated earlier for the first spell so we
+					// can animate to it
 					if (index == 0) {
-						spell._id = spellId; //only do this for the first spell added
+						spell._id = spellId;
 					}
 					spell.charId = charId;
 					spell.parent = {
