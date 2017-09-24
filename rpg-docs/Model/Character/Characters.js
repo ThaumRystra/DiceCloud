@@ -164,9 +164,9 @@ Schemas.Character = new SimpleSchema({
 
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
-	owner:   {type: String, regEx: SimpleSchema.RegEx.Id},
-	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
-	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
+	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
+	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
+	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
 	color:   {
 		type: String,
 		allowedValues: _.pluck(colorOptions, "key"),
