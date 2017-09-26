@@ -1,5 +1,11 @@
 characterExport = function(charId){
-	var char = Characters.findOne(charId);
+	var {
+		character, classes, effects, proficiencies,
+	} = getCharacterForComputation(charId);
+	var char = character;
+	computedCharacter = computeCharacter({
+		character, classes, effects, proficiencies,
+	});
 	if (!char) {
 		return {
 			error: charId + " character not found"
@@ -11,25 +17,87 @@ characterExport = function(charId){
 		};
 	}
 	var baseValue = function(attributeName){
-		return Characters.calculate.attributeBase(charId, attributeName);
+		var attribute = computedCharacter[attributeName];
+		return attribute && attribute.value;
 	};
 	var attributeValue = function(attributeName){
-		return Characters.calculate.attributeValue(charId, attributeName);
+		var base = baseValue(attributeName);
+		var adjustment = char[attributeName] && char[attributeName].adjustment;
+		return base + adjustment;
 	};
 	var abilityMod = function(attributeName){
-		return signedString(
-			Characters.calculate.abilityMod(charId, attributeName)
-		);
+		return signedString(getMod(attributeValue(attributeName)));
 	};
 	var skillMod = function(skillName){
-		return signedString(
-			Characters.calculate.skillMod(charId, skillName)
-		);
+		return signedString(baseValue(skillName));
 	};
 	var proficiency = function(skillName){
-		return Characters.calculate.proficiency(charId, skillName);
+		var skill = computedCharacter[skillName];
+		return skill && skill.proficiency;
+	};
+	var passiveSkill = function(skillName){
+		var attribute = computedCharacter[skillName];
+		if (!attribute) return;
+		return 10 + baseValue(skillName) + attribute.passiveAdd;
+	};
+	var experience = function(){
+		var xp = 0;
+		Experiences.find(
+			{charId: charId},
+			{fields: {value: 1}}
+		).forEach(function(e){
+			xp += e.value;
+		});
+		return xp;
+	};
+	var getClasses = function(){
+		return _.map(classes, c => `${c.name} ${c.level}`).join(", ");
+	};
+	var getHitDiceString = function(){
+		var d6  = baseValue("d6HitDice");
+		var d8  = baseValue("d8HitDice");
+		var d10 = baseValue("d10HitDice");
+		var d12 = baseValue("d12HitDice");
+		var con = abilityMod("constitution");
+		var string = "" +
+			(d6 ? `${d6}d6 + ` : "") +
+			(d8 ? `${d8}d8 + ` : "") +
+			(d10 ? `${d10}d10 + ` : "") +
+			(d12 ? `${d12}d12 + ` : "") +
+			con;
+		return string;
 	}
-	var damageMods = getDamageMods(charId);
+	var getSkills = function(charId){
+		var allSkills = [
+			{name: "acrobatics", attribute: "dexterity"},
+			{name: "animalHandling", attribute: "wisdom"},
+			{name: "arcana", attribute: "intelligence"},
+			{name: "athletics", attribute: "strength"},
+			{name: "deception", attribute: "charisma"},
+			{name: "history", attribute: "intelligence"},
+			{name: "insight", attribute: "wisdom"},
+			{name: "intimidation", attribute: "charisma"},
+			{name: "investigation", attribute: "intelligence"},
+			{name: "medicine", attribute: "wisdom"},
+			{name: "nature", attribute: "intelligence"},
+			{name: "perception", attribute: "wisdom"},
+			{name: "performance", attribute: "charisma"},
+			{name: "persuasion", attribute: "charisma"},
+			{name: "religion", attribute: "intelligence"},
+			{name: "sleightOfHand", attribute: "dexterity"},
+			{name: "stealth", attribute: "dexterity"},
+			{name: "survival", attribute: "wisdom"},
+		];
+		var skills = {};
+		_.each(allSkills, skill => {
+			var value = skillMod(skill.name);
+			var prof = proficiency(skill.name);
+			var name = skill.name.charAt(0).toUpperCase() + skill.name.slice(1);
+			skills[name] = value;
+			skills[name + "Proficiency"] = prof;
+		});
+		return skills;
+	};
 	var character = {
 		"Id": char._id,
 		"Name": char.name,
@@ -37,8 +105,8 @@ characterExport = function(charId){
 		"Alignment": char.alignment || "",
 		"Gender": char.gender || "",
 		"Race": char.race || "",
-		"Level": Characters.calculate.level(charId),
-		"Experience": Characters.calculate.experience(charId),
+		"Level": _.reduce(classes, (memo, cls) => memo + cls.level, 0),
+		"Experience": experience(),
 		"Class": getClasses(charId),
 		"HPBase": baseValue("hitPoints"),
 		"HPValue": attributeValue("hitPoints"),
@@ -47,7 +115,7 @@ characterExport = function(charId){
 		"Initiative": skillMod("initiative"),
 		"Speed": attributeValue("speed"),
 		"ProficiencyBonus": attributeValue("proficiencyBonus"),
-		"passivePerception": Characters.calculate.passiveSkill(charId, "perception"),
+		"passivePerception": passiveSkill("perception"),
 
 		"Languages": getLanguages(charId),
 		"Description": char.description || "",
@@ -72,9 +140,9 @@ characterExport = function(charId){
 		"WisdomMod": abilityMod("wisdom"),
 		"CharismaMod": abilityMod("charisma"),
 
-		"DamageVulnerabilities": damageMods.vulnerabilities,
-		"DamageResistances": damageMods.resistances,
-		"DamageImmunities": damageMods.immunities,
+		//"DamageVulnerabilities": damageMods.vulnerabilities,
+		//"DamageResistances": damageMods.resistances,
+		//"DamageImmunities": damageMods.immunities,
 
 		"StrengthSave": skillMod("strengthSave"),
 		"StrengthSaveProficiency": proficiency("strengthSave"),
@@ -112,21 +180,6 @@ characterExport = function(charId){
 	return character;
 }
 
-var getHitDiceString = function(charId){
-	var d6  = Characters.calculate.attributeBase(charId, "d6HitDice");
-	var d8  = Characters.calculate.attributeBase(charId, "d8HitDice");
-	var d10 = Characters.calculate.attributeBase(charId, "d10HitDice");
-	var d12 = Characters.calculate.attributeBase(charId, "d12HitDice");
-	var con = Characters.calculate.abilityMod(charId,"constitution");
-	var string = "" +
-		(d6 ? `${d6}d6 + ` : "") +
-		(d8 ? `${d8}d8 + ` : "") +
-		(d10 ? `${d10}d10 + ` : "") +
-		(d12 ? `${d12}d12 + ` : "") +
-		con;
-	return string;
-}
-
 var getArmorString = function(charId){
 	var bases = Effects.find({
 		charId: charId,
@@ -148,7 +201,7 @@ var getArmorString = function(charId){
 	strings = strings.concat(effects);
 	return strings.join(", ");
 }
-
+/*
 var getDamageMods = function(charId){
 	// jscs:disable maximumLineLength
 	var multipliers = [
@@ -175,40 +228,7 @@ var getDamageMods = function(charId){
 		"vulnerabilities": _.map(multipliers["2"], names).join(", "),
 	};
 }
-
-var getSkills = function(charId){
-	var allSkills = [
-		{name: "acrobatics", attribute: "dexterity"},
-		{name: "animalHandling", attribute: "wisdom"},
-		{name: "arcana", attribute: "intelligence"},
-		{name: "athletics", attribute: "strength"},
-		{name: "deception", attribute: "charisma"},
-		{name: "history", attribute: "intelligence"},
-		{name: "insight", attribute: "wisdom"},
-		{name: "intimidation", attribute: "charisma"},
-		{name: "investigation", attribute: "intelligence"},
-		{name: "medicine", attribute: "wisdom"},
-		{name: "nature", attribute: "intelligence"},
-		{name: "perception", attribute: "wisdom"},
-		{name: "performance", attribute: "charisma"},
-		{name: "persuasion", attribute: "charisma"},
-		{name: "religion", attribute: "intelligence"},
-		{name: "sleightOfHand", attribute: "dexterity"},
-		{name: "stealth", attribute: "dexterity"},
-		{name: "survival", attribute: "wisdom"},
-	];
-	var skills = {};
-	_.each(allSkills, skill => {
-		var value = signedString(
-			Characters.calculate.skillMod(charId, skill.name)
-		);
-		var prof = Characters.calculate.proficiency(charId, skill.name);
-		var name = skill.name.charAt(0).toUpperCase() + skill.name.slice(1);
-		skills[name] = value;
-		skills[name + "Proficiency"] = prof;
-	});
-	return skills;
-};
+*/
 
 var getLanguages = function(charId){
 	return Proficiencies.find({
@@ -216,10 +236,6 @@ var getLanguages = function(charId){
 		enabled: true,
 		type: "language",
 	}).map(l => l.name).join(", ");
-};
-
-var getClasses = function(charId){
-	return Classes.find({charId}).map(c => `${c.name} ${c.level}`).join(", ");
 };
 
 var getAttacks = function(charId){
