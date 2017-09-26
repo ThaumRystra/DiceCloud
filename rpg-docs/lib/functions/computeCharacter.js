@@ -11,6 +11,7 @@ getCharacterForComputation = function(charId){
 }
 
 computeCharacter = function({character, classes, effects, proficiencies}){
+	var charId = character._id;
 	let computedClasses = computeCharacterClasses(charId, classes);
 	let changed = false;
 	computedCharacter = {};
