@@ -25,3 +25,10 @@ Meteor.publish("characterList", function(){
 		Parties.find({owner: userId}),
 	];
 });
+
+DDPRateLimiter.addRule({
+	name: "characterList",
+	type: "subscription",
+	userId(){ return true; },
+	connectionId(){ return true; },
+}, 8, 5000);

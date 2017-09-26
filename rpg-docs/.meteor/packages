@@ -52,3 +52,4 @@ ongoworks:speakingurl
 service-configuration@1.0.11
 google-config-ui
 dynamic-import
+ddp-rate-limiter
