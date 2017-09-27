@@ -44,17 +44,18 @@
 				</div>
 				<div bottom-item>
 					<paper-tabs id="characterSheetTabs" selected={{selectedTab}} class="{{colorClass}}">
-						<paper-tab name="stats">Stats</paper-tab>
-						<paper-tab name="features">Features</paper-tab>
+						<paper-tab name="stats" class="{{#if shouldBounce 0}}bounce{{/if}}">Stats</paper-tab>
+						<paper-tab name="features" class="{{#if shouldBounce 1}}bounce{{/if}}">Features</paper-tab>
 						<paper-tab name="inventory">Inventory</paper-tab>
 						{{#unless hideSpellcasting}}
 						<paper-tab name="spells">Spells</paper-tab>
 						{{/unless}}
 						<paper-tab name="persona">Persona</paper-tab>
-						<paper-tab name="journal">Journal</paper-tab>
+						<paper-tab name="journal" class="{{#if shouldBounce 5}}bounce{{/if}}">Journal</paper-tab>
 					</paper-tabs>
 				</div>
 			</app-toolbar>
+			{{#if session "showNewUserExperience"}}{{> newUserStepper}}{{/if}}
 		</app-header>
 		<div class="flex" style="position: relative;">
 			<iron-pages id="tabPages" class="fit" selected={{selectedTab}}>

@@ -29,7 +29,17 @@ Template.characterSheet.onRendered(function() {
 		tabFabMenus = _.times(6, (n) =>
 			tabPages[n].find(".mini-holder")
 		);
-	})
+	});
+
+	// New user experience starts on the features tab
+	var settings = Characters.findOne(this.data._id, {
+		fields: {settings: 1}
+	}).settings;
+	if (settings && settings.newUserExperience){
+		Session.set(this.data._id + ".selectedTab", "1");
+		Session.set("showNewUserExperience", true);
+		Session.set("newUserExperienceStep", 0);
+	}
 
 	//watch this character and make sure their encumbrance is updated
 	//trackEncumbranceConditions(this.data._id, this);
@@ -171,6 +181,20 @@ Template.characterSheet.helpers({
 	hideSpellcasting: function() {
 		var char = Characters.findOne(this._id);
 		return char && char.settings.hideSpellcasting;
+	},
+	newUserExperience: function(){
+		var char = Characters.findOne(this._id);
+		return char && char.settings.newUserExperience;
+	},
+	shouldBounce: function(tab){
+		console.log(this._id);
+		const selected = Session.get(this._id + ".selectedTab")
+		const step = Session.get("newUserExperienceStep");
+		console.log({selected, step, tab});
+		if (selected == tab) return false;
+		return (tab === 1 && step === 0) ||
+			   (tab === 5 && step === 1) ||
+			   (tab === 0 && step === 2);
 	},
 });
 

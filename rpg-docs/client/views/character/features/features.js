@@ -59,6 +59,10 @@ Template.features.helpers({
 	hasCharacters: function(string){
 		return string && string.match(/\S/);
 	},
+	shouldFloatyButtonBounce: function(){
+		const step = Session.get("newUserExperienceStep");
+		return step === 0 && Features.find({charId: this._id}).count() <= 1;
+	},
 });
 
 Template.features.events({

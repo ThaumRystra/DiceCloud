@@ -1,0 +1,17 @@
+@keyframes bounce {
+	from {
+		transform: translate(0px,0px);
+	}
+	to {
+		transform: translate(0px,-16px);
+	}
+}
+
+.bounce{
+	animation-name: bounce;
+	animation-duration: 0.3s;
+	animation-direction: alternate;
+	animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+}

@@ -102,7 +102,7 @@
 		</div>
 		{{#if canEditCharacter _id}}
 			<paper-fab id="addFeature"
-					   class="floatyButton"
+					   class="floatyButton {{#if shouldFloatyButtonBounce}}bounce{{/if}}"
 					   icon="add">
 		   		<paper-tooltip position="left">Add Feature</paper-tooltip>
 		  	</paper-fab>

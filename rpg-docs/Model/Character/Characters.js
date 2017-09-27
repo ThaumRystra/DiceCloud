@@ -191,6 +191,7 @@ Schemas.Character = new SimpleSchema({
 	"settings.exportFeatures": {type: Boolean, defaultValue: true},
 	"settings.exportAttacks": {type: Boolean, defaultValue: true},
 	"settings.exportDescription": {type: Boolean, defaultValue: true},
+	"settings.newUserExperience": {type: Boolean, optional: true},
 });
 
 Characters.attachSchema(Schemas.Character);
@@ -554,6 +555,10 @@ if (Meteor.isServer){
 	});
 	Characters.before.insert(function(userId, doc) {
 		doc.urlName = getSlug(doc.name, {maintainCase: true}) || "-";
+		// The first character a user creates should have the new user experience
+		if (!Characters.find({owner: userId}).count()){
+			doc.settings.newUserExperience = true;
+		}
 	});
 }
 

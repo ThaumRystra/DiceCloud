@@ -50,6 +50,9 @@ Template.journal.helpers({
 		var char = Characters.findOne(this._id, {fields: {race: 1}});
 		return char && char.race;
 	},
+	shouldRaceBounce: function(){
+		return Session.get("newUserExperienceStep") === 1;
+	},
 });
 
 Template.journal.events({
