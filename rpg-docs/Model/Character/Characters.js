@@ -299,6 +299,7 @@ Characters.calculate = {
 		var fieldSelector = {};
 		fieldSelector[fieldName] = 1;
 		var char = Characters.findOne(charId, {fields: fieldSelector});
+		if (!char) return;
 		var field = char[fieldName];
 		if (field === undefined){
 			throw new Meteor.Error(
@@ -332,6 +333,7 @@ Characters.calculate = {
 	},
 	attributeValue: memoize(function(charId, attributeName){
 		var attribute = Characters.calculate.getField(charId, attributeName);
+		if (!attribute) return;
 		//base value
 		var value = Characters.calculate.attributeBase(charId, attributeName);
 		//plus adjustment
@@ -343,6 +345,7 @@ Characters.calculate = {
 	}),
 	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
+		if (!skill) return;
 		//get the final value of the ability score
 		var ability = Characters.calculate.attributeValue(charId, skill.ability);
 
@@ -394,7 +397,6 @@ Characters.calculate = {
 		return prof && prof.value || 0;
 	}),
 	passiveSkill: memoize(function(charId, skillName){
-		var skill = Characters.calculate.getField(charId, skillName);
 		var mod = +Characters.calculate.skillMod(charId, skillName);
 		var value = 10 + mod;
 		Effects.find(

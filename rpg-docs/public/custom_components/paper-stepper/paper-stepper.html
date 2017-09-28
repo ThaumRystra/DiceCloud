@@ -180,14 +180,14 @@ Custom property | Description | Default
     <!-- Slideshow and buttons area for horizontal layout -->
     <template is="dom-if" if="[[!vertical]]">
       <div class="flex"></div>
+      <!--
       <div id="buttonsWrapper">
         <paper-button hidden$="[[!hasBackButton]]" disabled=[[!_hasBackStep]] on-tap="back">[[backText]]</paper-button>
         <span class="flex"></span>
         <paper-button hidden$="[[!hasSkipButton]]" disabled="[[!_canSkip]]" on-tap="progress">[[skipText]]</paper-button>
-        <!--
         <paper-button id="continueButton" on-tap="continue">{{_choosePrimaryButtonText(_attrForSelectedStepPrimaryButtonText, finishText, continueText, updateText)}}</paper-button>
-        -->
       </div>
+      -->
     </template>
 
   </template>

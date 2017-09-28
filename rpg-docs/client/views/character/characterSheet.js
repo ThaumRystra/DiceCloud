@@ -199,6 +199,12 @@ Template.characterSheet.events({
 			data: this,
 			template: "deleteCharacterConfirmation",
 			element: event.currentTarget.parentElement.parentElement,
+			callback: (result) => {
+				if (result === true){
+					Router.go("/characterList");
+					Tracker.afterFlush(() => Characters.remove(this._id));
+				}
+			},
 		});
 	},
 	"click #shareCharacter": function(event, instance){
