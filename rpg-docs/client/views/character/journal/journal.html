@@ -83,9 +83,12 @@
 	</div>
 	<div class="fab-buffer"></div>
 	{{#if canEditCharacter _id}}
-		<paper-fab id="addNote"
-				   class="floatyButton"
-				   icon="add"
-				   title="Add"></paper-fab>
+		<div class="floatyButton">
+			<paper-fab id="addNote"
+				icon="add"
+				title="Add">
+			</paper-fab>
+			{{#simpleTooltip}}Add Note{{/simpleTooltip}}
+		</div>
 	{{/if}}
 </template>

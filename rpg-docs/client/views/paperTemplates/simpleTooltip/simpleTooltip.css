@@ -1,4 +1,18 @@
-.simple-tooltip:hover .tooltip {
+.simple-tooltip {
+	pointer-events: none;
+}
+
+.simple-tooltip:active {
+	pointer-events: none;
+}
+
+/* Show the tooltip if a older sibling is hovered */
+*:hover ~ .simple-tooltip > .tooltip {
+	opacity: 0.9;
+}
+
+/* Show the tooltip if parent is hovered */
+*:hover > .simple-tooltip > .tooltip {
 	opacity: 0.9;
 }
 
@@ -15,4 +29,8 @@
 	right: calc(100% + 8px);
 	pointer-events: none;
     white-space: nowrap;
+}
+
+.tooltip.always {
+	opacity: 0.9;
 }

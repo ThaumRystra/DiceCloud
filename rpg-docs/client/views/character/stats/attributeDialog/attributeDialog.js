@@ -157,4 +157,10 @@ Template.attributeDialogView.helpers({
 	statValue: function(){
 		return evaluateEffect(this.charId, this);
 	},
+	showNewUserExperience: function(){
+		console.log(this.statName);
+		if (this.statName === "speed"){
+			return Session.get("newUserExperienceStep") >= 2;
+		}
+	},
 });

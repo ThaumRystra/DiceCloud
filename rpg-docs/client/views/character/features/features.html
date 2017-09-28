@@ -74,7 +74,7 @@
 													checked={{enabled}}
 													disabled={{#unless canEditCharacter charId}}true{{/unless}}>
 									</paper-checkbox>
-									<paper-tooltip position="left">Feature enabled</paper-tooltip>
+									{{#simpleTooltip}}Feature enabled{{/simpleTooltip}}
 								</div>
 							{{/if}}
 						</div>
@@ -101,11 +101,13 @@
 			{{/each}}
 		</div>
 		{{#if canEditCharacter _id}}
-			<paper-fab id="addFeature"
-					   class="floatyButton {{#if shouldFloatyButtonBounce}}bounce{{/if}}"
-					   icon="add">
-		   		<paper-tooltip position="left">Add Feature</paper-tooltip>
-		  	</paper-fab>
+			<div class="floatyButton">
+				<paper-fab id="addFeature"
+					class="{{#if shouldFloatyButtonBounce}}bounce{{/if}}"
+					icon="add">
+				</paper-fab>
+				{{#simpleTooltip}}Add Feature{{/simpleTooltip}}
+			</div>
 		{{/if}}
 	</div>
 </template>
