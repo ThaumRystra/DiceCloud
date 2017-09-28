@@ -6,6 +6,16 @@
 </template>
 
 <template name="attributeDialogView">
+	{{#if showNewUserExperience}}
+		{{#infoBox}}
+			<p>
+				This dialog shows how your speed is set by the effect you added to your character's race.
+			</p>
+			<p>
+				In DiceCloud you don't change stats directly, rather you add effects which impact your stats in different ways. This way, you can always tell where your stats came from, and how they got to their current value.
+			</p>
+		{{/infoBox}}
+	{{/if}}
 	<div class="layout horizontal center-justified end">
 		<div class="paper-font-display2">
 			{{attributeValue}}

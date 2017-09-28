@@ -48,7 +48,8 @@ Template.featureDetails.events({
 
 Template.featureEdit.helpers({
 	showNewUserExperience: function(){
-		return Session.get("newUserExperienceStep") === 0;
+		return Session.get("newUserExperienceStep") === 0 ||
+			Session.get("newUserExperienceStep") === 1;
 	},
 	usesSet: function(){
 		return _.isString(this.uses);

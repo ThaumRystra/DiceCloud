@@ -55,7 +55,7 @@
 					</paper-tabs>
 				</div>
 			</app-toolbar>
-			{{#if session "showNewUserExperience"}}{{> newUserStepper}}{{/if}}
+			{{#if newUserExperience}}{{> newUserStepper}}{{/if}}
 		</app-header>
 		<div class="flex" style="position: relative;">
 			<iron-pages id="tabPages" class="fit" selected={{selectedTab}}>

@@ -31,16 +31,6 @@ Template.characterSheet.onRendered(function() {
 		);
 	});
 
-	// New user experience starts on the features tab
-	var settings = Characters.findOne(this.data._id, {
-		fields: {settings: 1}
-	}).settings;
-	if (settings && settings.newUserExperience){
-		Session.set(this.data._id + ".selectedTab", "1");
-		Session.set("showNewUserExperience", true);
-		Session.set("newUserExperienceStep", 0);
-	}
-
 	//watch this character and make sure their encumbrance is updated
 	//trackEncumbranceConditions(this.data._id, this);
 });
@@ -187,10 +177,8 @@ Template.characterSheet.helpers({
 		return char && char.settings.newUserExperience;
 	},
 	shouldBounce: function(tab){
-		console.log(this._id);
 		const selected = Session.get(this._id + ".selectedTab")
 		const step = Session.get("newUserExperienceStep");
-		console.log({selected, step, tab});
 		if (selected == tab) return false;
 		return (tab === 1 && step === 0) ||
 			   (tab === 5 && step === 1) ||
