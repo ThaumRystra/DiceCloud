@@ -5,10 +5,8 @@ Template.newUserStepper.onRendered(function(){
 		this.autorun((c) => {
 			var step = Session.get("newUserExperienceStep");
 			var hasFeatures = Features.find({charId: this.data._id}).count() > 1;
-			console.log({step, hasFeatures});
 			if (step === 0 && hasFeatures){
 				stepper.continue();
-				c.stop();
 			}
 		});
 		this.autorun((c) => {
@@ -17,10 +15,11 @@ Template.newUserStepper.onRendered(function(){
 				charId: this.data._id,
 				stat: "speed",
 				"parent.group": "racial",
+				operation: "base",
+				value: {$gt: 0},
 			}).count();
 			if (step === 1 && hasEffect){
 				stepper.continue();
-				c.stop();
 			}
 		});
 		this.autorun((c) => {
@@ -28,7 +27,6 @@ Template.newUserStepper.onRendered(function(){
 			if (step === 2 && Session.get("viewedSpeed")){
 				Session.set("viewedSpeed", undefined);
 				stepper.continue();
-				c.stop();
 			}
 		});
 	});
