@@ -1,4 +1,3 @@
-.profile #at-nav-button {
-	color: #212121;
-    color: rgba(0,0,0,0.87);
+.profile paper-button, .profile a, .profile #at-nav-button {
+	color: #d13b2e;
 }
