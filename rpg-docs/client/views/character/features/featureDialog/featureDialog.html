@@ -42,9 +42,20 @@
 </template>
 
 <template name="featureEdit">
+	{{#if showNewUserExperience}}
+		{{# infoBox}}
+			<p>
+				Features represent all the permanent things your character can do.
+			</p><p>
+				A feature can change a character's stats with effects,
+				or give the character proficiencies, attacks, and buffs.
+			</p><p>
+				Give the feature a name, and close it to continue.
+			</p>
+		{{/infoBox}}
+	{{/if}}
 	<!--name-->
 	<paper-input id="featureNameInput" class="fullwidth" label="Name" value={{name}}></paper-input>
-
 	<div class="layout horizontal center wrap justified">
 		<paper-dropdown-menu class=flex label="Enable Feature" style="flex-basis: 150px; max-width: 200px;">
 			<dicecloud-selector selected={{enabledSelection}} class="dropdown-content enabled-dropdown">

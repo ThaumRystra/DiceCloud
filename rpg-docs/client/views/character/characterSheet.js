@@ -29,7 +29,7 @@ Template.characterSheet.onRendered(function() {
 		tabFabMenus = _.times(6, (n) =>
 			tabPages[n].find(".mini-holder")
 		);
-	})
+	});
 
 	//watch this character and make sure their encumbrance is updated
 	//trackEncumbranceConditions(this.data._id, this);
@@ -172,6 +172,18 @@ Template.characterSheet.helpers({
 		var char = Characters.findOne(this._id);
 		return char && char.settings.hideSpellcasting;
 	},
+	newUserExperience: function(){
+		var char = Characters.findOne(this._id);
+		return char && char.settings.newUserExperience;
+	},
+	shouldBounce: function(tab){
+		const selected = Session.get(this._id + ".selectedTab")
+		const step = Session.get("newUserExperienceStep");
+		if (selected == tab) return false;
+		return (tab === 1 && step === 0) ||
+			   (tab === 5 && step === 1) ||
+			   (tab === 0 && step === 2);
+	},
 });
 
 Template.characterSheet.events({
@@ -187,6 +199,12 @@ Template.characterSheet.events({
 			data: this,
 			template: "deleteCharacterConfirmation",
 			element: event.currentTarget.parentElement.parentElement,
+			callback: (result) => {
+				if (result === true){
+					Router.go("/characterList");
+					Tracker.afterFlush(() => Characters.remove(this._id));
+				}
+			},
 		});
 	},
 	"click #shareCharacter": function(event, instance){

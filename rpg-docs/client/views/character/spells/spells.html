@@ -53,22 +53,22 @@
 									{{numPrepared}} / {{evaluate charId maxPrepared}}
 								</div>
 							{{/if}}
-							<div>
-								<paper-tooltip position="left">
-									Done
-			  					</paper-tooltip>
+							<div style="position: relative;">
 								<paper-icon-button class="finishPrep" icon="done">
 								</paper-icon-button>
+								{{#simpleTooltip}}
+									Done
+			  					{{/simpleTooltip}}
 							</div>
 						{{else}}
-							<div>
-								<paper-tooltip position="left">
-									Change prepared spells
-	  							</paper-tooltip>
+							<div style="position: relative;">
 								<paper-icon-button class="prepSpells"
 												   disabled={{#unless canEditCharacter charId}}true{{/unless}}
 												   icon="book">
 								</paper-icon-button>
+								{{#simpleTooltip}}
+									Change prepared spells
+	  							{{/simpleTooltip}}
 							</div>
 						{{/if}}
 					</div>
@@ -124,32 +124,31 @@
 	{{#if canEditCharacter _id}}
 		{{#fabMenu}}
 			<div>
-				<paper-tooltip position="left">
-					New spell list
-				</paper-tooltip>
 				<paper-fab icon="work"
 						   class="addSpellList"
 						   mini>
 				</paper-fab>
-
+				{{#simpleTooltip class="always"}}
+					Spell list
+				{{/simpleTooltip}}
 			</div>
 			<div>
-				<paper-tooltip position="left">
-					Spell library
-				</paper-tooltip>
 				<paper-fab icon="av:library-books"
 						   class="librarySpell"
 						   mini>
 				</paper-fab>
+				{{#simpleTooltip class="always"}}
+					Spell from library
+				{{/simpleTooltip}}
 			</div>
 			<div>
-				<paper-tooltip position="left">
-					New spell
-				</paper-tooltip>
 				<paper-fab icon="note-add"
 					class="addSpell"
 					mini>
 				</paper-fab>
+				{{#simpleTooltip class="always"}}
+					Spell
+				{{/simpleTooltip}}
 			</div>
 		{{/fabMenu}}
 	{{/if}}

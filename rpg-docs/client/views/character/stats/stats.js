@@ -8,6 +8,10 @@ Template.stats.helpers({
 		};
 		return Buffs.find(selector);
 	},
+	// New user experience
+	shouldSpeedBounce: function(){
+		return Session.get("newUserExperienceStep") === 2;
+	},
 })
 
 Template.stats.events({
@@ -84,8 +88,7 @@ Template.stats.events({
 			callback: (result) => {
 				if (!result) {
 					return;
-				}
-				else Meteor.call("giveCondition", this._id, result)
+				} else Meteor.call("giveCondition", this._id, result)
 			},
 			//returnElement: () => $(`[data-id='${itemId}']`).get(0),
 		})

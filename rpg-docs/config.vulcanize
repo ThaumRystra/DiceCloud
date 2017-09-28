@@ -49,6 +49,7 @@
 	"/custom_components/dicecloud-wrapper/dicecloud-wrapper.html",
 	"/custom_components/paper-checkbox/paper-checkbox.html",
 	"/custom_components/paper-diff-slider/paper-diff-slider.html",
+	"/custom_components/paper-stepper/paper-stepper.html",
 	"/custom_components/app-theme.html"
   ]
 }

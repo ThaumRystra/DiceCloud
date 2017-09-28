@@ -191,6 +191,7 @@ Schemas.Character = new SimpleSchema({
 	"settings.exportFeatures": {type: Boolean, defaultValue: true},
 	"settings.exportAttacks": {type: Boolean, defaultValue: true},
 	"settings.exportDescription": {type: Boolean, defaultValue: true},
+	"settings.newUserExperience": {type: Boolean, optional: true},
 });
 
 Characters.attachSchema(Schemas.Character);
@@ -298,6 +299,7 @@ Characters.calculate = {
 		var fieldSelector = {};
 		fieldSelector[fieldName] = 1;
 		var char = Characters.findOne(charId, {fields: fieldSelector});
+		if (!char) return;
 		var field = char[fieldName];
 		if (field === undefined){
 			throw new Meteor.Error(
@@ -331,6 +333,7 @@ Characters.calculate = {
 	},
 	attributeValue: memoize(function(charId, attributeName){
 		var attribute = Characters.calculate.getField(charId, attributeName);
+		if (!attribute) return;
 		//base value
 		var value = Characters.calculate.attributeBase(charId, attributeName);
 		//plus adjustment
@@ -342,6 +345,7 @@ Characters.calculate = {
 	}),
 	skillMod: memoize(preventLoop(function(charId, skillName){
 		var skill = Characters.calculate.getField(charId, skillName);
+		if (!skill) return;
 		//get the final value of the ability score
 		var ability = Characters.calculate.attributeValue(charId, skill.ability);
 
@@ -393,7 +397,6 @@ Characters.calculate = {
 		return prof && prof.value || 0;
 	}),
 	passiveSkill: memoize(function(charId, skillName){
-		var skill = Characters.calculate.getField(charId, skillName);
 		var mod = +Characters.calculate.skillMod(charId, skillName);
 		var value = 10 + mod;
 		Effects.find(
@@ -554,6 +557,10 @@ if (Meteor.isServer){
 	});
 	Characters.before.insert(function(userId, doc) {
 		doc.urlName = getSlug(doc.name, {maintainCase: true}) || "-";
+		// The first character a user creates should have the new user experience
+		if (!Characters.find({owner: userId}).count()){
+			doc.settings.newUserExperience = true;
+		}
 	});
 }
 

@@ -110,12 +110,12 @@
 						<div class="paper-font-caption" style="margin-right: 8px">
 							{{round totalWeight}} lbs
 						</div>
-						<div>
+						<div style="position: relative;">
 							<paper-checkbox class="carriedCheckbox"
 											disabled={{#unless canEditCharacter charId}}true{{/unless}}
 											checked={{isCarried}}>
 							</paper-checkbox>
-							<paper-tooltip position="left"> Container carried</paper-tooltip>
+							{{#simpleTooltip}} Container carried{{/simpleTooltip}}
 						</div>
 					</div>
 					<div class="bottom list">
@@ -136,21 +136,21 @@
 						   class="addContainer"
 						   mini>
 				</paper-fab>
-				<paper-tooltip position="left"> New container </paper-tooltip>
+				{{#simpleTooltip class="always"}} Container {{/simpleTooltip}}
 			</div>
 			<div>
 				<paper-fab icon="av:library-books"
 						   class="libraryItem"
 						   mini>
 				</paper-fab>
-				<paper-tooltip position="left"> Library item </paper-tooltip>
+				{{#simpleTooltip class="always"}} Item from library {{/simpleTooltip}}
 			</div>
 			<div>
 				<paper-fab icon="note-add"
 						   class="addItem"
 						   mini>
 				</paper-fab>
-				<paper-tooltip position="left"> New item </paper-tooltip>
+				{{#simpleTooltip class="always"}} Item {{/simpleTooltip}}
 			</div>
 		{{/fabMenu}}
 	{{/if}}

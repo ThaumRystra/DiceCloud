@@ -1,6 +1,6 @@
 <template name="statCard">
 	<div>
-		<paper-material class="stat-card layout horizontal">
+		<paper-material class="stat-card layout horizontal {{#if bounce}}bounce{{/if}}">
 			<div class="numbers paper-font-display1">
 					{{#if isSkill}}
 						{{prefix}}{{skillMod}}

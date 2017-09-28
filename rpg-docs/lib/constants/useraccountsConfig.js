@@ -2,7 +2,7 @@ AccountsTemplates.configure({
 	//behaviour
 	confirmPassword: true,
 	enablePasswordChange: true,
-	enforceEmailVerification: true,
+	enforceEmailVerification: false,
 	overrideLoginErrors: false,
 	sendVerificationEmail: true,
 	lowercaseUsername: true,
@@ -21,35 +21,35 @@ AccountsTemplates.configure({
 
 AccountsTemplates.configureRoute("changePwd", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("enrollAccount", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("forgotPwd", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("resetPwd", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("signIn", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("signUp", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("verifyEmail", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 AccountsTemplates.configureRoute("resendVerificationEmail", {
 	template: "titledAtForm",
-    layoutTemplate: 'layout',
+	layoutTemplate: "layout",
 });
 
 if (Meteor.isServer){
