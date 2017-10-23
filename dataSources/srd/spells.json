@@ -88,12 +88,28 @@
 	},
 	{
 		"castingTime": "action",
-		"description": "By means of this spell, you use an animal to deliver a message. Choose a Tiny beast you can see within range, such as a squirrel, a blue jay, or a bat. You specify a location, which you must have visited, and a recipient who matches a general description, such as “a man or woman dressed in the uniform of the town guard” or “a red-haired dwarf wearing a pointed hat.” You also speak a message of up to twenty-five words. The target beast travels for the duration of the spell toward the specified location, covering about 50 miles per 24 hours for a flying messenger, or 25 miles for other animals.\n\nWhen the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. The messenger speaks only to a creature matching the description you gave. If the messenger doesn’t reach its destination before the spell ends, the message is lost, and the beast makes its way back to where you cast this spell.\n\n***At Higher Levels.***If you cast this spell using a spell slot of 3nd level or higher, the duration of the spell increases by 48 hours for each slot level above 2nd.",
+		"description": "This spell lets you convince a beast that you mean it no harm. Choose a beast that you can see within range. It must see and hear you. If the beast's Intelligence is 4 or higher, the spell fails. Otherwise, the beast must succeed on a Wisdom saving throw or be charmed by you for the spell's duration. If you or one of your companions harms the target, the spells ends. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you can affect one additional beast for each slot level above 1st.",
 		"duration": "24 hours",
 		"level": 1,
 		"range": "30 feet",
 		"school": "Enchantment",
 		"ritual": false,
+		"name": "Animal Friendship",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a morsel of food"
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "By means of this spell, you use an animal to deliver a message. Choose a Tiny beast you can see within range, such as a squirrel, a blue jay, or a bat. You specify a location, which you must have visited, and a recipient who matches a general description, such as “a man or woman dressed in the uniform of the town guard” or “a red-haired dwarf wearing a pointed hat.” You also speak a message of up to twenty-five words. The target beast travels for the duration of the spell toward the specified location, covering about 50 miles per 24 hours for a flying messenger, or 25 miles for other animals.\n\nWhen the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. The messenger speaks only to a creature matching the description you gave. If the messenger doesn’t reach its destination before the spell ends, the message is lost, and the beast makes its way back to where you cast this spell.\n\n***At Higher Levels.***If you cast this spell using a spell slot of 3nd level or higher, the duration of the spell increases by 48 hours for each slot level above 2nd.",
+		"duration": "24 hours",
+		"level": 2,
+		"range": "30 feet",
+		"school": "Enchantment",
+		"ritual": true,
 		"name": "Animal Messenger",
 		"components": {
 			"verbal": true,
@@ -576,6 +592,22 @@
 	},
 	{
 		"castingTime": "action",
+		"description": "",
+		"duration": "Instantaneous",
+		"level": 1,
+		"range": "90 feet",
+		"school": "Evocation",
+		"ritual": false,
+		"name": "Chromatic Orb",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a diamond worth at least 50 gp"
+		}
+	},
+	{
+		"castingTime": "action",
 		"description": "A sphere of negative energy ripples out in a 60-foot radius sphere from a point within range. Each creature in that area must make a DC {DC} Constitution saving throw. A target takes 8d6 necrotic damage on a failed save, or half as much damage on a successful one.\n\n***At Higher Levels.*** When you cast this spell using a spell slot of 7th level or higher, the damage increases by 2d6 for each slot level above 6th.",
 		"duration": "Instantaneous",
 		"level": 6,
@@ -931,6 +963,21 @@
 			"somatic": true,
 			"concentration": true,
 			"material": "burning incense and bits of earth and wood mixed in water"
+		}
+	},
+	{
+		"castingTime": "1 reaction, which you take when you see a creature within 60 feet of you casting a spell",
+		"description": "",
+		"duration": "Instantaneous",
+		"level": 3,
+		"range": "60 feet",
+		"school": "Abjuration",
+		"ritual": false,
+		"name": "Counterspell",
+		"components": {
+			"verbal": false,
+			"somatic": true,
+			"concentration": false,
 		}
 	},
 	{
@@ -1614,6 +1661,38 @@
 		}
 	},
 	{
+		"castingTime": "1 action",
+		"description": "You touch a willing creature and put it into a cataleptic state that is indistinguishable from death. For the spell’s duration, or until you use an action to touch the target and dismiss the spell, the target appears dead to all outward inspection and to spells used to determine the target’s status. The target is blinded and incapacitated, and its speed drops to 0. The target has resistance to all damage except psychic damage. If the target is diseased or poisoned when you cast the spell, or becomes diseased or poisoned while under the spell’s effect, the disease and poison have no effect until the spell ends.",
+		"duration": "1 hour",
+		"level": 3,
+		"range": "Touch",
+		"school": "Necromancy",
+		"ritual": true,
+		"name": "Feign Death",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false
+			"material": "a pinch of graveyard dirt"
+		}
+	},
+	{
+		"castingTime": "1 hour",
+		"description": "You gain the service of a familiar, a spirit that takes an animal form you choose: bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, poisonous snake, fish (quipper), rat, raven, sea horse, spider, or weasel. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of a beast. Your familiar acts independently of you, but it always obeys your commands. In combat, it rolls its own initiative and acts on its own turn. A familiar can’t attack, but it can take other actions as normal. When the familiar drops to 0 hit points, it disappears, leaving behind no physical form. It reappears after you cast this spell again. While your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as an action, you can see through your familiar’s eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses that the familiar has. During this time, you are deaf and blind with regard to your own senses. As an action, you can temporarily dismiss your familiar. It disappears into a pocket dimension where it awaits your summons. Alternatively, you can dismiss it forever. As an action while it is temporarily dismissed, you can cause it to reappear in any unoccupied space within 30 feet of you. You can’t have more than one familiar at a time. If you cast this spell while you already have a familiar, you instead cause it to adopt a new form. Choose one of the forms from the above list. Your familiar transforms into the chosen creature. Finally, when you cast a spell with a range of touch, your familiar can deliver the spell as if it had cast the spell. Your familiar must be within 100 feet of you, and it must use its reaction to deliver the spell when you cast it. If the spell requires an attack roll, you use your action modifier for the roll.",
+		"duration": "Instantaneous",
+		"level": 1,
+		"range": "10 feet",
+		"school": "Conjuration",
+		"ritual": true,
+		"name": "Find Familiar",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false
+			"material": "0 gp worth of charcoal, incense, and herbs that must be consumed by fire in a brass brazier"
+		}
+	},
+	{
 		"castingTime": "10 minutes",
 		"description": "You summon a spirit that assumes the form of an unusually intelligent, strong, and loyal steed, creating a long-lasting bond with it. Appearing in an unoccupied space within range, the steed takes on a form that you choose, such as a warhorse, a pony, a camel, an elk, or a mastiff. (Your DM might allow other animals to be summoned as steeds.) The steed has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of its normal type. Additionally, if your steed has an Intelligence of 5 or less, its Intelligence becomes 6, and it gains the ability to understand one language of your choice that you speak.\n\nYour steed serves you as a mount, both in combat and out, and you have an instinctive bond with it that allows you to fight as a seamless unit. While mounted on your steed, you can make any spell you cast that targets only you also target your steed.\n\nWhen the steed drops to 0 hit points, it disappears, leaving behind no physical form. You can also dismiss your steed at any time as an action, causing it to disappear. In either case, casting this spell again summons the same steed, restored to its hit point maximum.\n\nWhile your steed is within 1 mile of you, you can communicate with it telepathically.\n\nYou can’t have more than one steed bonded by this spell at a time. As an action, you can release the steed from its bond at any time, causing it to disappear.",
 		"duration": "Instantaneous",
@@ -2003,6 +2082,37 @@
 			"somatic": true,
 			"concentration": false,
 			"material": "incense and powdered diamond worth at least 200 gp. which the spell consumes"
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "Up to ten berries appear in your hand and are infused with magic for the duration. A creature can use its action to eat one berry. Eating a berry restores 1 hit point, and the berry provides enough nourishment to sustain a creature for one day. The berries lose their potency if they have not been consumed within 24 hours of the casting of this spell. ",
+		"duration": "instantaneous",
+		"level": 1,
+		"range": "Touch",
+		"school": "Transmutation",
+		"ritual": false,
+		"name": "Goodberry",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a sprig of mistletoe"
+		}
+	},
+	{
+		"castingTime": "bonus action",
+		"description": "You conjure a vine that sprouts from the ground in an unoccupied space of your choice that you can see within range. When you cast this spell, you can direct the vine to lash out at a creature within 30 feet of it that you can see. That creature must succeed on a Dexterity saving throw or be pulled 20 feet directly toward the vine. Until the spell ends, you can direct the vine to lash out at the same creature or another one as a bonus action on each of your turns.",
+		"duration": "Concentration, up to 1 minute",
+		"level": 4,
+		"range": "30 feet",
+		"school": "Conjuration",
+		"ritual": false,
+		"name": "Grasping Vine",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
 		}
 	},
 	{
@@ -3594,6 +3704,20 @@
 	},
 	{
 		"castingTime": "action",
+		"description": "A black beam of enervating energy springs from your finger toward a creature within range. Make a ranged spell attack against the target. On a hit, the target deals only half damage with weapon attacks that use Strength until the spell ends. At the end of each of the target’s turns, it can make a Constitution saving throw against the spell. On a success, the spell ends.",
+		"duration": "up to 1 minute",
+		"level": 2,
+		"range": "60 feet",
+		"school": "Necromancy",
+		"ritual": false,
+		"name": "Ray of Enfeeblement",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": true
+		},
+	{
+		"castingTime": "action",
 		"description": "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 cold damage, and its speed is reduced by 10 feet until the start of your next turn.\n\nThe spell’s damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
 		"duration": "Instantaneous",
 		"level": 0,
@@ -4074,6 +4198,21 @@
 			"verbal": false,
 			"somatic": false,
 			"concentration": true
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
+		"duration": "Instantaneous",
+		"level": 0,
+		"range": "Touch",
+		"school": "Necromancy",
+		"ritual": false,
+		"name": "Spare The Dying",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false
 		}
 	},
 	{
@@ -4572,6 +4711,21 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": true
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "You unleash a string of insults laced with subtle enchantments at a creature you can see within range. If the target can hear you (though it need not understand you), it must succeed on a Wisdom saving throw or take 1d4 psychic damage and have disadvantage on the next attack roll it makes before the end of its next turn. This spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4).",
+		"duration": "Instantaneous",
+		"level": 0,
+		"range": "60 feet",
+		"school": "Enchantment",
+		"ritual": false,
+		"name": "Vicious Mockery",
+		"components": {
+			"verbal": true,
+			"somatic": false,
+			"concentration": false
 		}
 	},
 	{
