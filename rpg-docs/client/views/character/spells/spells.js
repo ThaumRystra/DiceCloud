@@ -279,23 +279,23 @@ Template.spells.events({
 						collection: "SpellLists",
 					};
 					spell.prepared = "prepared";
-					Spells.insert(spell);
+					let insertedSpellId = Spells.insert(spell);
 					// Copy over attacks and effects
 					_.each(rawSpell.attacks, (attack) => {
 						if (!("attackBonus" in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
 						attack.charId = charId;
-						attack.parent = {id: spellId, collection: "Spells"};
+						attack.parent = {id: insertedSpellId, collection: "Spells"};
 						Attacks.insert(attack);
 					});
 					_.each(rawSpell.effects, (effect) => {
 						effect.charId = charId;
-						effect.parent = {id: spellId, collection: "Spells"};
+						effect.parent = {id: insertedSpellId, collection: "Spells"};
 						Effects.insert(effect);
 					});
 
 					_.each(rawSpell.buffs, (buff) => {
 						buff.charId = charId;
-						buff.parent = {id: spellId, collection: "Spells"};
+						buff.parent = {id: insertedSpellId, collection: "Spells"};
 						buffId = Buffs.insert(buff);
 
 						_.each(buff.attacks, (attack) => {
