@@ -3,13 +3,12 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-iron:router
 accounts-password@1.4.0
 accounts-ui@1.1.9
 random@1.0.10
 dburles:collection-helpers
 reactive-var@1.0.11
-underscore@1.0.10
+underscore
 aldeed:collection2
 matb33:collection-hooks
 zimme:collection-softremovable
@@ -54,3 +53,4 @@ google-config-ui
 dynamic-import
 ddp-rate-limiter
 rate-limit
+iron:router
