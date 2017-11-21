@@ -1,10 +1,17 @@
+Template.profile.onCreated(function(){
+	this.showApiKey = new ReactiveVar(false);
+});
+
 Template.profile.helpers({
 	profileName: function() {
 		var user = Meteor.user();
 		return user.profile && user.profile.username ||
 			user.username ||
 			"Tap to set username";
-	}
+	},
+	showApiKey: function(){
+		return Template.instance().showApiKey.get();
+	},
 });
 
 Template.profile.events({
@@ -24,5 +31,12 @@ Template.profile.events({
 			template: "",
 			data: {},
 		});
+	},
+	"click .showApiKey": function(event, instance){
+		instance.showApiKey.set(!instance.showApiKey.get());
+	},
+	"click .generateMyApiKey": function(event, instance){
+		Meteor.call("generateMyApiKey");
+		instance.showApiKey.set(true);
 	},
 });
