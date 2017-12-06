@@ -19,4 +19,10 @@ Template.raceDialog.helpers({
 		var char = Characters.findOne(this.charId, {fields: {color: 1}});
 		if (char) return getColorClass(char.color);
 	},
+	stepComplete: function(){
+		return Session.get("newUserExperienceStep") > 1;
+	},
+	showNewUserExperience: function(){
+		return Session.get("newUserExperienceStep") >= 1;
+	},
 });

@@ -267,9 +267,11 @@ Template.spells.events({
 				//loop through all returned spells
 				_.each(resultArray, (rawSpell, index) =>{
 					// Make the library spell into a regular spell
-					let spell = _.omit(rawSpell, "library", "attacks", "effects");
+					let spell = _.omit(rawSpell, "_id", "library", "attacks", "effects");
+					// Use the ID generated earlier for the first spell so we
+					// can animate to it
 					if (index == 0) {
-						spell._id = spellId; //only do this for the first spell added
+						spell._id = spellId;
 					}
 					spell.charId = charId;
 					spell.parent = {
@@ -277,23 +279,23 @@ Template.spells.events({
 						collection: "SpellLists",
 					};
 					spell.prepared = "prepared";
-					Spells.insert(spell);
+					let insertedSpellId = Spells.insert(spell);
 					// Copy over attacks and effects
 					_.each(rawSpell.attacks, (attack) => {
 						if (!("attackBonus" in attack)) {attack.attackBonus = "attackBonus"} //if no attack bonus provided, use spell list's
 						attack.charId = charId;
-						attack.parent = {id: spellId, collection: "Spells"};
+						attack.parent = {id: insertedSpellId, collection: "Spells"};
 						Attacks.insert(attack);
 					});
 					_.each(rawSpell.effects, (effect) => {
 						effect.charId = charId;
-						effect.parent = {id: spellId, collection: "Spells"};
+						effect.parent = {id: insertedSpellId, collection: "Spells"};
 						Effects.insert(effect);
 					});
 
 					_.each(rawSpell.buffs, (buff) => {
 						buff.charId = charId;
-						buff.parent = {id: spellId, collection: "Spells"};
+						buff.parent = {id: insertedSpellId, collection: "Spells"};
 						buffId = Buffs.insert(buff);
 
 						_.each(buff.attacks, (attack) => {

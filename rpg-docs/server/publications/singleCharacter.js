@@ -35,9 +35,16 @@ Meteor.publish("singleCharacter", function(characterId){
 	}
 });
 
+DDPRateLimiter.addRule({
+	name: "singleCharacter",
+	type: "subscription",
+	userId(){ return true; },
+	connectionId(){ return true; },
+}, 8, 5000);
+
 Meteor.publish("singleCharacterName", function(characterId){
 	userId = this.userId;
-	var char = Characters.findOne({
+	return Characters.find({
 		_id: characterId,
 		$or: [
 			{readers: userId},
@@ -45,8 +52,7 @@ Meteor.publish("singleCharacterName", function(characterId){
 			{owner: userId},
 			{"settings.viewPermission": "public"},
 		],
+	}, {
+		fields:{"name": 1}
 	});
-	if (char) {
-		return Characters.find(characterId, {fields:{"name": 1}});
-	}
 });

@@ -10,7 +10,7 @@ Template.deleteCharacterConfirmation.helpers({
 		if (Template.instance().canDelete.get()) {
 			return "background: #d23f31; color: white;";
 		}
-	}
+	},
 });
 
 Template.deleteCharacterConfirmation.events({
@@ -20,9 +20,7 @@ Template.deleteCharacterConfirmation.events({
 	},
 	"click #deleteButton": function(event, instance) {
 		if (instance.find("#nameInput").value === this.name) {
-			popDialogStack();
-			Router.go("/characterList");
-			Characters.remove(this._id);
+			popDialogStack(true);
 		}
 	},
 	"click .cancelButton": function(event, instance){

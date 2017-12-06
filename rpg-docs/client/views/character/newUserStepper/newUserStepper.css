@@ -1,0 +1,12 @@
+.newUserStepper {
+	height: 180px !important;
+}
+
+.newUserStepper paper-step .invalid-step-message {
+	color: #d13b2e;
+	visibility: hidden;
+}
+
+.newUserStepper paper-step[invalid] .invalid-step-message {
+	visibility: visible;
+}

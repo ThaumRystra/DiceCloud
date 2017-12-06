@@ -27,7 +27,7 @@
 										{{#if verified}}
 											<span>
 												<iron-icon icon="check"></iron-icon>
-												<paper-tooltip>Verified</paper-tooltip>
+												{{#simpleTooltip}}Verified{{/simpleTooltip}}
 											</span>
 										{{/if}}
 									</div>
@@ -35,9 +35,36 @@
 							</td>
 							<td></td>
 						</tr>
+						<tr>
+							<td colspan="2">
+								<a href="/change-password">
+									<paper-button>Change password</paper-button>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								API Key
+							</td>
+							<td class="apiKey">
+								{{#if apiKey}}
+									{{#unless showApiKey}}
+										<paper-button class="showApiKey">
+											Show
+										</paper-button>
+									{{else}}
+										{{apiKey}}
+									{{/unless}}
+								{{else}}
+									<paper-button class="generateMyApiKey">
+										Generate
+									</paper-button>
+								{{/if}}
+							</td>
+						</tr>
 					</table>
 					<div style="max-width: 250px">
-						{{> atForm}}
+						{{> atForm state="signIn"}}
 					</div>
 					{{> atNavButton }}
 				</paper-material>

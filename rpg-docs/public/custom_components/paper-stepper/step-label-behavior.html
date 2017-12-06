@@ -1,0 +1,58 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+
+<script>
+
+window.Stepper = window.Stepper || {};
+
+  /*
+  * @polymerBehavior Stepper.StepLabelBehavior
+  */
+  Stepper.StepLabelBehavior = {
+
+    properties: {
+      icon: {
+        type: String,
+        computed: '_computeIcon(saved, editable)'
+      },
+      opened: {
+        type: Boolean,
+        reflectToAttribute: true
+      },
+      selectable: {
+        type: Boolean,
+        reflectToAttribute: true
+      },
+      editable: {
+        type: Boolean,
+        reflectToAttribute: true,
+      },
+      label: {
+        type: String,
+        notify: true
+      },
+      optional: {
+        type: Boolean,
+        notify: true
+      },
+      saved: {
+        type: Boolean,
+        reflectToAttribute: true
+      },
+      index: {
+        type: Number
+      },
+      stepperData: {
+       type: Object
+      }
+    },
+
+    _computeIcon: function(saved, editable) {
+      return saved ? ( editable ? 'editor:mode-edit' : 'done' ) : '';
+    },
+
+    _computeIsIconBadge: function(icon) {
+      return icon.length > 0;
+    }
+
+  };
+</script>
