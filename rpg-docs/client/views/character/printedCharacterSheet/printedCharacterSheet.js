@@ -14,4 +14,16 @@ Template.printedCharacterSheet.helpers({
 	classes: function(){
 		return Classes.find({charId: this._id}, {sort: {createdAt: 1}});
 	},
+	weaponProfs: function(){
+		var profs = Proficiencies.find({charId: this._id, type: "weapon"});
+		return removeDuplicateProficiencies(profs);
+	},
+	armorProfs: function(){
+		var profs = Proficiencies.find({charId: this._id, type: "armor"});
+		return removeDuplicateProficiencies(profs);
+	},
+	toolProfs: function(){
+		var profs = Proficiencies.find({charId: this._id, type: "tool"});
+		return removeDuplicateProficiencies(profs);
+	},
 });

@@ -15,7 +15,7 @@
 							{{/each}}
 						</div>
 						<div>
-							{{alignment}} {{gender}} {{race}}
+							{{character.alignment}} {{character.gender}} {{character.race}}
 						</div>
 					</div>
 				</div>
@@ -23,12 +23,12 @@
 					<div class="col1 padded flex layout vertical">
 						<div class="layout horizontal">
 							<div class="abilities padded layout vertical justified">
-								{{> printedAbility ability="strength"     title="Strength"     color="red"}}
-								{{> printedAbility ability="dexterity"    title="Dexterity"    color="indigo"}}
-								{{> printedAbility ability="constitution" title="Constitution" color="green"}}
-								{{> printedAbility ability="intelligence" title="Intelligence" color="deep-orange"}}
-								{{> printedAbility ability="wisdom"       title="Wisdom"       color="purple"}}
-								{{> printedAbility ability="charisma"     title="Charisma"     color="pink"}}
+								{{> printedAbility ability="strength"     title="Strength"}}
+								{{> printedAbility ability="dexterity"    title="Dexterity"}}
+								{{> printedAbility ability="constitution" title="Constitution"}}
+								{{> printedAbility ability="intelligence" title="Intelligence"}}
+								{{> printedAbility ability="wisdom"       title="Wisdom"}}
+								{{> printedAbility ability="charisma"     title="Charisma"}}
 							</div>
 							<div class="padded flex layout vertical">
 								<div class="proficiencyBonus">
@@ -75,20 +75,42 @@
 							</div>
 						</div>
 						<div class="proficiencies">
-
+							<div class="paper-font-subhead">
+								Proficiencies
+							</div>
+							<div>
+								{{#if weaponProfs.length}}
+									<div class="paper-font-subhead">Weapons</div>
+								{{/if}}
+								{{#each weaponProfs}}
+									{{> printedProficiency}}
+								{{/each}}
+								{{#if armorProfs.length}}
+									<div class="paper-font-subhead">Armor</div>
+								{{/if}}
+								{{#each armorProfs}}
+									{{> printedProficiency}}
+								{{/each}}
+								{{#if toolProfs.length}}
+									<div class="paper-font-subhead">Tools</div>
+								{{/if}}
+								{{#each toolProfs}}
+									{{> printedProficiency}}
+								{{/each}}
+							</div>
 						</div>
 					</div>
 					<div class="col2 padded flex">
 						<div class="layout vertical">
 							<div class="layout horizontal justified">
 								<div class="armor">
-									{{> printedSquareStat stat="armor" name="Armor Class" color="teal"}}
+									{{> printedSquareStat stat="armor" name="Armor Class"}}
 								</div>
 								<div class="inititive">
-									{{> printedSquareStat stat="initiative" name="Initiative" color="teal"}}
+									{{> printedSquareStat stat="initiative" name="Initiative" isSkill="true"}}
 								</div>
 								<div class="speed">
-									{{> printedSquareStat stat="speed" name="Speed" color="teal"}}
+									{{> printedSquareStat stat="speed" name="Speed"}}
 								</div>
 							</div>
 							<div class="hitpoints padded layout vertical">
@@ -97,13 +119,35 @@
 									<!-- Space for writing-->
 								</div>
 								<div class="layout horizontal end-justified">
-									/{{characterCalculate "attributeValue" _id "hitPoints"}}
+									/{{characterCalculate "attributeBase" _id "hitPoints"}}
 								</div>
 							</div>
-							<div class="tempHitpoints"></div>
-							<div class="layout horizontal">
-								<div class="hitDice"></div>
-								<div class="deathSaves"></div>
+							<div class="tempHitpoints padded layout vertical">
+								<div>Temporary Hit Points</div>
+								<div style="width: 3cm; height: 2cm;">
+									<!-- Space for writing-->
+								</div>
+							</div>
+							<div class="hitDice">
+								Hit Dice
+							</div>
+							<div class="deathSaves layout vertical">
+								<div class="layout horizontal center">
+									<div class="flex">
+										Successes
+									</div>
+									<iron-icon icon="radio-button-unchecked"></iron-icon>
+									<iron-icon icon="radio-button-unchecked"></iron-icon>
+									<iron-icon icon="radio-button-unchecked"></iron-icon>
+								</div>
+								<div class="layout horizontal center">
+									<div class="flex">
+										Failures
+									</div>
+									<iron-icon icon="radio-button-unchecked"></iron-icon>
+									<iron-icon icon="radio-button-unchecked"></iron-icon>
+									<iron-icon icon="radio-button-unchecked"></iron-icon>
+								</div>
 							</div>
 						</div>
 						<div class="attacks"></div>

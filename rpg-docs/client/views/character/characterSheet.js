@@ -238,4 +238,7 @@ Template.characterSheet.events({
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
+	"click #printButton": function(event, instance){
+		print();
+	},
 });
