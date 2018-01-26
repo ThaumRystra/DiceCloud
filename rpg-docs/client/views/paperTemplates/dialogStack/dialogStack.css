@@ -68,7 +68,7 @@
 	transform-origin: top left;
 	transition: top 400ms ease, left 400ms ease;
 	z-index: 3;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .dialog-stack .dialog .testButton {
