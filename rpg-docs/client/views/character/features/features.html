@@ -134,7 +134,10 @@
 				{{title}}
 			</div>
 			<div class="layout horizontal center">
-				<paper-button class="resourceReset" disabled={{cantIncrement}}>Reset</paper-button>
+				<div class="layout vertical">
+					<paper-button class="resourceResetMax" disabled={{cantIncrement}}>Reset</paper-button>
+					<paper-button class="resourceResetZero" disabled={{cantDecrement}}>Clear</paper-button>
+				</div>
 			</div>
 		</paper-material>
 	</div>
