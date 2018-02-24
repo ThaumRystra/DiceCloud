@@ -129,6 +129,11 @@ Template.resource.helpers({
 });
 
 Template.resource.events({
+	"click .resourceReset": function(event){
+		var modifier = {$set: {}};
+		modifier.$set[this.name + ".adjustment"] = 0;
+		Characters.update(this.char._id, modifier, {validate: false});
+	},
 	"click .resourceUp": function(event){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var base = Characters.calculate.attributeBase(this.char._id, this.name);
