@@ -20,6 +20,41 @@
     overflow: hidden;
 }
 
+.double-border {
+	position: relative;
+	margin: 16px;
+}
+
+.double-border::after {
+	content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 28px solid transparent;
+    border-image-source: url(/png/doubleLineImageBorder110x126.png);
+    border-image-slice: 110 126;
+    border-image-repeat: stretch;
+    border-image-outset: 11px 10px;
+    box-sizing: content-box;
+}
+
+.shield-background {
+	background: url(/png/shieldBorder.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 102px;
+    height: 118px;
+	-webkit-print-color-adjust: exact;
+}
+
+.shield-background .paper-font-subhead {
+	width: 80px;
+    text-align: center;
+	line-height: 1.1;
+}
+
 @media screen {
 	.printed {
 		display: none;
