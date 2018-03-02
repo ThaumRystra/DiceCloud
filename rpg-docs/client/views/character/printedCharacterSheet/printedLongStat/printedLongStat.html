@@ -1,10 +1,12 @@
 <template name="printedLongStat">
-	<div class="printedLongStat layout horizontal">
-		<div class="numbers paper-font-display1">
-				{{#if isSkill}}
-					{{prefix}}{{skillMod}}
-				{{else}}
-					{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
+	<div class="printedLongStat layout horizontal double-border">
+		<div class="numbers paper-font-display1 octogon-border">
+				{{#if stat}}
+					{{#if isSkill}}
+						{{prefix}}{{skillMod}}
+					{{else}}
+						{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
+					{{/if}}
 				{{/if}}
 		</div>
 		<div class="paper-font-subhead title flex layout horizontal center">

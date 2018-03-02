@@ -1,0 +1,10 @@
+.printedSkillRow {
+	height: 24px;
+	min-width: 140px;
+}
+
+.printedSkillRow .skill-mod {
+	width: 36px;
+    text-align: center;
+	font-size: 3.5mm;
+}
