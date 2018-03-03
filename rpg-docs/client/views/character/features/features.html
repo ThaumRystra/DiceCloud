@@ -133,6 +133,12 @@
 			<div class="right clickable flex layout horizontal center">
 				{{title}}
 			</div>
+			<div class="layout horizontal center">
+				<div class="layout vertical">
+					<paper-button class="resourceResetMax" disabled={{cantIncrement}}>Reset</paper-button>
+					<paper-button class="resourceResetZero" disabled={{cantDecrement}}>Clear</paper-button>
+				</div>
+			</div>
 		</paper-material>
 	</div>
 	{{/if}}

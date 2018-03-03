@@ -111,6 +111,17 @@ Template.resource.helpers({
 });
 
 Template.resource.events({
+	"click .resourceResetMax": function(event){
+		var modifier = {$set: {}};
+		modifier.$set[this.name + ".adjustment"] = 0;
+		Characters.update(this.char._id, modifier, {validate: false});
+	},
+	"click .resourceResetZero": function(event){
+		var base = Characters.calculate.attributeBase(this.char._id, this.name);
+		var modifier = {$set: {}};
+		modifier.$set[this.name + ".adjustment"] = -base;
+		Characters.update(this.char._id, modifier, {validate: false});
+	},
 	"click .resourceUp": function(event){
 		var value = Characters.calculate.attributeValue(this.char._id, this.name);
 		var base = Characters.calculate.attributeBase(this.char._id, this.name);
