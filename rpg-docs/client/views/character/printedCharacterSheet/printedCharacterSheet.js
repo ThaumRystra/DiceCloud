@@ -27,3 +27,12 @@ Template.printedCharacterSheet.helpers({
 		return removeDuplicateProficiencies(profs);
 	},
 });
+
+Template.printedCharacterSheet.events({
+	"click .printButton": function(event, instance){
+		print();
+	},
+	"click .backButton": function(event, instance){
+		history && history.back();
+	},
+});

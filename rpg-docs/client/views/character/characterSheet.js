@@ -168,6 +168,9 @@ Template.characterSheet.helpers({
 	printing: function(){
 		return Session.get("isPrinting");
 	},
+	printUrl: function(){
+		return `/character/${this._id}/${this.name || "-"}/print`
+	},
 	selectedTab: function(){
 		return getTab(this._id);
 	},
@@ -184,8 +187,8 @@ Template.characterSheet.helpers({
 		const step = Session.get("newUserExperienceStep");
 		if (selected == tab) return false;
 		return (tab === 1 && step === 0) ||
-			   (tab === 5 && step === 1) ||
-			   (tab === 0 && step === 2);
+			(tab === 5 && step === 1) ||
+			(tab === 0 && step === 2);
 	},
 });
 
@@ -237,8 +240,5 @@ Template.characterSheet.events({
 			template: "unshareCharacterConfirmation",
 			element: event.currentTarget.parentElement.parentElement,
 		});
-	},
-	"click #printButton": function(event, instance){
-		print();
 	},
 });

@@ -1,207 +1,223 @@
 <template name="printedCharacterSheet">
-	<div class="printed">
-		<div class="page">
-			<div class="layout vertical">
-				<div class="layout horizontal" style="margin-bottom: 6mm">
-					<div class="characterName paper-font-title" style="margin-right: 4mm">
-						{{name}}
-					</div>
-					<div>
-						<div>
-							{{#each classes}}
-								<span style="margin-right: 16px;">
-									{{name}}&nbsp;{{level}}
-								</span>
-							{{/each}}
+<div class="fit printed-character-sheet layout vertical">
+	<app-header fixed effects="waterfall">
+		<app-toolbar class="medium {{colorClass}} layout horizontal center" style="z-index: 2;">
+			<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+			<paper-icon-button icon="arrow-back" class="backButton"></paper-icon-button>
+			<div class="flex character-name">
+				{{name}}
+			</div>
+			<div>
+				<paper-icon-button icon="print" class="printButton"></paper-icon-button>
+				{{#simpleTooltip}} Print {{/simpleTooltip}}
+			</div>
+		</app-toolbar>
+	</app-header>
+	<div class="printed flex">
+		<div class="page-holder">
+			<div class="page">
+				<div class="layout vertical">
+					<div class="layout horizontal" style="margin-bottom: 6mm">
+						<div class="characterName paper-font-title" style="margin-right: 4mm">
+							{{name}}
 						</div>
 						<div>
-							{{character.alignment}} {{character.gender}} {{character.race}}
-						</div>
-					</div>
-				</div>
-				<div class="layout horizontal">
-					<div class="col1 flex layout vertical">
-						<div class="initiative" style="margin-bottom: 2mm;">
-							{{> printedLongStat stat="" name="Inspiration" prefix=""}}
-						</div>
-						<div class="proficiencyBonus" style="margin-bottom: 4mm;">
-							{{> printedLongStat stat="proficiencyBonus" name="Proficiency Bonus" prefix="+"}}
-						</div>
-						<div class="layout horizontal">
-							<div class="abilities layout vertical justified" style="margin-right: 4mm;">
-								{{> printedAbility ability="strength"     title="Strength"}}
-								{{> printedAbility ability="dexterity"    title="Dexterity"}}
-								{{> printedAbility ability="constitution" title="Constitution"}}
-								{{> printedAbility ability="intelligence" title="Intelligence"}}
-								{{> printedAbility ability="wisdom"       title="Wisdom"}}
-								{{> printedAbility ability="charisma"     title="Charisma"}}
-							</div>
-							<div class="flex layout vertical">
-								<div class="saves double-border" style="margin-bottom: 2mm">
-									<div>
-										{{> printedSkillRow name="Strength"     skill="strengthSave"}}
-										{{> printedSkillRow name="Dexterity"    skill="dexteritySave"}}
-										{{> printedSkillRow name="Constitution" skill="constitutionSave"}}
-										{{> printedSkillRow name="Intelligence" skill="intelligenceSave"}}
-										{{> printedSkillRow name="Wisdom"       skill="wisdomSave"}}
-										{{> printedSkillRow name="Charisma"     skill="charismaSave"}}
-									</div>
-									<div class="paper-font-subhead layout vertical center">
-										Saving Throws
-									</div>
-								</div>
-								<div class="skills double-border">
-									<div>
-										{{> printedSkillRow name="Acrobatics"      skill="acrobatics"}}
-										{{> printedSkillRow name="Animal Handling" skill="animalHandling"}}
-										{{> printedSkillRow name="Arcana"          skill="arcana"}}
-										{{> printedSkillRow name="Athletics"       skill="athletics"}}
-										{{> printedSkillRow name="Deception"       skill="deception"}}
-										{{> printedSkillRow name="History"         skill="history"}}
-										{{> printedSkillRow name="Insight"         skill="insight"}}
-										{{> printedSkillRow name="Intimidation"    skill="intimidation"}}
-										{{> printedSkillRow name="Investigation"   skill="investigation"}}
-										{{> printedSkillRow name="Medicine"        skill="medicine"}}
-										{{> printedSkillRow name="Nature"          skill="nature"}}
-										{{> printedSkillRow name="Perception"      skill="perception" showPassive="true"}}
-										{{> printedSkillRow name="Performance"     skill="performance"}}
-										{{> printedSkillRow name="Persuasion"      skill="persuasion"}}
-										{{> printedSkillRow name="Religion"        skill="religion"}}
-										{{> printedSkillRow name="Sleight of Hand" skill="sleightOfHand"}}
-										{{> printedSkillRow name="Stealth"         skill="stealth"}}
-										{{> printedSkillRow name="Survival"        skill="survival"}}
-									</div>
-									<div class="paper-font-subhead layout vertical center">
-										Skills
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="proficiencies double-border" style="margin-top: 4mm">
-							<div class="paper-font-subhead layout vertical center">
-								Proficiencies
+							<div>
+								{{#each classes}}
+									<span style="margin-right: 16px;">
+										{{name}}&nbsp;{{level}}
+									</span>
+								{{/each}}
 							</div>
 							<div>
-								{{#if weaponProfs.length}}
-									<div class="paper-font-subhead">Weapons</div>
-								{{/if}}
-								{{#each weaponProfs}}
-									{{> printedProficiency}}
-								{{/each}}
-								{{#if armorProfs.length}}
-									<div class="paper-font-subhead">Armor</div>
-								{{/if}}
-								{{#each armorProfs}}
-									{{> printedProficiency}}
-								{{/each}}
-								{{#if toolProfs.length}}
-									<div class="paper-font-subhead">Tools</div>
-								{{/if}}
-								{{#each toolProfs}}
-									{{> printedProficiency}}
-								{{/each}}
+								{{character.alignment}} {{character.gender}} {{character.race}}
 							</div>
 						</div>
 					</div>
-					<div class="col2 flex" style="margin-left: 4mm; margin-right: 4mm;">
-						<div class="layout vertical">
-							<div class="layout horizontal justified" style="margin-bottom: 2mm">
-								<div class="armor">
-									{{> printedSquareStat stat="armor" name="Armor Class" class="shield-background"}}
-								</div>
-								<div class="inititive">
-									{{> printedSquareStat stat="initiative" name="Initiative" isSkill="true" class="double-border"}}
-								</div>
-								<div class="speed">
-									{{> printedSquareStat stat="speed" name="Speed" class="double-border"}}
-								</div>
+					<div class="layout horizontal">
+						<div class="col1 flex layout vertical">
+							<div class="initiative" style="margin-bottom: 2mm;">
+								{{> printedLongStat stat="" name="Inspiration" prefix=""}}
 							</div>
-							<div class="hitpoints layout vertical double-border" style="margin-bottom: 2mm;">
-								<div>
-									Hit point maximum:
-									<span class="paper-font-subhead">
-										{{characterCalculate "attributeBase" _id "hitPoints"}}
-									</span>
-								</div>
-								<div class="flex" style="width: 3cm; height: 2cm;">
-									<!-- Space for writing -->
-								</div>
-								<div class="layout vertical center paper-font-subhead">
-									Hit Points
-								</div>
-							</div>
-							<div class="tempHitpoints layout vertical  double-border" style="margin-bottom: 2mm;">
-								<div style="width: 3cm; height: 2cm;">
-									<!-- Space for writing -->
-								</div>
-								<div  class="layout vertical center paper-font-subhead">
-									Temporary Hit Points
-								</div>
+							<div class="proficiencyBonus" style="margin-bottom: 4mm;">
+								{{> printedLongStat stat="proficiencyBonus" name="Proficiency Bonus" prefix="+"}}
 							</div>
 							<div class="layout horizontal">
-								<div class="hitDice double-border layout vertical" style="margin-right: 2mm;">
+								<div class="abilities layout vertical justified" style="margin-right: 4mm;">
+									{{> printedAbility ability="strength"     title="Strength"}}
+									{{> printedAbility ability="dexterity"    title="Dexterity"}}
+									{{> printedAbility ability="constitution" title="Constitution"}}
+									{{> printedAbility ability="intelligence" title="Intelligence"}}
+									{{> printedAbility ability="wisdom"       title="Wisdom"}}
+									{{> printedAbility ability="charisma"     title="Charisma"}}
+								</div>
+								<div class="flex layout vertical">
+									<div class="saves double-border" style="margin-bottom: 2mm">
+										<div>
+											{{> printedSkillRow name="Strength"     skill="strengthSave"}}
+											{{> printedSkillRow name="Dexterity"    skill="dexteritySave"}}
+											{{> printedSkillRow name="Constitution" skill="constitutionSave"}}
+											{{> printedSkillRow name="Intelligence" skill="intelligenceSave"}}
+											{{> printedSkillRow name="Wisdom"       skill="wisdomSave"}}
+											{{> printedSkillRow name="Charisma"     skill="charismaSave"}}
+										</div>
+										<div class="paper-font-subhead layout vertical center">
+											Saving Throws
+										</div>
+									</div>
+									<div class="skills double-border">
+										<div>
+											{{> printedSkillRow name="Acrobatics"      skill="acrobatics"}}
+											{{> printedSkillRow name="Animal Handling" skill="animalHandling"}}
+											{{> printedSkillRow name="Arcana"          skill="arcana"}}
+											{{> printedSkillRow name="Athletics"       skill="athletics"}}
+											{{> printedSkillRow name="Deception"       skill="deception"}}
+											{{> printedSkillRow name="History"         skill="history"}}
+											{{> printedSkillRow name="Insight"         skill="insight"}}
+											{{> printedSkillRow name="Intimidation"    skill="intimidation"}}
+											{{> printedSkillRow name="Investigation"   skill="investigation"}}
+											{{> printedSkillRow name="Medicine"        skill="medicine"}}
+											{{> printedSkillRow name="Nature"          skill="nature"}}
+											{{> printedSkillRow name="Perception"      skill="perception" showPassive="true"}}
+											{{> printedSkillRow name="Performance"     skill="performance"}}
+											{{> printedSkillRow name="Persuasion"      skill="persuasion"}}
+											{{> printedSkillRow name="Religion"        skill="religion"}}
+											{{> printedSkillRow name="Sleight of Hand" skill="sleightOfHand"}}
+											{{> printedSkillRow name="Stealth"         skill="stealth"}}
+											{{> printedSkillRow name="Survival"        skill="survival"}}
+										</div>
+										<div class="paper-font-subhead layout vertical center">
+											Skills
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="proficiencies double-border" style="margin-top: 4mm">
+								<div class="paper-font-subhead layout vertical center">
+									Proficiencies
+								</div>
+								<div>
+									{{#if weaponProfs.length}}
+										<div class="paper-font-subhead">Weapons</div>
+									{{/if}}
+									{{#each weaponProfs}}
+										{{> printedProficiency}}
+									{{/each}}
+									{{#if armorProfs.length}}
+										<div class="paper-font-subhead">Armor</div>
+									{{/if}}
+									{{#each armorProfs}}
+										{{> printedProficiency}}
+									{{/each}}
+									{{#if toolProfs.length}}
+										<div class="paper-font-subhead">Tools</div>
+									{{/if}}
+									{{#each toolProfs}}
+										{{> printedProficiency}}
+									{{/each}}
+								</div>
+							</div>
+						</div>
+						<div class="col2 flex" style="margin-left: 4mm; margin-right: 4mm;">
+							<div class="layout vertical">
+								<div class="layout horizontal justified" style="margin-bottom: 2mm">
+									<div class="armor">
+										{{> printedSquareStat stat="armor" name="Armor Class" class="shield-background"}}
+									</div>
+									<div class="inititive">
+										{{> printedSquareStat stat="initiative" name="Initiative" isSkill="true" class="double-border"}}
+									</div>
+									<div class="speed">
+										{{> printedSquareStat stat="speed" name="Speed" class="double-border"}}
+									</div>
+								</div>
+								<div class="hitpoints layout vertical double-border" style="margin-bottom: 2mm;">
 									<div>
-										Total:
+										Hit point maximum:
 										<span class="paper-font-subhead">
-											Total goes here
+											{{characterCalculate "attributeBase" _id "hitPoints"}}
 										</span>
 									</div>
-									<div class="flex">
+									<div class="flex" style="width: 3cm; height: 2cm;">
 										<!-- Space for writing -->
 									</div>
-									<div class="paper-font-subhead layout vertical center">
-										Hit Dice
+									<div class="layout vertical center paper-font-subhead">
+										Hit Points
 									</div>
 								</div>
-								<div class="deathSaves layout vertical  double-border">
-									<div class="layout horizontal center">
-										<div class="flex layout vertical end" style="margin-right: 1mm;">
-											Successes
-										</div>
-										<iron-icon icon="radio-button-unchecked"></iron-icon>
-										<iron-icon icon="radio-button-unchecked"></iron-icon>
-										<iron-icon icon="radio-button-unchecked"></iron-icon>
+								<div class="tempHitpoints layout vertical  double-border" style="margin-bottom: 2mm;">
+									<div style="width: 3cm; height: 2cm;">
+										<!-- Space for writing -->
 									</div>
-									<div class="layout horizontal center">
-										<div class="flex layout vertical end" style="margin-right: 1mm;">
-											Failures
-										</div>
-										<iron-icon icon="radio-button-unchecked"></iron-icon>
-										<iron-icon icon="radio-button-unchecked"></iron-icon>
-										<iron-icon icon="radio-button-unchecked"></iron-icon>
+									<div  class="layout vertical center paper-font-subhead">
+										Temporary Hit Points
 									</div>
-									<div class="paper-font-subhead layout vertical center" style="margin-top: 4mm;">
-										Death Saves
+								</div>
+								<div class="layout horizontal">
+									<div class="hitDice double-border layout vertical" style="margin-right: 2mm;">
+										<div>
+											Total:
+											<span class="paper-font-subhead">
+												Total goes here
+											</span>
+										</div>
+										<div class="flex">
+											<!-- Space for writing -->
+										</div>
+										<div class="paper-font-subhead layout vertical center">
+											Hit Dice
+										</div>
+									</div>
+									<div class="deathSaves layout vertical  double-border">
+										<div class="layout horizontal center">
+											<div class="flex layout vertical end" style="margin-right: 1mm;">
+												Successes
+											</div>
+											<iron-icon icon="radio-button-unchecked"></iron-icon>
+											<iron-icon icon="radio-button-unchecked"></iron-icon>
+											<iron-icon icon="radio-button-unchecked"></iron-icon>
+										</div>
+										<div class="layout horizontal center">
+											<div class="flex layout vertical end" style="margin-right: 1mm;">
+												Failures
+											</div>
+											<iron-icon icon="radio-button-unchecked"></iron-icon>
+											<iron-icon icon="radio-button-unchecked"></iron-icon>
+											<iron-icon icon="radio-button-unchecked"></iron-icon>
+										</div>
+										<div class="paper-font-subhead layout vertical center" style="margin-top: 4mm;">
+											Death Saves
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="attacks"></div>
+							<div class="attacks"></div>
 
-					</div>
-					<div class="col3 flex">
-						<div class="traits double-border">
-							{{#markdown}}{{evaluateShortString character._id character.personality}}{{/markdown}}
-							<div class="paper-font-subhead layout vertical center">
-								Personality traits
-							</div>
 						</div>
-						<div class="ideals double-border" style="margin-top: 2mm">
-							{{#markdown}}{{evaluateShortString character._id character.ideals}}{{/markdown}}
-							<div class="paper-font-subhead layout vertical center">
-								Ideals
+						<div class="col3 flex">
+							<div class="traits double-border">
+								{{#markdown}}{{evaluateShortString character._id character.personality}}{{/markdown}}
+								<div class="paper-font-subhead layout vertical center">
+									Personality traits
+								</div>
 							</div>
-						</div>
-						<div class="bonds double-border" style="margin-top: 2mm">
-							{{#markdown}}{{evaluateShortString character._id character.bonds}}{{/markdown}}
-							<div class="paper-font-subhead layout vertical center">
-								Bonds
+							<div class="ideals double-border" style="margin-top: 2mm">
+								{{#markdown}}{{evaluateShortString character._id character.ideals}}{{/markdown}}
+								<div class="paper-font-subhead layout vertical center">
+									Ideals
+								</div>
 							</div>
-						</div>
-						<div class="flaws double-border" style="margin-top: 2mm">
-							{{#markdown}}{{evaluateShortString character._id character.flaws}}{{/markdown}}
-							<div class="paper-font-subhead layout vertical center">
-								Flaws
+							<div class="bonds double-border" style="margin-top: 2mm">
+								{{#markdown}}{{evaluateShortString character._id character.bonds}}{{/markdown}}
+								<div class="paper-font-subhead layout vertical center">
+									Bonds
+								</div>
+							</div>
+							<div class="flaws double-border" style="margin-top: 2mm">
+								{{#markdown}}{{evaluateShortString character._id character.flaws}}{{/markdown}}
+								<div class="paper-font-subhead layout vertical center">
+									Flaws
+								</div>
 							</div>
 						</div>
 					</div>
@@ -209,4 +225,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 </template>

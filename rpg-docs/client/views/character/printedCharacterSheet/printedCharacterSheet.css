@@ -1,14 +1,4 @@
-.printed {
-	background: #fff;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: 99;
-}
-
-.printed > .page {
+.printed .page {
 	width: 100%;
 	padding: 6mm;
 	page-break-inside: avoid;
@@ -30,6 +20,10 @@
 	padding: 11px 10px;
 }
 
+.printed .double-border > * {
+	position: relative;
+}
+
 .printed .double-border:before {
 	content: "";
     position: absolute;
@@ -39,10 +33,9 @@
     right: 0;
     border: 16px solid transparent;
     border-image-source: url(/png/doubleLineImageBorder.png);
-    border-image-slice: 110 126;
+    border-image-slice: 110 126 fill;
     border-image-repeat: stretch;
     box-sizing: content-box;
-	z-index: -1;
 }
 
 .printed .double-border.printedAbility {
@@ -63,6 +56,7 @@
 	background-position: center;
 	background-size: contain;
 	background-repeat: no-repeat;
+	print-color-adjust: exact;
 	-webkit-print-color-adjust: exact;
 }
 
@@ -88,10 +82,11 @@
 	height: 16px;
 }
 
-.shield-background {
+.printed .shield-background {
 	background: url(/png/shieldBorder.png);
 	background-size: cover;
 	background-repeat: no-repeat;
+	print-color-adjust: exact;
 	-webkit-print-color-adjust: exact;
 	padding: 4px 8px 8px;
 	width: 80px;
@@ -100,37 +95,62 @@
 	top: -6px;
 }
 
-.shield-background .paper-font-subhead {
+.printed .shield-background .paper-font-subhead {
 	width: 64px;
     text-align: center;
 	line-height: 1.1;
 }
 
+.printed .paper-font-subhead {
+	font-size: 3mm !important;
+	line-height: 3.5mm !important;
+	font-weight: bold !important;
+	text-transform: uppercase !important;
+}
+.printed .paper-font-subhead.modifier {
+	font-size: 4mm !important;
+	line-height: 6mm !important;
+}
+.printed .paper-font-display1 {
+	font-size: 8mm !important;
+	line-height: 12mm !important;
+}
+
 @media screen {
+	.printed .page {
+		width: 210mm;
+		height: 297mm;
+		background: white;
+		margin: 8px;
+		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+					0 1px 5px 0 rgba(0, 0, 0, 0.12),
+					0 3px 1px -2px rgba(0, 0, 0, 0.2);
+	}
+
+	.printed .page-holder {
+		width: calc(210mm + 16px);
+	}
+
 	.printed {
-		display: none;
+		overflow: auto;
+		padding-left:
 	}
 }
 
 @media print {
-	.character-sheet {
-		display: none;
-	}
 	app-drawer {
 		display: none;
 	}
-	.paper-font-subhead {
-		font-size: 3mm !important;
-		line-height: 3.5mm !important;
-		font-weight: bold !important;
-		text-transform: uppercase !important;
+	app-header {
+		display: none;
 	}
-	.paper-font-subhead.modifier {
-		font-size: 4mm !important;
-		line-height: 6mm !important;
-	}
-	.paper-font-display1 {
-		font-size: 8mm !important;
-		line-height: 12mm !important;
+	.printed {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 99;
+		background: #fff;
 	}
 }

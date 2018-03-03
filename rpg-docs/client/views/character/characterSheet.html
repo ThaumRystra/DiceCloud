@@ -1,7 +1,4 @@
 <template name="characterSheet">
-	{{#if printing}}
-		{{> printedCharacterSheet}}
-	{{/if}}
 	<div class="fit layout vertical character-sheet">
 		<app-header fixed effects="waterfall">
 			<app-toolbar class="medium-tall {{colorClass}}" style="z-index: 2;">
@@ -23,10 +20,12 @@
 									<iron-icon icon="social:share" item-icon></iron-icon>
 									Share
 								</paper-icon-item>
-								<paper-icon-item id="printButton">
-									<iron-icon icon="print" item-icon></iron-icon>
-									Print
-								</paper-icon-item>
+								<a href={{printUrl}}>
+									<paper-icon-item id="printButton">
+										<iron-icon icon="print" item-icon></iron-icon>
+										Print
+									</paper-icon-item>
+								</a>
 								<paper-icon-item id="characterSettings">
 									<iron-icon icon="settings" item-icon></iron-icon>
 									Settings
