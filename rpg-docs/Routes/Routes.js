@@ -78,6 +78,35 @@ Router.map(function() {
 		fastRender: true,
 	});
 
+	this.route("printedCharacterSheet", {
+		path: "/character/:_id/:urlName/print",
+		waitOn: function(){
+			return [
+				subsManager.subscribe("singleCharacter", this.params._id),
+			];
+		},
+		data: function() {
+			var data = Characters.findOne(
+				{_id: this.params._id},
+				{fields: {_id: 1, name: 1, color: 1, writers: 1, readers: 1}}
+			);
+			return data;
+		},
+		onAfterAction: function() {
+			var char = Characters.findOne({_id: this.params._id}, {fields: {name: 1}});
+			var name = char && char.name;
+			if (name){
+				document.title = name + " - Printing";
+			}
+		},
+		//analytics
+		trackPageView: false,
+		onRun: function() {
+			window.ga && window.ga("send", "pageview", "/print-character");
+			this.next();
+		},
+	});
+
 	this.route("library", {
 		path: "/library",
 		waitOn: function(){

@@ -1,0 +1,14 @@
+<template name="printedSquareStat">
+	<div class="printedSquareStat layout vertical center {{class}}">
+		<div class="numbers paper-font-display1">
+			{{#if isSkill}}
+				{{prefix}}{{skillMod}}
+			{{else}}
+				{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
+			{{/if}}
+		</div>
+		<div class="paper-font-subhead title">
+			{{name}}
+		</div>
+	</div>
+</template>

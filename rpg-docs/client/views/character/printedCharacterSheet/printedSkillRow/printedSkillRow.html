@@ -1,0 +1,21 @@
+<template name="printedSkillRow">
+	<div class="printedSkillRow layout horizontal center">
+		<iron-icon icon="{{profIcon}}"></iron-icon>
+		{{#if failSkill}}
+			<div class="fail skill-mod">fail</div>
+		{{else}}
+			<div class="{{advantage}} skill-mod">
+				{{skillMod}}
+			</div>
+		{{/if}}
+		<div flex>
+			{{name}}
+			{{#if conditionalCount}}
+				*
+			{{/if}}
+			{{#if showPassive}}
+				({{characterCalculate "passiveSkill" ../_id skill}})
+			{{/if}}
+		</div>
+	</div>
+</template>

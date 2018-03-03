@@ -1,0 +1,13 @@
+<template name="printedAbility">
+	<div class="printedAbility layout vertical center double-border">
+		<div class="paper-font-subhead title flex layout horizontal center">
+			{{title}}
+		</div>
+		<div class="paper-font-display1 stat">
+			{{characterCalculate "attributeValue" ../_id ability}}
+		</div>
+		<div class="paper-font-subhead modifier">
+			{{abilityMod}}
+		</div>
+	</div>
+</template>
