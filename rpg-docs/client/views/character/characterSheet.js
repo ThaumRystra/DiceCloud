@@ -169,7 +169,7 @@ Template.characterSheet.helpers({
 		return Session.get("isPrinting");
 	},
 	printUrl: function(){
-		return `/character/${this._id}/${this.name || "-"}/print`
+		return `/character/${this._id}/${this.urlName || "-"}/print`
 	},
 	selectedTab: function(){
 		return getTab(this._id);

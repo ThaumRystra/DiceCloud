@@ -1,4 +1,7 @@
 .printedSquareStat {
-	min-width: 75px;
-	min-height: 75px;
+	min-width: 67px;
+}
+
+.printedSquareStat .title.paper-font-subhead {
+	font-size: 2.5mm !important;
 }

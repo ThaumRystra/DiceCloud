@@ -3,7 +3,6 @@
 	padding: 6mm;
 	page-break-inside: avoid;
 	page-break-after: always;
-	font-size: 3mm;
 }
 
 .printed .shrink-to-fit {
@@ -51,7 +50,7 @@
 	position: relative;
 	top: 4px;
 	z-index: 1;
-	padding: 2px 32px;
+	padding: 2px 18px;
 	background-image: url(/png/upwardPointingBorder.png);
 	background-position: center;
 	background-size: contain;
@@ -79,7 +78,13 @@
 
 .printed iron-icon {
 	width: 16px;
+	min-width: 16px;
 	height: 16px;
+	min-height: 16px;
+}
+
+.printed .proficiencies, .printed .attacks, .printed .background {
+	overflow: hidden;
 }
 
 .printed .shield-background {
@@ -92,7 +97,6 @@
 	width: 80px;
 	height: 91px;
 	position: relative;
-	top: -6px;
 }
 
 .printed .shield-background .paper-font-subhead {
@@ -101,19 +105,42 @@
 	line-height: 1.1;
 }
 
+.printed {
+	font-size: 3mm;
+}
+
+.printed .paper-font-body2 {
+	font-size: 3mm;
+	line-height: 4mm;
+}
+
 .printed .paper-font-subhead {
 	font-size: 3mm !important;
 	line-height: 3.5mm !important;
 	font-weight: bold !important;
 	text-transform: uppercase !important;
 }
+
 .printed .paper-font-subhead.modifier {
 	font-size: 4mm !important;
 	line-height: 6mm !important;
 }
+
 .printed .paper-font-display1 {
-	font-size: 8mm !important;
+	font-size: 7mm !important;
 	line-height: 12mm !important;
+}
+
+.printed .paper-font-headline {
+	font-size: 5mm !important;
+	line-height: 6mm !important;
+}
+
+.printed .lined-background {
+	background-image: url(/png/horizontalLine.png);
+	background-size: 100% 4mm;
+	print-color-adjust: exact;
+	-webkit-print-color-adjust: exact;
 }
 
 @media screen {
@@ -152,5 +179,12 @@
 		right: 0;
 		z-index: 99;
 		background: #fff;
+	}
+	.printed .page-holder {
+		height: 100%
+	}
+
+	.printed .page {
+		height: 100%;
 	}
 }
