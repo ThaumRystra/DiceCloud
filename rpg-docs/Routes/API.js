@@ -33,6 +33,7 @@ var ifKeyValid = function(apiKey, response, callback){
 		response.writeHead(403, "API key is invalid");
 		response.end();
 	} else if (isRateLimited(apiKey)){
+		console.log(`Rate limit hit by API key ${apiKey}`);
 		response.writeHead(429, "Too many requests");
 		response.end();
 	} else {
@@ -42,7 +43,10 @@ var ifKeyValid = function(apiKey, response, callback){
 };
 
 var isKeyValid = function(apiKey){
-	return !!Meteor.users.findOne({apiKey});
+	var user = Meteor.users.findOne({apiKey});
+	if (!user) return false;
+	var blackListed = Blacklist.findOne({userId: user._id});
+	return !blackListed;
 };
 
 var rateLimiter = new RateLimiter();
