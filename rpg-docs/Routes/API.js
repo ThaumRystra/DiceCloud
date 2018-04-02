@@ -42,12 +42,21 @@ var ifKeyValid = function(apiKey, response, callback){
 };
 
 var isKeyValid = function(apiKey){
-	return !!Meteor.users.findOne({apiKey});
+	var user = Meteor.users.findOne({apiKey});
+	if (!user) return false;
+	var blackListed = Blacklist.findOne({userId: user._id});
+	return !blackListed;
 };
 
 var rateLimiter = new RateLimiter();
 rateLimiter.addRule({apiKey: String}, 2, 10000);
 
 var isRateLimited = function(apiKey){
-	return !rateLimiter.check({apiKey}).allowed;
+	const limited = !rateLimiter.check({apiKey}).allowed
+	if (limited) {
+		console.log(`Rate limit hit by API key ${apiKey}`);
+		return true;
+	} else {
+		return false;
+	}
 };

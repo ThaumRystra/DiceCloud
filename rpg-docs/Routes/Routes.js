@@ -13,6 +13,11 @@ Router.plugin("ensureSignedIn", {
 
 Router.plugin("dataNotFound", {notFoundTemplate: "notFound"});
 
+var handleSubError = function(e){
+	Session.set("error", {reason: e.reason, href: location.href});
+	Router.go("/error");
+};
+
 Router.map(function() {
 	this.route("/", {
 		name: "home",
@@ -36,7 +41,9 @@ Router.map(function() {
 		path: "/character/:_id/",
 		waitOn: function(){
 			return [
-				subsManager.subscribe("singleCharacter", this.params._id),
+				subsManager.subscribe(
+					"singleCharacter", this.params._id, {onError: handleSubError}
+				),
 			];
 		},
 		action: function(){
@@ -52,7 +59,9 @@ Router.map(function() {
 		path: "/character/:_id/:urlName",
 		waitOn: function(){
 			return [
-				subsManager.subscribe("singleCharacter", this.params._id),
+				subsManager.subscribe(
+					"singleCharacter", this.params._id, {onError: handleSubError}
+				),
 			];
 		},
 		data: function() {
@@ -82,7 +91,9 @@ Router.map(function() {
 		path: "/character/:_id/:urlName/print",
 		waitOn: function(){
 			return [
-				subsManager.subscribe("singleCharacter", this.params._id),
+				subsManager.subscribe(
+					"singleCharacter", this.params._id, {onError: handleSubError}
+				),
 			];
 		},
 		data: function() {
@@ -151,6 +162,13 @@ Router.map(function() {
 		name: "guide",
 		onAfterAction: function() {
 			document.title = appName;
+		},
+	});
+
+	this.route("/error", {
+		name: "error",
+		onAfterAction: function() {
+			document.title = `${appName} - Error`;
 		},
 	});
 });

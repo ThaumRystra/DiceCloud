@@ -1,0 +1,20 @@
+<template name="error">
+	<app-header-layout has-scrolling-region fullbleed>
+		<app-header class="app-grey white-text" fixed>
+			<app-toolbar>
+				<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+			</app-toolbar>
+		</app-header>
+		<div class="fit layout vertical center center-justified">
+			<div class="paper-font-subhead"
+				style="margin-left: 16px;
+				margin-right: 16px;
+				text-align: center;">
+				{{#if errorMessage}}
+					<div>{{errorMessage}}</div>
+					<paper-button class="try-again">Try Again</paper-button>
+				{{/if}}
+			</div>
+		</div>
+	</app-header-layout>
+</template>
