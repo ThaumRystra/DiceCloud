@@ -33,7 +33,6 @@ var ifKeyValid = function(apiKey, response, callback){
 		response.writeHead(403, "API key is invalid");
 		response.end();
 	} else if (isRateLimited(apiKey)){
-		console.log(`Rate limit hit by API key ${apiKey}`);
 		response.writeHead(429, "Too many requests");
 		response.end();
 	} else {
@@ -53,5 +52,11 @@ var rateLimiter = new RateLimiter();
 rateLimiter.addRule({apiKey: String}, 2, 10000);
 
 var isRateLimited = function(apiKey){
-	return !rateLimiter.check({apiKey}).allowed;
+	const limited = !rateLimiter.check({apiKey}).allowed
+	if (limited) {
+		console.log(`Rate limit hit by API key ${apiKey}`);
+		return true;
+	} else {
+		return false;
+	}
 };

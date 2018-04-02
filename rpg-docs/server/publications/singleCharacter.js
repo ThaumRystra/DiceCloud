@@ -38,9 +38,13 @@ Meteor.publish("singleCharacter", function(characterId){
 DDPRateLimiter.addRule({
 	name: "singleCharacter",
 	type: "subscription",
-	userId(){ return true; },
+	userId: null,
 	connectionId(){ return true; },
-}, 8, 5000);
+}, 8, 10000, function(reply, ruleInput){
+	if(!reply.allowed){
+		logRateError(reply, ruleInput);
+	}
+});
 
 Meteor.publish("singleCharacterName", function(characterId){
 	userId = this.userId;
