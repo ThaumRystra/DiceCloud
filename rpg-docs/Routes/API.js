@@ -44,9 +44,11 @@ var ifKeyValid = function(apiKey, response, method, callback){
 	} else if (!isKeyValid(apiKey)){
 		response.writeHead(403, "API key is invalid");
 		response.end();
-	} else if (isRateLimited(apiKey)){
+	} else if (isRateLimited(apiKey, method)){
 		response.writeHead(429, "Too many requests");
-		response.end();
+		response.end(JSON.stringify({
+			"timeToReset": rateLimiter.check({apiKey: apiKey, method: method}).timeToReset
+		}));
 	} else {
 		rateLimiter.increment({apiKey: apiKey, method: method})
 		callback();
@@ -66,8 +68,8 @@ rateLimiter.addRule({apiKey: String, method: "vmixCharacter"}, 2, 10000);
 rateLimiter.addRule({apiKey: String, method: "vmixParty"}, 2, 10000);
 rateLimiter.addRule({apiKey: String, method: "jsonCharacterSheet"}, 5, 5000);
 
-var isRateLimited = function(apiKey){
-	const limited = !rateLimiter.check({apiKey}).allowed
+var isRateLimited = function(apiKey, method){
+	const limited = !rateLimiter.check({apiKey: apiKey, method: method}).allowed
 	if (limited) {
 		console.log(`Rate limit hit by API key ${apiKey}`);
 		return true;
