@@ -6,7 +6,7 @@ Router.map(function() {
 			this.response.setHeader("Content-Type", "application/json");
 			var query = this.params.query;
 			var key = query && query.key;
-			ifKeyValid(key, this.response, () =>
+			ifKeyValid(key, this.response, "vmixCharacter", () =>
 				this.response.end(vMixCharacter(this.params._id))
 			);
 		},
@@ -18,14 +18,26 @@ Router.map(function() {
 			this.response.setHeader("Content-Type", "application/json");
 			var query = this.params.query;
 			var key = query && query.key;
-			ifKeyValid(key, this.response, () =>
+			ifKeyValid(key, this.response, "vmixParty", () =>
 				this.response.end(vMixParty(this.params._id))
+			);
+		},
+	});
+	this.route("jsonCharacterSheet", {
+		path: "/character/:_id/json",
+		where: "server",
+		action: function() {
+			this.response.setHeader("Content-Type", "application/json");
+			var query = this.params.query;
+			var key = query && query.key;
+			ifKeyValid(key, this.response, "jsonCharacterSheet", () =>
+				this.response.end(JSONExport(this.params._id))
 			);
 		},
 	});
 });
 
-var ifKeyValid = function(apiKey, response, callback){
+var ifKeyValid = function(apiKey, response, method, callback){
 	if (!apiKey){
 		response.writeHead(403, "You must use an api key to access this api");
 		response.end();
@@ -36,7 +48,7 @@ var ifKeyValid = function(apiKey, response, callback){
 		response.writeHead(429, "Too many requests");
 		response.end();
 	} else {
-		rateLimiter.increment({apiKey})
+		rateLimiter.increment({apiKey: apiKey, method: method})
 		callback();
 	}
 };
@@ -49,7 +61,10 @@ var isKeyValid = function(apiKey){
 };
 
 var rateLimiter = new RateLimiter();
-rateLimiter.addRule({apiKey: String}, 2, 10000);
+rateLimiter.addRule({apiKey: String}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "vmixCharacter"}, 2, 10000);
+rateLimiter.addRule({apiKey: String, method: "vmixParty"}, 2, 10000);
+rateLimiter.addRule({apiKey: String, method: "jsonCharacterSheet"}, 5, 5000);
 
 var isRateLimited = function(apiKey){
 	const limited = !rateLimiter.check({apiKey}).allowed
