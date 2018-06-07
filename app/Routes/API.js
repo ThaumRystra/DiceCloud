@@ -23,6 +23,7 @@ Router.map(function() {
 			);
 		},
 	});
+
 	this.route("jsonCharacterSheet", {
 		path: "/character/:_id/json",
 		where: "server",
