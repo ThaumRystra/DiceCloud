@@ -54,4 +54,3 @@ dynamic-import@0.2.0
 ddp-rate-limiter@1.0.7
 rate-limit@1.0.8
 iron:router
-mixmax:smart-disconnect
