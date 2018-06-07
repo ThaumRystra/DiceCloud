@@ -30,8 +30,14 @@ Router.map(function() {
 			this.response.setHeader("Content-Type", "application/json");
 			var query = this.params.query;
 			var key = query && query.key;
-			ifKeyValid(key, this.response, "jsonCharacterSheet", () =>
-				this.response.end(JSONExport(this.params._id))
+			ifKeyValid(key, this.response, "jsonCharacterSheet", () => {
+				if (canViewCharacter(this.params._id, userIdFromKey(key))){
+					this.response.end(JSONExport(this.params._id))
+				} else {
+					this.response.writeHead(403, "You do not have permission to view this character");
+					this.response.end();
+				}
+			}
 			);
 		},
 	});
@@ -61,6 +67,11 @@ var isKeyValid = function(apiKey){
 	var blackListed = Blacklist.findOne({userId: user._id});
 	return !blackListed;
 };
+
+var userIdFromKey = function(apiKey){
+	var user = Meteor.users.findOne({apiKey}); // we know user exists from isKeyValid
+	return user._id;
+}
 
 var rateLimiter = new RateLimiter();
 rateLimiter.addRule({apiKey: String}, 5, 5000);
