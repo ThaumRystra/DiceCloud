@@ -8,6 +8,6 @@ Getting started
 
 `git clone https://github.com/ThaumRystra/DiceCloud1 dicecloud`  
 `cd dicecloud`  
-`cd rpg-docs`  
+`cd app`  
 `bower install`  
 `meteor`
