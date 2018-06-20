@@ -15,14 +15,14 @@
 	padding: 16px;
 }
 
-.stat-card .skill-mod.advantage{
+.stat-card .advantage{
 	background-image: url(/png/advantage/greenUp.png);
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
 }
 
-.stat-card .skill-mod.disadvantage{
+.stat-card .disadvantage{
 	background-image: url(/png/advantage/redDown.png);
 	background-size: contain;
 	background-repeat: no-repeat;
