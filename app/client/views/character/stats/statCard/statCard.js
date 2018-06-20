@@ -6,4 +6,10 @@ Template.statCard.helpers({
 			)
 		);
 	},
+	advantage: function(){
+		var charId = Template.parentData()._id;
+		var advantage = Characters.calculate.advantage(charId, this.stat);
+		if (advantage > 0) return "advantage";
+		if (advantage < 0) return "disadvantage";
+	},
 });
