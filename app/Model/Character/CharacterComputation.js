@@ -1,4 +1,5 @@
 // TODO make sure all attributes can only have lowercase, stripped, no spaced names
+// TODO make sure proficiencies are indexed by type
 
 const recomputeCharacter = new ValidatedMethod({
 
@@ -20,7 +21,7 @@ const recomputeCharacter = new ValidatedMethod({
       'You do not have permission to recompute this character');
     }
 
-    doRecompute(charId);
+    computeCharacterById(charId);
 
   });
 
@@ -61,7 +62,16 @@ const recomputeCharacter = new ValidatedMethod({
  *   - Conglomerate all the effects to compute the final attribute values
  *   - Mark the attribute as computed
  */
-const doRecompute = function (charId){
+const computeCharacterById = function (charId){
+  let char = buildCharacter();
+  char = computeCharacter(char);
+};
+
+/*
+ * Get the character's data from the database and build an in-memory model that
+ * can be computed. Hits 6 database tables with indexed queries.
+ */
+const buildCharacter = function (charId){
   let char = {
     atts: {},
     skills: {},
@@ -164,19 +174,28 @@ const doRecompute = function (charId){
       char.skills[proficiency.name].proficiencies.push(effect);
     }
   });
-
-  // Iterate over each stat in order and compute it
-  for (stat in atts){
-    computeStat (stat, char);
-  }
-  for (stat in skills){
-    computeStat (stat, char);
-  }
-  for (stat in dms){
-    computeStat (stat, char);
-  }
 }
 
+/*
+ * Compute the character's stats in-place, returns the same char object
+ */
+const computeCharacter = function (char){
+  // Iterate over each stat in order and compute it
+  for (stat in char.atts){
+    computeStat (stat, char);
+  }
+  for (stat in char.skills){
+    computeStat (stat, char);
+  }
+  for (stat in char.dms){
+    computeStat (stat, char);
+  }
+  return char;
+}
+
+/*
+ * Compute a single stat on a character
+ */
 const computeStat = function(stat, char){
   // If the stat is already computed, skip it
   if (stat.computed) return;
@@ -206,6 +225,9 @@ const computeStat = function(stat, char){
   stat.busyComputing = false;
 }
 
+/*
+ * Compute a single effect on a character
+ */
 const computeEffect = function(effect, char){
   if (_.isFinite(effect.value)){
 		effect.result = effect.value;
@@ -218,6 +240,9 @@ const computeEffect = function(effect, char){
 	}
 };
 
+/*
+ * Apply a computed effect to its stat
+ */
 const applyEffect = function(effect, stat){
   // Take the largest base value
   if (effect.operation === "base"){
@@ -277,6 +302,9 @@ const applyEffect = function(effect, stat){
   }
 };
 
+/*
+ * Combine the results of multiple effects to get the result of the stat
+ */
 const combineStat = function(stat, char){
   if (stat.type === "attribute"){
     combineAttribute(stat, char)
