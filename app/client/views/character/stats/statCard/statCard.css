@@ -14,3 +14,17 @@
 	min-width: 72px;
 	padding: 16px;
 }
+
+.stat-card .advantage{
+	background-image: url(/png/advantage/greenUp.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.stat-card .disadvantage{
+	background-image: url(/png/advantage/redDown.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}

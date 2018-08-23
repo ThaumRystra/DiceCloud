@@ -3,7 +3,9 @@
 		<paper-material class="stat-card layout horizontal {{#if bounce}}bounce{{/if}}">
 			<div class="numbers paper-font-display1">
 					{{#if isSkill}}
-						{{prefix}}{{skillMod}}
+						<div class="{{advantage}}">
+							{{prefix}}{{skillMod}}
+						</div>
 					{{else}}
 						{{prefix}}{{characterCalculate "attributeValue" ../_id stat}}
 					{{/if}}
