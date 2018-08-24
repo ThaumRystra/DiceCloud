@@ -54,3 +54,5 @@ dynamic-import@0.4.0
 ddp-rate-limiter@1.0.7
 rate-limit@1.0.9
 iron:router
+meteortesting:mocha
+mdg:validated-method

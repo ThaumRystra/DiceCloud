@@ -1,9 +1,11 @@
 // TODO make sure all attributes can only have lowercase, stripped, no spaced names
 // TODO make sure proficiencies are indexed by type
+// TODO skills rely on an ability's modifier
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const recomputeCharacter = new ValidatedMethod({
 
-  "Characters.methods.recomputeCharacter", // DDP method name
+  name: "Characters.methods.recomputeCharacter", // DDP method name
 
   validate: new SimpleSchema({
     charId: { type: String }
@@ -12,6 +14,7 @@ const recomputeCharacter = new ValidatedMethod({
   applyOptions: {
     noRetry: true,
   },
+
   run({ charId }) {
     // `this` is the same method invocation object you normally get inside
     // Meteor.methods
@@ -23,7 +26,7 @@ const recomputeCharacter = new ValidatedMethod({
 
     computeCharacterById(charId);
 
-  });
+  },
 
 });
 
@@ -76,6 +79,8 @@ const buildCharacter = function (charId){
     atts: {},
     skills: {},
     dms: {},
+    classes: {},
+    level: 0,
   };
   // Fetch the attributes of the character and add them to an object for quick lookup
   Attributes.find({charId}).forEach(attribute => {
@@ -83,12 +88,12 @@ const buildCharacter = function (charId){
       char.atts[attribute.name] = {
         computed: false,
         busyComputing: false,
-        type: "attribute";
+        type: "attribute",
         result: 0,
         mod: 0, // The resulting modifier if this is an ability
         base: 0,
         add: 0,
-        mul: 0,
+        mul: 1,
         min: Number.NEGATIVE_INFINITY,
         max: Number.POSITIVE_INFINITY,
         effects: [],
@@ -102,11 +107,12 @@ const buildCharacter = function (charId){
       char.skills[skill.name] = {
         computed: false,
         busyComputing: false,
-        type: "skill";
+        type: "skill",
+        ability: skill.ability,
         result: 0, // For skills the result is the skillMod
         proficiency: 0,
         add: 0,
-        mul: 0,
+        mul: 1,
         min: Number.NEGATIVE_INFINITY,
         max: Number.POSITIVE_INFINITY,
         advantage: 0,
@@ -126,7 +132,7 @@ const buildCharacter = function (charId){
       char.dms[damageMultiplier.name] = {
         computed: false,
         busyComputing: false,
-        type: "damageMultiplier";
+        type: "damageMultiplier",
         result: 0,
         immunityCount: 0,
         ressistanceCount: 0,
@@ -137,12 +143,11 @@ const buildCharacter = function (charId){
   });
 
   // Fetch the class levels and store them
-  char.level = 0;
-  char.classes = {};
-  Classes.find({charId}).forEach(class => {
-    if (!char.classes[class.name]){
-      char.classes[class.name] = {level: class.level};
-      char.level += class.level;
+  // don't use the word "class" it's reserved
+  Classes.find({charId}).forEach(cls => {
+    if (!char.classes[cls.name]){
+      char.classes[cls.name] = {level: cls.level};
+      char.level += cls.level;
     }
   });
 
@@ -151,14 +156,19 @@ const buildCharacter = function (charId){
     charId: charId,
     enabled: true,
   }).forEach(effect => {
-    effect.computed = false;
-    effect.result = 0;
+    let storedEffect = {
+      computed: false,
+      result: 0,
+      operation: effect.operation,
+      value: effect.value,
+      calculation: effect.calculation,
+    }
     if (char.atts[effect.stat]) {
-      char.atts[effect.stat].effects.push(effect);
+      char.atts[effect.stat].effects.push(storedEffect);
     } else if (char.skills[effect.stat]) {
-      char.skills[effect.stat].effects.push(effect);
+      char.skills[effect.stat].effects.push(storedEffect);
     } else if (char.dms[effect.stat]) {
-      char.dms[effect.stat].effects.push(effect);
+      char.dms[effect.stat].effects.push(storedEffect);
     } else {
       // ignore effects that don't apply to an actual stat
     }
@@ -174,20 +184,24 @@ const buildCharacter = function (charId){
       char.skills[proficiency.name].proficiencies.push(effect);
     }
   });
+  return char;
 }
 
 /*
  * Compute the character's stats in-place, returns the same char object
  */
-const computeCharacter = function (char){
+export const computeCharacter = function (char){
   // Iterate over each stat in order and compute it
-  for (stat in char.atts){
+  for (statName in char.atts){
+    let stat = char.atts[statName]
     computeStat (stat, char);
   }
-  for (stat in char.skills){
+  for (statName in char.skills){
+    let stat = char.skills[statName]
     computeStat (stat, char);
   }
-  for (stat in char.dms){
+  for (statName in char.dms){
+    let stat = char.dms[statName]
     computeStat (stat, char);
   }
   return char;
@@ -211,10 +225,10 @@ const computeStat = function(stat, char){
   }
 
   // Iterate over each effect which applies to the stat
-  for (effect in stat.effects){
-    computeEffect(effect, char);
+  for (i in stat.effects){
+    computeEffect(stat.effects[i], char);
     // apply the effect to the stat
-    applyEffect(effect, stat);
+    applyEffect(stat.effects[i], stat);
   }
 
   // Conglomerate all the effects to compute the final stat values
@@ -229,15 +243,18 @@ const computeStat = function(stat, char){
  * Compute a single effect on a character
  */
 const computeEffect = function(effect, char){
+  if (effect.computed) return;
   if (_.isFinite(effect.value)){
 		effect.result = effect.value;
 	} else if(effect.operation === "conditional"){
     effect.result = effect.calculation;
-  } else if(_.contains(["advantage", "disadvantage", "fail"], effect.operation){
+  } else if(_.contains(["advantage", "disadvantage", "fail"], effect.operation)){
     effect.result = 1;
   } else if (_.isString(effect.calculation)){
-		effect.result = evaluateCalculation(charId, effect.calculation);
+		effect.result = evaluateCalculation(effect.calculation, char);
 	}
+  effect.computed = true;
+  console.log({effect});
 };
 
 /*
@@ -320,20 +337,37 @@ const combineAttribute = function(stat, char){
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
   // Round everything that isn't the carry multiplier
-  if (stat.name !== "carryMultiplier") stat.result = Math.floor(stat.result);
-  stat.mod = Math.floor((stat.result - 10) / 2);
+  if (!stat.decimal) stat.result = Math.floor(stat.result);
+  if (stat.attributeType === "ability") {
+    stat.mod = Math.floor((stat.result - 10) / 2);
+  }
+  console.log({statResult: stat.result})
 }
 
 const combineSkill = function(stat, char){
-  for (prof in stat.proficiencies){
+  for (i in stat.proficiencies){
+    let prof = stat.proficiencies[i];
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
-  if (!char.atts.proficiencyBonus.computed){
-    computeStat(char.atts.proficiencyBonus, char);
+  let profBonus;
+  if (char.atts.proificiencyBonus){
+    if (!char.atts.proficiencyBonus.computed){
+      computeStat(char.atts.proficiencyBonus, char);
+    }
+    profBonus = char.atts.proficiencyBonus.result;
+  } else {
+    profBonus = Math.floor(char.level / 4 + 1.75);
   }
-  const profBonus = char.atts.proficiencyBonus.result;
-  const base = profBonus * stat.proficiency;
-  stat.result = (base + stat.add) * stat.mul;
+  profBonus *= stat.proficiency;
+  // Skills are based on some ability Modifier
+  let abilityMod = 0;
+  if (stat.ability && char.atts[stat.ability]){
+    if (!char.atts[stat.ability].computed){
+      computeStat(char.atts[stat.ability], char);
+    }
+    abilityMod = char.atts[stat.ability].mod;
+  }
+  stat.result = (abilityMod + profBonus + stat.add) * stat.mul;
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
   stat.result = Math.floor(stat.result);
@@ -341,9 +375,9 @@ const combineSkill = function(stat, char){
 
 const combineDamageMultiplier = function(stat, char){
   if (stat.immunityCount) return 0;
-  if (ressistanceCount && !vulnerabilityCount){
+  if (stat.ressistanceCount && !stat.vulnerabilityCount){
     stat.result = 0.5;
-  }  else if (!ressistanceCount && vulnerabilityCount){
+  }  else if (!stat.ressistanceCount && stat.vulnerabilityCount){
     stat.result = 2;
   } else {
     stat.result = 1;
