@@ -1,6 +1,3 @@
-// TODO make sure all attributes can only have lowercase, stripped, no spaced names
-// TODO make sure proficiencies are indexed by type
-// TODO skills rely on an ability's modifier
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const recomputeCharacter = new ValidatedMethod({
@@ -11,13 +8,7 @@ const recomputeCharacter = new ValidatedMethod({
     charId: { type: String }
   }).validator(),
 
-  applyOptions: {
-    noRetry: true,
-  },
-
   run({ charId }) {
-    // `this` is the same method invocation object you normally get inside
-    // Meteor.methods
     if (!canEditCharacter(charId, this.userId)) {
       // Throw errors with a specific error code
       throw new Meteor.Error('Characters.methods.recomputeCharacter.denied',
@@ -89,6 +80,7 @@ const buildCharacter = function (charId){
         computed: false,
         busyComputing: false,
         type: "attribute",
+        attributeType: attribute.type,
         result: 0,
         mod: 0, // The resulting modifier if this is an ability
         base: 0,
