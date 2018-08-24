@@ -1,3 +1,8 @@
+// TODO recalculate carried weight method
+// TODO Add attribute, skill, damageMultiplier and bundle library models
+//      Bundle libraries should support races, classes, and rulesets
+// TODO Add monster library
+
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const recomputeCharacter = new ValidatedMethod({
@@ -8,7 +13,7 @@ const recomputeCharacter = new ValidatedMethod({
     charId: { type: String }
   }).validator(),
 
-  run({ charId }) {
+  run({charId}) {
     if (!canEditCharacter(charId, this.userId)) {
       // Throw errors with a specific error code
       throw new Meteor.Error('Characters.methods.recomputeCharacter.denied',
@@ -20,6 +25,31 @@ const recomputeCharacter = new ValidatedMethod({
   },
 
 });
+
+const recomputeCharacterXP = new ValidatedMethod({
+  name: "Characters.methods.recomputeCharacterXP",
+
+  validate: new SimpleSchema({
+    charId: { type: String }
+  }).validator(),
+
+  run({charId}) {
+    if (!canEditCharacter(charId, this.userId)) {
+      // Throw errors with a specific error code
+      throw new Meteor.Error("Characters.methods.recomputeCharacterXP.denied",
+      "You do not have permission to recompute this character's XP");
+    }
+    var xp = 0;
+		Experiences.find(
+			{charId: charId},
+			{fields: {value: 1}}
+		).forEach(function(e){
+			xp += e.value;
+		});
+    //TODO write the XP to the database, don't just return it
+		return xp;
+  },
+})
 
 /*
  * This function is the heart of DiceCloud. It recomputes a character's stats,
@@ -342,11 +372,11 @@ const combineSkill = function(stat, char){
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
   let profBonus;
-  if (char.atts.proificiencyBonus){
-    if (!char.atts.proficiencyBonus.computed){
-      computeStat(char.atts.proficiencyBonus, char);
+  if (char.skills.proificiencyBonus){
+    if (!char.skills.proficiencyBonus.computed){
+      computeStat(char.skills.proficiencyBonus, char);
     }
-    profBonus = char.atts.proficiencyBonus.result;
+    profBonus = char.skills.proficiencyBonus.result;
   } else {
     profBonus = Math.floor(char.level / 4 + 1.75);
   }

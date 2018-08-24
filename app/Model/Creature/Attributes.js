@@ -17,6 +17,10 @@ Schemas.Attribute = new SimpleSchema({
   variableName: {
     type: String,
   },
+	// Attributes need to store their order to keep the sheet consistent
+	order: {
+		type: Number,
+	},
   type: {
     type: String,
     allowedValues: [
@@ -26,7 +30,7 @@ Schemas.Attribute = new SimpleSchema({
       "healthBar", // Hitpoints, Temporary Hitpoints
       "resource", // Rages, sorcery points
       "spellSlot", // Level 1, 2, 3... spell slots
-      "attribute", // Aren't displayed, Jump height, Carry capacity
+      "utility", // Aren't displayed, Jump height, Carry capacity
     ],
   },
   value: {

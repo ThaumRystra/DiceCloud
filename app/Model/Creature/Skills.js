@@ -27,9 +27,11 @@ Schemas.Skill = new SimpleSchema({
     allowedValues: [
       "skill",
       "save",
+			"stat",
       "tool",
       "weapon",
       "language",
+			"utility", //not displayed anywhere
     ],
   },
   value: {
