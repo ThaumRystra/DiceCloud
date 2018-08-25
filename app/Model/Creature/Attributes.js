@@ -36,6 +36,7 @@ Schemas.Attribute = new SimpleSchema({
   value: {
     type: Number,
     decimal: true,
+	defaultValue: 0,
   },
   adjustment: {
     type: Number,
