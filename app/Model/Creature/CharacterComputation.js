@@ -111,9 +111,9 @@ const buildCharacter = function (charId){
         busyComputing: false,
         type: "attribute",
         attributeType: attribute.type,
+        base: attribute.baseValue || 0,
         result: 0,
         mod: 0, // The resulting modifier if this is an ability
-        base: 0,
         add: 0,
         mul: 1,
         min: Number.NEGATIVE_INFINITY,

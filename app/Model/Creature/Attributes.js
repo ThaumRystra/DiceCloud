@@ -33,6 +33,11 @@ Schemas.Attribute = new SimpleSchema({
       "utility", // Aren't displayed, Jump height, Carry capacity
     ],
   },
+	baseValue: {
+		Number,
+		decimal: true,
+		optional: true,
+	},
   value: {
     type: Number,
     decimal: true,
