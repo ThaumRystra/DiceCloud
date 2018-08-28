@@ -91,12 +91,12 @@ const insertCharacterMethod = new ValidatedMethod({
 	// Create the character document
     Characters.insert({name, owner: this.userId});
 	//Add all the required attributes to it
-	addDefaultAttributes(charId);
+	addDefaultStats(charId);
   },
 
 });
 
-const addDefaultAttributes function(charId){
+const addDefaultStats function(charId){
 	const stats = DEFAULT_CHARACTER_STATS;
 	let order = 0;
 	const baseParent = {
