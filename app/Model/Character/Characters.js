@@ -583,7 +583,7 @@ Characters.allow({
 
 Characters.deny({
 	update: function(userId, docs, fields, modifier) {
-		// can't change owners
-		return _.contains(fields, "owner");
+		// can't change owners unless you are the current owner
+		return _.contains(fields, "owner") && doc.owner !== userId;
 	}
 });
