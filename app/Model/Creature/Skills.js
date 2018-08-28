@@ -34,9 +34,14 @@ Schemas.Skill = new SimpleSchema({
 			"utility", //not displayed anywhere
     ],
   },
+  // Skills need to store their order to keep the sheet consistent
+  order: {
+	  type: Number,
+	  },
   value: {
     type: Number,
     decimal: true,
+	defaultValue: 0,
   },
   advantage: {
     type: Number,
@@ -50,6 +55,7 @@ Schemas.Skill = new SimpleSchema({
   proficiency: {
     type: Number,
     allowedValues: [0, 0.5, 1, 2],
+	defaultValue: 0,
   },
   conditionalBenefits: {
     type: Number,

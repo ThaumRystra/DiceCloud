@@ -1,3 +1,5 @@
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+
 //set up the collection for characters
 Characters = new Mongo.Collection("characters");
 
@@ -17,8 +19,9 @@ Schemas.Character = new SimpleSchema({
 	backstory:    {type: String, defaultValue: "", trim: false, optional: true},
 
 	//mechanics
-	deathSave: {type: Schemas.DeathSave},
-	xp:        {type: Number, defaultValue: 0},
+	deathSave:     {type: Schemas.DeathSave},
+	xp:            {type: Number, defaultValue: 0},
+	carriedWeight: {type: Number, defaultValue: 0},
 
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
@@ -66,6 +69,87 @@ Characters.calculate = {
 		if (xp > 355000) return 20;
 		return 0;
 	},
+};
+
+const insertCharacterMethod = new ValidatedMethod({
+
+  name: "Characters.methods.insert", // DDP method name
+
+  validate: new SimpleSchema({
+	  name: {
+		  type: String,
+		  optional: true,
+	  },
+  }).validator(),
+
+  run({name}) {
+    if (!this.userId) {
+      throw new Meteor.Error("Characters.methods.insert.denied",
+      "You need to be logged in to insert a character");
+    }
+
+	// Create the character document
+    Characters.insert({name, owner: this.userId});
+	//Add all the required attributes to it
+	addDefaultAttributes(charId);
+  },
+
+});
+
+const addDefaultAttributes function(charId){
+	const stats = DEFAULT_CHARACTER_STATS;
+	let order = 0;
+	const baseParent = {
+		collection: "Characters",
+		id: charId,
+		group: "default",
+	};
+	let name, variableName, parent, attribute, skill, ability, dm;
+	for (type in stats.attributes){
+		for (let i in stats.attributes[type]){
+			attribute = stats.attributes[type][i];
+			if (_.isString(attribute)){
+				name = attribute;
+				variableName = attribute.toLowerCase();
+			} else {
+				name = attribute.name;
+				variableName = attribute.variableName;
+			}
+			parent = _.clone(baseParent);
+			// TODO Inserting documets in a for-loop is slow
+			// conider using the raw collection to bulk insert
+			// Including a callback makes the operation async, 3x faster
+			Attributes.insert({
+				charId, name, variableName, order, type, parent
+			}, function(error, _id){}));
+			order++;
+		}
+	}
+	order = 0;
+	for (type in stats.skills){
+		for (let i in stats.skills[type]){
+			skill = stats.skills[type][i];
+			Skills.insert({
+				charId,
+				type,
+				order,
+				name: skill.name,
+				variableName: skill.variableName,
+				ability: skill.ability,
+				parent: _.clone(baseParent),
+			}, function(error, _id){}));
+			order++;
+		}
+	}
+	for (let i in stats.damageMultipliers){
+		dm = stats.damageMultipliers[i];
+		DamageMultipliers.insert({
+			charId,
+			name: dm.name,
+			variableName = dm.variableName,
+			parent: _.clone(baseParent),
+		}, function(error, _id){}));
+	}
 };
 
 //clean up all data related to that character before removing it

@@ -1,7 +1,5 @@
 // TODO recalculate carried weight method
-// TODO Add attribute, skill, damageMultiplier and bundle library models
-//      Bundle libraries should support races, classes, and rulesets
-// TODO Add monster library
+// TODO actually write the recomputed character to the database
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
