@@ -15,29 +15,33 @@ Meteor.startup(() => {
 		const now = new Date();
 		const thirtyMinutesAgo = new Date(now.getTime() - 30*60000);
 		_.each(collections, (collection) => {
-			numRemoved += collection.remove({
+			collection.remove({
 				removed: true,
 				removedAt: {$lt: thirtyMinutesAgo} // dates *before* 30 minutes ago
+			}, function(error, result){
+				if (error){
+					console.error(error);
+				}
 			});
 		});
-		return numRemoved;
 	};
 
 	SyncedCron.add({
-		name: "Delete all soft removed items that haven't been restored",
+		name: "deleteSoftRemovedDocs",
 		schedule: function(parser) {
-			return parser.text('every 6 hours');
+			return parser.text('every 2 hours');
 		},
-		job: function() {
-			deleteOldSoftRemovedDocs();
-		}
+		job: deleteOldSoftRemovedDocs,
 	});
+
+	SyncedCron.start();
 
 	// Add a method to manually trigger removal
 	Meteor.methods({
 		deleteOldSoftRemovedDocs() {
 			const user = Meteor.users.findOne(this.userId);
 			if (user && _.contains(user.roles, "admin")){
+				this.unblock();
 				return deleteOldSoftRemovedDocs();
 			}
 		},
