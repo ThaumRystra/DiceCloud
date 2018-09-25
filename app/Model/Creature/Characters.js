@@ -21,7 +21,7 @@ Schemas.Character = new SimpleSchema({
 	//mechanics
 	deathSave:     {type: Schemas.DeathSave},
 	xp:            {type: Number, defaultValue: 0},
-	carriedWeight: {type: Number, defaultValue: 0},
+	weightCarried: {type: Number, defaultValue: 0},
 
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
@@ -57,7 +57,6 @@ Schemas.Character = new SimpleSchema({
 
 Characters.attachSchema(Schemas.Character);
 
-//memoize funcitons that have finds and slow loops
 Characters.calculate = {
 	xpLevel: function(charId){
 		var xp = Characters.calculate.experience(charId);

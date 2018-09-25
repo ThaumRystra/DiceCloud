@@ -1,11 +1,10 @@
-// TODO recalculate carried weight method
 // TODO actually write the recomputed character to the database
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const recomputeCharacter = new ValidatedMethod({
 
-  name: "Characters.methods.recomputeCharacter", // DDP method name
+  name: "Characters.methods.recomputeCharacter",
 
   validate: new SimpleSchema({
     charId: { type: String }
@@ -13,7 +12,6 @@ const recomputeCharacter = new ValidatedMethod({
 
   run({charId}) {
     if (!canEditCharacter(charId, this.userId)) {
-      // Throw errors with a specific error code
       throw new Meteor.Error('Characters.methods.recomputeCharacter.denied',
       'You do not have permission to recompute this character');
     }
@@ -44,10 +42,60 @@ const recomputeCharacterXP = new ValidatedMethod({
 		).forEach(function(e){
 			xp += e.value;
 		});
-    //TODO write the XP to the database, don't just return it
+
+    Characters.update(charId, {$set: {xp}})
 		return xp;
   },
-})
+});
+
+const recomputeCharacterWeightCarried = new ValidatedMethod){
+  name: "Character.methods.recomputeCharacterWeightCarried",
+
+  validate: new SimpleSchema({
+    charId: { type: String }
+  }).validator(),
+
+  run({charId}){
+    if (!canEditCharacter(charId, this.userId)) {
+      // Throw errors with a specific error code
+      throw new Meteor.Error("Characters.methods.recomputeCharacterWeightCarried.denied",
+      "You do not have permission to recompute this character's carried weight");
+    }
+    var weightCarried = 0;
+    // store a dictionary of carried containers
+    var carriedContainers = {};
+    Containers.find(
+      {
+        charId,
+        isCarried: true,
+      },
+      { fields: {
+        isCarried: 1,
+        weight: 1,
+      }}
+    ).forEach(container => {
+      carriedContainers[container._id] = true;
+      weightCarried += container.weight;
+    });
+    Items.find(
+      {
+        charId,
+      },
+      { fields: {
+        weight: 1,
+        parent: 1,
+      }}
+    ).forEach(item => {
+      // if the item is carried/equiped or in a carried container, add its weight
+      if (parent.id === charId || carriedContainers[parent.id]){
+        weightCarried += item.weight;
+      }
+    });
+
+    Characters.update(charId, {$set: {weightCarried}})
+    return weightCarried;
+  }
+}
 
 /*
  * This function is the heart of DiceCloud. It recomputes a character's stats,
@@ -74,19 +122,20 @@ const recomputeCharacterXP = new ValidatedMethod({
  * - Mark each stat and effect as uncomputed
  * - Iterate over each stat in order and compute it
  *   - If the stat is already computed, skip it
- *   - If the stat is busy being computed, make it NaN and mark computed
+ *   - If the stat is busy being computed, we are in a dependency loop, make it NaN and mark computed
  *   - Mark the stat as busy computing
  *   - Iterate over each effect which applies to the attribute
  *     - If the effect is not computed compute it
  *       - If the effect relies on another attribute, get its computed value
  *       - Recurse if that attribute is uncomputed
  *     - apply the effect to the attribute
- *   - Conglomerate all the effects to compute the final attribute values
- *   - Mark the attribute as computed
+ *   - Conglomerate all the effects to compute the final stat values
+ *   - Mark the stat as computed
  */
 const computeCharacterById = function (charId){
   let char = buildCharacter();
   char = computeCharacter(char);
+  //TODO do something with this char
 };
 
 /*
