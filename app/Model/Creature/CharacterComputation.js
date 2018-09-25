@@ -1,5 +1,3 @@
-// TODO actually write the recomputed character to the database
-
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const recomputeCharacter = new ValidatedMethod({
@@ -56,19 +54,93 @@ const recomputeCharacter = new ValidatedMethod({
  *     - apply the effect to the attribute
  *   - Conglomerate all the effects to compute the final stat values
  *   - Mark the stat as computed
+ * - Write the computed results back to the database
  */
 const computeCharacterById = function (charId){
   let char = buildCharacter();
   char = computeCharacter(char);
-  //TODO do something with this char
+  writeCharacter(char);
 };
 
 /*
+ * Write the in-memory character to the database docs
+ */
+const writeCharacter = function (char) {
+  writeAttributes(char);
+  writeSkills(char);
+  writeDamageMultipliers(char);
+  Characters.update(char.id, {$set: {level: char.level}});
+};
+
+/*
+ * Write all the attributes from the in-memory char object to the Attirbute docs
+ */
+const writeAttributes = function (char) {
+  let bulkWriteOps =  _.map(char.atts, (att, variableName) => {
+    let op = {
+      updateMany: {
+        filter: {charId: char.id, variableName},
+        update: {$set: {
+          value: att.result,
+        }},
+      }
+    }
+    if (att.mod){
+      op.updateMany.update.mod = att.mod;
+    }
+    return op;
+  });
+  Attributes.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+}
+
+/*
+ * Write all the skills from the in-memory char object to the Skills docs
+ */
+const writeSkills = function (char) {
+  let bulkWriteOps =  _.map(char.skills, (skill, variableName) => {
+    let op = {
+      updateMany: {
+        filter: {charId: char.id, variableName},
+        update: {$set: {
+          value: skill.result,
+          advantage: skill.advantage,
+          passiveBonus: skill.passiveAdd,
+          proficiency: skill.proficiency,
+          conditionalBenefits: skill.conditional,
+          fail: skill.fail,
+        }},
+      }
+    }
+    return op;
+  });
+  Skills.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+}
+
+/*
+ * Write all the damange multipliers from the in-memory char object to the docs
+ */
+const writeDamageMultipliers = function (char) {
+  let bulkWriteOps =  _.map(char.dms, (dm, variableName) => {
+    let op = {
+      updateMany: {
+        filter: {charId: char.id, variableName},
+        update: {$set: {
+          value: dm.result,
+        }},
+      }
+    }
+    return op;
+  });
+  DamageMultipliers.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+}
+
+/*
  * Get the character's data from the database and build an in-memory model that
- * can be computed. Hits 6 database tables with indexed queries.
+ * can be computed. Hits 6 database collections with indexed queries.
  */
 const buildCharacter = function (charId){
   let char = {
+    id: charId,
     atts: {},
     skills: {},
     dms: {},
@@ -77,13 +149,14 @@ const buildCharacter = function (charId){
   };
   // Fetch the attributes of the character and add them to an object for quick lookup
   Attributes.find({charId}).forEach(attribute => {
-    if (!char.atts[attribute.name]){
-      char.atts[attribute.name] = {
+    if (!char.atts[attribute.variableName]){
+      char.atts[attribute.variableName] = {
         computed: false,
         busyComputing: false,
         type: "attribute",
         attributeType: attribute.type,
         base: attribute.baseValue || 0,
+        decimal: attribute.decimal,
         result: 0,
         mod: 0, // The resulting modifier if this is an ability
         add: 0,
@@ -97,8 +170,8 @@ const buildCharacter = function (charId){
 
   // Fetch the skills of the character and store them
   Skills.find({charId}).forEach(skill => {
-    if (!char.skills[skill.name]){
-      char.skills[skill.name] = {
+    if (!char.skills[skill.variableName]){
+      char.skills[skill.variableName] = {
         computed: false,
         busyComputing: false,
         type: "skill",
@@ -122,8 +195,8 @@ const buildCharacter = function (charId){
 
   // Fetch the damage multipliers of the character and store them
   DamageMultipliers.find({charId}).forEach(damageMultiplier =>{
-    if (!char.dms[damageMultiplier.name]){
-      char.dms[damageMultiplier.name] = {
+    if (!char.dms[damageMultiplier.variableName]){
+      char.dms[damageMultiplier.variableName] = {
         computed: false,
         busyComputing: false,
         type: "damageMultiplier",

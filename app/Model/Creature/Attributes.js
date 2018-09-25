@@ -41,8 +41,12 @@ Schemas.Attribute = new SimpleSchema({
   value: {
     type: Number,
     decimal: true,
-	defaultValue: 0,
+		defaultValue: 0,
   },
+	mod: {
+		type: Number,
+		optional: true,
+	},
   adjustment: {
     type: Number,
     optional: true,

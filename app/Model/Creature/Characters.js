@@ -22,6 +22,7 @@ Schemas.Character = new SimpleSchema({
 	deathSave:     {type: Schemas.DeathSave},
 	xp:            {type: Number, defaultValue: 0},
 	weightCarried: {type: Number, defaultValue: 0},
+	level:         {type: Number, defaultValue: 0},
 
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},

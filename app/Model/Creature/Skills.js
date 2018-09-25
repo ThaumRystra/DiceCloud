@@ -37,11 +37,11 @@ Schemas.Skill = new SimpleSchema({
   // Skills need to store their order to keep the sheet consistent
   order: {
 	  type: Number,
-	  },
+	},
   value: {
     type: Number,
     decimal: true,
-	defaultValue: 0,
+		defaultValue: 0,
   },
   advantage: {
     type: Number,
