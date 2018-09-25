@@ -90,7 +90,13 @@ const writeAttributes = function (char) {
     }
     return op;
   });
-  Attributes.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+  if (Meteor.isServer){
+    Attributes.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+  } else {
+    _.each(bulkWriteOps, op => {
+      Attributes.update(op.updateMany.filter, op.updateMany.update, {multi: true});
+    });
+  }
 }
 
 /*
@@ -113,7 +119,13 @@ const writeSkills = function (char) {
     }
     return op;
   });
-  Skills.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+  if (Meteor.isServer){
+    Skills.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+  } else {
+    _.each(bulkWriteOps, op => {
+      Skills.update(op.updateMany.filter, op.updateMany.update, {multi: true});
+    });
+  }
 }
 
 /*
@@ -131,7 +143,13 @@ const writeDamageMultipliers = function (char) {
     }
     return op;
   });
-  DamageMultipliers.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+  if (Meteor.isServer){
+    DamageMultipliers.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+  } else {
+    _.each(bulkWriteOps, op => {
+      DamageMultipliers.update(op.updateMany.filter, op.updateMany.update, {multi: true});
+    });
+  }
 }
 
 /*

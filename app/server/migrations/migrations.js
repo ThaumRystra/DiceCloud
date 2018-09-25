@@ -54,3 +54,132 @@ Migrations.add({
 		return;
 	},
 });
+
+Migrations.add({
+	version: 3,
+	name: "Moves all character attributes off the character document",
+	up: function () {
+		const batchSize = 50;
+		const stats = [
+			// Abilities
+			"strength",
+			"dexterity",
+			"constitution",
+			"intelligence",
+			"wisdom",
+			"charisma",
+
+			// Stats
+			"hitPoints",
+			"tempHP",
+			"experience",
+			"proficiencyBonus",
+			"speed",
+			"weight",
+			"age",
+			"ageRate",
+			"armor",
+			"carryMultiplier",
+
+			// Resources
+			"level1SpellSlots",
+			"level2SpellSlots",
+			"level3SpellSlots",
+			"level4SpellSlots",
+			"level5SpellSlots",
+			"level6SpellSlots",
+			"level7SpellSlots",
+			"level8SpellSlots",
+			"level9SpellSlots",
+			"ki",
+			"sorceryPoints",
+			"rages",
+			"superiorityDice",
+			"expertiseDice",
+			"rageDamage",
+
+			// Hit Dice
+			"d6HitDice",
+			"d8HitDice",
+			"d10HitDice",
+			"d12HitDice",
+
+			// Damage Multipliers
+			"acidMultiplier",
+			"bludgeoningMultiplier",
+			"coldMultiplier",
+			"fireMultiplier",
+			"forceMultiplier",
+			"lightningMultiplier",
+			"necroticMultiplier",
+			"piercingMultiplier",
+			"poisonMultiplier",
+			"psychicMultiplier",
+			"radiantMultiplier",
+			"slashingMultiplier",
+			"thunderMultiplier",
+
+			// Saves
+			"strengthSave",
+			"dexteritySave",
+			"constitutionSave",
+			"intelligenceSave",
+			"wisdomSave",
+			"charismaSave",
+
+			// Skills
+			"acrobatics",
+			"animalHandling",
+			"arcana",
+			"athletics",
+			"deception",
+			"history",
+			"insight",
+			"intimidation",
+			"investigation",
+			"medicine",
+			"nature",
+			"perception",
+			"performance",
+			"persuasion",
+			"religion",
+			"sleightOfHand",
+			"stealth",
+			"survival",
+			"initiative",
+			"dexterityArmor",
+		];
+		let modifier = {$unset: {}};
+		_.each(stats, stat => {
+			modifier.$unset[stat] = 1;
+		});
+		let charIds, defaultDocs;
+		let migrateBatch = function(){
+			// Iterate over a batch of characters at a time
+			charIds = Characters.find(
+				{strength: {$exists: true}},
+				{fields: {_id: 1}, limit: batchSize},
+			).map(char => char._id);
+			if (!charIds.length) {
+				return;
+			}
+			_.each(charIds, charId => {
+				// Add all the stats to their own collections
+				defaultDocs = getDefaultCharacterDocs(charId);
+				Attributes.rawCollection().insert(defaultDocs.attributes, {ordered: false});
+				Skills.rawCollection().insert(defaultDocs.skills, {ordered: false});
+				DamageMultipliers.rawCollection().insert(defaultDocs.damageMultipliers, {ordered: false});
+				// Remove the stats on the character document
+				Characters.update(charId, modifier, function(error, result){
+					if (error) console.log(error);
+				});
+			});
+			// Do the next batch
+			Meteor.defer(migrateBatch);
+		};
+		migrateBatch();
+	},
+	down: function () {
+		return;
+	}
+});

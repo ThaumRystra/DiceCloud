@@ -90,66 +90,20 @@ const insertCharacterMethod = new ValidatedMethod({
 
 	// Create the character document
     Characters.insert({name, owner: this.userId});
-	//Add all the required attributes to it
-	addDefaultStats(charId);
+		this.unblock();
+		//Add all the required attributes to it
+		if (Meteor.isServer){
+			addDefaultStats(charId);
+		}
   },
 
 });
 
-const addDefaultStats function(charId){
-	const stats = DEFAULT_CHARACTER_STATS;
-	let order = 0;
-	const baseParent = {
-		collection: "Characters",
-		id: charId,
-		group: "default",
-	};
-	let name, variableName, parent, attribute, skill, ability, dm;
-	for (type in stats.attributes){
-		for (let i in stats.attributes[type]){
-			attribute = stats.attributes[type][i];
-			if (_.isString(attribute)){
-				name = attribute;
-				variableName = attribute.toLowerCase();
-			} else {
-				name = attribute.name;
-				variableName = attribute.variableName;
-			}
-			parent = _.clone(baseParent);
-			// TODO Inserting documets in a for-loop is slow
-			// conider using the raw collection to bulk insert
-			// Including a callback makes the operation async, 3x faster
-			Attributes.insert({
-				charId, name, variableName, order, type, parent
-			}, function(error, _id){}));
-			order++;
-		}
-	}
-	order = 0;
-	for (type in stats.skills){
-		for (let i in stats.skills[type]){
-			skill = stats.skills[type][i];
-			Skills.insert({
-				charId,
-				type,
-				order,
-				name: skill.name,
-				variableName: skill.variableName,
-				ability: skill.ability,
-				parent: _.clone(baseParent),
-			}, function(error, _id){}));
-			order++;
-		}
-	}
-	for (let i in stats.damageMultipliers){
-		dm = stats.damageMultipliers[i];
-		DamageMultipliers.insert({
-			charId,
-			name: dm.name,
-			variableName = dm.variableName,
-			parent: _.clone(baseParent),
-		}, function(error, _id){}));
-	}
+const addDefaultStats = function(charId){
+	const defaultDocs = getDefaultCharacterDocs(charId);
+	Attributes.rawCollection().insert(defaultDocs.attributes, {ordered: false});
+	Skills.rawCollection().insert(defaultDocs.skills, {ordered: false});
+	DamageMultipliers.rawCollection().insert(defaultDocs.damageMultipliers, {ordered: false});
 };
 
 //clean up all data related to that character before removing it

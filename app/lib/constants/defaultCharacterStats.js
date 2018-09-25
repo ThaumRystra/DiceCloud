@@ -94,3 +94,60 @@ DEFAULT_CHARACTER_STATS = {
     {"name": "Thunder Multiplier", "variableName":"thunderMultiplier"},
   ]
 }
+
+getDefaultCharacterDocs = function(charId){
+  let docs = {attributes: [], skills: [], damageMultipliers: []};
+  const stats = DEFAULT_CHARACTER_STATS;
+	let order = 0;
+	const baseParent = {
+		collection: "Characters",
+		id: charId,
+		group: "default",
+	};
+	let name, variableName, parent, attribute, skill, ability, dm, type;
+	for (type in stats.attributes){
+		for (let i in stats.attributes[type]){
+			attribute = stats.attributes[type][i];
+			if (_.isString(attribute)){
+				name = attribute;
+				variableName = attribute.toLowerCase();
+			} else {
+				name = attribute.name;
+				variableName = attribute.variableName;
+			}
+			parent = _.clone(baseParent);
+			docs.attributes.push({
+        _id: Random.id,
+				charId, name, variableName, order, type, parent
+			});
+			order++;
+		}
+	}
+	order = 0;
+	for (type in stats.skills){
+		for (let i in stats.skills[type]){
+			skill = stats.skills[type][i];
+			docs.skills.push({
+        _id: Random.id,
+				charId,
+				type,
+				order,
+				name: skill.name,
+				variableName: skill.variableName,
+				ability: skill.ability,
+				parent: _.clone(baseParent),
+			});
+			order++;
+		}
+	}
+	for (let i in stats.damageMultipliers){
+		dm = stats.damageMultipliers[i];
+		docs.damageMultipliers.push({
+      _id: Random.id,
+			charId,
+			name: dm.name,
+			variableName = dm.variableName,
+			parent: _.clone(baseParent),
+		});
+	}
+}
