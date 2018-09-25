@@ -34,7 +34,7 @@ Schemas.Attribute = new SimpleSchema({
     ],
   },
 	baseValue: {
-		Number,
+		type: Number,
 		decimal: true,
 		optional: true,
 	},
@@ -55,7 +55,7 @@ Schemas.Attribute = new SimpleSchema({
   decimal: {
     type: Boolean,
     optional: true,
-  }
+  },
 	parent: {
 		type: Schemas.Parent
 	},

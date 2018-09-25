@@ -146,7 +146,7 @@ getDefaultCharacterDocs = function(charId){
       _id: Random.id,
 			charId,
 			name: dm.name,
-			variableName = dm.variableName,
+			variableName: dm.variableName,
 			parent: _.clone(baseParent),
 		});
 	}

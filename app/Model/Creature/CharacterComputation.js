@@ -557,7 +557,7 @@ const recomputeCharacterXP = new ValidatedMethod({
   },
 });
 
-const recomputeCharacterWeightCarried = new ValidatedMethod){
+const recomputeCharacterWeightCarried = new ValidatedMethod({
   name: "Character.methods.recomputeCharacterWeightCarried",
 
   validate: new SimpleSchema({
@@ -604,4 +604,4 @@ const recomputeCharacterWeightCarried = new ValidatedMethod){
     Characters.update(charId, {$set: {weightCarried}})
     return weightCarried;
   }
-}
+});
