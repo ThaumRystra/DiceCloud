@@ -22,81 +22,6 @@ const recomputeCharacter = new ValidatedMethod({
 
 });
 
-const recomputeCharacterXP = new ValidatedMethod({
-  name: "Characters.methods.recomputeCharacterXP",
-
-  validate: new SimpleSchema({
-    charId: { type: String }
-  }).validator(),
-
-  run({charId}) {
-    if (!canEditCharacter(charId, this.userId)) {
-      // Throw errors with a specific error code
-      throw new Meteor.Error("Characters.methods.recomputeCharacterXP.denied",
-      "You do not have permission to recompute this character's XP");
-    }
-    var xp = 0;
-		Experiences.find(
-			{charId: charId},
-			{fields: {value: 1}}
-		).forEach(function(e){
-			xp += e.value;
-		});
-
-    Characters.update(charId, {$set: {xp}})
-		return xp;
-  },
-});
-
-const recomputeCharacterWeightCarried = new ValidatedMethod){
-  name: "Character.methods.recomputeCharacterWeightCarried",
-
-  validate: new SimpleSchema({
-    charId: { type: String }
-  }).validator(),
-
-  run({charId}){
-    if (!canEditCharacter(charId, this.userId)) {
-      // Throw errors with a specific error code
-      throw new Meteor.Error("Characters.methods.recomputeCharacterWeightCarried.denied",
-      "You do not have permission to recompute this character's carried weight");
-    }
-    var weightCarried = 0;
-    // store a dictionary of carried containers
-    var carriedContainers = {};
-    Containers.find(
-      {
-        charId,
-        isCarried: true,
-      },
-      { fields: {
-        isCarried: 1,
-        weight: 1,
-      }}
-    ).forEach(container => {
-      carriedContainers[container._id] = true;
-      weightCarried += container.weight;
-    });
-    Items.find(
-      {
-        charId,
-      },
-      { fields: {
-        weight: 1,
-        parent: 1,
-      }}
-    ).forEach(item => {
-      // if the item is carried/equiped or in a carried container, add its weight
-      if (parent.id === charId || carriedContainers[parent.id]){
-        weightCarried += item.weight;
-      }
-    });
-
-    Characters.update(charId, {$set: {weightCarried}})
-    return weightCarried;
-  }
-}
-
 /*
  * This function is the heart of DiceCloud. It recomputes a character's stats,
  * distilling down effects and proficiencies into the final stats that make up
@@ -514,3 +439,78 @@ const evaluateCalculation = function(string, char){
     return string;
   }
 };
+
+const recomputeCharacterXP = new ValidatedMethod({
+  name: "Characters.methods.recomputeCharacterXP",
+
+  validate: new SimpleSchema({
+    charId: { type: String }
+  }).validator(),
+
+  run({charId}) {
+    if (!canEditCharacter(charId, this.userId)) {
+      // Throw errors with a specific error code
+      throw new Meteor.Error("Characters.methods.recomputeCharacterXP.denied",
+      "You do not have permission to recompute this character's XP");
+    }
+    var xp = 0;
+		Experiences.find(
+			{charId: charId},
+			{fields: {value: 1}}
+		).forEach(function(e){
+			xp += e.value;
+		});
+
+    Characters.update(charId, {$set: {xp}})
+		return xp;
+  },
+});
+
+const recomputeCharacterWeightCarried = new ValidatedMethod){
+  name: "Character.methods.recomputeCharacterWeightCarried",
+
+  validate: new SimpleSchema({
+    charId: { type: String }
+  }).validator(),
+
+  run({charId}){
+    if (!canEditCharacter(charId, this.userId)) {
+      // Throw errors with a specific error code
+      throw new Meteor.Error("Characters.methods.recomputeCharacterWeightCarried.denied",
+      "You do not have permission to recompute this character's carried weight");
+    }
+    var weightCarried = 0;
+    // store a dictionary of carried containers
+    var carriedContainers = {};
+    Containers.find(
+      {
+        charId,
+        isCarried: true,
+      },
+      { fields: {
+        isCarried: 1,
+        weight: 1,
+      }}
+    ).forEach(container => {
+      carriedContainers[container._id] = true;
+      weightCarried += container.weight;
+    });
+    Items.find(
+      {
+        charId,
+      },
+      { fields: {
+        weight: 1,
+        parent: 1,
+      }}
+    ).forEach(item => {
+      // if the item is carried/equiped or in a carried container, add its weight
+      if (parent.id === charId || carriedContainers[parent.id]){
+        weightCarried += item.weight;
+      }
+    });
+
+    Characters.update(charId, {$set: {weightCarried}})
+    return weightCarried;
+  }
+}
