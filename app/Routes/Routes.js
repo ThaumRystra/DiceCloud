@@ -1,3 +1,4 @@
+/*
 Router.configure({
 	loadingTemplate: "loading",
 	layoutTemplate: "layout",
@@ -172,3 +173,4 @@ Router.map(function() {
 		},
 	});
 });
+*/

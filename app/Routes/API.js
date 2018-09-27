@@ -1,3 +1,4 @@
+/*
 Router.map(function() {
 	this.route("vmixCharacter", {
 		path: "/vmix-character/:_id/",
@@ -89,3 +90,4 @@ var isRateLimited = function(apiKey, method){
 		return false;
 	}
 };
+*/

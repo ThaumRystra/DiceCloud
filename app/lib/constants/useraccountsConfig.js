@@ -18,7 +18,7 @@ AccountsTemplates.configure({
 		resendVerificationEmailLink_link: "Resend email verification",
 	},
 });
-
+/*
 AccountsTemplates.configureRoute("changePwd", {
 	template: "titledAtForm",
 	layoutTemplate: "layout",
@@ -51,7 +51,7 @@ AccountsTemplates.configureRoute("resendVerificationEmail", {
 	template: "titledAtForm",
 	layoutTemplate: "layout",
 });
-
+*/
 if (Meteor.isServer){
 	Meteor.methods({
 		"userExists": function(username){
