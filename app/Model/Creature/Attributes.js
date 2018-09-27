@@ -12,6 +12,7 @@ Schemas.Attribute = new SimpleSchema({
   // The nice-to-read name
 	name: {
 		type: String,
+		index: 1,
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
@@ -20,6 +21,7 @@ Schemas.Attribute = new SimpleSchema({
 	// Attributes need to store their order to keep the sheet consistent
 	order: {
 		type: Number,
+		index: 1,
 	},
   type: {
     type: String,
@@ -32,6 +34,7 @@ Schemas.Attribute = new SimpleSchema({
       "spellSlot", // Level 1, 2, 3... spell slots
       "utility", // Aren't displayed, Jump height, Carry capacity
     ],
+		index: 1,
   },
 	baseValue: {
 		type: Number,

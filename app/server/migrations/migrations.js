@@ -170,7 +170,7 @@ Migrations.add({
 				Skills.rawCollection().insert(defaultDocs.skills, {ordered: false});
 				DamageMultipliers.rawCollection().insert(defaultDocs.damageMultipliers, {ordered: false});
 				// Remove the stats on the character document
-				Characters.update(charId, modifier, function(error, result){
+				Characters.update(charId, modifier, {validate: false}, function(error, result){
 					if (error) console.log(error);
 				});
 			});

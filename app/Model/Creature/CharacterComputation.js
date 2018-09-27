@@ -60,6 +60,7 @@ const computeCharacterById = function (charId){
   let char = buildCharacter();
   char = computeCharacter(char);
   writeCharacter(char);
+  return char;
 };
 
 /*
@@ -339,7 +340,6 @@ const computeEffect = function(effect, char){
 		effect.result = evaluateCalculation(effect.calculation, char);
 	}
   effect.computed = true;
-  console.log({effect});
 };
 
 /*
@@ -426,7 +426,6 @@ const combineAttribute = function(stat, char){
   if (stat.attributeType === "ability") {
     stat.mod = Math.floor((stat.result - 10) / 2);
   }
-  console.log({statResult: stat.result})
 }
 
 const combineSkill = function(stat, char){

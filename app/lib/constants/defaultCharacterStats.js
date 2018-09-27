@@ -150,4 +150,5 @@ getDefaultCharacterDocs = function(charId){
 			parent: _.clone(baseParent),
 		});
 	}
+  return docs;
 }
