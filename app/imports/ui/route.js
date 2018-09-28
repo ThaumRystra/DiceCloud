@@ -3,6 +3,7 @@ import Vue from "vue";
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
+import CharacterList from "/imports/ui/pages/CharacterList.vue"
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -22,7 +23,10 @@ RouterFactory.configure(factory => {
       path: '/',
       name: 'home',
       component: Home,
-    },
+    },{
+      path: "/characterList",
+      component: CharacterList,
+    }
   ]);
 });
 

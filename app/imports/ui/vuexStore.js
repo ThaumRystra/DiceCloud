@@ -5,7 +5,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    drawer: false,
+    drawer: undefined,
   },
   mutations: {
     toggleDrawer (state) {

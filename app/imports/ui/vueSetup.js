@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import Vuetify from "vuetify";
 import routerFactory from "/imports/ui/route.js";
 import store from "/imports/ui/vuexStore.js";
+import VueMeteorTracker from 'vue-meteor-tracker';
 import AppLayout from '/imports/ui/layouts/AppLayout.vue';
 import "vuetify/dist/vuetify.min.css";
 
@@ -18,6 +19,8 @@ Vue.use(Vuetify, {
   },
   iconfont: "mdi",
 });
+
+Vue.use(VueMeteorTracker);
 
 // App start
 Meteor.startup(() => {
