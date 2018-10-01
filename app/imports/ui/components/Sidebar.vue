@@ -1,9 +1,22 @@
 <template>
   <div class="sidebar">
-    <v-parallax src="/png/paper-dice-crown.png" height="140"></v-parallax>
+		<v-toolbar color="primary" dark>
+			<v-layout row v-if="signedIn">
+				{{userName}}
+				<v-spacer></v-spacer>
+				<v-tooltip bottom>
+					<v-btn flat icon slot="activator"><v-icon>settings</v-icon></v-btn>
+					<span>Account Settings</span>
+				</v-tooltip>
+			</v-layout>
+			<v-layout row justify-center v-else="signedIn">
+				<v-btn flat>Sign in</v-btn>
+			</v-layout>
+		</v-toolbar>
     <v-list>
       <v-list-tile
         v-for="(link, i) in links"
+				v-if="link.vif || link.vif === undefined"
         :href="link.href"
         :key="i"
       >
@@ -51,21 +64,26 @@
 
 <script>
   export default {
-    data(){
-      return {
-        links: [
-          {title: "Home", icon: "home", href: "/"},
-          {title: "Characters", icon: "group", href: "/characterList"},
-          {title: "Send Feedback", icon: "bug_report", href: "/feedback"},
-          {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
-          {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},
-        ],
-      };
-    },
     meteor: {
       $subscribe: {
         "characterList": [],
       },
+			signedIn(){
+				return Meteor.userId();
+			},
+			userName(){
+				let user = Meteor.user();
+				return user && user.username || user && user._id;
+			},
+			links(){
+				return [
+					{title: "Home", icon: "home", href: "/"},
+	        {title: "Characters", icon: "group", href: "/characterList", vif: Meteor.userId()},
+	        {title: "Send Feedback", icon: "bug_report", href: "/feedback"},
+	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
+	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},
+				];
+			},
       parties(){
         let parties =  Parties.find(
     			{owner: Meteor.userId()},

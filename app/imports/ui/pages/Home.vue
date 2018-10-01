@@ -121,7 +121,6 @@
         </v-layout>
       </section>
     </div>
-    <v-footer></v-footer>
   </toolbar-layout>
 </template>
 

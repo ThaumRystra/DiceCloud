@@ -8,7 +8,7 @@
   },
   "author": "Stefan Zermatten",
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.49",
+    "@babel/runtime": "7.0.0-beta.55",
     "@polymer/polymer": "^1.2.5-npm-test.2",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",

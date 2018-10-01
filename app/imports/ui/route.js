@@ -3,7 +3,9 @@ import Vue from "vue";
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
-import CharacterList from "/imports/ui/pages/CharacterList.vue"
+import CharacterList from "/imports/ui/pages/CharacterList.vue";
+import SignIn from "/imports/ui/pages/SignIn.vue" ;
+import Register from "/imports/ui/pages/Register.vue" ;
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -26,7 +28,13 @@ RouterFactory.configure(factory => {
     },{
       path: "/characterList",
       component: CharacterList,
-    }
+    },{
+			path: "/sign-in",
+			component: SignIn,
+		},{
+			path: "/register",
+			component: Register,
+		},
   ]);
 });
 
