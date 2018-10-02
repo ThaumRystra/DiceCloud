@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
 		<v-toolbar color="primary" dark>
-			<v-layout row v-if="signedIn">
+			<v-layout row align-center v-if="signedIn">
 				{{userName}}
 				<v-spacer></v-spacer>
 				<v-tooltip bottom>
@@ -17,7 +17,7 @@
       <v-list-tile
         v-for="(link, i) in links"
 				v-if="link.vif || link.vif === undefined"
-        :href="link.href"
+        :to="link.to"
         :key="i"
       >
         <v-list-tile-action>
@@ -77,9 +77,9 @@
 			},
 			links(){
 				return [
-					{title: "Home", icon: "home", href: "/"},
-	        {title: "Characters", icon: "group", href: "/characterList", vif: Meteor.userId()},
-	        {title: "Send Feedback", icon: "bug_report", href: "/feedback"},
+					{title: "Home", icon: "home", to: "/"},
+	        {title: "Characters", icon: "group", to: "characterList", vif: Meteor.userId()},
+	        {title: "Send Feedback", icon: "bug_report", to: "feedback"},
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
 	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},
 				];

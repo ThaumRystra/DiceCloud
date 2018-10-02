@@ -25,7 +25,7 @@ Vue.use(VueMeteorTracker);
 // App start
 Meteor.startup(() => {
   // Create the router instance
-  const router = routerFactory.create()
+  const router = routerFactory.create();
 
   // Start the Vue app
   new Vue({
