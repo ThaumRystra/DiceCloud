@@ -7,6 +7,13 @@ const categories = [
 	{name: "Tools", key: "tools"},
 ];
 
+const categoryKeys = [
+	"weapons",
+	"armor",
+	"adventuringGear",
+	"tools",
+];
+
 Template.itemLibraryDialog.onCreated(function(){
 	this.selectedItem = new ReactiveVar();
 	this.searchTerm = new ReactiveVar();
@@ -14,10 +21,17 @@ Template.itemLibraryDialog.onCreated(function(){
 	this.readyDict = new ReactiveDict();
 	this.searchReady = new ReactiveVar();
 	librarySubs.subscribe("standardLibraries");
+	librarySubs.subscribe("customLibraries");
+
 	this.autorun(() => {
 		// Subscribe to all open categories
 		_.each(this.categoriesOpen.get(), (key) => {
-			var handle = librarySubs.subscribe("standardLibraryItems", key);
+			let handle;
+			if (_.contains(categoryKeys, key)){
+				handle = librarySubs.subscribe("standardLibraryItems", key);
+			} else {
+				handle = librarySubs.subscribe("libraryItems", key);
+			}
 			this.autorun(() => {
 				this.readyDict.set(key, handle.ready());
 			});
@@ -70,12 +84,29 @@ Template.itemLibraryDialog.helpers({
 		const searchTerm = Template.instance().searchTerm.get();
 		if (!searchTerm) return;
 		return LibraryItems.find({
-			library: "SRDLibraryGA3XWsd",
 			name: {
 				$regex: new RegExp(".*" + searchTerm + ".*", "gi")
 			},
 		});
 	},
+	customLibraries(){
+		let userId = Meteor.userId();
+    return Libraries.find({
+      $or: [
+  			{readers: userId},
+  			{writers: userId},
+  			{owner: userId},
+  		],
+    });
+	},
+	itemsInLibrary(libraryId){
+		return LibraryItems.find({
+			library: libraryId,
+		}, {
+			sort: {name: 1},
+		});
+	},
+
 });
 
 Template.itemLibraryDialog.events({
@@ -93,7 +124,7 @@ Template.itemLibraryDialog.events({
 	},
 	"click .category-header": function(event, template){
 		let cats = template.categoriesOpen.get();
-		const key = this.key;
+		const key = this.key || this._id;
 		// Toggle whether this key is in the array or not
 		if (_.contains(cats, key)){
 			cats = _.without(cats, key);

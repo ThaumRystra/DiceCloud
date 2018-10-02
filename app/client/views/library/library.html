@@ -1,26 +1,32 @@
 <template name="library">
-	<div class="fit layout vertical character-sheet">
+	<div class="fit layout vertical library">
 		<app-header fixed effects="waterfall">
 			<app-toolbar class="medium-tall app-grey white-text">
 				<div top-item class="layout horizontal center">
 					<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-					<div class="flex">
-						Library
+					<div class="flex layout horizontal center" style="height: 40px; margin-left: 8px;">
+						Item Library
 					</div>
 				</div>
+				<!--
 				<div bottom-item>
-					<paper-tabs id="characterSheetTabs" selected={{selectedTab}} class="app-grey white-text">
+					<paper-tabs id="libraryTabs" selected={{selectedTab}} class="app-grey white-text">
 						<paper-tab name="items">Items</paper-tab>
 						<paper-tab name="spells">Spells</paper-tab>
 					</paper-tabs>
 				</div>
+				-->
 			</app-toolbar>
 		</app-header>
 		<div class="flex" style="position: relative;">
-			<iron-pages id="tabPages" class="fit" selected={{selectedTab}}>
+			<!-- <iron-pages id="tabPages" class="fit" selected={{selectedTab}}> -->
 				<div name="items" class="tab-page fit">{{> itemLibrary}}</div>
-				<div name="spells" class="tab-page fit">{{! {{> spellLibrary}} }}</div>
-			</iron-pages>
+				<!-- <div name="spells" class="tab-page fit">{{! {{> spellLibrary}} }}</div>
+			</iron-pages> -->
+		</div>
+		<div class="floatyButton">
+			<paper-fab id="addLibrary" icon="add"></paper-fab>
+			{{#simpleTooltip}}Add Library{{/simpleTooltip}}
 		</div>
 	</div>
 </template>

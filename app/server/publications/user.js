@@ -4,5 +4,6 @@ Meteor.publish("user", function(){
 		username: 1,
 		profile: 1,
 		apiKey: 1,
+		librarySubscriptions: 1,
 	}});
 });

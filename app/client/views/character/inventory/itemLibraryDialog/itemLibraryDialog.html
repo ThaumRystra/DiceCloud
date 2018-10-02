@@ -48,6 +48,25 @@
 							{{/unless}}
 						</iron-collapse>
 					{{/each}}
+					{{#each customLibraries}}
+						<div class="paper-font-body2 category-header clickable">
+							<iron-icon icon="chevron-right" class="{{#if isOpen _id}}open{{/if}}">
+							</iron-icon>
+							{{name}}
+						</div>
+						<iron-collapse opened={{isOpen _id}}>
+							<table style="width: 100%">
+								<tbody>
+									{{#each item in (itemsInLibrary _id)}}
+										{{>libraryItem item=item selected=(isSelected item)}}
+									{{/each}}
+								</tbody>
+							</table>
+							{{#unless ready _id}}
+								<paper-spinner active></paper-spinner>
+							{{/unless}}
+						</iron-collapse>
+					{{/each}}
 				{{/if}}
 			</div>
 		</div>

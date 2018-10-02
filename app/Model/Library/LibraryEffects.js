@@ -9,7 +9,6 @@ Schemas.LibraryEffects = new SimpleSchema({
 		defaultValue: "add",
 		allowedValues: [
 			"base",
-			"proficiency",
 			"add",
 			"mul",
 			"min",

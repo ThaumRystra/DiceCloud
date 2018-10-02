@@ -42,3 +42,50 @@ LibraryItems.allow({
 	},
 	fetch: ["library"],
 });
+
+Meteor.methods({
+	updateLibraryItemEffect: function({itemId, effectIndex, field, value, unsetField}){
+		let libraryId = LibraryItems.findOne(itemId).library;
+		let userId = Meteor.userId();
+		if (!Libraries.canEdit(userId, libraryId)) return;
+		let modifier = {
+			$set: {
+				[`effects.${effectIndex}.${field}`]: value,
+			}
+		};
+		if (unsetField){
+			modifier.$unset = {
+				[`effects.${effectIndex}.${unsetField}`]: 1,
+			}
+		}
+		LibraryItems.update(itemId, modifier);
+	},
+	removeLibraryItemEffect: function({itemId, effectIndex}){
+		let libraryId = LibraryItems.findOne(itemId).library;
+		let userId = Meteor.userId();
+		if (!Libraries.canEdit(userId, libraryId)) return;
+		LibraryItems.update(itemId, {$unset : {
+			[`effects.${effectIndex}`] : 1,
+		}});
+		LibraryItems.update(itemId, {$pull : {"effects" : null}});
+	},
+	updateLibraryItemAttack: function({itemId, attackIndex, field, value}){
+		let libraryId = LibraryItems.findOne(itemId).library;
+		let userId = Meteor.userId();
+		if (!Libraries.canEdit(userId, libraryId)) return;
+		LibraryItems.update(itemId, {
+			$set: {
+				[`attacks.${attackIndex}.${field}`]: value,
+			}
+		});
+	},
+	removeLibraryItemAttack: function({itemId, attackIndex}){
+		let libraryId = LibraryItems.findOne(itemId).library;
+		let userId = Meteor.userId();
+		if (!Libraries.canEdit(userId, libraryId)) return;
+		LibraryItems.update(itemId, {$unset : {
+			[`attacks.${attackIndex}`] : 1,
+		}});
+		LibraryItems.update(itemId, {$pull : {"attacks" : null}});
+	},
+})

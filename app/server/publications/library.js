@@ -23,3 +23,18 @@ Meteor.publish("standardLibrarySpells", function(level){
 		sort: {name: 1},
 	});
 });
+
+Meteor.publish("customLibraries", function(){
+	userId = this.userId;
+	return Libraries.find({
+		$or: [
+			{readers: userId},
+			{writers: userId},
+			{owner: userId},
+		],
+	});
+});
+
+Meteor.publish("libraryItems", function(libraryId){
+	return LibraryItems.find({library: libraryId});
+});

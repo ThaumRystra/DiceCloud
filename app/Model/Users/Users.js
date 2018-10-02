@@ -3,6 +3,10 @@ Schemas.UserProfile = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+	librarySubscriptions: {
+		type: [String],
+		defaultValue: [],
+	},
 });
 
 Schemas.User = new SimpleSchema({

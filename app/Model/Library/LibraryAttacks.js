@@ -1,7 +1,7 @@
 Schemas.LibraryAttacks = new SimpleSchema({
 	name: {
 		type: String,
-		defaultValue: "New Attack",
+		optional: true,
 		trim: false,
 	},
 	details: {

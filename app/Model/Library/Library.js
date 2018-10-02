@@ -2,13 +2,37 @@ Libraries = new Mongo.Collection("library");
 
 Schemas.Library = new SimpleSchema({
 	name:    {type: String},
-	owner:   {type: String, regEx: SimpleSchema.RegEx.Id},
-	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
-	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
-	public:  {type: Boolean, defaultValue: false},
+	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
+	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
+	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
+	public:  {type: Boolean, defaultValue: false, index: 1},
 });
 
 Libraries.attachSchema(Schemas.Library);
+
+Libraries.after.remove(function(userId, library) {
+	LibraryItems.remove({library: library._id});
+	LibrarySpells.remove({library: library._id});
+});
+
+Meteor.methods({
+	removeLibrary: function(libraryId) {
+		let library = Libraries.findOne(libraryId);
+    let userId = Meteor.userId();
+
+		if (!library) return;
+		if (library.owner === userId){
+			Libraries.remove(libraryId);
+		} else {
+			if (_.contains(library.readers, userId)){
+				Libraries.update(libraryId, {$pull: {"readers": userId}});
+			}
+			if (_.contains(library.writers, userId)){
+				Libraries.update(libraryId, {$pull: {"writers": userId}});
+			}
+		}
+	},
+});
 
 Libraries.allow({
 	insert(userId, doc) {
@@ -18,16 +42,14 @@ Libraries.allow({
 		return canEdit(userId, doc);
 	},
 	remove(userId, doc) {
-		return canEdit(userId, doc);
+		return userId && doc.owner === userId;
 	},
 	fetch: ["owner", "writers"],
 });
 
 Libraries.deny({
-	// For now, only admins can manage libraries
 	insert(userId, doc){
-		var user = Meteor.users.findOne(userId);
-		return !user || !_.contains(user.roles, "admin");
+		return !Meteor.users.findOne(userId);
 	},
 	update(userId, doc, fields, modifier) {
 		// Can't change owners

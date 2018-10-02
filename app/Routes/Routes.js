@@ -121,7 +121,7 @@ Router.map(function() {
 	this.route("library", {
 		path: "/library",
 		waitOn: function(){
-			return subsManager.subscribe("standardLibraries");
+			return subsManager.subscribe("customLibraries");
 		},
 		onAfterAction: function() {
 			document.title = appName + " - Library";
