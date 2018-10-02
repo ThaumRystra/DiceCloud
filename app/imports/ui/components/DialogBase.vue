@@ -1,0 +1,19 @@
+<template>
+  <transition
+    v-on:before-enter="beforeEnter"
+    v-on:enter="enter"
+    v-on:after-enter="afterEnter"
+    v-on:enter-cancelled="enterCancelled"
+
+    v-on:before-leave="beforeLeave"
+    v-on:leave="leave"
+    v-on:after-leave="afterLeave"
+    v-on:leave-cancelled="leaveCancelled"
+  >
+    <v-card>
+      <v-toolbar></v-toolbar>
+      <v-layout></v-layout>
+      <v-card-actions></v-card-actions>
+    </v-card>
+  </transition>
+</template>
