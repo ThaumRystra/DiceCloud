@@ -1,6 +1,6 @@
 <template>
 	<ToolbarLayout>
-		<div slot="toolbar">Sign In</div>
+		<div slot="toolbar">Sign Up</div>
 		<v-form ref="form" class="mt-4">
 			<v-layout column align-center>
 				<v-img

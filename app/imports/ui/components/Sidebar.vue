@@ -10,7 +10,7 @@
 				</v-tooltip>
 			</v-layout>
 			<v-layout row justify-center v-else="signedIn">
-				<v-btn flat>Sign in</v-btn>
+				<v-btn flat to="/sign-in">Sign in</v-btn>
 			</v-layout>
 		</v-toolbar>
     <v-list>

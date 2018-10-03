@@ -57,9 +57,9 @@
           </v-layout>
         </v-layout>
       </section>
-      <section class="ma-5">
+      <section class="ma-5" v-if="!signedIn">
         <v-layout row align-center justify-space-around>
-          <v-btn color="accent" round large>
+          <v-btn color="accent" round large to="/register">
             Sign up
           </v-btn>
         </v-layout>
@@ -130,6 +130,11 @@
     components: {
       ToolbarLayout,
     },
+    meteor: {
+      signedIn(){
+				return Meteor.userId();
+			},
+    }
   };
 </script>
 

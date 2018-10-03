@@ -35,7 +35,7 @@
 					>
 						Sign In
 					</v-btn>
-					<v-btn color="accent" href="/register">
+					<v-btn color="accent" to="/register">
 						Register
 					</v-btn>
 				</v-layout>
@@ -55,6 +55,7 @@
 
 <script>
 	import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
+	import {router} from "/imports/ui/vueSetup.js";
 	export default{
 		data: () => ({
       valid: true,
@@ -74,7 +75,11 @@
 				console.log("submitting");
         if (this.$refs.form.validate()) {
 					Meteor.loginWithPassword(this.name, this.password, e => {
-						this.error = e && e.reason;
+						if (e){
+							this.error = e.reason;
+						} else {
+							Router
+						}
 					});
         }
       },
