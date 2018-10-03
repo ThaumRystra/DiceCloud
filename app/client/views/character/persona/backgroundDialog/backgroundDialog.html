@@ -1,9 +1,0 @@
-<template name="backgroundDialog">
-	{{#baseDialog title=title class=colorClass hideColor="true" hideDelete="true"}}
-		<div>{{#markdown}}{{evaluateString charId value}}{{/markdown}}</div>
-		{{> proficiencyViewList charId=charId parentId=charId parentGroup="background"}}
-	{{else}}
-		{{> textDialogEdit}}
-		{{> proficiencyEditList parentId=charId parentCollection="Characters" charId=charId parentGroup="background"}}
-	{{/baseDialog}}
-</template>

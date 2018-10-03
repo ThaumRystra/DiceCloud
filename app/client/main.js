@@ -1,2 +1,2 @@
 import "/imports/ui/vueSetup.js";
-import "/imports/styles/stylesIndex.js";
+import "/imports/ui/styles/stylesIndex.js";

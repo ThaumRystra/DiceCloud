@@ -1,7 +1,0 @@
-html /deep/ .moveItemDialog paper-tabs::shadow #selectionBar {
-	background-color: #D50000;
-}
-
-html /deep/ .moveItemDialog paper-tab::shadow #ink {
-	color: #D50000;
-}

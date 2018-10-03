@@ -4,6 +4,7 @@
 settings.json
 public/components
 public/_imports.html
+private/oldClient
 nohup.out
 node_modules
 dump

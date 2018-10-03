@@ -97,8 +97,13 @@
       submit () {
 				console.log("submitting");
         if (this.$refs.form.validate()) {
-					Meteor.loginWithPassword(this.name, this.password, e => {
-						this.error = e && e.reason;
+					Accounts.createUser({
+						username: this.username,
+						password: this.password,
+						email: this.email,
+					}, function(e){
+						console.error(e);
+						this.error = e.reason;
 					});
         }
       },
