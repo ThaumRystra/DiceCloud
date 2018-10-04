@@ -1,0 +1,8 @@
+/*
+ * iOS doens't believe in click events for some elements.
+ * This is here to convince it to allow buttons to be clickable
+ */
+ button {
+   cursor: pointer;
+ }
+ 
