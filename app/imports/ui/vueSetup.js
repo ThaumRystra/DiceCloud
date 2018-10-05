@@ -5,6 +5,7 @@ import routerFactory from "/imports/ui/route.js";
 import store from "/imports/ui/vuexStore.js";
 import VueMeteorTracker from 'vue-meteor-tracker';
 import AppLayout from '/imports/ui/layouts/AppLayout.vue';
+import router from "/imports/ui/router.js";
 import "vuetify/dist/vuetify.min.css";
 
 Vue.use(VueMeteorTracker);
@@ -21,9 +22,6 @@ Vue.use(Vuetify, {
   iconfont: "mdi",
 });
 
-// Create the router instance
-const router = routerFactory.create();
-export router;
 
 // App start
 Meteor.startup(() => {

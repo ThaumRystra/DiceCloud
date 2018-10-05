@@ -102,4 +102,10 @@ if (Meteor.isServer) Meteor.methods({
 		var apiKey = Random.id(30);
 		Meteor.users.update(this.userId, {$set: {apiKey}});
 	},
+	sendVerificationEmail(address) {
+		var user = Meteor.users.findOne(this.userId);
+		if (!user) return;
+		if (!_.some(user.emails, email => email.address === address)) return;
+		Accounts.sendVerificationEmail(this.userId, address);
+	},
 });

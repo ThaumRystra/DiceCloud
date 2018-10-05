@@ -55,7 +55,7 @@
 
 <script>
 	import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
-	import {router} from "/imports/ui/vueSetup.js";
+	import router from "/imports/ui/Router.js";
 	export default{
 		data: () => ({
       valid: true,
@@ -78,7 +78,7 @@
 						if (e){
 							this.error = e.reason;
 						} else {
-							Router
+							router.push("characterList");
 						}
 					});
         }

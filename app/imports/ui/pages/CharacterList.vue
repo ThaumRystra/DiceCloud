@@ -1,12 +1,12 @@
 <template>
-  <ToolbarLayout>
+  <toolbar-layout>
     <span slot="toolbar">Characters</span>
     <v-card class="ma-4">
       <v-list v-if="charactersWithNoParty.length">
         <v-list-tile
           v-for="character in charactersWithNoParty"
           :key="character._id"
-          :href="character.url"
+          :to="character.url"
         >
           <v-list-tile-avatar :color="character.color">
               <img
@@ -18,9 +18,14 @@
                 {{character.initial}}
               </template>
           </v-list-tile-avatar>
-          <v-list-tile-title>
-            {{character.name}}
-          </v-list-tile-title>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{character.name}}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              {{character.alignment}} {{character.gender}} {{character.race}}
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
         </v-list-tile>
       </v-list>
       <v-expansion-panel popout>
@@ -63,7 +68,7 @@
       <labeled-fab icon="face" label="New Character"></labeled-fab>
       <labeled-fab icon="group" label="New Party"></labeled-fab>
     </v-speed-dial>
-  </ToolbarLayout>
+  </toolbar-layout>
 </template>
 
 <script>

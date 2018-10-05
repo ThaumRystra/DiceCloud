@@ -6,6 +6,7 @@ import Home from '/imports/ui/pages/Home.vue';
 import CharacterList from "/imports/ui/pages/CharacterList.vue";
 import SignIn from "/imports/ui/pages/SignIn.vue" ;
 import Register from "/imports/ui/pages/Register.vue" ;
+import Account from "/imports/ui/pages/Account.vue" ;
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -34,6 +35,9 @@ RouterFactory.configure(factory => {
 		},{
 			path: "/register",
 			component: Register,
+		},{
+			path: "/account",
+			component: Account,
 		},
   ]);
 });
@@ -46,4 +50,6 @@ RouterFactory.configure(factory => {
   });
 }, -1);
 
-export default routerFactory;
+// Create the router instance
+const router = routerFactory.create();
+export default router;

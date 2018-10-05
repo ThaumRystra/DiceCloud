@@ -1,3 +1,6 @@
+// TODO allow abilities to get disadvantage, making all skills that are based
+// on them disadvantaged as well
+
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const recomputeCharacter = new ValidatedMethod({
