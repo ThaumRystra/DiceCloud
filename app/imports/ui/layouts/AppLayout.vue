@@ -4,11 +4,13 @@
       <Sidebar></Sidebar>
     </v-navigation-drawer>
     <router-view></router-view>
+    <dialog-stack></dialog-stack>
   </v-app>
 </template>
 
 <script>
   import Sidebar from "/imports/ui/components/Sidebar.vue";
+  import DialogStack from "/imports/ui/dialogStack/DialogStack.vue"
   export default {
     computed: {
       drawer: {
@@ -22,6 +24,7 @@
     },
     components: {
       Sidebar,
+      DialogStack,
     },
   };
 </script>

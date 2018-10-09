@@ -55,7 +55,7 @@
 
 <script>
 	import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
-	import router from "/imports/ui/Router.js";
+	import router from "/imports/ui/router.js";
 	export default{
 		data: () => ({
       valid: true,
@@ -72,11 +72,10 @@
     }),
 		methods: {
       submit () {
-				console.log("submitting");
         if (this.$refs.form.validate()) {
-					Meteor.loginWithPassword(this.name, this.password, e => {
-						if (e){
-							this.error = e.reason;
+					Meteor.loginWithPassword(this.name, this.password, error => {
+						if (error){
+							this.error = error.reason;
 						} else {
 							router.push("characterList");
 						}
@@ -84,9 +83,8 @@
         }
       },
 			googleLogin() {
-				console.log("logging in with Google");
-				Meteor.loginWithGoogle(e => {
-					this.googleError = e.message;
+				Meteor.loginWithGoogle(error => {
+					if (error) this.googleError = error.reason;
 				});
 			}
     },

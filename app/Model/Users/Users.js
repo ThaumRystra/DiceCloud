@@ -70,42 +70,41 @@ Schemas.User = new SimpleSchema({
 
 Meteor.users.attachSchema(Schemas.User);
 
-Meteor.users.allow({
-	update: function(userId, doc, fields, modifier) {
-		if (
-			doc._id === userId &&
-			_.contains(fields, "username") &&
-			_.contains(fields, "profile") &&
-			fields.length === 2 &&
-			_.keys(modifier).length === 1 &&
-			modifier.$set &&
-			modifier.$set["profile.username"] &&
-			modifier.$set.username &&
-			_.keys(modifier.$set).length === 2
-		){
-			var expectedUsername = modifier.$set["profile.username"];
-			expectedUsername = expectedUsername.toLowerCase().replace(/\s+/gm, "");
-			if (modifier.$set.username !== expectedUsername){
-				return false;
-			}
-			var foundUser = Meteor.call("getUserId", expectedUsername);
-			return !foundUser || foundUser === userId;
-		}
-	}
-});
-
-if (Meteor.isServer) Meteor.methods({
-	generateMyApiKey() {
+Meteor.users.gnerateApiKey = new ValidatedMethod({
+  name: "Users.methods.generateApiKey",
+	validate: null,
+  run(){
+		if(Meteor.isClient) return;
 		var user = Meteor.users.findOne(this.userId);
 		if (!user) return;
 		if (user && user.apiKey) return;
 		var apiKey = Random.id(30);
 		Meteor.users.update(this.userId, {$set: {apiKey}});
 	},
-	sendVerificationEmail(address) {
-		var user = Meteor.users.findOne(this.userId);
-		if (!user) return;
-		if (!_.some(user.emails, email => email.address === address)) return;
+});
+
+Meteor.users.sendVerificationEmail = new ValidatedMethod({
+	name: "Users.methods.sendVerificationEmail",
+	validate: new SimpleSchema({
+		userId:{
+			type: String,
+			optional: true,
+		},
+		address: {
+			type: String,
+		},
+	}).validator(),
+	run(userId, address){
+		userId = this.userId || userId;
+		let user = Meteor.users.findOne();
+		if (!user) {
+			throw new Meteor.Error("User not found",
+				"Can't send a validation email to a user that does not exist");
+		}
+		if (!_.some(user.emails, email => email.address === address)) {
+			throw new Meteor.Error("Email address not found",
+				"The specified email address wasn't found on this user account");
+		}
 		Accounts.sendVerificationEmail(this.userId, address);
-	},
+	}
 });

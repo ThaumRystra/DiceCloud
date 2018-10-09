@@ -140,6 +140,8 @@
     data(){ return {
       showApiKey: false,
       signOutBusy: false,
+      apiKeyGenerationError: null,
+      emailVerificationError: null,
     }},
     methods: {
       signOut(){
@@ -148,11 +150,15 @@
         });
       },
       generateKey(){
-        Meteor.call("generateMyApiKey");
+        Meteor.users.gnerateApiKey.call(error => {
+          if(error) this.apiKeyGenerationError = error.reason;
+        });
     		this.showApiKey = true;
       },
       verifyEmail(address){
-    		Meteor.call("sendVerificationEmail", address);
+        Meteor.users.sendVerificationEmail.call({address}, error => {
+          if(error) this.emailVerificationError = error.reason;
+        });
       },
     },
     components: {
