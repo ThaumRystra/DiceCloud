@@ -49,7 +49,7 @@ reactive-dict@1.2.0
 ongoworks:speakingurl
 service-configuration@1.0.11
 google-config-ui@1.0.0
-dynamic-import@0.4.0
+dynamic-import@0.4.2
 ddp-rate-limiter@1.0.7
 rate-limit@1.0.9
 iron:router
