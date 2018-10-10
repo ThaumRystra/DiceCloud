@@ -107,7 +107,7 @@ reload@1.2.0
 retry@1.1.0
 reywood:iron-router-ga@0.7.1
 routepolicy@1.1.0
-seba:minifiers-autoprefixer@1.0.1
+seba:minifiers-autoprefixer@1.1.1
 service-configuration@1.0.11
 session@1.1.8
 sha@1.0.9
