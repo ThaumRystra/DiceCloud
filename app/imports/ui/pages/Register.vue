@@ -101,8 +101,12 @@
 						username: this.username,
 						password: this.password,
 						email: this.email,
-					}, function(error){
-						this.error = error.reason;
+					}, error => {
+						if (error){
+							this.error = error.reason;
+						} else {
+							router.push("characterList");
+						}
 					});
         }
       },
