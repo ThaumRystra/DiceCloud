@@ -4,7 +4,7 @@
 # but you can also edit it by hand.
 
 accounts-password@1.5.1
-accounts-ui@1.3.1
+accounts-ui@1.3.0
 random@1.1.0
 dburles:collection-helpers
 reactive-var@1.0.11
@@ -16,15 +16,15 @@ momentjs:moment
 dburles:mongo-collection-instances
 percolate:migrations
 ecwyne:mathjs
-accounts-google@1.3.2
+accounts-google@1.3.1
 splendido:accounts-meld
 email@1.2.3
 meteorhacks:subs-manager
 chuangbo:marked
 meteor-base@1.4.0
 mobile-experience@1.0.5
-mongo@1.6.0
-session@1.1.8
+mongo@1.5.0
+session@1.1.7
 jquery@1.11.10
 tracker@1.2.0
 logging@1.1.20
@@ -32,18 +32,18 @@ reload@1.2.0
 ejson@1.1.0
 check@1.3.1
 wizonesolutions:canonical
-standard-minifier-js@2.4.0
-shell-server@0.4.0
+standard-minifier-js@2.3.4
+shell-server@0.3.1
 seba:minifiers-autoprefixer
 templates:array
-ecmascript@0.12.0
+ecmascript@0.11.1
 es5-shim@4.8.0
-reactive-dict@1.2.1
+reactive-dict@1.2.0
 percolate:synced-cron
 ongoworks:speakingurl
 service-configuration@1.0.11
-google-config-ui@1.0.1
-dynamic-import@0.5.0
+google-config-ui@1.0.0
+dynamic-import@0.4.2
 ddp-rate-limiter@1.0.7
 rate-limit@1.0.9
 meteortesting:mocha
