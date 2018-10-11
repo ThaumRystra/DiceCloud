@@ -12,7 +12,7 @@
         class="dialog"
         :style="getDialogStyle(index)"
       >
-        <component :is="dialog.component" :data="dialog.data"></component>
+        <component :is="dialog.component" :data="dialog.data" @pop="popDialogStack($event)"></component>
       </div>
     </transition-group>
   </v-layout>
@@ -32,8 +32,8 @@
       },
     },
     methods: {
-      popDialogStack(){
-        store.dispatch("popDialogStack");
+      popDialogStack(result){
+        store.dispatch("popDialogStack", result);
       },
       backdropClicked(event){
         if (event.target === event.currentTarget) this.popDialogStack();
@@ -61,8 +61,8 @@
   }
   .dialog-sizer {
     position: relative;
-    height: 500px;
-    width: 500px;
+    height: 600px;
+    width: 600px;
     z-index: 5;
     flex: initial;
   }

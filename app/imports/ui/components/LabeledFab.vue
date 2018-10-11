@@ -1,5 +1,5 @@
 <template>
-  <v-btn fab small>
+  <v-btn fab small @click="$emit('click')">
     <v-icon>
       {{icon}}
     </v-icon>

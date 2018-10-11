@@ -8,6 +8,7 @@ dialogStack.dialogs = [];
 const dialogStackStore = {
   state: {
     dialogs: [],
+    currentResult: null,
   },
   mutations: {
     pushDialogStack(state, {component, data, element, returnElement, callback}){
@@ -24,15 +25,18 @@ const dialogStackStore = {
       updateHistory();
     },
     popDialogStackMutation (state, result){
+      console.log({popped: result});
       const dialog = state.dialogs.pop();
+      state.currentResult = null;
       updateHistory();
       if (!dialog) return;
-      dialog.callback && dialog.callback(result);
+      if (dialog.callback) dialog.callback(result);
     },
   },
   actions: {
     popDialogStack(context, result){
       if (history && history.state && history.state.openDialogs){
+        context.state.currentResult = result;
         history.back();
       } else {
         context.commit("popDialogStackMutation", result)

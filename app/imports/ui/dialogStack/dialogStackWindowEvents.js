@@ -5,7 +5,7 @@ if (window){
     let state = event.state;
     let numDialogs = store.state.dialogStack.dialogs.length;
     if (_.isFinite(state.openDialogs) && numDialogs > state.openDialogs){
-      store.commit("popDialogStackMutation");
+      store.commit("popDialogStackMutation", store.state.dialogStack.currentResult);
     }
   };
 }

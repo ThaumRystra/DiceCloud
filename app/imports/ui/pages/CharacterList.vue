@@ -65,15 +65,17 @@
         <v-icon>add</v-icon>
         <v-icon>close</v-icon>
       </v-btn>
-      <labeled-fab icon="face" label="New Character"></labeled-fab>
+      <labeled-fab icon="face" label="New Character" @click="insertCharacter"></labeled-fab>
       <labeled-fab icon="group" label="New Party"></labeled-fab>
     </v-speed-dial>
   </toolbar-layout>
 </template>
 
 <script>
+  import store from "/imports/ui/vuexStore.js";
   import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
   import LabeledFab from "/imports/ui/components/LabeledFab.vue";
+  import CharacterCreationDialog from "/imports/ui/character/CharacterCreationDialog.vue";
 
   const characterTransform = function(char){
     char.url = `\/character\/${char._id}\/${char.urlName || "-"}`;
@@ -117,6 +119,20 @@
     			{sort: {name: 1}}
     		).map(characterTransform);
     	},
+    },
+    methods: {
+      insertCharacter(e){
+				console.log(e);
+        store.commit("pushDialogStack", {
+           component: CharacterCreationDialog,
+           data: {},
+           element: undefined,
+           returnElement: undefined,
+           callback(result){
+             console.log({result});
+           },
+        });
+      },
     },
     components: {
       ToolbarLayout,
