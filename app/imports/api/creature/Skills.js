@@ -40,6 +40,11 @@ skillSchema = new SimpleSchema({
   order: {
 	  type: Number,
 	},
+	baseValue: {
+		type: Number,
+		decimal: true,
+		optional: true,
+	},
   value: {
     type: Number,
     decimal: true,

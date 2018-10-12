@@ -230,6 +230,7 @@ function buildCreature(charId){
         busyComputing: false,
         type: "skill",
         ability: skill.ability,
+        base: skill.baseValue || 0,
         result: 0, // For skills the result is the skillMod
         proficiency: 0,
         add: 0,
@@ -528,8 +529,8 @@ function combineSkill(stat, char){
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
   stat.result = Math.floor(stat.result);
+  if (stat.base > stat.result) stat.result = stat.base;
 }
-
 
 /**
  * combineDamageMultiplier - Combine damageMultiplier's results into final values
