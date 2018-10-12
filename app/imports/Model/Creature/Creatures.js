@@ -23,6 +23,7 @@ Schemas.Creature = new SimpleSchema({
 	xp:            {type: Number, defaultValue: 0},
 	weightCarried: {type: Number, defaultValue: 0},
 	level:         {type: Number, defaultValue: 0},
+	type:          {type: String, defaultValue: "pc", allowedValues: ["pc", "npc", "monster"]},
 
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
@@ -71,9 +72,9 @@ Creatures.calculate = {
 	},
 };
 
-const insertCreatureMethod = new ValidatedMethod({
+const insertCharacter = new ValidatedMethod({
 
-  name: "Creatures.methods.insert", // DDP method name
+  name: "Creatures.methods.insertCharacter", // DDP method name
 
   validate: new SimpleSchema({
 	  name: {
