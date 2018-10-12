@@ -7,7 +7,7 @@ import Attributes from "/imports/api/creature/Attributes.js";
 import Skills from "/imports/api/creature/Skills.js";
 import Effects from "/imports/api/creature/Effects.js";
 
-const recomputeCreature = new ValidatedMethod({
+export const recomputeCreature = new ValidatedMethod({
 
   name: "Creatures.methods.recomputeCreature",
 
@@ -314,7 +314,7 @@ function buildCreature(charId){
  * @param  {type} char description
  * @returns {type}      description
  */
-function computeCreature(char){
+export function computeCreature(char){
   // Iterate over each stat in order and compute it
   for (statName in char.atts){
     let stat = char.atts[statName]
@@ -623,7 +623,7 @@ function evaluateCalculation(string, char){
 /**
  * recompute a character's XP from a given id
  */
-const recomputeCreatureXP = new ValidatedMethod({
+export const recomputeCreatureXP = new ValidatedMethod({
   name: "Creatures.methods.recomputeCreatureXP",
 
   validate: new SimpleSchema({
@@ -653,7 +653,7 @@ const recomputeCreatureXP = new ValidatedMethod({
 /**
  * Recompute a character's weight carried from a given id
  */
-const recomputeCreatureWeightCarried = new ValidatedMethod({
+export const recomputeCreatureWeightCarried = new ValidatedMethod({
   name: "Creature.methods.recomputeCreatureWeightCarried",
 
   validate: new SimpleSchema({
@@ -701,10 +701,3 @@ const recomputeCreatureWeightCarried = new ValidatedMethod({
     return weightCarried;
   }
 });
-
-export {
-  recomputeCreature,
-  computeCreature,
-  recomputeCreatureXP,
-  recomputeCreatureWeightCarried
-};
