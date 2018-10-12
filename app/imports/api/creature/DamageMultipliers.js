@@ -22,9 +22,6 @@ Schemas.DamageMultiplier = new SimpleSchema({
     decimal: true,
 		defaultValue: 1,
   },
-	parent: {
-		type: Schemas.Parent
-	},
 	enabled: {
 		type: Boolean,
 		defaultValue: true,

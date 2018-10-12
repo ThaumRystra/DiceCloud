@@ -1,3 +1,6 @@
+import SimpleSchema from 'simpl-schema';
+import {makeChild} from "/imports/api/parenting.js";
+
 let Attacks = new Mongo.Collection("attacks");
 
 /*
@@ -51,15 +54,6 @@ attackSchema = new SimpleSchema({
 		],
 		defaultValue: "slashing",
 	},
-	//the id of the feature, buff or item that created this effect
-	parent: {
-		type: Schemas.Parent
-	},
-	color: {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 	enabled: {
 		type: Boolean,
 		defaultValue: true,
@@ -68,7 +62,7 @@ attackSchema = new SimpleSchema({
 
 Attacks.attachSchema(attackSchema);
 
-Attacks.attachBehaviour("softRemovable");
+//Attacks.attachBehaviour("softRemovable");
 makeChild(Attacks, ["name", "enabled"]); //children of lots of things
 
 Attacks.after.insert(function (userId, attack) {
@@ -82,8 +76,5 @@ Attacks.after.insert(function (userId, attack) {
 		}
 	}
 });
-
-Attacks.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Attacks.deny(CHARACTER_SUBSCHEMA_DENY);
 
 export default Attacks;

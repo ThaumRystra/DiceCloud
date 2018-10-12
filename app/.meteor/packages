@@ -9,9 +9,7 @@ random@1.1.0
 dburles:collection-helpers
 reactive-var@1.0.11
 underscore@1.0.10
-aldeed:collection2
 matb33:collection-hooks
-zimme:collection-softremovable
 momentjs:moment
 dburles:mongo-collection-instances
 percolate:migrations
@@ -51,3 +49,5 @@ mdg:validated-method
 akryum:vue-component
 akryum:vue-router2
 static-html
+aldeed:collection2@3.0.0
+aldeed:schema-index

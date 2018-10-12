@@ -59,6 +59,7 @@ Migrations.add({
 	version: 3,
 	name: "Moves all character attributes off the character document",
 	up: function () {
+		//TODO Temporary hitpoints should become attributes with the hitpoints type
 		const batchSize = 50;
 		const stats = [
 			// Abilities

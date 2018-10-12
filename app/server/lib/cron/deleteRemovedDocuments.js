@@ -1,3 +1,17 @@
+import Attacks from "/imports/api/creature/Attacks.js";
+import Buffs from "/imports/api/creature/Buffs.js";
+import Classes from "/imports/api/creature/Classes.js";
+import CustomBuffs from "/imports/api/creature/CustomBuffs.js";
+import Effects from "/imports/api/creature/Effects.js";
+import Experiences from "/imports/api/creature/Experiences.js";
+import Features from "/imports/api/creature/Features.js";
+import Notes from "/imports/api/creature/Notes.js";
+import Proficiencies from "/imports/api/creature/Proficiencies.js";
+import SpellLists from "/imports/api/creature/SpellLists.js";
+import Spells from "/imports/api/creature/Spells.js";
+import Containers from "/imports/api/creature/Containers.js";
+import Items from "/imports/api/creature/Items.js";
+
 Meteor.startup(() => {
 	const collections = [
 		Attacks, Buffs, Classes, CustomBuffs, Effects, Experiences,

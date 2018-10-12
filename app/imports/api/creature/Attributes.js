@@ -1,4 +1,6 @@
 import {makeChild} from "/imports/api/parenting.js";
+import SimpleSchema from 'simpl-schema';
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 let Attributes = new Mongo.Collection("attributes");
 
@@ -78,6 +80,7 @@ attributeSchema = new SimpleSchema({
 });
 
 Attributes.attachSchema(attributeSchema);
+Attributes.attachSchema(ColorSchema);
 
 Attributes.attachBehaviour("softRemovable");
 makeChild(Attributes, ["enabled"]); //children of lots of things

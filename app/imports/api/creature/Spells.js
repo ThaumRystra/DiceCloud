@@ -1,4 +1,5 @@
 Spells = new Mongo.Collection("spells");
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 Schemas.Spell = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
@@ -52,14 +53,10 @@ Schemas.Spell = new SimpleSchema({
 		defaultValue: "Abjuration",
 		allowedValues: magicSchools,
 	},
-	color:       {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 });
 
 Spells.attachSchema(Schemas.Spell);
+Attributes.attachSchema(ColorSchema);
 
 Spells.attachBehaviour("softRemovable");
 makeChild(Spells); //children of spell lists

@@ -9,11 +9,8 @@ akryum:vue-component@0.14.1
 akryum:vue-component-dev-client@0.4.3
 akryum:vue-component-dev-server@0.1.2
 akryum:vue-router2@0.2.2
-aldeed:collection2@2.10.0
-aldeed:collection2-core@1.2.0
-aldeed:schema-deny@1.1.0
-aldeed:schema-index@1.1.1
-aldeed:simple-schema@1.5.4
+aldeed:collection2@3.0.0
+aldeed:schema-index@3.0.0
 allow-deny@1.1.0
 autoupdate@1.4.1
 babel-compiler@7.1.1
@@ -28,7 +25,6 @@ caching-html-compiler@1.1.3
 callback-hook@1.1.0
 check@1.3.1
 chuangbo:marked@0.3.5_1
-coffeescript@1.0.17
 dburles:collection-helpers@1.1.0
 dburles:mongo-collection-instances@0.3.5
 ddp@1.4.0
@@ -65,7 +61,6 @@ localstorage@1.2.0
 logging@1.1.20
 matb33:collection-hooks@0.8.4
 mdg:validated-method@1.2.0
-mdg:validation-error@0.5.1
 meteor@1.9.2
 meteor-base@1.4.0
 meteorhacks:picker@1.0.3
@@ -121,11 +116,10 @@ templating@1.3.2
 templating-compiler@1.3.3
 templating-runtime@1.3.2
 templating-tools@1.1.2
+tmeasday:check-npm-versions@0.3.2
 tracker@1.2.0
 underscore@1.0.10
 url@1.2.0
 webapp@1.6.2
 webapp-hashing@1.0.9
 wizonesolutions:canonical@0.0.5
-zimme:collection-behaviours@1.1.3
-zimme:collection-softremovable@1.0.5

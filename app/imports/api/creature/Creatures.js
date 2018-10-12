@@ -1,6 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Effects from "/imports/api/creature/Effects.js"
 import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSaves.js"
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
@@ -32,12 +33,6 @@ let creatureSchema = new SimpleSchema({
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
 	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
-	color:   {
-		type: String,
-		defaultValue: "#9E9E9E",
-		// match hex colors of the form #A23 or #A23f56
-		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
-	},
 	//TODO add per-creature settings
 	//how many experiences to load at a time in XP table
 	"settings.experiencesInc": {type: Number, defaultValue: 20},
@@ -61,6 +56,7 @@ let creatureSchema = new SimpleSchema({
 });
 
 Creatures.attachSchema(creatureSchema);
+Creatures.attachSchema(ColorSchema);
 
 Creatures.calculate = {
 	xpLevel: function(charId){

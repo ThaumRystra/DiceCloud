@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 let childSchema = new SimpleSchema({

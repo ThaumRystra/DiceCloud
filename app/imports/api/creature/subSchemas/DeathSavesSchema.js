@@ -1,4 +1,5 @@
-const deathSaveSchema = new SimpleSchema({
+import SimpleSchema from 'simpl-schema';
+const DeathSavesSchema = new SimpleSchema({
 	pass: {
 		type: Number,
 		min: 0,
@@ -21,4 +22,4 @@ const deathSaveSchema = new SimpleSchema({
 	},
 });
 
-export default deathSaveSchema;
+export default DeathSavesSchema;

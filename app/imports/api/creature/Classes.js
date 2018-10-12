@@ -1,6 +1,10 @@
-Classes = new Mongo.Collection("classes");
+import SimpleSchema from 'simpl-schema';
+import {makeParent} from "/imports/api/parenting.js";
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
-Schemas.Class = new SimpleSchema({
+let Classes = new Mongo.Collection("classes");
+
+classSchema= new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:		 {type: String, optional: true, trim: false},
 	level:		 {type: Number},
@@ -16,17 +20,12 @@ Schemas.Class = new SimpleSchema({
 			}
 		},
 	},
-	color:   {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 });
 
-Classes.attachSchema(Schemas.Class);
+Classes.attachSchema(classSchema);
+Classes.attachSchema(ColorSchema);
 
-Classes.attachBehaviour("softRemovable");
+//Classes.attachBehaviour("softRemovable");
 makeParent(Classes, "name"); //parents of effects and attacks
 
-Classes.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Classes.deny(CHARACTER_SUBSCHEMA_DENY);
+export default Classes;

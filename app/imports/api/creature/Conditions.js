@@ -1,6 +1,10 @@
-Conditions = new Mongo.Collection("conditions");
+import SimpleSchema from 'simpl-schema';
+import {makeParent} from "/imports/api/parenting.js";
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
-Schemas.Conditions = new SimpleSchema({
+let Conditions = new Mongo.Collection("conditions");
+
+conditionSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -26,17 +30,12 @@ Schemas.Conditions = new SimpleSchema({
 		defaultValue: 0,
 		min: 0,
 	},
-	color: {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 });
 
-Conditions.attachSchema(Schemas.Conditions);
+Conditions.attachSchema(conditionSchema);
+Conditions.attachSchema(ColorSchema);
 
-Conditions.attachBehaviour("softRemovable");
+//Conditions.attachBehaviour("softRemovable");
 makeParent(Conditions, ["name"]); //parents of effects, attacks, proficiencies
 
-Conditions.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Conditions.deny(CHARACTER_SUBSCHEMA_DENY);
+export default Conditions;

@@ -1,4 +1,5 @@
 Features = new Mongo.Collection("features");
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 Schemas.Feature = new SimpleSchema({
 	charId:		  {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
@@ -13,13 +14,10 @@ Schemas.Feature = new SimpleSchema({
 	},
 	enabled:      {type: Boolean, defaultValue: true},
 	alwaysEnabled:{type: Boolean, defaultValue: true},
-	color:   {type: String,
-			  allowedValues: _.pluck(colorOptions, "key"),
-			  defaultValue: "q",
-			 },
 });
 
 Features.attachSchema(Schemas.Feature);
+Features.attachSchema(ColorSchema);
 
 Features.helpers({
 	usesLeft: function(){
@@ -30,11 +28,8 @@ Features.helpers({
 	},
 });
 
-Features.attachBehaviour("softRemovable");
+//Features.attachBehaviour("softRemovable");
 makeParent(Features, ["name", "enabled"]); //parents of effects and attacks
-
-Features.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Features.deny(CHARACTER_SUBSCHEMA_DENY);
 
 //give characters default feature of base ability scores of 10
 Characters.after.insert(function(userId, char) {

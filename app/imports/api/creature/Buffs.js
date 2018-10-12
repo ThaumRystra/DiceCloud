@@ -1,6 +1,10 @@
-Buffs = new Mongo.Collection("buffs");
+import SimpleSchema from 'simpl-schema';
+import {makeParent} from "/imports/api/parenting.js";
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
-Schemas.Buff = new SimpleSchema({
+let Buffs = new Mongo.Collection("buffs");
+
+let buffSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -27,6 +31,9 @@ Schemas.Buff = new SimpleSchema({
 			"custom",
 		],
 	},
+	lifeTime: {
+		type: Object,
+	},
 	"lifeTime.total": {
 		type: Number,
 		defaultValue: 0, //0 is infinite
@@ -36,11 +43,6 @@ Schemas.Buff = new SimpleSchema({
 		type: Number,
 		defaultValue: 0,
 		min: 0,
-	},
-	color: {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
 	},
 	appliedBy: { //the charId of whoever applied the buff
 		type: String,
@@ -58,10 +60,10 @@ Schemas.Buff = new SimpleSchema({
 	},
 });
 
-Buffs.attachSchema(Schemas.Buff);
+Buffs.attachSchema(buffSchema);
+Buffs.attachSchema(ColorSchema);
 
-Buffs.attachBehaviour("softRemovable");
+//Buffs.attachBehaviour("softRemovable");
 makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies
 
-Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Buffs.deny(CHARACTER_SUBSCHEMA_DENY);
+export default Buffs;

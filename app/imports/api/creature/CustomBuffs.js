@@ -37,15 +37,11 @@ Schemas.CustomBuff = new SimpleSchema({
 		defaultValue: 0, //0 is infinite
 		min: 0,
 	},
-	//the id of the feature, buff or item that creates this buff
-	parent: {
-		type: Schemas.Parent,
-	},
 });
 
 CustomBuffs.attachSchema(Schemas.CustomBuff);
 
-CustomBuffs.attachBehaviour("softRemovable");
+//CustomBuffs.attachBehaviour("softRemovable");
 makeParent(CustomBuffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies. Since this represents a template, "enabled" is always false.
 makeChild(CustomBuffs); //children of lots of things
 

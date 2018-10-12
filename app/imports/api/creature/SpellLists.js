@@ -1,4 +1,5 @@
 SpellLists = new Mongo.Collection("spellLists");
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 Schemas.SpellLists = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
@@ -7,15 +8,11 @@ Schemas.SpellLists = new SimpleSchema({
 	saveDC:      {type: String, optional: true, trim: false},
 	attackBonus: {type: String, optional: true, trim: false},
 	maxPrepared: {type: String, optional: true, trim: false},
-	color:   {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 	"settings.showUnprepared": {type: Boolean, defaultValue: true},
 });
 
 SpellLists.attachSchema(Schemas.SpellLists);
+Attributes.attachSchema(ColorSchema);
 
 SpellLists.helpers({
 	numPrepared: function(){

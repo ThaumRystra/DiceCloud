@@ -1,3 +1,5 @@
+import SimpleSchema from 'simpl-schema';
+
 let Actions = new Mongo.Collection("actions");
 
 /*
