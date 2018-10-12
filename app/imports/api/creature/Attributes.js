@@ -1,9 +1,11 @@
-Attributes = new Mongo.Collection("attributes");
+import {makeChild} from "/imports/api/parenting.js";
+
+let Attributes = new Mongo.Collection("attributes");
 
 /*
  * Attributes are whole numbered stats of a character
  */
-Schemas.Attribute = new SimpleSchema({
+attributeSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -59,9 +61,6 @@ Schemas.Attribute = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
-	parent: {
-		type: Schemas.Parent
-	},
 	enabled: {
 		type: Boolean,
 		defaultValue: true,
@@ -78,10 +77,9 @@ Schemas.Attribute = new SimpleSchema({
   },
 });
 
-Attributes.attachSchema(Schemas.Attribute);
+Attributes.attachSchema(attributeSchema);
 
 Attributes.attachBehaviour("softRemovable");
 makeChild(Attributes, ["enabled"]); //children of lots of things
 
-Attributes.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Attributes.deny(CHARACTER_SUBSCHEMA_DENY);
+export default Attributes;

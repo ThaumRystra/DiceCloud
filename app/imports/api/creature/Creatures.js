@@ -1,9 +1,11 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import Effects from "/imports/api/creature/Effects.js"
+import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSaves.js"
 
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
 
-Schemas.Creature = new SimpleSchema({
+let creatureSchema = new SimpleSchema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
 	urlName:      {type: String, defaultValue: "-", trim: false, optional: true},
@@ -19,7 +21,7 @@ Schemas.Creature = new SimpleSchema({
 	backstory:    {type: String, defaultValue: "", trim: false, optional: true},
 
 	//mechanics
-	deathSave:     {type: Schemas.DeathSave},
+	deathSave:     {type: deathSaveSchema},
 	xp:            {type: Number, defaultValue: 0},
 	weightCarried: {type: Number, defaultValue: 0},
 	level:         {type: Number, defaultValue: 0},
@@ -32,8 +34,9 @@ Schemas.Creature = new SimpleSchema({
 	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
 	color:   {
 		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
+		defaultValue: "#9E9E9E",
+		// match hex colors of the form #A23 or #A23f56
+		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
 	},
 	//TODO add per-creature settings
 	//how many experiences to load at a time in XP table
@@ -57,7 +60,7 @@ Schemas.Creature = new SimpleSchema({
 	"settings.newUserExperience": {type: Boolean, optional: true},
 });
 
-Creatures.attachSchema(Schemas.Creature);
+Creatures.attachSchema(creatureSchema);
 
 Creatures.calculate = {
 	xpLevel: function(charId){
@@ -89,7 +92,7 @@ const insertCharacter = new ValidatedMethod({
       "You need to be logged in to insert a creature");
     }
 
-	// Create the creature document
+		// Create the creature document
     Creatures.insert({name, owner: this.userId});
 		this.unblock();
 		//Add all the required attributes to it
@@ -141,6 +144,59 @@ if (Meteor.isServer){
 			doc.settings.newUserExperience = true;
 		}
 	});
+	//give ceatures default ceature effects
+	Creatures.after.insert(function(userId, char) {
+		if (Meteor.isServer) {
+			Effects.insert({
+				charId: char._id,
+				name: "Proficiency bonus by level",
+				stat: "proficiencyBonus",
+				operation: "add",
+				calculation: "floor(level / 4 + 1.75)",
+				parent: {
+					id: char._id,
+					collection: "Ceatures",
+					group: "Inate",
+				},
+			});
+			Effects.insert({
+				charId: char._id,
+				name: "Dexterity Armor Bonus",
+				stat: "armor",
+				operation: "add",
+				calculation: "dexterityArmor",
+				parent: {
+					id: char._id,
+					collection: "Ceatures",
+					group: "Inate",
+				},
+			});
+			Effects.insert({
+				charId: char._id,
+				name: "Natural Armor",
+				stat: "armor",
+				operation: "base",
+				value: 10,
+				parent: {
+					id: char._id,
+					collection: "Ceatures",
+					group: "Inate",
+				},
+			});
+			Effects.insert({
+				charId: char._id,
+				name: "Natural Carrying Capacity",
+				stat: "carryMultiplier",
+				operation: "base",
+				value: "1",
+				parent: {
+					id: char._id,
+					collection: "Ceatures",
+					group: "Inate",
+				},
+			});
+		}
+	});
 }
 
 Creatures.allow({
@@ -166,3 +222,5 @@ Creatures.deny({
 		return _.contains(fields, "owner");
 	}
 });
+
+export default Creatures;

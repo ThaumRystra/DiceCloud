@@ -1,32 +1,36 @@
-// TODO allow abilities to get disadvantage, making all skills that are based
+// TODO allow abilities to get advantage/disadvantage, making all skills that are based
 // on them disadvantaged as well
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import Creatures from "/imports/api/creature/Creatures.js";
+import Attributes from "/imports/api/creature/Attributes.js";
+import Skills from "/imports/api/creature/Skills.js";
+import Effects from "/imports/api/creature/Effects.js";
 
-const recomputeCharacter = new ValidatedMethod({
+const recomputeCreature = new ValidatedMethod({
 
-  name: "Characters.methods.recomputeCharacter",
+  name: "Creatures.methods.recomputeCreature",
 
   validate: new SimpleSchema({
     charId: { type: String }
   }).validator(),
 
   run({charId}) {
-    if (!canEditCharacter(charId, this.userId)) {
-      throw new Meteor.Error('Characters.methods.recomputeCharacter.denied',
-      'You do not have permission to recompute this character');
+    if (!canEditCreature(charId, this.userId)) {
+      throw new Meteor.Error('Creatures.methods.recomputeCreature.denied',
+      'You do not have permission to recompute this creature');
     }
 
-    computeCharacterById(charId);
+    computeCreatureById(charId);
 
   },
 
 });
 
 /*
- * This function is the heart of DiceCloud. It recomputes a character's stats,
+ * This function is the heart of DiceCloud. It recomputes a creature's stats,
  * distilling down effects and proficiencies into the final stats that make up
- * a character.
+ * a creature.
  *
  * Essentially this is a backtracking algorithm that computes stats'
  * dependencies before computing stats themselves, while detecting
@@ -41,7 +45,7 @@ const recomputeCharacter = new ValidatedMethod({
  * expanded to meet demand.
  *
  * A brief overview:
- * - Fetch the stats of the character and add them to
+ * - Fetch the stats of the creature and add them to
  *   an object for quick lookup
  * - Fetch the effects and proficiencies which apply to each stat and store them with the stat
  * - Fetch the class levels and store them as well
@@ -59,21 +63,21 @@ const recomputeCharacter = new ValidatedMethod({
  *   - Mark the stat as computed
  * - Write the computed results back to the database
  */
-const computeCharacterById = function (charId){
-  let char = buildCharacter();
-  char = computeCharacter(char);
-  writeCharacter(char);
+const computeCreatureById = function (charId){
+  let char = buildCreature();
+  char = computeCreature(char);
+  writeCreature(char);
   return char;
 };
 
 /*
- * Write the in-memory character to the database docs
+ * Write the in-memory creature to the database docs
  */
-const writeCharacter = function (char) {
+const writeCreature = function (char) {
   writeAttributes(char);
   writeSkills(char);
   writeDamageMultipliers(char);
-  Characters.update(char.id, {$set: {level: char.level}});
+  Creatures.update(char.id, {$set: {level: char.level}});
 };
 
 /*
@@ -157,10 +161,10 @@ const writeDamageMultipliers = function (char) {
 }
 
 /*
- * Get the character's data from the database and build an in-memory model that
+ * Get the creature's data from the database and build an in-memory model that
  * can be computed. Hits 6 database collections with indexed queries.
  */
-const buildCharacter = function (charId){
+const buildCreature = function (charId){
   let char = {
     id: charId,
     atts: {},
@@ -169,7 +173,7 @@ const buildCharacter = function (charId){
     classes: {},
     level: 0,
   };
-  // Fetch the attributes of the character and add them to an object for quick lookup
+  // Fetch the attributes of the creature and add them to an object for quick lookup
   Attributes.find({charId}).forEach(attribute => {
     if (!char.atts[attribute.variableName]){
       char.atts[attribute.variableName] = {
@@ -190,7 +194,7 @@ const buildCharacter = function (charId){
     }
   });
 
-  // Fetch the skills of the character and store them
+  // Fetch the skills of the creature and store them
   Skills.find({charId}).forEach(skill => {
     if (!char.skills[skill.variableName]){
       char.skills[skill.variableName] = {
@@ -215,7 +219,7 @@ const buildCharacter = function (charId){
     }
   });
 
-  // Fetch the damage multipliers of the character and store them
+  // Fetch the damage multipliers of the creature and store them
   DamageMultipliers.find({charId}).forEach(damageMultiplier =>{
     if (!char.dms[damageMultiplier.variableName]){
       char.dms[damageMultiplier.variableName] = {
@@ -277,9 +281,9 @@ const buildCharacter = function (charId){
 }
 
 /*
- * Compute the character's stats in-place, returns the same char object
+ * Compute the creature's stats in-place, returns the same char object
  */
-export const computeCharacter = function (char){
+const computeCreature = function (char){
   // Iterate over each stat in order and compute it
   for (statName in char.atts){
     let stat = char.atts[statName]
@@ -297,7 +301,7 @@ export const computeCharacter = function (char){
 }
 
 /*
- * Compute a single stat on a character
+ * Compute a single stat on a creature
  */
 const computeStat = function(stat, char){
   // If the stat is already computed, skip it
@@ -329,7 +333,7 @@ const computeStat = function(stat, char){
 }
 
 /*
- * Compute a single effect on a character
+ * Compute a single effect on a creature
  */
 const computeEffect = function(effect, char){
   if (effect.computed) return;
@@ -516,7 +520,7 @@ const evaluateCalculation = function(string, char){
       var className = sub.replace(/levels?$/, "");
       return char.classes[className] && char.classes[className].level || sub;
     }
-    // Character level
+    // Creature level
     if (sub  === "level"){
       return char.level;
     }
@@ -533,18 +537,18 @@ const evaluateCalculation = function(string, char){
   }
 };
 
-const recomputeCharacterXP = new ValidatedMethod({
-  name: "Characters.methods.recomputeCharacterXP",
+const recomputeCreatureXP = new ValidatedMethod({
+  name: "Creatures.methods.recomputeCreatureXP",
 
   validate: new SimpleSchema({
     charId: { type: String }
   }).validator(),
 
   run({charId}) {
-    if (!canEditCharacter(charId, this.userId)) {
+    if (!canEditCreature(charId, this.userId)) {
       // Throw errors with a specific error code
-      throw new Meteor.Error("Characters.methods.recomputeCharacterXP.denied",
-      "You do not have permission to recompute this character's XP");
+      throw new Meteor.Error("Creatures.methods.recomputeCreatureXP.denied",
+      "You do not have permission to recompute this creature's XP");
     }
     var xp = 0;
 		Experiences.find(
@@ -554,23 +558,23 @@ const recomputeCharacterXP = new ValidatedMethod({
 			xp += e.value;
 		});
 
-    Characters.update(charId, {$set: {xp}})
+    Creatures.update(charId, {$set: {xp}})
 		return xp;
   },
 });
 
-const recomputeCharacterWeightCarried = new ValidatedMethod({
-  name: "Character.methods.recomputeCharacterWeightCarried",
+const recomputeCreatureWeightCarried = new ValidatedMethod({
+  name: "Creature.methods.recomputeCreatureWeightCarried",
 
   validate: new SimpleSchema({
     charId: { type: String }
   }).validator(),
 
   run({charId}){
-    if (!canEditCharacter(charId, this.userId)) {
+    if (!canEditCreature(charId, this.userId)) {
       // Throw errors with a specific error code
-      throw new Meteor.Error("Characters.methods.recomputeCharacterWeightCarried.denied",
-      "You do not have permission to recompute this character's carried weight");
+      throw new Meteor.Error("Creatures.methods.recomputeCreatureWeightCarried.denied",
+      "You do not have permission to recompute this creature's carried weight");
     }
     var weightCarried = 0;
     // store a dictionary of carried containers
@@ -603,7 +607,14 @@ const recomputeCharacterWeightCarried = new ValidatedMethod({
       }
     });
 
-    Characters.update(charId, {$set: {weightCarried}})
+    Creatures.update(charId, {$set: {weightCarried}})
     return weightCarried;
   }
 });
+
+export {
+  recomputeCreature,
+  computeCreature,
+  recomputeCreatureXP,
+  recomputeCreatureWeightCarried
+};

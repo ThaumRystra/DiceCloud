@@ -190,6 +190,8 @@ const softRemoveNode = new ValidatedMethod({
 });
 
 const restoreNode = new ValidatedMethod({
+	name: "parenting.methods.restoreNode",
+	validate: null,
 	run(collectionName, id){
 		checkRemovePermission(collectionName, id, this);
 		let collection = Mongo.Collection.get(collectionName);
@@ -205,6 +207,8 @@ const restoreNode = new ValidatedMethod({
 });
 
 const updateChildren = new ValidatedMethod({
+	name: "parenting.methods.updateChildren",
+	validate: null,
 	run({parent, modifier, limitToInheritance}){
 		check(parent, {_id: String, charId: String});
 		check(modifier, Object);
@@ -224,6 +228,8 @@ const updateChildren = new ValidatedMethod({
 });
 
 const cloneChildren = new ValidatedMethod({
+	name: "parenting.methods.cloneChildren",
+	validate: null,
 	run({objectId, newParent}){
 		check(objectId, String);
 		check(newParent, {id: String, collection: String});

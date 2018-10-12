@@ -1,4 +1,4 @@
-Schemas.DeathSave = new SimpleSchema({
+const deathSaveSchema = new SimpleSchema({
 	pass: {
 		type: Number,
 		min: 0,
@@ -20,3 +20,5 @@ Schemas.DeathSave = new SimpleSchema({
 		defaultValue: false,
 	},
 });
+
+export default deathSaveSchema;

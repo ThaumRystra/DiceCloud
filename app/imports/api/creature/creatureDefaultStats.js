@@ -5,7 +5,7 @@ DEFAULT_CHARACTER_STATS = {
   	],
   	"stat": [
   		"Speed",
-  		{"name": "Armor Class", "variableName": "armor"},
+  		{"name": "Armor Class", "variableName": "armor", "baseValue": 10},
   	],
   	"hitDice": [
   		{"name":  "d6 Hit Dice", "variableName":  "d6HitDice"},
@@ -35,7 +35,7 @@ DEFAULT_CHARACTER_STATS = {
   		{"name": "Level 9 Spell Slots", "variableName": "level9SpellSlots"},
   	],
   	"utility": [
-  		{"name": "Carry Capacity Multiplier", "variableName": "carryMultiplier"},
+  		{"name": "Carry Capacity Multiplier", "variableName": "carryMultiplier", "baseValue": 1},
   		{"name": "Rage Damage", "variableName": "rageDamage"},
   	],
   },
@@ -73,9 +73,6 @@ DEFAULT_CHARACTER_STATS = {
       {"name": "Proficiency Bonus", "variableName": "proficiencyBonus"},
       {"name": "initiative", "variableName": "initiative"},
     ],
-    "utility": [
-      {"name": "Dexterity Armor", "variableName": "dexterityArmor", "ability": "dexterity"},
-    ],
   },
 
   "damageMultipliers": [
@@ -92,19 +89,33 @@ DEFAULT_CHARACTER_STATS = {
     {"name": "Radiant Multiplier", "variableName":"radiantMultiplier"},
     {"name": "Slashing Multiplier", "variableName":"slashingMultiplier"},
     {"name": "Thunder Multiplier", "variableName":"thunderMultiplier"},
+  ],
+
+  "effects": [
+    {
+      "name": "Proficiency bonus by level",
+      "stat": "proficiencyBonus",
+      "operation": "add",
+      "calculation": "floor(level / 4 + 1.75)",
+    },
   ]
 }
 
-getDefaultCharacterDocs = function(charId){
+getDefaultCreatureDocs = function(charId, creatureType = "pc"){
   let docs = {attributes: [], skills: [], damageMultipliers: []};
-  const stats = DEFAULT_CHARACTER_STATS;
+  if (creatureType === "pc"){
+    const stats = DEFAULT_CHARACTER_STATS;
+  } else {
+    throw new Meteor.Error("Not implemented",
+      "Default stats for non-player characters aren't implemented yet");
+  }
 	let order = 0;
 	const baseParent = {
 		collection: "Characters",
 		id: charId,
 		group: "default",
 	};
-	let name, variableName, parent, attribute, skill, ability, dm, type;
+	let name, variableName, parent, attribute, skill, ability, dm, type, baseValue;
 	for (type in stats.attributes){
 		for (let i in stats.attributes[type]){
 			attribute = stats.attributes[type][i];
@@ -115,10 +126,11 @@ getDefaultCharacterDocs = function(charId){
 				name = attribute.name;
 				variableName = attribute.variableName;
 			}
+      baseValue = attribute.baseValue;
 			parent = _.clone(baseParent);
 			docs.attributes.push({
         _id: Random.id,
-				charId, name, variableName, order, type, parent
+				charId, name, variableName, order, type, parent, baseValue,
 			});
 			order++;
 		}

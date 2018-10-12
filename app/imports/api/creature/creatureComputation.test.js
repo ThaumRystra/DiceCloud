@@ -1,4 +1,4 @@
-import {computeCharacter} from "./CharacterComputation.js";
+import {computeCreature} from "./creatureComputation.js";
 import assert from "assert";
 
 const makeEffect = function(operation, value){
@@ -11,8 +11,8 @@ const makeEffect = function(operation, value){
   return effect;
 }
 
-describe('computeCharacter', function () {
-  it('computes an aritrary character', function () {
+describe('computeCreature', function () {
+  it('computes an aritrary creature', function () {
     let char = {
       atts: {
         attribute1: {
@@ -90,7 +90,7 @@ describe('computeCharacter', function () {
       },
       level: 5,
     };
-    char = computeCharacter(char);
+    char = computeCreature(char);
     console.log(char);
     assert(true);
   });

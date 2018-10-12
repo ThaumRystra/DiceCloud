@@ -1,10 +1,12 @@
+import {makeChild} from "/imports/api/parenting.js";
+
 Skills = new Mongo.Collection("skills");
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
  * Skills usually have an ability score modifier that they use as their basis
  */
-Schemas.Skill = new SimpleSchema({
+skillSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -65,19 +67,15 @@ Schemas.Skill = new SimpleSchema({
     type: Number,
     optional: true,
   },
-	parent: {
-		type: Schemas.Parent
-	},
 	enabled: {
 		type: Boolean,
 		defaultValue: true,
 	},
 });
 
-Skills.attachSchema(Schemas.Skill);
+Skills.attachSchema(skillSchema);
 
 Skills.attachBehaviour("softRemovable");
 makeChild(Skills, ["enabled"]); //children of lots of things
 
-Skills.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Skills.deny(CHARACTER_SUBSCHEMA_DENY);
+export default Skills;

@@ -8,6 +8,10 @@
     "url": "https://github.com/ThaumRystra/RPG-Docs"
   },
   "author": "Stefan Zermatten",
+  "scripts": {
+    "run": "meteor --once",
+    "test": "meteor test --driver-package meteortesting:mocha"
+  },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",
     "animejs": "^2.2.0",
