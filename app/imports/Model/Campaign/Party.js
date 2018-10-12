@@ -1,6 +1,6 @@
-Parties = new Mongo.Collection("parties");
+let Parties = new Mongo.Collection("parties");
 
-Schemas.Party = new SimpleSchema({
+let partySchema = new SimpleSchema({
 	name: {
 		type: String,
 		defaultValue: "New Party",
@@ -40,3 +40,5 @@ Parties.deny({
 		return _.contains(fields, "owner");
 	}
 });
+
+export default Parties;

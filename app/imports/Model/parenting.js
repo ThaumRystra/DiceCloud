@@ -1,4 +1,6 @@
-var childSchema = new SimpleSchema({
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+
+let childSchema = new SimpleSchema({
 	parent:              {type: Object},
 	"parent.collection": {type: String},
 	"parent.id":         {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
@@ -10,14 +12,14 @@ var childSchema = new SimpleSchema({
 	},
 });
 
-var joinWithDefaultKeys = function(keys){
-	var defaultKeys = [
+let joinWithDefaultKeys = function(keys){
+	let defaultKeys = [
 		"charId",
 	];
 	return _.union(keys, defaultKeys);
 };
 
-var limitModifierToKeys = function(modifier, keys){
+let limitModifierToKeys = function(modifier, keys){
 	if (!modifier) return;
 	modifier = _.pick(modifier, ["$set", "$unset"]);
 	if (modifier.$set) modifier.$set   = _.pick(modifier.$set,   keys);
@@ -27,21 +29,21 @@ var limitModifierToKeys = function(modifier, keys){
 	return modifier;
 };
 
-var getParent = function(doc){
+let getParent = function(doc){
 	if (!doc || !doc.parent) return;
-	var parentCol = Meteor.isClient ?
+	let parentCol = Meteor.isClient ?
 		window[doc.parent.collection] : global[doc.parent.collection];
 	if (parentCol)
 		return parentCol.findOne(doc.parent.id, {removed: true});
 };
 
-var inheritParentProperties = function(doc, collection){
-	var parent = getParent(doc);
+let inheritParentProperties = function(doc, collection){
+	let parent = getParent(doc);
 	if (!parent) throw new Meteor.Error(
 		"Parenting Error",
 		"Document's parent does not exist"
 	);
-	var handMeDowns = _.pick(parent, collection.inheritedKeys);
+	let handMeDowns = _.pick(parent, collection.inheritedKeys);
 	if (
 		_.contains(collection.inheritedKeys, "charId") &&
 		doc.parent.collection === "Characters"
@@ -52,9 +54,9 @@ var inheritParentProperties = function(doc, collection){
 	collection.update(doc._id, {$set: handMeDowns});
 };
 
-var childCollections = [];
+let childCollections = [];
 
-makeChild = function(collection, inheritedKeys){
+let makeChild = function(collection, inheritedKeys){
 	inheritedKeys = inheritedKeys || [];
 	if (inheritedKeys) {
 		collection.inheritedKeys = joinWithDefaultKeys(inheritedKeys);
@@ -102,9 +104,9 @@ makeChild = function(collection, inheritedKeys){
 	childCollections.push(collection);
 };
 
-makeParent = function(collection, donatedKeys){
+let makeParent = function(collection, donatedKeys){
 	donatedKeys = joinWithDefaultKeys(donatedKeys);
-	var collectionName = collection._collection.name;
+	let collectionName = collection._collection.name;
 	//after changing, push the changes to all children
 	collection.after.update(function(userId, doc, fieldNames, modifier, options) {
 		modifier = limitModifierToKeys(modifier, donatedKeys);
@@ -129,8 +131,8 @@ makeParent = function(collection, donatedKeys){
 	});
 };
 
-var checkPermission = function(userId, charId){
-	var char = Characters.findOne(charId, {fields: {owner: 1, writers: 1}});
+let checkPermission = function(userId, charId){
+	let char = Characters.findOne(charId, {fields: {owner: 1, writers: 1}});
 	if (!char)
 		throw new Meteor.Error("Access Denied, no charId",
 							   "Character " + charId + " does not exist");
@@ -143,7 +145,7 @@ var checkPermission = function(userId, charId){
 	return true;
 };
 
-var cascadeSoftRemove = function(id, removedWithId){
+let cascadeSoftRemove = function(id, removedWithId){
 	_.each(childCollections, function(treeCollection){
 		treeCollection.update(
 			{"parent.id": id},
@@ -159,25 +161,38 @@ var cascadeSoftRemove = function(id, removedWithId){
 	});
 };
 
-var checkRemovePermission = function(collectionName, id, self){
+let checkRemovePermission = function(collectionName, id, self){
 	check(collectionName, String);
 	check(id, String);
-	var collection = Mongo.Collection.get(collectionName);
-	var node = collection.findOne(id);
-	var charId = node && node.charId;
+	let collection = Mongo.Collection.get(collectionName);
+	let node = collection.findOne(id);
+	let charId = node && node.charId;
 	checkPermission(self.userId, charId);
 };
 
-Meteor.methods({
-	softRemoveNode: function(collectionName, id){
+const softRemoveNode = new ValidatedMethod({
+  name: "parenting.methods.softRemoveNode",
+
+  validate: new SimpleSchema({
+		collectionName: {type: String,},
+		id: {
+			type: String,
+			regEx: SimpleSchema.RegEx.Id,
+		},
+	}).validator(), // argument validation
+
+  run({collectionName, id}){
 		checkRemovePermission(collectionName, id, this);
-		var collection = Mongo.Collection.get(collectionName);
+		let collection = Mongo.Collection.get(collectionName);
 		collection.softRemove(id);
 		cascadeSoftRemove(id, id);
 	},
-	restoreNode: function(collectionName, id){
+});
+
+const restoreNode = new ValidatedMethod({
+	run(collectionName, id){
 		checkRemovePermission(collectionName, id, this);
-		var collection = Mongo.Collection.get(collectionName);
+		let collection = Mongo.Collection.get(collectionName);
 		collection.restore(id);
 		_.each(childCollections, function(treeCollection){
 			treeCollection.update(
@@ -187,13 +202,16 @@ Meteor.methods({
 			);
 		});
 	},
-	updateChildren: function(parent, modifier, limitToInheritance) {
+});
+
+const updateChildren = new ValidatedMethod({
+	run({parent, modifier, limitToInheritance}){
 		check(parent, {_id: String, charId: String});
 		check(modifier, Object);
 		checkPermission(this.userId, parent.charId);
-		var selector = {"parent.id": parent._id};
+		let selector = {"parent.id": parent._id};
 		_.each(childCollections, function(collection){
-			var thisModifier;
+			let thisModifier;
 			if (limitToInheritance){
 				thisModifier = limitModifierToKeys(modifier, collection.inheritedKeys);
 			} else {
@@ -203,17 +221,22 @@ Meteor.methods({
 			collection.update(selector, thisModifier, {multi: true, removed: true});
 		});
 	},
-	cloneChildren: function(objectId, newParent){
+});
+
+const cloneChildren = new ValidatedMethod({
+	run({objectId, newParent}){
 		check(objectId, String);
 		check(newParent, {id: String, collection: String});
 
 		_.each(childCollections, function(collection){
-			var keys = collection.simpleSchema().objectKeys();
+			let keys = collection.simpleSchema().objectKeys();
 			collection.find({"parent.id": objectId}).forEach(function(doc){
-				var newDoc = _.pick(doc, keys);
+				let newDoc = _.pick(doc, keys);
 				newDoc.parent = newParent;
 				collection.insert(newDoc);
 			});
 		});
-	},
-});
+	}
+})
+
+export {makeChild, makeParent, softRemoveNode};

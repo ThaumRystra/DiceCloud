@@ -1,9 +1,9 @@
-Actions = new Mongo.Collection("actions");
+let Actions = new Mongo.Collection("actions");
 
 /*
  * Actions are given to a character by items and features
  */
-Schemas.Action = new SimpleSchema({
+let actionSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -31,10 +31,12 @@ Schemas.Action = new SimpleSchema({
 	},
 });
 
-Actions.attachSchema(Schemas.Action);
+Actions.attachSchema(actionSchema);
 
 Actions.attachBehaviour("softRemovable");
 makeChild(Actions);
 
 Actions.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Actions.deny(CHARACTER_SUBSCHEMA_DENY);
+
+export default Actions

@@ -1,9 +1,9 @@
-Attacks = new Mongo.Collection("attacks");
+let Attacks = new Mongo.Collection("attacks");
 
 /*
  * Attacks are given to a character by items and features
  */
-Schemas.Attack = new SimpleSchema({
+attackSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -66,7 +66,7 @@ Schemas.Attack = new SimpleSchema({
 	},
 });
 
-Attacks.attachSchema(Schemas.Attack);
+Attacks.attachSchema(attackSchema);
 
 Attacks.attachBehaviour("softRemovable");
 makeChild(Attacks, ["name", "enabled"]); //children of lots of things
@@ -85,3 +85,5 @@ Attacks.after.insert(function (userId, attack) {
 
 Attacks.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Attacks.deny(CHARACTER_SUBSCHEMA_DENY);
+
+export default Attacks;
