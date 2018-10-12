@@ -1,6 +1,9 @@
-CustomBuffs = new Mongo.Collection("customBuffs");
+import SimpleSchema from 'simpl-schema';
+import {makeParent, makeChild} from "/imports/api/parenting.js";
 
-Schemas.CustomBuff = new SimpleSchema({
+let CustomBuffs = new Mongo.Collection("customBuffs");
+
+customBuffSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -32,6 +35,9 @@ Schemas.CustomBuff = new SimpleSchema({
 			//enabled is ALWAYS false on these, so that its children are also not enabled, so that the buff templates have no effects.
 		},
 	},
+	lifeTime: {
+		type: Object,
+	},
 	"lifeTime.total": {
 		type: Number,
 		defaultValue: 0, //0 is infinite
@@ -39,11 +45,10 @@ Schemas.CustomBuff = new SimpleSchema({
 	},
 });
 
-CustomBuffs.attachSchema(Schemas.CustomBuff);
+CustomBuffs.attachSchema(customBuffSchema);
 
 //CustomBuffs.attachBehaviour("softRemovable");
 makeParent(CustomBuffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies. Since this represents a template, "enabled" is always false.
 makeChild(CustomBuffs); //children of lots of things
 
-CustomBuffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
-CustomBuffs.deny(CHARACTER_SUBSCHEMA_DENY);
+export default CustomBuffs;
