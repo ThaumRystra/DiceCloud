@@ -16,64 +16,73 @@ const recomputeCreature = new ValidatedMethod({
   }).validator(),
 
   run({charId}) {
+    // Permission
     if (!canEditCreature(charId, this.userId)) {
       throw new Meteor.Error('Creatures.methods.recomputeCreature.denied',
       'You do not have permission to recompute this creature');
     }
 
+    // Work
     computeCreatureById(charId);
 
   },
 
 });
 
-/*
- * This function is the heart of DiceCloud. It recomputes a creature's stats,
- * distilling down effects and proficiencies into the final stats that make up
- * a creature.
- *
- * Essentially this is a backtracking algorithm that computes stats'
- * dependencies before computing stats themselves, while detecting
- * dependency loops.
- *
- * At the moment it makes no effort to limit recomputation to just what was
- * changed.
- *
- * Attempting to implement dependency management to limit recomputation to just
- * change affected stats should only happen as a last resort, when this function
- * can no longer be performed more efficiently, and server resources can not be
- * expanded to meet demand.
- *
- * A brief overview:
- * - Fetch the stats of the creature and add them to
- *   an object for quick lookup
- * - Fetch the effects and proficiencies which apply to each stat and store them with the stat
- * - Fetch the class levels and store them as well
- * - Mark each stat and effect as uncomputed
- * - Iterate over each stat in order and compute it
- *   - If the stat is already computed, skip it
- *   - If the stat is busy being computed, we are in a dependency loop, make it NaN and mark computed
- *   - Mark the stat as busy computing
- *   - Iterate over each effect which applies to the attribute
- *     - If the effect is not computed compute it
- *       - If the effect relies on another attribute, get its computed value
- *       - Recurse if that attribute is uncomputed
- *     - apply the effect to the attribute
- *   - Conglomerate all the effects to compute the final stat values
- *   - Mark the stat as computed
- * - Write the computed results back to the database
- */
-const computeCreatureById = function (charId){
+ /**
+  * This function is the heart of DiceCloud. It recomputes a creature's stats,
+  * distilling down effects and proficiencies into the final stats that make up
+  * a creature.
+  *
+  * Essentially this is a backtracking algorithm that computes stats'
+  * dependencies before computing stats themselves, while detecting
+  * dependency loops.
+  *
+  * At the moment it makes no effort to limit recomputation to just what was
+  * changed.
+  *
+  * Attempting to implement dependency management to limit recomputation to just
+  * change affected stats should only happen as a last resort, when this function
+  * can no longer be performed more efficiently, and server resources can not be
+  * expanded to meet demand.
+  *
+  * A brief overview:
+  * - Fetch the stats of the creature and add them to
+  *   an object for quick lookup
+  * - Fetch the effects and proficiencies which apply to each stat and store them with the stat
+  * - Fetch the class levels and store them as well
+  * - Mark each stat and effect as uncomputed
+  * - Iterate over each stat in order and compute it
+  *   - If the stat is already computed, skip it
+  *   - If the stat is busy being computed, we are in a dependency loop, make it NaN and mark computed
+  *   - Mark the stat as busy computing
+  *   - Iterate over each effect which applies to the attribute
+  *     - If the effect is not computed compute it
+  *       - If the effect relies on another attribute, get its computed value
+  *       - Recurse if that attribute is uncomputed
+  *     - apply the effect to the attribute
+  *   - Conglomerate all the effects to compute the final stat values
+  *   - Mark the stat as computed
+  * - Write the computed results back to the database
+  *
+  * @param  {String} charId the Id of the creature to compute
+  * @returns {Object}       An in-memory description of the character as
+  *                         computed and written to the database
+  */
+function computeCreatureById(charId){
   let char = buildCreature();
   char = computeCreature(char);
   writeCreature(char);
   return char;
 };
 
-/*
+/**
  * Write the in-memory creature to the database docs
+ *
+ * @param  {Object} char in-memory char object
+ * @returns {undefined}
  */
-const writeCreature = function (char) {
+function writeCreature(char) {
   writeAttributes(char);
   writeSkills(char);
   writeDamageMultipliers(char);
@@ -83,7 +92,14 @@ const writeCreature = function (char) {
 /*
  * Write all the attributes from the in-memory char object to the Attirbute docs
  */
-const writeAttributes = function (char) {
+
+/**
+ * writeAttributes - description
+ *
+ * @param  {type} char description
+ * @returns {type}      description
+ */
+function writeAttributes(char) {
   let bulkWriteOps =  _.map(char.atts, (att, variableName) => {
     let op = {
       updateMany: {
@@ -107,10 +123,15 @@ const writeAttributes = function (char) {
   }
 }
 
-/*
+
+
+/**
  * Write all the skills from the in-memory char object to the Skills docs
+ *
+ * @param  {type} char description
+ * @returns {type}      description
  */
-const writeSkills = function (char) {
+function writeSkills(char) {
   let bulkWriteOps =  _.map(char.skills, (skill, variableName) => {
     let op = {
       updateMany: {
@@ -136,10 +157,13 @@ const writeSkills = function (char) {
   }
 }
 
-/*
- * Write all the damange multipliers from the in-memory char object to the docs
- */
-const writeDamageMultipliers = function (char) {
+ /**
+  * Write all the damange multipliers from the in-memory char object to the docs
+  *
+  * @param  {type} char description
+  * @returns {type}      description
+  */
+function writeDamageMultipliers(char) {
   let bulkWriteOps =  _.map(char.dms, (dm, variableName) => {
     let op = {
       updateMany: {
@@ -160,11 +184,15 @@ const writeDamageMultipliers = function (char) {
   }
 }
 
-/*
- * Get the creature's data from the database and build an in-memory model that
- * can be computed. Hits 6 database collections with indexed queries.
- */
-const buildCreature = function (charId){
+
+ /**
+  * Get the creature's data from the database and build an in-memory model that
+  * can be computed. Hits 6 database collections with indexed queries.
+  *
+  * @param  {type} charId description
+  * @returns {type}        description
+  */
+function buildCreature(charId){
   let char = {
     id: charId,
     atts: {},
@@ -280,10 +308,13 @@ const buildCreature = function (charId){
   return char;
 }
 
-/*
- * Compute the creature's stats in-place, returns the same char object
+
+/**
+ *  Compute the creature's stats in-place, returns the same char object
+ * @param  {type} char description
+ * @returns {type}      description
  */
-const computeCreature = function (char){
+function computeCreature(char){
   // Iterate over each stat in order and compute it
   for (statName in char.atts){
     let stat = char.atts[statName]
@@ -300,10 +331,15 @@ const computeCreature = function (char){
   return char;
 }
 
-/*
+
+/**
  * Compute a single stat on a creature
+ *
+ * @param  {type} stat description
+ * @param  {type} char description
+ * @returns {type}      description
  */
-const computeStat = function(stat, char){
+function computeStat(stat, char){
   // If the stat is already computed, skip it
   if (stat.computed) return;
 
@@ -332,10 +368,14 @@ const computeStat = function(stat, char){
   stat.busyComputing = false;
 }
 
-/*
- * Compute a single effect on a creature
- */
-const computeEffect = function(effect, char){
+ /**
+  * const computeEffect - Compute a single effect on a creature
+  *
+  * @param  {Object} effect The effect to compute
+  * @param  {Object} char   The char document to compute with
+  * @returns {undefined}        description
+  */
+function computeEffect(effect, char){
   if (effect.computed) return;
   if (_.isFinite(effect.value)){
 		effect.result = effect.value;
@@ -349,10 +389,15 @@ const computeEffect = function(effect, char){
   effect.computed = true;
 };
 
-/*
+
+/**
  * Apply a computed effect to its stat
+ *
+ * @param  {type} effect description
+ * @param  {type} stat   description
+ * @returns {type}        description
  */
-const applyEffect = function(effect, stat){
+function applyEffect(effect, stat){
   // Take the largest base value
   if (effect.operation === "base"){
     if (!_.has(stat, "base")) return;
@@ -411,10 +456,15 @@ const applyEffect = function(effect, stat){
   }
 };
 
-/*
+
+/**
  * Combine the results of multiple effects to get the result of the stat
+ *
+ * @param  {type} stat description
+ * @param  {type} char description
+ * @returns {type}      description
  */
-const combineStat = function(stat, char){
+function combineStat(stat, char){
   if (stat.type === "attribute"){
     combineAttribute(stat, char)
   } else if (stat.type === "skill"){
@@ -424,7 +474,15 @@ const combineStat = function(stat, char){
   }
 }
 
-const combineAttribute = function(stat, char){
+
+/**
+ * combineAttribute - Combine attributes's results into final values
+ *
+ * @param  {type} stat description
+ * @param  {type} char description
+ * @returns {type}      description
+ */
+function combineAttribute(stat, char){
   stat.result = (stat.base + stat.add) * stat.mul;
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
@@ -435,7 +493,15 @@ const combineAttribute = function(stat, char){
   }
 }
 
-const combineSkill = function(stat, char){
+
+/**
+ * combineSkill - Combine skills results into final values
+ *
+ * @param  {type} stat description
+ * @param  {type} char description
+ * @returns {type}      description
+ */
+function combineSkill(stat, char){
   for (i in stat.proficiencies){
     let prof = stat.proficiencies[i];
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
@@ -464,7 +530,15 @@ const combineSkill = function(stat, char){
   stat.result = Math.floor(stat.result);
 }
 
-const combineDamageMultiplier = function(stat, char){
+
+/**
+ * combineDamageMultiplier - Combine damageMultiplier's results into final values
+ *
+ * @param  {type} stat description
+ * @param  {type} char description
+ * @returns {type}      description
+ */
+function combineDamageMultiplier(stat, char){
   if (stat.immunityCount) return 0;
   if (stat.ressistanceCount && !stat.vulnerabilityCount){
     stat.result = 0.5;
@@ -475,8 +549,15 @@ const combineDamageMultiplier = function(stat, char){
   }
 }
 
-// Evaluate a string computation
-const evaluateCalculation = function(string, char){
+
+/**
+ * evaluateCalculation - Evaluate a string computation in the context of  a char
+ *
+ * @param  {type} string description
+ * @param  {type} char   description
+ * @returns {type}        description
+ */
+function evaluateCalculation(string, char){
   if (!string) return string;
 
   // Replace all the string variables with numbers if possible
@@ -537,6 +618,11 @@ const evaluateCalculation = function(string, char){
   }
 };
 
+
+
+/**
+ * recompute a character's XP from a given id
+ */
 const recomputeCreatureXP = new ValidatedMethod({
   name: "Creatures.methods.recomputeCreatureXP",
 
@@ -563,6 +649,10 @@ const recomputeCreatureXP = new ValidatedMethod({
   },
 });
 
+
+/**
+ * Recompute a character's weight carried from a given id
+ */
 const recomputeCreatureWeightCarried = new ValidatedMethod({
   name: "Creature.methods.recomputeCreatureWeightCarried",
 
