@@ -144,59 +144,6 @@ if (Meteor.isServer){
 			doc.settings.newUserExperience = true;
 		}
 	});
-	//give ceatures default ceature effects
-	Creatures.after.insert(function(userId, char) {
-		if (Meteor.isServer) {
-			Effects.insert({
-				charId: char._id,
-				name: "Proficiency bonus by level",
-				stat: "proficiencyBonus",
-				operation: "add",
-				calculation: "floor(level / 4 + 1.75)",
-				parent: {
-					id: char._id,
-					collection: "Ceatures",
-					group: "Inate",
-				},
-			});
-			Effects.insert({
-				charId: char._id,
-				name: "Dexterity Armor Bonus",
-				stat: "armor",
-				operation: "add",
-				calculation: "dexterityArmor",
-				parent: {
-					id: char._id,
-					collection: "Ceatures",
-					group: "Inate",
-				},
-			});
-			Effects.insert({
-				charId: char._id,
-				name: "Natural Armor",
-				stat: "armor",
-				operation: "base",
-				value: 10,
-				parent: {
-					id: char._id,
-					collection: "Ceatures",
-					group: "Inate",
-				},
-			});
-			Effects.insert({
-				charId: char._id,
-				name: "Natural Carrying Capacity",
-				stat: "carryMultiplier",
-				operation: "base",
-				value: "1",
-				parent: {
-					id: char._id,
-					collection: "Ceatures",
-					group: "Inate",
-				},
-			});
-		}
-	});
 }
 
 Creatures.allow({

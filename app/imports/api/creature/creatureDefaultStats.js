@@ -102,7 +102,7 @@ DEFAULT_CHARACTER_STATS = {
 }
 
 getDefaultCreatureDocs = function(charId, creatureType = "pc"){
-  let docs = {attributes: [], skills: [], damageMultipliers: []};
+  let docs = {attributes: [], skills: [], damageMultipliers: [], effects: []};
   if (creatureType === "pc"){
     const stats = DEFAULT_CHARACTER_STATS;
   } else {
@@ -162,5 +162,16 @@ getDefaultCreatureDocs = function(charId, creatureType = "pc"){
 			parent: _.clone(baseParent),
 		});
 	}
+  for (let i in stats.effects){
+    eff = stats.effects[i];
+    docs.effects.push({
+      _id: Random.id,
+			charId,
+			name: eff.name,
+      stat: eff.stat,
+      operation: eff.operation,
+      calculation:eff.calculation,
+    });
+  }
   return docs;
 }
