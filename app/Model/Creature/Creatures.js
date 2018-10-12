@@ -1,9 +1,9 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
-//set up the collection for characters
-Characters = new Mongo.Collection("characters");
+//set up the collection for creatures
+Creatures = new Mongo.Collection("creatures");
 
-Schemas.Character = new SimpleSchema({
+Schemas.Creature = new SimpleSchema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
 	urlName:      {type: String, defaultValue: "-", trim: false, optional: true},
@@ -34,7 +34,7 @@ Schemas.Character = new SimpleSchema({
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
 	},
-	//TODO add per-character settings
+	//TODO add per-creature settings
 	//how many experiences to load at a time in XP table
 	"settings.experiencesInc": {type: Number, defaultValue: 20},
 	//slowed down by carrying too much?
@@ -56,11 +56,11 @@ Schemas.Character = new SimpleSchema({
 	"settings.newUserExperience": {type: Boolean, optional: true},
 });
 
-Characters.attachSchema(Schemas.Character);
+Creatures.attachSchema(Schemas.Creature);
 
-Characters.calculate = {
+Creatures.calculate = {
 	xpLevel: function(charId){
-		var xp = Characters.calculate.experience(charId);
+		var xp = Creatures.calculate.experience(charId);
 		for (var i = 0; i < 19; i++){
 			if (xp < XP_TABLE[i]){
 				return i;
@@ -71,9 +71,9 @@ Characters.calculate = {
 	},
 };
 
-const insertCharacterMethod = new ValidatedMethod({
+const insertCreatureMethod = new ValidatedMethod({
 
-  name: "Characters.methods.insert", // DDP method name
+  name: "Creatures.methods.insert", // DDP method name
 
   validate: new SimpleSchema({
 	  name: {
@@ -84,12 +84,12 @@ const insertCharacterMethod = new ValidatedMethod({
 
   run({name}) {
     if (!this.userId) {
-      throw new Meteor.Error("Characters.methods.insert.denied",
-      "You need to be logged in to insert a character");
+      throw new Meteor.Error("Creatures.methods.insert.denied",
+      "You need to be logged in to insert a creature");
     }
 
-	// Create the character document
-    Characters.insert({name, owner: this.userId});
+	// Create the creature document
+    Creatures.insert({name, owner: this.userId});
 		this.unblock();
 		//Add all the required attributes to it
 		if (Meteor.isServer){
@@ -100,16 +100,16 @@ const insertCharacterMethod = new ValidatedMethod({
 });
 
 const addDefaultStats = function(charId){
-	const defaultDocs = getDefaultCharacterDocs(charId);
+	const defaultDocs = getDefaultCreatureDocs(charId);
 	Attributes.rawCollection().insert(defaultDocs.attributes, {ordered: false});
 	Skills.rawCollection().insert(defaultDocs.skills, {ordered: false});
 	DamageMultipliers.rawCollection().insert(defaultDocs.damageMultipliers, {ordered: false});
 };
 
-//clean up all data related to that character before removing it
+//clean up all data related to that creature before removing it
 if (Meteor.isServer){
-	Characters.after.remove(function(userId, character) {
-		let charId = character._id;
+	Creatures.after.remove(function(userId, creature) {
+		let charId = creature._id;
 		Actions          .remove({charId});
 		Attacks          .remove({charId});
 		Attributes       .remove({charId});
@@ -127,22 +127,22 @@ if (Meteor.isServer){
 		Items            .remove({charId});
 		Containers       .remove({charId});
 	});
-	Characters.after.update(function(userId, doc, fieldNames, modifier, options) {
+	Creatures.after.update(function(userId, doc, fieldNames, modifier, options) {
 		if (_.contains(fieldNames, "name")){
 			var urlName = getSlug(doc.name, {maintainCase: true}) || "-";
-			Characters.update(doc._id, {$set: {urlName}});
+			Creatures.update(doc._id, {$set: {urlName}});
 		}
 	});
-	Characters.before.insert(function(userId, doc) {
+	Creatures.before.insert(function(userId, doc) {
 		doc.urlName = getSlug(doc.name, {maintainCase: true}) || "-";
-		// The first character a user creates should have the new user experience
-		if (!Characters.find({owner: userId}).count()){
+		// The first creature a user creates should have the new user experience
+		if (!Creatures.find({owner: userId}).count()){
 			doc.settings.newUserExperience = true;
 		}
 	});
 }
 
-Characters.allow({
+Creatures.allow({
 	insert: function(userId, doc) {
 		// the user must be logged in, and the document must be owned by the user
 		return (userId && doc.owner === userId);
@@ -159,7 +159,7 @@ Characters.allow({
 	fetch: ["owner", "writers"],
 });
 
-Characters.deny({
+Creatures.deny({
 	update: function(userId, docs, fields, modifier) {
 		// can't change owners
 		return _.contains(fields, "owner");
