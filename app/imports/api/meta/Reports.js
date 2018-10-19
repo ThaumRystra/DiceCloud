@@ -22,7 +22,7 @@ Schemas.Report = new SimpleSchema({
 	},
 	//the immediate impact of doing this action (eg. -1 rages)
 	severity: {
-		type: Number,
+		type: SimpleSchema.Integer,
 		defaultValue: 5,
 		min: 1,
 		max: 10,

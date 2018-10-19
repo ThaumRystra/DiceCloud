@@ -1,3 +1,5 @@
+import SimpleSchema from 'simpl-schema';
+
 DamageMultipliers = new Mongo.Collection("damageMultipliers");
 
 /*
@@ -19,7 +21,6 @@ Schemas.DamageMultiplier = new SimpleSchema({
   },
   value: {
     type: Number,
-    decimal: true,
 		defaultValue: 1,
   },
 	enabled: {

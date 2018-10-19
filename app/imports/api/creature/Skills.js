@@ -1,12 +1,13 @@
+import SimpleSchema from 'simpl-schema';
 import {makeChild} from "/imports/api/parenting.js";
 
-Skills = new Mongo.Collection("skills");
+let Skills = new Mongo.Collection("skills");
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
  * Skills usually have an ability score modifier that they use as their basis
  */
-skillSchema = new SimpleSchema({
+let skillSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -38,20 +39,18 @@ skillSchema = new SimpleSchema({
   },
   // Skills need to store their order to keep the sheet consistent
   order: {
-	  type: Number,
+	  type: SimpleSchema.Integer,
 	},
 	baseValue: {
 		type: Number,
-		decimal: true,
 		optional: true,
 	},
   value: {
     type: Number,
-    decimal: true,
 		defaultValue: 0,
   },
   advantage: {
-    type: Number,
+    type: SimpleSchema.Integer,
     optional: true,
     allowedValues: [-1, 0, 1],
   },
@@ -62,14 +61,14 @@ skillSchema = new SimpleSchema({
   proficiency: {
     type: Number,
     allowedValues: [0, 0.5, 1, 2],
-	defaultValue: 0,
+		defaultValue: 0,
   },
   conditionalBenefits: {
-    type: Number,
+    type: SimpleSchema.Integer,
     optional: true,
   },
   fail: {
-    type: Number,
+    type: SimpleSchema.Integer,
     optional: true,
   },
 	enabled: {
@@ -80,7 +79,7 @@ skillSchema = new SimpleSchema({
 
 Skills.attachSchema(skillSchema);
 
-Skills.attachBehaviour("softRemovable");
+//Skills.attachBehaviour("softRemovable");
 makeChild(Skills, ["enabled"]); //children of lots of things
 
 export default Skills;

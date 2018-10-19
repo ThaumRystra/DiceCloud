@@ -1,3 +1,6 @@
+import SimpleSchema from 'simpl-schema';
+import {makeParent, makeChild} from "/imports/api/parenting.js";
+
 Items = new Mongo.Collection("items");
 
 Schemas.Item = new SimpleSchema({
@@ -5,9 +8,9 @@ Schemas.Item = new SimpleSchema({
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
 	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1}, //id of owner
-	quantity:	{type: Number, min: 0, defaultValue: 1},
-	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
+	quantity:	{type: SimpleSchema.Integer, min: 0, defaultValue: 1},
+	weight:		{type: Number, min: 0, defaultValue: 0},
+	value:		{type: Number, min: 0, defaultValue: 0},
 	enabled:    {type: Boolean, defaultValue: false},
 	requiresAttunement: {type: Boolean, defaultValue: false},
 	"settings.showIncrement": {type: Boolean, defaultValue: false},
@@ -200,11 +203,11 @@ Items.before.update(function(userId, doc, fieldNames, modifier, options){
 	}
 });
 
-Items.attachBehaviour("softRemovable");
+// Items.attachBehaviour("softRemovable");
 makeChild(Items); //children of containers
 makeParent(Items, ["name", "enabled"]); //parents of effects and attacks
 
-Items.allow(CHARACTER_SUBSCHEMA_ALLOW);
+//Items.allow(CHARACTER_SUBSCHEMA_ALLOW);
 
 //give characters default items
 Characters.after.insert(function(userId, char) {

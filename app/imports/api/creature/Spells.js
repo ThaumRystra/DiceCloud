@@ -1,7 +1,9 @@
-Spells = new Mongo.Collection("spells");
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import SimpleSchema from 'simpl-schema';
 
-Schemas.Spell = new SimpleSchema({
+let Spells = new Mongo.Collection("spells");
+
+let spellSchema = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	prepared: {
 		type: String,
@@ -45,7 +47,7 @@ Schemas.Spell = new SimpleSchema({
 		defaultValue: false,
 	},
 	level:       {
-		type: Number,
+		type: SimpleSchema.Integer,
 		defaultValue: 1,
 	},
 	school:      {
@@ -55,10 +57,10 @@ Schemas.Spell = new SimpleSchema({
 	},
 });
 
-Spells.attachSchema(Schemas.Spell);
+Spells.attachSchema(spellSchema);
 Attributes.attachSchema(ColorSchema);
 
-Spells.attachBehaviour("softRemovable");
+//Spells.attachBehaviour("softRemovable");
 makeChild(Spells); //children of spell lists
 makeParent(Spells, ["name", "enabled"]); //parents of attacks
 
@@ -77,12 +79,6 @@ Spells.after.update(function (userId, spell, fieldNames) {
 		}
 	}
 });
-
-Spells.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Spells.deny(CHARACTER_SUBSCHEMA_DENY);
-
-
-
 
 var checkMovePermission = function(spellId, parent, destinationOnly) {
 	var spell = Spells.findOne(spellId);
@@ -247,3 +243,5 @@ Meteor.methods({
 		copySpell(spellId, "Characters", charId);
 	},
 });
+
+export default Spells;

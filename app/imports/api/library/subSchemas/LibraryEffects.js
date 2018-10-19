@@ -1,4 +1,6 @@
-Schemas.LibraryEffects = new SimpleSchema({
+import SimpleSchema from 'simpl-schema';
+
+libraryEffectsSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true, //TODO make necessary if there is no owner
@@ -24,7 +26,6 @@ Schemas.LibraryEffects = new SimpleSchema({
 	// Effects either have a value OR a calculation
 	value: {
 		type: Number,
-		decimal: true,
 		optional: true,
 	},
 	calculation: {
@@ -38,3 +39,5 @@ Schemas.LibraryEffects = new SimpleSchema({
 		optional: true,
 	},
 });
+
+export default libraryEffectsSchema;

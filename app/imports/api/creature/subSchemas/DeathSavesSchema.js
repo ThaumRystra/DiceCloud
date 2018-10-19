@@ -1,13 +1,14 @@
 import SimpleSchema from 'simpl-schema';
+
 const DeathSavesSchema = new SimpleSchema({
 	pass: {
-		type: Number,
+		type: SimpleSchema.Integer,
 		min: 0,
 		max: 3,
 		defaultValue: 0,
 	},
 	fail: {
-		type: Number,
+		type: SimpleSchema.Integer,
 		min: 0,
 		max: 3,
 		defaultValue: 0,

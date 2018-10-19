@@ -7,7 +7,7 @@ let Classes = new Mongo.Collection("classes");
 classSchema= new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:		 {type: String, optional: true, trim: false},
-	level:		 {type: Number},
+	level:		 {type: SimpleSchema.Integer},
 	createdAt: {
 		type: Date,
 		autoValue: function() {

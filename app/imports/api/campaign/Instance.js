@@ -1,3 +1,5 @@
+import SimpleSchema from 'simpl-schema';
+
 let Instances = new Mongo.Collection("instances");
 
 let instanceSchema = new SimpleSchema({

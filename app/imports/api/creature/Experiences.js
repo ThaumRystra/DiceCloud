@@ -1,10 +1,12 @@
+import SimpleSchema from 'simpl-schema';
+
 Experiences = new Mongo.Collection("experience");
 
-Schemas.Experience = new SimpleSchema({
+let experienceSchema = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:		 {type: String, optional: true, trim: false, defaultValue: "New Experience"},
 	description: {type: String, optional: true, trim: false},
-	value:       {type: Number, defaultValue: 0},
+	value:       {type: SimpleSchema.Integer, defaultValue: 0},
 	dateAdded:   {
 		type: Date,
 		autoValue: function() {
@@ -19,9 +21,6 @@ Schemas.Experience = new SimpleSchema({
 	},
 });
 
-Experiences.attachSchema(Schemas.Experience);
+Experiences.attachSchema(experienceSchema);
 
-Experiences.attachBehaviour("softRemovable");
-
-Experiences.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Experiences.deny(CHARACTER_SUBSCHEMA_DENY);
+//Experiences.attachBehaviour("softRemovable");

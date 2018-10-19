@@ -1,4 +1,6 @@
-Schemas.LibraryAttacks = new SimpleSchema({
+import SimpleSchema from 'simpl-schema';
+
+libraryAttacksSchema = new SimpleSchema({
 	name: {
 		type: String,
 		defaultValue: "New Attack",
@@ -39,3 +41,5 @@ Schemas.LibraryAttacks = new SimpleSchema({
 		defaultValue: "slashing",
 	},
 });
+
+export default libraryAttacksSchema;

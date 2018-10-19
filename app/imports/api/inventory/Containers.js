@@ -1,12 +1,15 @@
-//set up the collection for containers
-Containers = new Mongo.Collection("containers");
+import SimpleSchema from 'simpl-schema';
+import {makeParent} from "/imports/api/parenting.js";
 
-Schemas.Container = new SimpleSchema({
+//set up the collection for containers
+let Containers = new Mongo.Collection("containers");
+
+let containerSchema = new SimpleSchema({
 	name:       {type: String, optional: true, trim: false},
 	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	isCarried:  {type: Boolean},
-	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
+	weight:		{type: Number, min: 0, defaultValue: 0},
+	value:		{type: Number, min: 0, defaultValue: 0},
 	description:{type: String, optional: true, trim: false},
 	color:   {
 		type: String,
@@ -15,7 +18,7 @@ Schemas.Container = new SimpleSchema({
 	},
 });
 
-Containers.attachSchema(Schemas.Container);
+Containers.attachSchema(containerSchema);
 
 Containers.helpers({
 	contentsValue: function(){
@@ -50,7 +53,7 @@ Containers.helpers({
 	},
 });
 
-Containers.attachBehaviour("softRemovable");
+// Containers.attachBehaviour("softRemovable");
 makeParent(Containers); //parents of items
 
-Containers.allow(CHARACTER_SUBSCHEMA_ALLOW);
+export default Containers;

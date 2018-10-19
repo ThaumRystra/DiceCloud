@@ -1,3 +1,5 @@
+import SimpleSchema from 'simpl-schema';
+
 let Parties = new Mongo.Collection("parties");
 
 let partySchema = new SimpleSchema({
@@ -19,7 +21,7 @@ let partySchema = new SimpleSchema({
 	},
 });
 
-Parties.attachSchema(Schemas.Party);
+Parties.attachSchema(partySchema);
 
 Parties.allow({
 	insert: function(userId, doc) {

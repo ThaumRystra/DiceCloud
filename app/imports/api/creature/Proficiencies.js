@@ -1,6 +1,8 @@
+import SimpleSchema from 'simpl-schema';
+
 Proficiencies = new Mongo.Collection("proficiencies");
 
-Schemas.Proficiency = new SimpleSchema({
+proficiencySchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -15,7 +17,6 @@ Schemas.Proficiency = new SimpleSchema({
 		type: Number,
 		allowedValues: [0, 0.5, 1, 2],
 		defaultValue: 1,
-		decimal: true,
 	},
 	type: {
 		type: String,
@@ -28,10 +29,7 @@ Schemas.Proficiency = new SimpleSchema({
 	},
 });
 
-Proficiencies.attachSchema(Schemas.Proficiency);
+Proficiencies.attachSchema(proficiencySchema);
 
-Proficiencies.attachBehaviour("softRemovable");
+// Proficiencies.attachBehaviour("softRemovable");
 makeChild(Proficiencies, ["enabled"]);
-
-Proficiencies.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Proficiencies.deny(CHARACTER_SUBSCHEMA_DENY);

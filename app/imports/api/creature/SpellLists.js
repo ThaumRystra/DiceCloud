@@ -1,7 +1,9 @@
-SpellLists = new Mongo.Collection("spellLists");
+import SimpleSchema from 'simpl-schema';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
-Schemas.SpellLists = new SimpleSchema({
+let SpellLists = new Mongo.Collection("spellLists");
+
+let spellListSchema = new SimpleSchema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:        {type: String, optional: true, trim: false},
 	description: {type: String, optional: true, trim: false},
@@ -11,7 +13,7 @@ Schemas.SpellLists = new SimpleSchema({
 	"settings.showUnprepared": {type: Boolean, defaultValue: true},
 });
 
-SpellLists.attachSchema(Schemas.SpellLists);
+SpellLists.attachSchema(spellListSchema);
 Attributes.attachSchema(ColorSchema);
 
 SpellLists.helpers({
@@ -27,8 +29,7 @@ SpellLists.helpers({
 	}
 });
 
-SpellLists.attachBehaviour("softRemovable");
+//SpellLists.attachBehaviour("softRemovable");
 makeParent(SpellLists); //parents of spells
 
-SpellLists.allow(CHARACTER_SUBSCHEMA_ALLOW);
-SpellLists.deny(CHARACTER_SUBSCHEMA_DENY);
+export default SpellLists;

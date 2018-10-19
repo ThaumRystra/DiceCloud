@@ -24,7 +24,7 @@ attributeSchema = new SimpleSchema({
   },
 	// Attributes need to store their order to keep the sheet consistent
 	order: {
-		type: Number,
+		type: SimpleSchema.Integer,
 		index: 1,
 	},
   type: {
@@ -42,20 +42,18 @@ attributeSchema = new SimpleSchema({
   },
 	baseValue: {
 		type: Number,
-		decimal: true,
 		optional: true,
 	},
   value: {
     type: Number,
-    decimal: true,
 		defaultValue: 0,
   },
 	mod: {
-		type: Number,
+		type: SimpleSchema.Integer,
 		optional: true,
 	},
   adjustment: {
-    type: Number,
+    type: SimpleSchema.Integer,
     optional: true,
   },
   // Can the value be decimal?

@@ -37,7 +37,7 @@ Schemas.LibrarySpells = new SimpleSchema({
 		defaultValue: false,
 	},
 	level:       {
-		type: Number,
+		type: SimpleSchema.Integer,
 		defaultValue: 1,
 	},
 	school:      {

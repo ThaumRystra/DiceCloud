@@ -1,96 +1,135 @@
 {
-  "attributes": {
-  	"ability": [
-  		"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"
-  	],
-  	"stat": [
-  		"Speed",
-  		{"name": "Armor Class", "variableName": "armor"},
-  	],
-  	"hitDice": [
-  		{"name":  "d6 Hit Dice", "variableName":  "d6HitDice"},
-  		{"name":  "d8 Hit Dice", "variableName":  "d8HitDice"},
-  		{"name": "d10 Hit Dice", "variableName": "d10HitDice"},
-  		{"name": "d12 Hit Dice", "variableName": "d12HitDice"},
-  	],
-  	"healthBar": [
-  		{"name": "Hit Points", "variableName": "hitPoints"},
-  		{"name": "Temporary Hit Points", "variableName": "tempHitPoints"},
-  	],
-  	"resource": [
-  		"Ki", "Rages",
-  		{"name": "Sourcery Points", "variableName": "sorceryPoints"},
-  		{"name": "Superiority Dice", "variableName": "superiorityDice"},
-  		{"name": "Expertise Dice", "variableName": "expertiseDice"},
-  	],
-  	"spellSlot": [
-  		{"name": "Level 1 Spell Slots", "variableName": "level1SpellSlots"},
-  		{"name": "Level 2 Spell Slots", "variableName": "level2SpellSlots"},
-  		{"name": "Level 3 Spell Slots", "variableName": "level3SpellSlots"},
-  		{"name": "Level 4 Spell Slots", "variableName": "level4SpellSlots"},
-  		{"name": "Level 5 Spell Slots", "variableName": "level5SpellSlots"},
-  		{"name": "Level 6 Spell Slots", "variableName": "level6SpellSlots"},
-  		{"name": "Level 7 Spell Slots", "variableName": "level7SpellSlots"},
-  		{"name": "Level 8 Spell Slots", "variableName": "level8SpellSlots"},
-  		{"name": "Level 9 Spell Slots", "variableName": "level9SpellSlots"},
-  	],
-  	"utility": [
-  		{"name": "Carry Capacity Multiplier", "variableName": "carryMultiplier"},
-  		{"name": "Rage Damage", "variableName": "rageDamage"},
-  	],
-  },
+  "attributes": [
+    {"name": "Strength",     "variableName": "strength",     "baseValue": 10, "type": "ability"},
+    {"name": "Dexterity",    "variableName": "dexterity",    "baseValue": 10, "type": "ability"},
+    {"name": "Constitution", "variableName": "constitution", "baseValue": 10, "type": "ability"},
+    {"name": "Intelligence", "variableName": "intelligence", "baseValue": 10, "type": "ability"},
+    {"name": "Wisdom",       "variableName": "wisdom",       "baseValue": 10, "type": "ability"},
+    {"name": "Charisma",     "variableName": "charisma",     "baseValue": 10, "type": "ability"},
 
-  "skills": {
-    "skill": [
-      {"name": "Acrobatics", "variableName": "acrobatics", "ability": "dexterity"},
-      {"name": "Animal Handling", "variableName": "animalHandling", "ability": "wisdom"},
-      {"name": "Arcana", "variableName": "arcana", "ability": "intelligence"},
-      {"name": "Athletics", "variableName": "athletics", "ability": "strength"},
-      {"name": "Deception", "variableName": "deception", "ability": "charisma"},
-      {"name": "History", "variableName": "history", "ability": "intelligence"},
-      {"name": "Insight", "variableName": "insight", "ability": "wisdom"},
-      {"name": "Intimidation", "variableName": "intimidation", "ability": "charisma"},
-      {"name": "Investigation", "variableName": "investigation", "ability": "intelligence"},
-      {"name": "Medicine", "variableName": "medicine", "ability": "wisdom"},
-      {"name": "Nature", "variableName": "nature", "ability": "intelligence"},
-      {"name": "Perception", "variableName": "perception", "ability": "wisdom"},
-      {"name": "Performance", "variableName": "performance", "ability": "charisma"},
-      {"name": "Persuasion", "variableName": "persuasion", "ability": "charisma"},
-      {"name": "Religion", "variableName": "religion", "ability": "intelligence"},
-      {"name": "Sleight of Hand", "variableName": "sleightOfHand", "ability": "dexterity"},
-      {"name": "Stealth", "variableName": "stealth", "ability": "dexterity"},
-      {"name": "Survival", "variableName": "survival", "ability": "wisdom"},
-    ],
-    "save": [
-      {"name": "Strength Save", "variableName": "strengthSave", "ability": "strength"},
-      {"name": "Dexterity Save", "variableName": "dexteritySave", "ability": "dexterity"},
-      {"name": "Constitution Save", "variableName": "constitutionSave", "ability": "constitution"},
-      {"name": "Intelligence Save", "variableName": "intelligenceSave", "ability": "intelligence"},
-      {"name": "Wisdom Save", "variableName": "wisdomSave", "ability": "wisdom"},
-      {"name": "Charisma Save", "variableName": "charismaSave", "ability": "charisma"},
-    ],
-    "stat": [
-      {"name": "Proficiency Bonus", "variableName": "proficiencyBonus"},
-      {"name": "initiative", "variableName": "initiative"},
-    ],
-    "utility": [
-      {"name": "Dexterity Armor", "variableName": "dexterityArmor", "ability": "dexterity"},
-    ],
-  },
+  	{"name": "Speed",       "variableName": "speed", "baseValue": 30, "type": "stat"},
+  	{"name": "Armor Class", "variableName": "armor", "baseValue": 10, "type": "stat"},
+
+  	{"name":  "d6 Hit Dice", "variableName":  "d6HitDice", "type": "hitDice"},
+		{"name":  "d8 Hit Dice", "variableName":  "d8HitDice", "type": "hitDice"},
+		{"name": "d10 Hit Dice", "variableName": "d10HitDice", "type": "hitDice"},
+		{"name": "d12 Hit Dice", "variableName": "d12HitDice", "type": "hitDice"},
+
+
+		{"name": "Hit Points",           "variableName": "hitPoints",     "type": "healthBar"},
+		{"name": "Temporary Hit Points", "variableName": "tempHitPoints", "type": "healthBar"},
+
+    {"name": "Ki",               "variableName": "ki",              "type": "resource"},
+    {"name": "Rages",            "variableName": "rages",           "type": "resource"},
+		{"name": "Sourcery Points",  "variableName": "sorceryPoints",   "type": "resource"},
+		{"name": "Superiority Dice", "variableName": "superiorityDice", "type": "resource"},
+		{"name": "Expertise Dice",   "variableName": "expertiseDice",   "type": "resource"},
+
+		{"name": "Level 1 Spell Slots", "variableName": "level1SpellSlots", "type": "spellSlot"},
+		{"name": "Level 2 Spell Slots", "variableName": "level2SpellSlots", "type": "spellSlot"},
+		{"name": "Level 3 Spell Slots", "variableName": "level3SpellSlots", "type": "spellSlot"},
+		{"name": "Level 4 Spell Slots", "variableName": "level4SpellSlots", "type": "spellSlot"},
+		{"name": "Level 5 Spell Slots", "variableName": "level5SpellSlots", "type": "spellSlot"},
+		{"name": "Level 6 Spell Slots", "variableName": "level6SpellSlots", "type": "spellSlot"},
+		{"name": "Level 7 Spell Slots", "variableName": "level7SpellSlots", "type": "spellSlot"},
+		{"name": "Level 8 Spell Slots", "variableName": "level8SpellSlots", "type": "spellSlot"},
+		{"name": "Level 9 Spell Slots", "variableName": "level9SpellSlots", "type": "spellSlot"},
+
+  	{"name": "Carry Capacity Multiplier", "variableName": "carryMultiplier", "type": "utility", "baseValue": 1},
+  	{"name": "Rage Damage",               "variableName": "rageDamage",      "type": "utility"},
+  ],
+
+  "skills": [
+    {"name": "Acrobatics",      "variableName": "acrobatics",     "ability": "dexterity",    "type":"skill"},
+    {"name": "Animal Handling", "variableName": "animalHandling", "ability": "wisdom",       "type":"skill"},
+    {"name": "Arcana",          "variableName": "arcana",         "ability": "intelligence", "type":"skill"},
+    {"name": "Athletics",       "variableName": "athletics",      "ability": "strength",     "type":"skill"},
+    {"name": "Deception",       "variableName": "deception",      "ability": "charisma",     "type":"skill"},
+    {"name": "History",         "variableName": "history",        "ability": "intelligence", "type":"skill"},
+    {"name": "Insight",         "variableName": "insight",        "ability": "wisdom",       "type":"skill"},
+    {"name": "Intimidation",    "variableName": "intimidation",   "ability": "charisma",     "type":"skill"},
+    {"name": "Investigation",   "variableName": "investigation",  "ability": "intelligence", "type":"skill"},
+    {"name": "Medicine",        "variableName": "medicine",       "ability": "wisdom",       "type":"skill"},
+    {"name": "Nature",          "variableName": "nature",         "ability": "intelligence", "type":"skill"},
+    {"name": "Perception",      "variableName": "perception",     "ability": "wisdom",       "type":"skill"},
+    {"name": "Performance",     "variableName": "performance",    "ability": "charisma",     "type":"skill"},
+    {"name": "Persuasion",      "variableName": "persuasion",     "ability": "charisma",     "type":"skill"},
+    {"name": "Religion",        "variableName": "religion",       "ability": "intelligence", "type":"skill"},
+    {"name": "Sleight of Hand", "variableName": "sleightOfHand",  "ability": "dexterity",    "type":"skill"},
+    {"name": "Stealth",         "variableName": "stealth",        "ability": "dexterity",    "type":"skill"},
+    {"name": "Survival",        "variableName": "survival",       "ability": "wisdom",       "type":"skill"},
+
+    {"name": "Strength Save",     "variableName": "strengthSave",     "ability": "strength",     "type":"save"},
+    {"name": "Dexterity Save",    "variableName": "dexteritySave",    "ability": "dexterity",    "type":"save"},
+    {"name": "Constitution Save", "variableName": "constitutionSave", "ability": "constitution", "type":"save"},
+    {"name": "Intelligence Save", "variableName": "intelligenceSave", "ability": "intelligence", "type":"save"},
+    {"name": "Wisdom Save",       "variableName": "wisdomSave",       "ability": "wisdom",       "type":"save"},
+    {"name": "Charisma Save",     "variableName": "charismaSave",     "ability": "charisma",     "type":"save"},
+
+    {"name": "Proficiency Bonus", "variableName": "proficiencyBonus", "type": "stat"},
+    {"name": "initiative",        "variableName": "initiative",       "type": "stat"},
+  ],
 
   "damageMultipliers": [
-    {"name": "Acid Multiplier", "variableName":"acidMultiplier"},
+    {"name": "Acid Multiplier",        "variableName":"acidMultiplier"},
     {"name": "Bludgeoning Multiplier", "variableName":"bludgeoningMultiplier"},
-    {"name": "Cold Multiplier", "variableName":"coldMultiplier"},
-    {"name": "Fire Multiplier", "variableName":"fireMultiplier"},
-    {"name": "Force Multiplier", "variableName":"forceMultiplier"},
-    {"name": "Lightning Multiplier", "variableName":"lightningMultiplier"},
-    {"name": "Necrotic Multiplier", "variableName":"necroticMultiplier"},
-    {"name": "Piercing Multiplier", "variableName":"piercingMultiplier"},
-    {"name": "Poison Multiplier", "variableName":"poisonMultiplier"},
-    {"name": "Psychic Multiplier", "variableName":"psychicMultiplier"},
-    {"name": "Radiant Multiplier", "variableName":"radiantMultiplier"},
-    {"name": "Slashing Multiplier", "variableName":"slashingMultiplier"},
-    {"name": "Thunder Multiplier", "variableName":"thunderMultiplier"},
-  ]
+    {"name": "Cold Multiplier",        "variableName":"coldMultiplier"},
+    {"name": "Fire Multiplier",        "variableName":"fireMultiplier"},
+    {"name": "Force Multiplier",       "variableName":"forceMultiplier"},
+    {"name": "Lightning Multiplier",   "variableName":"lightningMultiplier"},
+    {"name": "Necrotic Multiplier",    "variableName":"necroticMultiplier"},
+    {"name": "Piercing Multiplier",    "variableName":"piercingMultiplier"},
+    {"name": "Poison Multiplier",      "variableName":"poisonMultiplier"},
+    {"name": "Psychic Multiplier",     "variableName":"psychicMultiplier"},
+    {"name": "Radiant Multiplier",     "variableName":"radiantMultiplier"},
+    {"name": "Slashing Multiplier",    "variableName":"slashingMultiplier"},
+    {"name": "Thunder Multiplier",     "variableName":"thunderMultiplier"},
+  ],
+
+  "effects": [
+    {
+      "name": "Proficiency bonus by level",
+      "stat": "proficiencyBonus",
+      "operation": "add",
+      "calculation": "floor(level / 4 + 1.75)",
+    },
+  ],
+
+  "containers": [
+    {
+			"name": "Coin Pouch",
+			"isCarried": true,
+			"description": "A sturdy pouch for coins",
+      "items": [
+        {
+    			"name": "Gold piece",
+    			"plural": "Gold pieces",
+    			"quantity": 0,
+    			"weight": 0.02,
+    			"value": 1,
+    			"settings": {
+    				"showIncrement": true,
+    			},
+        }, {
+    			"name": "Silver piece",
+    			"plural": "Silver pieces",
+    			"quantity": 0,
+    			"weight": 0.02,
+    			"value": 0.1,
+    			"settings": {
+    				"showIncrement": true,
+    			},
+    		}, {
+    			"name": "Copper piece",
+    			"plural": "Copper pieces",
+    			"quantity": 0,
+    			"weight": 0.02,
+    			"value": 0.01,
+    			"settings": {
+    				"showIncrement": true,
+    			},
+        },
+      ],
+    },
+  ],
 }

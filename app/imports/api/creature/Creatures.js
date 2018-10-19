@@ -1,4 +1,5 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import SimpleSchema from 'simpl-schema';
 import Effects from "/imports/api/creature/Effects.js"
 import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSaves.js"
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
@@ -23,9 +24,9 @@ let creatureSchema = new SimpleSchema({
 
 	//mechanics
 	deathSave:     {type: deathSaveSchema},
-	xp:            {type: Number, defaultValue: 0},
+	xp:            {type: SimpleSchema.Integer, defaultValue: 0},
 	weightCarried: {type: Number, defaultValue: 0},
-	level:         {type: Number, defaultValue: 0},
+	level:         {type: SimpleSchema.Integer, defaultValue: 0},
 	type:          {type: String, defaultValue: "pc", allowedValues: ["pc", "npc", "monster"]},
 
 	//permissions
@@ -35,7 +36,7 @@ let creatureSchema = new SimpleSchema({
 	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
 	//TODO add per-creature settings
 	//how many experiences to load at a time in XP table
-	"settings.experiencesInc": {type: Number, defaultValue: 20},
+	"settings.experiencesInc": {type: SimpleSchema.Integer, defaultValue: 20},
 	//slowed down by carrying too much?
 	"settings.useVariantEncumbrance": {type: Boolean, defaultValue: false},
 	"settings.useStandardEncumbrance": {type: Boolean, defaultValue: true},

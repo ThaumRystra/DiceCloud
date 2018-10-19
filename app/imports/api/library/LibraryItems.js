@@ -5,9 +5,9 @@ Schemas.LibraryItems = new SimpleSchema({
 	name:       {type: String, defaultValue: "New Item", trim: false},
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
-	quantity:	{type: Number, min: 0, defaultValue: 1},
-	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
+	quantity:	{type: SimpleSchema.Integer, min: 0, defaultValue: 1},
+	weight:		{type: Number, min: 0, defaultValue: 0},
+	value:		{type: Number, min: 0, defaultValue: 0},
 	requiresAttunement: {type: Boolean, defaultValue: false},
 
 	library:    {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},

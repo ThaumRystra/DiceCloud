@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+
 const ColorSchema = new SimpleSchema({
   color:   {
 		type: String,

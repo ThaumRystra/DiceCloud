@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import {makeChild} from "/imports/api/parenting.js";
 
 Effects = new Mongo.Collection("effects");
@@ -35,7 +36,6 @@ effectSchema = new SimpleSchema({
 	},
 	value: {
 		type: Number,
-		decimal: true,
 		optional: true,
 	},
 	calculation: {
@@ -56,7 +56,7 @@ effectSchema = new SimpleSchema({
 
 Effects.attachSchema(effectSchema);
 
-Effects.attachBehaviour("softRemovable");
+//Effects.attachBehaviour("softRemovable");
 makeChild(Effects, ["enabled"]); //children of lots of things
 
 export default Effects;
