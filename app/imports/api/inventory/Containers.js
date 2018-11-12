@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import {makeParent} from "/imports/api/parenting.js";
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 //set up the collection for containers
 let Containers = new Mongo.Collection("containers");
@@ -11,14 +12,10 @@ let containerSchema = new SimpleSchema({
 	weight:		{type: Number, min: 0, defaultValue: 0},
 	value:		{type: Number, min: 0, defaultValue: 0},
 	description:{type: String, optional: true, trim: false},
-	color:   {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 });
 
 Containers.attachSchema(containerSchema);
+Containers.attachSchema(ColorSchema);
 
 Containers.helpers({
 	contentsValue: function(){

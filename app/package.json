@@ -13,7 +13,7 @@
     "test": "meteor test --driver-package meteortesting:mocha"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.55",
+    "@babel/runtime": "^7.0.0-beta.55",
     "animejs": "^2.2.0",
     "bcrypt": "^1.0.3",
     "bower": "^1.7.9",

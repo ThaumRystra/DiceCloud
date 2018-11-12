@@ -80,7 +80,7 @@ attributeSchema = new SimpleSchema({
 Attributes.attachSchema(attributeSchema);
 Attributes.attachSchema(ColorSchema);
 
-Attributes.attachBehaviour("softRemovable");
+//Attributes.attachBehaviour("softRemovable");
 makeChild(Attributes, ["enabled"]); //children of lots of things
 
 export default Attributes;

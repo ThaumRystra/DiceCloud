@@ -46,8 +46,8 @@ ddp-rate-limiter@1.0.7
 rate-limit@1.0.9
 meteortesting:mocha
 mdg:validated-method
-akryum:vue-component
 akryum:vue-router2
 static-html
 aldeed:collection2@3.0.0
 aldeed:schema-index
+akryum:vue-component

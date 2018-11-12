@@ -1,5 +1,17 @@
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import SimpleSchema from 'simpl-schema';
+import {makeParent, makeChild} from "/imports/api/parenting.js";
+
+const magicSchools = [
+	"Abjuration",
+	"Conjuration",
+	"Divination",
+	"Enchantment",
+	"Evocation",
+	"Illusion",
+	"Necromancy",
+	"Transmutation",
+];
 
 let Spells = new Mongo.Collection("spells");
 
@@ -38,6 +50,7 @@ let spellSchema = new SimpleSchema({
 		trim: false,
 		defaultValue: "Instantaneous",
 	},
+	components: Object,
 	"components.verbal":        {type: Boolean, defaultValue: false},
 	"components.somatic":       {type: Boolean, defaultValue: false},
 	"components.concentration":	{type: Boolean, defaultValue: false},
@@ -58,7 +71,7 @@ let spellSchema = new SimpleSchema({
 });
 
 Spells.attachSchema(spellSchema);
-Attributes.attachSchema(ColorSchema);
+Spells.attachSchema(ColorSchema);
 
 //Spells.attachBehaviour("softRemovable");
 makeChild(Spells); //children of spell lists

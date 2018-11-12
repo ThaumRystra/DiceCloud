@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
+import Attributes from "/imports/api/creature/Attributes.js";
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import {makeParent} from "/imports/api/parenting.js";
 
 let SpellLists = new Mongo.Collection("spellLists");
 
@@ -10,7 +12,6 @@ let spellListSchema = new SimpleSchema({
 	saveDC:      {type: String, optional: true, trim: false},
 	attackBonus: {type: String, optional: true, trim: false},
 	maxPrepared: {type: String, optional: true, trim: false},
-	"settings.showUnprepared": {type: Boolean, defaultValue: true},
 });
 
 SpellLists.attachSchema(spellListSchema);

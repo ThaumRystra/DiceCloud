@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import {makeParent, makeChild} from "/imports/api/parenting.js";
+import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 Items = new Mongo.Collection("items");
 
@@ -14,14 +15,10 @@ Schemas.Item = new SimpleSchema({
 	enabled:    {type: Boolean, defaultValue: false},
 	requiresAttunement: {type: Boolean, defaultValue: false},
 	"settings.showIncrement": {type: Boolean, defaultValue: false},
-	color:      {
-		type: String,
-		allowedValues: _.pluck(colorOptions, "key"),
-		defaultValue: "q",
-	},
 });
 
 Items.attachSchema(Schemas.Item);
+Items.attachSchema(ColorSchema);
 
 var checkMovePermission = function(itemId, parent) {
 	var item = Items.findOne(itemId);

@@ -9,8 +9,8 @@ import Notes from "/imports/api/creature/Notes.js";
 import Proficiencies from "/imports/api/creature/Proficiencies.js";
 import SpellLists from "/imports/api/creature/SpellLists.js";
 import Spells from "/imports/api/creature/Spells.js";
-import Containers from "/imports/api/creature/Containers.js";
-import Items from "/imports/api/creature/Items.js";
+import Containers from "/imports/api/inventory/Containers.js";
+import Items from "/imports/api/inventory/Items.js";
 
 Meteor.startup(() => {
 	const collections = [

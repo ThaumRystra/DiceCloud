@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import {makeChild} from "/imports/api/parenting.js";
 
 Proficiencies = new Mongo.Collection("proficiencies");
 
