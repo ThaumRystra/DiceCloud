@@ -122,6 +122,7 @@ Template.spells.helpers({
 		return false;
 	},
 	slotBubbles: function(char){
+		const MAX_SLOTS = 10;
 		var baseSlots = Characters.calculate.attributeBase(
 			char._id, "level" + this.level + "SpellSlots"
 		);
@@ -130,22 +131,37 @@ Template.spells.helpers({
 		);
 		var slotsUsed = baseSlots - currentSlots;
 		var bubbles = [];
-		var i;
-		for (i = 0; i < currentSlots; i++){
+		var i, overflowFilled, overflowEmpty;
+		var filledSlots = currentSlots;
+		var maxEmptySlots = Math.max(MAX_SLOTS - filledSlots + 1, 1);
+		var emptySlots = slotsUsed;
+		if (baseSlots > MAX_SLOTS){
+			filledSlots = Math.min(MAX_SLOTS, filledSlots);
+			overflowFilled = Math.max(currentSlots - MAX_SLOTS, 0);
+			emptySlots = Math.min(maxEmptySlots, emptySlots);
+			overflowEmpty = Math.max(slotsUsed - maxEmptySlots, 0);
+		}
+		for (i = 0; i < filledSlots; i++){
 			bubbles.push({
 				icon: "radio-button-checked",
-				disabled: i !== currentSlots - 1 || !canEditCharacter(char._id), //last full slot not disabled
+				disabled: i !== filledSlots - 1 || !canEditCharacter(char._id), //last full slot not disabled
 				attribute: "level" + this.level + "SpellSlots",
 				charId: char._id,
 			});
 		}
-		for (i = 0; i < slotsUsed; i++){
+		if (overflowFilled){
+			bubbles.push({overflow: overflowFilled});
+		}
+		for (i = 0; i < emptySlots; i++){
 			bubbles.push({
 				icon: "radio-button-unchecked",
 				disabled: i !== 0 || !canEditCharacter(char._id), //first empty slot not disabled
 				attribute: "level" + this.level + "SpellSlots",
 				charId: char._id,
 			});
+		}
+		if (overflowEmpty){
+			bubbles.push({overflow: overflowEmpty});
 		}
 		return bubbles;
 	},
@@ -178,7 +194,7 @@ Template.spells.events({
 		}
 		event.stopPropagation();
 	},
-	"click .spellSlot": function(event, instance) {
+	"click .spellLevelName": function(event, instance) {
 		var name = "Level " + this.level + " Spell Slots";
 		var stat = "level" + this.level + "SpellSlots";
 		var charId = instance.data._id;

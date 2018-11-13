@@ -11,16 +11,20 @@
 					<div class="bottom list">
 						{{#each levels}}{{#if showSlots ..}}
 							<div class="item-slot">
-								<div class="item spellSlot layout horizontal center">
-									<div style="margin-right: 16px">
+								<div class="white spellSlot layout horizontal center ">
+									<div class="spellLevelName" style="margin-right: 16px; margin-left: 8px; cursor: pointer;">
 										{{name}}
 									</div>
-									<div class="flex layout horizontal center">
+									<div class="flex layout horizontal center wrap">
 										{{#each slotBubbles ..}}
-											<paper-icon-button class="slotBubble"
-															   icon={{icon}}
-															   disabled={{disabled}}>
-											</paper-icon-button>
+											{{#unless overflow}}
+												<paper-icon-button class="slotBubble"
+																   icon={{icon}}
+																   disabled={{disabled}}>
+												</paper-icon-button>
+											{{else}}
+												<div class="paper-font-subhead">+{{overflow}}</div>
+											{{/unless}}
 										{{/each}}
 									</div>
 								</div>
