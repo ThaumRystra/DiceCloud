@@ -145,17 +145,17 @@ var checkPermission = function(userId, charId){
 	return true;
 };
 
-var cascadeSoftRemove = function(id, removedWithId){
+var cascadeSoftRemove = function(parentId, removedWithId){
 	_.each(childCollections, function(treeCollection){
 		treeCollection.update(
-			{"parent.id": id},
+			{"parent.id": parentId},
 			{$set: {
 				removed: true,
 				removedWith: removedWithId,
 			}},
 			{multi: true}
 		);
-		treeCollection.find({"parent.id": id}).forEach(function(doc){
+		treeCollection.find({"parent.id": parentId, removed: true}).forEach(function(doc){
 			cascadeSoftRemove(doc._id, removedWithId);
 		});
 	});
