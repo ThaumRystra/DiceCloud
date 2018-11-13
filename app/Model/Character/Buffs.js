@@ -65,3 +65,37 @@ makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficien
 
 Buffs.allow(CHARACTER_SUBSCHEMA_ALLOW);
 Buffs.deny(CHARACTER_SUBSCHEMA_DENY);
+
+Meteor.methods({
+	applyBuff: function(buffId, targetId){
+		if (!Meteor.call("canWriteCharacter", targetId)){
+			throw new Meteor.Error(
+				"Access denied",
+				"You do not have permission to buff this character"
+			);
+		}
+		let buff = CustomBuffs.findOne(buffId);
+		if (!buff) return;
+
+		var parentCol = Meteor.isClient ?
+			window[buff.parent.collection] : global[buff.parent.collection]
+		var parent = parentCol.findOne(buff.parent.id);
+
+		//insert new buff
+		newBuffId = Buffs.insert({
+			charId: targetId,
+			name: buff.name,
+			description: buff.description,
+			lifeTime: {total: buff.lifeTime.total},
+			type: "custom",
+
+			appliedBy: buff.charId,
+			appliedByDetails: {
+				name: parent && parent.name || "",
+				collection: buff.parent.collection,
+			},
+		});
+
+		Meteor.call("cloneChildren", buffId, {id: newBuffId, collection: "Buffs"})
+	}
+})
