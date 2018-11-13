@@ -53,7 +53,7 @@ Template.shareDialog.events({
 		Characters.update(this._id, {$set: {"settings.viewPermission": value}});
 	},
 	"input #userNameOrEmailInput":
-	function(event, instance){
+	_.debounce(function(event, instance){
 		var userName = instance.find("#userNameOrEmailInput").value;
 		instance.userId.set(undefined);
 		Meteor.call("getUserId", userName, function(err, result) {
@@ -64,7 +64,7 @@ Template.shareDialog.events({
 				instance.userId.set(result);
 			}
 		});
-	},
+	}, 300),
 	"click #shareButton": function(event, instance){
 		var self = this;
 		var permission = instance.find("#accessLevelMenu").selected;
