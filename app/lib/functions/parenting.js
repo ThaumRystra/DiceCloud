@@ -3,10 +3,12 @@ var childSchema = new SimpleSchema({
 	"parent.collection": {type: String},
 	"parent.id":         {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	"parent.group":      {type: String, optional: true},
+	"removed":           {type: Boolean, optional: true, index: 1},
 	"removedWith":       {
 		optional: true,
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
+		index: 1,
 	},
 });
 
