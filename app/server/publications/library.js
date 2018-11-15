@@ -1,3 +1,5 @@
+import Libraries from "/imports/api/library/library.js"
+
 const standardLibraryIds = [
 	"SRDLibraryGA3XWsd",
 ];

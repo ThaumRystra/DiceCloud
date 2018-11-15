@@ -1,3 +1,6 @@
+import Creatures from "/imports/api/creature/Creatures.js";
+import Parties from "/imports/api/campaign/Party.js";
+
 Meteor.publish("characterList", function(){
 	var userId = this.userId;
 	if (!userId) {
@@ -6,7 +9,7 @@ Meteor.publish("characterList", function(){
 	}
 	return [
 			Characters.find(
-			{$or: [{readers: userId}, {writers: userId}, {owner: userId}]},
+			{$or: [{readers: userId}, {writers: userId}, {owner: userId}], type: "pc"},
 			{
 				fields: {
 					name: 1,
