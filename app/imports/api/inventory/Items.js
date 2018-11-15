@@ -4,7 +4,7 @@ import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 Items = new Mongo.Collection("items");
 
-Schemas.Item = new SimpleSchema({
+itemSchema = new SimpleSchema({
 	name:       {type: String, optional: true, trim: false, defaultValue: "New Item"},
 	plural:		{type: String, optional: true, trim: false},
 	description:{type: String, optional: true, trim: false},
@@ -14,10 +14,11 @@ Schemas.Item = new SimpleSchema({
 	value:		{type: Number, min: 0, defaultValue: 0},
 	enabled:    {type: Boolean, defaultValue: false},
 	requiresAttunement: {type: Boolean, defaultValue: false},
+	settings: {type: Object},
 	"settings.showIncrement": {type: Boolean, defaultValue: false},
 });
 
-Items.attachSchema(Schemas.Item);
+Items.attachSchema(itemSchema);
 Items.attachSchema(ColorSchema);
 
 var checkMovePermission = function(itemId, parent) {
@@ -205,64 +206,3 @@ makeChild(Items); //children of containers
 makeParent(Items, ["name", "enabled"]); //parents of effects and attacks
 
 //Items.allow(CHARACTER_SUBSCHEMA_ALLOW);
-
-//give characters default items
-Characters.after.insert(function(userId, char) {
-	if (Meteor.isServer){
-		var containerId = Containers.insert({
-			name: "Coin Pouch",
-			charId: char._id,
-			isCarried: true,
-			description: "A sturdy pouch for coins",
-			color: "d",
-		});
-		Items.insert({
-			name: "Gold piece",
-			plural: "Gold pieces",
-			charId: char._id,
-			quantity: 0,
-			weight: 0.02,
-			value: 1,
-			color: "n",
-			parent: {
-				id: containerId,
-				collection: "Containers",
-			},
-			settings: {
-				showIncrement: true,
-			},
-		});
-		Items.insert({
-			name: "Silver piece",
-			plural: "Silver pieces",
-			charId: char._id,
-			quantity: 0,
-			weight: 0.02,
-			value: 0.1,
-			color: "q",
-			parent: {
-				id: containerId,
-				collection: "Containers",
-			},
-			settings: {
-				showIncrement: true,
-			},
-		});
-		Items.insert({
-			name: "Copper piece",
-			plural: "Copper pieces",
-			charId: char._id,
-			quantity: 0,
-			weight: 0.02,
-			value: 0.01,
-			color: "s",
-			parent: {
-				id: containerId,
-				collection: "Containers",
-			},
-			settings: {
-				showIncrement: true,
-			},
-		});
-	}
-});

@@ -90,12 +90,13 @@ const insertCharacter = new ValidatedMethod({
     }
 
 		// Create the creature document
-    Creatures.insert({name, owner: this.userId});
+    let charId = Creatures.insert({name, owner: this.userId});
 		this.unblock();
 		//Add all the required attributes to it
 		if (Meteor.isServer){
 			addDefaultStats(charId);
 		}
+		return charId;
   },
 
 });
@@ -139,6 +140,67 @@ if (Meteor.isServer){
 		// The first creature a user creates should have the new user experience
 		if (!Creatures.find({owner: userId}).count()){
 			doc.settings.newUserExperience = true;
+		}
+	});
+
+	//give characters default items
+	Characters.after.insert(function(userId, char) {
+		if (Meteor.isServer){
+			var containerId = Containers.insert({
+				name: "Coin Pouch",
+				charId: char._id,
+				isCarried: true,
+				description: "A sturdy pouch for coins",
+				color: "d",
+			});
+			Items.insert({
+				name: "Gold piece",
+				plural: "Gold pieces",
+				charId: char._id,
+				quantity: 0,
+				weight: 0.02,
+				value: 1,
+				color: "n",
+				parent: {
+					id: containerId,
+					collection: "Containers",
+				},
+				settings: {
+					showIncrement: true,
+				},
+			});
+			Items.insert({
+				name: "Silver piece",
+				plural: "Silver pieces",
+				charId: char._id,
+				quantity: 0,
+				weight: 0.02,
+				value: 0.1,
+				color: "q",
+				parent: {
+					id: containerId,
+					collection: "Containers",
+				},
+				settings: {
+					showIncrement: true,
+				},
+			});
+			Items.insert({
+				name: "Copper piece",
+				plural: "Copper pieces",
+				charId: char._id,
+				quantity: 0,
+				weight: 0.02,
+				value: 0.01,
+				color: "s",
+				parent: {
+					id: containerId,
+					collection: "Containers",
+				},
+				settings: {
+					showIncrement: true,
+				},
+			});
 		}
 	});
 }
