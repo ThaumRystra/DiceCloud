@@ -72,3 +72,5 @@ getDefaultCreatureDocs = function(charId, creatureType = "pc"){
   }
   return docs;
 }
+
+export default getDefaultCreatureDocs;

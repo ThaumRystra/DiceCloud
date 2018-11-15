@@ -10,10 +10,13 @@ let partySchema = new SimpleSchema({
 		optional: true,
 	},
 	characters: {
-		type: [String],
+		type: Array,
+		defaultValue: [],
+	},
+	characters: {
+		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 		index: 1,
-		defaultValue: [],
 	},
 	owner: {
 		type: String,

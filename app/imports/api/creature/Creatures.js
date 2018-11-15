@@ -1,8 +1,9 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import Effects from "/imports/api/creature/Effects.js"
-import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSaves.js"
+import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSavesSchema.js"
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import getDefaultCreatureDocs from "/imports/api/creature/CreatureDefaults.js";
 
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
@@ -32,9 +33,11 @@ let creatureSchema = new SimpleSchema({
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
-	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: [], index: 1},
-	//TODO add per-creature settings
+	readers: {type: Array, defaultValue: []},
+	"readers.$": {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
+	writers: {type: Array, defaultValue: []},
+	"writers.$": {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
+	settings: {type: Object},
 	//how many experiences to load at a time in XP table
 	"settings.experiencesInc": {type: SimpleSchema.Integer, defaultValue: 20},
 	//slowed down by carrying too much?
@@ -144,7 +147,7 @@ if (Meteor.isServer){
 	});
 
 	//give characters default items
-	Characters.after.insert(function(userId, char) {
+	Creatures.after.insert(function(userId, char) {
 		if (Meteor.isServer){
 			var containerId = Containers.insert({
 				name: "Coin Pouch",

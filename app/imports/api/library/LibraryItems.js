@@ -1,6 +1,9 @@
+import SimpleSchema from 'simpl-schema';
+import libraryAttacksSchema from "/imports/api/library/";
+
 LibraryItems = new Mongo.Collection("libraryItems");
 
-Schemas.LibraryItems = new SimpleSchema({
+libraryItemsSchema = new SimpleSchema({
 	libraryName:{type: String, optional: true, trim: false},
 	name:       {type: String, defaultValue: "New Item", trim: false},
 	plural:		{type: String, optional: true, trim: false},
@@ -12,6 +15,7 @@ Schemas.LibraryItems = new SimpleSchema({
 
 	library:    {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 
+	settings: {type: Object},
 	"settings.category":   {
 		type: String,
 		optional: true,
@@ -24,11 +28,11 @@ Schemas.LibraryItems = new SimpleSchema({
 		defaultValue: false,
 	},
 
-	effects: {type: [Schemas.LibraryEffects], defaultValue: []},
-	attacks: {type: [Schemas.LibraryAttacks], defaultValue: []},
+	effects: [Schemas.LibraryEffects],
+	attacks: [Schemas.LibraryAttacks],
 });
 
-LibraryItems.attachSchema(Schemas.LibraryItems);
+LibraryItems.attachSchema(libraryItemsSchema);
 
 LibraryItems.allow({
 	insert(userId, doc) {

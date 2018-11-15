@@ -1,6 +1,8 @@
+import SimpleSchema from 'simpl-schema';
+
 Libraries = new Mongo.Collection("library");
 
-Schemas.Library = new SimpleSchema({
+librarySchema = new SimpleSchema({
 	name:    {type: String},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id},
 	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
@@ -8,7 +10,7 @@ Schemas.Library = new SimpleSchema({
 	public:  {type: Boolean, defaultValue: false},
 });
 
-Libraries.attachSchema(Schemas.Library);
+Libraries.attachSchema(librarySchema);
 
 Libraries.allow({
 	insert(userId, doc) {
@@ -45,3 +47,5 @@ Libraries.canEdit = function(userId, libraryId){
 	const library = Libraries.findOne(libraryId);
 	return canEdit(userId, library);
 };
+
+export default Libraries;
