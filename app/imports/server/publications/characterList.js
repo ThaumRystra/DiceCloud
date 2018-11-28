@@ -8,7 +8,7 @@ Meteor.publish("characterList", function(){
 		return;
 	}
 	return [
-			Characters.find(
+			Creatures.find(
 			{$or: [{readers: userId}, {writers: userId}, {owner: userId}], type: "pc"},
 			{
 				fields: {

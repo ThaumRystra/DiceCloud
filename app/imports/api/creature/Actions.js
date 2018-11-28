@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import {makeChild} from "/imports/api/parenting.js";
 
 let Actions = new Mongo.Collection("actions");
 
@@ -28,17 +29,17 @@ let actionSchema = new SimpleSchema({
 	},
 	//the immediate impact of doing this action (eg. -1 rages)
 	adjustments: {
-		type: [Schemas.Adjustment],
+		type: Array,
 		defaultValue: [],
+	},
+	"adjustments.$": {
+		type: Object,
 	},
 });
 
 Actions.attachSchema(actionSchema);
 
-Actions.attachBehaviour("softRemovable");
+// Actions.attachBehaviour("softRemovable");
 makeChild(Actions);
-
-Actions.allow(CHARACTER_SUBSCHEMA_ALLOW);
-Actions.deny(CHARACTER_SUBSCHEMA_DENY);
 
 export default Actions

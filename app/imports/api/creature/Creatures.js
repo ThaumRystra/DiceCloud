@@ -33,10 +33,10 @@ let creatureSchema = new SimpleSchema({
 	//permissions
 	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	readers: {type: Array, defaultValue: []},
-	"readers.$": {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	writers: {type: Array, defaultValue: []},
-	"writers.$": {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
+	readers: {type: Array, defaultValue: [], index: 1},
+	"readers.$": {type: String, regEx: SimpleSchema.RegEx.Id},
+	writers: {type: Array, defaultValue: [], index: 1},
+	"writers.$": {type: String, regEx: SimpleSchema.RegEx.Id},
 	settings: {type: Object},
 	//how many experiences to load at a time in XP table
 	"settings.experiencesInc": {type: SimpleSchema.Integer, defaultValue: 20},

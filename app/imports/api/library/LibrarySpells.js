@@ -46,8 +46,10 @@ Schemas.LibrarySpells = new SimpleSchema({
 		allowedValues: magicSchools,
 	},
 	library:    {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	effects: {type: [Schemas.LibraryEffects], defaultValue: []},
-	attacks: {type: [Schemas.LibraryAttacks], defaultValue: []},
+	effects: {type: Array},
+	"effects.$": {type: Schemas.LibraryEffects, defaultValue: []},
+	attacks: {type: Array},
+	"attacks.$": {type: Schemas.LibraryAttacks, defaultValue: []},
 });
 
 LibrarySpells.attachSchema(Schemas.LibrarySpells);

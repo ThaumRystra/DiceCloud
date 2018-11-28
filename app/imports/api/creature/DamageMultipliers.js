@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import {makeChild} from "/imports/api/parenting.js";
 
 DamageMultipliers = new Mongo.Collection("damageMultipliers");
 
@@ -31,8 +32,5 @@ Schemas.DamageMultiplier = new SimpleSchema({
 
 DamageMultipliers.attachSchema(Schemas.DamageMultiplier);
 
-DamageMultipliers.attachBehaviour("softRemovable");
+// DamageMultipliers.attachBehaviour("softRemovable");
 makeChild(DamageMultipliers, ["enabled"]); //children of lots of things
-
-DamageMultipliers.allow(CHARACTER_SUBSCHEMA_ALLOW);
-DamageMultipliers.deny(CHARACTER_SUBSCHEMA_DENY);

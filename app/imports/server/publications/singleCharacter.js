@@ -5,19 +5,18 @@ import Attributes from "/imports/api/creature/Attributes.js";
 import Buffs from "/imports/api/creature/Buffs.js";
 import Classes from "/imports/api/creature/Classes.js";
 import Conditions from "/imports/api/creature/Conditions.js";
-import Containers from "/imports/api/creature/Containers.js";
 import CustomBuffs from "/imports/api/creature/CustomBuffs.js";
 import DamageMultipliers from "/imports/api/creature/DamageMultipliers.js";
 import Effects from "/imports/api/creature/Effects.js";
 import Experiences from "/imports/api/creature/Experiences.js";
 import Features from "/imports/api/creature/Features.js";
-import Items from "/imports/api/creature/Items.js";
 import Notes from "/imports/api/creature/Notes.js";
 import Skills from "/imports/api/creature/Skills.js";
 import Spells from "/imports/api/creature/Spells.js";
 import SpellLists from "/imports/api/creature/SpellLists.js";
-import TemporaryHitPoints from "/imports/api/creature/TemporaryHitPoints.js";
 import Proficiencies from "/imports/api/creature/Proficiencies.js";
+import Containers from "/imports/api/inventory/Containers.js";
+import Items from "/imports/api/inventory/Items.js";
 
 Meteor.publish("singleCharacter", function(characterId){
 	userId = this.userId;

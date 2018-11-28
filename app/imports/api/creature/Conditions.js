@@ -20,6 +20,9 @@ conditionSchema = new SimpleSchema({
 		optional: true,
 		trim: false,
 	},
+	lifeTime: {
+		type: Object,
+	},
 	"lifeTime.total": {
 		type: Number,
 		defaultValue: 0, //0 is infinite

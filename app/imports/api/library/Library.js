@@ -5,8 +5,10 @@ Libraries = new Mongo.Collection("library");
 librarySchema = new SimpleSchema({
 	name:    {type: String},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id},
-	readers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
-	writers: {type: [String], regEx: SimpleSchema.RegEx.Id, defaultValue: []},
+	readers: {type: Array, defaultValue: []},
+	"readers.$": {type: String, regEx: SimpleSchema.RegEx.Id},
+	writers: {type: Array, defaultValue: []},
+	"writers.$": {type: String, regEx: SimpleSchema.RegEx.Id},
 	public:  {type: Boolean, defaultValue: false},
 });
 
