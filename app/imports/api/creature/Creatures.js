@@ -1,9 +1,9 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
-import Effects from "/imports/api/creature/Effects.js"
+import Effects from "/imports/api/creature/properties/Effects.js"
 import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSavesSchema.js"
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import getDefaultCreatureDocs from "/imports/api/creature/CreatureDefaults.js";
+import getDefaultCreatureDocs from "/imports/api/creature/getDefaultCreatureDocs.js";
 
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
@@ -62,55 +62,6 @@ let creatureSchema = new SimpleSchema({
 Creatures.attachSchema(creatureSchema);
 Creatures.attachSchema(ColorSchema);
 
-Creatures.calculate = {
-	xpLevel: function(charId){
-		var xp = Creatures.calculate.experience(charId);
-		for (var i = 0; i < 19; i++){
-			if (xp < XP_TABLE[i]){
-				return i;
-			}
-		}
-		if (xp > 355000) return 20;
-		return 0;
-	},
-};
-
-const insertCharacter = new ValidatedMethod({
-
-  name: "Creatures.methods.insertCharacter", // DDP method name
-
-  validate: new SimpleSchema({
-	  name: {
-		  type: String,
-		  optional: true,
-	  },
-  }).validator(),
-
-  run({name}) {
-    if (!this.userId) {
-      throw new Meteor.Error("Creatures.methods.insert.denied",
-      "You need to be logged in to insert a creature");
-    }
-
-		// Create the creature document
-    let charId = Creatures.insert({name, owner: this.userId});
-		this.unblock();
-		//Add all the required attributes to it
-		if (Meteor.isServer){
-			addDefaultStats(charId);
-		}
-		return charId;
-  },
-
-});
-
-const addDefaultStats = function(charId){
-	const defaultDocs = getDefaultCreatureDocs(charId);
-	Attributes.rawCollection().insert(defaultDocs.attributes, {ordered: false});
-	Skills.rawCollection().insert(defaultDocs.skills, {ordered: false});
-	DamageMultipliers.rawCollection().insert(defaultDocs.damageMultipliers, {ordered: false});
-};
-
 //clean up all data related to that creature before removing it
 if (Meteor.isServer){
 	Creatures.after.remove(function(userId, creature) {
@@ -145,91 +96,6 @@ if (Meteor.isServer){
 			doc.settings.newUserExperience = true;
 		}
 	});
-
-	//give characters default items
-	Creatures.after.insert(function(userId, char) {
-		if (Meteor.isServer){
-			var containerId = Containers.insert({
-				name: "Coin Pouch",
-				charId: char._id,
-				isCarried: true,
-				description: "A sturdy pouch for coins",
-				color: "d",
-			});
-			Items.insert({
-				name: "Gold piece",
-				plural: "Gold pieces",
-				charId: char._id,
-				quantity: 0,
-				weight: 0.02,
-				value: 1,
-				color: "n",
-				parent: {
-					id: containerId,
-					collection: "Containers",
-				},
-				settings: {
-					showIncrement: true,
-				},
-			});
-			Items.insert({
-				name: "Silver piece",
-				plural: "Silver pieces",
-				charId: char._id,
-				quantity: 0,
-				weight: 0.02,
-				value: 0.1,
-				color: "q",
-				parent: {
-					id: containerId,
-					collection: "Containers",
-				},
-				settings: {
-					showIncrement: true,
-				},
-			});
-			Items.insert({
-				name: "Copper piece",
-				plural: "Copper pieces",
-				charId: char._id,
-				quantity: 0,
-				weight: 0.02,
-				value: 0.01,
-				color: "s",
-				parent: {
-					id: containerId,
-					collection: "Containers",
-				},
-				settings: {
-					showIncrement: true,
-				},
-			});
-		}
-	});
 }
-
-Creatures.allow({
-	insert: function(userId, doc) {
-		// the user must be logged in, and the document must be owned by the user
-		return (userId && doc.owner === userId);
-	},
-	update: function(userId, doc, fields, modifier) {
-		// can only change documents you have write access to
-		return doc.owner === userId ||
-			_.contains(doc.writers, userId);
-	},
-	remove: function(userId, doc) {
-		// can only remove your own documents
-		return doc.owner === userId;
-	},
-	fetch: ["owner", "writers"],
-});
-
-Creatures.deny({
-	update: function(userId, docs, fields, modifier) {
-		// can't change owners
-		return _.contains(fields, "owner");
-	}
-});
 
 export default Creatures;

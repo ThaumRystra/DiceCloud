@@ -31,7 +31,7 @@
     </v-list>
     <v-list dense>
       <v-list-tile
-        v-for="character in charactersWithNoParty"
+        v-for="character in CreaturesWithNoParty"
         :href="character.url"
         :key="character._id"
       >
@@ -63,6 +63,9 @@
 </template>
 
 <script>
+	import Creatures from '/imports/api/creature/Creatures.js';
+	import Parties from '/imports/api/campaign/Parties.js';
+
   export default {
     meteor: {
       $subscribe: {
@@ -78,7 +81,7 @@
 			links(){
 				return [
 					{title: "Home", icon: "home", to: "/"},
-	        {title: "Characters", icon: "group", to: "characterList", vif: Meteor.userId()},
+	        {title: "Creatures", icon: "group", to: "characterList", vif: Meteor.userId()},
 	        {title: "Send Feedback", icon: "bug_report", to: "feedback"},
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
 	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},
@@ -89,9 +92,9 @@
     			{owner: Meteor.userId()},
     			{sort: {name: 1}},
     		).map(party => {
-          party.characterDocs = Characters.find(
+          party.characterDocs = Creatures.find(
       			{
-      				_id: {$in: party.characters},
+      				_id: {$in: party.Creatures},
       				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
       			}, {
               sort: {name: 1},
@@ -104,11 +107,11 @@
           return party;
         });
       },
-    	charactersWithNoParty() {
+    	CreaturesWithNoParty() {
     		var userId = Meteor.userId();
-    		var charArrays = Parties.find({owner: userId}).map(p => p.characters);
+    		var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
     		var partyChars = _.uniq(_.flatten(charArrays));
-    		return Characters.find(
+    		return Creatures.find(
     			{
     				_id: {$nin: partyChars},
     				$or: [{readers: userId}, {writers: userId}, {owner: userId}],

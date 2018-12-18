@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import Attributes from "/imports/api/creature/Attributes.js";
+import Attributes from "/imports/api/creature/properties/Attributes.js";
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import {makeParent} from "/imports/api/parenting.js";
 

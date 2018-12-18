@@ -1,4 +1,4 @@
-{
+export default {
   "attributes": [
     {"name": "Strength",     "variableName": "strength",     "baseValue": 10, "type": "ability"},
     {"name": "Dexterity",    "variableName": "dexterity",    "baseValue": 10, "type": "ability"},

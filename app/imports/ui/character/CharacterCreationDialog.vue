@@ -198,10 +198,10 @@
 			14: 7,
 			15: 9,
 		};
-		if (costs[score]){
+		if (costs[score] || costs[score] === 0){
 			return costs[score];
 		} else {
-			return null;
+			return NaN;
 		}
 	};
   export default {

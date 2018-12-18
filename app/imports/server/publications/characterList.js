@@ -1,5 +1,5 @@
 import Creatures from "/imports/api/creature/Creatures.js";
-import Parties from "/imports/api/campaign/Party.js";
+import Parties from '/imports/api/campaign/Parties.js';
 
 Meteor.publish("characterList", function(){
 	var userId = this.userId;

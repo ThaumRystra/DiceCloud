@@ -1,7 +1,3 @@
-import store from "/imports/ui/vuexStore.js";
-
-const offset = 16;
-const duration = 400;
 let dialogStack = {};
 dialogStack.dialogs = [];
 
@@ -32,14 +28,17 @@ const dialogStackStore = {
       if (!dialog) return;
       if (dialog.callback) dialog.callback(result);
     },
+    setCurrentResult (state, result){
+      state.currentResult = result;
+    },
   },
   actions: {
     popDialogStack(context, result){
       if (history && history.state && history.state.openDialogs){
-        context.state.currentResult = result;
+        context.commit("setCurrentResult", result);
         history.back();
       } else {
-        context.commit("popDialogStackMutation", result)
+        context.commit("popDialogStackMutation", result);
       }
     }
   }

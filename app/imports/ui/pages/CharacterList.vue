@@ -1,10 +1,10 @@
 <template>
   <toolbar-layout>
-    <span slot="toolbar">Characters</span>
+    <span slot="toolbar">Creatures</span>
     <v-card class="ma-4">
-      <v-list v-if="charactersWithNoParty.length">
+      <v-list v-if="CreaturesWithNoParty.length">
         <v-list-tile
-          v-for="character in charactersWithNoParty"
+          v-for="character in CreaturesWithNoParty"
           :key="character._id"
           :to="character.url"
         >
@@ -72,6 +72,8 @@
 </template>
 
 <script>
+	import Creatures from '/imports/api/creature/Creatures.js';
+	import Parties from '/imports/api/campaign/Parties.js';
   import store from "/imports/ui/vuexStore.js";
   import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
   import LabeledFab from "/imports/ui/components/LabeledFab.vue";
@@ -96,9 +98,9 @@
     			{owner: Meteor.userId()},
     			{sort: {name: 1}},
     		).map(party => {
-          party.characterDocs = Characters.find(
+          party.characterDocs = Creatures.find(
       			{
-      				_id: {$in: party.characters},
+      				_id: {$in: party.Creatures},
       				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
       			}, {
               sort: {name: 1},
@@ -107,11 +109,11 @@
           return party;
         });
       },
-      charactersWithNoParty() {
+      CreaturesWithNoParty() {
     		var userId = Meteor.userId();
-    		var charArrays = Parties.find({owner: userId}).map(p => p.characters);
+    		var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
     		var partyChars = _.uniq(_.flatten(charArrays));
-    		return Characters.find(
+    		return Creatures.find(
     			{
     				_id: {$nin: partyChars},
     				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
