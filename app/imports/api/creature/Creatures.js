@@ -1,9 +1,10 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import Effects from "/imports/api/creature/properties/Effects.js"
 import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSavesSchema.js"
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import getDefaultCreatureDocs from "/imports/api/creature/getDefaultCreatureDocs.js";
+
+//Methods
+import '/imports/api/creature/insertCreature.js';
 
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
@@ -24,20 +25,19 @@ let creatureSchema = new SimpleSchema({
 	backstory:    {type: String, defaultValue: "", trim: false, optional: true},
 
 	//mechanics
-	deathSave:     {type: deathSaveSchema},
+	deathSave:     {type: deathSaveSchema, defaultValue: {}},
 	xp:            {type: SimpleSchema.Integer, defaultValue: 0},
 	weightCarried: {type: Number, defaultValue: 0},
 	level:         {type: SimpleSchema.Integer, defaultValue: 0},
 	type:          {type: String, defaultValue: "pc", allowedValues: ["pc", "npc", "monster"]},
 
 	//permissions
-	party:   {type: String, regEx: SimpleSchema.RegEx.Id, optional: true},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	readers: {type: Array, defaultValue: [], index: 1},
 	"readers.$": {type: String, regEx: SimpleSchema.RegEx.Id},
 	writers: {type: Array, defaultValue: [], index: 1},
 	"writers.$": {type: String, regEx: SimpleSchema.RegEx.Id},
-	settings: {type: Object},
+	settings: {type: Object, defaultValue: {}},
 	//how many experiences to load at a time in XP table
 	"settings.experiencesInc": {type: SimpleSchema.Integer, defaultValue: 20},
 	//slowed down by carrying too much?

@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import {makeChild} from "/imports/api/parenting.js";
 
-DamageMultipliers = new Mongo.Collection("damageMultipliers");
+const DamageMultipliers = new Mongo.Collection("damageMultipliers");
 
 /*
  * DamageMultipliers are whole numbered stats of a character
  */
-Schemas.DamageMultiplier = new SimpleSchema({
+const damageMultiplierSchema = new SimpleSchema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -30,7 +30,9 @@ Schemas.DamageMultiplier = new SimpleSchema({
 	},
 });
 
-DamageMultipliers.attachSchema(Schemas.DamageMultiplier);
+DamageMultipliers.attachSchema(damageMultiplierSchema);
 
 // DamageMultipliers.attachBehaviour("softRemovable");
 makeChild(DamageMultipliers, ["enabled"]); //children of lots of things
+
+export default DamageMultipliers;

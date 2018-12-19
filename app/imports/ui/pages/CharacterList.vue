@@ -78,6 +78,7 @@
   import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
   import LabeledFab from "/imports/ui/components/LabeledFab.vue";
   import CharacterCreationDialog from "/imports/ui/character/CharacterCreationDialog.vue";
+	import insertCreature from '/imports/api/creature/insertCreature.js';
 
   const characterTransform = function(char){
     char.url = `\/character\/${char._id}\/${char.urlName || "-"}`;
@@ -123,15 +124,14 @@
     	},
     },
     methods: {
-      insertCharacter(e){
-				console.log(e);
+      insertCharacter(){
         store.commit("pushDialogStack", {
            component: CharacterCreationDialog,
            data: {},
            element: undefined,
            returnElement: undefined,
            callback(result){
-             console.log({result});
+             insertCreature.call(result);
            },
         });
       },

@@ -20,7 +20,7 @@
         <v-stepper-content step="1">
           <v-text-field label="Name" v-model="name"></v-text-field>
 					<v-text-field label="Gender" v-model="gender"></v-text-field>
-					<v-text-field label="Alignment" v-model="alignment"></v-text-field>
+					<v-text-field label="Alignment" v-model="alignment" @keydown.tab="step++"></v-text-field>
         </v-stepper-content>
         <v-stepper-content step="2">
           <v-text-field label="Race" v-model="race"></v-text-field>

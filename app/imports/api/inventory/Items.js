@@ -206,3 +206,4 @@ makeChild(Items); //children of containers
 makeParent(Items, ["name", "enabled"]); //parents of effects and attacks
 
 //Items.allow(CHARACTER_SUBSCHEMA_ALLOW);
+export default Items;

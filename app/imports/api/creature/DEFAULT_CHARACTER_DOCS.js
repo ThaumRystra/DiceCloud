@@ -1,4 +1,7 @@
-export default {
+// Don't just export a constant, because deep nested objects could be changed
+// by code that requires it. Exporting a function that returns the newly created
+// object is a little safer.
+export default () => ({
   "attributes": [
     {"name": "Strength",     "variableName": "strength",     "baseValue": 10, "type": "ability"},
     {"name": "Dexterity",    "variableName": "dexterity",    "baseValue": 10, "type": "ability"},
@@ -132,4 +135,4 @@ export default {
       ],
     },
   ],
-}
+});
