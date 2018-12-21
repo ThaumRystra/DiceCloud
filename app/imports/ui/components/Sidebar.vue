@@ -32,7 +32,7 @@
     <v-list dense>
       <v-list-tile
         v-for="character in CreaturesWithNoParty"
-        :href="character.url"
+        :to="character.url"
         :key="character._id"
       >
         <v-list-tile-title>
@@ -50,7 +50,7 @@
         </v-list-tile>
         <v-list-tile
           v-for="character in characterDocs"
-          :href="character.url"
+          :to="character.url"
           :key="character._id"
         >
           <v-list-tile-title>
@@ -81,8 +81,8 @@
 			links(){
 				return [
 					{title: "Home", icon: "home", to: "/"},
-	        {title: "Creatures", icon: "group", to: "characterList", vif: Meteor.userId()},
-	        {title: "Send Feedback", icon: "bug_report", to: "feedback"},
+	        {title: "Creatures", icon: "group", to: "/characterList", vif: Meteor.userId()},
+	        {title: "Send Feedback", icon: "bug_report", to: "/feedback"},
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
 	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},
 				];
