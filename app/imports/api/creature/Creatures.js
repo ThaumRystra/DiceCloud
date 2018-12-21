@@ -1,10 +1,10 @@
 import SimpleSchema from 'simpl-schema';
-import Effects from "/imports/api/creature/properties/Effects.js"
 import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSavesSchema.js"
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 //Methods
 import '/imports/api/creature/insertCreature.js';
+import '/imports/api/creature/removeCreature.js';
 
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
@@ -62,27 +62,8 @@ let creatureSchema = new SimpleSchema({
 Creatures.attachSchema(creatureSchema);
 Creatures.attachSchema(ColorSchema);
 
-//clean up all data related to that creature before removing it
+//Keep the urlName up to date
 if (Meteor.isServer){
-	Creatures.after.remove(function(userId, creature) {
-		let charId = creature._id;
-		Actions          .remove({charId});
-		Attacks          .remove({charId});
-		Attributes       .remove({charId});
-		Buffs            .remove({charId});
-		Classes          .remove({charId});
-		CustomBuffs      .remove({charId});
-		DamageMultipliers.remove({charId});
-		Effects          .remove({charId});
-		Experiences      .remove({charId});
-		Features         .remove({charId});
-		Notes            .remove({charId});
-		Proficiencies    .remove({charId});
-		Skills           .remove({charId});
-		SpellLists       .remove({charId});
-		Items            .remove({charId});
-		Containers       .remove({charId});
-	});
 	Creatures.after.update(function(userId, doc, fieldNames, modifier, options) {
 		if (_.contains(fieldNames, "name")){
 			var urlName = getSlug(doc.name, {maintainCase: true}) || "-";

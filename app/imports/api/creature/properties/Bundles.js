@@ -1,6 +1,6 @@
 import SimpleSchema from "simpl-schema";
 
-let Bundle = new Mongo.Collection("bundle");
+let Bundles = new Mongo.Collection("bundle");
 
 let attributeSchema = new SimpleSchema({
   name: String,

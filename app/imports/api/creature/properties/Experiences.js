@@ -24,3 +24,5 @@ let experienceSchema = new SimpleSchema({
 Experiences.attachSchema(experienceSchema);
 
 //Experiences.attachBehaviour("softRemovable");
+
+export default Experiences;

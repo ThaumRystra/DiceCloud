@@ -4,10 +4,11 @@ import Vue from "vue";
 // Components
 import Home from '/imports/ui/pages/Home.vue';
 import CharacterList from "/imports/ui/pages/CharacterList.vue";
+import CharacterSheetPage from "/imports/ui/pages/CharacterSheetPage.vue";
 import SignIn from "/imports/ui/pages/SignIn.vue" ;
 import Register from "/imports/ui/pages/Register.vue" ;
 import Account from "/imports/ui/pages/Account.vue" ;
-import TestDialog from "/imports/ui/dialogStack/TestDialog.vue"
+import TestDialog from "/imports/ui/dialogStack/TestDialog.vue";
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -30,6 +31,12 @@ RouterFactory.configure(factory => {
     },{
       path: "/characterList",
       component: CharacterList,
+    },{
+      path: "/character/:id/:urlName",
+      component: CharacterSheetPage,
+    },{
+      path: "/character/:id",
+      component: CharacterSheetPage,
     },{
 			path: "/sign-in",
 			component: SignIn,

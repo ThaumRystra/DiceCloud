@@ -34,3 +34,5 @@ Proficiencies.attachSchema(proficiencySchema);
 
 // Proficiencies.attachBehaviour("softRemovable");
 makeChild(Proficiencies, ["enabled"]);
+
+export default Proficiencies;

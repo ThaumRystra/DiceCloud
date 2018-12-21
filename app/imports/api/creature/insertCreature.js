@@ -19,7 +19,7 @@ const addDefaultDocs = function(docs){
 
 const insertCreature = new ValidatedMethod({
 
-  name: "Creatures.methods.insertCharacter", // DDP method name
+  name: "Creatures.methods.insertCreature",
 
   validate: null,
 
