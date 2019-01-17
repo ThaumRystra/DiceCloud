@@ -40,7 +40,7 @@ export default {
 			if (this.proficiency == 0.5){
 				return 'brightness_2';
 			} else if (this.proficiency == 1) {
-				return 'radio_button_checked'
+				return 'brightness_1'
 			} else if (this.proficiency == 2){
 				return 'album'
 			} else {
@@ -69,7 +69,6 @@ export default {
 <style lang="css" scoped>
 	.skill-list-tile >>> .v-list__tile {
 		height: 34px;
-		padding: 0;
 	}
 	.prof-icon {
 		min-width: 30px;
