@@ -1,6 +1,7 @@
 .meteor/local
 .meteor/meteorite
 .demeteorized
+.cache
 settings.json
 public/components
 public/_imports.html
