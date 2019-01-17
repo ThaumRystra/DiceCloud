@@ -32,7 +32,6 @@
 				if (this.value > this.maxValue){
 					this.value = this.maxValue;
 				}
-				console.log(this);
 			},
 		},
 	}

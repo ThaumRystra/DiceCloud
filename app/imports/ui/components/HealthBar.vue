@@ -1,6 +1,6 @@
 <template>
 	<div style="height: 48px;">
-		<v-layout column align-center @click="edit">
+		<v-layout column align-center @click="edit" style="height: 100%; cursor: pointer;">
 			<v-progress-linear :value="(value / maxValue) * 100" height="20" color="green lighten-1">
 			</v-progress-linear>
 			<span class="value"
@@ -9,15 +9,17 @@
 				{{value}} / {{maxValue}}
 			</span>
 		</v-layout>
+		<transition name="background-transition">
+			<div v-if="editing" class="page-tint" @click="cancelEdit" />
+		</transition>
 		<transition name="transition">
 			<v-toolbar
 				v-if="editing"
 				justify-center
-				@blur="cancelEdit"
 				height="48"
 				flat
 				class="transparent"
-				style="margin-top: -36px; z-index: 2;"
+				style="margin-top: -46px; z-index: 4;"
 			>
 				<v-spacer/>
 				<v-btn-toggle
@@ -101,12 +103,18 @@
 </script>
 
 <style scoped>
-	.transition-enter-active{
+	.background-transition-enter-active, .background-transition-leave-active{
 		 transition: all .2s;
 	 }
-	 .transition-leave-active {
-			transition: all .3s;
-		}
+	.background-transition-enter, .background-transition-leave-to {
+		opacity: 0;
+	}
+	.transition-enter-active{
+		transition: all .2s;
+	}
+	.transition-leave-active {
+		transition: all .3s;
+	}
 	.transition-enter-to, .transition-leave {
 		opacity: 1;
 		transform: scaleY(1) !important;
@@ -114,5 +122,14 @@
 	.transition-enter, .transition-leave-to {
 		opacity: 0;
 		transform: scaleY(0) !important;
+	}
+	.page-tint {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgba(0, 0, 0, 0.15);
+		z-index: 3;
 	}
 </style>
