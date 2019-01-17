@@ -7,3 +7,5 @@ const theme = {
   info: "#5C6BC0",
   success: "#43A047",
 };
+
+export default theme;

@@ -22,7 +22,6 @@ const routerFactory = new RouterFactory({
 
 
 RouterFactory.configure(factory => {
-  // Simple routes
   factory.addRoutes([
     {
       path: '/',
@@ -51,6 +50,21 @@ RouterFactory.configure(factory => {
 			component: TestDialog,
 		},
   ]);
+  //Development routes
+  if (Meteor.isDevelopment){
+    let StoryBook = require('/imports/ui/pages/StoryBook.vue').default;
+    factory.addRoutes([
+      {
+        path: '/storybook/:component',
+        name: 'componentStory',
+        component: StoryBook,
+      },{
+        path: '/storybook',
+        name: 'storybook',
+        component: StoryBook,
+      },
+    ]);
+  }
 });
 
 // Not found route has lowest priority
