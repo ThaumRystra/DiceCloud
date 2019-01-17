@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+
 export default {
 	props: {
 		proficiency: Number,
@@ -50,12 +52,8 @@ export default {
 			let mod = this.modifier;
 			if (this.fail){
 				return 'fail';
-			} else if (mod === 0){
-				return '+0';
-			} else if (mod > 0 && typeof mod === 'number'){
-				return `+${mod}`
 			} else {
-				return mod;
+				return numberToSignedString(mod);
 			}
 		},
 		hasClickListener(){

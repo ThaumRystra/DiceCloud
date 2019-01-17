@@ -33,11 +33,13 @@
 	import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
 	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
+	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
 	export default {
 		components: {
 			ToolbarLayout,
 			HealthBar,
 			SkillListTile,
+			AbilityListTile,
 		},
 	}
 </script>

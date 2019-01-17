@@ -4,10 +4,7 @@
 			v-for="skill in skills"
 			:key="skill.name"
 			v-bind="skill"
-		/>
-		<skill-list-tile
-			v-bind="skills[0]"
-			@click="e => log(e)"
+			@click="click"
 		/>
 	</v-list>
 </template>
@@ -49,7 +46,7 @@
 			SkillListTile,
 		},
 		methods: {
-			log(){
+			click(){
 				console.log(...arguments);
 			},
 		},
