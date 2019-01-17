@@ -1,12 +1,12 @@
 <template>
 	<div style="height: 48px;">
 		<v-layout column align-center @click="edit">
-			<v-progress-linear :value="(value / valueMax) * 100" height="20" color="green lighten-1">
+			<v-progress-linear :value="(value / maxValue) * 100" height="20" color="green lighten-1">
 			</v-progress-linear>
 			<span class="value"
 				style="margin-top: -35px; z-index: 1; font-size: 16px; font-weight: 600;"
 			>
-				{{value}} / {{valueMax}}
+				{{value}} / {{maxValue}}
 			</span>
 		</v-layout>
 		<transition name="transition">
@@ -64,8 +64,7 @@
 		}},
 		props: {
 			value: Number,
-			valueMax: Number,
-			update: Function,
+			maxValue: Number,
 		},
 		methods: {
 			edit(){
@@ -81,16 +80,12 @@
 			},
 			commitEdit(){
 				this.editing = false;
-				const value = +this.$refs.editInput.lazyValue;
-				let type = "set";
-				if (this.operation === 0){
-					type = "increment";
-				} else if (this.operation === 1){
-					type = "decrement";
+				let value = +this.$refs.editInput.lazyValue;
+				let type = this.operation === null ? 'set' : 'increment';
+				if (this.operation === 1){
+					value = -value;
 				}
-				if (this.update){
-					this.update({type, value});
-				}
+				this.$emit('change', {type, value});
 			},
 			rejectNonNumbers: function(evt) {
 				evt = (evt) ? evt : window.event;
