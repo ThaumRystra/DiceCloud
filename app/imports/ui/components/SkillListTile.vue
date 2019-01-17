@@ -10,8 +10,7 @@
 				<span class="prof-mod">
 					{{displayedModifier}}
 				</span>
-				{{name}}
-				<template v-if="conditionalBenefit">*</template>
+				{{name}}<template v-if="conditionalBenefit">*</template>
 				<v-icon size="20px" v-if="advantage && !disadvantage">arrow_upward</v-icon>
 				<v-icon size="20px" v-if="!advantage && disadvantage">arrow_downward</v-icon>
 			</v-list-tile-title>
