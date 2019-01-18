@@ -28,14 +28,16 @@
 	    </v-list>
 		</v-navigation-drawer>
     <div class="content">
-			<v-card class="ma-4">
-				<component :is="$route.params.component"></component>
+			<component v-if="dontWrap" :is="$route.params.component"/>
+			<v-card class="ma-4" v-else="dontWrap">
+				<component :is="$route.params.component"/>
 			</v-card>
 		</div>
 	</toolbar-layout>
 </template>
 
 <script>
+	import Vue from "vue";
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
@@ -52,7 +54,13 @@
 		data(){ return {
 			sidebar: undefined,
 		}},
-	}
+		computed: {
+			dontWrap(){
+				let component = this.$options.components[this.$route.params.component];
+				return component && component.dontWrap;
+			},
+		},
+	};
 </script>
 
 <style lang="css" scoped>

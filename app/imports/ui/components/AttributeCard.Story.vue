@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-container style="background: #fafafa;" grid-list-md>
+  <v-container grid-list-md>
   	<v-layout row wrap>
   		<v-flex xs12 v-for="attribute in attributes" :key="attribute.name">
   			<attribute-card v-bind="attribute" @click="click"/>
@@ -14,6 +14,7 @@
 		components: {
 			AttributeCard
 		},
+		dontWrap: true,
 		data(){ return {
 			attributes: [
 				{
