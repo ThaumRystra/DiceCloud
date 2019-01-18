@@ -41,7 +41,6 @@
 
 <script>
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
-// Set elevation to 8 when hovering over the name
 export default {
 	data(){ return{
 		hover: false,
