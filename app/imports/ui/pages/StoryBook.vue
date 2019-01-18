@@ -1,9 +1,15 @@
 <template lang="html">
 	<toolbar-layout>
-    <div slot="toolbar">
-      Storybook
-    </div>
-		<v-navigation-drawer right app>
+    <v-layout row slot="toolbar" align-center>
+			<div>
+				Storybook
+			</div>
+			<v-flex/>
+			<v-btn flat icon @click="sidebar = !sidebar">
+				<v-icon>menu</v-icon>
+			</v-btn>
+    </v-layout>
+		<v-navigation-drawer right app v-model="sidebar">
 			<v-toolbar color="primary" dark>
 				Components
 			</v-toolbar>
@@ -30,17 +36,22 @@
 </template>
 
 <script>
-	import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
+	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
+	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
 	export default {
 		components: {
 			ToolbarLayout,
 			HealthBar,
 			SkillListTile,
 			AbilityListTile,
+			AttributeCard,
 		},
+		data(){ return {
+			sidebar: undefined,
+		}},
 	}
 </script>
 
