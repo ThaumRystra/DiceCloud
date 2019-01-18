@@ -52,7 +52,7 @@ RouterFactory.configure(factory => {
   ]);
   //Development routes
   if (Meteor.isDevelopment){
-    let StoryBook = require('/imports/ui/pages/StoryBook.vue').default;
+    let StoryBook = require('/imports/ui/StoryBook.vue').default;
     factory.addRoutes([
       {
         path: '/storybook/:component',
