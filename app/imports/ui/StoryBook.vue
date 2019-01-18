@@ -38,18 +38,20 @@
 
 <script>
 	import Vue from "vue";
-	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
-	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
-	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
 	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
+	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
+	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.Story.vue';
+	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
+	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 	export default {
 		components: {
-			ToolbarLayout,
-			HealthBar,
-			SkillListTile,
 			AbilityListTile,
 			AttributeCard,
+			HealthBar,
+			HitDiceListTile,
+			SkillListTile,
+			ToolbarLayout,
 		},
 		data(){ return {
 			sidebar: undefined,
