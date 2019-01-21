@@ -17,28 +17,27 @@
 				{
 					name: 'Animal Handling',
 					proficiency: 1,
-					modifier: 4,
+					value: 4,
 				}, {
 					name: 'Deception',
 					proficiency: 0,
-					modifier: -0,
-					advantage: true,
-					disadvantage: true,
+					value: -0,
+					advantage: 0,
 				}, {
 					name: 'Intimidation',
 					proficiency: 2,
-					modifier: 6,
-					advantage: true,
+					value: 6,
+					advantage: 1,
 				}, {
 					name: 'Insight',
 					proficiency: 0.5,
-					modifier: -2,
-					disadvantage: true,
+					value: -2,
+					advantage: -1,
 				}, {
 					name: 'History',
-					conditionalBenefit: "Some cool benefit",
-					fail: true,
-					disadvantage: true,
+					conditionalBenefits: 1,
+					fail: 1,
+					advantage: -1,
 				}
 			]
 		}},

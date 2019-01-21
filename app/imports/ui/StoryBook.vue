@@ -40,6 +40,7 @@
 	import Vue from "vue";
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
 	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
+	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
@@ -48,6 +49,7 @@
 		components: {
 			AbilityListTile,
 			AttributeCard,
+			ColumnLayout,
 			HealthBar,
 			HitDiceListTile,
 			SkillListTile,

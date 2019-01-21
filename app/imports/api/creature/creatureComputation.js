@@ -2,10 +2,16 @@
 // on them disadvantaged as well
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import SimpleSchema from 'simpl-schema';
 import Creatures from "/imports/api/creature/Creatures.js";
-import Attributes from "/imports/api/creature/Attributes.js";
-import Skills from "/imports/api/creature/Skills.js";
-import Effects from "/imports/api/creature/Effects.js";
+import Attributes from "/imports/api/creature/properties/Attributes.js";
+import Skills from "/imports/api/creature/properties/Skills.js";
+import Effects from "/imports/api/creature/properties/Effects.js";
+import DamageMultipliers from "/imports/api/creature/properties/DamageMultipliers.js";
+import Classes from "/imports/api/creature/properties/Classes.js";
+
+// TODO, just checks that a charId is given
+const canEditCreature = charId => !!charId;
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -70,7 +76,7 @@ export const recomputeCreature = new ValidatedMethod({
   *                         computed and written to the database
   */
 function computeCreatureById(charId){
-  let char = buildCreature();
+  let char = buildCreature(charId);
   char = computeCreature(char);
   writeCreature(char);
   return char;
@@ -109,19 +115,21 @@ function writeAttributes(char) {
         }},
       }
     }
-    if (att.mod){
-      op.updateMany.update.mod = att.mod;
+    if (typeof att.mod === 'number'){
+      op.updateMany.update.$set.mod = att.mod;
     }
     return op;
   });
   if (Meteor.isServer){
-    Attributes.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+    Attributes.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.warn(JSON.stringify(e, null, 2))
+    });
   } else {
     _.each(bulkWriteOps, op => {
       Attributes.update(op.updateMany.filter, op.updateMany.update, {multi: true});
     });
   }
-}
+};
 
 
 
@@ -149,13 +157,15 @@ function writeSkills(char) {
     return op;
   });
   if (Meteor.isServer){
-    Skills.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+    Skills.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.warn(JSON.stringify(e, null, 2))
+    });
   } else {
     _.each(bulkWriteOps, op => {
       Skills.update(op.updateMany.filter, op.updateMany.update, {multi: true});
     });
   }
-}
+};
 
  /**
   * Write all the damange multipliers from the in-memory char object to the docs
@@ -176,13 +186,15 @@ function writeDamageMultipliers(char) {
     return op;
   });
   if (Meteor.isServer){
-    DamageMultipliers.rawCollection().bulkWrite( bulkWriteOps, {ordered : false});
+    DamageMultipliers.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.warn(JSON.stringify(e, null, 2))
+    });
   } else {
     _.each(bulkWriteOps, op => {
       DamageMultipliers.update(op.updateMany.filter, op.updateMany.update, {multi: true});
     });
   }
-}
+};
 
 
  /**
@@ -307,7 +319,7 @@ function buildCreature(charId){
     }
   });
   return char;
-}
+};
 
 
 /**
@@ -330,7 +342,7 @@ export function computeCreature(char){
     computeStat (stat, char);
   }
   return char;
-}
+};
 
 
 /**

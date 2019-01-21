@@ -10,9 +10,9 @@
 				<span class="prof-mod">
 					{{displayedModifier}}
 				</span>
-				{{name}}<template v-if="conditionalBenefit">*</template>
-				<v-icon size="20px" v-if="advantage && !disadvantage">arrow_upward</v-icon>
-				<v-icon size="20px" v-if="!advantage && disadvantage">arrow_downward</v-icon>
+				{{name}}<template v-if="conditionalBenefits">*</template>
+				<v-icon size="20px" v-if="advantage > 0">arrow_upward</v-icon>
+				<v-icon size="20px" v-if="advantage < 0">arrow_downward</v-icon>
 			</v-list-tile-title>
 		</v-list-tile-content>
   </v-list-tile>
@@ -24,12 +24,11 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
 	props: {
 		proficiency: Number,
-		advantage: Boolean,
-		disadvantage: Boolean,
-		fail: Boolean,
-		modifier: Number,
+		advantage: Number,
+		fail: Number,
+		value: Number,
 		name: String,
-		conditionalBenefit: String,
+		conditionalBenefits: Number,
 	},
 	methods: {
 		click(e){
@@ -49,7 +48,7 @@ export default {
 			}
 		},
 		displayedModifier(){
-			let mod = this.modifier;
+			let mod = this.value;
 			if (this.fail){
 				return 'fail';
 			} else {

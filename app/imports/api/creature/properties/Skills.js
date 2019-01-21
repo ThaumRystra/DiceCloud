@@ -71,15 +71,11 @@ let skillSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
     optional: true,
   },
-	enabled: {
-		type: Boolean,
-		defaultValue: true,
-	},
 });
 
 Skills.attachSchema(skillSchema);
 
 //Skills.attachBehaviour("softRemovable");
-makeChild(Skills, ["enabled"]); //children of lots of things
+makeChild(Skills); //children of lots of things
 
 export default Skills;

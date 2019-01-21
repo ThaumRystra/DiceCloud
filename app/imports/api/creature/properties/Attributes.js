@@ -5,7 +5,7 @@ import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 let Attributes = new Mongo.Collection("attributes");
 
 /*
- * Attributes are whole numbered stats of a character
+ * Attributes are numbered stats of a character
  */
 attributeSchema = new SimpleSchema({
 	charId: {
@@ -32,7 +32,8 @@ attributeSchema = new SimpleSchema({
     allowedValues: [
       "ability", //Strength, Dex, Con, etc.
       "stat", // Speed, Armor Class
-      "hitDice",
+			"modifier", // Proficiency Bonus, Initiative
+      "hitDice", // d12 hit dice
       "healthBar", // Hitpoints, Temporary Hitpoints
       "resource", // Rages, sorcery points
       "spellSlot", // Level 1, 2, 3... spell slots

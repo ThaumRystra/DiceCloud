@@ -1,4 +1,5 @@
 import DEFAULT_CHARACTER_DOCS from '/imports/api/creature/DEFAULT_CHARACTER_DOCS.js';
+import { Random } from 'meteor/random';
 
 const setParent = function(charId){
 	let parent = {
@@ -27,9 +28,12 @@ const getRacialBonusEffect = function(charId, attribute, bonus){
 	};
 };
 
-const giveDocsOrder = function(docArray){
+const giveDocsOrderAndIds = function(docArray){
 	for (i in docArray){
 		docArray[i].order = +i;
+		if (!docArray[i]._id){
+			docArray[i]._id = Random.id();
+		}
 	}
 };
 
@@ -164,7 +168,7 @@ const getDefaultCharacterDocs = function(charId, {
 
 	// Order the docs
 	for (collection in docs){
-		giveDocsOrder(docs[collection]);
+		giveDocsOrderAndIds(docs[collection]);
 	}
 
 	return docs
