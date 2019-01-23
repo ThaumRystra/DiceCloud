@@ -3,15 +3,13 @@
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
+import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
 import Creatures from "/imports/api/creature/Creatures.js";
 import Attributes from "/imports/api/creature/properties/Attributes.js";
 import Skills from "/imports/api/creature/properties/Skills.js";
 import Effects from "/imports/api/creature/properties/Effects.js";
 import DamageMultipliers from "/imports/api/creature/properties/DamageMultipliers.js";
 import Classes from "/imports/api/creature/properties/Classes.js";
-
-// TODO, just checks that a charId is given
-const canEditCreature = charId => !!charId;
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -40,8 +38,8 @@ export const recomputeCreature = new ValidatedMethod({
   * distilling down effects and proficiencies into the final stats that make up
   * a creature.
   *
-  * Essentially this is a backtracking algorithm that computes stats'
-  * dependencies before computing stats themselves, while detecting
+  * Essentially this is a depth first tree traversal algorithm that computes
+  * stats' dependencies before computing stats themselves, while detecting
   * dependency loops.
   *
   * At the moment it makes no effort to limit recomputation to just what was
