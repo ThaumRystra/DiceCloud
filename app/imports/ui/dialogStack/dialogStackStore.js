@@ -7,14 +7,15 @@ const dialogStackStore = {
     currentResult: null,
   },
   mutations: {
-    pushDialogStack(state, {component, data, element, returnElement, callback}){
+    pushDialogStack(state, {component, data, elementId, returnElement, callback}){
       // Generate a new _id so that Vue knows how to shuffle the array
+      console.log({elementId});
       const _id = Random.id();
       state.dialogs.push({
         _id,
         component,
         data,
-        element,
+        elementId,
         returnElement,
         callback,
       });

@@ -4,7 +4,7 @@
       Test Dialog
     </div>
     <div>
-      <v-btn @click="openDialog">Open Dialog</v-btn>
+      <v-btn @click="openDialog(_uid + 'btn')" :id="_uid + 'btn'">Open Dialog</v-btn>
     </div>
   </dialog-base>
 </template>
@@ -14,9 +14,10 @@
   import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
   const component = {
     methods: {
-      openDialog(event){
+      openDialog(elementId){
         store.commit("pushDialogStack", {
           component,
+					elementId,
         });
       }
     },
