@@ -4,8 +4,9 @@
 			<v-divider v-if="index !== 0"/>
 			<ability-list-tile
 				:key="ability.name"
+				:id="_uid + ability.name"
 				v-bind="ability"
-				@click="click"
+				@click="click(_uid + ability.name, ability)"
 			/>
 		</template>
 	</v-list>
@@ -13,6 +14,8 @@
 
 <script>
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.vue';
+	import store from "/imports/ui/vuexStore.js";
+
 	export default {
 		data(){ return{
 			abilities: [
@@ -47,8 +50,12 @@
 			AbilityListTile,
 		},
 		methods: {
-			click(e){
-				console.log(e)
+			click(elementId, data){
+				store.commit("pushDialogStack", {
+					component: "ability-dialog",
+					elementId,
+					data,
+				});
 			},
 		},
 	};

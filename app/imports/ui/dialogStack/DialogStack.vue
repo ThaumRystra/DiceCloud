@@ -25,37 +25,42 @@
 				:style="getDialogStyle(index)"
 				:elevation="6"
       >
-        <component :is="dialog.component" :data="dialog.data" @pop="popDialogStack($event)" class="dialog-component"></component>
+        <component :is="dialog.component" v-bind="dialog.data" @pop="popDialogStack($event)" class="dialog-component"></component>
       </v-card>
     </transition-group>
   </v-layout>
 </template>
 
 <script>
-  import "/imports/ui/dialogStack/dialogStackWindowEvents.js";
-  import store from "/imports/ui/vuexStore.js";
-  import anime from "animejs";
-	import mockElement from '/imports/ui/dialogStack/mockElement.js';
 	import Vue from "vue";
+	import anime from "animejs";
+  import "/imports/ui/dialogStack/dialogStackWindowEvents.js";
+	import mockElement from '/imports/ui/dialogStack/mockElement.js';
+	import DialogComponentIndex from '/imports/ui/dialogStack/DialogComponentIndex.js';
 
   const OFFSET = 16;
 	const MOCK_DURATION = 400; // Keep in sync with css transition of .dialog
 
   export default {
+		components: DialogComponentIndex,
     computed: {
       dialogs(){
-        return store.state.dialogStack.dialogs;
+        return this.$store.state.dialogStack.dialogs;
       },
     },
     methods: {
+			logAndReturn(thing){
+				console.log(thing);
+				return thing;
+			},
       popDialogStack(result){
-        store.dispatch("popDialogStack", result);
+        this.$store.dispatch("popDialogStack", result);
       },
       backdropClicked(event){
         if (event.target === event.currentTarget) this.popDialogStack();
       },
       getDialogStyle(index){
-        const length = store.state.dialogStack.dialogs.length;
+        const length = this.$store.state.dialogStack.dialogs.length;
     		if (index >= length) return;
     		const num = length - 1;
     		const left = (num - index) * -OFFSET;

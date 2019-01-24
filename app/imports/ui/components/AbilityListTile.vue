@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-list-tile class="ability-list-tile"  v-on="hasClickListener ? {click} : {}">
+	<v-list-tile class="ability-list-tile white" v-on="hasClickListener ? {click} : {}">
 
 		<v-list-tile-action class="mr-4">
 			<div class="display-1 modifier">
