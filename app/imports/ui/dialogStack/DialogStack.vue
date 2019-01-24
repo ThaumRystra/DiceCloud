@@ -1,10 +1,12 @@
 <template>
   <v-layout class="dialog-stack" align-center justify-center>
-    <div
-      class="backdrop"
-      @click="backdropClicked"
-      :class="dialogs.length ? '' : 'hidden' "
-    ></div>
+		<transition name="backdrop-fade">
+			<div
+				class="backdrop"
+				@click="backdropClicked"
+				v-if="dialogs.length"
+			></div>
+		</transition>
     <transition-group
 			name="dialog-list"
 			class="dialog-sizer"
@@ -13,16 +15,17 @@
 			@leave="leave"
 		>
 			<div class="sibling" key="sibling"/>
-      <div
+      <v-card
         v-for="(dialog, index) in dialogs"
         :key="dialog._id"
         class="dialog"
 				:data-element-id="dialog.elementId"
 				:data-index="index"
 				:style="getDialogStyle(index)"
+				:elevation="6"
       >
         <component :is="dialog.component" :data="dialog.data" @pop="popDialogStack($event)" class="dialog-component"></component>
-      </div>
+      </v-card>
     </transition-group>
   </v-layout>
 </template>
@@ -35,7 +38,7 @@
 	import Vue from "vue";
 
   const OFFSET = 16;
-	const MOCK_DURATION = 8000; // Keep in sync with css transition of .dialog
+	const MOCK_DURATION = 400; // Keep in sync with css transition of .dialog
 
   export default {
     computed: {
@@ -64,7 +67,7 @@
 				// Get the original styles so we can repair them later
 				let originalStyle = {
 					transform: target.style.transform,
-					background: target.style.background,
+					backgroundColor: target.style.backgroundColor,
 					borderRadius: target.style.borderRadius,
 					transition: target.style.transition,
 					boxShadow: target.style.boxShadow,
@@ -73,21 +76,21 @@
 
 				// hide the source
 				source.style.transition = "none";
-				source.style.visibility = "hidden";
+				source.style.opacity = "0";
 
 				// Instantly mock the source
 				target.style.transition = 'none';
 				mockElement({source, target});
 
-				// After a full tick, repair the original styles
-				Vue.nextTick(() => {
+				// on the next animation frame, repair the styles
+				requestAnimationFrame(() => {
 					target.style.transform = originalStyle.transform;
-					target.style.background = originalStyle.background;
+					target.style.backgroundColor = originalStyle.backgroundColor;
 					target.style.borderRadius = originalStyle.borderRadius;
 					target.style.transition = originalStyle.transition;
 					target.style.boxShadow = originalStyle.boxShadow;
 					source.style.transition = originalStyle.sourceTransition;
-					setTimeout(done, MOCK_DURATION);
+					setTimeout(() => done, MOCK_DURATION);
 				});
 			},
 			leave(target, done){
@@ -101,8 +104,17 @@
 					mockElement({source, target});
 				}
 				setTimeout(() => {
-					source.style.visibility = null;
-					done();
+					let originalTransition = source.style.transition;
+					source.style.opacity = null;
+					source.style.transition = 'none';
+					target.style.transition = `opacity ${MOCK_DURATION / 4}ms, pointer-events 0s`
+					requestAnimationFrame(() => {
+						source.style.transition = originalTransition;
+						target.style.opacity = "0";
+						target.style.pointerEvents = "none";
+						target.style.setProperty('box-shadow', "none", 'important');
+						setTimeout(done, MOCK_DURATION / 4);
+					});
 				}, MOCK_DURATION);
 			}
     },
@@ -110,6 +122,22 @@
 </script>
 
 <style scoped>
+	.backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.4);
+		z-index: 4;
+		pointer-events: initial;
+	}
+	.backdrop-fade-enter-active, .backdrop-fade-leave-active {
+		transition: opacity 0.3s;
+	}
+	.backdrop-fade-enter, .backdrop-fade-leave-to {
+		opacity: 0;
+	}
   .dialog-stack {
     position: fixed;
     top: 0;
@@ -121,35 +149,45 @@
   }
   .dialog-sizer {
     position: relative;
-    height: 600px;
-    width: 600px;
+		width: 80%;
+		width: calc(100% - 64px);
+    max-width: 1000px;
+		height: 80%;
+    height: calc(100% - 64px);
+    max-height: 800px;
     z-index: 5;
     flex: initial;
   }
-  .backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 4;
-    pointer-events: initial;
-  }
-  .backdrop.hidden {
-    display: none
-  }
+	/* sm */
+	@media only screen and (max-width:  960px) and (min-width:  601px){
+		.dialog-sizer {
+			width: calc(100% - 32px);
+			height: calc(100% - 32px);
+	  }
+	}
+	/* xs */
+	@media only screen and (max-width: 600px) {
+		.dialog-sizer {
+			width: 100%;
+			height: 100%;
+	  }
+	}
 	.dialog-list-enter .dialog-component, .dialog-list-leave-to .dialog-component {
 		opacity: 0;
 	}
 	.dialog-list-enter-active .dialog-component {
-		transition: opacity 4s;
+		transition: opacity 0.3s;
 	}
 	.dialog-list-leave-active .dialog-component {
-		transition: opacity 4s 4s;
+		transition: opacity 0.3s 0.1s;
+	}
+	.dialog-list-enter-active {
+		transition: all 0.4s, box-shadow 0.1s;
+	}
+	.dialog-list-leave-active {
+		transition: all 0.4s, box-shadow 0.1s 0.3s, opacity 0.1s, pointer-events 0s;
 	}
   .dialog {
-  	transition: all 8s;
 		transform-origin: top left;
     position: absolute;
     height: 100%;
@@ -157,7 +195,6 @@
     pointer-events: initial;
 		z-index: 1;
 		overflow: hidden;
-		background: white;
   }
   .dialog > * {
     height: 100%;

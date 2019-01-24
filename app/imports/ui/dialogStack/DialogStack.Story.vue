@@ -1,7 +1,9 @@
 <template lang="html">
 	<v-card-text>
 		<v-layout align-center justify-center>
-			<v-btn @click="openDialog(_uid + 'btn')" :id="_uid + 'btn'"/>
+			<v-btn @click="openDialog(_uid + 'btn')" :id="_uid + 'btn'">
+				Open Dialog
+			</v-btn>
 		</v-layout>
 	</v-card-text>
 </template>

@@ -17,20 +17,20 @@ const transformedBoxShadow = (shadowString, deltaWidth, deltaHeight) => {
 	if (shadowString[0] === 'r'){
 		let strings = shadowString.match(/rgba\([^)]+\)[^,]+/g);
 		strings = strings.map(string => {
-			// TODO move color to end
-			strings.match(/(rgba\([^)]+\))([^,]+)/)
+			// Move color to end
+			let m = string.match(/(rgba\([^)]+\))([^,]+)/);
+			return `${m[2].trim()} ${m[1]}`;
 		});
+		shadowString = strings.join(', ');
 	}
 	let scaleAverage = (deltaWidth + deltaHeight) / 2;
 	let shadows = parse(shadowString);
-	console.log({shadowString, shadows});
 	shadows.forEach(shadow => {
 		shadow.offsetX /= deltaWidth;
 		shadow.offsetY /= deltaHeight;
 		shadow.blurRadius /= scaleAverage;
 		shadow.spreadRadius /= scaleAverage;
 	})
-	console.log({newShadows: shadows});
 	return stringify(shadows);
 }
 
@@ -48,11 +48,15 @@ export default function mockElement({source, target, offset = {x: 0, y: 0}}){
   target.style.transform = `translate(${deltaLeft}px, ${deltaTop}px) ` +
 		`scale(${deltaWidth}, ${deltaHeight})`;
 
-	target.style.background = getComputedStyle(source).background;
-	target.style.borderRadius = transformedRadius(
-    getComputedStyle(source).borderRadius, deltaWidth, deltaHeight
-  );
-	//target.style.boxShadow = transformedBoxShadow(
-	//	getComputedStyle(source).boxShadow, deltaWidth, deltaHeight
-	//);
+	target.style.backgroundColor = getComputedStyle(source).backgroundColor;
+	// Edge might not combine all border radii into a single value,
+	// So we just sample the top left one if we need to
+	let oldRadius = getComputedStyle(source).borderRadius ||
+		getComputedStyle(source).borderTopLeftRadius;
+	let borderRadius = transformedRadius(oldRadius, deltaWidth, deltaHeight);
+	target.style.borderRadius = borderRadius;
+	let boxShadow = transformedBoxShadow(
+		getComputedStyle(source).boxShadow, deltaWidth, deltaHeight
+	);
+	target.style.setProperty('box-shadow', boxShadow, 'important');
 };
