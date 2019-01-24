@@ -20,6 +20,7 @@
         :key="dialog._id"
         class="dialog"
 				:data-element-id="dialog.elementId"
+				:data-return-element-id="dialog.returnElementId"
 				:data-index="index"
 				:style="getDialogStyle(index)"
 				:elevation="6"
@@ -94,8 +95,13 @@
 				});
 			},
 			leave(target, done){
-				let elementId = target.attributes['data-element-id'].value;
-				let source = document.getElementById(elementId);
+				let elementId;
+				if (target.attributes['data-return-element-id']) {
+					elementId = target.attributes['data-return-element-id'].value;
+				} else {
+					elementId = target.attributes['data-element-id'].value;
+				}
+				let source	= document.getElementById(elementId);
 				let index = target.attributes['data-index'].value;
 				if (index != 0){
 					// If we aren't the only dialog, we'll need compensate for offset
