@@ -49,6 +49,7 @@ RouterFactory.configure(factory => {
   //Development routes
   if (Meteor.isDevelopment){
     let StoryBook = require('/imports/ui/StoryBook.vue').default;
+    let IconAdmin = require('/imports/ui/icons/IconAdmin.vue').default;
     factory.addRoutes([
       {
         path: '/storybook/:component',
@@ -58,6 +59,10 @@ RouterFactory.configure(factory => {
         path: '/storybook',
         name: 'storybook',
         component: StoryBook,
+      }, {
+        path: '/icon-admin',
+        name: "iconAdmin",
+        component: IconAdmin,
       },
     ]);
   }

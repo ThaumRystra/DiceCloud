@@ -29,6 +29,7 @@
     "vue-meteor-tracker": "^2.0.0-beta.5",
     "vue-router": "^3.0.2",
     "vuetify": "^1.4.2",
+    "vuetify-upload-button": "^1.2.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {}

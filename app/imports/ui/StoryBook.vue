@@ -44,8 +44,10 @@
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
 	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.Story.vue';
+	import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
+
 	export default {
 		components: {
 			AbilityListTile,
@@ -54,6 +56,7 @@
 			DialogStack,
 			HealthBar,
 			HitDiceListTile,
+			IconSearch,
 			SkillListTile,
 			ToolbarLayout,
 		},
