@@ -5,10 +5,10 @@
 			<v-card>
 				<v-card-text>
 					<health-bar
-					v-for="healthBar in healthBars"
-					:key="healthBar._id"
-					:value="healthBar.value + (healthBar.adjustment || 0)"
-					:maxValue="healthBar.value"
+						v-for="healthBar in healthBars"
+						:key="healthBar._id"
+						:value="healthBar.value + (healthBar.adjustment || 0)"
+						:maxValue="healthBar.value"
 					/>
 				</v-card-text>
 			</v-card>
@@ -22,10 +22,10 @@
 						<template v-for="(ability, index) in abilities">
 							<v-divider v-if="index !== 0"/>
 							<ability-list-tile
-							:key="ability._id"
-							:name="ability.name"
-							:score="ability.value"
-							:modifier="ability.mod"
+								v-bind="ability"
+								:key="ability._id"
+								:id="`${_uid}-${ability._id}`"
+								@click="clickAbility({elementId: `${_uid}-${ability._id}`, abilityId: ability._id})"
 							/>
 						</template>
 					</v-list>
@@ -174,6 +174,15 @@
 					type: 'skill',
 				}, {
 					sort: {order: 1},
+				});
+			},
+		},
+		methods: {
+			clickAbility({elementId, abilityId}){
+				this.$store.commit("pushDialogStack", {
+					component: "ability-dialog-container",
+					elementId,
+					data: {_id: abilityId},
 				});
 			},
 		},

@@ -1,4 +1,4 @@
-import Characters from "/imports/api/creature/Creatures.js";
+import Creatures from "/imports/api/creature/Creatures.js";
 import Actions from "/imports/api/creature/properties/Actions.js";
 import Attacks from "/imports/api/creature/properties/Attacks.js";
 import Attributes from "/imports/api/creature/properties/Attributes.js";
@@ -18,10 +18,10 @@ import Proficiencies from "/imports/api/creature/properties/Proficiencies.js";
 import Containers from "/imports/api/inventory/Containers.js";
 import Items from "/imports/api/inventory/Items.js";
 
-Meteor.publish("singleCharacter", function(characterId){
+Meteor.publish("singleCharacter", function(charId){
 	userId = this.userId;
-	var char = Characters.findOne({
-		_id: characterId,
+	var char = Creatures.findOne({
+		_id: charId,
 		$or: [
 			{readers: userId},
 			{writers: userId},
@@ -31,27 +31,26 @@ Meteor.publish("singleCharacter", function(characterId){
 	});
 	if (char){
 		return [
-			Characters.find({_id: characterId}),
+			Creatures.find({_id: charId}),
 			//get all the assets for this character including soft deleted ones
-			Actions.find            ({charId: characterId}, {removed: true}),
-			Attacks.find            ({charId: characterId}, {removed: true}),
-			Attributes.find         ({charId: characterId}, {removed: true}),
-			Buffs.find              ({charId: characterId}, {removed: true}),
-			Classes.find            ({charId: characterId}, {removed: true}),
-			Conditions.find         ({charId: characterId}, {removed: true}),
-			Containers.find         ({charId: characterId}, {removed: true}),
-			CustomBuffs.find        ({charId: characterId}, {removed: true}),
-			DamageMultipliers.find  ({charId: characterId}, {removed: true}),
-			Effects.find            ({charId: characterId}, {removed: true}),
-			Experiences.find        ({charId: characterId}, {removed: true}),
-			Features.find           ({charId: characterId}, {removed: true}),
-			Items.find              ({charId: characterId}, {removed: true}),
-			Notes.find              ({charId: characterId}, {removed: true}),
-			Skills.find             ({charId: characterId}, {removed: true}),
-			Spells.find             ({charId: characterId}, {removed: true}),
-			SpellLists.find         ({charId: characterId}, {removed: true}),
-			TemporaryHitPoints.find ({charId: characterId}, {removed: true}),
-			Proficiencies.find      ({charId: characterId}, {removed: true}),
+			Actions.find            ({charId}, {removed: true}),
+			Attacks.find            ({charId}, {removed: true}),
+			Attributes.find         ({charId}, {removed: true}),
+			Buffs.find              ({charId}, {removed: true}),
+			Classes.find            ({charId}, {removed: true}),
+			Conditions.find         ({charId}, {removed: true}),
+			Containers.find         ({charId}, {removed: true}),
+			CustomBuffs.find        ({charId}, {removed: true}),
+			DamageMultipliers.find  ({charId}, {removed: true}),
+			Effects.find            ({charId}, {removed: true}),
+			Experiences.find        ({charId}, {removed: true}),
+			Features.find           ({charId}, {removed: true}),
+			Items.find              ({charId}, {removed: true}),
+			Notes.find              ({charId}, {removed: true}),
+			Skills.find             ({charId}, {removed: true}),
+			Spells.find             ({charId}, {removed: true}),
+			SpellLists.find         ({charId}, {removed: true}),
+			Proficiencies.find      ({charId}, {removed: true}),
 		];
 	} else {
 		return [];
@@ -69,10 +68,10 @@ DDPRateLimiter.addRule({
 	}
 });
 
-Meteor.publish("singleCharacterName", function(characterId){
+Meteor.publish("singleCharacterName", function(charId){
 	userId = this.userId;
-	return Characters.find({
-		_id: characterId,
+	return Creatures.find({
+		_id: charId,
 		$or: [
 			{readers: userId},
 			{writers: userId},

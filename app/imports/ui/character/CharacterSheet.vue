@@ -34,6 +34,11 @@
 		components: {
 			StatsTab,
 		},
+		watch: {
+			charId(newValue){
+				console.log(newValue)
+			},
+		},
 		data(){return {
 			theme,
 		}},
@@ -48,7 +53,9 @@
     },
 		meteor: {
 			$subscribe: {
-	      'singleCharacter': [this.charId],
+	      'singleCharacter'(){
+					return [this.charId];
+				},
 			},
 			character(){
 				return Creatures.findOne(this.charId) || {};

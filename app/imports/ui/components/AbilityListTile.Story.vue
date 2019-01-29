@@ -4,9 +4,9 @@
 			<v-divider v-if="index !== 0"/>
 			<ability-list-tile
 				:key="ability.name"
-				:id="_uid + ability.name"
+				:id="`${_uid}-${ability.name}`"
 				v-bind="ability"
-				@click="click(_uid + ability.name, ability)"
+				@click="click({ability, elementId: `${_uid}-${ability.name}`})"
 			/>
 		</template>
 	</v-list>
@@ -21,28 +21,79 @@
 			abilities: [
 				{
 					name: "Strength",
-					score: 8,
-					modifier: -1,
+					value: 8,
+					mod: -1,
+					effects: [
+						{
+							name: "Ghost Touch",
+							operation: "add",
+							value: -2,
+							enabled: true,
+							_id: Random.id(),
+						},{
+							name: "Some Base",
+							operation: "base",
+							value: 15,
+							enabled: true,
+							_id: Random.id(),
+						},{
+							name: "Some Multiply",
+							operation: "mul",
+							value: 1.5,
+							enabled: true,
+							_id: Random.id(),
+						},{
+							name: "Some Min",
+							operation: "min",
+							value: 8,
+							enabled: true,
+							_id: Random.id(),
+						},{
+							name: "Some Advantage",
+							operation: "advantage",
+							value: 1,
+							enabled: true,
+							_id: Random.id(),
+						},{
+							name: "Some Disadvantage",
+							operation: "disadvantage",
+							value: 1,
+							enabled: true,
+							_id: Random.id(),
+						},{
+							name: "Some Passive",
+							operation: "passiveAdd",
+							value: -2,
+							calculation: "3-5",
+							_id: Random.id(),
+						},{
+							name: "Some Conditional",
+							operation: "conditional",
+							calculation: "+8 Only when asleep",
+							enabled: true,
+							_id: Random.id(),
+						},
+					]
 				}, {
 					name: "Dexterity",
-					score: 18,
-					modifier: 4,
+					value: 18,
+					mod: 4,
 				}, {
 					name: "Constitution",
-					score: 12,
-					modifier: 1,
+					value: 12,
+					mod: 1,
 				}, {
 					name: "Intelligence",
-					score: 20,
-					modifier: 5,
+					value: 20,
+					mod: 5,
 				}, {
 					name: "Wisdom",
-					score: 6,
-					modifier: -2,
+					value: 6,
+					mod: -2,
 				}, {
 					name: "Charisma",
-					score: 28,
-					modifier: 9,
+					value: 28,
+					mod: 9,
 				},
 			]
 		}},
@@ -50,11 +101,11 @@
 			AbilityListTile,
 		},
 		methods: {
-			click(elementId, data){
+			click({ability, elementId}){
 				store.commit("pushDialogStack", {
 					component: "ability-dialog",
 					elementId,
-					data,
+					data: ability,
 				});
 			},
 		},
