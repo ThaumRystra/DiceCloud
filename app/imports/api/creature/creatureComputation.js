@@ -92,6 +92,7 @@ function writeCreature(char) {
   writeAttributes(char);
   writeSkills(char);
   writeDamageMultipliers(char);
+  // TODO write effect results to effect.result
   Creatures.update(char.id, {$set: {level: char.level}});
 };
 

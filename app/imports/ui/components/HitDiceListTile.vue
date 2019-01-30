@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-list-tile class="hit-dice-list-tile" :class="{hover}">
+	<v-list-tile class="hit-dice-list-tile white" :class="{hover}">
 
 		<v-list-tile-action class="mr-4">
 

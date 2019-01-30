@@ -1,9 +1,28 @@
 <template lang="html">
-	<health-bar
+	<div class="pa-1">
+		<health-bar
 		:value="value"
 		:max-value="maxValue"
+		name="Hit Points"
 		@change="healthBarChanged"
-	/>
+		/>
+		<health-bar
+		:value="50"
+		:max-value="100"
+		name="Temporary Hit Points"
+		/>
+		<health-bar
+		:value="70"
+		:max-value="100"
+		name="Some other bar"
+		@change="healthBarChanged"
+		/>
+		<health-bar
+		:value="90"
+		:max-value="100"
+		name="Cow"
+		/>
+	</div>
 </template>
 
 <script>

@@ -2,6 +2,7 @@
   <health-bar-card
 		:attributes="attributes"
 		@change="healthBarChanged"
+		@click="healthBarClicked"
 	/>
 </template>
 
@@ -29,6 +30,13 @@
 			},
 		},
 		methods: {
+			healthBarClicked({_id, elementId}){
+				this.$store.commit("pushDialogStack", {
+					component: "attribute-dialog-container",
+					elementId,
+					data: {_id},
+				});
+			},
 			healthBarChanged({_id, change}){
 				adjustAttribute.call({
 					_id,

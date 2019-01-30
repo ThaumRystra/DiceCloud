@@ -16,24 +16,26 @@
 								v-bind="ability"
 								:key="ability._id"
 								:id="`${_uid}-${ability._id}`"
-								@click="clickAbility({elementId: `${_uid}-${ability._id}`, abilityId: ability._id})"
+								@click="clickAttribute({elementId: `${_uid}-${ability._id}`, _id: ability._id})"
 							/>
 						</template>
 					</v-list>
 				</v-card>
 			</div>
 
-			<div v-for="stat in stats" class="stat">
+			<div v-for="stat in stats" class="stat" :key="stat._id">
 				<attribute-card
-					:name="stat.name"
-					:value="stat.value"
+					v-bind="stat"
+					:id="`${_uid}-${stat._id}`"
+					@click="clickAttribute({elementId: `${_uid}-${stat._id}`, _id: stat._id})"
 				/>
 			</div>
 
 			<div v-for="modifier in modifiers" class="modifier">
 				<attribute-card modifier
-					:name="modifier.name"
-					:value="modifier.value"
+					v-bind="modifier"
+					:id="`${_uid}-${modifier._id}`"
+					@click="clickAttribute({elementId: `${_uid}-${modifier._id}`, _id: modifier._id})"
 				/>
 			</div>
 
@@ -45,6 +47,9 @@
 							<v-divider v-if="index !== 0"/>
 							<hit-dice-list-tile
 								v-bind="hitDie"
+								:key="hitDie._id"
+								:id="`${_uid}-${hitDie._id}`"
+								@click="clickAttribute({elementId: `${_uid}-${hitDie._id}`, _id: hitDie._id})"
 							/>
 						</template>
 					</v-list>
@@ -59,6 +64,8 @@
 							v-for="save in savingThrows"
 							v-bind="save"
 							:key="save._id"
+							:id="`${_uid}-${save._id}`"
+							@click="clickSkill({elementId: `${_uid}-${save._id}`, _id: save._id})"
 						/>
 					</v-list>
 				</v-card>
@@ -72,6 +79,8 @@
 							v-for="skill in skills"
 							v-bind="skill"
 							:key="skill._id"
+							:id="`${_uid}-${skill._id}`"
+							@click="clickSkill({elementId: `${_uid}-${skill._id}`, _id: skill._id})"
 						/>
 					</v-list>
 				</v-card>
@@ -134,6 +143,7 @@
 					});
 					let conMod = con && con.mod;
 					return {
+						_id: hd._id,
 						dice,
 						conMod,
 						key: hd._id,
@@ -160,11 +170,11 @@
 			},
 		},
 		methods: {
-			clickAbility({elementId, abilityId}){
+			clickAttribute({elementId, _id}){
 				this.$store.commit("pushDialogStack", {
 					component: "attribute-dialog-container",
 					elementId,
-					data: {_id: abilityId},
+					data: {_id},
 				});
 			},
 		},
