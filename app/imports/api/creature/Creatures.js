@@ -12,7 +12,11 @@ Creatures = new Mongo.Collection("creatures");
 let creatureSchema = new SimpleSchema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
-	urlName:      {type: String, defaultValue: "-", trim: false, optional: true},
+	urlName:      {type: String, trim: false, optional: true,
+		autoValue: function() {
+			return getSlug(this.field("name").value, {maintainCase: true}) || "-";
+		},
+	},
 	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
 	gender:       {type: String, defaultValue: "", trim: false, optional: true},
 	race:         {type: String, defaultValue: "", trim: false, optional: true},
@@ -61,22 +65,5 @@ let creatureSchema = new SimpleSchema({
 
 Creatures.attachSchema(creatureSchema);
 Creatures.attachSchema(ColorSchema);
-
-//Keep the urlName up to date
-if (Meteor.isServer){
-	Creatures.after.update(function(userId, doc, fieldNames, modifier, options) {
-		if (_.contains(fieldNames, "name")){
-			var urlName = getSlug(doc.name, {maintainCase: true}) || "-";
-			Creatures.update(doc._id, {$set: {urlName}});
-		}
-	});
-	Creatures.before.insert(function(userId, doc) {
-		doc.urlName = getSlug(doc.name, {maintainCase: true}) || "-";
-		// The first creature a user creates should have the new user experience
-		if (!Creatures.find({owner: userId}).count()){
-			doc.settings.newUserExperience = true;
-		}
-	});
-}
 
 export default Creatures;

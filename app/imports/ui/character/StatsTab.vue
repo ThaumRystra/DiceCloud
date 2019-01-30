@@ -2,16 +2,7 @@
 	<div class="stats-tab ma-2">
 
 		<div class="px-2 pt-2">
-			<v-card>
-				<v-card-text>
-					<health-bar
-						v-for="healthBar in healthBars"
-						:key="healthBar._id"
-						:value="healthBar.value + (healthBar.adjustment || 0)"
-						:maxValue="healthBar.value"
-					/>
-				</v-card-text>
-			</v-card>
+			<health-bar-card-container :charId="charId"/>
 		</div>
 
 		<column-layout>
@@ -97,7 +88,7 @@
 	import AttributeCard from '/imports/ui/components/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.vue";
-	import HealthBar from '/imports/ui/components/HealthBar.vue';
+	import HealthBarCardContainer from '/imports/ui/components/HealthBarCardContainer.vue';
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.vue';
 
@@ -113,20 +104,11 @@
 			AbilityListTile,
 			AttributeCard,
 			ColumnLayout,
-			HealthBar,
+			HealthBarCardContainer,
 			HitDiceListTile,
 			SkillListTile,
 		},
 		meteor: {
-			healthBars(){
-				return Attributes.find({
-					charId: this.charId,
-					type: 'healthBar',
-					value: {$ne: 0},
-				}, {
-					sort: {order: 1},
-				});
-			},
 			abilities(){
 				return getAttributeOfType(this.charId, 'ability');
 			},

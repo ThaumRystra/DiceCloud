@@ -26,8 +26,9 @@ export const recomputeCreature = new ValidatedMethod({
       'You do not have permission to recompute this creature');
     }
 
-    // Work
-    computeCreatureById(charId);
+    // Work, call this direcly if you are already in a method that has checked
+    // for permission to edit a given character
+    recomputeCreatureById(charId);
 
   },
 
@@ -73,7 +74,7 @@ export const recomputeCreature = new ValidatedMethod({
   * @returns {Object}       An in-memory description of the character as
   *                         computed and written to the database
   */
-function computeCreatureById(charId){
+export function recomputeCreatureById(charId){
   let char = buildCreature(charId);
   char = computeCreature(char);
   writeCreature(char);
@@ -82,6 +83,7 @@ function computeCreatureById(charId){
 
 /**
  * Write the in-memory creature to the database docs
+ * This could be optimized to only write changed fields to the database
  *
  * @param  {Object} char in-memory char object
  * @returns {undefined}
