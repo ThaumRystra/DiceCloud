@@ -4,7 +4,7 @@
       {{name}}
     </div>
     <v-layout align-center column>
-			<div class="display-3 mod">
+			<div class="display-3 mod" v-if="typeof mod === 'number'">
 				{{numberToSignedString(mod)}}
 			</div>
 			<div class="display-1 value">

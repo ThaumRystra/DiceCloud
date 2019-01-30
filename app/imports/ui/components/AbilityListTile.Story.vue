@@ -103,7 +103,7 @@
 		methods: {
 			click({ability, elementId}){
 				store.commit("pushDialogStack", {
-					component: "ability-dialog",
+					component: "attribute-dialog",
 					elementId,
 					data: ability,
 				});

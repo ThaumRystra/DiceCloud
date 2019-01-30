@@ -1,22 +1,22 @@
 <template lang="html">
-  <ability-dialog
-		v-bind="ability"
+  <attribute-dialog
+		v-bind="attribute"
 		v-on="{clickedEffect}"
 	/>
 </template>
 
 <script>
-	import AbilityDialog from '/imports/ui/components/AbilityDialog.vue';
+	import AttributeDialog from '/imports/ui/components/AttributeDialog.vue';
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
 	export default {
 		components: {
-			AbilityDialog,
+			AttributeDialog,
 		},
 		props: {
 			_id: String,
 		},
 		meteor: {
-			ability(){
+			attribute(){
 				return Attributes.findOne(this._id);
 			},
 		},

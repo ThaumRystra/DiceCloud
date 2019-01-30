@@ -162,7 +162,7 @@
 		methods: {
 			clickAbility({elementId, abilityId}){
 				this.$store.commit("pushDialogStack", {
-					component: "ability-dialog-container",
+					component: "attribute-dialog-container",
 					elementId,
 					data: {_id: abilityId},
 				});
