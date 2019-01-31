@@ -66,6 +66,6 @@ You should see this:
 => App running at: http://localhost:3000/
 ```
 
-Now, visiting [](http://localhost:3000/) should show you an empty instance of
+Now, visiting http://localhost:3000/ should show you an empty instance of
 DiceCloud running.
 
