@@ -14,6 +14,7 @@ const transformedRadius = (radiusString, deltaWidth, deltaHeight) => {
 };
 
 const transformedBoxShadow = (shadowString, deltaWidth, deltaHeight) => {
+	if (shadowString === 'none') return shadowString;
 	if (shadowString[0] === 'r'){
 		let strings = shadowString.match(/rgba\([^)]+\)[^,]+/g);
 		strings = strings.map(string => {
