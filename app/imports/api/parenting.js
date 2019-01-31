@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { _ } from 'meteor/underscore';
 
 let childSchema = new SimpleSchema({
 	parent:              {type: Object},
