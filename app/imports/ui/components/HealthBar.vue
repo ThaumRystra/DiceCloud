@@ -135,7 +135,7 @@
 		z-index: 4;
 	}
 	.hover {
-		background: rgba(0,0,0,.04);
+		background: rgb(245, 245, 245) !important;
 	}
 	.background-transition-enter-active, .background-transition-leave-active{
 		 transition: all .2s;
