@@ -245,7 +245,7 @@ function buildCreature(charId){
         ability: skill.ability,
         base: skill.baseValue || 0,
         result: 0, // For skills the result is the skillMod
-        proficiency: 0,
+        proficiency: skill.baseProficiency || 0,
         add: 0,
         mul: 1,
         min: Number.NEGATIVE_INFINITY,

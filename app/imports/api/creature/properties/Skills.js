@@ -45,6 +45,10 @@ let skillSchema = new SimpleSchema({
 		type: Number,
 		optional: true,
 	},
+	baseProficiency: {
+		type: Number,
+		optional: true,
+	},
   value: {
     type: Number,
 		defaultValue: 0,
