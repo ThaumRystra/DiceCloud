@@ -50,7 +50,7 @@ You'll need to have installed:
 Then, it's just a matter of cloning this repository into a folder, installing the bower dependencies and running
 `meteor` in the app directory.
 
-`git clone https://github.com/ThaumRystra/DiceCloud1 dicecloud`  
+`git clone https://github.com/ThaumRystra/DiceCloud dicecloud`  
 `cd dicecloud`  
 `cd app`  
 `bower install`  
