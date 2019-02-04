@@ -9,7 +9,7 @@
 		>
 			<v-layout row align-center class="net-effect">
 				<v-icon class="black--text icon">
-					{{getIcon(effect.operation, effect.value)}}
+					{{getEffectIcon(effect.operation, effect.value)}}
 				</v-icon>
 				<div class="value display-1  pr-2" v-if="showValue(effect.operation)">
 					{{getValue(effect.operation, effect.value)}}
@@ -32,6 +32,7 @@
 
 <script>
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
 	const SORT_INDEX = {
 		"base": 1,
 		"add": 2,
@@ -66,20 +67,7 @@
 			click(event){
 				this.$emit('click', event);
 			},
-			getIcon(op, value){
-				switch(op) {
-					case 'base': return 'forward';
-					case 'add': return value < 0 ? 'remove' : 'add';
-					case 'mul': return 'clear';
-					case 'min': return 'unfold_less';
-					case 'max': return 'unfold_more';
-					case 'advantage': return 'arrow_upward';
-					case 'disadvantage': return 'arrow_downward';
-					case 'passiveAdd': return value < 0 ? 'remove_circle_outline' : 'add_circle_outline';
-					case 'fail': return 'block';
-					case 'conditional': return '*' ;
-				}
-			},
+			getEffectIcon,
 			getOperation(op, value){
 				switch(op) {
 					case 'base': return 'Base value';

@@ -68,6 +68,10 @@
     		return `left:${left}px; top:${top}px;`;
       },
 			enter(target, done){
+				if (!target.attributes['data-element-id']){
+					done();
+					return;
+				} 
 				let elementId = target.attributes['data-element-id'].value;
 				let source = document.getElementById(elementId);
 				// Get the original styles so we can repair them later
@@ -104,6 +108,10 @@
 				if (target.attributes['data-return-element-id']) {
 					elementId = target.attributes['data-return-element-id'].value;
 				} else {
+					if (!target.attributes['data-element-id']){
+						done();
+						return;
+					}
 					elementId = target.attributes['data-element-id'].value;
 				}
 				let source	= document.getElementById(elementId);

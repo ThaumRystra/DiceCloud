@@ -42,6 +42,7 @@
 	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
+	import EffectEdit from '/imports/ui/components/EffectEdit.Story.vue';
 	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.Story.vue';
 	import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
@@ -54,6 +55,7 @@
 			AttributeCard,
 			ColumnLayout,
 			DialogStack,
+			EffectEdit,
 			HealthBar,
 			HitDiceListTile,
 			IconSearch,
