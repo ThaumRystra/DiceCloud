@@ -18,7 +18,8 @@ const getRacialBonusEffect = function(charId, attribute, bonus){
 		name: "Race Bonus",
 		stat: attribute,
 		operation: "add",
-		value: bonus,
+		calculation: bonus,
+		enabled: true,
 		parent: {
 			collection: "Creatures",
 			id: charId,
@@ -112,6 +113,7 @@ const getDefaultCharacterDocs = function(charId, {
 		stat: `${hitDice}HitDice`,
 		operation: "add",
 		calculation: `${strippedCls}Level`,
+		enabled: true,
 		parent: {
 			collection: "Classes",
 			id: classId,
@@ -134,7 +136,20 @@ const getDefaultCharacterDocs = function(charId, {
 		name: cls,
 		stat: `${hitDice}HitDice`,
 		operation: "add",
+		calculation: `${strippedCls}Level`,
+		enabled: true,
+		parent: {
+			collection: "Classes",
+			id: classId,
+		},
+		charId: charId,
+	});
+	docs.effects.push({
+		name: cls,
+		stat: `hitPoints`,
+		operation: "add",
 		calculation: `${healthPerLevel - 2} + ${healthPerLevel} * ${strippedCls}Level`,
+		enabled: true,
 		parent: {
 			collection: "Classes",
 			id: classId,

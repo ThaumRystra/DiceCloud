@@ -89,10 +89,13 @@ export function recomputeCreatureById(charId){
  * @returns {undefined}
  */
 function writeCreature(char) {
+  if (Meteor.isClient){
+    console.log(char);
+  }
   writeAttributes(char);
   writeSkills(char);
   writeDamageMultipliers(char);
-  // TODO write effect results to effect.result
+  writeEffects(char);
   Creatures.update(char.id, {$set: {level: char.level}});
 };
 
@@ -132,7 +135,25 @@ function writeAttributes(char) {
   }
 };
 
-
+function writeEffects(char){
+  let bulkWriteOps =  _.map(char.computedEffects, effect => ({
+    updateOne: {
+      filter: {_id: effect._id},
+      update: {$set: {
+        result: effect.result,
+      }},
+    },
+  }));
+  if (Meteor.isServer){
+    Effects.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.warn(JSON.stringify(e, null, 2))
+    });
+  } else {
+    _.each(bulkWriteOps, op => {
+      Effects.update(op.updateOne.filter, op.updateOne.update);
+    });
+  }
+}
 
 /**
  * Write all the skills from the in-memory char object to the Skills docs
@@ -212,6 +233,8 @@ function buildCreature(charId){
     skills: {},
     dms: {},
     classes: {},
+    otherEffects: [],
+    computedEffects: [],
     level: 0,
   };
   // Fetch the attributes of the creature and add them to an object for quick lookup
@@ -280,8 +303,9 @@ function buildCreature(charId){
   // Fetch the class levels and store them
   // don't use the word "class" it's reserved
   Classes.find({charId}).forEach(cls => {
-    if (!char.classes[cls.name]){
-      char.classes[cls.name] = {level: cls.level};
+    const strippedCls = cls.name.replace(/\s+/g, '');
+    if (!char.classes[strippedCls]){
+      char.classes[strippedCls] = {level: cls.level};
       char.level += cls.level;
     }
   });
@@ -292,10 +316,10 @@ function buildCreature(charId){
     enabled: true,
   }).forEach(effect => {
     let storedEffect = {
+      _id: effect._id,
       computed: false,
       result: 0,
       operation: effect.operation,
-      value: effect.value,
       calculation: effect.calculation,
     }
     if (char.atts[effect.stat]) {
@@ -305,7 +329,7 @@ function buildCreature(charId){
     } else if (char.dms[effect.stat]) {
       char.dms[effect.stat].effects.push(storedEffect);
     } else {
-      // ignore effects that don't apply to an actual stat
+      char.otherEffects.push(storedEffects);
     }
   });
 
@@ -330,6 +354,7 @@ function buildCreature(charId){
  */
 export function computeCreature(char){
   // Iterate over each stat in order and compute it
+  let statName;
   for (statName in char.atts){
     let stat = char.atts[statName]
     computeStat (stat, char);
@@ -341,6 +366,9 @@ export function computeCreature(char){
   for (statName in char.dms){
     let stat = char.dms[statName]
     computeStat (stat, char);
+  }
+  for (let effect of char.otherEffects){
+    computeEffect(effect, char);
   }
   return char;
 };
@@ -391,16 +419,18 @@ function computeStat(stat, char){
   */
 function computeEffect(effect, char){
   if (effect.computed) return;
-  if (_.isFinite(effect.value)){
-		effect.result = effect.value;
+  if (_.isFinite(effect.calculation)){
+		effect.result = +effect.calculation;
 	} else if(effect.operation === "conditional"){
     effect.result = effect.calculation;
   } else if(_.contains(["advantage", "disadvantage", "fail"], effect.operation)){
     effect.result = 1;
   } else if (_.isString(effect.calculation)){
 		effect.result = evaluateCalculation(effect.calculation, char);
+    console.log(`evaluated ${effect.calculation} to ${effect.result}`);
 	}
   effect.computed = true;
+  char.computedEffects.push(effect);
 };
 
 
@@ -424,14 +454,7 @@ function applyEffect(effect, stat){
   }
   else if (effect.operation === "mul"){
     if (!_.has(stat, "mul")) return;
-    if (stat.type === "damageMultiplier"){
-      if (value === 0) stat.immunityCount++;
-      else if (value === 0.5) stat.ressistanceCount++;
-      else if (value === 2) stat.vulnerabilityCount++;
-    } else {
-      // Multiply all muls together
-      stat.mul *= effect.result;
-    }
+    stat.mul *= effect.result;
   }
   // Take the largest min value
   if (effect.operation === "min"){
@@ -573,11 +596,8 @@ function combineDamageMultiplier(stat, char){
  */
 function evaluateCalculation(string, char){
   if (!string) return string;
-
   // Replace all the string variables with numbers if possible
-  string = string.replace(/\b[a-z,1-9]+\b/gi, function(sub){
-    // Make case insensitive
-    sub = sub.toLowerCase()
+  string = string.replace(/\w*[a-z]\w*/gi, function(sub){
     // Attributes
     if (char.atts[sub]){
       if (!char.atts[sub].computed){
@@ -586,7 +606,7 @@ function evaluateCalculation(string, char){
       return char.atts[sub].result;
     }
     // Modifiers
-    if (/^\w+mod$/.test(sub)){
+    if (/^\w+mod$/i.test(sub)){
       var slice = sub.slice(0, -3);
       if (char.atts[slice]){
         if (!char.atts[slice].computed){
@@ -610,9 +630,9 @@ function evaluateCalculation(string, char){
       return char.dms[sub].result;
     }
     // Class levels
-    if (/^\w+levels?$/.test(sub)){
+    if (/^\w+levels?$/i.test(sub)){
       //strip out "level(s)"
-      var className = sub.replace(/levels?$/, "");
+      var className = sub.replace(/levels?$/i, "");
       return char.classes[className] && char.classes[className].level || sub;
     }
     // Creature level
@@ -620,6 +640,7 @@ function evaluateCalculation(string, char){
       return char.level;
     }
     // Give up
+    console.log(`Could not match ${sub}`);
     return sub;
   });
 

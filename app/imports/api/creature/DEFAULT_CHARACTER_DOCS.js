@@ -95,6 +95,7 @@ export default () => ({
       "stat": "proficiencyBonus",
       "operation": "add",
       "calculation": "floor(level / 4 + 1.75)",
+      "enabled": true,
     },
   ],
 
