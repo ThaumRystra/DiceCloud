@@ -34,14 +34,15 @@ effectSchema = new SimpleSchema({
 			"conditional",
 		],
 	},
-	value: {
-		type: Number,
-		optional: true,
-	},
 	calculation: {
 		type: String,
 		optional: true,
 		trim: false,
+	},
+	// The computed result of the effect
+	result: {
+		type: SimpleSchema.oneOf(Number, String),
+		optional: true,
 	},
 	//which stat the effect is applied to
 	stat: {
