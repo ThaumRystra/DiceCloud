@@ -39,8 +39,8 @@
 			type: String,
 			value: Number,
 			mod: Number,
-			adjustment: Number,
-			effects: Array,
+			adjustment: {type: Number, default: 0},
+			effects: {type: Array, default: () => []},
 		},
 		methods: {
 			numberToSignedString,
