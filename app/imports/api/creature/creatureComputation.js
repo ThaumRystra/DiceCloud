@@ -89,9 +89,6 @@ export function recomputeCreatureById(charId){
  * @returns {undefined}
  */
 function writeCreature(char) {
-  if (Meteor.isClient){
-    console.log(char);
-  }
   writeAttributes(char);
   writeSkills(char);
   writeDamageMultipliers(char);
@@ -329,7 +326,7 @@ function buildCreature(charId){
     } else if (char.dms[effect.stat]) {
       char.dms[effect.stat].effects.push(storedEffect);
     } else {
-      char.otherEffects.push(storedEffects);
+      char.otherEffects.push(storedEffect);
     }
   });
 
@@ -427,7 +424,6 @@ function computeEffect(effect, char){
     effect.result = 1;
   } else if (_.isString(effect.calculation)){
 		effect.result = evaluateCalculation(effect.calculation, char);
-    console.log(`evaluated ${effect.calculation} to ${effect.result}`);
 	}
   effect.computed = true;
   char.computedEffects.push(effect);
@@ -612,7 +608,7 @@ function evaluateCalculation(string, char){
         if (!char.atts[slice].computed){
           computeStat(char.atts[sub], char);
         }
-        return char.atts[slice].mod || NaN;
+        return char.atts[slice].mod;
       }
     }
     // Skills
@@ -633,14 +629,13 @@ function evaluateCalculation(string, char){
     if (/^\w+levels?$/i.test(sub)){
       //strip out "level(s)"
       var className = sub.replace(/levels?$/i, "");
-      return char.classes[className] && char.classes[className].level || sub;
+      return char.classes[className] && char.classes[className].level;
     }
     // Creature level
     if (sub  === "level"){
       return char.level;
     }
     // Give up
-    console.log(`Could not match ${sub}`);
     return sub;
   });
 
