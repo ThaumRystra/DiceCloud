@@ -131,6 +131,7 @@
            element: undefined,
            returnElement: undefined,
            callback(result){
+						 if (!result) return;
              insertCreature.call(result);
            },
         });
