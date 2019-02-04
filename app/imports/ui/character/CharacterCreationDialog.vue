@@ -210,7 +210,7 @@
 			name: "New Character",
 			gender: "",
 			alignment: "",
-			race: "",
+			race: "Race",
 			baseStrength: 10,
 			baseDexterity: 10,
 			baseConstitution: 10,
@@ -224,8 +224,8 @@
 			wisdomBonus: 0,
 			charismaBonus: 0,
 			hitDiceItems: ["d6", "d8", "d10", "d12"],
-			hitDice: "",
-			cls: "",
+			hitDice: "d8",
+			cls: "Class",
     }},
 		methods: {
 			mod(score){
