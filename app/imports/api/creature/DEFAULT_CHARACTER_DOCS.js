@@ -96,6 +96,12 @@ export default () => ({
       "operation": "add",
       "calculation": "floor(level / 4 + 1.75)",
       "enabled": true,
+    },{
+      "name": "Constitution modifier per level",
+      "stat": "hitPoints",
+      "operation": "add",
+      "calculation": "constitutionMod * level",
+      "enabled": true,
     },
   ],
 
