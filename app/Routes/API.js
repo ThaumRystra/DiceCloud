@@ -24,7 +24,7 @@ Router.map(function () {
         },
     });
 
-    this.route("jsonCharacterSheet", {
+    this.route("jsonCharacterSheet", { // GET /character/:_id/json?key=:key
         path: "/character/:_id/json",
         where: "server",
         action: function () {
@@ -43,7 +43,7 @@ Router.map(function () {
         },
     });
 
-    this.route("getUserId", { // GET /api/user?username=:un
+    this.route("getUserId", { // GET /api/user?username=:un&key=:key
         path: "/api/user",
         where: "server",
         action: function () {
@@ -65,6 +65,83 @@ Router.map(function () {
             });
         }
     });
+
+    this.route("addSpellsToCharacter", { // POST /api/character/:_id/spellList/:listId
+        path: "/api/character/:_id/spellList/:listId",
+        where: "server"
+    }).post(
+        function () {
+            ifPostOK(this, "addSpellsToCharacter", () => {
+
+            });
+        }
+    );
+
+    this.route("createCharacter", { // POST /api/character
+        path: "/api/character",
+        where: "server"
+    }).post(
+        function () {
+            ifPostOK(this, "createCharacter", () => {
+
+            });
+        }
+    );
+
+    this.route("transferCharacterOwnership", { // POST /api/character/:_id/owner
+        path: "/api/character/:_id/owner",
+        where: "server"
+    }).post(
+        function () {
+            ifPostOK(this, "transferCharacterOwnership", () => {
+
+            });
+        }
+    );
+
+    this.route("insertFeatures", { // POST /api/character/:_id/feature
+        path: "/api/character/:_id/feature",
+        where: "server",
+    }).post(
+        function () {
+            ifPostOK(this, "insertFeatures", () => {
+
+            });
+        }
+    );
+
+    this.route("insertProfs", { // POST /api/character/:_id/prof
+        path: "/api/character/:_id/prof",
+        where: "server",
+    }).post(
+        function () {
+            ifPostOK(this, "insertProfs", () => {
+
+            });
+        }
+    );
+
+    this.route("insertEffects", { // POST /api/character/:_id/effect
+        path: "/api/character/:_id/effect",
+        where: "server",
+    }).post(
+        function () {
+            ifPostOK(this, "insertEffects", () => {
+
+            });
+        }
+    );
+
+    this.route("insertClasses", { // POST /api/character/:_id/class
+        path: "/api/character/:_id/class",
+        where: "server",
+    }).post(
+        function () {
+            ifPostOK(this, "insertClasses", () => {
+
+            });
+        }
+    );
 });
 
 var ifPostOK = function (router, endpoint, callback) {
@@ -113,10 +190,23 @@ var userIdFromKey = function (apiKey) {
 };
 
 var rateLimiter = new RateLimiter();
-rateLimiter.addRule({apiKey: String}, 5, 5000);
+// global limit
+rateLimiter.addRule({apiKey: String}, 10, 1000);
+
+// vmix stuff
 rateLimiter.addRule({apiKey: String, method: "vmixCharacter"}, 2, 10000);
 rateLimiter.addRule({apiKey: String, method: "vmixParty"}, 2, 10000);
+
+// bot API endpoints
 rateLimiter.addRule({apiKey: String, method: "jsonCharacterSheet"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "getUserId"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "addSpellsToCharacter"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "createCharacter"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "transferCharacterOwnership"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "insertFeatures"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "insertProfs"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "insertEffects"}, 5, 5000);
+rateLimiter.addRule({apiKey: String, method: "insertClasses"}, 5, 5000);
 
 var isRateLimited = function (apiKey, method) {
     const limited = !rateLimiter.check({apiKey: apiKey, method: method}).allowed;
