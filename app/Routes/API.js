@@ -71,8 +71,30 @@ Router.map(function () {
         where: "server"
     }).post(
         function () {
-            ifPostOK(this, "addSpellsToCharacter", () => {
-
+            ifPostOK(this, "addSpellsToList", () => {
+                const spells = this.request.body;
+                const charId = this.params._id;
+                const listId = this.params.listId;
+                let spellIds = [];
+                let error;
+                for (let spell of spells) {
+                    spell.parent = {id: listId, collection: "SpellLists"};
+                    spell.charId = charId;
+                    let id = Spells.insert(spell, (err, _id) => {
+                        if (err) {
+                            error = err.message;
+                        }
+                    });
+                    if (error)
+                        break;
+                    spellIds.push(id);
+                }
+                if (error) {
+                    this.response.writeHead(400, "Failed to insert one or more spells");
+                    this.response.end(JSON.stringify({err: error, inserted: spellIds}));
+                } else {
+                    this.response.end(JSON.stringify(spellIds));
+                }
             });
         }
     );
@@ -147,7 +169,7 @@ Router.map(function () {
 var ifPostOK = function (router, endpoint, callback) {
     router.response.setHeader("Content-Type", "application/json");
     var header = router.request.headers;
-    var key = header && header['Authorization'];
+    var key = header && header['authorization'];
     ifKeyValid(key, router.response, endpoint, () => {
             if (canEditCharacter(router.params._id, userIdFromKey(key))) {
                 callback();

@@ -132,6 +132,9 @@ makeParent = function(collection, donatedKeys){
 };
 
 var checkPermission = function(userId, charId){
+	if (Meteor.isServer) {  // we always trust server
+		return true;
+	}
 	var char = Characters.findOne(charId, {fields: {owner: 1, writers: 1}});
 	if (!char)
 		throw new Meteor.Error("Access Denied, no charId",
