@@ -104,19 +104,58 @@ Router.map(function () {
         where: "server"
     }).post(
         function () {
-            ifPostOK(this, "createCharacter", () => {
+            this.response.setHeader("Content-Type", "application/json");
+            const header = this.request.headers;
+            const key = header && header['authorization'];
+            ifKeyValid(key, this.response, "createCharacter", () => {
+                const character = this.request.body;
+                let error;
 
+                character.owner = userIdFromKey(key);
+                let id = Characters.insert(character, (err) => {
+                    if (err)
+                        error = err.message;
+                });
+
+                if (error) {
+                    this.response.writeHead(400, "Failed to insert character");
+                    this.response.end(JSON.stringify({err: error}));
+                } else {
+                    this.response.end(JSON.stringify({id: id}));
+                }
             });
         }
     );
 
-    this.route("transferCharacterOwnership", { // POST /api/character/:_id/owner
+    this.route("transferCharacterOwnership", { // PUT /api/character/:_id/owner
         path: "/api/character/:_id/owner",
         where: "server"
-    }).post(
+    }).put(
         function () {
-            ifPostOK(this, "transferCharacterOwnership", () => {
+            this.response.setHeader("Content-Type", "application/json");
+            const header = this.request.headers;
+            const key = header && header['authorization'];
+            const charId = this.params._id;
+            ifKeyValid(key, this.response, "transferCharacterOwnership", () => {
+                if (isOwner(charId, userIdFromKey(key))) {
+                    const newOwner = this.request.body['id'];
+                    let error;
+                    Characters.update({_id: charId}, {"$set": {owner: newOwner}}, null,
+                        (err) => {
+                            if (err)
+                                error = err.message;
+                        });
 
+                    if (error) {
+                        this.response.writeHead(400, "Failed to update character");
+                        this.response.end(JSON.stringify({err: error}));
+                    } else {
+                        this.response.end(JSON.stringify({success: true}));
+                    }
+                } else {
+                    this.response.writeHead(403, "You do not have permission to transfer this character");
+                    this.response.end();
+                }
             });
         }
     );

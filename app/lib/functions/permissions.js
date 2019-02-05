@@ -1,3 +1,10 @@
+isOwner = function(charId, userId) {
+	userId = userId || Meteor.userId();
+	var char = Characters.findOne(charId, {fields: {owner: 1}});
+	if (!char) return true;
+	return (userId === char.owner);
+};
+
 canEditCharacter = function(charId, userId){
 	userId = userId || Meteor.userId();
 	var char = Characters.findOne(charId, {fields: {owner: 1, writers: 1}});
