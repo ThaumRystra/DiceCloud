@@ -127,6 +127,37 @@ Router.map(function () {
         }
     );
 
+    this.route("deleteCharacter", { // DELETE /api/character/:_id
+        path: "/api/character/:_id",
+        where: "server"
+    }).delete(
+        function () {
+            this.response.setHeader("Content-Type", "application/json");
+            const header = this.request.headers;
+            const key = header && header['authorization'];
+            const charId = this.params._id;
+            ifKeyValid(key, this.response, "deleteCharacter", () => {
+                if (isOwner(charId, userIdFromKey(key))) {
+                    let error;
+                    Characters.remove({_id: charId}, (err) => {
+                        if (err)
+                            error = err.message;
+                    });
+
+                    if (error) {
+                        this.response.writeHead(400, "Failed to delete character");
+                        this.response.end(JSON.stringify({err: error}));
+                    } else {
+                        this.response.end(JSON.stringify({success: true}));
+                    }
+                } else {
+                    this.response.writeHead(403, "You do not have permission to delete this character");
+                    this.response.end();
+                }
+            });
+        }
+    );
+
     this.route("transferCharacterOwnership", { // PUT /api/character/:_id/owner
         path: "/api/character/:_id/owner",
         where: "server"
