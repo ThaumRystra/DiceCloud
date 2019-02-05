@@ -166,7 +166,27 @@ Router.map(function () {
     }).post(
         function () {
             ifPostOK(this, "insertFeatures", () => {
-
+                const features = this.request.body;
+                const charId = this.params._id;
+                let ids = [];
+                let error;
+                for (let feature of features) {
+                    feature.charId = charId;
+                    let id = Features.insert(feature, (err) => {
+                        if (err) {
+                            error = err.message;
+                        }
+                    });
+                    if (error)
+                        break;
+                    ids.push(id);
+                }
+                if (error) {
+                    this.response.writeHead(400, "Failed to insert one or more features");
+                    this.response.end(JSON.stringify({err: error, inserted: ids}));
+                } else {
+                    this.response.end(JSON.stringify(ids));
+                }
             });
         }
     );
@@ -177,7 +197,27 @@ Router.map(function () {
     }).post(
         function () {
             ifPostOK(this, "insertProfs", () => {
-
+                const profs = this.request.body;
+                const charId = this.params._id;
+                let ids = [];
+                let error;
+                for (let prof of profs) {
+                    prof.charId = charId;  // we currently rely on the client to supply parent
+                    let id = Proficiencies.insert(prof, (err) => {
+                        if (err) {
+                            error = err.message;
+                        }
+                    });
+                    if (error)
+                        break;
+                    ids.push(id);
+                }
+                if (error) {
+                    this.response.writeHead(400, "Failed to insert one or more profs");
+                    this.response.end(JSON.stringify({err: error, inserted: ids}));
+                } else {
+                    this.response.end(JSON.stringify(ids));
+                }
             });
         }
     );
@@ -188,7 +228,27 @@ Router.map(function () {
     }).post(
         function () {
             ifPostOK(this, "insertEffects", () => {
-
+                const effects = this.request.body;
+                const charId = this.params._id;
+                let ids = [];
+                let error;
+                for (let effect of effects) {
+                    effect.charId = charId;  // we currently rely on the client to supply parent
+                    let id = Effects.insert(effect, (err) => {
+                        if (err) {
+                            error = err.message;
+                        }
+                    });
+                    if (error)
+                        break;
+                    ids.push(id);
+                }
+                if (error) {
+                    this.response.writeHead(400, "Failed to insert one or more effects");
+                    this.response.end(JSON.stringify({err: error, inserted: ids}));
+                } else {
+                    this.response.end(JSON.stringify(ids));
+                }
             });
         }
     );
@@ -199,7 +259,27 @@ Router.map(function () {
     }).post(
         function () {
             ifPostOK(this, "insertClasses", () => {
-
+                const klasses = this.request.body;
+                const charId = this.params._id;
+                let ids = [];
+                let error;
+                for (let klass of klasses) {
+                    klass.charId = charId;  // we currently rely on the client to supply parent
+                    let id = Classes.insert(klass, (err) => {
+                        if (err) {
+                            error = err.message;
+                        }
+                    });
+                    if (error)
+                        break;
+                    ids.push(id);
+                }
+                if (error) {
+                    this.response.writeHead(400, "Failed to insert one or more classes");
+                    this.response.end(JSON.stringify({err: error, inserted: ids}));
+                } else {
+                    this.response.end(JSON.stringify(ids));
+                }
             });
         }
     );
