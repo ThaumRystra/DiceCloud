@@ -42,6 +42,29 @@ Router.map(function() {
 			);
 		},
 	});
+
+    this.route("getUserId", { // GET /api/user?username=:un
+        path: "/api/user",
+        where: "server",
+        action: function () {
+            this.response.setHeader("Content-Type", "application/json");
+            var query = this.params.query;
+            var key = query && query.key;
+            var username = query && query.username;
+            ifKeyValid(key, this.response, "getUserId", () => {
+                Meteor.call("getUserId", username, (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        this.response.writeHead(404, "User not found");
+                        this.response.end();
+                    } else {
+                        console.log(result);
+                        this.response.end(JSON.stringify({id: result}));
+                    }
+                });
+            });
+        }
+    });
 });
 
 var ifKeyValid = function(apiKey, response, method, callback){
