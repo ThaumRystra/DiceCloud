@@ -41,6 +41,7 @@
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
 	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
 	import AttributeEdit from '/imports/ui/components/AttributeEdit.Story.vue';
+	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
 	import EffectEdit from '/imports/ui/components/EffectEdit.Story.vue';
@@ -55,6 +56,7 @@
 			AbilityListTile,
 			AttributeCard,
 			AttributeEdit,
+			ColorPicker,
 			ColumnLayout,
 			DialogStack,
 			EffectEdit,
