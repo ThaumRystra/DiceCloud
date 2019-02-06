@@ -5,7 +5,6 @@
 		<v-flex class="ma-1">
 			<v-select
 				label="Operation"
-				color="accent"
 				append-icon="arrow_drop_down"
 				:items="operations"
 				:value="this.effect.operation"
@@ -43,7 +42,6 @@
 		<v-flex class="ma-1">
 			<v-autocomplete
 				label="Stat"
-				color="accent"
 				append-icon="arrow_drop_down"
 				item-text="name"
 				item-value="variableName"

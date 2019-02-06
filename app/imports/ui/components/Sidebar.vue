@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-		<v-toolbar color="primary" dark>
+		<v-toolbar color="secondary" dark>
 			<v-layout row align-center v-if="signedIn">
 				{{userName}}
 				<v-spacer></v-spacer>
