@@ -9,7 +9,7 @@
 				:menu-props="{transition: 'slide-y-transition', lazy: true}"
 				:items="operations"
 				:value="this.effect.operation"
-				@change="operation => $emit('change', {operation})"
+				@input="operation => $emit('change', {operation})"
 			>
 				<v-icon
 					class="black--text icon"
@@ -35,7 +35,7 @@
 				:value="needsValue ? (effect.calculation) : ' '"
 				:disabled="!needsValue"
 				:hint="!isFinite(effect.calculation) && effect.result ? effect.result + '' : '' "
-				@change="calculation => $emit('change', {calculation})"
+				@input="calculation => $emit('change', {calculation})"
 			/>
 		</v-flex>
 
@@ -49,7 +49,7 @@
 				:menu-props="{transition: 'slide-y-transition', lazy: true}"
 				:value="effect.stat"
 				:items="stats"
-				@change="stat => $emit('change', {stat})"
+				@input="stat => $emit('change', {stat})"
 			/>
 		</v-flex>
 
