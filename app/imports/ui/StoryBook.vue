@@ -10,7 +10,7 @@
 			</v-btn>
     </v-layout>
 		<v-navigation-drawer right app v-model="sidebar">
-			<v-toolbar color="primary" dark>
+			<v-toolbar color="secondary" dark>
 				Components
 			</v-toolbar>
 			<v-list>
@@ -40,6 +40,7 @@
 	import Vue from "vue";
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
 	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
+	import AttributeEdit from '/imports/ui/components/AttributeEdit.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
 	import EffectEdit from '/imports/ui/components/EffectEdit.Story.vue';
@@ -53,6 +54,7 @@
 		components: {
 			AbilityListTile,
 			AttributeCard,
+			AttributeEdit,
 			ColumnLayout,
 			DialogStack,
 			EffectEdit,
