@@ -1,11 +1,11 @@
-Schemas.UserProfile = new SimpleSchema({
+Schemas.UserProfile = schema({
 	username: {
 		type: String,
 		optional: true,
 	},
 });
 
-Schemas.User = new SimpleSchema({
+Schemas.User = schema({
 	username: {
 		type: String,
 		optional: true,
@@ -85,7 +85,7 @@ Meteor.users.gnerateApiKey = new ValidatedMethod({
 
 Meteor.users.sendVerificationEmail = new ValidatedMethod({
 	name: "Users.methods.sendVerificationEmail",
-	validate: new SimpleSchema({
+	validate: schema({
 		userId:{
 			type: String,
 			optional: true,

@@ -1,9 +1,10 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
 
 Proficiencies = new Mongo.Collection("proficiencies");
 
-proficiencySchema = new SimpleSchema({
+proficiencySchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

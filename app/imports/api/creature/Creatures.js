@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSavesSchema.js"
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
@@ -9,7 +10,7 @@ import '/imports/api/creature/removeCreature.js';
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
 
-let creatureSchema = new SimpleSchema({
+let creatureSchema = schema({
 	//strings
 	name:         {type: String, defaultValue: "", trim: false, optional: true},
 	urlName:      {type: String, trim: false, optional: true,

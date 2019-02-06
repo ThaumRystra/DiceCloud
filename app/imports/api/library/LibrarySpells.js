@@ -1,6 +1,6 @@
 LibrarySpells = new Mongo.Collection("librarySpells");
 
-Schemas.LibrarySpells = new SimpleSchema({
+Schemas.LibrarySpells = schema({
 	name: {
 		type: String,
 		trim: false,

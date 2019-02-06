@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
 
 const DamageMultipliers = new Mongo.Collection("damageMultipliers");
@@ -6,7 +7,7 @@ const DamageMultipliers = new Mongo.Collection("damageMultipliers");
 /*
  * DamageMultipliers are whole numbered stats of a character
  */
-const damageMultiplierSchema = new SimpleSchema({
+const damageMultiplierSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

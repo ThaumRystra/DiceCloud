@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
 
 let Skills = new Mongo.Collection("skills");
@@ -7,7 +8,7 @@ let Skills = new Mongo.Collection("skills");
  * Skills are anything that results in a modifier to be added to a D20
  * Skills usually have an ability score modifier that they use as their basis
  */
-let skillSchema = new SimpleSchema({
+let skillSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

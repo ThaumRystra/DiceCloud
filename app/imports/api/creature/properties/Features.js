@@ -1,10 +1,11 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import {makeParent} from "/imports/api/parenting.js";
 
 let Features = new Mongo.Collection("features");
 
-let featureSchema = new SimpleSchema({
+let featureSchema = schema({
 	charId:		  {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:         {type: String, optional: true, trim: false},
 	description:  {type: String, optional: true, trim: false},

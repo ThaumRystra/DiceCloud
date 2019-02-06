@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
-libraryEffectsSchema = new SimpleSchema({
+libraryEffectsSchema = schema({
 	name: {
 		type: String,
 		optional: true, //TODO make necessary if there is no owner

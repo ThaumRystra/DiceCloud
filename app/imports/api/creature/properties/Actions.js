@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
 
 let Actions = new Mongo.Collection("actions");
@@ -6,7 +7,7 @@ let Actions = new Mongo.Collection("actions");
 /*
  * Actions are given to a character by items and features
  */
-let actionSchema = new SimpleSchema({
+let actionSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

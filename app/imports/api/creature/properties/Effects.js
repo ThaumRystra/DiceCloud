@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
 
 Effects = new Mongo.Collection("effects");
@@ -7,7 +8,7 @@ Effects = new Mongo.Collection("effects");
  * Effects are reason-value attached to skills and abilities
  * that modify their final value or presentation in some way
  */
-effectSchema = new SimpleSchema({
+effectSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

@@ -1,9 +1,10 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeParent, makeChild} from "/imports/api/parenting.js";
 
 let CustomBuffs = new Mongo.Collection("customBuffs");
 
-customBuffSchema = new SimpleSchema({
+customBuffSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

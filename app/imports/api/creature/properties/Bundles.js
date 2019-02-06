@@ -1,27 +1,28 @@
-import SimpleSchema from "simpl-schema";
+import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
 let Bundles = new Mongo.Collection("bundle");
 
-let attributeSchema = new SimpleSchema({
+let attributeSchema = schema({
   name: String,
   variableName: String,
   baseValue: String,
   type: String,
 });
 
-let skillSchema = new SimpleSchema({
+let skillSchema = schema({
   name: String,
   variableName: String,
   ability: String,
   type: String,
 });
 
-let damageMultiplierSchema = new SimpleSchema({
+let damageMultiplierSchema = schema({
   name: String,
   variableName: String,
 });
 
-let effectSchema = new SimpleSchema({
+let effectSchema = schema({
   name: String,
   stat: String,
   operation: {type: String},
@@ -29,7 +30,7 @@ let effectSchema = new SimpleSchema({
   value: {type: Number, optional: true}
 });
 
-let itemSchema = new SimpleSchema({
+let itemSchema = schema({
   name: String,
   plural:		{type: String, optional: true,},
   description: {type: String, optional: true,},
@@ -41,7 +42,7 @@ let itemSchema = new SimpleSchema({
   "settings.showIncrement": {type: Boolean, optional: true},
 });
 
-let containerSchema = new SimpleSchema({
+let containerSchema = schema({
   name: String,
 	isCarried:  Boolean,
 	weight:		{type: Number, min: 0},
@@ -51,7 +52,7 @@ let containerSchema = new SimpleSchema({
   "items.$": itemSchema,
 });
 
-let featureSchema = new SimpleSchema({
+let featureSchema = schema({
   name:          String,
   description:   {type: String, optional: true},
   uses:          {type: String, optional: true},
@@ -60,7 +61,7 @@ let featureSchema = new SimpleSchema({
   "effects.$":   effectSchema,
 });
 
-let bundleSchema = new SimpleSchema({
+let bundleSchema = schema({
   attributes: Array,
   "attributes.$": attributeSchema,
   skills: Array,

@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
-const DeathSavesSchema = new SimpleSchema({
+const DeathSavesSchema = schema({
 	pass: {
 		type: SimpleSchema.Integer,
 		min: 0,

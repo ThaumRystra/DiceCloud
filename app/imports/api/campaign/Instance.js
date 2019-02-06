@@ -1,8 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
 let Instances = new Mongo.Collection("instances");
 
-let instanceSchema = new SimpleSchema({
+let instanceSchema = schema({
 	//an instance is a single flow of time all parties in an instance are in-sync time wise
 });
 

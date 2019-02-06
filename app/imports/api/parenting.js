@@ -1,8 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { _ } from 'meteor/underscore';
 
-let childSchema = new SimpleSchema({
+let childSchema = schema({
 	parent:              {type: Object},
 	"parent.collection": {type: String},
 	"parent.id":         {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
@@ -175,7 +176,7 @@ let checkRemovePermission = function(collectionName, id, self){
 const softRemoveNode = new ValidatedMethod({
   name: "parenting.methods.softRemoveNode",
 
-  validate: new SimpleSchema({
+  validate: schema({
 		collectionName: {type: String,},
 		id: {
 			type: String,

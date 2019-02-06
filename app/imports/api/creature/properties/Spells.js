@@ -1,5 +1,6 @@
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeParent, makeChild} from "/imports/api/parenting.js";
 
 const magicSchools = [
@@ -15,7 +16,7 @@ const magicSchools = [
 
 let Spells = new Mongo.Collection("spells");
 
-let spellSchema = new SimpleSchema({
+let spellSchema = schema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	prepared: {
 		type: String,

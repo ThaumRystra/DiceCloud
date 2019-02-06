@@ -1,8 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
 Libraries = new Mongo.Collection("library");
 
-librarySchema = new SimpleSchema({
+librarySchema = schema({
 	name:    {type: String},
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id},
 	readers: {type: Array, defaultValue: []},

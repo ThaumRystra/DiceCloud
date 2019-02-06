@@ -1,6 +1,6 @@
 ChangeLogs = new Mongo.Collection("changeLogs");
 
-Schemas.ChangeLog = new SimpleSchema({
+Schemas.ChangeLog = schema({
 	version: {
 		type: String,
 	},

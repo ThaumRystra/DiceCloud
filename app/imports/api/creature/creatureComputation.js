@@ -3,6 +3,7 @@
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
 import Creatures from "/imports/api/creature/Creatures.js";
 import Attributes from "/imports/api/creature/properties/Attributes.js";
@@ -15,7 +16,7 @@ export const recomputeCreature = new ValidatedMethod({
 
   name: "Creatures.methods.recomputeCreature",
 
-  validate: new SimpleSchema({
+  validate: schema({
     charId: { type: String }
   }).validator(),
 
@@ -656,7 +657,7 @@ function evaluateCalculation(string, char){
 export const recomputeCreatureXP = new ValidatedMethod({
   name: "Creatures.methods.recomputeCreatureXP",
 
-  validate: new SimpleSchema({
+  validate: schema({
     charId: { type: String }
   }).validator(),
 
@@ -686,7 +687,7 @@ export const recomputeCreatureXP = new ValidatedMethod({
 export const recomputeCreatureWeightCarried = new ValidatedMethod({
   name: "Creature.methods.recomputeCreatureWeightCarried",
 
-  validate: new SimpleSchema({
+  validate: schema({
     charId: { type: String }
   }).validator(),
 

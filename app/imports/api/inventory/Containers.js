@@ -1,11 +1,12 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeParent} from "/imports/api/parenting.js";
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 //set up the collection for containers
 let Containers = new Mongo.Collection("containers");
 
-let containerSchema = new SimpleSchema({
+let containerSchema = schema({
 	name:       {type: String, optional: true, trim: false},
 	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	isCarried:  {type: Boolean},

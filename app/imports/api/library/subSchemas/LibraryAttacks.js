@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
-libraryAttacksSchema = new SimpleSchema({
+libraryAttacksSchema = schema({
 	name: {
 		type: String,
 		defaultValue: "New Attack",

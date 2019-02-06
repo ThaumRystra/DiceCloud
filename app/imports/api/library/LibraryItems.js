@@ -1,9 +1,10 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import libraryAttacksSchema from "/imports/api/library/";
 
 LibraryItems = new Mongo.Collection("libraryItems");
 
-libraryItemsSchema = new SimpleSchema({
+libraryItemsSchema = schema({
 	libraryName:{type: String, optional: true, trim: false},
 	name:       {type: String, defaultValue: "New Item", trim: false},
 	plural:		{type: String, optional: true, trim: false},

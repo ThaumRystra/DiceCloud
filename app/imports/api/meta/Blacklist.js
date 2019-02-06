@@ -1,6 +1,6 @@
 Blacklist = new Mongo.Collection("blacklist");
 
-Schemas.Blacklist = new SimpleSchema({
+Schemas.Blacklist = schema({
 	userId: {
 		type: String,
 	},

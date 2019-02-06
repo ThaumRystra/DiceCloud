@@ -1,5 +1,6 @@
 import {makeChild} from "/imports/api/parenting.js";
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
 import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
@@ -10,7 +11,7 @@ let Attributes = new Mongo.Collection("attributes");
 /*
  * Attributes are numbered stats of a character
  */
-attributeSchema = new SimpleSchema({
+attributeSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -98,7 +99,7 @@ const updateAttribute = new ValidatedMethod({
 
   name: "Attributes.methods.update",
 
-  validate: new SimpleSchema({
+  validate: schema({
 		_id: {
 			type: String,
 			regEx: SimpleSchema.RegEx.Id,
@@ -125,7 +126,7 @@ const adjustAttribute = new ValidatedMethod({
 
   name: "Attributes.methods.adjust",
 
-  validate: new SimpleSchema({
+  validate: schema({
 		_id: {
 			type: String,
 			regEx: SimpleSchema.RegEx.Id,

@@ -1,8 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
 let Icons = new Mongo.Collection('icons');
 
-iconsSchema = new SimpleSchema({
+iconsSchema = schema({
 	name: {
 		type: String,
     unique: true,

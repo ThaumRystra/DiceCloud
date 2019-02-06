@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
 
 let Attacks = new Mongo.Collection("attacks");
@@ -6,7 +7,7 @@ let Attacks = new Mongo.Collection("attacks");
 /*
  * Attacks are given to a character by items and features
  */
-attackSchema = new SimpleSchema({
+attackSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

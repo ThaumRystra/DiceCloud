@@ -1,8 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
 Experiences = new Mongo.Collection("experience");
 
-let experienceSchema = new SimpleSchema({
+let experienceSchema = schema({
 	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	name:		 {type: String, optional: true, trim: false, defaultValue: "New Experience"},
 	description: {type: String, optional: true, trim: false},

@@ -1,8 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
 let Parties = new Mongo.Collection("parties");
 
-let partySchema = new SimpleSchema({
+let partySchema = schema({
 	name: {
 		type: String,
 		defaultValue: "New Party",

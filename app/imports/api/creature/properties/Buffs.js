@@ -1,10 +1,11 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeParent} from "/imports/api/parenting.js";
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 let Buffs = new Mongo.Collection("buffs");
 
-let buffSchema = new SimpleSchema({
+let buffSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

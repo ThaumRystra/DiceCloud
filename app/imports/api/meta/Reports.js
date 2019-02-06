@@ -1,6 +1,6 @@
 Reports = new Mongo.Collection("reports");
 
-Schemas.Report = new SimpleSchema({
+Schemas.Report = schema({
 	owner: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

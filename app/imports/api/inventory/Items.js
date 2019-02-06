@@ -1,10 +1,11 @@
 import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 import {makeParent, makeChild} from "/imports/api/parenting.js";
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 Items = new Mongo.Collection("items");
 
-itemSchema = new SimpleSchema({
+itemSchema = schema({
 	name:               {type: String, optional: true, trim: false, defaultValue: "New Item"},
 	plural:		          {type: String, optional: true, trim: false},
 	description:        {type: String, optional: true, trim: false},
