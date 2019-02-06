@@ -5,16 +5,18 @@ import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 Items = new Mongo.Collection("items");
 
 itemSchema = new SimpleSchema({
-	name:       {type: String, optional: true, trim: false, defaultValue: "New Item"},
-	plural:		{type: String, optional: true, trim: false},
-	description:{type: String, optional: true, trim: false},
-	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1}, //id of owner
-	quantity:	{type: SimpleSchema.Integer, min: 0, defaultValue: 1},
-	weight:		{type: Number, min: 0, defaultValue: 0},
-	value:		{type: Number, min: 0, defaultValue: 0},
-	enabled:    {type: Boolean, defaultValue: false},
+	name:               {type: String, optional: true, trim: false, defaultValue: "New Item"},
+	plural:		          {type: String, optional: true, trim: false},
+	description:        {type: String, optional: true, trim: false},
+	charId:             {type: String, regEx: SimpleSchema.RegEx.Id, index: 1}, //id of owner
+	quantity:	          {type: SimpleSchema.Integer, min: 0, defaultValue: 1},
+	weight:		          {type: Number, min: 0, defaultValue: 0},
+	value:		          {type: Number, min: 0, defaultValue: 0},
+	uses:               {type: SimpleSchema.Integer, min: 0, optional: true},
+	usesUsed:           {type: SimpleSchema.Integer, min: 0, optional: true},
+	enabled:            {type: Boolean, defaultValue: false},
 	requiresAttunement: {type: Boolean, defaultValue: false},
-	settings: {type: Object},
+	settings:           {type: Object},
 	"settings.showIncrement": {type: Boolean, defaultValue: false},
 });
 
