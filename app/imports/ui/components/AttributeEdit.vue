@@ -26,7 +26,6 @@
 		<v-select
 			label="Type"
 			color="accent"
-			append-icon="arrow_drop_down"
 			:items="attributeTypes"
 			:value="attribute.type"
 			:menu-props="{auto: true, lazy: true}"
@@ -41,6 +40,7 @@
 			label="Reset"
 			color="accent"
 			append-icon="arrow_drop_down"
+			clearable
 			:items="resetOptions"
 			:value="attribute.reset"
 			:menu-props="{auto: true, lazy: true}"
@@ -94,9 +94,6 @@ export default {
 		],
 		resetOptions: [
 			{
-				text: 'None',
-				value: undefined,
-			}, {
 				text: 'Short rest',
 				value: 'shortRest',
 			}, {
