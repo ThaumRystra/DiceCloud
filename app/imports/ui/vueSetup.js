@@ -11,7 +11,7 @@ import theme from '/imports/ui/theme.js';
 Vue.use(VueMeteorTracker);
 Vue.use(Vuetify, {
   theme,
-  iconfont: "mdi",
+  iconfont: "md",
 });
 
 
