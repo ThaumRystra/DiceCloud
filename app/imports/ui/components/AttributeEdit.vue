@@ -26,8 +26,10 @@
 		<v-select
 			label="Type"
 			color="accent"
+			append-icon="arrow_drop_down"
 			:items="attributeTypes"
 			:value="attribute.type"
+			:menu-props="{auto: true, lazy: true}"
 			@change="type => $emit('change', {type})"
 		/>
 		<v-switch
@@ -38,8 +40,10 @@
 		<v-select
 			label="Reset"
 			color="accent"
+			append-icon="arrow_drop_down"
 			:items="resetOptions"
 			:value="attribute.reset"
+			:menu-props="{auto: true, lazy: true}"
 			@change="reset => $emit('change', {reset})"
 		/>
 		<v-text-field

@@ -6,6 +6,7 @@
 			<v-select
 				label="Operation"
 				append-icon="arrow_drop_down"
+				:menu-props="{transition: 'slide-y-transition', lazy: true}"
 				:items="operations"
 				:value="this.effect.operation"
 				@change="operation => $emit('change', {operation})"
@@ -45,6 +46,7 @@
 				append-icon="arrow_drop_down"
 				item-text="name"
 				item-value="variableName"
+				:menu-props="{transition: 'slide-y-transition', lazy: true}"
 				:value="effect.stat"
 				:items="stats"
 				@change="stat => $emit('change', {stat})"
