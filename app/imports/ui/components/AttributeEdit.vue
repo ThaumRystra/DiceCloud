@@ -1,23 +1,23 @@
 <template lang="html">
   <div>
-  	<v-text-field
+  	<text-field
 			label="Name"
 			:value="attribute.name"
 		/>
-		<v-text-field
+		<text-field
 			label="Variable name"
 			:value="attribute.variableName"
 			@change="variableName => $emit('change', {variableName})"
 			hint="Use this name in formulae to reference this attribute"
 		/>
-		<v-text-field
+		<text-field
 			label="Base Value"
 			type="number"
 			:value="attribute.baseValue"
 			@change="baseValue => $emit('change', {baseValue})"
 			hint="This is the value of the attribute before effects are applied"
 		/>
-		<v-text-field
+		<text-field
 			label="Damage"
 			type="number"
 			:value="-attribute.adjustment"
@@ -46,7 +46,7 @@
 			:menu-props="{auto: true, lazy: true}"
 			@change="reset => $emit('change', {reset})"
 		/>
-		<v-text-field
+		<text-field
 			label="Reset Multiplier"
 			type="number"
 			:value="attribute.resetMultiplier"

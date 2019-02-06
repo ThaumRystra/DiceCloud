@@ -1,10 +1,10 @@
 <template lang="html">
 	<div>
 		<attribute-edit
-			v-for="attribute in attributes"
+			v-for="(attribute, index) in attributes"
 			:key="attribute._id"
 			:attribute="attribute"
-			@change="log"
+			@change="e => change(index, e)"
 		/>
 	</div>
 </template>
@@ -35,10 +35,9 @@
 			],
 		}},
 		methods: {
-			log: console.log,
 			change(index, e){
 				for (let i in e){
-					this.attributes[index][i] = e[i];
+					this.attributes[index][i] = e[i].trim();
 				}
 			},
 		},
