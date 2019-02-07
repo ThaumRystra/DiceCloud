@@ -1,6 +1,6 @@
 <template>
 	<div class="character-sheet">
-    <v-toolbar app :color="character.color || 'primary'" :dark="isDarkColor(character.color || theme.primary)">
+    <v-toolbar app :color="character.color || 'secondary'" :dark="isDarkColor(character.color || theme.primary)">
       <v-btn v-if="showMenuButton" flat icon @click="toggleDrawer">
         <v-icon>menu</v-icon>
       </v-btn>

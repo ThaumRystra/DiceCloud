@@ -1,6 +1,6 @@
 <template>
 	<v-layout column style="height: 100%;">
-    <v-toolbar color="primary" dark class="base-dialog-toolbar" :flat="!offsetTop">
+    <v-toolbar :color="color || 'secondary'" dark class="base-dialog-toolbar" :flat="!offsetTop">
 			<v-btn icon flat @click="close">
 				<v-icon>
 					arrow_back
@@ -21,6 +21,9 @@
 	import store from "/imports/ui/vuexStore.js";
 
 	export default {
+		props: {
+			color: String,
+		},
 		data(){ return {
 			offsetTop: 0,
 		}},
