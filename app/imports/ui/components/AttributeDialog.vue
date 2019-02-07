@@ -20,6 +20,7 @@
 		<div class="display-3 attribute-value" v-else>
 			{{value}}
 		</div>
+		<attribute-effect-list v-if="attribueBaseEffect" :effects="[attribueBaseEffect]"/>
 		<div v-if="effects && effects.length">
 			<h6 class="title">Effects</h6>
 			<attribute-effect-list :effects="effects" @click="clickedEffect"/>
@@ -39,6 +40,7 @@
 			type: String,
 			value: Number,
 			mod: Number,
+			baseValue: Number,
 			adjustment: {type: Number, default: 0},
 			effects: {type: Array, default: () => []},
 		},
@@ -46,6 +48,19 @@
 			numberToSignedString,
 			clickedEffect(e){
 				this.$emit('clickedEffect', e);
+			},
+		},
+		computed: {
+			attribueBaseEffect(){
+				if (!this.baseValue) return;
+				return {
+					_id: 'attributeBaseValue',
+					name: `${this.name}`,
+					operation: 'base',
+					result: this.baseValue,
+					stat: this.variableName,
+					enabled: true,
+				};
 			},
 		},
 		components: {

@@ -1,6 +1,7 @@
 <template lang="html">
   <attribute-dialog
 		v-bind="attribute"
+		:effects="effects"
 		v-on="{clickedEffect}"
 	/>
 </template>
@@ -18,6 +19,18 @@
 		meteor: {
 			attribute(){
 				return Attributes.findOne(this._id);
+			},
+			effects(){
+				if (!this.attribute) return;
+				let charId = this.attribute.charId;
+				let stat = this.attribute.variableName;
+				return Effects.find({
+					charId,
+					stat,
+					enabled: true,
+				}, {
+					sort: {order: 1},
+				}).fetch();
 			},
 		},
 		methods: {

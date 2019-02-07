@@ -39,7 +39,7 @@ export default () => ({
 		{"name": "Level 9 Spell Slots", "variableName": "level9SpellSlots", "type": "spellSlot"},
 
     {"name": "Proficiency Bonus", "variableName": "proficiencyBonus", "type": "modifier"},
-    {"name": "initiative",        "variableName": "initiative",       "type": "modifier"},
+    {"name": "Initiative",        "variableName": "initiative",       "type": "modifier"},
 
   	{"name": "Carry Capacity Multiplier", "variableName": "carryMultiplier", "type": "utility", "baseValue": 1},
   	{"name": "Rage Damage",               "variableName": "rageDamage",      "type": "utility"},

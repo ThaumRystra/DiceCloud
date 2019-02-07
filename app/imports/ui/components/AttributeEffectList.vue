@@ -5,14 +5,16 @@
 			:class="{effect: true, disabled: !effect.enabled}"
 			:id="`${_uid}-${effect._id}`"
 			:key="effect._id"
-			@click="(e) => click({effect, elementId: `${_uid}-${effect._id}`})"
+			v-on="$listeners.click ? { click(e){
+					$emit('click', {effect, elementId: `${_uid}-${effect._id}`})
+				} } : {}"
 		>
 			<v-layout row align-center class="net-effect">
 				<v-icon class="black--text icon">
-					{{getEffectIcon(effect.operation, effect.value)}}
+					{{getEffectIcon(effect.operation, effect.result)}}
 				</v-icon>
 				<div class="value display-1  pr-2" v-if="showValue(effect.operation)">
-					{{getValue(effect.operation, effect.value)}}
+					{{getValue(effect.operation, effect.result)}}
 				</div>
 				<div class="calculation body-2 pr-2" v-else>
 					{{effect.calculation}}
@@ -64,9 +66,6 @@
 			}
 		},
 		methods: {
-			click(event){
-				this.$emit('click', event);
-			},
 			getEffectIcon,
 			getOperation(op, value){
 				switch(op) {
