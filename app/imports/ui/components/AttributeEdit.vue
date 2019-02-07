@@ -3,41 +3,41 @@
   	<text-field
 			label="Name"
 			:value="attribute.name"
-			@input="name => $emit('change', {name})"
+			@change="(name, ack) => $emit('change', {name}, ack)"
 		/>
 		<text-field
 			label="Variable name"
 			:value="attribute.variableName"
-			@input="variableName => $emit('change', {variableName})"
+			@change="(variableName, ack) => $emit('change', {variableName}, ack)"
 			hint="Use this name in formulae to reference this attribute"
 		/>
 		<text-field
 			label="Base Value"
 			type="number"
 			:value="attribute.baseValue"
-			@input="baseValue => $emit('change', {baseValue})"
+			@change="(baseValue, ack) => $emit('change', {baseValue}, ack)"
 			hint="This is the value of the attribute before effects are applied"
 		/>
 		<text-field
 			label="Damage"
 			type="number"
 			:value="-attribute.adjustment"
-			@input="damage => $emit('change', {adjustment: -damage || null})"
+			@change="(damage, ack) => $emit('change', {adjustment: -damage || null}, ack)"
 		/>
-		<v-select
+		<smart-select
 			label="Type"
 			color="accent"
 			:items="attributeTypes"
 			:value="attribute.type"
 			:menu-props="{auto: true, lazy: true}"
-			@input="type => $emit('change', {type})"
+			@change="(type, ack) => $emit('change', {type}, ack)"
 		/>
 		<v-switch
 			label="Allow decimal values"
 			:value="attribute.decimal"
 			@change="e => $emit('change', {decimal: e})"
 		/>
-		<v-select
+		<smart-select
 			label="Reset"
 			color="accent"
 			append-icon="arrow_drop_down"
@@ -45,13 +45,13 @@
 			:items="resetOptions"
 			:value="attribute.reset"
 			:menu-props="{auto: true, lazy: true}"
-			@input="reset => $emit('change', {reset})"
+			@change="(reset, ack) => $emit('change', {reset}, ack)"
 		/>
 		<text-field
 			label="Reset Multiplier"
 			type="number"
 			:value="attribute.resetMultiplier"
-			@input="resetMultiplier => $emit('change', {resetMultiplier})"
+			@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier}, ack)"
 			hint="Some attributes, like hit dice, only reset by half their total on a long rest"
 		/>
   </div>

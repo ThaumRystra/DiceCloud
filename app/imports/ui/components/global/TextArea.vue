@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-text-field
+  <v-textarea
 		v-bind="$attrs"
 		:loading="loading"
 		:error-messages="errorMessages"

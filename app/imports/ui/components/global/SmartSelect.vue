@@ -1,10 +1,11 @@
 <template lang="html">
-  <v-text-field
+  <v-select
 		v-bind="$attrs"
 		:loading="loading"
 		:error-messages="errorMessages"
 		:value="safeValue"
-		@input="input"
+		:menu-props="{auto: true, lazy: true}"
+		@change="change"
 		@focus="focused = true"
 		@blur="focused = false"
 	/>

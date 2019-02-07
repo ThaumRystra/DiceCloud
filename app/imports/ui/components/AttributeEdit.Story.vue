@@ -4,7 +4,7 @@
 			v-for="(attribute, index) in attributes"
 			:key="attribute._id"
 			:attribute="attribute"
-			@change="e => change(index, e)"
+			@change="(e, ack) => change(index, e, ack)"
 		/>
 		<div class="ma-4" v-for="(attribute, index) in attributes">
 			{{attribute}}
@@ -39,14 +39,17 @@
 			],
 		}},
 		methods: {
-			change(index, e){
-				for (let i in e){
-					this.attributes[index][i] = e[i].trim();
-				}
-			});
-		},
-		methods: {
-			log: console.log,
+			change(index, e, ack){
+				// Take a while to write the attribute
+				setTimeout(() => {
+					for (let i in e){
+						let val = e[i];
+						if (typeof val === 'string') val = val.trim();
+						this.attributes[index][i] = val;
+					}
+					if (ack) ack();
+				}, 600)
+			},
 		},
 	};
 </script>

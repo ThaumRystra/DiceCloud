@@ -5,13 +5,9 @@ import store from "/imports/ui/vuexStore.js";
 import VueMeteorTracker from 'vue-meteor-tracker';
 import AppLayout from '/imports/ui/layouts/AppLayout.vue';
 import router from "/imports/ui/router.js";
-import "vuetify/dist/vuetify.min.css";
 import theme from '/imports/ui/theme.js';
-
-// Global components
-import TextField from '/imports/ui/components/global/TextField.vue';
-
-Vue.component("text-field", TextField);
+import "vuetify/dist/vuetify.min.css";
+import '/imports/ui/components/global/globalIndex.js';
 
 Vue.use(VueMeteorTracker);
 Vue.use(Vuetify, {

@@ -49,6 +49,7 @@
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.Story.vue';
 	import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
+	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 
 	export default {
@@ -64,6 +65,7 @@
 			HitDiceListTile,
 			IconSearch,
 			SkillListTile,
+			SmartInput,
 			ToolbarLayout,
 		},
 		data(){ return {
