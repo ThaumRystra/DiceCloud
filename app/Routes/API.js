@@ -69,266 +69,144 @@ Router.map(function () {
     this.route("addSpellsToCharacter", { // POST /api/character/:_id/spellList/:listId
         path: "/api/character/:_id/spellList/:listId",
         where: "server"
-    }).post(
-        function () {
-            ifPostOK(this, "addSpellsToList", () => {
-                const spells = this.request.body;
-                const charId = this.params._id;
-                const listId = this.params.listId;
-                let spellIds = [];
-                let error;
-                for (let spell of spells) {
-                    spell.parent = {id: listId, collection: "SpellLists"};
-                    spell.charId = charId;
-                    let id = Spells.insert(spell, (err, _id) => {
-                        if (err) {
-                            error = err.message;
-                        }
-                    });
-                    if (error)
-                        break;
-                    spellIds.push(id);
-                }
-                if (error) {
-                    this.response.writeHead(400, "Failed to insert one or more spells");
-                    this.response.end(JSON.stringify({err: error, inserted: spellIds}));
-                } else {
-                    this.response.end(JSON.stringify(spellIds));
-                }
-            });
-        }
-    );
+    }).post(function () {
+        const key = startPOSTResponse(this);
+        const spells = this.request.body;
+        const charId = this.params._id;
+        const listId = this.params.listId;
+        Meteor.call("insertSpells", key, charId, listId, spells, (err, res) => {
+            if (err) {
+                console.log(err);
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("createCharacter", { // POST /api/character
         path: "/api/character",
         where: "server"
-    }).post(
-        function () {
-            this.response.setHeader("Content-Type", "application/json");
-            const header = this.request.headers;
-            const key = header && header['authorization'];
-            ifKeyValid(key, this.response, "createCharacter", () => {
-                const character = this.request.body;
-                let error;
-
-                character.owner = userIdFromKey(key);
-                let id = Characters.insert(character, (err) => {
-                    if (err)
-                        error = err.message;
-                });
-
-                if (error) {
-                    this.response.writeHead(400, "Failed to insert character");
-                    this.response.end(JSON.stringify({err: error}));
-                } else {
-                    this.response.end(JSON.stringify({id: id}));
-                }
-            });
-        }
-    );
+    }).post(function () {
+        const key = startPOSTResponse(this);
+        const character = this.request.body;
+        Meteor.call("insertCharacter", key, character, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("deleteCharacter", { // DELETE /api/character/:_id
         path: "/api/character/:_id",
         where: "server"
-    }).delete(
-        function () {
-            this.response.setHeader("Content-Type", "application/json");
-            const header = this.request.headers;
-            const key = header && header['authorization'];
-            const charId = this.params._id;
-            ifKeyValid(key, this.response, "deleteCharacter", () => {
-                if (isOwner(charId, userIdFromKey(key))) {
-                    let error;
-                    Characters.remove({_id: charId}, (err) => {
-                        if (err)
-                            error = err.message;
-                    });
-
-                    if (error) {
-                        this.response.writeHead(400, "Failed to delete character");
-                        this.response.end(JSON.stringify({err: error}));
-                    } else {
-                        this.response.end(JSON.stringify({success: true}));
-                    }
-                } else {
-                    this.response.writeHead(403, "You do not have permission to delete this character");
-                    this.response.end();
-                }
-            });
-        }
-    );
+    }).delete(function () {
+        const key = startPOSTResponse(this);
+        const charId = this.params._id;
+        Meteor.call("deleteCharacter", key, charId, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("transferCharacterOwnership", { // PUT /api/character/:_id/owner
         path: "/api/character/:_id/owner",
         where: "server"
-    }).put(
-        function () {
-            this.response.setHeader("Content-Type", "application/json");
-            const header = this.request.headers;
-            const key = header && header['authorization'];
-            const charId = this.params._id;
-            ifKeyValid(key, this.response, "transferCharacterOwnership", () => {
-                if (isOwner(charId, userIdFromKey(key))) {
-                    const newOwner = this.request.body['id'];
-                    let error;
-                    Characters.update({_id: charId}, {"$set": {owner: newOwner}}, null,
-                        (err) => {
-                            if (err)
-                                error = err.message;
-                        });
-
-                    if (error) {
-                        this.response.writeHead(400, "Failed to update character");
-                        this.response.end(JSON.stringify({err: error}));
-                    } else {
-                        this.response.end(JSON.stringify({success: true}));
-                    }
-                } else {
-                    this.response.writeHead(403, "You do not have permission to transfer this character");
-                    this.response.end();
-                }
-            });
-        }
-    );
+    }).put(function () {
+        const key = startPOSTResponse(this);
+        const charId = this.params._id;
+        const ownerId = this.request.body['id'];
+        Meteor.call("transferCharacterOwnership", key, charId, ownerId, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("insertFeatures", { // POST /api/character/:_id/feature
         path: "/api/character/:_id/feature",
         where: "server",
-    }).post(
-        function () {
-            ifPostOK(this, "insertFeatures", () => {
-                const features = this.request.body;
-                const charId = this.params._id;
-                let ids = [];
-                let error;
-                for (let feature of features) {
-                    feature.charId = charId;
-                    let id = Features.insert(feature, (err) => {
-                        if (err) {
-                            error = err.message;
-                        }
-                    });
-                    if (error)
-                        break;
-                    ids.push(id);
-                }
-                if (error) {
-                    this.response.writeHead(400, "Failed to insert one or more features");
-                    this.response.end(JSON.stringify({err: error, inserted: ids}));
-                } else {
-                    this.response.end(JSON.stringify(ids));
-                }
-            });
-        }
-    );
+    }).post(function () {
+        const key = startPOSTResponse(this);
+        const charId = this.params._id;
+        const features = this.request.body;
+        Meteor.call("insertFeatures", key, charId, features, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("insertProfs", { // POST /api/character/:_id/prof
         path: "/api/character/:_id/prof",
         where: "server",
-    }).post(
-        function () {
-            ifPostOK(this, "insertProfs", () => {
-                const profs = this.request.body;
-                const charId = this.params._id;
-                let ids = [];
-                let error;
-                for (let prof of profs) {
-                    prof.charId = charId;  // we currently rely on the client to supply parent
-                    let id = Proficiencies.insert(prof, (err) => {
-                        if (err) {
-                            error = err.message;
-                        }
-                    });
-                    if (error)
-                        break;
-                    ids.push(id);
-                }
-                if (error) {
-                    this.response.writeHead(400, "Failed to insert one or more profs");
-                    this.response.end(JSON.stringify({err: error, inserted: ids}));
-                } else {
-                    this.response.end(JSON.stringify(ids));
-                }
-            });
-        }
-    );
+    }).post(function () {
+        const key = startPOSTResponse(this);
+        const charId = this.params._id;
+        const profs = this.request.body;
+        Meteor.call("insertProfs", key, charId, profs, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("insertEffects", { // POST /api/character/:_id/effect
         path: "/api/character/:_id/effect",
         where: "server",
-    }).post(
-        function () {
-            ifPostOK(this, "insertEffects", () => {
-                const effects = this.request.body;
-                const charId = this.params._id;
-                let ids = [];
-                let error;
-                for (let effect of effects) {
-                    effect.charId = charId;  // we currently rely on the client to supply parent
-                    let id = Effects.insert(effect, (err) => {
-                        if (err) {
-                            error = err.message;
-                        }
-                    });
-                    if (error)
-                        break;
-                    ids.push(id);
-                }
-                if (error) {
-                    this.response.writeHead(400, "Failed to insert one or more effects");
-                    this.response.end(JSON.stringify({err: error, inserted: ids}));
-                } else {
-                    this.response.end(JSON.stringify(ids));
-                }
-            });
-        }
-    );
+    }).post(function () {
+        const key = startPOSTResponse(this);
+        const charId = this.params._id;
+        const effects = this.request.body;
+        Meteor.call("insertEffects", key, charId, effects, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 
     this.route("insertClasses", { // POST /api/character/:_id/class
         path: "/api/character/:_id/class",
         where: "server",
-    }).post(
-        function () {
-            ifPostOK(this, "insertClasses", () => {
-                const klasses = this.request.body;
-                const charId = this.params._id;
-                let ids = [];
-                let error;
-                for (let klass of klasses) {
-                    klass.charId = charId;  // we currently rely on the client to supply parent
-                    let id = Classes.insert(klass, (err) => {
-                        if (err) {
-                            error = err.message;
-                        }
-                    });
-                    if (error)
-                        break;
-                    ids.push(id);
-                }
-                if (error) {
-                    this.response.writeHead(400, "Failed to insert one or more classes");
-                    this.response.end(JSON.stringify({err: error, inserted: ids}));
-                } else {
-                    this.response.end(JSON.stringify(ids));
-                }
-            });
-        }
-    );
+    }).post(function () {
+        const key = startPOSTResponse(this);
+        const charId = this.params._id;
+        const classes = this.request.body;
+        Meteor.call("insertClasses", key, charId, classes, (err, res) => {
+            if (err) {
+                this.response.writeHead(err.error, err.reason);
+                this.response.end(err.details);
+            } else {
+                this.response.end(JSON.stringify(res));
+            }
+        });
+    });
 });
 
-var ifPostOK = function (router, endpoint, callback) {
-    router.response.setHeader("Content-Type", "application/json");
-    var header = router.request.headers;
-    var key = header && header['authorization'];
-    ifKeyValid(key, router.response, endpoint, () => {
-            if (canEditCharacter(router.params._id, userIdFromKey(key))) {
-                callback();
-            } else {
-                router.response.writeHead(403, "You do not have permission to edit this character");
-                router.response.end();
-            }
-        }
-    );
+const startPOSTResponse = function (request) {
+    request.response.setHeader("Content-Type", "application/json");
+    const header = request.request.headers;
+    return header && header['authorization'];
 };
 
 var ifKeyValid = function (apiKey, response, method, callback) {
@@ -349,19 +227,19 @@ var ifKeyValid = function (apiKey, response, method, callback) {
     }
 };
 
-var isKeyValid = function (apiKey) {
+isKeyValid = function (apiKey) {
     var user = Meteor.users.findOne({apiKey});
     if (!user) return false;
     var blackListed = Blacklist.findOne({userId: user._id});
     return !blackListed;
 };
 
-var userIdFromKey = function (apiKey) {
+userIdFromKey = function (apiKey) {
     var user = Meteor.users.findOne({apiKey}); // we know user exists from isKeyValid
     return user._id;
 };
 
-var rateLimiter = new RateLimiter();
+rateLimiter = new RateLimiter();
 // global limit
 rateLimiter.addRule({apiKey: String}, 10, 1000);
 
@@ -380,7 +258,7 @@ rateLimiter.addRule({apiKey: String, method: "insertProfs"}, 5, 5000);
 rateLimiter.addRule({apiKey: String, method: "insertEffects"}, 5, 5000);
 rateLimiter.addRule({apiKey: String, method: "insertClasses"}, 5, 5000);
 
-var isRateLimited = function (apiKey, method) {
+isRateLimited = function (apiKey, method) {
     const limited = !rateLimiter.check({apiKey: apiKey, method: method}).allowed;
     if (limited) {
         console.log(`Rate limit hit by API key ${apiKey}`);
