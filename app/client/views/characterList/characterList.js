@@ -88,6 +88,9 @@ Template.characterList.events({
 			callback(dump){
 				if (!dump) return;
 				dump.character.name += " - Restored"
+				dump.character.owner = Meteor.userId();
+				dump.character.readers = [];
+				dump.character.writers = [];
 				giveCharacterDumpNewIds(dump);
 				restoreCharacter(dump);
 				Router.go("characterSheet", {
