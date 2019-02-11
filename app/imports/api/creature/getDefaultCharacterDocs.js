@@ -132,18 +132,6 @@ const getDefaultCharacterDocs = function(charId, {
   } else if (hitDice == "d12"){
     healthPerLevel = 7;
   }
-  docs.effects.push({
-		name: cls,
-		stat: `${hitDice}HitDice`,
-		operation: "add",
-		calculation: `${strippedCls}Level`,
-		enabled: true,
-		parent: {
-			collection: "Classes",
-			id: classId,
-		},
-		charId: charId,
-	});
 	docs.effects.push({
 		name: cls,
 		stat: `hitPoints`,
