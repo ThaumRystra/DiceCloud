@@ -50,6 +50,7 @@
 								:key="hitDie._id"
 								:id="`${_uid}-${hitDie._id}`"
 								@click="clickAttribute({elementId: `${_uid}-${hitDie._id}`, _id: hitDie._id})"
+								@change="e => hitDiceChange(hitDie._id, e)"
 							/>
 						</template>
 					</v-list>
@@ -101,6 +102,8 @@
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.vue';
 
+	import { adjustAttribute } from '/imports/api/creature/properties/Attributes.js';
+
 	const getAttributeOfType = function(charId, type){
 		return Attributes.find({charId, type}, {sort: {order: 1}});
 	};
@@ -148,7 +151,7 @@
 						conMod,
 						key: hd._id,
 						maxValue: hd.value,
-						value: hd.value - (hd.adjustment || 0),
+						value: hd.value + (hd.adjustment || 0),
 					}
 				});
 			},
@@ -176,6 +179,11 @@
 					elementId,
 					data: {_id},
 				});
+			},
+			hitDiceChange(_id, {type, value}){
+				if (type === 'increment'){
+					adjustAttribute.call({_id, increment: value});
+				}
 			},
 		},
 	};
