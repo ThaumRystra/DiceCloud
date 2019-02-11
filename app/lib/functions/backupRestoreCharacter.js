@@ -1,24 +1,29 @@
-let characterCollections = [
-  Actions,
-  Attacks,
-  Buffs,
-  Classes,
-  Conditions,
-  CustomBuffs,
-  Effects,
-  Experiences,
-  Features,
-  Notes,
-  Proficiencies,
-  SpellLists,
-  Spells,
-  TemporaryHitPoints,
-  Items,
-  Containers,
-];
+import { saveAs } from 'file-saver';
 
-function dumpCharacter(charId){
-  let characterDump = {};
+let characterCollections = [];
+Meteor.startup(() => {
+  characterCollections = [
+    Actions,
+    Attacks,
+    Buffs,
+    Classes,
+    Conditions,
+    CustomBuffs,
+    Effects,
+    Experiences,
+    Features,
+    Notes,
+    Proficiencies,
+    SpellLists,
+    Spells,
+    TemporaryHitPoints,
+    Items,
+    Containers,
+  ];
+});
+
+dumpCharacter = function(charId){
+  let characterDump = {collections: {}};
   characterDump.character = Characters.findOne(charId);
   characterCollections.forEach(c =>  {
     characterDump.collections[c._name] = c.find({charId}).fetch();
@@ -26,13 +31,23 @@ function dumpCharacter(charId){
   return characterDump;
 };
 
-function giveCharacterDumpNewIds(characterDump){
+saveCharacterDump = function(charId){
+  let dump = dumpCharacter(charId);
+  let textDump = JSON.stringify(dump, null, 2);
+  let charName = dump.character.name;
+  let blob = new Blob([textDump], {type: "application/json;charset=utf-8"});
+  saveAs(blob, `${charName}.JSON`);
+};
+
+giveCharacterDumpNewIds = function(characterDump){
   // Give the character a new Id
+  const oldCharId = characterDump.character._id;
   const newCharId = Random.id();
   characterDump.character._id = newCharId;
 
+  let idMap = {[oldCharId]: newCharId}; // {oldId: newId}
+
   // Give all documents a new Id, and store the mapping from old to new
-  let idMap = {}; // {oldId: newId}
   for (let colName in characterDump.collections){
     for (let doc of characterDump.collections[colName]){
       let oldId = doc._id;
@@ -57,7 +72,7 @@ function giveCharacterDumpNewIds(characterDump){
   }
 }
 
-function restoreCharacter(characterDump){
+restoreCharacter = function(characterDump){
   Characters.insert(characterDump.character);
   for (collectionName in characterDump.collections){
     let collection = Meteor.Collection.get(collectionName);

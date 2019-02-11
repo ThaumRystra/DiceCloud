@@ -16,7 +16,11 @@ Meteor.methods({
     characterDump.character.writers = [];
     characterDump.character.owner = userId;
 
+		// Rename the character so it's obviously a copy
+		characterDump.character.name += " - Copy";
+
     // Write the character back to the database
     restoreCharacter(characterDump);
+		return characterDump.character;
 	},
 });
