@@ -73,11 +73,27 @@ giveCharacterDumpNewIds = function(characterDump){
 }
 
 restoreCharacter = function(characterDump){
-  Characters.insert(characterDump.character);
+  Characters.direct.insert(characterDump.character);
   for (collectionName in characterDump.collections){
     let collection = Meteor.Collection.get(collectionName);
-    for (doc in characterDump[collectionName]){
-      collection.insert(doc);
+    for (doc of characterDump.collections[collectionName]){
+      // delete problematic keys that shouldn't ever be available on insert
+      delete doc.restoredAt;
+      delete doc.restoredBy;
+      // Insert the doc with no hooks
+      collection.direct.insert(doc);
     }
   }
 };
+
+Meteor.methods({
+  restoreCharacter(characterDump){
+    characterDump.character.name += " - Restored"
+    characterDump.character.owner = Meteor.userId();
+    characterDump.character.readers = [];
+    characterDump.character.writers = [];
+    giveCharacterDumpNewIds(characterDump);
+    restoreCharacter(characterDump);
+    return characterDump.character
+  },
+});

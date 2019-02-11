@@ -17,6 +17,9 @@
             {{error}}
           </p>
         {{/if}}
+				{{#if loading}}
+					<paper-spinner active></paper-spinner>
+				{{/if}}
 			</div>
 		</app-header-layout>
 		<div class="buttons layout horizontal end-justified">

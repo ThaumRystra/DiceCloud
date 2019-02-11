@@ -86,17 +86,7 @@ Template.characterList.events({
 			template: "characterRestoreDialog",
 			element: event.currentTarget,
 			callback(dump){
-				if (!dump) return;
-				dump.character.name += " - Restored"
-				dump.character.owner = Meteor.userId();
-				dump.character.readers = [];
-				dump.character.writers = [];
-				giveCharacterDumpNewIds(dump);
-				restoreCharacter(dump);
-				Router.go("characterSheet", {
-					_id: dump.character._id,
-					urlName: dump.character.urlName || '-',
-				});
+				return;
 			},
 		})
 	},

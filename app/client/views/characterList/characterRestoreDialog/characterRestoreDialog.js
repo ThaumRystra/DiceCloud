@@ -2,14 +2,18 @@ Template.characterRestoreDialog.onCreated(function(){
 	this.dump = {};
   this.valid = new ReactiveVar(false);
   this.error = new ReactiveVar(null);
+	this.loading = new ReactiveVar(false);
 });
 
 Template.characterRestoreDialog.helpers({
 	invalid(){
 		return !Template.instance().valid.get();
 	},
-  error(){
+	error(){
     return Template.instance().error.get();
+  },
+	loading(){
+    return Template.instance().loading.get();
   },
 });
 
@@ -44,6 +48,19 @@ Template.characterRestoreDialog.events({
 		popDialogStack();
 	},
 	"click .addButton": function(event, instance){
-		popDialogStack(instance.dump);
+		let dump = instance.dump;
+		if (!dump) return;
+		Meteor.call('restoreCharacter', dump, (e, char) => {
+			instance.loading.set(false);
+			if (!char){
+				instance.error.set(e.message)
+			} else {
+				popDialogStack();
+				Router.go("characterSheet", {
+					_id: char._id,
+					urlName: char.urlName || '-',
+				});
+			}
+		});
 	},
 });
