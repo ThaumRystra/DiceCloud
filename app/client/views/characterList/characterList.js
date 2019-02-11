@@ -81,4 +81,20 @@ Template.characterList.events({
 			returnElement: instance.find(`.party[data-id='${partyId}']`),
 		});
 	},
+	"click .restoreCharacter": function(event, instance) {
+		pushDialogStack({
+			template: "characterRestoreDialog",
+			element: event.currentTarget,
+			callback(dump){
+				if (!dump) return;
+				dump.character.name += " - Restored"
+				giveCharacterDumpNewIds(dump);
+				restoreCharacter(dump);
+				Router.go("characterSheet", {
+					_id: dump.character._id,
+					urlName: dump.character.urlName || '-',
+				});
+			},
+		})
+	},
 });
