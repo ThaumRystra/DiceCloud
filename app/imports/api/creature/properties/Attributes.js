@@ -20,15 +20,16 @@ attributeSchema = schema({
   // The nice-to-read name
 	name: {
 		type: String,
-		index: 1,
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
+		index: 1,
   },
 	// Attributes need to store their order to keep the sheet consistent
 	order: {
 		type: SimpleSchema.Integer,
+		// Indexed because we update order in bulk using the current order as a query
 		index: 1,
 	},
   type: {

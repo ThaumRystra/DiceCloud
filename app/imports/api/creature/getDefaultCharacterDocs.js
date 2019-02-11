@@ -8,7 +8,7 @@ const setParent = function(charId){
 		group: "default",
 	};
 	return doc => {
-		doc.parent = parent;
+		doc.parent = doc.parent || parent;
 		doc.charId = charId;
 	};
 };
@@ -102,6 +102,7 @@ const getDefaultCharacterDocs = function(charId, {
   const strippedCls = cls.replace(/\s+/g, '')
   const classId = Random.id();
 	docs.classes = [{
+		_id: classId,
 		charId,
     level,
 		name: cls,
