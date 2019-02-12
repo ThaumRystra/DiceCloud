@@ -22,210 +22,248 @@ JSONExport = function (charId) {
 Meteor.methods({
     "insertSpells": function (key, charId, listId, spells) {
         if (Meteor.isClient) return;
-        ifCanEdit(key, charId, "addSpellsToCharacter", () => {
-            let ids = [];
-            let error;
-            for (let spell of spells) {
+        assertCanEdit(key, charId, "addSpellsToCharacter");
+        let ids = [];
+        let error;
+        for (let spell of spells) {
+            spell.charId = charId;
+            try {
+                Schemas.Spell.clean(spell);
+            } catch (e) {
+                // console.log(e);
+                error = e.error;
+            }
+            if (!error) {
                 spell.parent = {id: listId, collection: "SpellLists"};
-                spell.charId = charId;
-                let id = Spells.insert(spell, (err) => {
+                let id = Spells.direct.insert(spell, (err) => {
                     if (err) {
                         error = err.message;
                     }
                 });
+                // console.log(id);
                 ids.push(id);
-            }
-            if (error) {
-                throw new Meteor.Error(400, "Failed to insert one or more spells", JSON.stringify({
-                    err: error,
-                    inserted: ids
-                }));
             } else {
-                return ids;
+                break;
             }
-        });
+        }
+        if (error) {
+            throw new Meteor.Error(400, "Failed to insert one or more spells", JSON.stringify({
+                err: error,
+                inserted: ids
+            }));
+        } else {
+            return ids;
+        }
     },
 
     "insertCharacter": function (key, character) {
         if (Meteor.isClient) return;
-        ifAuthorized(key, "createCharacter", () => {
-            let error;
+        assertAuthorized(key, "createCharacter");
+        let error, id;
 
-            character.owner = userIdFromKey(key);
-            let id = Characters.insert(character, (err) => {
+        character.owner = userIdFromKey(key);
+        try {
+            Schemas.Character.clean(character);
+        } catch (e) {
+            console.log(e);
+            error = e.error;
+        }
+        if (!error) {
+            id = Characters.direct.insert(character, (err) => {
                 if (err)
                     error = err.message;
             });
-
-            if (error) {
-                throw new Meteor.Error(400, "Failed to insert character", JSON.stringify({err: error}));
-            } else {
-                return {id: id};
-            }
-        });
+            afterCharacterInsert(id);
+            return {id: id};
+        } else {
+            throw new Meteor.Error(400, "Failed to insert character", JSON.stringify({err: error}));
+        }
     },
 
     "deleteCharacter": function (key, charId) {
         if (Meteor.isClient) return;
-        ifAuthorized(key, "deleteCharacter", () => {
-            if (isOwner(charId, userIdFromKey(key))) {
-                let error;
+        assertAuthorized(key, "deleteCharacter");
+        if (isOwner(charId, userIdFromKey(key))) {
+            let error;
 
-                Characters.remove({_id: charId}, (err) => {
-                    if (err)
-                        error = err.message;
-                });
-                if (error) {
-                    throw new Meteor.Error(400, "Failed to delete character", JSON.stringify({err: error}));
-                } else {
-                    return {success: true};
-                }
+            Characters.direct.remove({_id: charId}, (err) => {
+                if (err)
+                    error = err.message;
+            });
+            if (error) {
+                throw new Meteor.Error(400, "Failed to delete character", JSON.stringify({err: error}));
             } else {
-                throw new Meteor.Error(403, "You do not have permission to delete the requested character");
+                return {success: true};
             }
-        });
+        } else {
+            throw new Meteor.Error(403, "You do not have permission to delete the requested character");
+        }
     },
 
     "transferCharacterOwnership": function (key, charId, newOwner) {
         if (Meteor.isClient) return;
-        ifAuthorized(key, "transferCharacterOwnership", () => {
-            if (isOwner(charId, userIdFromKey(key))) {
-                let error;
-                Characters.update({_id: charId}, {"$set": {owner: newOwner}}, null,
-                    (err) => {
-                        if (err)
-                            error = err.message;
-                    });
+        assertAuthorized(key, "transferCharacterOwnership");
+        if (isOwner(charId, userIdFromKey(key))) {
+            let error;
+            Characters.direct.update({_id: charId}, {"$set": {owner: newOwner}}, null,
+                (err) => {
+                    if (err)
+                        error = err.message;
+                });
 
-                if (error) {
-                    throw new Meteor.Error(400, "Failed to update character", JSON.stringify({err: error}));
-                } else {
-                    return {success: true};
-                }
+            if (error) {
+                throw new Meteor.Error(400, "Failed to update character", JSON.stringify({err: error}));
             } else {
-                throw new Meteor.Error(403, "You do not have permission to transfer the requested character");
+                return {success: true};
             }
-        });
+        } else {
+            throw new Meteor.Error(403, "You do not have permission to transfer the requested character");
+        }
     },
 
     "insertFeatures": function (key, charId, features) {
         if (Meteor.isClient) return;
-        ifCanEdit(key, charId, "insertFeatures", () => {
-            let ids = [];
-            let error;
-            for (let feature of features) {
-                feature.charId = charId;
-                let id = Features.insert(feature, (err) => {
+        assertCanEdit(key, charId, "insertFeatures");
+        let ids = [];
+        let error;
+        for (let feature of features) {
+            feature.charId = charId;
+            try {
+                Schemas.Feature.clean(feature);
+            } catch (e) {
+                error = e.error;
+            }
+            if (!error) {
+                let id = Features.direct.insert(feature, (err) => {
                     if (err) {
                         error = err.message;
                     }
                 });
-                if (error)
-                    break;
                 ids.push(id);
-            }
-            if (error) {
-                throw new Meteor.Error(400, "Failed to insert one or more features", JSON.stringify({
-                    err: error,
-                    inserted: ids
-                }));
             } else {
-                return ids;
+                break;
             }
-        });
+        }
+        if (error) {
+            throw new Meteor.Error(400, "Failed to insert one or more features", JSON.stringify({
+                err: error,
+                inserted: ids
+            }));
+        } else {
+            return ids;
+        }
+
     },
 
     "insertProfs": function (key, charId, profs) {
         if (Meteor.isClient) return;
-        ifCanEdit(key, charId, "insertProfs", () => {
-            let ids = [];
-            let error;
-            for (let prof of profs) {
-                prof.charId = charId;  // we currently rely on the client to supply parent
-                let id = Proficiencies.insert(prof, (err) => {
+        assertCanEdit(key, charId, "insertProfs");
+        let ids = [];
+        let error;
+        for (let prof of profs) {
+            prof.charId = charId;
+            try {
+                Schemas.Proficiency.clean(prof, {filter: false});
+            } catch (e) {
+                error = e.error;
+            }
+            if (!error) {
+                let id = Proficiencies.direct.insert(prof, (err) => {
                     if (err) {
                         error = err.message;
                     }
                 });
-                if (error)
-                    break;
                 ids.push(id);
-            }
-            if (error) {
-                throw new Meteor.Error(400, "Failed to insert one or more profs", JSON.stringify({
-                    err: error,
-                    inserted: ids
-                }));
             } else {
-                return ids;
+                break;
             }
-        });
+        }
+        if (error) {
+            throw new Meteor.Error(400, "Failed to insert one or more profs", JSON.stringify({
+                err: error,
+                inserted: ids
+            }));
+        } else {
+            return ids;
+        }
     },
 
     "insertEffects": function (key, charId, effects) {
         if (Meteor.isClient) return;
-        ifCanEdit(key, charId, "insertEffects", () => {
-            let ids = [];
-            let error;
-            for (let effect of effects) {
-                effect.charId = charId;  // we currently rely on the client to supply parent
-                let id = Effects.insert(effect, (err) => {
+        assertCanEdit(key, charId, "insertEffects");
+        let ids = [];
+        let error;
+        for (let effect of effects) {
+            effect.charId = charId;
+            try {
+                Schemas.Effect.clean(effect, {filter: false});
+            } catch (e) {
+                error = e.error;
+            }
+            if (!error) {
+                let id = Effects.direct.insert(effect, (err) => {
                     if (err) {
                         error = err.message;
                     }
                 });
-                if (error)
-                    break;
                 ids.push(id);
-            }
-            if (error) {
-                throw new Meteor.Error(400, "Failed to insert one or more effects", JSON.stringify({
-                    err: error,
-                    inserted: ids
-                }));
             } else {
-                return ids;
+                break;
             }
-        });
+        }
+        if (error) {
+            throw new Meteor.Error(400, "Failed to insert one or more effects", JSON.stringify({
+                err: error,
+                inserted: ids
+            }));
+        } else {
+            return ids;
+        }
     },
 
     "insertClasses": function (key, charId, klasses) {
         if (Meteor.isClient) return;
-        ifCanEdit(key, charId, "insertClasses", () => {
-            let ids = [];
-            let error;
-            for (let klass of klasses) {
-                klass.charId = charId;  // we currently rely on the client to supply parent
-                let id = Classes.insert(klass, (err) => {
+        assertCanEdit(key, charId, "insertClasses");
+        let ids = [];
+        let error;
+        for (let klass of klasses) {
+            klass.charId = charId;
+            try {
+                Schemas.Class.clean(klass);
+            } catch (e) {
+                error = e.error;
+            }
+            if (!error) {
+                let id = Classes.direct.insert(klass, (err) => {
                     if (err) {
                         error = err.message;
                     }
                 });
-                if (error)
-                    break;
                 ids.push(id);
-            }
-            if (error) {
-                throw new Meteor.Error(400, "Failed to insert one or more classes", JSON.stringify({
-                    err: error,
-                    inserted: ids
-                }));
             } else {
-                return ids;
+                break;
             }
-        });
+        }
+        if (error) {
+            throw new Meteor.Error(400, "Failed to insert one or more classes", JSON.stringify({
+                err: error,
+                inserted: ids
+            }));
+        } else {
+            return ids;
+        }
     }
 });
 
-var ifCanEdit = function (key, charId, method, callback) {
+var assertCanEdit = function (key, charId, method) {
     if (canEditCharacter(charId, userIdFromKey(key))) {
-        ifAuthorized(key, method, callback);
+        assertAuthorized(key, method);
     } else {
         throw new Meteor.Error(403, "You do not have permission to edit the requested character");
     }
 };
 
-var ifAuthorized = function (apiKey, method, callback) {
+var assertAuthorized = function (apiKey, method) {
     if (!apiKey) {
         throw new Meteor.Error(403, "You must use an api key to access this api");
     } else if (!isKeyValid(apiKey)) {
@@ -236,6 +274,198 @@ var ifAuthorized = function (apiKey, method, callback) {
         }));
     } else {
         rateLimiter.increment({apiKey: apiKey, method: method});
-        callback();
     }
+};
+
+var afterCharacterInsert = function (charId) {
+    // Effects
+    Effects.direct.insert({
+        charId: charId,
+        name: "Constitution modifier for each level",
+        stat: "hitPoints",
+        operation: "add",
+        calculation: "level * constitutionMod",
+        parent: {
+            id: charId,
+            collection: "Characters",
+            group: "Inate",
+        },
+    });
+    Effects.direct.insert({
+        charId: charId,
+        name: "Proficiency bonus by level",
+        stat: "proficiencyBonus",
+        operation: "add",
+        calculation: "floor(level / 4 + 1.75)",
+        parent: {
+            id: charId,
+            collection: "Characters",
+            group: "Inate",
+        },
+    });
+    Effects.direct.insert({
+        charId: charId,
+        name: "Dexterity Armor Bonus",
+        stat: "armor",
+        operation: "add",
+        calculation: "dexterityArmor",
+        parent: {
+            id: charId,
+            collection: "Characters",
+            group: "Inate",
+        },
+    });
+    Effects.direct.insert({
+        charId: charId,
+        name: "Natural Armor",
+        stat: "armor",
+        operation: "base",
+        value: 10,
+        parent: {
+            id: charId,
+            collection: "Characters",
+            group: "Inate",
+        },
+    });
+    Effects.direct.insert({
+        charId: charId,
+        name: "Natural Carrying Capacity",
+        stat: "carryMultiplier",
+        operation: "base",
+        value: "1",
+        parent: {
+            id: charId,
+            collection: "Characters",
+            group: "Inate",
+        },
+    });
+    // Features
+    let featureId = Features.direct.insert({
+        name: "Base Ability Scores",
+        charId: charId,
+        enabled: true,
+        alwaysEnabled: true,
+    });
+    Effects.direct.insert({
+        stat: "strength",
+        charId: charId,
+        parent: {
+            id: featureId,
+            collection: "Features",
+        },
+        operation: "base",
+        value: 10,
+        enabled: true,
+    });
+    Effects.direct.insert({
+        stat: "dexterity",
+        charId: charId,
+        parent: {
+            id: featureId,
+            collection: "Features",
+        },
+        operation: "base",
+        value: 10,
+        enabled: true,
+    });
+    Effects.direct.insert({
+        stat: "constitution",
+        charId: charId,
+        parent: {
+            id: featureId,
+            collection: "Features",
+        },
+        operation: "base",
+        value: 10,
+        enabled: true,
+    });
+    Effects.direct.insert({
+        stat: "intelligence",
+        charId: charId,
+        parent: {
+            id: featureId,
+            collection: "Features",
+        },
+        operation: "base",
+        value: 10,
+        enabled: true,
+    });
+    Effects.direct.insert({
+        stat: "wisdom",
+        charId: charId,
+        parent: {
+            id: featureId,
+            collection: "Features",
+        },
+        operation: "base",
+        value: 10,
+        enabled: true,
+    });
+    Effects.direct.insert({
+        stat: "charisma",
+        charId: charId,
+        parent: {
+            id: featureId,
+            collection: "Features",
+        },
+        operation: "base",
+        value: 10,
+        enabled: true,
+    });
+    // Items
+    let containerId = Containers.direct.insert({
+        name: "Coin Pouch",
+        charId: charId,
+        isCarried: true,
+        description: "A sturdy pouch for coins",
+        color: "d",
+    });
+    Items.direct.insert({
+        name: "Gold piece",
+        plural: "Gold pieces",
+        charId: charId,
+        quantity: 0,
+        weight: 0.02,
+        value: 1,
+        color: "n",
+        parent: {
+            id: containerId,
+            collection: "Containers",
+        },
+        settings: {
+            showIncrement: true,
+        },
+    });
+    Items.direct.insert({
+        name: "Silver piece",
+        plural: "Silver pieces",
+        charId: charId,
+        quantity: 0,
+        weight: 0.02,
+        value: 0.1,
+        color: "q",
+        parent: {
+            id: containerId,
+            collection: "Containers",
+        },
+        settings: {
+            showIncrement: true,
+        },
+    });
+    Items.direct.insert({
+        name: "Copper piece",
+        plural: "Copper pieces",
+        charId: charId,
+        quantity: 0,
+        weight: 0.02,
+        value: 0.01,
+        color: "s",
+        parent: {
+            id: containerId,
+            collection: "Containers",
+        },
+        settings: {
+            showIncrement: true,
+        },
+    });
 };

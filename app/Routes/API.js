@@ -76,7 +76,6 @@ Router.map(function () {
         const listId = this.params.listId;
         Meteor.call("insertSpells", key, charId, listId, spells, (err, res) => {
             if (err) {
-                console.log(err);
                 this.response.writeHead(err.error, err.reason);
                 this.response.end(err.details);
             } else {
