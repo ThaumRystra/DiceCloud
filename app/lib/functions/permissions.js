@@ -9,7 +9,7 @@ canViewCharacter = function(char, userId){
 	userId = userId || Meteor.userId();
 	if (typeof char !== 'object'){
 		char = Characters.findOne(
-			charId,
+			char,
 			{fields: {owner: 1, writers: 1, readers: 1, "settings.viewPermission": 1}}
 		);
 	}
