@@ -234,6 +234,18 @@ Template.characterSheet.events({
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
+	"click #characterCopy": function(event, instance){
+		Meteor.call("copyCharacter", this._id, (error, char) => {
+			if (error){
+				console.error(error);
+			} else {
+				Router.go(`/character/${char._id}/${char.urlName || "-"}`);
+			}
+		});
+	},
+	"click #characterDump": function(event, instance){
+		saveCharacterDump(this._id);
+	},
 	"click #unshareCharacter": function(event, instance){
 		pushDialogStack({
 			data: this,

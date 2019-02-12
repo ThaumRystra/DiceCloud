@@ -1,0 +1,34 @@
+<template name="characterRestoreDialog">
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="new-character-dialog flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>Restore Character</div>
+				</app-toolbar>
+			</app-header>
+			<div class="form">
+				<p>
+					Restore a character from a backup file, this will create a new copy of
+          the restored character
+				</p>
+				<paper-input class="fileInput" type="file" label="File"></paper-input><br>
+        {{#if error}}
+          <p style="color: red;">
+            {{error}}
+          </p>
+        {{/if}}
+				{{#if loading}}
+					<paper-spinner active></paper-spinner>
+				{{/if}}
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="cancelButton">
+				Cancel
+			</paper-button>
+			<paper-button class="addButton" disabled={{invalid}}>
+				Restore
+			</paper-button>
+		</div>
+	</div>
+</template>

@@ -81,4 +81,13 @@ Template.characterList.events({
 			returnElement: instance.find(`.party[data-id='${partyId}']`),
 		});
 	},
+	"click .restoreCharacter": function(event, instance) {
+		pushDialogStack({
+			template: "characterRestoreDialog",
+			element: event.currentTarget,
+			callback(dump){
+				return;
+			},
+		})
+	},
 });
