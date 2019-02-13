@@ -10,6 +10,7 @@ const store = new Vuex.Store({
   },
   state: {
     drawer: undefined,
+    darkMode: false,
   },
   mutations: {
     toggleDrawer (state) {
@@ -17,6 +18,9 @@ const store = new Vuex.Store({
     },
     setDrawer(state, value){
       state.drawer = value;
+    },
+    setDarkMode(state, value){
+      state.darkMode = value;
     },
   },
 });

@@ -12,6 +12,7 @@
 		<v-navigation-drawer right app v-model="sidebar">
 			<v-toolbar color="secondary" dark>
 				Components
+				<v-switch :value="darkMode" @change="setDarkMode" label="Dark mode"/>
 			</v-toolbar>
 			<v-list>
 	      <v-list-tile
@@ -75,6 +76,17 @@
 			dontWrap(){
 				let component = this.$options.components[this.$route.params.component];
 				return component && component.dontWrap;
+			},
+		},
+		methods: {
+			setDarkMode(value){
+				Meteor.users.setDarkMode.call({darkMode: !!value});
+			},
+		},
+		meteor: {
+			darkMode(){
+				let user = Meteor.user();
+				return user && user.darkMode;
 			},
 		},
 	};

@@ -15,4 +15,4 @@ function getDefaultSchema(){
 
 export default function schema(options){
   return getDefaultSchema().extend(options);
-}
+};

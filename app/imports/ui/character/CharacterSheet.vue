@@ -41,7 +41,7 @@
 	import Creatures from '/imports/api/creature/Creatures.js';
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 	import { mapMutations } from "vuex";
-	import theme from '/imports/ui/theme.js';
+	import { theme } from '/imports/ui/theme.js';
 	import StatsTab from '/imports/ui/character/StatsTab.vue';
 	import CharacterTreeView from '/imports/ui/character/CharacterTreeView.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js'

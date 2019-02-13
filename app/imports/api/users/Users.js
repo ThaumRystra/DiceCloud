@@ -1,17 +1,9 @@
-Schemas.UserProfile = schema({
-	username: {
-		type: String,
-		optional: true,
-	},
-});
+import SimpleSchema from 'simpl-schema';
+import schema from '/imports/api/schema.js';
 
-Schemas.User = schema({
+const userSchema = schema({
 	username: {
 		type: String,
-		optional: true,
-	},
-	profile: {
-		type: Schemas.UserProfile,
 		optional: true,
 	},
 	emails: {
@@ -45,11 +37,6 @@ Schemas.User = schema({
 		blackbox: true,
 	},
 	roles: {
-		type: Object,
-		optional: true,
-		blackbox: true,
-	},
-	roles: {
 		type: Array,
 		optional: true,
 	},
@@ -66,11 +53,15 @@ Schemas.User = schema({
 		index: 1,
 		optional: true,
 	},
+	darkMode: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
-Meteor.users.attachSchema(Schemas.User);
+Meteor.users.attachSchema(userSchema);
 
-Meteor.users.gnerateApiKey = new ValidatedMethod({
+Meteor.users.generateApiKey = new ValidatedMethod({
   name: "Users.methods.generateApiKey",
 	validate: null,
   run(){
@@ -80,6 +71,17 @@ Meteor.users.gnerateApiKey = new ValidatedMethod({
 		if (user && user.apiKey) return;
 		var apiKey = Random.id(30);
 		Meteor.users.update(this.userId, {$set: {apiKey}});
+	},
+});
+
+Meteor.users.setDarkMode = new ValidatedMethod({
+  name: "Users.methods.setDarkMode",
+	validate: new SimpleSchema({
+    darkMode: { type: Boolean },
+  }).validator(),
+  run({darkMode}){
+		if (!this.userId) return;
+		Meteor.users.update(this.userId, {$set: {darkMode}});
 	},
 });
 

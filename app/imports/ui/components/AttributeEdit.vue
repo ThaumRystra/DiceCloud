@@ -26,7 +26,6 @@
 		/>
 		<smart-select
 			label="Type"
-			color="accent"
 			:items="attributeTypes"
 			:value="attribute.type"
 			:menu-props="{auto: true, lazy: true}"
@@ -39,7 +38,6 @@
 		/>
 		<smart-select
 			label="Reset"
-			color="accent"
 			append-icon="arrow_drop_down"
 			clearable
 			:items="resetOptions"
