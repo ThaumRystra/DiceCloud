@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-list-tile class="ability-list-tile white" v-on="hasClickListener ? {click} : {}">
+	<v-list-tile class="ability-list-tile" v-on="hasClickListener ? {click} : {}">
 
 		<v-list-tile-action class="mr-4">
 			<div class="display-1 mod">
@@ -42,6 +42,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+	.ability-list-tile {
+		background: inherit;
+	}
 	.ability-list-tile >>> .v-list__tile {
 		height: 88px;
 	}
@@ -52,6 +55,9 @@ export default {
 		font-weight: 600;
 		font-size: 24px !important;
 		color: rgba(0, 0, 0, 0.54);
+	}
+	.theme--dark .value {
+		color: rgba(255, 255, 255, 0.54);
 	}
 	.mod, .value {
 		text-align: center;
