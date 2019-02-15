@@ -12,14 +12,14 @@
 				@input="operation => $emit('change', {operation})"
 			>
 				<v-icon
-					class="black--text icon"
+					class="icon"
 					slot="prepend"
 					:class="iconClass"
 				>
 					{{displayedIcon}}
 				</v-icon>
 				<template slot="item" slot-scope="item">
-					<v-icon class="black--text icon mr-2">
+					<v-icon class="icon mr-2">
 						{{getEffectIcon(item.item.value, 1)}}
 					</v-icon>
 					{{item.item.text}}
@@ -130,6 +130,9 @@
 </script>
 
 <style lang="css" scoped>
+	.theme--light .icon {
+		color: black;
+	}
 	.icon {
 		min-width: 30px;
 		transition: transform 0.15s linear, opacity 0.15s ease;
