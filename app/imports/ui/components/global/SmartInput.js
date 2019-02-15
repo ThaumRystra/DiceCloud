@@ -37,8 +37,8 @@ export default {
       // Start the loading bar on defocus if the input is dirty
       // It might be a lie, we aren't doing the work yet, but it feels laggy
       // to defocus an element and then it starts working after a delay
-      if (!newFocus, this.dirty){
-        this.loading = true;
+      if (!newFocus && this.dirty){
+        if (this.hasChangeListener) this.loading = true;
       }
     },
     dirty(newDirty){
@@ -74,7 +74,6 @@ export default {
     },
     change(val){
       this.dirty = true;
-      if (val === this.value) return;
       if (this.hasChangeListener) this.loading = true;
       this.$emit('change', val, this.acknowledgeChange);
     },
