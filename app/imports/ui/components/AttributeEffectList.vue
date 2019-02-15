@@ -4,7 +4,8 @@
 			v-for="effect in sortedEffects"
 			v-bind="effect"
 			v-on="$listeners.click ? { click(e){$emit('click', e)} } : {}"
-		>
+			:key="effect._id"
+		/>
   </v-list>
 </template>
 

@@ -3,13 +3,13 @@
 
 		<!-- Operation -->
 		<v-flex class="ma-1">
-			<v-select
+			<smart-select
 				label="Operation"
 				append-icon="arrow_drop_down"
 				:menu-props="{transition: 'slide-y-transition', lazy: true}"
 				:items="operations"
 				:value="this.effect.operation"
-				@input="operation => $emit('change', {operation})"
+				@change="(operation, ack) => $emit('change', {set: {operation}, ack})"
 			>
 				<v-icon
 					class="icon"
@@ -24,18 +24,18 @@
 					</v-icon>
 					{{item.item.text}}
 				</template>
-			</v-select>
+			</smart-select>
 		</v-flex>
 
 		<!-- Value -->
 		<v-flex class="ma-1">
-			<v-text-field
+			<text-field
 				label="Value"
 				:persistent-hint="needsValue"
 				:value="needsValue ? (effect.calculation) : ' '"
 				:disabled="!needsValue"
 				:hint="!isFinite(effect.calculation) && effect.result ? effect.result + '' : '' "
-				@input="calculation => $emit('change', {calculation})"
+				@change="(calculation, ack) => $emit('change', {set: {calculation}, ack})"
 			/>
 		</v-flex>
 
@@ -49,7 +49,7 @@
 				:menu-props="{transition: 'slide-y-transition', lazy: true}"
 				:value="effect.stat"
 				:items="stats"
-				@input="stat => $emit('change', {stat})"
+				@input="stat => $emit('change', {set: {stat}, ack: () => {} })"
 			/>
 		</v-flex>
 
@@ -64,7 +64,7 @@
 		props: {
 			effect: {
 				type: Object,
-				default: {},
+				default: () => ({}),
 			},
 			stats: {
 				type: Array,

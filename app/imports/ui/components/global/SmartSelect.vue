@@ -8,7 +8,9 @@
 		@change="change"
 		@focus="focused = true"
 		@blur="focused = false"
-	/>
+	>
+		<slot name="prepend" slot="prepend"/>
+	</v-select>
 </template>
 
 <script>

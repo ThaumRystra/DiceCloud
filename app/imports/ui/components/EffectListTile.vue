@@ -3,7 +3,6 @@
 		class="effect-list-tile"
 		:class="{disabled: !enabled}"
 		:id="elementId"
-		:key="_id"
 		v-on="$listeners.click ? { click(e){
 				$emit('click', {$props, elementId})
 			} } : {}"
@@ -16,11 +15,14 @@
 				{{getValue(operation, result)}}
 			</div>
 			<div class="calculation body-2 pr-2" v-else>
-				{{calculation}}
+				{{operation === 'conditional' ? calculation : ''}}
 			</div>
 		</v-layout>
 		<v-list-tile-content>
-			<v-list-tile-title class="name">
+			<v-list-tile-title class="stat" v-if="statName">
+				{{statName}}
+			</v-list-tile-title>
+			<v-list-tile-title class="name" v-else>
 				{{name}}
 			</v-list-tile-title>
 			<v-list-tile-sub-title class="operation">
@@ -41,6 +43,8 @@
 			result: [String, Number],
 			calculation: String,
 			name: String,
+			stat: String,
+			statName: String,
 		},
 		computed: {
 			elementId(){
@@ -99,11 +103,12 @@
 	.icon {
 		min-width: 30px;
 	}
-	.theme--light .icon {
-		color: black;
+	.icon {
+		color: inherit !important;
 	}
 	.net-effect {
 		flex-grow: 0;
+		flex-shrink: 0;
 	}
 	.value, .calculation {
 		min-width: 80px;
