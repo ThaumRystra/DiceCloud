@@ -15,7 +15,7 @@
 			slot-scope="{ item, tile }"
 		>
 			<v-list-tile-avatar>
-				<svg class="avatar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#000" :d="item.shape"/></svg>
+				<svg class="avatar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path :d="item.shape"/></svg>
 			</v-list-tile-avatar>
 			<v-list-tile-content>
 				<v-list-tile-title v-text="item.name"></v-list-tile-title>
@@ -72,5 +72,8 @@ export default {
 	.avatar {
 		width: 100%;
 		height: 100%;
+	}
+	.theme--dark .avatar {
+		fill: white;
 	}
 </style>
