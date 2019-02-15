@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="pa-1">
+	<div class="pa-1" style="background: inherit;">
 		<health-bar
 		:value="value"
 		:max-value="maxValue"

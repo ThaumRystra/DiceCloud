@@ -1,16 +1,42 @@
 <template>
-	<v-layout row wrap align-center justify-center style="min-height: 48px;" :class="{hover}" class="my-3 white" :id="`${_uid}-${_id}`">
-		<div class="subheading text-truncate pa-2 name" @mouseover="hover = true" @mouseleave="hover = false" @click="$emit('click', {elementId: `${_uid}-${_id}`})">
-			{{name}}
+	<v-layout
+		row
+		wrap
+		align-center
+		justify-center
+		style="min-height: 48px;"
+		:class="{ hover }"
+		class="my-3 health-bar"
+		:id="`${_uid}-${_id}`"
+	>
+		<div
+			class="subheading text-truncate pa-2 name"
+			@mouseover="hover = true"
+			@mouseleave="hover = false"
+			@click="$emit('click', { elementId: `${_uid}-${_id}` })"
+		>
+			{{ name }}
 		</div>
 		<v-flex style="height: 20px; flex-basis: 300px; flex-grow: 100;">
-			<v-layout column align-center @click="edit" style="cursor: pointer;" class="bar">
-				<v-progress-linear :value="(value / maxValue) * 100" height="20" color="green lighten-1" class="ma-0">
+			<v-layout
+				column
+				align-center
+				@click="edit"
+				style="cursor: pointer;"
+				class="bar"
+			>
+				<v-progress-linear
+					:value="(value / maxValue) * 100"
+					height="20"
+					color="green lighten-1"
+					class="ma-0"
+				>
 				</v-progress-linear>
-				<span class="value"
+				<span
+					class="value"
 					style="margin-top: -20px; z-index: 1; font-size: 16px; font-weight: 600; height: 20px;"
 				>
-					{{value}} / {{maxValue}}
+					{{ value }} / {{ maxValue }}
 				</span>
 			</v-layout>
 			<transition name="transition">
@@ -21,16 +47,22 @@
 					flat
 					class="transparent toolbar"
 				>
-					<v-spacer/>
+					<v-spacer />
 					<v-btn-toggle
 						v-model="operation"
 						@click="$refs.editInput.focus()"
 						class="mr-2"
 					>
-						<v-btn @click="$refs.editInput.focus()" class="white"><v-icon>add</v-icon></v-btn>
-						<v-btn @click="$refs.editInput.focus()" class="white"><v-icon>remove</v-icon></v-btn>
+						<v-btn @click="$refs.editInput.focus()" class="white"
+							><v-icon>add</v-icon></v-btn
+						>
+						<v-btn @click="$refs.editInput.focus()" class="white"
+							><v-icon>remove</v-icon></v-btn
+						>
 					</v-btn-toggle>
-					<v-text-field solo hide-details
+					<v-text-field
+						solo
+						hide-details
 						type="number"
 						v-if="editing"
 						ref="editInput"
@@ -40,10 +72,14 @@
 						:prefix="operation === 0 ? '+' : operation === 1 ? '-' : null"
 						@focus="$event.target.select()"
 						@keyup.enter="commitEdit"
-						@keypress.43="operation === 0 ? operation = null : operation = 0"
-						@keypress.45="operation === 1 ? operation = null : operation = 1"
+						@keypress.43="
+							operation === 0 ? (operation = null) : (operation = 0)
+						"
+						@keypress.45="
+							operation === 1 ? (operation = null) : (operation = 1)
+						"
 						@keypress="rejectNonNumbers($event)"
-						>
+					>
 					</v-text-field>
 					<v-btn small fab @click="commitEdit" class="white">
 						<v-icon>done</v-icon>
@@ -51,7 +87,7 @@
 					<v-btn small fab @click="cancelEdit" class="mx-0 white">
 						<v-icon>close</v-icon>
 					</v-btn>
-					<v-spacer/>
+					<v-spacer />
 				</v-toolbar>
 			</transition>
 		</v-flex>
@@ -63,12 +99,14 @@
 
 <script>
 	export default {
-		data(){ return {
-			editing: false,
-			editValue: 0,
-			operation: null,
-			hover: false,
-		}},
+		data() {
+			return {
+				editing: false,
+				editValue: 0,
+				operation: null,
+				hover: false,
+			};
+		},
 		props: {
 			value: Number,
 			maxValue: Number,
@@ -76,40 +114,46 @@
 			_id: String,
 		},
 		methods: {
-			edit(){
+			edit() {
 				this.editing = true;
 				this.operation = null;
 				this.editValue = this.value;
-				this.$nextTick(function(){
+				this.$nextTick(function() {
 					this.$refs.editInput.focus();
 				});
 			},
-			cancelEdit(){
+			cancelEdit() {
 				this.editing = false;
 			},
-			commitEdit(){
+			commitEdit() {
 				this.editing = false;
 				let value = +this.$refs.editInput.lazyValue;
 				let type = this.operation === null ? 'set' : 'increment';
-				if (this.operation === 1){
+				if (this.operation === 1) {
 					value = -value;
 				}
-				this.$emit('change', {type, value});
+				this.$emit('change', { type, value });
 			},
 			rejectNonNumbers: function(evt) {
-				evt = (evt) ? evt : window.event;
-				var charCode = (evt.which) ? evt.which : evt.keyCode;
-				if ((charCode > 31 && (charCode < 48 || charCode > 57)) || charCode === 46) {
-					evt.preventDefault();;
+				evt = evt ? evt : window.event;
+				var charCode = evt.which ? evt.which : evt.keyCode;
+				if (
+					(charCode > 31 && (charCode < 48 || charCode > 57)) ||
+					charCode === 46
+				) {
+					evt.preventDefault();
 				} else {
 					return true;
 				}
 			},
 		},
-	}
+	};
 </script>
 
 <style scoped>
+	.health-bar {
+		background: inherit;
+	}
 	.name {
 		text-align: center;
 		cursor: pointer;
@@ -125,35 +169,43 @@
 		transition: box-shadow 0.2s;
 	}
 	.bar:hover {
-		box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12)!important
+		box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+			0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
 	}
 	.toolbar {
 		margin-left: -50%;
 		margin-right: -50%;
-    width: 200%;
+		width: 200%;
 		margin-top: -34px !important;
 		z-index: 4;
 	}
 	.hover {
-		background: rgb(245, 245, 245) !important;
+		background: #f5f5f5 !important;
 	}
-	.background-transition-enter-active, .background-transition-leave-active{
-		 transition: all .2s;
-	 }
-	.background-transition-enter, .background-transition-leave-to {
+	.theme--dark .hover {
+		background: #515151 !important;
+	}
+	.background-transition-enter-active,
+	.background-transition-leave-active {
+		transition: all 0.2s;
+	}
+	.background-transition-enter,
+	.background-transition-leave-to {
 		opacity: 0;
 	}
-	.transition-enter-active{
-		transition: all .2s;
+	.transition-enter-active {
+		transition: all 0.2s;
 	}
 	.transition-leave-active {
-		transition: all .3s;
+		transition: all 0.3s;
 	}
-	.transition-enter-to, .transition-leave {
+	.transition-enter-to,
+	.transition-leave {
 		opacity: 1;
 		transform: scaleY(1) !important;
 	}
-	.transition-enter, .transition-leave-to {
+	.transition-enter,
+	.transition-leave-to {
 		opacity: 0;
 		transform: scaleY(0) !important;
 	}
