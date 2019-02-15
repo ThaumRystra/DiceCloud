@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-list-tile class="hit-dice-list-tile white" :class="{hover}">
+	<v-list-tile class="hit-dice-list-tile" :class="{hover}">
 
 		<v-list-tile-action class="mr-4">
 
@@ -69,6 +69,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+	.hit-dice-list-tile {
+		background: inherit;
+	}
 	.hit-dice-list-tile >>> .v-list__tile {
 		height: 88px;
 	}
@@ -82,12 +85,18 @@ export default {
 		margin: -2px;
 	}
 	.hit-dice-list-tile.hover {
-		background: rgba(0,0,0,.04);
+		background: #f5f5f5 !important;
+	}
+	.theme--dark .hit-dice-list-tile.hover {
+		background: #515151 !important;
 	}
 	.content {
 		cursor: pointer;
 	}
 	.max-value {
 		color: rgba(0,0,0,.54);
+	}
+	.theme--dark .max-value {
+		color: rgba(255, 255, 255, 0.54);
 	}
 </style>
