@@ -11,64 +11,66 @@
 		>
 		  <v-icon>format_paint</v-icon>
 		</v-btn>
-		<div class="white overflow-hidden">
-			<v-item-group v-model="color" mandatory>
-	      <v-layout row wrap>
-          <v-item
-						v-for="kebabColorOption in colors"
-	          :key="kebabColorOption"
-						:value="kebabToCamelCase(kebabColorOption)"
-					>
-            <div
-              slot-scope="{ active, toggle }"
-              :class="[kebabColorOption, kebabShade]"
-							class="color-swatch d-flex align-center"
-              @click="toggle"
-            >
-              <v-scroll-y-transition>
-                <v-icon
-                  v-if="active"
-									:dark="isDark(kebabColorOption, kebabShade)"
-                >
-                  check
-                </v-icon>
-              </v-scroll-y-transition>
-            </div>
-          </v-item>
-					<div class="spacer" v-for="i in 8"/>
-	      </v-layout>
-		  </v-item-group>
-			<v-item-group class="mt-2" v-model="shade" mandatory>
-	      <v-layout wrap>
-          <v-item
-						v-for="kebabShadeOption in shades"
-						:key="kebabShadeOption"
-						:value="kebabToCamelCase(kebabShadeOption)"
-					>
-            <div
-              slot-scope="{ active, toggle }"
-              :class="[kebabColor, kebabShadeOption]"
-							class="shade-swatch d-flex align-center"
-              @click="toggle"
-            >
-              <v-scroll-y-transition>
-                <v-icon
-                  v-if="active"
-									:dark="isDark(kebabColor, kebabShadeOption)"
-                >
-                  check
-                </v-icon>
-              </v-scroll-y-transition>
-            </div>
-          </v-item>
-					<div class="spacer" v-for="i in 8"/>
-	      </v-layout>
-		  </v-item-group>
-			<v-layout row class="mt-2">
+		<v-card class="overflow-hidden">
+			<v-card-text>
+				<v-item-group v-model="color" mandatory>
+		      <v-layout row wrap>
+	          <v-item
+							v-for="kebabColorOption in colors"
+		          :key="kebabColorOption"
+							:value="kebabToCamelCase(kebabColorOption)"
+						>
+	            <div
+	              slot-scope="{ active, toggle }"
+	              :class="[kebabColorOption, kebabShade]"
+								class="color-swatch d-flex align-center"
+	              @click="toggle"
+	            >
+	              <v-scroll-y-transition>
+	                <v-icon
+	                  v-if="active"
+										:class="{dark: isDark(kebabColorOption, kebabShade)}"
+	                >
+	                  check
+	                </v-icon>
+	              </v-scroll-y-transition>
+	            </div>
+	          </v-item>
+						<div class="spacer" v-for="i in 8"/>
+		      </v-layout>
+			  </v-item-group>
+				<v-item-group class="mt-2" v-model="shade" mandatory>
+		      <v-layout wrap>
+	          <v-item
+							v-for="kebabShadeOption in shades"
+							:key="kebabShadeOption"
+							:value="kebabToCamelCase(kebabShadeOption)"
+						>
+	            <div
+	              slot-scope="{ active, toggle }"
+	              :class="[kebabColor, kebabShadeOption]"
+								class="shade-swatch d-flex align-center"
+	              @click="toggle"
+	            >
+	              <v-scroll-y-transition>
+	                <v-icon
+	                  v-if="active"
+										:class="{dark: isDark(kebabColor, kebabShadeOption)}"
+	                >
+	                  check
+	                </v-icon>
+	              </v-scroll-y-transition>
+	            </div>
+	          </v-item>
+						<div class="spacer" v-for="i in 8"/>
+		      </v-layout>
+			  </v-item-group>
+			</v-card-text>
+			<v-card-actions>
 				<v-spacer/>
 				<v-btn flat @click="opened = false">Done</v-btn>
-			</v-layout>
-		</div>
+			</v-card-actions>
+		</v-card>
   </v-menu>
 </template>
 
@@ -177,6 +179,12 @@
 	}
 	.v-icon {
 		height: 30px;
+	}
+	.v-icon {
+		color: black;
+	}
+	.dark.v-icon {
+		color: white;
 	}
 	.layout {
 		max-width: 270px;
