@@ -37,8 +37,8 @@ const transformedBoxShadow = (shadowString, deltaWidth, deltaHeight) => {
 
 export default function mockElement({source, target, offset = {x: 0, y: 0}}){
   if (!source || !target) throw `Can't mock without ${source ? 'target' : 'source'}` ;
-  sourceRect = source.getBoundingClientRect();
-  targetRect = target.getBoundingClientRect();
+	let sourceRect = source.getBoundingClientRect();
+  let targetRect = target.getBoundingClientRect();
 
   // Get how must the target change to become the source
   const deltaWidth = sourceRect.width / targetRect.width;

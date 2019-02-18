@@ -68,12 +68,16 @@
     		return `left:${left}px; top:${top}px;`;
       },
 			enter(target, done){
-				if (!target.attributes['data-element-id']){
+				if (!target || !target.attributes['data-element-id']){
 					done();
 					return;
-				} 
+				}
 				let elementId = target.attributes['data-element-id'].value;
 				let source = document.getElementById(elementId);
+				if (!source){
+					done();
+					return;
+				}
 				// Get the original styles so we can repair them later
 				let originalStyle = {
 					transform: target.style.transform,
@@ -87,6 +91,7 @@
 				// hide the source
 				source.style.transition = "none";
 				source.style.opacity = "0";
+				this.hiddenElement = source;
 
 				// Instantly mock the source
 				target.style.transition = 'none';
@@ -105,16 +110,20 @@
 			},
 			leave(target, done){
 				let elementId;
-				if (target.attributes['data-return-element-id']) {
+				if (target && target.attributes['data-return-element-id']) {
 					elementId = target.attributes['data-return-element-id'].value;
 				} else {
-					if (!target.attributes['data-element-id']){
+					if (!target || !target.attributes['data-element-id']){
 						done();
 						return;
 					}
 					elementId = target.attributes['data-element-id'].value;
 				}
 				let source	= document.getElementById(elementId);
+				if (!source){
+					done();
+					return;
+				}
 				let index = target.attributes['data-index'].value;
 				if (index != 0){
 					// If we aren't the only dialog, we'll need compensate for offset
@@ -122,21 +131,54 @@
 				} else {
 					mockElement({source, target});
 				}
+				// If the source and the hidden Element are different
+				// hide the source and reveal the hidden element
+				let originalSourceTransition = source.style.transition;
+				if (this.hiddenElement !== source){
+					source.style.transition = "none";
+					source.style.opacity = "0";
+					this.hiddenElement.style.opacity = null;
+				}
 				setTimeout(() => {
-					let originalTransition = source.style.transition;
 					source.style.opacity = null;
 					source.style.transition = 'none';
 					target.style.transition = `opacity ${MOCK_DURATION / 4}ms, pointer-events 0s`
 					requestAnimationFrame(() => {
-						source.style.transition = originalTransition;
+						source.style.transition = originalSourceTransition;
 						target.style.opacity = "0";
 						target.style.pointerEvents = "none";
 						target.style.setProperty('box-shadow', "none", 'important');
 						setTimeout(done, MOCK_DURATION / 4);
 					});
 				}, MOCK_DURATION);
+			},
+			noScroll(e){
+				console.log(e);
+				e.preventDefault();
 			}
     },
+		watch:{
+			dialogs(newDialogs) {
+				let el = document.documentElement;
+        if (newDialogs.length) {
+					this.top = el.scrollTop;
+					if (el.scrollHeight > el.clientHeight){
+						el.style.position = 'fixed';
+						el.style.top = `${-this.top}px`;
+						el.style.left = 0;
+						el.style.right = 0;
+						el.style.overflowY = 'scroll';
+					}
+        } else {
+					el.style.position = null;
+					el.style.top = null;
+					el.style.left = null;
+					el.style.right = null;
+					el.style.overflowY = null;
+					el.scrollTop = this.top;
+        }
+      }
+		}
   };
 </script>
 
