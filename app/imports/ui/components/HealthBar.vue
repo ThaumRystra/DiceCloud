@@ -53,12 +53,12 @@
 						@click="$refs.editInput.focus()"
 						class="mr-2"
 					>
-						<v-btn @click="$refs.editInput.focus()" class="white"
-							><v-icon>add</v-icon></v-btn
-						>
-						<v-btn @click="$refs.editInput.focus()" class="white"
-							><v-icon>remove</v-icon></v-btn
-						>
+						<v-btn @click="$nextTick(() => $refs.editInput.focus())" class="filled">
+							<v-icon>add</v-icon>
+						</v-btn>
+						<v-btn @click="$nextTick(() => $refs.editInput.focus())" class="filled">
+							<v-icon>remove</v-icon>
+						</v-btn>
 					</v-btn-toggle>
 					<v-text-field
 						solo
@@ -69,7 +69,7 @@
 						style="max-width: 120px;"
 						min="0"
 						:value="editValue"
-						:prefix="operation === 0 ? '+' : operation === 1 ? '-' : null"
+						:prepend-inner-icon="operation === 0 ? 'add' : operation === 1 ? 'remove' : 'forward'"
 						@focus="$event.target.select()"
 						@keyup.enter="commitEdit"
 						@keypress.43="
@@ -81,10 +81,10 @@
 						@keypress="rejectNonNumbers($event)"
 					>
 					</v-text-field>
-					<v-btn small fab @click="commitEdit" class="white">
+					<v-btn small fab @click="commitEdit" class="filled" color="red">
 						<v-icon>done</v-icon>
 					</v-btn>
-					<v-btn small fab @click="cancelEdit" class="mx-0 white">
+					<v-btn small fab @click="cancelEdit" class="mx-0 filled">
 						<v-icon>close</v-icon>
 					</v-btn>
 					<v-spacer />
@@ -120,6 +120,7 @@
 				this.editValue = this.value;
 				this.$nextTick(function() {
 					this.$refs.editInput.focus();
+					console.log()
 				});
 			},
 			cancelEdit() {
@@ -184,6 +185,12 @@
 	}
 	.theme--dark .hover {
 		background: #515151 !important;
+	}
+	.filled.theme--light {
+		background: #fff !important;
+	}
+	.filled.theme--dark {
+		background: #424242 !important;
 	}
 	.background-transition-enter-active,
 	.background-transition-leave-active {
