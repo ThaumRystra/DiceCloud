@@ -6,8 +6,9 @@
 			:value="attribute.value + (attribute.adjustment || 0)"
 			:maxValue="attribute.value"
 			:name="attribute.name"
+			:_id="attribute._id"
 			@change="e => $emit('change', {_id: attribute._id, change: e})"
-			@click="e => $emit('click', {_id: attribute._id, elementId: e.elementId})"
+			@click="e => $emit('click', {_id: attribute._id})"
 		/>
 	</v-card>
 </template>

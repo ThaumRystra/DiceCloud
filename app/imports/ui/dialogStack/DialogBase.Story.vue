@@ -4,8 +4,8 @@
       Test Dialog
     </div>
     <div>
-			<v-btn @click="openDialog(_uid + 'btn')" :id="_uid + 'btn'">Open Dialog</v-btn>
-      <v-btn fab @click="openDialog(_uid + 'fab')" :id="_uid + 'fab'" color="green">Open Dialog</v-btn>
+			<v-btn @click="openDialog('btn')" data-id="btn">Open Dialog</v-btn>
+      <v-btn fab @click="openDialog('fab')" data-id="fab" color="green">Open Dialog</v-btn>
     </div>
   </dialog-base>
 </template>

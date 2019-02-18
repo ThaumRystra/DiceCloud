@@ -7,13 +7,13 @@
 		style="min-height: 48px;"
 		:class="{ hover }"
 		class="my-3 health-bar"
-		:id="`${_uid}-${_id}`"
+		:data-id="_id"
 	>
 		<div
 			class="subheading text-truncate pa-2 name"
 			@mouseover="hover = true"
 			@mouseleave="hover = false"
-			@click="$emit('click', { elementId: `${_uid}-${_id}` })"
+			@click="$emit('click')"
 		>
 			{{ name }}
 		</div>

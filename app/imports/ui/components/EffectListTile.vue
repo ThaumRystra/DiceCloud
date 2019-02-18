@@ -2,9 +2,9 @@
 	<v-list-tile
 		class="effect-list-tile"
 		:class="{disabled: !enabled}"
-		:id="elementId"
+		:data-id="_id"
 		v-on="$listeners.click ? { click(e){
-				$emit('click', {$props, elementId})
+				$emit('click', $props)
 			} } : {}"
 	>
 		<v-layout row align-center class="net-effect">
@@ -45,11 +45,6 @@
 			name: String,
 			stat: String,
 			statName: String,
-		},
-		computed: {
-			elementId(){
-				return `${this._uid}-${this._id}`
-			},
 		},
 		methods: {
 			getEffectIcon,

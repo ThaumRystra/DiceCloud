@@ -30,10 +30,10 @@
 			},
 		},
 		methods: {
-			healthBarClicked({_id, elementId}){
+			healthBarClicked({_id}){
 				this.$store.commit("pushDialogStack", {
 					component: "attribute-dialog-container",
-					elementId,
+					elementId: _id,
 					data: {_id},
 				});
 			},

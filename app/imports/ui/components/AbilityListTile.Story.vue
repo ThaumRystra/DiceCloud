@@ -4,7 +4,7 @@
 			<v-divider v-if="index !== 0"/>
 			<ability-list-tile
 				:key="ability.name"
-				:id="`${_uid}-${ability.name}`"
+				:data-id="`${_uid}-${ability.name}`"
 				v-bind="ability"
 				@click="click({ability, elementId: `${_uid}-${ability.name}`})"
 			/>

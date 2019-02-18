@@ -22,6 +22,7 @@
 				:data-element-id="dialog.elementId"
 				:data-return-element-id="dialog.returnElementId"
 				:data-index="index"
+				:ref="index"
 				:style="getDialogStyle(index)"
 				:elevation="6"
       >
@@ -49,10 +50,6 @@
       },
     },
     methods: {
-			logAndReturn(thing){
-				console.log(thing);
-				return thing;
-			},
       popDialogStack(result){
         this.$store.dispatch("popDialogStack", result);
       },
@@ -67,13 +64,22 @@
     		const top =  (num - index) * -OFFSET;
     		return `left:${left}px; top:${top}px;`;
       },
+			getTopElementByDataId(elementId, offset = 0){
+				let stackLength = this.$store.state.dialogStack.dialogs.length - offset;
+				if (stackLength){
+					let topDialog = this.$refs[stackLength - 1][0];
+					return topDialog.$el.querySelector(`[data-id='${elementId}']`);
+				} else {
+					return document.querySelector(`[data-id='${elementId}']`);
+				}
+			},
 			enter(target, done){
 				if (!target || !target.attributes['data-element-id']){
 					done();
 					return;
 				}
 				let elementId = target.attributes['data-element-id'].value;
-				let source = document.getElementById(elementId);
+				let source = this.getTopElementByDataId(elementId, 1);
 				if (!source){
 					done();
 					return;
@@ -119,7 +125,7 @@
 					}
 					elementId = target.attributes['data-element-id'].value;
 				}
-				let source	= document.getElementById(elementId);
+				let source = this.getTopElementByDataId(elementId);
 				if (!source){
 					done();
 					return;
