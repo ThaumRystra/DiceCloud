@@ -55,11 +55,6 @@
 			StatsTab,
 			CharacterTreeView,
 		},
-		watch: {
-			charId(newValue){
-				console.log(newValue)
-			},
-		},
 		data(){return {
 			theme,
 			tab: 0,

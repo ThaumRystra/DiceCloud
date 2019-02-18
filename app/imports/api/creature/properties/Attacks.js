@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import {makeChild} from "/imports/api/parenting.js";
+import DamageSchema from '/imports/api/creature/subSchemas/DamageSchema.js';
 
 let Attacks = new Mongo.Collection("attacks");
 
@@ -30,30 +31,12 @@ attackSchema = schema({
 		optional: true,
 		trim: false,
 	},
-	damage: {
-		type: String,
-		defaultValue: "1d8 + {strengthMod}",
-		optional: true,
-		trim: false,
+	damages: {
+		type: Array,
+		defaultValue: [],
 	},
-	damageType: {
-		type: String,
-		allowedValues: [
-			"bludgeoning",
-			"piercing",
-			"slashing",
-			"acid",
-			"cold",
-			"fire",
-			"force",
-			"lightning",
-			"necrotic",
-			"poison",
-			"psychic",
-			"radiant",
-			"thunder",
-		],
-		defaultValue: "slashing",
+	'damages.$': {
+		type: DamageSchema,
 	},
 	enabled: {
 		type: Boolean,
