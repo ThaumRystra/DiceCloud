@@ -15,7 +15,7 @@
 			label="Base Value"
 			type="number"
 			:value="attribute.baseValue"
-			@change="(baseValue, ack) => $emit('change', {baseValue}, ack)"
+			@change="(baseValue, ack) => $emit('change', {baseValue: +baseValue}, ack)"
 			hint="This is the value of the attribute before effects are applied"
 		/>
 		<text-field
@@ -34,7 +34,7 @@
 		<v-switch
 			label="Allow decimal values"
 			:value="attribute.decimal"
-			@change="e => $emit('change', {decimal: e})"
+			@change="e => $emit('change', {decimal: !!e})"
 		/>
 		<smart-select
 			label="Reset"
@@ -49,7 +49,7 @@
 			label="Reset Multiplier"
 			type="number"
 			:value="attribute.resetMultiplier"
-			@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier}, ack)"
+			@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier: +resetMultiplier}, ack)"
 			hint="Some attributes, like hit dice, only reset by half their total on a long rest"
 		/>
   </div>

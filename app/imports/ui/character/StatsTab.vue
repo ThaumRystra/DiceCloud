@@ -31,7 +31,7 @@
 				/>
 			</div>
 
-			<div v-for="modifier in modifiers" class="modifier">
+			<div v-for="modifier in modifiers" class="modifier" :key="modifier._id">
 				<attribute-card modifier
 					v-bind="modifier"
 					:id="`${_uid}-${modifier._id}`"
@@ -44,11 +44,11 @@
 					<v-list>
 						<v-subheader>Hit Dice</v-subheader>
 						<template v-for="(hitDie, index) in hitDice">
-							<v-divider v-if="index !== 0"/>
+							<v-divider v-if="index !== 0" :key="hitDice._id + 'divider'"/>
 							<hit-dice-list-tile
 								v-bind="hitDie"
-								:key="hitDie._id"
 								:id="`${_uid}-${hitDie._id}`"
+								:key="hitDice._id"
 								@click="clickAttribute({elementId: `${_uid}-${hitDie._id}`, _id: hitDie._id})"
 								@change="e => hitDiceChange(hitDie._id, e)"
 							/>

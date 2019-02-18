@@ -91,6 +91,7 @@ let updateAttributeSchema = pickKeysAsOptional(attributeSchema, [
 	'type',
 	'baseValue',
 	'decimal',
+	'adjustment',
 	'reset',
 	'resetMultiplier',
 	'color',
@@ -109,13 +110,18 @@ const updateAttribute = new ValidatedMethod({
 	}).validator(),
 
   run({_id, update}) {
-		let currentAttribute = Attributes.findOne(_id);
+		let currentAttribute = Attributes.findOne(_id, {fields: {value: 1, charId: 1}});
 		if (!currentAttribute){
 			throw new Meteor.Error("Attributes.methods.update.denied",
       `No attributes exist with the id: ${_id}`);
 		}
 		let charId = currentAttribute.charId;
 		if (canEditCreature(charId, this.userId)){
+			if (typeof update.adjustment === 'number'){
+				let val = currentAttribute.value;
+				if (update.adjustment < -val) update.adjustment = -val;
+				if (update.adjustment > 0) update.adjustment = 0;
+			}
 			Attributes.update(_id, {$set: update});
 			recomputeCreatureById(charId);
 		}

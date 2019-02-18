@@ -18,12 +18,12 @@ const getRacialBonusEffect = function(charId, attribute, bonus){
 		name: "Race Bonus",
 		stat: attribute,
 		operation: "add",
-		calculation: bonus,
+		calculation: bonus.toString(),
 		enabled: true,
 		parent: {
 			collection: "Creatures",
 			id: charId,
-			group: "racial",
+			group: "race",
 		},
 		charId: charId,
 	};

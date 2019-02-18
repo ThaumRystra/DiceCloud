@@ -62,7 +62,7 @@
 		},
 		data(){return {
 			theme,
-			tab: 1,
+			tab: 0,
 		}},
 		methods: {
       ...mapMutations([
