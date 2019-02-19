@@ -22,10 +22,12 @@ let skillSchema = schema({
   variableName: {
     type: String,
   },
+	// The variable name of the ability this skill relies on
   ability: {
     type: String,
     optional: true,
   },
+	// What type of skill is this
   type: {
     type: String,
     allowedValues: [
@@ -42,36 +44,49 @@ let skillSchema = schema({
   order: {
 	  type: SimpleSchema.Integer,
 	},
+	// If the baseValue is higher than the computed value, it will be used as `value`
 	baseValue: {
 		type: Number,
 		optional: true,
 	},
+	// The base proficiency of this skill
 	baseProficiency: {
 		type: Number,
 		optional: true,
 	},
+	// Computed value of skill to be added to skill rolls
   value: {
     type: Number,
 		defaultValue: 0,
   },
+	// Computed value added by the ability
+	abilityMod: {
+		type: SimpleSchema.Integer,
+		optional: true,
+	},
+	// Computed advantage/disadvantage
   advantage: {
     type: SimpleSchema.Integer,
     optional: true,
     allowedValues: [-1, 0, 1],
   },
+	// Computed bonus to passive checks
   passiveBonus: {
     type: Number,
     optional: true,
   },
+	// Computed proficiency multiplier
   proficiency: {
     type: Number,
     allowedValues: [0, 0.5, 1, 2],
 		defaultValue: 0,
   },
+	// Computed number of total conditional benefits
   conditionalBenefits: {
     type: SimpleSchema.Integer,
     optional: true,
   },
+	// Computed boolean of whether this skill is forced to fail
   fail: {
     type: SimpleSchema.Integer,
     optional: true,

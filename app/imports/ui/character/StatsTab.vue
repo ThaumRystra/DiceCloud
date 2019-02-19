@@ -180,6 +180,13 @@
 					data: {_id},
 				});
 			},
+			clickSkill({_id}){
+				this.$store.commit("pushDialogStack", {
+					component: "skill-dialog-container",
+					elementId: _id,
+					data: {_id},
+				});
+			},
 			hitDiceChange(_id, {type, value}){
 				if (type === 'increment'){
 					adjustAttribute.call({_id, increment: value});

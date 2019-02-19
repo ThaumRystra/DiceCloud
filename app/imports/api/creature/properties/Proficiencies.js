@@ -20,6 +20,10 @@ proficiencySchema = schema({
 		allowedValues: [0, 0.5, 1, 2],
 		defaultValue: 1,
 	},
+	skill: {
+		type: String,
+		optional: true,
+	},
 	type: {
 		type: String,
 		allowedValues: ["skill", "save", "weapon", "armor", "tool", "language"],
@@ -34,6 +38,6 @@ proficiencySchema = schema({
 Proficiencies.attachSchema(proficiencySchema);
 
 // Proficiencies.attachBehaviour("softRemovable");
-makeChild(Proficiencies, ["enabled"]);
+makeChild(Proficiencies, ["enabled", "name"]);
 
 export default Proficiencies;

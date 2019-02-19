@@ -66,6 +66,9 @@ export default {
 	.skill-list-tile >>> .v-list__tile {
 		height: 34px;
 	}
+	.skill-list-tile{
+		background: inherit;
+	}
 	.prof-icon {
 		min-width: 30px;
 	}

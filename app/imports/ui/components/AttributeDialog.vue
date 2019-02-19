@@ -34,7 +34,6 @@
 </template>
 
 <script>
-	import store from "/imports/ui/vuexStore.js";
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
 	import AttributeEffectList from '/imports/ui/components/AttributeEffectList.vue';
 	import AttributeEdit from '/imports/ui/components/AttributeEdit.vue';
