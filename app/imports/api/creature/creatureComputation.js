@@ -166,6 +166,7 @@ function writeSkills(char) {
         filter: {charId: char.id, variableName},
         update: {$set: {
           value: skill.result,
+          abilityMod: skill.abilityMod,
           advantage: skill.advantage,
           passiveBonus: skill.passiveAdd,
           proficiency: skill.proficiency,
@@ -264,7 +265,7 @@ function buildCreature(charId){
         busyComputing: false,
         type: "skill",
         ability: skill.ability,
-        base: skill.baseValue || 0,
+        base: skill.baseValue,
         result: 0, // For skills the result is the skillMod
         proficiency: skill.baseProficiency || 0,
         add: 0,
@@ -337,8 +338,8 @@ function buildCreature(charId){
     enabled: true,
     type: {$in: ["skill", "save"]}
   }).forEach(proficiency => {
-    if (char.skills[proficiency.name]) {
-      char.skills[proficiency.name].proficiencies.push(effect);
+    if (char.skills[proficiency.skill]) {
+      char.skills[proficiency.skill].proficiencies.push(proficiency);
     }
   });
   return char;
@@ -541,7 +542,7 @@ function combineSkill(stat, char){
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
   let profBonus;
-  if (char.skills.proificiencyBonus){
+  if (char.skills.proficiencyBonus){
     if (!char.skills.proficiencyBonus.computed){
       computeStat(char.skills.proficiencyBonus, char);
     }
@@ -551,14 +552,14 @@ function combineSkill(stat, char){
   }
   profBonus *= stat.proficiency;
   // Skills are based on some ability Modifier
-  let abilityMod = 0;
+  stat.abilityMod = 0;
   if (stat.ability && char.atts[stat.ability]){
     if (!char.atts[stat.ability].computed){
       computeStat(char.atts[stat.ability], char);
     }
-    abilityMod = char.atts[stat.ability].mod;
+    stat.abilityMod = char.atts[stat.ability].mod;
   }
-  stat.result = (abilityMod + profBonus + stat.add) * stat.mul;
+  stat.result = (stat.abilityMod + profBonus + stat.add) * stat.mul;
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
   stat.result = Math.floor(stat.result);
