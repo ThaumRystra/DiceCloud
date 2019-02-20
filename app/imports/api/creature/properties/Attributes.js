@@ -50,10 +50,12 @@ attributeSchema = schema({
 		type: Number,
 		optional: true,
 	},
+	// The computed value of the attribute
   value: {
     type: Number,
 		defaultValue: 0,
   },
+	// The computed modifier, provided the attribute is an ability
 	mod: {
 		type: SimpleSchema.Integer,
 		optional: true,

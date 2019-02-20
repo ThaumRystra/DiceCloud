@@ -119,6 +119,8 @@ function writeAttributes(char) {
     }
     if (typeof att.mod === 'number'){
       op.updateMany.update.$set.mod = att.mod;
+    } else {
+      op.updateMany.update.$unset = {mod: 1};
     }
     return op;
   });
