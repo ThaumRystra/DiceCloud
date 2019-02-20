@@ -38,9 +38,14 @@
 		},
 		methods: {
 			clickedEffect(e){
-				console.log(e);
+				console.log({TODO: e});
 			},
 			change(update, ack){
+				if(update.name){
+					update.variableName = update.name.toLowerCase().replace(
+						/\W+(\w?)/g, (match, p1) => p1.toUpperCase()
+					);
+				}
 				updateAttribute.call({_id: this._id, update}, error => {
 					ack(error);
 				});

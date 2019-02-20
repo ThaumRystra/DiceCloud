@@ -4,6 +4,7 @@ import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
 import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
+import { getHighestOrder } from '/imports/api/order.js';
 import pickKeysAsOptional from '/imports/api/pickKeysAsOptional.js';
 
 let Attributes = new Mongo.Collection("attributes");
@@ -11,7 +12,7 @@ let Attributes = new Mongo.Collection("attributes");
 /*
  * Attributes are numbered stats of a character
  */
-attributeSchema = schema({
+let attributeSchema = schema({
 	charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
@@ -24,6 +25,8 @@ attributeSchema = schema({
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
+		// Must contain a letter, and be made of word characters only
+		regEx: /^\w*[a-z]\w*$/i,
 		index: 1,
   },
 	// Attributes need to store their order to keep the sheet consistent
@@ -98,6 +101,35 @@ let updateAttributeSchema = pickKeysAsOptional(attributeSchema, [
 	'resetMultiplier',
 	'color',
 ]);
+
+const insertAttribute = new ValidatedMethod({
+
+  name: "Attributes.methods.insert",
+
+  validate: schema({
+		attribute: {
+			type: Object,
+			blackbox: true,
+		},
+	}).validator(),
+
+  run({attribute}) {
+		const charId = attribute.charId;
+		if (canEditCreature(charId, this.userId)){
+			attribute.order = getHighestOrder({
+				collection: Attributes,
+				charId,
+			}) + 1;
+			attribute.parent = {
+				id: charId,
+				collection: 'Creatures',
+			};
+			let attId = Attributes.insert(attribute);
+			recomputeCreatureById(charId);
+			return attId;
+		}
+  },
+});
 
 const updateAttribute = new ValidatedMethod({
 
@@ -191,4 +223,4 @@ const adjustAttribute = new ValidatedMethod({
 });
 
 export default Attributes;
-export { updateAttribute, adjustAttribute };
+export { insertAttribute, updateAttribute, adjustAttribute };

@@ -57,7 +57,7 @@
 				</v-card>
 			</div>
 
-			<div class="saving-throws">
+			<div class="saving-throws" v-show="true">
 				<v-card>
 					<v-list>
 						<v-subheader>Saving Throws</v-subheader>
@@ -89,6 +89,16 @@
 
 		</column-layout>
 
+		<v-btn absolute fab bottom right
+			color="primary"
+			@click="insertAttribute"
+			data-id="insert-attribute-fab"
+		>
+			<v-icon>
+				add
+			</v-icon>
+		</v-btn>
+
 	</div>
 </template>
 
@@ -97,12 +107,12 @@
 	import Skills from '/imports/api/creature/properties/Skills.js';
 	import AttributeCard from '/imports/ui/components/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/components/AbilityListTile.vue';
-	import ColumnLayout from "/imports/ui/components/ColumnLayout.vue";
+	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 	import HealthBarCardContainer from '/imports/ui/components/HealthBarCardContainer.vue';
 	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.vue';
 
-	import { adjustAttribute } from '/imports/api/creature/properties/Attributes.js';
+	import { adjustAttribute, insertAttribute } from '/imports/api/creature/properties/Attributes.js';
 
 	const getAttributeOfType = function(charId, type){
 		return Attributes.find({charId, type}, {sort: {order: 1}});
@@ -142,7 +152,7 @@
 					let dice = diceMatch && +diceMatch[1];
 					let con = Attributes.findOne({
 						charId: this.charId,
-						variableName: "constitution"
+						variableName: 'constitution'
 					});
 					let conMod = con && con.mod;
 					return {
@@ -174,15 +184,15 @@
 		},
 		methods: {
 			clickAttribute({_id}){
-				this.$store.commit("pushDialogStack", {
-					component: "attribute-dialog-container",
+				this.$store.commit('pushDialogStack', {
+					component: 'attribute-dialog-container',
 					elementId: _id,
 					data: {_id},
 				});
 			},
 			clickSkill({_id}){
-				this.$store.commit("pushDialogStack", {
-					component: "skill-dialog-container",
+				this.$store.commit('pushDialogStack', {
+					component: 'skill-dialog-container',
 					elementId: _id,
 					data: {_id},
 				});
@@ -191,6 +201,19 @@
 				if (type === 'increment'){
 					adjustAttribute.call({_id, increment: value});
 				}
+			},
+			insertAttribute(){
+				const charId = this.charId;
+				this.$store.commit('pushDialogStack', {
+					component: 'attribute-creation-dialog',
+					elementId: 'insert-attribute-fab',
+					callback(attribute){
+						if (!attribute) return;
+						attribute.charId = charId;
+						let attId = insertAttribute.call({attribute});
+						return attId
+					}
+				});
 			},
 		},
 	};
