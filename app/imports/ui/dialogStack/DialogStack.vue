@@ -20,7 +20,6 @@
         :key="dialog._id"
         class="dialog"
 				:data-element-id="dialog.elementId"
-				:data-return-element-id="dialog.returnElementId"
 				:data-index="index"
 				:ref="index"
 				:style="getDialogStyle(index)"
@@ -111,13 +110,18 @@
 					target.style.transition = originalStyle.transition;
 					target.style.boxShadow = originalStyle.boxShadow;
 					source.style.transition = originalStyle.sourceTransition;
-					setTimeout(() => done, MOCK_DURATION);
+					setTimeout(done, MOCK_DURATION);
 				});
 			},
 			leave(target, done){
+				// Give minimongo time to update documents we might need to animate to
+				setTimeout(() => this.doLeave(target, done));
+			},
+			doLeave(target, done){
 				let elementId;
-				if (target && target.attributes['data-return-element-id']) {
-					elementId = target.attributes['data-return-element-id'].value;
+				let returnElementId = this.$store.state.dialogStack.currentReturnElement;
+				if (returnElementId) {
+					elementId = returnElementId;
 				} else {
 					if (!target || !target.attributes['data-element-id']){
 						done();
@@ -127,6 +131,7 @@
 				}
 				let source = this.getTopElementByDataId(elementId);
 				if (!source){
+					console.log(`Can't find source for ${elementId}`);
 					done();
 					return;
 				}

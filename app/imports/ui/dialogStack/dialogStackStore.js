@@ -5,9 +5,10 @@ const dialogStackStore = {
   state: {
     dialogs: [],
     currentResult: null,
+    currentReturnElement: null,
   },
   mutations: {
-    pushDialogStack(state, {component, data, elementId, returnElementId, callback}){
+    pushDialogStack(state, {component, data, elementId, callback}){
       // Generate a new _id so that Vue knows how to shuffle the array
       const _id = Random.id();
       state.dialogs.push({
@@ -15,7 +16,6 @@ const dialogStackStore = {
         component,
         data,
         elementId,
-        returnElementId,
         callback,
       });
       updateHistory();
@@ -25,20 +25,19 @@ const dialogStackStore = {
       state.currentResult = null;
       updateHistory();
       if (!dialog) return;
-      if (dialog.callback) dialog.callback(result);
+      if (dialog.callback){
+        let returnElementId = dialog.callback(result);
+        state.currentReturnElement = returnElementId;
+      } else {
+        state.currentReturnElement = null;
+      }
     },
     setCurrentResult (state, result){
       state.currentResult = result;
     },
-    setTopReturnElementId (state, elementId){
-      state.dialogs[state.dialogs.length - 1].returnElementId = elementId;
-    },
   },
   actions: {
-    popDialogStack(context, result, {returnElementId} = {}){
-      if (returnElementId){
-        context.commit("setTopReturnElementId", returnElementId);
-      }
+    popDialogStack(context, result){
       if (history && history.state && history.state.openDialogs){
         context.commit("setCurrentResult", result);
         history.back();
