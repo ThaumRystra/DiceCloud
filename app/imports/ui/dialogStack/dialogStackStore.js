@@ -30,9 +30,15 @@ const dialogStackStore = {
     setCurrentResult (state, result){
       state.currentResult = result;
     },
+    setTopReturnElementId (state, elementId){
+      state.dialogs[state.dialogs.length - 1].returnElementId = elementId;
+    },
   },
   actions: {
-    popDialogStack(context, result){
+    popDialogStack(context, result, {returnElementId} = {}){
+      if (returnElementId){
+        context.commit("setTopReturnElementId", returnElementId);
+      }
       if (history && history.state && history.state.openDialogs){
         context.commit("setCurrentResult", result);
         history.back();
