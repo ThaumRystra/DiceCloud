@@ -94,9 +94,7 @@
 			@click="insertAttribute"
 			data-id="insert-attribute-fab"
 		>
-			<v-icon>
-				add
-			</v-icon>
+			<v-icon>add</v-icon>
 		</v-btn>
 
 	</div>

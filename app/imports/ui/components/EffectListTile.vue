@@ -8,9 +8,7 @@
 			} } : {}"
 	>
 		<v-layout row align-center class="net-effect">
-			<v-icon class="icon">
-				{{getEffectIcon(operation, result)}}
-			</v-icon>
+			<v-icon class="icon">{{getEffectIcon(operation, result)}}</v-icon>
 			<div class="value display-1  pr-2" v-if="showValue(operation)">
 				{{getValue(operation, result)}}
 			</div>

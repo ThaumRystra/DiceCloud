@@ -1,9 +1,7 @@
 <template lang="html">
   <v-list-tile class="skill-list-tile" height="32px" v-on="hasClickListener ? {click} : {}">
   	<v-list-tile-action class="prof-icon">
-  		<v-icon>
-  			{{icon}}
-  		</v-icon>
+  		<v-icon>{{icon}}</v-icon>
   	</v-list-tile-action>
 		<v-list-tile-content>
 			<v-list-tile-title>

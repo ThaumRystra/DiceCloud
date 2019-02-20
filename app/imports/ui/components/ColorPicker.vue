@@ -30,9 +30,7 @@
 	                <v-icon
 	                  v-if="active"
 										:class="{dark: isDark(kebabColorOption, kebabShade)}"
-	                >
-	                  check
-	                </v-icon>
+	                >check</v-icon>
 	              </v-scroll-y-transition>
 	            </div>
 	          </v-item>
@@ -56,9 +54,7 @@
 	                <v-icon
 	                  v-if="active"
 										:class="{dark: isDark(kebabColor, kebabShadeOption)}"
-	                >
-	                  check
-	                </v-icon>
+	                >check</v-icon>
 	              </v-scroll-y-transition>
 	            </div>
 	          </v-item>

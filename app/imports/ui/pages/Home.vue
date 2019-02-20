@@ -19,9 +19,7 @@
       <section class="text-xs-center">
         <v-layout row wrap justify-space-around class="selling-points">
           <v-layout column align-center>
-            <v-icon x-large class="ma-2">
-              money_off
-            </v-icon>
+            <v-icon x-large class="ma-2">money_off</v-icon>
             <h3 class="mb-2">
               Free, open source, community funded
             </h3>
@@ -31,9 +29,7 @@
             </p>
           </v-layout>
           <v-layout column align-center>
-            <v-icon x-large class="ma-2">
-              ballot
-            </v-icon>
+            <v-icon x-large class="ma-2">ballot</v-icon>
             <h3 class="mb-2">
               Character sheets optimised for one ruleset
             </h3>
@@ -43,9 +39,7 @@
             </p>
           </v-layout>
           <v-layout column align-center>
-            <v-icon x-large class="ma-2">
-              scatter_plot
-            </v-icon>
+            <v-icon x-large class="ma-2">scatter_plot</v-icon>
             <h3 class="mb-2">
               Inventory manager
             </h3>

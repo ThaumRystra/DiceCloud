@@ -2,22 +2,16 @@
 	<v-layout column style="height: 100%;">
     <v-toolbar :color="color || 'secondary'" dark class="base-dialog-toolbar" :flat="!offsetTop">
 			<v-btn icon flat @click="close">
-				<v-icon>
-					arrow_back
-				</v-icon>
+				<v-icon>arrow_back</v-icon>
 			</v-btn>
       <slot name="toolbar"></slot>
 			<template v-if="$slots.edit">
 				<v-spacer/>
 				<v-btn icon flat @click="() => $emit('delete')" v-if="isEditing">
-					<v-icon>
-						delete
-					</v-icon>
+					<v-icon>delete</v-icon>
 				</v-btn>
 				<v-btn icon flat @click="isEditing = !isEditing">
-					<v-icon>
-						{{isEditing ? 'check' : 'create'}}
-					</v-icon>
+					<v-icon>{{isEditing ? 'check' : 'create'}}</v-icon>
 				</v-btn>
 			</template>
     </v-toolbar>

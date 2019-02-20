@@ -32,9 +32,7 @@
             <v-list-tile-action>
               <v-tooltip left v-if="email.verified">
                 <span>Verified</span>
-                <v-icon slot="activator">
-                  assignment_turned_in
-                </v-icon>
+                <v-icon slot="activator">assignment_turned_in</v-icon>
               </v-tooltip>
               <v-tooltip left v-else="email.verified">
                 <span>Verify Account</span>
@@ -44,9 +42,7 @@
                   slot="activator"
                   @click="verifyEmail(email.address)"
                 >
-                  <v-icon>
-                    assignment_late
-                  </v-icon>
+                  <v-icon>assignment_late</v-icon>
                 </v-btn>
               </v-tooltip>
             </v-list-tile-action>
@@ -56,9 +52,7 @@
               <v-tooltip right>
                 <span>Add email address</span>
                 <v-btn flat icon slot="activator">
-                  <v-icon>
-                    add
-                  </v-icon>
+                  <v-icon>add</v-icon>
                 </v-btn>
               </v-tooltip>
             </v-list-tile-action>

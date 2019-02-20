@@ -15,13 +15,11 @@
 					class="icon"
 					slot="prepend"
 					:class="iconClass"
-				>
-					{{displayedIcon}}
-				</v-icon>
+				>{{displayedIcon}}</v-icon>
 				<template slot="item" slot-scope="item">
-					<v-icon class="icon mr-2">
-						{{getEffectIcon(item.item.value, 1)}}
-					</v-icon>
+					<v-icon
+						class="icon mr-2"
+					>{{getEffectIcon(item.item.value, 1)}}</v-icon>
 					{{item.item.text}}
 				</template>
 			</smart-select>
