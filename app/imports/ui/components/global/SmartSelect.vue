@@ -2,7 +2,7 @@
   <v-select
 		v-bind="$attrs"
 		:loading="loading"
-		:error-messages="errorMessages"
+		:error-messages="errors"
 		:value="safeValue"
 		:menu-props="{auto: true, lazy: true}"
 		@change="change"

@@ -12,7 +12,7 @@ export default {
   inheritAttrs: false,
   data(){ return {
     error: false,
-    errorMessages: [],
+    ackErrors: null,
     focused: false,
     loading: false,
     dirty: false,
@@ -25,6 +25,7 @@ export default {
       type: Number,
       default: 750,
     },
+    errorMessages: [String, Array],
   },
   watch: {
     focused(newFocus){
@@ -56,7 +57,7 @@ export default {
     safeValue(newSafeValue){
       // The safe value only gets updated from the parent, so it must be valid
       this.error = false;
-      this.errorMessages = [];
+      this.ackErrors = null;
     },
   },
   methods: {
@@ -70,7 +71,7 @@ export default {
       this.loading = false;
       this.dirty = false;
       this.error = !!error;
-      this.errorMessages = error || [];
+      this.ackErrors = error || null;
     },
     change(val){
       this.dirty = true;
@@ -84,6 +85,17 @@ export default {
       // hack to force the value to update on the child component
       this.safeValue = null
       this.$nextTick(() => this.safeValue = this.value);
+    },
+  },
+  computed: {
+    errors(){
+      let errors = this.ackErrors ? [this.ackErrors] : [];
+      if (Array.isArray(this.errorMessages)){
+        errors.push(...this.errorMessages);
+      } else if (typeof this.errorMessages === 'string' && this.errorMessages){
+        errors.push(this.errorMessages);
+      }
+      return errors;
     },
   },
   created(){

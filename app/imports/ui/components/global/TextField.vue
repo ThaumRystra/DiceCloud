@@ -2,7 +2,7 @@
   <v-text-field
 		v-bind="$attrs"
 		:loading="loading"
-		:error-messages="errorMessages"
+		:error-messages="errors"
 		:value="safeValue"
 		@input="input"
 		@focus="focused = true"
