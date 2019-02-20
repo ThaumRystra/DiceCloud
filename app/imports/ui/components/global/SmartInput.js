@@ -6,7 +6,7 @@
  * Emits a change event that requires acknowledgement with an optional error
  * message if something went wrong
  */
-import { _ } from 'underscore';
+import { debounce } from 'lodash';
 
 export default {
   inheritAttrs: false,
@@ -87,6 +87,9 @@ export default {
     },
   },
   created(){
-    this.debouncedChange = _.debounce(this.change, this.debounceTime);
+    this.debouncedChange = debounce(this.change, this.debounceTime);
+  },
+  beforeDestroy(){
+    this.debouncedChange.flush();
   },
 };

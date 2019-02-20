@@ -19,6 +19,7 @@
     "core-js": "^2.6.3",
     "css-box-shadow": "^1.0.0-3",
     "fibers": "^2.0.2",
+    "lodash": "^4.17.11",
     "meteor-node-stubs": "^0.3.3",
     "qrcode": "^1.3.3",
     "simpl-schema": "^1.5.5",
