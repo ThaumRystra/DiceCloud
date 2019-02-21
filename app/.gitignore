@@ -8,4 +8,5 @@ private/oldClient
 nohup.out
 node_modules
 dump
+.idea/
 .cache
