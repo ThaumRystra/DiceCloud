@@ -89,7 +89,7 @@
 
 		</column-layout>
 
-		<v-btn absolute fab bottom right
+		<v-btn fixed fab bottom right
 			color="primary"
 			@click="insertAttribute"
 			data-id="insert-attribute-fab"
