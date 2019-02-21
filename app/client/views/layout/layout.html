@@ -51,9 +51,16 @@
 				<iron-icon icon="bug-report" item-icon></iron-icon>
 				Send Feedback
 			</paper-icon-item>
-			<a class="patreon" href="https://www.patreon.com/dicecloud" target="_blank" tabindex="-1">
+			<a class="patreon" href="{{patreonLink}}" target="_blank" tabindex="-1">
 				<paper-icon-item>
-					<iron-icon icon="dicecloud:patreon" item-icon></iron-icon>
+					<iron-icon id="patreon-link-icon" icon="dicecloud:patreon" item-icon></iron-icon>
+					{{#if showPatreonBadge}}
+						<paper-badge
+		            icon="av:new-releases"
+		            for="patreon-link-icon"
+		            label="New post">
+		        </paper-badge>
+					{{/if}}
 					Patreon
 				</paper-icon-item>
 			</a>

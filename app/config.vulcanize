@@ -2,13 +2,13 @@
   "polyfill": "/components/webcomponentsjs/webcomponents.min.js",
   "useShadowDom": true,
   "imports": [
-    "/components/app-layout/app-layout.html",
-    "/components/app-layout/app-layout.html",
+  "/components/app-layout/app-layout.html",
+  "/components/app-layout/app-layout.html",
 	"/components/app-layout/app-scroll-effects/effects/waterfall.html",
 	"/components/app-layout/app-scroll-effects/effects/parallax-background.html",
 	"/components/app-layout/app-scroll-effects/effects/resize-title.html",
 
-    "/components/iron-collapse/iron-collapse.html",
+  "/components/iron-collapse/iron-collapse.html",
 	"/components/iron-icon/iron-icon.html",
 	"/components/iron-icons/av-icons.html",
 	"/components/iron-icons/editor-icons.html",
@@ -21,7 +21,8 @@
 
 	"/components/neon-animation/neon-animation.html",
 
-	"/components/paper-button/paper-button.html",
+  "/components/paper-button/paper-button.html",
+	"/components/paper-badge/paper-badge.html",
 	"/components/paper-swatch-picker/paper-swatch-picker.html",
 	"/components/paper-dialog/paper-dialog.html",
 	"/components/paper-dropdown-menu/paper-dropdown-menu.html",

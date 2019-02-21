@@ -70,6 +70,10 @@ Schemas.User = new SimpleSchema({
 		index: 1,
 		optional: true,
 	},
+	lastPatreonPostClicked: {
+		type: String,
+		optional: true,
+	},
 });
 
 Meteor.users.attachSchema(Schemas.User);
@@ -105,5 +109,13 @@ if (Meteor.isServer) Meteor.methods({
 		if (user && user.apiKey) return;
 		var apiKey = Random.id(30);
 		Meteor.users.update(this.userId, {$set: {apiKey}});
+	},
+});
+
+Meteor.methods({
+	clickPatreonPost(link) {
+		Meteor.users.update(this.userId, {$set: {
+			lastPatreonPostClicked: link
+		}});
 	},
 });

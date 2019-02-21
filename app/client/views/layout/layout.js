@@ -7,6 +7,16 @@ Template.appDrawer.helpers({
 		var user = Meteor.user();
 		return user.profile && user.profile.username || user.username || "My Account";
 	},
+	showPatreonBadge: function(){
+		let post = PatreonPosts.findOne({}, {sort: {date: -1}});
+		let user = Meteor.user();
+		if (!post || !user) return false;
+		return post.link !== user.lastPatreonPostClicked;
+	},
+	patreonLink: function(){
+		let post = PatreonPosts.findOne({}, {sort: {date: -1}});
+		return (post && post.link) || 'https://www.patreon.com/dicecloud';
+	},
 });
 
 let drawerLayout;
@@ -37,6 +47,9 @@ Template.appDrawer.events({
 		closeDrawer(instance);
 	},
 	"click .patreon": function(event, instance){
+		let post = PatreonPosts.findOne({}, {sort: {date: -1}});
+		let link = (post && post.link) || 'https://www.patreon.com/dicecloud';
+		Meteor.call('clickPatreonPost', link);
 		ga("send", "event", "externalLink", "patreon");
 	},
 	"click .github": function(event, instance){
