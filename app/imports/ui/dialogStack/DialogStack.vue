@@ -217,7 +217,7 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
-		z-index: 3;
+		z-index: 4;
   }
   .dialog-sizer {
     position: relative;

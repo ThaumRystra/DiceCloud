@@ -1,6 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import OrderSchema from "/imports/api/creature/subSchemas/OrderSchema.js";
+import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
+import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
+import { getHighestOrder } from '/imports/api/order.js';
 import {makeParent} from "/imports/api/parenting.js";
 
 let Features = new Mongo.Collection("features");
@@ -13,17 +17,58 @@ let featureSchema = schema({
 	used:         {type: SimpleSchema.Integer, defaultValue: 0},
 	reset:        {
 		type: String,
-		allowedValues: ["manual", "longRest", "shortRest"],
-		defaultValue: "manual",
+		allowedValues: ["longRest", "shortRest"],
+		optional: true,
 	},
 	enabled:      {type: Boolean, defaultValue: true},
 	alwaysEnabled:{type: Boolean, defaultValue: true},
+	order: {
+		type: SimpleSchema.Integer,
+		// Indexed because we update order in bulk using the current order as a query
+		index: 1,
+		defaultValue: 0,
+	},
+	order: OrderSchema(),
+	color: ColorSchema(),
 });
 
 Features.attachSchema(featureSchema);
-Features.attachSchema(ColorSchema);
 
 //Features.attachBehaviour("softRemovable");
 makeParent(Features, ["name", "enabled"]); //parents of effects and attacks
 
+const insertFeature = new ValidatedMethod({
+
+  name: "Features.methods.insert",
+
+  validate: schema({
+		feature: {
+			type: featureSchema.omit('order', 'parent'),
+		},
+	}).validator({clean: true}),
+
+  run({feature}) {
+		const charId = feature.charId;
+		if (canEditCreature(charId, this.userId)){
+			// Set order
+			feature.order = getHighestOrder({
+				collection: Features,
+				charId,
+			}) + 1;
+
+			// Set parent
+			feature.parent = {
+				id: charId,
+				collection: 'Creatures',
+			};
+
+			// Insert
+			let featureId = Features.insert(feature);
+			recomputeCreatureById(charId);
+			return featureId;
+		}
+  },
+});
+
 export default Features;
+export { insertFeature }

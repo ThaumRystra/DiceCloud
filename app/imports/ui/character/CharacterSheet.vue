@@ -16,6 +16,9 @@
         <v-tab>
           Stats
         </v-tab>
+        <v-tab>
+          Features
+        </v-tab>
 				<v-tab>
           Tree
         </v-tab>
@@ -25,6 +28,9 @@
 			<v-tabs-items v-model="tab">
 	      <v-tab-item>
 	        <stats-tab :char-id="character._id"/>
+	      </v-tab-item>
+				<v-tab-item>
+	        <features-tab :char-id="character._id"/>
 	      </v-tab-item>
 				<v-tab-item>
 					<character-tree-view :char-id="character._id"/>
@@ -43,6 +49,7 @@
 	import { mapMutations } from "vuex";
 	import { theme } from '/imports/ui/theme.js';
 	import StatsTab from '/imports/ui/character/StatsTab.vue';
+	import FeaturesTab from '/imports/ui/character/FeaturesTab.vue';
 	import CharacterTreeView from '/imports/ui/character/CharacterTreeView.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js'
 
@@ -53,6 +60,7 @@
 		},
 		components: {
 			StatsTab,
+			FeaturesTab,
 			CharacterTreeView,
 		},
 		data(){return {

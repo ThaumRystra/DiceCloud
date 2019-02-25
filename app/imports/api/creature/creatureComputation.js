@@ -94,8 +94,47 @@ function writeCreature(char) {
   writeSkills(char);
   writeDamageMultipliers(char);
   writeEffects(char);
-  Creatures.update(char.id, {$set: {level: char.level}});
+  writeCreatureDoc(char);
 };
+
+function writeCreatureDoc(char) {
+  // Store all the variables, using the same priority as computation evaluation
+  // Attributes
+  let variables = {};
+  for (let key in char.atts){
+    variables[key] = char.atts[key].result;
+    if (
+      char.atts[key].attributeType === 'ability' &&
+      !variables.hasOwnProperty(key + 'Mod')
+    ){
+      variables[key + 'Mod'] = char.atts[key].mod;
+    }
+  }
+  for (let key in char.skills){
+    if (!variables.hasOwnProperty(key)){
+      variables[key] = char.skills[key].result;
+    }
+  }
+  // Damage Multipliers
+  for (let key in char.dms){
+    if (!variables.hasOwnProperty(key)){
+      variables[key] = char.dms[key].result;
+    }
+  }
+  // Class levels
+  for (let key in char.classes){
+    if (!variables.hasOwnProperty(key + 'Level')){
+      variables[key + 'Level'] = char.classes[key].level;
+    }
+  }
+  // Creature level
+  if (!variables.hasOwnProperty('level')){
+    variables['level'] = char.level;
+  }
+
+  // Write the creature
+  Creatures.update(char.id, {$set: {level: char.level, variables}});
+}
 
 /*
  * Write all the attributes from the in-memory char object to the Attirbute docs

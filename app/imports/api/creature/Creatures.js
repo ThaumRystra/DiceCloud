@@ -36,6 +36,9 @@ let creatureSchema = schema({
 	level:         {type: SimpleSchema.Integer, defaultValue: 0},
 	type:          {type: String, defaultValue: "pc", allowedValues: ["pc", "npc", "monster"]},
 
+	//computed
+	variables: {type: Object, blackbox: true},
+
 	//permissions
 	owner:   {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
 	readers: {type: Array, defaultValue: [], index: 1},

@@ -9,16 +9,15 @@
 			@change="change"
 			:debounce-time="0"
 		/>
-		<div slot="actions">
-			<v-spacer/>
-			<v-btn
-				flat
-				:disabled="!valid"
-				@click="$store.dispatch('popDialogStack', attribute)"
-			>
-				Insert Attribute
-			</v-btn>
-		</div>
+		<v-spacer slot="actions"/>
+		<v-btn
+			flat
+			slot="actions"
+			:disabled="!valid"
+			@click="$store.dispatch('popDialogStack', attribute)"
+		>
+			Insert Attribute
+		</v-btn>
 	</dialog-base>
 </template>
 
@@ -26,7 +25,6 @@
 	import AttributeEdit from '/imports/ui/components/AttributeEdit.vue';
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-	import { Tracker } from 'meteor/tracker';
 
 	export default {
 		components: {

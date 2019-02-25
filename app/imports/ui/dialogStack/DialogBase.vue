@@ -16,7 +16,7 @@
 			</template>
     </v-toolbar>
 		<v-card-text id="base-dialog-body" v-scroll:#base-dialog-body="onScroll">
-			<v-tabs-items :value="isEditing ? 1 : 0">
+			<v-tabs-items :value="isEditing ? 1 : 0" touchless>
 				<v-tab-item>
 					<slot/>
 				</v-tab-item>

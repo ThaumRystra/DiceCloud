@@ -49,7 +49,6 @@
 		/>
 		<smart-select
 			label="Reset"
-			append-icon="arrow_drop_down"
 			clearable
 			:items="resetOptions"
 			:value="attribute.reset"

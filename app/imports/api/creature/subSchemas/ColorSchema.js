@@ -1,6 +1,3 @@
-import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
-
 const ColorSchema = ({optional = false} = {}) => ({
 	type: String,
 	defaultValue: "#9E9E9E",

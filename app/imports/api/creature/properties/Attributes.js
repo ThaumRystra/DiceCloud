@@ -2,6 +2,7 @@ import {makeChild} from "/imports/api/parenting.js";
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import OrderSchema from "/imports/api/creature/subSchemas/OrderSchema.js";
 import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
 import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
 import { getHighestOrder } from '/imports/api/order.js';
@@ -29,12 +30,6 @@ let attributeSchema = schema({
 		regEx: /^\w*[a-z]\w*$/i,
 		index: 1,
   },
-	// Attributes need to store their order to keep the sheet consistent
-	order: {
-		type: SimpleSchema.Integer,
-		// Indexed because we update order in bulk using the current order as a query
-		index: 1,
-	},
   type: {
     type: String,
     allowedValues: [
@@ -58,6 +53,10 @@ let attributeSchema = schema({
     type: Number,
 		defaultValue: 0,
   },
+	enabled: {
+		type: Boolean,
+		defaultValue: true,
+	},
 	// The computed modifier, provided the attribute is an ability
 	mod: {
 		type: SimpleSchema.Integer,
@@ -82,6 +81,8 @@ let attributeSchema = schema({
     type: Number,
     optional: true,
   },
+	// Attributes need to store their order to keep the sheet consistent
+	order: OrderSchema(),
 	color: ColorSchema(),
 });
 
@@ -108,10 +109,9 @@ const insertAttribute = new ValidatedMethod({
 
   validate: schema({
 		attribute: {
-			type: Object,
-			blackbox: true,
+			type: attributeSchema.omit('order', 'parent'),
 		},
-	}).validator(),
+	}).validator({ clean: true }),
 
   run({attribute}) {
 		const charId = attribute.charId;

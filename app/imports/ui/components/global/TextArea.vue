@@ -4,6 +4,7 @@
 		:loading="loading"
 		:error-messages="errors"
 		:value="safeValue"
+		:auto-grow="autoGrow"
 		@input="input"
 		@focus="focused = true"
 		@blur="focused = false"
@@ -15,5 +16,11 @@
 
 	export default {
 		mixins: [SmartInput],
+		props: {
+			autoGrow: {
+				type: Boolean,
+				default: true,
+			},
+		},
 	};
 </script>
