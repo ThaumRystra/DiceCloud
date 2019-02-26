@@ -51,6 +51,7 @@
 	import HealthBar from '/imports/ui/components/attributes/HealthBar.Story.vue';
 	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.Story.vue';
 	import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
+	import ResourceCard from '/imports/ui/components/attributes/ResourceCard.Story.vue';
 	import SkillListTile from '/imports/ui/components/skills/SkillListTile.Story.vue';
 	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
@@ -69,6 +70,7 @@
 			HealthBar,
 			HitDiceListTile,
 			IconSearch,
+			ResourceCard,
 			SkillListTile,
 			SmartInput,
 			ToolbarLayout,

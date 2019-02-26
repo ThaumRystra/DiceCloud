@@ -209,13 +209,17 @@ const adjustAttribute = new ValidatedMethod({
 				if (adjustment > 0) adjustment = 0;
 				Attributes.update(_id, {$set: {adjustment}});
 			} else if (typeof increment === 'number'){
-				let remaining = currentAttribute.value + currentAttribute.adjustment;
+				let remaining = currentAttribute.value + (currentAttribute.adjustment || 0);
 				let adj = currentAttribute.adjustment;
 				// Can't decrease adjustment below remaining value
 				if (-increment > remaining) increment = -remaining;
 				// Can't increase adjustment above zero
 				if (increment > -adj) increment = -adj;
-				Attributes.update(_id, {$inc: {adjustment: increment}});
+				if (typeof currentAttribute.adjustment === 'number'){
+					Attributes.update(_id, {$inc: {adjustment: increment}});
+				} else {
+					Attributes.update(_id, {$set: {adjustment: increment}});
+				}
 			}
 		}
   },

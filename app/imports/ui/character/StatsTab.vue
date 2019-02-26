@@ -50,7 +50,7 @@
 								:data-id="hitDie._id"
 								:key="hitDice._id"
 								@click="clickAttribute({_id: hitDie._id})"
-								@change="e => hitDiceChange(hitDie._id, e)"
+								@change="e => incrementChange(hitDie._id, e)"
 							/>
 						</template>
 					</v-list>
@@ -87,6 +87,19 @@
 				</v-card>
 			</div>
 
+			<div
+				v-for="resource in resources"
+				:key="resource._id"
+				class="resource"
+			>
+				<resource-card
+					v-bind="resource"
+					:data-id="resource._id"
+					@click="clickAttribute({_id: resource._id})"
+					@change="e => incrementChange(resource._id, e)"
+				/>
+			</div>
+
 		</column-layout>
 
 		<v-btn fixed fab bottom right
@@ -109,6 +122,7 @@
 	import HealthBarCardContainer from '/imports/ui/components/attributes/HealthBarCardContainer.vue';
 	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/components/skills/SkillListTile.vue';
+	import ResourceCard from '/imports/ui/components/attributes/ResourceCard.vue';
 
 	import { adjustAttribute, insertAttribute } from '/imports/api/creature/properties/Attributes.js';
 
@@ -127,6 +141,7 @@
 			HealthBarCardContainer,
 			HitDiceListTile,
 			SkillListTile,
+			ResourceCard,
 		},
 		meteor: {
 			abilities(){
@@ -137,6 +152,15 @@
 			},
 			modifiers(){
 				return getAttributeOfType(this.charId, 'modifier');
+			},
+			resources(){
+				return Attributes.find({
+					charId: this.charId,
+					type: 'resource',
+					value: {$ne: 0},
+				}, {
+					sort: {order: 1}
+				});
 			},
 			hitDice(){
 				return Attributes.find({
@@ -195,7 +219,7 @@
 					data: {_id},
 				});
 			},
-			hitDiceChange(_id, {type, value}){
+			incrementChange(_id, {type, value}){
 				if (type === 'increment'){
 					adjustAttribute.call({_id, increment: value});
 				}

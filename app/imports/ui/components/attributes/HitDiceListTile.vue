@@ -60,11 +60,6 @@ export default {
 			this.$emit('change', {type: 'increment', value})
 		},
 	},
-	computed: {
-		hasClickListener(){
-    	return this.$listeners && this.$listeners.click
-		},
-	},
 };
 </script>
 
@@ -82,7 +77,7 @@ export default {
 		height: 100%;
 	}
 	.buttons > .v-btn {
-		margin: -2px;
+		margin: 0;
 	}
 	.hit-dice-list-tile.hover {
 		background: #f5f5f5 !important;
