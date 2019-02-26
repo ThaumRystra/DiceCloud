@@ -35,8 +35,8 @@
 
 <script>
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
-	import AttributeEffectList from '/imports/ui/components/AttributeEffectList.vue';
-	import AttributeEdit from '/imports/ui/components/AttributeEdit.vue';
+	import AttributeEffectList from '/imports/ui/components/attributes/AttributeEffectList.vue';
+	import AttributeEdit from '/imports/ui/components/attributes/AttributeEdit.vue';
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 	export default {

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-	import AbilityListTile from '/imports/ui/components/AbilityListTile.vue';
+	import AbilityListTile from '/imports/ui/components/attributes/AbilityListTile.vue';
 	import store from "/imports/ui/vuexStore.js";
 
 	export default {

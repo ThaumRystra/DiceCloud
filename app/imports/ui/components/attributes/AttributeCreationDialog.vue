@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import AttributeEdit from '/imports/ui/components/AttributeEdit.vue';
+	import AttributeEdit from '/imports/ui/components/attributes/AttributeEdit.vue';
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 

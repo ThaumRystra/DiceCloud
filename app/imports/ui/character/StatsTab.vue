@@ -103,11 +103,11 @@
 <script>
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
 	import Skills from '/imports/api/creature/properties/Skills.js';
-	import AttributeCard from '/imports/ui/components/AttributeCard.vue';
-	import AbilityListTile from '/imports/ui/components/AbilityListTile.vue';
+	import AttributeCard from '/imports/ui/components/attributes/AttributeCard.vue';
+	import AbilityListTile from '/imports/ui/components/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-	import HealthBarCardContainer from '/imports/ui/components/HealthBarCardContainer.vue';
-	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.vue';
+	import HealthBarCardContainer from '/imports/ui/components/attributes/HealthBarCardContainer.vue';
+	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.vue';
 
 	import { adjustAttribute, insertAttribute } from '/imports/api/creature/properties/Attributes.js';

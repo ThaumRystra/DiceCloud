@@ -14,7 +14,7 @@
 </template>
 
 <script>
-	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.vue';
+	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.vue';
 	export default {
 		data(){ return{
 			hitDice: [

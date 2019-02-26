@@ -39,17 +39,17 @@
 
 <script>
 	import Vue from "vue";
-	import AbilityListTile from '/imports/ui/components/AbilityListTile.Story.vue';
-	import AttributeCard from '/imports/ui/components/AttributeCard.Story.vue';
-	import AttributeEdit from '/imports/ui/components/AttributeEdit.Story.vue';
+	import AbilityListTile from '/imports/ui/components/attributes/AbilityListTile.Story.vue';
+	import AttributeCard from '/imports/ui/components/attributes/AttributeCard.Story.vue';
+	import AttributeEdit from '/imports/ui/components/attributes/AttributeEdit.Story.vue';
 	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
 	import EffectEdit from '/imports/ui/components/EffectEdit.Story.vue';
 	import EffectEditExpansionList from '/imports/ui/components/EffectEditExpansionList.Story.vue';
 	import FeatureCard from '/imports/ui/components/FeatureCard.Story.vue';
-	import HealthBar from '/imports/ui/components/HealthBar.Story.vue';
-	import HitDiceListTile from '/imports/ui/components/HitDiceListTile.Story.vue';
+	import HealthBar from '/imports/ui/components/attributes/HealthBar.Story.vue';
+	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.Story.vue';
 	import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
 	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
 	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';

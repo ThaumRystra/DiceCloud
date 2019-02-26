@@ -13,7 +13,7 @@
 </template>
 
 <script>
-	import AttributeEdit from '/imports/ui/components/AttributeEdit.vue';
+	import AttributeEdit from '/imports/ui/components/attributes/AttributeEdit.vue';
 	import debounceUpdate from '/imports/ui/utility/debounceUpdate.js';
 	export default {
 		components: {

@@ -9,7 +9,7 @@
 <script>
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
 	import { adjustAttribute } from '/imports/api/creature/properties/Attributes.js';
-	import HealthBarCard from '/imports/ui/components/HealthBarCard.vue';
+	import HealthBarCard from '/imports/ui/components/attributes/HealthBarCard.vue';
 
 	export default {
 		components: {
