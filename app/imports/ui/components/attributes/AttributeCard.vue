@@ -1,14 +1,14 @@
 <template lang="html">
   <v-card :hover="hasClickListener" @click="click">
   	<v-card-text>
-  		<v-layout row align-center>
+  		<div class="layout row align-center">
   			<div class="value display-1 mr-1">
   				{{modifier ? signed(value) : value}}
   			</div>
-				<v-flex class="name text-truncate">
+				<div class="name text-truncate">
 					{{name}}
-				</v-flex>
-  		</v-layout>
+				</div>
+  		</div>
   	</v-card-text>
   </v-card>
 </template>

@@ -54,6 +54,7 @@
 	import ResourceCard from '/imports/ui/components/attributes/ResourceCard.Story.vue';
 	import SkillListTile from '/imports/ui/components/skills/SkillListTile.Story.vue';
 	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';
+	import SpellSlotListTile from '/imports/ui/components/attributes/SpellSlotListTile.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 
 	export default {
@@ -73,6 +74,7 @@
 			ResourceCard,
 			SkillListTile,
 			SmartInput,
+			SpellSlotListTile,
 			ToolbarLayout,
 		},
 		data(){ return {

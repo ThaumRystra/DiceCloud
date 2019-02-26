@@ -5,10 +5,10 @@
 
 			<v-layout row align-center class="left">
 				<v-layout column class="buttons" justify-center>
-					<v-btn icon flat :disabled="value >= maxValue" @click="increment(1)">
+					<v-btn icon small :disabled="value >= maxValue" @click="increment(1)">
 						<v-icon>arrow_drop_up</v-icon>
 					</v-btn>
-					<v-btn icon flat :disabled="value <= 0" @click="increment(-1)">
+					<v-btn icon small :disabled="value <= 0" @click="increment(-1)">
 						<v-icon>arrow_drop_down</v-icon>
 					</v-btn>
 				</v-layout>

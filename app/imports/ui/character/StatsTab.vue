@@ -100,6 +100,22 @@
 				/>
 			</div>
 
+			<div class="spell-slots" v-if="spellSlots.length">
+				<v-card>
+					<v-list>
+						<v-subheader>Spell Slots</v-subheader>
+						<spell-slot-list-tile
+							v-for="spellSlot in spellSlots"
+							v-bind="spellSlot"
+							:key="spellSlot._id"
+							:data-id="spellSlot._id"
+							@click="clickAttribute({_id: spellSlot._id})"
+							@change="e => incrementChange(spellSlot._id, e)"
+						/>
+					</v-list>
+				</v-card>
+			</div>
+
 		</column-layout>
 
 		<v-btn fixed fab bottom right
@@ -123,11 +139,22 @@
 	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/components/skills/SkillListTile.vue';
 	import ResourceCard from '/imports/ui/components/attributes/ResourceCard.vue';
+	import SpellSlotListTile from '/imports/ui/components/attributes/SpellSlotListTile.vue';
 
 	import { adjustAttribute, insertAttribute } from '/imports/api/creature/properties/Attributes.js';
 
 	const getAttributeOfType = function(charId, type){
 		return Attributes.find({charId, type}, {sort: {order: 1}});
+	};
+
+	const getNonZeroAttributeOfType = function(charId, type){
+		return Attributes.find({
+			charId,
+			type,
+			value: {$ne: 0},
+		}, {
+			sort: {order: 1}
+		});
 	};
 
 	export default {
@@ -142,6 +169,7 @@
 			HitDiceListTile,
 			SkillListTile,
 			ResourceCard,
+			SpellSlotListTile,
 		},
 		meteor: {
 			abilities(){
@@ -154,13 +182,10 @@
 				return getAttributeOfType(this.charId, 'modifier');
 			},
 			resources(){
-				return Attributes.find({
-					charId: this.charId,
-					type: 'resource',
-					value: {$ne: 0},
-				}, {
-					sort: {order: 1}
-				});
+				return getNonZeroAttributeOfType(this.charId, 'resource');
+			},
+			spellSlots(){
+				return getNonZeroAttributeOfType(this.charId, 'spellSlot');
 			},
 			hitDice(){
 				return Attributes.find({
