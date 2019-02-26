@@ -45,13 +45,13 @@
 	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
-	import EffectEdit from '/imports/ui/components/EffectEdit.Story.vue';
-	import EffectEditExpansionList from '/imports/ui/components/EffectEditExpansionList.Story.vue';
-	import FeatureCard from '/imports/ui/components/FeatureCard.Story.vue';
+	import EffectEdit from '/imports/ui/components/effects/EffectEdit.Story.vue';
+	import EffectEditExpansionList from '/imports/ui/components/effects/EffectEditExpansionList.Story.vue';
+	import FeatureCard from '/imports/ui/components/features/FeatureCard.Story.vue';
 	import HealthBar from '/imports/ui/components/attributes/HealthBar.Story.vue';
 	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.Story.vue';
 	import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
-	import SkillListTile from '/imports/ui/components/SkillListTile.Story.vue';
+	import SkillListTile from '/imports/ui/components/skills/SkillListTile.Story.vue';
 	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 

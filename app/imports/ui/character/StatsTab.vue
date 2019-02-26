@@ -108,7 +108,7 @@
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 	import HealthBarCardContainer from '/imports/ui/components/attributes/HealthBarCardContainer.vue';
 	import HitDiceListTile from '/imports/ui/components/attributes/HitDiceListTile.vue';
-	import SkillListTile from '/imports/ui/components/SkillListTile.vue';
+	import SkillListTile from '/imports/ui/components/skills/SkillListTile.vue';
 
 	import { adjustAttribute, insertAttribute } from '/imports/api/creature/properties/Attributes.js';
 

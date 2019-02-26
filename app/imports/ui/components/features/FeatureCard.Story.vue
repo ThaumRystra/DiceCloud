@@ -13,7 +13,7 @@
 
 <script>
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-	import FeatureCard from '/imports/ui/components/FeatureCard.vue';
+	import FeatureCard from '/imports/ui/components/features/FeatureCard.vue';
 
 	export default {
 		dontWrap: true,

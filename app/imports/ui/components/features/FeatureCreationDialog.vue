@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import FeatureEdit from '/imports/ui/components/FeatureEdit.vue';
+	import FeatureEdit from '/imports/ui/components/features/FeatureEdit.vue';
 	import Features from '/imports/api/creature/properties/Features.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 

@@ -29,9 +29,9 @@
 <script>
 	import AttributeEffectList from '/imports/ui/components/attributes/AttributeEffectList.vue';
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
-	import SkillEdit from '/imports/ui/components/SkillEdit.vue';
-	import SkillProficiencyList from '/imports/ui/components/SkillProficiencyList.vue';
-	import SkillListTile from '/imports/ui/components/SkillListTile.vue';
+	import SkillEdit from '/imports/ui/components/skills/SkillEdit.vue';
+	import SkillProficiencyList from '/imports/ui/components/skills/SkillProficiencyList.vue';
+	import SkillListTile from '/imports/ui/components/skills/SkillListTile.vue';
 
 	export default {
 		components: {

@@ -10,7 +10,7 @@
 
 <script>
 
-	import SkillDialog from '/imports/ui/components/SkillDialog.vue';
+	import SkillDialog from '/imports/ui/components/skills/SkillDialog.vue';
 	import Skills from '/imports/api/creature/properties/Skills.js';
 	import { updateSkill } from '/imports/api/creature/properties/Skills.js';
 	import Attributes from '/imports/api/creature/properties/Attributes.js';

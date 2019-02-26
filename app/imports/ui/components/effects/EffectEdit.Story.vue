@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import EffectEdit from '/imports/ui/components/EffectEdit.vue';
+import EffectEdit from '/imports/ui/components/effects/EffectEdit.vue';
 export default {
 	data(){ return {
 		effects: [

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-	import EffectListTile from '/imports/ui/components/EffectListTile.vue';
+	import EffectListTile from '/imports/ui/components/effects/EffectListTile.vue';
 	const SORT_INDEX = {
 		"base": 1,
 		"add": 2,
