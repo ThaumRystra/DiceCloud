@@ -39,7 +39,6 @@ export default () => ({
 		{"name": "Level 9 Spell Slots", "variableName": "level9SpellSlots", "type": "spellSlot"},
 
     {"name": "Proficiency Bonus", "variableName": "proficiencyBonus", "type": "modifier"},
-    {"name": "Initiative",        "variableName": "initiative",       "type": "modifier"},
 
   	{"name": "Carry Capacity Multiplier", "variableName": "carryMultiplier", "type": "utility", "baseValue": 1},
   	{"name": "Rage Damage",               "variableName": "rageDamage",      "type": "utility"},
@@ -71,6 +70,8 @@ export default () => ({
     {"name": "Intelligence Save", "variableName": "intelligenceSave", "ability": "intelligence", "type":"save"},
     {"name": "Wisdom Save",       "variableName": "wisdomSave",       "ability": "wisdom",       "type":"save"},
     {"name": "Charisma Save",     "variableName": "charismaSave",     "ability": "charisma",     "type":"save"},
+
+    {"name": "Initiative",     "variableName": "initiative",     "ability": "dexterity",     "type":"check"},
   ],
 
   "damageMultipliers": [

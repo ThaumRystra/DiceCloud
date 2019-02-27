@@ -33,7 +33,7 @@ let skillSchema = schema({
     allowedValues: [
       "skill",
       "save",
-			"stat",
+			"check",
       "tool",
       "weapon",
       "language",

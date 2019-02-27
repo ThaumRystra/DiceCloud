@@ -39,6 +39,14 @@
 				/>
 			</div>
 
+			<div v-for="check in checks" class="check" :key="check._id">
+				<attribute-card modifier
+					v-bind="check"
+					:data-id="check._id"
+					@click="clickSkill({_id: check._id})"
+				/>
+			</div>
+
 			<div class="hit-dice">
 				<v-card>
 					<v-list>
@@ -210,6 +218,14 @@
 						maxValue: hd.value,
 						value: hd.value + (hd.adjustment || 0),
 					}
+				});
+			},
+			checks(){
+				return Skills.find({
+					charId: this.charId,
+					type: 'check',
+				}, {
+					sort: {order: 1},
 				});
 			},
 			savingThrows(){
