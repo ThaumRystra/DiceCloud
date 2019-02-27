@@ -13,7 +13,6 @@ matb33:collection-hooks
 momentjs:moment
 dburles:mongo-collection-instances
 percolate:migrations
-ecwyne:mathjs
 accounts-google@1.3.2
 splendido:accounts-meld
 email@1.2.3

@@ -3,7 +3,6 @@
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
 import Creatures from "/imports/api/creature/Creatures.js";
 import Attributes from "/imports/api/creature/properties/Attributes.js";
@@ -11,12 +10,13 @@ import Skills from "/imports/api/creature/properties/Skills.js";
 import Effects from "/imports/api/creature/properties/Effects.js";
 import DamageMultipliers from "/imports/api/creature/properties/DamageMultipliers.js";
 import Classes from "/imports/api/creature/properties/Classes.js";
+import * as math from 'mathjs';
 
 export const recomputeCreature = new ValidatedMethod({
 
   name: "Creatures.methods.recomputeCreature",
 
-  validate: schema({
+  validate: new SimpleSchema({
     charId: { type: String }
   }).validator(),
 
@@ -99,37 +99,9 @@ function writeCreature(char) {
 
 function writeCreatureDoc(char) {
   // Store all the variables, using the same priority as computation evaluation
-  // Attributes
   let variables = {};
-  for (let key in char.atts){
-    variables[key] = char.atts[key].result;
-    if (
-      char.atts[key].attributeType === 'ability' &&
-      !variables.hasOwnProperty(key + 'Mod')
-    ){
-      variables[key + 'Mod'] = char.atts[key].mod;
-    }
-  }
-  for (let key in char.skills){
-    if (!variables.hasOwnProperty(key)){
-      variables[key] = char.skills[key].result;
-    }
-  }
-  // Damage Multipliers
-  for (let key in char.dms){
-    if (!variables.hasOwnProperty(key)){
-      variables[key] = char.dms[key].result;
-    }
-  }
-  // Class levels
-  for (let key in char.classes){
-    if (!variables.hasOwnProperty(key + 'Level')){
-      variables[key + 'Level'] = char.classes[key].level;
-    }
-  }
-  // Creature level
-  if (!variables.hasOwnProperty('level')){
-    variables['level'] = char.level;
+  for (let key in char.variables){
+    variables[key] = char.variables[key].result;
   }
 
   // Write the creature
@@ -138,13 +110,6 @@ function writeCreatureDoc(char) {
 
 /*
  * Write all the attributes from the in-memory char object to the Attirbute docs
- */
-
-/**
- * writeAttributes - description
- *
- * @param  {type} char description
- * @returns {type}      description
  */
 function writeAttributes(char) {
   let bulkWriteOps =  _.map(char.atts, (att, variableName) => {
@@ -261,7 +226,7 @@ function writeDamageMultipliers(char) {
 
  /**
   * Get the creature's data from the database and build an in-memory model that
-  * can be computed. Hits 6 database collections with indexed queries.
+  * can be computed. Hits 7 database collections with indexed queries.
   *
   * @param  {type} charId description
   * @returns {type}        description
@@ -273,14 +238,16 @@ function buildCreature(charId){
     skills: {},
     dms: {},
     classes: {},
+    variables: {},
     otherEffects: [],
     computedEffects: [],
     level: 0,
   };
   // Fetch the attributes of the creature and add them to an object for quick lookup
   Attributes.find({charId}).forEach(attribute => {
-    if (!char.atts[attribute.variableName]){
-      char.atts[attribute.variableName] = {
+    const key = attribute.variableName;
+    if (!char.atts[key]){
+      char.atts[key] = {
         computed: false,
         busyComputing: false,
         type: "attribute",
@@ -295,13 +262,27 @@ function buildCreature(charId){
         max: Number.POSITIVE_INFINITY,
         effects: [],
       };
+      char.variables[key] = char.atts[key];
+      if (attribute.type === 'ability' && !char.variables[key + "Mod"]){
+        char.variables[key + "Mod"] = {
+          type: "abilityMod",
+          ability: char.atts[key],
+          get result(){
+            return this.ability.mod;
+          },
+          get computed(){
+            return this.ability.computed;
+          },
+        }
+      }
     }
   });
 
   // Fetch the skills of the creature and store them
   Skills.find({charId}).forEach(skill => {
-    if (!char.skills[skill.variableName]){
-      char.skills[skill.variableName] = {
+    const key = skill.variableName;
+    if (!char.skills[key]){
+      char.skills[key] = {
         computed: false,
         busyComputing: false,
         type: "skill",
@@ -321,13 +302,17 @@ function buildCreature(charId){
         effects: [],
         proficiencies: [],
       };
+      if (!char.variables[key]){
+        char.variables[key] = char.skills[key];
+      }
     }
   });
 
   // Fetch the damage multipliers of the creature and store them
   DamageMultipliers.find({charId}).forEach(damageMultiplier =>{
-    if (!char.dms[damageMultiplier.variableName]){
-      char.dms[damageMultiplier.variableName] = {
+    const key = damageMultiplier.variableName
+    if (!char.dms[key]){
+      char.dms[key] = {
         computed: false,
         busyComputing: false,
         type: "damageMultiplier",
@@ -337,18 +322,52 @@ function buildCreature(charId){
         vulnerabilityCount: 0,
         effects: [],
       };
+      if (!char.variables[key]){
+        char.variables[key] = char.dms[key];
+      }
     }
   });
 
   // Fetch the class levels and store them
   // don't use the word "class" it's reserved
+  const levelOverwritten = !!char.variables['level']
+  if (!levelOverwritten){
+    char.variables['level'] = {
+      result: 0,
+      type: 'characterLevel',
+      computed: true,
+    };
+  }
   Classes.find({charId}).forEach(cls => {
     const strippedCls = cls.name.replace(/\s+/g, '');
     if (!char.classes[strippedCls]){
       char.classes[strippedCls] = {level: cls.level};
       char.level += cls.level;
+      if (!char.variables[strippedCls]){
+        char.variables[strippedCls + "Level"] = {
+          result: cls.level,
+          type: 'classLevel',
+          computed: true,
+        };
+      }
+      if (!levelOverwritten){
+        char.variables['level'].result = char.level;
+      }
     }
   });
+
+  // Add direct properties from creature to variable list
+  const fields = { xp: 1, weightCarried: 1};
+  const creature = Creatures.findOne(charId, {fields});
+  for (let key in fields){
+    if (!char.variables[key]){
+      char.variables[key] = {
+        result: creature[key] || 0,
+        type: 'creatureProperty',
+        computed: true,
+      };
+    }
+  }
 
   // Fetch the effects which apply to each stat and store them under the attribute
   Effects.find({
@@ -386,7 +405,6 @@ function buildCreature(charId){
   return char;
 };
 
-
 /**
  *  Compute the creature's stats in-place, returns the same char object
  * @param  {type} char description
@@ -422,6 +440,11 @@ export function computeCreature(char){
  * @returns {type}      description
  */
 function computeStat(stat, char){
+  // Ability mods aren't stats, use the stat they are based off of
+  if (stat.type === 'abilityMod'){
+    stat = stat.ability;
+  }
+
   // If the stat is already computed, skip it
   if (stat.computed) return;
 
@@ -434,6 +457,7 @@ function computeStat(stat, char){
     stat.busyComputing = false;
     return;
   }
+
 
   // Iterate over each effect which applies to the stat
   for (i in stat.effects){
@@ -451,11 +475,7 @@ function computeStat(stat, char){
 }
 
  /**
-  * const computeEffect - Compute a single effect on a creature
-  *
-  * @param  {Object} effect The effect to compute
-  * @param  {Object} char   The char document to compute with
-  * @returns {undefined}        description
+  * Compute a the result of a single effect
   */
 function computeEffect(effect, char){
   if (effect.computed) return;
@@ -465,80 +485,67 @@ function computeEffect(effect, char){
     effect.result = effect.calculation;
   } else if(_.contains(["advantage", "disadvantage", "fail"], effect.operation)){
     effect.result = 1;
-  } else if (_.isString(effect.calculation)){
+  } else {
 		effect.result = evaluateCalculation(effect.calculation, char);
 	}
   effect.computed = true;
   char.computedEffects.push(effect);
 };
 
-
 /**
  * Apply a computed effect to its stat
- *
- * @param  {type} effect description
- * @param  {type} stat   description
- * @returns {type}        description
  */
 function applyEffect(effect, stat){
-  // Take the largest base value
-  if (effect.operation === "base"){
-    if (!_.has(stat, "base")) return;
-    stat.base = effect.result > stat.base ? effect.result : stat.base;
+  if (!_.has(stat, effect.operation)){
+    return;
   }
-  // Add all adds together
-  else if (effect.operation === "add"){
-    if (!_.has(stat, "add")) return;
-    stat.add += effect.result;
-  }
-  else if (effect.operation === "mul"){
-    if (!_.has(stat, "mul")) return;
-    stat.mul *= effect.result;
-  }
-  // Take the largest min value
-  if (effect.operation === "min"){
-    if (!_.has(stat, "min")) return;
-    stat.min = effect.result > stat.min ? effect.result : stat.min;
-  }
-  // Take the smallest max value
-  if (effect.operation === "max"){
-    if (!_.has(stat, "max")) return;
-    stat.max = effect.result < stat.max ? effect.result : stat.max;
-  }
-  // Sum number of advantages
-  else if (effect.operation === "advantage"){
-    if (!_.has(stat, "advantage")) return;
-    stat.advantage++;
-  }
-  // Sum number of disadvantages
-  else if (effect.operation === "disadvantage"){
-    if (!_.has(stat, "disadvantage")) return;
-    stat.disadvantage++;
-  }
-  // Add all passive adds together
-  else if (effect.operation === "passiveAdd"){
-    if (!_.has(stat, "passiveAdd")) return;
-    stat.passiveAdd += effect.result;
-  }
-  // Sum number of fails
-  else if (effect.operation === "fail"){
-    if (!_.has(stat, "fail")) return;
-    stat.fail++;
-  }
-  // Sum number of conditionals
-  else if (effect.operation === "conditional"){
-    if (!_.has(stat, "conditional")) return;
-    stat.conditional++;
+  switch(effect.operation){
+    case "base":
+      // Take the largest base value
+      stat.base = effect.result > stat.base ? effect.result : stat.base;
+      break;
+    case "add":
+      // Add all adds together
+      stat.add += effect.result;
+      break;
+    case "mul":
+      // Multiply the muls together
+      stat.mul *= effect.result;
+      break;
+    case "min":
+      // Take the largest min value
+      stat.min = effect.result > stat.min ? effect.result : stat.min;
+      break;
+    case "max":
+      // Take the smallest max value
+      stat.max = effect.result < stat.max ? effect.result : stat.max;
+      break;
+    case "advantage":
+      // Sum number of advantages
+      stat.advantage++;
+      break;
+    case "disadvantage":
+      // Sum number of disadvantages
+      stat.disadvantage++;
+      break;
+    case "passiveAdd":
+      // Add all passive adds together
+      stat.passiveAdd += effect.result;
+      break;
+    case "fail":
+      // Sum number of fails
+      stat.fail++;
+      break;
+    case "conditional":
+      // Sum number of conditionals
+      stat.conditional++;
+      break;
   }
 };
 
 
 /**
  * Combine the results of multiple effects to get the result of the stat
- *
- * @param  {type} stat description
- * @param  {type} char description
- * @returns {type}      description
  */
 function combineStat(stat, char){
   if (stat.type === "attribute"){
@@ -553,16 +560,11 @@ function combineStat(stat, char){
 
 /**
  * combineAttribute - Combine attributes's results into final values
- *
- * @param  {type} stat description
- * @param  {type} char description
- * @returns {type}      description
  */
 function combineAttribute(stat, char){
   stat.result = (stat.base + stat.add) * stat.mul;
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
-  // Round everything that isn't the carry multiplier
   if (!stat.decimal) stat.result = Math.floor(stat.result);
   if (stat.attributeType === "ability") {
     stat.mod = Math.floor((stat.result - 10) / 2);
@@ -571,11 +573,7 @@ function combineAttribute(stat, char){
 
 
 /**
- * combineSkill - Combine skills results into final values
- *
- * @param  {type} stat description
- * @param  {type} char description
- * @returns {type}      description
+ * Combine skills results into final values
  */
 function combineSkill(stat, char){
   for (i in stat.proficiencies){
@@ -608,11 +606,7 @@ function combineSkill(stat, char){
 }
 
 /**
- * combineDamageMultiplier - Combine damageMultiplier's results into final values
- *
- * @param  {type} stat description
- * @param  {type} char description
- * @returns {type}      description
+ * Combine damageMultiplier's results into final values
  */
 function combineDamageMultiplier(stat, char){
   if (stat.immunityCount) return 0;
@@ -625,69 +619,47 @@ function combineDamageMultiplier(stat, char){
   }
 }
 
+/**
+ * Get the value of a key, compute it if necessary
+ */
+function getComputedValueOfKey(sub, char){
+  const stat = char.variables[sub];
+  if (!stat) return null;
+  if (!stat.computed){
+    computeStat(stat, char);
+  }
+  return stat.result;
+};
 
 /**
- * evaluateCalculation - Evaluate a string computation in the context of  a char
- *
- * @param  {type} string description
- * @param  {type} char   description
- * @returns {type}        description
+ * Evaluate a string computation in the context of a char
  */
 function evaluateCalculation(string, char){
   if (!string) return string;
-  // Replace all the string variables with numbers if possible
-  string = string.replace(/\w*[a-z]\w*/gi, function(sub){
-    // Attributes
-    if (char.atts[sub]){
-      if (!char.atts[sub].computed){
-        computeStat(char.atts[sub], char);
-      }
-      return char.atts[sub].result;
+  // Parse the string using mathjs
+  let calc;
+  try {
+    calc = math.parse(string);
+  } catch (e) {
+    return string;
+  }
+  // Replace all symbols with known values
+  let substitutedCalc = calc.transform(node => {
+    if (node.isSymbolNode) {
+      let val = getComputedValueOfKey(node.name, char);
+      if (val === null) return node;
+      return new math.expression.node.ConstantNode(val);
     }
-    // Modifiers
-    if (/^\w+mod$/i.test(sub)){
-      var slice = sub.slice(0, -3);
-      if (char.atts[slice]){
-        if (!char.atts[slice].computed){
-          computeStat(char.atts[sub], char);
-        }
-        return char.atts[slice].mod;
-      }
+    else {
+      return node;
     }
-    // Skills
-    if (char.skills[sub]){
-      if (!char.skills[sub].computed){
-        computeStat(char.skills[sub], char);
-      }
-      return char.skills[sub].result;
-    }
-    // Damage Multipliers
-    if (char.dms[sub]){
-      if (!char.dms[sub].computed){
-        computeStat(char.dms[sub], char);
-      }
-      return char.dms[sub].result;
-    }
-    // Class levels
-    if (/^\w+levels?$/i.test(sub)){
-      //strip out "level(s)"
-      var className = sub.replace(/levels?$/i, "");
-      return char.classes[className] && char.classes[className].level;
-    }
-    // Creature level
-    if (sub  === "level"){
-      return char.level;
-    }
-    // Give up
-    return sub;
   });
 
-  // Evaluate the expression to a number or return it as is.
+  // Evaluate the expression to a number or return with substitutions
   try {
-    var result = math.eval(string); // math.eval is safe
-    return result;
+    return substitutedCalc.eval();
   } catch (e){
-    return string;
+    return substitutedCalc.toString();
   }
 };
 
@@ -699,7 +671,7 @@ function evaluateCalculation(string, char){
 export const recomputeCreatureXP = new ValidatedMethod({
   name: "Creatures.methods.recomputeCreatureXP",
 
-  validate: schema({
+  validate: new SimpleSchema({
     charId: { type: String }
   }).validator(),
 
@@ -729,7 +701,7 @@ export const recomputeCreatureXP = new ValidatedMethod({
 export const recomputeCreatureWeightCarried = new ValidatedMethod({
   name: "Creature.methods.recomputeCreatureWeightCarried",
 
-  validate: schema({
+  validate: new SimpleSchema({
     charId: { type: String }
   }).validator(),
 
