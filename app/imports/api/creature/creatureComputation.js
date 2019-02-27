@@ -396,7 +396,6 @@ function buildCreature(charId){
   Proficiencies.find({
     charId: charId,
     enabled: true,
-    type: {$in: ["skill", "save"]}
   }).forEach(proficiency => {
     if (char.skills[proficiency.skill]) {
       char.skills[proficiency.skill].proficiencies.push(proficiency);
