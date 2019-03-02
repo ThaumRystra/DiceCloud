@@ -2564,10 +2564,12 @@
 			"material": "a piece of iron and a flame"
 		},
 		"attacks": [
-			"attackBonus": "Con save",
-			"details": "range 60 feet",
-			"damage": "2d8",
-			"damageType": "fire"
+			{
+				"attackBonus": "Con save",
+				"details": "range 60 feet",
+				"damage": "2d8",
+				"damageType": "fire"
+			}
 		]
 	},
 	{
@@ -3023,7 +3025,7 @@
 				"damage": "8d6",
 				"damageType": "lightning"
 			}
-		}
+		]
 	},
 	{
 		"castingTime": "action",
@@ -4488,7 +4490,7 @@
 	},
 	{
 		"castingTime": "action",
-		"description":" "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
+		"description": "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
 		"duration": "Instanataneous",
 		"level": 0,
 		"range": "Touch",
@@ -5025,7 +5027,7 @@
 		},
 		"attacks": [
 			{
-				"details":" "range melee, heal half damage dealt",
+				"details": "range melee, heal half damage dealt",
 				"damage": "3d6",
 				"damageType": "necrotic"
 			}
