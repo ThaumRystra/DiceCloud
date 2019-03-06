@@ -22,12 +22,6 @@ let featureSchema = schema({
 	},
 	enabled:      {type: Boolean, defaultValue: true},
 	alwaysEnabled:{type: Boolean, defaultValue: true},
-	order: {
-		type: SimpleSchema.Integer,
-		// Indexed because we update order in bulk using the current order as a query
-		index: 1,
-		defaultValue: 0,
-	},
 	order: OrderSchema(),
 	color: ColorSchema(),
 });

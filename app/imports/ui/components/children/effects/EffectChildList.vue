@@ -1,6 +1,7 @@
 <template lang="html">
   <v-list two-line v-if="this.effects && this.effects.length">
 		<effect-list-tile
+			:show-stat-name="showStatName"
 			v-for="effect in sortedEffects"
 			v-bind="effect"
 			v-on="$listeners.click ? { click(e){$emit('click', e)} } : {}"
@@ -11,33 +12,20 @@
 
 <script>
 	import EffectListTile from '/imports/ui/components/effects/EffectListTile.vue';
-	const SORT_INDEX = {
-		"base": 1,
-		"add": 2,
-		"mul": 3,
-		"min": 4,
-		"max": 5,
-		"advantage": 6,
-		"disadvantage": 7,
-		"passiveAdd": 8,
-		"fail": 9,
-		"conditional": 10,
-	};
+	import sortEffects from '/imports/ui/utility/sortEffects.js';
 
 	export default {
 		props: {
 			effects: Array,
+			showStatName: Boolean,
 		},
 		components: {
 			EffectListTile,
 		},
 		computed: {
 			sortedEffects(){
-				if (!this.effects || !this.effects.length) return [];
-				return [...this.effects].sort(
-					(a, b) => (SORT_INDEX[a.operation] || 99) - (SORT_INDEX[b.operation] || 99)
-				);
-			}
+				return sortEffects(this.effects);
+			},
 		},
 	};
 </script>

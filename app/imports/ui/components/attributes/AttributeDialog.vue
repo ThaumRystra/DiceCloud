@@ -21,10 +21,10 @@
 			<div class="display-3 attribute-value" v-else>
 				{{value}}
 			</div>
-			<attribute-effect-list v-if="attribueBaseEffect" :effects="[attribueBaseEffect]"/>
+			<effect-child-list v-if="attribueBaseEffect" :effects="[attribueBaseEffect]"/>
 			<div v-if="effects && effects.length">
 				<h6 class="title">Effects</h6>
-				<attribute-effect-list :effects="effects" @click="clickedEffect"/>
+				<effect-child-list :effects="effects" @click="clickedEffect"/>
 			</div>
 		</div>
 		<div slot="edit">
@@ -35,7 +35,7 @@
 
 <script>
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
-	import AttributeEffectList from '/imports/ui/components/attributes/AttributeEffectList.vue';
+	import EffectChildList from 'app/imports/ui/components/children/effects/EffectChildList.vue';
 	import AttributeEdit from '/imports/ui/components/attributes/AttributeEdit.vue';
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
@@ -78,7 +78,7 @@
 		},
 		components: {
 			DialogBase,
-			AttributeEffectList,
+			EffectChildList,
 			AttributeEdit,
 		},
 	};

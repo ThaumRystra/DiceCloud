@@ -17,7 +17,7 @@
 			</div>
 		</v-layout>
 		<v-list-tile-content>
-			<v-list-tile-title class="stat" v-if="statName">
+			<v-list-tile-title class="stat" v-if="showStatName">
 				{{statName}}
 			</v-list-tile-title>
 			<v-list-tile-title class="name" v-else>
@@ -43,6 +43,7 @@
 			name: String,
 			stat: String,
 			statName: String,
+			showStatName: Boolean,
 		},
 		methods: {
 			getEffectIcon,

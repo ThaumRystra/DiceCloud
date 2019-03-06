@@ -8,8 +8,8 @@
 				<skill-list-tile v-bind="$props"/>
 			</v-layout>
 			<skill-proficiency-list v-if="skillBaseProficiency" :effects="[skillBaseProficiency]"/>
-			<attribute-effect-list v-if="skillAbilityEffect" :effects="[skillAbilityEffect]"/>
-			<attribute-effect-list v-if="skillBaseEffect" :effects="[skillBaseEffect]"/>
+			<effect-child-list v-if="skillAbilityEffect" :effects="[skillAbilityEffect]"/>
+			<effect-child-list v-if="skillBaseEffect" :effects="[skillBaseEffect]"/>
 
 			<div v-if="proficiencies && proficiencies.length">
 				<h6 class="title">Proficiencies</h6>
@@ -17,7 +17,7 @@
 			</div>
 			<div v-if="effects && effects.length">
 				<h6 class="title">Effects</h6>
-				<attribute-effect-list :effects="effects" @click="clickedEffect"/>
+				<effect-child-list :effects="effects" @click="clickedEffect"/>
 			</div>
 		</div>
 		<div slot="edit">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-	import AttributeEffectList from '/imports/ui/components/attributes/AttributeEffectList.vue';
+	import EffectChildList from 'app/imports/ui/components/children/effects/EffectChildList.vue';
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
 	import SkillEdit from '/imports/ui/components/skills/SkillEdit.vue';
 	import SkillProficiencyList from '/imports/ui/components/skills/SkillProficiencyList.vue';
@@ -35,7 +35,7 @@
 
 	export default {
 		components: {
-			AttributeEffectList,
+			EffectChildList,
 			DialogBase,
 			SkillEdit,
 			SkillListTile,
