@@ -64,6 +64,7 @@ iron:router@1.1.2
 iron:url@1.1.0
 jquery@1.11.11
 lai:collection-extensions@0.2.1_1
+lamhieu:meteorx@2.0.1
 launch-screen@1.1.1
 less@2.8.0
 littledata:synced-cron@1.5.1
@@ -76,7 +77,6 @@ meteor@1.9.2
 meteor-base@1.4.0
 meteorhacks:subs-manager@1.6.4
 minifier-css@1.4.0
-minifier-js@2.4.0
 minimongo@1.4.5
 mobile-experience@1.0.5
 mobile-status-bar@1.0.14
@@ -88,6 +88,8 @@ mongo@1.6.0
 mongo-decimal@0.1.0
 mongo-dev-server@1.1.0
 mongo-id@1.0.7
+mongo-livedata@1.0.12
+montiapm:agent@2.34.3
 nikogosovd:multiple-uihooks@0.1.8
 npm-bcrypt@0.9.3
 npm-mongo@3.1.1
@@ -119,7 +121,6 @@ spacebars-compiler@1.1.3
 splendido:accounts-emails-field@1.2.0
 splendido:accounts-meld@1.3.1
 srp@1.0.12
-standard-minifier-js@2.4.0
 templates:array@1.0.3
 templating@1.3.2
 templating-compiler@1.3.3
@@ -137,3 +138,5 @@ webapp-hashing@1.0.9
 wizonesolutions:canonical@0.0.5
 zimme:collection-behaviours@1.1.3
 zimme:collection-softremovable@1.0.5
+zodern:minifier-js@3.0.0
+zodern:standard-minifier-js@3.0.0
