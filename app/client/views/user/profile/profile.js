@@ -44,7 +44,7 @@ Template.profile.helpers({
 		if (Template.instance().loadingPatreon.get()){
 			return "loading..."
 		} else if (patreon.entitledCentsOverride > entitledCents){
-			return `$ ${(patreon.entitledCentsOverride / 100).toFixed(0)} (Overridden)`;
+			return `$ ${(patreon.entitledCentsOverride / 100).toFixed(0)} (overridden)`;
 		} else if (patreon.entitledCents === undefined){
 			return "?";
 		} else {
