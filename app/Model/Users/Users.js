@@ -86,9 +86,14 @@ Schemas.User = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+	"patreon.tokenExpiryDate": {
+		type: Date,
+		optional: true,
+	},
 	"patreon.userId": {
 		type: String,
 		optional: true,
+		index: 1,
 	},
 	"patreon.entitledCents": {
 		type: Number,

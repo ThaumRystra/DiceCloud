@@ -17,6 +17,20 @@ Template.appDrawer.helpers({
 		let post = PatreonPosts.findOne({}, {sort: {date: -1}});
 		return (post && post.link) || 'https://www.patreon.com/dicecloud';
 	},
+	patreonTier: function(){
+		let user = Meteor.user();
+		if (!user) return;
+		patreon = user.patreon;
+		if (!patreon) return "$0";
+		let entitledCents = patreon.entitledCents || 0;
+		if (patreon.entitledCentsOverride > entitledCents){
+			return "$" + (patreon.entitledCentsOverride / 100).toFixed(0);
+		} else if (patreon.entitledCents === undefined){
+			return "$0";
+		} else {
+			return "$" + (patreon.entitledCents / 100).toFixed(0);
+		}
+	},
 });
 
 let drawerLayout;

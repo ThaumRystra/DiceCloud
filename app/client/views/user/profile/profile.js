@@ -1,9 +1,10 @@
 import { format as formatUrl } from 'url';
 
-const CLIENT_ID = "zv38izfGZDf8s_Z9BI5kICjGGnvs45PawHYu6cqsTqftwZ_5DZFqEGKZfdP8Q6I2";
+const CLIENT_ID = Meteor.settings.public.patreon.clientId;
 
 Template.profile.onCreated(function(){
 	this.showApiKey = new ReactiveVar(false);
+	this.loadingPatreon = new ReactiveVar(false);
 });
 
 Template.profile.helpers({
@@ -39,10 +40,17 @@ Template.profile.helpers({
 		if (!user) return;
 		patreon = user.patreon;
 		if (!patreon) return;
-		let tier = patreon.entitledCents || 0;
-		if (patreon.entitledCentsOverride > tier) tier = patreon.entitledCentsOverride;
-		return tier;
-	}
+		let entitledCents = patreon.entitledCents || 0;
+		if (Template.instance().loadingPatreon.get()){
+			return "loading..."
+		} else if (patreon.entitledCentsOverride > entitledCents){
+			return `$ ${(patreon.entitledCentsOverride / 100).toFixed(0)} (Overridden)"`;
+		} else if (patreon.entitledCents === undefined){
+			return "?";
+		} else {
+			return "$" + (patreon.entitledCents / 100).toFixed(0);
+		}
+	},
 });
 
 Template.profile.events({
@@ -69,5 +77,11 @@ Template.profile.events({
 	"click .generateMyApiKey": function(event, instance){
 		Meteor.call("generateMyApiKey");
 		instance.showApiKey.set(true);
+	},
+	"click .refreshPatreon": function(event, instance){
+		instance.loadingPatreon.set(true);
+		Meteor.call("updateMyPatreonDetails", (error) => {
+			instance.loadingPatreon.set(false);
+		});
 	},
 });
