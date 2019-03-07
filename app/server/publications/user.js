@@ -7,6 +7,7 @@ Meteor.publish("user", function(){
 			apiKey: 1,
 			librarySubscriptions: 1,
 			lastPatreonPostClicked: 1,
+			patreon: 1,
 		}}),
 		PatreonPosts.find({},{sort: {dateAdded: -1}, limit: 1})
 	];

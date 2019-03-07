@@ -21,6 +21,9 @@
 					<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
 						{{profileLink}}
 					</a>
+					<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px; margin-left: 8px;">
+						{{patreonTier}} tier
+					</a>
 				{{else}}
 					<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
 						Sign in
@@ -41,6 +44,14 @@
 					Characters
 				</paper-icon-item>
 			</a>
+			{{#if isTier5}}
+				<a href="/library" tabindex="-1">
+					<paper-icon-item id="libary">
+						<iron-icon icon="book" item-icon></iron-icon>
+						Library (beta)
+					</paper-icon-item>
+				</a>
+			{{/if}}
 			<a href="/guide" tabindex="-1">
 				<paper-icon-item id="guide">
 					<iron-icon icon="social:school" item-icon></iron-icon>

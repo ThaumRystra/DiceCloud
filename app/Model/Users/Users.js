@@ -74,6 +74,41 @@ Schemas.User = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+	patreon: {
+		type: Object,
+		optional: true,
+	},
+	"patreon.accessToken": {
+		type: String,
+		optional: true,
+	},
+	"patreon.refreshToken": {
+		type: String,
+		optional: true,
+	},
+	"patreon.tokenExpiryDate": {
+		type: Date,
+		optional: true,
+	},
+	"patreon.userId": {
+		type: String,
+		optional: true,
+		index: 1,
+	},
+	"patreon.entitledCents": {
+		type: Number,
+		decimal: false,
+		optional: true,
+	},
+	"patreon.entitledCentsOverride": {
+		type: Number,
+		decimal: false,
+		optional: true,
+	},
+	"patreon.error": {
+		type: String,
+		optional: true,
+	},
 });
 
 Meteor.users.attachSchema(Schemas.User);
