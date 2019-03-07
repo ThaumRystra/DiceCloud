@@ -44,6 +44,14 @@
 					Characters
 				</paper-icon-item>
 			</a>
+			{{#if isTier5}}
+				<a href="/library" tabindex="-1">
+					<paper-icon-item id="libary">
+						<iron-icon icon="book" item-icon></iron-icon>
+						Library (beta)
+					</paper-icon-item>
+				</a>
+			{{/if}}
 			<a href="/guide" tabindex="-1">
 				<paper-icon-item id="guide">
 					<iron-icon icon="social:school" item-icon></iron-icon>
