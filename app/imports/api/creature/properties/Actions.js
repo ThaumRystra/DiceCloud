@@ -1,8 +1,8 @@
-import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import {makeChild} from '/imports/api/parenting.js';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import DamageSchema from '/imports/api/creature/subSchemas/DamageSchema.js';
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 let Actions = new Mongo.Collection('actions');
 
@@ -10,19 +10,10 @@ let Actions = new Mongo.Collection('actions');
  * Actions are given to a character by items and features
  */
 let actionSchema = schema({
-	charId: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		index: 1,
-	},
 	name: {
 		type: String,
 		optional: true,
 		trim: false,
-	},
-	enabled: {
-		type: Boolean,
-		defaultValue: true,
 	},
 	description: {
 		type: String,
@@ -52,8 +43,9 @@ let actionSchema = schema({
 });
 
 Actions.attachSchema(actionSchema);
+Actions.attachSchema(PropertySchema);
+Actions.attachSchema(ChildSchema);
 
-// Actions.attachBehaviour('softRemovable');
-makeChild(Actions, ["name", "enabled"]);
+// makeChild(Actions, ["name", "enabled"]);
 
 export default Actions
