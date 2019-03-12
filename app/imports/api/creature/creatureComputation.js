@@ -3,7 +3,7 @@
 
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
-import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
+import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import Creatures from "/imports/api/creature/Creatures.js";
 import Attributes from "/imports/api/creature/properties/Attributes.js";
 import Skills from "/imports/api/creature/properties/Skills.js";
@@ -22,15 +22,11 @@ export const recomputeCreature = new ValidatedMethod({
 
   run({charId}) {
     // Permission
-    if (!canEditCreature(charId, this.userId)) {
-      throw new Meteor.Error('Creatures.methods.recomputeCreature.denied',
-      'You do not have permission to recompute this creature');
-    }
+    assertEditPermission(charId, this.userId)
 
     // Work, call this direcly if you are already in a method that has checked
     // for permission to edit a given character
     recomputeCreatureById(charId);
-
   },
 
 });
@@ -675,11 +671,7 @@ export const recomputeCreatureXP = new ValidatedMethod({
   }).validator(),
 
   run({charId}) {
-    if (!canEditCreature(charId, this.userId)) {
-      // Throw errors with a specific error code
-      throw new Meteor.Error("Creatures.methods.recomputeCreatureXP.denied",
-      "You do not have permission to recompute this creature's XP");
-    }
+    assertEditPermission(charId, this.userId)
     var xp = 0;
 		Experiences.find(
 			{charId: charId},
@@ -705,11 +697,7 @@ export const recomputeCreatureWeightCarried = new ValidatedMethod({
   }).validator(),
 
   run({charId}){
-    if (!canEditCreature(charId, this.userId)) {
-      // Throw errors with a specific error code
-      throw new Meteor.Error("Creatures.methods.recomputeCreatureWeightCarried.denied",
-      "You do not have permission to recompute this creature's carried weight");
-    }
+    assertEditPermission(charId, this.userId)
     var weightCarried = 0;
     // store a dictionary of carried containers
     var carriedContainers = {};

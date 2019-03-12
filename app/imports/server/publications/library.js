@@ -1,4 +1,4 @@
-import Libraries from "/imports/api/library/Library.js"
+import Libraries from "/imports/api/library/Libraries.js"
 
 const standardLibraryIds = [
 	"SRDLibraryGA3XWsd",

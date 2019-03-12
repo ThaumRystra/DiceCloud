@@ -1,29 +1,45 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 
-Experiences = new Mongo.Collection("experience");
+let Experiences = new Mongo.Collection("experience");
 
-let experienceSchema = schema({
-	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	name:		 {type: String, optional: true, trim: false, defaultValue: "New Experience"},
-	description: {type: String, optional: true, trim: false},
-	value:       {type: SimpleSchema.Integer, defaultValue: 0},
-	dateAdded:   {
+let ExperienceSchema = schema({
+	name: {
+		type: String,
+		optional: true,
+	},
+	// Potentially long description of the event
+	description: {
+		type: String,
+		optional: true,
+	},
+	// The amount of XP this experience gives
+	value: {
+		type: SimpleSchema.Integer,
+		defaultValue: 0
+	},
+	// The real-world date that it occured
+	date: {
 		type: Date,
 		autoValue: function() {
-			if (this.isInsert) {
+			// If the date isn't set, set it to now on insert
+			if (this.isInsert && !this.isSet) {
 				return new Date();
-			} else if (this.isUpsert) {
+			} else if (this.isUpsert && !this.isSet) {
 				return {$setOnInsert: new Date()};
-			} else {
-				this.unset();
 			}
 		},
 	},
+	// The date in-world of this event
+	worldDate: {
+		type: String,
+		optional: true,
+	},
 });
 
-Experiences.attachSchema(experienceSchema);
-
-//Experiences.attachBehaviour("softRemovable");
+Experiences.attachSchema(PropertySchema);
+Experiences.attachSchema(ExperienceSchema);
 
 export default Experiences;
+export { ExperienceSchema };

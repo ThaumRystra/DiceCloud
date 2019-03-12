@@ -1,5 +1,5 @@
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
-import getCollectionByName from 'app/imports/api/parenting/getCollectionByName.js';
+import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 
 // n = collections.length
 let collections = [];

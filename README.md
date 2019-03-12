@@ -52,6 +52,7 @@ Then, it's just a matter of cloning this repository into a folder, and running
 `git clone https://github.com/ThaumRystra/DiceCloud dicecloud`  
 `cd dicecloud`  
 `cd app`  
+`meteor npm install`  
 `meteor`
 
 You should see this:

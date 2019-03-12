@@ -24,8 +24,8 @@
 </template>
 
 <script>
-	import EffectEdit from '/imports/ui/components/effects/EffectEdit.vue';
-	import EffectListTile from '/imports/ui/components/effects/EffectListTile.vue';
+	import EffectEdit from '/imports/ui/components/children/effects/EffectEdit.vue';
+	import EffectListTile from '/imports/ui/components/children/effects/EffectListTile.vue';
 	export default {
 		props: {
 			effects: Array,

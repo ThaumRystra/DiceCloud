@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 
 const refSchema = new SimpleSchema({

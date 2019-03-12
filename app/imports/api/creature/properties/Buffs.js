@@ -1,16 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import {makeParent} from "/imports/api/parenting.js";
-import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
-let Buffs = new Mongo.Collection("buffs");
+let Buffs = new Mongo.Collection('buffs');
 
-let buffSchema = schema({
-	charId: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		index: 1,
-	},
+let BuffSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
@@ -21,50 +17,63 @@ let buffSchema = schema({
 		optional: true,
 		trim: false,
 	},
-	enabled: {
-		type: Boolean,
-		defaultValue: true,
-	},
-	type: {
-		type: String,
-		allowedValues: [
-			"inate", //this should be "innate", but changing it could be problematic
-			"custom",
-		],
-	},
-	lifeTime: {
-		type: Object,
-	},
-	"lifeTime.total": {
-		type: Number,
-		defaultValue: 0, //0 is infinite
-		min: 0,
-	},
-	"lifeTime.spent": {
-		type: Number,
-		defaultValue: 0,
-		min: 0,
-	},
-	appliedBy: { //the charId of whoever applied the buff
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-	},
-	appliedByDetails: {//the name and collection of the thing that applied the buff
-		type: Object,
+	duration: {
+		type: SimpleSchema.Integer,
 		optional: true,
-	},
-	"appliedByDetails.name": {
-		type: String,
-	},
-	"appliedByDetails.collection": {
-		type: String,
+		min: 0,
 	},
 });
 
-Buffs.attachSchema(buffSchema);
-Buffs.attachSchema(ColorSchema);
+// The effects in the stored buff need to be resolved to a number before being
+// placed on other characters, if they are applied to self, they can remain as
+// calculations, provided they don't contain any rolls
+let StoredBuffSchema = new SimpleSchema({
+	effects: {
+		type: Array,
+		defaultValue: [],
+	},
+	'effects.$': {
+		type: EffectSchema,
+	},
+	target: {
+		type: String,
+		allowedValues: [
+      // the character who took the action
+      'self',
+      // the singular `target` of the action
+      'target',
+      // rolled once for `each` target
+      'each',
+      // rolled once and applied to `every` target
+      'every'
+    ],
+	},
+}).extend(BuffSchema);
 
-//Buffs.attachBehaviour("softRemovable");
-makeParent(Buffs, ["name", "enabled"]); //parents of effects, attacks, proficiencies
+let AppliedBuffSchema = schema({
+	durationSpent: {
+		type: Number,
+		optional: true,
+		min: 0,
+	},
+	appliedBy: {
+		type: Object,
+	},
+	'appliedBy.name': {
+		type: String,
+	},
+	'appliedBy.id': {
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
+	},
+	'appliedBy.collection': {
+		type: String,
+	},
+}).extend(BuffSchema);
+
+Buffs.attachSchema(AppliedBuffSchema);
+Buffs.attachSchema(PropertySchema);
+Buffs.attachSchema(ChildSchema);
 
 export default Buffs;
+export { AppliedBuffSchema, StoredBuffSchema };

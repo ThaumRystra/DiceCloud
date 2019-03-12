@@ -27,7 +27,7 @@
 </template>
 
 <script>
-	import EffectChildList from 'app/imports/ui/components/children/effects/EffectChildList.vue';
+	import EffectChildList from '/imports/ui/components/children/effects/EffectChildList.vue';
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
 	import SkillEdit from '/imports/ui/components/skills/SkillEdit.vue';
 	import SkillProficiencyList from '/imports/ui/components/skills/SkillProficiencyList.vue';

@@ -1,39 +1,31 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import {makeChild} from "/imports/api/parenting.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
-const DamageMultipliers = new Mongo.Collection("damageMultipliers");
+let DamageMultipliers = new Mongo.Collection("damageMultipliers");
 
 /*
- * DamageMultipliers are whole numbered stats of a character
+ * DamageMultipliers are multipliers that affect
  */
-const damageMultiplierSchema = schema({
-	charId: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		index: 1,
-	},
-  // The nice-to-read name
-	name: {
-		type: String,
-	},
+let DamageMultiplierSchema = schema({
   // The technical, lowercase, single-word name used in formulae
-  variableName: {
+  damageType: {
     type: String,
+		allowedValues: DAMAGE_TYPES,
   },
-  value: {
+	// The value of the damage multiplier
+	value: {
     type: Number,
 		defaultValue: 1,
+		allowedValues: [0, 0.5, 1, 2],
   },
-	enabled: {
-		type: Boolean,
-		defaultValue: true,
-	},
 });
 
-DamageMultipliers.attachSchema(damageMultiplierSchema);
-
-// DamageMultipliers.attachBehaviour("softRemovable");
-makeChild(DamageMultipliers, ["enabled"]); //children of lots of things
+DamageMultipliers.attachSchema(DamageMultiplierSchema);
+DamageMultipliers.attachSchema(PropertySchema);
+DamageMultipliers.attachSchema(ChildSchema);
 
 export default DamageMultipliers;
+export { DamageMultiplierSchema };

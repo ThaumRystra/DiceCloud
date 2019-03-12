@@ -1,6 +1,6 @@
-import schema from '/imports/api/schema.js';
+import SimpleSchema from 'simpl-schema';
 
-let SoftRemovableSchema = schema({
+let SoftRemovableSchema = new SimpleSchema({
 	"removed": {
     type: Boolean,
     optional: true,

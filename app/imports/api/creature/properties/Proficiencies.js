@@ -1,43 +1,31 @@
-import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import {makeChild} from "/imports/api/parenting.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
-Proficiencies = new Mongo.Collection("proficiencies");
+let Proficiencies = new Mongo.Collection("proficiencies");
 
-proficiencySchema = schema({
-	charId: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		index: 1,
-	},
+let ProficiencySchema = schema({
 	name: {
 		type: String,
 		trim: false,
 		optional: true,
 	},
+	// A number representing how proficient the character is
 	value: {
 		type: Number,
 		allowedValues: [0, 0.5, 1, 2],
 		defaultValue: 1,
 	},
+	// The variableName of the skill to apply this to
 	skill: {
 		type: String,
 		optional: true,
 	},
-	type: {
-		type: String,
-		allowedValues: ["skill", "save", "weapon", "armor", "tool", "language"],
-		defaultValue: "skill",
-	},
-	enabled: {
-		type: Boolean,
-		defaultValue: true,
-	},
 });
 
-Proficiencies.attachSchema(proficiencySchema);
-
-// Proficiencies.attachBehaviour("softRemovable");
-makeChild(Proficiencies, ["enabled", "name"]);
+Proficiencies.attachSchema(ProficiencySchema);
+Proficiencies.attachSchema(PropertySchema);
+Proficiencies.attachSchema(ChildSchema);
 
 export default Proficiencies;
+export { ProficiencySchema };

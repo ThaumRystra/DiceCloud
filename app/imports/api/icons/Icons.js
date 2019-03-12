@@ -36,6 +36,8 @@ if (Meteor.isServer) {
 
 Icons.attachSchema(iconsSchema);
 
+/*
+console.warn("Write Icons is not secure, disable before deployment")
 const writeIcons = new ValidatedMethod({
 	name: 'writeIcons',
 	validate: null,
@@ -46,6 +48,7 @@ const writeIcons = new ValidatedMethod({
     }
 	}
 });
+*/
 
 export { writeIcons };
 export default Icons;

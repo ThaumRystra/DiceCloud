@@ -1,16 +1,23 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
+import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 
-const PropertySchema = schema({
+const PropertySchema = new SimpleSchema({
   charId: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 		index: 1,
+    optional: true,
 	},
   enabled: {
     type: Boolean,
     defaultValue: true,
   },
+  order: {
+  	type: SimpleSchema.Integer,
+  	index: true,
+  },
 });
+
+PropertySchema.extend(SoftRemovableSchema);
 
 export default PropertySchema;

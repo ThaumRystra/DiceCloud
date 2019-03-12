@@ -1,32 +1,21 @@
-import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import {makeParent} from "/imports/api/parenting.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 let Classes = new Mongo.Collection("classes");
 
-classSchema= schema({
-	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	name:		 {type: String, optional: true, trim: false},
-	level:		 {type: SimpleSchema.Integer},
-	createdAt: {
-		type: Date,
-		autoValue: function() {
-			if (this.isInsert) {
-				return new Date();
-			} else if (this.isUpsert) {
-				return {$setOnInsert: new Date()};
-			} else {
-				this.unset();
-			}
-		},
+let ClassSchema = schema({
+	name: {
+		type: String,
 	},
 });
 
-Classes.attachSchema(classSchema);
-Classes.attachSchema(ColorSchema);
+ClassSchema.extend(ColorSchema);
 
-//Classes.attachBehaviour("softRemovable");
-makeParent(Classes, "name"); //parents of effects and attacks
+Classes.attachSchema(ClassSchema);
+Classes.attachSchema(PropertySchema);
+Classes.attachSchema(ChildSchema);
 
 export default Classes;
+export { ClassSchema };

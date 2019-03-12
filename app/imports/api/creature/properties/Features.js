@@ -1,68 +1,63 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import OrderSchema from "/imports/api/creature/subSchemas/OrderSchema.js";
-import { canEditCreature } from '/imports/api/creature/creaturePermission.js';
+import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
 import { getHighestOrder } from '/imports/api/order.js';
-import {makeParent} from "/imports/api/parenting.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 
-let Features = new Mongo.Collection("features");
+let Features = new Mongo.Collection('features');
 
-let featureSchema = schema({
-	charId:		  {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	name:         {type: String, optional: true, trim: false},
-	description:  {type: String, optional: true, trim: false},
-	uses:         {type: String, optional: true, trim: false},
-	used:         {type: SimpleSchema.Integer, defaultValue: 0},
-	reset:        {
+let FeatureSchema = schema({
+	name: {
 		type: String,
-		allowedValues: ["longRest", "shortRest"],
 		optional: true,
 	},
-	enabled:      {type: Boolean, defaultValue: true},
-	alwaysEnabled:{type: Boolean, defaultValue: true},
-	order: OrderSchema(),
-	color: ColorSchema(),
+	description: {
+		type: String,
+		optional: true,
+	},
+	alwaysEnabled: {
+		type: Boolean,
+		defaultValue: true
+	},
 });
 
-Features.attachSchema(featureSchema);
+FeatureSchema.extend(ColorSchema);
 
-//Features.attachBehaviour("softRemovable");
-makeParent(Features, ["name", "enabled"]); //parents of effects and attacks
+Features.attachSchema(FeatureSchema);
+Features.attachSchema(PropertySchema);
+Features.attachSchema(ChildSchema);
 
 const insertFeature = new ValidatedMethod({
 
-  name: "Features.methods.insert",
+  name: 'Features.methods.insert',
 
-  validate: schema({
-		feature: {
-			type: featureSchema.omit('order', 'parent'),
-		},
-	}).validator({clean: true}),
+  validate: FeatureSchema.validator({clean: true}),
 
   run({feature}) {
 		const charId = feature.charId;
-		if (canEditCreature(charId, this.userId)){
-			// Set order
-			feature.order = getHighestOrder({
-				collection: Features,
-				charId,
-			}) + 1;
+		assertEditPermission(charId, this.userId);
 
-			// Set parent
-			feature.parent = {
-				id: charId,
-				collection: 'Creatures',
-			};
+		// Set order
+		feature.order = getHighestOrder({
+			collection: Features,
+			charId,
+		}) + 1;
 
-			// Insert
-			let featureId = Features.insert(feature);
-			recomputeCreatureById(charId);
-			return featureId;
-		}
+		// Set parent
+		feature.parent = {
+			id: charId,
+			collection: 'Creatures',
+		};
+
+		// Insert
+		let featureId = Features.insert(feature);
+		recomputeCreatureById(charId);
+		return featureId;
   },
 });
 
 export default Features;
-export { insertFeature }
+export { FeatureSchema, insertFeature }

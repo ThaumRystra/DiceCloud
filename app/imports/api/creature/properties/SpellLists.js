@@ -1,37 +1,40 @@
-import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import Attributes from "/imports/api/creature/properties/Attributes.js";
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import {makeParent} from "/imports/api/parenting.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 let SpellLists = new Mongo.Collection("spellLists");
 
-let spellListSchema = schema({
-	charId:      {type: String, regEx: SimpleSchema.RegEx.Id, index: 1},
-	name:        {type: String, optional: true, trim: false},
-	description: {type: String, optional: true, trim: false},
-	saveDC:      {type: String, optional: true, trim: false},
-	attackBonus: {type: String, optional: true, trim: false},
-	maxPrepared: {type: String, optional: true, trim: false},
+let SpellListSchema = schema({
+	name: {
+		type: String,
+		optional: true,
+	},
+	description: {
+		type: String,
+		optional: true,
+	},
+	// Calculation of save DC used for all spells in this list
+	saveDC: {
+		type: String,
+		optional: true,
+	},
+	// Calculation of attack bonus used for all spells in this list
+	attackBonus: {
+		type: String,
+		optional: true,
+	},
+	// Calculation of how many spells in this list can be prepared
+	maxPrepared: {
+		type: String,
+		optional: true,
+	},
 });
 
-SpellLists.attachSchema(spellListSchema);
-Attributes.attachSchema(ColorSchema);
+SpellListSchema.extend(ColorSchema);
 
-SpellLists.helpers({
-	numPrepared: function(){
-		var num = 0;
-		Spells.find(
-			{charId: this.charId, listId: this._id, prepared: 1},
-			{fields: {prepareCost: 1}}
-		).forEach(function(spell){
-			num += spell.prepareCost;
-		});
-		return num;
-	}
-});
-
-//SpellLists.attachBehaviour("softRemovable");
-makeParent(SpellLists); //parents of spells
+SpellLists.attachSchema(SpellListSchema);
+SpellLists.attachSchema(PropertySchema);
+SpellLists.attachSchema(ChildSchema);
 
 export default SpellLists;

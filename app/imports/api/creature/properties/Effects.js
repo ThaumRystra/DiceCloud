@@ -1,48 +1,37 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import {makeChild} from "/imports/api/parenting.js";
+import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
-let Effects = new Mongo.Collection("effects");
+let Effects = new Mongo.Collection('effects');
 
 /*
  * Effects are reason-value attached to skills and abilities
  * that modify their final value or presentation in some way
  */
-let effectSchema = schema({
-	charId: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		index: 1,
-	},
+let EffectSchema = schema({
 	name: {
 		type: String,
-		optional: true, //TODO make necessary if there is no owner
-		trim: false,
+		optional: true,
 	},
 	operation: {
 		type: String,
-		defaultValue: "add",
+		defaultValue: 'add',
 		allowedValues: [
-			"base",
-			"add",
-			"mul",
-			"min",
-			"max",
-			"advantage",
-			"disadvantage",
-			"passiveAdd",
-			"fail",
-			"conditional",
+			'base',
+			'add',
+			'mul',
+			'min',
+			'max',
+			'advantage',
+			'disadvantage',
+			'passiveAdd',
+			'fail',
+			'conditional',
 		],
 	},
 	calculation: {
 		type: String,
-		optional: true,
-		trim: false,
-	},
-	// The computed result of the effect
-	result: {
-		type: SimpleSchema.oneOf(Number, String),
 		optional: true,
 	},
 	//which stat the effect is applied to
@@ -50,15 +39,19 @@ let effectSchema = schema({
 		type: String,
 		optional: true,
 	},
-	enabled: {
-		type: Boolean,
-		defaultValue: true,
-	},
 });
 
-Effects.attachSchema(effectSchema);
+const EffectComputedSchema = new SimpleSchema({
+	// The computed result of the effect
+	result: {
+		type: SimpleSchema.oneOf(Number, String),
+		optional: true,
+	},
+}).extend(EffectSchema);
 
-//Effects.attachBehaviour("softRemovable");
-makeChild(Effects, ["enabled"]); //children of lots of things
+Effects.attachSchema(PropertySchema);
+Effects.attachSchema(ChildSchema);
+Effects.attachSchema(EffectComputedSchema);
 
 export default Effects;
+export { EffectSchema };
