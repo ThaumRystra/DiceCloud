@@ -4,9 +4,19 @@ import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
+// Mixins
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+
 let Buffs = new Mongo.Collection('buffs');
 
 let BuffSchema = new SimpleSchema({
+	name: {
+		type: String,
+		optional: true,
+	},
 	description: {
 		type: String,
 		optional: true,
@@ -32,9 +42,9 @@ let StoredBuffSchema = new SimpleSchema({
 	target: {
 		type: String,
 		allowedValues: [
-      // the character who took the action
+      // the character who took the buff
       'self',
-      // the singular `target` of the action
+      // the singular `target` of the buff
       'target',
       // rolled once for `each` target
       'each',
@@ -69,5 +79,39 @@ Buffs.attachSchema(AppliedBuffSchema);
 Buffs.attachSchema(PropertySchema);
 Buffs.attachSchema(ChildSchema);
 
+const insertBuff = new ValidatedMethod({
+  name: 'Buffs.methods.insert',
+	mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Buffs,
+  permission: 'edit',
+  schema: BuffSchema,
+  run(buff) {
+		return Buffs.insert(buff);
+  },
+});
+
+const updateBuff = new ValidatedMethod({
+  name: 'Buffs.methods.update',
+  mixins: [
+    creaturePermissionMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Buffs,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: BuffSchema.omit('name'),
+  }),
+  run({_id, update}) {
+		return Buffs.update(_id, {$set: update});
+  },
+});
+
 export default Buffs;
-export { AppliedBuffSchema, StoredBuffSchema };
+export { AppliedBuffSchema, StoredBuffSchema, insertBuff, updateBuff };

@@ -1,10 +1,22 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import recomputeCreatureXP from '/imports/api/creature/creatureComputation.js';
+
+// Mixins
+import recomputeCreatureMixin from '/imports/api/creature/recomputeCreatureMixin.js';
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
 
 let Experiences = new Mongo.Collection("experience");
 
 let ExperienceSchema = schema({
+	name: {
+		type: String,
+		optional: true,
+	},
 	// Potentially long description of the event
 	description: {
 		type: String,
@@ -37,5 +49,55 @@ let ExperienceSchema = schema({
 Experiences.attachSchema(PropertySchema);
 Experiences.attachSchema(ExperienceSchema);
 
+const insertExperience = new ValidatedMethod({
+  name: 'Experiences.methods.insert',
+	mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+		recomputeCreatureMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Experiences,
+  permission: 'edit',
+  schema: ExperienceSchema,
+	skipRecompute(experience){
+		return !experience.value;
+	},
+  run(experience) {
+		let result = Experiences.insert(experience);
+		if (experience.value){
+			recomputeCreatureXP(charId);
+		}
+		return result;
+  },
+});
+
+const updateExperience = new ValidatedMethod({
+  name: 'Experiences.methods.update',
+  mixins: [
+    creaturePermissionMixin,
+		recomputeCreatureMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Experiences,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: ExperienceSchema.omit('name'),
+  }),
+	skipRecompute({update}){
+		return !('value' in update);
+	},
+  run({_id, update, charId}) {
+		let result = Experiences.update(_id, {$set: update});
+		if ('value' in update){
+			recomputeCreatureXP(charId);
+		}
+		return result;
+  },
+});
+
 export default Experiences;
-export { ExperienceSchema };
+export { ExperienceSchema, insertExperience, updateExperience };

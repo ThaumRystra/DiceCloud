@@ -4,9 +4,19 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import StoredBuffSchema from '/imports/api/creature/properties/Buffs.js';
 
+// Mixins
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+
 let Rolls = new Mongo.Collection('rolls');
 
 let RollChildrenSchema = new SimpleSchema({
+  name: {
+		type: String,
+		optional: true,
+	},
   // The adjustments to be applied
   adjustments: {
 		type: Array,
@@ -93,5 +103,39 @@ Rolls.attachSchema(RollSchema);
 Rolls.attachSchema(PropertySchema);
 Rolls.attachSchema(ChildSchema);
 
+const insertRoll = new ValidatedMethod({
+  name: 'Rolls.methods.insert',
+	mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Rolls,
+  permission: 'edit',
+  schema: RollSchema,
+  run(roll) {
+		return Rolls.insert(roll);
+  },
+});
+
+const updateRoll = new ValidatedMethod({
+  name: 'Rolls.methods.update',
+  mixins: [
+    creaturePermissionMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Rolls,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: RollSchema.omit('name'),
+  }),
+  run({_id, update}) {
+		return Rolls.update(_id, {$set: update});
+  },
+});
+
 export default Rolls;
-export { RollSchema };
+export { RollSchema, insertRoll, updateRoll };

@@ -1,4 +1,6 @@
-const getHighestOrder = function({collection, charId}){
+import SimpleSchema from 'simpl-schema';
+
+export function getHighestOrder({collection, charId}){
   const highestOrderedDoc = collection.findOne({
     charId
   }, {
@@ -6,9 +8,37 @@ const getHighestOrder = function({collection, charId}){
     sort: {order: -1},
   });
   return (highestOrderedDoc && highestOrderedDoc.order) || 0;
+};
+
+export function setDocToLastOrder({collection, doc}){
+  doc.order = getHighestOrder({
+    collection,
+    charId: doc.charId,
+  }) + 1;
+};
+
+export function setDocToLastMixin(methodOptions){
+  // Make sure the doc has a charId
+  // This mixin should come before simpleSchemaMixin
+  methodOptions.schema.extend({
+    charId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  });
+  let collection = methodOptions.collection
+  if (!collection){
+    throw "`collection` required in method options for setDocToLastMixin"
+  }
+  let runFunc = methodOptions.run;
+  methodOptions.run = function(doc){
+    setDocToLastOrder({collection, doc});
+    return runFunc.apply(this, arguments);
+  };
+  return methodOptions;
 }
 
-const moveDocToOrder = function({collection, doc, order}){
+export function setDocOrder({collection, doc, order}){
   const currentOrder = doc.order;
   if (currentOrder === order){
     return;
@@ -42,7 +72,7 @@ const moveDocToOrder = function({collection, doc, order}){
   }
 };
 
-const reorderDocs = function({collection, charId}){
+export function reorderDocs({collection, charId}){
   let bulkWrite = [];
   collection.find({
     charId
@@ -67,5 +97,3 @@ const reorderDocs = function({collection, charId}){
     });
   }
 };
-
-export { getHighestOrder, moveDocToOrder, reorderDocs };

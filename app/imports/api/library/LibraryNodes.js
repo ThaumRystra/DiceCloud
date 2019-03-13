@@ -6,24 +6,28 @@ import librarySchemas from '/imports/api/library/librarySchemas.js';
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
 let LibraryNodeSchema = schema({
-	type: {
+	name: {
+		type: String,
+		optional: true,
+	},
+	libraryNodeType: {
     type: String,
     allowedValues: Object.keys(librarySchemas),
   },
-  data: {
-    type: Object,
-    custom(){
-      let type = this.field('type');
-      let schema = librarySchemas[type];
-      schema.validate(this.value)
-    },
-  },
 });
 
-LibraryNodeSchema.extend(SharingSchema);
-
-LibraryNodes.attachSchema(LibraryNodeSchema);
-LibraryNodes.attachSchema(ChildSchema);
+for (key in librarySchemas){
+	let schema = new SimpleSchema({});
+	schema.extend(librarySchemas[key]);
+	schema.extend(LibraryNodeSchema);
+	schema.extend(ChildSchema);
+	if (key === 'folder'){
+		schema.extend(SharingSchema);
+	}
+	LibraryNodes.attachSchema(schema, {
+		selector: {libraryNodeType: key}
+	});
+}
 
 export default LibraryNodes;
 export { LibraryNodeSchema };

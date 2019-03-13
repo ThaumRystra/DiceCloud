@@ -6,12 +6,23 @@ import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 
+// Mixins
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+
+
 let Actions = new Mongo.Collection('actions');
 
 /*
  * Actions are things a character can do
  */
 let ActionSchema = schema({
+	name: {
+		type: String,
+		optional: true,
+	},
 	description: {
 		type: String,
 		optional: true,
@@ -73,5 +84,39 @@ Actions.attachSchema(ActionSchema);
 Actions.attachSchema(PropertySchema);
 Actions.attachSchema(ChildSchema);
 
+const insertAction = new ValidatedMethod({
+  name: 'Actions.methods.insert',
+	mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Actions,
+  permission: 'edit',
+  schema: ActionSchema,
+  run(action) {
+		return Actions.insert(action);
+  },
+});
+
+const updateAction = new ValidatedMethod({
+  name: 'Actions.methods.update',
+  mixins: [
+    creaturePermissionMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Actions,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: ActionSchema.omit('name'),
+  }),
+  run({_id, update}) {
+		return Actions.update(_id, {$set: update});
+  },
+});
+
 export default Actions;
-export { ActionSchema };
+export { ActionSchema, insertAction, updateAction };

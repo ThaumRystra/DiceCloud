@@ -2,10 +2,39 @@ import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+
+// Mixins
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
 
 let ClassLevels = new Mongo.Collection("classLevels");
 
 let ClassLevelSchema = schema({
+	name: {
+		type: String,
+		optional: true,
+	},
+	// The name of this class level's variable
+	variableName: {
+    type: String,
+		regEx: VARIABLE_NAME_REGEX,
+  },
+	// The variable name of the base class this level is attached to
+	baseClass: {
+		type: String,
+		regEx: VARIABLE_NAME_REGEX,
+	},
+	// The name of the class level that needs to preceed this class level
+	// So a totemWarrior level 5 must be preceded by a totemWarrior level 4
+	// If it's not set, any level below with the same baseClass is matched
+	previousClassLevel: {
+		type: String,
+		regEx: VARIABLE_NAME_REGEX,
+		optional: true,
+	},
 	level: {
     type: SimpleSchema.Integer,
   },
@@ -15,5 +44,41 @@ ClassLevels.attachSchema(ClassLevelSchema);
 ClassLevels.attachSchema(PropertySchema);
 ClassLevels.attachSchema(ChildSchema);
 
+// Todo ensure the class level is being parented to a compatible class, and that
+// previous level requirements are met
+const insertClassLevel = new ValidatedMethod({
+  name: 'ClassLevels.methods.insert',
+	mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+    simpleSchemaMixin,
+  ],
+  collection: ClassLevels,
+  permission: 'edit',
+  schema: ClassLevelSchema,
+  run(classLevel) {
+		return ClassLevels.insert(classLevel);
+  },
+});
+
+const updateClassLevel = new ValidatedMethod({
+  name: 'ClassLevels.methods.update',
+  mixins: [
+    creaturePermissionMixin,
+    simpleSchemaMixin,
+  ],
+  collection: ClassLevels,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: ClassLevelSchema.omit('name'),
+  }),
+  run({_id, update}) {
+		return ClassLevels.update(_id, {$set: update});
+  },
+});
+
 export default ClassLevels;
-export { ClassLevelSchema };
+export { ClassLevelSchema, insertClassLevel, updateClassLevel };

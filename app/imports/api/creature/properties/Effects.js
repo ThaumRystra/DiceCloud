@@ -3,6 +3,13 @@ import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
+// Mixins
+import recomputeCreatureMixin from '/imports/api/creature/recomputeCreatureMixin.js';
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+
 let Effects = new Mongo.Collection('effects');
 
 /*
@@ -10,6 +17,10 @@ let Effects = new Mongo.Collection('effects');
  * that modify their final value or presentation in some way
  */
 let EffectSchema = schema({
+	name: {
+		type: String,
+		optional: true,
+	},
 	operation: {
 		type: String,
 		defaultValue: 'add',
@@ -48,6 +59,42 @@ const EffectComputedSchema = new SimpleSchema({
 Effects.attachSchema(PropertySchema);
 Effects.attachSchema(ChildSchema);
 Effects.attachSchema(EffectComputedSchema);
+
+const insertEffect = new ValidatedMethod({
+  name: 'Effects.methods.insert',
+	mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+		recomputeCreatureMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Effects,
+  permission: 'edit',
+  schema: EffectSchema,
+  run(effect) {
+		return Effects.insert(effect);
+  },
+});
+
+const updateEffect = new ValidatedMethod({
+  name: 'Effects.methods.update',
+  mixins: [
+    creaturePermissionMixin,
+		recomputeCreatureMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Effects,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: EffectSchema.omit('name'),
+  }),
+  run({_id, update}) {
+		return Effects.update(_id, {$set: update});
+  },
+});
 
 export default Effects;
 export { EffectSchema };

@@ -3,10 +3,14 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
-import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
-import { getHighestOrder } from '/imports/api/order.js';
-import pickKeysAsOptional from '/imports/api/pickKeysAsOptional.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+
+// Mixins
+import recomputeCreatureMixin from '/imports/api/creature/recomputeCreatureMixin.js';
+import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
+import { setDocToLastMixin } from '/imports/api/order.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
 
 let Attributes = new Mongo.Collection('attributes');
 
@@ -14,11 +18,14 @@ let Attributes = new Mongo.Collection('attributes');
  * Attributes are numbered stats of a character
  */
 let AttributeSchema = schema({
+  name: {
+		type: String,
+		optional: true,
+	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
-		// Must contain a letter, and be made of word characters only
-		regEx: /^\w*[a-z]\w*$/i,
+		regEx: VARIABLE_NAME_REGEX,
   },
 	// How it is displayed and computed is determined by type
   type: {
@@ -85,119 +92,88 @@ Attributes.attachSchema(PropertySchema);
 Attributes.attachSchema(ChildSchema);
 
 const insertAttribute = new ValidatedMethod({
-
   name: 'Attributes.methods.insert',
-
-  validate: AttributeSchema.validator({ clean: true }),
-
-  run({attribute}) {
-		const charId = attribute.charId;
-		assertEditPermission(charId, this.userId);
-		attribute.order = getHighestOrder({
-			collection: Attributes,
-			charId,
-		}) + 1;
-		attribute.parent = {
-			id: charId,
-			collection: 'Creatures',
-		};
-		let attId = Attributes.insert(attribute);
-		recomputeCreatureById(charId);
-		return attId;
+  mixins: [
+    creaturePermissionMixin,
+    setDocToLastMixin,
+    setDocAncestryMixin,
+    ensureAncestryContainsCharIdMixin,
+    recomputeCreatureMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Attributes,
+  permission: 'edit',
+  schema: AttributeSchema,
+  run(attribute) {
+    return Attributes.insert(attribute);
   },
 });
 
 const updateAttribute = new ValidatedMethod({
-
   name: 'Attributes.methods.update',
-
-  validate: schema({
-		_id: {
-			type: String,
-			regEx: SimpleSchema.RegEx.Id,
-		},
-		update: AttributeSchema,
-	}).validator(),
-
-  run({_id, update}) {
-		let currentAttribute = Attributes.findOne(_id, {fields: {value: 1, charId: 1}});
-		if (!currentAttribute){
-			throw new Meteor.Error('Attributes.methods.update.denied',
-      `No attributes exist with the id: ${_id}`);
-		}
-		let charId = currentAttribute.charId;
-		assertEditPermission(charId, this.userId)
-		if (typeof update.adjustment === 'number'){
-			let val = currentAttribute.value;
-			if (update.adjustment < -val) update.adjustment = -val;
-			if (update.adjustment > 0) update.adjustment = 0;
-		}
-		Attributes.update(_id, {$set: update});
-		recomputeCreatureById(charId);
+  mixins: [
+    creaturePermissionMixin,
+    recomputeCreatureMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Attributes,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    update: AttributeSchema.omit('adjustment', 'name'),
+  }),
+  skipRecompute({update}){
+    return !('variableName' in update) &&
+      !('type' in update) &&
+      !('baseValue' in update)
   },
-
+  run({_id, update}) {
+		return Attributes.update(_id, {$set: update});
+  },
 });
 
 const adjustAttribute = new ValidatedMethod({
-
   name: 'Attributes.methods.adjust',
-
-  validate: new SimpleSchema({
-		_id: {
-			type: String,
-			regEx: SimpleSchema.RegEx.Id,
-		},
-		increment: {
-			type: Number,
-			optional: true
-		},
-		set: {
-			type: Number,
-			optional: true,
-			custom() {
-	      if (!this.isSet && !this.field('increment').isSet) {
-					// either set or increment must exist
-	        return SimpleSchema.ErrorTypes.REQUIRED;
-	      } else if (this.isSet && this.field('increment').isSet){
-					return 'Can\'t increment and set an attritbute adjustment in one operation';
-				}
-	    },
-		},
-	}).validator(),
-
-  run({_id, increment, set}) {
-		let currentAttribute = Attributes.findOne(_id);
-		if (!currentAttribute){
-			throw new Meteor.Error('Attributes.methods.update.denied',
-      `No attributes exist with the id: ${_id}`);
-		}
-		let charId = currentAttribute.charId;
-		assertEditPermission(charId, this.userId)
-		if (typeof set === 'number'){
-			let val = currentAttribute.value;
+  mixins: [
+    creaturePermissionMixin,
+    simpleSchemaMixin,
+  ],
+  collection: Attributes,
+  permission: 'edit',
+  schema: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    type: {
+      type: String,
+      allowedValues: ['set', 'increment']
+    },
+    value: Number,
+  }),
+  run({_id, type, value}) {
+		if (type === 'set'){
+			let currentValue = currentAttribute.value;
 			// Set represents what we want the value to be after adjustment
 			// So we need the actual adjustment to get to that value
-			let adjustment = set - val;
+			let adjustment = value - currentValue;
 			// Ajustment can't exceed total value
-			if (-adjustment > val) adjustment = -val;
+			if (-adjustment > currentValue) adjustment = -currentValue;
 			// Adjustment must be negative
 			if (adjustment > 0) adjustment = 0;
-			Attributes.update(_id, {$set: {adjustment}});
-		} else if (typeof increment === 'number'){
+			return Attributes.update(_id, {$set: {adjustment}});
+		} else if (type === 'increment'){
 			let remaining = currentAttribute.value + (currentAttribute.adjustment || 0);
 			let adj = currentAttribute.adjustment;
 			// Can't decrease adjustment below remaining value
+      let increment = value;
 			if (-increment > remaining) increment = -remaining;
 			// Can't increase adjustment above zero
 			if (increment > -adj) increment = -adj;
 			if (typeof currentAttribute.adjustment === 'number'){
-				Attributes.update(_id, {$inc: {adjustment: increment}});
+				return Attributes.update(_id, {$inc: {adjustment: increment}});
 			} else {
-				Attributes.update(_id, {$set: {adjustment: increment}});
+				return Attributes.update(_id, {$set: {adjustment: increment}});
 			}
 		}
   },
-
 });
 
 export default Attributes;

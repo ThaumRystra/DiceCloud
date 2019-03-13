@@ -1,5 +1,6 @@
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
+import SimpleSchema from 'simpl-schema';
 
 // n = collections.length
 let collections = [];
@@ -64,8 +65,7 @@ export function forEachDecendent({ancestorId, filter = {}, options}, callback){
 };
 
 // 1 database read
-export function getParenting({id, collection}){
-
+export function getAncestry({id, collection}){
   // Get the parent ref
   let parentDoc = fetchDocByRef({id, collection}, {fields: {
     name: 1,
@@ -86,6 +86,71 @@ export function getParenting({id, collection}){
   return {parent, ancestors};
 }
 
+export function setDocAncestryMixin(methodOptions){
+  // Extend the method's schema to require the needed properties
+  // This mixin should come before simpleschema mixin
+  methodOptions.schema.extend({
+    parent: {
+      type: Object,
+    },
+    'parent.id': {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+    'parent.collection': {
+      type: String,
+    },
+  });
+  // Change the doc's ancestry before running
+  let runFunc = methodOptions.run;
+  methodOptions.run = function(doc, ...rest){
+    let {parent, ancestors} = getAncestry(doc.parent);
+    doc.parent = parent;
+    doc.ancestors = ancestors;
+    return runFunc.call(this, doc, ...rest);
+  };
+  return methodOptions;
+};
+
+function ensureAncestryContainsId(ancestors, id){
+  if (!id){
+    throw new Meteor.Error('ancestor-check-failed',
+      `Expected charId, got ${id}`
+    );
+  }
+  if (!ancestors){
+    throw new Meteor.Error('ancestor-check-failed',
+      `Expected ancestors array, got ${ancestors}`
+    );
+  }
+  for (let ancestor of ancestors){
+    if (ancestor.id === id){
+      return;
+    }
+  }
+  throw new Meteor.Error('ancestor-check-failed',
+    `Ancestors did not contain id: ${id}`
+  );
+}
+
+export function ensureAncestryContainsCharIdMixin(methodOptions){
+  // Extend the method's schema to require the needed properties
+  // This mixin should come before simpleSchemaMixin
+  methodOptions.schema.extend({
+    charId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  });
+  let runFunc = methodOptions.run;
+  methodOptions.run = function({charId, ancestors}){
+    ensureAncestryContainsId(ancestors, charId);
+    return runFunc.apply(this, arguments);
+  };
+  return methodOptions;
+};
+
+
 export function updateParent(docRef, parentRef){
   let collection = getCollectionByName(docRef.collection);
   let oldDoc = fetchDocByRef(docRef, {fields: {
@@ -97,7 +162,7 @@ export function updateParent(docRef, parentRef){
   if (oldDoc.parent.id === parentRef.id) return;
 
   // update the document's parenting
-  let {parent, ancestors} = getParenting(parentRef);
+  let {parent, ancestors} = getAncestry(parentRef);
   collection.update(docRef.id, {$set: {parent, ancestors}});
 
   // Remove the old ancestors from the decendents
@@ -123,7 +188,7 @@ export function updateParent(docRef, parentRef){
 export function setInheritedField({id, collection, fieldName, fieldValue}){
 
   // Update the doc
-  let collection = getCollectionByName(collection);
+  collection = getCollectionByName(collection);
   collection.update(id, {$set: {
     [`${fieldName}`]: fieldValue,
   }});
@@ -163,3 +228,17 @@ export function setName({id, collection, name}){
     fieldValue: name,
   });
 };
+
+export function findEnabled(collection, query, options){
+  query['enabled'] = true;
+  query['ancestors.$.enabled'] = {$not: false};
+  return collection.find(query, options);
+};
+
+export function getName(doc){
+  if (doc.name) return name;
+  var i = doc.ancestors.length;
+  while(i--) {
+    if (ancestors[i].name) return ancestors[i].name;
+  }
+}
