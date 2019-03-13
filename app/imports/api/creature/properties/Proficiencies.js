@@ -5,11 +5,6 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 let Proficiencies = new Mongo.Collection("proficiencies");
 
 let ProficiencySchema = schema({
-	name: {
-		type: String,
-		trim: false,
-		optional: true,
-	},
 	// A number representing how proficient the character is
 	value: {
 		type: Number,

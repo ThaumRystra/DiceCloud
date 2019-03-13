@@ -6,10 +6,6 @@ import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 let Notes = new Mongo.Collection("notes");
 
 let NoteSchema = schema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	description: {
 		type: String,
 		optional: true,

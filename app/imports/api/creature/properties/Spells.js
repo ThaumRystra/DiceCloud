@@ -23,11 +23,6 @@ let SpellSchema = schema({
 		defaultValue: 'prepared',
 		allowedValues: ['prepared', 'unprepared', 'always'],
 	},
-	name: {
-		type: String,
-		optional: true,
-		defaultValue: 'New Spell',
-	},
 	description: {
 		type: String,
 		optional: true,

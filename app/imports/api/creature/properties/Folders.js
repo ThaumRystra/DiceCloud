@@ -4,11 +4,7 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 let Folders = new Mongo.Collection('folders');
 
-let FolderSchema = schema({
-	name: {
-    type: String,
-  },
-});
+let FolderSchema = schema({});
 
 Folders.attachSchema(FolderSchema);
 Folders.attachSchema(PropertySchema);

@@ -7,15 +7,9 @@ import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 let Buffs = new Mongo.Collection('buffs');
 
 let BuffSchema = new SimpleSchema({
-	name: {
-		type: String,
-		optional: true,
-		trim: false,
-	},
 	description: {
 		type: String,
 		optional: true,
-		trim: false,
 	},
 	duration: {
 		type: SimpleSchema.Integer,

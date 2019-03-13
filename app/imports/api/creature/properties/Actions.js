@@ -12,11 +12,6 @@ let Actions = new Mongo.Collection('actions');
  * Actions are things a character can do
  */
 let ActionSchema = schema({
-	// Overrides the inherited name
-	name: {
-		type: String,
-		optional: true,
-	},
 	description: {
 		type: String,
 		optional: true,

@@ -5,10 +5,6 @@ import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 let Experiences = new Mongo.Collection("experience");
 
 let ExperienceSchema = schema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	// Potentially long description of the event
 	description: {
 		type: String,

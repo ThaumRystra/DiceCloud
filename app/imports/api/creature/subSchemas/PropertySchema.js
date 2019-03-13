@@ -12,6 +12,10 @@ const PropertySchema = new SimpleSchema({
     type: Boolean,
     defaultValue: true,
   },
+  name: {
+		type: String,
+		optional: true,
+	},
   order: {
   	type: SimpleSchema.Integer,
   	index: true,

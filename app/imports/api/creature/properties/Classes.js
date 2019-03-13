@@ -5,11 +5,7 @@ import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 
 let Classes = new Mongo.Collection("classes");
 
-let ClassSchema = schema({
-	name: {
-		type: String,
-	},
-});
+let ClassSchema = schema({});
 
 ClassSchema.extend(ColorSchema);
 

@@ -11,10 +11,6 @@ let Skills = new Mongo.Collection("skills");
  * Skills have an ability score modifier that they use as their basis
  */
 let SkillSchema = schema({
-  // The nice-to-read name
-	name: {
-		type: String,
-	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,

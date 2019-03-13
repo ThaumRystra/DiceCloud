@@ -10,10 +10,6 @@ let Effects = new Mongo.Collection('effects');
  * that modify their final value or presentation in some way
  */
 let EffectSchema = schema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	operation: {
 		type: String,
 		defaultValue: 'add',

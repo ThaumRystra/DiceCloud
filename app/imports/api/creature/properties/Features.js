@@ -10,10 +10,6 @@ import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 let Features = new Mongo.Collection('features');
 
 let FeatureSchema = schema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	description: {
 		type: String,
 		optional: true,

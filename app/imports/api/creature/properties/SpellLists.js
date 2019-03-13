@@ -6,10 +6,6 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 let SpellLists = new Mongo.Collection("spellLists");
 
 let SpellListSchema = schema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	description: {
 		type: String,
 		optional: true,

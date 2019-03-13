@@ -14,10 +14,6 @@ let Attributes = new Mongo.Collection('attributes');
  * Attributes are numbered stats of a character
  */
 let AttributeSchema = schema({
-  // The nice-to-read name
-	name: {
-		type: String,
-	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
