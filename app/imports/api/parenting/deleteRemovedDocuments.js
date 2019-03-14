@@ -1,6 +1,6 @@
 import creatureCollections from '/imports/api/creature/creatureCollections.js';
 
-Meteor.startup(() => {
+if (Meteor.isServer) Meteor.startup(() => {
 	/**
 	 * Deletes all soft removed documents that were removed more than 30 minutes ago
 	 * and were not restored
