@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 
-const refSchema = new SimpleSchema({
+const RefSchema = new SimpleSchema({
   id: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -21,9 +21,9 @@ const refSchema = new SimpleSchema({
   },
 });
 
-let childSchema = schema({
+let ChildSchema = schema({
 	parent: {
-    type: refSchema,
+    type: RefSchema,
     optional: true,
   },
   ancestors: {
@@ -31,8 +31,13 @@ let childSchema = schema({
     defaultValue: [],
   },
   'ancestors.$': {
-    type: refSchema,
+    type: RefSchema,
   },
 });
 
-export default childSchema;
+const inheritedFields = new Set(RefSchema.objectKeys());
+inheritedFields.delete('id');
+inheritedFields.delete('collection');
+
+export default ChildSchema;
+export { inheritedFields };

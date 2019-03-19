@@ -8,6 +8,7 @@ import Creatures from "/imports/api/creature/Creatures.js";
 import Attributes from "/imports/api/creature/properties/Attributes.js";
 import Skills from "/imports/api/creature/properties/Skills.js";
 import Effects from "/imports/api/creature/properties/Effects.js";
+import Proficiencies from "/imports/api/creature/properties/Proficiencies.js";
 import DamageMultipliers from "/imports/api/creature/properties/DamageMultipliers.js";
 import Classes from "/imports/api/creature/properties/Classes.js";
 import * as math from 'mathjs';

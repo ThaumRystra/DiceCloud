@@ -5,10 +5,10 @@ import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.
 import StoredBuffSchema from '/imports/api/creature/properties/Buffs.js';
 
 // Mixins
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
 
 let Rolls = new Mongo.Collection('rolls');
 

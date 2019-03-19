@@ -5,11 +5,11 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 // Mixins
-import recomputeCreatureMixin from '/imports/api/creature/recomputeCreatureMixin.js';
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
+import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
 
 let DamageMultipliers = new Mongo.Collection("damageMultipliers");
 
@@ -43,10 +43,10 @@ const insertDamageMultiplier = new ValidatedMethod({
   name: 'DamageMultipliers.methods.insert',
 	mixins: [
     creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
     recomputeCreatureMixin,
+    setDocToLastMixin,
     simpleSchemaMixin,
   ],
   collection: DamageMultipliers,

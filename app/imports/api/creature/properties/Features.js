@@ -2,17 +2,17 @@ import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
-import { getHighestOrder } from '/imports/api/order.js';
+import { getHighestOrder } from '/imports/api/order/order.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 
 // Mixins
-import recomputeCreatureMixin from '/imports/api/creature/recomputeCreatureMixin.js';
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
+import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
 
 let Features = new Mongo.Collection('features');
 
@@ -41,9 +41,9 @@ const insertFeature = new ValidatedMethod({
   name: 'Features.methods.insert',
 	mixins: [
     creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
+		setDocToLastMixin,
     simpleSchemaMixin,
   ],
   collection: Features,

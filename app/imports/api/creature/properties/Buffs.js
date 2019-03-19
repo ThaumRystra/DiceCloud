@@ -5,10 +5,10 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
 // Mixins
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
 
 let Buffs = new Mongo.Collection('buffs');
 
@@ -83,9 +83,9 @@ const insertBuff = new ValidatedMethod({
   name: 'Buffs.methods.insert',
 	mixins: [
     creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
+		setDocToLastMixin,
     simpleSchemaMixin,
   ],
   collection: Buffs,

@@ -6,10 +6,10 @@ import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 // Mixins
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
 
 let Classes = new Mongo.Collection("classes");
 
@@ -35,9 +35,9 @@ const insertClass = new ValidatedMethod({
   name: 'Classes.methods.insert',
 	mixins: [
     creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
+    setDocToLastMixin,
     simpleSchemaMixin,
   ],
   collection: Classes,

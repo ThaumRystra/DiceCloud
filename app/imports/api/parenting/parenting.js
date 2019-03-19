@@ -7,12 +7,12 @@ let collections = [];
 
 export function registerCollection(collectionName){
   collections.push(collectionName);
-};
+}
 
 // 1 database hit to get the parent by reference
 export function fetchParent({id, collection}){
   return fetchDocByRef({id, collection});
-};
+}
 
 // n database hits to get the children by parent id
 export function fetchChildren({parentId, filter = {}, options}){
@@ -35,7 +35,7 @@ export function updateChildren({parentId, filter = {}, modifier, options={}}){
   collections.forEach(collection => {
     collection.update(filter, modifier, options);
   });
-};
+}
 
 // n database hits to fetch the decendents by ancestor id, in no particular order
 export function fetchDecendents({ancestorId, filter = {}, options}){
@@ -45,7 +45,7 @@ export function fetchDecendents({ancestorId, filter = {}, options}){
     decendents.push(...collection.find(filter, options).fetch());
   });
   return decendents;
-};
+}
 
 // n database hits to update the decendents
 export function updateDecendents({ancestorId, filter = {}, modifier, options={}}){
@@ -54,7 +54,7 @@ export function updateDecendents({ancestorId, filter = {}, modifier, options={}}
   collections.forEach(collection => {
     collection.update(filter, modifier, options);
   });
-};
+}
 
 // n database hits to get decendents to act on
 export function forEachDecendent({ancestorId, filter = {}, options}, callback){
@@ -62,9 +62,10 @@ export function forEachDecendent({ancestorId, filter = {}, options}, callback){
   collections.forEach(collection => {
     collection.find(filter, options).forEach(callback);
   });
-};
+}
 
 // 1 database read
+// TODO generalise for all inheritedFields
 export function getAncestry({id, collection}){
   // Get the parent ref
   let parentDoc = fetchDocByRef({id, collection}, {fields: {
@@ -110,7 +111,7 @@ export function setDocAncestryMixin(methodOptions){
     return runFunc.call(this, doc, ...rest);
   };
   return methodOptions;
-};
+}
 
 function ensureAncestryContainsId(ancestors, id){
   if (!id){
@@ -148,7 +149,7 @@ export function ensureAncestryContainsCharIdMixin(methodOptions){
     return runFunc.apply(this, arguments);
   };
   return methodOptions;
-};
+}
 
 
 export function updateParent(docRef, parentRef){
@@ -183,57 +184,16 @@ export function updateParent(docRef, parentRef){
       },
     }},
   });
-};
+}
 
-export function setInheritedField({id, collection, fieldName, fieldValue}){
-
-  // Update the doc
-  collection = getCollectionByName(collection);
-  collection.update(id, {$set: {
-    [`${fieldName}`]: fieldValue,
-  }});
-
-  // Update the parent object of its children
-  updateChildren({
-    parentId: id,
-    modifier: {$set: {
-      [`parent.${fieldName}`]: fieldValue,
-    }},
-  });
-
-  // Update the ancestors object of its decendents
-  updateDecendents({
-    ancestorId: id,
-    modifier: {$set: {
-      [`ancestors.$.${fieldName}`]: fieldValue,
-    }},
-  });
-
-};
-
-export function setEnabled({id, collection, enabled}){
-  setInheritedField({
-    id,
-    collection,
-    fieldName: 'enabled',
-    fieldValue: enabled,
-  });
-};
-
-export function setName({id, collection, name}){
-  setInheritedField({
-    id,
-    collection,
-    fieldName: 'name',
-    fieldValue: name,
-  });
-};
-
+// TODO these rely on hard coding inherited fields
+// the inherited fields should only appear on the childChema, nowhere else
+// Move these somewhere appropriate
 export function findEnabled(collection, query, options){
-  query['enabled'] = true;
+  query.enabled = true;
   query['ancestors.$.enabled'] = {$not: false};
   return collection.find(query, options);
-};
+}
 
 export function getName(doc){
   if (doc.name) return name;

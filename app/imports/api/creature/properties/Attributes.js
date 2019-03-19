@@ -4,13 +4,19 @@ import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import getModifierFields from '/imports/api/getModifierFields.js';
 
 // Mixins
-import recomputeCreatureMixin from '/imports/api/creature/recomputeCreatureMixin.js';
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
-import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
+import {
+  setDocAncestryMixin,
+  ensureAncestryContainsCharIdMixin
+} from '/imports/api/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
 
 let Attributes = new Mongo.Collection('attributes');
 
@@ -73,6 +79,7 @@ let AttributeSchema = schema({
 });
 
 AttributeSchema.extend(ColorSchema);
+AttributeSchema.extend(PropertySchema);
 
 const ComputedAttributeSchema = schema({
 	// The computed value of the attribute
@@ -88,17 +95,16 @@ const ComputedAttributeSchema = schema({
 }).extend(AttributeSchema);
 
 Attributes.attachSchema(ComputedAttributeSchema);
-Attributes.attachSchema(PropertySchema);
 Attributes.attachSchema(ChildSchema);
 
 const insertAttribute = new ValidatedMethod({
   name: 'Attributes.methods.insert',
   mixins: [
-    creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
     recomputeCreatureMixin,
+    creaturePermissionMixin,
+    setDocToLastMixin,
     simpleSchemaMixin,
   ],
   collection: Attributes,
@@ -112,31 +118,32 @@ const insertAttribute = new ValidatedMethod({
 const updateAttribute = new ValidatedMethod({
   name: 'Attributes.methods.update',
   mixins: [
-    creaturePermissionMixin,
     recomputeCreatureMixin,
-    simpleSchemaMixin,
+    propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: Attributes,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: AttributeSchema.omit('adjustment', 'name'),
-  }),
+  updateSchema: AttributeSchema,
   skipRecompute({update}){
-    return !('variableName' in update) &&
-      !('type' in update) &&
-      !('baseValue' in update)
+    let fields = getModifierFields(update);
+    return !fields.hasAny([
+      'variableName',
+      'type',
+      'baseValue',
+    ]);
   },
   run({_id, update}) {
-		return Attributes.update(_id, {$set: update});
+		return Attributes.update(_id, update);
   },
 });
 
 const adjustAttribute = new ValidatedMethod({
   name: 'Attributes.methods.adjust',
   mixins: [
-    creaturePermissionMixin,
     simpleSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: Attributes,
   permission: 'edit',

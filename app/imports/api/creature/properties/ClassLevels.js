@@ -5,10 +5,10 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 // Mixins
-import { creaturePermissionMixin } from '/imports/api/creature/creaturePermissions.js';
-import { setDocToLastMixin } from '/imports/api/order.js';
+import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/simpleSchemaMixin.js';
+import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
 
 let ClassLevels = new Mongo.Collection("classLevels");
 
@@ -50,9 +50,9 @@ const insertClassLevel = new ValidatedMethod({
   name: 'ClassLevels.methods.insert',
 	mixins: [
     creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
+		setDocToLastMixin,
     simpleSchemaMixin,
   ],
   collection: ClassLevels,

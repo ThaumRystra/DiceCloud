@@ -8,34 +8,13 @@ export function getHighestOrder({collection, charId}){
     sort: {order: -1},
   });
   return (highestOrderedDoc && highestOrderedDoc.order) || 0;
-};
+}
 
 export function setDocToLastOrder({collection, doc}){
   doc.order = getHighestOrder({
     collection,
     charId: doc.charId,
   }) + 1;
-};
-
-export function setDocToLastMixin(methodOptions){
-  // Make sure the doc has a charId
-  // This mixin should come before simpleSchemaMixin
-  methodOptions.schema.extend({
-    charId: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
-    },
-  });
-  let collection = methodOptions.collection
-  if (!collection){
-    throw "`collection` required in method options for setDocToLastMixin"
-  }
-  let runFunc = methodOptions.run;
-  methodOptions.run = function(doc){
-    setDocToLastOrder({collection, doc});
-    return runFunc.apply(this, arguments);
-  };
-  return methodOptions;
 }
 
 export function setDocOrder({collection, doc, order}){
@@ -70,7 +49,7 @@ export function setDocOrder({collection, doc, order}){
       multi: true,
     });
   }
-};
+}
 
 export function reorderDocs({collection, charId}){
   let bulkWrite = [];
@@ -96,4 +75,4 @@ export function reorderDocs({collection, charId}){
       collection.update(op.filter, op.update);
     });
   }
-};
+}

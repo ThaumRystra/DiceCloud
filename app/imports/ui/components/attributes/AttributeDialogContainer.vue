@@ -9,8 +9,12 @@
 <script>
 	import AttributeDialog from '/imports/ui/components/attributes/AttributeDialog.vue';
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
-	import { updateAttribute, adjustAttribute } from '/imports/api/creature/properties/Attributes.js';
+	import {
+		updateAttribute,
+		adjustAttribute
+	} from '/imports/api/creature/properties/Attributes.js';
 	import Effects from '/imports/api/creature/properties/Effects.js';
+	import { setName } from '/imports/api/parenting/parenting.js';
 
 	export default {
 		components: {
@@ -41,13 +45,15 @@
 				console.log({TODO: e});
 			},
 			change(update, ack){
-				if(update.name){
-					update.variableName = update.name.toLowerCase().replace(
-						/\W+(\w?)/g, (match, p1) => p1.toUpperCase()
-					);
-				}
-				updateAttribute.call({_id: this._id, update}, error => {
+				if (update.name){
+					setName.call({})
+				} if (update)
+				updateAttribute.call({
+					_id: this._id,
+					update: {$set: update}
+				}, error => {
 					ack(error);
+					if (error) console.error(error);
 				});
 			},
 		}
