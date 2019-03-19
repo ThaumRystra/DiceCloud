@@ -6,7 +6,7 @@
 		"allowComments": true,
 		"allowRegex": true
 	},
-	"validateIndentation": "\t",
+	"validateIndentation": "  ",
 	"validateQuoteMarks": "\"",
 
 	"disallowMultipleLineStrings": true,

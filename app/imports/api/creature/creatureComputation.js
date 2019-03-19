@@ -22,7 +22,7 @@ export const recomputeCreature = new ValidatedMethod({
 
   run({charId}) {
     // Permission
-    assertEditPermission(charId, this.userId)
+    assertEditPermission(charId, this.userId);
 
     // Work, call this direcly if you are already in a method that has checked
     // for permission to edit a given character
@@ -76,7 +76,7 @@ export function recomputeCreatureById(charId){
   char = computeCreature(char);
   writeCreature(char);
   return char;
-};
+}
 
 /**
  * Write the in-memory creature to the database docs
@@ -91,7 +91,7 @@ function writeCreature(char) {
   writeDamageMultipliers(char);
   writeEffects(char);
   writeCreatureDoc(char);
-};
+}
 
 function writeCreatureDoc(char) {
   // Store all the variables, using the same priority as computation evaluation
@@ -116,7 +116,7 @@ function writeAttributes(char) {
           value: att.result,
         }},
       }
-    }
+    };
     if (typeof att.mod === 'number'){
       op.updateMany.update.$set.mod = att.mod;
     } else {
@@ -126,14 +126,14 @@ function writeAttributes(char) {
   });
   if (Meteor.isServer){
     Attributes.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2))
+      if (e) console.warn(JSON.stringify(e, null, 2));
     });
   } else {
     _.each(bulkWriteOps, op => {
       Attributes.update(op.updateMany.filter, op.updateMany.update, {multi: true});
     });
   }
-};
+}
 
 function writeEffects(char){
   let bulkWriteOps =  _.map(char.computedEffects, effect => ({
@@ -146,7 +146,7 @@ function writeEffects(char){
   }));
   if (Meteor.isServer){
     Effects.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2))
+      if (e) console.warn(JSON.stringify(e, null, 2));
     });
   } else {
     _.each(bulkWriteOps, op => {
@@ -176,19 +176,19 @@ function writeSkills(char) {
           fail: skill.fail,
         }},
       }
-    }
+    };
     return op;
   });
   if (Meteor.isServer){
     Skills.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2))
+      if (e) console.warn(JSON.stringify(e, null, 2));
     });
   } else {
     _.each(bulkWriteOps, op => {
       Skills.update(op.updateMany.filter, op.updateMany.update, {multi: true});
     });
   }
-};
+}
 
  /**
   * Write all the damange multipliers from the in-memory char object to the docs
@@ -205,19 +205,19 @@ function writeDamageMultipliers(char) {
           value: dm.result,
         }},
       }
-    }
+    };
     return op;
   });
   if (Meteor.isServer){
     DamageMultipliers.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2))
+      if (e) console.warn(JSON.stringify(e, null, 2));
     });
   } else {
     _.each(bulkWriteOps, op => {
       DamageMultipliers.update(op.updateMany.filter, op.updateMany.update, {multi: true});
     });
   }
-};
+}
 
 
  /**
@@ -269,7 +269,7 @@ function buildCreature(charId){
           get computed(){
             return this.ability.computed;
           },
-        }
+        };
       }
     }
   });
@@ -306,7 +306,7 @@ function buildCreature(charId){
 
   // Fetch the damage multipliers of the creature and store them
   DamageMultipliers.find({charId}).forEach(damageMultiplier =>{
-    const key = damageMultiplier.variableName
+    const key = damageMultiplier.variableName;
     if (!char.dms[key]){
       char.dms[key] = {
         computed: false,
@@ -326,9 +326,9 @@ function buildCreature(charId){
 
   // Fetch the class levels and store them
   // don't use the word "class" it's reserved
-  const levelOverwritten = !!char.variables['level']
+  const levelOverwritten = !!char.variables.level;
   if (!levelOverwritten){
-    char.variables['level'] = {
+    char.variables.level = {
       result: 0,
       type: 'characterLevel',
       computed: true,
@@ -347,7 +347,7 @@ function buildCreature(charId){
         };
       }
       if (!levelOverwritten){
-        char.variables['level'].result = char.level;
+        char.variables.level.result = char.level;
       }
     }
   });
@@ -376,7 +376,7 @@ function buildCreature(charId){
       result: 0,
       operation: effect.operation,
       calculation: effect.calculation,
-    }
+    };
     if (char.atts[effect.stat]) {
       char.atts[effect.stat].effects.push(storedEffect);
     } else if (char.skills[effect.stat]) {
@@ -398,7 +398,7 @@ function buildCreature(charId){
     }
   });
   return char;
-};
+}
 
 /**
  *  Compute the creature's stats in-place, returns the same char object
@@ -409,22 +409,22 @@ export function computeCreature(char){
   // Iterate over each stat in order and compute it
   let statName;
   for (statName in char.atts){
-    let stat = char.atts[statName]
+    let stat = char.atts[statName];
     computeStat (stat, char);
   }
   for (statName in char.skills){
-    let stat = char.skills[statName]
+    let stat = char.skills[statName];
     computeStat (stat, char);
   }
   for (statName in char.dms){
-    let stat = char.dms[statName]
+    let stat = char.dms[statName];
     computeStat (stat, char);
   }
   for (let effect of char.otherEffects){
     computeEffect(effect, char);
   }
   return char;
-};
+}
 
 
 /**
@@ -455,7 +455,7 @@ function computeStat(stat, char){
 
 
   // Iterate over each effect which applies to the stat
-  for (i in stat.effects){
+  for (let i in stat.effects){
     computeEffect(stat.effects[i], char);
     // apply the effect to the stat
     applyEffect(stat.effects[i], stat);
@@ -485,7 +485,7 @@ function computeEffect(effect, char){
 	}
   effect.computed = true;
   char.computedEffects.push(effect);
-};
+}
 
 /**
  * Apply a computed effect to its stat
@@ -536,7 +536,7 @@ function applyEffect(effect, stat){
       stat.conditional++;
       break;
   }
-};
+}
 
 
 /**
@@ -544,9 +544,9 @@ function applyEffect(effect, stat){
  */
 function combineStat(stat, char){
   if (stat.type === "attribute"){
-    combineAttribute(stat, char)
+    combineAttribute(stat, char);
   } else if (stat.type === "skill"){
-    combineSkill(stat, char)
+    combineSkill(stat, char);
   } else if (stat.type === "damageMultiplier"){
     combineDamageMultiplier(stat, char);
   }
@@ -571,7 +571,7 @@ function combineAttribute(stat, char){
  * Combine skills results into final values
  */
 function combineSkill(stat, char){
-  for (i in stat.proficiencies){
+  for (let i in stat.proficiencies){
     let prof = stat.proficiencies[i];
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
@@ -624,7 +624,7 @@ function getComputedValueOfKey(sub, char){
     computeStat(stat, char);
   }
   return stat.result;
-};
+}
 
 /**
  * Evaluate a string computation in the context of a char
@@ -656,9 +656,7 @@ function evaluateCalculation(string, char){
   } catch (e){
     return substitutedCalc.toString();
   }
-};
-
-
+}
 
 /**
  * recompute a character's XP from a given id
@@ -671,7 +669,7 @@ export const recomputeCreatureXP = new ValidatedMethod({
   }).validator(),
 
   run({charId}) {
-    assertEditPermission(charId, this.userId)
+    assertEditPermission(charId, this.userId);
     var xp = 0;
 		Experiences.find(
 			{charId: charId},
@@ -680,7 +678,7 @@ export const recomputeCreatureXP = new ValidatedMethod({
 			xp += e.value;
 		});
 
-    Creatures.update(charId, {$set: {xp}})
+    Creatures.update(charId, {$set: {xp}});
 		return xp;
   },
 });
@@ -697,7 +695,7 @@ export const recomputeCreatureWeightCarried = new ValidatedMethod({
   }).validator(),
 
   run({charId}){
-    assertEditPermission(charId, this.userId)
+    assertEditPermission(charId, this.userId);
     var weightCarried = 0;
     // store a dictionary of carried containers
     var carriedContainers = {};
@@ -729,7 +727,7 @@ export const recomputeCreatureWeightCarried = new ValidatedMethod({
       }
     });
 
-    Creatures.update(charId, {$set: {weightCarried}})
+    Creatures.update(charId, {$set: {weightCarried}});
     return weightCarried;
   }
 });
