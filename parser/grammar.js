@@ -3,28 +3,38 @@
 (function () {
 function id(x) { return x[0]; }
 
- const moo = require("moo");
+  const moo = require("moo");
 
- const lexer = moo.compile({
-  number: /[0-9]+(?:\.[0-9]+)?/,
-  string: /'.*?'|".*?"/,
-  name: {match: /[a-zA-Z]+\w*?/, type: moo.keywords({
-    'keywords': ['if', 'else', 'd'],
-  })},
-  space: {match: /\s+/, lineBreaks: true},
-  separators: [',', '.'],
-  multiplicativeOperator: ['*', '/'],
-  exponentOperator: ['^'],
-  additiveOperator: ['+', '-'],
-  unaryOperator: ['-'],
-  andOperator: ['&', '&&'],
-  orOperator: ['|', '||'],
-  equalityOperator: ['=', '==', '===', '!=', '!=='],
-  relationalOperator: ['>', '<', '>=', '<='],
-  brackets: ['(', ')', '{', '}'],
- });
+  const lexer = moo.compile({
+    number: /[0-9]+(?:\.[0-9]+)?/,
+    string: {
+      match: /'.*?'|".*?"/,
+      value: s => s.slice(1, -1),
+    },
+    name: {
+      match: /[a-zA-Z]+\w*?/,
+      type: moo.keywords({
+        'keywords': ['if', 'else', 'd'],
+      }),
+    },
+    space: {
+      match: /\s+/,
+      lineBreaks: true,
+    },
+    separators: [',', '.'],
+    multiplicativeOperator: ['*', '/'],
+    exponentOperator: ['^'],
+    additiveOperator: ['+', '-'],
+    unaryOperator: ['-'],
+    andOperator: ['&', '&&'],
+    orOperator: ['|', '||'],
+    stringDelimiters: ['\"', '\''],
+    equalityOperator: ['=', '==', '===', '!=', '!=='],
+    relationalOperator: ['>', '<', '>=', '<='],
+    brackets: ['(', ')', '{', '}'],
+  });
 
- function nuller() { return null; } 
+  function nuller() { return null; }
 
   class OperatorNode {
     constructor({left, right, operator, fn}) {
@@ -51,8 +61,8 @@ function id(x) { return x[0]; }
 
   class ConstantNode {
     constructor(value, type){
-      this.value = value;
       this.type = type;
+      this.value = value;
     }
   }
 var grammar = {
