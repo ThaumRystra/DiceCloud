@@ -4,7 +4,8 @@
   "scripts": {
     "build": "nearleyc grammar.ne -o grammar.js",
     "test": "nearley-test grammar.js",
-    "unparse": "nearley-unparse grammar.js"
+    "unparse": "nearley-unparse grammar.js",
+    "railroad": "nearley-railroad grammar.ne -o grammar.html"
   },
   "author": "Stefan Zermatten",
   "devDependencies": {
