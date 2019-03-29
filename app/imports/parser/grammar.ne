@@ -31,15 +31,6 @@
   });
 
   function nuller() { return null; }
-
-  class OperatorNode {
-    constructor({left, right, operator, fn}) {
-      this.left = left;
-      this.right = right;
-      this.fn = fn;
-      this.operator = operator;
-    }
-  }
   function operator([left, _1, operator, _2, right], fn){
     return new OperatorNode({
       left,
@@ -48,26 +39,15 @@
       fn
     });
   }
-
-  class SymbolNode {
-    constructor(name){
-      this.name = name;
-    }
-  }
-
-  class ConstantNode {
-    constructor(value, type){
-      this.type = type;
-      this.value = value;
-    }
-  }
 %}
 
 # Use the Moo lexer
 @lexer lexer
 
 ifStatement ->
-  "if" _ "(" _ expression _ ")" _ ifStatement _ "else" _ ifStatement {% d => ({condition: d[4], true: d[8], false: d[12]}) %}
+  "if" _ "(" _ expression _ ")" _ ifStatement _ "else" _ ifStatement {%
+     d => new ifNode({condition: d[4], consequent: d[8], alternative: d[12]})
+  %}
 | expression {% id %}
 
 expression ->
@@ -127,13 +107,13 @@ valueExpression ->
 
 # A number or a function of a number
 number ->
-  %number {% d => new ConstantNode(d[0].value, 'number') %}
+  %number {% d => new ConstantNode({value: d[0].value, type 'number'}) %}
 
 name ->
   %name {% d => new SymbolNode(d[0].value) %}
 
 string ->
-  %string {% d => new ConstantNode(d[0].value, 'string') %}
+  %string {% d => new ConstantNode({value: d[0].value, type: 'string'}) %}
 
 _ ->
   null
