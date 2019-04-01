@@ -15,23 +15,6 @@
 		<v-card-text>
 			{{description}}
 		</v-card-text>
-		<v-card-actions v-if="uses">
-			<v-spacer/>
-			<v-btn
-				flat
-				:disabled="uses - used <= 0"
-				@click="$emit('used')"
-			>
-				Use
-			</v-btn>
-			<v-btn
-				flat
-				:disabled="!used"
-				@click="$emit('reset')"
-			>
-				Reset
-			</v-btn>
-		</v-card-actions>
   </toolbar-card>
 </template>
 
@@ -43,9 +26,6 @@
 			charId: String,
 			name: String,
 			description: String,
-			uses: Number,
-			used: Number,
-			reset: String,
 			color: String,
 			enabled: Boolean,
 			alwaysEnabled: Boolean,

@@ -60,7 +60,7 @@
 					callback(feature){
 						if (!feature) return;
 						feature.charId = charId;
-						let featureId = insertFeature.call({feature});
+						let featureId = insertFeature.call(feature);
 						return featureId
 					}
 				});

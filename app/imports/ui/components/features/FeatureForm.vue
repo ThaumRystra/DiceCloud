@@ -3,33 +3,8 @@
   	<text-field
 			label="Name"
 			:value="feature.name"
-			@change="(name, ack) => $emit('change', {name}, ack)"
+			@change="(name, ack) => $emit('update', {name}, ack)"
 			:error-messages="errors.name"
-			:debounce-time="debounceTime"
-		/>
-		<text-field
-			label="Used"
-			type="number"
-			:value="feature.used"
-			@change="(used, ack) => $emit('change', {used}, ack)"
-			:error-messages="errors.used"
-			:debounce-time="debounceTime"
-		/>
-		<text-field
-			label="Uses"
-			:value="feature.uses"
-			@change="(uses, ack) => $emit('change', {uses}, ack)"
-			:error-messages="errors.uses"
-			:debounce-time="debounceTime"
-		/>
-		<smart-select
-			label="Reset"
-			clearable
-			:items="resetOptions"
-			:value="feature.reset"
-			:error-messages="errors.reset"
-			:menu-props="{auto: true, lazy: true}"
-			@change="(reset, ack) => $emit('change', {reset}, ack)"
 			:debounce-time="debounceTime"
 		/>
 		<smart-select
@@ -45,7 +20,7 @@
 			label="Description"
 			:value="feature.description"
 			:error-messages="errors.description"
-			@change="(description, ack) => $emit('change', {description}, ack)"
+			@change="(description, ack) => $emit('update', {description}, ack)"
 			:debounce-time="debounceTime"
 		/>
   </div>
@@ -65,15 +40,6 @@
 			debounceTime: Number,
 		},
 		data(){ return{
-			resetOptions: [
-				{
-					text: 'Short rest',
-					value: 'shortRest',
-				}, {
-					text: 'Long rest',
-					value: 'longRest',
-				}
-			],
 			enabledOptions: [
 				{
 					text: 'Always enabled',
@@ -98,11 +64,11 @@
 		methods: {
 			changeEnabled(value, ack){
 				if (value === 'always'){
-					this.$emit('change', {enabled: true, alwaysEnabled: true}, ack);
+					this.$emit('update', {enabled: true, alwaysEnabled: true}, ack);
 				} else if (value === 'enabled'){
-					this.$emit('change', {enabled: true, alwaysEnabled: false}, ack);
+					this.$emit('update', {enabled: true, alwaysEnabled: false}, ack);
 				} else if (value === 'disabled'){
-					this.$emit('change', {enabled: false, alwaysEnabled: false}, ack);
+					this.$emit('update', {enabled: false, alwaysEnabled: false}, ack);
 				}
 			}
 		}
