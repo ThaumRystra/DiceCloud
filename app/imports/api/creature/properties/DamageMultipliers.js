@@ -10,6 +10,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let DamageMultipliers = new Mongo.Collection("damageMultipliers");
 
@@ -42,12 +44,12 @@ DamageMultipliers.attachSchema(ChildSchema);
 const insertDamageMultiplier = new ValidatedMethod({
   name: 'DamageMultipliers.methods.insert',
 	mixins: [
-    creaturePermissionMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
     recomputeCreatureMixin,
     setDocToLastMixin,
     simpleSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: DamageMultipliers,
   permission: 'edit',
@@ -60,19 +62,14 @@ const insertDamageMultiplier = new ValidatedMethod({
 const updateDamageMultiplier = new ValidatedMethod({
   name: 'DamageMultipliers.methods.update',
   mixins: [
-    creaturePermissionMixin,
     recomputeCreatureMixin,
-    simpleSchemaMixin,
+    propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: DamageMultipliers,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: DamageMultiplierSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return DamageMultipliers.update(_id, {$set: update});
-  },
+  schema: DamageMultiplierSchema,
 });
 
 export default DamageMultipliers;

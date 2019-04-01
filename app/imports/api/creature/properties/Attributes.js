@@ -79,7 +79,6 @@ let AttributeSchema = schema({
 });
 
 AttributeSchema.extend(ColorSchema);
-AttributeSchema.extend(PropertySchema);
 
 const ComputedAttributeSchema = schema({
 	// The computed value of the attribute
@@ -94,6 +93,7 @@ const ComputedAttributeSchema = schema({
 	},
 }).extend(AttributeSchema);
 
+Attributes.attachSchema(PropertySchema);
 Attributes.attachSchema(ComputedAttributeSchema);
 Attributes.attachSchema(ChildSchema);
 
@@ -125,7 +125,7 @@ const updateAttribute = new ValidatedMethod({
   ],
   collection: Attributes,
   permission: 'edit',
-  updateSchema: AttributeSchema,
+  schema: AttributeSchema.omit(['adjutment']),
   skipRecompute({update}){
     let fields = getModifierFields(update);
     return !fields.hasAny([
@@ -133,9 +133,6 @@ const updateAttribute = new ValidatedMethod({
       'type',
       'baseValue',
     ]);
-  },
-  run({_id, update}) {
-		return Attributes.update(_id, update);
   },
 });
 

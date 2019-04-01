@@ -9,14 +9,12 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Rolls = new Mongo.Collection('rolls');
 
 let RollChildrenSchema = new SimpleSchema({
-  name: {
-		type: String,
-		optional: true,
-	},
   // The adjustments to be applied
   adjustments: {
 		type: Array,
@@ -91,12 +89,8 @@ let RollSchema = new SimpleSchema({
     optional: true,
   },
   // The buffs and adjustments to apply based on the outcome of the roll
-  hit: {
-    type: RollChildrenSchema,
-  },
-  miss: {
-    type: RollChildrenSchema,
-  },
+  hit: RollChildrenSchema,
+  miss: RollChildrenSchema,
 });
 
 Rolls.attachSchema(RollSchema);
@@ -123,18 +117,13 @@ const insertRoll = new ValidatedMethod({
 const updateRoll = new ValidatedMethod({
   name: 'Rolls.methods.update',
   mixins: [
+    propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: Rolls,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: RollSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Rolls.update(_id, {$set: update});
-  },
+  schema: RollSchema,
 });
 
 export default Rolls;

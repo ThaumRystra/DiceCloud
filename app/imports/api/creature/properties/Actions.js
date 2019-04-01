@@ -11,26 +11,35 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
-
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Actions = new Mongo.Collection('actions');
 
 /*
  * Actions are things a character can do
+ * Any rolls that are children of actions will be rolled when taking the action
+ * Any actions that are children of this action will be considered alternatives
+ * to this action
  */
 let ActionSchema = schema({
 	name: {
 		type: String,
 		optional: true,
 	},
+	enabled: {
+    type: Boolean,
+    defaultValue: true,
+  },
 	description: {
 		type: String,
 		optional: true,
 	},
 	// What time-resource is used to take the action in combat
+	// long actions take longer than 1 round to cast
 	type: {
 		type: String,
-		allowedValues: ['attack', 'action', 'bonus', 'reaction', 'free'],
+		allowedValues: ['action', 'bonus', 'attack', 'reaction', 'free', 'long'],
 		defaultValue: 'action',
 	},
 	// Who is the action directed at
@@ -42,8 +51,8 @@ let ActionSchema = schema({
 			'multipleTargets',
     ],
 	},
-	// Adjustments applied when taking this action, regardless of roll outcomes
-	// If these adjustments can't be made, the action should be unusable
+	// Adjustments applied when taking this action
+	// Ideally, if these adjustments can't be made, the action should be unusable
 	adjustments: {
 		type: Array,
 		defaultValue: [],
@@ -51,7 +60,7 @@ let ActionSchema = schema({
 	'adjustments.$': {
 		type: AdjustmentSchema,
 	},
-	// Buffs applied when taking this action, regardless of roll outcomes
+	// Buffs applied when taking this action
 	buffs: {
 		type: Array,
 		defaultValue: [],
@@ -60,7 +69,8 @@ let ActionSchema = schema({
 		type: StoredBuffSchema,
 	},
 	// Calculation of how many times this action can be used
-	// Only set if this action tracks its own uses
+	// Only set if this action tracks its own uses, rather than adjusting
+	// resources
 	uses: {
 		type: String,
 		optional: true,
@@ -104,18 +114,13 @@ const insertAction = new ValidatedMethod({
 const updateAction = new ValidatedMethod({
   name: 'Actions.methods.update',
   mixins: [
+    propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: Actions,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: ActionSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Actions.update(_id, {$set: update});
-  },
+  schema: ActionSchema,
 });
 
 export default Actions;

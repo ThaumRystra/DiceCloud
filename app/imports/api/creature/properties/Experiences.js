@@ -9,6 +9,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Experiences = new Mongo.Collection("experience");
 
@@ -77,16 +79,14 @@ const insertExperience = new ValidatedMethod({
 const updateExperience = new ValidatedMethod({
   name: 'Experiences.methods.update',
   mixins: [
-    creaturePermissionMixin,
 		recomputeCreatureMixin,
-    simpleSchemaMixin,
+		ropagateInheritanceUpdateMixin,
+    updateSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: Experiences,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: ExperienceSchema.omit('name'),
-  }),
+  schema: ExperienceSchema,
 	skipRecompute({update}){
 		return !('value' in update);
 	},

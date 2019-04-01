@@ -12,16 +12,12 @@ import SimpleSchema from 'simpl-schema';
 export default function updateSchemaMixin(methodOptions) {
   // If the user didn't give us a schema and they did give us a validate, assume
   // that they are choosing to use the validate way of doing things in this call.
-  //  If they've built a wrapper around ValidateMethod that includes this mixin
-  // all the time, this could happen semi-"intentionally". There may be times they
-  // just don't want to use a schema and have specified a "validate" option. So
-  // returning the unchanged options instead of an error seems proper.
   if ((
-    typeof methodOptions.updateSchema === 'undefined' &&
+    typeof methodOptions.schema === 'undefined' &&
     typeof methodOptions.validate !== 'undefined'
   ) || (
-    typeof methodOptions.updateSchema !== 'undefined' &&
-    methodOptions.updateSchema === null &&
+    typeof methodOptions.schema !== 'undefined' &&
+    methodOptions.schema === null &&
     typeof methodOptions.validate !== 'undefined' &&
     methodOptions.validate !== null
   )) {
@@ -46,10 +42,10 @@ export default function updateSchemaMixin(methodOptions) {
 
   // Make the update schema a SimpleSchema, if it isn't already
   let updateSchema;
-  if (methodOptions.updateSchema instanceof SimpleSchema) {
-    updateSchema = methodOptions.updateSchema;
+  if (methodOptions.schema instanceof SimpleSchema) {
+    updateSchema = methodOptions.schema;
   } else {
-    updateSchema = new SimpleSchema(methodOptions.updateSchema);
+    updateSchema = new SimpleSchema(methodOptions.schema);
   }
 
   // Set up the new validation
@@ -57,5 +53,12 @@ export default function updateSchemaMixin(methodOptions) {
     argumentSchema.validate(args);
     updateSchema.validate(args.update, methodOptions.schemaValidatorOptions);
   };
+
+  // Give a default run function if one isn't supplied
+  if (!methodOptions.run){
+    methodOptions.run = function({_id, update}){
+      return MethodOptions.collection.update(_id, {$set: update});
+    };
+  }
   return methodOptions;
 }

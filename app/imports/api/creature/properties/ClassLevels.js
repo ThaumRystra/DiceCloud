@@ -9,6 +9,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let ClassLevels = new Mongo.Collection("classLevels");
 
@@ -17,6 +19,10 @@ let ClassLevelSchema = schema({
 		type: String,
 		optional: true,
 	},
+	enabled: {
+    type: Boolean,
+    defaultValue: true,
+  },
 	// The name of this class level's variable
 	variableName: {
     type: String,
@@ -66,18 +72,13 @@ const insertClassLevel = new ValidatedMethod({
 const updateClassLevel = new ValidatedMethod({
   name: 'ClassLevels.methods.update',
   mixins: [
+		propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: ClassLevels,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: ClassLevelSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return ClassLevels.update(_id, {$set: update});
-  },
+  schema: ClassLevelSchema,
 });
 
 export default ClassLevels;
