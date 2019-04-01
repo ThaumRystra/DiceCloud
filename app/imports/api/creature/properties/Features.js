@@ -17,7 +17,7 @@ import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Features = new Mongo.Collection('features');
 
-let FeatureSchema = schema({
+let FeatureSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
@@ -38,18 +38,21 @@ let FeatureSchema = schema({
 
 FeatureSchema.extend(ColorSchema);
 
-Features.attachSchema(FeatureSchema);
-Features.attachSchema(PropertySchema);
-Features.attachSchema(ChildSchema);
+Features.attachSchema(
+	schema(FeatureSchema)
+	.extend(PropertySchema)
+	.extend(ChildSchema)
+);
+
 
 const insertFeature = new ValidatedMethod({
   name: 'Features.methods.insert',
 	mixins: [
-    creaturePermissionMixin,
-    setDocAncestryMixin,
-    ensureAncestryContainsCharIdMixin,
 		setDocToLastMixin,
-    simpleSchemaMixin,
+		simpleSchemaMixin,
+    ensureAncestryContainsCharIdMixin,
+		setDocAncestryMixin,
+		creaturePermissionMixin,
   ],
   collection: Features,
   permission: 'edit',

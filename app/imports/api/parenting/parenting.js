@@ -81,7 +81,7 @@ export function getAncestry({id, collection}){
   };
 
   // Ancestors is [...parent's ancestors, parent ref]
-  let ancestors = parentDoc.ancestors;
+  let ancestors = parentDoc.ancestors || [];
   ancestors.push(parent);
 
   return {parent, ancestors};
@@ -90,9 +90,10 @@ export function getAncestry({id, collection}){
 export function setDocAncestryMixin(methodOptions){
   // Extend the method's schema to require the needed properties
   // This mixin should come before simpleschema mixin
-  methodOptions.schema.extend({
+  methodOptions.schema = new SimpleSchema({
     parent: {
       type: Object,
+      optional: true,
     },
     'parent.id': {
       type: String,
@@ -101,10 +102,14 @@ export function setDocAncestryMixin(methodOptions){
     'parent.collection': {
       type: String,
     },
-  });
+  }).extend(methodOptions.schema);
   // Change the doc's ancestry before running
   let runFunc = methodOptions.run;
   methodOptions.run = function(doc, ...rest){
+    // If the doc's parent doesn't exist, set it to the character
+    if (!doc.parent && doc.charId) {
+      doc.parent = {id: doc.charId, collection: 'creatures'};
+    }
     let {parent, ancestors} = getAncestry(doc.parent);
     doc.parent = parent;
     doc.ancestors = ancestors;
@@ -137,12 +142,12 @@ function ensureAncestryContainsId(ancestors, id){
 export function ensureAncestryContainsCharIdMixin(methodOptions){
   // Extend the method's schema to require the needed properties
   // This mixin should come before simpleSchemaMixin
-  methodOptions.schema.extend({
+  methodOptions.schema = new SimpleSchema({
     charId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
     },
-  });
+  }).extend(methodOptions.schema);
   let runFunc = methodOptions.run;
   methodOptions.run = function({charId, ancestors}){
     ensureAncestryContainsId(ancestors, charId);

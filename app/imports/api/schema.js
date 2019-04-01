@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 
-function getDefaultSchema(){
-  return new SimpleSchema({}, {
+export default function schema(options){
+  return new SimpleSchema(options, {
     clean: {
       filter: true,
       autoConvert: true,
@@ -11,8 +11,4 @@ function getDefaultSchema(){
       removeNullsFromArrays: true,
     },
   });
-};
-
-export default function schema(options){
-  return getDefaultSchema().extend(options);
-};
+}
