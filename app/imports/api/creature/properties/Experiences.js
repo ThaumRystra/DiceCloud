@@ -80,7 +80,7 @@ const updateExperience = new ValidatedMethod({
   name: 'Experiences.methods.update',
   mixins: [
 		recomputeCreatureMixin,
-		ropagateInheritanceUpdateMixin,
+		propagateInheritanceUpdateMixin,
     updateSchemaMixin,
     creaturePermissionMixin,
   ],
