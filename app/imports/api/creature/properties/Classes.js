@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 

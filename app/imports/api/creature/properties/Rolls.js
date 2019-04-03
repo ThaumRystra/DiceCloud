@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import StoredBuffSchema from '/imports/api/creature/properties/Buffs.js';
 

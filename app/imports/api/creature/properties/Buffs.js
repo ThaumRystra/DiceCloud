@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
 // Mixins
