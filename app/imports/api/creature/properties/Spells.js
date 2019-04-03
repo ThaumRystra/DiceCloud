@@ -2,7 +2,6 @@ import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
@@ -95,7 +94,6 @@ SpellSchema.extend(ColorSchema);
 
 Spells.attachSchema(SpellSchema);
 Spells.attachSchema(PropertySchema);
-Spells.attachSchema(ChildSchema);
 
 const insertSpell = new ValidatedMethod({
   name: 'Spells.methods.insert',

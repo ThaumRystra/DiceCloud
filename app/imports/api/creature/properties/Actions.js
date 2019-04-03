@@ -3,7 +3,6 @@ import schema from '/imports/api/schema.js';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import StoredBuffSchema from '/imports/api/creature/properties/Buffs.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 
 // Mixins
@@ -92,7 +91,6 @@ ActionSchema.extend(ColorSchema);
 
 Actions.attachSchema(ActionSchema);
 Actions.attachSchema(PropertySchema);
-Actions.attachSchema(ChildSchema);
 
 const insertAction = new ValidatedMethod({
   name: 'Actions.methods.insert',

@@ -48,8 +48,8 @@ let ExperienceSchema = schema({
 	},
 });
 
-Experiences.attachSchema(PropertySchema);
 Experiences.attachSchema(ExperienceSchema);
+Experiences.attachSchema(PropertySchema);
 
 const insertExperience = new ValidatedMethod({
   name: 'Experiences.methods.insert',

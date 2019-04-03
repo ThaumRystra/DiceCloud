@@ -1,9 +1,9 @@
 import updateAction from '/imports/api/creature/properties/Actions.js';
 import updateAttribute from '/imports/api/creature/properties/Attributes.js';
-import updateBuff from '/imports/api/creature/properties/Buff.js';
+import updateBuff from '/imports/api/creature/properties/Buffs.js';
 import updateClass from '/imports/api/creature/properties/Classes.js';
 import updateClassLevel from '/imports/api/creature/properties/ClassLevels.js';
-import updateDamageMiliplier from '/imports/api/creature/properties/DamageMilipliers.js';
+import updateDamageMultiplier from '/imports/api/creature/properties/DamageMultipliers.js';
 import updateEffect from '/imports/api/creature/properties/Effects.js';
 import updateExperience from '/imports/api/creature/properties/Experiences.js';
 import updateFeature from '/imports/api/creature/properties/Features.js';
@@ -21,7 +21,7 @@ export default Object.freeze({
   buffs: updateBuff,
   classs: updateClass,
   classLevels: updateClassLevel,
-  damageMilipliers: updateDamageMiliplier,
+  damageMultipliers: updateDamageMultiplier,
   effects: updateEffect,
   experiences: updateExperience,
   features: updateFeature,

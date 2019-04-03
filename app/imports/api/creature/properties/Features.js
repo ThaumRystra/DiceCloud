@@ -1,10 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
-import { recomputeCreatureById } from '/imports/api/creature/creatureComputation.js'
-import { getHighestOrder } from '/imports/api/order/order.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 
 // Mixins
@@ -38,12 +34,8 @@ let FeatureSchema = new SimpleSchema({
 
 FeatureSchema.extend(ColorSchema);
 
-Features.attachSchema(
-	schema(FeatureSchema)
-	.extend(PropertySchema)
-	.extend(ChildSchema)
-);
-
+Features.attachSchema(FeatureSchema);
+Features.attachSchema(PropertySchema);
 
 const insertFeature = new ValidatedMethod({
   name: 'Features.methods.insert',
@@ -65,8 +57,8 @@ const insertFeature = new ValidatedMethod({
 const updateFeature = new ValidatedMethod({
   name: 'Features.methods.update',
   mixins: [
+		updateSchemaMixin,
 		propagateInheritanceUpdateMixin,
-    updateSchemaMixin,
     creaturePermissionMixin,
   ],
   collection: Features,

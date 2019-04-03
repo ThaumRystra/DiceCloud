@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import StoredBuffSchema from '/imports/api/creature/properties/Buffs.js';
 
@@ -95,7 +94,6 @@ let RollSchema = new SimpleSchema({
 
 Rolls.attachSchema(RollSchema);
 Rolls.attachSchema(PropertySchema);
-Rolls.attachSchema(ChildSchema);
 
 const insertRoll = new ValidatedMethod({
   name: 'Rolls.methods.insert',

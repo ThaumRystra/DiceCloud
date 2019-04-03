@@ -51,13 +51,16 @@ export default function updateSchemaMixin(methodOptions) {
   // Set up the new validation
   methodOptions.validate = function(args){
     argumentSchema.validate(args);
-    updateSchema.validate(args.update, methodOptions.schemaValidatorOptions);
+    updateSchema.validate(
+      {$set: args.update},
+      methodOptions.schemaValidatorOptions
+    );
   };
 
   // Give a default run function if one isn't supplied
   if (!methodOptions.run){
     methodOptions.run = function({_id, update}){
-      return MethodOptions.collection.update(_id, {$set: update});
+      return methodOptions.collection.update(_id, {$set: update});
     };
   }
   return methodOptions;

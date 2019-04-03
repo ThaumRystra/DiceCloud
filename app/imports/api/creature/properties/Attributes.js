@@ -1,5 +1,4 @@
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
@@ -93,9 +92,8 @@ const ComputedAttributeSchema = schema({
 	},
 }).extend(AttributeSchema);
 
-Attributes.attachSchema(PropertySchema);
 Attributes.attachSchema(ComputedAttributeSchema);
-Attributes.attachSchema(ChildSchema);
+Attributes.attachSchema(PropertySchema);
 
 const insertAttribute = new ValidatedMethod({
   name: 'Attributes.methods.insert',

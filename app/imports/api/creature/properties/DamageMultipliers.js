@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 // Mixins
@@ -39,7 +38,6 @@ let DamageMultiplierSchema = schema({
 
 DamageMultipliers.attachSchema(DamageMultiplierSchema);
 DamageMultipliers.attachSchema(PropertySchema);
-DamageMultipliers.attachSchema(ChildSchema);
 
 const insertDamageMultiplier = new ValidatedMethod({
   name: 'DamageMultipliers.methods.insert',

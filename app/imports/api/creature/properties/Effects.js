@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 // Mixins
 import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
@@ -58,9 +57,8 @@ const EffectComputedSchema = new SimpleSchema({
 	},
 }).extend(EffectSchema);
 
-Effects.attachSchema(PropertySchema);
-Effects.attachSchema(ChildSchema);
 Effects.attachSchema(EffectComputedSchema);
+Effects.attachSchema(PropertySchema);
 
 const insertEffect = new ValidatedMethod({
   name: 'Effects.methods.insert',

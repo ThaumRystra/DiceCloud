@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
 // Mixins
@@ -79,7 +78,6 @@ let AppliedBuffSchema = schema({
 
 Buffs.attachSchema(AppliedBuffSchema);
 Buffs.attachSchema(PropertySchema);
-Buffs.attachSchema(ChildSchema);
 
 const insertBuff = new ValidatedMethod({
   name: 'Buffs.methods.insert',

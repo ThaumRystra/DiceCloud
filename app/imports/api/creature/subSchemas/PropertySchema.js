@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 const PropertySchema = new SimpleSchema({
   charId: {
@@ -8,14 +9,14 @@ const PropertySchema = new SimpleSchema({
 		index: 1,
     optional: true,
 	},
+  name: {
+    type: String,
+    optional: true,
+  },
   enabled: {
     type: Boolean,
     defaultValue: true,
   },
-  name: {
-		type: String,
-		optional: true,
-	},
   order: {
   	type: SimpleSchema.Integer,
   	index: true,
@@ -23,5 +24,6 @@ const PropertySchema = new SimpleSchema({
 });
 
 PropertySchema.extend(SoftRemovableSchema);
+PropertySchema.extend(ChildSchema);
 
 export default PropertySchema;

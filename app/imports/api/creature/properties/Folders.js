@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
@@ -24,10 +23,10 @@ let FolderSchema = schema({
     type: Boolean,
     defaultValue: true,
   },
-}).extend(PropertySchema);
+});
 
 Folders.attachSchema(FolderSchema);
-Folders.attachSchema(ChildSchema);
+Folders.attachSchema(PropertySchema);
 
 const insertFolder = new ValidatedMethod({
   name: 'Folders.methods.insert',

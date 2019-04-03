@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 // Mixins
@@ -48,7 +47,6 @@ let ClassLevelSchema = schema({
 
 ClassLevels.attachSchema(ClassLevelSchema);
 ClassLevels.attachSchema(PropertySchema);
-ClassLevels.attachSchema(ChildSchema);
 
 // Todo ensure the class level is being parented to a compatible class, and that
 // previous level requirements are met
