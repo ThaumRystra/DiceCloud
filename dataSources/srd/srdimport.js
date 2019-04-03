@@ -1,6 +1,9 @@
 // This all gets run in the console by an admin.
-// Probably a good idea to reset the server after running big updates
-// Only do if the library doesn't exist yet
+
+// First Setup
+// -----------
+
+// Add the SRD library with the correct static ID:
 id = Libraries.insert({
 	_id: "SRDLibraryGA3XWsd",
 	owner: Meteor.userId(),
@@ -8,19 +11,23 @@ id = Libraries.insert({
 });
 
 // First copy-paste the JSON into your console like `items = <pasted JSON>`
-// First import, don't do this if the library is already populated
 _.each(items, (item) => {
-	item.settings = {category: }; // "adventuringGear", "armor", "weapons", "tools"
+	// replace "adventuringGear" with appropriate category: "armor", "weapons", "tools"
+	// if needed
+	item.settings = {category: "adventuringGear"};
 	item.library = "SRDLibraryGA3XWsd"
 	LibraryItems.insert(item)
 });
 
+// First copy-paste the JSON into your console like `spells = <pasted JSON>`
 _.each(spells, (spell) => {
 	spell.library = "SRDLibraryGA3XWsd"
 	LibrarySpells.insert(spell)
 });
 
-// Update the library using names as keys
+// Updating the Libary
+// -------------------
+
 // Make sure you're subscribed to all item categories
 handles = _.map(["weapons", "armor", "adventuringGear", "tools"],
 	category => Meteor.subscribe("standardLibraryItems", category)

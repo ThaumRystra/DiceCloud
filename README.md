@@ -37,7 +37,7 @@ changes on the fly. Let's look at a hypothetical example.
 Getting started
 ---------------
 
-Running DiceCloud locally, either to host it yourself away from an internet
+Running DiceCloud locally, either to run it locally, away from an internet
 connection, or to contribute to developing it further, is fairly
 straightforward and it should work on Linux, Windows, and Mac.
 
@@ -45,18 +45,29 @@ You'll need to have installed:
 
 - [git](https://www.atlassian.com/git/tutorials/install-git)
 - [Meteor](https://www.meteor.com/install)
-- [Bower](https://bower.io/)
 
-Then, it's just a matter of cloning this repository into a folder, installing the bower dependencies and running
-`meteor` in the app directory.
+Then, it's just a matter of cloning this repository into a folder, installing the dependencies and running
+`meteor` in the app directory:
 
 `git clone https://github.com/ThaumRystra/DiceCloud dicecloud`  
 `cd dicecloud`  
 `cd app`  
-`bower install`  
+`meteor npm install`  
 `meteor`
 
-You should see this:
+If you edit the source code at this point, Meteor will rebuild the server with
+your changes.
+
+If you want to simulate a production environment, run `meteor --production`
+
+This will minimize all the files served to your browser, and load a lot faster,
+in exchange for not watching the source code for changes.
+
+Note that this is not how you should deploy Meteor to your own web server, that
+is documented here: https://guide.meteor.com/deployment.html
+
+After running `meteor` or `meteor --production`, you should see this, possibly
+mixed with other logged text:
 
 ```
 => Started proxy.
@@ -69,3 +80,14 @@ You should see this:
 Now, visiting http://localhost:3000/ should show you an empty instance of
 DiceCloud running.
 
+To stop the process when you are done (or if it gets stuck) press `ctrl-c`
+
+## Adding default documents
+
+Navigate to `/dataSources/srd/srdimport.js`, and follow the steps under
+'First Setup', running the code in your browser's console, while logged in to
+your own instance of DiceCloud.
+
+Do not run code in your browser console on the live version of DiceCloud hosted
+at dicecloud.com, as doing so could result in a large number of denied requests
+to the server, and may get your account permanently banned.
