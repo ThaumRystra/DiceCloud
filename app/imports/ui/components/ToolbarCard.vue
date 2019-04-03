@@ -1,15 +1,15 @@
 <template lang="html">
-  <v-card>
+  <v-card :hover="hasClickListener" @click="$emit('click')">
   	<v-toolbar
 			flat
 			style="transform: none;"
-			@click="$emit('click')"
 			:color="color"
 			:dark="isDark"
 		>
   		<slot name="toolbar"/>
   	</v-toolbar>
-		<div>
+		<div
+		>
 			<slot/>
 		</div>
   </v-card>
@@ -29,7 +29,10 @@
 		computed: {
 			isDark(){
 				return isDarkColor(this.color);
-			}
+			},
+			hasClickListener(){
+	    	return this.$listeners && !!this.$listeners.click
+			},
 		}
 	};
 </script>

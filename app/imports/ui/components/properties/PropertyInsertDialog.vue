@@ -52,7 +52,7 @@ export default {
 					if (this.valid) this.valid = false;
 					errors[error.name] = this.schema.messageForError(error);
 				});
-				this.$emit('updateErrors', errors);
+				this.$emit('update:errors', errors);
 			},
 			deep: true,
 		},

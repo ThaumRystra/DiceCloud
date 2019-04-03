@@ -7,7 +7,7 @@
       <slot name="toolbar"></slot>
 			<template v-if="$slots.edit">
 				<v-spacer/>
-				<v-btn icon flat @click="() => $emit('delete')" v-if="isEditing">
+				<v-btn icon flat @click="$emit('remove')" v-if="isEditing">
 					<v-icon>delete</v-icon>
 				</v-btn>
 				<v-btn icon flat @click="isEditing = !isEditing">

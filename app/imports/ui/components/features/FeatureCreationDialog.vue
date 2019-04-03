@@ -3,7 +3,7 @@
 		documentType="Feature"
 		:doc="feature"
 		:schema="schema"
-		@updateErrors="newErrors => errors = newErrors"
+		:errors.sync="errors"
 	>
 		<feature-form
 			:feature="feature"
@@ -40,12 +40,7 @@
 				for (key in update){
 					this.feature[key] = update[key];
 				}
-				try {
-					FeatureSchema.validate({$set: update}, {clean: true, modifier: true});
-					ack()
-				} catch (e){
-					ack(e.message);
-				}
+				ack();
 			},
 		},
 	};
