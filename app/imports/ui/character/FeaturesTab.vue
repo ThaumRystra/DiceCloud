@@ -27,7 +27,7 @@
 	import { insertFeature } from '/imports/api/creature/properties/Features.js';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 	import FeatureCard from '/imports/ui/components/features/FeatureCard.vue';
-	import { evaluateComputation, evaluateString } from '/imports/ui/utility/evaluate.js';
+	import { evaluateComputation, evaluateStringWithVariables } from '/imports/ui/utility/evaluate.js';
 
 	export default {
 		props: {
@@ -47,7 +47,7 @@
 				}, {
 					sort: {order: 1},
 				}).map(f => {
-					f.description = evaluateString(f.description, vars);
+					f.description = evaluateStringWithVariables(f.description, vars);
 					return f;
 				});
 			},

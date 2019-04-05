@@ -12,7 +12,6 @@
 </template>
 
 <script>
-	import propertyUpdateMethods from '/imports/api/creature/properties/propertyUpdateMethods.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 	export default {
 		components: {

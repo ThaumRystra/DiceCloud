@@ -9,6 +9,7 @@
 <script>
 	import Features, {updateFeature} from '/imports/api/creature/properties/Features.js';
 	import FeatureDialog from '/imports/ui/components/features/FeatureDialog.vue';
+	import {evaluateStringForCharId} from '/imports/ui/utility/evaluate.js';
 
 	export default {
 		components: {
@@ -19,7 +20,11 @@
 		},
 		meteor: {
 			feature(){
-				return Features.findOne(this._id);
+				let feature = Features.findOne(this._id);
+				feature.computedDescription = evaluateStringForCharId(
+					feature.description, feature.charId
+				);
+				return feature;
 			},
 		},
 		methods: {

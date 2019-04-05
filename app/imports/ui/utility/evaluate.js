@@ -1,6 +1,8 @@
+import Creatures from '/imports/api/creature/Creatures.js';
+
 // Computations resolve to numbers
 // vars is a dict of variables to substitute
-function evaluateComputation(string, vars){
+export function evaluateComputation(string, vars){
   if (!string) return string;
   // Replace all the string variables with numbers if possible
   let substitutedString = string.replace(
@@ -14,11 +16,11 @@ function evaluateComputation(string, vars){
   } catch (e){
     return substitutedString;
   }
-};
+}
 
 // Strings can have computations in bracers like so: {computation}
 // vars is a dict of variables to substitute
-function evaluateString(string, vars){
+export function evaluateStringWithVariables(string, vars){
 	if (!string) return string;
   // Compute everything inside bracers
 	return string.replace(/\{([^\{\}]*)\}/g, function(match, p1){
@@ -26,4 +28,8 @@ function evaluateString(string, vars){
 	});
 }
 
-export { evaluateComputation, evaluateString };
+export function evaluateStringForCharId(string, charId){
+  let char = Creatures.findOne(charId, {fields: {variables: 1}});
+  let vars = char ? char.variables : {};
+  return evaluateStringWithVariables(string, vars);
+}
