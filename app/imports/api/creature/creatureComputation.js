@@ -12,6 +12,8 @@ import Proficiencies from "/imports/api/creature/properties/Proficiencies.js";
 import DamageMultipliers from "/imports/api/creature/properties/DamageMultipliers.js";
 import Classes from "/imports/api/creature/properties/Classes.js";
 import * as math from 'mathjs';
+import parser from '/imports/parser/parser.js';
+if (Meteor.isClient) console.log({parser});
 
 export const recomputeCreature = new ValidatedMethod({
 

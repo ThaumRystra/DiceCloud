@@ -1,5 +1,11 @@
+@preprocessor esmodule
 @{%
-  const moo = require("moo");
+	import CallNode from '/imports/parser/parseTree/CallNode.js';
+	import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+	import IfNode from '/imports/parser/parseTree/IfNode.js';
+	import OperatorNode from '/imports/parser/parseTree/OperatorNode.js';
+	import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+	import moo from 'moo';
 
   const lexer = moo.compile({
     number: /[0-9]+(?:\.[0-9]+)?/,
@@ -46,7 +52,7 @@
 
 ifStatement ->
   "if" _ "(" _ expression _ ")" _ ifStatement _ "else" _ ifStatement {%
-     d => new ifNode({condition: d[4], consequent: d[8], alternative: d[12]})
+     d => new IfNode({condition: d[4], consequent: d[8], alternative: d[12]})
   %}
 | expression {% id %}
 
@@ -87,7 +93,7 @@ exponentExpression ->
 
 callExpression ->
   name _ arguments {%
-    d => ({type: "call", function: d[0], arguments: d[2]})
+    d => new CallNode ({type: "call", fn: d[0], arguments: d[2]})
   %}
 | parenthesizedExpression {% id %}
 
@@ -107,10 +113,10 @@ valueExpression ->
 
 # A number or a function of a number
 number ->
-  %number {% d => new ConstantNode({value: d[0].value, type 'number'}) %}
+  %number {% d => new ConstantNode({value: d[0].value, type: 'number'}) %}
 
 name ->
-  %name {% d => new SymbolNode(d[0].value) %}
+  %name {% d => new SymbolNode({name: d[0].value}) %}
 
 string ->
   %string {% d => new ConstantNode({value: d[0].value, type: 'string'}) %}

@@ -1,9 +1,13 @@
 // Generated automatically by nearley, version 2.16.0
 // http://github.com/Hardmath123/nearley
-(function () {
 function id(x) { return x[0]; }
 
-  const moo = require("moo");
+	import CallNode from '/imports/parser/parseTree/CallNode.js';
+	import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+	import IfNode from '/imports/parser/parseTree/IfNode.js';
+	import OperatorNode from '/imports/parser/parseTree/OperatorNode.js';
+	import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+	import moo from 'moo';
 
   const lexer = moo.compile({
     number: /[0-9]+(?:\.[0-9]+)?/,
@@ -35,15 +39,6 @@ function id(x) { return x[0]; }
   });
 
   function nuller() { return null; }
-
-  class OperatorNode {
-    constructor({left, right, operator, fn}) {
-      this.left = left;
-      this.right = right;
-      this.fn = fn;
-      this.operator = operator;
-    }
-  }
   function operator([left, _1, operator, _2, right], fn){
     return new OperatorNode({
       left,
@@ -52,23 +47,11 @@ function id(x) { return x[0]; }
       fn
     });
   }
-
-  class SymbolNode {
-    constructor(name){
-      this.name = name;
-    }
-  }
-
-  class ConstantNode {
-    constructor(value, type){
-      this.type = type;
-      this.value = value;
-    }
-  }
-var grammar = {
-    Lexer: lexer,
-    ParserRules: [
-    {"name": "ifStatement", "symbols": [{"literal":"if"}, "_", {"literal":"("}, "_", "expression", "_", {"literal":")"}, "_", "ifStatement", "_", {"literal":"else"}, "_", "ifStatement"], "postprocess": d => ({condition: d[4], true: d[8], false: d[12]})},
+let Lexer = lexer;
+let ParserRules = [
+    {"name": "ifStatement", "symbols": [{"literal":"if"}, "_", {"literal":"("}, "_", "expression", "_", {"literal":")"}, "_", "ifStatement", "_", {"literal":"else"}, "_", "ifStatement"], "postprocess": 
+        d => new IfNode({condition: d[4], consequent: d[8], alternative: d[12]})
+          },
     {"name": "ifStatement", "symbols": ["expression"], "postprocess": id},
     {"name": "expression", "symbols": ["equalityExpression"], "postprocess": d => d[0]},
     {"name": "equalityExpression", "symbols": ["equalityExpression", "_", (lexer.has("equalityOperator") ? {type: "equalityOperator"} : equalityOperator), "_", "relationalExpression"], "postprocess": d => operator(d, 'equality')},
@@ -88,7 +71,7 @@ var grammar = {
     {"name": "exponentExpression", "symbols": ["callExpression", "_", (lexer.has("exponentOperator") ? {type: "exponentOperator"} : exponentOperator), "_", "exponentExpression"], "postprocess": d => operator(d, 'exponent')},
     {"name": "exponentExpression", "symbols": ["callExpression"], "postprocess": id},
     {"name": "callExpression", "symbols": ["name", "_", "arguments"], "postprocess": 
-        d => ({type: "call", function: d[0], arguments: d[2]})
+        d => new CallNode ({type: "call", fn: d[0], arguments: d[2]})
           },
     {"name": "callExpression", "symbols": ["parenthesizedExpression"], "postprocess": id},
     {"name": "arguments$ebnf$1$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
@@ -105,17 +88,11 @@ var grammar = {
     {"name": "valueExpression", "symbols": ["name"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["number"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["string"], "postprocess": id},
-    {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": d => new ConstantNode(d[0].value, 'number')},
-    {"name": "name", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => new SymbolNode(d[0].value)},
-    {"name": "string", "symbols": [(lexer.has("string") ? {type: "string"} : string)], "postprocess": d => new ConstantNode(d[0].value, 'string')},
+    {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": d => new ConstantNode({value: d[0].value, type: 'number'})},
+    {"name": "name", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => new SymbolNode({name: d[0].value})},
+    {"name": "string", "symbols": [(lexer.has("string") ? {type: "string"} : string)], "postprocess": d => new ConstantNode({value: d[0].value, type: 'string'})},
     {"name": "_", "symbols": []},
     {"name": "_", "symbols": [(lexer.has("space") ? {type: "space"} : space)], "postprocess": nuller}
-]
-  , ParserStart: "ifStatement"
-}
-if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
-   module.exports = grammar;
-} else {
-   window.grammar = grammar;
-}
-})();
+];
+let ParserStart = "ifStatement";
+export default { Lexer, ParserRules, ParserStart };
