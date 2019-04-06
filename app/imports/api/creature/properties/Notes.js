@@ -1,13 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Notes = new Mongo.Collection("notes");
 
@@ -47,18 +49,13 @@ const insertNote = new ValidatedMethod({
 const updateNote = new ValidatedMethod({
   name: 'Notes.methods.update',
   mixins: [
+		propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: Notes,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: NoteSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Notes.update(_id, {$set: update});
-  },
+  schema: NoteSchema,
 });
 
 export default Notes;

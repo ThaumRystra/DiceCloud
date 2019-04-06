@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 
 // Mixins
@@ -10,6 +9,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Skills = new Mongo.Collection("skills");
 
@@ -101,7 +102,6 @@ let ComputedSkillSchema = schema({
 
 Skills.attachSchema(ComputedSkillSchema);
 Skills.attachSchema(PropertySchema);
-Skills.attachSchema(ChildSchema);
 
 const insertSkill = new ValidatedMethod({
   name: 'Skills.methods.insert',
@@ -124,18 +124,23 @@ const insertSkill = new ValidatedMethod({
 const updateSkill = new ValidatedMethod({
   name: 'Skills.methods.update',
   mixins: [
-    creaturePermissionMixin,
     recomputeCreatureMixin,
-    simpleSchemaMixin,
+    propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: Skills,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: SkillSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Skills.update(_id, {$set: update});
+  schema: SkillSchema,
+  skipRecompute({update}){
+    let fields = getModifierFields(update);
+    return !fields.hasAny([
+      'variableName',
+      'ability',
+      'type',
+      'baseValue',
+      'baseProficiency',
+    ]);
   },
 });
 

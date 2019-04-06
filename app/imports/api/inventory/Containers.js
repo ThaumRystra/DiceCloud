@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
 //set up the collection for containers

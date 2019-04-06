@@ -8,12 +8,12 @@ export function setDocToLastMixin(methodOptions){
   if (methodOptions.validate){
     throw new Meteor.Error(`setDocToLastMixin should come before simpleSchemaMixin`);
   }
-  methodOptions.schema.extend({
+  methodOptions.schema = new SimpleSchema({
     charId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
     },
-  });
+  }).extend(methodOptions.schema);
   let collection = methodOptions.collection;
   if (!collection){
     throw new Meteor.Error("`collection` required in method options for setDocToLastMixin");

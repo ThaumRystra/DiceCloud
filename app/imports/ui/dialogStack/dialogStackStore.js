@@ -20,6 +20,19 @@ const dialogStackStore = {
       });
       updateHistory();
     },
+    replaceDialog(stat, {component, data, elementId, callback}){
+      const _id = Random.id();
+      if (!state.dialogs.length){
+        throw new Meteor.Error("can't replace dialog if no dialogs are open");
+      }
+      state.dialogs.$set(0, {
+        _id,
+        component,
+        data,
+        elementId,
+        callback,
+      });
+    },
     popDialogStackMutation (state, result){
       const dialog = state.dialogs.pop();
       state.currentResult = null;

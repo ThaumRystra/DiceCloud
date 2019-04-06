@@ -2,11 +2,11 @@ import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import updateDecendents from '/imports/api/parenting/parenting.js';
 
 // 1 + n database hits
-export function softRemove({id, collection}){
+export function softRemove({_id, collection}){
   let removalDate = new Date();
   // Remove this document
   collection = getCollectionByName(collection);
-  collection.update(id, {$set: {
+  collection.update(_id, {$set: {
     removed: true,
     removedAt: removalDate,
   }, $unset: {
@@ -15,15 +15,15 @@ export function softRemove({id, collection}){
   // Remove all the decendents that have not yet been removed, and set them to be
   // removed with this document
   updateDecendents({
-    ancestorId: id,
+    ancestorId: _id,
     filter: {removed: {$ne: true}},
     modifier: {$set: {
       removed: true,
       removedAt: removalDate,
-      removedWith: id,
+      removedWith: _id,
     }},
   });
-};
+}
 
 const restoreError = function(){
   throw new Meteor.Error('restore-failed',
@@ -31,10 +31,10 @@ const restoreError = function(){
   );
 };
 
-export function restore({id, collection}){
+export function restore({_id, collection}){
   collection = getCollectionByName(collection);
   let numUpdated = collection.update({
-    _id: id,
+    _id,
     removedWith: {$exists: false}
   }, { $unset: {
     removed: 1,
@@ -42,9 +42,9 @@ export function restore({id, collection}){
   }});
   if (numUpdated === 0) restoreError();
   updateDecendents({
-    ancestorId: id,
+    ancestorId: _id,
     filter: {
-      removedWith: id,
+      removedWith: _id,
     },
     modifier: { $unset: {
       removed: 1,

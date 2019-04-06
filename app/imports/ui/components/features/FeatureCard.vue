@@ -1,56 +1,40 @@
 <template lang="html">
-  <toolbar-card :color="color" @click="$emit('click')">
-  	<span slot="toolbar">
-			{{name}}
-		</span>
-		<v-spacer slot="toolbar"/>
-		<v-checkbox
-			hide-details
-			class="shrink"
-			v-if="!alwaysEnabled"
-			:value="enabled"
-			@change="enabled => $emit('change', {enabled})"
-			slot="toolbar"
-		/>
-		<v-card-text>
-			{{description}}
-		</v-card-text>
-		<v-card-actions v-if="uses">
+  <toolbar-card :color="color" @click="$emit('click')" :id="_id">
+		<template slot="toolbar">
+			<span>
+				{{name}}
+			</span>
 			<v-spacer/>
-			<v-btn
-				flat
-				:disabled="uses - used <= 0"
-				@click="$emit('used')"
-			>
-				Use
-			</v-btn>
-			<v-btn
-				flat
-				:disabled="!used"
-				@click="$emit('reset')"
-			>
-				Reset
-			</v-btn>
-		</v-card-actions>
+			<v-checkbox
+				hide-details
+				class="shrink"
+				v-if="!alwaysEnabled"
+				:value="enabled"
+				@click.stop="$emit('update', {_id, update: {enabled: !enabled}})"
+			/>
+		</template>
+		<v-card-text v-if="description">
+			<markdown-text :markdown="description"/>
+		</v-card-text>
   </toolbar-card>
 </template>
 
 <script>
+	import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 	import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 
 	export default {
 		props: {
+			_id: String,
 			charId: String,
 			name: String,
 			description: String,
-			uses: Number,
-			used: Number,
-			reset: String,
 			color: String,
 			enabled: Boolean,
 			alwaysEnabled: Boolean,
 		},
 		components: {
+			MarkdownText,
 			ToolbarCard,
 		},
 	};

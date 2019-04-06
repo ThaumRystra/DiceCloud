@@ -9,4 +9,4 @@ const docNotFoundError = function({id, collection}){
 export default function fetchDocByRef({id, collection}, options){
   return getCollectionByName(collection).findOne(id, options) ||
     docNotFoundError({id, collection});
-};
+}

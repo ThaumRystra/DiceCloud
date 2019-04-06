@@ -1,5 +1,5 @@
 {
-  "name": "rpg-docs",
+  "name": "dicecloud",
   "version": "0.10.0",
   "description": "Unofficial Online Realtime D&D 5e App",
   "license": "GPL-3.0",
@@ -20,6 +20,7 @@
     "css-box-shadow": "^1.0.0-3",
     "fibers": "^2.0.2",
     "lodash": "^4.17.11",
+    "marked": "^0.6.1",
     "mathjs": "^5.5.0",
     "meteor-node-stubs": "^0.3.3",
     "moo": "^0.5.0",

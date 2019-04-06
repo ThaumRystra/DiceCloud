@@ -1,5 +1,4 @@
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
@@ -79,7 +78,6 @@ let AttributeSchema = schema({
 });
 
 AttributeSchema.extend(ColorSchema);
-AttributeSchema.extend(PropertySchema);
 
 const ComputedAttributeSchema = schema({
 	// The computed value of the attribute
@@ -95,7 +93,7 @@ const ComputedAttributeSchema = schema({
 }).extend(AttributeSchema);
 
 Attributes.attachSchema(ComputedAttributeSchema);
-Attributes.attachSchema(ChildSchema);
+Attributes.attachSchema(PropertySchema);
 
 const insertAttribute = new ValidatedMethod({
   name: 'Attributes.methods.insert',
@@ -125,7 +123,7 @@ const updateAttribute = new ValidatedMethod({
   ],
   collection: Attributes,
   permission: 'edit',
-  updateSchema: AttributeSchema,
+  schema: AttributeSchema.omit(['adjutment']),
   skipRecompute({update}){
     let fields = getModifierFields(update);
     return !fields.hasAny([
@@ -133,9 +131,6 @@ const updateAttribute = new ValidatedMethod({
       'type',
       'baseValue',
     ]);
-  },
-  run({_id, update}) {
-		return Attributes.update(_id, update);
   },
 });
 

@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 
 // Mixins
 import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
@@ -9,6 +8,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Proficiencies = new Mongo.Collection("proficiencies");
 
@@ -32,7 +33,6 @@ let ProficiencySchema = schema({
 
 Proficiencies.attachSchema(ProficiencySchema);
 Proficiencies.attachSchema(PropertySchema);
-Proficiencies.attachSchema(ChildSchema);
 
 const insertProficiency = new ValidatedMethod({
   name: 'Proficiencies.methods.insert',
@@ -55,18 +55,20 @@ const insertProficiency = new ValidatedMethod({
 const updateProficiency = new ValidatedMethod({
   name: 'Proficiencies.methods.update',
   mixins: [
-    creaturePermissionMixin,
 		recomputeCreatureMixin,
-    simpleSchemaMixin,
+		propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
+    creaturePermissionMixin,
   ],
   collection: Proficiencies,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: ProficiencySchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Proficiencies.update(_id, {$set: update});
+  schema: ProficiencySchema,
+  skipRecompute({update}){
+    let fields = getModifierFields(update);
+    return !fields.hasAny([
+      'value',
+      'skill',
+    ]);
   },
 });
 

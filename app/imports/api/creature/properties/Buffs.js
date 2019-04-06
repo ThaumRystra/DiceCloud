@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
 // Mixins
@@ -9,6 +8,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Buffs = new Mongo.Collection('buffs');
 
@@ -77,7 +78,6 @@ let AppliedBuffSchema = schema({
 
 Buffs.attachSchema(AppliedBuffSchema);
 Buffs.attachSchema(PropertySchema);
-Buffs.attachSchema(ChildSchema);
 
 const insertBuff = new ValidatedMethod({
   name: 'Buffs.methods.insert',
@@ -99,18 +99,13 @@ const insertBuff = new ValidatedMethod({
 const updateBuff = new ValidatedMethod({
   name: 'Buffs.methods.update',
   mixins: [
+		propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: Buffs,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: BuffSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Buffs.update(_id, {$set: update});
-  },
+  schema: BuffSchema,
 });
 
 export default Buffs;

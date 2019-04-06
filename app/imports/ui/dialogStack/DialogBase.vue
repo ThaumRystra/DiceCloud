@@ -7,7 +7,7 @@
       <slot name="toolbar"></slot>
 			<template v-if="$slots.edit">
 				<v-spacer/>
-				<v-btn icon flat @click="() => $emit('delete')" v-if="isEditing">
+				<v-btn icon flat @click="$emit('remove')" v-if="isEditing">
 					<v-icon>delete</v-icon>
 				</v-btn>
 				<v-btn icon flat @click="isEditing = !isEditing">
@@ -15,6 +15,11 @@
 				</v-btn>
 			</template>
     </v-toolbar>
+		<template v-if="breadcrumbs">
+			<v-card-text>
+				example > bread > crumb
+			</v-card-text>
+		</template>
 		<v-card-text id="base-dialog-body" v-scroll:#base-dialog-body="onScroll">
 			<v-tabs-items :value="isEditing ? 1 : 0" touchless>
 				<v-tab-item>
@@ -37,6 +42,7 @@
 	export default {
 		props: {
 			color: String,
+			breadcrumbs: Object,
 		},
 		data(){ return {
 			offsetTop: 0,

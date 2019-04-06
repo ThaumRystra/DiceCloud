@@ -3,8 +3,10 @@
 		<column-layout>
 			<div v-for="feature in features" :key="feature._id">
 				<feature-card
-				v-bind="feature"
-				:data-id="feature._id"
+					v-bind="feature"
+					:data-id="feature._id"
+					@update="updateFeature"
+					@click="featureClicked(feature)"
 				/>
 			</div>
 		</column-layout>
@@ -21,11 +23,11 @@
 
 <script>
 	import Creatures from '/imports/api/creature/Creatures.js';
-	import Features from '/imports/api/creature/properties/Features.js';
+	import Features, { updateFeature } from '/imports/api/creature/properties/Features.js';
 	import { insertFeature } from '/imports/api/creature/properties/Features.js';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 	import FeatureCard from '/imports/ui/components/features/FeatureCard.vue';
-	import { evaluateComputation, evaluateString } from '/imports/ui/utility/evaluate.js';
+	import { evaluateComputation, evaluateStringWithVariables } from '/imports/ui/utility/evaluate.js';
 
 	export default {
 		props: {
@@ -45,8 +47,7 @@
 				}, {
 					sort: {order: 1},
 				}).map(f => {
-					f.uses = evaluateComputation(f.uses, vars);
-					f.description = evaluateString(f.description, vars);
+					f.description = evaluateStringWithVariables(f.description, vars);
 					return f;
 				});
 			},
@@ -60,12 +61,28 @@
 					callback(feature){
 						if (!feature) return;
 						feature.charId = charId;
-						let featureId = insertFeature.call({feature});
+						let featureId = insertFeature.call(feature);
 						return featureId
 					}
 				});
-			}
-		}
+			},
+			updateFeature({_id, update}, ack){
+				updateFeature.call({_id, update}, error => {
+					if (ack){
+						ack(error);
+					} else if(error) {
+						throw error;
+					}
+				});
+			},
+			featureClicked(feature){
+				this.$store.commit('pushDialogStack', {
+					component: 'feature-dialog-container',
+					elementId: feature._id,
+					data: {_id: feature._id},
+				});
+			},
+		},
 	};
 </script>
 

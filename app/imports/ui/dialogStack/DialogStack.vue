@@ -14,7 +14,6 @@
 			@enter="enter"
 			@leave="leave"
 		>
-			<div class="sibling" key="sibling"/>
       <v-card
         v-for="(dialog, index) in dialogs"
         :key="dialog._id"
@@ -25,7 +24,9 @@
 				:style="getDialogStyle(index)"
 				:elevation="6"
       >
-        <component :is="dialog.component" v-bind="dialog.data" @pop="popDialogStack($event)" class="dialog-component"></component>
+				<transition name="slide">
+					<component :is="dialog.component" v-bind="dialog.data" @pop="popDialogStack($event)" class="dialog-component"></component>
+				</transition>
       </v-card>
     </transition-group>
   </v-layout>
@@ -168,7 +169,7 @@
 				e.preventDefault();
 			}
     },
-		watch:{
+		watch: {
 			dialogs(newDialogs) {
 				let el = document.documentElement;
         if (newDialogs.length) {

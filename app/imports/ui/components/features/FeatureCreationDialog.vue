@@ -1,74 +1,46 @@
 <template lang="html">
-	<dialog-base>
-		<div slot="toolbar">
-			New Feature
-		</div>
-		<feature-edit
+	<property-insert-dialog
+		documentType="Feature"
+		:doc="feature"
+		:schema="schema"
+		:errors.sync="errors"
+	>
+		<feature-form
 			:feature="feature"
-			:errors="errors"
-			@change="change"
+			@update="update"
 			:debounce-time="0"
+			:errors="errors"
 		/>
-		<v-spacer slot="actions"/>
-		<v-btn
-			flat
-			slot="actions"
-			:disabled="!valid"
-			@click="$store.dispatch('popDialogStack', feature)"
-		>
-			Insert Feature
-		</v-btn>
-	</dialog-base>
+	</property-insert-dialog>
 </template>
 
 <script>
-	import FeatureEdit from '/imports/ui/components/features/FeatureEdit.vue';
-	import Features from '/imports/api/creature/properties/Features.js';
-	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
+	import FeatureForm from '/imports/ui/components/features/FeatureForm.vue';
+	import Features, { FeatureSchema } from '/imports/api/creature/properties/Features.js';
+	import PropertyInsertDialog from '/imports/ui/components/properties/PropertyInsertDialog.vue';
 
 	export default {
 		components: {
-			FeatureEdit,
-			DialogBase,
+			FeatureForm,
+			PropertyInsertDialog,
 		},
 		data(){ return {
 			feature: {
 				name: 'New Feature',
 				description: null,
-				uses: null,
-				used: 0,
-				reset: null,
 				enabled: true,
 				alwaysEnabled: true,
 				color: '#9E9E9E',
 			},
-			valid: true,
+			schema: FeatureSchema,
+			errors: {},
 		}},
 		methods: {
-			change(update, ack){
+			update(update, ack){
 				for (key in update){
 					this.feature[key] = update[key];
 				}
-				if (ack) ack();
-			},
-		},
-		created(){
-			this.validationContext = Features.simpleSchema().newContext();
-		},
-		computed: {
-			errors(){
-				this.valid = true;
-				let cleanAtt = this.validationContext.clean(this.feature)
-				this.validationContext.validate(cleanAtt, {keys: [
-					'name', 'description', 'uses', 'used', 'reset', 'enabled',
-					'alwaysEnabled', 'color',
-				]});
-				let errors = {};
-				this.validationContext.validationErrors().forEach(error => {
-					if (this.valid) this.valid = false;
-					errors[error.name] = Features.simpleSchema().messageForError(error);
-				});
-				return errors;
+				ack();
 			},
 		},
 	};

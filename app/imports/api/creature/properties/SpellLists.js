@@ -1,14 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let SpellLists = new Mongo.Collection("spellLists");
 
@@ -42,7 +43,6 @@ SpellListSchema.extend(ColorSchema);
 
 SpellLists.attachSchema(SpellListSchema);
 SpellLists.attachSchema(PropertySchema);
-SpellLists.attachSchema(ChildSchema);
 
 const insertSpellList = new ValidatedMethod({
   name: 'SpellLists.methods.insert',
@@ -64,18 +64,13 @@ const insertSpellList = new ValidatedMethod({
 const updateSpellList = new ValidatedMethod({
   name: 'SpellLists.methods.update',
   mixins: [
+		propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: SpellLists,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: SpellListSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return SpellLists.update(_id, {$set: update});
-  },
+  schema: SpellListSchema,
 });
 
 export default SpellLists;

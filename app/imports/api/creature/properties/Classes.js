@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import PropertySchema from '/imports/api/creature/subSchemas/PropertySchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
@@ -10,6 +9,8 @@ import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin
 import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
 import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
 
 let Classes = new Mongo.Collection("classes");
 
@@ -29,7 +30,6 @@ ClassSchema.extend(ColorSchema);
 
 Classes.attachSchema(ClassSchema);
 Classes.attachSchema(PropertySchema);
-Classes.attachSchema(ChildSchema);
 
 const insertClass = new ValidatedMethod({
   name: 'Classes.methods.insert',
@@ -51,18 +51,13 @@ const insertClass = new ValidatedMethod({
 const updateClass = new ValidatedMethod({
   name: 'Classes.methods.update',
   mixins: [
+    propagateInheritanceUpdateMixin,
+    updateSchemaMixin,
     creaturePermissionMixin,
-    simpleSchemaMixin,
   ],
   collection: Classes,
   permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    update: ClassSchema.omit('name'),
-  }),
-  run({_id, update}) {
-		return Classes.update(_id, {$set: update});
-  },
+  schema: ClassSchema,
 });
 
 export default Classes;

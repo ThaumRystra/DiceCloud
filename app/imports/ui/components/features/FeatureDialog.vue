@@ -1,45 +1,32 @@
 <template lang="html">
-	<dialog-base>
-    <div slot="toolbar" :color="color">
-      {{name}}
-    </div>
+	<property-dialog :doc="feature" collection="features" @remove="$emit('remove')">
 		<div>
-			{{description}}
+			<markdown-text :markdown="feature.computedDescription || feature.description"/>
+			<!--
 			<child-lists
-				:effects="effects"
-				:proficiencies="proficiencies"
-				:actions="actions"
-				:attacks="attacks"
+				:parent="feature"
 			/>
+			-->
 		</div>
-		<div slot="edit">
-			<feature-edit
-				:feature="$props"
-				@change="(update, ack) => $emit('change', update, ack)"
-			/>
-		</div>
-  </dialog-base>
+		<feature-form slot="form" :feature="feature" @update="(update, ack) => $emit('update', update, ack)"/>
+	</property-dialog>
 </template>
 
 <script>
-export default {
-	props: {
-		charId: String,
-		name: String,
-		description: String,
-		uses: String,
-		used: Number,
-		reset: String,
-		enabled: Boolean,
-		alwaysEnabled: Boolean,
-		order: Number,
-		color: String,
-		effects: Array,
-		proficiencies: Array,
-		actions: Array,
-		attacks: Array,
+	import PropertyDialog from '/imports/ui/components/properties/PropertyDialog.vue';
+	import FeatureForm from '/imports/ui/components/features/FeatureForm.vue';
+	import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+
+	export default {
+		components: {
+			PropertyDialog,
+			FeatureForm,
+			MarkdownText,
+		},
+		props: {
+			feature: Object,
+		},
 	}
-}
 </script>
 
 <style lang="css" scoped>
