@@ -1,6 +1,9 @@
 import schema from '/imports/api/schema.js';
 import ChildSchema from '/imports/api/creature/parenting/ChildSchema.js';
 import librarySchemas from '/imports/api/library/librarySchemas.js';
+import Libraries from '/imports/api/library/Libraries.js';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import getModifierFields from '/imports/api/getModifierFields.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -50,3 +53,31 @@ for (let key in librarySchemas){
 
 export default LibraryNodes;
 export { LibraryNodeSchema };
+
+function getLibrary(node){
+  if (!node) throw new Meteor.Error('No node provided');
+  return Libraries.findOne(node.ancestors[0].id);
+}
+
+function assertNodeEditPermission(node, userId){
+  let lib = getLibrary(node);
+  return assertEditPermission(lib, userId);
+}
+
+const updateNode = new ValidatedMethod({
+  name: 'LibraryNodes.methods.update',
+  validate({_id, update}){
+    let fields = getModifierFields(update);
+    return !fields.hasAny([
+      'libraryNodeType',
+      'order',
+      'parent',
+      'ancestors',
+    ]);
+  },
+  run({_id, update}) {
+    let node = LibraryNodes.findOne(_id);
+    assertNodeEditPermission(node, this.userId);
+		return LibraryNodes.update(_id, update);
+  },
+});

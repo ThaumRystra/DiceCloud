@@ -5,14 +5,14 @@ function assertIdValid(userId){
     throw new Meteor.Error("Permission denied",
       "No user ID given for edit permission check");
   }
-};
+}
 
 function assertdocExists(doc){
   if (!doc){
     throw new Meteor.Error("Edit permission denied",
       `No doc exists with the given id: ${charId}`);
   }
-};
+}
 
 export function assertOwnership(doc, userId){
   assertIdValid(userId);
@@ -34,7 +34,7 @@ export function assertEditPermission(doc, userId) {
     throw new Meteor.Error("Edit permission denied",
       `You do not have permission to edit this character`);
   }
-};
+}
 
 export function assertViewPermission(doc, userId) {
   assertIdValid(userId);
@@ -50,4 +50,4 @@ export function assertViewPermission(doc, userId) {
     throw new Meteor.Error("View permission denied",
       `You do not have permission to view this character`);
   }
-};
+}
