@@ -1,8 +1,9 @@
 <template lang="html">
-  <v-treeview :items="treeItems">
+  <v-treeview :items="treeItems" transition>
 		<template slot="label" slot-scope="{ item, open }">
+			<em>{{item.collection}}</em>:
 			<span v-if="item.collection === 'attributes' || item.collection === 'skills'">
-				{{item.name}}: {{item.value}}
+				{{item.name}} {{item.value}}
 			</span>
 			<span v-else-if="item.collection === 'effects'">
 				{{item.name}}: {{item.stat}} {{item.operation}} {{item.result}}
