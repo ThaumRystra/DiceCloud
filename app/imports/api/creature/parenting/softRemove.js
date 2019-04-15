@@ -1,5 +1,5 @@
-import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import updateDecendents from '/imports/api/parenting/parenting.js';
+import getCollectionByName from '/imports/api/creature/parenting/getCollectionByName.js';
+import updateDecendents from '/imports/api/creature/parenting/parenting.js';
 
 // 1 + n database hits
 export function softRemove({_id, collection}){

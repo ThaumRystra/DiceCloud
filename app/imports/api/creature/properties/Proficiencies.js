@@ -3,13 +3,13 @@ import schema from '/imports/api/schema.js';
 import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
 
 // Mixins
-import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
-import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
-import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
-import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
-import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
-import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
+import recomputeCreatureMixin from '/imports/api/creature/mixins/recomputeCreatureMixin.js';
+import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixin.js';
+import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/creature/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
+import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
 
 let Proficiencies = new Mongo.Collection("proficiencies");
 

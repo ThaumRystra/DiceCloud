@@ -3,8 +3,8 @@ import Attributes from '/imports/api/creature/properties/Attributes.js';
 import Skills from '/imports/api/creature/properties/Skills.js';
 import DamageMultipliers from '/imports/api/creature/properties/DamageMultipliers.js';
 import Effects from '/imports/api/creature/properties/Effects.js';
-import Containers from '/imports/api/inventory/Containers.js';
-import Items from '/imports/api/inventory/Items.js';
+import Containers from '/imports/api/creature/properties/inventory/Containers.js';
+import Items from '/imports/api/creature/properties/inventory/Items.js';
 import Classes from '/imports/api/creature/properties/Classes.js';
 
 const addDefaultDocs = function(docs){

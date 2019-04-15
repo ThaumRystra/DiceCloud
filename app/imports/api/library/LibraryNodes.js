@@ -1,5 +1,5 @@
 import schema from '/imports/api/schema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import ChildSchema from '/imports/api/creature/parenting/ChildSchema.js';
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');

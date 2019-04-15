@@ -14,8 +14,8 @@ import Rolls from '/imports/api/creature/properties/Rolls.js';
 import Skills from '/imports/api/creature/properties/Skills.js';
 import SpellLists from '/imports/api/creature/properties/SpellLists.js';
 import Spells from '/imports/api/creature/properties/Spells.js';
-import Containers from '/imports/api/inventory/Containers.js';
-import Items from '/imports/api/inventory/Items.js';
+import Containers from '/imports/api/creature/properties/inventory/Containers.js';
+import Items from '/imports/api/creature/properties/inventory/Items.js';
 
 // All theses collections have the field {charId: String}
 // Collate them here in case we need to do something on all the collections of

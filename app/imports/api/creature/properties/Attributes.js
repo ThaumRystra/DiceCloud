@@ -6,16 +6,16 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import getModifierFields from '/imports/api/getModifierFields.js';
 
 // Mixins
-import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
-import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
-import { setDocToLastMixin } from '/imports/api/mixins/setDocToLastMixin.js';
+import recomputeCreatureMixin from '/imports/api/creature/mixins/recomputeCreatureMixin.js';
+import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
+import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixin.js';
 import {
   setDocAncestryMixin,
   ensureAncestryContainsCharIdMixin
-} from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
-import updateSchemaMixin from '/imports/api/mixins/updateSchemaMixin.js';
-import propagateInheritanceUpdateMixin from '/imports/api/mixins/propagateInheritanceUpdateMixin.js';
+} from '/imports/api/creature/parenting/parenting.js';
+import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
+import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
+import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
 
 let Attributes = new Mongo.Collection('attributes');
 

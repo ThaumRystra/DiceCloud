@@ -1,4 +1,4 @@
-import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
+import getCollectionByName from '/imports/api/creature/parenting/getCollectionByName.js';
 
 const docNotFoundError = function({id, collection}){
   throw new Meteor.Error('document-not-found',

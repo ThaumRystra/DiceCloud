@@ -1,13 +1,13 @@
 import SimpleSchema from 'simpl-schema';
-import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
-import softRemove from '/imports/api/parenting/softRemove.js';
-import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
+import SoftRemovableSchema from '/imports/api/creature/parenting/SoftRemovableSchema.js';
+import ChildSchema from '/imports/api/creature/parenting/ChildSchema.js';
+import softRemove from '/imports/api/creature/parenting/softRemove.js';
+import getCollectionByName from '/imports/api/creature/parenting/getCollectionByName.js';
 
 // Mixins
-import recomputeCreatureMixin from '/imports/api/mixins/recomputeCreatureMixin.js';
-import creaturePermissionMixin from '/imports/api/mixins/creaturePermissionMixin.js';
-import simpleSchemaMixin from '/imports/api/mixins/simpleSchemaMixin.js';
+import recomputeCreatureMixin from '/imports/api/creature/mixins/recomputeCreatureMixin.js';
+import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
+import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 
 const PropertySchema = new SimpleSchema({
   charId: {
