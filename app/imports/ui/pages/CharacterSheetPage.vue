@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import CharacterSheet from '/imports/ui/character/CharacterSheet.vue';
+import CharacterSheet from '/imports/ui/creature/character/CharacterSheet.vue';
 export default {
 	components: {
 		CharacterSheet,

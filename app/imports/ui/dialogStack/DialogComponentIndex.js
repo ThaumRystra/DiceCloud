@@ -1,9 +1,9 @@
-import AttributeDialog from '/imports/ui/components/attributes/AttributeDialog.vue';
-import AttributeDialogContainer from '/imports/ui/components/attributes/AttributeDialogContainer.vue';
-import AttributeCreationDialog from '/imports/ui/components/attributes/AttributeCreationDialog.vue';
-import FeatureCreationDialog from '/imports/ui/components/features/FeatureCreationDialog.vue';
-import FeatureDialogContainer from '/imports/ui/components/features/FeatureDialogContainer.vue';
-import SkillDialogContainer from '/imports/ui/components/skills/SkillDialogContainer.vue';
+import AttributeDialog from '/imports/ui/creature/properties/attributes/AttributeDialog.vue';
+import AttributeDialogContainer from '/imports/ui/creature/properties/attributes/AttributeDialogContainer.vue';
+import AttributeCreationDialog from '/imports/ui/creature/properties/attributes/AttributeCreationDialog.vue';
+import FeatureCreationDialog from '/imports/ui/creature/properties/features/FeatureCreationDialog.vue';
+import FeatureDialogContainer from '/imports/ui/creature/properties/features/FeatureDialogContainer.vue';
+import SkillDialogContainer from '/imports/ui/creature/properties/skills/SkillDialogContainer.vue';
 
 export default {
   AttributeDialog,

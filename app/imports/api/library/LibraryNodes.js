@@ -16,7 +16,7 @@ let LibraryNodeSchema = schema({
   },
 });
 
-for (key in librarySchemas){
+for (let key in librarySchemas){
 	let schema = new SimpleSchema({});
 	schema.extend(librarySchemas[key]);
 	schema.extend(LibraryNodeSchema);
