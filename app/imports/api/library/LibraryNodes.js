@@ -1,9 +1,16 @@
 import schema from '/imports/api/schema.js';
-import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
+
+const RefSchema = new SimpleSchema({
+  id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    index: 1
+  },
+});
 
 let LibraryNodeSchema = schema({
 	name: {
@@ -14,6 +21,21 @@ let LibraryNodeSchema = schema({
     type: String,
     allowedValues: Object.keys(librarySchemas),
   },
+	order: {
+  	type: SimpleSchema.Integer,
+  	index: true,
+  },
+	parent: {
+    type: RefSchema,
+  },
+	// ancestors[0] should be the library to check for permission
+  ancestors: {
+    type: Array,
+    defaultValue: [],
+  },
+  'ancestors.$': {
+    type: RefSchema,
+  },
 });
 
 for (let key in librarySchemas){
@@ -21,9 +43,6 @@ for (let key in librarySchemas){
 	schema.extend(librarySchemas[key]);
 	schema.extend(LibraryNodeSchema);
 	schema.extend(ChildSchema);
-	if (key === 'folder'){
-		schema.extend(SharingSchema);
-	}
 	LibraryNodes.attachSchema(schema, {
 		selector: {libraryNodeType: key}
 	});
