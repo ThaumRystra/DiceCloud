@@ -30,14 +30,12 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"attackBonus": "Dex save",
-				"details": "range 60 feet, 2 targets within 5 feet",
-				"damage": "{floor((Level+1)/6)+1}d6",
-				"damageType": "acid"
-			}
-		]
+		"attacks": [{
+			"attackBonus": "Dex save",
+			"details": "range 60 feet, 2 targets within 5 feet",
+			"damage": "{floor((Level+1)/6)+1}d6",
+			"damageType": "acid"
+		}]
 	},
 	{
 		"castingTime": "action",
@@ -88,12 +86,28 @@
 	},
 	{
 		"castingTime": "action",
-		"description": "By means of this spell, you use an animal to deliver a message. Choose a Tiny beast you can see within range, such as a squirrel, a blue jay, or a bat. You specify a location, which you must have visited, and a recipient who matches a general description, such as “a man or woman dressed in the uniform of the town guard” or “a red-haired dwarf wearing a pointed hat.” You also speak a message of up to twenty-five words. The target beast travels for the duration of the spell toward the specified location, covering about 50 miles per 24 hours for a flying messenger, or 25 miles for other animals.\n\nWhen the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. The messenger speaks only to a creature matching the description you gave. If the messenger doesn’t reach its destination before the spell ends, the message is lost, and the beast makes its way back to where you cast this spell.\n\n***At Higher Levels.***If you cast this spell using a spell slot of 3nd level or higher, the duration of the spell increases by 48 hours for each slot level above 2nd.",
+		"description": "This spell lets you convince a beast that you mean it no harm. Choose a beast that you can see within range. It must see and hear you. If the beast's Intelligence is 4 or higher, the spell fails. Otherwise, the beast must succeed on a Wisdom saving throw or be charmed by you for the spell's duration. If you or one of your companions harms the target, the spells ends. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you can affect one additional beast for each slot level above 1st.",
 		"duration": "24 hours",
 		"level": 1,
 		"range": "30 feet",
 		"school": "Enchantment",
 		"ritual": false,
+		"name": "Animal Friendship",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a morsel of food"
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "By means of this spell, you use an animal to deliver a message. Choose a Tiny beast you can see within range, such as a squirrel, a blue jay, or a bat. You specify a location, which you must have visited, and a recipient who matches a general description, such as “a man or woman dressed in the uniform of the town guard” or “a red-haired dwarf wearing a pointed hat.” You also speak a message of up to twenty-five words. The target beast travels for the duration of the spell toward the specified location, covering about 50 miles per 24 hours for a flying messenger, or 25 miles for other animals.\n\nWhen the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. The messenger speaks only to a creature matching the description you gave. If the messenger doesn’t reach its destination before the spell ends, the message is lost, and the beast makes its way back to where you cast this spell.\n\n***At Higher Levels.***If you cast this spell using a spell slot of 3nd level or higher, the duration of the spell increases by 48 hours for each slot level above 2nd.",
+		"duration": "24 hours",
+		"level": 2,
+		"range": "30 feet",
+		"school": "Enchantment",
+		"ritual": true,
 		"name": "Animal Messenger",
 		"components": {
 			"verbal": true,
@@ -566,13 +580,27 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"details": "range 120 feet",
-				"damage": "{floor((Level+1)/6)+1}d8",
-				"damageType": "necrotic"
-			}
-		]
+		"attacks": [{
+			"details": "range 120 feet",
+			"damage": "{floor((Level+1)/6)+1}d8",
+			"damageType": "necrotic"
+		}]
+	},
+	{
+		"castingTime": "action",
+		"description": "",
+		"duration": "Instantaneous",
+		"level": 1,
+		"range": "90 feet",
+		"school": "Evocation",
+		"ritual": false,
+		"name": "Chromatic Orb",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a diamond worth at least 50 gp"
+		}
 	},
 	{
 		"castingTime": "action",
@@ -931,6 +959,21 @@
 			"somatic": true,
 			"concentration": true,
 			"material": "burning incense and bits of earth and wood mixed in water"
+		}
+	},
+	{
+		"castingTime": "1 reaction, which you take when you see a creature within 60 feet of you casting a spell",
+		"description": "",
+		"duration": "Instantaneous",
+		"level": 3,
+		"range": "60 feet",
+		"school": "Abjuration",
+		"ritual": false,
+		"name": "Counterspell",
+		"components": {
+			"verbal": false,
+			"somatic": true,
+			"concentration": false
 		}
 	},
 	{
@@ -1400,6 +1443,20 @@
 	},
 	{
 		"castingTime": "action",
+		"description": "A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes ldlO force damage. The spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam.",
+		"level": 0,
+		"range": "120 feet",
+		"school": "Evocation",
+		"ritual": false,
+		"name": "Eldritch Blast",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false
+		}
+	},
+	{
+		"castingTime": "action",
 		"description": "You touch a creature and bestow upon it a magical enhancement. Choose one of the following effects; the target gains that effect until the spell ends.\n\nBear’s Endurance. The target has advantage on Constitution checks. It also gains 2d6 temporary hit points, which are lost when the spell ends.\n\nBull’s Strength. The target has advantage on Strength checks, and his or her carrying capacity doubles.\n\nCat’s Grace. The target has advantage on Dexterity checks. It also doesn’t take damage from falling 20 feet or less if it isn’t incapacitated.\n\nEagle’s Splendor. The target has advantage on Charisma checks.\n\nFox’s Cunning. The target has advantage on Intelligence checks.\n\nOwl’s Wisdom. The target has advantage on Wisdom checks.\n\n***At Higher Levels.*** When you cast this spell using a spell slot of 3rd level or higher, you can target one additional creature for each slot level above 2nd.",
 		"duration": "Concentration, up to 1 hour",
 		"level": 2,
@@ -1597,6 +1654,38 @@
 			"somatic": true,
 			"concentration": false,
 			"material": "a handful of clay, crystal, glass, or mineral spheres"
+		}
+	},
+	{
+		"castingTime": "1 action",
+		"description": "You touch a willing creature and put it into a cataleptic state that is indistinguishable from death. For the spell’s duration, or until you use an action to touch the target and dismiss the spell, the target appears dead to all outward inspection and to spells used to determine the target’s status. The target is blinded and incapacitated, and its speed drops to 0. The target has resistance to all damage except psychic damage. If the target is diseased or poisoned when you cast the spell, or becomes diseased or poisoned while under the spell’s effect, the disease and poison have no effect until the spell ends.",
+		"duration": "1 hour",
+		"level": 3,
+		"range": "Touch",
+		"school": "Necromancy",
+		"ritual": true,
+		"name": "Feign Death",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a pinch of graveyard dirt"
+		}
+	},
+	{
+		"castingTime": "1 hour",
+		"description": "You gain the service of a familiar, a spirit that takes an animal form you choose: bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, poisonous snake, fish (quipper), rat, raven, sea horse, spider, or weasel. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of a beast. Your familiar acts independently of you, but it always obeys your commands. In combat, it rolls its own initiative and acts on its own turn. A familiar can’t attack, but it can take other actions as normal. When the familiar drops to 0 hit points, it disappears, leaving behind no physical form. It reappears after you cast this spell again. While your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as an action, you can see through your familiar’s eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses that the familiar has. During this time, you are deaf and blind with regard to your own senses. As an action, you can temporarily dismiss your familiar. It disappears into a pocket dimension where it awaits your summons. Alternatively, you can dismiss it forever. As an action while it is temporarily dismissed, you can cause it to reappear in any unoccupied space within 30 feet of you. You can’t have more than one familiar at a time. If you cast this spell while you already have a familiar, you instead cause it to adopt a new form. Choose one of the forms from the above list. Your familiar transforms into the chosen creature. Finally, when you cast a spell with a range of touch, your familiar can deliver the spell as if it had cast the spell. Your familiar must be within 100 feet of you, and it must use its reaction to deliver the spell when you cast it. If the spell requires an attack roll, you use your action modifier for the roll.",
+		"duration": "Instantaneous",
+		"level": 1,
+		"range": "10 feet",
+		"school": "Conjuration",
+		"ritual": true,
+		"name": "Find Familiar",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "0 gp worth of charcoal, incense, and herbs that must be consumed by fire in a brass brazier"
 		}
 	},
 	{
@@ -1993,6 +2082,37 @@
 	},
 	{
 		"castingTime": "action",
+		"description": "Up to ten berries appear in your hand and are infused with magic for the duration. A creature can use its action to eat one berry. Eating a berry restores 1 hit point, and the berry provides enough nourishment to sustain a creature for one day. The berries lose their potency if they have not been consumed within 24 hours of the casting of this spell. ",
+		"duration": "instantaneous",
+		"level": 1,
+		"range": "Touch",
+		"school": "Transmutation",
+		"ritual": false,
+		"name": "Goodberry",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": "a sprig of mistletoe"
+		}
+	},
+	{
+		"castingTime": "bonus action",
+		"description": "You conjure a vine that sprouts from the ground in an unoccupied space of your choice that you can see within range. When you cast this spell, you can direct the vine to lash out at a creature within 30 feet of it that you can see. That creature must succeed on a Dexterity saving throw or be pulled 20 feet directly toward the vine. Until the spell ends, you can direct the vine to lash out at the same creature or another one as a bonus action on each of your turns.",
+		"duration": "Concentration, up to 1 minute",
+		"level": 4,
+		"range": "30 feet",
+		"school": "Conjuration",
+		"ritual": false,
+		"name": "Grasping Vine",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false
+		}
+	},
+	{
+		"castingTime": "action",
 		"description": "Slick grease covers the ground in a 10-fool square centered on a point within range and turns it into difficult terrain for the duration.\n\nWhen the grease appears, each creature standing in its area must succeed on a DC {DC} Dexterity saving throw or fall prone. A creature that enters the area or ends its turn there must also succeed on a DC {DC} Dexterity saving throw or fall prone.",
 		"duration": "1 minute",
 		"level": 1,
@@ -2194,9 +2314,9 @@
 		}
 	},
 	{
-		"castingTime": "action",
+		"castingTime": "bonus action",
 		"description": "Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot. Any creature in physical contact with the object takes 2d8 fire damage when you cast the spell. Until the spell ends, you can use a bonus action on each of your subsequent turns to cause this damage again.\n\nIf a creature is holding or wearing the object and takes the damage from it, the creature must succeed on a DC {DC} Constitution saving throw or drop the object if it can. If it doesn’t drop the object, it has disadvantage on attack rolls and ability checks until the start of your next turn.\n\n***At Higher Levels.*** When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for each slot level above 2nd.",
-		"duration": "Concentration, up to 1 minute",
+		"duration": "Instantaneous",
 		"level": 2,
 		"range": "60 feet",
 		"school": "Transmutation",
@@ -2204,9 +2324,8 @@
 		"name": "Heat Metal",
 		"components": {
 			"verbal": true,
-			"somatic": true,
-			"concentration": true,
-			"material": "a piece of iron and a flame"
+			"somatic": false,
+			"concentration": false
 		}
 	},
 	{
@@ -3317,14 +3436,12 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"attackBonus": "Con save",
-				"details": "range 10 feet",
-				"damage": "{floor((Level+1)/6)+1}d12",
-				"damageType": "poison"
-			}
-		]
+		"attacks": [{
+			"attackBonus": "Con save",
+			"details": "range 10 feet",
+			"damage": "{floor((Level+1)/6)+1}d12",
+			"damageType": "poison"
+		}]
 	},
 	{
 		"castingTime": "action",
@@ -3446,13 +3563,11 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"details": "range 30 feet",
-				"damage": "{floor((Level+1)/6)+1}d8",
-				"damageType": "fire"
-			}
-		]
+		"attacks": [{
+			"details": "range 30 feet",
+			"damage": "{floor((Level+1)/6)+1}d8",
+			"damageType": "fire"
+		}]
 	},
 	{
 		"castingTime": "action",
@@ -3581,6 +3696,21 @@
 	},
 	{
 		"castingTime": "action",
+		"description": "A black beam of enervating energy springs from your finger toward a creature within range. Make a ranged spell attack against the target. On a hit, the target deals only half damage with weapon attacks that use Strength until the spell ends. At the end of each of the target’s turns, it can make a Constitution saving throw against the spell. On a success, the spell ends.",
+		"duration": "up to 1 minute",
+		"level": 2,
+		"range": "60 feet",
+		"school": "Necromancy",
+		"ritual": false,
+		"name": "Ray of Enfeeblement",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": true
+		}
+	},
+	{
+		"castingTime": "action",
 		"description": "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 cold damage, and its speed is reduced by 10 feet until the start of your next turn.\n\nThe spell’s damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
 		"duration": "Instantaneous",
 		"level": 0,
@@ -3593,13 +3723,11 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"details": "range 60 feet, target speed reduced by 10ft on hit",
-				"damage": "{floor((Level+1)/6)+1}d8",
-				"damageType": "cold"
-			}
-		]
+		"attacks": [{
+			"details": "range 60 feet, target speed reduced by 10ft on hit",
+			"damage": "{floor((Level+1)/6)+1}d8",
+			"damageType": "cold"
+		}]
 	},
 	{
 		"castingTime": "1 minute",
@@ -3619,7 +3747,7 @@
 	},
 	{
 		"castingTime": "1 hour",
-		"description":"You touch a dead humanoid or a piece of a dead humanoid. Provided that the creature has been dead no longer than 10 days, the spell forms a new adult body for it and then calls the soul to enter that body. If the target’s soul isn’t free or willing to do so, the spell fails.\n\nThe magic fashions a new body for the creature to inhabit, which likely causes the creature’s race to change. The DM rolls a d100 and consults the following table to determine what form the creature takes when restored to life, or the DM chooses a form.\n\nd100 | Race\n---|---\n01-04 | Dragonborn\n05-13 | Dwarf, hill\n14-21 | Dwarf, mountain\n22-25 | Elf, dark\n26–34 | Elf, high\n35-42 | Elf, wood\n43-46 | Gnome, forest\n47-52 | Gnome, Rock\n53-56 | Half-elf\n57-60 | Half Orc,61-68 - Halfling, lightfoot\n69-76 | Halfling, stout\n77-96 | Human\n97-00 | Tiefling\n\nThe reincarnated creature recalls its former life and experiences. It retains the capabilities it had in its original form, except it exchanges its original race for the new one and changes its racial traits accordingly. ",
+		"description": "You touch a dead humanoid or a piece of a dead humanoid. Provided that the creature has been dead no longer than 10 days, the spell forms a new adult body for it and then calls the soul to enter that body. If the target’s soul isn’t free or willing to do so, the spell fails.\n\nThe magic fashions a new body for the creature to inhabit, which likely causes the creature’s race to change. The DM rolls a d100 and consults the following table to determine what form the creature takes when restored to life, or the DM chooses a form.\n\nd100 | Race\n---|---\n01-04 | Dragonborn\n05-13 | Dwarf, hill\n14-21 | Dwarf, mountain\n22-25 | Elf, dark\n26–34 | Elf, high\n35-42 | Elf, wood\n43-46 | Gnome, forest\n47-52 | Gnome, Rock\n53-56 | Half-elf\n57-60 | Half Orc,61-68 - Halfling, lightfoot\n69-76 | Halfling, stout\n77-96 | Human\n97-00 | Tiefling\n\nThe reincarnated creature recalls its former life and experiences. It retains the capabilities it had in its original form, except it exchanges its original race for the new one and changes its racial traits accordingly. ",
 		"duration": "Instantaneous",
 		"level": 5,
 		"range": "Touch",
@@ -3742,14 +3870,12 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"attackBonus": "Dex save",
-				"details": "range 60 feet, target gains no benefit from cover",
-				"damage": "{floor((Level+1)/6)+1}d8",
-				"damageType": "radiant"
-			}
-		]
+		"attacks": [{
+			"attackBonus": "Dex save",
+			"details": "range 60 feet, target gains no benefit from cover",
+			"damage": "{floor((Level+1)/6)+1}d8",
+			"damageType": "radiant"
+		}]
 	},
 	{
 		"castingTime": "bonus action",
@@ -3939,13 +4065,11 @@
 			"concentration": false,
 			"material": "mistletoe, a shamrock leaf, and a club or quarterstaff"
 		},
-		"attacks": [
-			{
-				"details": "magical",
-				"damage": "{floor((Level+1)/6)+1}d8",
-				"damageType": "bludgeoning"
-			}
-		]
+		"attacks": [{
+			"details": "magical",
+			"damage": "{floor((Level+1)/6)+1}d8",
+			"damageType": "bludgeoning"
+		}]
 	},
 	{
 		"castingTime": "action",
@@ -3961,13 +4085,11 @@
 			"somatic": true,
 			"concentration": false
 		},
-		"attacks": [
-			{
-				"details": "on hit, target can't take reactions",
-				"damage": "{floor((Level+1)/6)+1}d8",
-				"damageType": "lightning"
-			}
-		]
+		"attacks": [{
+			"details": "on hit, target can't take reactions",
+			"damage": "{floor((Level+1)/6)+1}d8",
+			"damageType": "lightning"
+		}]
 	},
 	{
 		"castingTime": "action",
@@ -4061,6 +4183,21 @@
 			"verbal": false,
 			"somatic": false,
 			"concentration": true
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
+		"duration": "Instantaneous",
+		"level": 0,
+		"range": "Touch",
+		"school": "Necromancy",
+		"ritual": false,
+		"name": "Spare The Dying",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false
 		}
 	},
 	{
@@ -4559,6 +4696,21 @@
 			"verbal": true,
 			"somatic": true,
 			"concentration": true
+		}
+	},
+	{
+		"castingTime": "action",
+		"description": "You unleash a string of insults laced with subtle enchantments at a creature you can see within range. If the target can hear you (though it need not understand you), it must succeed on a Wisdom saving throw or take 1d4 psychic damage and have disadvantage on the next attack roll it makes before the end of its next turn. This spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4).",
+		"duration": "Instantaneous",
+		"level": 0,
+		"range": "60 feet",
+		"school": "Enchantment",
+		"ritual": false,
+		"name": "Vicious Mockery",
+		"components": {
+			"verbal": true,
+			"somatic": false,
+			"concentration": false
 		}
 	},
 	{
