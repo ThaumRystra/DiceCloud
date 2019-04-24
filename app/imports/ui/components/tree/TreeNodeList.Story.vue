@@ -1,12 +1,7 @@
 <template lang="html">
-	<div>
-		<tree-node-list :children="children" group="example-group" :show-empty="true"/>
-		<samp>
-			{{dataString}}
-		</samp>
-		<div style="height: 200px" @drop="e => log(e.dataTransfer.getData('cow'))" @dragover.prevent></div>
-		<tree-node-list :children="otherChildren" group="example-group" :show-empty="true"/>
-	</div>
+	<v-card-text>
+		<tree-node-list :children="children" group="example-group" :show-empty="false"/>
+	</v-card-text>
 </template>
 
 <script>
@@ -18,12 +13,37 @@
 		},
 		data(){ return {
 			children: [
-				{name: 'child 1', children:[]},
-				{name: 'child 2', children: [
-					{name: 'grandchild 1', children:[]},
-					{name: 'grandchild 2', children:[]},
+				{name: 'Point buy', children:[
+					{name: 'Strength 14', children:[]},
+					{name: 'Dexterity 8', children:[]},
+					{name: 'Constitution 14', children:[]},
+					{name: 'Intelligence 8', children:[]},
+					{name: 'Wisdom 15', children:[]},
+					{name: 'Charisma 12', children:[]},
 				]},
-				{name: 'child 3', children:[]},
+				{name: 'Hermit', children:[
+					{name: 'Discovery', children:[]},
+				]},
+				{name: 'Hill Dwarf', children: [
+					{name: 'Dwarven combat training', children:[]},
+					{name: 'Dwarven resilience', children:[]},
+					{name: 'Dwarven toughness', children:[]},
+					{name: 'Stone cutting', children:[]},
+				]},
+				{name: 'Cleric', children:[
+					{name: 'Level 1', children:[
+						{name: 'Spellcasting', children:[
+							{name: 'Light', children:[]},
+							{name: 'Sacred Flame', children:[]},
+							{name: 'Thaumaturgy', children:[]},
+						]},
+						{name: 'Divine domain: Tempest', children:[]},
+					]},
+					{name: 'Level 2', children:[]},
+					{name: 'Level 3', children:[]},
+					{name: 'Level 4', children:[]},
+					{name: 'Level 5', children:[]},
+				]},
 			],
 			otherChildren: [],
 			drag: false,
