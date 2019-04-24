@@ -56,7 +56,7 @@
 	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';
 	import SpellSlotListTile from '/imports/ui/creature/properties/attributes/SpellSlotListTile.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
-	import TreeNode from '/imports/ui/components/tree/TreeNode.Story.vue';
+	import TreeNode from '/imports/ui/components/tree/TreeNodeList.Story.vue';
 
 	export default {
 		components: {

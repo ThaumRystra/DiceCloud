@@ -13,23 +13,11 @@
 		</div>
 		<v-expand-transition>
 			<div v-if="showExpanded">
-				<draggable
-					:list="children"
-					class="drag-area layout column"
+				<tree-node-list
+					:children="children"
 					:group="group"
-					:animation="200"
-					ghost-class="ghost"
-					draggable=".item"
-				>
-					<tree-node
-						v-for="child in children"
-						v-bind="child"
-						:group="group"
-						:key="child.name"
-						class="item"
-						@dragstart.native="e => e.dataTransfer.setData('cow', 'moooooo')"
-					/>
-				</draggable>
+					:show-empty="showEmpty"
+				/>
 			</div>
 		</v-expand-transition>
 	</div>
@@ -47,6 +35,9 @@
 		name: 'tree-node',
 		components: {
 			draggable,
+		},
+		beforeCreate() {
+		  this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
 		},
 		data(){ return {
 			expanded: false,
@@ -68,11 +59,6 @@
 				return this.expanded && (this.showEmpty || this.hasChildren)
 			},
 		},
-		methods: {
-			dragstart(){
-				console.log(arguments);
-			},
-		}
 	};
 </script>
 
@@ -82,11 +68,11 @@
 	}
 	.drag-area {
 		min-height: 40px;
-		box-shadow: -2px 0px 0px 0px #808080, 2px 0px 0px 0px #808080;
+		box-shadow: -2px 0px 0px 0px #808080;
 		margin-left: 23px;
 	}
 	.empty .drag-area {
-		box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4), 2px 0px 0px 0px rgb(128, 128, 128, 0.4);
+		box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4);
 	}
 	.empty .v-btn {
 		opacity: 0.4;
