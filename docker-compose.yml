@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  web:
+    build:
+      context: ./
+    volumes:
+      - .:/home/dicecloud/DiceCloud
+    ports:
+      - "3000:3000"
+      - "3003:3003"
+    # entrypoint: /bin/bash
+    # stdin_open: true
+    # tty: true
