@@ -1,6 +1,8 @@
 import { format as formatUrl } from 'url';
 
-const CLIENT_ID = Meteor.settings.public.patreon.clientId;
+const CLIENT_ID = Meteor.settings &&
+	Meteor.settings.public.patreon  &&
+	Meteor.settings.public.patreon.clientId;
 
 Template.profile.onCreated(function(){
 	this.showApiKey = new ReactiveVar(false);
@@ -18,6 +20,7 @@ Template.profile.helpers({
 		return Template.instance().showApiKey.get();
 	},
 	patreonLoginUrl: function(){
+		if (!CLIENT_ID) return;
 		return formatUrl({
 	    protocol: 'https',
 	    host: 'patreon.com',
