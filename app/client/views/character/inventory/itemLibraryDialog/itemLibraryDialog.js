@@ -30,7 +30,7 @@ Template.itemLibraryDialog.onCreated(function(){
 			if (_.contains(categoryKeys, key)){
 				handle = librarySubs.subscribe("standardLibraryItems", key);
 			} else {
-				handle = librarySubs.subscribe("libraryItems", key);
+				handle = librarySubs.subscribe("fullLibraryItems", key);
 			}
 			this.autorun(() => {
 				this.readyDict.set(key, handle.ready());

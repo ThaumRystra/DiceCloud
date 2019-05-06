@@ -63,6 +63,12 @@ Meteor.publish("libraryItems", function(libraryId){
 	});
 });
 
+Meteor.publish("fullLibraryItems", function(libraryId){
+	return LibraryItems.find({
+		library: libraryId
+	});
+});
+
 Meteor.publish("libraryItem", function(itemId){
 	let cursor = LibraryItems.find(itemId);
 	let item = cursor.fetch()[0];
