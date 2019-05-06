@@ -9,7 +9,7 @@ Template.libraries.helpers({
   			{readers: userId},
   			{writers: userId},
   			{owner: userId},
-        {_id: {$in: subs}}
+        {_id: {$in: subs || []}}
   		],
     }, {
       sort: {name: 1},
