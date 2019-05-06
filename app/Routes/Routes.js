@@ -8,6 +8,8 @@ Router.plugin("ensureSignedIn", {
 	only: [
 		"profile",
 		"characterList",
+		"library",
+		"libraries",
 	]
 });
 
@@ -118,10 +120,27 @@ Router.map(function() {
 		},
 	});
 
-	this.route("library", {
+	this.route("libraries", {
 		path: "/library",
 		waitOn: function(){
 			return subsManager.subscribe("customLibraries");
+		},
+		onAfterAction: function() {
+			document.title = appName + " - Libraries";
+		},
+		fastRender: true,
+	});
+
+	this.route("library", {
+		path: "/library/:_id",
+		waitOn: function(){
+			return [
+				subsManager.subscribe("libraryItems", this.params._id),
+				subsManager.subscribe("singleLibrary", this.params._id),
+			];
+		},
+		data: function() {
+			return Libraries.findOne(this.params._id);
 		},
 		onAfterAction: function() {
 			document.title = appName + " - Library";

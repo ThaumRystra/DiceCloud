@@ -1,0 +1,18 @@
+<template name="libraryDeleteConfirmation">
+	<div class="fit layout vertical">
+		<app-header-layout has-scrolling-region class="feedback flex">
+			<app-header fixed effects="waterfall">
+				<app-toolbar>
+				  <div main-title>Delete Library</div>
+				</app-toolbar>
+			</app-header>
+			<div class="form flex">
+				Deleting a library cannot be undone<br>
+				<paper-button id="deleteButton" raised>Delete Library and All Contents</paper-button>
+			</div>
+		</app-header-layout>
+		<div class="buttons layout horizontal end-justified">
+			<paper-button class="cancelButton"> Cancel </paper-button>
+		</div>
+	</div>
+</template>

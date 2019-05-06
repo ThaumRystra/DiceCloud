@@ -1,0 +1,27 @@
+<template name="patronsOnly">
+  <div class="flex layout vertical center" style="position: relative; padding: 0 16px;">
+    <paper-material class="card" style="padding: 32px; max-width: 800px; width: 100%;">
+      <h3>
+        This beta feature is available to Patreon Insiders who pledge $5 or more
+      </h3>
+      <div class="layout vertical center">
+        <a href="https://www.patreon.com/join/dicecloud/checkout?rid=3002853">
+          <paper-button raised> Become a Patron </paper-button>
+        </a>
+        <a href="{{patreonLoginUrl}}">
+          <paper-button class="connectPatreon" style="color: #d13b2e; margin-top: 12px;">
+            Connect Patreon account
+          </paper-button>
+        </a>
+      </div>
+      <p style="margin-top: 32px;">
+        With the Item Libraries beta you can create collections of items to use
+        across your characters, and share them with other players.
+      </p>
+      <p>
+        You can also subscribe to existing community libraries of items, saving
+        time and effort manually entering item details.
+      </p>
+    </paper-material>
+  </div>
+</template>

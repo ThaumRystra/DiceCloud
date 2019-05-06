@@ -17,13 +17,6 @@ Template.appDrawer.helpers({
 		let post = PatreonPosts.findOne({}, {sort: {date: -1}});
 		return (post && post.link) || 'https://www.patreon.com/dicecloud';
 	},
-	isTier5: function(){
-		let user = Meteor.user();
-		if (!user) return false;
-		patreon = user.patreon;
-		if (!patreon) return false;
-		return patreon.entitledCents >= 500 || patreon.entitledCentsOverride >= 500;
-	},
 	patreonTier: function(){
 		let user = Meteor.user();
 		if (!user) return;

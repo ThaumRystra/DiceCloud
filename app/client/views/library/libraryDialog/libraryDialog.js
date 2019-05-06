@@ -13,6 +13,10 @@ Template.libraryDialog.helpers({
   library(){
     return Libraries.findOne(this.libraryId);
   },
+	viewPermission(){
+		var library = Libraries.findOne(this.libraryId, {fields: {public: 1}});
+		return library && library.public ? "public" : "whitelist";
+	},
   readers: function(){
 		var library = Libraries.findOne(this.libraryId, {fields: {readers: 1}});
 		return library && library.readers;
@@ -33,9 +37,17 @@ Template.libraryDialog.helpers({
 			return "User not found";
 		}
 	},
+	notOwner: function(){
+		var library = Libraries.findOne(this.libraryId, {fields: {owner: 1}});
+		if (!library) return;
+		return Meteor.userId() !== library.owner;
+	},
 });
 
 Template.libraryDialog.events({
+	"click #backButton": function(){
+		popDialogStack();
+	},
   "input #libraryNameInput": _.debounce(function(event){
 		const input = event.currentTarget;
 		var name = input.value;
@@ -53,8 +65,10 @@ Template.libraryDialog.events({
 		}
 	}, 300),
   "click #deleteButton": function(){
-    Meteor.call("removeLibrary", this.libraryId);
-    popDialogStack();
+		var library = Libraries.findOne(this.libraryId, {fields: {owner: 1}});
+		if (Meteor.userId() === library.owner){
+			popDialogStack({delete: true});
+		}
   },
   "input #userNameOrEmailInput":
 	function(event, instance){
@@ -64,10 +78,24 @@ Template.libraryDialog.events({
 			if (err){
 				console.error(err);
 			} else {
-				console.log(result);
 				instance.userId.set(result);
 			}
 		});
+	},
+	"iron-select .visibilityDropdown": function(event){
+		var detail = event.originalEvent.detail;
+		var value = detail.item.getAttribute("name");
+		let public;
+		if (value === "whitelist"){
+			public = false;
+		} else if (value === "public") {
+			public = true;
+		} else {
+			return;
+		}
+		var library = Libraries.findOne(this.libraryId, {fields: {public: 1}});
+		if (library.public === public) return;
+		Libraries.update(this.libraryId, {$set: {public}});
 	},
   "click #shareButton": function(event, instance){
 		var self = this;
