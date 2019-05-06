@@ -157,7 +157,7 @@ Template.inventory.events({
 				}
 				// Make the library item into a regular item
 				let item = _.omit(result, "libraryName", "library", "attacks", "effects");
-				delete item.settings.category;
+				if (item.settings && item.settings.category) delete item.settings.category;
 				// Update the item to match library item
 				Items.update(itemId, {$set: item});
 				// Copy over attacks and effects
