@@ -10,19 +10,21 @@ Schemas.Library = new SimpleSchema({
 
 Libraries.attachSchema(Schemas.Library);
 
-Libraries.after.remove(function(userId, library) {
-	LibraryItems.remove({library: library._id});
-	LibrarySpells.remove({library: library._id});
-});
+if (Meteor.isServer){
+	Libraries.after.remove(function(userId, library) {
+		LibraryItems.remove({library: library._id});
+		LibrarySpells.remove({library: library._id});
+	});
+}
 
 Meteor.methods({
-	removeLibrary: function(libraryId) {
+	unshareLibraryWithMe: function(libraryId) {
 		let library = Libraries.findOne(libraryId);
-    let userId = Meteor.userId();
+		let userId = Meteor.userId();
 
 		if (!library) return;
 		if (library.owner === userId){
-			Libraries.remove(libraryId);
+			throw new Meteor.error("Can't unshare, you own this")
 		} else {
 			if (_.contains(library.readers, userId)){
 				Libraries.update(libraryId, {$pull: {"readers": userId}});

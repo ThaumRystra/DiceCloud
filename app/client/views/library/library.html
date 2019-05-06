@@ -2,31 +2,55 @@
 	<div class="fit layout vertical library">
 		<app-header fixed effects="waterfall">
 			<app-toolbar class="medium-tall app-grey white-text">
-				<div top-item class="layout horizontal center">
+				<div top-item class="layout horizontal center" style="min-height: 56px;">
 					<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+					<a href="/library"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
 					<div class="flex layout horizontal center" style="height: 40px; margin-left: 8px;">
-						Item Library
+						{{name}}
 					</div>
+					{{#if isTier5}}{{#if canUserEdit}}
+						<paper-icon-button icon="settings" id="edit"></paper-icon-button>
+					{{/if}}{{/if}}
 				</div>
-				<!--
-				<div bottom-item>
-					<paper-tabs id="libraryTabs" selected={{selectedTab}} class="app-grey white-text">
-						<paper-tab name="items">Items</paper-tab>
-						<paper-tab name="spells">Spells</paper-tab>
-					</paper-tabs>
-				</div>
-				-->
+				{{#if isTier5}}
+					<div bottom-item class="layout horizontal center">
+						<paper-input label="Search" class="search-input">
+							<iron-icon icon="search" prefix></iron-icon>
+						</paper-input>
+						<div class="flex"></div>
+						{{#if canUserSubscribe}}
+							<paper-button style="color: rgba(255,255,255,0.87);" id="subscribe">
+								<iron-icon icon="add-circle"></iron-icon>
+								Subscribe
+							</paper-button>
+						{{else if canUserUnsubscribe}}
+							<paper-button style="color: rgba(255,255,255,0.87);" id="unsubscribe">
+								<iron-icon icon="remove-circle"></iron-icon>
+								Unsubscribe
+							</paper-button>
+						{{/if}}
+					</div>
+				{{/if}}
 			</app-toolbar>
 		</app-header>
-		<div class="flex" style="position: relative;">
-			<!-- <iron-pages id="tabPages" class="fit" selected={{selectedTab}}> -->
-				<div name="items" class="tab-page fit">{{> itemLibrary}}</div>
-				<!-- <div name="spells" class="tab-page fit">{{! {{> spellLibrary}} }}</div>
-			</iron-pages> -->
-		</div>
-		<div class="floatyButton">
-			<paper-fab id="addLibrary" icon="add"></paper-fab>
-			{{#simpleTooltip}}Add Library{{/simpleTooltip}}
-		</div>
+		{{#if isTier5}}
+			<div class="flex layout vertical center" style="position: relative; padding: 0 16px;">
+				<paper-material class="card" style="padding: 32px; max-width: 800px; width: 100%;">
+					{{#each items}}
+						<paper-item data-id={{_id}} class="item">
+							<paper-item-body>
+								<div>{{displayName}}</div>
+							</paper-item-body>
+						</paper-item>
+					{{/each}}
+				</paper-material>
+			</div>
+			<div class="floatyButton">
+				<paper-fab id="addLibraryItem" icon="add"></paper-fab>
+				{{#simpleTooltip}}Add Library Item{{/simpleTooltip}}
+			</div>
+		{{else}}
+			{{> patronsOnly }}
+		{{/if}}
 	</div>
 </template>

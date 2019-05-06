@@ -1,9 +1,5 @@
 import { format as formatUrl } from 'url';
 
-const CLIENT_ID = Meteor.settings &&
-	Meteor.settings.public.patreon  &&
-	Meteor.settings.public.patreon.clientId;
-
 Template.profile.onCreated(function(){
 	this.showApiKey = new ReactiveVar(false);
 	this.loadingPatreon = new ReactiveVar(false);
@@ -18,21 +14,6 @@ Template.profile.helpers({
 	},
 	showApiKey: function(){
 		return Template.instance().showApiKey.get();
-	},
-	patreonLoginUrl: function(){
-		if (!CLIENT_ID) return;
-		return formatUrl({
-	    protocol: 'https',
-	    host: 'patreon.com',
-	    pathname: '/oauth2/authorize',
-	    query: {
-        response_type: 'code',
-        client_id: CLIENT_ID,
-        redirect_uri: Meteor.absoluteUrl() + 'patreon-redirect',
-        state: Meteor.userId(),
-				scope: 'identity',
-	    },
-		});
 	},
 	patreon: function(){
 		let user = Meteor.user();
