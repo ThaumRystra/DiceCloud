@@ -66,7 +66,9 @@ Template.libraryItemDialog.helpers({
     return Template.instance().subscriptionsReady();
   },
   cantEdit(){
-    let item = LibraryItems.findOne(this.itemId);
+    // Get itemId from the top level template data regardless of current context
+    let itemId = Blaze.getData(Template.instance().view).itemId;
+    let item = LibraryItems.findOne(itemId);
     if (!item) return;
     let library = Libraries.findOne(item.library);
     if (!library) return;
