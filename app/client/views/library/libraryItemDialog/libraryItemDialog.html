@@ -1,5 +1,5 @@
 <template name="libraryItemDialog">
-  <div class="fit base-dialog layout vertical">
+  <div class="fit base-dialog layout vertical library-item-dialog">
 		<app-toolbar>
       <paper-icon-button id="backButton"
 							   icon="arrow-back">
@@ -34,7 +34,7 @@
       <div style="margin-top: 8px;">
         <div class="paper-font-subhead">Effects</div>
         {{#each indexedEffects}}
-          <div class="effect layout horizontal center wrap">
+          <div class="effect layout horizontal center wrap" style="margin-bottom: 32px;">
             <paper-dropdown-menu label="Operation" class="operationMenu" disabled="{{cantEdit}}">
   						<paper-listbox class="dropdown-content"  selected={{operationIndex operation}}>
                 <paper-item label="Base Value" name="base"> Base Value </paper-item>
@@ -59,7 +59,7 @@
       <div style="margin-top: 8px;">
         <div class="paper-font-subhead">Attacks</div>
         {{#each indexedAttacks}}
-          <div class="effect layout horizontal center wrap">
+          <div class="effect layout horizontal center wrap" style="margin-bottom: 32px">
             <paper-input class="LibraryItemAttackBonusInput flex" label="Attack Bonus" value={{attackBonus}} disabled="{{cantEdit}}"></paper-input>
             <paper-input class="LibraryItemAttackDamageInput flex" label="Damage" value={{damage}} disabled="{{cantEdit}}"></paper-input>
             <paper-input class="LibraryItemAttackDetailsInput flex" label="Details" value={{details}} disabled="{{cantEdit}}"></paper-input>
