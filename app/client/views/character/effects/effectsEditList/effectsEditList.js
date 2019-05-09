@@ -9,7 +9,10 @@ Template.effectsEditList.helpers({
 			selector["parent.group"] = this.parentGroup;
 		}
 		var effects = Effects.find(selector).fetch();
-		return _.sortBy(effects, effect => statOrder[effect.stat] || 999);
+		return _.sortBy(effects, effect => {
+			if (!statOrder[effect.stat] && statOrder[effect.stat] !== 0) { return 999; }
+			return statOrder[effect.stat]
+		});
 	}
 });
 
