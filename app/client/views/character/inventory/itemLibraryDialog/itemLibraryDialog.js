@@ -91,11 +91,14 @@ Template.itemLibraryDialog.helpers({
 	},
 	customLibraries(){
 		let userId = Meteor.userId();
+		let user = Meteor.user()
+		let subs = user && user.profile && user.profile.librarySubscriptions;
     return Libraries.find({
       $or: [
   			{readers: userId},
   			{writers: userId},
   			{owner: userId},
+				{public: true, _id: {$in: subs || []}},
   		],
     });
 	},
