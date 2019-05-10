@@ -18,7 +18,7 @@ export default {
     dirty: false,
     safeValue: this.value,
     inputValue: this.value,
-  }},
+  };},
   props: {
     value: [String, Number],
     debounceTime: {

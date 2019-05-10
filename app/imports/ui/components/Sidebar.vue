@@ -5,7 +5,7 @@
 				{{userName}}
 				<v-spacer></v-spacer>
 				<v-tooltip bottom>
-					<v-btn flat icon slot="activator"><v-icon>settings</v-icon></v-btn>
+					<v-btn flat icon slot="activator" to="/account"><v-icon>settings</v-icon></v-btn>
 					<span>Account Settings</span>
 				</v-tooltip>
 			</v-layout>
@@ -82,6 +82,7 @@
 				return [
 					{title: "Home", icon: "home", to: "/"},
 	        {title: "Creatures", icon: "group", to: "/characterList", vif: Meteor.userId()},
+					{title: "Libraries", icon: "book", to: "/library", vif: Meteor.userId()},
 	        {title: "Send Feedback", icon: "bug_report", to: "/feedback"},
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
 	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},

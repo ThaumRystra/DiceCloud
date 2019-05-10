@@ -1,13 +1,14 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import Vue from "vue";
+import Vue from 'vue';
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
-import CharacterList from "/imports/ui/pages/CharacterList.vue";
-import CharacterSheetPage from "/imports/ui/pages/CharacterSheetPage.vue";
-import SignIn from "/imports/ui/pages/SignIn.vue" ;
-import Register from "/imports/ui/pages/Register.vue" ;
-import Account from "/imports/ui/pages/Account.vue" ;
+import CharacterList from '/imports/ui/pages/CharacterList.vue';
+import Libraries from '/imports/ui/pages/Libraries.vue';
+import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
+import SignIn from '/imports/ui/pages/SignIn.vue' ;
+import Register from '/imports/ui/pages/Register.vue' ;
+import Account from '/imports/ui/pages/Account.vue' ;
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -27,22 +28,25 @@ RouterFactory.configure(factory => {
       name: 'home',
       component: Home,
     },{
-      path: "/characterList",
+      path: '/characterList',
       component: CharacterList,
     },{
-      path: "/character/:id/:urlName",
+      path: '/library',
+      component: Libraries,
+    },{
+      path: '/character/:id/:urlName',
       component: CharacterSheetPage,
     },{
-      path: "/character/:id",
+      path: '/character/:id',
       component: CharacterSheetPage,
     },{
-			path: "/sign-in",
+			path: '/sign-in',
 			component: SignIn,
 		},{
-			path: "/register",
+			path: '/register',
 			component: Register,
 		},{
-			path: "/account",
+			path: '/account',
 			component: Account,
 		},
   ]);
@@ -61,7 +65,7 @@ RouterFactory.configure(factory => {
         component: StoryBook,
       }, {
         path: '/icon-admin',
-        name: "iconAdmin",
+        name: 'iconAdmin',
         component: IconAdmin,
       },
     ]);

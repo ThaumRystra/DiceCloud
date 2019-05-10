@@ -3,6 +3,7 @@ import AttributeDialogContainer from '/imports/ui/creature/properties/attributes
 import AttributeCreationDialog from '/imports/ui/creature/properties/attributes/AttributeCreationDialog.vue';
 import FeatureCreationDialog from '/imports/ui/creature/properties/features/FeatureCreationDialog.vue';
 import FeatureDialogContainer from '/imports/ui/creature/properties/features/FeatureDialogContainer.vue';
+import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
 import SkillDialogContainer from '/imports/ui/creature/properties/skills/SkillDialogContainer.vue';
 
 export default {
@@ -11,5 +12,6 @@ export default {
   AttributeCreationDialog,
   FeatureCreationDialog,
   FeatureDialogContainer,
+  LibraryCreationDialog,
   SkillDialogContainer,
 };

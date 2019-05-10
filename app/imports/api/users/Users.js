@@ -10,21 +10,21 @@ const userSchema = schema({
 		type: Array,
 		optional: true,
 	},
-	"emails.$": {
+	'emails.$': {
 		type: Object,
 	},
-	"emails.$.address": {
+	'emails.$.address': {
 		type: String,
 		regEx: SimpleSchema.RegEx.Email,
 	},
-	"emails.$.verified": {
+	'emails.$.verified': {
 		type: Boolean,
 	},
 	registered_emails: {
 		type: Array,
 		optional: true,
 	},
-	"registered_emails.$": {
+	'registered_emails.$': {
 		type: Object,
 		blackbox: true,
 	},
@@ -40,7 +40,7 @@ const userSchema = schema({
 		type: Array,
 		optional: true,
 	},
-	"roles.$": {
+	'roles.$': {
 		type: String
 	},
 	// In order to avoid an 'Exception in setInterval callback' from Meteor
@@ -57,12 +57,20 @@ const userSchema = schema({
 		type: Boolean,
 		optional: true,
 	},
+	subscribedLibraries: {
+		type: Array,
+		defaultValue: [],
+		max: 100,
+	},
+	'subscribedLibraries.$': {
+		type: String,
+	},
 });
 
 Meteor.users.attachSchema(userSchema);
 
 Meteor.users.generateApiKey = new ValidatedMethod({
-  name: "Users.methods.generateApiKey",
+  name: 'Users.methods.generateApiKey',
 	validate: null,
   run(){
 		if(Meteor.isClient) return;
@@ -75,7 +83,7 @@ Meteor.users.generateApiKey = new ValidatedMethod({
 });
 
 Meteor.users.setDarkMode = new ValidatedMethod({
-  name: "Users.methods.setDarkMode",
+  name: 'Users.methods.setDarkMode',
 	validate: new SimpleSchema({
     darkMode: { type: Boolean },
   }).validator(),
@@ -86,7 +94,7 @@ Meteor.users.setDarkMode = new ValidatedMethod({
 });
 
 Meteor.users.sendVerificationEmail = new ValidatedMethod({
-	name: "Users.methods.sendVerificationEmail",
+	name: 'Users.methods.sendVerificationEmail',
 	validate: schema({
 		userId:{
 			type: String,
@@ -100,12 +108,12 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 		userId = this.userId || userId;
 		let user = Meteor.users.findOne();
 		if (!user) {
-			throw new Meteor.Error("User not found",
-				"Can't send a validation email to a user that does not exist");
+			throw new Meteor.Error('User not found',
+				'Can\'t send a validation email to a user that does not exist');
 		}
 		if (!_.some(user.emails, email => email.address === address)) {
-			throw new Meteor.Error("Email address not found",
-				"The specified email address wasn't found on this user account");
+			throw new Meteor.Error('Email address not found',
+				'The specified email address wasn\'t found on this user account');
 		}
 		Accounts.sendVerificationEmail(this.userId, address);
 	}

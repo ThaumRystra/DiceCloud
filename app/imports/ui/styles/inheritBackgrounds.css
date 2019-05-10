@@ -1,0 +1,14 @@
+/**
+ * Some componets are used as targets for dialog animations often, and thus
+ * require a background color. Inheriting the color from the nearest ancestor
+ * that is known to have a background ensures that the background is
+ * consistent for both light and dark themes
+**/
+
+.v-list > div {
+  background-color: inherit;
+}
+
+.v-list > div > .v-list__tile {
+  background-color: inherit;
+}

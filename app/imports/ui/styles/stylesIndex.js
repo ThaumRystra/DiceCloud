@@ -1,1 +1,2 @@
-import "./speedDial.css";
+import './speedDial.css';
+import './inheritBackgrounds.css';
