@@ -1,9 +1,14 @@
+import { format as formatUrl } from 'url';
+
 const CLIENT_ID = Meteor.settings &&
 	Meteor.settings.public.patreon  &&
 	Meteor.settings.public.patreon.clientId;
 
 Template.registerHelper("patreonLoginUrl", function() {
-  if (!CLIENT_ID) return;
+  if (!CLIENT_ID) {
+		console.warn('Could not find Meteor.settings.public.patreon.clientId to make patreon link')
+		return;
+	}
   return formatUrl({
     protocol: 'https',
     host: 'patreon.com',

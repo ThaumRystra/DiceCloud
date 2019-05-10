@@ -1,5 +1,3 @@
-import { format as formatUrl } from 'url';
-
 Template.profile.onCreated(function(){
 	this.showApiKey = new ReactiveVar(false);
 	this.loadingPatreon = new ReactiveVar(false);
