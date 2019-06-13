@@ -6,7 +6,7 @@
 				<v-list-tile
 					v-for="library in libraries"
 					:key="library._id"
-					:to="library.url"
+					:to="`/library/${library._id}`"
 					:data-id="library._id"
 				>
 					<v-list-tile-content>

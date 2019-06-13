@@ -1,4 +1,4 @@
-import { CreatureSchema } from '/imports/api/creature/properties/Creatures.js';
+import { CreatureSchema } from '/imports/api/creature/Creatures.js';
 import { ActionSchema } from '/imports/api/creature/properties/Actions.js';
 import { AttributeSchema } from '/imports/api/creature/properties/Attributes.js';
 import { ClassSchema } from '/imports/api/creature/properties/Classes.js';
@@ -13,8 +13,8 @@ import { ProficiencySchema } from '/imports/api/creature/properties/Proficiencie
 import { SkillSchema } from '/imports/api/creature/properties/Skills.js';
 import { SpellListSchema } from '/imports/api/creature/properties/SpellLists.js';
 import { SpellSchema } from '/imports/api/creature/properties/Spells.js';
-import { ContainerSchema } from '/imports/api/creature/properties/Containers.js';
-import { ItemSchema } from '/imports/api/creature/properties/Items.js';
+import { ContainerSchema } from '/imports/api/creature/properties/inventory/Containers.js';
+import { ItemSchema } from '/imports/api/creature/properties/inventory/Items.js';
 
 
 const librarySchemas = {

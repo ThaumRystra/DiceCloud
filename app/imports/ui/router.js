@@ -5,6 +5,7 @@ import Vue from 'vue';
 import Home from '/imports/ui/pages/Home.vue';
 import CharacterList from '/imports/ui/pages/CharacterList.vue';
 import Libraries from '/imports/ui/pages/Libraries.vue';
+import Library from '/imports/ui/pages/Library.vue';
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue' ;
@@ -33,6 +34,9 @@ RouterFactory.configure(factory => {
     },{
       path: '/library',
       component: Libraries,
+    },{
+      path: '/library/:id',
+      component: Library,
     },{
       path: '/character/:id/:urlName',
       component: CharacterSheetPage,
