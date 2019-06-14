@@ -1,6 +1,6 @@
 <template lang="html">
 	<v-card-text>
-		<tree-node-list :children="libraryChildren" :group="library._id" v-if="libraryChildren"/>
+		<tree-node-list v-if="libraryChildren" :children="libraryChildren" :group="library && library._id"/>
 		<template v-else>This library is empty</template>
 	</v-card-text>
 </template>
@@ -19,7 +19,7 @@
 		},
 		meteor: {
 			$subscribe: {
-				'library': this.libraryId,
+				'library': [this.libraryId],
 			},
 			library(){
 				return Libraries.findOne(this.libraryId);
