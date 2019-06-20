@@ -52,9 +52,6 @@ for (let key in librarySchemas){
 	});
 }
 
-export default LibraryNodes;
-export { LibraryNodeSchema };
-
 function getLibrary(node){
   if (!node) throw new Meteor.Error('No node provided');
   return Libraries.findOne(node.ancestors[0].id);
@@ -82,3 +79,26 @@ const updateNode = new ValidatedMethod({
 		return LibraryNodes.update(_id, update);
   },
 });
+
+function libraryNodesToTree(ancestorId){
+  // Store a dict of all the nodes
+  let nodeIndex = {};
+  LibraryNodes.find({'ancestors.id': ancestorId}).forEach( node => {
+    node.children = [];
+    nodeIndex[node._id] = node;
+  });
+  // Create a forest of trees
+  let forest = [];
+  // Either the node is a child of another node, or in the forest as a root
+  nodeList.forEach(node => {
+    if (nodeIndex[node.parent.id]){
+      nodeIndex[node.parent.id].children.push(node);
+    } else {
+      forest.push(node);
+    }
+  });
+  return forest;
+}
+
+export default LibraryNodes;
+export { LibraryNodeSchema, updateNode };
