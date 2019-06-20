@@ -1,4 +1,5 @@
 import Libraries from '/imports/api/library/Libraries.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 
 const standardLibraryIds = [
 	'SRDLibraryGA3XWsd',
@@ -29,6 +30,7 @@ Meteor.publish('standardLibrarySpells', function(level){
 Meteor.publish('libraries', function(){
 	const user = Meteor.user();
 	const userId = user && user._id;
+	if (!userId) return [];
 	const subs = user && user.subscribedLibraries || [];
 	return Libraries.find({
 		$or: [
@@ -38,4 +40,26 @@ Meteor.publish('libraries', function(){
 			{_id: {$in: subs}},
 		]
 	});
+});
+
+Meteor.publish('library', function(libraryId){
+	const user = Meteor.user();
+	const userId = user && user._id;
+	if (!userId) return [];
+	let libraryCursor = Libraries.find({
+		_id: libraryId,
+		$or: [
+			{owner: userId},
+			{writers: userId},
+			{readers: userId},
+			{_id: {$in: subs}},
+		],
+	});
+	if (!libraryCursor.count()) return [];
+	return [
+		libraryCursor,
+		LibraryNodes.find({
+			'ancestors.id': libraryId,
+		}),
+	];
 });
