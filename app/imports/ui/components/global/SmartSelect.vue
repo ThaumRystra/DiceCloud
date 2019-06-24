@@ -14,7 +14,7 @@
 </template>
 
 <script>
-	import SmartInput from '/imports/ui/components/global/SmartInput.js';
+	import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 
 	export default {
 		mixins: [SmartInput],
