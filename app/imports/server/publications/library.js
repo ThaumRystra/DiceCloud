@@ -46,6 +46,7 @@ Meteor.publish('library', function(libraryId){
 	const user = Meteor.user();
 	const userId = user && user._id;
 	if (!userId) return [];
+	const subs = user && user.subscribedLibraries || [];
 	let libraryCursor = Libraries.find({
 		_id: libraryId,
 		$or: [

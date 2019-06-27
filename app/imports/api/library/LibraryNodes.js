@@ -5,6 +5,7 @@ import librarySchemas from '/imports/api/library/librarySchemas.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getModifierFields from '/imports/api/getModifierFields.js';
+import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -62,6 +63,18 @@ function assertNodeEditPermission(node, userId){
   return assertEditPermission(lib, userId);
 }
 
+const insertNode = new ValidatedMethod({
+  name: 'LibraryNodes.methods.insert',
+	mixins: [
+		simpleSchemaMixin,
+  ],
+  schema: LibraryNodeSchema,
+  run(libraryNode) {
+    assertNodeEditPermission(libraryNode, this.userId);
+		return LibraryNodes.insert(libraryNode);
+  },
+});
+
 const updateNode = new ValidatedMethod({
   name: 'LibraryNodes.methods.update',
   validate({_id, update}){
@@ -101,4 +114,4 @@ function libraryNodesToTree(ancestorId){
 }
 
 export default LibraryNodes;
-export { LibraryNodeSchema, updateNode };
+export { LibraryNodeSchema, insertNode, updateNode };

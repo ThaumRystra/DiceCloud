@@ -79,11 +79,11 @@ export default {
       this.$emit('change', val, this.acknowledgeChange);
     },
     hasChangeListener(){
-      return this.$listeners && this.$listeners.change
+      return this.$listeners && this.$listeners.change;
     },
     forceSafeValueUpdate(){
       // hack to force the value to update on the child component
-      this.safeValue = null
+      this.safeValue = null;
       this.$nextTick(() => this.safeValue = this.value);
     },
   },

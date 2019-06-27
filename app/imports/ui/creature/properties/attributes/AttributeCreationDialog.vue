@@ -44,6 +44,9 @@
 			},
 			valid: true,
 		}},
+		created(){
+			this.validationContext = Attributes.simpleSchema().newContext();
+		},
 		methods: {
 			change(update, ack){
 				for (key in update){
@@ -57,9 +60,6 @@
 				}
 				if (ack) ack();
 			},
-		},
-		created(){
-			this.validationContext = Attributes.simpleSchema().newContext();
 		},
 		computed: {
 			errors(){

@@ -1,10 +1,10 @@
 <template>
 	<v-layout column style="height: 100%;">
     <v-toolbar :color="color || 'secondary'" dark class="base-dialog-toolbar" :flat="!offsetTop">
-			<v-btn icon flat @click="close">
+			<v-btn icon flat @click="back">
 				<v-icon>arrow_back</v-icon>
 			</v-btn>
-      <slot name="toolbar"></slot>
+      <slot name="toolbar"/>
 			<template v-if="$slots.edit">
 				<v-spacer/>
 				<v-btn icon flat @click="$emit('remove')" v-if="isEditing">
@@ -20,6 +20,7 @@
 				example > bread > crumb
 			</v-card-text>
 		</template>
+		<slot name="unwrapped-content"/>
 		<v-card-text id="base-dialog-body" v-scroll:#base-dialog-body="onScroll">
 			<v-tabs-items :value="isEditing ? 1 : 0" touchless>
 				<v-tab-item>
@@ -43,6 +44,7 @@
 		props: {
 			color: String,
 			breadcrumbs: Object,
+			overrideBackButton: Function,
 		},
 		data(){ return {
 			offsetTop: 0,
@@ -51,6 +53,13 @@
 		methods: {
 			onScroll(e){
 				this.offsetTop = e.target.scrollTop
+			},
+			back(){
+				if (this.overrideBackButton){
+					this.overrideBackButton();
+				} else {
+					this.close();
+				}
 			},
 			close(){
         store.dispatch("popDialogStack");
