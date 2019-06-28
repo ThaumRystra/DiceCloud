@@ -41,7 +41,7 @@
 	import Vue from "vue";
 	import AbilityListTile from '/imports/ui/creature/properties/attributes/AbilityListTile.Story.vue';
 	import AttributeCard from '/imports/ui/creature/properties/attributes/AttributeCard.Story.vue';
-	import AttributeEdit from '/imports/ui/creature/properties/attributes/AttributeEdit.Story.vue';
+	import AttributeForm from '/imports/ui/creature/properties/attributes/AttributeForm.Story.vue';
 	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
@@ -62,7 +62,7 @@
 		components: {
 			AbilityListTile,
 			AttributeCard,
-			AttributeEdit,
+			AttributeForm,
 			ColorPicker,
 			ColumnLayout,
 			DialogStack,

@@ -36,7 +36,7 @@
 <script>
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
 	import EffectChildList from '/imports/ui/creature/properties/effects/EffectChildList.vue';
-	import AttributeEdit from '/imports/ui/creature/properties/attributes/AttributeEdit.vue';
+	import AttributeForm from '/imports/ui/creature/properties/attributes/AttributeForm.vue';
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 	export default {
@@ -79,7 +79,7 @@
 		components: {
 			DialogBase,
 			EffectChildList,
-			AttributeEdit,
+			AttributeForm,
 		},
 	};
 </script>

@@ -22,13 +22,13 @@
 </template>
 
 <script>
-	import AttributeEdit from '/imports/ui/creature/properties/attributes/AttributeEdit.vue';
+	import AttributeForm from '/imports/ui/creature/properties/attributes/AttributeForm.vue';
 	import Attributes from '/imports/api/creature/properties/Attributes.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 	export default {
 		components: {
-			AttributeEdit,
+			AttributeForm,
 			DialogBase,
 		},
 		data(){ return {

@@ -13,11 +13,11 @@
 </template>
 
 <script>
-	import AttributeEdit from '/imports/ui/creature/properties/attributes/AttributeEdit.vue';
+	import AttributeForm from '/imports/ui/creature/properties/attributes/AttributeForm.vue';
 	import debounceUpdate from '/imports/ui/utility/debounceUpdate.js';
 	export default {
 		components: {
-			AttributeEdit,
+			AttributeForm,
 		},
 		data(){ return {
 			attributes: [

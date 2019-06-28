@@ -3,7 +3,7 @@
 		<v-container fluid grid-list-lg fill-height>
 			<v-layout row wrap>
 				<v-flex v-for="property in properties" :key="property.name" xs4>
-					<v-card hover @click="$emit('select', property.type)">
+					<v-card hover @click="$emit('select', property)">
 						<div class="layout row align-center justify-center" style="min-height: 70px;">
 							<v-icon x-large>{{ property.icon }}</v-icon>
 						</div>
