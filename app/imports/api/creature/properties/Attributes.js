@@ -26,11 +26,14 @@ let AttributeSchema = schema({
   name: {
 		type: String,
 		optional: true,
+    defaultValue: 'New Attribute',
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
 		regEx: VARIABLE_NAME_REGEX,
+    min: 3,
+    defaultValue: 'newAttribute',
   },
 	// How it is displayed and computed is determined by type
   type: {
@@ -46,6 +49,7 @@ let AttributeSchema = schema({
       'spellSlot', // Level 1, 2, 3... spell slots
       'utility', // Aren't displayed, Jump height, Carry capacity
     ],
+    defaultValue: 'stat',
 		index: 1,
   },
 	// The starting value, before effects

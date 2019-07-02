@@ -1,27 +1,24 @@
 <template lang="html">
-  <dialog-base :override-back-button="step === 2 ? back : undefined">
-		<div slot="toolbar">{{ step === 2 ? `Add ${property.name}` : 'Add Library Content'}}</div>
-		<v-window v-model="step" slot="unwrapped-content" style="height: 100%;">
-			<v-window-item :value="1">
-				<property-selector @select="setProperty"/>
-			</v-window-item>
-			<v-window-item :value="2">
-				<v-card-text>
-					<library-node-form :type="property && property.type"/>
-				</v-card-text>
-			</v-window-item>
-		</v-window>
-
-		<div slot="actions" v-if="step === 2" class="layout row justify-end">
-			<v-btn flat>Insert</v-btn>
-		</div>
-  </dialog-base>
+	<transition-group name="slide">
+		<dialog-base v-show="step == 1" class="step-1" key="left">
+			<div slot="toolbar">Add Library Content</div>
+			<property-selector @select="setProperty"/>
+		</dialog-base>
+		<library-node-insert-form
+			v-show="step == 2"
+			class="step-2"
+			key="right"
+			:type="property && property.type"
+			:property-name="property && property.name"
+			@back="step = 1"
+		/>
+	</transition-group>
 </template>
 
 <script>
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/creature/properties/PropertySelector.vue';
-import LibraryNodeForm from '/imports/ui/library/LibraryNodeForm.vue';
+import LibraryNodeInsertForm from '/imports/ui/library/LibraryNodeInsertForm.vue';
 
 export default {
   data() { return {
@@ -31,12 +28,9 @@ export default {
   components: {
     DialogBase,
 		PropertySelector,
-		LibraryNodeForm,
+		LibraryNodeInsertForm,
   },
 	methods: {
-		back(){
-			this.step = 1;
-		},
 		setProperty(property){
 			this.property = property;
 			this.step = 2;
@@ -46,4 +40,16 @@ export default {
 </script>
 
 <style lang="css" scoped>
+	.slide-enter-active, .slide-leave-active {
+		transition: transform .3s ease;
+	}
+	.slide-enter-active.step-1, .slide-leave-active.step-1{
+		position: absolute;
+	}
+	.slide-enter.step-1, .slide-leave-to.step-1 {
+		transform: translateX(-100%);
+	}
+	.slide-enter.step-2, .slide-leave-to.step-2 {
+		transform: translateX(100%);
+	}
 </style>

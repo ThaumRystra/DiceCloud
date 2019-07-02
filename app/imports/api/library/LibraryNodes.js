@@ -65,10 +65,7 @@ function assertNodeEditPermission(node, userId){
 
 const insertNode = new ValidatedMethod({
   name: 'LibraryNodes.methods.insert',
-	mixins: [
-		simpleSchemaMixin,
-  ],
-  schema: LibraryNodeSchema,
+	validate: null,
   run(libraryNode) {
     assertNodeEditPermission(libraryNode, this.userId);
 		return LibraryNodes.insert(libraryNode);

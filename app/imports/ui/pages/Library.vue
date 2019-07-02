@@ -33,6 +33,8 @@
 					elementId: 'insert-library-node-fab',
 					callback(libraryNode){
 						if (!libraryNode) return;
+						console.log({libraryNode});
+						throw "TODO: give this library node ancestry before inserting it"
 						let libraryNodeId = insertNode.call(libraryNode);
 						return libraryNodeId;
 					}

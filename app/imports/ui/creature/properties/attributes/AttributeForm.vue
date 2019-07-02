@@ -2,14 +2,14 @@
   <div>
   	<text-field
 			label="Name"
-			:value="attribute.name"
+			:value="model.name"
 			@change="(name, ack) => $emit('change', {name}, ack)"
 			:error-messages="errors.name"
 			:debounce-time="debounceTime"
 		/>
 		<text-field
 			label="Variable name"
-			:value="attribute.variableName"
+			:value="model.variableName"
 			@change="(variableName, ack) => $emit('change', {variableName}, ack)"
 			hint="Use this name in formulae to reference this attribute"
 			:error-messages="errors.variableName"
@@ -18,8 +18,8 @@
 		<text-field
 			label="Base Value"
 			type="number"
-			:value="attribute.baseValue"
-			@change="(baseValue, ack) => $emit('change', {baseValue: +baseValue}, ack)"
+			:value="model.baseValue"
+			@change="(baseValue, ack) => $emit('change', {baseValue}, ack)"
 			hint="This is the value of the attribute before effects are applied"
 			:error-messages="errors.baseValue"
 			:debounce-time="debounceTime"
@@ -27,15 +27,15 @@
 		<text-field
 			label="Damage"
 			type="number"
-			:value="-attribute.adjustment"
-			@change="(damage, ack) => $emit('change', {adjustment: -damage || null}, ack)"
+			:value="damage"
+			@change="(damage, ack) => $emit('change', {adjustment: -damage || damage}, ack)"
 			:error-messages="errors.adjustment"
 			:debounce-time="debounceTime"
 		/>
 		<smart-select
 			label="Type"
 			:items="attributeTypes"
-			:value="attribute.type"
+			:value="model.type"
 			:error-messages="errors.type"
 			:menu-props="{auto: true, lazy: true}"
 			@change="(type, ack) => $emit('change', {type}, ack)"
@@ -43,7 +43,7 @@
 		/>
 		<v-switch
 			label="Allow decimal values"
-			:value="attribute.decimal"
+			:value="model.decimal"
 			:error-messages="errors.decimal"
 			@change="e => $emit('change', {decimal: !!e})"
 		/>
@@ -51,7 +51,7 @@
 			label="Reset"
 			clearable
 			:items="resetOptions"
-			:value="attribute.reset"
+			:value="model.reset"
 			:error-messages="errors.reset"
 			:menu-props="{auto: true, lazy: true}"
 			@change="(reset, ack) => $emit('change', {reset}, ack)"
@@ -60,9 +60,9 @@
 		<text-field
 			label="Reset Multiplier"
 			type="number"
-			:value="attribute.resetMultiplier"
+			:value="model.resetMultiplier"
 			:error-messages="errors.resetMultiplier"
-			@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier: +resetMultiplier}, ack)"
+			@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier}, ack)"
 			hint="Some attributes, like hit dice, only reset by half their total on a long rest"
 			:debounce-time="debounceTime"
 		/>
@@ -72,7 +72,7 @@
 <script>
 	export default {
 		props: {
-			attribute: {
+			model: {
 				type: Object,
 				default: () => ({}),
 			},
@@ -81,6 +81,11 @@
 				default: () => ({}),
 			},
 			debounceTime: Number,
+		},
+		computed: {
+			damage(){
+				return this.model.adjustment && -this.model.adjustment
+			},
 		},
 		data(){ return{
 			attributeTypes: [
