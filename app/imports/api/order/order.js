@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 
-export function getHighestOrder({collection, charId}){
+export function getHighestOrder({collection, rootAncestor}){
   const highestOrderedDoc = collection.findOne({
-    charId
+    'ancestors.0': rootAncestor,
   }, {
     fields: {order: 1},
     sort: {order: -1},
@@ -13,7 +13,7 @@ export function getHighestOrder({collection, charId}){
 export function setDocToLastOrder({collection, doc}){
   doc.order = getHighestOrder({
     collection,
-    charId: doc.charId,
+    rootAncestor: doc.ancestors[0],
   }) + 1;
 }
 
@@ -42,7 +42,7 @@ export function setDocOrder({collection, doc, order}){
     }
     collection.update({
       order: {$and: inBetweenSelector},
-      charId: doc.charId,
+      rootAncestor: doc.ancestors[0],
     }, {
       $inc: {order: increment},
     }, {
@@ -51,10 +51,10 @@ export function setDocOrder({collection, doc, order}){
   }
 }
 
-export function reorderDocs({collection, charId}){
+export function reorderDocs({collection, rootAncestor}){
   let bulkWrite = [];
   collection.find({
-    charId
+    'ancestors.0': rootAncestor,
   }, {
     fields: {order: 1},
     sort: {order: 1}

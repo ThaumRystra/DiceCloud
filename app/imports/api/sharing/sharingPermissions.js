@@ -10,7 +10,7 @@ function assertIdValid(userId){
 function assertdocExists(doc){
   if (!doc){
     throw new Meteor.Error("Edit permission denied",
-      `No doc exists with the given id: ${charId}`);
+      `No such document exists`);
   }
 }
 
@@ -32,7 +32,7 @@ export function assertEditPermission(doc, userId) {
     return true;
   } else {
     throw new Meteor.Error("Edit permission denied",
-      `You do not have permission to edit this character`);
+      `You do not have permission to edit this document`);
   }
 }
 

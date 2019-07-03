@@ -55,7 +55,9 @@ for (let key in librarySchemas){
 
 function getLibrary(node){
   if (!node) throw new Meteor.Error('No node provided');
-  return Libraries.findOne(node.ancestors[0].id);
+  let library = Libraries.findOne(node.ancestors[0].id);
+  if (!library) throw new Meteor.Error('Library does not exist');
+  return library;
 }
 
 function assertNodeEditPermission(node, userId){

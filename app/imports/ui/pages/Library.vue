@@ -1,6 +1,6 @@
 <template lang="html">
 	<toolbar-layout>
-		<span slot="toolbar">Library</span>
+		<span slot="toolbar">{{library && library.name || 'Library'}}</span>
 		<v-card class="ma-4">
 			<library-contents-container
 				:library-id="$route.params.id"
@@ -19,7 +19,9 @@
 <script>
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 	import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
-	import {insertNode} from '/imports/api/library/LibraryNodes.js';
+	import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
+	import Libraries from '/imports/api/library/Libraries.js';
+	import { setDocToLastOrder } from '/imports/api/order/order.js';
 
 	export default {
 		components: {
@@ -28,18 +30,31 @@
 		},
 		methods: {
 			insertLibraryNode(){
+				let that = this;
 				this.$store.commit('pushDialogStack', {
 					component: 'library-node-creation-dialog',
 					elementId: 'insert-library-node-fab',
 					callback(libraryNode){
 						if (!libraryNode) return;
-						console.log({libraryNode});
-						throw "TODO: give this library node ancestry before inserting it"
+						libraryNode.parent = {collection: "library", id: that.library._id};
+						libraryNode.ancestors = [ {collection: "library", id: that.library._id}];
+						setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
+						console.log(libraryNode);
 						let libraryNodeId = insertNode.call(libraryNode);
 						return libraryNodeId;
 					}
 				});
 			},
 		},
+		meteor: {
+			$subscribe: {
+				library(){
+					return [this.$route.params.id];
+				},
+			},
+			library(){
+				return Libraries.findOne(this.$route.params.id);
+			}
+		}
 	};
 </script>

@@ -11,8 +11,9 @@
 			v-for="child in children"
 			v-bind="child"
 			:group="group"
-			:key="child.name"
+			:key="child._id || child.name"
 			:showEmpty="showEmpty"
+			:lazy="lazy"
 			class="item"
 			@dragstart.native="e => e.dataTransfer.setData('cow', child.name)"
 		/>
@@ -33,6 +34,7 @@
 		props: {
 			group: String,
 			showEmpty: Boolean,
+			lazy: Boolean,
 			children: {
 				type: Array,
 				required: true,

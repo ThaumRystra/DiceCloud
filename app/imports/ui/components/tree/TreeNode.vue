@@ -14,7 +14,7 @@
 		<v-expand-transition>
 			<div v-if="showExpanded">
 				<tree-node-list
-					:children="children"
+					:children="computedChildren"
 					:group="group"
 					:show-empty="showEmpty"
 				/>
@@ -46,18 +46,26 @@
 			name: String,
 			group: String,
 			showEmpty: Boolean,
-			children: {
-				type: Array,
-				required: true,
-			},
+			children: Array,
+			getChildren: Function,
 		},
 		computed: {
 			hasChildren(){
-				return this.children && this.children.length;
+				return this.children && this.children.length || this.lazy && !this.expanded;
 			},
 			showExpanded(){
 				return this.expanded && (this.showEmpty || this.hasChildren)
 			},
+			computedChildren(){
+				let children = [];
+				if (this.children){
+					children.push(...this.children)
+				}
+				if (this.getChildren){
+					children.push(...this.getChildren())
+				}
+				return children;
+			}
 		},
 	};
 </script>

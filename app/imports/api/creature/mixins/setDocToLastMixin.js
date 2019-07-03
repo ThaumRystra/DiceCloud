@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import { setDocToLastOrder } from '/imports/api/creature/order/order.js';
+import { setDocToLastOrder } from '/imports/api/order/order.js';
 
 export function setDocToLastMixin(methodOptions){
   // Make sure the doc has a charId
