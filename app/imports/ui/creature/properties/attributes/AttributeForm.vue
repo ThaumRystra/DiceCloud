@@ -11,22 +11,6 @@
 				:error-messages="errors.baseValue"
 				:debounce-time="debounceTime"
 			/>
-			<v-switch
-				label="Allow decimal values"
-				class="no-flex"
-				:value="model.decimal"
-				:error-messages="errors.decimal"
-				@change="e => $emit('change', {decimal: !!e})"
-			/>
-			<text-field
-				label="Damage"
-				type="number"
-				class="damage-field no-flex text-xs-center"
-				:value="model.damage"
-				@change="(damage, ack) => $emit('change', {damage}, ack)"
-				:error-messages="errors.adjustment"
-				:debounce-time="debounceTime"
-			/>
 		</div>
 		<div class="layout row wrap">
 			<text-field
@@ -56,34 +40,62 @@
 			:hint="attributeTypeHints[model.type]"
 			:debounce-time="debounceTime"
 		/>
-		<div class="layout row wrap">
-			<smart-select
-				label="Reset"
-				clearable
-				style="flex-basis: 300px;"
-				:items="resetOptions"
-				:value="model.reset"
-				:error-messages="errors.reset"
-				:menu-props="{auto: true, lazy: true}"
-				@change="(reset, ack) => $emit('change', {reset}, ack)"
-				:debounce-time="debounceTime"
-			/>
-			<text-field
-				label="Reset Multiplier"
-				type="number"
-				style="flex-basis: 400px;"
-				:value="model.resetMultiplier"
-				:error-messages="errors.resetMultiplier"
-				@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier}, ack)"
-				hint="Some attributes, like hit dice, only reset by half their total on a long rest"
-				:debounce-time="debounceTime"
-			/>
-		</div>
+		<advanced-section>
+			<div class="layout column align-center">
+				<v-switch
+					label="Allow decimal values"
+					class="no-flex"
+					:value="model.decimal"
+					:error-messages="errors.decimal"
+					@change="e => $emit('change', {decimal: !!e})"
+				/>
+				<div class="layout row justify-center" style="align-self: stretch;">
+					<text-field
+						label="Damage"
+						type="number"
+						class="damage-field text-xs-center"
+						style="max-width: 300px;"
+						hint="The attribute's final value is reduced by this amount"
+						:value="model.damage"
+						@change="(damage, ack) => $emit('change', {damage}, ack)"
+						:error-messages="errors.adjustment"
+						:debounce-time="debounceTime"
+					/>
+				</div>
+			</div>
+			<div class="layout row wrap">
+				<smart-select
+					label="Reset"
+					clearable
+					style="flex-basis: 300px;"
+					:items="resetOptions"
+					:value="model.reset"
+					:error-messages="errors.reset"
+					:menu-props="{auto: true, lazy: true}"
+					@change="(reset, ack) => $emit('change', {reset}, ack)"
+					:debounce-time="debounceTime"
+				/>
+				<text-field
+					label="Reset Multiplier"
+					type="number"
+					style="flex-basis: 400px;"
+					:value="model.resetMultiplier"
+					:error-messages="errors.resetMultiplier"
+					@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier}, ack)"
+					hint="Some attributes, like hit dice, only reset by half their total on a long rest"
+					:debounce-time="debounceTime"
+				/>
+			</div>
+		</advanced-section>
   </div>
 </template>
 
 <script>
+	import AdvancedSection from '/imports/ui/components/forms/AdvancedSection.vue';
 	export default {
+		components: {
+			AdvancedSection,
+		},
 		props: {
 			model: {
 				type: Object,
