@@ -57,11 +57,11 @@ let AttributeSchema = schema({
 		type: Number,
 		optional: true,
 	},
-	// The damage done to the attribute, always negative
-  adjustment: {
+	// The damage done to the attribute, always positive
+  damage: {
     type: SimpleSchema.Integer,
     optional: true,
-		max: 0,
+		min: 0,
   },
   // Can the value be decimal?
   decimal: {

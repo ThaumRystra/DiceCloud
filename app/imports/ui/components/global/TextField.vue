@@ -7,6 +7,7 @@
 		@input="input"
 		@focus="focused = true"
 		@blur="focused = false"
+		box
 	/>
 </template>
 

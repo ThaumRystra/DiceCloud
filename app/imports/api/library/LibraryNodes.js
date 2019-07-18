@@ -5,7 +5,6 @@ import librarySchemas from '/imports/api/library/librarySchemas.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getModifierFields from '/imports/api/getModifierFields.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
