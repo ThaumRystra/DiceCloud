@@ -26,10 +26,6 @@ let ActionSchema = schema({
 		type: String,
 		optional: true,
 	},
-	enabled: {
-    type: Boolean,
-    defaultValue: true,
-  },
 	description: {
 		type: String,
 		optional: true,
@@ -44,6 +40,7 @@ let ActionSchema = schema({
 	// Who is the action directed at
 	target: {
 		type: String,
+		defaultValue: 'singleTarget',
 		allowedValues: [
       'self',
       'singleTarget',

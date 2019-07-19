@@ -32,6 +32,22 @@ const schemaFormMixin = {
 			}
 			if (ack) ack();
 		},
+    push(modifier, ack){
+      for (let key in modifier){
+        this.model[key].push(modifier[key]);
+			}
+			if (ack) ack();
+    },
+    changeAtIndex(field, index, modifier, ack){
+      for (let key in modifier){
+				this.$set(this.model[field][index], key, modifier[key])
+			}
+      if (ack) ack();
+    },
+    removeAtIndex(field, index, ack){
+      this.model[field].splice(index, 1);
+      if (ack) ack();
+    },
 	},
 };
 

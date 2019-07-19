@@ -1,24 +1,30 @@
 import SimpleSchema from 'simpl-schema';
+import { Random } from 'meteor/random';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 const AdjustmentSchema = new SimpleSchema({
-	// The calculation that determines the adjustment
-  roll: {
+  _id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (this.isSet) return;
+      return Random.id();
+    }
+  },
+	// The roll that determines how much to damage the attribute
+  damage: {
     type: String,
     optional: true,
+    defaultValue: '1',
   },
 	// Who this adjustment applies to
 	target: {
 		type: String,
+    defaultValue: 'every',
 		allowedValues: [
-      // the character who took the action
-      'self',
-      // the singular `target` of the action
-      'target',
-      // rolled once for `each` target
-      'each',
-      // rolled once and applied to `every` target
-      'every'
+      'self',   // the character who took the action
+      'each',   // rolled once for `each` target
+      'every',  // rolled once and applied to `every` target
     ],
 	},
 	// The stat this rolls applies to, if damage type is set, this is ignored

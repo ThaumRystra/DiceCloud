@@ -40,7 +40,7 @@
 			:hint="attributeTypeHints[model.type]"
 			:debounce-time="debounceTime"
 		/>
-		<advanced-section>
+		<form-section name="Advanced" standalone>
 			<div class="layout column align-center">
 				<v-switch
 					label="Allow decimal values"
@@ -86,15 +86,16 @@
 					:debounce-time="debounceTime"
 				/>
 			</div>
-		</advanced-section>
+		</form-section>
   </div>
 </template>
 
 <script>
-	import AdvancedSection from '/imports/ui/components/forms/AdvancedSection.vue';
+	import FormSection from '/imports/ui/components/forms/FormSection.vue';
+
 	export default {
 		components: {
-			AdvancedSection,
+			FormSection,
 		},
 		props: {
 			model: {
@@ -149,7 +150,7 @@
 						text: 'Long rest',
 						value: 'longRest',
 					}
-				]
+				],
 			};
 			data.attributeTypeHints = {};
 			data.attributeTypes.forEach(type => {

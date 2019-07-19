@@ -1,16 +1,17 @@
 <template lang="html">
 	<dialog-base :override-back-button="() => $emit('back')">
 		<div slot="toolbar">Add {{propertyName}}</div>
-		<v-card-text>
-			<component
-				v-if="type"
-				:is="type"
-				class="library-node-form"
-				:model="model"
-				:errors="errors"
-				@change="change"
-			/>
-		</v-card-text>
+		<component
+			v-if="type"
+			:is="type"
+			class="library-node-form"
+			:model="model"
+			:errors="errors"
+			@change="change"
+			@push="push"
+			@changeAtIndex="changeAtIndex"
+			@removeAtIndex="removeAtIndex"
+		/>
 		<div
 			slot="actions"
 			class="layout row justify-end"
@@ -53,6 +54,10 @@ export default {
 			let model = this.schema.clean({});
 			model.libraryNodeType = newType;
 			this.model = model;
+		},
+		model(newModel){
+			console.log('model changed');
+			console.log(newModel);
 		},
 	},
 	methods: {

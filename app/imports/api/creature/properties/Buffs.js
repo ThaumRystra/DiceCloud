@@ -43,14 +43,9 @@ let StoredBuffSchema = new SimpleSchema({
 	target: {
 		type: String,
 		allowedValues: [
-      // the character who took the buff
-      'self',
-      // the singular `target` of the buff
-      'target',
-      // rolled once for `each` target
-      'each',
-      // rolled once and applied to `every` target
-      'every'
+      'self',  // the character who took the buff
+      'each',  // rolled once for `each` target
+      'every', // rolled once and applied to `every` target
     ],
 	},
 }).extend(BuffSchema);
