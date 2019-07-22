@@ -28,8 +28,8 @@
 <script>
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import propertyFormIndex from '/imports/ui/creature/properties/propertyFormIndex.js';
-import schemaFormMixin from '/imports/ui/components/forms/schemaFormMixin.js';
+import propertyFormIndex from 'imports/ui/forms/propertyFormIndex.vue';
+import schemaFormMixin from '/imports/ui/forms/components/schemaFormMixin.vue';
 export default {
 	components: {
 		...propertyFormIndex,

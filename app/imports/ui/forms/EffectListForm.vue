@@ -38,7 +38,7 @@
 </template>
 
 <script>
-	import EffectForm from '/imports/ui/creature/properties/effects/EffectForm.vue';
+	import EffectForm from '/imports/ui/forms/EffectForm.vue';
 	import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
 	export default {
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-	import EffectForm from '/imports/ui/creature/properties/effects/EffectForm.vue';
+	import EffectForm from '/imports/ui/forms/EffectForm.vue';
 	import { EffectSchema } from '/imports/api/creature/properties/Effects.js';
 
 	export default {

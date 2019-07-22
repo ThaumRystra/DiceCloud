@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import FormSections from '/imports/ui/components/forms/FormSections.vue';
+import FormSections from '/imports/ui/forms/components/FormSections.vue';
 export default {
 	components: {
 		FormSections,

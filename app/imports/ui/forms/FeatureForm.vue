@@ -1,9 +1,9 @@
 <template lang="html">
-  <div>
+  <div class="feature-form">
   	<text-field
 			label="Name"
-			:value="feature.name"
-			@change="(name, ack) => $emit('update', {name}, ack)"
+			:value="model.name"
+			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
 			:error-messages="errors.name"
 			:debounce-time="debounceTime"
 		/>
@@ -18,9 +18,9 @@
 		/>
 		<text-area
 			label="Description"
-			:value="feature.description"
+			:value="model.description"
 			:error-messages="errors.description"
-			@change="(description, ack) => $emit('update', {description}, ack)"
+			@change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
 			:debounce-time="debounceTime"
 		/>
   </div>
@@ -29,7 +29,7 @@
 <script>
 	export default {
 		props: {
-			feature: {
+			model: {
 				type: Object,
 				default: () => ({}),
 			},
@@ -55,23 +55,27 @@
 		}},
 		computed: {
 			enabledStatus(){
-				if (!this.feature) return;
-				if (this.feature.alwaysEnabled) return 'always';
-				if (this.feature.enabled) return 'enabled';
+				if (!this.model) return;
+				if (this.model.alwaysEnabled) return 'always';
+				if (this.model.enabled) return 'enabled';
 				return 'disabled';
 			},
 		},
 		methods: {
 			changeEnabled(value, ack){
-				if (value === 'always'){
-					this.$emit('update', {enabled: true, alwaysEnabled: true}, ack);
-				} else if (value === 'enabled'){
-					this.$emit('update', {enabled: true, alwaysEnabled: false}, ack);
-				} else if (value === 'disabled'){
-					this.$emit('update', {enabled: false, alwaysEnabled: false}, ack);
+				let change = ({enabled, alwaysEnabled}) => {
+					this.$emit('change', {path: ['enabled'], value: enabled, ack});
+					this.$emit('change', {path: ['alwaysEnabled'], value: alwaysEnabled, ack});
 				}
-			}
-		}
+				if (value === 'always'){
+					change({enabled: true, alwaysEnabled: true});
+				} else if (value === 'enabled'){
+					change({enabled: true, alwaysEnabled: false});
+				} else if (value === 'disabled'){
+					change({enabled: false, alwaysEnabled: false});
+				}
+			},
+		},
 	};
 </script>
 

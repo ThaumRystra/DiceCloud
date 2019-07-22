@@ -91,7 +91,7 @@
 </template>
 
 <script>
-	import FormSection from '/imports/ui/components/forms/FormSection.vue';
+	import FormSection from '/imports/ui/forms/components/FormSection.vue';
 
 	export default {
 		components: {
