@@ -53,6 +53,7 @@ let StoredBuffSchema = new SimpleSchema({
       'each',  // rolled once for `each` target
       'every', // rolled once and applied to `every` target
     ],
+		defaultValue: 'every',
 	},
 }).extend(BuffSchema);
 
