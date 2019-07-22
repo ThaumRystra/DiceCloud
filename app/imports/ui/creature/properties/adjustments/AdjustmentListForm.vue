@@ -10,9 +10,13 @@
 					class="mt-4"
 					:model="adjustment"
 					:parent-target="parentTarget"
-					@change="(modifier, ack) => $emit('changeAtIndex', i, modifier, ack)"
-					@remove="(ack) => $emit('removeAtIndex', i, ack)"
+					@change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
 				/>
+				<div>
+					<v-btn outline icon large class="ma-3" @click="$emit('pull', {path: [i]})">
+						<v-icon>delete</v-icon>
+					</v-btn>
+				</div>
 			</div>
 		</v-slide-x-transition>
 		<div class="layout row justify-end">
@@ -46,7 +50,11 @@
 			},
 			addAdjustment(){
 				this.addAdjustmentLoading = true;
-				this.$emit('push', AdjustmentSchema.clean({}), this.acknowledgeAddAdjustment);
+				this.$emit('push', {
+					path: [],
+					value: AdjustmentSchema.clean({}),
+					ack: this.acknowledgeAddAdjustment,
+				});
 			},
 		},
 		props: {

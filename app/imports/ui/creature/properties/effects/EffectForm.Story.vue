@@ -2,13 +2,13 @@
 	<v-card-text>
 		<template v-for="(effect, index) in effects">
 			<v-divider v-if="index != 0"/>
-			<effect-edit :key="index" :effect="effect" :stats="stats" @change="e => change(index, e)"/>
+			<effect-form :key="index" :effect="effect" :stats="stats" @change="e => change(index, e)"/>
 		</template>
 	</v-card-text>
 </template>
 
 <script>
-import EffectEdit from '/imports/ui/creature/properties/effects/EffectEdit.vue';
+import EffectForm from '/imports/ui/creature/properties/effects/EffectForm.vue';
 export default {
 	data(){ return {
 		effects: [
@@ -34,7 +34,7 @@ export default {
 		],
 	}},
 	components: {
-		EffectEdit,
+		EffectForm,
 	},
 	methods: {
 		change(index, e){

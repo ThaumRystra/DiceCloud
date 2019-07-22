@@ -45,7 +45,7 @@
 	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
-	import EffectEdit from '/imports/ui/creature/properties/effects/EffectEdit.Story.vue';
+	import EffectForm from '/imports/ui/creature/properties/effects/EffectForm.Story.vue';
 	import EffectEditExpansionList from '/imports/ui/creature/properties/effects/EffectEditExpansionList.Story.vue';
 	import FeatureCard from '/imports/ui/creature/properties/features/FeatureCard.Story.vue';
 	import HealthBar from '/imports/ui/creature/properties/attributes/HealthBar.Story.vue';
@@ -66,7 +66,7 @@
 			ColorPicker,
 			ColumnLayout,
 			DialogStack,
-			EffectEdit,
+			EffectForm,
 			EffectEditExpansionList,
 			FeatureCard,
 			HealthBar,

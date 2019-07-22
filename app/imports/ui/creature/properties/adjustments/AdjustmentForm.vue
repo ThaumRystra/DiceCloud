@@ -1,43 +1,36 @@
 <template lang="html">
-	<div class="layout row align-center">
-		<div style="flex-grow: 1;">
-			<div class="layout row wrap">
-				<text-field
-					label="Attribute"
-					hint="The attribute this adjustment will apply to"
-					style="flex-basis: 300px;"
-					:value="model.stat"
-					@change="(stat, ack) => $emit('change', {stat}, ack)"
-					:error-messages="errors.stat"
-					:debounce-time="debounceTime"
-				/>
-				<text-field
-					label="Damage"
-					hint="The amount of damage to apply to the selected stat, can be a calculation or roll"
-					style="flex-basis: 300px;"
-					:value="model.damage"
-					@change="(damage, ack) => $emit('change', {damage}, ack)"
-					:error-messages="errors.damage"
-					:debounce-time="debounceTime"
-				/>
-			</div>
-			<smart-select
-				v-if="parentTarget !== 'self'"
-				label="Target"
-				:hint="targetOptionHint"
-				:items="targetOptions"
-				:value="model.target"
-				:error-messages="errors.target"
-				:menu-props="{auto: true, lazy: true}"
-				@change="(target, ack) => $emit('change', {target}, ack)"
+	<div>
+		<div class="layout row">
+			<text-field
+				label="Attribute"
+				hint="The attribute this adjustment will apply to"
+				style="flex-basis: 300px;"
+				:value="model.stat"
+				@change="(value, ack) => $emit('change', {path: ['stat'], value, ack})"
+				:error-messages="errors.stat"
+				:debounce-time="debounceTime"
+			/>
+			<text-field
+				label="Damage"
+				hint="The amount of damage to apply to the selected stat, can be a calculation or roll"
+				style="flex-basis: 300px;"
+				:value="model.damage"
+				@change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
+				:error-messages="errors.damage"
 				:debounce-time="debounceTime"
 			/>
 		</div>
-		<div>
-			<v-btn outline icon large class="ma-3" @click="$emit('remove')">
-				<v-icon>delete</v-icon>
-			</v-btn>
-		</div>
+		<smart-select
+			v-if="parentTarget !== 'self'"
+			label="Target"
+			:hint="targetOptionHint"
+			:items="targetOptions"
+			:value="model.target"
+			:error-messages="errors.target"
+			:menu-props="{auto: true, lazy: true}"
+			@change="(value, ack) => $emit('change', {path: ['target'], value, ack})"
+			:debounce-time="debounceTime"
+		/>
 	</div>
 </template>
 

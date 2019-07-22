@@ -7,8 +7,7 @@ const AdjustmentSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     autoValue(){
-      if (this.isSet) return;
-      return Random.id();
+      if (!this.isSet) return Random.id();
     }
   },
 	// The roll that determines how much to damage the attribute

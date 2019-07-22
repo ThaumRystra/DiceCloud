@@ -3,7 +3,7 @@
 		<text-field
 			label="Name"
 			:value="model.name"
-			@change="(name, ack) => $emit('change', {name}, ack)"
+			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
 			:error-messages="errors.name"
 			:debounce-time="debounceTime"
 		/>
@@ -13,7 +13,7 @@
 			:value="model.type"
 			:error-messages="errors.type"
 			:menu-props="{auto: true, lazy: true}"
-			@change="(type, ack) => $emit('change', {type}, ack)"
+			@change="(value, ack) => $emit('change', {path: ['type'], value, ack})"
 			:hint="actionTypeHints[model.type]"
 			:debounce-time="debounceTime"
 		/>
@@ -26,7 +26,7 @@
 					:value="model.target"
 					:error-messages="errors.target"
 					:menu-props="{auto: true, lazy: true}"
-					@change="(target, ack) => $emit('change', {target}, ack)"
+					@change="(value, ack) => $emit('change', {path: ['target'], value, ack})"
 					:debounce-time="debounceTime"
 				/>
 				<div class="layout row wrap">
@@ -35,7 +35,7 @@
 						hint="How many times this action can be used before needing to be reset"
 						style="flex-basis: 300px;"
 						:value="model.uses"
-						@change="(uses, ack) => $emit('change', {uses}, ack)"
+						@change="(value, ack) => $emit('change', {path: ['uses'], value, ack})"
 						:error-messages="errors.uses"
 						:debounce-time="debounceTime"
 					/>
@@ -45,7 +45,7 @@
 						hint="How many times this action has already been used"
 						style="flex-basis: 300px;"
 						:value="model.usesUsed"
-						@change="(uses, ack) => $emit('change', {uses}, ack)"
+						@change="(value, ack) => $emit('change', {path: ['usesUsed'], value, ack})"
 						:error-messages="errors.uses"
 						:debounce-time="debounceTime"
 					/>
@@ -58,11 +58,11 @@
 					:value="model.reset"
 					:error-messages="errors.reset"
 					:menu-props="{auto: true, lazy: true}"
-					@change="(reset, ack) => $emit('change', {reset}, ack)"
+					@change="(value, ack) => $emit('change', {path: ['reset'], value, ack})"
 					:debounce-time="debounceTime"
 				/>
 			</form-section>
-			<form-section name="Adjustments">
+			<form-section name="Damage and Adjustments">
 				<div class="caption">
 					Adjustments can be used to automatically spend resources or deal
 					damage when taking an action.
@@ -71,9 +71,22 @@
 				<adjustment-list-form
 					:model="model.adjustments"
 					:parent-target="model.target"
-					@push="(adjustments, ack) => $emit('push', {adjustments}, ack)"
-					@changeAtIndex="(index, modifier, ack) => $emit('changeAtIndex', 'adjustments', index, modifier, ack)"
-					@removeAtIndex="(index, ack) => $emit('removeAtIndex', 'adjustments', index, ack)"
+					@change="({path, value, ack}) => $emit('change', {path: ['adjustments', ...path], value, ack})"
+					@push="({path, value, ack}) => $emit('push', {path: ['adjustments', ...path], value, ack})"
+					@pull="({path, ack}) => $emit('pull', {path: ['adjustments', ...path], ack})"
+				/>
+			</form-section>
+			<form-section name="Buffs">
+				<div class="caption">
+					Buffs apply temporary effects to characters when taking an action.
+				</div>
+				<buff-list-form
+					:model="model.buffs"
+					:parent-target="model.target"
+					:stored="stored"
+					@change="({path, value, ack}) => $emit('change', {path: ['buffs', ...path], value, ack})"
+					@push="({path, value, ack}) => $emit('push', {path: ['buffs', ...path], value, ack})"
+					@pull="({path, ack}) => $emit('pull', {path: ['buffs', ...path], ack})"
 				/>
 			</form-section>
 		</form-sections>
@@ -83,14 +96,19 @@
 <script>
 	import FormSection, {FormSections} from '/imports/ui/components/forms/FormSection.vue';
 	import AdjustmentListForm from '/imports/ui/creature/properties/adjustments/AdjustmentListForm.vue';
+	import BuffListForm from '/imports/ui/creature/properties/buffs/BuffListForm.vue';
 
 	export default {
 		components: {
 			FormSection,
 			FormSections,
 			AdjustmentListForm,
+			BuffListForm,
 		},
 		props: {
+			stored: {
+				type: Boolean,
+			},
 			model: {
 				type: Object,
 				default: () => ({}),

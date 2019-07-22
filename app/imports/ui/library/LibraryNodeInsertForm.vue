@@ -3,14 +3,14 @@
 		<div slot="toolbar">Add {{propertyName}}</div>
 		<component
 			v-if="type"
+			stored
 			:is="type"
 			class="library-node-form"
 			:model="model"
 			:errors="errors"
 			@change="change"
 			@push="push"
-			@changeAtIndex="changeAtIndex"
-			@removeAtIndex="removeAtIndex"
+			@pull="pull"
 		/>
 		<div
 			slot="actions"

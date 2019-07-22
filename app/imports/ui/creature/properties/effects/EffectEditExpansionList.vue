@@ -14,7 +14,7 @@
 				:class="{'primary--text': expanded === index}"
 				v-bind="effect"
 			/>
-			<effect-edit
+			<effect-form
 				:effect="effect"
 				:stats="stats"
 				@change="({set, ack}) => $emit('change', {set, ack, effectId: effect._id, index})"
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-	import EffectEdit from '/imports/ui/creature/properties/effects/EffectEdit.vue';
+	import EffectForm from '/imports/ui/creature/properties/effects/EffectForm.vue';
 	import EffectListTile from '/imports/ui/creature/properties/effects/EffectListTile.vue';
 	export default {
 		props: {
@@ -32,7 +32,7 @@
 			stats: Array,
 		},
 		components: {
-			EffectEdit,
+			EffectForm,
 			EffectListTile,
 		},
 		data(){ return {

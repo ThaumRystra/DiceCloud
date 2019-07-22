@@ -6,7 +6,7 @@
 				type="number"
 				class="base-value-field text-xs-center large-format no-flex"
 				:value="model.baseValue"
-				@change="(baseValue, ack) => $emit('change', {baseValue}, ack)"
+				@change="(value, ack) => $emit('change', {path: ['baseValue'], value, ack})"
 				hint="This is the value of the attribute before effects are applied"
 				:error-messages="errors.baseValue"
 				:debounce-time="debounceTime"
@@ -16,7 +16,7 @@
 			<text-field
 				label="Name"
 				:value="model.name"
-				@change="(name, ack) => $emit('change', {name}, ack)"
+				@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
 				:error-messages="errors.name"
 				:debounce-time="debounceTime"
 			/>
@@ -24,7 +24,7 @@
 				label="Variable name"
 				:value="model.variableName"
 				style="flex-basis: 300px;"
-				@change="(variableName, ack) => $emit('change', {variableName}, ack)"
+				@change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
 				hint="Use this name in formulae to reference this attribute"
 				:error-messages="errors.variableName"
 				:debounce-time="debounceTime"
@@ -36,7 +36,7 @@
 			:value="model.type"
 			:error-messages="errors.type"
 			:menu-props="{auto: true, lazy: true}"
-			@change="(type, ack) => $emit('change', {type}, ack)"
+			@change="(value, ack) => $emit('change', {path: ['type'], value, ack})"
 			:hint="attributeTypeHints[model.type]"
 			:debounce-time="debounceTime"
 		/>
@@ -47,7 +47,7 @@
 					class="no-flex"
 					:value="model.decimal"
 					:error-messages="errors.decimal"
-					@change="e => $emit('change', {decimal: !!e})"
+					@change="e => $emit('change', $emit('change', {path: ['decimal'], value: !!e, ack}))"
 				/>
 				<div class="layout row justify-center" style="align-self: stretch;">
 					<text-field
@@ -57,7 +57,7 @@
 						style="max-width: 300px;"
 						hint="The attribute's final value is reduced by this amount"
 						:value="model.damage"
-						@change="(damage, ack) => $emit('change', {damage}, ack)"
+						@change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
 						:error-messages="errors.adjustment"
 						:debounce-time="debounceTime"
 					/>
@@ -72,7 +72,7 @@
 					:value="model.reset"
 					:error-messages="errors.reset"
 					:menu-props="{auto: true, lazy: true}"
-					@change="(reset, ack) => $emit('change', {reset}, ack)"
+					@change="(value, ack) => $emit('change', {path: ['reset'], value, ack})"
 					:debounce-time="debounceTime"
 				/>
 				<text-field
@@ -81,7 +81,7 @@
 					style="flex-basis: 400px;"
 					:value="model.resetMultiplier"
 					:error-messages="errors.resetMultiplier"
-					@change="(resetMultiplier, ack) => $emit('change', {resetMultiplier}, ack)"
+					@change="(value, ack) => $emit('change', {path: ['resetMultiplier'], value, ack})"
 					hint="Some attributes, like hit dice, only reset by half their total on a long rest"
 					:debounce-time="debounceTime"
 				/>

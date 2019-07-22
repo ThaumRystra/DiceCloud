@@ -14,6 +14,13 @@ import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js
 let Buffs = new Mongo.Collection('buffs');
 
 let BuffSchema = new SimpleSchema({
+	_id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
+  },
 	name: {
 		type: String,
 		optional: true,
@@ -23,9 +30,8 @@ let BuffSchema = new SimpleSchema({
 		optional: true,
 	},
 	duration: {
-		type: SimpleSchema.Integer,
+		type: String,
 		optional: true,
-		min: 0,
 	},
 });
 

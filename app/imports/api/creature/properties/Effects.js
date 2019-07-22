@@ -18,6 +18,13 @@ let Effects = new Mongo.Collection('effects');
  * that modify their final value or presentation in some way
  */
 let EffectSchema = schema({
+	_id: {
+		type: String,
+		regEx: SimpleSchema.RegEx.Id,
+		autoValue(){
+			if (!this.isSet) return Random.id();
+		}
+	},
 	name: {
 		type: String,
 		optional: true,

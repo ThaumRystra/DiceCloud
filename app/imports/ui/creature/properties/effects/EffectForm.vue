@@ -1,57 +1,49 @@
 <template lang="html">
-	<v-layout row wrap class="effect-edit py-4 px-2">
-
-		<!-- Operation -->
-		<v-flex class="ma-1">
-			<smart-select
-				label="Operation"
-				append-icon="arrow_drop_down"
-				:menu-props="{transition: 'slide-y-transition', lazy: true}"
-				:items="operations"
-				:value="this.effect.operation"
-				@change="(operation, ack) => $emit('change', {set: {operation}, ack})"
-			>
+	<div class="layout row wrap justify-start effect-form">
+		<smart-select
+			label="Operation"
+			append-icon="arrow_drop_down"
+			class="mx-2"
+			:menu-props="{transition: 'slide-y-transition', lazy: true}"
+			:items="operations"
+			:value="model.operation"
+			@change="(value, ack) => $emit('change', {path: ['operation'], value, ack})"
+		>
+			<v-icon
+				class="icon"
+				slot="prepend"
+				:class="iconClass"
+			>{{displayedIcon}}</v-icon>
+			<template slot="item" slot-scope="item">
 				<v-icon
-					class="icon"
-					slot="prepend"
-					:class="iconClass"
-				>{{displayedIcon}}</v-icon>
-				<template slot="item" slot-scope="item">
-					<v-icon
-						class="icon mr-2"
-					>{{getEffectIcon(item.item.value, 1)}}</v-icon>
-					{{item.item.text}}
-				</template>
-			</smart-select>
-		</v-flex>
+					class="icon mr-2"
+				>{{getEffectIcon(item.item.value, 1)}}</v-icon>
+				{{item.item.text}}
+			</template>
+		</smart-select>
 
-		<!-- Value -->
-		<v-flex class="ma-1">
-			<text-field
-				label="Value"
-				:persistent-hint="needsValue"
-				:value="needsValue ? (effect.calculation) : ' '"
-				:disabled="!needsValue"
-				:hint="!isFinite(effect.calculation) && effect.result ? effect.result + '' : '' "
-				@change="(calculation, ack) => $emit('change', {set: {calculation}, ack})"
-			/>
-		</v-flex>
+		<text-field
+			label="Value"
+			class="mr-2"
+			:persistent-hint="needsValue"
+			:value="needsValue ? (model.calculation) : ' '"
+			:disabled="!needsValue"
+			:hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
+			@change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
+		/>
 
-		<!-- Stat -->
-		<v-flex class="ma-1">
-			<v-autocomplete
-				label="Stat"
-				append-icon="arrow_drop_down"
-				item-text="name"
-				item-value="variableName"
-				:menu-props="{transition: 'slide-y-transition', lazy: true}"
-				:value="effect.stat"
-				:items="stats"
-				@input="stat => $emit('change', {set: {stat}, ack: () => {} })"
-			/>
-		</v-flex>
-
-	</v-layout>
+		<text-field
+			label="Stat"
+			class="mr-2"
+			append-icon="arrow_drop_down"
+			item-text="name"
+			item-value="variableName"
+			:menu-props="{transition: 'slide-y-transition', lazy: true}"
+			:value="model.stat"
+			:items="stats"
+			@change="(value, ack) => $emit('change', {path: ['stat'], value, ack})"
+		/>
+	</div>
 </template>
 
 <script>
@@ -60,7 +52,7 @@
 	const ICON_SPIN_DURATION = 300;
 	export default {
 		props: {
-			effect: {
+			model: {
 				type: Object,
 				default: () => ({}),
 			},
@@ -86,7 +78,7 @@
 		}},
 		computed: {
 			needsValue(){
-				switch(this.effect.operation) {
+				switch(this.model.operation) {
 					case 'base': return true;
 					case 'add': return true;
 					case 'mul': return true;
@@ -104,7 +96,7 @@
 			getEffectIcon,
 		},
 		watch: {
-			'effect.operation': {
+			'model.operation': {
 				immediate: true,
 				handler(newValue, oldValue, e){
 					let newIcon = getEffectIcon(newValue, 1);
@@ -149,7 +141,7 @@
 	.hidden {
 		visibility: hidden;
 	}
-	.flex {
-		width: 220px;
+	.effect-form > div {
+		flex-basis: 220px;
 	}
 </style>

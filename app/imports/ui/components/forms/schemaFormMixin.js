@@ -2,6 +2,18 @@
  * Forms that take in a schema and a model of the current data, manages smart
  * inputs, and sends update events when valid data model changes must occur
  */
+import { get, toPath } from 'lodash';
+function resolvePath(model, path){
+  let arrayPath = toPath(path);
+  if (arrayPath.length === 1){
+    return { object: model, key: arrayPath[0] };
+  }
+  let objectPath = arrayPath.slice(0, -1);
+  let key = arrayPath.slice(-1);
+  let object = get(model, objectPath);
+  return {object, key};
+};
+
 const schemaFormMixin = {
 	data(){ return {
 		valid: true,
@@ -26,26 +38,19 @@ const schemaFormMixin = {
 		},
 	},
 	methods: {
-		change(modifier, ack){
-			for (let key in modifier){
-				this.$set(this.model, key, modifier[key])
-			}
+    // Sets the value at the given path
+		change({path, value, ack}){
+      let {object, key} = resolvePath(this.model, path);
+			this.$set(object, key, value);
 			if (ack) ack();
 		},
-    push(modifier, ack){
-      for (let key in modifier){
-        this.model[key].push(modifier[key]);
-			}
+    push({path, value, ack}){
+      get(this.model, path).push(value);
 			if (ack) ack();
     },
-    changeAtIndex(field, index, modifier, ack){
-      for (let key in modifier){
-				this.$set(this.model[field][index], key, modifier[key])
-			}
-      if (ack) ack();
-    },
-    removeAtIndex(field, index, ack){
-      this.model[field].splice(index, 1);
+    pull({path, ack}){
+      let {object, key} = resolvePath(this.model, path);
+      object.splice(key, 1);
       if (ack) ack();
     },
 	},
