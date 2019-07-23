@@ -9,6 +9,7 @@ import FeatureForm from '/imports/ui/forms/FeatureForm.vue';
 import FolderForm from '/imports/ui/forms/FolderForm.vue';
 import NoteForm from '/imports/ui/forms/NoteForm.vue';
 import ProficiencyForm from '/imports/ui/forms/ProficiencyForm.vue';
+import RollForm from '/imports/ui/forms/RollForm.vue';
 
 export default {
   action: ActionForm,
@@ -22,4 +23,5 @@ export default {
   folder: FolderForm,
   note: NoteForm,
   proficiency: ProficiencyForm,
+  roll: RollForm,
 };

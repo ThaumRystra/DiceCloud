@@ -51,10 +51,10 @@ let RollChildrenSchema = new SimpleSchema({
  *  child rolls are applied
  */
 let RollSchema = new SimpleSchema({
-  // Apply this only if the parent roll missed
-  // i.e. roll failed or target suceeded on their save
-  onMiss: {
-    type: Boolean,
+  // The roll made against the target value. A calculation that resolves to a
+  // number or a roll. If it is a number, it will be added to a d20 roll
+  roll: {
+    type: String,
     optional: true,
   },
   // The target number to meet or exceed
@@ -62,13 +62,20 @@ let RollSchema = new SimpleSchema({
 		type: String,
     optional: true,
 	},
-  // Swap who wins ties
-  invertTies: {
+  // Is this roll a saving throw
+  rollType: {
+    type: String,
+    defaultValue: 'roll',
+    allowedValues: ['roll', 'savingThrow'],
+  },
+  // Apply this only if the parent roll missed
+  // i.e. roll failed or target suceeded on their save
+  onMiss: {
     type: Boolean,
     optional: true,
   },
-  // Is this roll a saving throw
-  isSavingThrow: {
+  // Swap who wins ties
+  invertTies: {
     type: Boolean,
     optional: true,
   },
@@ -81,15 +88,15 @@ let RollSchema = new SimpleSchema({
   'tags.$': {
     type: String,
   },
-  // The roll made against the target value. A calculation that resolves to a
-  // number or a roll. If it is a number, it will be added to a d20 roll
-  roll: {
-    type: String,
-    optional: true,
-  },
   // The buffs and adjustments to apply based on the outcome of the roll
-  hit: RollChildrenSchema,
-  miss: RollChildrenSchema,
+  hit: {
+    type: RollChildrenSchema,
+    defaultValue: {},
+  },
+  miss: {
+    type: RollChildrenSchema,
+    defaultValue: {},
+  },
 });
 
 Rolls.attachSchema(RollSchema);

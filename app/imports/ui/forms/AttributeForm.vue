@@ -47,7 +47,7 @@
 					class="no-flex"
 					:value="model.decimal"
 					:error-messages="errors.decimal"
-					@change="e => $emit('change', $emit('change', {path: ['decimal'], value: !!e, ack}))"
+					@change="e => $emit('change', {path: ['decimal'], value: !!e})"
 				/>
 				<div class="layout row justify-center" style="align-self: stretch;">
 					<text-field
@@ -58,7 +58,7 @@
 						hint="The attribute's final value is reduced by this amount"
 						:value="model.damage"
 						@change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
-						:error-messages="errors.adjustment"
+						:error-messages="errors.damage"
 						:debounce-time="debounceTime"
 					/>
 				</div>
