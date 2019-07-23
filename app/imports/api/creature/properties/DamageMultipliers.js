@@ -27,12 +27,13 @@ let DamageMultiplierSchema = schema({
   damageType: {
     type: String,
 		allowedValues: DAMAGE_TYPES,
+    defaultValue: 'bludgeoning',
   },
 	// The value of the damage multiplier
 	value: {
     type: Number,
-		defaultValue: 1,
-		allowedValues: [0, 0.5, 1, 2],
+		defaultValue: 0.5,
+		allowedValues: [0, 0.5, 2],
   },
 });
 

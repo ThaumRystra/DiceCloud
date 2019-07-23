@@ -15,7 +15,7 @@ import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js
 let Experiences = new Mongo.Collection("experience");
 
 let ExperienceSchema = schema({
-	name: {
+	title: {
 		type: String,
 		optional: true,
 	},
@@ -33,11 +33,9 @@ let ExperienceSchema = schema({
 	date: {
 		type: Date,
 		autoValue: function() {
-			// If the date isn't set, set it to now on insert
-			if (this.isInsert && !this.isSet) {
+			// If the date isn't set, set it to now
+			if (!this.isSet) {
 				return new Date();
-			} else if (this.isUpsert && !this.isSet) {
-				return {$setOnInsert: new Date()};
 			}
 		},
 	},

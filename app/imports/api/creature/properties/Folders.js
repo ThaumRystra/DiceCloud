@@ -17,11 +17,6 @@ let Folders = new Mongo.Collection('folders');
 let FolderSchema = schema({
   name: {
     type: String,
-    optional: true,
-  },
-  enabled: {
-    type: Boolean,
-    defaultValue: true,
   },
 });
 

@@ -18,10 +18,6 @@ let ClassLevelSchema = schema({
 		type: String,
 		optional: true,
 	},
-	enabled: {
-    type: Boolean,
-    defaultValue: true,
-  },
 	// The name of this class level's variable
 	variableName: {
     type: String,
@@ -31,17 +27,11 @@ let ClassLevelSchema = schema({
 	baseClass: {
 		type: String,
 		regEx: VARIABLE_NAME_REGEX,
-	},
-	// The name of the class level that needs to preceed this class level
-	// So a totemWarrior level 5 must be preceded by a totemWarrior level 4
-	// If it's not set, any level below with the same baseClass is matched
-	previousClassLevel: {
-		type: String,
-		regEx: VARIABLE_NAME_REGEX,
 		optional: true,
 	},
 	level: {
     type: SimpleSchema.Integer,
+		defaultValue: 1,
   },
 });
 
