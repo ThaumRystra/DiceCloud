@@ -45,6 +45,7 @@ let SkillSchema = schema({
       "language",
 			"utility", //not displayed anywhere
     ],
+    defaultValue: 'skill',
   },
 	// If the baseValue is higher than the computed value, it will be used as `value`
 	baseValue: {

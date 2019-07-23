@@ -35,10 +35,6 @@
 		<text-field
 			label="Stat"
 			class="mr-2"
-			append-icon="arrow_drop_down"
-			item-text="name"
-			item-value="variableName"
-			:menu-props="{transition: 'slide-y-transition', lazy: true}"
 			:value="model.stat"
 			:items="stats"
 			@change="(value, ack) => $emit('change', {path: ['stat'], value, ack})"

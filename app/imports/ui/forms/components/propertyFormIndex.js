@@ -10,6 +10,7 @@ import FolderForm from '/imports/ui/forms/FolderForm.vue';
 import NoteForm from '/imports/ui/forms/NoteForm.vue';
 import ProficiencyForm from '/imports/ui/forms/ProficiencyForm.vue';
 import RollForm from '/imports/ui/forms/RollForm.vue';
+import SkillForm from '/imports/ui/forms/SkillForm.vue';
 
 export default {
   action: ActionForm,
@@ -24,4 +25,5 @@ export default {
   note: NoteForm,
   proficiency: ProficiencyForm,
   roll: RollForm,
+  skill: SkillForm,
 };
