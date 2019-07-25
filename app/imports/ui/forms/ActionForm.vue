@@ -19,6 +19,15 @@
 		/>
 		<form-sections>
 			<form-section name="Advanced">
+				<v-combobox
+			    label="Tags"
+			    multiple
+					chips
+					deletable-chips
+					box
+					:value="model.tags"
+					@change="(value) => $emit('change', {path: ['tags'], value})"
+			  />
 				<smart-select
 					label="Target"
 					style="flex-basis: 300px;"

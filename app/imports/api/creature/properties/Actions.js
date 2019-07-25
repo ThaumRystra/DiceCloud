@@ -47,6 +47,15 @@ let ActionSchema = schema({
 			'multipleTargets',
     ],
 	},
+	// Effects can apply to this tag specifically
+  // Ranged spell attack, Ranged weapon attack, etc.
+  tags: {
+    type: Array,
+    defaultValue: [],
+  },
+  'tags.$': {
+    type: String,
+  },
 	// Adjustments applied when taking this action
 	// Ideally, if these adjustments can't be made, the action should be unusable
 	adjustments: {
