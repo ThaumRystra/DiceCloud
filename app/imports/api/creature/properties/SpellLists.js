@@ -10,6 +10,7 @@ import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
 import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 let SpellLists = new Mongo.Collection("spellLists");
 
@@ -18,17 +19,14 @@ let SpellListSchema = schema({
 		type: String,
 		optional: true,
 	},
+	// The technical, lowercase, single-word name used in formulae
+  variableName: {
+    type: String,
+		regEx: VARIABLE_NAME_REGEX,
+    min: 3,
+    defaultValue: 'newAttribute',
+  },
 	description: {
-		type: String,
-		optional: true,
-	},
-	// Calculation of save DC used for all spells in this list
-	saveDC: {
-		type: String,
-		optional: true,
-	},
-	// Calculation of attack bonus used for all spells in this list
-	attackBonus: {
 		type: String,
 		optional: true,
 	},

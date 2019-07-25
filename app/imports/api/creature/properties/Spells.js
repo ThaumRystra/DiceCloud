@@ -35,11 +35,13 @@ let SpellSchema = schema({
 		type: Boolean,
 		defaultValue: false,
 	},
-	// Spells are enabled when they are prepared, so that unprepared spells don't
-	// show their actions
-	enabled: {
-    type: Boolean,
-    defaultValue: true,
+	// Spell lists that this spell appears on
+  spellLists: {
+    type: Array,
+    defaultValue: [],
+  },
+  'spellLists.$': {
+    type: String,
   },
 	description: {
 		type: String,
