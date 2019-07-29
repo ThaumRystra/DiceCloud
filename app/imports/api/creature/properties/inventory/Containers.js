@@ -13,9 +13,14 @@ let ContainerSchema = schema({
 		optional: true,
 		trim: false
 	},
-	isCarried: {
+	carried: {
 		type: Boolean,
 		defaultValue: true,
+		optional: true,
+	},
+	contentsWeightless: {
+		type: Boolean,
+		optional: true,
 	},
 	weight: {
 		type: Number,
