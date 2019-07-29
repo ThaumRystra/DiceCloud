@@ -38,13 +38,13 @@
 			<form-section name="Advanced">
 				<v-switch
 					label="Only roll if the parent roll misses"
-					:value="model.onMiss"
+					:input-value="model.onMiss"
 					:error-messages="errors.onMiss"
 					@change="e => $emit('change', {path: ['onMiss'], value: !!e})"
 				/>
 				<v-switch
 					label="Swap who wins ties"
-					:value="model.invertTies"
+					:input-value="model.invertTies"
 					:error-messages="errors.invertTies"
 					@change="e => $emit('change', {path: ['invertTies'], value: !!e})"
 				/>

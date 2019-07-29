@@ -12,7 +12,7 @@
 		<v-navigation-drawer right app v-model="sidebar">
 			<v-toolbar color="secondary" dark>
 				Components
-				<v-switch :value="darkMode" @change="setDarkMode" label="Dark mode"/>
+				<v-switch :input-value="darkMode" @change="setDarkMode" label="Dark mode"/>
 			</v-toolbar>
 			<v-list>
 	      <v-list-tile

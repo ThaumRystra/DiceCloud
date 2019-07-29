@@ -44,7 +44,7 @@
 			label="Always prepared"
 			style="width: 200px; flex-grow: 0;"
 			class="ml-2"
-			:value="model.alwaysPrepared"
+			:input-value="model.alwaysPrepared"
 			:error-messages="errors.alwaysPrepared"
 			@change="e => $emit('change', {path: ['alwaysPrepared'], value: !!e})"
 			/>

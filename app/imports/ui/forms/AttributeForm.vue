@@ -45,7 +45,7 @@
 				<v-switch
 					label="Allow decimal values"
 					class="no-flex"
-					:value="model.decimal"
+					:input-value="model.decimal"
 					:error-messages="errors.decimal"
 					@change="e => $emit('change', {path: ['decimal'], value: !!e})"
 				/>
