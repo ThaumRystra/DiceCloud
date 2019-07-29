@@ -11,6 +11,8 @@ import NoteForm from '/imports/ui/forms/NoteForm.vue';
 import ProficiencyForm from '/imports/ui/forms/ProficiencyForm.vue';
 import RollForm from '/imports/ui/forms/RollForm.vue';
 import SkillForm from '/imports/ui/forms/SkillForm.vue';
+import SpellListForm from '/imports/ui/forms/SpellListForm.vue';
+import SpellForm from '/imports/ui/forms/SpellForm.vue';
 
 export default {
   action: ActionForm,
@@ -26,4 +28,6 @@ export default {
   proficiency: ProficiencyForm,
   roll: RollForm,
   skill: SkillForm,
+  spellList: SpellListForm,
+  spell: SpellForm,
 };

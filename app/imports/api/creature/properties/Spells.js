@@ -12,14 +12,14 @@ import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propag
 import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
 
 const magicSchools = [
-	'Abjuration',
-	'Conjuration',
-	'Divination',
-	'Enchantment',
-	'Evocation',
-	'Illusion',
-	'Necromancy',
-	'Transmutation',
+	'abjuration',
+	'conjuration',
+	'divination',
+	'enchantment',
+	'evocation',
+	'illusion',
+	'necromancy',
+	'transmutation',
 ];
 
 let Spells = new Mongo.Collection('spells');
@@ -33,7 +33,7 @@ let SpellSchema = schema({
 	// prepared in a spell list, and enabled should be true
 	alwaysPrepared: {
 		type: Boolean,
-		defaultValue: false,
+		optional: true,
 	},
 	// Spell lists that this spell appears on
   spellLists: {
@@ -63,31 +63,33 @@ let SpellSchema = schema({
 	},
 	verbal: {
 		type: Boolean,
-		defaultValue: false
+		optional: true,
 	},
 	somatic: {
 		type: Boolean,
-		defaultValue: false
+		optional: true,
 	},
 	concentration: {
 		type: Boolean,
-		defaultValue: false
+		optional: true,
 	},
 	material: {
 		type: String,
-		optional: true
+		optional: true,
 	},
 	ritual: {
 		type: Boolean,
-		defaultValue: false,
+		optional: true,
 	},
 	level: {
 		type: SimpleSchema.Integer,
 		defaultValue: 1,
+		max: 9,
+		min: 0,
 	},
 	school: {
 		type: String,
-		defaultValue: 'Abjuration',
+		defaultValue: 'abjuration',
 		allowedValues: magicSchools,
 	},
 });

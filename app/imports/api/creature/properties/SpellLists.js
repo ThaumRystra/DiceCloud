@@ -24,7 +24,6 @@ let SpellListSchema = schema({
     type: String,
 		regEx: VARIABLE_NAME_REGEX,
     min: 3,
-    defaultValue: 'newAttribute',
   },
 	description: {
 		type: String,
@@ -72,3 +71,4 @@ const updateSpellList = new ValidatedMethod({
 });
 
 export default SpellLists;
+export { SpellListSchema }
