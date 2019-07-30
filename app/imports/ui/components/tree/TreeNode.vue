@@ -5,18 +5,24 @@
 				small icon
 				:class="showExpanded ? 'rotate-90' : null"
 				@click="expanded = !expanded"
-				:disabled="!hasChildren && !showEmpty"
+				:disabled="!hasChildren && !organize"
 			>
-				<v-icon v-if="hasChildren || showEmpty">chevron_right</v-icon>
+				<v-icon v-if="hasChildren || organize">chevron_right</v-icon>
 			</v-btn>
-			<div>{{name}}</div>
+			<v-icon class="handle mr-2" v-if="organize">reorder</v-icon>
+			<div>
+				<span class="mr-2 subheading">{{node && node.order}}</span>
+				{{node && node.name}}
+			</div>
 		</div>
 		<v-expand-transition>
 			<div v-if="showExpanded">
 				<tree-node-list
+					:node="node"
 					:children="computedChildren"
 					:group="group"
-					:show-empty="showEmpty"
+					:show-empty="organize"
+					@moved="e => $emit('moved', e)"
 				/>
 			</div>
 		</v-expand-transition>
@@ -30,12 +36,8 @@
 	* the tree view shows off the full character structure, and where each part of
 	* character comes from.
 	**/
-	import draggable from 'vuedraggable';
 	export default {
 		name: 'tree-node',
-		components: {
-			draggable,
-		},
 		beforeCreate() {
 		  this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
 		},
@@ -43,9 +45,9 @@
 			expanded: false,
 		}},
 		props: {
-			name: String,
+			node: Object,
 			group: String,
-			showEmpty: Boolean,
+			organize: Boolean,
 			children: Array,
 			getChildren: Function,
 		},
@@ -54,7 +56,7 @@
 				return this.children && this.children.length || this.lazy && !this.expanded;
 			},
 			showExpanded(){
-				return this.expanded && (this.showEmpty || this.hasChildren)
+				return this.expanded && (this.organize || this.hasChildren)
 			},
 			computedChildren(){
 				let children = [];
@@ -78,6 +80,9 @@
 		min-height: 40px;
 		box-shadow: -2px 0px 0px 0px #808080;
 		margin-left: 23px;
+	}
+	.handle {
+		cursor: move;
 	}
 	.empty .drag-area {
 		box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4);

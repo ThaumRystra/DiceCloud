@@ -1,21 +1,25 @@
 <template lang="html">
 	<draggable
-		:list="children"
+		:value="children"
 		class="drag-area layout column"
+		@change="change"
 		:group="group"
 		:animation="200"
 		ghost-class="ghost"
 		draggable=".item"
+		handle=".handle"
 	>
 		<tree-node
 			v-for="child in children"
-			v-bind="child"
+			:node="child.node"
+			:children="child.children"
 			:group="group"
-			:key="child._id || child.name"
-			:showEmpty="showEmpty"
+			:key="child.node && (child.node._id || child.node.name)"
+			:organize="organize"
 			:lazy="lazy"
 			class="item"
-			@dragstart.native="e => e.dataTransfer.setData('cow', child.name)"
+			@moved="e => $emit('moved', e)"
+			@dragstart.native="e => e.dataTransfer.setData('cow', child.node && child.node.name)"
 		/>
 	</draggable>
 </template>
@@ -32,8 +36,9 @@
 			expanded: false,
 		}},
 		props: {
+			node: Object,
 			group: String,
-			showEmpty: Boolean,
+			organize: Boolean,
 			lazy: Boolean,
 			children: {
 				type: Array,
@@ -45,7 +50,14 @@
 				return this.children && this.children.length;
 			},
 			showExpanded(){
-				return this.expanded && (this.showEmpty || this.hasChildren)
+				return this.expanded && (this.organize || this.hasChildren)
+			},
+		},
+		methods: {
+			change({added, removed, moved}){
+				if (removed) return;
+				let newIndex = (added || moved).newIndex;
+				this.$emit('moved', {parent: this.node, newIndex});
 			},
 		},
 	};

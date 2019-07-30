@@ -1,13 +1,19 @@
 <template lang="html">
 	<v-card-text>
-		<tree-node-list v-if="libraryChildren" :children="libraryChildren" :group="library && library._id"/>
+		<tree-node-list
+			v-if="libraryChildren"
+			:children="libraryChildren"
+			:group="library && library._id"
+			:organize="organize"
+			@moved="moved"
+		/>
 		<template v-else>This library is empty</template>
 	</v-card-text>
 </template>
 
 <script>
 	import Libraries from '/imports/api/library/Libraries.js';
-	import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+	import LibraryNodes, { libraryNodesToTree } from '/imports/api/library/LibraryNodes.js';
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
 
 	export default {
@@ -16,6 +22,7 @@
 		},
 		props: {
 			libraryId: String,
+			organize: Boolean,
 		},
 		meteor: {
 			$subscribe: {
@@ -26,11 +33,12 @@
 			},
 			libraryChildren(){
 				if (!this.library) return;
-				return LibraryNodes.find({
-					"parent.id": this.library._id
-				}, {
-					sort: {order: 1},
-				});
+				return libraryNodesToTree(this.library._id);
+			},
+		},
+		methods: {
+			moved(e){
+				console.log(e)
 			},
 		},
 	};

@@ -1,9 +1,14 @@
 <template lang="html">
 	<toolbar-layout>
-		<span slot="toolbar">{{library && library.name || 'Library'}}</span>
+		<template slot="toolbar">
+			{{library && library.name || 'Library'}}
+			<v-spacer/>
+			<v-switch v-model="organize" label="Sort" style="flex-grow: 0;"/>
+		</template>
 		<v-card class="ma-4">
 			<library-contents-container
 				:library-id="$route.params.id"
+				:organize="organize"
 			/>
 		</v-card>
 		<v-btn fixed fab bottom right
@@ -28,6 +33,9 @@
 			ToolbarLayout,
 			LibraryContentsContainer,
 		},
+		data(){ return {
+			organize: false,
+		};},
 		methods: {
 			insertLibraryNode(){
 				let that = this;
