@@ -1,18 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 
-const inhertitedFieldsSchema = new SimpleSchema({
-  name: {
-    type: String,
-    optional: true,
-  },
-  enabled: {
-    type: Boolean,
-    optional: true,
-    index: 1,
-  },
-});
-
 const RefSchema = new SimpleSchema({
   id: {
     type: String,
@@ -24,9 +12,11 @@ const RefSchema = new SimpleSchema({
   },
 });
 
-RefSchema.extend(inhertitedFieldsSchema);
-
 let ChildSchema = schema({
+  order: {
+    type: Number,
+    min: 0,
+  },
 	parent: {
     type: RefSchema,
     optional: true,
@@ -40,7 +30,4 @@ let ChildSchema = schema({
   },
 });
 
-const inheritedFields = new Set(inhertitedFieldsSchema.objectKeys());
-
 export default ChildSchema;
-export { inheritedFields };

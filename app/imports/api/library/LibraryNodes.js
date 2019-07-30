@@ -8,37 +8,10 @@ import getModifierFields from '/imports/api/getModifierFields.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
-const RefSchema = new SimpleSchema({
-  id: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    index: 1
-  },
-});
-
 let LibraryNodeSchema = schema({
-	name: {
-		type: String,
-		optional: true,
-	},
 	libraryNodeType: {
     type: String,
     allowedValues: Object.keys(librarySchemas),
-  },
-	order: {
-  	type: SimpleSchema.Integer,
-  	index: true,
-  },
-	parent: {
-    type: RefSchema,
-  },
-	// ancestors[0] should be the library to check for permission
-  ancestors: {
-    type: Array,
-    defaultValue: [],
-  },
-  'ancestors.$': {
-    type: RefSchema,
   },
 });
 
