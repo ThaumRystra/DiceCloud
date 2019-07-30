@@ -25,7 +25,7 @@
     "mathjs": "^5.10.3",
     "meteor-node-stubs": "^0.3.3",
     "moo": "^0.5.0",
-    "nearley": "^2.16.0",
+    "nearley": "^2.18.0",
     "qrcode": "^1.4.1",
     "simpl-schema": "^1.5.5",
     "source-map-support": "^0.5.12",
