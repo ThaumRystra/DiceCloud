@@ -27,7 +27,7 @@ let ExperienceSchema = schema({
 	// The amount of XP this experience gives
 	value: {
 		type: SimpleSchema.Integer,
-		defaultValue: 0
+		optional: true,
 	},
 	// The real-world date that it occured
 	date: {
