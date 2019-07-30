@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 
 const RefSchema = new SimpleSchema({
   id: {
@@ -12,7 +11,7 @@ const RefSchema = new SimpleSchema({
   },
 });
 
-let ChildSchema = schema({
+let ChildSchema = new SimpleSchema({
   order: {
     type: Number,
     min: 0,

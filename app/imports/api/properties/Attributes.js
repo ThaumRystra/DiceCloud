@@ -62,7 +62,7 @@ let AttributeSchema = new SimpleSchema({
   },
 });
 
-let ComputedAttributeSchema = schema({
+let ComputedAttributeSchema = new SimpleSchema({
 	// The computed value of the attribute
   value: {
     type: Number,

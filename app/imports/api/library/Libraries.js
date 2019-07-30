@@ -1,4 +1,4 @@
-import schema from '/imports/api/schema.js';
+import SimpleSchema from 'simpl-schema';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 
@@ -13,7 +13,7 @@ import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js
  */
 let Libraries = new Mongo.Collection('libraries');
 
-let LibrarySchema = schema({
+let LibrarySchema = new SimpleSchema({
 	name: {
     type: String,
   },

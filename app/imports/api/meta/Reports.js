@@ -1,6 +1,8 @@
+import SimpleSchema from 'simpl-schema';
+
 Reports = new Mongo.Collection("reports");
 
-Schemas.Report = schema({
+Schemas.Report = new SimpleSchema({
 	owner: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,

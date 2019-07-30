@@ -1,6 +1,8 @@
+import SimpleSchema from 'simpl-schema';
+
 Blacklist = new Mongo.Collection("blacklist");
 
-Schemas.Blacklist = schema({
+Schemas.Blacklist = new SimpleSchema({
 	userId: {
 		type: String,
 	},

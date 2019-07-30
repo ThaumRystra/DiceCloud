@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import propertySchemas from '/imports/api/properties/propertySchemas.js';
 import Libraries from '/imports/api/library/Libraries.js';
@@ -8,7 +7,7 @@ import getModifierFields from '/imports/api/getModifierFields.js';
 
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
-let CreaturePropertySchema = schema({
+let CreaturePropertySchema = new SimpleSchema({
 	creaturePropertyType: {
     type: String,
     allowedValues: Object.keys(propertySchemas),

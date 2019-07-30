@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import { PropertySchema } from '/imports/api/properties/Properties.js'
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 let ClassLevelSchema = new SimpleSchema({

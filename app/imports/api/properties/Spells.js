@@ -1,15 +1,4 @@
-import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
-import { PropertySchema } from '/imports/api/properties/Properties.js'
-
-// Mixins
-import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
-import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixin.js';
-import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
-import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
-import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
 
 const magicSchools = [
 	'abjuration',
@@ -22,7 +11,7 @@ const magicSchools = [
 	'transmutation',
 ];
 
-let SpellSchema = schema({
+let SpellSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,

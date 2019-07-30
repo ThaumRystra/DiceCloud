@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import StoredBuffSchema from '/imports/api/properties/Buffs.js';
 

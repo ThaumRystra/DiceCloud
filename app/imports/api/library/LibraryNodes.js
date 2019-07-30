@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 import Libraries from '/imports/api/library/Libraries.js';
@@ -8,7 +7,7 @@ import getModifierFields from '/imports/api/getModifierFields.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
-let LibraryNodeSchema = schema({
+let LibraryNodeSchema = new SimpleSchema({
 	libraryNodeType: {
     type: String,
     allowedValues: Object.keys(librarySchemas),

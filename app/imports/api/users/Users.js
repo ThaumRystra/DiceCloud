@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 
-const userSchema = schema({
+const userSchema = new SimpleSchema({
 	username: {
 		type: String,
 		optional: true,
@@ -95,7 +94,7 @@ Meteor.users.setDarkMode = new ValidatedMethod({
 
 Meteor.users.sendVerificationEmail = new ValidatedMethod({
 	name: 'Users.methods.sendVerificationEmail',
-	validate: schema({
+	validate: new SimpleSchema({
 		userId:{
 			type: String,
 			optional: true,

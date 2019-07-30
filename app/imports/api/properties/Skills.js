@@ -1,22 +1,10 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
-import { PropertySchema } from '/imports/api/properties/Properties.js'
-import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
-
-// Mixins
-import recomputeCreatureMixin from '/imports/api/creature/mixins/recomputeCreatureMixin.js';
-import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
-import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixin.js';
-import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
-import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
-import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
  * Skills have an ability score modifier that they use as their basis
  */
-let SkillSchema = schema({
+let SkillSchema = new SimpleSchema({
   name: {
 		type: String,
 		optional: true,

@@ -1,7 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import { PropertySchema } from '/imports/api/properties/Properties.js'
-
-let Effects = new Mongo.Collection('effects');
 
 /*
  * Effects are reason-value attached to skills and abilities
