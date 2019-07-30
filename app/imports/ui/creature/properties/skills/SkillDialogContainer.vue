@@ -11,11 +11,11 @@
 <script>
 
 	import SkillDialog from '/imports/ui/creature/properties/skills/SkillDialog.vue';
-	import Skills from '/imports/api/creature/properties/Skills.js';
-	import { updateSkill } from '/imports/api/creature/properties/Skills.js';
-	import Attributes from '/imports/api/creature/properties/Attributes.js';
-	import Effects from '/imports/api/creature/properties/Effects.js';
-	import Proficiencies from '/imports/api/creature/properties/Proficiencies.js';
+	import Skills from '/imports/api/properties/Skills.js';
+	import { updateSkill } from '/imports/api/properties/Skills.js';
+	import Attributes from '/imports/api/properties/Attributes.js';
+	import Effects from '/imports/api/properties/Effects.js';
+	import Proficiencies from '/imports/api/properties/Proficiencies.js';
 
 	export default {
 		components: {

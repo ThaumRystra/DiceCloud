@@ -8,12 +8,12 @@
 
 <script>
 	import AttributeDialog from '/imports/ui/creature/properties/attributes/AttributeDialog.vue';
-	import Attributes from '/imports/api/creature/properties/Attributes.js';
+	import Attributes from '/imports/api/properties/Attributes.js';
 	import {
 		updateAttribute,
 		adjustAttribute
-	} from '/imports/api/creature/properties/Attributes.js';
-	import Effects from '/imports/api/creature/properties/Effects.js';
+	} from '/imports/api/properties/Attributes.js';
+	import Effects from '/imports/api/properties/Effects.js';
 	import { setName } from '/imports/api/parenting/parenting.js';
 
 	export default {

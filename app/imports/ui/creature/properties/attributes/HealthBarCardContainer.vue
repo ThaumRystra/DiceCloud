@@ -7,8 +7,8 @@
 </template>
 
 <script>
-	import Attributes from '/imports/api/creature/properties/Attributes.js';
-	import { adjustAttribute } from '/imports/api/creature/properties/Attributes.js';
+	import Attributes from '/imports/api/properties/Attributes.js';
+	import { adjustAttribute } from '/imports/api/properties/Attributes.js';
 	import HealthBarCard from '/imports/ui/creature/properties/attributes/HealthBarCard.vue';
 
 	export default {

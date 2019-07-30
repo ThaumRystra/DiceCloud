@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import Features, {updateFeature} from '/imports/api/creature/properties/Features.js';
+	import Features, {updateFeature} from '/imports/api/properties/Features.js';
 	import FeatureDialog from '/imports/ui/creature/properties/features/FeatureDialog.vue';
 	import {evaluateStringForCharId} from '/imports/ui/utility/evaluate.js';
 

@@ -1,7 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
+import { PropertySchema } from '/imports/api/properties/Properties.js'
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
@@ -10,65 +11,54 @@ import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
 import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
-let SpellLists = new Mongo.Collection("spellLists");
+let Classes = new Mongo.Collection("classes");
 
-let SpellListSchema = schema({
-	name: {
+// TODO use variable name in computation engine, rather than a generated one
+let ClassSchema = schema({
+  name: {
 		type: String,
 		optional: true,
 	},
-	// The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
 		regEx: VARIABLE_NAME_REGEX,
-    min: 3,
   },
-	description: {
-		type: String,
-		optional: true,
-	},
-	// Calculation of how many spells in this list can be prepared
-	maxPrepared: {
-		type: String,
-		optional: true,
-	},
 });
 
-SpellListSchema.extend(ColorSchema);
+ClassSchema.extend(ColorSchema);
 
-SpellLists.attachSchema(SpellListSchema);
-SpellLists.attachSchema(PropertySchema);
+Classes.attachSchema(ClassSchema);
+Classes.attachSchema(PropertySchema);
 
-const insertSpellList = new ValidatedMethod({
-  name: 'SpellLists.methods.insert',
+const insertClass = new ValidatedMethod({
+  name: 'Classes.methods.insert',
 	mixins: [
     creaturePermissionMixin,
-    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
+    setDocToLastMixin,
     simpleSchemaMixin,
   ],
-  collection: SpellLists,
+  collection: Classes,
   permission: 'edit',
-  schema: SpellListSchema,
-  run(spellList) {
-		return SpellLists.insert(spellList);
+  schema: ClassSchema,
+  run(cls) {
+		return Classes.insert(cls);
   },
 });
 
-const updateSpellList = new ValidatedMethod({
-  name: 'SpellLists.methods.update',
+const updateClass = new ValidatedMethod({
+  name: 'Classes.methods.update',
   mixins: [
-		propagateInheritanceUpdateMixin,
+    propagateInheritanceUpdateMixin,
     updateSchemaMixin,
     creaturePermissionMixin,
   ],
-  collection: SpellLists,
+  collection: Classes,
   permission: 'edit',
-  schema: SpellListSchema,
+  schema: ClassSchema,
 });
 
-export default SpellLists;
-export { SpellListSchema }
+export default Classes;
+export { ClassSchema, insertClass, updateClass };

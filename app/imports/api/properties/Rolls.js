@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
-import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
+import { PropertySchema } from '/imports/api/properties/Properties.js'
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
-import StoredBuffSchema from '/imports/api/creature/properties/Buffs.js';
+import StoredBuffSchema from '/imports/api/properties/Buffs.js';
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';

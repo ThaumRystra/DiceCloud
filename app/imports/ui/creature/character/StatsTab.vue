@@ -138,8 +138,8 @@
 </template>
 
 <script>
-	import Attributes from '/imports/api/creature/properties/Attributes.js';
-	import Skills from '/imports/api/creature/properties/Skills.js';
+	import Attributes from '/imports/api/properties/Attributes.js';
+	import Skills from '/imports/api/properties/Skills.js';
 	import AttributeCard from '/imports/ui/creature/properties/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/creature/properties/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
@@ -149,7 +149,7 @@
 	import ResourceCard from '/imports/ui/creature/properties/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/creature/properties/attributes/SpellSlotListTile.vue';
 
-	import { adjustAttribute, insertAttribute } from '/imports/api/creature/properties/Attributes.js';
+	import { adjustAttribute, insertAttribute } from '/imports/api/properties/Attributes.js';
 
 	const getAttributeOfType = function(charId, type){
 		return Attributes.find({charId, type}, {sort: {order: 1}});

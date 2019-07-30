@@ -16,7 +16,7 @@
 
 <script>
 	import FeatureForm from '/imports/ui/forms/FeatureForm.vue';
-	import Features, { FeatureSchema } from '/imports/api/creature/properties/Features.js';
+	import Features, { FeatureSchema } from '/imports/api/properties/Features.js';
 	import PropertyInsertDialog from '/imports/ui/components/properties/PropertyInsertDialog.vue';
 
 	export default {

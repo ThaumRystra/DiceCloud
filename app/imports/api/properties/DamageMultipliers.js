@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
+import { PropertySchema } from '/imports/api/properties/Properties.js'
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 // Mixins

@@ -1,11 +1,11 @@
 import getDefaultCharacterDocs from '/imports/api/creature/getDefaultCharacterDocs.js';
-import Attributes from '/imports/api/creature/properties/Attributes.js';
-import Skills from '/imports/api/creature/properties/Skills.js';
-import DamageMultipliers from '/imports/api/creature/properties/DamageMultipliers.js';
-import Effects from '/imports/api/creature/properties/Effects.js';
-import Containers from '/imports/api/creature/properties/inventory/Containers.js';
-import Items from '/imports/api/creature/properties/inventory/Items.js';
-import Classes from '/imports/api/creature/properties/Classes.js';
+import Attributes from '/imports/api/properties/Attributes.js';
+import Skills from '/imports/api/properties/Skills.js';
+import DamageMultipliers from '/imports/api/properties/DamageMultipliers.js';
+import Effects from '/imports/api/properties/Effects.js';
+import Containers from '/imports/api/properties/Containers.js';
+import Items from '/imports/api/properties/Items.js';
+import Classes from '/imports/api/properties/Classes.js';
 
 const addDefaultDocs = function(docs){
 	Attributes.rawCollection().insert(docs.attributes, {ordered: false});

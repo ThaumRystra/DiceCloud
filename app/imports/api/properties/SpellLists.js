@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import { PropertySchema } from '/imports/api/creature/properties/Properties.js'
+import { PropertySchema } from '/imports/api/properties/Properties.js'
 
 // Mixins
 import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
@@ -10,53 +10,65 @@ import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
 import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
-let Notes = new Mongo.Collection("notes");
+let SpellLists = new Mongo.Collection("spellLists");
 
-let NoteSchema = schema({
+let SpellListSchema = schema({
 	name: {
 		type: String,
 		optional: true,
 	},
+	// The technical, lowercase, single-word name used in formulae
+  variableName: {
+    type: String,
+		regEx: VARIABLE_NAME_REGEX,
+    min: 3,
+  },
 	description: {
+		type: String,
+		optional: true,
+	},
+	// Calculation of how many spells in this list can be prepared
+	maxPrepared: {
 		type: String,
 		optional: true,
 	},
 });
 
-NoteSchema.extend(ColorSchema);
+SpellListSchema.extend(ColorSchema);
 
-Notes.attachSchema(NoteSchema);
-Notes.attachSchema(PropertySchema);
+SpellLists.attachSchema(SpellListSchema);
+SpellLists.attachSchema(PropertySchema);
 
-const insertNote = new ValidatedMethod({
-  name: 'Notes.methods.insert',
+const insertSpellList = new ValidatedMethod({
+  name: 'SpellLists.methods.insert',
 	mixins: [
     creaturePermissionMixin,
+    setDocToLastMixin,
     setDocAncestryMixin,
     ensureAncestryContainsCharIdMixin,
-		setDocToLastMixin,
     simpleSchemaMixin,
   ],
-  collection: Notes,
+  collection: SpellLists,
   permission: 'edit',
-  schema: NoteSchema,
-  run(note) {
-		return Notes.insert(note);
+  schema: SpellListSchema,
+  run(spellList) {
+		return SpellLists.insert(spellList);
   },
 });
 
-const updateNote = new ValidatedMethod({
-  name: 'Notes.methods.update',
+const updateSpellList = new ValidatedMethod({
+  name: 'SpellLists.methods.update',
   mixins: [
 		propagateInheritanceUpdateMixin,
     updateSchemaMixin,
     creaturePermissionMixin,
   ],
-  collection: Notes,
+  collection: SpellLists,
   permission: 'edit',
-  schema: NoteSchema,
+  schema: SpellListSchema,
 });
 
-export default Notes;
-export { NoteSchema, insertNote, updateNote };
+export default SpellLists;
+export { SpellListSchema }

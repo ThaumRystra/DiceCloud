@@ -23,7 +23,7 @@
 
 <script>
 	import AttributeForm from '/imports/ui/forms/AttributeForm.vue';
-	import Attributes from '/imports/api/creature/properties/Attributes.js';
+	import Attributes from '/imports/api/properties/Attributes.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 	export default {
