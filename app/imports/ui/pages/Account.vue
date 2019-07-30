@@ -5,6 +5,7 @@
     </span>
     <v-layout align-center justify-center>
       <v-card class="ma-4 pa-2">
+				<v-switch :input-value="darkMode" @change="setDarkMode" label="Dark mode"/>
         <v-list>
           <v-subheader>
             Username
@@ -130,6 +131,9 @@
       emails(){
         return Meteor.user().emails;
       },
+			darkMode(){
+				return this.user && this.user.darkMode;
+			},
     },
     data(){ return {
       showApiKey: false,
@@ -143,6 +147,9 @@
 
         });
       },
+			setDarkMode(value){
+				Meteor.users.setDarkMode.call({darkMode: !!value});
+			},
       generateKey(){
         Meteor.users.gnerateApiKey.call(error => {
           if(error) this.apiKeyGenerationError = error.reason;
