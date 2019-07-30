@@ -21,7 +21,6 @@
 export default {
 	data(){return {
 		properties: [
-			{name: 'Creature', icon: 'accessibility', type: 'creature'},
 			{name: 'Action', icon: 'offline-bolt', type: 'action'},
 			{name: 'Attribute', icon: 'star-rate', type: 'attribute'},
 			{name: 'Buff', icon: 'star', type: 'buff'},
