@@ -5,7 +5,8 @@
 			:children="libraryChildren"
 			:group="library && library._id"
 			:organize="organize"
-			@moved="moved"
+			@reordered="reordered"
+			@reorganized="reorganized"
 		/>
 	</v-card-text>
 </template>
@@ -14,6 +15,7 @@
 	import Libraries from '/imports/api/library/Libraries.js';
 	import LibraryNodes, { libraryNodesToTree } from '/imports/api/library/LibraryNodes.js';
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
+	import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
 
 	export default {
 		components: {
@@ -36,8 +38,36 @@
 			},
 		},
 		methods: {
-			moved(e){
-				console.log(e)
+			reordered({doc, newIndex}){
+				reorderDoc.call({
+					docRef: {
+						id: doc._id,
+						collection: 'libraryNodes',
+					},
+					order: newIndex,
+				});
+			},
+			reorganized({doc, parent, newIndex}){
+				let parentRef;
+				if (parent){
+					parentRef = {
+						id: this.libraryId,
+						collection: 'libraries',
+					};
+				} else {
+					parentRef = {
+						id: parent._id,
+						collection: 'libraryNodes',
+					};
+				}
+				organizeDoc.call({
+					docRef: {
+						id: doc._id,
+						collection: 'libraryNodes',
+					},
+					parentRef,
+					order: newIndex,
+				});
 			},
 		},
 	};

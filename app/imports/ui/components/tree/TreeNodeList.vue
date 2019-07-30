@@ -18,7 +18,8 @@
 			:organize="organize"
 			:lazy="lazy"
 			class="item"
-			@moved="e => $emit('moved', e)"
+			@reordered="e => $emit('reordered', e)"
+			@reorganized="e => $emit('reorganized', e)"
 			@dragstart.native="e => e.dataTransfer.setData('cow', child.node && child.node.name)"
 		/>
 	</draggable>
@@ -54,10 +55,17 @@
 			},
 		},
 		methods: {
-			change({added, removed, moved}){
-				if (removed) return;
-				let newIndex = (added || moved).newIndex;
-				this.$emit('moved', {parent: this.node, newIndex});
+			change({added, moved}){
+				let event = moved || added;
+				if (event){
+					let newIndex = event.newIndex;
+					let doc = event.element.node;
+					if (moved){
+						this.$emit('reordered', {doc, newIndex});
+					} else if (added){
+						this.$emit('reorganized', {doc, parent: this.node, newIndex});
+					}
+				}
 			},
 		},
 	};

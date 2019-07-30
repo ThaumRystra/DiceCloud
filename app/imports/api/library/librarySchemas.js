@@ -1,4 +1,4 @@
-import { CreatureSchema } from '/imports/api/creature/Creatures.js';
+import SimpleSchema from 'simpl-schema';
 import { ActionSchema } from '/imports/api/properties/Actions.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
 import { StoredBuffSchema } from '/imports/api/properties/Buffs.js';
@@ -20,7 +20,6 @@ import { ItemSchema } from '/imports/api/properties/Items.js';
 
 
 const librarySchemas = {
-  creature: CreatureSchema,
   action: ActionSchema,
   attribute: AttributeSchema,
   buff: StoredBuffSchema,
@@ -39,6 +38,7 @@ const librarySchemas = {
   spell: SpellSchema,
   container: ContainerSchema,
   item: ItemSchema,
+  any: new SimpleSchema({}),
 };
 
 export default librarySchemas;

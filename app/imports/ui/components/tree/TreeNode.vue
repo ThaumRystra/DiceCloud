@@ -22,7 +22,8 @@
 					:children="computedChildren"
 					:group="group"
 					:show-empty="organize"
-					@moved="e => $emit('moved', e)"
+					@reordered="e => $emit('reordered', e)"
+					@reorganized="e => $emit('reorganized', e)"
 				/>
 			</div>
 		</v-expand-transition>

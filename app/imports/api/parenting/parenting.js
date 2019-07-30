@@ -1,6 +1,5 @@
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import SimpleSchema from 'simpl-schema';
 
 export function fetchParent({id, collection}){
   return fetchDocByRef({id, collection});
@@ -23,20 +22,20 @@ export function updateChildren({collection, parentId, filter = {}, modifier, opt
   collection.update(filter, modifier, options);
 }
 
-export function fetchDecendents({ collection, ancestorId, filter = {}, options}){
+export function fetchDescendants({ collection, ancestorId, filter = {}, options}){
   filter["ancestors.id"] = ancestorId;
-  let decendents = [];
-  decendents.push(...collection.find(filter, options).fetch());
-  return decendents;
+  let descendants = [];
+  descendants.push(...collection.find(filter, options).fetch());
+  return descendants;
 }
 
-export function updateDecendents({collection, ancestorId, filter = {}, modifier, options={}}){
+export function updateDescendants({collection, ancestorId, filter = {}, modifier, options={}}){
   filter["ancestors.id"] = ancestorId;
   options.multi = true;
   collection.update(filter, modifier, options);
 }
 
-export function forEachDecendent({collection, ancestorId, filter = {}, options}, callback){
+export function forEachDescendant({collection, ancestorId, filter = {}, options}, callback){
   filter["ancestors.id"] = ancestorId;
   collection.find(filter, options).forEach(callback);
 }
@@ -75,16 +74,16 @@ export function updateParent({docRef, parentRef}){
   let {parent, ancestors} = getAncestry({parentRef});
   collection.update(docRef.id, {$set: {parent, ancestors}});
 
-  // Remove the old ancestors from the decendents
-  updateDecendents({
+  // Remove the old ancestors from the descendants
+  updateDescendants({
     ancestorId: docRef.id,
     modifier: {$pullAll: {
       ancestors: oldDoc.ancestors,
     }},
   });
 
-  // Add the new ancestors to the decendents
-  updateDecendents({
+  // Add the new ancestors to the descendants
+  updateDescendants({
     ancestorId: docRef.id,
     modifier: {$push: {
       ancestors: {

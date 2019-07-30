@@ -38,7 +38,7 @@ export default {
 	mixins: [schemaFormMixin],
 	data(){return {
 		model: {
-			libraryNodeType: this.type,
+			type: this.type,
 		},
 		schema: undefined,
 		validationContext: undefined,
@@ -52,7 +52,7 @@ export default {
 			this.schema = librarySchemas[newType];
 			this.validationContext = this.schema.newContext();
 			let model = this.schema.clean({});
-			model.libraryNodeType = newType;
+			model.type = newType;
 			this.model = model;
 		},
 		model(newModel){

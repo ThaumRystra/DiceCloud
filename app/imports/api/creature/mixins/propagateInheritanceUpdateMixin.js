@@ -1,6 +1,6 @@
 import {
   updateChildren,
-  updateDecendents,
+  updateDescendants,
 } from '/imports/api/parenting/parenting.js';
 import { inheritedFields } from '/imports/api/parenting/ChildSchema.js';
 import MONGO_OPERATORS from '/imports/constants/MONGO_OPERATORS.js';
@@ -11,7 +11,7 @@ import MONGO_OPERATORS from '/imports/constants/MONGO_OPERATORS.js';
 // It should have neglible performance impact for updates that aren't inherited
 function propagateInheritanceUpdate({_id, update}){
   let childModifier = {};
-  let decendentModifier = {};
+  let descendantModifier = {};
   // For each operator
   for (let operator of MONGO_OPERATORS){
     // If the operator is in the update, for each field
@@ -26,11 +26,11 @@ function propagateInheritanceUpdate({_id, update}){
       }
       // If that field is updated and inherited
       if (inheritedFields.has(modifiedField)){
-        // Perform the same update on the decendents
+        // Perform the same update on the descendants
         if (!childModifier[operator]) childModifier[operator] = {};
-        if (!decendentModifier[operator]) decendentModifier[operator] = {};
+        if (!descendantModifier[operator]) descendantModifier[operator] = {};
         childModifier[operator][`parent.${field}`] = update[operator][field];
-        decendentModifier[operator][`ancestors.$.${field}`] = update[operator][field];
+        descendantModifier[operator][`ancestors.$.${field}`] = update[operator][field];
       }
     }
   }
@@ -41,10 +41,10 @@ function propagateInheritanceUpdate({_id, update}){
     modifier: childModifier,
   });
 
-  // Update the ancestors object of its decendents
-  updateDecendents({
+  // Update the ancestors object of its descendants
+  updateDescendants({
     ancestorId: _id,
-    modifier: decendentModifier,
+    modifier: descendantModifier,
   });
 }
 

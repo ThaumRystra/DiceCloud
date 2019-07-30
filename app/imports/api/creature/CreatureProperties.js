@@ -8,7 +8,7 @@ import getModifierFields from '/imports/api/getModifierFields.js';
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
 let CreaturePropertySchema = new SimpleSchema({
-	creaturePropertyType: {
+	type: {
     type: String,
     allowedValues: Object.keys(propertySchemas),
   },
@@ -26,7 +26,7 @@ for (let key in propertySchemas){
 	schema.extend(CreaturePropertySchema);
 	schema.extend(ChildSchema);
 	CreatureProperties.attachSchema(schema, {
-		selector: {creaturePropertyType: key}
+		selector: {type: key}
 	});
 }
 

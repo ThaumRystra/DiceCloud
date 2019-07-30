@@ -80,4 +80,4 @@ let ActionSchema = new SimpleSchema({
 	},
 });
 
-export default { ActionSchema };
+export { ActionSchema };

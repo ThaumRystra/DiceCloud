@@ -8,7 +8,7 @@ import getModifierFields from '/imports/api/getModifierFields.js';
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
 let LibraryNodeSchema = new SimpleSchema({
-	libraryNodeType: {
+	type: {
     type: String,
     allowedValues: Object.keys(librarySchemas),
   },
@@ -20,7 +20,7 @@ for (let key in librarySchemas){
 	schema.extend(LibraryNodeSchema);
 	schema.extend(ChildSchema);
 	LibraryNodes.attachSchema(schema, {
-		selector: {libraryNodeType: key}
+		selector: {type: key}
 	});
 }
 
@@ -50,7 +50,7 @@ const updateNode = new ValidatedMethod({
   validate({_id, update}){
     let fields = getModifierFields(update);
     return !fields.hasAny([
-      'libraryNodeType',
+      'type',
       'order',
       'parent',
       'ancestors',

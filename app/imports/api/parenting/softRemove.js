@@ -1,5 +1,5 @@
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import updateDecendents from '/imports/api/parenting/parenting.js';
+import updateDescendants from '/imports/api/parenting/parenting.js';
 
 // 1 + n database hits
 export function softRemove({_id, collection}){
@@ -12,9 +12,9 @@ export function softRemove({_id, collection}){
   }, $unset: {
     removedWith: 1,
   }});
-  // Remove all the decendents that have not yet been removed, and set them to be
+  // Remove all the descendants that have not yet been removed, and set them to be
   // removed with this document
-  updateDecendents({
+  updateDescendants({
     ancestorId: _id,
     filter: {removed: {$ne: true}},
     modifier: {$set: {
@@ -41,7 +41,7 @@ export function restore({_id, collection}){
     removedAt: 1,
   }});
   if (numUpdated === 0) restoreError();
-  updateDecendents({
+  updateDescendants({
     ancestorId: _id,
     filter: {
       removedWith: _id,

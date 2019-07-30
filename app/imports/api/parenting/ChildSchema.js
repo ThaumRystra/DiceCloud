@@ -30,3 +30,4 @@ let ChildSchema = new SimpleSchema({
 });
 
 export default ChildSchema;
+export { RefSchema };

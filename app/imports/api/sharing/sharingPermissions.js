@@ -1,4 +1,5 @@
 import { _ } from 'meteor/underscore';
+import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
 function assertIdValid(userId){
   if (!userId || typeof userId !== 'string'){
@@ -25,6 +26,12 @@ export function assertOwnership(doc, userId){
   }
 }
 
+/**
+ * Assert that the user can edit the root document which manages its own sharing
+ * permissions.
+ *
+ * Warning: the doc and userId must be set by a trusted source
+ */
 export function assertEditPermission(doc, userId) {
   assertIdValid(userId);
   assertdocExists(doc);
@@ -34,6 +41,22 @@ export function assertEditPermission(doc, userId) {
     throw new Meteor.Error("Edit permission denied",
       `You do not have permission to edit this document`);
   }
+}
+
+function getRoot(doc){
+  assertdocExists(doc);
+  return fetchDocByRef(doc.ancestors && doc.ancestors.length && doc.ancestors[0] || doc);
+}
+
+/**
+ * Assert that the user can edit a descendant document whose root ancestor
+ * implements sharing permissions.
+ *
+ * Warning: the doc and userId must be set by a trusted source
+ */
+export function assertDocEditPermission(doc, userId){
+  let root = getRoot(doc);
+  assertEditPermission(root, userId);
 }
 
 export function assertViewPermission(doc, userId) {
@@ -50,4 +73,15 @@ export function assertViewPermission(doc, userId) {
     throw new Meteor.Error("View permission denied",
       `You do not have permission to view this character`);
   }
+}
+
+/**
+ * Assert that the user can view a descendant document whose root ancestor
+ * implements sharing permissions.
+ *
+ * Warning: the doc and userId must be set by a trusted source
+ */
+export function assertDocViewPermission(doc, userId){
+  let root = getRoot(doc);
+  assertViewPermission(root, userId);
 }

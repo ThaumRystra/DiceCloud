@@ -72,30 +72,31 @@ export function updateOrder({docRef, order}){
     return;
   } else {
     // Move the document to its new order
-    docRef.collection.update(doc._id, {$set: {order}});
+    collection.update(doc._id, {$set: {order}}, {selector: {type: 'any'}});
     let inBetweenSelector, increment;
     if (order > currentOrder){
       // Move in-between docs backward
-      inBetweenSelector = [
-        {$gt: currentOrder},
-        {$lte: order},
-      ];
+      inBetweenSelector = {
+        $gt: currentOrder,
+        $lte: order
+      };
       increment = -1;
     } else if (order < currentOrder){
       // Move in-between docs forward
-      inBetweenSelector = [
-        {$lt: currentOrder},
-        {$gte: order},
-      ];
+      inBetweenSelector = {
+        $lt: currentOrder,
+        $gte: order
+      };
       increment = 1;
     }
     collection.update({
       'parent.id': doc.parent.id,
-      order: {$and: inBetweenSelector},
+      order: inBetweenSelector,
     }, {
       $inc: {order: increment},
     }, {
       multi: true,
+      selector: {type: 'any'},
     });
   }
 }

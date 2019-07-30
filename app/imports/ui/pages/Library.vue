@@ -44,8 +44,8 @@
 					elementId: 'insert-library-node-fab',
 					callback(libraryNode){
 						if (!libraryNode) return;
-						libraryNode.parent = {collection: "library", id: that.library._id};
-						libraryNode.ancestors = [ {collection: "library", id: that.library._id}];
+						libraryNode.parent = {collection: "libraries", id: that.library._id};
+						libraryNode.ancestors = [ {collection: "libraries", id: that.library._id}];
 						setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
 						console.log(libraryNode);
 						let libraryNodeId = insertNode.call(libraryNode);
