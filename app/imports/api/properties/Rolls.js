@@ -1,17 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import { PropertySchema } from '/imports/api/properties/Properties.js'
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
 import StoredBuffSchema from '/imports/api/properties/Buffs.js';
-
-// Mixins
-import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
-import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixin.js';
-import { setDocAncestryMixin, ensureAncestryContainsCharIdMixin } from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
-import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
-import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
-
-let Rolls = new Mongo.Collection('rolls');
 
 let RollChildrenSchema = new SimpleSchema({
   // The adjustments to be applied
@@ -99,37 +88,4 @@ let RollSchema = new SimpleSchema({
   },
 });
 
-Rolls.attachSchema(RollSchema);
-Rolls.attachSchema(PropertySchema);
-
-const insertRoll = new ValidatedMethod({
-  name: 'Rolls.methods.insert',
-	mixins: [
-    creaturePermissionMixin,
-    setDocToLastMixin,
-    setDocAncestryMixin,
-    ensureAncestryContainsCharIdMixin,
-    simpleSchemaMixin,
-  ],
-  collection: Rolls,
-  permission: 'edit',
-  schema: RollSchema,
-  run(roll) {
-		return Rolls.insert(roll);
-  },
-});
-
-const updateRoll = new ValidatedMethod({
-  name: 'Rolls.methods.update',
-  mixins: [
-    propagateInheritanceUpdateMixin,
-    updateSchemaMixin,
-    creaturePermissionMixin,
-  ],
-  collection: Rolls,
-  permission: 'edit',
-  schema: RollSchema,
-});
-
-export default Rolls;
-export { RollSchema, insertRoll, updateRoll };
+export { RollSchema };

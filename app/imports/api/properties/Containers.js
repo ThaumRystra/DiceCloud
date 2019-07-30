@@ -1,13 +1,9 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
 import { PropertySchema } from '/imports/api/properties/Properties.js'
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
-//set up the collection for containers
-let Containers = new Mongo.Collection("containers");
-
-let ContainerSchema = schema({
+let ContainerSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
@@ -39,11 +35,4 @@ let ContainerSchema = schema({
 	},
 });
 
-ContainerSchema.extend(ColorSchema);
-
-Containers.attachSchema(ContainerSchema);
-Containers.attachSchema(PropertySchema);
-Containers.attachSchema(ChildSchema);
-
-export default Containers;
 export { ContainerSchema };

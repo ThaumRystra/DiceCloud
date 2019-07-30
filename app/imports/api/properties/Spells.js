@@ -22,8 +22,6 @@ const magicSchools = [
 	'transmutation',
 ];
 
-let Spells = new Mongo.Collection('spells');
-
 let SpellSchema = schema({
 	name: {
 		type: String,
@@ -94,39 +92,4 @@ let SpellSchema = schema({
 	},
 });
 
-SpellSchema.extend(ColorSchema);
-
-Spells.attachSchema(SpellSchema);
-Spells.attachSchema(PropertySchema);
-
-const insertSpell = new ValidatedMethod({
-  name: 'Spells.methods.insert',
-	mixins: [
-    creaturePermissionMixin,
-    setDocToLastMixin,
-    setDocAncestryMixin,
-    ensureAncestryContainsCharIdMixin,
-    simpleSchemaMixin,
-  ],
-  collection: Spells,
-  permission: 'edit',
-  schema: SpellSchema,
-  run(spell) {
-		return Spells.insert(spell);
-  },
-});
-
-const updateSpell = new ValidatedMethod({
-  name: 'Spells.methods.update',
-  mixins: [
-		propagateInheritanceUpdateMixin,
-    updateSchemaMixin,
-    creaturePermissionMixin,
-  ],
-  collection: Spells,
-  permission: 'edit',
-  schema: SpellSchema,
-});
-
-export default Spells;
-export { SpellSchema, insertSpell, updateSpell };
+export { SpellSchema };

@@ -1,31 +1,12 @@
-import { PropertySchema } from '/imports/api/properties/Properties.js'
-import ColorSchema from '/imports/api/creature/subSchemas/ColorSchema.js';
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import getModifierFields from '/imports/api/getModifierFields.js';
-
-// Mixins
-import recomputeCreatureMixin from '/imports/api/creature/mixins/recomputeCreatureMixin.js';
-import creaturePermissionMixin from '/imports/api/creature/mixins/creaturePermissionMixin.js';
-import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixin.js';
-import {
-  setDocAncestryMixin,
-  ensureAncestryContainsCharIdMixin
-} from '/imports/api/parenting/parenting.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
-import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
-import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
-
-let Attributes = new Mongo.Collection('attributes');
 
 /*
  * Attributes are numbered stats of a character
  */
-let AttributeSchema = schema({
+let AttributeSchema = new SimpleSchema({
   name: {
 		type: String,
-		optional: true,
     defaultValue: 'New Attribute',
 	},
   // The technical, lowercase, single-word name used in formulae
@@ -81,9 +62,7 @@ let AttributeSchema = schema({
   },
 });
 
-AttributeSchema.extend(ColorSchema);
-
-const ComputedAttributeSchema = schema({
+let ComputedAttributeSchema = schema({
 	// The computed value of the attribute
   value: {
     type: Number,
@@ -96,91 +75,4 @@ const ComputedAttributeSchema = schema({
 	},
 }).extend(AttributeSchema);
 
-Attributes.attachSchema(ComputedAttributeSchema);
-Attributes.attachSchema(PropertySchema);
-
-const insertAttribute = new ValidatedMethod({
-  name: 'Attributes.methods.insert',
-  mixins: [
-    setDocAncestryMixin,
-    ensureAncestryContainsCharIdMixin,
-    recomputeCreatureMixin,
-    creaturePermissionMixin,
-    setDocToLastMixin,
-    simpleSchemaMixin,
-  ],
-  collection: Attributes,
-  permission: 'edit',
-  schema: AttributeSchema,
-  run(attribute) {
-    return Attributes.insert(attribute);
-  },
-});
-
-const updateAttribute = new ValidatedMethod({
-  name: 'Attributes.methods.update',
-  mixins: [
-    recomputeCreatureMixin,
-    propagateInheritanceUpdateMixin,
-    updateSchemaMixin,
-    creaturePermissionMixin,
-  ],
-  collection: Attributes,
-  permission: 'edit',
-  schema: AttributeSchema.omit(['adjutment']),
-  skipRecompute({update}){
-    let fields = getModifierFields(update);
-    return !fields.hasAny([
-      'variableName',
-      'type',
-      'baseValue',
-    ]);
-  },
-});
-
-const adjustAttribute = new ValidatedMethod({
-  name: 'Attributes.methods.adjust',
-  mixins: [
-    simpleSchemaMixin,
-    creaturePermissionMixin,
-  ],
-  collection: Attributes,
-  permission: 'edit',
-  schema: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id,
-    type: {
-      type: String,
-      allowedValues: ['set', 'increment']
-    },
-    value: Number,
-  }),
-  run({_id, type, value}) {
-		if (type === 'set'){
-			let currentValue = currentAttribute.value;
-			// Set represents what we want the value to be after adjustment
-			// So we need the actual adjustment to get to that value
-			let adjustment = value - currentValue;
-			// Ajustment can't exceed total value
-			if (-adjustment > currentValue) adjustment = -currentValue;
-			// Adjustment must be negative
-			if (adjustment > 0) adjustment = 0;
-			return Attributes.update(_id, {$set: {adjustment}});
-		} else if (type === 'increment'){
-			let remaining = currentAttribute.value + (currentAttribute.adjustment || 0);
-			let adj = currentAttribute.adjustment;
-			// Can't decrease adjustment below remaining value
-      let increment = value;
-			if (-increment > remaining) increment = -remaining;
-			// Can't increase adjustment above zero
-			if (increment > -adj) increment = -adj;
-			if (typeof currentAttribute.adjustment === 'number'){
-				return Attributes.update(_id, {$inc: {adjustment: increment}});
-			} else {
-				return Attributes.update(_id, {$set: {adjustment: increment}});
-			}
-		}
-  },
-});
-
-export default Attributes;
-export { AttributeSchema, insertAttribute, updateAttribute, adjustAttribute };
+export { AttributeSchema, ComputedAttributeSchema };

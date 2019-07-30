@@ -12,8 +12,6 @@ import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js
 import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
 import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
 
-let Skills = new Mongo.Collection("skills");
-
 /*
  * Skills are anything that results in a modifier to be added to a D20
  * Skills have an ability score modifier that they use as their basis
@@ -59,9 +57,8 @@ let SkillSchema = schema({
 	},
 });
 
-SkillSchema.extend(ColorSchema);
 
-let ComputedSkillSchema = schema({
+let ComputedSkillSchema = new SimpleSchema({
 	// Computed value of skill to be added to skill rolls
   value: {
     type: Number,
@@ -101,49 +98,4 @@ let ComputedSkillSchema = schema({
   },
 }).extend(SkillSchema);
 
-Skills.attachSchema(ComputedSkillSchema);
-Skills.attachSchema(PropertySchema);
-
-const insertSkill = new ValidatedMethod({
-  name: 'Skills.methods.insert',
-	mixins: [
-    creaturePermissionMixin,
-    setDocToLastMixin,
-    setDocAncestryMixin,
-    ensureAncestryContainsCharIdMixin,
-    recomputeCreatureMixin,
-    simpleSchemaMixin,
-  ],
-  collection: Skills,
-  permission: 'edit',
-  schema: SkillSchema,
-  run(skill) {
-		return Skills.insert(skill);
-  },
-});
-
-const updateSkill = new ValidatedMethod({
-  name: 'Skills.methods.update',
-  mixins: [
-    recomputeCreatureMixin,
-    propagateInheritanceUpdateMixin,
-    updateSchemaMixin,
-    creaturePermissionMixin,
-  ],
-  collection: Skills,
-  permission: 'edit',
-  schema: SkillSchema,
-  skipRecompute({update}){
-    let fields = getModifierFields(update);
-    return !fields.hasAny([
-      'variableName',
-      'ability',
-      'type',
-      'baseValue',
-      'baseProficiency',
-    ]);
-  },
-});
-
-export default Skills;
-export { SkillSchema };
+export { SkillSchema, ComputedSkillSchema };

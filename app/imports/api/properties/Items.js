@@ -1,12 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import schema from '/imports/api/schema.js';
-import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
-import { PropertySchema } from '/imports/api/properties/Properties.js'
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 
-Items = new Mongo.Collection("items");
-
-ItemSchema = schema({
+ItemSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
@@ -52,11 +46,4 @@ ItemSchema = schema({
 	},
 });
 
-ItemSchema.extend(ColorSchema);
-
-Items.attachSchema(ItemSchema);
-Items.attachSchema(PropertySchema);
-Items.attachSchema(ChildSchema);
-
-export default Items;
 export { ItemSchema };
