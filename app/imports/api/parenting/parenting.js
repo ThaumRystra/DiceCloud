@@ -1,5 +1,5 @@
-import fetchDocByRef from '/imports/api/creature/parenting/fetchDocByRef.js';
-import getCollectionByName from '/imports/api/creature/parenting/getCollectionByName.js';
+import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import SimpleSchema from 'simpl-schema';
 
 // n = collections.length

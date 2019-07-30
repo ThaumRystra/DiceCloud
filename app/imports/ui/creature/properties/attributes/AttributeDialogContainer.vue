@@ -14,7 +14,7 @@
 		adjustAttribute
 	} from '/imports/api/creature/properties/Attributes.js';
 	import Effects from '/imports/api/creature/properties/Effects.js';
-	import { setName } from '/imports/api/creature/parenting/parenting.js';
+	import { setName } from '/imports/api/parenting/parenting.js';
 
 	export default {
 		components: {

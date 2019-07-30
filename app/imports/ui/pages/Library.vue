@@ -26,7 +26,7 @@
 	import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
 	import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 	import Libraries from '/imports/api/library/Libraries.js';
-	import { setDocToLastOrder } from '/imports/api/order/order.js';
+	import { setDocToLastOrder } from '/imports/api/parenting/order.js';
 
 	export default {
 		components: {

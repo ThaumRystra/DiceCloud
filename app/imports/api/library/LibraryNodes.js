@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import schema from '/imports/api/schema.js';
-import ChildSchema from '/imports/api/creature/parenting/ChildSchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';

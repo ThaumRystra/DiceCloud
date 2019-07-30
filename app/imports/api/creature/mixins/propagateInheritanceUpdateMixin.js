@@ -1,8 +1,8 @@
 import {
   updateChildren,
   updateDecendents,
-} from '/imports/api/creature/parenting/parenting.js';
-import { inheritedFields } from '/imports/api/creature/parenting/ChildSchema.js';
+} from '/imports/api/parenting/parenting.js';
+import { inheritedFields } from '/imports/api/parenting/ChildSchema.js';
 import MONGO_OPERATORS from '/imports/constants/MONGO_OPERATORS.js';
 
 // This mixin can be safely applied to all update methods which are validated

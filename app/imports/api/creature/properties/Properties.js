@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import SoftRemovableSchema from '/imports/api/creature/parenting/SoftRemovableSchema.js';
-import ChildSchema from '/imports/api/creature/parenting/ChildSchema.js';
-import softRemove from '/imports/api/creature/parenting/softRemove.js';
-import getCollectionByName from '/imports/api/creature/parenting/getCollectionByName.js';
+import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import softRemove from '/imports/api/parenting/softRemove.js';
+import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 
 // Mixins
 import recomputeCreatureMixin from '/imports/api/creature/mixins/recomputeCreatureMixin.js';

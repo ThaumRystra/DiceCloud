@@ -7,7 +7,6 @@
 			:organize="organize"
 			@moved="moved"
 		/>
-		<template v-else>This library is empty</template>
 	</v-card-text>
 </template>
 

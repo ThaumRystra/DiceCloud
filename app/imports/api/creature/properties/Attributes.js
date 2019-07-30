@@ -12,7 +12,7 @@ import { setDocToLastMixin } from '/imports/api/creature/mixins/setDocToLastMixi
 import {
   setDocAncestryMixin,
   ensureAncestryContainsCharIdMixin
-} from '/imports/api/creature/parenting/parenting.js';
+} from '/imports/api/parenting/parenting.js';
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 import updateSchemaMixin from '/imports/api/creature/mixins/updateSchemaMixin.js';
 import propagateInheritanceUpdateMixin from '/imports/api/creature/mixins/propagateInheritanceUpdateMixin.js';
