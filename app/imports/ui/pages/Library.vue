@@ -1,9 +1,12 @@
 <template lang="html">
 	<toolbar-layout>
 		<template slot="toolbar">
+			<v-btn icon to="/library">
+				<v-icon>arrow_back</v-icon>
+			</v-btn>
 			{{library && library.name || 'Library'}}
 			<v-spacer/>
-			<v-switch v-model="organize" label="Sort" style="flex-grow: 0;"/>
+			<v-switch v-model="organize" label="Sort" style="flex-grow: 0; height: 32px;"/>
 		</template>
 		<v-card class="ma-4">
 			<library-contents-container
