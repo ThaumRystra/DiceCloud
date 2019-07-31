@@ -10,7 +10,7 @@
 </template>
 
 <script>
-	import SkillListTile from '/imports/ui/creature/properties/skills/SkillListTile.vue';
+	import SkillListTile from '/imports/ui/properties/skills/SkillListTile.vue';
 	export default {
 		data(){return {
 			skills: [

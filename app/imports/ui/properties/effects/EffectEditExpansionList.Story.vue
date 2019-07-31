@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import EffectEditExpansionList from '/imports/ui/creature/properties/effects/EffectEditExpansionList.vue';
+import EffectEditExpansionList from '/imports/ui/properties/effects/EffectEditExpansionList.vue';
 export default {
 	data(){ return {
 		effects: [

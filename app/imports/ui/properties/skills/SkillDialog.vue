@@ -27,11 +27,11 @@
 </template>
 
 <script>
-	import EffectChildList from '/imports/ui/creature/properties/effects/EffectChildList.vue';
+	import EffectChildList from '/imports/ui/properties/effects/EffectChildList.vue';
 	import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
-	import SkillEdit from '/imports/ui/creature/properties/skills/SkillEdit.vue';
-	import SkillProficiencyList from '/imports/ui/creature/properties/skills/SkillProficiencyList.vue';
-	import SkillListTile from '/imports/ui/creature/properties/skills/SkillListTile.vue';
+	import SkillEdit from '/imports/ui/properties/skills/SkillEdit.vue';
+	import SkillProficiencyList from '/imports/ui/properties/skills/SkillProficiencyList.vue';
+	import SkillListTile from '/imports/ui/properties/skills/SkillListTile.vue';
 
 	export default {
 		components: {

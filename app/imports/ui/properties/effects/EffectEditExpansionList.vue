@@ -25,7 +25,7 @@
 
 <script>
 	import EffectForm from '/imports/ui/forms/EffectForm.vue';
-	import EffectListTile from '/imports/ui/creature/properties/effects/EffectListTile.vue';
+	import EffectListTile from '/imports/ui/properties/effects/EffectListTile.vue';
 	export default {
 		props: {
 			effects: Array,

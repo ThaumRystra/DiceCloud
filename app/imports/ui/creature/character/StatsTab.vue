@@ -140,14 +140,14 @@
 <script>
 	import Attributes from '/imports/api/properties/Attributes.js';
 	import Skills from '/imports/api/properties/Skills.js';
-	import AttributeCard from '/imports/ui/creature/properties/attributes/AttributeCard.vue';
-	import AbilityListTile from '/imports/ui/creature/properties/attributes/AbilityListTile.vue';
+	import AttributeCard from '/imports/ui/properties/attributes/AttributeCard.vue';
+	import AbilityListTile from '/imports/ui/properties/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-	import HealthBarCardContainer from '/imports/ui/creature/properties/attributes/HealthBarCardContainer.vue';
-	import HitDiceListTile from '/imports/ui/creature/properties/attributes/HitDiceListTile.vue';
-	import SkillListTile from '/imports/ui/creature/properties/skills/SkillListTile.vue';
-	import ResourceCard from '/imports/ui/creature/properties/attributes/ResourceCard.vue';
-	import SpellSlotListTile from '/imports/ui/creature/properties/attributes/SpellSlotListTile.vue';
+	import HealthBarCardContainer from '/imports/ui/properties/attributes/HealthBarCardContainer.vue';
+	import HitDiceListTile from '/imports/ui/properties/attributes/HitDiceListTile.vue';
+	import SkillListTile from '/imports/ui/properties/skills/SkillListTile.vue';
+	import ResourceCard from '/imports/ui/properties/attributes/ResourceCard.vue';
+	import SpellSlotListTile from '/imports/ui/properties/attributes/SpellSlotListTile.vue';
 
 	import { adjustAttribute, insertAttribute } from '/imports/api/properties/Attributes.js';
 

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-	import SpellSlotListTile from '/imports/ui/creature/properties/attributes/SpellSlotListTile.vue';
+	import SpellSlotListTile from '/imports/ui/properties/attributes/SpellSlotListTile.vue';
 
 	export default {
 		components: {

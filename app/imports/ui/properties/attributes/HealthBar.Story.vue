@@ -26,7 +26,7 @@
 </template>
 
 <script>
-	import HealthBar from '/imports/ui/creature/properties/attributes/HealthBar.vue';
+	import HealthBar from '/imports/ui/properties/attributes/HealthBar.vue';
 	export default {
 		data(){return{
 			value: 100,

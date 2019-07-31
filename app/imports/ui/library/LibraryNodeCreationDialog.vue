@@ -17,7 +17,7 @@
 
 <script>
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import PropertySelector from '/imports/ui/creature/properties/PropertySelector.vue';
+import PropertySelector from '/imports/ui/properties/PropertySelector.vue';
 import LibraryNodeInsertForm from '/imports/ui/library/LibraryNodeInsertForm.vue';
 
 export default {

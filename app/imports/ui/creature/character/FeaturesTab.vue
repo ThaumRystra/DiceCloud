@@ -26,7 +26,7 @@
 	import Features, { updateFeature } from '/imports/api/properties/Features.js';
 	import { insertFeature } from '/imports/api/properties/Features.js';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-	import FeatureCard from '/imports/ui/creature/properties/features/FeatureCard.vue';
+	import FeatureCard from '/imports/ui/properties/features/FeatureCard.vue';
 	import { evaluateComputation, evaluateStringWithVariables } from '/imports/ui/utility/evaluate.js';
 
 	export default {

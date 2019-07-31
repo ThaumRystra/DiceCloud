@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import AttributeDialog from '/imports/ui/creature/properties/attributes/AttributeDialog.vue';
+	import AttributeDialog from '/imports/ui/properties/attributes/AttributeDialog.vue';
 	import Attributes from '/imports/api/properties/Attributes.js';
 	import {
 		updateAttribute,
