@@ -45,7 +45,11 @@ export function assertEditPermission(doc, userId) {
 
 function getRoot(doc){
   assertdocExists(doc);
-  return fetchDocByRef(doc.ancestors && doc.ancestors.length && doc.ancestors[0] || doc);
+  if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]){
+    return fetchDocByRef(doc.ancestors[0]);
+  } else {
+    return doc;
+  }
 }
 
 /**

@@ -1,9 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { updateParent } from '/imports/api/parenting/parenting.js';
-import { updateOrder } from '/imports/api/parenting/order.js';
+import { insertedDocAtOrder, removedDocAtOrder, updateDocOrder } from '/imports/api/parenting/order.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 
 const organizeDoc = new ValidatedMethod({
   name: 'organize.methods.organizeDoc',
@@ -17,14 +18,21 @@ const organizeDoc = new ValidatedMethod({
   }).validator(),
   run({docRef, parentRef, order}) {
     let doc = fetchDocByRef(docRef);
-
+    let collection = getCollectionByName(docRef.collection);
     // The user must be able to edit both the doc and its parent to move it
     // successfully
     assertDocEditPermission(doc, this.userId);
     let parent = fetchDocByRef(parentRef);
     assertDocEditPermission(parent, this.userId);
+
+    // Reorder the documents in the doc's old parent
+    removedDocAtOrder({collection, doc});
+    // Reorder the docs in the destination parent
+    insertedDocAtOrder({collection, parentId: parentRef.id, order});
+    // Change the doc's parent
     updateParent({docRef, parentRef});
-    updateOrder({docRef, order})
+    // Change the doc's order
+    collection.update(doc._id, {$set: {order}}, {selector: {type: 'any'}});
   },
 });
 
@@ -40,7 +48,7 @@ const reorderDoc = new ValidatedMethod({
   run({docRef, order}) {
     let doc = fetchDocByRef(docRef);
     assertDocEditPermission(doc, this.userId);
-    updateOrder({docRef, order})
+    updateDocOrder({docRef, order})
   },
 });
 

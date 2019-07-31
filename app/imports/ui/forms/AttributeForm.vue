@@ -33,11 +33,11 @@
 		<smart-select
 			label="Type"
 			:items="attributeTypes"
-			:value="model.type"
-			:error-messages="errors.type"
+			:value="model.attributeType"
+			:error-messages="errors.attributeType"
 			:menu-props="{auto: true, lazy: true}"
-			@change="(value, ack) => $emit('change', {path: ['type'], value, ack})"
-			:hint="attributeTypeHints[model.type]"
+			@change="(value, ack) => $emit('change', {path: ['attributeType'], value, ack})"
+			:hint="attributeTypeHints[model.attributeType]"
 			:debounce-time="debounceTime"
 		/>
 		<form-section name="Advanced" standalone>

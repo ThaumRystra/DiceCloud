@@ -42,9 +42,6 @@ export function forEachDescendant({collection, ancestorId, filter = {}, options}
 
 // 1 database read
 export function getAncestry({parentRef, inheritedFields = {}}){
-  // Ancestry must include ancestors
-  inheritedFields.ancestors = 1;
-
   let parentDoc = fetchDocByRef(parentRef, {fields: inheritedFields});
   let parent = { ...parentRef};
   for (let field in inheritedFields){
@@ -66,24 +63,30 @@ export function updateParent({docRef, parentRef}){
     parent: 1,
     ancestors: 1,
   }});
+  let updateOptions = { selector: {type: 'any'} };
 
   // Skip if we aren't changing the parent id
   if (oldDoc.parent.id === parentRef.id) return;
 
   // update the document's parenting
   let {parent, ancestors} = getAncestry({parentRef});
-  collection.update(docRef.id, {$set: {parent, ancestors}});
+  collection.update(docRef.id, {
+    $set: {parent, ancestors}
+  }, updateOptions);
 
   // Remove the old ancestors from the descendants
   updateDescendants({
+    collection,
     ancestorId: docRef.id,
     modifier: {$pullAll: {
       ancestors: oldDoc.ancestors,
     }},
+    options: updateOptions,
   });
 
   // Add the new ancestors to the descendants
   updateDescendants({
+    collection,
     ancestorId: docRef.id,
     modifier: {$push: {
       ancestors: {
@@ -91,6 +94,7 @@ export function updateParent({docRef, parentRef}){
         $position: 0,
       },
     }},
+    options: updateOptions,
   });
 }
 

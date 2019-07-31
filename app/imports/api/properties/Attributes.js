@@ -17,7 +17,7 @@ let AttributeSchema = new SimpleSchema({
     defaultValue: 'newAttribute',
   },
 	// How it is displayed and computed is determined by type
-  type: {
+  attributeType: {
     type: String,
     allowedValues: [
       'ability', //Strength, Dex, Con, etc.

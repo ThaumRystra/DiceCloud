@@ -51,7 +51,7 @@ export function getHighestOrder({collection, parentId}){
     fields: {order: 1},
     sort: {order: -1},
   });
-  return (highestOrderedDoc && highestOrderedDoc.order) || 0;
+  return highestOrderedDoc ? highestOrderedDoc.order : -1;
 }
 
 export function setDocToLastOrder({collection, doc}){
@@ -61,7 +61,7 @@ export function setDocToLastOrder({collection, doc}){
   }) + 1;
 }
 
-export function updateOrder({docRef, order}){
+export function updateDocOrder({docRef, order}){
   let doc = fetchDocByRef(docRef, {fields: {
     order: 1,
     parent: 1,
@@ -71,8 +71,7 @@ export function updateOrder({docRef, order}){
   if (currentOrder === order){
     return;
   } else {
-    // Move the document to its new order
-    collection.update(doc._id, {$set: {order}}, {selector: {type: 'any'}});
+    // First move the documents that are in the way
     let inBetweenSelector, increment;
     if (order > currentOrder){
       // Move in-between docs backward
@@ -98,7 +97,35 @@ export function updateOrder({docRef, order}){
       multi: true,
       selector: {type: 'any'},
     });
+    // Then move the document itself
+    collection.update(doc._id, {$set: {order}}, {selector: {type: 'any'}});
   }
+}
+
+export function removedDocAtOrder({collection, doc}){
+  // Decrement the order of all docs after the removed doc
+  collection.update({
+    'parent.id': doc.parent.id,
+    order: {$gt: doc.order},
+  }, {
+    $inc: {order: -1},
+  }, {
+    multi: true,
+    selector: {type: 'any'},
+  });
+}
+
+export function insertedDocAtOrder({collection, parentId, order}){
+  // Decrement the order of all docs after the removed doc
+  collection.update({
+    'parent.id': parentId,
+    order: {$gte: order},
+  }, {
+    $inc: {order: 1},
+  }, {
+    multi: true,
+    selector: {type: 'any'},
+  });
 }
 
 export function reorderDocs({collection, parentId}){

@@ -51,13 +51,13 @@
 				let parentRef;
 				if (parent){
 					parentRef = {
-						id: this.libraryId,
-						collection: 'libraries',
+						id: parent._id,
+						collection: 'libraryNodes',
 					};
 				} else {
 					parentRef = {
-						id: parent._id,
-						collection: 'libraryNodes',
+						id: this.libraryId,
+						collection: 'libraries',
 					};
 				}
 				organizeDoc.call({

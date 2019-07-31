@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="!hasChildren ? 'empty' : null">
+	<div :class="!hasChildren ? 'empty' : null" :data-id="node._id">
 		<div class="layout row align-center">
 			<v-btn
 				small icon
@@ -9,9 +9,10 @@
 			>
 				<v-icon v-if="hasChildren || organize">chevron_right</v-icon>
 			</v-btn>
-			<v-icon class="handle mr-2" v-if="organize">reorder</v-icon>
+			<v-icon class="handle mr-2" v-if="organize" :disabled="expanded">reorder</v-icon>
 			<div>
-				<span class="mr-2 subheading">{{node && node.order}}</span>
+				<span class="mr-2 caption">{{node && node.order}}</span>
+				<span class="mr-2 caption">({{node && node.type}})</span>
 				{{node && node.name}}
 			</div>
 		</div>
@@ -21,7 +22,7 @@
 					:node="node"
 					:children="computedChildren"
 					:group="group"
-					:show-empty="organize"
+					:organize="organize"
 					@reordered="e => $emit('reordered', e)"
 					@reorganized="e => $emit('reorganized', e)"
 				/>
@@ -94,5 +95,8 @@
 	.ghost {
 	  opacity: 0.5;
 	  background: #c8ebfb;
+	}
+	.v-icon--disabled {
+		opacity: 0;
 	}
 </style>
