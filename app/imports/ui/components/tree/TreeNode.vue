@@ -9,10 +9,9 @@
 			>
 				<v-icon v-if="hasChildren || organize">chevron_right</v-icon>
 			</v-btn>
-			<v-icon class="handle mr-2" v-if="organize" :disabled="expanded">reorder</v-icon>
-			<div>
-				<span class="mr-2 caption">{{node && node.order}}</span>
-				<span class="mr-2 caption">({{node && node.type}})</span>
+			<v-icon class="handle mr-2" v-if="organize" :disabled="expanded">drag_handle</v-icon>
+			<div class="layout row center" style="align-items: center">
+				<v-icon v-if="node.type" class="mr-2">{{icon(node.type)}}</v-icon>
 				{{node && node.name}}
 			</div>
 		</div>
@@ -38,6 +37,7 @@
 	* the tree view shows off the full character structure, and where each part of
 	* character comes from.
 	**/
+	import PROPERTY_ICONS from '/imports/constants/PROPERTY_ICONS.js';
 	export default {
 		name: 'tree-node',
 		beforeCreate() {
@@ -69,8 +69,14 @@
 					children.push(...this.getChildren())
 				}
 				return children;
-			}
+			},
 		},
+		methods: {
+			icon(type){
+				console.log({icon: PROPERTY_ICONS[type],PROPERTY_ICONS})
+				return PROPERTY_ICONS[type];
+			},
+		}
 	};
 </script>
 

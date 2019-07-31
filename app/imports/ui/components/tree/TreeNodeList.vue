@@ -3,7 +3,6 @@
 		:value="children"
 		class="drag-area layout column"
 		@change="change"
-		@start="start"
 		:group="group"
 		:animation="200"
 		ghost-class="ghost"
@@ -68,9 +67,6 @@
 					}
 				}
 			},
-			start(){
-				console.log({start: arguments})
-			}
 		},
 	};
 </script>
