@@ -2,14 +2,14 @@
 	<transition-group name="slide">
 		<dialog-base v-show="step == 1" class="step-1" key="left">
 			<div slot="toolbar">Add Library Content</div>
-			<property-selector @select="setProperty"/>
+			<property-selector @select="setType"/>
 		</dialog-base>
 		<library-node-insert-form
 			v-show="step == 2"
 			class="step-2"
 			key="right"
-			:type="property && property.type"
-			:property-name="property && property.name"
+			:type="type"
+			:property-name="getPropertyName(type)"
 			@back="step = 1"
 		/>
 	</transition-group>
@@ -19,10 +19,11 @@
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/properties/PropertySelector.vue';
 import LibraryNodeInsertForm from '/imports/ui/library/LibraryNodeInsertForm.vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default {
   data() { return {
-    property: undefined,
+    type: undefined,
 		step: 1,
   };},
   components: {
@@ -31,10 +32,11 @@ export default {
 		LibraryNodeInsertForm,
   },
 	methods: {
-		setProperty(property){
-			this.property = property;
+		setType(property){
+			this.type = property;
 			this.step = 2;
-		}
+		},
+		getPropertyName,
 	},
 };
 </script>
