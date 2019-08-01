@@ -32,6 +32,10 @@
 					<div class="title">
 						{{getPropertyName(selectedNode && selectedNode.type)}}
 					</div>
+					<v-spacer/>
+					<v-btn flat icon>
+						<v-icon>create</v-icon>
+					</v-btn>
 				</v-toolbar>
 				<v-card-text>
 					<property-viewer :model="selectedNode"/>
