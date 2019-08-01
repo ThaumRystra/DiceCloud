@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 
 let ExperienceSchema = new SimpleSchema({
-	title: {
+	name: {
 		type: String,
 		optional: true,
 	},

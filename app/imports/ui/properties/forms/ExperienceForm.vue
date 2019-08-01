@@ -15,9 +15,9 @@
 			<text-field
 				label="Title"
 				style="flex-basis: 300px;"
-				:value="model.title"
-				@change="(value, ack) => $emit('change', {path: ['title'], value, ack})"
-				:error-messages="errors.title"
+				:value="model.name"
+				@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+				:error-messages="errors.name"
 				:debounce-time="debounceTime"
 			/>
 			<text-field
