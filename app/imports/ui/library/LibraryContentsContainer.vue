@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-card-text style="width: initial; max-width: 50%; min-width: 320px;">
+	<v-card-text style="width: initial; max-width: 100%; min-width: 320px;">
 		<tree-node-list
 			v-if="libraryChildren"
 			:children="libraryChildren"

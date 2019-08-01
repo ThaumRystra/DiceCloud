@@ -8,7 +8,11 @@
 </template>
 
 <script>
+import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 export default {
+	components: {
+		...propertyViewerIndex,
+	},
 	props: {
 		model: {
 			type: Object,

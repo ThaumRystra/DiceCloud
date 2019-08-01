@@ -6,25 +6,30 @@
 			</v-btn>
 			{{library && library.name || 'Library'}}
 			<v-spacer/>
-			<v-btn-toggle>
-				<v-btn v-model="organize">
-					<v-icon class="mr-1">reorder</v-icon>
-					Organize
-				</v-btn>
-			</v-btn-toggle>
 		</template>
 		<v-card class="ma-4 layout row">
-			<library-contents-container
+			<div>
+				<v-toolbar>
+					<v-spacer/>
+					<v-btn-toggle>
+						<v-btn v-model="organize">
+							<v-icon class="mr-1">reorder</v-icon>
+							Organize
+						</v-btn>
+					</v-btn-toggle>
+				</v-toolbar>
+				<library-contents-container
 				:library-id="$route.params.id"
 				:organize="organize"
 				@selected="e => selected = e"
 				:selected-node-id="selected"
-			/>
+				/>
+			</div>
 			<v-divider vertical/>
 			<v-card-text
 			style="flex-grow: 1;"
 			>
-				<pre>{{selectedNode}}</pre>
+				<property-viewer :model="selectedNode"/>
 			</v-card-text>
 		</v-card>
 		<v-btn fixed fab bottom right
@@ -40,6 +45,7 @@
 <script>
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 	import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
+	import PropertyViewer from '/imports/ui/properties/PropertyViewer.vue';
 	import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 	import Libraries from '/imports/api/library/Libraries.js';
 	import { setDocToLastOrder } from '/imports/api/parenting/order.js';
@@ -48,6 +54,7 @@
 		components: {
 			ToolbarLayout,
 			LibraryContentsContainer,
+			PropertyViewer,
 		},
 		data(){ return {
 			organize: false,
@@ -81,8 +88,7 @@
 				return Libraries.findOne(this.$route.params.id);
 			},
 			selectedNode(){
-				let node = LibraryNodes.findOne(this.selected);
-				return JSON.stringify(node, null, 2);
+				return LibraryNodes.findOne(this.selected);
 			}
 		}
 	};
