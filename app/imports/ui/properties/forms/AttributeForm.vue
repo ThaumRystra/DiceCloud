@@ -40,6 +40,13 @@
 			:hint="attributeTypeHints[model.attributeType]"
 			:debounce-time="debounceTime"
 		/>
+		<text-area
+			label="Description"
+			:value="model.description"
+			:error-messages="errors.description"
+			@change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+			:debounce-time="debounceTime"
+		/>
 		<form-section name="Advanced" standalone>
 			<div class="layout column align-center">
 				<v-switch

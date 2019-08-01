@@ -38,6 +38,11 @@ let AttributeSchema = new SimpleSchema({
 		type: Number,
 		optional: true,
 	},
+  // Description of what the attribute is used for
+  description: {
+		type: String,
+		optional: true,
+	},
 	// The damage done to the attribute, always positive
   damage: {
     type: SimpleSchema.Integer,
