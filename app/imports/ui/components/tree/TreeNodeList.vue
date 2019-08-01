@@ -1,7 +1,7 @@
 <template lang="html">
 	<draggable
 		:value="children"
-		class="drag-area layout column"
+		class="drag-area"
 		@change="change"
 		:group="group"
 		:animation="200"
@@ -10,14 +10,17 @@
 		handle=".handle"
 	>
 		<tree-node
+			class="item"
 			v-for="child in children"
 			:node="child.node"
 			:children="child.children"
 			:group="group"
-			:key="child.node && (child.node._id || child.node.name)"
+			:key="child.node._id"
+			:selected-node-id="selectedNodeId"
+			:selected="selectedNodeId === child.node._id"
 			:organize="organize"
 			:lazy="lazy"
-			class="item"
+			@selected="e => $emit('selected', e)"
 			@reordered="e => $emit('reordered', e)"
 			@reorganized="e => $emit('reorganized', e)"
 			@dragstart.native="e => e.dataTransfer.setData('cow', child.node && child.node.name)"
@@ -45,6 +48,7 @@
 				type: Array,
 				required: true,
 			},
+			selectedNodeId: String,
 		},
 		computed: {
 			hasChildren(){

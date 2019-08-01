@@ -1,10 +1,12 @@
 <template lang="html">
-	<v-card-text>
+	<v-card-text style="width: initial; max-width: 50%; min-width: 320px;">
 		<tree-node-list
 			v-if="libraryChildren"
 			:children="libraryChildren"
 			:group="library && library._id"
 			:organize="organize"
+			:selected-node-id="selectedNodeId"
+			@selected="e => $emit('selected', e)"
 			@reordered="reordered"
 			@reorganized="reorganized"
 		/>
@@ -24,6 +26,7 @@
 		props: {
 			libraryId: String,
 			organize: Boolean,
+			selectedNodeId: String,
 		},
 		meteor: {
 			$subscribe: {

@@ -13,11 +13,19 @@
 				</v-btn>
 			</v-btn-toggle>
 		</template>
-		<v-card class="ma-4">
+		<v-card class="ma-4 layout row">
 			<library-contents-container
 				:library-id="$route.params.id"
 				:organize="organize"
+				@selected="e => selected = e"
+				:selected-node-id="selected"
 			/>
+			<v-divider vertical/>
+			<v-card-text
+			style="flex-grow: 1;"
+			>
+				<pre>{{selectedNode}}</pre>
+			</v-card-text>
 		</v-card>
 		<v-btn fixed fab bottom right
 			color="primary"
@@ -43,6 +51,7 @@
 		},
 		data(){ return {
 			organize: false,
+			selected: undefined,
 		};},
 		methods: {
 			insertLibraryNode(){
@@ -70,6 +79,10 @@
 			},
 			library(){
 				return Libraries.findOne(this.$route.params.id);
+			},
+			selectedNode(){
+				let node = LibraryNodes.findOne(this.selected);
+				return JSON.stringify(node, null, 2);
 			}
 		}
 	};

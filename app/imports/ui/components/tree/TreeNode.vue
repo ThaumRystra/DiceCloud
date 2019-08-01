@@ -1,18 +1,41 @@
 <template lang="html">
-	<div :class="!hasChildren ? 'empty' : null" :data-id="node._id">
-		<div class="layout row align-center">
+	<div
+		class="tree-node"
+		:class="!hasChildren ? 'empty' : null"
+		:data-id="node._id"
+	>
+		<div
+			class="layout row align-center justify-start tree-node-title"
+			style="cursor: pointer;"
+			:class="selected && 'primary--text'"
+			@click.stop="$emit('selected', node._id)"
+		>
 			<v-btn
 				small icon
 				:class="showExpanded ? 'rotate-90' : null"
-				@click="expanded = !expanded"
+				@click.stop="expanded = !expanded"
 				:disabled="!hasChildren && !organize"
 			>
 				<v-icon v-if="hasChildren || organize">chevron_right</v-icon>
 			</v-btn>
-			<v-icon class="handle mr-2" v-if="organize" :disabled="expanded">drag_handle</v-icon>
-			<div class="layout row center" style="align-items: center">
-				<v-icon v-if="node.type" class="mr-2">{{icon(node.type)}}</v-icon>
-				{{node && node.name}}
+			<div
+				class="layout row align-center justify-start"
+				style="flex-grow: 0;"
+			>
+				<v-icon
+					class="handle mr-2"
+					v-if="organize"
+					:class="selected && 'primary--text'"
+					:disabled="expanded"
+				>drag_handle</v-icon>
+				<v-icon
+					v-if="node.type"
+					class="mr-2"
+					:class="selected && 'primary--text'"
+				>{{icon(node.type)}}</v-icon>
+				<div class="text-no-wrap text-truncate">
+					{{node && node.name}}
+				</div>
 			</div>
 		</div>
 		<v-expand-transition>
@@ -22,8 +45,10 @@
 					:children="computedChildren"
 					:group="group"
 					:organize="organize"
+					:selected-node-id="selectedNodeId"
 					@reordered="e => $emit('reordered', e)"
 					@reorganized="e => $emit('reorganized', e)"
+					@selected="e => $emit('selected', e)"
 				/>
 			</div>
 		</v-expand-transition>
@@ -52,6 +77,8 @@
 			organize: Boolean,
 			children: Array,
 			getChildren: Function,
+			selectedNodeId: String,
+			selected: Boolean,
 		},
 		computed: {
 			hasChildren(){
@@ -73,7 +100,6 @@
 		},
 		methods: {
 			icon(type){
-				console.log({icon: PROPERTY_ICONS[type],PROPERTY_ICONS})
 				return PROPERTY_ICONS[type];
 			},
 		}
@@ -102,7 +128,10 @@
 	  opacity: 0.5;
 	  background: #c8ebfb;
 	}
-	.v-icon--disabled {
+	.v-icon.v-icon--disabled {
 		opacity: 0;
+	}
+	.theme--light .tree-node-title:hover {
+		background: rgba(0,0,0,.04);
 	}
 </style>
