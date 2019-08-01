@@ -28,11 +28,12 @@
 					:class="selected && 'primary--text'"
 					:disabled="expanded"
 				>drag_handle</v-icon>
-				<v-icon
+				<property-icon
 					v-if="node.type"
 					class="mr-2"
+					:type="node.type"
 					:class="selected && 'primary--text'"
-				>{{icon(node.type)}}</v-icon>
+				/>
 				<div class="text-no-wrap text-truncate">
 					{{node && node.name}}
 				</div>
@@ -62,11 +63,14 @@
 	* the tree view shows off the full character structure, and where each part of
 	* character comes from.
 	**/
-	import PROPERTY_ICONS from '/imports/constants/PROPERTY_ICONS.js';
+	import PropertyIcon from '/imports/ui/components/properties/PropertyIcon.vue';
 	export default {
 		name: 'tree-node',
 		beforeCreate() {
 		  this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
+		},
+		components: {
+			PropertyIcon,
 		},
 		data(){ return {
 			expanded: false,

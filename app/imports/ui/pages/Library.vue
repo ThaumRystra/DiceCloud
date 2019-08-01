@@ -9,14 +9,14 @@
 		</template>
 		<v-card class="ma-4 layout row">
 			<div>
-				<v-toolbar>
+				<v-toolbar dense flat>
 					<v-spacer/>
-					<v-btn-toggle>
-						<v-btn v-model="organize">
-							<v-icon class="mr-1">reorder</v-icon>
-							Organize
-						</v-btn>
-					</v-btn-toggle>
+					<v-switch
+						label="Organize"
+						class="mx-3"
+						v-model="organize"
+						style="flex-grow: 0; height: 32px;"
+					/>
 				</v-toolbar>
 				<library-contents-container
 				:library-id="$route.params.id"
@@ -26,11 +26,17 @@
 				/>
 			</div>
 			<v-divider vertical/>
-			<v-card-text
-			style="flex-grow: 1;"
-			>
-				<property-viewer :model="selectedNode"/>
-			</v-card-text>
+			<div style="width: 100%;">
+				<v-toolbar dense flat>
+					<property-icon :type="selectedNode && selectedNode.type" class="mr-2"/>
+					<div class="title">
+						{{getPropertyName(selectedNode && selectedNode.type)}}
+					</div>
+				</v-toolbar>
+				<v-card-text>
+					<property-viewer :model="selectedNode"/>
+				</v-card-text>
+			</div>
 		</v-card>
 		<v-btn fixed fab bottom right
 			color="primary"
@@ -49,12 +55,15 @@
 	import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 	import Libraries from '/imports/api/library/Libraries.js';
 	import { setDocToLastOrder } from '/imports/api/parenting/order.js';
+	import PropertyIcon from '/imports/ui/components/properties/PropertyIcon.vue';
+	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 	export default {
 		components: {
 			ToolbarLayout,
 			LibraryContentsContainer,
 			PropertyViewer,
+			PropertyIcon,
 		},
 		data(){ return {
 			organize: false,
@@ -77,6 +86,7 @@
 					}
 				});
 			},
+			getPropertyName,
 		},
 		meteor: {
 			$subscribe: {
