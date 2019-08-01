@@ -103,9 +103,9 @@
 </template>
 
 <script>
-	import FormSection, {FormSections} from '/imports/ui/forms/components/FormSection.vue';
-	import AdjustmentListForm from '/imports/ui/forms/AdjustmentListForm.vue';
-	import BuffListForm from '/imports/ui/forms/BuffListForm.vue';
+	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
+	import AdjustmentListForm from '/imports/ui/properties/forms/AdjustmentListForm.vue';
+	import BuffListForm from '/imports/ui/properties/forms/BuffListForm.vue';
 
 	export default {
 		components: {

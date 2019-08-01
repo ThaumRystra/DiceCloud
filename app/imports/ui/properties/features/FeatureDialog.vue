@@ -14,7 +14,7 @@
 
 <script>
 	import PropertyDialog from '/imports/ui/components/properties/PropertyDialog.vue';
-	import FeatureForm from '/imports/ui/forms/FeatureForm.vue';
+	import FeatureForm from '/imports/ui/properties/forms/FeatureForm.vue';
 	import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 	export default {

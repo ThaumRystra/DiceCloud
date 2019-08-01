@@ -34,7 +34,7 @@
 </template>
 
 <script>
-	import FormSection from '/imports/ui/forms/components/FormSection.vue';
+	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 	import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 	export default {

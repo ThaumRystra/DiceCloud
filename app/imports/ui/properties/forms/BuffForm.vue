@@ -45,7 +45,7 @@
 </template>
 
 <script>
-	import EffectListForm from '/imports/ui/forms/EffectListForm.vue';
+	import EffectListForm from '/imports/ui/properties/forms/EffectListForm.vue';
 	export default {
 		props: {
 			stored: Boolean,

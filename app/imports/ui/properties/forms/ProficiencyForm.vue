@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import ProficiencySelect from '/imports/ui/forms/components/ProficiencySelect.vue';
+	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
 
 	export default {
 		components: {

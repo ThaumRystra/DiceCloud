@@ -24,7 +24,7 @@
 </template>
 
 <script>
-	import EffectForm from '/imports/ui/forms/EffectForm.vue';
+	import EffectForm from '/imports/ui/properties/forms/EffectForm.vue';
 	import EffectListTile from '/imports/ui/properties/effects/EffectListTile.vue';
 	export default {
 		props: {

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-	import BuffForm from '/imports/ui/forms/BuffForm.vue';
+	import BuffForm from '/imports/ui/properties/forms/BuffForm.vue';
 	import {StoredBuffSchema, AppliedBuffSchema} from '/imports/api/properties/Buffs.js';
 
 	export default {

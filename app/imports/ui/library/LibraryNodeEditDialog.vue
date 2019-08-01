@@ -31,7 +31,7 @@
 <script>
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import propertyFormIndex from '/imports/ui/forms/components/propertyFormIndex.js';
+import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 
 let todo = () => console.log('not implemented');
 let libraryNodeSet = libraryNodePull = libraryNodePush = libraryNodeRemove = todo;

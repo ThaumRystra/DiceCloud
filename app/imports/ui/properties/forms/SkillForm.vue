@@ -62,8 +62,8 @@
 </template>
 
 <script>
-	import ProficiencySelect from '/imports/ui/forms/components/ProficiencySelect.vue';
-	import FormSection from '/imports/ui/forms/components/FormSection.vue';
+	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
+	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 
 	export default {
 		components: {

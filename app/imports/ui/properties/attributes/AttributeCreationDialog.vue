@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import AttributeForm from '/imports/ui/forms/AttributeForm.vue';
+	import AttributeForm from '/imports/ui/properties/forms/AttributeForm.vue';
 	import Attributes from '/imports/api/properties/Attributes.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
