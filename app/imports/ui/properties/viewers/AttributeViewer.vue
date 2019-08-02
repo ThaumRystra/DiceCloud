@@ -20,11 +20,10 @@
 		<p v-if="reset">
 			{{reset}}
 		</p>
-		<effect-list-tile
+		<effect-viewer
 			class="mb-3"
 			operation="base"
-			:result="model.baseValue"
-			:name="model.attributeType"
+			:model="{result: model.baseValue, name: model.attributeType, operation: 'base'}"
 		/>
 		<p v-if="model.description">
 			{{model.description}}
@@ -34,11 +33,11 @@
 
 <script>
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
-	import EffectListTile from '/imports/ui/properties/viewers/shared/effects/EffectListTile.vue';
+	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
 
 	export default {
 		components: {
-			EffectListTile,
+			EffectViewer,
 		},
 		props: {
 			model: Object,
