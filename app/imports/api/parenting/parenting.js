@@ -32,6 +32,7 @@ export function fetchDescendants({ collection, ancestorId, filter = {}, options}
 export function updateDescendants({collection, ancestorId, filter = {}, modifier, options={}}){
   filter["ancestors.id"] = ancestorId;
   options.multi = true;
+  options.selector = {type: 'any'};
   collection.update(filter, modifier, options);
 }
 

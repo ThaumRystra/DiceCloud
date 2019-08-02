@@ -1,20 +1,29 @@
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import updateDescendants from '/imports/api/parenting/parenting.js';
+import { updateDescendants } from '/imports/api/parenting/parenting.js';
 
-// 1 + n database hits
 export function softRemove({_id, collection}){
   let removalDate = new Date();
+  if (typeof collection === 'string') {
+    collection = getCollectionByName(collection);
+  }
   // Remove this document
-  collection = getCollectionByName(collection);
-  collection.update(_id, {$set: {
-    removed: true,
-    removedAt: removalDate,
-  }, $unset: {
-    removedWith: 1,
-  }});
+  collection.update(
+    _id, {
+      $set: {
+        removed: true,
+        removedAt: removalDate,
+      },
+      $unset: {
+        removedWith: 1,
+      }
+    }, {
+      selector: {type: 'any'},
+    },
+  );
   // Remove all the descendants that have not yet been removed, and set them to be
   // removed with this document
   updateDescendants({
+    collection,
     ancestorId: _id,
     filter: {removed: {$ne: true}},
     modifier: {$set: {

@@ -3,6 +3,7 @@
  * inputs, and sends update events when valid data model changes must occur
  */
 import { get, toPath } from 'lodash';
+
 function resolvePath(model, path){
   let arrayPath = toPath(path);
   if (arrayPath.length === 1){

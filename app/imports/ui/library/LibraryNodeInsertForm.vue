@@ -55,16 +55,7 @@ export default {
 			model.type = newType;
 			this.model = model;
 		},
-		model(newModel){
-			console.log('model changed');
-			console.log(newModel);
-		},
 	},
-	methods: {
-		insert(){
-			console.log(this.model);
-		}
-	}
 }
 </script>
 

@@ -12,8 +12,9 @@
 		</template>
 		<component
 			v-if="model"
-			:is="model.type"
 			class="library-node-form"
+			stored
+			:is="model.type"
 			:model="model"
 			@change="change"
 			@push="push"
@@ -32,18 +33,18 @@
 </template>
 
 <script>
-	import LibraryNodes, { updateLibraryNode } from '/imports/api/library/LibraryNodes.js';
+	import LibraryNodes, {
+		updateLibraryNode,
+		pushToLibraryNode,
+		pullFromLibraryNode,
+		softRemoveLibraryNode,
+	} from '/imports/api/library/LibraryNodes.js';
 	import librarySchemas from '/imports/api/library/librarySchemas.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 	import PropertyIcon from '/imports/ui/components/properties/PropertyIcon.vue';
 	import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
-
-	let todo = ({ack}) => {
-		console.warn('not implemented');
-		ack && ack();
-	};
-	let libraryNodePull = libraryNodePush = libraryNodeRemove = todo;
+	import { get } from 'lodash';
 
 	export default {
 	  components: {
@@ -62,16 +63,28 @@
 		methods: {
 			getPropertyName,
 			change({path, value, ack}){
-	      updateLibraryNode.call({_id: this._id, path, value, ack});
+	      updateLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
+					console.log({error, result});
+					ack && ack(error);
+				});
 			},
 	    push({path, value, ack}){
-				libraryNodePush({_id: this._id, path}, e => ack(e));
+				pushToLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
+					console.log({error, result});
+					ack && ack(error);
+				});
 	    },
 	    pull({path, ack}){
-				libraryNodePull({_id: this._id, path}, e => ack(e));
+				let itemId = get(this.model, path)._id;
+				path.pop();
+				pullFromLibraryNode.call({_id: this._id, path, itemId}, (error, result) =>{
+					console.log({error, result});
+					ack && ack(error);
+				});
 	    },
 			remove(){
-				libraryNodeRemove({_id: this._id});
+				softRemoveLibraryNode.call({_id: this._id});
+				this.$store.dispatch('popDialogStack');
 			},
 		}
 	};

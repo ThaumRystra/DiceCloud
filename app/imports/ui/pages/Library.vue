@@ -109,7 +109,10 @@
 				return Libraries.findOne(this.$route.params.id);
 			},
 			selectedNode(){
-				return LibraryNodes.findOne(this.selected);
+				return LibraryNodes.findOne({
+					_id: this.selected,
+					removed: {$ne: true}
+				});
 			}
 		}
 	};

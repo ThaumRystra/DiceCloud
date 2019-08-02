@@ -3,7 +3,8 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import librarySchemas from '/imports/api/library/librarySchemas.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import getModifierFields from '/imports/api/getModifierFields.js';
+import { softRemove } from '/imports/api/parenting/softRemove.js';
+import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -16,9 +17,10 @@ let LibraryNodeSchema = new SimpleSchema({
 
 for (let key in librarySchemas){
 	let schema = new SimpleSchema({});
-	schema.extend(librarySchemas[key]);
 	schema.extend(LibraryNodeSchema);
+	schema.extend(librarySchemas[key]);
 	schema.extend(ChildSchema);
+	schema.extend(SoftRemovableSchema);
 	LibraryNodes.attachSchema(schema, {
 		selector: {type: key}
 	});
@@ -46,9 +48,10 @@ const insertNode = new ValidatedMethod({
 });
 
 const updateLibraryNode = new ValidatedMethod({
-  name: 'LibraryNodes.methods.set',
+  name: 'LibraryNodes.methods.update',
   validate({_id, path, value, ack}){
 		if (!_id) return false;
+		// We cannot change these with a simple update
 		switch (path[0]){
 			case 'type':
       case 'order':
@@ -57,15 +60,56 @@ const updateLibraryNode = new ValidatedMethod({
 				return false;
 		}
   },
-  run({_id, path, value, ack}) {
+  run({_id, path, value}) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
 		return LibraryNodes.update(_id, {
 			$set: {[path.join('.')]: value},
 		}, {
 			selector: {type: node.type},
-		}, error => ack && ack(error));
+		});
   },
+});
+
+const pushToLibraryNode = new ValidatedMethod({
+	name: 'LibraryNodes.methods.push',
+	validate: null,
+	run({_id, path, value}){
+		let node = LibraryNodes.findOne(_id);
+    assertNodeEditPermission(node, this.userId);
+		return LibraryNodes.update(_id, {
+			$push: {[path.join('.')]: value},
+		}, {
+			selector: {type: node.type},
+		});
+	}
+});
+
+const pullFromLibraryNode = new ValidatedMethod({
+	name: 'LibraryNodes.methods.pull',
+	validate: null,
+	run({_id, path, itemId}){
+		let node = LibraryNodes.findOne(_id);
+    assertNodeEditPermission(node, this.userId);
+		return LibraryNodes.update(_id, {
+			$pull: {[path.join('.')]: {_id: itemId}},
+		}, {
+			selector: {type: node.type},
+			getAutoValues: false,
+		});
+	}
+});
+
+const softRemoveLibraryNode = new ValidatedMethod({
+	name: 'LibraryNodes.methods.softRemove',
+	validate: new SimpleSchema({
+		_id: SimpleSchema.RegEx.Id
+	}).validator(),
+	run({_id}){
+		let node = LibraryNodes.findOne(_id);
+    assertNodeEditPermission(node, this.userId);
+		softRemove({_id, collection: LibraryNodes});
+	}
 });
 
 function libraryNodesToTree(ancestorId){
@@ -73,7 +117,8 @@ function libraryNodesToTree(ancestorId){
   let nodeIndex = {};
   let nodeList = [];
   LibraryNodes.find({
-    'ancestors.id': ancestorId
+    'ancestors.id': ancestorId,
+		removed: {$ne: true},
   }, {
     sort: {order: 1}
   }).forEach( node => {
@@ -98,4 +143,12 @@ function libraryNodesToTree(ancestorId){
 }
 
 export default LibraryNodes;
-export { LibraryNodeSchema, insertNode, updateLibraryNode, libraryNodesToTree };
+export {
+	LibraryNodeSchema,
+	insertNode,
+	updateLibraryNode,
+	pullFromLibraryNode,
+	pushToLibraryNode,
+	softRemoveLibraryNode,
+	libraryNodesToTree,
+};
