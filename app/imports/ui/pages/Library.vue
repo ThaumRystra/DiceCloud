@@ -7,7 +7,7 @@
 			{{library && library.name || 'Library'}}
 			<v-spacer/>
 		</template>
-		<v-card class="ma-4 layout row">
+		<v-card class="ma-4 layout row" data-id="library-card">
 			<div>
 				<v-toolbar dense flat>
 					<v-spacer/>
@@ -19,21 +19,21 @@
 					/>
 				</v-toolbar>
 				<library-contents-container
-				:library-id="$route.params.id"
-				:organize="organize"
-				@selected="e => selected = e"
-				:selected-node-id="selected"
+					:library-id="$route.params.id"
+					:organize="organize"
+					@selected="e => selected = e"
+					:selected-node-id="selected"
 				/>
 			</div>
 			<v-divider vertical/>
-			<div style="width: 100%;">
+			<div style="width: 100%; background-color: inherit;" data-id="selected-node-card">
 				<v-toolbar dense flat>
 					<property-icon :type="selectedNode && selectedNode.type" class="mr-2"/>
 					<div class="title">
 						{{getPropertyName(selectedNode && selectedNode.type)}}
 					</div>
 					<v-spacer/>
-					<v-btn flat icon>
+					<v-btn flat icon @click="editLibraryNode" v-if="selectedNode">
 						<v-icon>create</v-icon>
 					</v-btn>
 				</v-toolbar>
@@ -84,10 +84,17 @@
 						libraryNode.parent = {collection: "libraries", id: that.library._id};
 						libraryNode.ancestors = [ {collection: "libraries", id: that.library._id}];
 						setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
-						console.log(libraryNode);
 						let libraryNodeId = insertNode.call(libraryNode);
 						return libraryNodeId;
 					}
+				});
+			},
+			editLibraryNode(){
+				let that = this;
+				this.$store.commit('pushDialogStack', {
+					component: 'library-node-edit-dialog',
+					elementId: 'selected-node-card',
+					data: {_id: this.selected},
 				});
 			},
 			getPropertyName,

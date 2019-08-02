@@ -5,6 +5,7 @@ import FeatureCreationDialog from '/imports/ui/properties/features/FeatureCreati
 import FeatureDialogContainer from '/imports/ui/properties/features/FeatureDialogContainer.vue';
 import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
 import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
+import LibraryNodeEditDialog from '/imports/ui/library/LibraryNodeEditDialog.vue';
 import SkillDialogContainer from '/imports/ui/properties/skills/SkillDialogContainer.vue';
 
 export default {
@@ -15,5 +16,6 @@ export default {
   FeatureDialogContainer,
   LibraryCreationDialog,
   LibraryNodeCreationDialog,
+  LibraryNodeEditDialog,
   SkillDialogContainer,
 };

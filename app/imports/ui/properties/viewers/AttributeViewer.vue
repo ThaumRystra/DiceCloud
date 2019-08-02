@@ -11,24 +11,21 @@
 		<div v-if="model.mod !== undefined">
 			{{numberToSignedString(model.mod)}}
 		</div>
-		<div class="title">
+		<h1 class="display-1">
 			{{model.name}}
-		</div>
-		<div>
+		</h1>
+		<p class="my-2">
 			<code>{{model.variableName}}</code>
-		</div>
-		<div>
-			{{model.attributeType}}
-		</div>
-		<div>
-			Base value: {{model.baseValue}}
-		</div>
-		<div v-if="reset">
+		</p>
+		<p v-if="reset">
 			{{reset}}
-		</div>
-		<div v-if="model.resetMultiplier">
-			Reset multiplier: {{model.resetMultiplier}}
-		</div>
+		</p>
+		<effect-list-tile
+			class="mb-3"
+			operation="base"
+			:result="model.baseValue"
+			:name="model.attributeType"
+		/>
 		<p v-if="model.description">
 			{{model.description}}
 		</p>
@@ -37,8 +34,12 @@
 
 <script>
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+	import EffectListTile from '/imports/ui/properties/viewers/shared/effects/EffectListTile.vue';
 
 	export default {
+		components: {
+			EffectListTile,
+		},
 		props: {
 			model: Object,
 			required: true,
@@ -50,9 +51,13 @@
 			reset(){
 				let reset = this.model.reset
 				if (reset === 'shortRest'){
-					return 'Reset on a short rest';
+					return `Reset${
+						this.model.resetMultiplier && ' x' + this.model.resetMultiplier
+					} on a short rest`;
 				} else if (reset === 'longRest'){
-					return 'Reset on a long rest';
+					return `Reset${
+						this.model.resetMultiplier && ' x' + this.model.resetMultiplier
+					} on a long rest`;
 				}
 			}
 		}

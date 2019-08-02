@@ -45,21 +45,26 @@ const insertNode = new ValidatedMethod({
   },
 });
 
-const updateNode = new ValidatedMethod({
-  name: 'LibraryNodes.methods.update',
-  validate({_id, update}){
-    let fields = getModifierFields(update);
-    return !fields.hasAny([
-      'type',
-      'order',
-      'parent',
-      'ancestors',
-    ]);
+const updateLibraryNode = new ValidatedMethod({
+  name: 'LibraryNodes.methods.set',
+  validate({_id, path, value, ack}){
+		if (!_id) return false;
+		switch (path[0]){
+			case 'type':
+      case 'order':
+      case 'parent':
+      case 'ancestors':
+				return false;
+		}
   },
-  run({_id, update}) {
+  run({_id, path, value, ack}) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
-		return LibraryNodes.update(_id, update);
+		return LibraryNodes.update(_id, {
+			$set: {[path.join('.')]: value},
+		}, {
+			selector: {type: node.type},
+		}, error => ack && ack(error));
   },
 });
 
@@ -93,4 +98,4 @@ function libraryNodesToTree(ancestorId){
 }
 
 export default LibraryNodes;
-export { LibraryNodeSchema, insertNode, updateNode, libraryNodesToTree };
+export { LibraryNodeSchema, insertNode, updateLibraryNode, libraryNodesToTree };

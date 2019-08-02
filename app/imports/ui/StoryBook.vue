@@ -44,7 +44,7 @@
 	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
-	import EffectEditExpansionList from '/imports/ui/properties/effects/EffectEditExpansionList.Story.vue';
+	import EffectEditExpansionList from '/imports/ui/properties/viewers/shared/effects/EffectEditExpansionList.Story.vue';
 	import FeatureCard from '/imports/ui/properties/features/FeatureCard.Story.vue';
 	import HealthBar from '/imports/ui/properties/attributes/HealthBar.Story.vue';
 	import HitDiceListTile from '/imports/ui/properties/attributes/HitDiceListTile.Story.vue';
