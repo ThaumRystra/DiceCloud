@@ -18,7 +18,6 @@ import { SpellSchema } from '/imports/api/properties/Spells.js';
 import { ContainerSchema } from '/imports/api/properties/Containers.js';
 import { ItemSchema } from '/imports/api/properties/Items.js';
 
-
 const librarySchemas = {
   action: ActionSchema,
   attribute: AttributeSchema,

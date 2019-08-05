@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
-import StoredBuffSchema from '/imports/api/properties/Buffs.js';
+import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
 
 let RollChildrenSchema = new SimpleSchema({
   // The adjustments to be applied
@@ -17,7 +17,7 @@ let RollChildrenSchema = new SimpleSchema({
 		defaultValue: [],
 	},
 	'buffs.$': {
-		type: StoredBuffSchema,
+		type: StoredBuffWithIdSchema,
 	},
 });
 

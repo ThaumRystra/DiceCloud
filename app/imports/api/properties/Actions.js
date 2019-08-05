@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
-import StoredBuffSchema from '/imports/api/properties/Buffs.js';
+import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
 
 /*
  * Actions are things a character can do
@@ -58,7 +58,7 @@ let ActionSchema = new SimpleSchema({
 		defaultValue: [],
 	},
 	'buffs.$': {
-		type: StoredBuffSchema,
+		type: StoredBuffWithIdSchema,
 	},
 	// Calculation of how many times this action can be used
 	// Only set if this action tracks its own uses, rather than adjusting

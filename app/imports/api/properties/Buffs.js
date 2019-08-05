@@ -2,10 +2,6 @@ import SimpleSchema from 'simpl-schema';
 import { EffectSchema } from '/imports/api/properties/Effects.js';
 
 let BuffSchema = new SimpleSchema({
-	_id: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-  },
 	name: {
 		type: String,
 		optional: true,
@@ -42,6 +38,13 @@ let StoredBuffSchema = new SimpleSchema({
 	},
 }).extend(BuffSchema);
 
+let StoredBuffWithIdSchema = new SimpleSchema({
+	_id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+}).extend(StoredBuffSchema);
+
 let AppliedBuffSchema = new SimpleSchema({
 	durationSpent: {
 		type: Number,
@@ -63,4 +66,4 @@ let AppliedBuffSchema = new SimpleSchema({
 	},
 }).extend(BuffSchema);
 
-export { AppliedBuffSchema, StoredBuffSchema };
+export { AppliedBuffSchema, StoredBuffSchema, StoredBuffWithIdSchema };

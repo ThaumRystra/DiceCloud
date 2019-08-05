@@ -8,23 +8,18 @@
 				{{model.value}}
 			</div>
 		</div>
-		<div v-if="model.mod !== undefined">
-			{{numberToSignedString(model.mod)}}
-		</div>
 		<h1 class="display-1">
 			{{model.name}}
 		</h1>
-		<p class="my-2">
-			<code>{{model.variableName}}</code>
-		</p>
-		<p v-if="reset">
-			{{reset}}
-		</p>
 		<effect-viewer
 			class="mb-3"
 			operation="base"
-			:model="{result: model.baseValue, name: model.attributeType, operation: 'base'}"
+			v-for="effect in model.effects"
+			:model="effect"
 		/>
+		<div v-if="model.duration">
+			{{model.duration}}
+		</div>
 		<p v-if="model.description">
 			{{model.description}}
 		</p>

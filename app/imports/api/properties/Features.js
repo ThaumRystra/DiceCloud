@@ -4,10 +4,6 @@ let FeatureSchema = new SimpleSchema({
 	name: {
 		type: String,
 	},
-	enabled: {
-    type: Boolean,
-    defaultValue: true,
-  },
 	description: {
 		type: String,
 		optional: true,
