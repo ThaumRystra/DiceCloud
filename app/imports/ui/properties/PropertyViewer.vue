@@ -1,10 +1,13 @@
 <template lang="html">
 	<component
-		v-if="model"
+		v-if="model && $options.components[model.type]"
 		class="property-viewer"
 		:is="model.type"
 		:model="model"
 	/>
+	<div v-else-if="model">
+		This property can't be viewed yet.
+	</div>
 </template>
 
 <script>
