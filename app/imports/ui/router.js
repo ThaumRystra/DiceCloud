@@ -55,7 +55,7 @@ RouterFactory.configure(factory => {
 		},
   ]);
   // Storybook routes
-  if (process.env.SHOW_STORYBOOK || Meteor.isDevelopment){
+  if (Meteor.settings.public.showStorybook || Meteor.isDevelopment){
     let StoryBook = require('/imports/ui/StoryBook.vue').default;
     factory.addRoutes([
       {

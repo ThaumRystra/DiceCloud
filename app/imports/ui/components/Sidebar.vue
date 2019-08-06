@@ -88,7 +88,7 @@
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
 	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud/tree/version-2"},
 				];
-				if (process.env.SHOW_STORYBOOK || Meteor.isDevelopment){
+				if (Meteor.settings.public.showStorybook || Meteor.isDevelopment){
 					links.push({title: 'Component Previews', icon: "category", to: '/storybook/HealthBar'})
 				}
 				return links;
