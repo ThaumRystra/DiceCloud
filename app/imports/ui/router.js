@@ -10,6 +10,7 @@ import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue' ;
 import Account from '/imports/ui/pages/Account.vue' ;
+import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -30,7 +31,8 @@ RouterFactory.configure(factory => {
       component: Home,
     },{
       path: '/characterList',
-      component: CharacterList,
+      //component: CharacterList,
+      component: NotImplemented,
     },{
       path: '/library',
       component: Libraries,
@@ -39,10 +41,12 @@ RouterFactory.configure(factory => {
       component: Library,
     },{
       path: '/character/:id/:urlName',
-      component: CharacterSheetPage,
+      //component: CharacterSheetPage,
+      component: NotImplemented,
     },{
       path: '/character/:id',
-      component: CharacterSheetPage,
+      //component: CharacterSheetPage,
+      component: NotImplemented,
     },{
 			path: '/sign-in',
 			component: SignIn,
@@ -52,7 +56,10 @@ RouterFactory.configure(factory => {
 		},{
 			path: '/account',
 			component: Account,
-		},
+		},{
+      path: '/feedback',
+      component: NotImplemented,
+    },
   ]);
   // Storybook routes
   if (Meteor.settings.public.showStorybook || Meteor.isDevelopment){
