@@ -13,6 +13,18 @@
 				<v-btn flat to="/sign-in">Sign in</v-btn>
 			</v-layout>
 		</v-toolbar>
+		<v-alert
+			:value="showWarning"
+			type="warning"
+		>
+			<div>
+				This is an early alpha build of DiceCloud version 2. Data will be erased
+				frequently. Don't store anything important here.
+			</div>
+			<div class="layout row justify-center">
+				<v-btn @click="showWarning = false">I won't</v-btn>
+			</div>
+		</v-alert>
     <v-list>
       <v-list-tile
         v-for="(link, i) in links"
@@ -68,6 +80,9 @@
 	import Parties from '/imports/api/campaign/Parties.js';
 
   export default {
+		data(){return {
+			showWarning: true,
+		}},
     meteor: {
       $subscribe: {
         "characterList": [],

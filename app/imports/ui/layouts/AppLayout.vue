@@ -3,14 +3,14 @@
     <v-navigation-drawer app v-model="drawer">
       <Sidebar/>
     </v-navigation-drawer>
-    <router-view></router-view>
+		<router-view></router-view>
     <dialog-stack></dialog-stack>
   </v-app>
 </template>
 
 <script>
 	import '/imports/api/users/Users.js';
-  import Sidebar from "/imports/ui/components/Sidebar.vue";
+  import Sidebar from "/imports/ui/layouts/Sidebar.vue";
   import DialogStack from "/imports/ui/dialogStack/DialogStack.vue";
 	import { theme, darkTheme } from '/imports/ui/theme.js';
   export default {
