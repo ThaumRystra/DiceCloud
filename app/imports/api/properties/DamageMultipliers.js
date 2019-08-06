@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
+// TODO consider damage types as an array that applies to multiple types at once
 
 /*
  * DamageMultipliers are multipliers that affect how much damage is taken from
@@ -10,17 +11,36 @@ let DamageMultiplierSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+  damageTypes: {
+    type: Array,
+    defaultValue: [],
+  },
   // The technical, lowercase, single-word name used in formulae
-  damageType: {
+  'damageTypes.$': {
     type: String,
 		allowedValues: DAMAGE_TYPES,
-    defaultValue: 'bludgeoning',
   },
 	// The value of the damage multiplier
 	value: {
     type: Number,
 		defaultValue: 0.5,
 		allowedValues: [0, 0.5, 2],
+  },
+  // Tags which bypass this multiplier (OR)
+  excludeTags: {
+    type: Array,
+    defaultValue: [],
+  },
+  'excludeTags.$': {
+    type: String,
+  },
+  // Tags which must be present to be affected by this multiplier (AND)
+  targetTags: {
+    type: Array,
+    defaultValue: [],
+  },
+  'targetTags.$': {
+    type: String,
   },
 });
 
