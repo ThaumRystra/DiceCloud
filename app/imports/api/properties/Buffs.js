@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import { EffectSchema } from '/imports/api/properties/Effects.js';
+import { StoredEffectSchema } from '/imports/api/properties/Effects.js';
 
 let BuffSchema = new SimpleSchema({
 	name: {
@@ -25,7 +25,7 @@ let StoredBuffSchema = new SimpleSchema({
 		defaultValue: [],
 	},
 	'effects.$': {
-		type: EffectSchema,
+		type: StoredEffectSchema,
 	},
 	target: {
 		type: String,

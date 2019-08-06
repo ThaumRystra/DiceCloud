@@ -1,34 +1,22 @@
 <template lang="html">
   <div class="container-viewer">
-  	<h1 class="display-1">
-			{{model.name}}
-		</h1>
+		<property-name :value="model.name"/>
 		<div v-if="!model.carried" class="caption">
 			Not carried
 		</div>
 		<div v-if="model.contentsWeightless" class="caption">
 			Contents are weightless
 		</div>
-		<div>
-			Weight: {{model.weight}} lbs
-		</div>
-		<div>
-			Value: {{model.value}} gp
-		</div>
-		<p v-if="model.description">
-			{{model.description}}
-		</p>
+		<property-field name="Weight" :value="`${model.weight} lbs`"/>
+		<property-field name="Value" :value="`${model.value} gp`"/>
+		<property-description :value="model.description"/>
   </div>
 </template>
 
 <script>
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {
-	props: {
-		model: {
-			type: Object,
-			required: true,
-		},
-	},
+	mixins: [propertyViewerMixin],
 }
 </script>
 

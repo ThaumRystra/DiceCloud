@@ -42,7 +42,7 @@
 	import librarySchemas from '/imports/api/library/librarySchemas.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-	import PropertyIcon from '/imports/ui/components/properties/PropertyIcon.vue';
+	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
 	import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 	import { get } from 'lodash';
 

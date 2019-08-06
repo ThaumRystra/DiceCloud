@@ -1,28 +1,19 @@
 <template lang="html">
-	<property-insert-dialog
-		documentType="Feature"
-		:doc="feature"
-		:schema="schema"
-		:errors.sync="errors"
-	>
 		<feature-form
 			:feature="feature"
 			@update="update"
 			:debounce-time="0"
 			:errors="errors"
 		/>
-	</property-insert-dialog>
 </template>
 
 <script>
 	import FeatureForm from '/imports/ui/properties/forms/FeatureForm.vue';
 	import Features, { FeatureSchema } from '/imports/api/properties/Features.js';
-	import PropertyInsertDialog from '/imports/ui/components/properties/PropertyInsertDialog.vue';
 
 	export default {
 		components: {
 			FeatureForm,
-			PropertyInsertDialog,
 		},
 		data(){ return {
 			feature: {

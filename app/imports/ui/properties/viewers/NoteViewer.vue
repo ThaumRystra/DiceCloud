@@ -1,22 +1,14 @@
 <template lang="html">
 	<div class="note-viewer">
-		<h1 class="display-1">
-			{{model.name}}
-		</h1>
-		<p v-if="model.description">
-			{{model.description}}
-		</p>
+		<property-name :value="model.name"/>
+		<property-description :value="model.description"/>
 	</div>
 </template>
 
 <script>
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {
-	props: {
-		model: {
-			type: Object,
-			required: true,
-		},
-	},
+	mixins: [propertyViewerMixin],
 }
 </script>
 

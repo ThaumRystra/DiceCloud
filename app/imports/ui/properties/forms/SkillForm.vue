@@ -30,10 +30,17 @@
 		<smart-select
 			label="Type"
 			:items="skillTypes"
-			:value="model.type"
-			:error-messages="errors.type"
+			:value="model.skillType"
+			:error-messages="errors.skillType"
 			:menu-props="{auto: true, lazy: true}"
-			@change="(value, ack) => $emit('change', {path: ['type'], value, ack})"
+			@change="(value, ack) => $emit('change', {path: ['skillType'], value, ack})"
+			:debounce-time="debounceTime"
+		/>
+		<text-area
+			label="Description"
+			:value="model.description"
+			:error-messages="errors.description"
+			@change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
 			:debounce-time="debounceTime"
 		/>
 		<form-section name="Advanced" standalone>

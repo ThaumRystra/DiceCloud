@@ -63,7 +63,7 @@
 	* the tree view shows off the full character structure, and where each part of
 	* character comes from.
 	**/
-	import PropertyIcon from '/imports/ui/components/properties/PropertyIcon.vue';
+	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
 	export default {
 		name: 'tree-node',
 		beforeCreate() {

@@ -1,12 +1,10 @@
 <template lang="html">
 	<div class="experience-viewer">
-		<h1 class="display-1" v-if="model.value">
+		<div class="display-1" v-if="model.value">
 			{{model.value}} XP
-		</h1>
+		</div>
 		<div class="headline layout row mb-3">
-			<div>
-				{{model.name}}
-			</div>
+			<property-name :value="model.name"/>
 			<v-spacer/>
 			<div>
 				{{model.worldDate}}
@@ -22,13 +20,9 @@
 </template>
 
 <script>
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {
-	props: {
-		model: {
-			type: Object,
-			required: true,
-		},
-	},
+	mixins: [propertyViewerMixin],
 }
 </script>
 

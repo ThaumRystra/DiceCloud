@@ -1,11 +1,12 @@
 <template lang="html">
-	<div class="feature-viewer">
+	<div class="spell-viewer">
 		<property-name :value="model.name"/>
-		<div v-if="model.alwaysEnabled" class="caption">
-			Always enabled
-		</div>
+		<property-field name="Casting time" :value="model.castingTime"/>
+		<property-field name="Range" :value="model.range"/>
+		<property-field name="Duration" :value="model.duration"/>
+		<property-field name="Level" :value="`${model.level} ${model.school}`"/>
 		<property-description :value="model.description"/>
-	</div>
+  </div>
 </template>
 
 <script>

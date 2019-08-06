@@ -11,39 +11,30 @@
 		<div v-if="model.mod !== undefined">
 			{{numberToSignedString(model.mod)}}
 		</div>
-		<h1 class="display-1">
-			{{model.name}}
-		</h1>
-		<p class="my-2">
-			<code>{{model.variableName}}</code>
-		</p>
+		<property-name :value="model.name"/>
+		<property-variable-name :value="model.variableName"/>
 		<p v-if="reset">
 			{{reset}}
 		</p>
 		<effect-viewer
-			class="mb-3"
-			operation="base"
-			:model="{result: model.baseValue, name: model.attributeType, operation: 'base'}"
+			:model="{
+				result: model.baseValue,
+				operation: 'base'
+			}"
 		/>
-		<p v-if="model.description">
-			{{model.description}}
-		</p>
+		<property-description :value="model.description"/>
 	</div>
 </template>
 
 <script>
+	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
 
 	export default {
+		mixins: [propertyViewerMixin],
 		components: {
 			EffectViewer,
-		},
-		props: {
-			model: {
-				type: Object,
-				required: true,
-			},
 		},
 		methods: {
 			numberToSignedString,

@@ -1,14 +1,16 @@
 <template lang="html">
 	<div class="class-level-viewer">
-		<h1 class="display-1">
-			{{model.name}}
+		<div>
+			<span class="name headline">
+				{{model.name}}
+			</span>
 			<span
 				class="display-2"
 				v-if="model.level"
 			>
 				{{model.level}}
 			</span>
-		</h1>
+		</div>
 		<p class="my-2">
 			<code>{{model.variableName}}</code>
 		</p>
@@ -19,13 +21,10 @@
 </template>
 
 <script>
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+
 export default {
-	props: {
-		model: {
-			type: Object,
-			required: true,
-		},
-	}
+	mixins: [propertyViewerMixin],
 }
 </script>
 

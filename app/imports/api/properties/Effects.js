@@ -5,13 +5,6 @@ import SimpleSchema from 'simpl-schema';
  * that modify their final value or presentation in some way
  */
 let EffectSchema = new SimpleSchema({
-	_id: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		autoValue(){
-			if (!this.isSet) return Random.id();
-		}
-	},
 	name: {
 		type: String,
 		optional: true,
@@ -43,6 +36,16 @@ let EffectSchema = new SimpleSchema({
 	},
 });
 
+const StoredEffectSchema = new SimpleSchema({
+		_id: {
+			type: String,
+			regEx: SimpleSchema.RegEx.Id,
+			autoValue(){
+				if (!this.isSet) return Random.id();
+			}
+		},
+}).extend(EffectSchema);
+
 const ComputedEffectSchema = new SimpleSchema({
 	// The computed result of the effect
 	result: {
@@ -51,4 +54,4 @@ const ComputedEffectSchema = new SimpleSchema({
 	},
 }).extend(EffectSchema);
 
-export { EffectSchema, ComputedEffectSchema };
+export { EffectSchema, StoredEffectSchema, ComputedEffectSchema };

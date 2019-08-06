@@ -20,7 +20,7 @@ let SkillSchema = new SimpleSchema({
     optional: true,
   },
 	// What type of skill is this
-  type: {
+  skillType: {
     type: String,
     allowedValues: [
       "skill",
@@ -41,6 +41,11 @@ let SkillSchema = new SimpleSchema({
 	// The base proficiency of this skill
 	baseProficiency: {
 		type: Number,
+		optional: true,
+	},
+  // Description of what the skill is used for
+  description: {
+		type: String,
 		optional: true,
 	},
 });

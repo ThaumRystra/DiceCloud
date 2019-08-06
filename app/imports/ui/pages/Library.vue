@@ -59,7 +59,7 @@
 	import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 	import Libraries from '/imports/api/library/Libraries.js';
 	import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-	import PropertyIcon from '/imports/ui/components/properties/PropertyIcon.vue';
+	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
 	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 	export default {

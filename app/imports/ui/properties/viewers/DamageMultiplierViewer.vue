@@ -1,8 +1,6 @@
 <template lang="html">
 	<div>
-		<h1 class="display-1">
-			{{model.name}}
-		</h1>
+		<property-name :value="model.name"/>
 		<div>
 			{{model.damageType}} {{operation}}
 		</div>
@@ -10,13 +8,9 @@
 </template>
 
 <script>
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {
-	props: {
-		model: {
-			type: Object,
-			required: true,
-		}
-	},
+	mixins: [propertyViewerMixin],
 	computed: {
 		operation(){
 			switch (this.model.value){

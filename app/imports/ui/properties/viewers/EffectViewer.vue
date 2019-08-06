@@ -1,46 +1,39 @@
 <template lang="html">
-	<v-list-tile
-		class="effect-list-tile"
-		:class="{disabled: !model.enabled}"
-		:data-id="model._id"
-	>
-		<v-layout row align-center class="net-effect">
-			<v-icon class="icon">{{getEffectIcon(model.operation, model.result)}}</v-icon>
-			<div class="value display-1  pr-2" v-if="showValue(model.operation) && model.result !== undefined">
-				{{getValue(model.operation, model.result)}}
+	<div class="effect-viewer">
+		<property-name :value="model.name" v-if="model.name"/>
+		<div class="layout row center wrap">
+			<div class="headline mr-2 my-0" v-if="model.stat">
+				{{model.stat}}
 			</div>
-			<div class="calculation body-2 pr-2" v-else>
-				{{model.operation === 'conditional' ? model.calculation : ''}}
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-icon v-on="on" class="mr-2" style="cursor: default;">{{effectIcon}}</v-icon>
+				</template>
+				<span>{{operation}}</span>
+			</v-tooltip>
+			<div v-if="showValue" class="headline">
+				{{displayedValue}}
 			</div>
-		</v-layout>
-		<v-list-tile-content>
-			<v-list-tile-title class="stat" v-if="model.showStatName">
-				{{model.statName}}
-			</v-list-tile-title>
-			<v-list-tile-title class="name" v-else>
-				{{model.name}}
-			</v-list-tile-title>
-			<v-list-tile-sub-title class="operation">
-				{{getOperation(model.operation)}}
-			</v-list-tile-sub-title>
-		</v-list-tile-content>
-	</v-list-tile>
+		</div>
+	</div>
 </template>
 
 <script>
+	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
 	export default {
-		props: {
-			model: {
-				type: Object,
-				required: true,
+		mixins: [propertyViewerMixin],
+		computed: {
+			resolvedValue(){
+				return this.model.result !== undefined ? this.model.result : +this.model.calculation;
 			},
-		},
-		methods: {
-			getEffectIcon,
-			getOperation(op, value){
-				switch(op) {
+			effectIcon(){
+				let value = this.resolvedValue;
+				return getEffectIcon(this.model.operation, value);
+			},
+			operation(){
+				switch(this.model.operation) {
 					case 'base': return 'Base value';
 					case 'add': return 'Add';
 					case 'mul': return 'Multiply';
@@ -53,8 +46,8 @@
 					case 'conditional': return 'Conditional benefit' ;
 				}
 			},
-			showValue(op){
-				switch(op) {
+			showValue(){
+				switch(this.model.operation) {
 					case 'base': return true;
 					case 'add': return true;
 					case 'mul': return true;
@@ -67,8 +60,9 @@
 					case 'conditional': return false;
 				}
 			},
-			getValue(op, value){
-				switch(op) {
+			displayedValue(){
+				let value = this.resolvedValue;
+				switch(this.model.operation) {
 					case 'base': return value;
 					case 'add': return Math.abs(value);
 					case 'mul': return value;

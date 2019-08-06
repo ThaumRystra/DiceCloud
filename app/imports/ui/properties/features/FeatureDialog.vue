@@ -1,5 +1,4 @@
 <template lang="html">
-	<property-dialog :doc="feature" collection="features" @remove="$emit('remove')">
 		<div>
 			<markdown-text :markdown="feature.computedDescription || feature.description"/>
 			<!--
@@ -7,19 +6,16 @@
 				:parent="feature"
 			/>
 			-->
+			<feature-form slot="form" :feature="feature" @update="(update, ack) => $emit('update', update, ack)"/>
 		</div>
-		<feature-form slot="form" :feature="feature" @update="(update, ack) => $emit('update', update, ack)"/>
-	</property-dialog>
 </template>
 
 <script>
-	import PropertyDialog from '/imports/ui/components/properties/PropertyDialog.vue';
 	import FeatureForm from '/imports/ui/properties/forms/FeatureForm.vue';
 	import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 	export default {
 		components: {
-			PropertyDialog,
 			FeatureForm,
 			MarkdownText,
 		},

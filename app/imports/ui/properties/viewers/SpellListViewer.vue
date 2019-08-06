@@ -1,7 +1,10 @@
 <template lang="html">
-	<div class="folder-viewer">
+  <div class="spell-list-viewer">
 		<property-name :value="model.name"/>
-	</div>
+		<property-variable-name :value="model.variableName"/>
+		<property-field name="Maximum prepared spells" :value="model.maxPrepared"/>
+		<property-description :value="model.description"/>
+  </div>
 </template>
 
 <script>

@@ -8,13 +8,13 @@ import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
 import ExperienceViewer from '/imports/ui/properties/viewers/ExperienceViewer.vue';
 import FeatureViewer from '/imports/ui/properties/viewers/FeatureViewer.vue';
 import FolderViewer from '/imports/ui/properties/viewers/FolderViewer.vue';
-//import ItemViewer from '/imports/ui/properties/viewers/ItemViewer.vue';
+import ItemViewer from '/imports/ui/properties/viewers/ItemViewer.vue';
 import NoteViewer from '/imports/ui/properties/viewers/NoteViewer.vue';
-//import ProficiencyViewer from '/imports/ui/properties/viewers/ProficiencyViewer.vue';
+import ProficiencyViewer from '/imports/ui/properties/viewers/ProficiencyViewer.vue';
 //import RollViewer from '/imports/ui/properties/viewers/RollViewer.vue';
-//import SkillViewer from '/imports/ui/properties/viewers/SkillViewer.vue';
-//import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue';
-//import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
+import SkillViewer from '/imports/ui/properties/viewers/SkillViewer.vue';
+import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue';
+import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
 
 export default {
 //  action: ActionViewer,
@@ -27,11 +27,11 @@ export default {
   effect: EffectViewer,
   feature: FeatureViewer,
   folder: FolderViewer,
-//  item: ItemViewer,
+  item: ItemViewer,
   note: NoteViewer,
-//  proficiency: ProficiencyViewer,
+  proficiency: ProficiencyViewer,
 //  roll: RollViewer,
-//  skill: SkillViewer,
-//  spellList: SpellListViewer,
-//  spell: SpellViewer,
+  skill: SkillViewer,
+  spellList: SpellListViewer,
+  spell: SpellViewer,
 };

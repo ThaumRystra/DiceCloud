@@ -8,37 +8,38 @@
 				{{model.value}}
 			</div>
 		</div>
-		<h1 class="display-1">
-			{{model.name}}
-		</h1>
-		<effect-viewer
-			class="mb-3"
-			operation="base"
-			v-for="effect in model.effects"
-			:model="effect"
-		/>
-		<div v-if="model.duration">
-			{{model.duration}}
+		<property-name :value="model.name"/>
+		<property-field name="Duration" :value="model.duration"/>
+		<div>
+			<div class="subheading">
+				Effects
+			</div>
+			<div
+				class="layout row center mb-2 ml-2"
+				v-for="effect in model.effects"
+			>
+				<property-icon type="effect" class="mr-2"/>
+				<effect-viewer
+					operation="base"
+					:model="effect"
+				/>
+			</div>
 		</div>
-		<p v-if="model.description">
-			{{model.description}}
-		</p>
+		<property-description :value="model.description"/>
 	</div>
 </template>
 
 <script>
+	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
+	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
 
 	export default {
+		mixins: [propertyViewerMixin],
 		components: {
 			EffectViewer,
-		},
-		props: {
-			model: {
-				type: Object,
-				required: true,
-			},
+			PropertyIcon,
 		},
 		methods: {
 			numberToSignedString,
