@@ -54,10 +54,9 @@ RouterFactory.configure(factory => {
 			component: Account,
 		},
   ]);
-  //Development routes
-  if (Meteor.isDevelopment){
+  // Storybook routes
+  if (process.env.SHOW_STORYBOOK || Meteor.isDevelopment){
     let StoryBook = require('/imports/ui/StoryBook.vue').default;
-    let IconAdmin = require('/imports/ui/icons/IconAdmin.vue').default;
     factory.addRoutes([
       {
         path: '/storybook/:component',
@@ -67,7 +66,14 @@ RouterFactory.configure(factory => {
         path: '/storybook',
         name: 'storybook',
         component: StoryBook,
-      }, {
+      },
+    ]);
+  }
+  // Icon admin routes
+  if (Meteor.isDevelopment){
+    let IconAdmin = require('/imports/ui/icons/IconAdmin.vue').default;
+    factory.addRoutes([
+      {
         path: '/icon-admin',
         name: 'iconAdmin',
         component: IconAdmin,

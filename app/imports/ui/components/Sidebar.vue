@@ -18,6 +18,7 @@
         v-for="(link, i) in links"
 				v-if="link.vif || link.vif === undefined"
         :to="link.to"
+				:href="link.href"
         :key="i"
       >
         <v-list-tile-action>
@@ -79,14 +80,18 @@
 				return user && user.username || user && user._id;
 			},
 			links(){
-				return [
+				let links = [
 					{title: "Home", icon: "home", to: "/"},
 	        {title: "Creatures", icon: "group", to: "/characterList", vif: Meteor.userId()},
 					{title: "Libraries", icon: "book", to: "/library", vif: Meteor.userId()},
 	        {title: "Send Feedback", icon: "bug_report", to: "/feedback"},
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
-	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud1"},
+	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud/tree/version-2"},
 				];
+				if (process.env.SHOW_STORYBOOK || Meteor.isDevelopment){
+					links.push({title: 'Component Previews', icon: "category", to: '/storybook/HealthBar'})
+				}
+				return links;
 			},
       parties(){
         let parties =  Parties.find(
