@@ -29,8 +29,12 @@ let EffectSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
-	//which stat the effect is applied to
-	stat: {
+	//which stats the effect is applied to
+	stats: {
+		type: Array,
+		defaultValue: [],
+	},
+	'stats.$': {
 		type: String,
 		optional: true,
 	},
