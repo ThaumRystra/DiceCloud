@@ -10,6 +10,7 @@ let SkillSchema = new SimpleSchema({
 		optional: true,
 	},
   // The technical, lowercase, single-word name used in formulae
+  // Ignored for skilltype = save
   variableName: {
     type: String,
 		regEx: /^\w*[a-z]\w*$/i,

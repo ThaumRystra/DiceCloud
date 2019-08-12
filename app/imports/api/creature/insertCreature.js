@@ -5,7 +5,6 @@ import DamageMultipliers from '/imports/api/properties/DamageMultipliers.js';
 import Effects from '/imports/api/properties/Effects.js';
 import Containers from '/imports/api/properties/Containers.js';
 import Items from '/imports/api/properties/Items.js';
-import Classes from '/imports/api/properties/Classes.js';
 
 const addDefaultDocs = function(docs){
 	Attributes.rawCollection().insert(docs.attributes, {ordered: false});
@@ -14,7 +13,6 @@ const addDefaultDocs = function(docs){
 	Effects.rawCollection().insert(docs.effects, {ordered: false});
 	Containers.rawCollection().insert(docs.containers, {ordered: false});
 	Items.rawCollection().insert(docs.items, {ordered: false});
-	Classes.rawCollection().insert(docs.classes, {ordered: false});
 };
 
 const insertCreature = new ValidatedMethod({

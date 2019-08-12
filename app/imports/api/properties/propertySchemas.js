@@ -1,8 +1,7 @@
-import { CreatureSchema } from '/imports/api/creature/Creatures.js';
 import { ActionSchema } from '/imports/api/properties/Actions.js';
+import { AttackSchema } from 'app/imports/api/properties/Attacks.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
 import { StoredBuffSchema } from '/imports/api/properties/Buffs.js';
-import { ClassSchema } from '/imports/api/properties/Classes.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
 import { EffectSchema } from '/imports/api/properties/Effects.js';
@@ -12,19 +11,19 @@ import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { NoteSchema } from '/imports/api/properties/Notes.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
+import { RollResultSchema } from '/imports/api/properties/RollResult.js';
+import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SkillSchema } from '/imports/api/properties/Skills.js';
 import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { SpellSchema } from '/imports/api/properties/Spells.js';
 import { ContainerSchema } from '/imports/api/properties/Containers.js';
 import { ItemSchema } from '/imports/api/properties/Items.js';
 
-
 const propertySchemas = {
-  creature: CreatureSchema,
   action: ActionSchema,
+  attack: AttackSchema,
   attribute: AttributeSchema,
   buff: StoredBuffSchema,
-  class: ClassSchema,
   classLevel: ClassLevelSchema,
   damageMultiplier: DamageMultiplierSchema,
   effect: EffectSchema,
@@ -34,6 +33,8 @@ const propertySchemas = {
   note: NoteSchema,
   proficiency: ProficiencySchema,
   roll: RollSchema,
+  rollResult: RollResultSchema,
+  savingThrow: SavingThrowSchema,
   skill: SkillSchema,
   spellList: SpellListSchema,
   spell: SpellSchema,

@@ -10,7 +10,6 @@ import Skills from "/imports/api/properties/Skills.js";
 import Effects from "/imports/api/properties/Effects.js";
 import Proficiencies from "/imports/api/properties/Proficiencies.js";
 import DamageMultipliers from "/imports/api/properties/DamageMultipliers.js";
-import Classes from "/imports/api/properties/Classes.js";
 import * as math from 'mathjs';
 import parser from '/imports/parser/parser.js';
 if (Meteor.isClient) console.log({parser});

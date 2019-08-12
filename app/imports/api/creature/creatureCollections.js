@@ -1,7 +1,6 @@
 import Actions from '/imports/api/properties/Actions.js';
 import Attributes from '/imports/api/properties/Attributes.js';
 import Buffs from '/imports/api/properties/Buffs.js';
-import Classes from '/imports/api/properties/Classes.js';
 import ClassLevels from '/imports/api/properties/ClassLevels.js';
 import DamageMultipliers from '/imports/api/properties/DamageMultipliers.js';
 import Effects from '/imports/api/properties/Effects.js';
@@ -25,7 +24,6 @@ let creatureCollections = [
   Actions,
   Attributes,
   Buffs,
-  Classes,
   ClassLevels,
   DamageMultipliers,
   Effects,

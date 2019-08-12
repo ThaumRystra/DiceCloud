@@ -1,10 +1,11 @@
 <template lang="html">
 	<draggable
-		:value="children"
 		class="drag-area"
-		@change="change"
+		:value="children"
 		:group="group"
 		:animation="200"
+		:move="move"
+		@change="change"
 		ghost-class="ghost"
 		draggable=".item"
 		handle=".handle"
@@ -31,6 +32,8 @@
 <script>
 	import draggable from 'vuedraggable';
 	import TreeNode from '/imports/ui/components/tree/TreeNode.vue';
+	import { isParentAllowed } from '/imports/api/parenting/parenting.js';
+
 	export default {
 		components: {
 			draggable,
@@ -70,6 +73,13 @@
 						this.$emit('reorganized', {doc, parent: this.node, newIndex});
 					}
 				}
+			},
+			move(evt){
+				let parentNode = evt.relatedContext.component.$parent.node
+				let parentType = parentNode && parentNode.type || 'root';
+				let childType = evt.draggedContext.element.node.type;
+				let allowed = isParentAllowed({parentType, childType});
+				return allowed;
 			},
 		},
 	};

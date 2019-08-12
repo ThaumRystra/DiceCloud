@@ -16,7 +16,7 @@
 				@click.stop="expanded = !expanded"
 				:disabled="!hasChildren && !organize"
 			>
-				<v-icon v-if="hasChildren || organize">chevron_right</v-icon>
+				<v-icon v-if="canExpand && (hasChildren || organize)">chevron_right</v-icon>
 			</v-btn>
 			<div
 				class="layout row align-center justify-start"
@@ -35,13 +35,15 @@
 					:class="selected && 'primary--text'"
 				/>
 				<div class="text-no-wrap text-truncate">
+					{{node && node.order}}
 					{{node && node.name}}
 				</div>
 			</div>
 		</div>
 		<v-expand-transition>
-			<div v-if="showExpanded">
+			<div v-if="showExpanded" class="pl-3">
 				<tree-node-list
+					v-if="showExpanded"
 					:node="node"
 					:children="computedChildren"
 					:group="group"
@@ -64,6 +66,8 @@
 	* character comes from.
 	**/
 	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
+	import { canBeParent } from '/imports/api/parenting/parenting.js';
+
 	export default {
 		name: 'tree-node',
 		beforeCreate() {
@@ -101,6 +105,9 @@
 				}
 				return children;
 			},
+			canExpand(){
+				return canBeParent(this.node.type);
+			}
 		},
 		methods: {
 			icon(type){
@@ -115,9 +122,9 @@
 		transform: rotate(90deg);
 	}
 	.drag-area {
-		min-height: 40px;
 		box-shadow: -2px 0px 0px 0px #808080;
-		margin-left: 23px;
+		margin-left: 0;
+		min-height: 32px;
 	}
 	.handle {
 		cursor: move;
