@@ -3,11 +3,8 @@ import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.
 import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
 
 let RollResultSchema = new SimpleSchema ({
+  // Expression of whether or not to apply buffs
   comparison: {
-    type: String,
-    allowedValues: ['>', '<', '>=', '<=', '==', 'always', 'else'],
-  },
-  targetValue: {
     type: String,
     optional: true,
   },
@@ -18,7 +15,6 @@ let RollResultSchema = new SimpleSchema ({
 	'adjustments.$': {
 		type: AdjustmentSchema,
 	},
-  // The buffs to be applied
   buffs: {
 		type: Array,
 		defaultValue: [],

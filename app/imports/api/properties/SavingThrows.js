@@ -21,7 +21,6 @@ let SavingThrowSchema = new SimpleSchema ({
 	'passAdjustments.$': {
 		type: AdjustmentSchema,
 	},
-  // The buffs to be applied
   passBuffs: {
 		type: Array,
 		defaultValue: [],
@@ -36,7 +35,6 @@ let SavingThrowSchema = new SimpleSchema ({
 	'failAdjustments.$': {
 		type: AdjustmentSchema,
 	},
-  // The buffs to be applied
   failBuffs: {
 		type: Array,
 		defaultValue: [],

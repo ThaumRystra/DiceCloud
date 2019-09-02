@@ -3,8 +3,8 @@ import SimpleSchema from 'simpl-schema';
 /*
  * RollModifiers are reason-value attached to rolls
  * that modify their final value in some way
- * These are separate from effects because they are a always a result of the
- * creature's stats, and never cause a recomputation themselves
+ * These are separate from effects because they never cause a recomputation
+ * themselves
  */
 let RollModifierSchema = new SimpleSchema({
 	name: {
@@ -13,10 +13,11 @@ let RollModifierSchema = new SimpleSchema({
 	},
 	operation: {
 		type: String,
-		defaultValue: 'add',
+		defaultValue: 'rollBonus',
 		allowedValues: [
+			'rollBonus',
 			'damageBonus',
-      'rollBonus',
+			'advantage',
 		],
 	},
 	calculation: {
