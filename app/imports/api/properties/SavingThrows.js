@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
+import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
 import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
 
 // These are the rolls made when saves are called for

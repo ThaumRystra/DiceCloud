@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
+import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
 import { ActionSchema } from '/imports/api/properties/Actions.js';
 
 // Attacks are special instances of actions

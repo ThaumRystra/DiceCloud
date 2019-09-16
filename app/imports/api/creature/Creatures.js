@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import deathSaveSchema from "/imports/api/creature/subSchemas/DeathSavesSchema.js"
-import ColorSchema from "/imports/api/creature/subSchemas/ColorSchema.js";
+import deathSaveSchema from "/imports/api/properties/subSchemas/DeathSavesSchema.js"
+import ColorSchema from "/imports/api/properties/subSchemas/ColorSchema.js";
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 
 //Methods

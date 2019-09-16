@@ -35,7 +35,7 @@
 
 <script>
 	import AdjustmentForm from '/imports/ui/properties/forms/AdjustmentForm.vue';
-	import AdjustmentSchema from '/imports/api/creature/subSchemas/AdjustmentSchema.js';
+	import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
 
 	export default {
 		components: {
