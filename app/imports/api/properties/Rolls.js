@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import { RollResultsSchema } from '/imports/api/properties/subSchemas/RollResultsSchema.js'
 
 /**
  * Rolls are children to actions or other rolls, they are triggered with 0 or
@@ -32,6 +33,13 @@ let RollSchema = new SimpleSchema({
   },
   'tags.$': {
     type: String,
+  },
+  results: {
+    type: Array,
+    defaultValue: [],
+  },
+  'results.$': {
+    type: RollResultsSchema,
   },
 });
 

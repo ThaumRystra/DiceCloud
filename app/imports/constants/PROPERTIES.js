@@ -3,6 +3,10 @@ const PROPERTIES = Object.freeze({
     icon: 'offline_bolt',
     name: 'Action'
   },
+  attack: {
+    icon: 'bolt',
+    name: 'Attack'
+  },
   attribute: {
     icon: 'donut_small',
     name: 'Attribute'

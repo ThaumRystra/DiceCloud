@@ -1,12 +1,23 @@
 <template lang="html">
-  <div class="attribute-form">
-		<text-field
-			label="Name"
-			:value="model.name"
-			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
-			:error-messages="errors.name"
-			:debounce-time="debounceTime"
-		/>
+  <div class="item-form">
+		<div class="layout row wrap">
+			<text-field
+				label="Name"
+				:value="model.name"
+				@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+				:error-messages="errors.name"
+				:debounce-time="debounceTime"
+			/>
+			<text-field
+				label="Variable name"
+				:value="model.variableName"
+				style="flex-basis: 300px;"
+				@change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
+				hint="Use this name in formulae to reference this attribute"
+				:error-messages="errors.variableName"
+				:debounce-time="debounceTime"
+			/>
+		</div>
 		<text-field
 			label="Plural name"
 			:value="model.plural"

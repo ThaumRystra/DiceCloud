@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
+import DamageSchema from '/imports/api/properties/subSchemas/DamageSchema.js';
 import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
 
 /*
@@ -19,7 +20,7 @@ let ActionSchema = new SimpleSchema({
 	},
 	// What time-resource is used to take the action in combat
 	// long actions take longer than 1 round to cast
-	type: {
+	actionType: {
 		type: String,
 		allowedValues: ['action', 'bonus', 'attack', 'reaction', 'free', 'long'],
 		defaultValue: 'action',
@@ -51,6 +52,13 @@ let ActionSchema = new SimpleSchema({
 	},
 	'adjustments.$': {
 		type: AdjustmentSchema,
+	},
+	damages: {
+		type: Array,
+		defaultValue: [],
+	},
+	'damages.$': {
+		type: DamageSchema,
 	},
 	// Buffs applied when taking this action
 	buffs: {

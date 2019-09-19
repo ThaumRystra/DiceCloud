@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ActionSchema } from '/imports/api/properties/Actions.js';
+import { AttackSchema } from '/imports/api/properties/Attacks.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
 import { StoredBuffSchema } from '/imports/api/properties/Buffs.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
@@ -19,6 +20,7 @@ import { ItemSchema } from '/imports/api/properties/Items.js';
 
 const librarySchemas = {
   action: ActionSchema,
+  attack: AttackSchema,
   attribute: AttributeSchema,
   buff: StoredBuffSchema,
   classLevel: ClassLevelSchema,

@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 ItemSchema = new SimpleSchema({
 	name: {
@@ -6,6 +7,13 @@ ItemSchema = new SimpleSchema({
 		optional: true,
 		defaultValue: "New Item",
 	},
+	// Variable name to reference this item as ammunition or in formulae
+	variableName: {
+    type: String,
+		regEx: VARIABLE_NAME_REGEX,
+    min: 3,
+    defaultValue: 'newAttribute',
+  },
 	// Plural name of the item, if there is more than one
 	plural: {
 		type: String,

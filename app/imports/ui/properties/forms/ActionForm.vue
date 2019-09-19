@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="action-form">
+  <div :class="attackForm ? 'attack-form' : 'action-form'">
 		<text-field
 			label="Name"
 			:value="model.name"
@@ -8,17 +8,46 @@
 			:debounce-time="debounceTime"
 		/>
 		<smart-select
-			label="Type"
+			label="Action type"
 			:items="actionTypes"
-			:value="model.type"
-			:error-messages="errors.type"
+			:value="model.actionType"
+			:error-messages="errors.actionType"
 			:menu-props="{auto: true, lazy: true}"
-			@change="(value, ack) => $emit('change', {path: ['type'], value, ack})"
-			:hint="actionTypeHints[model.type]"
+			@change="(value, ack) => $emit('change', {path: ['actionType'], value, ack})"
+			:hint="actionTypeHints[model.actionType]"
+			:debounce-time="debounceTime"
+		/>
+		<text-field
+			label="Roll bonus"
+			v-if="attackForm"
+			:value="model.rollBonus"
+			@change="(value, ack) => $emit('change', {path: ['rollBonus'], value, ack})"
+			:error-messages="errors.rollBonus"
 			:debounce-time="debounceTime"
 		/>
 		<form-sections>
+			<form-section name="Damage">
+				<div class="caption">
+					Damage to deal when this action is taken
+				</div>
+				<damage-list-form
+					:model="model.damages"
+					:parent-target="model.target"
+					@change="({path, value, ack}) => $emit('change', {path: ['damages', ...path], value, ack})"
+					@push="({path, value, ack}) => $emit('push', {path: ['damages', ...path], value, ack})"
+					@pull="({path, ack}) => $emit('pull', {path: ['damages', ...path], ack})"
+				/>
+			</form-section>
 			<form-section name="Advanced">
+				<text-field
+					label="Ammunition"
+					hint="The name of the item used as ammunition"
+					v-if="attackForm"
+					:value="model.ammunition"
+					@change="(value, ack) => $emit('change', {path: ['ammunition'], value, ack})"
+					:error-messages="errors.ammunition"
+					:debounce-time="debounceTime"
+				/>
 				<v-combobox
 			    label="Tags"
 			    multiple
@@ -71,11 +100,10 @@
 					:debounce-time="debounceTime"
 				/>
 			</form-section>
-			<form-section name="Damage and Adjustments">
+			<form-section name="Adjustments">
 				<div class="caption">
-					Adjustments can be used to automatically spend resources or deal
-					damage when taking an action.
-					They apply damage to an attribute each time the action is taken.
+					Adjustments can be used to automatically spend resources or gain
+					resources when taking an action.
 				</div>
 				<adjustment-list-form
 					:model="model.adjustments"
@@ -105,6 +133,7 @@
 <script>
 	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
 	import AdjustmentListForm from '/imports/ui/properties/forms/AdjustmentListForm.vue';
+	import DamageListForm from '/imports/ui/properties/forms/DamageListForm.vue';
 	import BuffListForm from '/imports/ui/properties/forms/BuffListForm.vue';
 
 	export default {
@@ -112,6 +141,7 @@
 			FormSection,
 			FormSections,
 			AdjustmentListForm,
+			DamageListForm,
 			BuffListForm,
 		},
 		props: {
@@ -125,6 +155,9 @@
 			errors: {
 				type: Object,
 				default: () => ({}),
+			},
+			attackForm: {
+				type: Boolean,
 			},
 			debounceTime: Number,
 		},

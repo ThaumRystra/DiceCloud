@@ -29,6 +29,16 @@ let EffectSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+	statType: {
+		type: String,
+		allowedValues: [
+			'attribute',
+			'skill',
+			'roll',
+			'attack',
+			'damage',
+		],
+	},
 	//which stats the effect is applied to
 	stats: {
 		type: Array,

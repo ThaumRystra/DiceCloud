@@ -1,4 +1,5 @@
 import ActionForm from '/imports/ui/properties/forms/ActionForm.vue';
+import AttackForm from '/imports/ui/properties/forms/AttackForm.vue';
 import AttributeForm from '/imports/ui/properties/forms/AttributeForm.vue';
 import BuffForm from '/imports/ui/properties/forms/BuffForm.vue';
 import ContainerForm from '/imports/ui/properties/forms/ContainerForm.vue';
@@ -18,6 +19,7 @@ import SpellForm from '/imports/ui/properties/forms/SpellForm.vue';
 
 export default {
   action: ActionForm,
+  attack: AttackForm,
   attribute: AttributeForm,
   buff: BuffForm,
   container: ContainerForm,
