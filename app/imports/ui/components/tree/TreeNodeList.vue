@@ -1,4 +1,5 @@
 <template lang="html">
+	<!--use value for immutable, list for auto-updating children -->
 	<draggable
 		class="drag-area"
 		:value="children"
@@ -62,11 +63,17 @@
 			},
 		},
 		methods: {
-			change({added, moved}){
+			change({added, moved, removed}){
 				let event = moved || added;
-				let newIndex = this.children[event.newIndex].node.order;
 				if (event){
 					let doc = event.element.node;
+					let newIndex;
+					if (event.newIndex === 0){
+						newIndex = 0;
+					} else {
+						childBeforeNewIndex = this.children[event.newIndex - 1];
+						newIndex = childBeforeNewIndex.node.order + 1;
+					}
 					if (moved){
 						this.$emit('reordered', {doc, newIndex});
 					} else if (added){
