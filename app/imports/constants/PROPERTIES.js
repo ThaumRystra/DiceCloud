@@ -51,6 +51,10 @@ const PROPERTIES = Object.freeze({
     icon: 'flare',
     name: 'Roll'
   },
+  savingThrow: {
+    icon: 'all_out',
+    name: 'Saving throw'
+  },
   skill: {
     icon: 'check_box',
     name: 'Skill'

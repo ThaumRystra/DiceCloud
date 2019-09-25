@@ -6,28 +6,30 @@
 				:key="damage._id || i"
 			>
 				<v-divider v-if="i !== 0"/>
-				<damage-form
-					class="mt-4"
-					:model="damage"
-					:parent-target="parentTarget"
-					@change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
-				/>
-				<div>
+				<div class="layout row align-center">
+					<div style="flex-grow: 1;">
+						<damage-form
+							class="mt-4"
+							:model="damage"
+							:parent-target="parentTarget"
+							@change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
+						/>
+					</div>
 					<v-btn outline icon large class="ma-3" @click="$emit('pull', {path: [i]})">
 						<v-icon>delete</v-icon>
 					</v-btn>
 				</div>
 			</div>
 		</v-slide-x-transition>
-		<div class="layout row justify-end">
+		<div class="layout row justify-center">
 			<v-btn
 				:loading="addDamageLoading"
 				:disabled="addDamageLoading"
 				outline
+				icon
 				@click="addDamage"
 			>
 				<v-icon>add</v-icon>
-				Add Damage
 			</v-btn>
 		</div>
   </div>

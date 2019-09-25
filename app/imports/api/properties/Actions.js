@@ -1,7 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
-import DamageSchema from '/imports/api/properties/subSchemas/DamageSchema.js';
-import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
+import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
 /*
  * Actions are things a character can do
@@ -35,8 +33,6 @@ let ActionSchema = new SimpleSchema({
 			'multipleTargets',
     ],
 	},
-	// Effects can apply to this tag specifically
-  // Ranged spell attack, Ranged weapon attack, etc.
   tags: {
     type: Array,
     defaultValue: [],
@@ -44,29 +40,9 @@ let ActionSchema = new SimpleSchema({
   'tags.$': {
     type: String,
   },
-	// Adjustments applied when taking this action
-	// Ideally, if these adjustments can't be made, the action should be unusable
-	adjustments: {
-		type: Array,
-		defaultValue: [],
-	},
-	'adjustments.$': {
-		type: AdjustmentSchema,
-	},
-	damages: {
-		type: Array,
-		defaultValue: [],
-	},
-	'damages.$': {
-		type: DamageSchema,
-	},
-	// Buffs applied when taking this action
-	buffs: {
-		type: Array,
-		defaultValue: [],
-	},
-	'buffs.$': {
-		type: StoredBuffWithIdSchema,
+	results: {
+		type: ResultsSchema,
+		defaultValue: {},
 	},
 	// Calculation of how many times this action can be used
 	// Only set if this action tracks its own uses, rather than adjusting

@@ -1,9 +1,9 @@
 <template lang="html">
 	<div>
 		<v-container fluid grid-list-lg fill-height>
-			<v-layout row wrap>
-				<v-flex v-for="(property, type) in PROPERTIES" :key="type" xs4>
-					<v-card hover @click="$emit('select', type)">
+			<v-layout row wrap fill-height>
+				<v-flex v-for="(property, type) in PROPERTIES" :key="type" sm4 xs6>
+					<v-card hover @click="$emit('select', type)" style="height: 100%; overflow: hidden;">
 						<div class="layout row align-center justify-center" style="min-height: 70px;">
 							<v-icon x-large>{{property.icon}}</v-icon>
 						</div>

@@ -1,4 +1,6 @@
-import creatureCollections from '/imports/api/creature/creatureCollections.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+
+let collections = [LibraryNodes];
 
 if (Meteor.isServer) Meteor.startup(() => {
 	/**
@@ -8,7 +10,7 @@ if (Meteor.isServer) Meteor.startup(() => {
 	const deleteOldSoftRemovedDocs = function(){
 		const now = new Date();
 		const thirtyMinutesAgo = new Date(now.getTime() - 30*60000);
-		creatureCollections.forEach(collection => {
+		collections.forEach(collection => {
 			collection.remove({
 				removed: true,
 				removedAt: {$lt: thirtyMinutesAgo} // dates *before* 30 minutes ago

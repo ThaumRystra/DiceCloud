@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
-import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
+import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
 // These are the rolls made when saves are called for
 // For the saving throw bonus or proficiency, see ./Skills.js
@@ -14,34 +13,14 @@ let SavingThrowSchema = new SimpleSchema ({
     type: String,
     optional: true,
   },
-  passAdjustments: {
-		type: Array,
-		defaultValue: [],
+	passResults: {
+		type: ResultsSchema,
+		defaultValue: {},
 	},
-	'passAdjustments.$': {
-		type: AdjustmentSchema,
-	},
-  passBuffs: {
-		type: Array,
-		defaultValue: [],
-	},
-	'passBuffs.$': {
-		type: StoredBuffWithIdSchema,
-	},
-  failAdjustments: {
-		type: Array,
-		defaultValue: [],
-	},
-	'failAdjustments.$': {
-		type: AdjustmentSchema,
-	},
-  failBuffs: {
-		type: Array,
-		defaultValue: [],
-	},
-	'failBuffs.$': {
-		type: StoredBuffWithIdSchema,
-	},
+  failResults: {
+    type: ResultsSchema,
+		defaultValue: {},
+  },
 });
 
 export { SavingThrowSchema };

@@ -26,16 +26,13 @@
 			:debounce-time="debounceTime"
 		/>
 		<form-sections>
-			<form-section name="Damage">
-				<div class="caption">
-					Damage to deal when this action is taken
-				</div>
-				<damage-list-form
-					:model="model.damages"
+			<form-section name="Results">
+				<results-form
+					:model="model.results"
 					:parent-target="model.target"
-					@change="({path, value, ack}) => $emit('change', {path: ['damages', ...path], value, ack})"
-					@push="({path, value, ack}) => $emit('push', {path: ['damages', ...path], value, ack})"
-					@pull="({path, ack}) => $emit('pull', {path: ['damages', ...path], ack})"
+					@change="({path, value, ack}) => $emit('change', {path: ['results', ...path], value, ack})"
+					@push="({path, value, ack}) => $emit('push', {path: ['results', ...path], value, ack})"
+					@pull="({path, ack}) => $emit('pull', {path: ['results', ...path], ack})"
 				/>
 			</form-section>
 			<form-section name="Advanced">
@@ -100,49 +97,19 @@
 					:debounce-time="debounceTime"
 				/>
 			</form-section>
-			<form-section name="Adjustments">
-				<div class="caption">
-					Adjustments can be used to automatically spend resources or gain
-					resources when taking an action.
-				</div>
-				<adjustment-list-form
-					:model="model.adjustments"
-					:parent-target="model.target"
-					@change="({path, value, ack}) => $emit('change', {path: ['adjustments', ...path], value, ack})"
-					@push="({path, value, ack}) => $emit('push', {path: ['adjustments', ...path], value, ack})"
-					@pull="({path, ack}) => $emit('pull', {path: ['adjustments', ...path], ack})"
-				/>
-			</form-section>
-			<form-section name="Buffs">
-				<div class="caption">
-					Buffs apply temporary effects to characters when taking an action.
-				</div>
-				<buff-list-form
-					:model="model.buffs"
-					:parent-target="model.target"
-					:stored="stored"
-					@change="({path, value, ack}) => $emit('change', {path: ['buffs', ...path], value, ack})"
-					@push="({path, value, ack}) => $emit('push', {path: ['buffs', ...path], value, ack})"
-					@pull="({path, ack}) => $emit('pull', {path: ['buffs', ...path], ack})"
-				/>
-			</form-section>
 		</form-sections>
   </div>
 </template>
 
 <script>
 	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
-	import AdjustmentListForm from '/imports/ui/properties/forms/AdjustmentListForm.vue';
-	import DamageListForm from '/imports/ui/properties/forms/DamageListForm.vue';
-	import BuffListForm from '/imports/ui/properties/forms/BuffListForm.vue';
+	import ResultsForm from '/imports/ui/properties/forms/ResultsForm.vue';
 
 	export default {
 		components: {
 			FormSection,
 			FormSections,
-			AdjustmentListForm,
-			DamageListForm,
-			BuffListForm,
+			ResultsForm,
 		},
 		props: {
 			stored: {

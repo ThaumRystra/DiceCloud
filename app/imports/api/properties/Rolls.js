@@ -34,11 +34,11 @@ let RollSchema = new SimpleSchema({
   'tags.$': {
     type: String,
   },
-  results: {
+  rollResults: {
     type: Array,
     defaultValue: [],
   },
-  'results.$': {
+  'rollResults.$': {
     type: RollResultsSchema,
   },
 });

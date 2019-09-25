@@ -6,28 +6,30 @@
 				:key="adjustment._id || i"
 			>
 				<v-divider v-if="i !== 0"/>
-				<adjustment-form
-					class="mt-4"
-					:model="adjustment"
-					:parent-target="parentTarget"
-					@change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
-				/>
-				<div>
+				<div class="layout row align-center">
+					<div style="flex-grow: 1;">
+						<adjustment-form
+							class="mt-4"
+							:model="adjustment"
+							:parent-target="parentTarget"
+							@change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
+						/>
+					</div>
 					<v-btn outline icon large class="ma-3" @click="$emit('pull', {path: [i]})">
 						<v-icon>delete</v-icon>
 					</v-btn>
 				</div>
 			</div>
 		</v-slide-x-transition>
-		<div class="layout row justify-end">
+		<div class="layout row justify-center">
 			<v-btn
 				:loading="addAdjustmentLoading"
 				:disabled="addAdjustmentLoading"
 				outline
+				icon
 				@click="addAdjustment"
 			>
 				<v-icon>add</v-icon>
-				Add Adjustment
 			</v-btn>
 		</div>
   </div>

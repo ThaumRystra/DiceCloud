@@ -1,7 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
-import DamageSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
-import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
+import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
 let RollResultsSchema = new SimpleSchema ({
   // Expression of whether or not to apply the roll
@@ -11,26 +9,9 @@ let RollResultsSchema = new SimpleSchema ({
     type: String,
     optional: true,
   },
-  damages: {
-		type: Array,
-		defaultValue: [],
-	},
-	'damages.$': {
-		type: DamageSchema,
-	},
-  adjustments: {
-		type: Array,
-		defaultValue: [],
-	},
-	'adjustments.$': {
-		type: AdjustmentSchema,
-	},
-  buffs: {
-		type: Array,
-		defaultValue: [],
-	},
-	'buffs.$': {
-		type: StoredBuffWithIdSchema,
+  results: {
+		type: ResultsSchema,
+		defaultValue: {},
 	},
 });
 

@@ -24,15 +24,15 @@
 				</div>
 			</div>
 		</v-slide-x-transition>
-		<div class="layout row justify-end">
+		<div class="layout row justify-center">
 			<v-btn
 				:loading="addBuffLoading"
 				:disabled="addBuffLoading"
 				outline
+				icon
 				@click="addBuff"
 			>
 				<v-icon>add</v-icon>
-				Add Buff
 			</v-btn>
 		</div>
   </div>

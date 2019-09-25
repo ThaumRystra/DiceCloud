@@ -35,8 +35,8 @@
 					:class="selected && 'primary--text'"
 				/>
 				<div class="text-no-wrap text-truncate">
-					{{node && node.order}}
-					{{node && node.name}}
+					<!--{{node && node.order}}-->
+					{{getTitle}}
 				</div>
 			</div>
 		</div>
@@ -67,6 +67,7 @@
 	**/
 	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
 	import { canBeParent } from '/imports/api/parenting/parenting.js';
+	import PROPERTIES from '/imports/constants/PROPERTIES.js'
 
 	export default {
 		name: 'tree-node',
@@ -107,6 +108,13 @@
 			},
 			canExpand(){
 				return canBeParent(this.node.type);
+			},
+			getTitle(){
+				let node = this.node;
+				if (!node) return;
+				if (node.name) return node.name;
+				let prop = PROPERTIES[this.node.type]
+				return prop && prop.name;
 			}
 		},
 		methods: {

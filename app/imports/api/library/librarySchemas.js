@@ -13,6 +13,7 @@ import { NoteSchema } from '/imports/api/properties/Notes.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
 import { SkillSchema } from '/imports/api/properties/Skills.js';
+import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { SpellSchema } from '/imports/api/properties/Spells.js';
 import { ContainerSchema } from '/imports/api/properties/Containers.js';
@@ -32,6 +33,7 @@ const librarySchemas = {
   note: NoteSchema,
   proficiency: ProficiencySchema,
   roll: RollSchema,
+  savingThrow: SavingThrowSchema,
   skill: SkillSchema,
   spellList: SpellListSchema,
   spell: SpellSchema,
