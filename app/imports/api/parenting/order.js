@@ -61,6 +61,8 @@ export function setDocToLastOrder({collection, doc}){
   }) + 1;
 }
 
+// update the order of a doc, and shift the siblings around to suit the new
+// order
 export function updateDocOrder({docRef, order}){
   let doc = fetchDocByRef(docRef, {fields: {
     order: 1,
@@ -116,7 +118,7 @@ export function removedDocAtOrder({collection, doc}){
 }
 
 export function insertedDocAtOrder({collection, parentId, order}){
-  // Decrement the order of all docs after the removed doc
+  // Increment the order of all docs after the inserted doc
   collection.update({
     'parent.id': parentId,
     order: {$gte: order},
@@ -128,6 +130,46 @@ export function insertedDocAtOrder({collection, parentId, order}){
   });
 }
 
+// Update the order a single doc and re-order the entire sibling list
+// with the change
+export function safeUpdateDocOrder({docRef, order}){
+  let collection = getCollectionByName(docRef.collection);
+  let movedDoc = fetchDocByRef(docRef, {fields: {
+    parent: 1, name: 1
+  }});
+  let parentId = movedDoc.parent.id;
+  let bulkWrite = [];
+  let docs = collection.find({
+    'parent.id': parentId,
+    '_id': {$ne: movedDoc._id},
+  }, {
+    fields: {order: 1, name: 1},
+    sort: {order: 1}
+  }).fetch();
+  docs.splice(order, 0, movedDoc);
+  docs.forEach((doc, index) => {
+    if (doc.order !== index){
+      bulkWrite.push({
+        updateOne: {
+          filter: {_id: doc._id},
+          update: {$set: {order: index}},
+        },
+      });
+    }
+  });
+  if (Meteor.isServer){
+    collection.rawCollection().bulkWrite(bulkWrite);
+  } else {
+    bulkWrite.forEach(op => {
+      collection.update(
+        op.updateOne.filter,
+        op.updateOne.update,
+        {selector: {type: 'any'}}
+      );
+    });
+  }
+};
+
 export function reorderDocs({collection, parentId}){
   let bulkWrite = [];
   collection.find({
@@ -137,7 +179,7 @@ export function reorderDocs({collection, parentId}){
     sort: {order: 1}
   }).forEach((doc, index) => {
     if (doc.order !== index){
-      bulkwrite.push({
+      bulkWrite.push({
         updateOne : {
           filter: {_id: doc._id},
           update: {$set: {order: index}},
@@ -149,7 +191,7 @@ export function reorderDocs({collection, parentId}){
     collection.rawCollection().bulkWrite(bulkWrite);
   } else {
     bulkWrite.forEach(op => {
-      collection.update(op.filter, op.update);
+      collection.update(op.updateOne.filter, op.updateOne.update);
     });
   }
 }

@@ -64,8 +64,8 @@
 		methods: {
 			change({added, moved}){
 				let event = moved || added;
+				let newIndex = this.children[event.newIndex].node.order;
 				if (event){
-					let newIndex = event.newIndex;
 					let doc = event.element.node;
 					if (moved){
 						this.$emit('reordered', {doc, newIndex});

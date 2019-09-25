@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { updateParent } from '/imports/api/parenting/parenting.js';
-import { insertedDocAtOrder, removedDocAtOrder, updateDocOrder } from '/imports/api/parenting/order.js';
+import { insertedDocAtOrder, removedDocAtOrder, safeUpdateDocOrder } from '/imports/api/parenting/order.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
@@ -48,7 +48,7 @@ const reorderDoc = new ValidatedMethod({
   run({docRef, order}) {
     let doc = fetchDocByRef(docRef);
     assertDocEditPermission(doc, this.userId);
-    updateDocOrder({docRef, order})
+    safeUpdateDocOrder({docRef, order})
   },
 });
 
