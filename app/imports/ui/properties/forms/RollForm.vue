@@ -2,23 +2,81 @@
   <div class="roll-form">
 		<text-field
 			label="Roll"
-			prefix="d20+"
-			:value="model.rollBonus"
-			@change="(value, ack) => $emit('change', {path: ['rollBonus'], value, ack})"
-			:error-messages="errors.rollBonus"
+			:value="model.roll"
+			@change="(value, ack) => $emit('change', {path: ['roll'], value, ack})"
+			:error-messages="errors.roll"
 			:debounce-time="debounceTime"
 		/>
-		<v-combobox
-	    label="Tags"
-	    multiple
-			chips
-			deletable-chips
-			box
-			:value="model.tags"
-			@change="(value) => $emit('change', {path: ['tags'], value})"
-	  />
 		<form-sections>
+			<form-section name="Results">
+				<v-slide-x-transition group>
+					<div
+						v-for="(rollResult, index) in model.rollResults"
+						:key="rollResult._id || index"
+					>
+						<div class="layout row align-center">
+							<text-field
+								label="Comparison"
+								style="flex-grow: 1;"
+								hint="If the comparison is true, the results below will be applied"
+								:value="rollResult.comparison"
+								@change="(value, ack) => $emit('change', {path: ['rollResults', index, 'comparison'], value, ack})"
+								:error-messages="errors.rollResults && errors.rollResults[index] && errors.rollResults[index].comparison"
+								:debounce-time="debounceTime"
+							/>
+							<v-btn
+								outline
+								icon
+								large
+								class="ma-3"
+								@click="$emit('pull', {path: ['rollResults', index]})"
+							>
+								<v-icon>delete</v-icon>
+							</v-btn>
+						</div>
+						<results-form
+							:model="rollResult.results"
+							:parent-target="model.target"
+							@change="({path, value, ack}) => $emit('change', {
+								path: ['rollResults', index, 'results', ...path],
+								value,
+								ack
+								})"
+							@push="({path, value, ack}) => $emit('push', {
+								path: ['rollResults', index, 'results', ...path],
+								value,
+								ack
+								})"
+							@pull="({path, ack}) => $emit('pull', {
+								path: ['rollResults', index, 'results', ...path],
+								ack
+								})"
+						/>
+						<v-divider class="my-4"/>
+					</div>
+				</v-slide-x-transition>
+				<div class="layout row justify-center">
+					<v-btn
+						:loading="addResultLoading"
+						:disabled="addResultLoading"
+						outline
+						@click="addResult"
+					>
+						<v-icon>add</v-icon>
+						Add Result
+					</v-btn>
+				</div>
+			</form-section>
 			<form-section name="Advanced">
+				<v-combobox
+			    label="Tags"
+			    multiple
+					chips
+					deletable-chips
+					box
+					:value="model.tags"
+					@change="(value) => $emit('change', {path: ['tags'], value})"
+			  />
 			</form-section>
 		</form-sections>
   </div>
@@ -26,16 +84,18 @@
 
 <script>
 	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
-	import AdjustmentListForm from '/imports/ui/properties/forms/AdjustmentListForm.vue';
-	import BuffListForm from '/imports/ui/properties/forms/BuffListForm.vue';
+	import RollResultsSchema from '/imports/api/properties/subSchemas/RollResultsSchema.js';
+	import ResultsForm from '/imports/ui/properties/forms/ResultsForm.vue';
 
 	export default {
 		components: {
 			FormSection,
 			FormSections,
-			AdjustmentListForm,
-			BuffListForm,
+			ResultsForm,
 		},
+		data(){return {
+			addResultLoading: false,
+		}},
 		props: {
 			stored: {
 				type: Boolean,
@@ -50,17 +110,19 @@
 			},
 			debounceTime: Number,
 		},
-		data(){return {
-			rollTypes: [
-				{
-					text: 'Roll',
-					value: 'roll',
-				}, {
-					text: 'Saving Throw',
-					value: 'savingThrow',
-				},
-			],
-		};},
+		methods: {
+			acknowledgeAddResult(){
+				this.addResultLoading = false;
+			},
+			addResult(){
+				this.addResultLoading = true;
+				this.$emit('push', {
+					path: ['rollResults'],
+					value: RollResultsSchema.clean({}),
+					ack: this.acknowledgeAddResult,
+				});
+			},
+		},
 	};
 </script>
 

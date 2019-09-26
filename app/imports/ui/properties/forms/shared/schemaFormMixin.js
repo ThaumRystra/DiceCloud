@@ -46,11 +46,18 @@ const schemaFormMixin = {
 			if (ack) ack();
 		},
     push({path, value, ack}){
-      get(this.model, path).push(value);
+      let array = get(this.model, path);
+      if (!array || !array.join){
+        throw `${path.join('.')} is ${array}, doesn't have "join"`
+      }
+      array.push(value);
 			if (ack) ack();
     },
     pull({path, ack}){
       let {object, key} = resolvePath(this.model, path);
+      if (!object || !object.splice){
+        throw `${path.join('.')} is ${object}, doesnt have "splice"`
+      }
       object.splice(key, 1);
       if (ack) ack();
     },
