@@ -50,35 +50,7 @@ let CreatureSchema = new SimpleSchema({
 		type: String,
 		optional: true
 	},
-	race:         {
-		type: String,
-		optional: true
-	},
 	picture:      {
-		type: String,
-		optional: true
-	},
-	description:  {
-		type: String,
-		optional: true
-	},
-	personality:  {
-		type: String,
-		optional: true
-	},
-	ideals:       {
-		type: String,
-		optional: true
-	},
-	bonds:        {
-		type: String,
-		optional: true
-	},
-	flaws:        {
-		type: String,
-		optional: true
-	},
-	backstory:    {
 		type: String,
 		optional: true
 	},
@@ -105,8 +77,6 @@ let CreatureSchema = new SimpleSchema({
 		defaultValue: "pc",
 		allowedValues: ["pc", "npc", "monster"],
 	},
-
-	// Computed
 	variables: {
 		type: Object,
 		blackbox: true,

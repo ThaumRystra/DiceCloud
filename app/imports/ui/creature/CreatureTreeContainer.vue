@@ -1,9 +1,9 @@
 <template lang="html">
 	<v-card-text style="width: initial; max-width: 100%; min-width: 320px;">
 		<tree-node-list
-			v-if="libraryChildren"
-			:children="libraryChildren"
-			:group="library && library._id"
+			v-if="creatureChildren"
+			:children="creatureChildren"
+			:group="creature && creature._id"
 			:organize="organize"
 			:selected-node-id="selectedNodeId"
 			@selected="e => $emit('selected', e)"
@@ -14,8 +14,8 @@
 </template>
 
 <script>
-	import Libraries from '/imports/api/library/Libraries.js';
-	import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+	import Creatures from '/imports/api/creature/Creatures.js';
+	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 	import { nodesToTree } from '/imports/api/parenting/parenting.js'
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
 	import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
@@ -25,20 +25,20 @@
 			TreeNodeList,
 		},
 		props: {
-			libraryId: String,
+			creatureId: String,
 			organize: Boolean,
 			selectedNodeId: String,
 		},
 		meteor: {
 			$subscribe: {
-				'library': [this.libraryId],
+				'creature': [this.creatureId],
 			},
-			library(){
-				return Libraries.findOne(this.libraryId);
+			creature(){
+				return Creatures.findOne(this.creatureId);
 			},
-			libraryChildren(){
-				if (!this.library) return;
-				return nodesToTree({collection: LibraryNodes, ancestorId: this.library._id});
+			creatureChildren(){
+				if (!this.creature) return;
+				return nodesToTree({collection: CreatureProperties, ancestorId: this.creatureId});
 			},
 		},
 		methods: {
@@ -46,7 +46,7 @@
 				reorderDoc.call({
 					docRef: {
 						id: doc._id,
-						collection: 'libraryNodes',
+						collection: 'creatureProperties',
 					},
 					order: newIndex,
 				});
@@ -56,18 +56,18 @@
 				if (parent){
 					parentRef = {
 						id: parent._id,
-						collection: 'libraryNodes',
+						collection: 'creatureProperties',
 					};
 				} else {
 					parentRef = {
-						id: this.libraryId,
-						collection: 'libraries',
+						id: this.creatureId,
+						collection: 'creatures',
 					};
 				}
 				organizeDoc.call({
 					docRef: {
 						id: doc._id,
-						collection: 'libraryNodes',
+						collection: 'creatureProperties',
 					},
 					parentRef,
 					order: newIndex,

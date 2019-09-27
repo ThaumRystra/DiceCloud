@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
-import librarySchemas from '/imports/api/library/librarySchemas.js';
+import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
@@ -11,14 +11,14 @@ let LibraryNodes = new Mongo.Collection('libraryNodes');
 let LibraryNodeSchema = new SimpleSchema({
 	type: {
     type: String,
-    allowedValues: Object.keys(librarySchemas),
+    allowedValues: Object.keys(propertySchemasIndex),
   },
 });
 
-for (let key in librarySchemas){
+for (let key in propertySchemasIndex){
 	let schema = new SimpleSchema({});
 	schema.extend(LibraryNodeSchema);
-	schema.extend(librarySchemas[key]);
+	schema.extend(propertySchemasIndex[key]);
 	schema.extend(ChildSchema);
 	schema.extend(SoftRemovableSchema);
 	LibraryNodes.attachSchema(schema, {
@@ -111,36 +111,6 @@ const softRemoveLibraryNode = new ValidatedMethod({
 		softRemove({_id, collection: LibraryNodes});
 	}
 });
-
-function libraryNodesToTree(ancestorId){
-  // Store a dict of all the nodes
-  let nodeIndex = {};
-  let nodeList = [];
-  LibraryNodes.find({
-    'ancestors.id': ancestorId,
-		removed: {$ne: true},
-  }, {
-    sort: {order: 1}
-  }).forEach( node => {
-    let treeNode = {
-      node: node,
-      children: [],
-    };
-    nodeIndex[node._id] = treeNode;
-    nodeList.push(treeNode);
-  });
-  // Create a forest of trees
-  let forest = [];
-  // Either the node is a child of another node, or in the forest as a root
-  nodeList.forEach(node => {
-    if (nodeIndex[node.node.parent.id]){
-      nodeIndex[node.node.parent.id].children.push(node);
-    } else {
-      forest.push(node);
-    }
-  });
-  return forest;
-}
 
 export default LibraryNodes;
 export {

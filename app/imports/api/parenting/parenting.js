@@ -165,3 +165,33 @@ export function getName(doc){
     if (ancestors[i].name) return ancestors[i].name;
   }
 }
+
+export function nodesToTree({collection, ancestorId}){
+  // Store a dict of all the nodes
+  let nodeIndex = {};
+  let nodeList = [];
+  collection.find({
+    'ancestors.id': ancestorId,
+		removed: {$ne: true},
+  }, {
+    sort: {order: 1}
+  }).forEach( node => {
+    let treeNode = {
+      node: node,
+      children: [],
+    };
+    nodeIndex[node._id] = treeNode;
+    nodeList.push(treeNode);
+  });
+  // Create a forest of trees
+  let forest = [];
+  // Either the node is a child of another node, or in the forest as a root
+  nodeList.forEach(node => {
+    if (nodeIndex[node.node.parent.id]){
+      nodeIndex[node.node.parent.id].children.push(node);
+    } else {
+      forest.push(node);
+    }
+  });
+  return forest;
+}

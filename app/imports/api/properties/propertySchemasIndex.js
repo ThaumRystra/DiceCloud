@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import { ActionSchema } from '/imports/api/properties/Actions.js';
 import { AttackSchema } from '/imports/api/properties/Attacks.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
@@ -11,14 +12,14 @@ import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { NoteSchema } from '/imports/api/properties/Notes.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
-import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SkillSchema } from '/imports/api/properties/Skills.js';
+import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { SpellSchema } from '/imports/api/properties/Spells.js';
 import { ContainerSchema } from '/imports/api/properties/Containers.js';
 import { ItemSchema } from '/imports/api/properties/Items.js';
 
-const propertySchemas = {
+const propertySchemasIndex = {
   action: ActionSchema,
   attack: AttackSchema,
   attribute: AttributeSchema,
@@ -38,6 +39,7 @@ const propertySchemas = {
   spell: SpellSchema,
   container: ContainerSchema,
   item: ItemSchema,
+  any: new SimpleSchema({}),
 };
 
-export default propertySchemas;
+export default propertySchemasIndex;

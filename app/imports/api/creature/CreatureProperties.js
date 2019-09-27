@@ -1,16 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
-import propertySchemas from '/imports/api/properties/propertySchemas.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import Creature from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import getModifierFields from '/imports/api/getModifierFields.js';
+import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
 let CreaturePropertySchema = new SimpleSchema({
 	type: {
     type: String,
-    allowedValues: Object.keys(propertySchemas),
+    allowedValues: Object.keys(propertySchemasIndex),
   },
 	charId: {
 		type: String,
@@ -20,9 +19,9 @@ let CreaturePropertySchema = new SimpleSchema({
 	},
 });
 
-for (let key in propertySchemas){
+for (let key in propertySchemasIndex){
 	let schema = new SimpleSchema({});
-	schema.extend(propertySchemas[key]);
+	schema.extend(propertySchemasIndex[key]);
 	schema.extend(CreaturePropertySchema);
 	schema.extend(ChildSchema);
 	CreatureProperties.attachSchema(schema, {
@@ -30,6 +29,28 @@ for (let key in propertySchemas){
 	});
 }
 
+function getCreature(property){
+  if (!property) throw new Meteor.Error('No property provided');
+  let creature = Creatures.findOne(property.ancestors[0].id);
+  if (!creature) throw new Meteor.Error('Creature does not exist');
+  return creature;
+}
+
+function assertPropertyEditPermission(property, userId){
+  let creature = getCreature(property);
+  return assertEditPermission(creature, userId);
+}
+
+const insertProperty = new ValidatedMethod({
+  name: 'CreatureProperties.methods.insert',
+	validate: null,
+  run(creatureProperty) {
+    assertPropertyEditPermission(creatureProperty, this.userId);
+		return CreatureProperties.insert(creatureProperty);
+  },
+});
+
+/*
 const adjustAttribute = new ValidatedMethod({
   name: 'Attributes.methods.adjust',
   mixins: [
@@ -73,6 +94,7 @@ const adjustAttribute = new ValidatedMethod({
 		}
   },
 });
+*/
 
 export default CreatureProperties;
-export { CreaturePropertySchema};
+export { CreaturePropertySchema, insertProperty };

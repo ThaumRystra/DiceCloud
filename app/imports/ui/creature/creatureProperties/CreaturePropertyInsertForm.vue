@@ -5,7 +5,7 @@
 			v-if="type"
 			stored
 			:is="type"
-			class="library-node-form"
+			class="creature-property-form"
 			:model="model"
 			:errors="errors"
 			@change="change"
@@ -26,11 +26,10 @@
 </template>
 
 <script>
+import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin.js';
-import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
-
 export default {
 	components: {
 		...propertyFormIndex,

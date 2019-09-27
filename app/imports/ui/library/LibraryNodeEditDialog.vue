@@ -39,7 +39,6 @@
 		pullFromLibraryNode,
 		softRemoveLibraryNode,
 	} from '/imports/api/library/LibraryNodes.js';
-	import librarySchemas from '/imports/api/library/librarySchemas.js';
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';

@@ -82,7 +82,6 @@
 
   const characterTransform = function(char){
     char.url = `\/character\/${char._id}\/${char.urlName || "-"}`;
-    char.color = getColorClass(char.color);
     char.initial = char.name[0] || "?";
     return char;
   };

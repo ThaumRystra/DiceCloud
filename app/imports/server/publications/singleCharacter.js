@@ -1,7 +1,7 @@
-import Creatures from "/imports/api/creature/Creatures.js";
-import creatureCollections from '/imports/api/creature/creatureCollections.js';
+import Creatures from '/imports/api/creature/Creatures.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
-Meteor.publish("singleCharacter", function(charId){
+Meteor.publish('singleCharacter', function(charId){
 	userId = this.userId;
 	var char = Creatures.findOne({
 		_id: charId,
@@ -9,15 +9,15 @@ Meteor.publish("singleCharacter", function(charId){
 			{readers: userId},
 			{writers: userId},
 			{owner: userId},
-			{"settings.viewPermission": "public"},
+			{'settings.viewPermission': 'public'},
 		],
 	});
 	if (char){
 		return [
 			Creatures.find({_id: charId}),
-			...creatureCollections.map(
-				collection => collection.find({charId})
-			)
+			CreatureProperties.find({
+				'ancestors.id': charId,
+			}),
 		];
 	} else {
 		return [];
@@ -25,8 +25,8 @@ Meteor.publish("singleCharacter", function(charId){
 });
 
 DDPRateLimiter.addRule({
-	name: "singleCharacter",
-	type: "subscription",
+	name: 'singleCharacter',
+	type: 'subscription',
 	userId: null,
 	connectionId(){ return true; },
 }, 8, 10000, function(reply, ruleInput){
@@ -35,7 +35,7 @@ DDPRateLimiter.addRule({
 	}
 });
 
-Meteor.publish("singleCharacterName", function(charId){
+Meteor.publish('singleCharacterName', function(charId){
 	userId = this.userId;
 	return Creatures.find({
 		_id: charId,
@@ -43,9 +43,9 @@ Meteor.publish("singleCharacterName", function(charId){
 			{readers: userId},
 			{writers: userId},
 			{owner: userId},
-			{"settings.viewPermission": "public"},
+			{'settings.viewPermission': 'public'},
 		],
 	}, {
-		fields:{"name": 1}
+		fields:{'name': 1}
 	});
 });

@@ -31,8 +31,7 @@ RouterFactory.configure(factory => {
       component: Home,
     },{
       path: '/characterList',
-      //component: CharacterList,
-      component: NotImplemented,
+      component: CharacterList,
     },{
       path: '/library',
       component: Libraries,
@@ -41,12 +40,11 @@ RouterFactory.configure(factory => {
       component: Library,
     },{
       path: '/character/:id/:urlName',
-      //component: CharacterSheetPage,
-      component: NotImplemented,
+      component: CharacterSheetPage,
+      //component: NotImplemented,
     },{
       path: '/character/:id',
-      //component: CharacterSheetPage,
-      component: NotImplemented,
+      component: CharacterSheetPage,
     },{
 			path: '/sign-in',
 			component: SignIn,

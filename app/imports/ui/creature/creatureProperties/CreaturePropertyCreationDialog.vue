@@ -1,6 +1,6 @@
 <template lang="html">
 	<selectable-property-dialog v-model="type">
-		<library-node-insert-form
+		<creature-property-insert-form
 			:type="type"
 			:property-name="getPropertyName(type)"
 			@back="type = undefined"
@@ -10,7 +10,7 @@
 
 <script>
 import SelectablePropertyDialog from '/imports/ui/properties/components/SelectablePropertyDialog.vue';
-import LibraryNodeInsertForm from '/imports/ui/library/LibraryNodeInsertForm.vue';
+import CreaturePropertyInsertForm from '/imports/ui/creature/creatureProperties/CreaturePropertyInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default {
@@ -19,7 +19,7 @@ export default {
   };},
   components: {
     SelectablePropertyDialog,
-		LibraryNodeInsertForm,
+		CreaturePropertyInsertForm,
   },
 	methods: {
 		getPropertyName,

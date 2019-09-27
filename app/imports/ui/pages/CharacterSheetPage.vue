@@ -1,5 +1,5 @@
 <template>
-  <character-sheet show-menu-button :char-id="$route.params.id" />
+  <character-sheet show-menu-button :creature-id="$route.params.id" />
 </template>
 
 <script>

@@ -13,12 +13,6 @@
         v-model="tab"
         centered
       >
-        <v-tab>
-          Stats
-        </v-tab>
-        <v-tab>
-          Features
-        </v-tab>
 				<v-tab>
           Tree
         </v-tab>
@@ -26,14 +20,8 @@
     </v-toolbar>
     <v-content v-if="$subReady.singleCharacter">
 			<v-tabs-items v-model="tab">
-	      <v-tab-item>
-	        <stats-tab :char-id="character._id"/>
-	      </v-tab-item>
 				<v-tab-item>
-	        <features-tab :char-id="character._id"/>
-	      </v-tab-item>
-				<v-tab-item>
-					<character-tree-view :char-id="character._id"/>
+					<tree-tab :character-id="creatureId"/>
 				</v-tab-item>
     	</v-tabs-items>
     </v-content>
@@ -48,20 +36,16 @@
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 	import { mapMutations } from "vuex";
 	import { theme } from '/imports/ui/theme.js';
-	import StatsTab from '/imports/ui/creature/character/StatsTab.vue';
-	import FeaturesTab from '/imports/ui/creature/character/FeaturesTab.vue';
-	import CharacterTreeView from '/imports/ui/creature/character/CharacterTreeView.vue';
+	import TreeTab from '/imports/ui/creature/character/TreeTab.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js'
 
 	export default {
 		props: {
 			showMenuButton: Boolean,
-			charId: String,
+			creatureId: String,
 		},
 		components: {
-			StatsTab,
-			FeaturesTab,
-			CharacterTreeView,
+			TreeTab,
 		},
 		data(){return {
 			theme,
@@ -71,19 +55,19 @@
       ...mapMutations([
         "toggleDrawer",
       ]),
-			recompute(charId){
-				recomputeCreature.call({charId});
+			recompute(creatureId){
+				recomputeCreature.call({creatureId});
 			},
 			isDarkColor,
     },
 		meteor: {
 			$subscribe: {
 	      'singleCharacter'(){
-					return [this.charId];
+					return [this.creatureId];
 				},
 			},
 			character(){
-				return Creatures.findOne(this.charId) || {};
+				return Creatures.findOne(this.creatureId) || {};
 			},
 		},
 	}
