@@ -1,6 +1,14 @@
 <template lang="html">
   <div class="layout row" style="background-color: inherit;">
-		<div class="layout column" style="background-color: inherit;">
+		<div
+			class="layout column"
+			style="
+				background-color: inherit;
+				width: initial;
+				max-width: 100%;
+				min-width: 320px;
+			"
+		>
 			<v-toolbar dense flat>
 				<v-spacer/>
 				<v-switch

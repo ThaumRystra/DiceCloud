@@ -3,9 +3,6 @@
 		style="
 			background-color: inherit;
 			overflow-y: auto;
-			width: initial;
-			max-width: 100%;
-			min-width: 320px;
 		"
 	>
 		<v-expansion-panel
