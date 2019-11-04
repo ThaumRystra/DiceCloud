@@ -20,8 +20,17 @@
 				example > bread > crumb
 			</v-card-text>
 		</template>
-		<slot name="unwrapped-content"/>
-		<v-card-text id="base-dialog-body" v-scroll:#base-dialog-body="onScroll">
+		<div
+			v-if="$slots['unwrapped-content']"
+			class="unwrapped-content"
+		>
+			<slot name="unwrapped-content"/>
+		</div>
+		<v-card-text
+			v-if="!$slots['unwrapped-content']"
+			id="base-dialog-body"
+			v-scroll:#base-dialog-body="onScroll"
+		>
 			<v-tabs-items :value="isEditing ? 1 : 0" touchless>
 				<v-tab-item>
 					<slot/>
@@ -32,7 +41,7 @@
 			</v-tabs-items>
 		</v-card-text>
 		<v-card-actions>
-			<slot name="actions"></slot>
+			<slot name="actions"/>
 		</v-card-actions>
 	</v-layout>
 </template>
@@ -73,7 +82,7 @@
 		z-index: 1;
 		border-radius: 2px 2px 0 0;
 	}
-	#base-dialog-body {
+	#base-dialog-body, .unwrapped-content {
 		flex-grow: 1;
 		overflow: auto;
 	}

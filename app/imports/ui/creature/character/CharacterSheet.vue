@@ -21,7 +21,7 @@
     <v-content v-if="$subReady.singleCharacter">
 			<v-tabs-items v-model="tab">
 				<v-tab-item>
-					<tree-tab :character-id="creatureId"/>
+					<tree-tab :creature-id="creatureId"/>
 				</v-tab-item>
     	</v-tabs-items>
     </v-content>

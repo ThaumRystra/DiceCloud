@@ -1,16 +1,14 @@
 <template lang="html">
-	<v-card-text style="width: initial; max-width: 100%; min-width: 320px;">
-		<tree-node-list
-			v-if="libraryChildren"
-			:children="libraryChildren"
-			:group="library && library._id"
-			:organize="organize"
-			:selected-node-id="selectedNodeId"
-			@selected="e => $emit('selected', e)"
-			@reordered="reordered"
-			@reorganized="reorganized"
-		/>
-	</v-card-text>
+	<tree-node-list
+
+		:children="libraryChildren"
+		:group="library && library._id"
+		:organize="organizeMode"
+		:selected-node-id="selectedNodeId"
+		@selected="e => $emit('selected', e)"
+		@reordered="reordered"
+		@reorganized="reorganized"
+	/>
 </template>
 
 <script>
@@ -26,12 +24,14 @@
 		},
 		props: {
 			libraryId: String,
-			organize: Boolean,
+			organizeMode: Boolean,
 			selectedNodeId: String,
 		},
 		meteor: {
 			$subscribe: {
-				'library': [this.libraryId],
+				'library'(){
+					return [this.libraryId]
+				},
 			},
 			library(){
 				return Libraries.findOne(this.libraryId);

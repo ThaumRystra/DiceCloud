@@ -4,7 +4,6 @@ import Vue from 'vue';
 // Components
 import Home from '/imports/ui/pages/Home.vue';
 import CharacterList from '/imports/ui/pages/CharacterList.vue';
-import Libraries from '/imports/ui/pages/Libraries.vue';
 import Library from '/imports/ui/pages/Library.vue';
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
@@ -22,7 +21,6 @@ const routerFactory = new RouterFactory({
   scrollBehavior: nativeScrollBehavior,
 });
 
-
 RouterFactory.configure(factory => {
   factory.addRoutes([
     {
@@ -34,17 +32,16 @@ RouterFactory.configure(factory => {
       component: CharacterList,
     },{
       path: '/library',
-      component: Libraries,
-    },{
-      path: '/library/:id',
       component: Library,
     },{
       path: '/character/:id/:urlName',
-      component: CharacterSheetPage,
-      //component: NotImplemented,
+      //component: CharacterSheetPage,
+      component: NotImplemented,
     },{
       path: '/character/:id',
-      component: CharacterSheetPage,
+      //component: CharacterSheetPage,
+      component: NotImplemented,
+
     },{
 			path: '/sign-in',
 			component: SignIn,

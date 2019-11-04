@@ -35,13 +35,46 @@
 				</v-card-text>
 			</div>
 		</v-card>
-		<v-btn fixed fab bottom right
-			color="primary"
-			@click="insertCreatureProperty"
-			data-id="insert-creature-property-fab"
-		>
-			<v-icon>add</v-icon>
-		</v-btn>
+		<v-speed-dial
+      v-model="fab"
+			fixed
+      bottom="bottom"
+      right="right"
+    >
+      <template v-slot:activator>
+        <v-btn
+          v-model="fab"
+          color="primary"
+          fab
+					data-id="insert-creature-property-fab"
+        >
+          <v-icon>add</v-icon>
+          <v-icon>close</v-icon>
+        </v-btn>
+      </template>
+			<v-tooltip disabled left :value="true" :nudge-left="16">
+				Property from library
+				<v-btn
+					slot="activator"
+					color="primary"
+					small fab
+					@click="propertyFromLibrary"
+				>
+					<v-icon>book</v-icon>
+				</v-btn>
+			</v-tooltip>
+			<v-tooltip disabled left :value="true" :nudge-left="16">
+				New property
+				<v-btn
+					slot="activator"
+					color="primary"
+					small fab
+					@click="insertCreatureProperty"
+				>
+					<v-icon>edit</v-icon>
+				</v-btn>
+			</v-tooltip>
+    </v-speed-dial>
   </div>
 </template>
 
@@ -62,6 +95,7 @@
 		data(){ return {
 			organize: false,
 			selected: undefined,
+			fab: false,
 		};},
 		props: {
 			creatureId: {
@@ -81,6 +115,17 @@
 						setDocToLastOrder({collection: CreatureProperties, doc: creatureProperty});
 						let creaturePropertyId = insertProperty.call(creatureProperty);
 						return creaturePropertyId;
+					}
+				});
+			},
+			propertyFromLibrary(){
+				let that = this;
+				this.$store.commit('pushDialogStack', {
+					component: 'creature-property-from-library-dialog',
+					elementId: 'insert-creature-property-fab',
+					callback(creatureProperty){
+						console.log(creatureProperty);
+						return;
 					}
 				});
 			},

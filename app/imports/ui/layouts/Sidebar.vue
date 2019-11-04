@@ -98,7 +98,7 @@
 				let links = [
 					{title: "Home", icon: "home", to: "/"},
 	        {title: "Creatures", icon: "group", to: "/characterList", vif: Meteor.userId()},
-					{title: "Libraries", icon: "book", to: "/library", vif: Meteor.userId()},
+					{title: "Library", icon: "book", to: "/library", vif: Meteor.userId()},
 	        {title: "Send Feedback", icon: "bug_report", to: "/feedback"},
 	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
 	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud/tree/version-2"},
