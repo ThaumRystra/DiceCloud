@@ -29,7 +29,8 @@ RouterFactory.configure(factory => {
       component: Home,
     },{
       path: '/characterList',
-      component: CharacterList,
+      //component: CharacterList,
+      component: NotImplemented,
     },{
       path: '/library',
       component: Library,
