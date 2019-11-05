@@ -26,6 +26,7 @@ export function compareOrder(docA, docB){
 
   // Go through their ancestors after the root, and find the first order
   // difference
+  // TODO ancestors don't store order yet
   let i, difference;
   const length = Math.min(docA.ancestors.length, docB.ancestors.length);
   for (i = 1; i < length; i++){

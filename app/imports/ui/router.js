@@ -29,19 +29,19 @@ RouterFactory.configure(factory => {
       component: Home,
     },{
       path: '/characterList',
-      //component: CharacterList,
-      component: NotImplemented,
+      component: CharacterList,
+      //component: NotImplemented,
     },{
       path: '/library',
       component: Library,
     },{
       path: '/character/:id/:urlName',
-      //component: CharacterSheetPage,
-      component: NotImplemented,
+      component: CharacterSheetPage,
+      //component: NotImplemented,
     },{
       path: '/character/:id',
-      //component: CharacterSheetPage,
-      component: NotImplemented,
+      component: CharacterSheetPage,
+      //component: NotImplemented,
 
     },{
 			path: '/sign-in',

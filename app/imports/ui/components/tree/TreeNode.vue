@@ -14,7 +14,7 @@
 				small icon
 				:class="showExpanded ? 'rotate-90' : null"
 				@click.stop="expanded = !expanded"
-				:disabled="!hasChildren && !organize"
+				:disabled="!hasChildren && !organize || !canExpand"
 			>
 				<v-icon v-if="canExpand && (hasChildren || organize)">chevron_right</v-icon>
 			</v-btn>

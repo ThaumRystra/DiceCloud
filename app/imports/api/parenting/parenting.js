@@ -94,6 +94,46 @@ export function getAncestry({parentRef, inheritedFields = {}}){
   return {parentDoc, parent, ancestors};
 }
 
+export function setLineageOfDocs({docArray, oldParent, newAncestry}){
+  //const oldParent = oldAncestry[oldAncestry.length - 1];
+  const newParent = newAncestry[newAncestry.length - 1];
+  docArray.forEach(doc => {
+    if(doc.parent.id === oldParent.id){
+      doc.parent = newParent;
+    }
+    let oldAncestors = doc.ancestors;
+    let oldParentIndex = oldAncestors.findIndex(a => a.id === oldParent.id);
+    doc.ancestors = [...newAncestry, ...oldAncestors.slice(oldParentIndex + 1)];
+  });
+}
+
+
+/**
+ * Give documents new random ids and transform their references.
+ * Transform collections of re-IDed docs according to the collection map
+ */
+export function renewDocIds({docArray, collectionMap}){
+  // map of {oldId: newId}
+  let idMap = {};
+  // Give new ids and map the changes
+  docArray.forEach(doc => {
+    let oldId = doc._id;
+    let newId = Random.id();
+    doc._id = newId;
+    idMap[oldId] = newId;
+  });
+  const remapReference = ref => {
+    if (idMap[ref.id]){
+      ref.id = idMap[ref.id];
+      ref.collection = collectionMap[ref.collection] || ref.collection;
+    }
+  }
+  docArray.forEach(doc => {
+    remapReference(doc.parent);
+    doc.ancestors.forEach(remapReference);
+  });
+}
+
 export function updateParent({docRef, parentRef}){
   let collection = getCollectionByName(docRef.collection);
   let oldDoc = fetchDocByRef(docRef, {fields: {

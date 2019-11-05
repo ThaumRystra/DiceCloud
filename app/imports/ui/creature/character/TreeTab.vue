@@ -80,7 +80,10 @@
 
 <script>
 	import CreatureTreeContainer from '/imports/ui/creature/CreatureTreeContainer.vue';
-	import CreatureProperties, { insertProperty } from '/imports/api/creature/CreatureProperties.js';
+	import CreatureProperties, {
+		insertProperty,
+		insertPropertyFromLibraryNode
+	} from '/imports/api/creature/CreatureProperties.js';
 	import PropertyViewer from '/imports/ui/properties/PropertyViewer.vue';
 	import { setDocToLastOrder } from '/imports/api/parenting/order.js';
 	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
@@ -123,8 +126,13 @@
 				this.$store.commit('pushDialogStack', {
 					component: 'creature-property-from-library-dialog',
 					elementId: 'insert-creature-property-fab',
-					callback(creatureProperty){
-						console.log(creatureProperty);
+					callback(libraryNode){
+						console.log({libraryNode});
+						let propertyId = insertPropertyFromLibraryNode.call({
+							nodeId: libraryNode._id,
+							parentRef: {collection: 'creatures', id: that.creatureId},
+						});
+						console.log({propertyId});
 						return;
 					}
 				});
