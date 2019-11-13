@@ -105,7 +105,7 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 	}).validator(),
 	run(userId, address){
 		userId = this.userId || userId;
-		let user = Meteor.users.findOne();
+		let user = Meteor.users.findOne(userId);
 		if (!user) {
 			throw new Meteor.Error('User not found',
 				'Can\'t send a validation email to a user that does not exist');
@@ -114,6 +114,12 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 			throw new Meteor.Error('Email address not found',
 				'The specified email address wasn\'t found on this user account');
 		}
-		Accounts.sendVerificationEmail(this.userId, address);
+		Accounts.sendVerificationEmail(userId, address);
 	}
 });
+
+Meteor.users.isAdmin = function(userId){
+	userId = this.userId || userId;
+	let user = Meteor.users.findOne(userId);
+	return user && user.roles.includes('admin');
+}

@@ -13,6 +13,13 @@ let LibraryNodeSchema = new SimpleSchema({
     type: String,
     allowedValues: Object.keys(propertySchemasIndex),
   },
+	tags: {
+		type: Array,
+		defaultValue: [],
+	},
+	'tags.$': {
+		type: String,
+	},
 });
 
 for (let key in propertySchemasIndex){

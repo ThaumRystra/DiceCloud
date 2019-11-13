@@ -17,6 +17,10 @@ let LibrarySchema = new SimpleSchema({
 	name: {
     type: String,
   },
+	isDefault: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 LibrarySchema.extend(SharingSchema);
@@ -30,11 +34,30 @@ const insertLibrary = new ValidatedMethod({
 	mixins: [
 		simpleSchemaMixin,
   ],
-  schema: LibrarySchema.omit('owner'),
+  schema: LibrarySchema.omit('owner', 'isDefault'),
   run(library) {
     library.owner = this.userId;
 		return Libraries.insert(library);
   },
 });
 
-export { LibrarySchema, insertLibrary };
+const setLibraryDefault = new ValidatedMethod({
+  name: 'Libraries.methods.makeLibraryDefault',
+	validate: new SimpleSchema({
+		_id: {
+			type: String,
+			regEx: SimpleSchema.RegEx.id
+		},
+		isDefault: {
+			type: Boolean,
+		},
+	}).validator(),
+  run({_id, isDefault}) {
+		if (!Meteor.users.isAdmin()){
+			throw new Meteor.Error('Permission denied', 'User must be admin to set libraries as default');
+		}
+		return Libraries.update(_id, {$set: {isDefault}});
+  },
+});
+
+export { LibrarySchema, insertLibrary, setLibraryDefault };

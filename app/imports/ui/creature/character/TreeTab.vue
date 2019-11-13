@@ -68,7 +68,7 @@
 				<v-btn
 					slot="activator"
 					color="primary"
-					small fab
+					small fab disabled
 					@click="insertCreatureProperty"
 				>
 					<v-icon>edit</v-icon>
@@ -127,12 +127,11 @@
 					component: 'creature-property-from-library-dialog',
 					elementId: 'insert-creature-property-fab',
 					callback(libraryNode){
-						console.log({libraryNode});
+						if (!libraryNode) return;
 						let propertyId = insertPropertyFromLibraryNode.call({
 							nodeId: libraryNode._id,
 							parentRef: {collection: 'creatures', id: that.creatureId},
 						});
-						console.log({propertyId});
 						return;
 					}
 				});

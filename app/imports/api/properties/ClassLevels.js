@@ -21,6 +21,13 @@ let ClassLevelSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
 		defaultValue: 1,
   },
+	nextLevelTags: {
+		type: Array,
+		defaultValue: [],
+	},
+	'nextLevelTags.$': {
+		type: String,
+	},
 });
 
 export { ClassLevelSchema };

@@ -21,7 +21,7 @@ const insertCreature = new ValidatedMethod({
 
   validate: null,
 
-  run(characterFormData) {
+  run() {
     if (!this.userId) {
       throw new Meteor.Error("Creatures.methods.insert.denied",
       "You need to be logged in to insert a creature");
@@ -29,18 +29,9 @@ const insertCreature = new ValidatedMethod({
 
 		// Create the creature document
     let charId = Creatures.insert({
-			name: characterFormData.name,
 			owner: this.userId,
-			alignment: characterFormData.alignment,
-			gender: characterFormData.gender,
-			race: characterFormData.race,
 		});
 		this.unblock();
-		if (Meteor.isServer){
-			//Add all the required attributes to it
-			let docs = getDefaultCharacterDocs(charId, characterFormData);
-			addDefaultDocs(docs);
-		}
 		return charId;
   },
 

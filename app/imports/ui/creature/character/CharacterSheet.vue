@@ -1,5 +1,5 @@
 <template>
-	<div class="character-sheet">
+	<div class="character-sheet layout column">
     <v-toolbar app :color="character.color || 'secondary'" :dark="isDarkColor(character.color || theme.primary)">
       <v-btn v-if="showMenuButton" flat icon @click="toggleDrawer">
         <v-icon>menu</v-icon>
@@ -14,12 +14,36 @@
         centered
       >
 				<v-tab>
+					Stats
+				</v-tab>
+				<v-tab>
+					Features
+				</v-tab>
+				<v-tab>
           Tree
         </v-tab>
       </v-tabs>
     </v-toolbar>
-    <v-content v-if="$subReady.singleCharacter">
+    <v-content class="flex" v-if="$subReady.singleCharacter">
 			<v-tabs-items v-model="tab">
+				<v-tab-item>
+					<!--<stats-tab/>-->
+					<v-alert
+						:value="true"
+						type="info"
+					>
+						This tab is not available in this version of the alpha.
+					</v-alert>
+				</v-tab-item>
+				<v-tab-item>
+					<!--<features-tab/>-->
+					<v-alert
+						:value="true"
+						type="info"
+					>
+						This tab is not available in this version of the alpha.
+					</v-alert>
+				</v-tab-item>
 				<v-tab-item>
 					<tree-tab :creature-id="creatureId"/>
 				</v-tab-item>
@@ -37,6 +61,8 @@
 	import { mapMutations } from "vuex";
 	import { theme } from '/imports/ui/theme.js';
 	import TreeTab from '/imports/ui/creature/character/TreeTab.vue';
+	import StatsTab from '/imports/ui/creature/character/StatsTab.vue';
+	import FeaturesTab from '/imports/ui/creature/character/FeaturesTab.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js'
 
 	export default {
@@ -73,5 +99,14 @@
 	}
 </script>
 
-<style scoped>
+<style>
+	.v-tabs__bar {
+		background: none !important;
+	}
+	.v-window-item, .v-window, .v-window__container {
+		height: 100%;
+	}
+	.v-window-item {
+		padding: 0.1px;
+	}
 </style>

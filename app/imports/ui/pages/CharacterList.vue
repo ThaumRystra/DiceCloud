@@ -124,7 +124,10 @@
     },
     methods: {
       insertCharacter(){
-        store.commit("pushDialogStack", {
+				insertCreature.call(result);
+				
+        /*
+				store.commit("pushDialogStack", {
            component: CharacterCreationDialog,
            data: {},
            element: undefined,
@@ -134,6 +137,7 @@
              insertCreature.call(result);
            },
         });
+				*/
       },
     },
     components: {

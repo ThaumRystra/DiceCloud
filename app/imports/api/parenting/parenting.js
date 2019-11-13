@@ -107,7 +107,6 @@ export function setLineageOfDocs({docArray, oldParent, newAncestry}){
   });
 }
 
-
 /**
  * Give documents new random ids and transform their references.
  * Transform collections of re-IDed docs according to the collection map
