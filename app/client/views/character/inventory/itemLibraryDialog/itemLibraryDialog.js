@@ -30,7 +30,7 @@ Template.itemLibraryDialog.onCreated(function(){
 			if (_.contains(categoryKeys, key)){
 				handle = librarySubs.subscribe("standardLibraryItems", key);
 			} else {
-				handle = librarySubs.subscribe("libraryItems", key);
+				handle = librarySubs.subscribe("fullLibraryItems", key);
 			}
 			this.autorun(() => {
 				this.readyDict.set(key, handle.ready());
@@ -91,11 +91,14 @@ Template.itemLibraryDialog.helpers({
 	},
 	customLibraries(){
 		let userId = Meteor.userId();
+		let user = Meteor.user()
+		let subs = user && user.profile && user.profile.librarySubscriptions;
     return Libraries.find({
       $or: [
   			{readers: userId},
   			{writers: userId},
   			{owner: userId},
+				{public: true, _id: {$in: subs || []}},
   		],
     });
 	},

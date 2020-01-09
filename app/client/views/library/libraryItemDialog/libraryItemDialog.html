@@ -1,5 +1,5 @@
 <template name="libraryItemDialog">
-  <div class="fit base-dialog layout vertical">
+  <div class="fit base-dialog layout vertical library-item-dialog">
 		<app-toolbar>
       <paper-icon-button id="backButton"
 							   icon="arrow-back">
@@ -8,32 +8,34 @@
 			<paper-icon-button id="deleteButton"
 							   role="button"
 							   tabindex="0"
-							   icon="delete">
+							   icon="delete"
+                 disabled="{{cantEdit}}">
 			</paper-icon-button>
 		</app-toolbar>
 		<div class="form flex scroll-y" style="position: relative;">
-      <paper-input id="libraryItemLibraryNameInput" class="fullwidth" label="Library name (optional)" value={{item.libraryName}}></paper-input>
-      <paper-input id="libraryItemNameInput" class="fullwidth" label="Item name" value={{item.name}}></paper-input>
+      {{#if ready}}
+      <paper-input id="libraryItemLibraryNameInput" class="fullwidth" label="Library name (optional)" value={{item.libraryName}} disabled="{{cantEdit}}"></paper-input>
+      <paper-input id="libraryItemNameInput" class="fullwidth" label="Item name" value={{item.name}} disabled="{{cantEdit}}"></paper-input>
       <div class="layout horizontal center wrap">
-        <paper-input id="libraryItemPluralInput" class="flex" label="Plural name" value={{item.plural}}></paper-input>
-        <paper-input id="libraryItemQuantityInput" class="flex" label="Quantity" type="number" value={{item.quantity}}></paper-input>
-        <paper-checkbox id="incrementCheckbox" class="flex" checked={{item.settings.showIncrement}}>
+        <paper-input id="libraryItemPluralInput" class="flex" label="Plural name" value={{item.plural}} disabled="{{cantEdit}}"></paper-input>
+        <paper-input id="libraryItemQuantityInput" class="flex" label="Quantity" type="number" value={{item.quantity}} disabled="{{cantEdit}}"></paper-input>
+        <paper-checkbox id="incrementCheckbox" class="flex" checked={{item.settings.showIncrement}} disabled="{{cantEdit}}">
           Show Increment
         </paper-checkbox>
       </div>
       <div class="layout horizontal center wrap">
-        <paper-input id="libraryItemValueInput" class="flex" label="Value" type="number" value={{item.value}}></paper-input>
-        <paper-input id="libraryItemWeightInput" class="flex" label="Weight" type="number" value={{item.weight}}></paper-input>
-        <paper-checkbox id="attunementCheckbox" class="flex" checked={{item.requiresAttunement}}>
+        <paper-input id="libraryItemWeightInput" class="flex" label="Weight" type="number" value={{item.weight}} disabled="{{cantEdit}}"></paper-input>
+        <paper-input id="libraryItemValueInput" class="flex" label="Value" type="number" value={{item.value}} disabled="{{cantEdit}}"></paper-input>
+        <paper-checkbox id="attunementCheckbox" class="flex" checked={{item.requiresAttunement}} disabled="{{cantEdit}}">
           Requires Attunement
         </paper-checkbox>
       </div>
-      <paper-textarea id="libraryItemDescriptionInput" label="Description" value={{item.description}}></paper-textarea>
+      <paper-textarea id="libraryItemDescriptionInput" label="Description" value={{item.description}} disabled="{{cantEdit}}"></paper-textarea>
       <div style="margin-top: 8px;">
         <div class="paper-font-subhead">Effects</div>
         {{#each indexedEffects}}
-          <div class="effect layout horizontal center wrap">
-            <paper-dropdown-menu label="Operation" class="operationMenu">
+          <div class="effect layout horizontal center wrap" style="margin-bottom: 32px;">
+            <paper-dropdown-menu label="Operation" class="operationMenu" disabled="{{cantEdit}}">
   						<paper-listbox class="dropdown-content"  selected={{operationIndex operation}}>
                 <paper-item label="Base Value" name="base"> Base Value </paper-item>
                 <paper-item label="Add" name="add"> Add </paper-item>
@@ -47,21 +49,21 @@
   							<paper-item label="Conditional" name="conditional"> Conditional </paper-item>
   						</paper-listbox>
   					</paper-dropdown-menu>
-            <paper-input class="LibraryItemEffectStat flex" label="Attribute" value={{stat}}></paper-input>
-            <paper-input class="LibraryItemEffectValue flex" label="Value" value={{calculationOrValue}}></paper-input>
-            <paper-icon-button icon="delete" class="deleteEffect"></paper-icon-button>
+            <paper-input class="LibraryItemEffectStat flex" label="Attribute" value={{stat}} disabled="{{cantEdit}}"></paper-input>
+            <paper-input class="LibraryItemEffectValue flex" label="Value" value={{calculationOrValue}} disabled="{{cantEdit}}"></paper-input>
+            <paper-icon-button icon="delete" class="deleteEffect" disabled="{{cantEdit}}"></paper-icon-button>
           </div>
         {{/each}}
-        <paper-button id="addEffect" class="red-button">Add Effect</paper-button>
+        <paper-button id="addEffect" class="red-button" disabled="{{cantEdit}}">Add Effect</paper-button>
       </div>
       <div style="margin-top: 8px;">
         <div class="paper-font-subhead">Attacks</div>
         {{#each indexedAttacks}}
-          <div class="effect layout horizontal center wrap">
-            <paper-input class="LibraryItemAttackBonusInput flex" label="Attack Bonus" value={{attackBonus}}></paper-input>
-            <paper-input class="LibraryItemAttackDamageInput flex" label="Damage" value={{damage}}></paper-input>
-            <paper-input class="LibraryItemAttackDetailsInput flex" label="Details" value={{details}}></paper-input>
-            <paper-dropdown-menu label="Damage Type" class="damageTypeMenu">
+          <div class="effect layout horizontal center wrap" style="margin-bottom: 32px">
+            <paper-input class="LibraryItemAttackBonusInput flex" label="Attack Bonus" value={{attackBonus}} disabled="{{cantEdit}}"></paper-input>
+            <paper-input class="LibraryItemAttackDamageInput flex" label="Damage" value={{damage}} disabled="{{cantEdit}}"></paper-input>
+            <paper-input class="LibraryItemAttackDetailsInput flex" label="Details" value={{details}} disabled="{{cantEdit}}"></paper-input>
+            <paper-dropdown-menu label="Damage Type" class="damageTypeMenu" disabled="{{cantEdit}}">
   						<paper-listbox class="dropdown-content"  selected={{damageTypeIndex damageType}}>
                 <paper-item label="Bludgeoning" name="bludgeoning"> Bludgeoning </paper-item>
                 <paper-item label="Piercing" name="piercing"> Piercing </paper-item>
@@ -78,11 +80,14 @@
                 <paper-item label="Thunder" name="thunder"> Thunder </paper-item>
   						</paper-listbox>
   					</paper-dropdown-menu>
-            <paper-icon-button icon="delete" class="deleteAttack"></paper-icon-button>
+            <paper-icon-button icon="delete" class="deleteAttack" disabled="{{cantEdit}}"></paper-icon-button>
           </div>
         {{/each}}
-        <paper-button id="addAttack" class="red-button">Add Attack</paper-button>
+        <paper-button id="addAttack" class="red-button" disabled="{{cantEdit}}">Add Attack</paper-button>
       </div>
+      {{else}}
+      <paper-spinner active></paper-spinner>
+      {{/if}}
     </div>
 	</div>
 </template>

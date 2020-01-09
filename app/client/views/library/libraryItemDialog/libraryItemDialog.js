@@ -1,3 +1,9 @@
+Template.libraryItemDialog.onCreated(function(){
+  this.autorun(() => {
+    this.subscribe('libraryItem', Template.currentData().itemId);
+  });
+});
+
 Template.libraryItemDialog.helpers({
   item(){
     return LibraryItems.findOne(this.itemId);
@@ -55,6 +61,22 @@ Template.libraryItemDialog.helpers({
       thunder: 12,
     };
     return ref[damageType];
+  },
+  ready(){
+    return Template.instance().subscriptionsReady();
+  },
+  cantEdit(){
+    // Get itemId from the top level template data regardless of current context
+    let itemId = Blaze.getData(Template.instance().view).itemId;
+    let item = LibraryItems.findOne(itemId);
+    if (!item) return;
+    let library = Libraries.findOne(item.library);
+    if (!library) return;
+    let userId = Meteor.userId();
+    return !(
+      library.owner === userId ||
+	    _.contains(library.writers, userId)
+    );
   }
 });
 

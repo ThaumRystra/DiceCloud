@@ -153,4 +153,31 @@ Meteor.methods({
 			lastPatreonPostClicked: link
 		}});
 	},
+	sendResetPasswordEmail({userId, email}){
+		var user = Meteor.users.findOne(this.userId);
+		// Only admins
+		if (user && _.contains(user.roles, "admin")) {
+			return Accounts.sendResetPasswordEmail(userId, email)
+		} else {
+			throw new Meteor.error('access denied');
+		}
+	},
+	sendEnrollmentEmail({userId, email}){
+		var user = Meteor.users.findOne(this.userId);
+		// Only admins
+		if (user && _.contains(user.roles, "admin")) {
+			return Accounts.sendEnrollmentEmail(userId, email)
+		} else {
+			throw new Meteor.error('access denied');
+		}
+	},
+	setPassword({userId, newPassword}){
+		var user = Meteor.users.findOne(this.userId);
+		// Only admins
+		if (user && _.contains(user.roles, "admin")) {
+			return Accounts.setPassword(userId, newPassword);
+		} else {
+			throw new Meteor.error('access denied');
+		}
+	}
 });

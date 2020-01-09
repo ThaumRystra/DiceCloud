@@ -1,15 +1,39 @@
 <template name="libraryDialog">
   <div class="fit base-dialog layout vertical">
 		<app-toolbar>
-			<div main-title>{{library.name}}</div>
-			<paper-icon-button id="deleteButton"
-							   role="button"
-							   tabindex="0"
-							   icon="delete">
+      <paper-icon-button id="backButton"
+							   icon="arrow-back">
 			</paper-icon-button>
+			<div main-title>{{library.name}}</div>
+      <paper-menu-button class="character-menu" horizontal-align="right">
+        <paper-icon-button icon="delete"  class="dropdown-trigger" disabled="{{notOwner}}">
+        </paper-icon-button>
+        <paper-menu class="dropdown-content black87">
+          <paper-button id="deleteButton" disabled="{{notOwner}}" raised>
+            Delete library and all its contents
+          </paper-button>
+        </paper-menu>
+      </paper-menu-button>
 		</app-toolbar>
 		<div class="form flex scroll-y" style="position: relative;">
 			<paper-input id="libraryNameInput" class="fullwidth" label="Name" value={{library.name}}></paper-input>
+      <hr style="margin: 24px 0; opacity: 0.4;">
+      <paper-dropdown-menu label="Who can view and subscribe to this library">
+        <dicecloud-selector class="visibilityDropdown dropdown-content" selected={{viewPermission}}>
+          <paper-item name="whitelist">Only people I share with</paper-item>
+          <paper-item name="public">Anyone with link</paper-item>
+        </dicecloud-selector>
+      </paper-dropdown-menu>
+      {{#if library.public}}
+        <div style="margin-top: 16px;">
+          Share this link for others to subscribe to this library:
+        </div>
+        <a href="{{pathFor route='library' data=library}}" style="color: #d13b2e; font-size: 18px">
+          {{urlFor route='library' data=library}}
+        </a>
+      {{/if}}
+      <hr style="margin: 24px 0; opacity: 0.4;">
+      <div class="paper-font-title" style="margin-top: 32px;">Share Directly</div>
       <div class="layout horizontal center wrap">
           <paper-input class="flex" id="userNameOrEmailInput" label="Share with username or email" floatinglabel></paper-input>
           <paper-button id="shareButton"

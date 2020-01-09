@@ -46,6 +46,10 @@ Template.newUserStepper.events({
 		const stepper = instance.find("paper-stepper");
 		stepper.continue();
 	},
+	"click .skip-button": function(event, instance){
+		const stepper = instance.find("paper-stepper");
+		stepper.continue();
+	},
 });
 
 Template.stats.events({
