@@ -27,22 +27,10 @@
     <v-content class="flex" v-if="$subReady.singleCharacter">
 			<v-tabs-items v-model="tab">
 				<v-tab-item>
-					<!--<stats-tab/>-->
-					<v-alert
-						:value="true"
-						type="info"
-					>
-						This tab is not available in this version of the alpha.
-					</v-alert>
+					<stats-tab/>
 				</v-tab-item>
 				<v-tab-item>
-					<!--<features-tab/>-->
-					<v-alert
-						:value="true"
-						type="info"
-					>
-						This tab is not available in this version of the alpha.
-					</v-alert>
+					<features-tab/>
 				</v-tab-item>
 				<v-tab-item>
 					<tree-tab :creature-id="creatureId"/>
@@ -60,9 +48,9 @@
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 	import { mapMutations } from "vuex";
 	import { theme } from '/imports/ui/theme.js';
-	import TreeTab from '/imports/ui/creature/character/TreeTab.vue';
-	import StatsTab from '/imports/ui/creature/character/StatsTab.vue';
-	import FeaturesTab from '/imports/ui/creature/character/FeaturesTab.vue';
+	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
+	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
+	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js'
 
 	export default {
@@ -72,6 +60,8 @@
 		},
 		components: {
 			TreeTab,
+			StatsTab,
+			FeaturesTab,
 		},
 		data(){return {
 			theme,

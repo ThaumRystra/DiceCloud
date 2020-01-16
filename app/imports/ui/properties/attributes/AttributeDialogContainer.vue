@@ -8,13 +8,7 @@
 
 <script>
 	import AttributeDialog from '/imports/ui/properties/attributes/AttributeDialog.vue';
-	import Attributes from '/imports/api/properties/Attributes.js';
-	import {
-		updateAttribute,
-		adjustAttribute
-	} from '/imports/api/properties/Attributes.js';
-	import Effects from '/imports/api/properties/Effects.js';
-	import { setName } from '/imports/api/parenting/parenting.js';
+	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 	export default {
 		components: {
@@ -31,8 +25,9 @@
 				if (!this.attribute) return;
 				let charId = this.attribute.charId;
 				let stat = this.attribute.variableName;
-				return Effects.find({
-					charId,
+				return CreatureProperties.find({
+					'ancestor.id': charId,
+					type: 'effect',
 					stat,
 					enabled: true,
 				}, {

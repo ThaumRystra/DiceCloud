@@ -138,8 +138,8 @@
 </template>
 
 <script>
-	import Attributes from '/imports/api/properties/Attributes.js';
-	import Skills from '/imports/api/properties/Skills.js';
+	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+
 	import AttributeCard from '/imports/ui/properties/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
@@ -149,17 +149,24 @@
 	import ResourceCard from '/imports/ui/properties/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/properties/attributes/SpellSlotListTile.vue';
 
-	import { adjustAttribute, insertAttribute } from '/imports/api/properties/Attributes.js';
+	let adjustAttribute = insertAttribute = () => console.error("this shit isn't defined");
 
 	const getAttributeOfType = function(charId, type){
-		return Attributes.find({charId, type}, {sort: {order: 1}});
+		return CreatureProperties.find({
+			'ancestor.id': charId,
+			type: 'attribute',
+			attributeType: type,
+		}, {
+			sort: {order: 1}
+		});
 	};
 
 	const getNonZeroAttributeOfType = function(charId, type){
-		return Attributes.find({
-			charId,
-			type,
-			value: {$ne: 0},
+		return CreatureProperties.find({
+			'ancestor.id': charId,
+			type: 'attribute',
+			attributeType: type,
+			value: {$ne: 0}
 		}, {
 			sort: {order: 1}
 		});
@@ -196,17 +203,19 @@
 				return getNonZeroAttributeOfType(this.charId, 'spellSlot');
 			},
 			hitDice(){
-				return Attributes.find({
-					charId: this.charId,
-					type: 'hitDice',
+				return CreatureProperties.find({
+					'ancestor.id': this.charId,
+					type: 'attribute',
+					attributeType: 'hitDice',
 					value: {$ne: 0},
 				}, {
 					sort: {order: 1},
 				}).map(hd => {
 					let diceMatch = hd.variableName.match(/d(\d+)/);
 					let dice = diceMatch && +diceMatch[1];
-					let con = Attributes.findOne({
-						charId: this.charId,
+					let con = CreatureProperties.findOne({
+						'ancestor.id': this.charId,
+						type: 'attribute',
 						variableName: 'constitution'
 					});
 					let conMod = con && con.mod;
@@ -221,25 +230,28 @@
 				});
 			},
 			checks(){
-				return Skills.find({
-					charId: this.charId,
-					type: 'check',
+				return CreatureProperties.find({
+					'ancestor.id': this.charId,
+					type: 'skill',
+					skillType: 'check',
 				}, {
 					sort: {order: 1},
 				});
 			},
 			savingThrows(){
-				return Skills.find({
-					charId: this.charId,
-					type: 'save',
+				return CreatureProperties.find({
+					'ancestor.id': this.charId,
+					type: 'skill',
+					skillType: 'save',
 				}, {
 					sort: {order: 1},
 				});
 			},
 			skills(){
-				return Skills.find({
-					charId: this.charId,
+				return CreatureProperties.find({
+					'ancestor.id': this.charId,
 					type: 'skill',
+					skillType: 'skill',
 				}, {
 					sort: {order: 1},
 				});

@@ -139,7 +139,7 @@
 			editCreatureProperty(){
 				let that = this;
 				this.$store.commit('pushDialogStack', {
-					component: 'library-node-edit-dialog',
+					component: 'creature-property-dialog',
 					elementId: 'selected-node-card',
 					data: {_id: this.selected},
 				});

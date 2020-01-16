@@ -7,8 +7,7 @@
 </template>
 
 <script>
-	import Attributes from '/imports/api/properties/Attributes.js';
-	import { adjustAttribute } from '/imports/api/properties/Attributes.js';
+	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 	import HealthBarCard from '/imports/ui/properties/attributes/HealthBarCard.vue';
 
 	export default {
@@ -20,9 +19,10 @@
 		},
 		meteor: {
 			attributes(){
-				return Attributes.find({
-					charId: this.charId,
-					type: 'healthBar',
+				return CreatureProperties.find({
+					'ancestor.id': this.charId,
+					type: 'attribute',
+					attributeType: 'healthBar',
 					value: {$ne: 0},
 				}, {
 					sort: {order: 1},
