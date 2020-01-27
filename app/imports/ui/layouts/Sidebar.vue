@@ -18,7 +18,7 @@
 			type="warning"
 		>
 			<div>
-				This is an early alpha build of DiceCloud version 2. Data will be erased
+				This is an early build of DiceCloud version 2. Data will be erased
 				frequently. Don't store anything important here.
 			</div>
 			<div class="layout row justify-center">
