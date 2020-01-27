@@ -141,7 +141,10 @@
 				this.$store.commit('pushDialogStack', {
 					component: 'creature-property-dialog',
 					elementId: 'selected-node-card',
-					data: {_id: this.selected},
+					data: {
+						_id: this.selected,
+						startInEditTab: true,
+					},
 				});
 			},
 			getPropertyName,
