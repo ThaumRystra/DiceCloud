@@ -38,7 +38,7 @@
 			<form-section name="Advanced">
 				<text-field
 					label="Ammunition"
-					hint="The name of the item used as ammunition"
+					hint="The variable name of the item used as ammunition"
 					v-if="attackForm"
 					:value="model.ammunition"
 					@change="(value, ack) => $emit('change', {path: ['ammunition'], value, ack})"
