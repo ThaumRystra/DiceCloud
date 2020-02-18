@@ -1,13 +1,13 @@
 <template lang="html">
 	<div class="effect-viewer">
 		<property-name :value="model.name" v-if="model.name"/>
-		<div class="layout row center wrap">
-			<div class="headline mr-2 my-0" v-if="model.stat">
-				{{model.stat}}
+		<div class="layout row align-center wrap">
+			<div class="headline">
+				<code style="display: block;" class="my-1" v-for="stat in model.stats">{{stat}}</code>
 			</div>
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on }">
-					<v-icon v-on="on" class="mr-2" style="cursor: default;">{{effectIcon}}</v-icon>
+					<v-icon v-on="on" class="mx-2" style="cursor: default;">{{effectIcon}}</v-icon>
 				</template>
 				<span>{{operation}}</span>
 			</v-tooltip>

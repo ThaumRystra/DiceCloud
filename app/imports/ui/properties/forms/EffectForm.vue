@@ -1,44 +1,58 @@
 <template lang="html">
-	<div class="layout row wrap justify-start effect-form">
-		<smart-select
-			label="Operation"
-			append-icon="arrow_drop_down"
-			class="mx-2"
-			:menu-props="{transition: 'slide-y-transition', lazy: true}"
-			:items="operations"
-			:value="model.operation"
-			@change="(value, ack) => $emit('change', {path: ['operation'], value, ack})"
-		>
-			<v-icon
-				class="icon"
-				slot="prepend"
-				:class="iconClass"
-			>{{displayedIcon}}</v-icon>
-			<template slot="item" slot-scope="item">
+	<div class="effect-form">
+		<text-field
+			label="Name"
+			:value="model.name"
+			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+			:error-messages="errors.name"
+			:debounce-time="debounceTime"
+		/>
+		<div class="layout row wrap justify-start">
+			<smart-select
+				label="Operation"
+				append-icon="arrow_drop_down"
+				class="mx-2"
+				:error-messages="errors.operation"
+				:menu-props="{transition: 'slide-y-transition', lazy: true}"
+				:items="operations"
+				:value="model.operation"
+				@change="(value, ack) => $emit('change', {path: ['operation'], value, ack})"
+			>
 				<v-icon
-					class="icon mr-2"
-				>{{getEffectIcon(item.item.value, 1)}}</v-icon>
-				{{item.item.text}}
-			</template>
-		</smart-select>
+					class="icon"
+					slot="prepend"
+					:class="iconClass"
+				>{{displayedIcon}}</v-icon>
+				<template slot="item" slot-scope="item">
+					<v-icon
+						class="icon mr-2"
+					>{{getEffectIcon(item.item.value, 1)}}</v-icon>
+					{{item.item.text}}
+				</template>
+			</smart-select>
 
-		<text-field
-			label="Value"
-			class="mr-2"
-			:persistent-hint="needsValue"
-			:value="needsValue ? (model.calculation) : ' '"
-			:disabled="!needsValue"
-			:hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
-			@change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
-		/>
+			<text-field
+				label="Value"
+				class="mr-2"
+				:persistent-hint="needsValue"
+				:value="needsValue ? (model.calculation) : ' '"
+				:disabled="!needsValue"
+				:error-messages="errors.calculation"
+				:hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
+				:debounce-time="debounceTime"
+				@change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
+			/>
 
-		<text-field
-			label="Stat"
-			class="mr-2"
-			:value="model.stats[0]"
-			:items="stats"
-			@change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
-		/>
+			<text-field
+				label="Stat"
+				class="mr-2"
+				:value="model.stats[0]"
+				:items="stats"
+				:error-messages="errors.stats"
+				:debounce-time="debounceTime"
+				@change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -52,9 +66,14 @@
 				type: Object,
 				default: () => ({}),
 			},
+			errors: {
+				type: Object,
+				default: () => ({}),
+			},
 			stats: {
 				type: Array,
 			},
+			debounceTime: Number,
 		},
 		data(){ return {
 			displayedIcon: 'add',

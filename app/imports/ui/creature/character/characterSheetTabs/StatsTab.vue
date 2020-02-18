@@ -15,7 +15,7 @@
 							<ability-list-tile
 								v-bind="ability"
 								:key="ability._id"
-								:data-id="ability._id"
+								:data-id="`ability-list-tile-${ability._id}`"
 								@click="clickAttribute({_id: ability._id})"
 							/>
 						</template>
@@ -123,17 +123,7 @@
 					</v-list>
 				</v-card>
 			</div>
-
 		</column-layout>
-
-		<v-btn fixed fab bottom right
-			color="primary"
-			@click="insertAttribute"
-			data-id="insert-attribute-fab"
-		>
-			<v-icon>add</v-icon>
-		</v-btn>
-
 	</div>
 </template>
 
@@ -156,6 +146,7 @@
 			'ancestor.id': charId,
 			type: 'attribute',
 			attributeType: type,
+			removed: {$ne: true},
 		}, {
 			sort: {order: 1}
 		});
@@ -166,7 +157,8 @@
 			'ancestor.id': charId,
 			type: 'attribute',
 			attributeType: type,
-			value: {$ne: 0}
+			value: {$ne: 0},
+			removed: {$ne: true},
 		}, {
 			sort: {order: 1}
 		});
@@ -260,14 +252,14 @@
 		methods: {
 			clickAttribute({_id}){
 				this.$store.commit('pushDialogStack', {
-					component: 'attribute-dialog-container',
-					elementId: _id,
+					component: 'creature-property-dialog',
+					elementId: `ability-list-tile-${_id}`,
 					data: {_id},
 				});
 			},
 			clickSkill({_id}){
 				this.$store.commit('pushDialogStack', {
-					component: 'skill-dialog-container',
+					component: 'creature-property-dialog',
 					elementId: _id,
 					data: {_id},
 				});
