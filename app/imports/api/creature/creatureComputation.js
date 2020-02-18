@@ -19,9 +19,9 @@ export const recomputeCreature = new ValidatedMethod({
   }).validator(),
 
   run({charId}) {
+    console.log(`recomputing ${charId}`)
     // Permission
     assertEditPermission(charId, this.userId);
-
     // Work, call this direcly if you are already in a method that has checked
     // for permission to edit a given character
     recomputeCreatureById(charId);
@@ -85,7 +85,7 @@ export function recomputeCreatureById(charId){
  */
 function writeCreature(char) {
   writeAttributes(char);
-  writeCreatureProperties(char);
+  writeSkills(char);
   writeDamageMultipliers(char);
   writeEffects(char);
   writeCreatureDoc(char);
@@ -106,11 +106,11 @@ function writeCreatureDoc(char) {
  * Write all the attributes from the in-memory char object to the Attirbute docs
  */
 function writeAttributes(char) {
-  let bulkWriteOps =  _.map(char.atts, (att, variableName) => {
+  let bulkWriteOps = _.map(char.atts, (att, variableName) => {
     let op = {
       updateMany: {
         filter: {'ancestors.id': char.id, variableName},
-        update: {$set: {
+        update: {'$set': {
           value: att.result,
         }},
       }
@@ -128,7 +128,10 @@ function writeAttributes(char) {
     });
   } else {
     _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {multi: true});
+      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
+        multi: true,
+        selector: {type: 'attribute'}
+      });
     });
   }
 }
@@ -148,7 +151,7 @@ function writeEffects(char){
     });
   } else {
     _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateOne.filter, op.updateOne.update);
+      CreatureProperties.update(op.updateOne.filter, op.updateOne.update, {selector: {type: 'effect'}});
     });
   }
 }
@@ -160,7 +163,7 @@ function writeEffects(char){
  * @param  {type} char description
  * @returns {type}      description
  */
-function writeCreatureProperties(char) {
+function writeSkills(char) {
   let bulkWriteOps =  _.map(char.skills, (skill, variableName) => {
     let op = {
       updateMany: {
@@ -184,7 +187,10 @@ function writeCreatureProperties(char) {
     });
   } else {
     _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {multi: true});
+      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
+        multi: true,
+        selector: {type: 'skill'},
+      });
     });
   }
 }
@@ -213,7 +219,10 @@ function writeDamageMultipliers(char) {
     });
   } else {
     _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {multi: true});
+      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
+        multi: true,
+        selector: {type: 'damageMultiplier'},
+      });
     });
   }
 }
@@ -315,21 +324,23 @@ function buildCreature(charId){
     //TODO
     // Effects
     else if (prop.type === 'effect'){
-      let storedEffect = {
-        _id: effect._id,
-        computed: false,
-        result: 0,
-        operation: prop.operation,
-        calculation: prop.calculation,
-      };
-      if (char.atts[effect.stat]) {
-        char.atts[effect.stat].effects.push(storedEffect);
-      } else if (char.skills[effect.stat]) {
-        char.skills[effect.stat].effects.push(storedEffect);
-      } else if (char.dms[effect.stat]) {
-        char.dms[effect.stat].effects.push(storedEffect);
-      } else {
-        char.otherEffects.push(storedEffect);
+      for (let stat of prop.stats){
+        let storedEffect = {
+          _id: prop._id,
+          computed: false,
+          result: 0,
+          operation: prop.operation,
+          calculation: prop.calculation,
+        };
+        if (char.atts[stat]) {
+          char.atts[stat].effects.push(storedEffect);
+        } else if (char.skills[stat]) {
+          char.skills[stat].effects.push(storedEffect);
+        } else if (char.dms[stat]) {
+          char.dms[stat].effects.push(storedEffect);
+        } else {
+          char.otherEffects.push(storedEffect);
+        }
       }
     }
     // Proficiencies

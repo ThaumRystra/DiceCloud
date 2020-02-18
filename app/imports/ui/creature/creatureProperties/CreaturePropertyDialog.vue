@@ -58,7 +58,13 @@
 </template>
 
 <script>
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties, {
+	updateProperty,
+	damageProperty,
+	pushToProperty,
+	pullFromProperty,
+	softRemoveProperty,
+} from '/imports/api/creature/CreatureProperties.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
@@ -97,13 +103,13 @@ export default {
 	methods: {
 		getPropertyName,
 		change({path, value, ack}){
-			updateLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
+			updateProperty.call({_id: this._id, path, value}, (error, result) =>{
 				console.log({error, result});
 				ack && ack(error);
 			});
 		},
 		push({path, value, ack}){
-			pushToLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
+			pushToProperty.call({_id: this._id, path, value}, (error, result) =>{
 				console.log({error, result});
 				ack && ack(error);
 			});
@@ -111,13 +117,13 @@ export default {
 		pull({path, ack}){
 			let itemId = get(this.model, path)._id;
 			path.pop();
-			pullFromLibraryNode.call({_id: this._id, path, itemId}, (error, result) =>{
+			pullFromProperty.call({_id: this._id, path, itemId}, (error, result) =>{
 				console.log({error, result});
 				ack && ack(error);
 			});
 		},
 		remove(){
-			softRemoveLibraryNode.call({_id: this._id});
+			softRemoveProperty.call({_id: this._id});
 			this.$store.dispatch('popDialogStack');
 		},
 	}

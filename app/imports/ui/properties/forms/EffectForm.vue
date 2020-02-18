@@ -35,9 +35,9 @@
 		<text-field
 			label="Stat"
 			class="mr-2"
-			:value="model.stat"
+			:value="model.stats[0]"
 			:items="stats"
-			@change="(value, ack) => $emit('change', {path: ['stat'], value, ack})"
+			@change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
 		/>
 	</div>
 </template>

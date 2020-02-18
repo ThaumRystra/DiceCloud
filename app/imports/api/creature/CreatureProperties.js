@@ -3,7 +3,9 @@ import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { recomputeCreature } from '/imports/api/creature/creatureComputation.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
+import { softRemove } from '/imports/api/parenting/softRemove.js';
+import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
 import {
 	setLineageOfDocs,
 	getAncestry,
@@ -32,6 +34,7 @@ for (let key in propertySchemasIndex){
 	schema.extend(propertySchemasIndex[key]);
 	schema.extend(CreaturePropertySchema);
 	schema.extend(ChildSchema);
+	schema.extend(SoftRemovableSchema);
 	CreatureProperties.attachSchema(schema, {
 		selector: {type: key}
 	});
@@ -50,9 +53,9 @@ function assertPropertyEditPermission(property, userId){
 }
 
 function recomputeCreatures(property){
-	for (let ref in property.ancestors){
+	for (let ref of property.ancestors){
 		if (ref.collection === 'creatures') {
-			recomputeCreature.call(ref.id);
+			recomputeCreature.call({charId: ref.id});
 		}
 	}
 }
@@ -156,9 +159,9 @@ const updateProperty = new ValidatedMethod({
 		}
   },
   run({_id, path, value}) {
-    let property = LibraryNodes.findOne(_id);
+    let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);
-		LibraryNodes.update(_id, {
+		CreatureProperties.update(_id, {
 			$set: {[path.join('.')]: value},
 		}, {
 			selector: {type: property.type},
@@ -169,14 +172,14 @@ const updateProperty = new ValidatedMethod({
 
 const damageProperty = new ValidatedMethod({
   name: 'CreatureProperties.methods.adjust',
-  schema: new SimpleSchema({
+  validate: new SimpleSchema({
     _id: SimpleSchema.RegEx.Id,
     operation: {
       type: String,
       allowedValues: ['set', 'increment']
     },
     value: Number,
-  }),
+  }).validator(),
   run({_id, operation, value}) {
 		let currentProperty = CreatureProperties.findOne(_id);
 		// Check permissions
@@ -244,6 +247,18 @@ const pullFromProperty = new ValidatedMethod({
 	}
 });
 
+const softRemoveProperty = new ValidatedMethod({
+	name: 'CreatureProperties.methods.softRemove',
+	validate: new SimpleSchema({
+		_id: SimpleSchema.RegEx.Id
+	}).validator(),
+	run({_id}){
+		let property = CreatureProperties.findOne(_id);
+    assertPropertyEditPermission(property, this.userId);
+		softRemove({_id, collection: CreatureProperties});
+	}
+});
+
 
 export default CreatureProperties;
 export {
@@ -254,4 +269,5 @@ export {
 	damageProperty,
 	pushToProperty,
 	pullFromProperty,
+	softRemoveProperty,
 };
