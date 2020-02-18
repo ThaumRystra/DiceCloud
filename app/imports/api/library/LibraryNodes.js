@@ -58,7 +58,7 @@ const updateLibraryNode = new ValidatedMethod({
   name: 'LibraryNodes.methods.update',
   validate({_id, path, value, ack}){
 		if (!_id) return false;
-		// We cannot change these with a simple update
+		// We cannot change these fields with a simple update
 		switch (path[0]){
 			case 'type':
       case 'order':

@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema.js';
-import Creature from '/imports/api/creature/Creatures.js';
+import { recomputeCreature } from '/imports/api/creature/creatureComputation.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
@@ -49,14 +49,22 @@ function assertPropertyEditPermission(property, userId){
   return assertEditPermission(creature, userId);
 }
 
+function recomputeCreatures(property){
+	for (let ref in property.ancestors){
+		if (ref.collection === 'creatures') {
+			recomputeCreature.call(ref.id);
+		}
+	}
+}
+
 const insertProperty = new ValidatedMethod({
   name: 'CreatureProperties.methods.insert',
 	validate: null,
-  run({creatureProperty, parentRef}) {
-		// TODO insert a property with the correct ancestry and order
-    //assertPropertyEditPermission(creatureProperty, this.userId);
-		//return CreatureProperties.insert(creatureProperty);
-		// TODO trigger a recalculation of the creature
+  run({creatureProperty}) {
+    assertPropertyEditPermission(creatureProperty, this.userId);
+		let _id = CreatureProperties.insert(creatureProperty);
+		let property = CreatureProperties.findOne(_id);
+		recomputeCreatures(property);
   },
 });
 
@@ -124,58 +132,126 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 			docId = CreatureProperties.insert(doc);
 		});
 
-		// TODO trigger a recalculation of the creature
+		// Recompute the creatures doc was attached to
+		let doc = CreatureProperties.findOne(docId);
+		recomputeCreatures(doc);
 
 		// Return the docId of the last property, the inserted root property
 		return docId;
 	},
 })
 
-/*
-const adjustAttribute = new ValidatedMethod({
-  name: 'Attributes.methods.adjust',
-  mixins: [
-    simpleSchemaMixin,
-    creaturePermissionMixin,
-  ],
-  collection: Attributes,
-  permission: 'edit',
+const updateProperty = new ValidatedMethod({
+  name: 'CreatureProperties.methods.update',
+  validate({_id, path, value, ack}){
+		if (!_id) return false;
+		// We cannot change these fields with a simple update
+		switch (path[0]){
+			case 'type':
+      case 'order':
+      case 'parent':
+      case 'ancestors':
+			case 'damage':
+				return false;
+		}
+  },
+  run({_id, path, value}) {
+    let property = LibraryNodes.findOne(_id);
+    assertPropertyEditPermission(property, this.userId);
+		LibraryNodes.update(_id, {
+			$set: {[path.join('.')]: value},
+		}, {
+			selector: {type: property.type},
+		});
+		recomputeCreatures(property);
+  },
+});
+
+const damageProperty = new ValidatedMethod({
+  name: 'CreatureProperties.methods.adjust',
   schema: new SimpleSchema({
     _id: SimpleSchema.RegEx.Id,
-    type: {
+    operation: {
       type: String,
       allowedValues: ['set', 'increment']
     },
     value: Number,
   }),
-  run({_id, type, value}) {
-		if (type === 'set'){
-			let currentValue = currentAttribute.value;
-			// Set represents what we want the value to be after adjustment
-			// So we need the actual adjustment to get to that value
-			let adjustment = value - currentValue;
-			// Ajustment can't exceed total value
-			if (-adjustment > currentValue) adjustment = -currentValue;
-			// Adjustment must be negative
-			if (adjustment > 0) adjustment = 0;
-			return Attributes.update(_id, {$set: {adjustment}});
-		} else if (type === 'increment'){
-			let remaining = currentAttribute.value + (currentAttribute.adjustment || 0);
-			let adj = currentAttribute.adjustment;
-			// Can't decrease adjustment below remaining value
-      let increment = value;
-			if (-increment > remaining) increment = -remaining;
-			// Can't increase adjustment above zero
-			if (increment > -adj) increment = -adj;
-			if (typeof currentAttribute.adjustment === 'number'){
-				return Attributes.update(_id, {$inc: {adjustment: increment}});
-			} else {
-				return Attributes.update(_id, {$set: {adjustment: increment}});
-			}
+  run({_id, operation, value}) {
+		let currentProperty = CreatureProperties.findOne(_id);
+		// Check permissions
+		assertPropertyEditPermission(currentProperty, this.UserId);
+		// Check if property can take damage
+		let schema = CreatureProperties.simpleSchema(currentProperty);
+		if (!schema.allowsKey('damage')){
+			throw new Meteor.Error(
+				'Damage property failed',
+				`Property of type "${currentProperty.type}" can't be damaged`
+			);
 		}
+		if (operation === 'set'){
+			let currentValue = currentProperty.value;
+			// Set represents what we want the value to be after damage
+			// So we need the actual damage to get to that value
+			let damage = currentValue - value;
+			// Damage can't exceed total value
+			if (damage > currentValue) damage = currentValue;
+			// Damage must be positive
+			if (damage < 0) damage = 0;
+			CreatureProperties.update(_id, {$set: {damage}});
+		} else if (operation === 'increment'){
+			let currentValue = currentAttribute.value - (currentAttribute.damage || 0);
+			let currentDamage = currentAttribute.damage;
+			let increment = value;
+			// Can't increase damage above the remaining value
+			if (increment > currentValue) increment = currentValue;
+			// Can't decrease damage below zero
+			if (-increment > currentDamage) increment = -currentDamage;
+			CreatureProperties.update(_id, {$inc: {damage: increment}});
+		}
+		recomputeCreatures(currentProperty);
   },
 });
-*/
+
+const pushToProperty = new ValidatedMethod({
+	name: 'CreatureProperties.methods.push',
+	validate: null,
+	run({_id, path, value}){
+		let property = CreatureProperties.findOne(_id);
+    assertPropertyEditPermission(property, this.userId);
+		CreatureProperties.update(_id, {
+			$push: {[path.join('.')]: value},
+		}, {
+			selector: {type: property.type},
+		});
+		recomputeCreatures(property);
+	}
+});
+
+const pullFromProperty = new ValidatedMethod({
+	name: 'CreatureProperties.methods.pull',
+	validate: null,
+	run({_id, path, itemId}){
+		let property = CreatureProperties.findOne(_id);
+    assertPropertyEditPermission(property, this.userId);
+		CreatureProperties.update(_id, {
+			$pull: {[path.join('.')]: {_id: itemId}},
+		}, {
+			selector: {type: property.type},
+			getAutoValues: false,
+		});
+		recomputeCreatures(property);
+	}
+});
+
 
 export default CreatureProperties;
-export { CreaturePropertySchema, insertProperty, insertPropertyFromLibraryNode };
+export {
+	CreaturePropertySchema,
+	insertProperty,
+	insertPropertyFromLibraryNode,
+	updateProperty,
+	damageProperty,
+	pushToProperty,
+	pullFromProperty,
+};
