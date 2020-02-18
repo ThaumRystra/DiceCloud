@@ -10,14 +10,6 @@
 				/>
 			</div>
 		</column-layout>
-
-		<v-btn fixed fab bottom right
-			color="primary"
-			@click="insertFeature"
-			data-id="insert-feature-fab"
-		>
-			<v-icon>add</v-icon>
-		</v-btn>
 	</div>
 </template>
 
