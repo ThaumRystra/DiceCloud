@@ -3,10 +3,6 @@ import deathSaveSchema from "/imports/api/properties/subSchemas/DeathSavesSchema
 import ColorSchema from "/imports/api/properties/subSchemas/ColorSchema.js";
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 
-//Methods
-import '/imports/api/creature/insertCreature.js';
-import '/imports/api/creature/removeCreature.js';
-
 //set up the collection for creatures
 Creatures = new Mongo.Collection("creatures");
 
@@ -95,5 +91,27 @@ CreatureSchema.extend(SharingSchema);
 
 Creatures.attachSchema(CreatureSchema);
 
+const insertCreature = new ValidatedMethod({
+
+  name: "Creatures.methods.insertCreature",
+
+  validate: null,
+
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error("Creatures.methods.insert.denied",
+      "You need to be logged in to insert a creature");
+    }
+
+		// Create the creature document
+    let charId = Creatures.insert({
+			owner: this.userId,
+		});
+		this.unblock();
+		return charId;
+  },
+
+});
+
 export default Creatures;
-export { CreatureSchema };
+export { CreatureSchema, insertCreature };

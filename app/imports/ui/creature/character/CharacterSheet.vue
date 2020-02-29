@@ -71,8 +71,8 @@
       ...mapMutations([
         "toggleDrawer",
       ]),
-			recompute(creatureId){
-				recomputeCreature.call({creatureId});
+			recompute(charId){
+				recomputeCreature.call({charId});
 			},
 			isDarkColor,
     },

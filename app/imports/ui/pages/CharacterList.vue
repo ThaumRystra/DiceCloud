@@ -1,6 +1,6 @@
 <template>
   <toolbar-layout>
-    <span slot="toolbar">Creatures</span>
+    <span slot="toolbar">Characters</span>
     <v-card class="ma-4">
       <v-list v-if="CreaturesWithNoParty.length">
         <v-list-tile
@@ -72,17 +72,16 @@
 </template>
 
 <script>
-	import Creatures from '/imports/api/creature/Creatures.js';
+	import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
 	import Parties from '/imports/api/campaign/Parties.js';
   import store from "/imports/ui/vuexStore.js";
   import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
   import LabeledFab from "/imports/ui/components/LabeledFab.vue";
   import CharacterCreationDialog from "/imports/ui/creature/character/CharacterCreationDialog.vue";
-	import insertCreature from '/imports/api/creature/insertCreature.js';
 
   const characterTransform = function(char){
     char.url = `\/character\/${char._id}\/${char.urlName || "-"}`;
-    char.initial = char.name[0] || "?";
+    char.initial = char.name && char.name[0] || "?";
     return char;
   };
   export default {
@@ -124,8 +123,14 @@
     },
     methods: {
       insertCharacter(){
-				insertCreature.call(result);
-				
+				insertCreature.call((error, result) => {
+					if (error){
+						console.error(error);
+					} else {
+						this.$router.push({ path: `/character/${result}`})
+					}
+				});
+
         /*
 				store.commit("pushDialogStack", {
            component: CharacterCreationDialog,
