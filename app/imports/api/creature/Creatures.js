@@ -113,5 +113,16 @@ const insertCreature = new ValidatedMethod({
 
 });
 
+const removeCreature = new ValidatedMethod({
+  name: 'Creature.methods.remove',
+	validate: null,
+  run({charId}) {
+    assertCreatureEditPermission(charId, this.userId);
+		let _id = CreatureProperties.insert(creatureProperty);
+		let property = CreatureProperties.findOne(_id);
+		recomputeCreatures(property);
+  },
+});
+
 export default Creatures;
-export { CreatureSchema, insertCreature };
+export { CreatureSchema, insertCreature, removeCreature };
