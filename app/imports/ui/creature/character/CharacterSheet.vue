@@ -4,10 +4,14 @@
       <v-btn v-if="showMenuButton" flat icon @click="toggleDrawer">
         <v-icon>menu</v-icon>
       </v-btn>
-			<v-btn v-if="showMenuButton" flat icon @click="recompute(character._id)">
+			<v-btn flat icon @click="recompute(character._id)">
         <v-icon>refresh</v-icon>
       </v-btn>
 			<span>{{character.name}}</span>
+			<v-spacer/>
+			<v-btn flat icon @click="showCharacterForm" data-id="character-form-button">
+        <v-icon>more</v-icon>
+      </v-btn>
 			<v-tabs
         slot="extension"
         v-model="tab"
@@ -73,6 +77,15 @@
       ]),
 			recompute(charId){
 				recomputeCreature.call({charId});
+			},
+			showCharacterForm(){
+				this.$store.commit('pushDialogStack', {
+					component: 'creature-form-dialog',
+					elementId: 'character-form-button',
+					data: {
+						_id: this.creatureId,
+					},
+				});
 			},
 			isDarkColor,
     },

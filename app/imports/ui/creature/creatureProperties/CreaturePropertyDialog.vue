@@ -105,13 +105,13 @@ export default {
 		change({path, value, ack}){
 			updateProperty.call({_id: this._id, path, value}, (error, result) =>{
 				console.log({error, result});
-				ack && ack(error);
+				ack && ack(error && error.reason || error);
 			});
 		},
 		push({path, value, ack}){
 			pushToProperty.call({_id: this._id, path, value}, (error, result) =>{
 				console.log({error, result});
-				ack && ack(error);
+				ack && ack(error && error.reason || error);
 			});
 		},
 		pull({path, ack}){
@@ -119,7 +119,7 @@ export default {
 			path.pop();
 			pullFromProperty.call({_id: this._id, path, itemId}, (error, result) =>{
 				console.log({error, result});
-				ack && ack(error);
+				ack && ack(error && error.reason || error);
 			});
 		},
 		remove(){

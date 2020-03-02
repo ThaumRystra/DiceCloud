@@ -64,13 +64,13 @@
 			change({path, value, ack}){
 	      updateLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
 					console.log({error, result});
-					ack && ack(error);
+					ack && ack(error && error.reason || error);
 				});
 			},
 	    push({path, value, ack}){
 				pushToLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
 					console.log({error, result});
-					ack && ack(error);
+					ack && ack(error && error.reason || error);
 				});
 	    },
 	    pull({path, ack}){
@@ -78,7 +78,7 @@
 				path.pop();
 				pullFromLibraryNode.call({_id: this._id, path, itemId}, (error, result) =>{
 					console.log({error, result});
-					ack && ack(error);
+					ack && ack(error && error.reason || error);
 				});
 	    },
 			remove(){

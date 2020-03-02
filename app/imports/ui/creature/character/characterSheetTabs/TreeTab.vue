@@ -68,7 +68,7 @@
 				<v-btn
 					slot="activator"
 					color="primary"
-					small fab disabled
+					small fab
 					@click="insertCreatureProperty"
 				>
 					<v-icon>edit</v-icon>
@@ -116,7 +116,7 @@
 						creatureProperty.parent = {collection: "creatures", id: that.creatureId};
 						creatureProperty.ancestors = [ {collection: "creatures", id: that.creatureId}];
 						setDocToLastOrder({collection: CreatureProperties, doc: creatureProperty});
-						let creaturePropertyId = insertProperty.call(creatureProperty);
+						let creaturePropertyId = insertProperty.call({creatureProperty});
 						return creaturePropertyId;
 					}
 				});
