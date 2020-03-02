@@ -12,7 +12,7 @@
 				]"
 				:value="model.public"
 				:error-messages="errors.public"
-				@change="(value, ack) => setSheetPublic({value, ack}))"
+				@change="(value, ack) => setSheetPublic({value, ack})"
 			/>
 			<div class="layout row">
 				<text-field
@@ -51,10 +51,10 @@ export default {
 	components: {
 		DialogBase,
 	},
-	data(){
+	data(){ return {
 		userFoundState: 'idle',
 		userId: undefined,
-	},
+	}},
 	props: {
 		ref: Object,
 	},
@@ -80,7 +80,7 @@ export default {
 		},
 	},
 	meteor: {
-		model: {
+		model(){
 			return fetchDocByRef(this.ref);
 		},
 		username(userId){
