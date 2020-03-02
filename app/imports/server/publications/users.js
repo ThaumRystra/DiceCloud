@@ -9,10 +9,12 @@ Meteor.publish("user", function(){
 	}});
 });
 
-Meteor.publish("userNames", function(ids){
+Meteor.publish("userPublicProfiles", function(ids){
 	if (!this.userId || !ids) return [];
-	return Meteor.users.find(
-		{_id: {$in: ids}},
-		{fields: {username: 1}}
-	);
+	return Meteor.users.find({
+		_id: {$in: ids}
+	},{
+		fields: {username: 1},
+		sort: {username: 1},
+	});
 });

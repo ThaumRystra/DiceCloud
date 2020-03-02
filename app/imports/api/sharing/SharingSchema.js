@@ -9,7 +9,8 @@ let SharingSchema = new SimpleSchema({
 	readers: {
 		type: Array,
 		defaultValue: [],
-		index: 1
+		index: 1,
+    max: 50,
 	},
 	"readers.$": {
 		type: String,
@@ -18,7 +19,8 @@ let SharingSchema = new SimpleSchema({
 	writers: {
 		type: Array,
 		defaultValue: [],
-		index: 1
+		index: 1,
+    max: 20,
 	},
 	"writers.$": {
 		type: String,

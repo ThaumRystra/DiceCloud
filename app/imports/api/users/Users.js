@@ -4,6 +4,8 @@ const userSchema = new SimpleSchema({
 	username: {
 		type: String,
 		optional: true,
+		max: 30,
+		min: 4,
 	},
 	emails: {
 		type: Array,
@@ -103,7 +105,7 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 			type: String,
 		},
 	}).validator(),
-	run(userId, address){
+	run({userId, address}){
 		userId = this.userId || userId;
 		let user = Meteor.users.findOne(userId);
 		if (!user) {
@@ -123,3 +125,17 @@ Meteor.users.isAdmin = function(userId){
 	let user = Meteor.users.findOne(userId);
 	return user && user.roles.includes('admin');
 }
+
+Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
+	name: 'Users.methods.findUserByUsernameOrEmail',
+	validate: new SimpleSchema({
+		usernameOrEmail:{
+			type: String,
+		},
+	}).validator(),
+	run({usernameOrEmail}){
+		let user = Accounts.findUserByUsername(username) ||
+			Accounts.findUserByEmail(email);
+		return user && user._id;
+	}
+});
