@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import '/imports/api/sharing/sharing.js';
 
 let SharingSchema = new SimpleSchema({
   owner: {
@@ -28,7 +29,7 @@ let SharingSchema = new SimpleSchema({
 	},
 	public: {
 		type: Boolean,
-		optional: true,
+		defaultValue: false,
 		index: 1,
 	},
 });

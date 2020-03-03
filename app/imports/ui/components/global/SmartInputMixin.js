@@ -71,7 +71,14 @@ export default {
       this.loading = false;
       this.dirty = false;
       this.error = !!error;
-      this.ackErrors = error || null;
+			if (!error){
+				this.ackErrors = null;
+			} else if (typeof error === 'string'){
+				this.ackErrors = error;
+			} else {
+				this.ackErrors = 'Something went wrong'
+				console.error(error);
+			}
     },
     change(val){
       this.dirty = true;

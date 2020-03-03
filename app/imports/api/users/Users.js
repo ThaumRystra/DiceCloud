@@ -134,8 +134,9 @@ Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
 		},
 	}).validator(),
 	run({usernameOrEmail}){
-		let user = Accounts.findUserByUsername(username) ||
-			Accounts.findUserByEmail(email);
+		if (Meteor.isClient) return;
+		let user = Accounts.findUserByUsername(usernameOrEmail) ||
+			Accounts.findUserByEmail(usernameOrEmail);
 		return user && user._id;
 	}
 });

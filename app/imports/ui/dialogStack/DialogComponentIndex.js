@@ -10,6 +10,7 @@ import FeatureDialogContainer from '/imports/ui/properties/features/FeatureDialo
 import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
 import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
 import LibraryNodeEditDialog from '/imports/ui/library/LibraryNodeEditDialog.vue';
+import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
 import SkillDialogContainer from '/imports/ui/properties/skills/SkillDialogContainer.vue';
 
 export default {
@@ -25,5 +26,6 @@ export default {
   LibraryCreationDialog,
   LibraryNodeCreationDialog,
   LibraryNodeEditDialog,
+	ShareDialog,
   SkillDialogContainer,
 };
