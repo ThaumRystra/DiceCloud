@@ -2,6 +2,7 @@ import AttributeDialog from '/imports/ui/properties/attributes/AttributeDialog.v
 import AttributeDialogContainer from '/imports/ui/properties/attributes/AttributeDialogContainer.vue';
 import AttributeCreationDialog from '/imports/ui/properties/attributes/AttributeCreationDialog.vue';
 import CreatureFormDialog from '/imports/ui/creature/CreatureFormDialog.vue';
+import CharacterDeleteDialog from '/imports/ui/creature/character/CharacterDeleteDialog.vue';
 import CreaturePropertyCreationDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue';
 import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue'
 import CreaturePropertyFromLibraryDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue'
@@ -18,6 +19,7 @@ export default {
   AttributeDialogContainer,
   AttributeCreationDialog,
   CreatureFormDialog,
+	CharacterDeleteDialog,
   CreaturePropertyCreationDialog,
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,

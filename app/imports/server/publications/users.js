@@ -10,7 +10,7 @@ Meteor.publish("user", function(){
 });
 
 Meteor.publish("userPublicProfiles", function(ids){
-	if (!this.userId || !ids) return [];
+	if (!this.userId || !Array.isArray(ids)) return [];
 	return Meteor.users.find({
 		_id: {$in: ids}
 	},{

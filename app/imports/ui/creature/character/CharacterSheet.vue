@@ -121,7 +121,13 @@
 				});
 			},
 			deleteCharacter(){
-				console.log('todo');
+				this.$store.commit('pushDialogStack', {
+					component: 'character-delete-dialog',
+					elementId: 'creature-menu',
+					data: {
+						id: this.creatureId,
+					},
+				});
 			},
 			isDarkColor,
     },

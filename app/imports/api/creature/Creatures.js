@@ -4,6 +4,8 @@ import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import {assertEditPermission, assertOwnership} from '/imports/api/sharing/sharingPermissions.js';
 
+import '/imports/api/creature/removeCreature.js';
+
 //set up the collection for creatures
 Creatures = new Mongo.Collection('creatures');
 

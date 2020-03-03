@@ -1,14 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/Creatures.js';
-import creatureCollections from '/imports/api/creature/creatureCollections.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js'
 import { assertOwnership } from '/imports/api/creature/creaturePermissions.js';
 
 function removeRelatedDocuments(charId){
-  creatureCollections.forEach(collection => {
-    collection.remove({charId}, error => {
-      if (error) console.error(error);
-    });
-  });
+  CreatureProperties.remove({'ancestors.id': charId});
 };
 
 const removeCreature = new ValidatedMethod({

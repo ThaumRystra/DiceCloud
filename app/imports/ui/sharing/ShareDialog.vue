@@ -41,6 +41,11 @@
 					</div>
 			</div>
 		</div>
+		<v-btn
+			slot="actions"
+			 flat
+			 @click="$store.dispatch('popDialogStack')"
+		 >Done</v-btn>
   </dialog-base>
 </template>
 
@@ -105,7 +110,6 @@ export default {
 		model(){
 			if (!this.docRef || !this.docRef.id) return;
 			let model = fetchDocByRef(this.docRef);
-			console.log({model})
 			return model;
 		},
 		readers(){

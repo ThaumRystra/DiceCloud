@@ -22,7 +22,7 @@ export function assertOwnership(doc, userId){
     return true;
   } else {
     throw new Meteor.Error("Permission denied",
-      `You are not the owner of this doc`);
+      `You are not the owner of this document`);
   }
 }
 
