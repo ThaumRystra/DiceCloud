@@ -41,7 +41,7 @@
 		},
 		computed: {
 			currentValue(){
-				return this.value + (this.adjustment || 0);
+				return this.value - (this.damage || 0);
 			},
 		},
 		methods: {

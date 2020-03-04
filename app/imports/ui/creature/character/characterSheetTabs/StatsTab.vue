@@ -15,8 +15,8 @@
 							<ability-list-tile
 								v-bind="ability"
 								:key="ability._id"
-								:data-id="`ability-list-tile-${ability._id}`"
-								@click="clickAttribute({_id: ability._id})"
+								:data-id="ability._id"
+								@click="clickProperty({_id: ability._id})"
 							/>
 						</template>
 					</v-list>
@@ -27,7 +27,7 @@
 				<attribute-card
 					v-bind="stat"
 					:data-id="stat._id"
-					@click="clickAttribute({_id: stat._id})"
+					@click="clickProperty({_id: stat._id})"
 				/>
 			</div>
 
@@ -35,7 +35,7 @@
 				<attribute-card modifier
 					v-bind="modifier"
 					:data-id="modifier._id"
-					@click="clickAttribute({_id: modifier._id})"
+					@click="clickProperty({_id: modifier._id})"
 				/>
 			</div>
 
@@ -43,7 +43,7 @@
 				<attribute-card modifier
 					v-bind="check"
 					:data-id="check._id"
-					@click="clickSkill({_id: check._id})"
+					@click="clickProperty({_id: check._id})"
 				/>
 			</div>
 
@@ -57,7 +57,7 @@
 								v-bind="hitDie"
 								:data-id="hitDie._id"
 								:key="hitDice._id"
-								@click="clickAttribute({_id: hitDie._id})"
+								@click="clickProperty({_id: hitDie._id})"
 								@change="e => incrementChange(hitDie._id, e)"
 							/>
 						</template>
@@ -74,7 +74,7 @@
 							v-bind="save"
 							:key="save._id"
 							:data-id="save._id"
-							@click="clickSkill({_id: save._id})"
+							@click="clickProperty({_id: save._id})"
 						/>
 					</v-list>
 				</v-card>
@@ -89,7 +89,7 @@
 							v-bind="skill"
 							:key="skill._id"
 							:data-id="skill._id"
-							@click="clickSkill({_id: skill._id})"
+							@click="clickProperty({_id: skill._id})"
 						/>
 					</v-list>
 				</v-card>
@@ -103,7 +103,7 @@
 				<resource-card
 					v-bind="resource"
 					:data-id="resource._id"
-					@click="clickAttribute({_id: resource._id})"
+					@click="clickProperty({_id: resource._id})"
 					@change="e => incrementChange(resource._id, e)"
 				/>
 			</div>
@@ -117,7 +117,7 @@
 							v-bind="spellSlot"
 							:key="spellSlot._id"
 							:data-id="spellSlot._id"
-							@click="clickAttribute({_id: spellSlot._id})"
+							@click="clickProperty({_id: spellSlot._id})"
 							@change="e => incrementChange(spellSlot._id, e)"
 						/>
 					</v-list>
@@ -128,8 +128,7 @@
 </template>
 
 <script>
-	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
-
+	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
 	import AttributeCard from '/imports/ui/properties/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
@@ -217,7 +216,7 @@
 						conMod,
 						key: hd._id,
 						maxValue: hd.value,
-						value: hd.value + (hd.adjustment || 0),
+						value: hd.value - (hd.damage || 0),
 					}
 				});
 			},
@@ -250,23 +249,16 @@
 			},
 		},
 		methods: {
-			clickAttribute({_id}){
+			clickProperty({_id}){
 				this.$store.commit('pushDialogStack', {
 					component: 'creature-property-dialog',
-					elementId: `ability-list-tile-${_id}`,
-					data: {_id},
-				});
-			},
-			clickSkill({_id}){
-				this.$store.commit('pushDialogStack', {
-					component: 'creature-property-dialog',
-					elementId: _id,
+					elementId: `${_id}`,
 					data: {_id},
 				});
 			},
 			incrementChange(_id, {type, value}){
 				if (type === 'increment'){
-					adjustAttribute.call({_id, increment: value});
+					damageProperty.call({_id, operation: 'increment' ,value: -value});
 				}
 			},
 			insertAttribute(){

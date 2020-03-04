@@ -3,7 +3,7 @@
 		<health-bar
 			v-for="attribute in attributes"
 			:key="attribute._id"
-			:value="attribute.value + (attribute.adjustment || 0)"
+			:value="attribute.value - (attribute.damage || 0)"
 			:maxValue="attribute.value"
 			:name="attribute.name"
 			:_id="attribute._id"

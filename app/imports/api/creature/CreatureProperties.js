@@ -183,7 +183,7 @@ const damageProperty = new ValidatedMethod({
   run({_id, operation, value}) {
 		let currentProperty = CreatureProperties.findOne(_id);
 		// Check permissions
-		assertPropertyEditPermission(currentProperty, this.UserId);
+		assertPropertyEditPermission(currentProperty, this.userId);
 		// Check if property can take damage
 		let schema = CreatureProperties.simpleSchema(currentProperty);
 		if (!schema.allowsKey('damage')){
@@ -194,23 +194,34 @@ const damageProperty = new ValidatedMethod({
 		}
 		if (operation === 'set'){
 			let currentValue = currentProperty.value;
+			console.log('currentValue is ', currentValue)
+			console.log('target value is ', value)
 			// Set represents what we want the value to be after damage
 			// So we need the actual damage to get to that value
 			let damage = currentValue - value;
+			console.log('required damage is ', damage)
 			// Damage can't exceed total value
 			if (damage > currentValue) damage = currentValue;
 			// Damage must be positive
 			if (damage < 0) damage = 0;
-			CreatureProperties.update(_id, {$set: {damage}});
+			CreatureProperties.update(_id, {
+				$set: {damage}
+			}, {
+				selector: currentProperty
+			});
 		} else if (operation === 'increment'){
-			let currentValue = currentAttribute.value - (currentAttribute.damage || 0);
-			let currentDamage = currentAttribute.damage;
+			let currentValue = currentProperty.value - (currentProperty.damage || 0);
+			let currentDamage = currentProperty.damage;
 			let increment = value;
 			// Can't increase damage above the remaining value
 			if (increment > currentValue) increment = currentValue;
 			// Can't decrease damage below zero
 			if (-increment > currentDamage) increment = -currentDamage;
-			CreatureProperties.update(_id, {$inc: {damage: increment}});
+			CreatureProperties.update(_id, {
+				$inc: {damage: increment}
+			}, {
+				selector: currentProperty
+			});
 		}
 		recomputeCreatures(currentProperty);
   },

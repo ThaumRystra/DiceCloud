@@ -34,7 +34,7 @@
 				</v-progress-linear>
 				<span
 					class="value"
-					style="margin-top: -20px; z-index: 1; font-size: 16px; font-weight: 600; height: 20px;"
+					style="margin-top: -20px; z-index: 1; font-size: 15px; font-weight: 600; height: 20px;"
 				>
 					{{ value }} / {{ maxValue }}
 				</span>
@@ -130,7 +130,7 @@
 				this.editing = false;
 				let value = +this.$refs.editInput.lazyValue;
 				let type = this.operation === null ? 'set' : 'increment';
-				if (this.operation === 1) {
+				if (this.operation === 0) {
 					value = -value;
 				}
 				this.$emit('change', { type, value });

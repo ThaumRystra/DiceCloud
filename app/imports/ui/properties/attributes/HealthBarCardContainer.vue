@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
 	import HealthBarCard from '/imports/ui/properties/attributes/HealthBarCard.vue';
 
 	export default {
@@ -31,16 +31,17 @@
 		},
 		methods: {
 			healthBarClicked({_id}){
-				this.$store.commit("pushDialogStack", {
-					component: "attribute-dialog-container",
-					elementId: _id,
+				this.$store.commit('pushDialogStack', {
+					component: 'creature-property-dialog',
+					elementId: `${_id}`,
 					data: {_id},
 				});
 			},
 			healthBarChanged({_id, change}){
-				adjustAttribute.call({
+				damageProperty.call({
 					_id,
-					[change.type]: change.value
+					operation: change.type,
+					value: change.value
 				});
 			},
 		},
