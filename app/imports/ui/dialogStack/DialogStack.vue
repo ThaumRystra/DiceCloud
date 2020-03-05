@@ -132,7 +132,7 @@
 				}
 				let source = this.getTopElementByDataId(elementId);
 				if (!source){
-					console.log(`Can't find source for ${elementId}`);
+					console.warn(`Can't find source for ${elementId}`);
 					done();
 					return;
 				}
@@ -165,7 +165,6 @@
 				}, MOCK_DURATION);
 			},
 			noScroll(e){
-				console.log(e);
 				e.preventDefault();
 			}
     },

@@ -78,9 +78,6 @@ export default {
 		},
 		debounceTime: Number,
 	},
-	methods: {
-		log: console.log,
-	}
 };
 </script>
 

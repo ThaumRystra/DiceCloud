@@ -123,11 +123,6 @@ export default {
 			});
 		},
 	},
-	watch: {
-		expandedLibrary(value){
-			console.log(value)
-		},
-	},
 }
 </script>
 

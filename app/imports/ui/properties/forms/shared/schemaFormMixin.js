@@ -35,7 +35,7 @@ const schemaFormMixin = {
 				if (this.valid) this.valid = false;
 				errors[error.name] = this.schema.messageForError(error);
 			});
-      console.log(errors);
+      console.error(errors);
 			return errors;
 		},
 	},

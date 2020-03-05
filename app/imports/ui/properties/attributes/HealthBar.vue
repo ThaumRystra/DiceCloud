@@ -120,7 +120,6 @@
 				this.editValue = this.value;
 				this.$nextTick(function() {
 					this.$refs.editInput.focus();
-					console.log()
 				});
 			},
 			cancelEdit() {

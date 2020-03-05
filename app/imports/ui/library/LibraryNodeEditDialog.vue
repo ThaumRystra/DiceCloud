@@ -63,13 +63,11 @@
 			getPropertyName,
 			change({path, value, ack}){
 	      updateLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
-					console.log({error, result});
 					ack && ack(error && error.reason || error);
 				});
 			},
 	    push({path, value, ack}){
 				pushToLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
-					console.log({error, result});
 					ack && ack(error && error.reason || error);
 				});
 	    },
@@ -77,7 +75,6 @@
 				let itemId = get(this.model, path)._id;
 				path.pop();
 				pullFromLibraryNode.call({_id: this._id, path, itemId}, (error, result) =>{
-					console.log({error, result});
 					ack && ack(error && error.reason || error);
 				});
 	    },

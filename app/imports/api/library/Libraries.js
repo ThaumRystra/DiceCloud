@@ -90,7 +90,6 @@ const removeLibrary = new ValidatedMethod({
 	}).validator(),
 	run({_id}){
 		let library = Libraries.findOne(_id);
-		console.log({library, _id});
 		assertOwnership(library, this.userId);
 		Libraries.remove(_id);
 		this.unblock();

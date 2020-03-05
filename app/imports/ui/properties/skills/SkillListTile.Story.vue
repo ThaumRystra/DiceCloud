@@ -4,7 +4,6 @@
 			v-for="skill in skills"
 			:key="skill.name"
 			v-bind="skill"
-			@click="click"
 		/>
 	</v-list>
 </template>
@@ -43,11 +42,6 @@
 		}},
 		components: {
 			SkillListTile,
-		},
-		methods: {
-			click(){
-				console.log(...arguments);
-			},
 		},
 	}
 </script>

@@ -194,12 +194,9 @@ const damageProperty = new ValidatedMethod({
 		}
 		if (operation === 'set'){
 			let currentValue = currentProperty.value;
-			console.log('currentValue is ', currentValue)
-			console.log('target value is ', value)
 			// Set represents what we want the value to be after damage
 			// So we need the actual damage to get to that value
 			let damage = currentValue - value;
-			console.log('required damage is ', damage)
 			// Damage can't exceed total value
 			if (damage > currentValue) damage = currentValue;
 			// Damage must be positive

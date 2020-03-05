@@ -53,9 +53,6 @@
 				return JSON.stringify(this.children, null, 2);
 			}
 		},
-		methods: {
-			log: console.log,
-		},
 	};
 </script>
 

@@ -104,13 +104,11 @@ export default {
 		getPropertyName,
 		change({path, value, ack}){
 			updateProperty.call({_id: this._id, path, value}, (error, result) =>{
-				console.log({error, result});
 				ack && ack(error && error.reason || error);
 			});
 		},
 		push({path, value, ack}){
 			pushToProperty.call({_id: this._id, path, value}, (error, result) =>{
-				console.log({error, result});
 				ack && ack(error && error.reason || error);
 			});
 		},
@@ -118,7 +116,6 @@ export default {
 			let itemId = get(this.model, path)._id;
 			path.pop();
 			pullFromProperty.call({_id: this._id, path, itemId}, (error, result) =>{
-				console.log({error, result});
 				ack && ack(error && error.reason || error);
 			});
 		},
