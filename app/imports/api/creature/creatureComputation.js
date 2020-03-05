@@ -8,7 +8,6 @@ import Creatures from "/imports/api/creature/Creatures.js";
 import CreatureProperties from "/imports/api/creature/CreatureProperties.js";
 import * as math from 'mathjs';
 import parser from '/imports/parser/parser.js';
-if (Meteor.isClient) console.log({parser});
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -19,7 +18,6 @@ export const recomputeCreature = new ValidatedMethod({
   }).validator(),
 
   run({charId}) {
-    console.log(`recomputing ${charId}`)
     // Permission
     assertEditPermission(charId, this.userId);
     // Work, call this direcly if you are already in a method that has checked
@@ -122,9 +120,10 @@ function writeAttributes(char) {
     }
     return op;
   });
+  if (!bulkWriteOps.length) return;
   if (Meteor.isServer){
-    CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2));
+    let result = CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.error(e);
     });
   } else {
     _.each(bulkWriteOps, op => {
@@ -145,9 +144,10 @@ function writeEffects(char){
       }},
     },
   }));
+  if (!bulkWriteOps.length) return;
   if (Meteor.isServer){
-    CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2));
+    let result = CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.error(e);
     });
   } else {
     _.each(bulkWriteOps, op => {
@@ -181,9 +181,10 @@ function writeSkills(char) {
     };
     return op;
   });
+  if (!bulkWriteOps.length) return;
   if (Meteor.isServer){
-    CreatureProperties.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2));
+    let result = CreatureProperties.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.error(e);
     });
   } else {
     _.each(bulkWriteOps, op => {
@@ -213,9 +214,10 @@ function writeDamageMultipliers(char) {
     };
     return op;
   });
+  if (!bulkWriteOps.length) return;
   if (Meteor.isServer){
-    CreatureProperties.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.warn(JSON.stringify(e, null, 2));
+    let result = CreatureProperties.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
+      if (e) console.error(e);
     });
   } else {
     _.each(bulkWriteOps, op => {
