@@ -27,16 +27,20 @@
 						:selected-node-id="selectedNodeId"
 					/>
 					<v-card-actions>
-						<v-spacer/>
 						<v-btn
-							flat
-							color="primary"
+							flat small
 							style="background-color: inherit; margin-top: 0;"
 							@click="insertLibraryNode(library._id)"
 							:data-id="`insert-node-${library._id}`"
 						>
 							<v-icon>add</v-icon>
 							New property
+						</v-btn>
+						<v-spacer/>
+						<v-btn flat small icon
+							@click="editLibrary(library._id)"
+						>
+							<v-icon>create</v-icon>
 						</v-btn>
 					</v-card-actions>
 				</v-card>
@@ -97,6 +101,13 @@ export default {
 				}
 			});
 		},
+		editLibrary(_id){
+			this.$store.commit('pushDialogStack', {
+				component: 'library-edit-dialog',
+				elementId: _id,
+				data: {_id},
+			});
+		},
 		insertLibraryNode(libraryId){
 			this.$store.commit('pushDialogStack', {
 				component: 'library-node-creation-dialog',
@@ -111,7 +122,12 @@ export default {
 				}
 			});
 		},
-	}
+	},
+	watch: {
+		expandedLibrary(value){
+			console.log(value)
+		},
+	},
 }
 </script>
 

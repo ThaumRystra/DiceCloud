@@ -116,21 +116,9 @@ const insertCreature = new ValidatedMethod({
 
 });
 
-const removeCreature = new ValidatedMethod({
-  name: 'Creatures.methods.remove',
-	validate: null,
-  run({charId}) {
-		let creature = Creatures.findOne(_id);
-    assertOwnership(creature, this.userId);
-		let _id = CreatureProperties.insert(creatureProperty);
-		let property = CreatureProperties.findOne(_id);
-		recomputeCreatures(property);
-  },
-});
-
 const updateCreature = new ValidatedMethod({
   name: 'Creatures.methods.update',
-  validate({_id, path, value, ack}){
+  validate({_id, path, value}){
 		if (!_id) return false;
 		// Allowed fields
 		let allowedFields = ['name', 'alignment', 'gender', 'picture', 'settings'];

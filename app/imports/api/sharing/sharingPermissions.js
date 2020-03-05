@@ -10,7 +10,7 @@ function assertIdValid(userId){
 
 function assertdocExists(doc){
   if (!doc){
-    throw new Meteor.Error("Edit permission denied",
+    throw new Meteor.Error("Permission denied",
       `No such document exists`);
   }
 }

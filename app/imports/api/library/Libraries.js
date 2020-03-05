@@ -1,6 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
+import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 
 /**
  * Libraries are trees of library nodes where each node represents a character
@@ -41,6 +43,24 @@ const insertLibrary = new ValidatedMethod({
   },
 });
 
+const updateLibraryName = new ValidatedMethod({
+	name: 'Libraries.methods.updateName',
+	validate: new SimpleSchema({
+		_id: {
+			type: String,
+			regEx: SimpleSchema.RegEx.id
+		},
+		name: {
+			type: String,
+		},
+	}).validator(),
+	run({_id, name}){
+		let library = Libraries.findOne(_id);
+		assertEditPermission(library, this.userId);
+		Libraries.update(_id, {$set: {name}});
+	},
+});
+
 const setLibraryDefault = new ValidatedMethod({
   name: 'Libraries.methods.makeLibraryDefault',
 	validate: new SimpleSchema({
@@ -60,4 +80,22 @@ const setLibraryDefault = new ValidatedMethod({
   },
 });
 
-export { LibrarySchema, insertLibrary, setLibraryDefault };
+const removeLibrary = new ValidatedMethod({
+	name: 'Libraries.methods.remove',
+	validate: new SimpleSchema({
+		_id: {
+			type: String,
+			regEx: SimpleSchema.RegEx.id
+		},
+	}).validator(),
+	run({_id}){
+		let library = Libraries.findOne(_id);
+		console.log({library, _id});
+		assertOwnership(library, this.userId);
+		Libraries.remove(_id);
+		this.unblock();
+		LibraryNodes.remove({'ancestors.id': _id});
+	}
+})
+
+export { LibrarySchema, insertLibrary, setLibraryDefault, updateLibraryName, removeLibrary };

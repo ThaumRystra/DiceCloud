@@ -70,6 +70,7 @@
 
 <script>
 	import Creatures from '/imports/api/creature/Creatures.js';
+	import removeCreature from '/imports/api/creature/removeCreature.js';
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 	import { mapMutations } from "vuex";
 	import { theme } from '/imports/ui/theme.js';
@@ -121,12 +122,24 @@
 				});
 			},
 			deleteCharacter(){
+				let that = this;
 				this.$store.commit('pushDialogStack', {
-					component: 'character-delete-dialog',
+					component: 'delete-confirmation-dialog',
 					elementId: 'creature-menu',
 					data: {
-						id: this.creatureId,
+						name: this.character.name,
+						typeName: 'Character'
 					},
+					callback(confirmation){
+						if(!confirmation) return;
+						removeCreature.call({charId: that.creatureId}, (error, result) => {
+							if (error) {
+								console.error(error);
+							} else {
+								that.$router.push('/characterList');
+							}
+						});
+					}
 				});
 			},
 			isDarkColor,
