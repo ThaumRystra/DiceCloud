@@ -61,14 +61,14 @@ export default {
 		name: String,
 		color: String,
 		value: Number,
-		adjustment: {
+		damage: {
 			type: Number,
 			default: 0,
 		},
 	},
 	computed: {
 		currentValue(){
-			return this.value + (this.adjustment || 0);
+			return this.value - this.damage;
 		},
 	},
 	methods: {

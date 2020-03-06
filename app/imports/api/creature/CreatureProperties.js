@@ -155,7 +155,8 @@ const updateProperty = new ValidatedMethod({
       case 'parent':
       case 'ancestors':
 			case 'damage':
-				return false;
+				throw new Meteor.Error('Permission denied',
+				'This property can\'t be updated directly');
 		}
   },
   run({_id, path, value}) {

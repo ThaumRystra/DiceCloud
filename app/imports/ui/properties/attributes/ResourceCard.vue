@@ -37,7 +37,7 @@
 			name: String,
 			color: String,
 			value: Number,
-			adjustment: Number,
+			damage: Number,
 		},
 		computed: {
 			currentValue(){
