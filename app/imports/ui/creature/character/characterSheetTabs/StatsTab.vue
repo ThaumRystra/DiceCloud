@@ -129,14 +129,14 @@
 
 <script>
 	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
-	import AttributeCard from '/imports/ui/properties/attributes/AttributeCard.vue';
-	import AbilityListTile from '/imports/ui/properties/attributes/AbilityListTile.vue';
+	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
+	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-	import HealthBarCardContainer from '/imports/ui/properties/attributes/HealthBarCardContainer.vue';
-	import HitDiceListTile from '/imports/ui/properties/attributes/HitDiceListTile.vue';
-	import SkillListTile from '/imports/ui/properties/skills/SkillListTile.vue';
-	import ResourceCard from '/imports/ui/properties/attributes/ResourceCard.vue';
-	import SpellSlotListTile from '/imports/ui/properties/attributes/SpellSlotListTile.vue';
+	import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
+	import HitDiceListTile from '/imports/ui/properties/components/attributes/HitDiceListTile.vue';
+	import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
+	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
+	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
 
 	let adjustAttribute = insertAttribute = () => console.error("this shit isn't defined");
 

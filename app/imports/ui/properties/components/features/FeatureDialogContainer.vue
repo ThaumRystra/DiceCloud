@@ -8,7 +8,7 @@
 
 <script>
 	import Features, {updateFeature} from '/imports/api/properties/Features.js';
-	import FeatureDialog from '/imports/ui/properties/features/FeatureDialog.vue';
+	import FeatureDialog from '/imports/ui/properties/components/features/FeatureDialog.vue';
 	import {evaluateStringForCharId} from '/imports/ui/utility/evaluate.js';
 
 	export default {

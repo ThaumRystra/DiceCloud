@@ -39,20 +39,20 @@
 
 <script>
 	import Vue from "vue";
-	import AbilityListTile from '/imports/ui/properties/attributes/AbilityListTile.Story.vue';
-	import AttributeCard from '/imports/ui/properties/attributes/AttributeCard.Story.vue';
+	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.Story.vue';
+	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.Story.vue';
 	import ColorPicker from '/imports/ui/components/ColorPicker.Story.vue';
 	import ColumnLayout from "/imports/ui/components/ColumnLayout.Story.vue";
 	import DialogStack from '/imports/ui/dialogStack/DialogStack.Story.vue';
 	import EffectEditExpansionList from '/imports/ui/properties/viewers/shared/effects/EffectEditExpansionList.Story.vue';
-	import FeatureCard from '/imports/ui/properties/features/FeatureCard.Story.vue';
-	import HealthBar from '/imports/ui/properties/attributes/HealthBar.Story.vue';
-	import HitDiceListTile from '/imports/ui/properties/attributes/HitDiceListTile.Story.vue';
+	import FeatureCard from '/imports/ui/properties/components/features/FeatureCard.Story.vue';
+	import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.Story.vue';
+	import HitDiceListTile from '/imports/ui/properties/components/attributes/HitDiceListTile.Story.vue';
 	// import IconSearch from '/imports/ui/components/IconSearch.Story.vue';
-	import ResourceCard from '/imports/ui/properties/attributes/ResourceCard.Story.vue';
-	import SkillListTile from '/imports/ui/properties/skills/SkillListTile.Story.vue';
+	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.Story.vue';
+	import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.Story.vue';
 	import SmartInput from '/imports/ui/components/global/SmartInput.Story.vue';
-	import SpellSlotListTile from '/imports/ui/properties/attributes/SpellSlotListTile.Story.vue';
+	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.Story.vue';
 	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 
 	export default {

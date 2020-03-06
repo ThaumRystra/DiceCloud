@@ -8,7 +8,7 @@
 
 <script>
 	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
-	import HealthBarCard from '/imports/ui/properties/attributes/HealthBarCard.vue';
+	import HealthBarCard from '/imports/ui/properties/components/attributes/HealthBarCard.vue';
 
 	export default {
 		components: {

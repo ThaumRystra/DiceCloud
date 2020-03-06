@@ -9,7 +9,7 @@
 </template>
 
 <script>
-	import AttributeCard from '/imports/ui/properties/attributes/AttributeCard.vue';
+	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 	export default {
 		components: {
 			AttributeCard

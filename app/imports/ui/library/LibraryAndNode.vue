@@ -47,10 +47,10 @@
 <script>
 import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 import LibraryBrowser from '/imports/ui/library/LibraryBrowser.vue';
-import PropertyViewer from '/imports/ui/properties/PropertyViewer.vue';
+import PropertyViewer from '/imports/ui/properties/shared/PropertyViewer.vue';
 import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 import Libraries from '/imports/api/library/Libraries.js';
-import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
+import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default {

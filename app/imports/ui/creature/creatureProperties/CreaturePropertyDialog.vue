@@ -67,7 +67,7 @@ import CreatureProperties, {
 } from '/imports/api/creature/CreatureProperties.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
+import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 

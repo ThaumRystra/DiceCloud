@@ -84,9 +84,9 @@
 		insertProperty,
 		insertPropertyFromLibraryNode
 	} from '/imports/api/creature/CreatureProperties.js';
-	import PropertyViewer from '/imports/ui/properties/PropertyViewer.vue';
+	import PropertyViewer from '/imports/ui/properties/shared/PropertyViewer.vue';
 	import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
+	import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 	export default {

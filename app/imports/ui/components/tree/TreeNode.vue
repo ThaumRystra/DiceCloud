@@ -65,7 +65,7 @@
 	* the tree view shows off the full character structure, and where each part of
 	* character comes from.
 	**/
-	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
+	import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 	import { canBeParent } from '/imports/api/parenting/parenting.js';
 	import PROPERTIES from '/imports/constants/PROPERTIES.js'
 

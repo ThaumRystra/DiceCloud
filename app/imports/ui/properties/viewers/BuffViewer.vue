@@ -33,7 +33,7 @@
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
-	import PropertyIcon from '/imports/ui/properties/PropertyIcon.vue';
+	import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 
 	export default {
 		mixins: [propertyViewerMixin],

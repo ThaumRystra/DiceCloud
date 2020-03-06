@@ -12,7 +12,7 @@
 
 <script>
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
-import ProficiencyIcon from '/imports/ui/properties/components/ProficiencyIcon.vue';
+import ProficiencyIcon from '/imports/ui/properties/shared/ProficiencyIcon.vue';
 export default {
 	mixins: [propertyViewerMixin],
 	components: {

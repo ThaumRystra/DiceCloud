@@ -31,7 +31,7 @@
 </template>
 
 <script>
-	import ResourceCard from '/imports/ui/properties/attributes/ResourceCard.vue';
+	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 
 	export default {

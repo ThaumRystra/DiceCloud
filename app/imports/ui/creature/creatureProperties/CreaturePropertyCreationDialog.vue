@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import SelectablePropertyDialog from '/imports/ui/properties/components/SelectablePropertyDialog.vue';
+import SelectablePropertyDialog from '/imports/ui/properties/shared/SelectablePropertyDialog.vue';
 import CreaturePropertyInsertForm from '/imports/ui/creature/creatureProperties/CreaturePropertyInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 

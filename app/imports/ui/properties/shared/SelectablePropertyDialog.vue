@@ -17,7 +17,7 @@
 
 <script>
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import PropertySelector from '/imports/ui/properties/PropertySelector.vue';
+import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
 
 export default {
 	props: {

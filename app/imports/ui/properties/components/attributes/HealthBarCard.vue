@@ -14,7 +14,7 @@
 </template>
 
 <script>
-	import HealthBar from '/imports/ui/properties/attributes/HealthBar.vue';
+	import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.vue';
 
 	export default {
 		props: {
