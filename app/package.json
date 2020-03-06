@@ -5,12 +5,16 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ThaumRystra/RPG-Docs"
+    "url": "https://github.com/ThaumRystra/DiceCloud"
   },
   "author": "Stefan Zermatten",
   "scripts": {
     "run": "meteor --once",
     "test": "meteor test --driver-package meteortesting:mocha"
+  },
+  "engines": {
+    "node": "12.16.x",
+    "npm": "6.13.x"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.7",
