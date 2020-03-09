@@ -79,7 +79,7 @@
 					:value="model.reset"
 					:error-messages="errors.reset"
 					:menu-props="{auto: true, lazy: true}"
-					@change="(value, ack) => $emit('change', {path: ['reset'], value, ack})"
+					@change="(value, ack) => $emit('change', {path: ['reset'], value: value || '', ack})"
 					:debounce-time="debounceTime"
 				/>
 				<text-field

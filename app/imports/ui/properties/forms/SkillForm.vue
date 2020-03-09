@@ -61,7 +61,7 @@
 					clearable
 					:value="model.baseProficiency"
 					:error-messages="errors.baseProficiency"
-					@change="(value, ack) => {$emit('change', {path: ['baseProficiency'], value: value || 0, ack}); log({value, ack})}"
+					@change="(value, ack) => {$emit('change', {path: ['baseProficiency'], value: value || '', ack}); log({value, ack})}"
 				/>
 			</div>
 		</form-section>
