@@ -49,14 +49,20 @@
 				>
 					<v-spacer />
 					<v-btn-toggle
-						v-model="operation"
+						:value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
 						@click="$refs.editInput.focus()"
 						class="mr-2"
 					>
-						<v-btn @click="$nextTick(() => $refs.editInput.focus())" class="filled">
+						<v-btn
+							@click="toggleAdd(); $nextTick(() => $refs.editInput.focus())"
+							class="filled"
+						>
 							<v-icon>add</v-icon>
 						</v-btn>
-						<v-btn @click="$nextTick(() => $refs.editInput.focus())" class="filled">
+						<v-btn
+							@click="toggleSubtract(); $nextTick(() => $refs.editInput.focus())"
+							class="filled"
+						>
 							<v-icon>remove</v-icon>
 						</v-btn>
 					</v-btn-toggle>
@@ -69,16 +75,9 @@
 						style="max-width: 120px;"
 						min="0"
 						:value="editValue"
-						:prepend-inner-icon="operation === 0 ? 'add' : operation === 1 ? 'remove' : 'forward'"
+						:prepend-inner-icon="operationIcon(operation)"
 						@focus="$event.target.select()"
-						@keyup.enter="commitEdit"
-						@keypress.43="
-							operation === 0 ? (operation = null) : (operation = 0)
-						"
-						@keypress.45="
-							operation === 1 ? (operation = null) : (operation = 1)
-						"
-						@keypress="rejectNonNumbers($event)"
+						@keypress="keypress"
 					>
 					</v-text-field>
 					<v-btn small fab @click="commitEdit" class="filled" color="red">
@@ -103,7 +102,7 @@
 			return {
 				editing: false,
 				editValue: 0,
-				operation: null,
+				operation: 3,
 				hover: false,
 			};
 		},
@@ -116,7 +115,7 @@
 		methods: {
 			edit() {
 				this.editing = true;
-				this.operation = null;
+				this.operation = 'set';
 				this.editValue = this.value;
 				this.$nextTick(function() {
 					this.$refs.editInput.focus();
@@ -128,24 +127,43 @@
 			commitEdit() {
 				this.editing = false;
 				let value = +this.$refs.editInput.lazyValue;
-				let type = this.operation === null ? 'set' : 'increment';
-				if (this.operation === 0) {
+				if (this.operation === 'add') {
 					value = -value;
 				}
+				let type = this.operation === 'set' ? 'set' : 'increment';
 				this.$emit('change', { type, value });
 			},
-			rejectNonNumbers: function(evt) {
-				evt = evt ? evt : window.event;
-				var charCode = evt.which ? evt.which : evt.keyCode;
-				if (
-					(charCode > 31 && (charCode < 48 || charCode > 57)) ||
-					charCode === 46
-				) {
-					evt.preventDefault();
-				} else {
-					return true;
+			operationIcon(operation) {
+				switch (operation) {
+					case 'set':
+						return 'forward';
+					case 'add':
+					  return 'add';
+					case 'subtract':
+						return 'remove';
 				}
 			},
+			toggleAdd(){
+				this.operation = (this.operation === 'add') ? 'set': 'add';
+			},
+			toggleSubtract(){
+				this.operation = (this.operation === 'subtract') ? 'set': 'subtract';
+			},
+			keypress(event) {
+				let digitsOnly = /[0-9]/;
+				let key = event.key;
+				if (key === '+') {
+					this.toggleAdd();
+					event.preventDefault();
+				} else if (key === '-') {
+					this.toggleSubtract();
+					event.preventDefault();
+				} else if (key === 'Enter') {
+					this.commitEdit();
+				} else if (!digitsOnly.test(key)){
+					event.preventDefault();
+				}
+			}
 		},
 	};
 </script>
