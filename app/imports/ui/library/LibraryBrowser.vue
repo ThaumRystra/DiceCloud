@@ -118,7 +118,7 @@ export default {
 					libraryNode.ancestors = [ {collection: "libraries", id: libraryId}];
 					setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
 					let libraryNodeId = insertNode.call(libraryNode);
-					return libraryNodeId;
+					return `tree-node-${libraryNodeId}`;
 				}
 			});
 		},
