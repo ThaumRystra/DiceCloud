@@ -5,7 +5,6 @@
 				<feature-card
 					v-bind="feature"
 					:data-id="feature._id"
-					@update="updateFeature"
 					@click="featureClicked(feature)"
 				/>
 			</div>
@@ -33,7 +32,6 @@
 				let char = Creatures.findOne(this.creatureId, {fields: {variables: 1}});
 				if (!char) return [];
 				let vars = char.variables;
-				console.log('finding features for', this.creatureId);
 				return CreatureProperties.find({
 					'ancestors.id': this.creatureId,
 					type: 'feature',
@@ -41,27 +39,17 @@
 				}, {
 					sort: {order: 1},
 				}).map(f => {
-					console.log(f);
 					f.description = evaluateStringWithVariables(f.description, vars);
 					return f;
 				});
 			},
 		},
 		methods: {
-			updateFeature({_id, update}, ack){
-				updateFeature.call({_id, update}, error => {
-					if (ack){
-						ack(error);
-					} else if(error) {
-						throw error;
-					}
-				});
-			},
-			featureClicked(feature){
+			featureClicked({_id}){
 				this.$store.commit('pushDialogStack', {
-					component: 'feature-dialog-container',
-					elementId: feature._id,
-					data: {_id: feature._id},
+					component: 'creature-property-dialog',
+					elementId: `${_id}`,
+					data: {_id},
 				});
 			},
 		},

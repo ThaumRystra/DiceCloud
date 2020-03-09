@@ -8,10 +8,6 @@ let FeatureSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
-	alwaysEnabled: {
-		type: Boolean,
-		defaultValue: true
-	},
 });
 
 export { FeatureSchema }

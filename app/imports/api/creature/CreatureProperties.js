@@ -146,7 +146,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 
 const updateProperty = new ValidatedMethod({
   name: 'CreatureProperties.methods.update',
-  validate({_id, path, value, ack}){
+  validate({_id, path, value}){
 		if (!_id) return false;
 		// We cannot change these fields with a simple update
 		switch (path[0]){

@@ -7,6 +7,7 @@
 			:error-messages="errors.name"
 			:debounce-time="debounceTime"
 		/>
+		<!--
 		<smart-select
 			label="Enabled"
 			:items="enabledOptions"
@@ -15,7 +16,7 @@
 			:menu-props="{auto: true, lazy: true}"
 			@change="changeEnabled"
 			:debounce-time="debounceTime"
-		/>
+		/>-->
 		<text-area
 			label="Description"
 			:value="model.description"
