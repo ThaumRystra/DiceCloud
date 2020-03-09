@@ -141,7 +141,6 @@
 	let adjustAttribute = insertAttribute = () => console.error("this shit isn't defined");
 
 	const getAttributeOfType = function(charId, type){
-		console.log({charId})
 		return CreatureProperties.find({
 			'ancestors.id': charId,
 			type: 'attribute',
