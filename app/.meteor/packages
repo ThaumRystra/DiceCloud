@@ -14,7 +14,6 @@ momentjs:moment
 dburles:mongo-collection-instances
 percolate:migrations
 accounts-google@1.3.3
-splendido:accounts-meld
 email@1.2.3
 meteorhacks:subs-manager
 chuangbo:marked
