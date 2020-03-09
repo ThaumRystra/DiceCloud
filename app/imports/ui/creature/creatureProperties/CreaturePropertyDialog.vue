@@ -44,6 +44,14 @@
 	 		 :model="model"
 	 	 />
 		 <p v-else>This property can't be viewed yet.</p>
+		 <template v-if="!editing">
+		   <v-divider/>
+			 <creature-properties-tree
+				 v-if="!editing"
+				 :root="{collection: 'creatureProperties', id: model._id}"
+				 @selected="selectSubProperty"
+			 />
+		 </template>
 	 </template>
  	 <div
  		 slot="actions"
@@ -70,6 +78,8 @@ import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
+import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import { get } from 'lodash';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -87,6 +97,7 @@ export default {
 		...viewerIndex,
 		PropertyIcon,
 		DialogBase,
+		CreaturePropertiesTree,
 	},
 	props: {
 		_id: String,
@@ -123,6 +134,13 @@ export default {
 			softRemoveProperty.call({_id: this._id});
 			this.$store.dispatch('popDialogStack');
 		},
+		selectSubProperty(_id){
+			this.$store.commit('pushDialogStack', {
+				component: 'creature-property-dialog',
+				elementId: `tree-node-${_id}`,
+				data: {_id},
+			});
+		}
 	}
 };
 </script>

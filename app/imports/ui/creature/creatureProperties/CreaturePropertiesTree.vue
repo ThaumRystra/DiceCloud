@@ -1,9 +1,9 @@
 <template lang="html">
 	<v-card-text style="width: initial; max-width: 100%; min-width: 320px;">
 		<tree-node-list
-			v-if="creatureChildren"
-			:children="creatureChildren"
-			:group="creature && creature._id"
+			v-if="root"
+			:children="children"
+			:group="root.id"
 			:organize="organize"
 			:selected-node-id="selectedNodeId"
 			@selected="e => $emit('selected', e)"
@@ -14,7 +14,6 @@
 </template>
 
 <script>
-	import Creatures from '/imports/api/creature/Creatures.js';
 	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 	import { nodesToTree } from '/imports/api/parenting/parenting.js'
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
@@ -25,20 +24,13 @@
 			TreeNodeList,
 		},
 		props: {
-			creatureId: String,
+			root: Object,
 			organize: Boolean,
 			selectedNodeId: String,
 		},
 		meteor: {
-			$subscribe: {
-				'creature': [this.creatureId],
-			},
-			creature(){
-				return Creatures.findOne(this.creatureId);
-			},
-			creatureChildren(){
-				if (!this.creature) return;
-				return nodesToTree({collection: CreatureProperties, ancestorId: this.creatureId});
+			children(){
+				return nodesToTree({collection: CreatureProperties, ancestorId: this.root.id});
 			},
 		},
 		methods: {
@@ -59,10 +51,7 @@
 						collection: 'creatureProperties',
 					};
 				} else {
-					parentRef = {
-						id: this.creatureId,
-						collection: 'creatures',
-					};
+					parentRef = this.root;
 				}
 				organizeDoc.call({
 					docRef: {

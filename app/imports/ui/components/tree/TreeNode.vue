@@ -1,8 +1,8 @@
 <template lang="html">
-	<div
+	<v-sheet
 		class="tree-node"
 		:class="!hasChildren ? 'empty' : null"
-		:data-id="node._id"
+		:data-id="`tree-node-${node._id}`"
 	>
 		<div
 			class="layout row align-center justify-start tree-node-title"
@@ -55,7 +55,7 @@
 				/>
 			</div>
 		</v-expand-transition>
-	</div>
+	</v-sheet>
 </template>
 
 <script>

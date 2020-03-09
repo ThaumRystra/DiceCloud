@@ -11,8 +11,8 @@
 						style="flex-grow: 0; height: 32px;"
 					/>
 				</v-toolbar>
-				<creature-tree-container
-					:creature-id="creatureId"
+				<creature-properties-tree
+					:root="{collection: 'creatures', id: creatureId}"
 					:organize="organize"
 					@selected="e => selected = e"
 					:selected-node-id="selected"
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-	import CreatureTreeContainer from '/imports/ui/creature/CreatureTreeContainer.vue';
+import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 	import CreatureProperties, {
 		insertProperty,
 		insertPropertyFromLibraryNode
@@ -91,7 +91,7 @@
 
 	export default {
 		components: {
-			CreatureTreeContainer,
+			CreaturePropertiesTree,
 			PropertyViewer,
 			PropertyIcon,
 		},
