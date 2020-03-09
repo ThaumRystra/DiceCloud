@@ -5,8 +5,10 @@
     </span>
     <v-layout align-center justify-center>
       <v-card class="ma-4 pa-2">
-				<v-switch :input-value="darkMode" @change="setDarkMode" label="Dark mode"/>
         <v-list>
+					<v-list-tile>
+						<v-switch :input-value="darkMode" @change="setDarkMode" label="Dark mode"/>
+					</v-list-tile>
           <v-subheader>
             Username
           </v-subheader>
