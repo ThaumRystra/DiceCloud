@@ -15,12 +15,12 @@
 			HealthBarCard,
 		},
 		props: {
-			charId: String,
+			creatureId: String,
 		},
 		meteor: {
 			attributes(){
 				return CreatureProperties.find({
-					'ancestor.id': this.charId,
+					'ancestors.id': this.creatureId,
 					type: 'attribute',
 					attributeType: 'healthBar',
 					value: {$ne: 0},

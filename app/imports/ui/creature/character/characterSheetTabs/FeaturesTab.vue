@@ -15,15 +15,14 @@
 
 <script>
 	import Creatures from '/imports/api/creature/Creatures.js';
-	import Features, { updateFeature } from '/imports/api/properties/Features.js';
-	import { insertFeature } from '/imports/api/properties/Features.js';
+	import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 	import FeatureCard from '/imports/ui/properties/components/features/FeatureCard.vue';
 	import { evaluateComputation, evaluateStringWithVariables } from '/imports/ui/utility/evaluate.js';
 
 	export default {
 		props: {
-			charId: String,
+			creatureId: String,
 		},
 		components: {
 			ColumnLayout,
@@ -31,33 +30,24 @@
 		},
 		meteor: {
 			features(){
-				let char = Creatures.findOne(this.charId, {fields: {variables: 1}});
+				let char = Creatures.findOne(this.creatureId, {fields: {variables: 1}});
 				if (!char) return [];
 				let vars = char.variables;
-				return Features.find({
-					charId: this.charId,
+				console.log('finding features for', this.creatureId);
+				return CreatureProperties.find({
+					'ancestors.id': this.creatureId,
+					type: 'feature',
+					removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				}).map(f => {
+					console.log(f);
 					f.description = evaluateStringWithVariables(f.description, vars);
 					return f;
 				});
 			},
 		},
 		methods: {
-			insertFeature(){
-				const charId = this.charId;
-				this.$store.commit('pushDialogStack', {
-					component: 'feature-creation-dialog',
-					elementId: 'insert-feature-fab',
-					callback(feature){
-						if (!feature) return;
-						feature.charId = charId;
-						let featureId = insertFeature.call(feature);
-						return featureId
-					}
-				});
-			},
 			updateFeature({_id, update}, ack){
 				updateFeature.call({_id, update}, error => {
 					if (ack){

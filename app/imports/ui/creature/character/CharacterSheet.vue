@@ -52,10 +52,10 @@
     <v-content class="flex" v-if="$subReady.singleCharacter">
 			<v-tabs-items v-model="tab">
 				<v-tab-item>
-					<stats-tab/>
+					<stats-tab :creature-id="creatureId"/>
 				</v-tab-item>
 				<v-tab-item>
-					<features-tab/>
+					<features-tab :creature-id="creatureId"/>
 				</v-tab-item>
 				<v-tab-item>
 					<tree-tab :creature-id="creatureId"/>

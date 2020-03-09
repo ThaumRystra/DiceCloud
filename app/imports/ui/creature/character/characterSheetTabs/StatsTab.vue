@@ -2,7 +2,7 @@
 	<div class="stats-tab ma-2">
 
 		<div class="px-2 pt-2">
-			<health-bar-card-container :charId="charId"/>
+			<health-bar-card-container :creature-id="creatureId"/>
 		</div>
 
 		<column-layout>
@@ -141,8 +141,9 @@
 	let adjustAttribute = insertAttribute = () => console.error("this shit isn't defined");
 
 	const getAttributeOfType = function(charId, type){
+		console.log({charId})
 		return CreatureProperties.find({
-			'ancestor.id': charId,
+			'ancestors.id': charId,
 			type: 'attribute',
 			attributeType: type,
 			removed: {$ne: true},
@@ -153,7 +154,7 @@
 
 	const getNonZeroAttributeOfType = function(charId, type){
 		return CreatureProperties.find({
-			'ancestor.id': charId,
+			'ancestors.id': charId,
 			type: 'attribute',
 			attributeType: type,
 			value: {$ne: 0},
@@ -165,7 +166,7 @@
 
 	export default {
 		props: {
-			charId: String,
+			creatureId: String,
 		},
 		components: {
 			AbilityListTile,
@@ -179,23 +180,23 @@
 		},
 		meteor: {
 			abilities(){
-				return getAttributeOfType(this.charId, 'ability');
+				return getAttributeOfType(this.creatureId, 'ability');
 			},
 			stats(){
-				return getAttributeOfType(this.charId, 'stat');
+				return getAttributeOfType(this.creatureId, 'stat');
 			},
 			modifiers(){
-				return getAttributeOfType(this.charId, 'modifier');
+				return getAttributeOfType(this.creatureId, 'modifier');
 			},
 			resources(){
-				return getNonZeroAttributeOfType(this.charId, 'resource');
+				return getNonZeroAttributeOfType(this.creatureId, 'resource');
 			},
 			spellSlots(){
-				return getNonZeroAttributeOfType(this.charId, 'spellSlot');
+				return getNonZeroAttributeOfType(this.creatureId, 'spellSlot');
 			},
 			hitDice(){
 				return CreatureProperties.find({
-					'ancestor.id': this.charId,
+					'ancestors.id': this.creatureId,
 					type: 'attribute',
 					attributeType: 'hitDice',
 					value: {$ne: 0},
@@ -205,7 +206,7 @@
 					let diceMatch = hd.variableName.match(/d(\d+)/);
 					let dice = diceMatch && +diceMatch[1];
 					let con = CreatureProperties.findOne({
-						'ancestor.id': this.charId,
+						'ancestors.id': this.creatureId,
 						type: 'attribute',
 						variableName: 'constitution'
 					});
@@ -222,7 +223,7 @@
 			},
 			checks(){
 				return CreatureProperties.find({
-					'ancestor.id': this.charId,
+					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'check',
 				}, {
@@ -231,7 +232,7 @@
 			},
 			savingThrows(){
 				return CreatureProperties.find({
-					'ancestor.id': this.charId,
+					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'save',
 				}, {
@@ -240,7 +241,7 @@
 			},
 			skills(){
 				return CreatureProperties.find({
-					'ancestor.id': this.charId,
+					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'skill',
 				}, {
@@ -260,19 +261,6 @@
 				if (type === 'increment'){
 					damageProperty.call({_id, operation: 'increment' ,value: -value});
 				}
-			},
-			insertAttribute(){
-				const charId = this.charId;
-				this.$store.commit('pushDialogStack', {
-					component: 'attribute-creation-dialog',
-					elementId: 'insert-attribute-fab',
-					callback(attribute){
-						if (!attribute) return;
-						attribute.charId = charId;
-						let attId = insertAttribute.call({attribute});
-						return attId
-					}
-				});
 			},
 		},
 	};
