@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-list-tile class="skill-list-tile" height="32px" v-on="hasClickListener ? {click} : {}">
+	<v-list-tile class="skill-list-tile" height="32px" v-on="hasClickListener ? {click: () => $emit('click')} : {}">
 		<v-list-tile-content>
 			<v-list-tile-title>
 				{{model.name}}
@@ -13,6 +13,11 @@ export default {
 	props: {
 		model: Object,
 	},
+	computed: {
+		hasClickListener(){
+			return this.$listeners && !!this.$listeners.click
+		},
+	}
 }
 </script>
 

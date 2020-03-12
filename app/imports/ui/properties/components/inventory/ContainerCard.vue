@@ -1,5 +1,5 @@
 <template lang="html">
-	<toolbar-card :color="model.color" @click="clickProperty(model._id)" :data-id="model._id">
+	<toolbar-card :color="model.color" @toolbarclick="clickProperty(model._id)" :data-id="model._id">
 		<template slot="toolbar">
 			<span>
 				{{model.name}}

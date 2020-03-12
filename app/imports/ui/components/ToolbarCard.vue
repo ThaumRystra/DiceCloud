@@ -2,9 +2,10 @@
   <v-card :hover="hasClickListener" @click="$emit('click')">
   	<v-toolbar
 			flat
-			style="transform: none;"
+			:style="`transform: none; ${hasToolbarClickListener ? 'cursor: pointer;' : ''}`"
 			:color="color"
 			:dark="isDark"
+			@click="$emit('toolbarclick')"
 		>
   		<slot name="toolbar"/>
   	</v-toolbar>
@@ -31,7 +32,10 @@
 				return isDarkColor(this.color);
 			},
 			hasClickListener(){
-	    	return this.$listeners && !!this.$listeners.click
+	    	return this.$listeners && !!this.$listeners.click;
+			},
+			hasToolbarClickListener(){
+	    	return this.$listeners && !!this.$listeners.toolbarclick;
 			},
 		}
 	};
