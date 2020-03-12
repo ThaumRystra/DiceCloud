@@ -10,6 +10,7 @@ import "vuetify/dist/vuetify.min.css";
 import '/imports/ui/components/global/globalIndex.js';
 
 Vue.use(VueMeteorTracker);
+Vue.config.meteor.freeze = true
 Vue.use(Vuetify, {
   theme,
   iconfont: "md",
