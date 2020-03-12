@@ -45,6 +45,9 @@
 					Features
 				</v-tab>
 				<v-tab>
+					Inventory
+				</v-tab>
+				<v-tab>
           Tree
         </v-tab>
       </v-tabs>
@@ -56,6 +59,9 @@
 				</v-tab-item>
 				<v-tab-item>
 					<features-tab :creature-id="creatureId"/>
+				</v-tab-item>
+				<v-tab-item>
+					<inventory-tab :creature-id="creatureId"/>
 				</v-tab-item>
 				<v-tab-item>
 					<tree-tab :creature-id="creatureId"/>
@@ -74,10 +80,11 @@
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 	import { mapMutations } from "vuex";
 	import { theme } from '/imports/ui/theme.js';
-	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
-	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js'
+	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
+	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
+	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js';
 
 	export default {
 		props: {
@@ -85,9 +92,10 @@
 			creatureId: String,
 		},
 		components: {
-			TreeTab,
 			StatsTab,
 			FeaturesTab,
+			InventoryTab,
+			TreeTab,
 		},
 		data(){return {
 			theme,

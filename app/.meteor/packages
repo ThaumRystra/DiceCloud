@@ -9,7 +9,6 @@ random@1.1.0
 dburles:collection-helpers
 reactive-var@1.0.11
 underscore@1.0.10
-matb33:collection-hooks
 momentjs:moment
 dburles:mongo-collection-instances
 percolate:migrations
