@@ -4,7 +4,6 @@
 			<div v-for="container in containers" :key="container._id">
 				<container-card
 					:model="container"
-					:items="container.items"
 				/>
 			</div>
 		</column-layout>
@@ -38,7 +37,7 @@ export default {
 					removed: {$ne: true},
 				}, {
 					sort: {order: 1},
-				});
+				}).fetch();
 				return container;
 			});
 		},

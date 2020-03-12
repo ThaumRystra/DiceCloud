@@ -8,7 +8,7 @@
 		</template>
 		<v-list>
 			<item-list-tile
-				v-for="item in items"
+				v-for="item in model.items"
 				:model="item"
 				:key="item._id"
 				:data-id="item._id"
@@ -26,7 +26,6 @@ import ItemListTile from '/imports/ui/properties/components/inventory/ItemListTi
 export default {
 	props: {
 		model: Object,
-		items: [Array, Object],
 	},
 	components: {
 		ToolbarCard,
