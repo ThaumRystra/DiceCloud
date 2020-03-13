@@ -31,7 +31,7 @@
 					group="inventory"
 				/>
 			</v-card>
-			<div v-for="container in containers" :key="container._id">
+			<div v-for="container in containersWithoutAncestorContainers" :key="container._id">
 				<container-card
 					:model="container"
 					:organize="organize"
@@ -63,6 +63,18 @@ export default {
 		containers(){
 			return CreatureProperties.find({
 				'ancestors.id': this.creatureId,
+				type: 'container',
+				removed: {$ne: true},
+			}, {
+				sort: {order: 1},
+			});
+		},
+		containersWithoutAncestorContainers(){
+			return CreatureProperties.find({
+				'ancestors.id': {
+					$eq: this.creatureId,
+					$nin: this.containerIds
+				},
 				type: 'container',
 				removed: {$ne: true},
 			}, {
