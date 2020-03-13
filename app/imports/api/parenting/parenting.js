@@ -24,6 +24,9 @@ const allowedParenting = {
 const allParentTypes = new Set(flatten(Object.values(allowedParenting)));
 
 export function canBeParent(type){
+  return true;
+  //TODO until there is a good reason to disallow certain parenting options,
+  // this should just let the user do whatever
   return type && allParentTypes.has(type);
 }
 

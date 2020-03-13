@@ -1,5 +1,5 @@
 <template lang="html">
-	<toolbar-card :color="model.color" @toolbarclick="clickContainer(model._id)" :data-id="model._id">
+	<toolbar-card :color="model.color" @toolbarclick="clickSpellList(model._id)" :data-id="model._id">
 		<template slot="toolbar">
 			<span>
 				{{model.name}}
@@ -8,10 +8,10 @@
 		</template>
 		<creature-properties-tree
 			:root="{collection: 'creatureProperties', id: model._id}"
-			:filter="{type: {$in: ['container', 'item', 'folder']}}"
+			:filter="{type: {$in: ['spellList', 'spell', 'folder']}}"
 			@selected="e => clickProperty(e)"
 			:organize="organize"
-			group="inventory"
+			group="spells"
 		/>
   </toolbar-card>
 </template>
@@ -31,7 +31,7 @@ export default {
 		CreaturePropertiesTree,
 	},
 	methods: {
-		clickContainer(_id){
+		clickSpellList(_id){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-property-dialog',
 				elementId: `${_id}`,

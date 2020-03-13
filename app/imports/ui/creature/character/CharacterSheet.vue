@@ -48,6 +48,9 @@
 					Inventory
 				</v-tab>
 				<v-tab>
+					Spells
+				</v-tab>
+				<v-tab>
           Tree
         </v-tab>
       </v-tabs>
@@ -62,6 +65,9 @@
 				</v-tab-item>
 				<v-tab-item>
 					<inventory-tab :creature-id="creatureId"/>
+				</v-tab-item>
+				<v-tab-item>
+					<spells-tab :creature-id="creatureId"/>
 				</v-tab-item>
 				<v-tab-item>
 					<tree-tab :creature-id="creatureId"/>
@@ -83,6 +89,7 @@
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
+	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
 	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js';
 
@@ -95,6 +102,7 @@
 			StatsTab,
 			FeaturesTab,
 			InventoryTab,
+			SpellsTab,
 			TreeTab,
 		},
 		data(){return {
