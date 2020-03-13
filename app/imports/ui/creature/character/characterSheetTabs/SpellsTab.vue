@@ -2,9 +2,12 @@
 	<div class="spells">
 		<column-layout>
 			<v-card>
-				<v-card-actions>
-					<v-switch v-model="organize" label="Organize"/>
-				</v-card-actions>
+				<v-switch
+					v-model="organize"
+					label="Organize"
+					class="justify-end"
+					style="margin: 16px 24px -16px;"
+				/>
 				<!-- Equipping things isn't implemented yet
 				<creature-properties-tree
 					:root="{collection: 'creatures', id: creatureId}"
