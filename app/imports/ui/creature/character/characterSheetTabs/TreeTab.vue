@@ -2,20 +2,36 @@
   <div class="tree-tab">
 		<v-card class="ma-4 layout row" data-id="creature-tree-card">
 			<div>
-				<v-toolbar dense flat>
+				<v-toolbar flat dense>
 					<v-spacer/>
 					<v-switch
 						label="Organize"
 						class="mx-3"
 						v-model="organize"
+						:disabled="organizeDisabled"
 						style="flex-grow: 0; height: 32px;"
 					/>
 				</v-toolbar>
+				<v-combobox
+	        v-model="filterString"
+	        :items="filterOptions"
+	        prepend-inner-icon="search"
+					class="mx-4"
+					hide-no-data
+					hide-selected
+					multiple
+					clearable
+					small-chips
+					deletable-chips
+					ref="searchBox"
+      	/>
 				<creature-properties-tree
+					class="pt-0"
 					:root="{collection: 'creatures', id: creatureId}"
 					:organize="organize"
 					@selected="e => selected = e"
 					:selected-node-id="selected"
+					:filter="filter"
 					style="min-width: 320px;"
 				/>
 			</div>
@@ -98,8 +114,31 @@ import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/Crea
 		},
 		data(){ return {
 			organize: false,
+			organizeDisabled: false,
 			selected: undefined,
 			fab: false,
+			filterString: '',
+			filterOptions: [
+				{text: 'Actions', value: 'action'},
+				{text: 'Attacks', value: 'attack'},
+				{text: 'Attributes', value: 'attribute'},
+				{text: 'Buffs', value: 'buff'},
+				{text: 'Class Levels', value: 'classLevel'},
+				{text: 'Damage Multipliers', value: 'damageMultiplier'},
+				{text: 'Effects', value: 'effect'},
+				{text: 'Experiences', value: 'experience'},
+				{text: 'Features', value: 'feature'},
+				{text: 'Folders', value: 'folder'},
+				{text: 'Notes', value: 'note'},
+				{text: 'Proficiencies', value: 'proficiency'},
+				{text: 'Rolls', value: 'roll'},
+				{text: 'Saving Throws', value: 'savingThrow'},
+				{text: 'Skills', value: 'skill'},
+				{text: 'Spell Lists', value: 'spellList'},
+				{text: 'Spells', value: 'spell'},
+				{text: 'Containers', value: 'container'},
+				{text: 'Items', value: 'item'},
+			],
 		};},
 		props: {
 			creatureId: {
@@ -157,6 +196,37 @@ import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/Crea
 					removed: {$ne: true}
 				});
 			}
+		},
+		computed: {
+			filter(){
+				if (!this.filterString.length) return;
+				let typeFilters = [];
+				let nameFilters = [];
+				this.filterString.forEach(filter => {
+					if (filter.value){
+						typeFilters.push(filter.value);
+					} else {
+						// escape string
+						let term = filter.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' );
+  					var reg = new RegExp( '.*' + term + '.*', 'i' );
+						nameFilters.push(reg)
+					}
+				});
+				return {$or: [
+					{type: {$in: typeFilters}},
+					{name: {$in: nameFilters}},
+				]};
+			},
+		},
+		watch: {
+			filter(filter){
+				if (filter) {
+					this.organize = false;
+					this.organizeDisabled = true;
+				} else {
+					this.organizeDisabled = false;
+				}
+			},
 		}
 	};
 </script>
