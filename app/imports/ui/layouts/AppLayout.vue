@@ -1,6 +1,6 @@
 <template>
   <v-app :dark="darkMode" :light="!darkMode">
-    <v-navigation-drawer app v-model="drawer">
+    <v-navigation-drawer app v-model="drawer" clipped>
       <Sidebar/>
     </v-navigation-drawer>
 		<router-view></router-view>

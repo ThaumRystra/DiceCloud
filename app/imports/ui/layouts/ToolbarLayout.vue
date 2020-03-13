@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar app color="secondary" dark>
+    <v-toolbar app color="secondary" dark clipped-left>
       <v-btn flat icon @click="toggleDrawer">
         <v-icon>menu</v-icon>
       </v-btn>

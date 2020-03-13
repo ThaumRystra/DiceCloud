@@ -1,18 +1,5 @@
 <template>
   <div class="sidebar">
-		<v-toolbar color="secondary" dark>
-			<v-layout row align-center v-if="signedIn">
-				{{userName}}
-				<v-spacer></v-spacer>
-				<v-tooltip bottom>
-					<v-btn flat icon slot="activator" to="/account"><v-icon>settings</v-icon></v-btn>
-					<span>Account Settings</span>
-				</v-tooltip>
-			</v-layout>
-			<v-layout row justify-center v-else="signedIn">
-				<v-btn flat to="/sign-in">Sign in</v-btn>
-			</v-layout>
-		</v-toolbar>
 		<v-alert
 			:value="showWarning"
 			type="warning"
@@ -25,7 +12,24 @@
 				<v-btn @click="showWarning = false">I won't</v-btn>
 			</div>
 		</v-alert>
+		<v-layout row justify-center v-if="!signedIn">
+			<v-btn flat to="/sign-in">Sign in</v-btn>
+		</v-layout>
     <v-list>
+			<v-list-tile v-if="signedIn">
+				<v-list-tile-content>
+					<v-list-tile-title>
+						{{userName}}
+					</v-list-tile-title>
+        </v-list-tile-content>
+				<v-list-tile-action>
+					<v-tooltip bottom>
+						<v-btn flat icon slot="activator" to="/account"><v-icon>settings</v-icon></v-btn>
+						<span>Account Settings</span>
+					</v-tooltip>
+        </v-list-tile-action>
+			</v-list-tile>
+
       <v-list-tile
         v-for="(link, i) in links"
 				v-if="link.vif || link.vif === undefined"
