@@ -30,16 +30,6 @@
 			/>
 		</div>
 		<div class="layout row wrap">
-			<v-combobox
-				label="Spell lists"
-				multiple
-				chips
-				deletable-chips
-				box
-				:value="model.spellLists"
-				@change="(value) => $emit('change', {path: ['spellLists'], value})"
-				:error-messages="errors.spellLists"
-			/>
 			<v-switch
 			label="Always prepared"
 			style="width: 200px; flex-grow: 0;"
@@ -110,11 +100,28 @@
 			@change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
 			:debounce-time="debounceTime"
 		/>
+		<form-section name="Advanced" standalone>
+			<v-combobox
+				label="Spell lists"
+				multiple
+				chips
+				deletable-chips
+				box
+				:value="model.spellLists"
+				@change="(value) => $emit('change', {path: ['spellLists'], value})"
+				:error-messages="errors.spellLists"
+			/>
+		</form-section>
   </div>
 </template>
 
 <script>
+	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+
 	export default {
+		components: {
+			FormSection,
+		},
 		props: {
 			model: {
 				type: Object,
