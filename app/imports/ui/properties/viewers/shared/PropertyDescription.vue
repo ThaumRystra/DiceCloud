@@ -1,7 +1,7 @@
 <template lang="html">
-	<p v-if="value" class="mt-3">
-		<markdown-text :markdown="value"/>
-	</p>
+	<div>
+		<markdown-text v-if="value" :markdown="value"/>
+	</div>
 </template>
 
 <script>

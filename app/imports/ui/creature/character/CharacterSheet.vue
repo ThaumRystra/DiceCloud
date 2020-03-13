@@ -1,14 +1,17 @@
 <template>
 	<div class="character-sheet layout column">
-    <v-toolbar app :color="character.color || 'secondary'" :dark="isDarkColor(character.color || theme.primary)">
+    <v-toolbar
+			app clipped-left
+			:color="character.color || 'secondary'"
+			:dark="isDarkColor(character.color || theme.primary)"
+		>
       <v-btn v-if="showMenuButton" flat icon @click="toggleDrawer">
         <v-icon>menu</v-icon>
       </v-btn>
+			<div class="flex">{{character.name}}</div>
 			<v-btn flat icon @click="recompute(character._id)">
         <v-icon>refresh</v-icon>
       </v-btn>
-			<span>{{character.name}}</span>
-			<v-spacer/>
 			<v-menu bottom left transition="slide-y-transition" data-id="creature-menu">
 	      <template v-slot:activator="{ on }">
 	 				<v-btn icon v-on="on">
@@ -34,10 +37,11 @@
 	 			</v-list>
  		 	</v-menu>
 			<v-tabs
-        slot="extension"
-        v-model="tab"
-        centered
-      >
+				v-model="tab"
+				slot="extension"
+				centered
+				grow
+			>
 				<v-tab>
 					Stats
 				</v-tab>
@@ -51,9 +55,12 @@
 					Spells
 				</v-tab>
 				<v-tab>
-          Tree
-        </v-tab>
-      </v-tabs>
+					Persona
+				</v-tab>
+				<v-tab>
+					Tree
+				</v-tab>
+			</v-tabs>
     </v-toolbar>
     <v-content class="flex" v-if="$subReady.singleCharacter">
 			<v-tabs-items v-model="tab">
@@ -68,6 +75,9 @@
 				</v-tab-item>
 				<v-tab-item>
 					<spells-tab :creature-id="creatureId"/>
+				</v-tab-item>
+				<v-tab-item>
+					<persona-tab :creature-id="creatureId"/>
 				</v-tab-item>
 				<v-tab-item>
 					<tree-tab :creature-id="creatureId"/>
@@ -90,6 +100,7 @@
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
 	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
+	import PersonaTab from '/imports/ui/creature/character/characterSheetTabs/PersonaTab.vue';
 	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
 	import { recomputeCreature } from '/imports/api/creature/creatureComputation.js';
 
@@ -103,6 +114,7 @@
 			FeaturesTab,
 			InventoryTab,
 			SpellsTab,
+			PersonaTab,
 			TreeTab,
 		},
 		data(){return {
@@ -176,6 +188,9 @@
 <style>
 	.v-tabs__bar {
 		background: none !important;
+	}
+	.v-tabs__container--grow .v-tabs__div {
+		max-width: 180px !important;
 	}
 	.v-window-item, .v-window, .v-window__container {
 		height: 100%;
