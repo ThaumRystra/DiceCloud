@@ -1,6 +1,6 @@
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import { flatten } from 'lodash';
+import { flatten, findLast } from 'lodash';
 
 const generalParents = [
   'attribute',
@@ -32,6 +32,9 @@ export function getAllowedParents({childType}){
 }
 
 export function isParentAllowed({parentType = 'root', childType}){
+  return true;
+  //TODO until there is a good reason to disallow certain parenting options,
+  // this should just let the user do whatever
   if (!childType) throw 'childType is required';
   let allowedParents = getAllowedParents({childType});
   return allowedParents.includes(parentType);
@@ -205,13 +208,14 @@ export function getName(doc){
   }
 }
 
-export function nodesToTree({collection, ancestorId}){
+export function nodesToTree({collection, ancestorId, filter}){
   // Store a dict of all the nodes
   let nodeIndex = {};
   let nodeList = [];
   collection.find({
     'ancestors.id': ancestorId,
 		removed: {$ne: true},
+    ...filter,
   }, {
     sort: {order: 1}
   }).forEach( node => {
@@ -224,12 +228,16 @@ export function nodesToTree({collection, ancestorId}){
   });
   // Create a forest of trees
   let forest = [];
-  // Either the node is a child of another node, or in the forest as a root
-  nodeList.forEach(node => {
-    if (nodeIndex[node.node.parent.id]){
-      nodeIndex[node.node.parent.id].children.push(node);
+  // Either the node is a child of its nearest found ancestor, or in the forest as a root
+  nodeList.forEach(treeNode => {
+    let ancestorInForest = findLast(
+      treeNode.node.ancestors,
+      ancestor => !!nodeIndex[ancestor.id]
+    );
+    if (ancestorInForest){
+      nodeIndex[ancestorInForest.id].children.push(treeNode);
     } else {
-      forest.push(node);
+      forest.push(treeNode);
     }
   });
   return forest;

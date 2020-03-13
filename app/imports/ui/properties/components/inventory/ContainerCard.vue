@@ -1,20 +1,18 @@
 <template lang="html">
-	<toolbar-card :color="model.color" @toolbarclick="clickProperty(model._id)" :data-id="model._id">
+	<toolbar-card :color="model.color" @toolbarclick="clickContainer(model._id)" :data-id="model._id">
 		<template slot="toolbar">
 			<span>
 				{{model.name}}
 			</span>
 			<v-spacer/>
 		</template>
-		<v-list>
-			<item-list-tile
-				v-for="item in model.items"
-				:model="item"
-				:key="item._id"
-				:data-id="item._id"
-				@click="clickProperty(item._id)"
-			/>
-		</v-list>
+		<creature-properties-tree
+			:root="{collection: 'creatureProperties', id: model._id}"
+			:filter="{type: {$in: ['container', 'item', 'folder']}}"
+			@selected="e => clickProperty(e)"
+			:organize="organize"
+			group="inventory"
+		/>
   </toolbar-card>
 </template>
 
@@ -22,20 +20,30 @@
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemListTile from '/imports/ui/properties/components/inventory/ItemListTile.vue';
+import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 
 export default {
 	props: {
 		model: Object,
+		organize: Boolean,
 	},
 	components: {
 		ToolbarCard,
 		ItemListTile,
+		CreaturePropertiesTree,
 	},
 	methods: {
-		clickProperty(_id){
+		clickContainer(_id){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-property-dialog',
 				elementId: `${_id}`,
+				data: {_id},
+			});
+		},
+		clickProperty(_id){
+			this.$store.commit('pushDialogStack', {
+				component: 'creature-property-dialog',
+				elementId: `tree-node-${_id}`,
 				data: {_id},
 			});
 		},

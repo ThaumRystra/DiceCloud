@@ -16,6 +16,7 @@
 					:organize="organize"
 					@selected="e => selected = e"
 					:selected-node-id="selected"
+					style="min-width: 320px;"
 				/>
 			</div>
 			<v-divider vertical/>

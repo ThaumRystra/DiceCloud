@@ -127,7 +127,7 @@
 
 <style lang="css" scoped>
 	.rotate-90 {
-		transform: rotate(90deg);
+		transform: rotate(90deg) translateZ(0);
 	}
 	.drag-area {
 		box-shadow: -2px 0px 0px 0px #808080;

@@ -1,9 +1,9 @@
 <template lang="html">
-	<v-card-text style="width: initial; max-width: 100%; min-width: 320px;">
+	<v-card-text style="width: initial; max-width: 100%;">
 		<tree-node-list
 			v-if="root"
 			:children="children"
-			:group="root.id"
+			:group="group"
 			:organize="organize"
 			:selected-node-id="selectedNodeId"
 			@selected="e => $emit('selected', e)"
@@ -27,10 +27,19 @@
 			root: Object,
 			organize: Boolean,
 			selectedNodeId: String,
+			filter: Object,
+			group: {
+				type: String,
+				default: 'creatureProperties'
+			}
 		},
 		meteor: {
 			children(){
-				return nodesToTree({collection: CreatureProperties, ancestorId: this.root.id});
+				return nodesToTree({
+					collection: CreatureProperties,
+					ancestorId: this.root.id,
+					filter: this.filter,
+				});
 			},
 		},
 		methods: {

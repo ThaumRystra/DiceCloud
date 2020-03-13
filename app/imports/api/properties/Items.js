@@ -52,6 +52,11 @@ ItemSchema = new SimpleSchema({
 		type: Boolean,
 		optional: true,
 	},
+	// Unequipped items shouldn't affect creature stats
+	equipped: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 export { ItemSchema };
