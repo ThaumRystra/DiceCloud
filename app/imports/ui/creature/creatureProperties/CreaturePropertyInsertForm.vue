@@ -3,7 +3,6 @@
 		<div slot="toolbar">Add {{propertyName}}</div>
 		<component
 			v-if="type"
-			stored
 			:is="type"
 			class="creature-property-form"
 			:model="model"

@@ -1,6 +1,7 @@
 import ActionForm from '/imports/ui/properties/forms/ActionForm.vue';
 import AttackForm from '/imports/ui/properties/forms/AttackForm.vue';
 import AttributeForm from '/imports/ui/properties/forms/AttributeForm.vue';
+import BuffForm from '/imports/ui/properties/forms/BuffForm.vue';
 import ContainerForm from '/imports/ui/properties/forms/ContainerForm.vue';
 import ClassLevelForm from '/imports/ui/properties/forms/ClassLevelForm.vue';
 import DamageMultiplierForm from '/imports/ui/properties/forms/DamageMultiplierForm.vue';
@@ -21,6 +22,7 @@ export default {
   action: ActionForm,
   attack: AttackForm,
   attribute: AttributeForm,
+  buff: BuffForm,
   container: ContainerForm,
   classLevel: ClassLevelForm,
   damageMultiplier: DamageMultiplierForm,

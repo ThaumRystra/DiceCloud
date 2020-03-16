@@ -12,7 +12,7 @@
 							class="mt-4"
 							:model="buff"
 							:parent-target="parentTarget"
-							:stored="stored"
+							:stored="true"
 							@change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
 							@push="({path, value, ack}) => $emit('push', {path: [i, ...path], value, ack})"
 							@pull="({path, ack}) => $emit('pull', {path: [i, ...path], ack})"
@@ -40,14 +40,13 @@
 
 <script>
 	import BuffForm from '/imports/ui/properties/forms/BuffForm.vue';
-	import {StoredBuffSchema, AppliedBuffSchema} from '/imports/api/properties/Buffs.js';
+	import { StoredBuffSchema } from '/imports/api/properties/Buffs.js';
 
 	export default {
 		components: {
 			BuffForm,
 		},
 		props: {
-			stored: Boolean,
 			model: {
 				type: Array,
 				default: () => ([]),
@@ -66,8 +65,7 @@
 			},
 			addBuff(){
 				this.addBuffLoading = true;
-				let schema = this.stored ? StoredBuffSchema : AppliedBuffSchema;
-				this.$emit('push', {path: [], value: schema.clean({}), ack: this.acknowledgeAddBuff});
+				this.$emit('push', {path: [], value: StoredBuffSchema.clean({}), ack: this.acknowledgeAddBuff});
 			},
 		},
 	}
