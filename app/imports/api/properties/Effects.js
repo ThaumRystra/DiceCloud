@@ -23,6 +23,7 @@ let EffectSchema = new SimpleSchema({
 			'passiveAdd',
 			'fail',
 			'conditional',
+			'rollBonus',
 		],
 	},
 	calculation: {

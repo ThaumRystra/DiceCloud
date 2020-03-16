@@ -1,23 +1,29 @@
 <template lang="html">
-	<div class="layout row wrap justify-start proficiency-form">
+	<div>
 		<text-field
-			label="Skill"
-			class="mr-2"
-			append-icon="arrow_drop_down"
-			item-text="name"
-			item-value="skill"
-			style="flex-basis: 300px;"
-			:menu-props="{transition: 'slide-y-transition', lazy: true}"
-			:value="model.skill"
-			:items="undefined"
-			@change="(value, ack) => $emit('change', {path: ['skill'], value, ack})"
+			label="Name"
+			:value="model.name"
+			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+			:error-messages="errors.name"
+			:debounce-time="debounceTime"
 		/>
-		<proficiency-select
-			label="Proficiency"
-			style="flex-basis: 300px;"
-			:value="model.value"
-			@change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
-		/>
+		<div class="layout row wrap justify-start proficiency-form">
+			<text-field
+				label="Skill"
+				class="mr-2"
+				:value="model.stats[0]"
+				:items="stats"
+				:error-messages="errors.stats"
+				:debounce-time="debounceTime"
+				@change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
+			/>
+			<proficiency-select
+				label="Proficiency"
+				style="flex-basis: 300px;"
+				:value="model.value"
+				@change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
+			/>
+		</div>
 	</div>
 </template>
 

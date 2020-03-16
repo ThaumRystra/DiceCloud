@@ -1,8 +1,16 @@
 import SimpleSchema from 'simpl-schema';
 
 let ProficiencySchema = new SimpleSchema({
-	// The variableName of the skill to apply this to
-	skill: {
+	name: {
+		type: String,
+		optional: true,
+	},
+	// The variableNames of the skills, tags, or attributes to apply proficiency to
+	stats: {
+		type: Array,
+		defaultValue: [],
+	},
+	'stats.$': {
 		type: String,
 		optional: true,
 	},

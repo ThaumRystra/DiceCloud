@@ -7,7 +7,7 @@ import { assertEditPermission } from '/imports/api/creature/creaturePermissions.
 import Creatures from "/imports/api/creature/Creatures.js";
 import CreatureProperties from "/imports/api/creature/CreatureProperties.js";
 import * as math from 'mathjs';
-import parser from '/imports/parser/parser.js';
+import { includes } from 'lodash';
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -27,380 +27,278 @@ export const recomputeCreature = new ValidatedMethod({
 
 });
 
- /**
-  * This function is the heart of DiceCloud. It recomputes a creature's stats,
-  * distilling down effects and proficiencies into the final stats that make up
-  * a creature.
-  *
-  * Essentially this is a depth first tree traversal algorithm that computes
-  * stats' dependencies before computing stats themselves, while detecting
-  * dependency loops.
-  *
-  * At the moment it makes no effort to limit recomputation to just what was
-  * changed.
-  *
-  * Attempting to implement dependency management to limit recomputation to just
-  * change affected stats should only happen as a last resort, when this function
-  * can no longer be performed more efficiently, and server resources can not be
-  * expanded to meet demand.
-  *
-  * A brief overview:
-  * - Fetch the stats of the creature and add them to
-  *   an object for quick lookup
-  * - Fetch the effects and proficiencies which apply to each stat and store them with the stat
-  * - Fetch the class levels and store them as well
-  * - Mark each stat and effect as uncomputed
-  * - Iterate over each stat in order and compute it
-  *   - If the stat is already computed, skip it
-  *   - If the stat is busy being computed, we are in a dependency loop, make it NaN and mark computed
-  *   - Mark the stat as busy computing
-  *   - Iterate over each effect which applies to the attribute
-  *     - If the effect is not computed compute it
-  *       - If the effect relies on another attribute, get its computed value
-  *       - Recurse if that attribute is uncomputed
-  *     - apply the effect to the attribute
-  *   - Conglomerate all the effects to compute the final stat values
-  *   - Mark the stat as computed
-  * - Write the computed results back to the database
-  *
-  * @param  {String} charId the Id of the creature to compute
-  * @returns {Object}       An in-memory description of the character as
-  *                         computed and written to the database
-  */
-export function recomputeCreatureById(charId){
-  let char = buildCreature(charId);
+/**
+ * This function is the heart of DiceCloud. It recomputes a creature's stats,
+ * distilling down effects and proficiencies into the final stats that make up
+ * a creature.
+ *
+ * Essentially this is a depth first tree traversal algorithm that computes
+ * stats' dependencies before computing stats themselves, while detecting
+ * dependency loops.
+ *
+ * At the moment it makes no effort to limit recomputation to just what was
+ * changed.
+ *
+ * Attempting to implement dependency management to limit recomputation to just
+ * change affected stats should only happen as a last resort, when this function
+ * can no longer be performed more efficiently, and server resources can not be
+ * expanded to meet demand.
+ *
+ * A brief overview:
+ * - Fetch the stats of the creature and add them to
+ *   an object for quick lookup
+ * - Fetch the effects and proficiencies which apply to each stat and store them with the stat
+ * - Fetch the class levels and store them as well
+ * - Mark each stat and effect as uncomputed
+ * - Iterate over each stat in order and compute it
+ *   - If the stat is already computed, skip it
+ *   - If the stat is busy being computed, we are in a dependency loop, make it NaN and mark computed
+ *   - Mark the stat as busy computing
+ *   - Iterate over each effect which applies to the attribute
+ *     - If the effect is not computed compute it
+ *       - If the effect relies on another attribute, get its computed value
+ *       - Recurse if that attribute is uncomputed
+ *     - apply the effect to the attribute
+ *   - Conglomerate all the effects to compute the final stat values
+ *   - Mark the stat as computed
+ * - Write the computed results back to the database
+ */
+export function recomputeCreatureById(creatureId){
+  let char = buildCreature(creatureId);
   char = computeCreature(char);
   writeCreature(char);
   return char;
 }
 
-/**
- * Write the in-memory creature to the database docs
- * This could be optimized to only write changed fields to the database
- *
- * @param  {Object} char in-memory char object
- * @returns {undefined}
- */
-function writeCreature(char) {
-  writeAttributes(char);
-  writeSkills(char);
-  writeDamageMultipliers(char);
-  writeEffects(char);
-  writeCreatureDoc(char);
-}
-
-function writeCreatureDoc(char) {
-  // Store all the variables, using the same priority as computation evaluation
-  let variables = {};
-  for (let key in char.variables){
-    variables[key] = char.variables[key].result;
-  }
-
-  // Write the creature
-  Creatures.update(char.id, {$set: {level: char.level, variables}});
-}
-
-/*
- * Write all the attributes from the in-memory char object to the Attirbute docs
- */
-function writeAttributes(char) {
-  let bulkWriteOps = _.map(char.atts, (att, variableName) => {
-    let op = {
-      updateMany: {
-        filter: {'ancestors.id': char.id, variableName},
-        update: {'$set': {
-          value: att.result,
-        }},
-      }
-    };
-    if (typeof att.mod === 'number'){
-      op.updateMany.update.$set.mod = att.mod;
-    } else {
-      op.updateMany.update.$unset = {mod: 1};
-    }
-    return op;
-  });
-  if (!bulkWriteOps.length) return;
-  if (Meteor.isServer){
-    let result = CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.error(e);
-    });
-  } else {
-    _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
-        multi: true,
-        selector: {type: 'attribute'}
-      });
-    });
-  }
-}
-
-function writeEffects(char){
-  let bulkWriteOps =  _.map(char.computedEffects, effect => ({
-    updateOne: {
-      filter: {_id: effect._id},
-      update: {$set: {
-        result: effect.result,
-      }},
-    },
-  }));
-  if (!bulkWriteOps.length) return;
-  if (Meteor.isServer){
-    let result = CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.error(e);
-    });
-  } else {
-    _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateOne.filter, op.updateOne.update, {selector: {type: 'effect'}});
-    });
-  }
-}
-
-/**
- * Write all the Creature Properties from the in-memory char object to the
- * properties docs
- *
- * @param  {type} char description
- * @returns {type}      description
- */
-function writeSkills(char) {
-  let bulkWriteOps =  _.map(char.skills, (skill, variableName) => {
-    let op = {
-      updateMany: {
-        filter: {'ancestors.id': char.id, variableName},
-        update: {$set: {
-          value: skill.result,
-          abilityMod: skill.abilityMod,
-          advantage: skill.advantage,
-          passiveBonus: skill.passiveAdd,
-          proficiency: skill.proficiency,
-          conditionalBenefits: skill.conditional,
-          fail: skill.fail,
-        }},
-      }
-    };
-    return op;
-  });
-  if (!bulkWriteOps.length) return;
-  if (Meteor.isServer){
-    let result = CreatureProperties.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.error(e);
-    });
-  } else {
-    _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
-        multi: true,
-        selector: {type: 'skill'},
-      });
-    });
-  }
-}
-
- /**
-  * Write all the damange multipliers from the in-memory char object to the docs
-  *
-  * @param  {type} char description
-  * @returns {type}      description
-  */
-function writeDamageMultipliers(char) {
-  let bulkWriteOps =  _.map(char.dms, (dm, variableName) => {
-    let op = {
-      updateMany: {
-        filter: {'ancestors.id': char.id, variableName},
-        update: {$set: {
-          value: dm.result,
-        }},
-      }
-    };
-    return op;
-  });
-  if (!bulkWriteOps.length) return;
-  if (Meteor.isServer){
-    let result = CreatureProperties.rawCollection().bulkWrite( bulkWriteOps, {ordered : false}, function(e, r){
-      if (e) console.error(e);
-    });
-  } else {
-    _.each(bulkWriteOps, op => {
-      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
-        multi: true,
-        selector: {type: 'damageMultiplier'},
-      });
-    });
-  }
-}
-
-
- /**
-  * Get the creature's data from the database and build an in-memory model that
-  * can be computed.
-  *
-  * @param  {type} charId description
-  * @returns {type}        description
-  */
-function buildCreature(charId){
+// Load creature details into memory from database
+function buildCreature(creatureId){
   let char = {
-    id: charId,
-    atts: {},
-    skills: {},
-    dms: {},
-    classes: {},
-    variables: {},
-    otherEffects: [],
+    id: creatureId,
+    stats: {},
+    skillsByAbility: {},
+    unassignedEffects: [],
     computedEffects: [],
-    level: 0,
   };
-  // Fetch the properties of the creature and add them to the char object for
-  // quicker lookup
-  CreatureProperties.find({'ancestors.id': charId}).forEach(prop => {
+  // Get all relevant properties and store them on the in-memory creature
+  getCreatureProps(creatureId).filter(prop => {
     const key = prop.variableName;
-    // Attributes
-    if (prop.type === 'attribute'){
-      char.atts[key] = {
-        computed: false,
-        busyComputing: false,
-        type: "attribute",
-        attributeType: prop.attributeType,
-        base: prop.baseValue || 0,
-        decimal: prop.decimal,
-        result: 0,
-        mod: 0, // The resulting modifier if this is an ability
-        add: 0,
-        mul: 1,
-        min: Number.NEGATIVE_INFINITY,
-        max: Number.POSITIVE_INFINITY,
-        advantage: 0,
-        disadvantage: 0,
-        passiveAdd: 0,
-        fail: 0,
-        effects: [],
-      };
-      char.variables[key] = char.atts[key];
-    }
-    //Skill
-    else if (prop.type === 'skill'){
-      if (!char.skills[key]){
-        char.skills[key] = {
-          computed: false,
-          busyComputing: false,
-          type: "skill",
-          ability: prop.ability,
-          base: prop.baseValue,
-          result: 0, // For skills the result is the skillMod
-          proficiency: prop.baseProficiency || 0,
-          add: 0,
-          mul: 1,
-          min: Number.NEGATIVE_INFINITY,
-          max: Number.POSITIVE_INFINITY,
-          advantage: 0,
-          disadvantage: 0,
-          passiveAdd: 0,
-          fail: 0,
-          conditional: 0,
-          effects: [],
-          proficiencies: [],
-        };
-        if (!char.variables[key]){
-          char.variables[key] = char.skills[key];
+    switch(prop.type){
+      case 'attribute':
+      case 'skill':
+        let skill = statObject(prop);
+        // Store the skill as a stat on the in-memory creature
+        if (!char.stats[key]) char.stats[key] = skill;
+        // Store a reference to the skill under the relevant ability as well
+        if (skill.ability){
+          if (!char.skillsByAbility[skill.ability]){
+            char.skillsByAbility[skill.ability] = [];
+          }
+          char.skillsByAbility[skill.ability].push(skill);
         }
-      }
+        return false;
+      case 'damageMultiplier':
+        if (!char.stats[key]) char.stats[key] = damageMultiplierObject();
+        return false;
+      default:
+        return true;
     }
-    // Damage multipliers
-    else if (prop.type === 'damageMultiplier'){
-      if (!char.dms[key]){
-        char.dms[key] = {
-          computed: false,
-          busyComputing: false,
-          type: "damageMultiplier",
-          result: 0,
-          immunityCount: 0,
-          ressistanceCount: 0,
-          vulnerabilityCount: 0,
-          effects: [],
-        };
-        if (!char.variables[key]){
-          char.variables[key] = char.dms[key];
+  }).forEach(prop => {
+    // In a second pass through the props, assign effects and proficiencies to
+    // their matched attributes and skills
+    switch(prop.type){
+      case 'effect':
+        let effect = effectObject(prop);
+        // Assign the effect to all the stats it directly targets
+        let targets = getEffectTargets(char, effect);
+        targets.forEach(target =>
+          target.effects.push(effect)
+        );
+        if (!targets.length){
+          char.unassignedEffects.push(effect);
         }
+        break;
+      case 'proficiency':
+        let proficiency = proficiencyObject(prop);
+        getProficiencyTargets(char, proficiency).forEach(target =>
+          target.proficiencies.push(proficiency)
+        );
+        break;
       }
-    }
-    // Classes
-    //TODO
-    // Effects
-    else if (prop.type === 'effect'){
-      for (let stat of prop.stats){
-        let storedEffect = {
-          _id: prop._id,
-          computed: false,
-          result: 0,
-          operation: prop.operation,
-          calculation: prop.calculation,
-        };
-        if (char.atts[stat]) {
-          char.atts[stat].effects.push(storedEffect);
-        } else if (char.skills[stat]) {
-          char.skills[stat].effects.push(storedEffect);
-        } else if (char.dms[stat]) {
-          char.dms[stat].effects.push(storedEffect);
-        } else {
-          char.otherEffects.push(storedEffect);
-        }
-      }
-    }
-    // Proficiencies
-    else if (prop.type === 'proficiency'){
-      if (char.skills[prop.skill]) {
-        char.skills[prop.skill].proficiencies.push(proficiency);
-      }
-    }
-    // Add direct properties from creature to variable list
-    const fields = { xp: 1, weightCarried: 1};
-    const creature = Creatures.findOne(charId, {fields});
-    for (let key in fields){
-      if (!char.variables[key]){
-        char.variables[key] = {
-          result: creature[key] || 0,
-          type: 'creatureProperty',
-          computed: true,
-        };
-      }
-    }
   });
+  // Add direct properties from creature to variable list
+  const fields = { xp: 1, weightCarried: 1, level: 1};
+  const creature = Creatures.findOne(creatureId, {fields});
+  for (let key in fields){
+    if (!char.stats[key]){
+      char.stats[key] = {
+        computed: true,
+        type: 'creatureProperty',
+        result: creature[key] || 0,
+      };
+    }
+  }
   return char;
 }
 
-/**
- *  Compute the creature's stats in-place, returns the same char object
- * @param  {type} char description
- * @returns {type}      description
- */
-export function computeCreature(char){
-  // Iterate over each stat in order and compute it
-  let statName;
-  for (statName in char.atts){
-    let stat = char.atts[statName];
+function getCreatureProps(creatureId){
+  // First get ids of disabled properties and unequiped items
+  let disabledAncestorIds = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    $or: [
+      {disabled: true},
+      {equipped: false},
+    ],
+  }, {
+    fields: {_id: 1},
+  }).map(prop => prop._id);
+
+  // Then get the ids of creatures that are children of this creature
+  // to isolate their decendent properties from this calculation
+  Creatures.find({
+    'ancestors.id': creatureId,
+  }, {
+    fields: {_id: 1},
+  }).forEach(prop => {
+    disabledAncestorIds.push(prop._id);
+  });
+
+  // Get all the properties that aren't from the excluded decendents
+  return CreatureProperties.find({
+    'ancestors.id': {
+      $eq: creatureId,
+      $nin: disabledAncestorIds,
+    },
+    type: {$in: [
+      'attribute',
+      'skill',
+      'damageMultiplier',
+      'effect',
+      'proficiency',
+    ]},
+  }).fetch();
+}
+
+function getProficiencyTargets(char, proficiency){
+  let extraTargets = [];
+  if (!proficiency.stats) return [];
+  let targets = proficiency.stats.map(targetStat => {
+    let target = char[targetStat];
+    // Proficiencies targeting ability scores apply to 'skill' and check' skills
+    // based on that ability as well
+    if (
+      target &&
+      target.type === 'attribute' &&
+      target.attributeType === 'ability' &&
+      char.skillsByAbility[targetStat]
+    ) {
+      extraTargets.push(
+        ...char.skillsByAbility[targetStat].filter(skill =>
+          includes(['skill', 'check'], skill.skillType)
+        )
+      );
+    }
+    return target;
+  }).filter(target => !!target);
+  return targets.concat(extraTargets);
+}
+
+function getEffectTargets(char, effect){
+  const skillOperations = [
+    'advantage',
+    'disadvantage',
+    'passiveAdd',
+    'fail',
+    'conditional',
+    'rollBonus',
+  ];
+  let extraTargets = [];
+  if (!effect.stats) return [];
+  let targets = effect.stats.map(targetStat => {
+    let target = char[targetStat];
+    // Certain effects targeting ability scores apply to  skills
+    // based on that ability as well
+    if (
+      includes(skillOperations, effect.operation) &&
+      target &&
+      target.type === 'attribute' &&
+      target.attributeType === 'ability' &&
+      char.skillsByAbility[targetStat]
+    ) {
+      extraTargets.push(...char.skillsByAbility[targetStat]);
+    }
+    return target;
+  });
+  return targets.concat(extraTargets);
+}
+
+function statObject(prop){
+  return {
+    computed: false,
+    busyComputing: false,
+    type: prop.type,
+    attributeType: prop.attributeType,
+    skillType: prop.skillType,
+    ability: prop.ability,
+    base: prop.baseValue || 0,
+    proficiency: prop.baseProficiency || 0,
+    decimal: prop.decimal,
+    result: 0,
+    mod: 0, // The resulting modifier if this is an ability
+    add: 0,
+    mul: 1,
+    min: Number.NEGATIVE_INFINITY,
+    max: Number.POSITIVE_INFINITY,
+    advantage: 0,
+    disadvantage: 0,
+    passiveAdd: 0,
+    fail: 0,
+    conditional: 0,
+    rollBonuses: 0,
+    effects: [],
+    proficiencies: [],
+  };
+}
+
+function damageMultiplierObject(){
+  return {
+    computed: false,
+    busyComputing: false,
+    type: "damageMultiplier",
+    result: 0,
+    immunityCount: 0,
+    ressistanceCount: 0,
+    vulnerabilityCount: 0,
+    effects: [],
+  };
+};
+
+function effectObject(prop){
+  return {
+    _id: prop._id,
+    computed: false,
+    result: 0,
+    operation: prop.operation,
+    calculation: prop.calculation,
+  };
+}
+
+function proficiencyObject(prop){
+  return {
+    value: prop.value,
+  };
+}
+
+function computeCreature(char){
+  for (let statName in char.stats){
+    let stat = char.stats[statName];
     computeStat (stat, char);
   }
-  for (statName in char.skills){
-    let stat = char.skills[statName];
-    computeStat (stat, char);
-  }
-  for (statName in char.dms){
-    let stat = char.dms[statName];
-    computeStat (stat, char);
-  }
-  for (let effect of char.otherEffects){
+  for (let effect of char.unassignedEffects){
     computeEffect(effect, char);
   }
   return char;
 }
 
-
-/**
- * Compute a single stat on a creature
- *
- * @param  {type} stat description
- * @param  {type} char description
- * @returns {type}      description
- */
 function computeStat(stat, char){
 
   // If the stat is already computed, skip it
@@ -431,22 +329,22 @@ function computeStat(stat, char){
   stat.busyComputing = false;
 }
 
- /**
-  * Compute a the result of a single effect
-  */
+/**
+ * Compute a the result of a single effect
+ */
 function computeEffect(effect, char){
-  if (effect.computed) return;
-  if (_.isFinite(effect.calculation)){
-		effect.result = +effect.calculation;
-	} else if(effect.operation === "conditional"){
-    effect.result = effect.calculation;
-  } else if(_.contains(["advantage", "disadvantage", "fail"], effect.operation)){
-    effect.result = 1;
-  } else {
-		effect.result = evaluateCalculation(effect.calculation, char);
-	}
-  effect.computed = true;
-  char.computedEffects.push(effect);
+ if (effect.computed) return;
+ if (_.isFinite(effect.calculation)){
+   effect.result = +effect.calculation;
+ } else if(effect.operation === "conditional" || effect.operation === "rollBonuses"){
+   effect.result = effect.calculation;
+ } else if(_.contains(["advantage", "disadvantage", "fail"], effect.operation)){
+   effect.result = 1;
+ } else {
+   effect.result = evaluateCalculation(effect.calculation, char);
+ }
+ effect.computed = true;
+ char.computedEffects.push(effect);
 }
 
 /**
@@ -497,6 +395,10 @@ function applyEffect(effect, stat){
       // Sum number of conditionals
       stat.conditional++;
       break;
+    case "rollBonus":
+      // Sum number of roll bonuses
+      stat.rollBonus++;
+      break;
   }
 }
 
@@ -530,29 +432,34 @@ function combineAttribute(stat, char){
  * Combine skills results into final values
  */
 function combineSkill(stat, char){
+  // Skills are based on some ability Modifier
+  let abilityMod = 0;
+  let ability = char.stats[stat.ability]
+  if (stat.ability && ability){
+    if (!ability.computed){
+      computeStat(ability, char);
+    }
+    stat.abilityMod = ability.mod;
+  }
+  // Combine all the child proficiencies
   for (let i in stat.proficiencies){
     let prof = stat.proficiencies[i];
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
+  // Get the character's proficiency bonus to apply
   let profBonus;
-  if (char.skills.proficiencyBonus){
-    if (!char.skills.proficiencyBonus.computed){
-      computeStat(char.skills.proficiencyBonus, char);
+  if (char.stats.proficiencyBonus){
+    if (!char.stats.proficiencyBonus.computed){
+      computeStat(char.stats.proficiencyBonus, char);
     }
-    profBonus = char.skills.proficiencyBonus.result;
+    profBonus = char.stats.proficiencyBonus.result;
   } else {
     profBonus = Math.floor(char.level / 4 + 1.75);
   }
+  // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;
-  // Skills are based on some ability Modifier
-  stat.abilityMod = 0;
-  if (stat.ability && char.atts[stat.ability]){
-    if (!char.atts[stat.ability].computed){
-      computeStat(char.atts[stat.ability], char);
-    }
-    stat.abilityMod = char.atts[stat.ability].mod;
-  }
-  stat.result = (stat.abilityMod + profBonus + stat.add) * stat.mul;
+  // Combine everything to get the final result
+  stat.result = (abilityMod + profBonus + stat.add) * stat.mul;
   if (stat.result < stat.min) stat.result = stat.min;
   if (stat.result > stat.max) stat.result = stat.max;
   stat.result = Math.floor(stat.result);
@@ -562,7 +469,7 @@ function combineSkill(stat, char){
 /**
  * Combine damageMultiplier's results into final values
  */
-function combineDamageMultiplier(stat, char){
+function combineDamageMultiplier(stat){
   if (stat.immunityCount) return 0;
   if (stat.ressistanceCount && !stat.vulnerabilityCount){
     stat.result = 0.5;
@@ -577,7 +484,7 @@ function combineDamageMultiplier(stat, char){
  * Get the value of a key, compute it if necessary
  */
 function getComputedValueOfKey(sub, char){
-  const stat = char.variables[sub];
+  const stat = char.stats[sub];
   if (!stat) return null;
   if (!stat.computed){
     computeStat(stat, char);
@@ -617,75 +524,100 @@ function evaluateCalculation(string, char){
   }
 }
 
-/**
- * recompute a character's XP from a given id
+function writeCreature(char) {
+  //TODO these functions don't filter the stats before trying to write
+  writeAttributes(char);
+  writeSkills(char);
+  writeDamageMultipliers(char);
+  writeEffects(char);
+}
+
+/*
+ * Write all the attributes from the in-memory char object to the Attirbute docs
  */
-export const recomputeCreatureXP = new ValidatedMethod({
-  name: "Creatures.methods.recomputeCreatureXP",
-
-  validate: new SimpleSchema({
-    charId: { type: String }
-  }).validator(),
-
-  run({charId}) {
-    assertEditPermission(charId, this.userId);
-    var xp = 0;
-		Experiences.find(
-			{charId: charId},
-			{fields: {value: 1}}
-		).forEach(function(e){
-			xp += e.value;
-		});
-
-    Creatures.update(charId, {$set: {xp}});
-		return xp;
-  },
-});
-
-/**
- * Recompute a character's weight carried from a given id
- */
-export const recomputeCreatureWeightCarried = new ValidatedMethod({
-  name: "Creature.methods.recomputeCreatureWeightCarried",
-
-  validate: new SimpleSchema({
-    charId: { type: String }
-  }).validator(),
-
-  run({charId}){
-    assertEditPermission(charId, this.userId);
-    var weightCarried = 0;
-    // store a dictionary of carried containers
-    var carriedContainers = {};
-    Containers.find(
-      {
-        charId,
-        isCarried: true,
-      },
-      { fields: {
-        isCarried: 1,
-        weight: 1,
-      }}
-    ).forEach(container => {
-      carriedContainers[container._id] = true;
-      weightCarried += container.weight;
-    });
-    Items.find(
-      {
-        charId,
-      },
-      { fields: {
-        weight: 1,
-        parent: 1,
-      }}
-    ).forEach(item => {
-      // if the item is carried/equiped or in a carried container, add its weight
-      if (parent.id === charId || carriedContainers[parent.id]){
-        weightCarried += item.weight;
+function writeAttributes(char) {
+  let bulkWriteOps = _.map(char.atts, (att, variableName) => {
+    let op = {
+      updateMany: {
+        filter: {'ancestors.id': char.id, variableName},
+        update: {'$set': {
+          value: att.result,
+          rollBonuses: skill.rollBonus,
+        }},
       }
-    });
+    };
+    if (typeof att.mod === 'number'){
+      op.updateMany.update.$set.mod = att.mod;
+    } else {
+      op.updateMany.update.$unset = {mod: 1};
+    }
+    return op;
+  });
+  bulkWriteProperties({bulkWriteOps, selectorType: 'attribute'});
+}
 
-    Creatures.update(charId, {$set: {weightCarried}});
-    return weightCarried;
+function writeSkills(char) {
+  let bulkWriteOps =  _.map(char.skills, (skill, variableName) => {
+    let op = {
+      updateMany: {
+        filter: {'ancestors.id': char.id, variableName},
+        update: {$set: {
+          value: skill.result,
+          abilityMod: skill.abilityMod,
+          advantage: skill.advantage,
+          passiveBonus: skill.passiveAdd,
+          proficiency: skill.proficiency,
+          conditionalBenefits: skill.conditional,
+          rollBonuses: skill.rollBonus,
+          fail: skill.fail,
+        }},
+      }
+    };
+    return op;
+  });
+  bulkWriteProperties({bulkWriteOps, selectorType: 'skill'});
+}
+
+function writeDamageMultipliers(char) {
+  let bulkWriteOps =  _.map(char.dms, (dm, variableName) => {
+    let op = {
+      updateMany: {
+        filter: {'ancestors.id': char.id, variableName},
+        update: {$set: {
+          value: dm.result,
+        }},
+      }
+    };
+    return op;
+  });
+  bulkWriteProperties({bulkWriteOps, selectorType: 'damageMultiplier'});
+}
+
+function writeEffects(char){
+  let bulkWriteOps =  _.map(char.computedEffects, effect => ({
+    updateOne: {
+      filter: {_id: effect._id},
+      update: {$set: {
+        result: effect.result,
+      }},
+    },
+  }));
+  if (!bulkWriteOps.length) return;
+  bulkWriteProperties({bulkWriteOps, selectorType: 'effect'});
+}
+
+function bulkWriteProperties({bulkWriteOps, selectorType}){
+  if (!bulkWriteOps.length) return;
+  if (Meteor.isServer){
+    CreatureProperties.rawCollection().bulkWrite(bulkWriteOps, {ordered : false}, function(e){
+      if (e) console.error(e);
+    });
+  } else {
+    _.each(bulkWriteOps, op => {
+      CreatureProperties.update(op.updateMany.filter, op.updateMany.update, {
+        multi: true,
+        selector: {type: selectorType}
+      });
+    });
   }
-});
+}

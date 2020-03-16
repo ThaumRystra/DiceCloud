@@ -27,6 +27,10 @@ let CreaturePropertySchema = new SimpleSchema({
 	'tags.$': {
 		type: String,
 	},
+	disabled: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 for (let key in propertySchemasIndex){
