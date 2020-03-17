@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema.js';
-import { recomputeCreature } from '/imports/api/creature/creatureComputation.js';
+import { recomputeCreature } from '/imports/api/creature/computation/creatureComputation.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
