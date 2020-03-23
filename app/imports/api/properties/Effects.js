@@ -51,12 +51,16 @@ const StoredEffectSchema = new SimpleSchema({
 		},
 }).extend(EffectSchema);
 
-const ComputedEffectSchema = new SimpleSchema({
+const ComputedOnlyEffectSchema = new SimpleSchema({
 	// The computed result of the effect
 	result: {
 		type: SimpleSchema.oneOf(Number, String),
 		optional: true,
 	},
-}).extend(EffectSchema);
+})
 
-export { EffectSchema, StoredEffectSchema, ComputedEffectSchema };
+const ComputedEffectSchema = new SimpleSchema()
+	.extend(ComputedOnlyEffectSchema)
+	.extend(EffectSchema);
+
+export { EffectSchema, StoredEffectSchema, ComputedEffectSchema, ComputedOnlyEffectSchema };

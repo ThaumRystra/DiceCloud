@@ -13,6 +13,7 @@ export default function computeStat(stat, memo){
     stat.value = NaN;
     stat.computationDetails.busyComputing = false;
     stat.computationDetails.error = 'dependencyLoop';
+    console.warn('dependencyLoop', stat);
     return;
   }
   // Compute and aggregate all the effects

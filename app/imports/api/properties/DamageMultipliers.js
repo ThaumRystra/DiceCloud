@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
-// TODO consider damage types as an array that applies to multiple types at once
 
 /*
  * DamageMultipliers are multipliers that affect how much damage is taken from

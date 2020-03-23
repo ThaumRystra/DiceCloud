@@ -1,4 +1,5 @@
 import computedValueOfVariableName from '/imports/api/creature/computation/computedValueOfVariableName.js'
+import * as math from 'mathjs';
 
 export default function evaluateCalculation(string, memo){
   if (!string) return string;
@@ -7,6 +8,7 @@ export default function evaluateCalculation(string, memo){
   try {
     calc = math.parse(string);
   } catch (e) {
+    console.error(e);
     return string;
   }
   // Replace all symbols with known values
@@ -20,7 +22,6 @@ export default function evaluateCalculation(string, memo){
       return node;
     }
   });
-
   // Evaluate the expression to a number or return with substitutions
   try {
     return substitutedCalc.eval();

@@ -34,6 +34,7 @@ export default class ComputationMemo {
     if (this.statsByVariableName[variableName]){
       prop.value = NaN;
       prop.computationDetails.error = 'variableNameCollision';
+      console.warn('variableNameCollision', prop);
       return;
     }
     this.statsByVariableName[variableName] = prop;

@@ -196,13 +196,6 @@ export function updateParent({docRef, parentRef}){
   });
 }
 
-// TODO move these functions to character properties collection
-export function findEnabled(collection, query, options){
-  query.enabled = true;
-  query['ancestors.$.enabled'] = {$not: false};
-  return collection.find(query, options);
-}
-
 export function getName(doc){
   if (doc.name) return name;
   var i = doc.ancestors.length;

@@ -4,7 +4,7 @@ export default function computedValueOfVariableName(sub, memo){
   const stat = memo.statsByVariableName[sub];
   if (!stat) return null;
   if (!stat.computationDetails.computed){
-    computeStat(stat, char);
+    computeStat(stat, memo);
   }
-  return stat.result;
+  return stat.value;
 }

@@ -1,14 +1,10 @@
-// TODO allow abilities to get advantage/disadvantage, making all skills that are based
-// on them disadvantaged as well
-
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.js';
 import computeMemo from '/imports/api/creature/computation/computeMemo.js';
 import getCalculationProperties from '/imports/api/creature/computation/getCalculationProperties.js';
-import logAlterations from '/imports/api/creature/computation/logAlterations.js';
-import * as math from 'mathjs';
+import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -67,10 +63,7 @@ export const recomputeCreature = new ValidatedMethod({
 export function recomputeCreatureById(creatureId){
   let props = getCalculationProperties(creatureId);
   let computationMemo = new ComputationMemo(props);
-  console.log({toCompute: computationMemo});
   computeMemo(computationMemo);
-  console.log({computed: computationMemo});
-  logAlterations(computationMemo);
-  //writeAlteredProps(computationMemo);
+  writeAlteredProperties(computationMemo);
   return computationMemo;
 }

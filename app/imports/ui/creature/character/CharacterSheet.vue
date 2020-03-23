@@ -102,7 +102,7 @@
 	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
 	import PersonaTab from '/imports/ui/creature/character/characterSheetTabs/PersonaTab.vue';
 	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
-	import { recomputeCreature } from '/imports/api/creature/computation/creatureComputation.js';
+	import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
 
 	export default {
 		props: {

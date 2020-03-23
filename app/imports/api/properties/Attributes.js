@@ -67,7 +67,7 @@ let AttributeSchema = new SimpleSchema({
   },
 });
 
-let ComputedAttributeSchema = new SimpleSchema({
+let ComputedOnlyAttributeSchema = new SimpleSchema({
 	// The computed value of the attribute
   value: {
     type: Number,
@@ -78,6 +78,10 @@ let ComputedAttributeSchema = new SimpleSchema({
 		type: SimpleSchema.Integer,
 		optional: true,
 	},
-}).extend(AttributeSchema);
+});
 
-export { AttributeSchema, ComputedAttributeSchema };
+const ComputedAttributeSchema = new SimpleSchema()
+  .extend(ComputedOnlyAttributeSchema)
+  .extend(AttributeSchema);
+
+export { AttributeSchema, ComputedOnlyAttributeSchema, ComputedAttributeSchema };

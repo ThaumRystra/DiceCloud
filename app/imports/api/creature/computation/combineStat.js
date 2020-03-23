@@ -25,7 +25,6 @@ function combineAttribute(stat, aggregator){
 
 function combineSkill(stat, aggregator, memo){
   // Skills are based on some ability Modifier
-  let abilityMod = 0;
   let ability = memo.statsByVariableName[stat.ability]
   if (stat.ability && ability){
     if (!ability.computationDetails.computed){
@@ -48,9 +47,9 @@ function combineSkill(stat, aggregator, memo){
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;
   // Combine everything to get the final result
-  let result = (abilityMod + profBonus + stat.add) * stat.mul;
-  if (result < stat.min) result = stat.min;
-  if (result > stat.max) result = stat.max;
+  let result = (stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
+  if (result < aggregator.min) result = aggregator.min;
+  if (result > aggregator.max) result = aggregator.max;
   result = Math.floor(result);
   if (stat.base > result) result = stat.base;
   stat.value = result;

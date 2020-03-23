@@ -1,4 +1,4 @@
-import {computeCreature} from "./creatureComputation.js";
+import {computeCreature} from "./recomputeCreature.js";
 import assert from "assert";
 
 const makeEffect = function(operation, value){

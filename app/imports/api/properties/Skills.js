@@ -79,7 +79,7 @@ let ComputedOnlySkillSchema = new SimpleSchema({
     allowedValues: [0, 0.5, 1, 2],
 		defaultValue: 0,
   },
-  // Computed number of total conditional benefits
+  // Compiled text of all conditional benefits
   conditionalBenefits: {
     type: Array,
     optional: true,
@@ -87,7 +87,7 @@ let ComputedOnlySkillSchema = new SimpleSchema({
   'conditionalBenefits.$': {
     type: String,
   },
-  // Computed number of things forcing this skill to fail
+  // Compiled text of all roll bonuses
   rollBonuses: {
     type: Array,
     optional: true,
@@ -102,6 +102,8 @@ let ComputedOnlySkillSchema = new SimpleSchema({
   },
 })
 
-let ComputedSkillSchema = ComputedOnlySkillSchema.extend(SkillSchema);
+const ComputedSkillSchema = new SimpleSchema()
+  .extend(ComputedOnlySkillSchema)
+  .extend(SkillSchema);
 
 export { SkillSchema, ComputedSkillSchema, ComputedOnlySkillSchema };
