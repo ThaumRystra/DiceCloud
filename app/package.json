@@ -42,6 +42,29 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^7.0.0-alpha.0",
     "mem": "^6.0.1"
+  },
+  "eslintConfig": {
+    "extends": [
+			"eslint:recommended",
+			"plugin:vue/recommended"
+		],
+    "plugins": ["vue"],
+    "overrides": [
+      {
+        "files": ["*.vue"],
+        "parser": "vue-eslint-parser"
+      }
+    ],
+    "parserOptions": {
+      "ecmaVersion": 6
+    },
+    "env": {
+      "es6": true,
+      "browser": true,
+      "node": true
+    }
   }
 }
