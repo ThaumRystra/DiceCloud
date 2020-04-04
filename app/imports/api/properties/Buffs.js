@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import { Random } from 'meteor/random';
 import { StoredEffectSchema } from '/imports/api/properties/Effects.js';
 
 let BuffSchema = new SimpleSchema({
@@ -42,6 +43,11 @@ let StoredBuffWithIdSchema = new SimpleSchema({
 	_id: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet){
+        return Random.id();
+      }
+    },
   },
 }).extend(StoredBuffSchema);
 

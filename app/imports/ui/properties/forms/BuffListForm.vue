@@ -46,7 +46,7 @@
 
 <script>
 	import BuffForm from '/imports/ui/properties/forms/BuffForm.vue';
-	import { StoredBuffSchema } from '/imports/api/properties/Buffs.js';
+	import { StoredBuffWithIdSchema } from '/imports/api/properties/Buffs.js';
 
 	export default {
 		components: {
@@ -75,7 +75,7 @@
 			},
 			addBuff(){
 				this.addBuffLoading = true;
-				this.$emit('push', {path: [], value: StoredBuffSchema.clean({}), ack: this.acknowledgeAddBuff});
+				this.$emit('push', {path: [], value: StoredBuffWithIdSchema.clean({}), ack: this.acknowledgeAddBuff});
 			},
 		},
 	}
