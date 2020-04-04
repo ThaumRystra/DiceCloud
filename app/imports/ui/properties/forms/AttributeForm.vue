@@ -1,99 +1,105 @@
 <template lang="html">
   <div class="attribute-form">
-		<div class="layout column align-center">
-			<text-field
-				label="Base Value"
-				type="number"
-				class="base-value-field text-xs-center large-format no-flex"
-				:value="model.baseValue"
-				@change="(value, ack) => $emit('change', {path: ['baseValue'], value, ack})"
-				hint="This is the value of the attribute before effects are applied"
-				:error-messages="errors.baseValue"
-				:debounce-time="debounceTime"
-			/>
-		</div>
-		<div class="layout row wrap">
-			<text-field
-				label="Name"
-				:value="model.name"
-				@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
-				:error-messages="errors.name"
-				:debounce-time="debounceTime"
-			/>
-			<text-field
-				label="Variable name"
-				:value="model.variableName"
-				style="flex-basis: 300px;"
-				@change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
-				hint="Use this name in formulae to reference this attribute"
-				:error-messages="errors.variableName"
-				:debounce-time="debounceTime"
-			/>
-		</div>
-		<smart-select
-			label="Type"
-			:items="attributeTypes"
-			:value="model.attributeType"
-			:error-messages="errors.attributeType"
-			:menu-props="{auto: true, lazy: true}"
-			@change="(value, ack) => $emit('change', {path: ['attributeType'], value, ack})"
-			:hint="attributeTypeHints[model.attributeType]"
-			:debounce-time="debounceTime"
-		/>
-		<text-area
-			label="Description"
-			:value="model.description"
-			:error-messages="errors.description"
-			@change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
-			:debounce-time="debounceTime"
-		/>
-		<form-section name="Advanced" standalone>
-			<div class="layout column align-center">
-				<v-switch
-					label="Allow decimal values"
-					class="no-flex"
-					:input-value="model.decimal"
-					:error-messages="errors.decimal"
-					@change="e => $emit('change', {path: ['decimal'], value: !!e})"
-				/>
-				<div class="layout row justify-center" style="align-self: stretch;">
-					<text-field
-						label="Damage"
-						type="number"
-						class="damage-field text-xs-center"
-						style="max-width: 300px;"
-						hint="The attribute's final value is reduced by this amount"
-						:value="model.damage"
-						@change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
-						:error-messages="errors.damage"
-						:debounce-time="debounceTime"
-					/>
-				</div>
-			</div>
-			<div class="layout row wrap">
-				<smart-select
-					label="Reset"
-					clearable
-					style="flex-basis: 300px;"
-					:items="resetOptions"
-					:value="model.reset"
-					:error-messages="errors.reset"
-					:menu-props="{auto: true, lazy: true}"
-					@change="(value, ack) => $emit('change', {path: ['reset'], value: value || '', ack})"
-					:debounce-time="debounceTime"
-				/>
-				<text-field
-					label="Reset Multiplier"
-					type="number"
-					style="flex-basis: 400px;"
-					:value="model.resetMultiplier"
-					:error-messages="errors.resetMultiplier"
-					@change="(value, ack) => $emit('change', {path: ['resetMultiplier'], value, ack})"
-					hint="Some attributes, like hit dice, only reset by half their total on a long rest"
-					:debounce-time="debounceTime"
-				/>
-			</div>
-		</form-section>
+    <div class="layout column align-center">
+      <text-field
+        label="Base Value"
+        type="number"
+        class="base-value-field text-xs-center large-format no-flex"
+        :value="model.baseValue"
+        hint="This is the value of the attribute before effects are applied"
+        :error-messages="errors.baseValue"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['baseValue'], value, ack})"
+      />
+    </div>
+    <div class="layout row wrap">
+      <text-field
+        label="Name"
+        :value="model.name"
+        :error-messages="errors.name"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      />
+      <text-field
+        label="Variable name"
+        :value="model.variableName"
+        style="flex-basis: 300px;"
+        hint="Use this name in formulae to reference this attribute"
+        :error-messages="errors.variableName"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
+      />
+    </div>
+    <smart-select
+      label="Type"
+      :items="attributeTypes"
+      :value="model.attributeType"
+      :error-messages="errors.attributeType"
+      :menu-props="{auto: true, lazy: true}"
+      :hint="attributeTypeHints[model.attributeType]"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['attributeType'], value, ack})"
+    />
+    <text-area
+      label="Description"
+      :value="model.description"
+      :error-messages="errors.description"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+    />
+    <form-section
+      name="Advanced"
+      standalone
+    >
+      <div class="layout column align-center">
+        <v-switch
+          label="Allow decimal values"
+          class="no-flex"
+          :input-value="model.decimal"
+          :error-messages="errors.decimal"
+          @change="e => $emit('change', {path: ['decimal'], value: !!e})"
+        />
+        <div
+          class="layout row justify-center"
+          style="align-self: stretch;"
+        >
+          <text-field
+            label="Damage"
+            type="number"
+            class="damage-field text-xs-center"
+            style="max-width: 300px;"
+            hint="The attribute's final value is reduced by this amount"
+            :value="model.damage"
+            :error-messages="errors.damage"
+            :debounce-time="debounceTime"
+            @change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
+          />
+        </div>
+      </div>
+      <div class="layout row wrap">
+        <smart-select
+          label="Reset"
+          clearable
+          style="flex-basis: 300px;"
+          :items="resetOptions"
+          :value="model.reset"
+          :error-messages="errors.reset"
+          :menu-props="{auto: true, lazy: true}"
+          :debounce-time="debounceTime"
+          @change="(value, ack) => $emit('change', {path: ['reset'], value: value || '', ack})"
+        />
+        <text-field
+          label="Reset Multiplier"
+          type="number"
+          style="flex-basis: 400px;"
+          :value="model.resetMultiplier"
+          :error-messages="errors.resetMultiplier"
+          hint="Some attributes, like hit dice, only reset by half their total on a long rest"
+          :debounce-time="debounceTime"
+          @change="(value, ack) => $emit('change', {path: ['resetMultiplier'], value, ack})"
+        />
+      </div>
+    </form-section>
   </div>
 </template>
 
@@ -113,7 +119,10 @@
 				type: Object,
 				default: () => ({}),
 			},
-			debounceTime: Number,
+      debounceTime: {
+        type: Number,
+        default: undefined,
+      },
 		},
 		data(){
 			let data = {

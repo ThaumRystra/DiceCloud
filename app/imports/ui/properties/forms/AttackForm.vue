@@ -1,5 +1,9 @@
 <template lang="html">
-  <action-form attack-form v-bind="$attrs" v-on="$listeners"/>
+  <action-form
+    attack-form
+    v-bind="$attrs"
+    v-on="$listeners"
+  />
 </template>
 
 <script>

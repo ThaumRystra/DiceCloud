@@ -1,7 +1,10 @@
 <template lang="html">
-	<v-expansion-panel popout expand>
-		<slot/>
-	</v-expansion-panel>
+  <v-expansion-panel
+    popout
+    expand
+  >
+    <slot />
+  </v-expansion-panel>
 </template>
 
 <script>

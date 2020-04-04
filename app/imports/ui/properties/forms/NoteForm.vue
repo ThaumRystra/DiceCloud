@@ -1,19 +1,19 @@
 <template lang="html">
   <div class="feature-form">
-  	<text-field
-			label="Name"
-			:value="model.name"
-			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
-			:error-messages="errors.name"
-			:debounce-time="debounceTime"
-		/>
-		<text-area
-			label="Description"
-			:value="model.description"
-			:error-messages="errors.description"
-			@change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
-			:debounce-time="debounceTime"
-		/>
+    <text-field
+      label="Name"
+      :value="model.name"
+      :error-messages="errors.name"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+    />
+    <text-area
+      label="Description"
+      :value="model.description"
+      :error-messages="errors.description"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+    />
   </div>
 </template>
 
@@ -28,7 +28,10 @@
 				type: Object,
 				default: () => ({}),
 			},
-			debounceTime: Number,
+      debounceTime: {
+        type: Number,
+        default: undefined,
+      },
 		},
 	};
 </script>

@@ -1,59 +1,66 @@
 <template lang="html">
-	<div class="effect-form">
-		<text-field
-			label="Name"
-			:value="model.name"
-			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
-			:error-messages="errors.name"
-			:debounce-time="debounceTime"
-		/>
-		<div class="layout row wrap justify-start">
-			<smart-select
-				label="Operation"
-				append-icon="arrow_drop_down"
-				class="mx-2"
-				:error-messages="errors.operation"
-				:menu-props="{transition: 'slide-y-transition', lazy: true}"
-				:items="operations"
-				:value="model.operation"
-				@change="(value, ack) => $emit('change', {path: ['operation'], value, ack})"
-			>
-				<v-icon
-					class="icon"
-					slot="prepend"
-					:class="iconClass"
-				>{{displayedIcon}}</v-icon>
-				<template slot="item" slot-scope="item">
-					<v-icon
-						class="icon mr-2"
-					>{{getEffectIcon(item.item.value, 1)}}</v-icon>
-					{{item.item.text}}
-				</template>
-			</smart-select>
+  <div class="effect-form">
+    <text-field
+      label="Name"
+      :value="model.name"
+      :error-messages="errors.name"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+    />
+    <div class="layout row wrap justify-start">
+      <smart-select
+        label="Operation"
+        append-icon="arrow_drop_down"
+        class="mx-2"
+        :error-messages="errors.operation"
+        :menu-props="{transition: 'slide-y-transition', lazy: true}"
+        :items="operations"
+        :value="model.operation"
+        @change="(value, ack) => $emit('change', {path: ['operation'], value, ack})"
+      >
+        <v-icon
+          slot="prepend"
+          class="icon"
+          :class="iconClass"
+        >
+          {{ displayedIcon }}
+        </v-icon>
+        <template
+          slot="item"
+          slot-scope="item"
+        >
+          <v-icon
+            class="icon mr-2"
+          >
+            {{ getEffectIcon(item.item.value, 1) }}
+          </v-icon>
+          {{ item.item.text }}
+        </template>
+      </smart-select>
 
-			<text-field
-				label="Value"
-				class="mr-2"
-				:persistent-hint="needsValue"
-				:value="needsValue ? (model.calculation) : ' '"
-				:disabled="!needsValue"
-				:error-messages="errors.calculation"
-				:hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
-				:debounce-time="debounceTime"
-				@change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
-			/>
+      <text-field
+        label="Value"
+        class="mr-2"
+        :persistent-hint="needsValue"
+        :value="needsValue ? (model.calculation) : ' '"
+        :disabled="!needsValue"
+        :error-messages="errors.calculation"
+        :hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
+      />
 
-			<text-field
-				label="Stat"
-				class="mr-2"
-				:value="model.stats[0]"
-				:items="stats"
-				:error-messages="errors.stats"
-				:debounce-time="debounceTime"
-				@change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
-			/>
-		</div>
-	</div>
+      <text-field
+        label="Stat"
+        class="mr-2"
+        :value="model.stats[0]"
+        :items="stats"
+        :error-messages="errors.stats"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -72,8 +79,12 @@
 			},
 			stats: {
 				type: Array,
+        default: () => [],
 			},
-			debounceTime: Number,
+      debounceTime: {
+        type: Number,
+        default: undefined,
+      },
 		},
 		data(){ return {
 			displayedIcon: 'add',
@@ -104,32 +115,33 @@
 					case 'passiveAdd': return true;
 					case 'fail': return false;
 					case 'conditional': return true;
+          default: return true;
 				}
 			},
-		},
-		methods: {
-			getEffectIcon,
 		},
 		watch: {
 			'model.operation': {
 				immediate: true,
-				handler(newValue, oldValue, e){
+				handler(newValue, oldValue){
 					let newIcon = getEffectIcon(newValue, 1);
 					if (!oldValue){
 						// Skip animation
 						this.displayedIcon = newIcon;
 					} else {
-						this.iconClass="leaving";
+						this.iconClass='leaving';
 						setTimeout(() => {
 							this.displayedIcon = newIcon;
-							this.iconClass="arriving";
+							this.iconClass='arriving';
 							requestAnimationFrame(() => {
-								this.iconClass="";
+								this.iconClass='';
 							});
 						}, ICON_SPIN_DURATION / 2);
 					}
 				},
 			},
+		},
+		methods: {
+			getEffectIcon,
 		}
 	};
 </script>

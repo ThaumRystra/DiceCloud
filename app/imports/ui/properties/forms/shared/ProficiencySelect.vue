@@ -1,19 +1,21 @@
 <template lang="html">
-	<smart-select
-		append-icon="arrow_drop_down"
-		class="ml-3"
-		v-bind="$attrs"
-		:menu-props="{transition: 'slide-y-transition', lazy: true}"
-		:items="values"
-		:value="value"
-		@change="(value, ack) => $emit('change', value, ack)"
-	>
-		<v-icon
-			class="icon"
-			slot="prepend"
-			:class="iconClass"
-		>{{displayedIcon}}</v-icon>
-	</smart-select>
+  <smart-select
+    append-icon="arrow_drop_down"
+    class="ml-3"
+    v-bind="$attrs"
+    :menu-props="{transition: 'slide-y-transition', lazy: true}"
+    :items="values"
+    :value="value"
+    @change="(value, ack) => $emit('change', value, ack)"
+  >
+    <v-icon
+      slot="prepend"
+      class="icon"
+      :class="iconClass"
+    >
+      {{ displayedIcon }}
+    </v-icon>
+  </smart-select>
 </template>
 
 <script>
@@ -32,7 +34,10 @@
 
 	export default {
 		props: {
-			value: Number,
+			value: {
+        type: Number,
+        default: 1,
+      },
 		},
 		data(){ return {
 			displayedIcon: 'radio_button_unchecked',
@@ -46,18 +51,18 @@
 		watch: {
 			'value': {
 				immediate: true,
-				handler(newValue, oldValue, e){
+				handler(newValue, oldValue){
 					let newIcon = proficiencyIcon(newValue);
 					if (!oldValue){
 						// Skip animation
 						this.displayedIcon = newIcon;
 					} else {
-						this.iconClass="leaving";
+						this.iconClass='leaving';
 						setTimeout(() => {
 							this.displayedIcon = newIcon;
-							this.iconClass="arriving";
+							this.iconClass='arriving';
 							requestAnimationFrame(() => {
-								this.iconClass="";
+								this.iconClass='';
 							});
 						}, ICON_SPIN_DURATION / 2);
 					}

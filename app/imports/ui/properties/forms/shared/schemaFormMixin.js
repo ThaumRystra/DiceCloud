@@ -13,7 +13,7 @@ function resolvePath(model, path){
   let key = arrayPath.slice(-1);
   let object = get(model, objectPath);
   return {object, key};
-};
+}
 
 const schemaFormMixin = {
 	data(){ return {
@@ -23,7 +23,7 @@ const schemaFormMixin = {
 		errors(){
 			this.valid = true;
 			if (!this.model){
-				throw new Error("this.model must be set");
+				throw new Error('this.model must be set');
 			}
 			if (!this.validationContext) return {};
 			let cleanModel = this.validationContext.clean(this.model, {

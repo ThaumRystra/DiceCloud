@@ -1,46 +1,43 @@
 <template lang="html">
-	<div>
-		<div class="layout row">
-			<text-field
-				label="Damage"
-				style="flex-basis: 300px;"
-				:value="model.damage"
-				@change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
-				:error-messages="errors.damage"
-				:debounce-time="debounceTime"
-			/>
-			<smart-select
-				label="Damage Type"
-				style="flex-basis: 200px;"
-				:items="DAMAGE_TYPES"
-				:value="model.damageType"
-				:error-messages="errors.damageType"
-				:menu-props="{auto: true}"
-				@change="(value, ack) => $emit('change', {path: ['damageType'], value, ack})"
-				:debounce-time="debounceTime"
-			/>
-		</div>
-		<smart-select
-			v-if="parentTarget == 'multipleTargets'"
-			label="Target"
-			:hint="targetOptionHint"
-			:items="targetOptions"
-			:value="model.target"
-			:error-messages="errors.target"
-			:menu-props="{auto: true, lazy: true}"
-			@change="(value, ack) => $emit('change', {path: ['target'], value, ack})"
-			:debounce-time="debounceTime"
-		/>
-	</div>
+  <div>
+    <div class="layout row">
+      <text-field
+        label="Damage"
+        style="flex-basis: 300px;"
+        :value="model.damage"
+        :error-messages="errors.damage"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
+      />
+      <smart-select
+        label="Damage Type"
+        style="flex-basis: 200px;"
+        :items="DAMAGE_TYPES"
+        :value="model.damageType"
+        :error-messages="errors.damageType"
+        :menu-props="{auto: true}"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['damageType'], value, ack})"
+      />
+    </div>
+    <smart-select
+      v-if="parentTarget == 'multipleTargets'"
+      label="Target"
+      :hint="targetOptionHint"
+      :items="targetOptions"
+      :value="model.target"
+      :error-messages="errors.target"
+      :menu-props="{auto: true, lazy: true}"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['target'], value, ack})"
+    />
+  </div>
 </template>
 
 <script>
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 export default {
-	data(){return{
-		DAMAGE_TYPES,
-	}},
 	props: {
 		model: {
 			type: Object,
@@ -52,9 +49,16 @@ export default {
 		},
 		parentTarget: {
 			type: String,
+      required: true,
 		},
-		debounceTime: Number,
+    debounceTime: {
+      type: Number,
+      default: undefined,
+    },
 	},
+	data(){return{
+		DAMAGE_TYPES,
+	}},
 	computed: {
 		targetOptions(){
 			return [

@@ -1,15 +1,15 @@
 <template lang="html">
   <div class="folder-form">
-		<div class="layout row wrap">
-			<text-field
-				label="Name"
-				style="flex-basis: 300px;"
-				:value="model.name"
-				@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
-				:error-messages="errors.name"
-				:debounce-time="debounceTime"
-			/>
-		</div>
+    <div class="layout row wrap">
+      <text-field
+        label="Name"
+        style="flex-basis: 300px;"
+        :value="model.name"
+        :error-messages="errors.name"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      />
+    </div>
   </div>
 </template>
 
@@ -24,7 +24,10 @@
 				type: Object,
 				default: () => ({}),
 			},
-			debounceTime: Number,
+      debounceTime: {
+        type: Number,
+        default: undefined,
+      },
 		},
 	};
 </script>
