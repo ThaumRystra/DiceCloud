@@ -53,7 +53,7 @@
       },
       parentTarget: {
         type: String,
-        required: true,
+        default: undefined,
       },
       buffsStored: {
         type: Boolean,

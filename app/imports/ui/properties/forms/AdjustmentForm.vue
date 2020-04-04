@@ -47,7 +47,7 @@ export default {
 		},
 		parentTarget: {
 			type: String,
-      required: true,
+      default: undefined,
 		},
     debounceTime: {
       type: Number,
