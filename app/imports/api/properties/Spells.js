@@ -1,3 +1,4 @@
+import { AttackSchema } from '/imports/api/properties/Attacks.js';
 import SimpleSchema from 'simpl-schema';
 
 const magicSchools = [
@@ -11,7 +12,9 @@ const magicSchools = [
 	'transmutation',
 ];
 
-let SpellSchema = new SimpleSchema({
+let SpellSchema = new SimpleSchema({})
+.extend(AttackSchema)
+.extend({
 	name: {
 		type: String,
 		optional: true,
@@ -22,6 +25,11 @@ let SpellSchema = new SimpleSchema({
 		type: Boolean,
 		optional: true,
 	},
+  // This spell ignores spell slot rules
+  castWithoutSpellSlots: {
+    type: Boolean,
+    optional: true,
+  },
 	// Spell lists that this spell appears on
   spellLists: {
     type: Array,

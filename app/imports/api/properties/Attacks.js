@@ -11,19 +11,13 @@ let AttackSchema = new SimpleSchema()
       defaultValue: 'strength.modifier + proficiencyBonus',
       optional: true,
     },
-    // If set reference an item whose quantity is reduced by 1 every time this
-    // attack is rolled
-    ammunition: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
-      optional: true,
-    },
     // Set better defaults for the action
     actionType: {
+      type: String,
       defaultValue: 'attack',
     },
     tags: {
-  		type: Array,
+      type: Array,
       defaultValue: ['attack'],
     },
     'tags.$': {

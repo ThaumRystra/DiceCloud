@@ -59,7 +59,12 @@
         "files": [
           "*.vue"
         ],
-        "parser": "vue-eslint-parser"
+        "parser": "vue-eslint-parser",
+        "rules": {
+          "vue/component-tags-order": ["error", {
+            "order": ["template", "script", "style"]
+          }]
+        }
       }
     ],
     "parserOptions": {

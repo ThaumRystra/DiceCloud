@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import ResourceSchema from '/imports/api/properties/subSchemas/ResourceSchema.js'
 import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
 /*
@@ -7,7 +8,9 @@ import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
  * Any actions that are children of this action will be considered alternatives
  * to this action
  */
-let ActionSchema = new SimpleSchema({
+let ActionSchema = new SimpleSchema({})
+.extend(ResourceSchema)
+.extend({
 	name: {
 		type: String,
 		optional: true,
@@ -59,7 +62,7 @@ let ActionSchema = new SimpleSchema({
 	// How this action's uses are reset automatically
 	reset: {
 		type: String,
-		allowedValues: ["longRest", "shortRest"],
+		allowedValues: ['longRest', 'shortRest'],
 		optional: true,
 	},
 });
