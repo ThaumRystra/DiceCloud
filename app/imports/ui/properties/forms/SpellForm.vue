@@ -100,30 +100,42 @@
       :debounce-time="debounceTime"
       @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
     />
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <v-combobox
-        label="Spell lists"
-        multiple
-        chips
-        deletable-chips
-        box
-        :value="model.spellLists"
-        :error-messages="errors.spellLists"
-        @change="(value) => $emit('change', {path: ['spellLists'], value})"
-      />
-    </form-section>
+    <form-sections>
+      <form-section
+        name="Advanced"
+      >
+        <v-combobox
+          label="Spell lists"
+          multiple
+          chips
+          deletable-chips
+          box
+          :value="model.spellLists"
+          :error-messages="errors.spellLists"
+          @change="(value) => $emit('change', {path: ['spellLists'], value})"
+        />
+      </form-section>
+      <form-section
+        name="Casting"
+      >
+        <action-form
+          v-bind="$props"
+          v-on="$listeners"
+        />
+      </form-section>
+    </form-sections>
   </div>
 </template>
 
 <script>
-	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
+  import ActionForm from '/imports/ui/properties/forms/ActionForm.vue'
 
 	export default {
 		components: {
+      FormSections,
 			FormSection,
+      ActionForm,
 		},
 		props: {
 			model: {

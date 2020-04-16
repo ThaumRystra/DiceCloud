@@ -1,22 +1,23 @@
 <template lang="html">
-	<v-list-tile class="ability-list-tile" v-on="hasClickListener ? {click} : {}">
+  <v-list-tile
+    class="ability-list-tile"
+    v-on="hasClickListener ? {click} : {}"
+  >
+    <v-list-tile-action class="mr-4">
+      <div class="display-1 mod">
+        {{ numberToSignedString(mod) }}
+      </div>
+      <div class="title value">
+        {{ value }}
+      </div>
+    </v-list-tile-action>
 
-		<v-list-tile-action class="mr-4">
-			<div class="display-1 mod">
-				{{numberToSignedString(mod)}}
-			</div>
-			<div class="title value">
-				{{value}}
-			</div>
-		</v-list-tile-action>
-
-	  <v-list-tile-content>
-			<v-list-tile-title>
-				{{name}}
-			</v-list-tile-title>
-	  </v-list-tile-content>
-
-	</v-list-tile>
+    <v-list-tile-content>
+      <v-list-tile-title>
+        {{ name }}
+      </v-list-tile-title>
+    </v-list-tile-content>
+  </v-list-tile>
 </template>
 
 <script>
@@ -27,15 +28,15 @@ export default {
 		mod: Number,
 		name: String,
 	},
+	computed: {
+		hasClickListener(){
+      return this.$listeners && this.$listeners.click
+		},
+	},
 	methods: {
 		numberToSignedString,
 		click(e){
 			this.$emit('click', e);
-		},
-	},
-	computed: {
-		hasClickListener(){
-    	return this.$listeners && this.$listeners.click
 		},
 	}
 }

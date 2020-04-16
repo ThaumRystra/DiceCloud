@@ -1,4 +1,4 @@
-import { AttackSchema } from '/imports/api/properties/Attacks.js';
+import { ActionSchema } from '/imports/api/properties/Actions.js';
 import SimpleSchema from 'simpl-schema';
 
 const magicSchools = [
@@ -13,7 +13,7 @@ const magicSchools = [
 ];
 
 let SpellSchema = new SimpleSchema({})
-.extend(AttackSchema)
+.extend(ActionSchema)
 .extend({
 	name: {
 		type: String,
@@ -27,6 +27,10 @@ let SpellSchema = new SimpleSchema({})
 	},
   // This spell ignores spell slot rules
   castWithoutSpellSlots: {
+    type: Boolean,
+    optional: true,
+  },
+  hasAttackRoll: {
     type: Boolean,
     optional: true,
   },
@@ -87,6 +91,11 @@ let SpellSchema = new SimpleSchema({})
 		defaultValue: 'abjuration',
 		allowedValues: magicSchools,
 	},
+  // Set better defaults for the action
+  actionType: {
+    type: String,
+    defaultValue: 'spell',
+  },
 });
 
 export { SpellSchema };

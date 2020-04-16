@@ -1,130 +1,172 @@
 <template lang="html">
-	<div class="stats-tab ma-2">
+  <div class="stats-tab ma-2">
+    <div class="px-2 pt-2">
+      <health-bar-card-container :creature-id="creatureId" />
+    </div>
 
-		<div class="px-2 pt-2">
-			<health-bar-card-container :creature-id="creatureId"/>
-		</div>
+    <column-layout>
+      <div class="ability-scores">
+        <v-card>
+          <v-list>
+            <template v-for="(ability, index) in abilities">
+              <v-divider
+                v-if="index !== 0"
+                :key="index"
+              />
+              <ability-list-tile
+                :key="ability._id"
+                v-bind="ability"
+                :data-id="ability._id"
+                @click="clickProperty({_id: ability._id})"
+              />
+            </template>
+          </v-list>
+        </v-card>
+      </div>
 
-		<column-layout>
+      <div
+        v-for="stat in stats"
+        :key="stat._id"
+        class="stat"
+      >
+        <attribute-card
+          v-bind="stat"
+          :data-id="stat._id"
+          @click="clickProperty({_id: stat._id})"
+        />
+      </div>
 
-			<div class="ability-scores">
-				<v-card>
-					<v-list>
-						<template v-for="(ability, index) in abilities">
-							<v-divider v-if="index !== 0"/>
-							<ability-list-tile
-								v-bind="ability"
-								:key="ability._id"
-								:data-id="ability._id"
-								@click="clickProperty({_id: ability._id})"
-							/>
-						</template>
-					</v-list>
-				</v-card>
-			</div>
+      <div
+        v-for="modifier in modifiers"
+        :key="modifier._id"
+        class="modifier"
+      >
+        <attribute-card
+          modifier
+          v-bind="modifier"
+          :data-id="modifier._id"
+          @click="clickProperty({_id: modifier._id})"
+        />
+      </div>
 
-			<div v-for="stat in stats" class="stat" :key="stat._id">
-				<attribute-card
-					v-bind="stat"
-					:data-id="stat._id"
-					@click="clickProperty({_id: stat._id})"
-				/>
-			</div>
+      <div
+        v-for="check in checks"
+        :key="check._id"
+        class="check"
+      >
+        <attribute-card
+          modifier
+          v-bind="check"
+          :data-id="check._id"
+          @click="clickProperty({_id: check._id})"
+        />
+      </div>
 
-			<div v-for="modifier in modifiers" class="modifier" :key="modifier._id">
-				<attribute-card modifier
-					v-bind="modifier"
-					:data-id="modifier._id"
-					@click="clickProperty({_id: modifier._id})"
-				/>
-			</div>
+      <div class="hit-dice">
+        <v-card>
+          <v-list>
+            <v-subheader>Hit Dice</v-subheader>
+            <template v-for="(hitDie, index) in hitDice">
+              <v-divider
+                v-if="index !== 0"
+                :key="hitDie._id + 'divider'"
+              />
+              <hit-dice-list-tile
+                :key="hitDie._id"
+                v-bind="hitDie"
+                :data-id="hitDie._id"
+                @click="clickProperty({_id: hitDie._id})"
+                @change="e => incrementChange(hitDie._id, e)"
+              />
+            </template>
+          </v-list>
+        </v-card>
+      </div>
 
-			<div v-for="check in checks" class="check" :key="check._id">
-				<attribute-card modifier
-					v-bind="check"
-					:data-id="check._id"
-					@click="clickProperty({_id: check._id})"
-				/>
-			</div>
+      <div
+        v-show="true"
+        class="saving-throws"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>Saving Throws</v-subheader>
+            <skill-list-tile
+              v-for="save in savingThrows"
+              :key="save._id"
+              v-bind="save"
+              :data-id="save._id"
+              @click="clickProperty({_id: save._id})"
+            />
+          </v-list>
+        </v-card>
+      </div>
 
-			<div class="hit-dice">
-				<v-card>
-					<v-list>
-						<v-subheader>Hit Dice</v-subheader>
-						<template v-for="(hitDie, index) in hitDice">
-							<v-divider v-if="index !== 0" :key="hitDice._id + 'divider'"/>
-							<hit-dice-list-tile
-								v-bind="hitDie"
-								:data-id="hitDie._id"
-								:key="hitDice._id"
-								@click="clickProperty({_id: hitDie._id})"
-								@change="e => incrementChange(hitDie._id, e)"
-							/>
-						</template>
-					</v-list>
-				</v-card>
-			</div>
+      <div class="skills">
+        <v-card>
+          <v-list>
+            <v-subheader>Skills</v-subheader>
+            <skill-list-tile
+              v-for="skill in skills"
+              :key="skill._id"
+              v-bind="skill"
+              :data-id="skill._id"
+              @click="clickProperty({_id: skill._id})"
+            />
+          </v-list>
+        </v-card>
+      </div>
 
-			<div class="saving-throws" v-show="true">
-				<v-card>
-					<v-list>
-						<v-subheader>Saving Throws</v-subheader>
-						<skill-list-tile
-							v-for="save in savingThrows"
-							v-bind="save"
-							:key="save._id"
-							:data-id="save._id"
-							@click="clickProperty({_id: save._id})"
-						/>
-					</v-list>
-				</v-card>
-			</div>
+      <div
+        v-for="resource in resources"
+        :key="resource._id"
+        class="resource"
+      >
+        <resource-card
+          v-bind="resource"
+          :data-id="resource._id"
+          @click="clickProperty({_id: resource._id})"
+          @change="e => incrementChange(resource._id, e)"
+        />
+      </div>
 
-			<div class="skills">
-				<v-card>
-					<v-list>
-						<v-subheader>Skills</v-subheader>
-						<skill-list-tile
-							v-for="skill in skills"
-							v-bind="skill"
-							:key="skill._id"
-							:data-id="skill._id"
-							@click="clickProperty({_id: skill._id})"
-						/>
-					</v-list>
-				</v-card>
-			</div>
+      <div
+        v-if="spellSlots.length"
+        class="spell-slots"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>Spell Slots</v-subheader>
+            <spell-slot-list-tile
+              v-for="spellSlot in spellSlots"
+              :key="spellSlot._id"
+              v-bind="spellSlot"
+              :data-id="spellSlot._id"
+              @click="clickProperty({_id: spellSlot._id})"
+              @change="e => incrementChange(spellSlot._id, e)"
+            />
+          </v-list>
+        </v-card>
+      </div>
 
-			<div
-				v-for="resource in resources"
-				:key="resource._id"
-				class="resource"
-			>
-				<resource-card
-					v-bind="resource"
-					:data-id="resource._id"
-					@click="clickProperty({_id: resource._id})"
-					@change="e => incrementChange(resource._id, e)"
-				/>
-			</div>
-
-			<div class="spell-slots" v-if="spellSlots.length">
-				<v-card>
-					<v-list>
-						<v-subheader>Spell Slots</v-subheader>
-						<spell-slot-list-tile
-							v-for="spellSlot in spellSlots"
-							v-bind="spellSlot"
-							:key="spellSlot._id"
-							:data-id="spellSlot._id"
-							@click="clickProperty({_id: spellSlot._id})"
-							@change="e => incrementChange(spellSlot._id, e)"
-						/>
-					</v-list>
-				</v-card>
-			</div>
-		</column-layout>
-	</div>
+      <div
+        v-if="actions.length"
+        class="actions"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>Actions</v-subheader>
+            <action-list-tile
+              v-for="action in actions"
+              :key="action._id"
+              :model="action"
+              :data-id="action._id"
+              @click="clickProperty({_id: action._id})"
+            />
+          </v-list>
+        </v-card>
+      </div>
+    </column-layout>
+  </div>
 </template>
 
 <script>
@@ -137,8 +179,7 @@
 	import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
 	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
-
-	let adjustAttribute = insertAttribute = () => console.error("this shit isn't defined");
+  import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
 
 	const getAttributeOfType = function(charId, type){
 		return CreatureProperties.find({
@@ -164,9 +205,6 @@
 	};
 
 	export default {
-		props: {
-			creatureId: String,
-		},
 		components: {
 			AbilityListTile,
 			AttributeCard,
@@ -176,6 +214,13 @@
 			SkillListTile,
 			ResourceCard,
 			SpellSlotListTile,
+      ActionListTile,
+		},
+		props: {
+			creatureId: {
+        type: String,
+        required: true,
+      },
 		},
 		meteor: {
 			abilities(){
@@ -243,6 +288,14 @@
 					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'skill',
+				}, {
+					sort: {order: 1},
+				});
+			},
+      actions(){
+				return CreatureProperties.find({
+					'ancestors.id': this.creatureId,
+					type: 'action',
 				}, {
 					sort: {order: 1},
 				});

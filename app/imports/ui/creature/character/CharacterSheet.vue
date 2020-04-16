@@ -1,92 +1,115 @@
 <template>
-	<div class="character-sheet layout column">
+  <div class="character-sheet layout column">
     <v-toolbar
-			app clipped-left
-			:color="character.color || 'secondary'"
-			:dark="isDarkColor(character.color || theme.primary)"
-		>
-      <v-btn v-if="showMenuButton" flat icon @click="toggleDrawer">
+      app
+      clipped-left
+      :color="character.color || 'secondary'"
+      :dark="isDarkColor(character.color || theme.primary)"
+    >
+      <v-btn
+        v-if="showMenuButton"
+        flat
+        icon
+        @click="toggleDrawer"
+      >
         <v-icon>menu</v-icon>
       </v-btn>
-			<div class="flex">{{character.name}}</div>
-			<v-btn flat icon @click="recompute(character._id)">
+      <div class="flex">
+        {{ character.name }}
+      </div>
+      <v-btn
+        flat
+        icon
+        @click="recompute(character._id)"
+      >
         <v-icon>refresh</v-icon>
       </v-btn>
-			<v-menu bottom left transition="slide-y-transition" data-id="creature-menu">
-	      <template v-slot:activator="{ on }">
-	 				<v-btn icon v-on="on">
-	 					<v-icon>more_vert</v-icon>
-	 				</v-btn>
-	 			</template>
-	 			<v-list>
-	 				<v-list-tile @click="deleteCharacter">
-	 					<v-list-tile-title>
-	 						<v-icon>delete</v-icon> Delete
-	 					</v-list-tile-title>
-	 				</v-list-tile>
-					<v-list-tile @click="showCharacterForm">
-	 					<v-list-tile-title>
-	 						<v-icon>create</v-icon> Edit details
-	 					</v-list-tile-title>
-	 				</v-list-tile>
-					<v-list-tile @click="showShareDialog">
-	 					<v-list-tile-title>
-	 						<v-icon>share</v-icon> Sharing
-	 					</v-list-tile-title>
-	 				</v-list-tile>
-	 			</v-list>
- 		 	</v-menu>
-			<v-tabs
-				v-model="tab"
-				slot="extension"
-				centered
-				grow
-			>
-				<v-tab>
-					Stats
-				</v-tab>
-				<v-tab>
-					Features
-				</v-tab>
-				<v-tab>
-					Inventory
-				</v-tab>
-				<v-tab>
-					Spells
-				</v-tab>
-				<v-tab>
-					Persona
-				</v-tab>
-				<v-tab>
-					Tree
-				</v-tab>
-			</v-tabs>
+      <v-menu
+        bottom
+        left
+        transition="slide-y-transition"
+        data-id="creature-menu"
+      >
+        <template #activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-tile @click="deleteCharacter">
+            <v-list-tile-title>
+              <v-icon>delete</v-icon> Delete
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="showCharacterForm">
+            <v-list-tile-title>
+              <v-icon>create</v-icon> Edit details
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="showShareDialog">
+            <v-list-tile-title>
+              <v-icon>share</v-icon> Sharing
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <v-tabs
+        slot="extension"
+        v-model="tab"
+        centered
+        grow
+      >
+        <v-tab>
+          Stats
+        </v-tab>
+        <v-tab>
+          Features
+        </v-tab>
+        <v-tab>
+          Inventory
+        </v-tab>
+        <v-tab>
+          Spells
+        </v-tab>
+        <v-tab>
+          Persona
+        </v-tab>
+        <v-tab>
+          Tree
+        </v-tab>
+      </v-tabs>
     </v-toolbar>
-    <v-content class="flex" v-if="$subReady.singleCharacter">
-			<v-tabs-items v-model="tab">
-				<v-tab-item>
-					<stats-tab :creature-id="creatureId"/>
-				</v-tab-item>
-				<v-tab-item>
-					<features-tab :creature-id="creatureId"/>
-				</v-tab-item>
-				<v-tab-item>
-					<inventory-tab :creature-id="creatureId"/>
-				</v-tab-item>
-				<v-tab-item>
-					<spells-tab :creature-id="creatureId"/>
-				</v-tab-item>
-				<v-tab-item>
-					<persona-tab :creature-id="creatureId"/>
-				</v-tab-item>
-				<v-tab-item>
-					<tree-tab :creature-id="creatureId"/>
-				</v-tab-item>
-    	</v-tabs-items>
+    <v-content
+      v-if="$subReady.singleCharacter"
+      class="flex"
+    >
+      <v-tabs-items v-model="tab">
+        <v-tab-item>
+          <stats-tab :creature-id="creatureId" />
+        </v-tab-item>
+        <v-tab-item>
+          <features-tab :creature-id="creatureId" />
+        </v-tab-item>
+        <v-tab-item>
+          <inventory-tab :creature-id="creatureId" />
+        </v-tab-item>
+        <v-tab-item>
+          <spells-tab :creature-id="creatureId" />
+        </v-tab-item>
+        <v-tab-item>
+          <persona-tab :creature-id="creatureId" />
+        </v-tab-item>
+        <v-tab-item>
+          <tree-tab :creature-id="creatureId" />
+        </v-tab-item>
+      </v-tabs-items>
     </v-content>
-		<v-content v-else>
-			<v-progress-circular indeterminate />
-		</v-content>
+    <v-content v-else>
+      <v-progress-circular indeterminate />
+    </v-content>
   </div>
 </template>
 
@@ -94,7 +117,7 @@
 	import Creatures from '/imports/api/creature/Creatures.js';
 	import removeCreature from '/imports/api/creature/removeCreature.js';
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
-	import { mapMutations } from "vuex";
+	import { mapMutations } from 'vuex';
 	import { theme } from '/imports/ui/theme.js';
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
@@ -105,10 +128,6 @@
 	import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
 
 	export default {
-		props: {
-			showMenuButton: Boolean,
-			creatureId: String,
-		},
 		components: {
 			StatsTab,
 			FeaturesTab,
@@ -117,13 +136,20 @@
 			PersonaTab,
 			TreeTab,
 		},
+		props: {
+			showMenuButton: Boolean,
+			creatureId: {
+        type: String,
+        required: true,
+      },
+		},
 		data(){return {
 			theme,
 			tab: 0,
 		}},
 		methods: {
       ...mapMutations([
-        "toggleDrawer",
+        'toggleDrawer',
       ]),
 			recompute(charId){
 				recomputeCreature.call({charId});
@@ -160,7 +186,7 @@
 					},
 					callback(confirmation){
 						if(!confirmation) return;
-						removeCreature.call({charId: that.creatureId}, (error, result) => {
+						removeCreature.call({charId: that.creatureId}, (error) => {
 							if (error) {
 								console.error(error);
 							} else {
@@ -174,7 +200,7 @@
     },
 		meteor: {
 			$subscribe: {
-	      'singleCharacter'(){
+        'singleCharacter'(){
 					return [this.creatureId];
 				},
 			},
@@ -182,6 +208,9 @@
 				return Creatures.findOne(this.creatureId) || {};
 			},
 		},
+    provide: {
+      creature: this.character,
+    }
 	}
 </script>
 
