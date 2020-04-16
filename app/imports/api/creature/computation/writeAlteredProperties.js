@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { isEqual, forOwn } from 'lodash';
 import { ComputedOnlySkillSchema } from '/imports/api/properties/Skills.js';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes.js';
@@ -28,7 +29,10 @@ export default function writeAlteredProperties(memo){
     for (let key of schema.objectKeys()){
       if (!isEqual(original[key], changed[key])){
         if (!op) op = newOperation(_id, changed.type);
-        op.updateOne.update.$set[key] = changed[key];
+        let value = changed[key];
+        // Use null instead of undefined because it works with the $set operator
+        if (value === undefined) value = null;
+        op.updateOne.update.$set[key] = value;
       }
     }
     if (op){
@@ -42,14 +46,14 @@ function newOperation(_id, type){
   let newOp = {
     updateOne: {
       filter: {_id},
-      update: {$set: {}},
+      update: {'$set': {}},
     }
   };
   if (Meteor.isClient){
     newOp.type = type;
   }
   return newOp;
-};
+}
 
 function bulkWriteProperties(bulkWriteOps){
   if (!bulkWriteOps.length) return;
@@ -62,9 +66,13 @@ function bulkWriteProperties(bulkWriteOps){
       }
     );
   } else {
-    _.each(bulkWriteOps, op => {
+    bulkWriteOps.forEach(op => {
       CreatureProperties.update(op.updateOne.filter, op.updateOne.update, {
-        selector: {type: op.type}
+        // The server code is bypassing collection 2 validation, so do the same
+        // on the client
+        // include this if bypass is off:
+        // selector: {type: op.type}
+        bypassCollection2: true,
       });
     });
   }

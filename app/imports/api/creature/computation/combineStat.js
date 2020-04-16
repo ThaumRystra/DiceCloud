@@ -3,11 +3,11 @@ import computedValueOfVariableName from '/imports/api/creature/computation/compu
 
 
 export default function combineStat(stat, aggregator, memo){
-  if (stat.type === "attribute"){
+  if (stat.type === 'attribute'){
     combineAttribute(stat, aggregator);
-  } else if (stat.type === "skill"){
+  } else if (stat.type === 'skill'){
     combineSkill(stat, aggregator, memo);
-  } else if (stat.type === "damageMultiplier"){
+  } else if (stat.type === 'damageMultiplier'){
     combineDamageMultiplier(stat, memo);
   }
 }
@@ -18,7 +18,7 @@ function combineAttribute(stat, aggregator){
   if (result > aggregator.max) result = aggregator.max;
   if (!stat.decimal) result = Math.floor(result);
   stat.value = result;
-  if (stat.attributeType === "ability") {
+  if (stat.attributeType === 'ability') {
     stat.mod = Math.floor((result - 10) / 2);
   }
 }
@@ -57,6 +57,7 @@ function combineSkill(stat, aggregator, memo){
 
 function combineDamageMultiplier(stat){
   if (stat.immunityCount) return 0;
+  let result;
   if (stat.ressistanceCount && !stat.vulnerabilityCount){
     result = 0.5;
   }  else if (!stat.ressistanceCount && stat.vulnerabilityCount){

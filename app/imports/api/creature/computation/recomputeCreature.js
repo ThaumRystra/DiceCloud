@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
@@ -5,10 +6,11 @@ import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.j
 import computeMemo from '/imports/api/creature/computation/computeMemo.js';
 import getCalculationProperties from '/imports/api/creature/computation/getCalculationProperties.js';
 import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
+import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
 
 export const recomputeCreature = new ValidatedMethod({
 
-  name: "Creatures.methods.recomputeCreature",
+  name: 'Creatures.methods.recomputeCreature',
 
   validate: new SimpleSchema({
     charId: { type: String }
@@ -65,5 +67,7 @@ export function recomputeCreatureById(creatureId){
   let computationMemo = new ComputationMemo(props);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
+  writeCreatureVariables(computationMemo, creatureId);
+  if(Meteor.isClient) console.log(computationMemo);
   return computationMemo;
 }

@@ -78,7 +78,7 @@ export default class ComputationMemo {
   }
   addProficiency(prop){
     prop = this.registerProperty(prop);
-    let targets = getProficiencyTargets(prop);
+    let targets = this.getProficiencyTargets(prop);
     targets.forEach(target => {
       target.computationDetails.proficiencies.push(prop);
     });
@@ -86,7 +86,7 @@ export default class ComputationMemo {
   getProficiencyTargets(prop){
     let targets = new Set();
     if (!prop.stats) return targets;
-    proficiency.stats.forEach(statName => {
+    prop.stats.forEach(statName => {
       let target = this.statsByVariableName[statName];
       if (!target) return;
       targets.add(target);
@@ -145,5 +145,8 @@ const propDetailsByType = {
     return {
       computed: false,
     };
+  },
+  damageMultiplier(){
+    return {};
   },
 }

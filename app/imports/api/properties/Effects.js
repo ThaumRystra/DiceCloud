@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import { Random } from 'meteor/random';
 
 /*
  * Effects are reason-value attached to skills and abilities
@@ -54,7 +55,7 @@ const StoredEffectSchema = new SimpleSchema({
 const ComputedOnlyEffectSchema = new SimpleSchema({
 	// The computed result of the effect
 	result: {
-		type: SimpleSchema.oneOf(Number, String),
+		type: SimpleSchema.oneOf(Number, String, Boolean),
 		optional: true,
 	},
 })

@@ -70,8 +70,9 @@ let AttributeSchema = new SimpleSchema({
 let ComputedOnlyAttributeSchema = new SimpleSchema({
 	// The computed value of the attribute
   value: {
-    type: Number,
+    type: SimpleSchema.oneOf(Number, String, Boolean),
 		defaultValue: 0,
+    optional: true,
   },
 	// The computed modifier, provided the attribute type is `ability`
 	mod: {
