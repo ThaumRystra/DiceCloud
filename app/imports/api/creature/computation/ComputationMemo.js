@@ -58,7 +58,7 @@ export default class ComputationMemo {
     targets.forEach(target => {
       target.computationDetails.effects.push(prop);
     });
-    if (!targets.length){
+    if (!targets.size){
       this.unassignedEffects.push(prop);
     }
   }
