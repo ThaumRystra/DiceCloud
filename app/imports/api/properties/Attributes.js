@@ -60,11 +60,6 @@ let AttributeSchema = new SimpleSchema({
     optional: true,
     allowedValues: ['shortRest', 'longRest'],
   },
-  // Some things are only reset their adjustment by up to half of the value
-  resetMultiplier: {
-    type: Number,
-    optional: true,
-  },
 });
 
 let ComputedOnlyAttributeSchema = new SimpleSchema({

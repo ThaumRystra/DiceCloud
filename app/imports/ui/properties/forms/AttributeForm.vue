@@ -88,16 +88,6 @@
           :debounce-time="debounceTime"
           @change="(value, ack) => $emit('change', {path: ['reset'], value: value || '', ack})"
         />
-        <text-field
-          label="Reset Multiplier"
-          type="number"
-          style="flex-basis: 400px;"
-          :value="model.resetMultiplier"
-          :error-messages="errors.resetMultiplier"
-          hint="Some attributes, like hit dice, only reset by half their total on a long rest"
-          :debounce-time="debounceTime"
-          @change="(value, ack) => $emit('change', {path: ['resetMultiplier'], value, ack})"
-        />
       </div>
     </form-section>
   </div>
