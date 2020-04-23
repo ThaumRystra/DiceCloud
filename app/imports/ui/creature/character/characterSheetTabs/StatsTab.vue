@@ -162,6 +162,14 @@
               :data-id="action._id"
               @click="clickProperty({_id: action._id})"
             />
+            <v-subheader>Attacks</v-subheader>
+            <attack-list-tile
+              v-for="attack in attacks"
+              :key="attack._id"
+              :model="attack"
+              :data-id="attack._id"
+              @click="clickProperty({_id: attack._id})"
+            />
           </v-list>
         </v-card>
       </div>
@@ -180,6 +188,7 @@
 	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
+  import AttackListTile from '/imports/ui/properties/components/actions/AttackListTile.vue';
 
 	const getAttributeOfType = function(charId, type){
 		return CreatureProperties.find({
@@ -215,6 +224,7 @@
 			ResourceCard,
 			SpellSlotListTile,
       ActionListTile,
+      AttackListTile,
 		},
 		props: {
 			creatureId: {
@@ -296,6 +306,14 @@
 				return CreatureProperties.find({
 					'ancestors.id': this.creatureId,
 					type: 'action',
+				}, {
+					sort: {order: 1},
+				});
+			},
+      attacks(){
+				return CreatureProperties.find({
+					'ancestors.id': this.creatureId,
+					type: 'attack',
 				}, {
 					sort: {order: 1},
 				});

@@ -3,8 +3,8 @@
     <v-toolbar
       app
       clipped-left
-      :color="character.color || 'secondary'"
-      :dark="isDarkColor(character.color || theme.primary)"
+      :color="creature.color || 'secondary'"
+      :dark="isDarkColor(creature.color || theme.primary)"
     >
       <v-btn
         v-if="showMenuButton"
@@ -15,12 +15,12 @@
         <v-icon>menu</v-icon>
       </v-btn>
       <div class="flex">
-        {{ character.name }}
+        {{ creature.name }}
       </div>
       <v-btn
         flat
         icon
-        @click="recompute(character._id)"
+        @click="recompute(creature._id)"
       >
         <v-icon>refresh</v-icon>
       </v-btn>
@@ -143,6 +143,10 @@
         required: true,
       },
 		},
+    reactiveProvide: {
+      name: 'computationContext',
+      include: ['creature'],
+    },
 		data(){return {
 			theme,
 			tab: 0,
@@ -181,7 +185,7 @@
 					component: 'delete-confirmation-dialog',
 					elementId: 'creature-menu',
 					data: {
-						name: this.character.name,
+						name: this.creature.name,
 						typeName: 'Character'
 					},
 					callback(confirmation){
@@ -204,13 +208,10 @@
 					return [this.creatureId];
 				},
 			},
-			character(){
+			creature(){
 				return Creatures.findOne(this.creatureId) || {};
 			},
 		},
-    provide: {
-      creature: this.character,
-    }
 	}
 </script>
 

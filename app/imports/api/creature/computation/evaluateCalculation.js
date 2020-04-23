@@ -16,7 +16,7 @@ export default function evaluateCalculation(string, memo){
     if (node.isSymbolNode) {
       let val = computedValueOfVariableName(node.name, memo);
       if (val === null) return node;
-      return new math.expression.node.ConstantNode(val);
+      return new math.ConstantNode(val);
     }
     else {
       return node;

@@ -4,6 +4,7 @@
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-tile-content>
+      <computed :value="model.rollBonus"/>
       {{ model.name }}
     </v-list-tile-content>
   </v-list-tile>

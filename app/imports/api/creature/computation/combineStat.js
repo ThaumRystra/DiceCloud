@@ -19,8 +19,9 @@ function combineAttribute(stat, aggregator){
   if (!stat.decimal) result = Math.floor(result);
   stat.value = result;
   if (stat.attributeType === 'ability') {
-    stat.mod = Math.floor((result - 10) / 2);
+    stat.modifier = Math.floor((result - 10) / 2);
   }
+  stat.currentValue = stat.value - (stat.damage || 0);
 }
 
 function combineSkill(stat, aggregator, memo){
@@ -30,7 +31,7 @@ function combineSkill(stat, aggregator, memo){
     if (!ability.computationDetails.computed){
       computeStat(ability, memo);
     }
-    stat.abilityMod = ability.mod;
+    stat.abilityMod = ability.modifier;
   }
   // Combine all the child proficiencies
   for (let i in stat.proficiencies){

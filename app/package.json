@@ -25,7 +25,7 @@
     "date-fns": "^1.30.1",
     "lodash": "^4.17.15",
     "marked": "^0.8.2",
-    "mathjs": "^5.10.3",
+    "mathjs": "^6.6.4",
     "meteor-node-stubs": "^0.3.3",
     "moo": "^0.5.1",
     "nearley": "^2.19.1",
@@ -35,6 +35,7 @@
     "underscore": "^1.10.2",
     "vue": "2.6.10",
     "vue-meteor-tracker": "^2.0.0-beta.5",
+    "vue-reactive-provide": "^0.3.0",
     "vue-router": "^3.1.6",
     "vuedraggable": "^2.23.2",
     "vuetify": "^1.5.24",
@@ -61,9 +62,16 @@
         ],
         "parser": "vue-eslint-parser",
         "rules": {
-          "vue/component-tags-order": ["error", {
-            "order": ["template", "script", "style"]
-          }]
+          "vue/component-tags-order": [
+            "error",
+            {
+              "order": [
+                "template",
+                "script",
+                "style"
+              ]
+            }
+          ]
         }
       }
     ],
