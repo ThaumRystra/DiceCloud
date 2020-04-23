@@ -30,17 +30,6 @@
         </div>
       </div>
     </v-slide-x-transition>
-    <div class="layout row justify-center">
-      <v-btn
-        :loading="addBuffLoading"
-        :disabled="addBuffLoading"
-        outline
-        icon
-        @click="addBuff"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div>
   </div>
 </template>
 
@@ -65,18 +54,6 @@
         type: Number,
         default: undefined,
       },
-		},
-		data(){return {
-			addBuffLoading: false,
-		}},
-		methods: {
-			acknowledgeAddBuff(){
-				this.addBuffLoading = false;
-			},
-			addBuff(){
-				this.addBuffLoading = true;
-				this.$emit('push', {path: [], value: StoredBuffWithIdSchema.clean({}), ack: this.acknowledgeAddBuff});
-			},
 		},
 	}
 </script>

@@ -27,23 +27,11 @@
         </div>
       </div>
     </v-slide-x-transition>
-    <div class="layout row justify-center">
-      <v-btn
-        :loading="addDamageLoading"
-        :disabled="addDamageLoading"
-        outline
-        icon
-        @click="addDamage"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div>
   </div>
 </template>
 
 <script>
 	import DamageForm from '/imports/ui/properties/forms/DamageForm.vue';
-	import DamageSchema from '/imports/api/properties/subSchemas/DamageSchema.js';
 
 	export default {
 		components: {
@@ -63,24 +51,5 @@
         default: undefined,
       },
 		},
-		data(){return {
-			addDamageLoading: false,
-		}},
-		methods: {
-			acknowledgeAddDamage(){
-				this.addDamageLoading = false;
-			},
-			addDamage(){
-				this.addDamageLoading = true;
-				this.$emit('push', {
-					path: [],
-					value: DamageSchema.clean({}),
-					ack: this.acknowledgeAddDamage,
-				});
-			},
-		},
 	}
 </script>
-
-<style lang="css" scoped>
-</style>

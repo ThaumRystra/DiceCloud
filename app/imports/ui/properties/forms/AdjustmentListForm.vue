@@ -27,23 +27,11 @@
         </div>
       </div>
     </v-slide-x-transition>
-    <div class="layout row justify-center">
-      <v-btn
-        :loading="addAdjustmentLoading"
-        :disabled="addAdjustmentLoading"
-        outline
-        icon
-        @click="addAdjustment"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div>
   </div>
 </template>
 
 <script>
 	import AdjustmentForm from '/imports/ui/properties/forms/AdjustmentForm.vue';
-	import AdjustmentSchema from '/imports/api/properties/subSchemas/AdjustmentSchema.js';
 
 	export default {
 		components: {
@@ -62,22 +50,6 @@
         type: Number,
         default: undefined,
       },
-		},
-		data(){return {
-			addAdjustmentLoading: false,
-		}},
-		methods: {
-			acknowledgeAddAdjustment(){
-				this.addAdjustmentLoading = false;
-			},
-			addAdjustment(){
-				this.addAdjustmentLoading = true;
-				this.$emit('push', {
-					path: [],
-					value: AdjustmentSchema.clean({}),
-					ack: this.acknowledgeAddAdjustment,
-				});
-			},
 		},
 	}
 </script>

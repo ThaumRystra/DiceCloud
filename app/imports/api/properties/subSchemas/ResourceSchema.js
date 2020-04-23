@@ -8,7 +8,7 @@ const ResourceSchema = new SimpleSchema({
   'itemsConsumed.$': {
     type: Object,
   },
-  'itemsConsumed.$.variableName': {
+  'itemsConsumed.$.tag': {
     type: String,
   },
   'itemsConsumed.$.quantity': {
