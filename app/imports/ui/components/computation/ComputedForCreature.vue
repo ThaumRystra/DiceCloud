@@ -1,5 +1,5 @@
 <template lang="html">
-  <computed :value="value" :scope="scope"/>
+  <computed :value="value" :scope="scope" v-bind="$attrs"/>
 </template>
 
 <script>

@@ -1,4 +1,5 @@
-//import ActionViewer from '/imports/ui/properties/viewers/ActionViewer.vue';
+import ActionViewer from '/imports/ui/properties/viewers/ActionViewer.vue';
+import AttackViewer from '/imports/ui/properties/viewers/AttackViewer.vue';
 import AttributeViewer from '/imports/ui/properties/viewers/AttributeViewer.vue';
 import BuffViewer from '/imports/ui/properties/viewers/BuffViewer.vue';
 import ContainerViewer from '/imports/ui/properties/viewers/ContainerViewer.vue';
@@ -17,7 +18,8 @@ import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue'
 import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
 
 export default {
-//  action: ActionViewer,
+  action: ActionViewer,
+  attack: AttackViewer,
   attribute: AttributeViewer,
   buff: BuffViewer,
   container: ContainerViewer,

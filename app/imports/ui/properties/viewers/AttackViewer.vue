@@ -1,20 +1,27 @@
 <template lang="html">
-  <div class="action-viewer">
+  <div class="attack-viewer">
     <property-field name="Action type" :value="model.actionType"/>
     <property-field name="Target" :value="model.target"/>
     <property-field name="tags" :value="model.tags.join(', ')" v-if="model.tags.length"/>
     <property-field name="Uses" :value="model.uses"/>
     <property-field name="Uses used" :value="model.usesUsed"/>
     <property-field name="Reset" :value="reset"/>
-		<property-description :value="model.description"/>
+    <property-field name="Attack roll bonus">
+      <computed signed :value="model.rollBonus"/>
+    </property-field>
+    <property-description :value="model.description"/>
 	</div>
 </template>
 
 <script>
-import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
+import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 
 export default {
   mixins: [propertyViewerMixin],
+  components: {
+    Computed: ComputedForCreature,
+  },
   computed: {
     reset(){
       let reset = this.model.reset

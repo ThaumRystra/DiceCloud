@@ -1,11 +1,13 @@
 <template lang="html">
-  <div v-if="value !== undefined">
+  <div v-if="value !== undefined || $slots.default">
   	<div class="caption">
   		{{name}}
   	</div>
-		<p class="ml-2 subheading">
-			{{value}}
-		</p>
+    <p class="ml-2 subheading">
+      <slot>
+        {{value}}
+      </slot>
+    </p>
   </div>
 </template>
 

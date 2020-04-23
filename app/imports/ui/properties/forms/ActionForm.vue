@@ -25,6 +25,13 @@
       :debounce-time="debounceTime"
       @change="(value, ack) => $emit('change', {path: ['rollBonus'], value, ack})"
     />
+    <text-area
+      label="Description"
+      :value="model.description"
+      :error-messages="errors.description"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+    />
     <form-sections>
       <form-section name="Results">
         <results-form

@@ -91,11 +91,6 @@ let SpellSchema = new SimpleSchema({})
 		defaultValue: 'abjuration',
 		allowedValues: magicSchools,
 	},
-  // Set better defaults for the action
-  actionType: {
-    type: String,
-    defaultValue: 'spell',
-  },
 });
 
 export { SpellSchema };

@@ -3,7 +3,7 @@
  	 <template slot="toolbar">
  		 <property-icon :type="model.type" class="mr-2"/>
  		 <div class="title">
- 			 {{getPropertyName(model.type)}}
+ 			 {{model.name || getPropertyName(model.type)}}
  		 </div>
  		 <v-spacer/>
 		 <v-menu v-if="editing" bottom left transition="slide-y-transition">
@@ -73,13 +73,14 @@ import CreatureProperties, {
 	pullFromProperty,
 	softRemoveProperty,
 } from '/imports/api/creature/CreatureProperties.js';
+import Creatures from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
-import { get } from 'lodash';
+import { get, findLast } from 'lodash';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -111,6 +112,21 @@ export default {
 			return CreatureProperties.findOne(this._id);
 		},
 	},
+  computed: {
+    creature(){
+      if (!this.model) return;
+      let nearestCreatureAncestor = findLast(
+        this.model.ancestors,
+        ref => ref.collection === "creatures"
+      );
+      if (!nearestCreatureAncestor) return;
+      return Creatures.findOne(nearestCreatureAncestor.id);
+    }
+  },
+  reactiveProvide: {
+    name: 'computationContext',
+    include: ['creature'],
+  },
 	methods: {
 		getPropertyName,
 		change({path, value, ack}){
