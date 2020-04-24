@@ -11,13 +11,13 @@
         @change="(value, ack) => $emit('change', {path: ['stat'], value, ack})"
       />
       <text-field
-        label="Damage"
+        label="Adjustment"
         hint="The amount of damage to apply to the selected stat, can be a calculation or roll"
         style="flex-basis: 300px;"
-        :value="model.damage"
-        :error-messages="errors.damage"
+        :value="model.adjustment"
+        :error-messages="errors.adjustment"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
+        @change="(value, ack) => $emit('change', {path: ['adjustment'], value, ack})"
       />
     </div>
     <smart-select

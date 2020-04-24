@@ -153,7 +153,10 @@
         class="actions"
       >
         <v-card>
-          <v-list>
+          <v-list
+            two-line
+            subheader
+          >
             <v-subheader>Actions</v-subheader>
             <action-list-tile
               v-for="action in actions"
