@@ -23,5 +23,9 @@
     "request": "^2.88.2",
     "source-map-support": "^0.5.19",
     "underscore": "^1.10.2"
+  },
+  "engines": {
+    "node": "12",
+    "npm": "6"
   }
 }
