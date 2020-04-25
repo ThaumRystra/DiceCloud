@@ -16,7 +16,6 @@
     "bcrypt": "^4.0.1",
     "bower": "^1.8.8",
     "core-js": "^2.6.11",
-    "fibers": "^2.0.2",
     "file-saver": "^2.0.2",
     "meteor-node-stubs": "^0.3.3",
     "patreon": "^0.4.1",
