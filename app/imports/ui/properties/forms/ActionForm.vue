@@ -42,6 +42,14 @@
           @pull="({path, ack}) => $emit('pull', {path: ['results', ...path], ack})"
         />
       </form-section>
+      <form-section name="Resources">
+        <resources-form
+          :model="model.resources"
+          @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
+          @push="({path, value, ack}) => $emit('push', {path: ['resources', ...path], value, ack})"
+          @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
+        />
+      </form-section>
       <form-section name="Advanced">
         <text-field
           v-if="attackForm"
@@ -111,12 +119,14 @@
 <script>
   import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ResultsForm from '/imports/ui/properties/forms/ResultsForm.vue';
+  import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
 
   export default {
     components: {
       FormSection,
       FormSections,
       ResultsForm,
+      ResourcesForm,
     },
     props: {
       stored: {

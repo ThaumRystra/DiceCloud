@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import ResourceSchema from '/imports/api/properties/subSchemas/ResourceSchema.js'
+import ResourcesSchema from '/imports/api/properties/subSchemas/ResourcesSchema.js'
 import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
 /*
@@ -8,9 +8,7 @@ import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
  * Any actions that are children of this action will be considered alternatives
  * to this action
  */
-let ActionSchema = new SimpleSchema({})
-.extend(ResourceSchema)
-.extend({
+let ActionSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
@@ -47,6 +45,10 @@ let ActionSchema = new SimpleSchema({})
 		type: ResultsSchema,
 		defaultValue: {},
 	},
+  resources: {
+    type: ResourcesSchema,
+    defaultValue: {},
+  },
 	// Calculation of how many times this action can be used
 	// Only set if this action tracks its own uses, rather than adjusting
 	// resources
