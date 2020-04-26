@@ -109,7 +109,7 @@
           :error-messages="errors.reset"
           :menu-props="{auto: true, lazy: true}"
           :debounce-time="debounceTime"
-          @change="(value, ack) => $emit('change', {path: ['reset'], value: value || '', ack})"
+          @change="(value, ack) => $emit('change', {path: ['reset'], value, ack})"
         />
       </form-section>
     </form-sections>

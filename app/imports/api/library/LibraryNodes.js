@@ -1,3 +1,6 @@
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
@@ -56,7 +59,7 @@ const insertNode = new ValidatedMethod({
 
 const updateLibraryNode = new ValidatedMethod({
   name: 'LibraryNodes.methods.update',
-  validate({_id, path, value, ack}){
+  validate({_id, path}){
 		if (!_id) return false;
 		// We cannot change these fields with a simple update
 		switch (path[0]){
@@ -70,9 +73,15 @@ const updateLibraryNode = new ValidatedMethod({
   run({_id, path, value}) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
-		return LibraryNodes.update(_id, {
-			$set: {[path.join('.')]: value},
-		}, {
+    let pathString = path.join('.');
+    let modifier;
+    // unset empty values
+    if (value === null || value === undefined){
+      modifier = {$unset: {[pathString]: 1}};
+    } else {
+      modifier = {$set: {[pathString]: value}};
+    }
+		return LibraryNodes.update(_id, modifier, {
 			selector: {type: node.type},
 		});
   },
@@ -127,5 +136,4 @@ export {
 	pullFromLibraryNode,
 	pushToLibraryNode,
 	softRemoveLibraryNode,
-	libraryNodesToTree,
 };

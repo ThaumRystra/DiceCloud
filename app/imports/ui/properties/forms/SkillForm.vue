@@ -61,10 +61,9 @@
         <proficiency-select
           style="flex-basis: 300px;"
           label="Base Proficiency"
-          clearable
           :value="model.baseProficiency"
           :error-messages="errors.baseProficiency"
-          @change="(value, ack) => {$emit('change', {path: ['baseProficiency'], value: value || '', ack}); log({value, ack})}"
+          @change="(value, ack) => {$emit('change', {path: ['baseProficiency'], value, ack})}"
         />
       </div>
     </form-section>
@@ -120,9 +119,6 @@
 				},
 			]
 		};},
-		methods: {
-			log: console.log,
-		},
 	};
 </script>
 

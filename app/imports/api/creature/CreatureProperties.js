@@ -1,7 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
@@ -150,7 +154,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 
 const updateProperty = new ValidatedMethod({
   name: 'CreatureProperties.methods.update',
-  validate({_id, path, value}){
+  validate({_id, path}){
 		if (!_id) return false;
 		// We cannot change these fields with a simple update
 		switch (path[0]){
@@ -166,9 +170,15 @@ const updateProperty = new ValidatedMethod({
   run({_id, path, value}) {
     let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);
-		CreatureProperties.update(_id, {
-			$set: {[path.join('.')]: value},
-		}, {
+    let pathString = path.join('.');
+    let modifier;
+    // unset empty values
+    if (value === null || value === undefined){
+      modifier = {$unset: {[pathString]: 1}};
+    } else {
+      modifier = {$set: {[pathString]: value}};
+    }
+		CreatureProperties.update(_id, modifier, {
 			selector: {type: property.type},
 		});
 		recomputeCreatures(property);
