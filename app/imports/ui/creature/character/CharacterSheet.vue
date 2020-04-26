@@ -114,6 +114,8 @@
 </template>
 
 <script>
+  //TODO add a "no character found" screen if shown on a false address
+  // or on a character the user does not have permission to view
 	import Creatures from '/imports/api/creature/Creatures.js';
 	import removeCreature from '/imports/api/creature/removeCreature.js';
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
