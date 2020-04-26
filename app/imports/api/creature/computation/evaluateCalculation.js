@@ -24,7 +24,7 @@ export default function evaluateCalculation(string, memo){
   });
   // Evaluate the expression to a number or return with substitutions
   try {
-    return substitutedCalc.eval();
+    return substitutedCalc.evaluate();
   } catch (e){
     return substitutedCalc.toString();
   }
