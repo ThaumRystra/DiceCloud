@@ -40,7 +40,7 @@ export default class ComputationMemo {
     this.statsByVariableName[variableName] = prop;
     if (
       prop.type === 'skill' &&
-      includes(['skill', 'check'], prop.skillType) &&
+      isSkillCheck(prop) &&
       prop.ability
     ){
       this.addSkillToAbility(prop, prop.ability)
@@ -114,7 +114,7 @@ function isAbility(prop){
 }
 
 function isSkillCheck(prop){
-  return includes(['skill', 'check'], prop.skillType);
+  return includes(['skill', 'check', 'save', 'utility'], prop.skillType);
 }
 
 function isSkillOperation(prop){
@@ -145,6 +145,9 @@ const propDetailsByType = {
     return {
       computed: false,
     };
+  },
+  proficiency(){
+    return {};
   },
   damageMultiplier(){
     return {};

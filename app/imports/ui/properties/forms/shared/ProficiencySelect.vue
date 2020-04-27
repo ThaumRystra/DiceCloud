@@ -1,7 +1,7 @@
 <template lang="html">
   <smart-select
     append-icon="arrow_drop_down"
-    clearable
+    :clearable="clearable"
     class="ml-3"
     v-bind="$attrs"
     :menu-props="{transition: 'slide-y-transition', lazy: true}"
@@ -38,6 +38,10 @@
 			value: {
         type: Number,
         default: undefined,
+      },
+      clearable: {
+        type: Boolean,
+        default: true,
       },
 		},
 		data(){ return {

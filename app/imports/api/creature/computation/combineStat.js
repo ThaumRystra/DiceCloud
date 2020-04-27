@@ -34,8 +34,9 @@ function combineSkill(stat, aggregator, memo){
     stat.abilityMod = ability.modifier;
   }
   // Combine all the child proficiencies
-  for (let i in stat.proficiencies){
-    let prof = stat.proficiencies[i];
+  stat.proficiency = stat.baseProficiency || 0;
+  for (let i in stat.computationDetails.proficiencies){
+    let prof = stat.computationDetails.proficiencies[i];
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
   // Get the character's proficiency bonus to apply

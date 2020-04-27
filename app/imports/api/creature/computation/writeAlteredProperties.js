@@ -22,6 +22,8 @@ export default function writeAlteredProperties(memo){
       case 'effect':
         schema = ComputedOnlyEffectSchema;
         break;
+      default:
+        return;
     }
     let op = undefined;
     // Loop through all keys that can be changed by computation

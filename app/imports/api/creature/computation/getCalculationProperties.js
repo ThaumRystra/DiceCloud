@@ -1,5 +1,5 @@
-import Creatures from "/imports/api/creature/Creatures.js";
-import CreatureProperties from "/imports/api/creature/CreatureProperties.js";
+import Creatures from '/imports/api/creature/Creatures.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 export default function getCalculationProperties(creatureId){
   // First get ids of disabled properties and unequiped items
@@ -29,6 +29,7 @@ export default function getCalculationProperties(creatureId){
       $eq: creatureId,
       $nin: disabledAncestorIds,
     },
+    removed: {$ne: true},
     type: {$in: [
       'attribute',
       'skill',

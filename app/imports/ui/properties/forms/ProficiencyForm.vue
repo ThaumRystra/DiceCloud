@@ -20,6 +20,7 @@
       <proficiency-select
         label="Proficiency"
         style="flex-basis: 300px;"
+        :clearable="false"
         :value="model.value"
         @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
       />
@@ -35,10 +36,18 @@
 			ProficiencySelect,
 		},
 		props: {
-			model: {
+      model: {
 				type: Object,
 				default: () => ({}),
 			},
+			errors: {
+				type: Object,
+				default: () => ({}),
+			},
+      debounceTime: {
+        type: Number,
+        default: undefined,
+      },
 			stats: {
 				type: Array,
         default: () => [],
