@@ -15,7 +15,7 @@
               />
               <ability-list-tile
                 :key="ability._id"
-                v-bind="ability"
+                :model="ability"
                 :data-id="ability._id"
                 @click="clickProperty({_id: ability._id})"
               />

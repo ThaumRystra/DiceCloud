@@ -5,16 +5,16 @@
   >
     <v-list-tile-action class="mr-4">
       <div class="display-1 mod">
-        {{ numberToSignedString(mod) }}
+        {{ numberToSignedString(model.modifier) }}
       </div>
       <div class="title value">
-        {{ value }}
+        {{ model.value }}
       </div>
     </v-list-tile-action>
 
     <v-list-tile-content>
       <v-list-tile-title>
-        {{ name }}
+        {{ model.name }}
       </v-list-tile-title>
     </v-list-tile-content>
   </v-list-tile>
@@ -24,9 +24,7 @@
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
 	props: {
-		value: Number,
-		mod: Number,
-		name: String,
+		model: {type: Object, required: true},
 	},
 	computed: {
 		hasClickListener(){

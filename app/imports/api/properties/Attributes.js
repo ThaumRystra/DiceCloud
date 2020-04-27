@@ -70,7 +70,7 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
     optional: true,
   },
 	// The computed modifier, provided the attribute type is `ability`
-	mod: {
+	modifier: {
 		type: SimpleSchema.Integer,
 		optional: true,
 	},
