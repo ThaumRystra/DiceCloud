@@ -265,7 +265,8 @@
 					let con = CreatureProperties.findOne({
 						'ancestors.id': this.creatureId,
 						type: 'attribute',
-						variableName: 'constitution'
+						variableName: 'constitution',
+            removed: {$ne: true},
 					});
 					let conMod = con && con.mod;
 					return {
@@ -283,6 +284,7 @@
 					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'check',
+          removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				});
@@ -292,6 +294,7 @@
 					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'save',
+          removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				});
@@ -301,6 +304,7 @@
 					'ancestors.id': this.creatureId,
 					type: 'skill',
 					skillType: 'skill',
+          removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				});
@@ -309,6 +313,7 @@
 				return CreatureProperties.find({
 					'ancestors.id': this.creatureId,
 					type: 'action',
+          removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				});
@@ -317,6 +322,7 @@
 				return CreatureProperties.find({
 					'ancestors.id': this.creatureId,
 					type: 'attack',
+          removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				});
