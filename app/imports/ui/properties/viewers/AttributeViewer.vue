@@ -1,29 +1,37 @@
 <template lang="html">
-	<div class="attribute-viewer">
-		<div v-if="model.value !== undefined">
-			<div class="display-3" v-if="model.damage !== undefined">
-				{{model.value - model.damage}} / {{model.value}}
-			</div>
-			<div v-else>
-				{{model.value}}
-			</div>
-		</div>
-		<div v-if="model.mod !== undefined">
-			{{numberToSignedString(model.mod)}}
-		</div>
-		<property-name :value="model.name"/>
-		<property-variable-name :value="model.variableName"/>
-		<p v-if="reset">
-			{{reset}}
-		</p>
-		<effect-viewer
-			:model="{
-				result: model.baseValue,
-				operation: 'base'
-			}"
-		/>
-		<property-description :value="model.description"/>
-	</div>
+  <div class="attribute-viewer">
+    <div v-if="model.value !== undefined">
+      <div
+        v-if="model.damage !== undefined"
+        class="display-3"
+      >
+        {{ model.value - model.damage }} / {{ model.value }}
+      </div>
+      <div v-else>
+        {{ model.value }}
+      </div>
+    </div>
+    <div v-if="model.mod !== undefined">
+      {{ numberToSignedString(model.mod) }}
+    </div>
+    <property-name :value="model.name" />
+    <property-variable-name :value="model.variableName" />
+    <property-field
+      v-if="model.attributeType === 'hitDice' && model.hitDiceSize"
+      name="Hit dice size"
+      :value="model.hitDiceSize"
+    />
+    <p v-if="reset && model.attributeType !== 'hitDice'">
+      {{ reset }}
+    </p>
+    <effect-viewer
+      :model="{
+        result: model.baseValue,
+        operation: 'base'
+      }"
+    />
+    <property-description :value="model.description" />
+  </div>
 </template>
 
 <script>
@@ -32,13 +40,10 @@
 	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
 
 	export default {
-		mixins: [propertyViewerMixin],
 		components: {
 			EffectViewer,
 		},
-		methods: {
-			numberToSignedString,
-		},
+		mixins: [propertyViewerMixin],
 		computed: {
 			reset(){
 				let reset = this.model.reset
@@ -51,7 +56,11 @@
 						this.model.resetMultiplier && ' x' + this.model.resetMultiplier
 					} on a long rest`;
 				}
+        return undefined;
 			}
+		},
+		methods: {
+			numberToSignedString,
 		}
 	}
 </script>

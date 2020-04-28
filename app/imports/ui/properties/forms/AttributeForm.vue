@@ -39,6 +39,16 @@
       :debounce-time="debounceTime"
       @change="(value, ack) => $emit('change', {path: ['attributeType'], value, ack})"
     />
+    <smart-select
+      v-if="model.attributeType === 'hitDice'"
+      label="Hit Dice Size"
+      :items="['d4', 'd6', 'd8', 'd10', 'd12', 'd20']"
+      :value="model.hitDiceSize"
+      :error-messages="errors.hitDiceSize"
+      :menu-props="{auto: true, lazy: true}"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['hitDiceSize'], value, ack})"
+    />
     <text-area
       label="Description"
       :value="model.description"
@@ -52,6 +62,7 @@
     >
       <div class="layout column align-center">
         <v-switch
+          v-if="model.attributeType !== 'hitDice'"
           label="Allow decimal values"
           class="no-flex"
           :input-value="model.decimal"
@@ -77,6 +88,7 @@
       </div>
       <div class="layout row wrap">
         <smart-select
+          v-if="model.attributeType !== 'hitDice'"
           label="Reset"
           clearable
           style="flex-basis: 300px;"
@@ -163,6 +175,15 @@
 			});
 			return data;
 		},
+    watch: {
+      'model.attributeType': function(newVal, oldVal){
+        if (newVal === 'hitDice' && !this.model.hitDiceSize){
+          this.$emit('change', {path: ['hitDiceSize'], value: 'd8'});
+        } else if (oldVal === 'hitDice'){
+          this.$emit('change', {path: ['hitDiceSize'], value: undefined});
+        }
+      },
+    },
 	};
 </script>
 

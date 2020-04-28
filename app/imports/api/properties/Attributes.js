@@ -33,6 +33,12 @@ let AttributeSchema = new SimpleSchema({
     defaultValue: 'stat',
 		index: 1,
   },
+  // For type hitDice, the size needs to be stored separately
+  hitDiceSize: {
+    type: String,
+    allowedValues: ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'],
+    optional: true,
+  },
 	// The starting value, before effects
 	baseValueCalculation: {
 		type: String,

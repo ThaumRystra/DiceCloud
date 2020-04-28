@@ -1,58 +1,89 @@
 <template lang="html">
-	<v-list-tile class="hit-dice-list-tile" :class="{hover}">
+  <v-list-tile
+    class="hit-dice-list-tile"
+    :class="{hover}"
+  >
+    <v-list-tile-action class="mr-4">
+      <v-layout
+        row
+        align-center
+        class="left"
+      >
+        <v-layout
+          column
+          class="buttons"
+          justify-center
+        >
+          <v-btn
+            icon
+            small
+            :disabled="currentValue >= model.value"
+            @click="increment(1)"
+          >
+            <v-icon>arrow_drop_up</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            small
+            :disabled="currentValue <= 0"
+            @click="increment(-1)"
+          >
+            <v-icon>arrow_drop_down</v-icon>
+          </v-btn>
+        </v-layout>
 
-		<v-list-tile-action class="mr-4">
+        <v-layout
+          row
+          align-end
+        >
+          <div class="display-1">
+            {{ currentValue }}
+          </div>
+          <div class="title max-value ml-2">
+            /{{ model.value }}
+          </div>
+        </v-layout>
+      </v-layout>
+    </v-list-tile-action>
 
-			<v-layout row align-center class="left">
-				<v-layout column class="buttons" justify-center>
-					<v-btn icon small :disabled="value >= maxValue" @click="increment(1)">
-						<v-icon>arrow_drop_up</v-icon>
-					</v-btn>
-					<v-btn icon small :disabled="value <= 0" @click="increment(-1)">
-						<v-icon>arrow_drop_down</v-icon>
-					</v-btn>
-				</v-layout>
-
-				<v-layout row align-end>
-					<div class="display-1">
-						{{value}}
-					</div>
-					<div class="title max-value ml-2">
-						/{{maxValue}}
-					</div>
-				</v-layout>
-			</v-layout>
-
-		</v-list-tile-action>
-
-	  <v-list-tile-content
-			class="content"
-			@click="click"
-			@mouseover="hover = true"
-			@mouseleave="hover = false"
-		>
-			<v-list-tile-title>
-				d{{dice}} {{signed(conMod)}}
-			</v-list-tile-title>
-	  </v-list-tile-content>
-
-	</v-list-tile>
+    <v-list-tile-content
+      class="content"
+      @click="click"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+    >
+      <v-list-tile-title>
+        {{ model.hitDiceSize }} <computed
+          class="d-inline"
+          signed
+          value="constitution.modifier"
+        />
+      </v-list-tile-title>
+    </v-list-tile-content>
+  </v-list-tile>
 </template>
 
 <script>
-import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 export default {
+  components: {
+    Computed: ComputedForCreature,
+  },
+	props: {
+    model: {
+      type: Object,
+      required: true,
+    }
+	},
 	data(){ return{
 		hover: false,
 	}},
-	props: {
-		dice: Number,
-		value: Number,
-		maxValue: Number,
-		conMod: Number,
-	},
+  computed: {
+    currentValue(){
+      return this.model.value - (this.model.damage || 0);
+    }
+  },
 	methods: {
-		signed: numberToSignedString,
 		click(e){
 			this.$emit('click', e);
 		},

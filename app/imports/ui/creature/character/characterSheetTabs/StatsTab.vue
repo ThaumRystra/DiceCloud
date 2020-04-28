@@ -73,7 +73,7 @@
               />
               <hit-dice-list-tile
                 :key="hitDie._id"
-                v-bind="hitDie"
+                :model="hitDie"
                 :data-id="hitDie._id"
                 @click="clickProperty({_id: hitDie._id})"
                 @change="e => incrementChange(hitDie._id, e)"
@@ -252,32 +252,7 @@
 				return getNonZeroAttributeOfType(this.creatureId, 'spellSlot');
 			},
 			hitDice(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'attribute',
-					attributeType: 'hitDice',
-					value: {$ne: 0},
-				}, {
-					sort: {order: 1},
-				}).map(hd => {
-					let diceMatch = hd.variableName.match(/d(\d+)/);
-					let dice = diceMatch && +diceMatch[1];
-					let con = CreatureProperties.findOne({
-						'ancestors.id': this.creatureId,
-						type: 'attribute',
-						variableName: 'constitution',
-            removed: {$ne: true},
-					});
-					let conMod = con && con.mod;
-					return {
-						_id: hd._id,
-						dice,
-						conMod,
-						key: hd._id,
-						maxValue: hd.value,
-						value: hd.value - (hd.damage || 0),
-					}
-				});
+        return getNonZeroAttributeOfType(this.creatureId, 'hitDice');
 			},
 			checks(){
 				return CreatureProperties.find({
