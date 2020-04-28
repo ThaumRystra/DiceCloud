@@ -17,7 +17,7 @@ export default function computeStat(stat, memo){
     return;
   }
   // Compute and aggregate all the effects
-  let aggregator = new EffectAggregator(stat)
+  let aggregator = new EffectAggregator(stat, memo)
   each(stat.computationDetails.effects, (effect) => {
     computeEffect(effect, memo);
     aggregator.addEffect(effect);

@@ -1,4 +1,5 @@
-import computedValueOfVariableName from '/imports/api/creature/computation/computedValueOfVariableName.js'
+import  replaceBareSymbolsWithValueAccessor from '/imports/api/creature/computation/utility/replaceBareSymbolsWithValueAccessor.js';
+import computeStat from '/imports/api/creature/computation/computeStat.js';
 import * as math from 'mathjs';
 
 export default function evaluateCalculation(string, memo){
@@ -11,20 +12,20 @@ export default function evaluateCalculation(string, memo){
     console.error(e);
     return string;
   }
-  // Replace all symbols with known values
-  let substitutedCalc = calc.transform(node => {
-    if (node.isSymbolNode) {
-      let val = computedValueOfVariableName(node.name, memo);
-      if (val === null) return node;
-      return new math.ConstantNode(val);
-    }
-    else {
-      return node;
+  // Ensure all symbol nodes are defined and coputed
+  calc.traverse(node => {
+    if (node.isSymbolNode){
+      let stat = memo.statsByVariableName[node.name];
+      if (stat && !stat.computationDetails.computed){
+        computeStat(stat, memo);
+      }
     }
   });
+  // Ensure any bare symbols are value accessors instead
+  let substitutedCalc = calc.transform(replaceBareSymbolsWithValueAccessor);
   // Evaluate the expression to a number or return with substitutions
   try {
-    return substitutedCalc.evaluate();
+    return substitutedCalc.evaluate(memo.statsByVariableName);
   } catch (e){
     return substitutedCalc.toString();
   }

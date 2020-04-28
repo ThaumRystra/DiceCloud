@@ -3,13 +3,12 @@
     <div class="layout column align-center">
       <text-field
         label="Base Value"
-        type="number"
-        class="base-value-field text-xs-center large-format no-flex"
-        :value="model.baseValue"
+        class="base-value-field"
+        :value="model.baseValueCalculation"
         hint="This is the value of the attribute before effects are applied"
-        :error-messages="errors.baseValue"
+        :error-messages="errors.baseValueCalculation"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['baseValue'], value, ack})"
+        @change="(value, ack) => $emit('change', {path: ['baseValueCalculation'], value, ack})"
       />
     </div>
     <div class="layout row wrap">

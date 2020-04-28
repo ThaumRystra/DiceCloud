@@ -1,4 +1,5 @@
 import * as math from 'mathjs';
+import  replaceBareSymbolsWithValueAccessor from '/imports/api/creature/computation/utility/replaceBareSymbolsWithValueAccessor.js';
 
 export default function evaluateString(string, scope){
   let errors = [];
@@ -28,23 +29,12 @@ export default function evaluateString(string, scope){
   } catch (e1){
     errors.push(e1);
     try {
-      result = simplifyWithAccessors(calc, scope).toHTML();
+      let result = simplifyWithAccessors(calc, scope).toHTML();
       return {result, errors};
     } catch (e2){
       errors.push(e2);
       return {result: calc.toHTML(), errors};
     }
-  }
-}
-
-function replaceBareSymbolsWithValueAccessor(node, path, parent) {
-  if (node.isSymbolNode && path !== 'object') {
-    const object = new math.SymbolNode(node.name);
-    const address = new math.ConstantNode('value');
-    const index = new math.IndexNode([address]);
-    return new math.AccessorNode(object, index);
-  } else {
-    return node;
   }
 }
 
@@ -56,7 +46,7 @@ function simplifyWithAccessors(calc, scope){
 // returns a function to replace all accessors with either their resolved value
 // or a symbol to simplify with
 function substituteAccessors(scope){
-  return function(node, path, parent){
+  return function(node){
     if (node.isAccessorNode){
       try {
         return evaluateAccessor(node, scope);
@@ -84,6 +74,7 @@ function replaceAccessorWithSymbol(node){
   return symbolNode;
 }
 
+/*
 function overrideSymbolNodeHTML(symbolNode){
   let safeName = escape(symbolNode.name);
   symbolNode.toHTML = function(){
@@ -105,3 +96,4 @@ function escape (value) {
 
   return text
 }
+*/

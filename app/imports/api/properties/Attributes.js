@@ -34,8 +34,8 @@ let AttributeSchema = new SimpleSchema({
 		index: 1,
   },
 	// The starting value, before effects
-	baseValue: {
-		type: Number,
+	baseValueCalculation: {
+		type: String,
 		optional: true,
 	},
   // Description of what the attribute is used for
@@ -63,6 +63,11 @@ let AttributeSchema = new SimpleSchema({
 });
 
 let ComputedOnlyAttributeSchema = new SimpleSchema({
+  // The result of baseValueCalculation
+  baseValue: {
+    type: SimpleSchema.oneOf(Number, String, Boolean),
+    optional: true,
+  },
 	// The computed value of the attribute
   value: {
     type: SimpleSchema.oneOf(Number, String, Boolean),

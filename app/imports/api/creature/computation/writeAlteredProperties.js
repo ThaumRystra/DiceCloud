@@ -32,9 +32,13 @@ export default function writeAlteredProperties(memo){
       if (!isEqual(original[key], changed[key])){
         if (!op) op = newOperation(_id, changed.type);
         let value = changed[key];
-        // Use null instead of undefined because it works with the $set operator
-        if (value === undefined) value = null;
-        op.updateOne.update.$set[key] = value;
+        if (value === undefined){
+          // Unset values that become undefined
+          addUnsetOp(op, key);
+        } else {
+          // Set values that changed to something else
+          addSetOp(op, key, value);
+        }
       }
     }
     if (op){
@@ -48,13 +52,29 @@ function newOperation(_id, type){
   let newOp = {
     updateOne: {
       filter: {_id},
-      update: {'$set': {}},
+      update: {},
     }
   };
   if (Meteor.isClient){
     newOp.type = type;
   }
   return newOp;
+}
+
+function addSetOp(op, key, value){
+  if (op.updateOne.update.$set){
+    op.updateOne.update.$set[key] = value;
+  } else {
+    op.updateOne.update.$set = {[key]: value};
+  }
+}
+
+function addUnsetOp(op, key){
+  if (op.updateOne.update.$unset){
+    op.updateOne.update.$unset[key] = 1;
+  } else {
+    op.updateOne.update.$unset = {[key]: 1};
+  }
 }
 
 function bulkWriteProperties(bulkWriteOps){

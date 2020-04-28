@@ -1,5 +1,4 @@
 import computeStat from '/imports/api/creature/computation/computeStat.js';
-import computedValueOfVariableName from '/imports/api/creature/computation/computedValueOfVariableName.js'
 
 
 export default function combineStat(stat, aggregator, memo){
@@ -18,6 +17,7 @@ function combineAttribute(stat, aggregator){
   if (result > aggregator.max) result = aggregator.max;
   if (!stat.decimal) result = Math.floor(result);
   stat.value = result;
+  stat.baseValue = aggregator.statBaseValue;
   if (stat.attributeType === 'ability') {
     stat.modifier = Math.floor((result - 10) / 2);
   }
@@ -40,7 +40,9 @@ function combineSkill(stat, aggregator, memo){
     if (prof.value > stat.proficiency) stat.proficiency = prof.value;
   }
   // Get the character's proficiency bonus to apply
-  let profBonus = computedValueOfVariableName('proficiencyBonus', memo);
+  let profBonusStat = memo.statsByVariableName['proficiencyBonus'];
+  let profBonus = profBonusStat && profBonusStat.value;
+
   /** TODO level needs to be on the memo somewhere
   if (typeof profBonus !== "number"){
     profBonus = Math.floor(char.level / 4 + 1.75);

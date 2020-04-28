@@ -1,6 +1,13 @@
+import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
+
 export default class EffectAggregator{
-  constructor(stat){
-    this.base = stat.baseValue || 0;
+  constructor(stat, memo){
+    if (stat.baseValueCalculation){
+      this.statBaseValue = evaluateCalculation(stat.baseValueCalculation, memo);
+      this.base = +this.statBaseValue;
+    } else {
+      this.base = 0;
+    }
     this.add = 0;
     this.mul = 1;
     this.min = Number.NEGATIVE_INFINITY;
@@ -15,47 +22,47 @@ export default class EffectAggregator{
   addEffect(effect){
     let result = effect.result;
     switch(effect.operation){
-      case "base":
+      case 'base':
         // Take the largest base value
         this.base = result > this.base ? result : this.base;
         break;
-      case "add":
+      case 'add':
         // Add all adds together
         this.add += result;
         break;
-      case "mul":
+      case 'mul':
         // Multiply the muls together
         this.mul *= result;
         break;
-      case "min":
+      case 'min':
         // Take the largest min value
         this.min = result > this.min ? result : this.min;
         break;
-      case "max":
+      case 'max':
         // Take the smallest max value
         this.max = result < this.max ? result : this.max;
         break;
-      case "advantage":
+      case 'advantage':
         // Sum number of advantages
         this.advantage++;
         break;
-      case "disadvantage":
+      case 'disadvantage':
         // Sum number of disadvantages
         this.disadvantage++;
         break;
-      case "passiveAdd":
+      case 'passiveAdd':
         // Add all passive adds together
         this.passiveAdd += result;
         break;
-      case "fail":
+      case 'fail':
         // Sum number of fails
         this.fail++;
         break;
-      case "conditional":
+      case 'conditional':
         // Store array of conditionals
         this.conditional.push(result);
         break;
-      case "rollBonus":
+      case 'rollBonus':
         // Store array of roll bonuses
         this.rollBonus.push(result);
         break;
