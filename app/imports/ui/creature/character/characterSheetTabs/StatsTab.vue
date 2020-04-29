@@ -84,6 +84,38 @@
       </div>
 
       <div
+        v-for="resource in resources"
+        :key="resource._id"
+        class="resource"
+      >
+        <resource-card
+          v-bind="resource"
+          :data-id="resource._id"
+          @click="clickProperty({_id: resource._id})"
+          @change="e => incrementChange(resource._id, e)"
+        />
+      </div>
+
+      <div
+        v-if="spellSlots.length"
+        class="spell-slots"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>Spell Slots</v-subheader>
+            <spell-slot-list-tile
+              v-for="spellSlot in spellSlots"
+              :key="spellSlot._id"
+              v-bind="spellSlot"
+              :data-id="spellSlot._id"
+              @click="clickProperty({_id: spellSlot._id})"
+              @change="e => incrementChange(spellSlot._id, e)"
+            />
+          </v-list>
+        </v-card>
+      </div>
+
+      <div
         v-show="true"
         class="saving-throws"
       >
@@ -111,38 +143,6 @@
               v-bind="skill"
               :data-id="skill._id"
               @click="clickProperty({_id: skill._id})"
-            />
-          </v-list>
-        </v-card>
-      </div>
-
-      <div
-        v-for="resource in resources"
-        :key="resource._id"
-        class="resource"
-      >
-        <resource-card
-          v-bind="resource"
-          :data-id="resource._id"
-          @click="clickProperty({_id: resource._id})"
-          @change="e => incrementChange(resource._id, e)"
-        />
-      </div>
-
-      <div
-        v-if="spellSlots.length"
-        class="spell-slots"
-      >
-        <v-card>
-          <v-list>
-            <v-subheader>Spell Slots</v-subheader>
-            <spell-slot-list-tile
-              v-for="spellSlot in spellSlots"
-              :key="spellSlot._id"
-              v-bind="spellSlot"
-              :data-id="spellSlot._id"
-              @click="clickProperty({_id: spellSlot._id})"
-              @change="e => incrementChange(spellSlot._id, e)"
             />
           </v-list>
         </v-card>

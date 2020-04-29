@@ -4,8 +4,9 @@
       <text-field
         label="Base Value"
         class="base-value-field"
-        :value="model.baseValueCalculation"
         hint="This is the value of the attribute before effects are applied"
+        style="width: 332px;"
+        :value="model.baseValueCalculation"
         :error-messages="errors.baseValueCalculation"
         :debounce-time="debounceTime"
         @change="(value, ack) => $emit('change', {path: ['baseValueCalculation'], value, ack})"
