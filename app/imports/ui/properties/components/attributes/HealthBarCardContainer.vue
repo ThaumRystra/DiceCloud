@@ -23,6 +23,7 @@
 					'ancestors.id': this.creatureId,
 					type: 'attribute',
 					attributeType: 'healthBar',
+          removed: {$ne: true},
 				}, {
 					sort: {order: 1},
 				});
