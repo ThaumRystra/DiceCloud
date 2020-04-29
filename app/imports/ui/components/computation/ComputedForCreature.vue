@@ -1,9 +1,14 @@
 <template lang="html">
-  <computed :value="value" :scope="scope" v-bind="$attrs"/>
+  <computed
+    :value="value"
+    :scope="scope"
+    v-bind="$attrs"
+  />
 </template>
 
 <script>
 import Computed from '/imports/ui/components/computation/Computed.vue';
+import Creatures from '/imports/api/creature/Creatures.js';
 
 export default {
   inject: ['computationContext'],
@@ -13,6 +18,7 @@ export default {
   props: {
     value: {
       type: String,
+      default: undefined,
     },
   },
   meteor: {

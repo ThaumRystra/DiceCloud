@@ -20,7 +20,7 @@ export default {
     inputValue: this.value,
   };},
   props: {
-    value: [String, Number, Date],
+    value: [String, Number, Date, Array],
     debounceTime: {
       type: Number,
       default: 750,

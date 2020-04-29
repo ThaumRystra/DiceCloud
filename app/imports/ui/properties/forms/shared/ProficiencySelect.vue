@@ -56,21 +56,16 @@
 		watch: {
 			'value': {
 				immediate: true,
-				handler(newValue, oldValue){
+				handler(newValue){
 					let newIcon = proficiencyIcon(newValue);
-					if (!oldValue){
-						// Skip animation
+					this.iconClass='leaving';
+					setTimeout(() => {
 						this.displayedIcon = newIcon;
-					} else {
-						this.iconClass='leaving';
-						setTimeout(() => {
-							this.displayedIcon = newIcon;
-							this.iconClass='arriving';
-							requestAnimationFrame(() => {
-								this.iconClass='';
-							});
-						}, ICON_SPIN_DURATION / 2);
-					}
+						this.iconClass='arriving';
+						requestAnimationFrame(() => {
+							this.iconClass='';
+						});
+					}, ICON_SPIN_DURATION / 2);
 				},
 			},
 		}

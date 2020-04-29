@@ -1,10 +1,11 @@
 <template lang="html">
   <div>
     <div class="layout row">
-      <text-field
+      <smart-combobox
         label="Attribute"
         hint="The attribute this adjustment will apply to"
         style="flex-basis: 300px;"
+        :items="attributeList"
         :value="model.stat"
         :error-messages="errors.stat"
         :debounce-time="debounceTime"
@@ -35,7 +36,10 @@
 </template>
 
 <script>
+import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
+
 export default {
+  mixins: [attributeListMixin],
 	props: {
 		model: {
 			type: Object,

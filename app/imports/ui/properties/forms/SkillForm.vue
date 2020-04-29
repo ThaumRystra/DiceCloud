@@ -17,11 +17,12 @@
         :debounce-time="debounceTime"
         @change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
       />
-      <text-field
+      <smart-combobox
         label="Ability"
         :value="model.ability"
         style="flex-basis: 300px;"
         hint="Which ability is this skill based off of"
+        :items="abilityScoreList"
         :error-messages="errors.ability"
         :debounce-time="debounceTime"
         @change="(value, ack) => $emit('change', {path: ['ability'], value, ack})"
@@ -73,6 +74,7 @@
 <script>
 	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+  import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
 
 	export default {
 		components: {
@@ -119,6 +121,14 @@
 				},
 			]
 		};},
+    meteor: {
+      abilityScoreList(){
+        return createListOfProperties({
+          type: 'attribute',
+          attributeType: 'ability',
+        });
+      },
+    },
 	};
 </script>
 

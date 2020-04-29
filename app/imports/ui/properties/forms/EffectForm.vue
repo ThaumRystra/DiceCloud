@@ -50,14 +50,15 @@
         @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
       />
 
-      <text-field
+      <smart-combobox
         label="Stat"
         class="mr-2"
-        :value="model.stats[0]"
-        :items="stats"
+        multiple
+        :value="model.stats"
+        :items="attributeList"
         :error-messages="errors.stats"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
+        @change="(value, ack) => $emit('change', {path: ['stats'], value, ack})"
       />
     </div>
   </div>
@@ -65,9 +66,11 @@
 
 <script>
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
+  import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
 
 	const ICON_SPIN_DURATION = 300;
 	export default {
+    mixins: [attributeListMixin],
 		props: {
 			model: {
 				type: Object,
@@ -76,10 +79,6 @@
 			errors: {
 				type: Object,
 				default: () => ({}),
-			},
-			stats: {
-				type: Array,
-        default: () => [],
 			},
       debounceTime: {
         type: Number,
@@ -142,6 +141,7 @@
 		},
 		methods: {
 			getEffectIcon,
+      log: console.log,
 		}
 	};
 </script>

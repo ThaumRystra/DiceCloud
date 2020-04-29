@@ -8,14 +8,15 @@
       @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
     />
     <div class="layout row wrap justify-start proficiency-form">
-      <text-field
+      <smart-combobox
         label="Skill"
         class="mr-2"
-        :value="model.stats[0]"
-        :items="stats"
+        multiple
+        :value="model.stats"
+        :items="skillList"
         :error-messages="errors.stats"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['stats'], value: [value], ack})"
+        @change="(value, ack) => $emit('change', {path: ['stats'], value, ack})"
       />
       <proficiency-select
         label="Proficiency"
@@ -30,11 +31,13 @@
 
 <script>
 	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
+  import skillListMixin from '/imports/ui/properties/forms/shared/lists/skillListMixin.js';
 
 	export default {
 		components: {
 			ProficiencySelect,
 		},
+    mixins: [skillListMixin],
 		props: {
       model: {
 				type: Object,
