@@ -8,10 +8,11 @@
 
 <script>
 import Computed from '/imports/ui/components/computation/Computed.vue';
-import Creatures from '/imports/api/creature/Creatures.js';
 
 export default {
-  inject: ['computationContext'],
+  inject: {
+    computationContext: { default: {} }
+  },
   components: {
     Computed,
   },
@@ -21,14 +22,10 @@ export default {
       default: undefined,
     },
   },
-  meteor: {
-    creature(){
-      return Creatures.findOne(this.creatureId);
-    },
-  },
   computed: {
     scope(){
-      return this.computationContext.creature && this.computationContext.creature.variables;
+      return this.computationContext.creature &&
+      this.computationContext.creature.variables;
     }
   }
 }

@@ -1,10 +1,10 @@
 <template lang="html">
   <div class="effect-viewer">
-    <property-name
-      v-if="model.name"
-      :value="model.name"
-    />
     <div class="layout row align-center wrap">
+      <property-name
+        v-if="model.name"
+        :value="model.name"
+      />
       <div class="headline">
         <code
           v-for="stat in model.stats"

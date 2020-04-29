@@ -11,8 +11,8 @@
         {{ model.value }}
       </div>
     </div>
-    <div v-if="model.mod !== undefined">
-      {{ numberToSignedString(model.mod) }}
+    <div v-if="model.modifier !== undefined">
+      {{ numberToSignedString(model.modifier) }}
     </div>
     <property-name :value="model.name" />
     <property-variable-name :value="model.variableName" />
@@ -24,13 +24,21 @@
     <p v-if="reset && model.attributeType !== 'hitDice'">
       {{ reset }}
     </p>
+    <property-description :value="model.description" />
+
     <effect-viewer
+      v-if="computationContext.creature"
       :model="{
+        name: 'Attribute base value',
         result: model.baseValue,
         operation: 'base'
       }"
     />
-    <property-description :value="model.description" />
+    <effect-viewer
+      v-for="effect in effects"
+      :key="effect._id"
+      :model="effect"
+    />
   </div>
 </template>
 
@@ -38,8 +46,12 @@
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
+  import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 	export default {
+    inject: {
+      computationContext: { default: {} }
+    },
 		components: {
 			EffectViewer,
 		},
@@ -61,7 +73,21 @@
 		},
 		methods: {
 			numberToSignedString,
-		}
+		},
+    meteor: {
+      effects(){
+        if (this.computationContext.creature){
+          let creatureId = this.computationContext.creature._id;
+          return CreatureProperties.find({
+            'ancestors.id': creatureId,
+            'stats': this.model.variableName,
+            removed: {$ne: true},
+          });
+        } else {
+          return [];
+        }
+      },
+    },
 	}
 </script>
 

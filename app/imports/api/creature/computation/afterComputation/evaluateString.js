@@ -51,7 +51,6 @@ function substituteAccessors(scope){
       try {
         return evaluateAccessor(node, scope);
       } catch (e) {
-        console.log(typeof e);
         return replaceAccessorWithSymbol(node);
       }
     } else {
