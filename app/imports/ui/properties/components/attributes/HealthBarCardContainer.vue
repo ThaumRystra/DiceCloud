@@ -1,9 +1,9 @@
 <template lang="html">
   <health-bar-card
-		:attributes="attributes"
-		@change="healthBarChanged"
-		@click="healthBarClicked"
-	/>
+    :attributes="attributes"
+    @change="healthBarChanged"
+    @click="healthBarClicked"
+  />
 </template>
 
 <script>
@@ -23,7 +23,6 @@
 					'ancestors.id': this.creatureId,
 					type: 'attribute',
 					attributeType: 'healthBar',
-					value: {$ne: 0},
 				}, {
 					sort: {order: 1},
 				});

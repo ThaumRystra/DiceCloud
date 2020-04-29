@@ -204,18 +204,6 @@
 		});
 	};
 
-	const getNonZeroAttributeOfType = function(charId, type){
-		return CreatureProperties.find({
-			'ancestors.id': charId,
-			type: 'attribute',
-			attributeType: type,
-			value: {$ne: 0},
-			removed: {$ne: true},
-		}, {
-			sort: {order: 1}
-		});
-	};
-
 	export default {
 		components: {
 			AbilityListTile,
@@ -246,13 +234,13 @@
 				return getAttributeOfType(this.creatureId, 'modifier');
 			},
 			resources(){
-				return getNonZeroAttributeOfType(this.creatureId, 'resource');
+				return getAttributeOfType(this.creatureId, 'resource');
 			},
 			spellSlots(){
-				return getNonZeroAttributeOfType(this.creatureId, 'spellSlot');
+				return getAttributeOfType(this.creatureId, 'spellSlot');
 			},
 			hitDice(){
-        return getNonZeroAttributeOfType(this.creatureId, 'hitDice');
+        return getAttributeOfType(this.creatureId, 'hitDice');
 			},
 			checks(){
 				return CreatureProperties.find({
