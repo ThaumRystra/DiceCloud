@@ -1,18 +1,37 @@
 <template lang="html">
-  <v-list-tile class="skill-list-tile" height="32px" v-on="hasClickListener ? {click} : {}">
-  	<v-list-tile-action class="prof-icon">
-  		<v-icon>{{icon}}</v-icon>
-  	</v-list-tile-action>
-		<v-list-tile-content>
-			<v-list-tile-title>
-				<span class="prof-mod">
-					{{displayedModifier}}
-				</span>
-				{{name}}<template v-if="conditionalBenefits">*</template>
-				<v-icon size="20px" v-if="advantage > 0">arrow_upward</v-icon>
-				<v-icon size="20px" v-if="advantage < 0">arrow_downward</v-icon>
-			</v-list-tile-title>
-		</v-list-tile-content>
+  <v-list-tile
+    class="skill-list-tile"
+    height="32px"
+    v-on="hasClickListener ? {click} : {}"
+  >
+    <v-list-tile-action class="prof-icon">
+      <v-icon>{{ icon }}</v-icon>
+    </v-list-tile-action>
+    <v-list-tile-content>
+      <v-list-tile-title>
+        <span
+          v-if="!hideModifier"
+          class="prof-mod"
+        >
+          {{ displayedModifier }}
+        </span>
+        {{ model.name }}<template v-if="model.conditionalBenefits">
+          *
+        </template>
+        <v-icon
+          v-if="model.advantage > 0"
+          size="20px"
+        >
+          arrow_upward
+        </v-icon>
+        <v-icon
+          v-if="model.advantage < 0"
+          size="20px"
+        >
+          arrow_downward
+        </v-icon>
+      </v-list-tile-title>
+    </v-list-tile-content>
   </v-list-tile>
 </template>
 
@@ -21,40 +40,39 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 export default {
 	props: {
-		proficiency: Number,
-		advantage: Number,
-		fail: Number,
-		value: Number,
-		name: String,
-		conditionalBenefits: Number,
-	},
-	methods: {
-		click(e){
-			this.$emit('click', e);
-		},
+    model: {
+      type: Object,
+      required: true,
+    },
+    hideModifier: Boolean,
 	},
 	computed: {
 		icon(){
-			if (this.proficiency == 0.5){
+			if (this.model.proficiency == 0.5){
 				return 'brightness_2';
-			} else if (this.proficiency == 1) {
+			} else if (this.model.proficiency == 1) {
 				return 'brightness_1'
-			} else if (this.proficiency == 2){
+			} else if (this.model.proficiency == 2){
 				return 'album'
 			} else {
 				return 'radio_button_unchecked';
 			}
 		},
 		displayedModifier(){
-			let mod = this.value;
-			if (this.fail){
+			let mod = this.model.value;
+			if (this.model.fail){
 				return 'fail';
 			} else {
 				return numberToSignedString(mod);
 			}
 		},
 		hasClickListener(){
-    	return this.$listeners && this.$listeners.click
+      return this.$listeners && this.$listeners.click
+		},
+	},
+	methods: {
+		click(e){
+			this.$emit('click', e);
 		},
 	}
 }

@@ -115,17 +115,14 @@
         </v-card>
       </div>
 
-      <div
-        v-show="true"
-        class="saving-throws"
-      >
+      <div class="saving-throws">
         <v-card>
           <v-list>
             <v-subheader>Saving Throws</v-subheader>
             <skill-list-tile
               v-for="save in savingThrows"
               :key="save._id"
-              v-bind="save"
+              :model="save"
               :data-id="save._id"
               @click="clickProperty({_id: save._id})"
             />
@@ -140,9 +137,52 @@
             <skill-list-tile
               v-for="skill in skills"
               :key="skill._id"
-              v-bind="skill"
+              :model="skill"
               :data-id="skill._id"
               @click="clickProperty({_id: skill._id})"
+            />
+          </v-list>
+        </v-card>
+      </div>
+
+      <div
+        v-if="weapons.length || tools.length || languages.length"
+        class="proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader v-if="weapons.length">
+              Weapons
+            </v-subheader>
+            <skill-list-tile
+              v-for="weapon in weapons"
+              :key="weapon._id"
+              hide-modifier
+              :model="weapon"
+              :data-id="weapon._id"
+              @click="clickProperty({_id: weapon._id})"
+            />
+            <v-subheader v-if="tools.length">
+              Tools
+            </v-subheader>
+            <skill-list-tile
+              v-for="tool in tools"
+              :key="tool._id"
+              hide-modifier
+              :model="tool"
+              :data-id="tool._id"
+              @click="clickProperty({_id: tool._id})"
+            />
+            <v-subheader v-if="languages.length">
+              Languages
+            </v-subheader>
+            <skill-list-tile
+              v-for="language in languages"
+              :key="language._id"
+              hide-modifier
+              :model="language"
+              :data-id="language._id"
+              @click="clickProperty({_id: language._id})"
             />
           </v-list>
         </v-card>
@@ -193,16 +233,27 @@
   import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
   import AttackListTile from '/imports/ui/properties/components/actions/AttackListTile.vue';
 
-	const getAttributeOfType = function(charId, type){
-		return CreatureProperties.find({
-			'ancestors.id': charId,
-			type: 'attribute',
-			attributeType: type,
-			removed: {$ne: true},
-		}, {
+  const getProperties = function(creatureId, filter = {}){
+    filter['ancestors.id'] = creatureId;
+    filter.removed = {$ne: true};
+    return CreatureProperties.find(filter, {
 			sort: {order: 1}
 		});
+  };
+
+	const getAttributeOfType = function(creatureId, type){
+    return getProperties(creatureId, {
+      type: 'attribute',
+      attributeType: type,
+    });
 	};
+
+  const getSkillOfType = function(creatureId, type){
+    return getProperties(creatureId, {
+      type: 'skill',
+      skillType: type,
+    });
+  }
 
 	export default {
 		components: {
@@ -243,52 +294,28 @@
         return getAttributeOfType(this.creatureId, 'hitDice');
 			},
 			checks(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'skill',
-					skillType: 'check',
-          removed: {$ne: true},
-				}, {
-					sort: {order: 1},
-				});
+        return getSkillOfType(this.creatureId, 'check');
 			},
 			savingThrows(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'skill',
-					skillType: 'save',
-          removed: {$ne: true},
-				}, {
-					sort: {order: 1},
-				});
+        return getSkillOfType(this.creatureId, 'save');
 			},
 			skills(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'skill',
-					skillType: 'skill',
-          removed: {$ne: true},
-				}, {
-					sort: {order: 1},
-				});
+        return getSkillOfType(this.creatureId, 'skill');
+			},
+      tools(){
+        return getSkillOfType(this.creatureId, 'tool');
+			},
+      weapons(){
+        return getSkillOfType(this.creatureId, 'weapon');
+			},
+      languages(){
+        return getSkillOfType(this.creatureId, 'language');
 			},
       actions(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'action',
-          removed: {$ne: true},
-				}, {
-					sort: {order: 1},
-				});
+        return getProperties(this.creatureId, {type: 'action'});
 			},
       attacks(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'attack',
-          removed: {$ne: true},
-				}, {
-					sort: {order: 1},
-				});
+        return getProperties(this.creatureId, {type: 'attack'});
 			},
 		},
 		methods: {
