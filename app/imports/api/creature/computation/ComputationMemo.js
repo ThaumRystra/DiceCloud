@@ -1,4 +1,4 @@
-import { includes, cloneDeep } from 'lodash';
+import { includes, cloneDeep, has } from 'lodash';
 
 export default class ComputationMemo {
   constructor(props){
@@ -8,8 +8,12 @@ export default class ComputationMemo {
     this.skillsByAbility = {};
     this.unassignedEffects = [];
     props.filter((prop) => {
-      // skip effects and proficiencies for the next pass
-      if (prop.type === 'effect' || prop.type === 'proficiency') return true;
+      // skip effects, proficiencies, and class levels for the next pass
+      if (
+        prop.type === 'effect' ||
+        prop.type === 'proficiency' ||
+        prop.type === 'classLevel'
+      ) return true;
       // Add all the stats
       this.addStat(prop);
     }).forEach((prop) => {
@@ -18,6 +22,8 @@ export default class ComputationMemo {
         this.addEffect(prop);
       } else if (prop.type === 'proficiency') {
         this.addProficiency(prop);
+      } else if (prop.type === 'classLevel'){
+        this.addClassLevel(prop);
       }
     });
   }
@@ -26,6 +32,27 @@ export default class ComputationMemo {
     this.propsById[prop._id] = prop;
     prop.computationDetails = propDetails(prop);
     return prop;
+  }
+  storeHighestClassLevel(name, prop){
+    // Only store the highest level classLevel
+    let stat = this.statsByVariableName[name]
+    if (!stat){
+      this.statsByVariableName[name] = prop;
+    } else if (!has(stat, 'level')){
+      // Stat is overriden by an attribute
+      return;
+    } else if (stat.level < prop.level) {
+      this.statsByVariableName[name] = prop;
+    }
+  }
+  addClassLevel(prop){
+    prop = this.registerProperty(prop);
+    if (prop.variableName){
+      this.storeHighestClassLevel(prop.variableName, prop);
+    }
+    if (prop.baseClass){
+      this.storeHighestClassLevel(prop.baseClass, prop);
+    }
   }
   addStat(prop){
     prop = this.registerProperty(prop);
@@ -144,6 +171,11 @@ const propDetailsByType = {
   effect(){
     return {
       computed: false,
+    };
+  },
+  classLevel(){
+    return {
+      computed: true,
     };
   },
   proficiency(){

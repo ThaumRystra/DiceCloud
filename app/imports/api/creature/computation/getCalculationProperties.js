@@ -36,6 +36,7 @@ export default function getCalculationProperties(creatureId){
       'damageMultiplier',
       'effect',
       'proficiency',
+      'classLevel',
     ]},
   }).fetch();
 }

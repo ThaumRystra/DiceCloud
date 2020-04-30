@@ -23,6 +23,7 @@ export default function writeCreatureVariables(memo, creatureId) {
     'conditionalBenefits',
     'rollBonuses',
     'fail',
+    'level',
   ];
 
   memo.creatureVariables = {};
