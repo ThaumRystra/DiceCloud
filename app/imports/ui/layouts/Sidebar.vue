@@ -1,59 +1,77 @@
 <template>
   <div class="sidebar">
-		<v-alert
-			:value="showWarning"
-			type="warning"
-		>
-			<div>
-				This is an early build of DiceCloud version 2. Data will be erased
-				frequently. Don't store anything important here.
-			</div>
-			<div class="layout row justify-center">
-				<v-btn @click="showWarning = false">I won't</v-btn>
-			</div>
-		</v-alert>
-		<v-layout row justify-center v-if="!signedIn">
-			<v-btn flat to="/sign-in">Sign in</v-btn>
-		</v-layout>
+    <v-alert
+      :value="showWarning"
+      type="warning"
+    >
+      <div>
+        This is an early build of DiceCloud version 2. Data will be erased
+        frequently. Don't store anything important here yet.
+      </div>
+      <div class="layout row justify-center">
+        <v-btn @click="showWarning = false">
+          I won't
+        </v-btn>
+      </div>
+    </v-alert>
+    <v-layout
+      v-if="!signedIn"
+      row
+      justify-center
+    >
+      <v-btn
+        flat
+        to="/sign-in"
+      >
+        Sign in
+      </v-btn>
+    </v-layout>
     <v-list>
-			<v-list-tile v-if="signedIn">
-				<v-list-tile-content>
-					<v-list-tile-title>
-						{{userName}}
-					</v-list-tile-title>
+      <v-list-tile v-if="signedIn">
+        <v-list-tile-content>
+          <v-list-tile-title>
+            {{ userName }}
+          </v-list-tile-title>
         </v-list-tile-content>
-				<v-list-tile-action>
-					<v-tooltip bottom>
-						<v-btn flat icon slot="activator" to="/account"><v-icon>settings</v-icon></v-btn>
-						<span>Account Settings</span>
-					</v-tooltip>
+        <v-list-tile-action>
+          <v-tooltip bottom>
+            <v-btn
+              slot="activator"
+              flat
+              icon
+              to="/account"
+            >
+              <v-icon>settings</v-icon>
+            </v-btn>
+            <span>Account Settings</span>
+          </v-tooltip>
         </v-list-tile-action>
-			</v-list-tile>
+      </v-list-tile>
 
       <v-list-tile
         v-for="(link, i) in links"
-				v-if="link.vif || link.vif === undefined"
-        :to="link.to"
-				:href="link.href"
+        v-if="link.vif || link.vif === undefined"
         :key="i"
+        :to="link.to"
+        :href="link.href"
       >
         <v-list-tile-action>
-          <v-icon>{{link.icon}}</v-icon>
+          <v-icon>{{ link.icon }}</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>
-          {{link.title}}
+          {{ link.title }}
         </v-list-tile-title>
       </v-list-tile>
-      <v-divider></v-divider>
+      <v-divider />
     </v-list>
     <v-list dense>
       <v-list-tile
         v-for="character in CreaturesWithNoParty"
-        :to="character.url"
         :key="character._id"
+        :to="character.url"
       >
         <v-list-tile-title>
-          {{character.name}}
+          {{ character.name }}
         </v-list-tile-title>
       </v-list-tile>
       <v-list-group
@@ -62,16 +80,16 @@
       >
         <v-list-tile slot="activator">
           <v-list-tile-title>
-            {{party.name}}
+            {{ party.name }}
           </v-list-tile-title>
         </v-list-tile>
         <v-list-tile
           v-for="character in characterDocs"
-          :to="character.url"
           :key="character._id"
+          :to="character.url"
         >
           <v-list-tile-title>
-            {{character.name}}
+            {{ character.name }}
           </v-list-tile-title>
         </v-list-tile>
       </v-list-group>
@@ -89,7 +107,7 @@
 		}},
     meteor: {
       $subscribe: {
-        "characterList": [],
+        'characterList': [],
       },
 			signedIn(){
 				return Meteor.userId();
@@ -100,16 +118,13 @@
 			},
 			links(){
 				let links = [
-					{title: "Home", icon: "home", to: "/"},
-	        {title: "Characters", icon: "group", to: "/characterList", vif: Meteor.userId()},
-					{title: "Library", icon: "book", to: "/library", vif: Meteor.userId()},
-	        {title: "Send Feedback", icon: "bug_report", to: "/feedback"},
-	        {title: "Patreon", icon: "", href: "https://www.patreon.com/dicecloud"},
-	        {title: "Github", icon: "", href: "https://github.com/ThaumRystra/DiceCloud/tree/version-2"},
+					{title: 'Home', icon: 'home', to: '/'},
+	        {title: 'Characters', icon: 'group', to: '/characterList', vif: Meteor.userId()},
+					{title: 'Library', icon: 'book', to: '/library', vif: Meteor.userId()},
+	        {title: 'Send Feedback', icon: 'bug_report', to: '/feedback'},
+	        {title: 'Patreon', icon: '', href: 'https://www.patreon.com/dicecloud'},
+	        {title: 'Github', icon: '', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
 				];
-				if (Meteor.settings.public.showStorybook || Meteor.isDevelopment){
-					links.push({title: 'Component Previews', icon: "category", to: '/storybook/HealthBar'})
-				}
 				return links;
 			},
       parties(){
@@ -126,7 +141,7 @@
               fields: {name: 1, urlName: 1},
             }
       		).map(char => {
-            char.url = `\/character\/${char._id}\/${char.urlName || "-"}`;
+            char.url = `\/character\/${char._id}\/${char.urlName || '-'}`;
             return char;
           });
           return party;
@@ -143,7 +158,7 @@
     			},
     			{sort: {name: 1}}
     		).map(char => {
-          char.url = `\/character\/${char._id}\/${char.urlName || "-"}`;
+          char.url = `\/character\/${char._id}\/${char.urlName || '-'}`;
           return char;
         });
     	},

@@ -1,74 +1,112 @@
 <template>
-	<ToolbarLayout>
-		<div slot="toolbar">Sign In</div>
-		<v-form ref="form" class="mt-4">
-			<v-layout column align-center>
-				<v-img
-				src="crown-dice-logo-cropped-transparent.png"
-				width="120px"
-				class="ma-3"></v-img>
-				<v-text-field
-					type="text"
-					label="Username or email"
-					v-model="name"
-		      :rules="nameRules"
-		      @keyup.enter="submit"
-		      required
-				></v-text-field>
-				<v-text-field
-					type="password"
-					label="Password"
-					v-model="password"
-		      :rules="passwordRules"
-		      @keyup.enter="submit"
-					required
-				></v-text-field>
-				<v-btn flat>Reset Password</v-btn>
-				<div class="error--text">
-					{{error}}
-				</div>
-				<v-layout row>
-					<v-btn
-						:disabled="!valid"
-						@click="submit"
-						color="accent"
-					>
-						Sign In
-					</v-btn>
-					<v-btn color="accent" to="/register">
-						Register
-					</v-btn>
-				</v-layout>
-			</v-layout>
-		</v-form>
-		<v-divider class="ma-4"></v-divider>
-		<v-layout column align-center>
-			<div class="error--text">
-				{{googleError}}
-			</div>
-			<v-btn color="accent" @click="googleLogin">
-				Sign in with Google
-			</v-btn>
-		</v-layout>
-	</ToolbarLayout>
+  <ToolbarLayout>
+    <div slot="toolbar">
+      Sign In
+    </div>
+    <v-form
+      ref="form"
+      class="mt-4"
+    >
+      <v-layout
+        column
+        align-center
+      >
+        <v-img
+          src="crown-dice-logo-cropped-transparent.png"
+          width="120px"
+          class="ma-3"
+        />
+        <!--
+        <v-text-field
+          v-model="name"
+          type="text"
+          label="Username or email"
+          :rules="nameRules"
+          required
+          @keyup.enter="submit"
+        />
+        <v-text-field
+          v-model="password"
+          type="password"
+          label="Password"
+          :rules="passwordRules"
+          required
+          @keyup.enter="submit"
+        />
+        <v-btn flat>
+          Reset Password
+        </v-btn>
+        <div class="error--text">
+          {{ error }}
+        </div>
+        <v-layout row>
+          <v-btn
+            :disabled="!valid"
+            color="accent"
+            @click="submit"
+          >
+            Sign In
+          </v-btn>
+          <v-btn
+            color="accent"
+            to="/register"
+          >
+            Register
+          </v-btn>
+        </v-layout>
+        -->
+      </v-layout>
+    </v-form>
+    <v-divider class="ma-4" />
+    <v-layout
+      column
+      align-center
+    >
+      <!--
+      <div class="error--text">
+        {{ googleError }}
+      </div>
+      <v-btn
+        color="accent"
+        @click="googleLogin"
+      >
+        Sign in with Google
+      </v-btn>
+      -->
+      <div class="error--text">
+        {{ patreonError }}
+      </div>
+      <v-btn
+        color="accent"
+        @click="patreonLogin"
+      >
+        Sign in with Patreon
+      </v-btn>
+    </v-layout>
+  </ToolbarLayout>
 </template>
 
 <script>
-	import ToolbarLayout from "/imports/ui/layouts/ToolbarLayout.vue";
-	import router from "/imports/ui/router.js";
+  import { Meteor } from 'meteor/meteor'
+	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
+	import router from '/imports/ui/router.js';
 	export default{
+    components: {
+      ToolbarLayout,
+    },
 		data: () => ({
       valid: true,
-      name: "",
+      name: '',
       nameRules: [
-        v => !!v || "Name is required",
+        v => !!v || 'Name is required',
       ],
-      password: "",
+      password: '',
       passwordRules: [
-        v => !!v || "Password is required",
+        v => !!v || 'Password is required',
       ],
-			error: "",
-			googleError: "",
+			error: '',
+      googleError: '',
+			patreonError: '',
     }),
 		methods: {
       submit () {
@@ -77,19 +115,31 @@
 						if (error){
 							this.error = error.reason;
 						} else {
-							router.push("characterList");
+							router.push('characterList');
 						}
 					});
         }
       },
 			googleLogin() {
 				Meteor.loginWithGoogle(error => {
-					if (error) this.googleError = error.reason;
+          if (error){
+            console.error(error);
+            this.googleError = error.message;
+          } else {
+            router.push('characterList');
+          }
+				});
+			},
+      patreonLogin() {
+				Meteor.loginWithPatreon(error => {
+					if (error){
+            console.error(error);
+            this.patreonError = error.message;
+          } else {
+            router.push('characterList');
+          }
 				});
 			}
-    },
-    components: {
-      ToolbarLayout,
     },
 	}
 </script>

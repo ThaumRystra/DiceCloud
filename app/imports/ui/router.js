@@ -1,5 +1,4 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import Vue from 'vue';
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
@@ -10,6 +9,7 @@ import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue' ;
 import Account from '/imports/ui/pages/Account.vue' ;
 import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
+import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
 
 // Not found
 import NotFound from '/imports/ui/pages/NotFound.vue';
@@ -21,6 +21,22 @@ const routerFactory = new RouterFactory({
   scrollBehavior: nativeScrollBehavior,
 });
 
+function ensurePatronTier(to, from, next){
+  let user = Meteor.user();
+  if (!user){
+    next('/sign-in');
+    return;
+  }
+  let entitledCents = user.services.patreon.entitledCents || 0;
+  let overrideCents = user.services.patreon.entitledCentsOverride || 0;
+  
+  if (entitledCents < 500 && overrideCents < 500){
+    next('/patreon-level-too-low');
+  } else {
+    next();
+  }
+}
+
 RouterFactory.configure(factory => {
   factory.addRoutes([
     {
@@ -30,48 +46,36 @@ RouterFactory.configure(factory => {
     },{
       path: '/characterList',
       component: CharacterList,
-      //component: NotImplemented,
+      beforeEnter: ensurePatronTier,
     },{
       path: '/library',
       component: Library,
+      beforeEnter: ensurePatronTier,
     },{
       path: '/character/:id/:urlName',
       component: CharacterSheetPage,
-      //component: NotImplemented,
+      beforeEnter: ensurePatronTier,
     },{
       path: '/character/:id',
       component: CharacterSheetPage,
-      //component: NotImplemented,
-
+      beforeEnter: ensurePatronTier,
     },{
 			path: '/sign-in',
 			component: SignIn,
-		},{
+		},/*{
 			path: '/register',
 			component: Register,
-		},{
+		},*/{
 			path: '/account',
 			component: Account,
 		},{
       path: '/feedback',
       component: NotImplemented,
+    },{
+      path: '/patreon-level-too-low',
+      component: PatreonLevelTooLow,
     },
   ]);
-  // Storybook routes
-  if (Meteor.settings.public.showStorybook || Meteor.isDevelopment){
-    let StoryBook = require('/imports/ui/StoryBook.vue').default;
-    factory.addRoutes([
-      {
-        path: '/storybook/:component',
-        name: 'componentStory',
-        component: StoryBook,
-      },{
-        path: '/storybook',
-        name: 'storybook',
-        component: StoryBook,
-      },
-    ]);
-  }
   // Icon admin routes
   if (Meteor.isDevelopment){
     let IconAdmin = require('/imports/ui/icons/IconAdmin.vue').default;
