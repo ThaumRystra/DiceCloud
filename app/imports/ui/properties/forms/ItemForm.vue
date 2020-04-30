@@ -9,22 +9,13 @@
         @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
       />
       <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="Use this name in formulae to reference this attribute"
-        :error-messages="errors.variableName"
+        label="Plural name"
+        :value="model.plural"
+        :error-messages="errors.plural"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
+        @change="(value, ack) => $emit('change', {path: ['plural'], value, ack})"
       />
     </div>
-    <text-field
-      label="Plural name"
-      :value="model.plural"
-      :error-messages="errors.plural"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['plural'], value, ack})"
-    />
     <div class="layout row wrap">
       <text-field
         label="Value"
@@ -73,17 +64,41 @@
       standalone
     >
       <v-switch
-        label="Requires attunement"
-        :input-value="model.requiresAttunement"
-        :error-messages="errors.requiresAttunement"
-        @change="e => $emit('change', {path: ['requiresAttunement'], value})"
-      />
-      <v-switch
         label="Show increment buttons"
         :input-value="model.showIncrement"
         :error-messages="errors.showIncrement"
-        @change="e => $emit('change', {path: ['showIncrement'], value})"
+        @change="value => $emit('change', {path: ['showIncrement'], value})"
       />
+      <smart-combobox
+        label="Tags"
+        class="mr-2"
+        multiple
+        chips
+        deletable-chips
+        :value="model.tags"
+        :error-messages="errors.tags"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['tags'], value, ack})"
+      />
+      <v-switch
+        label="Requires attunement"
+        :input-value="model.requiresAttunement"
+        :error-messages="errors.requiresAttunement"
+        @change="value => $emit('change', {path: ['requiresAttunement'], value})"
+      />
+      <v-expand-transition>
+        <div
+          v-show="model.requiresAttunement"
+          style="padding-top: 0.1px;"
+        >
+          <v-switch
+            label="Attuned"
+            :input-value="model.attuned"
+            :error-messages="errors.attuned"
+            @change="value => $emit('change', {path: ['attuned'], value})"
+          />
+        </div>
+      </v-expand-transition>
     </form-section>
   </div>
 </template>

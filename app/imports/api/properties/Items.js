@@ -1,19 +1,10 @@
 import SimpleSchema from 'simpl-schema';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
-ItemSchema = new SimpleSchema({
+const ItemSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
-		defaultValue: "New Item",
 	},
-	// Variable name to reference this item as ammunition or in formulae
-	variableName: {
-    type: String,
-		regEx: VARIABLE_NAME_REGEX,
-    min: 3,
-    defaultValue: 'newAttribute',
-  },
 	// Plural name of the item, if there is more than one
 	plural: {
 		type: String,
@@ -44,6 +35,10 @@ ItemSchema = new SimpleSchema({
 	// If this item is equipped, it requires attunement
 	// Being equipped is `enabled === true`
 	requiresAttunement: {
+		type: Boolean,
+		optional: true,
+	},
+  attuned: {
 		type: Boolean,
 		optional: true,
 	},
