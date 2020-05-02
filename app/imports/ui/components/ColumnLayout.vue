@@ -1,6 +1,9 @@
-<template lang="html" functional>
+<template
+  lang="html"
+  functional
+>
   <div class="column-layout">
-  	<slot/>
+    <slot />
   </div>
 </template>
 
@@ -11,7 +14,7 @@ export default {
 
 <style lang="css" scoped>
 	.column-layout {
-		column-count: 4;
+		column-count: 12;
 		column-fill: balance;
 		column-gap: 0;
 		column-width: 240px;

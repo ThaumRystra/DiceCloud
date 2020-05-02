@@ -1,8 +1,5 @@
 <template>
-  <ToolbarLayout>
-    <div slot="toolbar">
-      Sign In
-    </div>
+  <div>
     <v-form
       ref="form"
       class="mt-4"
@@ -83,17 +80,13 @@
         Sign in with Patreon
       </v-btn>
     </v-layout>
-  </ToolbarLayout>
+  </div>
 </template>
 
 <script>
   import { Meteor } from 'meteor/meteor'
-	import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
 	import router from '/imports/ui/router.js';
 	export default{
-    components: {
-      ToolbarLayout,
-    },
 		data: () => ({
       valid: true,
       name: '',

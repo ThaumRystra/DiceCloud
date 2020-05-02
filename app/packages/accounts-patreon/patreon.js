@@ -1,5 +1,4 @@
 Accounts.oauth.registerService('patreon');
-console.log('accounts-patreon');
 
 if (Meteor.isClient) {
   const loginWithPatreon = (options, callback) => {

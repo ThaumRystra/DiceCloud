@@ -50,7 +50,6 @@
 
       <v-list-tile
         v-for="(link, i) in links"
-        v-if="link.vif || link.vif === undefined"
         :key="i"
         :to="link.to"
         :href="link.href"
@@ -98,70 +97,73 @@
 </template>
 
 <script>
-	import Creatures from '/imports/api/creature/Creatures.js';
-	import Parties from '/imports/api/campaign/Parties.js';
+  import Creatures from '/imports/api/creature/Creatures.js';
+  import Parties from '/imports/api/campaign/Parties.js';
 
   export default {
-		data(){return {
-			showWarning: true,
-		}},
+    data(){return {
+      showWarning: true,
+    }},
     meteor: {
       $subscribe: {
         'characterList': [],
       },
-			signedIn(){
-				return Meteor.userId();
-			},
-			userName(){
-				let user = Meteor.user();
-				return user && user.username || user && user._id;
-			},
-			links(){
-				let links = [
-					{title: 'Home', icon: 'home', to: '/'},
-	        {title: 'Characters', icon: 'group', to: '/characterList', vif: Meteor.userId()},
-					{title: 'Library', icon: 'book', to: '/library', vif: Meteor.userId()},
-	        {title: 'Send Feedback', icon: 'bug_report', to: '/feedback'},
-	        {title: 'Patreon', icon: '', href: 'https://www.patreon.com/dicecloud'},
-	        {title: 'Github', icon: '', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
-				];
-				return links;
-			},
+      signedIn(){
+        return Meteor.userId();
+      },
+      userName(){
+        let user = Meteor.user();
+        return user && user.username || user && user._id;
+      },
+      links(){
+        let isLoggedIn = !!Meteor.userId();
+        let links = [
+          {title: 'Home', icon: 'home', to: '/'},
+          {title: 'Characters', icon: 'portrait', to: '/characterList', requireLogin: true},
+          {title: 'Library', icon: 'book', to: '/library', requireLogin: true},
+          {title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
+          {title: 'Send Feedback', icon: 'bug_report', to: '/feedback'},
+          {title: 'Patreon', icon: '', href: 'https://www.patreon.com/dicecloud'},
+          {title: 'Github', icon: '', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
+        ];
+        return links.filter(link => !link.requireLogin || isLoggedIn);
+      },
       parties(){
-        let parties =  Parties.find(
-    			{owner: Meteor.userId()},
-    			{sort: {name: 1}},
-    		).map(party => {
+        const userId = Meteor.userId();
+        return Parties.find(
+          {owner: userId},
+          {sort: {name: 1}},
+        ).map(party => {
           party.characterDocs = Creatures.find(
-      			{
-      				_id: {$in: party.Creatures},
-      				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
-      			}, {
+            {
+              _id: {$in: party.Creatures},
+              $or: [{readers: userId}, {writers: userId}, {owner: userId}],
+            }, {
               sort: {name: 1},
               fields: {name: 1, urlName: 1},
             }
-      		).map(char => {
-            char.url = `\/character\/${char._id}\/${char.urlName || '-'}`;
+          ).map(char => {
+            char.url = `/character/${char._id}/${char.urlName || '-'}`;
             return char;
           });
           return party;
         });
       },
-    	CreaturesWithNoParty() {
-    		var userId = Meteor.userId();
-    		var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
-    		var partyChars = _.uniq(_.flatten(charArrays));
-    		return Creatures.find(
-    			{
-    				_id: {$nin: partyChars},
-    				$or: [{readers: userId}, {writers: userId}, {owner: userId}],
-    			},
-    			{sort: {name: 1}}
-    		).map(char => {
-          char.url = `\/character\/${char._id}\/${char.urlName || '-'}`;
+      CreaturesWithNoParty() {
+        var userId = Meteor.userId();
+        var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
+        var partyChars = _.uniq(_.flatten(charArrays));
+        return Creatures.find(
+          {
+            _id: {$nin: partyChars},
+            $or: [{readers: userId}, {writers: userId}, {owner: userId}],
+          },
+          {sort: {name: 1}}
+        ).map(char => {
+          char.url = `/character/${char._id}/${char.urlName || '-'}`;
           return char;
         });
-    	},
+      },
     },
   };
 </script>

@@ -1,8 +1,5 @@
 <template>
-  <toolbar-layout>
-    <div slot="toolbar">
-      DiceCloud
-    </div>
+  <div>
     <div class="content">
       <section>
         <v-parallax
@@ -195,15 +192,11 @@
         </v-layout>
       </section>
     </div>
-  </toolbar-layout>
+  </div>
 </template>
 
 <script>
-  import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
   export default {
-    components: {
-      ToolbarLayout,
-    },
     meteor: {
       signedIn(){
 				return Meteor.userId();

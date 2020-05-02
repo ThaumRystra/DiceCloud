@@ -140,3 +140,13 @@ Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
 		return user && user._id;
 	}
 });
+
+export function getEntitledCentsOfUser(user){
+  if (!user) return 0;
+  const patreon = user.services && user.services.patreon;
+  if (!patreon) return 0;
+  let entitledCents = patreon.entitledCents || 0;
+  let overrideCents = patreon.entitledCentsOverride || 0;
+  if (overrideCents > entitledCents) entitledCents = overrideCents;
+  return entitledCents;
+}

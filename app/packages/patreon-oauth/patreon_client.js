@@ -1,5 +1,4 @@
 Patreon = {};
-console.log('patreon-oauth');
 
 // Request Patreon credentials for the user
 // @param options {optional}
@@ -33,7 +32,6 @@ Patreon.requestCredential = (options, credentialRequestCompleteCallback) => {
   const flatScope = scope.map(encodeURIComponent).join(' ');
   //const flatScope = encodeURIComponent(scope.join(','));
 
-  console.log({flatScope})
   const loginStyle = OAuth._loginStyle('patreon', config, options);
 
   const loginUrl =

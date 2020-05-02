@@ -1,8 +1,5 @@
 <template>
-  <toolbar-layout>
-    <div slot="toolbar">
-      Patreon tier not high enough
-    </div>
+  <div>
     <v-layout
       column
       align-center
@@ -15,16 +12,11 @@
         You need to pledge at least $5 to use this beta.
       </h2>
     </v-layout>
-  </toolbar-layout>
+  </div>
 </template>
 
 <script>
-import ToolbarLayout from '/imports/ui/layouts/ToolbarLayout.vue';
-
 export default {
-  components: {
-    ToolbarLayout,
-  },
   meteor: {
     entitledDollars(){
       let user = Meteor.user();

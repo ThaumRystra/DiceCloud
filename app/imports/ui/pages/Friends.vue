@@ -1,0 +1,20 @@
+<template>
+  <div>
+    <div slot="toolbar">
+      Friends
+    </div>
+    <v-sheet>
+      <h1>
+        Friends
+      </h1>
+      <v-btn
+        fixed
+        bottom
+        right
+        fab
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+    </v-sheet>
+  </div>
+</template>

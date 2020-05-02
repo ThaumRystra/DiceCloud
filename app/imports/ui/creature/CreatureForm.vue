@@ -1,33 +1,34 @@
 <template lang="html">
-	<div class="creature-form">
-		<text-field
-			label="Name"
-			:value="model.name"
-			@change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
-			:error-messages="errors.name"
-			:debounce-time="debounceTime"
-		/>
-		<text-field
-			label="Alignment"
-			:value="model.alignment"
-			@change="(value, ack) => $emit('change', {path: ['alignment'], value, ack})"
-			:error-messages="errors.alignment"
-			:debounce-time="debounceTime"
-		/>
-		<text-field
-			label="Gender"
-			:value="model.gender"
-			@change="(value, ack) => $emit('change', {path: ['gender'], value, ack})"
-			:error-messages="errors.gender"
-			:debounce-time="debounceTime"
-		/>
-		<text-field
-			label="Picture URL"
-			:value="model.picture"
-			@change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
-			:error-messages="errors.picture"
-			:debounce-time="debounceTime"
-		/>
+  <div class="creature-form">
+    <text-field
+      label="Name"
+      :value="model.name"
+      :error-messages="errors.name"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+    />
+    <text-field
+      label="Alignment"
+      :value="model.alignment"
+      :error-messages="errors.alignment"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['alignment'], value, ack})"
+    />
+    <text-field
+      label="Gender"
+      :value="model.gender"
+      :error-messages="errors.gender"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['gender'], value, ack})"
+    />
+    <text-field
+      label="Picture URL"
+      :value="model.picture"
+      :error-messages="errors.picture"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
+    />
+    <!--
 		<form-sections>
 			<form-section name="settings">
 				<v-switch
@@ -50,7 +51,8 @@
 				/>
 			</form-section>
 		</form-sections>
-	</div>
+    -->
+  </div>
 </template>
 
 <script>

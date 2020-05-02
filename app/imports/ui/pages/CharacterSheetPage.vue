@@ -1,5 +1,9 @@
 <template>
-  <character-sheet show-menu-button :creature-id="$route.params.id" />
+  <character-sheet
+    show-menu-button
+    :creature-id="$route.params.id"
+    :tabs="tabs"
+  />
 </template>
 
 <script>
@@ -8,5 +12,11 @@ export default {
 	components: {
 		CharacterSheet,
 	},
+  props: {
+    tabs: {
+      type: Number,
+      required: true,
+    },
+  },
 }
 </script>
