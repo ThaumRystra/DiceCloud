@@ -1,19 +1,5 @@
 <template>
   <div class="sidebar">
-    <v-alert
-      :value="showWarning"
-      type="warning"
-    >
-      <div>
-        This is an early build of DiceCloud version 2. Data will be erased
-        frequently. Don't store anything important here yet.
-      </div>
-      <div class="layout row justify-center">
-        <v-btn @click="showWarning = false">
-          I won't
-        </v-btn>
-      </div>
-    </v-alert>
     <v-layout
       v-if="!signedIn"
       row
@@ -101,9 +87,6 @@
   import Parties from '/imports/api/campaign/Parties.js';
 
   export default {
-    data(){return {
-      showWarning: true,
-    }},
     meteor: {
       $subscribe: {
         'characterList': [],
