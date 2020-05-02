@@ -1,11 +1,10 @@
 <template lang="html">
-	<div class="feature-viewer">
-		<property-name :value="model.name"/>
-		<div v-if="model.alwaysEnabled" class="caption">
-			Always enabled
-		</div>
-		<property-description :value="model.description"/>
-	</div>
+  <div class="feature-viewer">
+    <property-name :value="model.name" />
+    <property-description :value="model.summary" />
+    <v-divider class="mt-3 mb-3" />
+    <property-description :value="model.description" />
+  </div>
 </template>
 
 <script>

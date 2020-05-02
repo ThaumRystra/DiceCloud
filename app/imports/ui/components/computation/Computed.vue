@@ -1,5 +1,10 @@
 <template lang="html">
+  <markdown-text
+    v-if="embedded"
+    :markdown="computedValue"
+  />
   <div
+    v-else
     class="computed"
     :class="{
       'symbols-are-errors': expectNumber && scope,
@@ -11,9 +16,14 @@
 
 <script>
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+import evalutateStringWithEmbeddedCalculations from '/imports/api/creature/computation/afterComputation/evalutateStringWithEmbeddedCalculations.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 export default {
+  components: {
+    MarkdownText,
+  },
   props: {
     value: {
       type: String,
@@ -29,6 +39,9 @@ export default {
     },
     signed: {
       type: Boolean
+    },
+    embedded: {
+      type: Boolean,
     },
   },
   data(){return {
@@ -49,12 +62,17 @@ export default {
   methods: {
     recalculate(){
       if (!this.value) return;
-      let {result, errors} = evaluateString(this.value, this.scope);
-      if (this.signed){
-        result = numberToSignedString(result);
+      if (this.embedded){
+        let result = evalutateStringWithEmbeddedCalculations(this.value, this.scope);
+        this.computedValue = result;
+      } else {
+        let {result, errors} = evaluateString(this.value, this.scope);
+        if (this.signed){
+          result = numberToSignedString(result);
+        }
+        this.computedValue = result;
+        this.errors = errors;
       }
-      this.computedValue = result;
-      this.errors = errors;
     }
   }
 }

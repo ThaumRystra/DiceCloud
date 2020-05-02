@@ -1,18 +1,20 @@
 <template lang="html">
-	<div>
-		<markdown-text v-if="value" :markdown="value"/>
-	</div>
+  <computed
+    class="property-description"
+    embedded
+    :value="value"
+  />
 </template>
 
 <script>
-import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 
 export default {
+	components: {
+    Computed: ComputedForCreature,
+	},
 	props: {
 		value: String,
-	},
-	components: {
-		MarkdownText,
 	},
 }
 </script>

@@ -7,18 +7,17 @@
       :debounce-time="debounceTime"
       @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
     />
-    <!--
-		<smart-select
-			label="Enabled"
-			:items="enabledOptions"
-			:value="enabledStatus"
-			:error-messages="errors.enabled || errors.alwaysEnabled"
-			:menu-props="{auto: true, lazy: true}"
-			@change="changeEnabled"
-			:debounce-time="debounceTime"
-		/>-->
+    <text-area
+      label="Summary"
+      hint="This will appear in the feature card in the character sheet"
+      :value="model.summary"
+      :error-messages="errors.summary"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['summary'], value, ack})"
+    />
     <text-area
       label="Description"
+      hint="The rest of the description that doesn't fit in the summary goes here"
       :value="model.description"
       :error-messages="errors.description"
       :debounce-time="debounceTime"

@@ -1,31 +1,38 @@
 <template lang="html">
-  <toolbar-card :color="color" @click="$emit('click')" :id="_id">
-		<template slot="toolbar">
-			<span>
-				{{name}}
-			</span>
-			<v-spacer/>
-		</template>
-		<v-card-text v-if="description">
-			<markdown-text :markdown="description"/>
-		</v-card-text>
+  <toolbar-card
+    :id="model._id"
+    :color="model.color"
+    @click="$emit('click')"
+  >
+    <template slot="toolbar">
+      <span>
+        {{ model.name }}
+      </span>
+      <v-spacer />
+    </template>
+    <v-card-text v-if="model.summary">
+      <computed
+        embedded
+        :value="model.summary"
+      />
+    </v-card-text>
   </toolbar-card>
 </template>
 
 <script>
-	import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 	import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
+  import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 
 	export default {
-		props: {
-			_id: String,
-			name: String,
-			description: String,
-			color: String,
-		},
 		components: {
-			MarkdownText,
 			ToolbarCard,
+      Computed: ComputedForCreature,
+		},
+		props: {
+			model: {
+        type: Object,
+        required: true,
+      },
 		},
 	};
 </script>

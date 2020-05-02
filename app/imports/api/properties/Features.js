@@ -4,7 +4,11 @@ let FeatureSchema = new SimpleSchema({
 	name: {
 		type: String,
 	},
-	description: {
+	summary: {
+		type: String,
+		optional: true,
+	},
+  description: {
 		type: String,
 		optional: true,
 	},

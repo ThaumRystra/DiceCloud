@@ -68,6 +68,6 @@ export function recomputeCreatureById(creatureId){
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
   writeCreatureVariables(computationMemo, creatureId);
-  if(Meteor.isClient) console.log(computationMemo);
+  // if(Meteor.isClient) console.log(computationMemo);
   return computationMemo;
 }

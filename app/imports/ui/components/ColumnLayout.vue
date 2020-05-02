@@ -2,13 +2,19 @@
   lang="html"
   functional
 >
-  <div class="column-layout">
+  <div
+    class="column-layout"
+    :class="wideColumns ? 'wide-columns' : ''"
+  >
     <slot />
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    wideColumns: Boolean,
+  },
 };
 </script>
 
@@ -18,6 +24,14 @@ export default {
 		column-fill: balance;
 		column-gap: 0;
 		column-width: 240px;
+		transform: translateZ(0);
+		padding: 4px;
+	}
+  .column-layout.wide-columns {
+		column-count: 12;
+		column-fill: balance;
+		column-gap: 0;
+		column-width: 320px;
 		transform: translateZ(0);
 		padding: 4px;
 	}
