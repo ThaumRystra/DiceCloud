@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <v-card class="ma-4 pa-2">
+  <div class="layout row justify-center">
+    <v-card
+      class="ma-4 pa-2"
+      style="flex-basis: 900px"
+    >
       <v-list>
         <v-list-tile>
           <v-switch
@@ -9,15 +12,13 @@
             @change="setDarkMode"
           />
         </v-list-tile>
+
         <v-subheader>
           Username
         </v-subheader>
         <v-list-tile>
-          <v-list-tile-title>
-            {{ user && user.username }}
-          </v-list-tile-title>
           <v-list-tile-action>
-            <v-tooltip left>
+            <v-tooltip right>
               <span>Change Username</span>
               <v-btn
                 slot="activator"
@@ -28,7 +29,11 @@
               </v-btn>
             </v-tooltip>
           </v-list-tile-action>
+          <v-list-tile-title>
+            {{ user && user.username }}
+          </v-list-tile-title>
         </v-list-tile>
+
         <v-subheader>
           Email
         </v-subheader>
@@ -62,6 +67,7 @@
             </v-tooltip>
           </v-list-tile-action>
         </v-list-tile>
+
         <v-list-tile>
           <v-list-tile-action>
             <v-tooltip right>
@@ -76,6 +82,16 @@
             </v-tooltip>
           </v-list-tile-action>
         </v-list-tile>
+
+        <v-subheader>
+          Patreon reward tier
+        </v-subheader>
+        <v-list-tile>
+          <v-list-tile-title>
+            ${{ entitledCents/100 }}
+          </v-list-tile-title>
+        </v-list-tile>
+
         <v-subheader>
           API Key
         </v-subheader>
@@ -148,6 +164,7 @@
 
 <script>
   import router from '/imports/ui/router.js';
+  import {getEntitledCentsOfUser} from '/imports/api/users/Users.js';
 
   export default {
     meteor: {
@@ -175,6 +192,11 @@
       apiKeyGenerationError: null,
       emailVerificationError: null,
     }},
+    computed: {
+      entitledCents(){
+        return getEntitledCentsOfUser(this.user);
+      },
+    },
     methods: {
       signOut(){
         Meteor.logout();
