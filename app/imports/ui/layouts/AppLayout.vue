@@ -4,12 +4,14 @@
     :light="!darkMode"
   >
     <v-navigation-drawer
+      v-if="$route.path !== '/countdown'"
       v-model="drawer"
       app
     >
       <Sidebar />
     </v-navigation-drawer>
     <v-toolbar
+      v-if="$route.path !== '/countdown'"
       app
       color="secondary"
       dark
@@ -53,6 +55,7 @@
     </v-toolbar>
     <v-content>
       <v-alert
+        v-if="$route.path !== '/countdown'"
         icon="priority_high"
         type="error"
         dismissible

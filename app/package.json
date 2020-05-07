@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.9.2",
+    "@chenfengyuan/vue-countdown": "^1.1.5",
     "animejs": "^2.2.0",
     "bcrypt": "^3.0.8",
     "core-js": "^2.6.11",

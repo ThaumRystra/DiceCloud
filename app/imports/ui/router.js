@@ -1,5 +1,6 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
 import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
+import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
@@ -14,6 +15,7 @@ import Friends from '/imports/ui/pages/Friends.vue' ;
 import Account from '/imports/ui/pages/Account.vue' ;
 import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
 import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
+import LaunchCountdown from '/imports/ui/pages/LaunchCountdown.vue';
 
 let userSubscription = Meteor.subscribe('user');
 
@@ -62,6 +64,15 @@ function ensurePatronTier5(to, from, next){
 RouterFactory.configure(factory => {
   factory.addRoutes([
     {
+      path: '/countdown',
+      name: 'Countdown',
+      components: {
+        default: LaunchCountdown,
+      },
+      meta: {
+        title: 'Countdown to Launch',
+      },
+    },{
       path: '/',
       name: 'home',
       components: {
@@ -185,4 +196,18 @@ RouterFactory.configure(factory => {
 
 // Create the router instance
 const router = routerFactory.create();
+router.beforeEach((to, from, next) => {
+  let user = Meteor.user();
+  if (
+    to.path === '/countdown' ||
+    to.path === '/sign-in' ||
+    (user.roles && user.roles.includes('admin'))
+  ){
+    next();
+  } else if (new Date() < LAUNCH_DATE){
+    next('/countdown');
+  } else {
+    next();
+  }
+});
 export default router;
