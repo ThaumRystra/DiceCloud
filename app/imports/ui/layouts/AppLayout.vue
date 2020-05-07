@@ -58,8 +58,8 @@
         dismissible
         :value="true"
       >
-        This version of DiceCloud is in beta. Data stored here may be destroyed by
-        future updates. Don't store anything important here yet.
+        This version of DiceCloud is in beta. Some data stored here may be destroyed by
+        future updates.
       </v-alert>
       <v-fade-transition
         mode="out-in"

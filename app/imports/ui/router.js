@@ -1,5 +1,5 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import { getEntitledCentsOfUser } from '/imports/api/users/Users.js';
+import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
@@ -49,7 +49,7 @@ function ensurePatronTier5(to, from, next){
         next('/sign-in');
         return;
       }
-      let entitledCents = getEntitledCentsOfUser(user);
+      let entitledCents = getEntitledCents(user);
       if (entitledCents < 500){
         next('/patreon-level-too-low');
       } else {
@@ -143,6 +143,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Account',
       },
+      beforeEnter: ensureLoggedIn,
 		},{
       path: '/feedback',
       components: {

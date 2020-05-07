@@ -141,7 +141,6 @@
 		},
 		methods: {
 			getEffectIcon,
-      log: console.log,
 		}
 	};
 </script>

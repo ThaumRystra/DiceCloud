@@ -12,6 +12,7 @@ OAuth.registerService('patreon', 2, null, query => {
     email: identity.data.attributes.email,
     entitledCents: identity.included[0] &&
       identity.included[0].attributes.currently_entitled_amount_cents || 0,
+    lastUpdatedIdentity: new Date(),
     accessToken,
     refreshToken,
     scope,
