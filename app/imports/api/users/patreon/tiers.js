@@ -3,13 +3,16 @@ import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
 
 const TIERS = [
   {
-    //cost per user $0
     name: 'Commoner',
     minimumEntitledCents: 0,
     invites: 0,
     paidBenefits: false,
   }, {
-    //cost per user $0
+    name: 'Dreamer',
+    minimumEntitledCents: 100,
+    invites: 0,
+    paidBenefits: false,
+  }, {
     name: 'Wanderer',
     minimumEntitledCents: 300,
     invites: 0,

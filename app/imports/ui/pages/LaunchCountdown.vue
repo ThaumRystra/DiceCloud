@@ -6,7 +6,7 @@
     class="fill-height"
   >
     <h1>
-      DiceCloud verison 2 beta will launch in
+      DiceCloud version 2 beta will launch in
     </h1>
     <h1 style="font-size: 64px;">
       <countdown
