@@ -201,7 +201,7 @@ router.beforeEach((to, from, next) => {
   if (
     to.path === '/countdown' ||
     to.path === '/sign-in' ||
-    (user.roles && user.roles.includes('admin'))
+    (user && user.roles && user.roles.includes('admin'))
   ){
     next();
   } else if (new Date() < LAUNCH_DATE){

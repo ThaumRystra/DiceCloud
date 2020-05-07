@@ -17,7 +17,7 @@
         <template slot-scope="props">
           <span v-if="props.days">
             {{ props.days }} days,
-          </span>{{ props.hours }}:{{ props.minutes }}:{{ props.seconds }}
+          </span>{{ props.hours }}:{{ formatNumber(props.minutes) }}:{{ formatNumber(props.seconds) }}
         </template>
       </countdown>
     </h1>
@@ -43,5 +43,10 @@
         time: timeLeft,
       };
     },
+    methods: {
+      formatNumber(num){
+        return ('0' + num).slice(-2)
+      }
+    }
   }
 </script>
