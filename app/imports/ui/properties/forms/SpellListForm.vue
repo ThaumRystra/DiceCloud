@@ -8,15 +8,6 @@
         :debounce-time="debounceTime"
         @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
       />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="Use this name in formulae to reference this attribute"
-        :error-messages="errors.variableName"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
-      />
     </div>
     <text-area
       label="Description"
