@@ -1,13 +1,14 @@
 <template lang="html">
-	<component
-		v-if="model && $options.components[model.type]"
-		class="property-viewer"
-		:is="model.type"
-		:model="model"
-	/>
-	<div v-else-if="model">
-		This property can't be viewed yet.
-	</div>
+  <component
+    :is="model.type"
+    v-if="model && $options.components[model.type]"
+    :key="model._id"
+    class="property-viewer"
+    :model="model"
+  />
+  <div v-else-if="model">
+    This property can't be viewed yet.
+  </div>
 </template>
 
 <script>
@@ -19,6 +20,7 @@ export default {
 	props: {
 		model: {
 			type: Object,
+      default: undefined
 		},
 	},
 }
