@@ -162,6 +162,17 @@
               :data-id="weapon._id"
               @click="clickProperty({_id: weapon._id})"
             />
+            <v-subheader v-if="armors.length">
+              Armor
+            </v-subheader>
+            <skill-list-tile
+              v-for="armor in armors"
+              :key="armor._id"
+              hide-modifier
+              :model="armor"
+              :data-id="armor._id"
+              @click="clickProperty({_id: armor._id})"
+            />
             <v-subheader v-if="tools.length">
               Tools
             </v-subheader>
@@ -307,6 +318,9 @@
 			},
       weapons(){
         return getSkillOfType(this.creatureId, 'weapon');
+			},
+      armors(){
+        return getSkillOfType(this.creatureId, 'armor');
 			},
       languages(){
         return getSkillOfType(this.creatureId, 'language');

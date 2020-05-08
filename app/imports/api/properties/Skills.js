@@ -24,13 +24,14 @@ let SkillSchema = new SimpleSchema({
   skillType: {
     type: String,
     allowedValues: [
-      "skill",
-      "save",
-			"check",
-      "tool",
-      "weapon",
-      "language",
-			"utility", //not displayed anywhere
+      'skill',
+      'save',
+			'check',
+      'tool',
+      'weapon',
+      'armor',
+      'language',
+			'utility', //not displayed anywhere
     ],
     defaultValue: 'skill',
   },

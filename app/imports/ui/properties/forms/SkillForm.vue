@@ -113,6 +113,9 @@
 					text: 'Weapon',
 					value: 'weapon',
 				}, {
+					text: 'Armor',
+					value: 'armor',
+				}, {
 					text: 'Language',
 					value: 'language',
 				}, {
