@@ -279,6 +279,7 @@ const softRemoveProperty = new ValidatedMethod({
 		let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);
 		softRemove({_id, collection: CreatureProperties});
+		recomputeCreatures(property);
 	}
 });
 
