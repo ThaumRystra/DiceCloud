@@ -104,42 +104,6 @@
           </v-btn>
         </v-layout>
       </section>
-      <section>
-        <h1 class="mb-2 text-xs-center">
-          Check out the example characters
-        </h1>
-        <v-layout
-          row
-          align-center
-          justify-space-around
-          class="pa-4"
-        >
-          <a href="/character/yBWwt5XQTTHZiRQxq">
-            <v-hover>
-              <v-card
-                slot-scope="{ hover }"
-                :class="`elevation-${hover ? 12 : 2}`"
-              >
-                <v-card-text>
-                  Starter set archer
-                </v-card-text>
-              </v-card>
-            </v-hover>
-          </a>
-          <a href="/character/yBWwt5XQTTHZiRQxq">
-            <v-hover>
-              <v-card
-                slot-scope="{ hover }"
-                :class="`elevation-${hover ? 12 : 2}`"
-              >
-                <v-card-text>
-                  Starter set wizard
-                </v-card-text>
-              </v-card>
-            </v-hover>
-          </a>
-        </v-layout>
-      </section>
       <section class="text-xs-center grey darken-3 white--text pa-5">
         <h1>
           Get involved in the DiceCloud community
@@ -152,43 +116,20 @@
           class="pa-4"
         >
           <v-btn
-            href="https://reddit.com/r/dicecloud"
+            v-for="btn in [
+              {link: 'https://reddit.com/r/dicecloud', name: 'Reddit'},
+              {link: 'https://discord.gg/qEvdfeB', name: 'Discord'},
+              {link: 'https://www.patreon.com/dicecloud', name: 'Patreon'},
+              {link: 'https://github.com/ThaumRystra/DiceCloud', name: 'Github'},
+            ]"
+            :key="btn.name"
+            :href="btn.link"
             flat
             large
-            color="secondary"
+            color="primary"
           >
-            Reddit
+            {{ btn.name }}
           </v-btn>
-          <v-flex>
-            <v-btn
-              href="https://discord.gg/qEvdfeB"
-              flat
-              large
-              color="secondary"
-            >
-              Discord
-            </v-btn>
-          </v-flex>
-          <v-flex>
-            <v-btn
-              href="https://www.patreon.com/dicecloud"
-              flat
-              large
-              color="secondary"
-            >
-              Patreon
-            </v-btn>
-          </v-flex>
-          <v-flex>
-            <v-btn
-              href="https://github.com/ThaumRystra/DiceCloud"
-              flat
-              large
-              color="secondary"
-            >
-              Github
-            </v-btn>
-          </v-flex>
         </v-layout>
       </section>
     </div>
