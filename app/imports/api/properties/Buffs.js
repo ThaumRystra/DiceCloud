@@ -59,6 +59,7 @@ let AppliedBuffSchema = new SimpleSchema({
 	},
 	appliedBy: {
 		type: Object,
+    optional: true,
 	},
 	'appliedBy.name': {
 		type: String,
