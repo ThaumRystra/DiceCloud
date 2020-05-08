@@ -124,7 +124,7 @@ RouterFactory.configure(factory => {
     },{
       path: '/friends',
       components: {
-        default: Friends,
+        default: NotImplemented,
       },
       meta: {
         title: 'Friends',
