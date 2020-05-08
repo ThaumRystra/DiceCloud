@@ -1,8 +1,13 @@
 <template>
-  <v-btn fab small @click="$emit('click')">
-    <v-icon>{{icon}}</v-icon>
+  <v-btn
+    fab
+    small
+    v-bind="$attrs"
+    @click="$emit('click')"
+  >
+    <v-icon>{{ icon }}</v-icon>
     <span id="label">
-      {{label}}
+      {{ label }}
     </span>
   </v-btn>
 </template>
@@ -12,8 +17,9 @@
    * Because speed dials only work well with v-btn's as children, this hacky
    * component creates a v-btn with a label.
    */
+   console.log('labeled fab reporting for duty')
   export default {
-    props: ["icon", "label"],
+    props: ['icon', 'label'],
   }
 </script>
 
