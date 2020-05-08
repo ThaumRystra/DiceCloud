@@ -56,25 +56,25 @@
     <div class="layout row wrap justify-space-between">
       <v-checkbox
         label="Verbal"
-        :value="model.verbal"
+        :input-value="model.verbal"
         :error-messages="errors.verbal"
-        @change="(value) => $emit('change', {path: ['verbal'], value})"
+        @change="(value) => log(value)/*$emit('change', {path: ['verbal'], value})*/"
       />
       <v-checkbox
         label="Somatic"
-        :value="model.somatic"
+        :input-value="model.somatic"
         :error-messages="errors.somatic"
         @change="(value) => $emit('change', {path: ['somatic'], value})"
       />
       <v-checkbox
         label="Concentration"
-        :value="model.concentration"
+        :input-value="model.concentration"
         :error-messages="errors.concentration"
         @change="(value) => $emit('change', {path: ['concentration'], value})"
       />
       <v-checkbox
         label="Ritual"
-        :value="model.ritual"
+        :input-value="model.ritual"
         :error-messages="errors.ritual"
         @change="(value) => $emit('change', {path: ['ritual'], value})"
       />
@@ -213,6 +213,9 @@
 				},
 			],
 		};},
+    methods: {
+      log: console.log,
+    },
 	};
 </script>
 
