@@ -189,7 +189,7 @@
       </div>
 
       <div
-        v-if="actions.length"
+        v-if="actions.length || attacks.length"
         class="actions"
       >
         <v-card>
