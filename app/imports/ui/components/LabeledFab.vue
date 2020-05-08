@@ -17,7 +17,6 @@
    * Because speed dials only work well with v-btn's as children, this hacky
    * component creates a v-btn with a label.
    */
-   console.log('labeled fab reporting for duty')
   export default {
     props: ['icon', 'label'],
   }
