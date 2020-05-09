@@ -127,6 +127,30 @@ Meteor.users.isAdmin = function(userId){
 	return user && user.roles.includes('admin');
 }
 
+Meteor.users.canPickUsername = new ValidatedMethod({
+	name: 'Users.methods.canPickUsername',
+	validate: userSchema.pick('username').validator(),
+	run({username}){
+		if (Meteor.isClient) return;
+		let user = Accounts.findUserByUsername(username);
+    // You can pick your own username
+    if (user && user._id === this.userId){
+      return false;
+    }
+		return !!user;
+	}
+});
+
+Meteor.users.setUsername = new ValidatedMethod({
+  name: 'Users.methods.setUsername',
+	validate: userSchema.pick('username').validator(),
+	run({username}){
+		if (!this.userId) throw 'Can only set your username if logged in';
+    if (Meteor.isClient) return;
+    return Accounts.setUsername(this.userId, username)
+	}
+});
+
 Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
 	name: 'Users.methods.findUserByUsernameOrEmail',
 	validate: new SimpleSchema({

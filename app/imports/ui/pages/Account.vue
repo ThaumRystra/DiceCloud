@@ -16,7 +16,7 @@
         <v-subheader>
           Username
         </v-subheader>
-        <v-list-tile>
+        <v-list-tile data-id="username">
           <v-list-tile-action>
             <v-tooltip right>
               <span>Change Username</span>
@@ -24,6 +24,7 @@
                 slot="activator"
                 icon
                 flat
+                @click="changeUsername"
               >
                 <v-icon>create</v-icon>
               </v-btn>
@@ -53,11 +54,13 @@
             <v-list-tile-title>
               Pledged amount: ${{ entitledCents/100 }}
             </v-list-tile-title>
+            <!--
             <v-list-tile-action>
               <v-btn icon>
                 <v-icon>refresh</v-icon>
               </v-btn>
             </v-list-tile-action>
+            -->
           </v-list-tile>
           <v-list-tile>
             <v-list-tile-title>
@@ -127,6 +130,12 @@
       },
     },
     methods: {
+      changeUsername(){
+        this.$store.commit('pushDialogStack', {
+          component: 'username-dialog',
+          elementId: 'username',
+        });
+      },
       signOut(){
         Meteor.logout();
         router.push('/');

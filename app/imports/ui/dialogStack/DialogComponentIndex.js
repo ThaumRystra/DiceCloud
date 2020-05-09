@@ -8,6 +8,7 @@ import LibraryEditDialog from '/imports/ui/library/LibraryEditDialog.vue';
 import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
 import LibraryNodeEditDialog from '/imports/ui/library/LibraryNodeEditDialog.vue';
 import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
+import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
 
 export default {
   CreatureFormDialog,
@@ -20,4 +21,5 @@ export default {
   LibraryNodeCreationDialog,
   LibraryNodeEditDialog,
 	ShareDialog,
+  UsernameDialog,
 };
