@@ -12,6 +12,7 @@ import CharacterSheetToolbarExtension from '/imports/ui/creature/character/Chara
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue';
 import Friends from '/imports/ui/pages/Friends.vue' ;
+import Feedback from '/imports/ui/pages/Feedback.vue' ;
 import Account from '/imports/ui/pages/Account.vue' ;
 import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
 import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
@@ -158,7 +159,7 @@ RouterFactory.configure(factory => {
 		},{
       path: '/feedback',
       components: {
-        default: NotImplemented,
+        default: Feedback,
       },
       meta: {
         title: 'Feedback',
