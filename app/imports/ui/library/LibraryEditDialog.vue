@@ -1,28 +1,45 @@
 <template lang="html">
-	<dialog-base>
-		<template slot="toolbar">
-			<div>
-				{{model && model.name}}
-			</div>
-			<v-spacer/>
-			<v-btn flat icon @click="remove">
-				<v-icon>delete</v-icon>
-			</v-btn>
-		</template>
-		<template v-if="model">
-			<text-field label="name" :value="model.name" @change="updateName"/>
-		</template>
-		<template slot="actions">
-			<v-spacer/>
-			<v-btn
-				flat
-				@click="$store.dispatch('popDialogStack')"
-				data-id="delete-library-button"
-			>
-				Done
-			</v-btn>
-		</template>
-	</dialog-base>
+  <dialog-base>
+    <template slot="toolbar">
+      <div>
+        {{ model && model.name }}
+      </div>
+      <v-spacer />
+      <v-btn
+        flat
+        icon
+        data-id="share-library-button"
+        @click="share"
+      >
+        <v-icon>share</v-icon>
+      </v-btn>
+      <v-btn
+        flat
+        icon
+        data-id="delete-library-button"
+        @click="remove"
+      >
+        <v-icon>delete</v-icon>
+      </v-btn>
+    </template>
+    <template v-if="model">
+      <text-field
+        label="name"
+        :value="model.name"
+        @change="updateName"
+      />
+    </template>
+    <template slot="actions">
+      <v-spacer />
+      <v-btn
+        flat
+        data-id="delete-library-button"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Done
+      </v-btn>
+    </template>
+  </dialog-base>
 </template>
 
 <script>
@@ -38,7 +55,7 @@ export default {
 	},
 	methods: {
 		updateName(value, ack){
-			updateLibraryName.call({_id: this._id, name: value}, (error, result) =>{
+			updateLibraryName.call({_id: this._id, name: value}, (error) =>{
 				ack(error && error.reason || error);
 			});
 		},
@@ -53,7 +70,7 @@ export default {
 				},
 				callback(confirmation){
 					if(!confirmation) return;
-					removeLibrary.call({_id: that._id}, (error, result) => {
+					removeLibrary.call({_id: that._id}, (error) => {
 						if (error) {
 							console.error(error);
 						} else {
@@ -61,6 +78,18 @@ export default {
 						}
 					});
 				}
+			});
+		},
+    share(){
+			this.$store.commit('pushDialogStack', {
+				component: 'share-dialog',
+				elementId: 'share-library-button',
+				data: {
+					docRef: {
+            id: this._id,
+            collection: 'libraries',
+          }
+				},
 			});
 		},
 	},

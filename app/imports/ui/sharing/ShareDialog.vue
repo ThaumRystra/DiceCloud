@@ -1,51 +1,70 @@
 <template lang="html">
   <dialog-base>
-  	<div slot="toolbar">
-  		Sharing
-  	</div>
-		<div v-if="model">
-			<smart-select
-				label="Who can view"
-				:items="[
-					{text: 'Only people I share with', value: 'false'},
-					{text: 'Anyone with link', value: 'true'}
-				]"
-				:value="!!model.public + ''"
-				@change="(value, ack) => setSheetPublic({value, ack})"
-			/>
-			<div class="layout row">
-				<text-field
-				label="Username or email"
-				:value="userSearched"
-				@change="(value, ack) => getUser({value, ack})"
-				:debounceTime="300"
-				/>
-				<v-btn :disabled="userFoundState !== 'found'">
-					Share
-				</v-btn>
-			</div>
-			<div class="sharedWith">
-				<h3 v-if="writers.length">Can Edit</h3>
-					<div v-for="user in writers">
-						{{user}}
-						<v-btn flat icon>
-							<v-icon>delete</v-icon>
-						</v-btn>
-					</div>
-				<h3 v-if="readers.length">Can View</h3>
-					<div v-for="user in readers">
-						{{user}}
-						<v-btn flat icon>
-							<v-icon>delete</v-icon>
-						</v-btn>
-					</div>
-			</div>
-		</div>
-		<v-btn
-			slot="actions"
-			 flat
-			 @click="$store.dispatch('popDialogStack')"
-		 >Done</v-btn>
+    <div slot="toolbar">
+      Sharing
+    </div>
+    <div v-if="model">
+      <smart-select
+        label="Who can view"
+        :items="[
+          {text: 'Only people I share with', value: 'false'},
+          {text: 'Anyone with link', value: 'true'}
+        ]"
+        :value="!!model.public + ''"
+        @change="(value, ack) => setSheetPublic({value, ack})"
+      />
+      <div class="layout row">
+        <text-field
+          label="Username or email"
+          :value="userSearched"
+          :debounce-time="300"
+          @change="(value, ack) => getUser({value, ack})"
+        />
+        <v-btn :disabled="userFoundState !== 'found'">
+          Share
+        </v-btn>
+      </div>
+      <div class="sharedWith">
+        <h3 v-if="writers.length">
+          Can Edit
+        </h3>
+        <div
+          v-for="user in writers"
+          :key="user._id"
+        >
+          {{ user }}
+          <v-btn
+            flat
+            icon
+          >
+            <v-icon>delete</v-icon>
+          </v-btn>
+        </div>
+        <h3 v-if="readers.length">
+          Can View
+        </h3>
+        <div
+          v-for="user in readers"
+          :key="user._id"
+        >
+          {{ user }}
+          <v-btn
+            flat
+            icon
+          >
+            <v-icon>delete</v-icon>
+          </v-btn>
+        </div>
+      </div>
+    </div>
+    <v-spacer slot="actions" />
+    <v-btn
+      slot="actions"
+      flat
+      @click="$store.dispatch('popDialogStack')"
+    >
+      Done
+    </v-btn>
   </dialog-base>
 </template>
 
@@ -58,20 +77,23 @@ export default {
 	components: {
 		DialogBase,
 	},
+	props: {
+		docRef: {
+      type: Object,
+      required: true,
+    },
+	},
 	data(){ return {
 		userSearched: undefined,
 		userFoundState: 'idle',
 		userId: undefined,
 	}},
-	props: {
-		docRef: Object,
-	},
 	methods: {
 		setSheetPublic({value, ack}){
 			setPublic.call({
 				docRef: this.docRef,
 				public: value === 'true',
-			}, (error, value) => {
+			}, (error) => {
 				ack(error && error.reason || error);
 			});
 		},
