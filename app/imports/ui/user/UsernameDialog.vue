@@ -1,6 +1,7 @@
 <template lang="html">
   <dialog-base>
     <text-field
+      label="Username"
       :value="newUsername || username"
       @change="change"
     />
