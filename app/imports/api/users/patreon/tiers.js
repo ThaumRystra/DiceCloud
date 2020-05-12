@@ -1,5 +1,6 @@
 import { findLast } from 'lodash';
 import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
+import Invites from '/imports/api/users/Invites.js';
 
 const TIERS = [
   {
@@ -62,7 +63,14 @@ export function getUserTier(user){
     if (!user) throw 'User not found';
   }
   const entitledCents = getEntitledCents(user);
-  return getTierByEntitledCents(entitledCents);
+  const tier = getTierByEntitledCents(entitledCents);
+  if (tier.paidBenefits) return tier;
+  let invite = Invites.findOne({invitee: user._id, isFunded: true});
+  if (invite){
+    return GUEST_TIER;
+  } else {
+    return tier;
+  }
 }
 
 export default TIERS;

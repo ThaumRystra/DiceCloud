@@ -5,12 +5,29 @@
         Invite
       </v-toolbar-title>
     </template>
-    <div v-if="invite.invitee" />
-    <div v-else>
+    <div
+      v-if="invite.invitee"
+      class="layout column align-center"
+    >
+      {{ username || invite.invitee }}
+      <div>
+        <v-btn
+          color="primary"
+          @click="revokeInvite"
+        >
+          Revoke Invite
+        </v-btn>
+      </div>
+    </div>
+    <div
+      v-else
+      class="layout column align-center"
+    >
       <p>This invite is available</p>
       <v-fade-transition mode="out-in">
         <v-btn
           v-if="!inviteLink"
+          color="primary"
           :loading="loading"
           :disabled="loading"
           @click="getInviteLink"
@@ -27,7 +44,7 @@
 
 <script>
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import Invites, { getInviteToken } from '/imports/api/users/Invites.js';
+import Invites, { getInviteToken, revokeInvite } from '/imports/api/users/Invites.js';
 
 export default {
 	components: {
@@ -47,6 +64,11 @@ export default {
   meteor: {
     invite(){
       return Invites.findOne(this.inviteId);
+    },
+    username(){
+      if (!this.invite) return;
+      let user = Meteor.users.findOne(this.invite.invitee);
+      return user && user.username;
     }
   },
   computed: {
@@ -67,8 +89,11 @@ export default {
           this.inviteToken = result;
         }
       });
-    }
-  }
+    },
+    revokeInvite(){
+      revokeInvite.call({inviteId: this.inviteId});
+    },
+  },
 }
 </script>
 

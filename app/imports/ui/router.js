@@ -1,5 +1,5 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
 import { acceptInviteToken } from '/imports/api/users/Invites.js';
 
@@ -48,7 +48,7 @@ function ensureLoggedIn(to, from, next){
   });
 }
 
-function ensurePatronTier5(to, from, next){
+function ensurePaidFeatures(to, from, next){
   Tracker.autorun((computation) => {
     if (userSubscription.ready()){
       computation.stop();
@@ -57,11 +57,11 @@ function ensurePatronTier5(to, from, next){
         next({ name: 'signIn', query: { redirect: to.path} });
         return;
       }
-      let entitledCents = getEntitledCents(user);
-      if (entitledCents < 500){
-        next('/patreon-level-too-low');
-      } else {
+      let tier = getUserTier(user);
+      if (tier && tier.paidBenefits){
         next();
+      } else {
+        next('/patreon-level-too-low');
       }
     }
   });
@@ -118,7 +118,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character List',
       },
-      beforeEnter: ensurePatronTier5,
+      beforeEnter: ensurePaidFeatures,
     },{
       path: '/library',
       components: {
@@ -127,7 +127,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Library',
       },
-      beforeEnter: ensurePatronTier5,
+      beforeEnter: ensurePaidFeatures,
     },{
       name: 'singleLibrary',
       path: '/library/:id',
@@ -138,7 +138,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Library',
       },
-      beforeEnter: ensurePatronTier5,
+      beforeEnter: ensurePaidFeatures,
     },{
       path: '/character/:id/:urlName',
       components: {
@@ -149,7 +149,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character Sheet',
       },
-      beforeEnter: ensurePatronTier5,
+      beforeEnter: ensurePaidFeatures,
     },{
       path: '/character/:id',
       components: {
@@ -160,7 +160,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character Sheet',
       },
-      beforeEnter: ensurePatronTier5,
+      beforeEnter: ensurePaidFeatures,
     },{
       path: '/friends',
       components: {
@@ -179,15 +179,15 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Sign In',
       },
-		},/*{
+		},{
 			path: '/register',
       components: {
         default: Register,
       },
       meta: {
-        title: 'Home',
+        title: 'Register',
       },
-		},*/{
+		},{
 			path: '/account',
       components: {
         default: Account,

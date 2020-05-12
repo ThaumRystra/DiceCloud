@@ -18,6 +18,10 @@ Meteor.publish('user', function(){
         {inviter: this.userId},
         {invitee: this.userId}
       ],
+    }, {
+      fields: {
+        inviteToken: 0,
+      }
     }),
   ];
 });

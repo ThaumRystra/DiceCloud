@@ -145,7 +145,41 @@ const acceptInviteToken = new ValidatedMethod({
   },
 });
 
+const revokeInvite = new ValidatedMethod({
+  name: 'Invites.methods.revokeInvite',
+  validate: new SimpleSchema({
+    inviteId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  }).validator(),
+  run({inviteId}) {
+    if (!this.userId) {
+      throw new Meteor.Error('Invites.methods.revokeInvite.denied',
+      'You need to be the logged in to revoke a token');
+    }
+    if (Meteor.isClient) return;
+    let invite = Invites.findOne(inviteId);
+    if (!invite){
+      throw new Meteor.Error('Invites.methods.revokeInvite.notFound',
+      'No invite could be found for this id');
+    }
+    if (this.userId !== invite.inviter) {
+      throw new Meteor.Error('Invites.methods.revokeInvite.denied',
+      'You are not the owner of this invite');
+    }
+
+    // If the invitee is empty, the token has already been revoked
+    if (!invite.invitee){
+      return;
+    }
+    Invites.update(invite._id, {
+      $unset: {invitee: 1, dateConfirmed: 1},
+    });
+  },
+});
+
 Invites.attachSchema(InviteSchema);
 
 export default Invites;
-export { alignInvitesWithPatreonTier, getInviteToken, acceptInviteToken };
+export { alignInvitesWithPatreonTier, getInviteToken, acceptInviteToken, revokeInvite };

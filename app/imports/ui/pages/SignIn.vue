@@ -13,7 +13,6 @@
           width="120px"
           class="ma-3"
         />
-        <!--
         <v-text-field
           v-model="name"
           type="text"
@@ -51,7 +50,6 @@
             Register
           </v-btn>
         </v-layout>
-        -->
       </v-layout>
     </v-form>
     <v-divider class="ma-4" />
@@ -59,7 +57,6 @@
       column
       align-center
     >
-      <!--
       <div class="error--text">
         {{ googleError }}
       </div>
@@ -69,7 +66,6 @@
       >
         Sign in with Google
       </v-btn>
-      -->
       <div class="error--text">
         {{ patreonError }}
       </div>

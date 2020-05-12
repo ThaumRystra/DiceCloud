@@ -100,7 +100,7 @@
             large
             to="/sign-in"
           >
-            Sign up
+            Sign In
           </v-btn>
         </v-layout>
       </section>

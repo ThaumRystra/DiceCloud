@@ -6,25 +6,26 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        Your current patreon support is ${{ entitledDollars }}.
+        Your current Patreon tier is {{ tier.name }}
       </h2>
-      <h2 style="margin: 16px 28px">
-        You need to pledge at least $5 to use this beta.
-      </h2>
+      <h3>
+        You need to be at least Adventurer tier (or be invited by a Patron of
+        a higher tier) to access this beta
+      </h3>
     </v-layout>
   </div>
 </template>
 
 <script>
+import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
+
 export default {
   meteor: {
-    entitledDollars(){
+    tier(){
       let user = Meteor.user();
-      if (!user) return 0;
-      let entitledCents = user.services.patreon.entitledCents || 0;
-      let overrideCents = user.services.patreon.entitledCentsOverride || 0;
-      return Math.max(entitledCents, overrideCents)/100;
+      if (!user) return TIERS[0];
+      return getUserTier(user);
     }
-  }
+  },
 }
 </script>

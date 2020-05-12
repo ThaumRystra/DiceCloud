@@ -49,26 +49,12 @@
         <v-subheader>
           Patreon
         </v-subheader>
-        <template v-if="user.services.patreon">
-          <v-list-tile>
-            <v-list-tile-title>
-              Pledged amount: ${{ entitledCents/100 }}
-            </v-list-tile-title>
-            <!--
-            <v-list-tile-action>
-              <v-btn icon>
-                <v-icon>refresh</v-icon>
-              </v-btn>
-            </v-list-tile-action>
-            -->
-          </v-list-tile>
-          <v-list-tile>
-            <v-list-tile-title>
-              Tier: {{ tier.name }}
-            </v-list-tile-title>
-          </v-list-tile>
-        </template>
-        <v-list-tile v-else>
+        <v-list-tile>
+          <v-list-tile-title>
+            Tier: {{ tier.name }}
+          </v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile v-if="!user.services.patreon">
           <v-btn @click="linkWithPatreon">
             Link Patreon
           </v-btn>
@@ -130,7 +116,10 @@
   export default {
     meteor: {
       $subscribe: {
-        'user': [],
+        'userPublicProfiles'(){
+          if (!this.invites) return false;
+          return [this.invites.map(i => i.invitee).filter(i => !!i)];
+        },
       },
       user(){
         return Meteor.user();
@@ -143,9 +132,9 @@
         const user = Meteor.user();
         return user && user.emails;
       },
-			darkMode(){
-				return this.user && this.user.darkMode;
-			},
+      darkMode(){
+        return this.user && this.user.darkMode;
+      },
       invites(){
         let usernames = {};
         Meteor.users.find({}).forEach(user => {
@@ -154,12 +143,12 @@
         return Invites.find({
           inviter: Meteor.userId(),
         }, {
-          sort: {dateConfirmed: 1},
+          sort: {dateConfirmed: 1, invitee: -1},
         }).map(invite => {
           invite.inviteeName = usernames[invite.invitee];
           return invite;
         });
-      }
+      },
     },
     data(){ return {
       showApiKey: false,
@@ -186,9 +175,9 @@
         Meteor.logout();
         router.push('/');
       },
-			setDarkMode(value){
-				Meteor.users.setDarkMode.call({darkMode: !!value});
-			},
+      setDarkMode(value){
+        Meteor.users.setDarkMode.call({darkMode: !!value});
+      },
       generateKey(){
         Meteor.users.gnerateApiKey.call(error => {
           if(error) this.apiKeyGenerationError = error.reason;
@@ -202,10 +191,10 @@
       },
       clickInvite(invite){
         this.$store.commit('pushDialogStack', {
-					component: 'invite-dialog',
-					elementId: invite._id,
-					data: {inviteId: invite._id},
-				});
+          component: 'invite-dialog',
+          elementId: invite._id,
+          data: {inviteId: invite._id},
+        });
       },
       linkWithPatreon,
     },
