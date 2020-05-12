@@ -66,6 +66,16 @@ const userSchema = new SimpleSchema({
 	},
 	'subscribedLibraries.$': {
 		type: String,
+    regEx: SimpleSchema.RegEx.Id,
+	},
+  subscribedCharacters: {
+		type: Array,
+		defaultValue: [],
+		max: 100,
+	},
+	'subscribedCharacters.$': {
+		type: String,
+    regEx: SimpleSchema.RegEx.Id,
 	},
 });
 
@@ -148,6 +158,31 @@ Meteor.users.setUsername = new ValidatedMethod({
 		if (!this.userId) throw 'Can only set your username if logged in';
     if (Meteor.isClient) return;
     return Accounts.setUsername(this.userId, username)
+	}
+});
+
+Meteor.users.subscribeToLibrary = new ValidatedMethod({
+  name: 'Users.methods.subscribeToLibrary',
+	validate: new SimpleSchema({
+		libraryId:{
+			type: String,
+      regEx: SimpleSchema.RegEx.Id,
+		},
+    subscribe: {
+      type: Boolean,
+    },
+	}).validator(),
+	run({libraryId, subscribe}){
+		if (!this.userId) throw 'Can only subscribe if logged in';
+    if (subscribe){
+      return Meteor.users.update(this.userId, {
+        $addToSet: {subscribedLibraries: libraryId},
+      });
+    } else {
+      return Meteor.users.update(this.userId, {
+        $pullAll: {subscribedLibraries: libraryId},
+      });
+    }
 	}
 });
 

@@ -8,6 +8,7 @@ Meteor.publish('user', function(){
       username: 1,
       apiKey: 1,
       darkMode: 1,
+      subscribedLibraries: 1,
       'services.patreon.id': 1,
       'services.patreon.entitledCents': 1,
       'services.patreon.entitledCentsOverride': 1,

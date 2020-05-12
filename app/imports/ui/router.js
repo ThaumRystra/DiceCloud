@@ -6,6 +6,8 @@ import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
 import Home from '/imports/ui/pages/Home.vue';
 import CharacterList from '/imports/ui/pages/CharacterList.vue';
 import Library from '/imports/ui/pages/Library.vue';
+import SingleLibraryPage from '/imports/ui/pages/SingleLibraryPage.vue'
+import SingleLibraryToolbarItems from '/imports/ui/library/SingleLibraryToolbarItems.vue'
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
 import CharacterSheetToolbarItems from '/imports/ui/creature/character/CharacterSheetToolbarItems.vue';
 import CharacterSheetToolbarExtension from '/imports/ui/creature/character/CharacterSheetToolbarExtension.vue';
@@ -95,6 +97,17 @@ RouterFactory.configure(factory => {
       path: '/library',
       components: {
         default: Library,
+      },
+      meta: {
+        title: 'Library',
+      },
+      beforeEnter: ensurePatronTier5,
+    },{
+      name: 'singleLibrary',
+      path: '/library/:id',
+      components: {
+        default: SingleLibraryPage,
+        toolbarItems: SingleLibraryToolbarItems,
       },
       meta: {
         title: 'Library',

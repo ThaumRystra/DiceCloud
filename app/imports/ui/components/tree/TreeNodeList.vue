@@ -1,33 +1,33 @@
 <template lang="html">
-	<!--use value for immutable, list for auto-updating children -->
-	<draggable
-		class="drag-area"
-		:value="children"
-		:group="group"
-		:animation="200"
-		:move="move"
-		@change="change"
-		ghost-class="ghost"
-		draggable=".item"
-		handle=".handle"
-	>
-		<tree-node
-			class="item"
-			v-for="child in children"
-			:node="child.node"
-			:children="child.children"
-			:group="group"
-			:key="child.node._id"
-			:selected-node-id="selectedNodeId"
-			:selected="selectedNodeId === child.node._id"
-			:organize="organize"
-			:lazy="lazy"
-			@selected="e => $emit('selected', e)"
-			@reordered="e => $emit('reordered', e)"
-			@reorganized="e => $emit('reorganized', e)"
-			@dragstart.native="e => e.dataTransfer.setData('cow', child.node && child.node.name)"
-		/>
-	</draggable>
+  <!--use value for immutable, list for auto-updating children -->
+  <draggable
+    class="drag-area"
+    :value="children"
+    :group="group"
+    :animation="200"
+    :move="move"
+    ghost-class="ghost"
+    draggable=".item"
+    handle=".handle"
+    @change="change"
+  >
+    <tree-node
+      v-for="child in children"
+      :key="child.node._id"
+      class="item"
+      :node="child.node"
+      :children="child.children"
+      :group="group"
+      :selected-node-id="selectedNodeId"
+      :selected="selectedNodeId === child.node._id"
+      :organize="organize"
+      :lazy="lazy"
+      @selected="e => $emit('selected', e)"
+      @reordered="e => $emit('reordered', e)"
+      @reorganized="e => $emit('reorganized', e)"
+      @dragstart.native="e => e.dataTransfer.setData('cow', child.node && child.node.name)"
+    />
+  </draggable>
 </template>
 
 <script>
@@ -40,9 +40,6 @@
 			draggable,
 			TreeNode,
 		},
-		data(){ return {
-			expanded: false,
-		}},
 		props: {
 			node: Object,
 			group: String,
@@ -50,10 +47,13 @@
 			lazy: Boolean,
 			children: {
 				type: Array,
-				required: true,
+				default: () => [],
 			},
 			selectedNodeId: String,
 		},
+		data(){ return {
+			expanded: false,
+		}},
 		computed: {
 			hasChildren(){
 				return this.children && this.children.length;
@@ -63,7 +63,7 @@
 			},
 		},
 		methods: {
-			change({added, moved, removed}){
+			change({added, moved}){
 				let event = moved || added;
 				if (event){
 					let doc = event.element.node;
@@ -71,7 +71,7 @@
 					if (event.newIndex === 0){
 						newIndex = 0;
 					} else {
-						childBeforeNewIndex = this.children[event.newIndex - 1];
+						let childBeforeNewIndex = this.children[event.newIndex - 1];
 						newIndex = childBeforeNewIndex.node.order + 1;
 					}
 					if (moved){
