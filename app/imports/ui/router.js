@@ -1,6 +1,7 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
 import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
 import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
+import { acceptInviteToken } from '/imports/api/users/Invites.js';
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
@@ -16,6 +17,8 @@ import Register from '/imports/ui/pages/Register.vue';
 import Friends from '/imports/ui/pages/Friends.vue' ;
 import Feedback from '/imports/ui/pages/Feedback.vue' ;
 import Account from '/imports/ui/pages/Account.vue' ;
+import InviteSuccess from '/imports/ui/pages/InviteSuccess.vue' ;
+import InviteError from '/imports/ui/pages/InviteError.vue' ;
 import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
 import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
 import LaunchCountdown from '/imports/ui/pages/LaunchCountdown.vue';
@@ -39,7 +42,7 @@ function ensureLoggedIn(to, from, next){
       if (user){
         next()
       } else {
-        next('/sign-in');
+        next({ name: 'signIn', query: { redirect: to.path} });
       }
     }
   });
@@ -51,7 +54,7 @@ function ensurePatronTier5(to, from, next){
       computation.stop();
       const user = Meteor.user();
       if (!user){
-        next('/sign-in');
+        next({ name: 'signIn', query: { redirect: to.path} });
         return;
       }
       let entitledCents = getEntitledCents(user);
@@ -59,6 +62,29 @@ function ensurePatronTier5(to, from, next){
         next('/patreon-level-too-low');
       } else {
         next();
+      }
+    }
+  });
+}
+
+function claimInvite(to, from, next){
+  Tracker.autorun((computation) => {
+    if (userSubscription.ready()){
+      computation.stop();
+      const user = Meteor.user();
+      if (user){
+        let inviteToken = to.params.inviteToken;
+        acceptInviteToken.call({
+          inviteToken
+        }, (error) => {
+          if (error){
+            next({name: 'inviteError', params: {error}});
+          } else {
+            next('/invite-success')
+          }
+        });
+      } else {
+        next({ name: 'signIn', query: { redirect: to.path} });
       }
     }
   });
@@ -145,6 +171,7 @@ RouterFactory.configure(factory => {
       },
       beforeEnter: ensureLoggedIn,
     },{
+      name: 'signIn',
 			path: '/sign-in',
       components: {
         default: SignIn,
@@ -176,6 +203,29 @@ RouterFactory.configure(factory => {
       },
       meta: {
         title: 'Feedback',
+      },
+    },{
+      path: '/invite/:inviteToken',
+      beforeEnter: claimInvite,
+    },{
+      name: 'inviteError',
+      path: '/invite-error',
+      components: {
+        default: InviteError,
+      },
+      props: {
+        default: true,
+      },
+      meta: {
+        title: 'Invite Error',
+      },
+    },{
+      path: '/invite-success',
+      components: {
+        default: InviteSuccess,
+      },
+      meta: {
+        title: 'Invite Success',
       },
     },{
       path: '/patreon-level-too-low',

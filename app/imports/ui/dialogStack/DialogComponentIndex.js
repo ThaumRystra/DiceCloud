@@ -3,6 +3,7 @@ import CreaturePropertyCreationDialog from '/imports/ui/creature/creaturePropert
 import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue'
 import CreaturePropertyFromLibraryDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue'
 import DeleteConfirmationDialog from '/imports/ui/dialogStack/DeleteConfirmationDialog.vue';
+import InviteDialog from '/imports/ui/user/InviteDialog.vue';
 import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
 import LibraryEditDialog from '/imports/ui/library/LibraryEditDialog.vue';
 import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
@@ -16,6 +17,7 @@ export default {
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,
   DeleteConfirmationDialog,
+  InviteDialog,
   LibraryCreationDialog,
   LibraryEditDialog,
   LibraryNodeCreationDialog,

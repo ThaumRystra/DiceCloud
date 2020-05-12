@@ -85,7 +85,6 @@
 
 <script>
   import { Meteor } from 'meteor/meteor'
-	import router from '/imports/ui/router.js';
 	export default{
 		data: () => ({
       valid: true,
@@ -108,7 +107,7 @@
 						if (error){
 							this.error = error.reason;
 						} else {
-							router.push('characterList');
+              this.$router.push(this.$route.query.redirect || 'characterList');
 						}
 					});
         }
@@ -119,7 +118,7 @@
             console.error(error);
             this.googleError = error.message;
           } else {
-            router.push('characterList');
+            this.$router.push(this.$route.query.redirect || 'characterList');
           }
 				});
 			},
@@ -129,7 +128,7 @@
             console.error(error);
             this.patreonError = error.message;
           } else {
-            router.push('characterList');
+            this.$router.push(this.$route.query.redirect || 'characterList');
           }
 				});
 			}

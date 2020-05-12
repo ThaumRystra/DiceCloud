@@ -74,16 +74,48 @@
           </v-btn>
         </v-list-tile>
       </v-list>
-      <v-card-actions>
-        <v-spacer />
+      <v-layout
+        row
+        justify-end
+      >
         <v-btn
-          flat
           color="accent"
           @click="signOut"
         >
           Sign Out
         </v-btn>
-      </v-card-actions>
+      </v-layout>
+      <template v-if="invites.length">
+        <v-divider class="mt-3 mb-3" />
+        <v-subheader>
+          <h1>
+            Invites
+          </h1>
+        </v-subheader>
+        <v-list>
+          <template
+            v-for="(invite, index) in invites"
+          >
+            <v-list-tile
+              :key="invite._id"
+              :data-id="invite._id"
+              @click="clickInvite(invite)"
+            >
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{ invite.inviteeName || invite.invitee || 'Available' }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-icon>mail_outline</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider
+              :key="index"
+            />
+          </template>
+        </v-list>
+      </template>
     </v-card>
   </div>
 </template>
@@ -114,6 +146,20 @@
 			darkMode(){
 				return this.user && this.user.darkMode;
 			},
+      invites(){
+        let usernames = {};
+        Meteor.users.find({}).forEach(user => {
+          usernames[user._id] = user.username;
+        });
+        return Invites.find({
+          inviter: Meteor.userId(),
+        }, {
+          sort: {dateConfirmed: 1},
+        }).map(invite => {
+          invite.inviteeName = usernames[invite.invitee];
+          return invite;
+        });
+      }
     },
     data(){ return {
       showApiKey: false,
@@ -153,6 +199,13 @@
         Meteor.users.sendVerificationEmail.call({address}, error => {
           if(error) this.emailVerificationError = error.reason;
         });
+      },
+      clickInvite(invite){
+        this.$store.commit('pushDialogStack', {
+					component: 'invite-dialog',
+					elementId: invite._id,
+					data: {inviteId: invite._id},
+				});
       },
       linkWithPatreon,
     },
