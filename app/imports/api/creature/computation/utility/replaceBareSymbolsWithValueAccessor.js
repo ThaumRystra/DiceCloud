@@ -1,4 +1,4 @@
-import * as math from 'mathjs';
+import math from '/imports/math.js';
 
 export default function replaceBareSymbolsWithValueAccessor(node, path) {
   if (node.isFunctionNode){

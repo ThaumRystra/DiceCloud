@@ -1,6 +1,6 @@
 import  replaceBareSymbolsWithValueAccessor from '/imports/api/creature/computation/utility/replaceBareSymbolsWithValueAccessor.js';
 import computeStat from '/imports/api/creature/computation/computeStat.js';
-import * as math from 'mathjs';
+import math from '/imports/math.js';
 
 export default function evaluateCalculation(string, memo){
   if (!string) return string;

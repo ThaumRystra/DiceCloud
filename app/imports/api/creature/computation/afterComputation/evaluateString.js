@@ -1,4 +1,4 @@
-import * as math from 'mathjs';
+import math from '/imports/math.js';
 import  replaceBareSymbolsWithValueAccessor from '/imports/api/creature/computation/utility/replaceBareSymbolsWithValueAccessor.js';
 
 export default function evaluateString(string, scope){
