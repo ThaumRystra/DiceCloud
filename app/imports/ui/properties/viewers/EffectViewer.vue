@@ -1,18 +1,6 @@
 <template lang="html">
-  <div class="effect-viewer">
-    <div class="layout row align-center wrap">
-      <property-name
-        v-if="model.name"
-        :value="model.name"
-      />
-      <div class="headline">
-        <code
-          v-for="stat in model.stats"
-          :key="stat"
-          style="display: block;"
-          class="my-1"
-        >{{ stat }}</code>
-      </div>
+  <v-list-tile class="effect-viewer">
+    <v-list-tile-avatar>
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-icon
@@ -25,14 +13,26 @@
         </template>
         <span>{{ operation }}</span>
       </v-tooltip>
-      <div
-        v-if="showValue"
-        class="headline"
-      >
-        {{ displayedValue }}
-      </div>
-    </div>
-  </div>
+    </v-list-tile-avatar>
+    <v-list-tile-action
+      v-if="showValue"
+      class="headline"
+    >
+      {{ displayedValue }}
+    </v-list-tile-action>
+    <v-list-tile-content>
+      <v-list-tile-title>
+        {{ model.name }}
+      </v-list-tile-title>
+      <v-list-tile-sub-title>
+        <code
+          v-for="stat in model.stats"
+          :key="stat"
+          class="mr-1"
+        >{{ stat }}</code>
+      </v-list-tile-sub-title>
+    </v-list-tile-content>
+  </v-list-tile>
 </template>
 
 <script>

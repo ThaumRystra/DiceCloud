@@ -1,35 +1,49 @@
 <template lang="html">
   <div class="attribute-viewer">
-    <div v-if="model.value !== undefined">
+    <v-layout
+      column
+      align-center
+    >
       <div
-        v-if="model.damage !== undefined"
-        class="display-3"
+        v-if="model.value !== undefined"
+        class="display-1"
       >
-        {{ model.value - model.damage }} / {{ model.value }}
+        <div
+          v-if="model.damage !== undefined"
+        >
+          {{ model.value - model.damage }} / {{ model.value }}
+        </div>
+        <div v-else>
+          {{ model.value }}
+        </div>
       </div>
-      <div v-else>
-        {{ model.value }}
+      <div
+        v-if="model.modifier !== undefined"
+        class="title"
+      >
+        {{ numberToSignedString(model.modifier) }}
       </div>
+    </v-layout>
+    <div>
+      <property-name :value="model.name" />
+      <property-variable-name :value="model.variableName" />
     </div>
-    <div v-if="model.modifier !== undefined">
-      {{ numberToSignedString(model.modifier) }}
-    </div>
-    <property-name :value="model.name" />
-    <property-variable-name :value="model.variableName" />
     <property-field
       v-if="model.attributeType === 'hitDice' && model.hitDiceSize"
       name="Hit dice size"
       :value="model.hitDiceSize"
     />
-    <p v-if="reset && model.attributeType !== 'hitDice'">
-      {{ reset }}
-    </p>
+    <property-field
+      v-if="reset && model.attributeType !== 'hitDice'"
+      name="Reset"
+      :value="reset"
+    />
     <property-description :value="model.description" />
 
     <effect-viewer
-      v-if="computationContext.creature"
+      v-if="computationContext.creature && model.baseValueCalculation"
       :model="{
-        name: 'Attribute base value',
+        name: 'Base value',
         result: model.baseValue,
         operation: 'base'
       }"
