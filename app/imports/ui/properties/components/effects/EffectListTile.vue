@@ -1,53 +1,65 @@
 <template lang="html">
-	<v-list-tile
-		class="effect-list-tile"
-		:class="{disabled: !enabled}"
-		:data-id="_id"
-		v-on="$listeners.click ? { click(e){
-				$emit('click', $props)
-			} } : {}"
-	>
-		<v-layout row align-center class="net-effect">
-			<v-icon class="icon">{{getEffectIcon(operation, result)}}</v-icon>
-			<div class="value display-1  pr-2" v-if="showValue(operation)">
-				{{getValue(operation, result)}}
-			</div>
-			<div class="calculation body-2 pr-2" v-else>
-				{{operation === 'conditional' ? calculation : ''}}
-			</div>
-		</v-layout>
-		<v-list-tile-content>
-			<v-list-tile-title class="stat" v-if="showStatName">
-				{{statName}}
-			</v-list-tile-title>
-			<v-list-tile-title class="name" v-else>
-				{{name}}
-			</v-list-tile-title>
-			<v-list-tile-sub-title class="operation">
-				{{getOperation(operation)}}
-			</v-list-tile-sub-title>
-		</v-list-tile-content>
-	</v-list-tile>
+  <v-list-tile
+    class="effect-list-tile"
+    :class="{disabled: !enabled}"
+    :data-id="_id"
+    v-on="$listeners.click ? { click(e){
+      $emit('click', $props)
+    } } : {}"
+  >
+    <v-list-tile-avatar>
+      <v-icon class="icon">
+        {{ getEffectIcon(model.operation, model.result) }}
+      </v-icon>
+    </v-list-tile-avatar>
+    <v-list-tile-action>
+      <div
+        v-if="showValue(model.operation)"
+        class="value display-1  pr-2"
+      >
+        {{ getValue(model.operation, model.result) }}
+      </div>
+      <div
+        v-else
+        class="calculation body-2 pr-2"
+      >
+        {{ model.operation === 'conditional' ? model.calculation : '' }}
+      </div>
+    </v-list-tile-action>
+    <v-list-tile-content>
+      <v-list-tile-title
+        v-if="showStatName"
+        class="stat"
+      >
+        {{ model.statName }}
+      </v-list-tile-title>
+      <v-list-tile-title
+        v-else
+        class="name"
+      >
+        {{ model.name }}
+      </v-list-tile-title>
+      <v-list-tile-sub-title class="operation">
+        {{ getOperation(model.operation) }}
+      </v-list-tile-sub-title>
+    </v-list-tile-content>
+  </v-list-tile>
 </template>
 
 <script>
-	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
 	export default {
 		props: {
-			_id: String,
 			enabled: Boolean,
-			operation: String,
-			result: [String, Number],
-			calculation: String,
-			name: String,
-			stat: String,
-			statName: String,
-			showStatName: Boolean,
+      showStatName: Boolean,
+      model: {
+        type: Object,
+        required: true,
+      },
 		},
 		methods: {
 			getEffectIcon,
-			getOperation(op, value){
+			getOperation(op){
 				switch(op) {
 					case 'base': return 'Base value';
 					case 'add': return 'Add';

@@ -1,12 +1,15 @@
 <template lang="html">
-  <v-list two-line v-if="this.effects && this.effects.length">
-		<effect-list-tile
-			:show-stat-name="showStatName"
-			v-for="effect in sortedEffects"
-			v-bind="effect"
-			v-on="$listeners.click ? { click(e){$emit('click', e)} } : {}"
-			:key="effect._id"
-		/>
+  <v-list
+    v-if="effects && effects.length"
+    two-line
+  >
+    <effect-list-tile
+      v-for="effect in sortedEffects"
+      :key="effect._id"
+      :show-stat-name="showStatName"
+      :model="effect"
+      v-on="$listeners.click ? { click(e){$emit('click', e)} } : {}"
+    />
   </v-list>
 </template>
 
@@ -15,12 +18,12 @@
 	import sortEffects from '/imports/ui/utility/sortEffects.js';
 
 	export default {
+		components: {
+			EffectListTile,
+		},
 		props: {
 			effects: Array,
 			showStatName: Boolean,
-		},
-		components: {
-			EffectListTile,
 		},
 		computed: {
 			sortedEffects(){

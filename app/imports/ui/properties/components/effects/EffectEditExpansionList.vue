@@ -1,25 +1,25 @@
 <template lang="html">
   <v-expansion-panel
-		class="effect-edit-expansion-list"
-		v-model="expanded"
-	>
-  	<v-expansion-panel-content
-			v-for="(effect, index) in effects"
-			:key="effect._id"
-			lazy
-		>
-  		<effect-list-tile
-				slot="header"
-				class="effect-list-tile"
-				:class="{'primary--text': expanded === index}"
-				v-bind="effect"
-			/>
-			<effect-form
-				:effect="effect"
-				:stats="stats"
-				@change="({set, ack}) => $emit('change', {set, ack, effectId: effect._id, index})"
-			/>
-  	</v-expansion-panel-content>
+    v-model="expanded"
+    class="effect-edit-expansion-list"
+  >
+    <v-expansion-panel-content
+      v-for="(effect, index) in effects"
+      :key="effect._id"
+      lazy
+    >
+      <effect-list-tile
+        slot="header"
+        class="effect-list-tile"
+        :class="{'primary--text': expanded === index}"
+        :model="effect"
+      />
+      <effect-form
+        :effect="effect"
+        :stats="stats"
+        @change="({set, ack}) => $emit('change', {set, ack, effectId: effect._id, index})"
+      />
+    </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
@@ -27,13 +27,13 @@
 	import EffectForm from '/imports/ui/properties/forms/EffectForm.vue';
 	import EffectListTile from '/imports/ui/properties/components/effects/EffectListTile.vue';
 	export default {
-		props: {
-			effects: Array,
-			stats: Array,
-		},
 		components: {
 			EffectForm,
 			EffectListTile,
+		},
+		props: {
+			effects: Array,
+			stats: Array,
 		},
 		data(){ return {
 			expanded: null,
