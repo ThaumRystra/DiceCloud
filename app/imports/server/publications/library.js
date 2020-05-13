@@ -10,32 +10,28 @@ Meteor.publish('standardLibraries', function(){
 });
 
 Meteor.publish('libraries', function(){
+  if (!this.userId) return [];
 	const user = Meteor.user();
-	const userId = user && user._id;
-	if (!userId) return [];
 	const subs = user && user.subscribedLibraries || [];
 	return Libraries.find({
 		$or: [
-			{owner: userId},
-			{writers: userId},
-			{readers: userId},
+			{owner: this.userId},
+			{writers: this.userId},
+			{readers: this.userId},
 			{_id: {$in: subs}},
 		]
 	});
 });
 
 Meteor.publish('library', function(libraryId){
-	const user = Meteor.user();
-	const userId = user && user._id;
-	if (!userId) return [];
-	const subs = user && user.subscribedLibraries || [];
+	if (!this.userId) return [];
 	let libraryCursor = Libraries.find({
 		_id: libraryId,
 		$or: [
-			{owner: userId},
-			{writers: userId},
-			{readers: userId},
-			{_id: {$in: subs}},
+			{owner: this.userId},
+			{writers: this.userId},
+			{readers: this.userId},
+      {public: true},
 		],
 	});
 	if (!libraryCursor.count()) return [];
