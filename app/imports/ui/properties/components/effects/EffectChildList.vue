@@ -11,7 +11,7 @@
 </template>
 
 <script>
-	import EffectListTile from '/imports/ui/properties/viewers/shared/effects/EffectListTile.vue';
+	import EffectListTile from '/imports/ui/properties/components/effects/EffectListTile.vue';
 	import sortEffects from '/imports/ui/utility/sortEffects.js';
 
 	export default {

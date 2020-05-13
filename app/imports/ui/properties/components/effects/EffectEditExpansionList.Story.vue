@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import EffectEditExpansionList from '/imports/ui/properties/viewers/shared/effects/EffectEditExpansionList.vue';
+import EffectEditExpansionList from '/imports/ui/properties/components/effects/EffectEditExpansionList.vue';
 export default {
 	data(){ return {
 		effects: [
