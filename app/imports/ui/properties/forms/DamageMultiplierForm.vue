@@ -11,12 +11,13 @@
       <smart-select
         label="Damage Type"
         style="flex-basis: 300px;"
+        multiple
         :items="damageTypes"
-        :value="model.damageType"
-        :error-messages="errors.damageType"
+        :value="model.damageTypes"
+        :error-messages="errors.damageTypes"
         :menu-props="{auto: true, lazy: true}"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['damageType'], value, ack})"
+        @change="(value, ack) => $emit('change', {path: ['damageTypes'], value, ack})"
       />
       <smart-select
         label="Value"
@@ -59,15 +60,6 @@
 				}, {
 					value: 'slashing',
 					text: 'Slashing',
-				}, {
-					value: 'magicalBludgeoning',
-					text: 'Magical Bludgeoning',
-				}, {
-					value: 'magicalPiercing',
-					text: 'Magical Piercing',
-				}, {
-					value: 'magicalSlashing',
-					text: 'Magical Slashing',
 				}, {
 					value: 'acid',
 					text: 'Acid',
@@ -113,6 +105,9 @@
 				},
 			],
 		};},
+    methods: {
+      log: console.log
+    },
 	};
 </script>
 
