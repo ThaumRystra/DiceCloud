@@ -9,7 +9,6 @@ export default function evaluateCalculation(string, memo){
   try {
     calc = math.parse(string);
   } catch (e) {
-    console.error(e);
     return string;
   }
   // Ensure all symbol nodes are defined and coputed

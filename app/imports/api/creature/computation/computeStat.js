@@ -16,6 +16,8 @@ export default function computeStat(stat, memo){
     console.warn('dependencyLoop', stat);
     return;
   }
+  // Before doing any work, mark this stat as busy
+  stat.computationDetails.busyComputing = true;
   // Compute and aggregate all the effects
   let aggregator = new EffectAggregator(stat, memo)
   each(stat.computationDetails.effects, (effect) => {
