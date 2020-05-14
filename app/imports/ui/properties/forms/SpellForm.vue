@@ -58,7 +58,7 @@
         label="Verbal"
         :input-value="model.verbal"
         :error-messages="errors.verbal"
-        @change="(value) => log(value)/*$emit('change', {path: ['verbal'], value})*/"
+        @change="(value) => $emit('change', {path: ['verbal'], value})"
       />
       <v-checkbox
         label="Somatic"
@@ -213,9 +213,6 @@
 				},
 			],
 		};},
-    methods: {
-      log: console.log,
-    },
 	};
 </script>
 

@@ -49,7 +49,6 @@ export default {
       this.loading = true;
       Meteor.users.canPickUsername.call({username}, (error, result) => {
         this.loading = false;
-        console.log({error, result})
         if (error){
           this.valid = false;
           ack(error.message || error);

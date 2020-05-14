@@ -105,9 +105,6 @@
 				},
 			],
 		};},
-    methods: {
-      log: console.log
-    },
 	};
 </script>
 
