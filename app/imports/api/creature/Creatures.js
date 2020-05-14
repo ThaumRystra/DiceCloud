@@ -1,13 +1,14 @@
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
-import {assertEditPermission, assertOwnership} from '/imports/api/sharing/sharingPermissions.js';
+import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
 
 import '/imports/api/creature/removeCreature.js';
 
 //set up the collection for creatures
-Creatures = new Mongo.Collection('creatures');
+let Creatures = new Mongo.Collection('creatures');
 
 let CreatureSettingsSchema = new SimpleSchema({
 	//slowed down by carrying too much?
@@ -33,13 +34,6 @@ let CreatureSchema = new SimpleSchema({
 		type: String,
 		defaultValue: '',
 		optional: true,
-	},
-	urlName: {
-		type: String,
-		optional: true,
-		autoValue: function() {
-			return getSlug(this.field('name').value, {maintainCase: true}) || '-';
-		},
 	},
 	alignment: {
 		type: String,
@@ -76,6 +70,11 @@ let CreatureSchema = new SimpleSchema({
 		defaultValue: 'pc',
 		allowedValues: ['pc', 'npc', 'monster'],
 	},
+  damageMultipliers: {
+    type: Object,
+		blackbox: true,
+		defaultValue: {}
+  },
 	variables: {
 		type: Object,
 		blackbox: true,
@@ -118,7 +117,7 @@ const insertCreature = new ValidatedMethod({
 
 const updateCreature = new ValidatedMethod({
   name: 'Creatures.methods.update',
-  validate({_id, path, value}){
+  validate({_id, path}){
 		if (!_id) return false;
 		// Allowed fields
 		let allowedFields = ['name', 'alignment', 'gender', 'picture', 'settings'];
@@ -137,4 +136,4 @@ const updateCreature = new ValidatedMethod({
 });
 
 export default Creatures;
-export { CreatureSchema, insertCreature, removeCreature, updateCreature };
+export { CreatureSchema, insertCreature, updateCreature };

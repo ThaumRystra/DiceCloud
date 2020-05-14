@@ -1,3 +1,4 @@
+import Creatures from '/imports/api/creature/Creatures.js';
 import {
   assertEditPermission as editPermission,
   assertViewPermission as viewPermission,

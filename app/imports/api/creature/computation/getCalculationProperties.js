@@ -1,7 +1,7 @@
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
-export default function getCalculationProperties(creatureId){
+export default function getCalculationProperties(creatureId, types){
   // First get ids of disabled properties and unequiped items
   let disabledAncestorIds = CreatureProperties.find({
     'ancestors.id': creatureId,
@@ -30,7 +30,7 @@ export default function getCalculationProperties(creatureId){
       $nin: disabledAncestorIds,
     },
     removed: {$ne: true},
-    type: {$in: [
+    type: {$in: types || [
       'attribute',
       'skill',
       'damageMultiplier',

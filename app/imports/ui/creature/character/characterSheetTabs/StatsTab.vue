@@ -115,6 +115,10 @@
         </v-card>
       </div>
 
+      <div v-if="numKeys(creature.damageMultipliers)">
+        <damage-multiplier-card :model="creature.damageMultipliers" />
+      </div>
+
       <div class="saving-throws">
         <v-card>
           <v-list>
@@ -232,11 +236,13 @@
 </template>
 
 <script>
+  import Creatures from '/imports/api/creature/Creatures.js';
 	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
 	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-	import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
+  import DamageMultiplierCard from '/imports/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
+  import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
 	import HitDiceListTile from '/imports/ui/properties/components/attributes/HitDiceListTile.vue';
 	import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
 	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
@@ -271,6 +277,7 @@
 			AbilityListTile,
 			AttributeCard,
 			ColumnLayout,
+      DamageMultiplierCard,
 			HealthBarCardContainer,
 			HitDiceListTile,
 			SkillListTile,
@@ -286,6 +293,9 @@
       },
 		},
 		meteor: {
+      creature(){
+        return Creatures.findOne(this.creatureId);
+      },
 			abilities(){
 				return getAttributeOfType(this.creatureId, 'ability');
 			},
@@ -345,6 +355,9 @@
 					damageProperty.call({_id, operation: 'increment' ,value: -value});
 				}
 			},
+      numKeys(obj){
+        return Object.keys(obj).length;
+      },
 		},
 	};
 </script>
