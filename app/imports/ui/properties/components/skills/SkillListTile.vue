@@ -28,7 +28,7 @@
           arrow_downward
         </v-icon>
         {{ model.name }}
-        <template v-if="model.conditionalBenefits.length">
+        <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
           *
         </template>
         <template v-if="model.passiveBonus">

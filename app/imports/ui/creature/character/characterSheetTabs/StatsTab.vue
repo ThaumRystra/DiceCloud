@@ -97,7 +97,7 @@
       </div>
 
       <div
-        v-if="spellSlots.length"
+        v-if="spellSlots && spellSlots.length"
         class="spell-slots"
       >
         <v-card>
@@ -150,7 +150,7 @@
       </div>
 
       <div
-        v-if="weapons.length"
+        v-if="weapons && weapons.length"
         class="weapon-proficiencies"
       >
         <v-card>
@@ -170,7 +170,7 @@
         </v-card>
       </div>
       <div
-        v-if="armors.length"
+        v-if="armors && armors.length"
         class="weapon-proficiencies"
       >
         <v-card>
@@ -190,7 +190,7 @@
         </v-card>
       </div>
       <div
-        v-if="tools.length"
+        v-if="tools && tools.length"
         class="weapon-proficiencies"
       >
         <v-card>
@@ -210,12 +210,12 @@
         </v-card>
       </div>
       <div
-        v-if="languages.length"
+        v-if="languages && languages.length"
         class="language-proficiencies"
       >
         <v-card>
           <v-list>
-            <v-subheader v-if="languages.length">
+            <v-subheader>
               Languages
             </v-subheader>
             <skill-list-tile
