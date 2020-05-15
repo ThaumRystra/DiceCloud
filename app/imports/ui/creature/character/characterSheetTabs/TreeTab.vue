@@ -1,11 +1,11 @@
 <template lang="html">
   <div
     class="tree-tab pa-4"
-    style="max-height: calc(100vh - 96px); display: flex;"
+    style="height: calc(100vh - 96px); display: flex;"
   >
     <v-card
       class="layout row"
-      style="max-height: 100%;"
+      style="height: 100%;"
       data-id="creature-tree-card"
     >
       <div
@@ -64,13 +64,19 @@
             flat
             extended
           >
-            <property-icon
-              :type="selectedProperty && selectedProperty.type"
-              class="mr-2"
-            />
-            <div class="title">
-              {{ getPropertyName(selectedProperty && selectedProperty.type) }}
-            </div>
+            <v-fade-transition mode="out-in">
+              <div
+                :key="selectedProperty && selectedProperty._id"
+                class="title"
+              >
+                <property-icon
+                  :key="selectedProperty && selectedProperty._id"
+                  :type="selectedProperty && selectedProperty.type"
+                  class="mr-2"
+                />
+                {{ getPropertyName(selectedProperty && selectedProperty.type) }}
+              </div>
+            </v-fade-transition>
             <v-spacer />
             <v-btn
               v-if="selectedProperty"
@@ -85,7 +91,12 @@
             class="flex"
             style="overflow-y: auto"
           >
-            <property-viewer :model="selectedProperty" />
+            <v-fade-transition mode="out-in">
+              <property-viewer
+                :key="selectedProperty && selectedProperty._id"
+                :model="selectedProperty"
+              />
+            </v-fade-transition>
           </v-card-text>
         </div>
       </template>
