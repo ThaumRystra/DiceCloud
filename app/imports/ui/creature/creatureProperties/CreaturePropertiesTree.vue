@@ -1,16 +1,14 @@
 <template lang="html">
-	<v-card-text style="width: initial; max-width: 100%;">
-		<tree-node-list
-			v-if="root"
-			:children="children"
-			:group="group"
-			:organize="organize"
-			:selected-node-id="selectedNodeId"
-			@selected="e => $emit('selected', e)"
-			@reordered="reordered"
-			@reorganized="reorganized"
-		/>
-	</v-card-text>
+  <tree-node-list
+    v-if="root"
+    :children="children"
+    :group="group"
+    :organize="organize"
+    :selected-node-id="selectedNodeId"
+    @selected="e => $emit('selected', e)"
+    @reordered="reordered"
+    @reorganized="reorganized"
+  />
 </template>
 
 <script>

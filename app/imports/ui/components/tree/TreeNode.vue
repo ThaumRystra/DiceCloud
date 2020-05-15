@@ -1,61 +1,69 @@
 <template lang="html">
-	<v-sheet
-		class="tree-node"
-		:class="!hasChildren ? 'empty' : null"
-		:data-id="`tree-node-${node._id}`"
-	>
-		<div
-			class="layout row align-center justify-start tree-node-title"
-			style="cursor: pointer;"
-			:class="selected && 'primary--text'"
-			@click.stop="$emit('selected', node._id)"
-		>
-			<v-btn
-				small icon
-				:class="showExpanded ? 'rotate-90' : null"
-				@click.stop="expanded = !expanded"
-				:disabled="!hasChildren && !organize || !canExpand"
-			>
-				<v-icon v-if="canExpand && (hasChildren || organize)">chevron_right</v-icon>
-			</v-btn>
-			<div
-				class="layout row align-center justify-start"
-				style="flex-grow: 0;"
-			>
-				<v-icon
-					class="handle mr-2"
-					v-if="organize"
-					:class="selected && 'primary--text'"
-					:disabled="expanded"
-				>drag_handle</v-icon>
-				<property-icon
-					v-if="node.type"
-					class="mr-2"
-					:type="node.type"
-					:class="selected && 'primary--text'"
-				/>
-				<div class="text-no-wrap text-truncate">
-					<!--{{node && node.order}}-->
-					{{getTitle}}
-				</div>
-			</div>
-		</div>
-		<v-expand-transition>
-			<div v-if="showExpanded" class="pl-3">
-				<tree-node-list
-					v-if="showExpanded"
-					:node="node"
-					:children="computedChildren"
-					:group="group"
-					:organize="organize"
-					:selected-node-id="selectedNodeId"
-					@reordered="e => $emit('reordered', e)"
-					@reorganized="e => $emit('reorganized', e)"
-					@selected="e => $emit('selected', e)"
-				/>
-			</div>
-		</v-expand-transition>
-	</v-sheet>
+  <v-sheet
+    class="tree-node"
+    :class="!hasChildren ? 'empty' : null"
+    :data-id="`tree-node-${node._id}`"
+  >
+    <div
+      class="layout row align-center justify-start tree-node-title"
+      style="cursor: pointer;"
+      :class="selected && 'primary--text'"
+      @click.stop="$emit('selected', node._id)"
+    >
+      <v-btn
+        small
+        icon
+        :class="showExpanded ? 'rotate-90' : null"
+        :disabled="!hasChildren && !organize || !canExpand"
+        @click.stop="expanded = !expanded"
+      >
+        <v-icon v-if="canExpand && (hasChildren || organize)">
+          chevron_right
+        </v-icon>
+      </v-btn>
+      <div
+        class="layout row align-center justify-start pr-1"
+        style="flex-grow: 0;"
+      >
+        <v-icon
+          v-if="organize"
+          class="handle mr-2"
+          :class="selected && 'primary--text'"
+          :disabled="expanded"
+        >
+          drag_handle
+        </v-icon>
+        <property-icon
+          v-if="node.type"
+          class="mr-2"
+          :type="node.type"
+          :class="selected && 'primary--text'"
+        />
+        <div class="text-no-wrap text-truncate">
+          <!--{{node && node.order}}-->
+          {{ getTitle }}
+        </div>
+      </div>
+    </div>
+    <v-expand-transition>
+      <div
+        v-if="showExpanded"
+        class="pl-3"
+      >
+        <tree-node-list
+          v-if="showExpanded"
+          :node="node"
+          :children="computedChildren"
+          :group="group"
+          :organize="organize"
+          :selected-node-id="selectedNodeId"
+          @reordered="e => $emit('reordered', e)"
+          @reorganized="e => $emit('reorganized', e)"
+          @selected="e => $emit('selected', e)"
+        />
+      </div>
+    </v-expand-transition>
+  </v-sheet>
 </template>
 
 <script>
@@ -70,16 +78,10 @@
 	import PROPERTIES from '/imports/constants/PROPERTIES.js'
 
 	export default {
-		name: 'tree-node',
-		beforeCreate() {
-		  this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
-		},
+		name: 'TreeNode',
 		components: {
 			PropertyIcon,
 		},
-		data(){ return {
-			expanded: false,
-		}},
 		props: {
 			node: Object,
 			group: String,
@@ -89,6 +91,9 @@
 			selectedNodeId: String,
 			selected: Boolean,
 		},
+		data(){ return {
+			expanded: false,
+		}},
 		computed: {
 			hasChildren(){
 				return this.children && this.children.length || this.lazy && !this.expanded;
@@ -116,6 +121,9 @@
 				let prop = PROPERTIES[this.node.type]
 				return prop && prop.name;
 			}
+		},
+		beforeCreate() {
+		  this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
 		},
 		methods: {
 			icon(type){
