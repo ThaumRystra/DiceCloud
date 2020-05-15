@@ -126,7 +126,12 @@ export default class ComputationMemo {
       targets.add(target);
       if (isSkillOperation(prop) && isAbility(target)){
         let extras = this.skillsByAbility[statName] || [];
-        targets.add(...extras)
+        extras.forEach(ex =>{
+          // Only pass on ability effects to skills and checks
+          if (ex.skillType === 'skill' || ex.skillType === 'check'){
+            targets.add(ex)
+          }
+        });
       }
     });
     return targets;
@@ -154,15 +159,6 @@ export default class ComputationMemo {
   }
 }
 
-const skillOperations = [
-  'advantage',
-  'disadvantage',
-  'passiveAdd',
-  'fail',
-  'conditional',
-  'rollBonus',
-];
-
 function isAbility(prop){
   return prop.type === 'attribute' &&
   prop.attributeType === 'ability'
@@ -171,6 +167,15 @@ function isAbility(prop){
 function isSkillCheck(prop){
   return includes(['skill', 'check', 'save', 'utility'], prop.skillType);
 }
+
+const skillOperations = [
+  'advantage',
+  'disadvantage',
+  'passiveAdd',
+  'fail',
+  'conditional',
+  'rollBonus',
+];
 
 function isSkillOperation(prop){
   return skillOperations.includes(prop.operation);
