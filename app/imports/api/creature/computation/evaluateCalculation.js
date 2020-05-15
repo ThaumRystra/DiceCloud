@@ -1,4 +1,4 @@
-import  replaceBareSymbolsWithValueAccessor from '/imports/api/creature/computation/utility/replaceBareSymbolsWithValueAccessor.js';
+import bareSymbolSubtitutor from '/imports/api/creature/computation/utility/bareSymbolSubtitutor.js';
 import computeStat from '/imports/api/creature/computation/computeStat.js';
 import math from '/imports/math.js';
 
@@ -21,7 +21,7 @@ export default function evaluateCalculation(string, memo){
     }
   });
   // Ensure any bare symbols are value accessors instead
-  let substitutedCalc = calc.transform(replaceBareSymbolsWithValueAccessor);
+  let substitutedCalc = calc.transform(bareSymbolSubtitutor(memo.statsByVariableName));
   // Evaluate the expression to a number or return with substitutions
   try {
     return substitutedCalc.evaluate(memo.statsByVariableName);

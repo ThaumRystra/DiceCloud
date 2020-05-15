@@ -1,5 +1,5 @@
 import math from '/imports/math.js';
-import  replaceBareSymbolsWithValueAccessor from '/imports/api/creature/computation/utility/replaceBareSymbolsWithValueAccessor.js';
+import bareSymbolSubtitutor from '/imports/api/creature/computation/utility/bareSymbolSubtitutor.js';
 
 export default function evaluateString(string, scope){
   let errors = [];
@@ -20,7 +20,7 @@ export default function evaluateString(string, scope){
   }
 
   // Replace all bare symbols with symbol.value
-  let transformedCalc = calc.transform(replaceBareSymbolsWithValueAccessor);
+  let transformedCalc = calc.transform(bareSymbolSubtitutor(scope));
 
   // Evaluate the expression to a number or return with substitutions
   try {
@@ -29,11 +29,11 @@ export default function evaluateString(string, scope){
   } catch (e1){
     errors.push(e1);
     try {
-      let result = simplifyWithAccessors(calc, scope).toHTML();
+      let result = simplifyWithAccessors(transformedCalc, scope).toHTML();
       return {result, errors};
     } catch (e2){
       errors.push(e2);
-      return {result: calc.toHTML(), errors};
+      return {result: transformedCalc.toHTML(), errors};
     }
   }
 }
