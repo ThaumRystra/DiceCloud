@@ -1,21 +1,27 @@
 <template lang="html">
-	<dialog-base>
+  <dialog-base>
     <div slot="toolbar">
       Creature Form Dialog
     </div>
-		<div>
-			<creature-form :model="model" @change="change"/>
-		</div>
-		<v-spacer slot="actions"/>
-		<v-btn
-			slot="actions"
-			 flat
-			 @click="$store.dispatch('popDialogStack')"
-		 >Done</v-btn>
+    <div>
+      <creature-form
+        :model="model"
+        @change="change"
+      />
+    </div>
+    <v-spacer slot="actions" />
+    <v-btn
+      slot="actions"
+      flat
+      @click="$store.dispatch('popDialogStack')"
+    >
+      Done
+    </v-btn>
   </dialog-base>
 </template>
 
 <script>
+import Creatures from '/imports/api/creature/Creatures.js';
 import {updateCreature} from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import CreatureForm from '/imports/ui/creature/CreatureForm.vue'
