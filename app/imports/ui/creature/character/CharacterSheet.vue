@@ -103,3 +103,10 @@
 		},
 	}
 </script>
+
+<style>
+  .character-sheet .v-window-item {
+    min-height: calc(100vh - 96px);
+    overflow: hidden;
+  }
+</style>
