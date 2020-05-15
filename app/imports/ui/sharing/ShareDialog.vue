@@ -1,8 +1,8 @@
 <template lang="html">
   <dialog-base>
-    <div slot="toolbar">
+    <v-toolbar-title slot="toolbar">
       Sharing
-    </div>
+    </v-toolbar-title>
     <div v-if="model">
       <smart-select
         label="Who can view"

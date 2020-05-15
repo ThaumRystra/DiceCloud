@@ -1,18 +1,22 @@
 <template lang="html">
-	<toolbar-card :color="model.color" @toolbarclick="clickSpellList(model._id)" :data-id="model._id">
-		<template slot="toolbar">
-			<span>
-				{{model.name}}
-			</span>
-			<v-spacer/>
-		</template>
-		<creature-properties-tree
-			:root="{collection: 'creatureProperties', id: model._id}"
-			:filter="{type: {$in: ['spellList', 'spell', 'folder']}}"
-			@selected="e => clickProperty(e)"
-			:organize="organize"
-			group="spells"
-		/>
+  <toolbar-card
+    :color="model.color"
+    :data-id="model._id"
+    @toolbarclick="clickSpellList(model._id)"
+  >
+    <template slot="toolbar">
+      <v-toolbar-title>
+        {{ model.name }}
+      </v-toolbar-title>
+      <v-spacer />
+    </template>
+    <creature-properties-tree
+      :root="{collection: 'creatureProperties', id: model._id}"
+      :filter="{type: {$in: ['spellList', 'spell', 'folder']}}"
+      :organize="organize"
+      group="spells"
+      @selected="e => clickProperty(e)"
+    />
   </toolbar-card>
 </template>
 
@@ -22,13 +26,13 @@ import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 
 export default {
-	props: {
-		model: Object,
-		organize: Boolean,
-	},
 	components: {
 		ToolbarCard,
 		CreaturePropertiesTree,
+	},
+	props: {
+		model: Object,
+		organize: Boolean,
 	},
 	methods: {
 		clickSpellList(_id){

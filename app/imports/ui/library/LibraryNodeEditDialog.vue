@@ -1,35 +1,44 @@
 <template lang="html">
-	<dialog-base>
-		<template slot="toolbar">
-			<property-icon :type="model.type" class="mr-2"/>
-			<div class="title">
-				{{getPropertyName(model.type)}}
-			</div>
-			<v-spacer/>
-			<v-btn icon flat @click="remove">
-				<v-icon>delete</v-icon>
-			</v-btn>
-		</template>
-		<component
-			v-if="model"
-			class="library-node-form"
-			stored
-			:is="model.type"
-			:model="model"
-			@change="change"
-			@push="push"
-			@pull="pull"
-		/>
-		<div
-			slot="actions"
-			class="layout row justify-end"
-		>
-			<v-btn
-				flat
-				@click="$store.dispatch('popDialogStack')"
-			>Done</v-btn>
-		</div>
-	</dialog-base>
+  <dialog-base>
+    <template slot="toolbar">
+      <property-icon
+        :type="model.type"
+        class="mr-2"
+      />
+      <v-toolbar-title class="title">
+        {{ getPropertyName(model.type) }}
+      </v-toolbar-title>
+      <v-spacer />
+      <v-btn
+        icon
+        flat
+        @click="remove"
+      >
+        <v-icon>delete</v-icon>
+      </v-btn>
+    </template>
+    <component
+      :is="model.type"
+      v-if="model"
+      class="library-node-form"
+      stored
+      :model="model"
+      @change="change"
+      @push="push"
+      @pull="pull"
+    />
+    <div
+      slot="actions"
+      class="layout row justify-end"
+    >
+      <v-btn
+        flat
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Done
+      </v-btn>
+    </div>
+  </dialog-base>
 </template>
 
 <script>

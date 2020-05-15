@@ -1,28 +1,35 @@
 <template lang="html">
   <dialog-base>
-		<div slot="toolbar">
-			Delete {{typeName}}
-		</div>
-		<div>
-			<p v-if="name">
-				Type "{{name}}" to permanenetly delete
-			</p>
-			<v-text-field v-if="name" v-model="inputName"/>
-			<div class="layout row justify-center">
-				<v-btn
-				v-show="nameMatch"
-				class="primary"
-				@click="$store.dispatch('popDialogStack', true);"
-				>Delete forever</v-btn>
-			</div>
-		</div>
-		<v-spacer slot="actions"/>
-		<v-btn
-			slot="actions"
-			flat
-			@click="$store.dispatch('popDialogStack')"
-		>Cancel</v-btn>
-	</dialog-base>
+    <v-toolbar-title slot="toolbar">
+      Delete {{ typeName }}
+    </v-toolbar-title>
+    <div>
+      <p v-if="name">
+        Type "{{ name }}" to permanenetly delete
+      </p>
+      <v-text-field
+        v-if="name"
+        v-model="inputName"
+      />
+      <div class="layout row justify-center">
+        <v-btn
+          v-show="nameMatch"
+          class="primary"
+          @click="$store.dispatch('popDialogStack', true);"
+        >
+          Delete forever
+        </v-btn>
+      </div>
+    </div>
+    <v-spacer slot="actions" />
+    <v-btn
+      slot="actions"
+      flat
+      @click="$store.dispatch('popDialogStack')"
+    >
+      Cancel
+    </v-btn>
+  </dialog-base>
 </template>
 
 <script>

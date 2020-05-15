@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div slot="toolbar">
-      Friends
-    </div>
     <v-sheet>
       <h1>
         Friends

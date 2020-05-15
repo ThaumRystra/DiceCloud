@@ -1,18 +1,24 @@
 <template lang="html">
-	<transition-group name="slide">
-		<dialog-base v-show="!value" class="step-1" key="left">
-			<div slot="toolbar">Add Library Content</div>
-			<property-selector @select="property => $emit('input', property)"/>
-		</dialog-base>
-		<div
-			v-show="value"
-			class="step-2"
-			style="height: 100%;"
-			key="right"
-		>
-			<slot/>
-		</div>
-	</transition-group>
+  <transition-group name="slide">
+    <dialog-base
+      v-show="!value"
+      key="left"
+      class="step-1"
+    >
+      <v-toolbar-title slot="toolbar">
+        Add Library Content
+      </v-toolbar-title>
+      <property-selector @select="property => $emit('input', property)" />
+    </dialog-base>
+    <div
+      v-show="value"
+      key="right"
+      class="step-2"
+      style="height: 100%;"
+    >
+      <slot />
+    </div>
+  </transition-group>
 </template>
 
 <script>
@@ -20,15 +26,15 @@ import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
 
 export default {
+  components: {
+    DialogBase,
+		PropertySelector,
+  },
 	props: {
 		value: {
 			type: String,
 		},
 	},
-  components: {
-    DialogBase,
-		PropertySelector,
-  },
 };
 </script>
 

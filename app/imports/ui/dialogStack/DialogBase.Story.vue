@@ -1,22 +1,34 @@
 <template>
   <dialog-base>
-    <div slot="toolbar">
+    <v-toolbar-title slot="toolbar">
       Test Dialog
-    </div>
+    </v-toolbar-title>
     <div>
-			<v-btn @click="openDialog('btn')" data-id="btn">Open Dialog</v-btn>
-      <v-btn fab @click="openDialog('fab')" data-id="fab" color="green">Open Dialog</v-btn>
+      <v-btn
+        data-id="btn"
+        @click="openDialog('btn')"
+      >
+        Open Dialog
+      </v-btn>
+      <v-btn
+        fab
+        data-id="fab"
+        color="green"
+        @click="openDialog('fab')"
+      >
+        Open Dialog
+      </v-btn>
     </div>
   </dialog-base>
 </template>
 
 <script>
-  import store from "/imports/ui/vuexStore.js";
-  import DialogBase from "/imports/ui/dialogStack/DialogBase.vue";
+  import store from '/imports/ui/vuexStore.js';
+  import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
   const component = {
     methods: {
       openDialog(elementId){
-        store.commit("pushDialogStack", {
+        store.commit('pushDialogStack', {
           component,
 					elementId,
         });

@@ -5,9 +5,9 @@
     @click="$emit('click')"
   >
     <template slot="toolbar">
-      <span>
+      <v-toolbar-title>
         {{ model.name }}
-      </span>
+      </v-toolbar-title>
       <v-spacer />
     </template>
     <v-card-text v-if="model.summary">

@@ -1,8 +1,8 @@
 <template lang="html">
   <dialog-base>
-    <div slot="toolbar">
+    <v-toolbar-title slot="toolbar">
       Creature Form Dialog
-    </div>
+    </v-toolbar-title>
     <div>
       <creature-form
         :model="model"

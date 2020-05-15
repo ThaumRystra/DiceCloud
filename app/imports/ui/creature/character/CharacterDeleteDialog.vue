@@ -1,8 +1,8 @@
 <template lang="html">
   <dialog-base>
-    <div slot="toolbar">
+    <v-toolbar-title slot="toolbar">
       Delete Character
-    </div>
+    </v-toolbar-title>
     <div>
       <p v-if="name">
         Type "{{ name }}" to permanenetly delete the character

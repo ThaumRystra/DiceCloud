@@ -1,20 +1,24 @@
 <template lang="html">
-	<dialog-base>
-		<div slot="toolbar">Add from library</div>
-		<library-and-node
-			slot="unwrapped-content"
-			@selected="val => node = val"
-			style="height: 100%;"
-		/>
-		<template slot="actions">
-			<v-spacer/>
-			<v-btn
-				flat
-				@click="$store.dispatch('popDialogStack', node)"
-				color="primary"
-			>Insert</v-btn>
-		</template>
-	</dialog-base>
+  <dialog-base>
+    <v-toolbar-title slot="toolbar">
+      Add from library
+    </v-toolbar-title>
+    <library-and-node
+      slot="unwrapped-content"
+      style="height: 100%;"
+      @selected="val => node = val"
+    />
+    <template slot="actions">
+      <v-spacer />
+      <v-btn
+        flat
+        color="primary"
+        @click="$store.dispatch('popDialogStack', node)"
+      >
+        Insert
+      </v-btn>
+    </template>
+  </dialog-base>
 </template>
 
 <script>

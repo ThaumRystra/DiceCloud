@@ -1,27 +1,31 @@
 <template lang="html">
-	<dialog-base :override-back-button="() => $emit('back')">
-		<div slot="toolbar">Add {{propertyName}}</div>
-		<component
-			v-if="type"
-			:is="type"
-			class="creature-property-form"
-			:model="model"
-			:errors="errors"
-			@change="change"
-			@push="push"
-			@pull="pull"
-		/>
-		<div
-			slot="actions"
-			class="layout row justify-end"
-		>
-			<v-btn
-				flat
-				:disabled="!valid"
-				@click="$store.dispatch('popDialogStack', model)"
-			>Insert</v-btn>
-		</div>
-	</dialog-base>
+  <dialog-base :override-back-button="() => $emit('back')">
+    <v-toolbar-title slot="toolbar">
+      Add {{ propertyName }}
+    </v-toolbar-title>
+    <component
+      :is="type"
+      v-if="type"
+      class="creature-property-form"
+      :model="model"
+      :errors="errors"
+      @change="change"
+      @push="push"
+      @pull="pull"
+    />
+    <div
+      slot="actions"
+      class="layout row justify-end"
+    >
+      <v-btn
+        flat
+        :disabled="!valid"
+        @click="$store.dispatch('popDialogStack', model)"
+      >
+        Insert
+      </v-btn>
+    </div>
+  </dialog-base>
 </template>
 
 <script>
@@ -35,6 +39,10 @@ export default {
 		DialogBase,
 	},
 	mixins: [schemaFormMixin],
+	props: {
+		propertyName: String,
+		type: String,
+	},
 	data(){return {
 		model: {
 			type: this.type,
@@ -42,10 +50,6 @@ export default {
 		schema: undefined,
 		validationContext: undefined,
 	};},
-	props: {
-		propertyName: String,
-		type: String,
-	},
 	watch: {
 		type(newType){
 			if (!newType) return;

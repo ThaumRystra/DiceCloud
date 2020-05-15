@@ -1,9 +1,9 @@
 <template lang="html">
   <dialog-base>
     <template slot="toolbar">
-      <div>
+      <v-toolbar-title>
         {{ model && model.name }}
-      </div>
+      </v-toolbar-title>
       <v-spacer />
       <v-btn
         flat

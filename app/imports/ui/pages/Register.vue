@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div slot="toolbar">
-      Sign Up
-    </div>
     <v-form
       ref="form"
       class="mt-4"
