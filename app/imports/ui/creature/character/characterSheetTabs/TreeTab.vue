@@ -55,13 +55,14 @@
       <template v-if="$vuetify.breakpoint.mdAndUp">
         <v-divider vertical />
         <div
-          class="flex"
+          class="flex layout column"
           style="background-color: inherit; overflow: hidden;"
           data-id="selected-node-card"
         >
           <v-toolbar
             dense
             flat
+            extended
           >
             <property-icon
               :type="selectedProperty && selectedProperty.type"
@@ -80,7 +81,10 @@
               <v-icon>create</v-icon>
             </v-btn>
           </v-toolbar>
-          <v-card-text>
+          <v-card-text
+            class="flex"
+            style="overflow-y: auto"
+          >
             <property-viewer :model="selectedProperty" />
           </v-card-text>
         </div>
