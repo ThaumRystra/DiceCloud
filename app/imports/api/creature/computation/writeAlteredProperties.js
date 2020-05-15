@@ -84,7 +84,10 @@ function bulkWriteProperties(bulkWriteOps){
       bulkWriteOps,
       {ordered : false},
       function(e){
-        if (e) console.error(e);
+        if (e) {
+          console.error('Bulk write failed: ');
+          console.error(e);
+        }
       }
     );
   } else {

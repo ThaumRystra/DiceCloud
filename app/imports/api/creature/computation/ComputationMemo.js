@@ -89,7 +89,7 @@ export default class ComputationMemo {
     if (this.statsByVariableName[variableName]){
       prop.value = NaN;
       prop.computationDetails.error = 'variableNameCollision';
-      console.warn('variableNameCollision', prop);
+      if (Meteor.isClient) console.warn('variableNameCollision', prop);
       return;
     }
     this.statsByVariableName[variableName] = prop;
@@ -111,7 +111,9 @@ export default class ComputationMemo {
     prop = this.registerProperty(prop);
     let targets = this.getEffectTargets(prop);
     targets.forEach(target => {
-      target.computationDetails.effects.push(prop);
+      if (target.computationDetails.effects){
+        target.computationDetails.effects.push(prop);
+      }
     });
     if (!targets.size){
       this.unassignedEffects.push(prop);
