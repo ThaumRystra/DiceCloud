@@ -1,18 +1,21 @@
 <template lang="html">
-  <v-card :hover="hasClickListener" @click="$emit('click')">
-  	<v-toolbar
-			flat
-			:style="`transform: none; ${hasToolbarClickListener ? 'cursor: pointer;' : ''}`"
-			:color="color"
-			:dark="isDark"
-			@click="$emit('toolbarclick')"
-		>
-  		<slot name="toolbar"/>
-  	</v-toolbar>
-		<div
-		>
-			<slot/>
-		</div>
+  <v-card
+    :hover="hasClickListener"
+    class="toolbar-card"
+    @click="$emit('click')"
+  >
+    <v-toolbar
+      flat
+      :style="`transform: none; ${hasToolbarClickListener ? 'cursor: pointer;' : ''}`"
+      :color="color"
+      :dark="isDark"
+      @click="$emit('toolbarclick')"
+    >
+      <slot name="toolbar" />
+    </v-toolbar>
+    <div>
+      <slot />
+    </div>
   </v-card>
 </template>
 
@@ -41,5 +44,8 @@
 	};
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.toolbar-card .v-toolbar__title {
+  font-size: 14px;
+}
 </style>

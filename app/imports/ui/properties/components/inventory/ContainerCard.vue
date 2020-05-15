@@ -10,13 +10,15 @@
       </v-toolbar-title>
       <v-spacer />
     </template>
-    <creature-properties-tree
-      :root="{collection: 'creatureProperties', id: model._id}"
-      :filter="{type: {$in: ['container', 'item', 'folder']}}"
-      :organize="organize"
-      group="inventory"
-      @selected="e => clickProperty(e)"
-    />
+    <v-card-text>
+      <creature-properties-tree
+        :root="{collection: 'creatureProperties', id: model._id}"
+        :filter="{type: {$in: ['container', 'item', 'folder']}}"
+        :organize="organize"
+        group="inventory"
+        @selected="e => clickProperty(e)"
+      />
+    </v-card-text>
   </toolbar-card>
 </template>
 

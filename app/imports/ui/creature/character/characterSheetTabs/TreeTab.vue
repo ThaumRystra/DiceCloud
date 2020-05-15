@@ -9,7 +9,7 @@
       data-id="creature-tree-card"
     >
       <div
-        class="layout column"
+        class="layout column justify-start"
         :style="
           $vuetify.breakpoint.mdAndUp &&
             'width: 320px; flex-shrink: 0; flex-grow: 0;'
@@ -27,22 +27,23 @@
             :disabled="organizeDisabled"
             style="flex-grow: 0; height: 32px;"
           />
+          <v-combobox
+            ref="searchBox"
+            slot="extension"
+            v-model="filterString"
+            :items="filterOptions"
+            prepend-inner-icon="search"
+            class="mx-4"
+            hide-no-data
+            hide-selected
+            multiple
+            clearable
+            small-chips
+            deletable-chips
+          />
         </v-toolbar>
-        <v-combobox
-          ref="searchBox"
-          v-model="filterString"
-          :items="filterOptions"
-          prepend-inner-icon="search"
-          class="mx-4"
-          hide-no-data
-          hide-selected
-          multiple
-          clearable
-          small-chips
-          deletable-chips
-        />
         <creature-properties-tree
-          class="pt-0 flex"
+          class="pt-2 flex"
           style="overflow-y: auto;"
           :root="{collection: 'creatures', id: creatureId}"
           :organize="organize"

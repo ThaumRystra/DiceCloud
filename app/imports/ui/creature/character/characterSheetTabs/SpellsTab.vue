@@ -1,47 +1,39 @@
 <template lang="html">
-	<div class="spells">
-		<column-layout>
-			<v-card>
-				<v-switch
-					v-model="organize"
-					label="Organize"
-					class="justify-end"
-					style="margin: 16px 24px -16px;"
-				/>
-				<!-- Equipping things isn't implemented yet
-				<creature-properties-tree
-					:root="{collection: 'creatures', id: creatureId}"
-					:filter="{
-						equipped: true,
-						type: 'spell',
-						'ancestors.id': {$nin: spellListIds}
-					}"
-					@selected="e => clickProperty(e)"
-					:organize="organize"
-					group="spells"
-				/>
-				<v-divider/>
-				-->
-				<creature-properties-tree
-					:root="{collection: 'creatures', id: creatureId}"
-					:filter="{
-						equipped: {$ne: true},
-						type: 'spell',
-						'ancestors.id': {$nin: spellListIds}
-					}"
-					@selected="e => clickProperty(e)"
-					:organize="organize"
-					group="spells"
-				/>
-			</v-card>
-			<div v-for="spellList in spellListsWithoutAncestorSpellLists" :key="spellList._id">
-				<spellList-card
-					:model="spellList"
-					:organize="organize"
-				/>
-			</div>
-		</column-layout>
-	</div>
+  <div class="spells">
+    <column-layout>
+      <div>
+        <v-card>
+          <v-card-text>
+            <v-switch
+              v-model="organize"
+              label="Organize"
+              class="justify-end"
+            />
+            <creature-properties-tree
+              :root="{collection: 'creatures', id: creatureId}"
+              :filter="{
+                equipped: {$ne: true},
+                type: 'spell',
+                'ancestors.id': {$nin: spellListIds}
+              }"
+              :organize="organize"
+              group="spells"
+              @selected="e => clickProperty(e)"
+            />
+          </v-card-text>
+        </v-card>
+      </div>
+      <div
+        v-for="spellList in spellListsWithoutAncestorSpellLists"
+        :key="spellList._id"
+      >
+        <spellList-card
+          :model="spellList"
+          :organize="organize"
+        />
+      </div>
+    </column-layout>
+  </div>
 </template>
 
 <script>
@@ -51,17 +43,20 @@ import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/Crea
 import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';
 
 export default {
-	props: {
-		creatureId: String,
-	},
-	data(){ return {
-		organize: false,
-	}},
 	components: {
 		ColumnLayout,
 		CreaturePropertiesTree,
 		SpellListCard,
 	},
+	props: {
+		creatureId: {
+      type: String,
+      required: true,
+    }
+	},
+	data(){ return {
+		organize: false,
+	}},
 	meteor: {
 		spellLists(){
 			return CreatureProperties.find({
