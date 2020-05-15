@@ -180,6 +180,7 @@ RouterFactory.configure(factory => {
         title: 'Sign In',
       },
 		},{
+      name: 'register',
 			path: '/register',
       components: {
         default: Register,

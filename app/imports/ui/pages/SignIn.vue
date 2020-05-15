@@ -45,7 +45,7 @@
           </v-btn>
           <v-btn
             color="accent"
-            to="/register"
+            :to="{ name: 'register', query: { redirect: this.$route.query.redirect} }"
           >
             Register
           </v-btn>
