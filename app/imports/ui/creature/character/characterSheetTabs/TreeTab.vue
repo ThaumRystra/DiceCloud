@@ -12,7 +12,7 @@
         class="layout column"
         :style="
           $vuetify.breakpoint.mdAndUp &&
-            'max-width: 400px; min-width: 320px;'
+            'width: 320px; flex-shrink: 0; flex-grow: 0;'
         "
       >
         <v-toolbar
@@ -54,7 +54,8 @@
       <template v-if="$vuetify.breakpoint.mdAndUp">
         <v-divider vertical />
         <div
-          style="width: 100%; background-color: inherit;"
+          class="flex"
+          style="background-color: inherit; overflow: hidden;"
           data-id="selected-node-card"
         >
           <v-toolbar
