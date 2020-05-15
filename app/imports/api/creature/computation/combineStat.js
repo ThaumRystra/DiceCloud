@@ -43,11 +43,10 @@ function combineSkill(stat, aggregator, memo){
   let profBonusStat = memo.statsByVariableName['proficiencyBonus'];
   let profBonus = profBonusStat && profBonusStat.value;
 
-  /** TODO level needs to be on the memo somewhere
-  if (typeof profBonus !== "number"){
-    profBonus = Math.floor(char.level / 4 + 1.75);
+  if (typeof profBonus !== 'number' && memo.statsByVariableName['level']){
+    let level = memo.statsByVariableName['level'].value;
+    profBonus = Math.floor(level / 4 + 1.75);
   }
-  */
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;
   // Combine everything to get the final result
@@ -55,8 +54,26 @@ function combineSkill(stat, aggregator, memo){
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;
   result = Math.floor(result);
-  if (stat.base > result) result = stat.base;
+  if (aggregator.base > result) result = aggregator.base;
   stat.value = result;
+  // Advantage/disadvantage
+  if (aggregator.advantage && !aggregator.disadvantage){
+    stat.advantage = 1;
+  } else if (aggregator.disadvantage && !aggregator.advantage){
+    stat.advantage = -1;
+  } else {
+    stat.advantage = 0;
+  }
+  // Passive bonus
+  stat.passiveBonus = aggregator.passiveAdd;
+  // conditional benefits
+  stat.conditionalBenefits = aggregator.conditional;
+  // Roll bonuses
+  stat.rollBonus = aggregator.rollBonus;
+  // Forced to fail
+  stat.fail = aggregator.fail;
+  // Rollbonus
+  stat.rollBonuses = aggregator.rollBonus;
 }
 
 function combineDamageMultiplier(stat){

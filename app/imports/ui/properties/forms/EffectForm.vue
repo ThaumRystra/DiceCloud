@@ -114,7 +114,8 @@
 					case 'disadvantage': return false;
 					case 'passiveAdd': return true;
 					case 'fail': return false;
-					case 'conditional': return true;
+          case 'conditional': return false;
+					case 'rollBonus': return true;
           default: return true;
 				}
 			},

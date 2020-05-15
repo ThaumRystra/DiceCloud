@@ -15,9 +15,6 @@
         >
           {{ displayedModifier }}
         </span>
-        {{ model.name }}<template v-if="model.conditionalBenefits">
-          *
-        </template>
         <v-icon
           v-if="model.advantage > 0"
           size="20px"
@@ -30,6 +27,13 @@
         >
           arrow_downward
         </v-icon>
+        {{ model.name }}
+        <template v-if="model.conditionalBenefits.length">
+          *
+        </template>
+        <template v-if="model.passiveBonus">
+          ({{ passiveScore }})
+        </template>
       </v-list-tile-title>
     </v-list-tile-content>
   </v-list-tile>
@@ -69,6 +73,9 @@ export default {
 		hasClickListener(){
       return this.$listeners && this.$listeners.click
 		},
+    passiveScore(){
+      return 10 + this.model.value + this.model.passiveBonus;
+    }
 	},
 	methods: {
 		click(e){
