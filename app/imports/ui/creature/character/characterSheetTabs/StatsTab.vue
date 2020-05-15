@@ -150,12 +150,12 @@
       </div>
 
       <div
-        v-if="weapons.length || tools.length || languages.length"
-        class="proficiencies"
+        v-if="weapons.length"
+        class="weapon-proficiencies"
       >
         <v-card>
           <v-list>
-            <v-subheader v-if="weapons.length">
+            <v-subheader>
               Weapons
             </v-subheader>
             <skill-list-tile
@@ -166,7 +166,16 @@
               :data-id="weapon._id"
               @click="clickProperty({_id: weapon._id})"
             />
-            <v-subheader v-if="armors.length">
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="armors.length"
+        class="weapon-proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>
               Armor
             </v-subheader>
             <skill-list-tile
@@ -177,7 +186,16 @@
               :data-id="armor._id"
               @click="clickProperty({_id: armor._id})"
             />
-            <v-subheader v-if="tools.length">
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="tools.length"
+        class="weapon-proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>
               Tools
             </v-subheader>
             <skill-list-tile
@@ -188,6 +206,15 @@
               :data-id="tool._id"
               @click="clickProperty({_id: tool._id})"
             />
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="languages.length"
+        class="language-proficiencies"
+      >
+        <v-card>
+          <v-list>
             <v-subheader v-if="languages.length">
               Languages
             </v-subheader>
