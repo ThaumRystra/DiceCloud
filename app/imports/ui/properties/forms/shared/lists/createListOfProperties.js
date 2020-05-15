@@ -15,7 +15,8 @@ export default function createListOfProperties(filter = {}){
       });
     }
   }
-  CreatureProperties.find(filter).forEach(addUniquePropertys);
-  LibraryNodes.find(filter).forEach(addUniquePropertys);
+  let options = {sort: {variableName: 1}}
+  CreatureProperties.find(filter, options).forEach(addUniquePropertys);
+  LibraryNodes.find(filter, options).forEach(addUniquePropertys);
   return Array.from(variableNames);
 }
