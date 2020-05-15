@@ -5,8 +5,9 @@
     :error-messages="errors"
     :value="safeValue"
     :menu-props="{auto: true, lazy: true}"
+    :search-input.sync="searchInput"
     box
-    @change="change"
+    @change="customChange"
     @focus="focused = true"
     @blur="focused = false"
   >
@@ -22,5 +23,14 @@
 
 	export default {
 		mixins: [SmartInput],
+    data(){ return {
+      searchInput: '',
+    }},
+    methods: {
+      customChange(val){
+        this.change(val);
+        this.searchInput = '';
+      },
+    }
 	};
 </script>
