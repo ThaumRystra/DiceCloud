@@ -49,18 +49,19 @@
         :debounce-time="debounceTime"
         @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
       />
-
-      <smart-combobox
-        label="Stat"
-        class="mr-2"
-        multiple
-        :value="model.stats"
-        :items="attributeList"
-        :error-messages="errors.stats"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['stats'], value, ack})"
-      />
     </div>
+    <smart-combobox
+      label="Stats"
+      class="mr-2"
+      multiple
+      chips
+      deletable-chips
+      :value="model.stats"
+      :items="attributeList"
+      :error-messages="errors.stats"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['stats'], value, ack})"
+    />
   </div>
 </template>
 
