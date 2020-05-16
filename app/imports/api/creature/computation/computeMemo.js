@@ -1,9 +1,12 @@
 import { each, forOwn } from 'lodash';
+import computeLevels from '/imports/api/creature/computation/computeLevels.js';
 import computeStat from '/imports/api/creature/computation/computeStat.js';
 import computeEffect from '/imports/api/creature/computation/computeEffect.js';
 import computeToggle from '/imports/api/creature/computation/computeToggle.js';
 
 export default function computeMemo(memo){
+  // Compute level
+  computeLevels(memo);
   // Compute all stats, even if they are overriden
   forOwn(memo.statsById, stat => {
     computeStat (stat, memo);

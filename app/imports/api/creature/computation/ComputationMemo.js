@@ -12,6 +12,7 @@ export default class ComputationMemo {
     this.skillsByAbility = {};
     this.unassignedEffects = [];
     this.classLevelsById = {};
+    this.classes = {};
     this.togglesById = {};
     this.toggleIds = new Set();
     // First note all the ids of all the toggles

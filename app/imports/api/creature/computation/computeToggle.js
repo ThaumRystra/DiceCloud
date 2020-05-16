@@ -18,6 +18,8 @@ export default function computeToggle(toggle, memo){
   // Do work
   if (toggle.enabled){
     toggle.toggleResult = true;
+  } else if (toggle.disabled){
+    toggle.toggleResult = false;
   } else if (!toggle.condition){
     toggle.toggleResult = false;
   } else if (Number.isFinite(+toggle.condition)){
