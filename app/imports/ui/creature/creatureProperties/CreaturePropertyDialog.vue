@@ -5,7 +5,7 @@
         :type="model.type"
         class="mr-2"
       />
-      <v-toolbar-title class="title">
+      <v-toolbar-title>
         {{ model.name || getPropertyName(model.type) }}
       </v-toolbar-title>
       <v-spacer />

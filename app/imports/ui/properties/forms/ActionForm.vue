@@ -33,15 +33,6 @@
       @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
     />
     <form-sections>
-      <form-section name="Results">
-        <results-form
-          :model="model.results"
-          :parent-target="model.target"
-          @change="({path, value, ack}) => $emit('change', {path: ['results', ...path], value, ack})"
-          @push="({path, value, ack}) => $emit('push', {path: ['results', ...path], value, ack})"
-          @pull="({path, ack}) => $emit('pull', {path: ['results', ...path], ack})"
-        />
-      </form-section>
       <form-section name="Resources">
         <resources-form
           :model="model.resources"
@@ -51,15 +42,6 @@
         />
       </form-section>
       <form-section name="Advanced">
-        <text-field
-          v-if="attackForm"
-          label="Ammunition"
-          hint="The variable name of the item used as ammunition"
-          :value="model.ammunition"
-          :error-messages="errors.ammunition"
-          :debounce-time="debounceTime"
-          @change="(value, ack) => $emit('change', {path: ['ammunition'], value, ack})"
-        />
         <v-combobox
           label="Tags"
           multiple
@@ -118,14 +100,12 @@
 
 <script>
   import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import ResultsForm from '/imports/ui/properties/forms/ResultsForm.vue';
   import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
 
   export default {
     components: {
       FormSection,
       FormSections,
-      ResultsForm,
       ResourcesForm,
     },
     props: {

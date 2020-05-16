@@ -1,16 +1,5 @@
 <template lang="html">
   <div class="class-form">
-    <div class="layout column align-center">
-      <text-field
-        label="XP"
-        type="number"
-        class="base-value-field text-xs-center large-format no-flex"
-        :value="model.value"
-        :error-messages="errors.value"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
-      />
-    </div>
     <div class="layout row wrap">
       <text-field
         label="Title"
@@ -46,6 +35,18 @@
       :debounce-time="debounceTime"
       @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
     />
+    <div class="layout column align-end">
+      <text-field
+        label="XP gained"
+        type="number"
+        class="base-value-field text-xs-center large-format no-flex"
+        hint="The number of experience points gained from this entry"
+        :value="model.value"
+        :error-messages="errors.value"
+        :debounce-time="debounceTime"
+        @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
+      />
+    </div>
   </div>
 </template>
 

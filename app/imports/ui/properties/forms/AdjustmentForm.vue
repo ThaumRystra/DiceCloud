@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="adjustment-form">
     <div class="layout row">
       <smart-combobox
         label="Attribute"

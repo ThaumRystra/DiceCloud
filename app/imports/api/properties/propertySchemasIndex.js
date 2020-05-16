@@ -3,7 +3,7 @@ import { ActionSchema } from '/imports/api/properties/Actions.js';
 import { AdjustmentSchema } from '/imports/api/properties/Adjustments.js';
 import { AttackSchema } from '/imports/api/properties/Attacks.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
-import { StoredBuffSchema } from '/imports/api/properties/Buffs.js';
+import { BuffSchema } from '/imports/api/properties/Buffs.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
 import { DamageSchema } from '/imports/api/properties/Damages.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
@@ -13,7 +13,6 @@ import { FeatureSchema } from '/imports/api/properties/Features.js';
 import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { NoteSchema } from '/imports/api/properties/Notes.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
-import { ResultSchema } from '/imports/api/properties/Results.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
 import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SkillSchema } from '/imports/api/properties/Skills.js';
@@ -29,7 +28,7 @@ const propertySchemasIndex = {
   adjustment: AdjustmentSchema,
   attack: AttackSchema,
   attribute: AttributeSchema,
-  buff: StoredBuffSchema,
+  buff: BuffSchema,
   classLevel: ClassLevelSchema,
   damage: DamageSchema,
   damageMultiplier: DamageMultiplierSchema,
@@ -39,7 +38,6 @@ const propertySchemasIndex = {
   folder: FolderSchema,
   note: NoteSchema,
   proficiency: ProficiencySchema,
-  result: ResultSchema,
   roll: RollSchema,
   savingThrow: SavingThrowSchema,
   skill: SkillSchema,

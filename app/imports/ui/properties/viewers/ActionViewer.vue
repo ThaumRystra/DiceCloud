@@ -26,18 +26,13 @@
       :value="reset"
     />
     <property-description :value="model.description" />
-    <results-viewer :model="model.results" />
   </div>
 </template>
 
 <script>
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
-import ResultsViewer from '/imports/ui/properties/viewers/ResultsViewer.vue';
 
 export default {
-  components: {
-    ResultsViewer
-  },
   mixins: [propertyViewerMixin],
   computed: {
     reset(){

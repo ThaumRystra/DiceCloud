@@ -1,9 +1,11 @@
 import ActionForm from '/imports/ui/properties/forms/ActionForm.vue';
+import AdjustmentForm from '/imports/ui/properties/forms/AdjustmentForm.vue';
 import AttackForm from '/imports/ui/properties/forms/AttackForm.vue';
 import AttributeForm from '/imports/ui/properties/forms/AttributeForm.vue';
 import BuffForm from '/imports/ui/properties/forms/BuffForm.vue';
-import ContainerForm from '/imports/ui/properties/forms/ContainerForm.vue';
 import ClassLevelForm from '/imports/ui/properties/forms/ClassLevelForm.vue';
+import ContainerForm from '/imports/ui/properties/forms/ContainerForm.vue';
+import DamageForm from '/imports/ui/properties/forms/DamageForm.vue';
 import DamageMultiplierForm from '/imports/ui/properties/forms/DamageMultiplierForm.vue';
 import EffectForm from '/imports/ui/properties/forms/EffectForm.vue';
 import ExperienceForm from '/imports/ui/properties/forms/ExperienceForm.vue';
@@ -21,11 +23,13 @@ import ToggleForm from '/imports/ui/properties/forms/ToggleForm.vue';
 
 export default {
   action: ActionForm,
+  adjustment: AdjustmentForm,
   attack: AttackForm,
   attribute: AttributeForm,
   buff: BuffForm,
   container: ContainerForm,
   classLevel: ClassLevelForm,
+  damage: DamageForm,
   damageMultiplier: DamageMultiplierForm,
   experience:ExperienceForm,
   effect: EffectForm,

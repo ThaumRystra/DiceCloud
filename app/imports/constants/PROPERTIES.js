@@ -3,6 +3,10 @@ const PROPERTIES = Object.freeze({
     icon: 'offline_bolt',
     name: 'Action'
   },
+  adjustment: {
+    icon: 'warning',
+    name: 'Adjustment'
+  },
   attack: {
     icon: 'bolt',
     name: 'Attack'
@@ -18,6 +22,10 @@ const PROPERTIES = Object.freeze({
   classLevel: {
     icon: 'school',
     name: 'Class level'
+  },
+  damage: {
+    icon: 'report',
+    name: 'Damage'
   },
   damageMultiplier: {
     icon: 'layers',

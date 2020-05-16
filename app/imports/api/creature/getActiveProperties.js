@@ -32,15 +32,21 @@ export default function getActiveProperties({
     'ancestors.id': ancestorId,
   }, {
     fields: {_id: 1},
-  }).forEach(prop => {
-    disabledAncestorIds.push(prop._id);
+  }).forEach(subCreature => {
+    disabledAncestorIds.push(subCreature._id);
   });
 
-  // Get all the properties that aren't from the excluded decendents
+  // Get all the properties that are decendents of the ancestor of interest but
+  // aren't from the excluded decendents
   filter['ancestors.id'] = {
     $eq: ancestorId,
     $nin: disabledAncestorIds,
   };
+  // Get properties that aren't removed
   filter.removed = {$ne: true};
+  // Don't include the disabled ancestors themselves either
+  filter._id = {
+    $nin: disabledAncestorIds,
+  }
   return CreatureProperties.find(filter, options).fetch();
 }
