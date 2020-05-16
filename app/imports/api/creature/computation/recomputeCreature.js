@@ -3,7 +3,7 @@ import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.js';
 import computeMemo from '/imports/api/creature/computation/computeMemo.js';
-import getCalculationProperties from '/imports/api/creature/computation/getCalculationProperties.js';
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
 import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
 import { recomputeDamageMultipliersById } from '/imports/api/creature/damageMultiplierDenormalise/recomputeDamageMultipliers.js'
@@ -25,6 +25,14 @@ export const recomputeCreature = new ValidatedMethod({
   },
 
 });
+
+const calculationPropertyTypes = [
+  'attribute',
+  'skill',
+  'effect',
+  'proficiency',
+  'classLevel',
+];
 
 /**
  * This function is the heart of DiceCloud. It recomputes a creature's stats,
@@ -63,7 +71,7 @@ export const recomputeCreature = new ValidatedMethod({
  * - Write the computed results back to the database
  */
 export function recomputeCreatureById(creatureId){
-  let props = getCalculationProperties(creatureId);
+  let props = getActiveProperties(creatureId, {type: {$in: calculationPropertyTypes}});
   let computationMemo = new ComputationMemo(props);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);

@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import Creatures from '/imports/api/creature/Creatures.js';
-import getCalculationProperties from '/imports/api/creature/computation/getCalculationProperties.js'
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
 export const recomputeDamageMultipliers = new ValidatedMethod({
 
@@ -24,7 +24,7 @@ export const recomputeDamageMultipliers = new ValidatedMethod({
 
 export function recomputeDamageMultipliersById(creatureId){
   if (!creatureId) throw 'Creature ID is required';
-  let props = getCalculationProperties(creatureId, ['damageMultiplier']);
+  let props = getActiveProperties(creatureId, {type: 'damageMultiplier'});
 
   // Count of how many weakness, resistances and immunities each damage type has
   let multipliersByName = {};

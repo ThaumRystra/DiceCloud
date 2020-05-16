@@ -216,7 +216,4 @@ const propDetailsByType = {
   proficiency(){
     return {};
   },
-  damageMultiplier(){
-    return {};
-  },
 }
