@@ -6,7 +6,6 @@
     <component
       :is="type"
       v-if="type"
-      stored
       class="library-node-form"
       :model="model"
       :errors="errors"
