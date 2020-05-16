@@ -21,7 +21,6 @@
       :is="model.type"
       v-if="model"
       class="library-node-form"
-      stored
       :model="model"
       @change="change"
       @push="push"
