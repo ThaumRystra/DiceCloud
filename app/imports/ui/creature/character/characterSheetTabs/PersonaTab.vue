@@ -7,6 +7,10 @@
           data-id="creature-summary"
           @click="showCharacterForm"
         >
+          <v-img
+            v-if="creature.picture"
+            :src="creature.picture"
+          />
           <v-card-title class="title">
             {{ creature.name }}
           </v-card-title>

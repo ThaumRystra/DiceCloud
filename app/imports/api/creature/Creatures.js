@@ -47,6 +47,10 @@ let CreatureSchema = new SimpleSchema({
 		type: String,
 		optional: true
 	},
+  avatarPicture: {
+    type: String,
+    optional: true,
+  },
 
 	// Mechanics
 	deathSave: {
@@ -120,7 +124,7 @@ const updateCreature = new ValidatedMethod({
   validate({_id, path}){
 		if (!_id) return false;
 		// Allowed fields
-		let allowedFields = ['name', 'alignment', 'gender', 'picture', 'settings'];
+		let allowedFields = ['name', 'alignment', 'gender', 'picture', 'avatarPicture', 'settings'];
 		if (!allowedFields.includes(path[0])){
 			throw new Meteor.Error('Creatures.methods.update.denied',
       'This field can\'t be updated using this method');

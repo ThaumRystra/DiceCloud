@@ -49,12 +49,24 @@
       </v-list-tile>
       <v-divider />
     </v-list>
-    <v-list dense>
+    <v-list
+      avatar
+    >
       <v-list-tile
         v-for="character in CreaturesWithNoParty"
         :key="character._id"
         :to="character.url"
       >
+        <v-list-tile-avatar :color="character.color || 'grey'">
+          <img
+            v-if="character.avatarPicture"
+            :src="character.avatarPicture"
+            :alt="character.name"
+          >
+          <template v-else>
+            {{ character.initial }}
+          </template>
+        </v-list-tile-avatar>
         <v-list-tile-title>
           {{ character.name }}
         </v-list-tile-title>
@@ -73,6 +85,16 @@
           :key="character._id"
           :to="character.url"
         >
+          <v-list-tile-avatar :color="character.color || 'grey'">
+            <img
+              v-if="character.avatarPicture"
+              :src="character.avatarPicture"
+              :alt="character.name"
+            >
+            <template v-else>
+              {{ character.initial }}
+            </template>
+          </v-list-tile-avatar>
           <v-list-tile-title>
             {{ character.name }}
           </v-list-tile-title>
@@ -127,6 +149,7 @@
             }
           ).map(char => {
             char.url = `/character/${char._id}/${char.urlName || '-'}`;
+            char.initial = char.name && char.name[0] || '?';
             return char;
           });
           return party;
@@ -144,6 +167,7 @@
           {sort: {name: 1}}
         ).map(char => {
           char.url = `/character/${char._id}/${char.urlName || '-'}`;
+          char.initial = char.name && char.name[0] || '?';
           return char;
         });
       },

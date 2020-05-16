@@ -23,10 +23,19 @@
     />
     <text-field
       label="Picture URL"
+      hint="A link to a high resolution image"
       :value="model.picture"
       :error-messages="errors.picture"
       :debounce-time="debounceTime"
       @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
+    />
+    <text-field
+      label="Avatar picture URL"
+      hint="A link to a smaller, square image to use as an avatar"
+      :value="model.avatarPicture"
+      :error-messages="errors.avatarPicture"
+      :debounce-time="debounceTime"
+      @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
     />
     <!--
 		<form-sections>

@@ -7,11 +7,11 @@
           :key="character._id"
           :to="character.url"
         >
-          <v-list-tile-avatar :color="character.color">
+          <v-list-tile-avatar :color="character.color || 'grey'">
             <img
-              v-if="character.picture"
-              :src="character.picture"
-              alt="character.name"
+              v-if="character.avatarPicture"
+              :src="character.avatarPicture"
+              :alt="character.name"
             >
             <template v-else>
               {{ character.initial }}

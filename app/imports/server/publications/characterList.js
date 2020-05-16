@@ -20,13 +20,15 @@ Meteor.publish('characterList', function(){
       }, {
 				fields: {
 					name: 1,
+          initial: 1,
 					alignment: 1,
 					gender: 1,
 					readers: 1,
 					writers:1,
 					owner: 1,
 					color: 1,
-					picture: 1,
+          picture: 1,
+					avatarPicture: 1,
           public: 1,
 				}
 			}
