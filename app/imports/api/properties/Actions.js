@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
 import ResourcesSchema from '/imports/api/properties/subSchemas/ResourcesSchema.js'
-import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
 /*
  * Actions are things a character can do
@@ -41,10 +40,6 @@ let ActionSchema = new SimpleSchema({
   'tags.$': {
     type: String,
   },
-	results: {
-		type: ResultsSchema,
-		defaultValue: {},
-	},
   resources: {
     type: ResourcesSchema,
     defaultValue: {},

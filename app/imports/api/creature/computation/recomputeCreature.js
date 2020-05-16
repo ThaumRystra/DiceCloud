@@ -32,6 +32,7 @@ const calculationPropertyTypes = [
   'effect',
   'proficiency',
   'classLevel',
+  'toggle',
 ];
 
 /**
@@ -71,7 +72,11 @@ const calculationPropertyTypes = [
  * - Write the computed results back to the database
  */
 export function recomputeCreatureById(creatureId){
-  let props = getActiveProperties(creatureId, {type: {$in: calculationPropertyTypes}});
+  let props = getActiveProperties({
+    ancestorId: creatureId,
+    filter: {type: {$in: calculationPropertyTypes}},
+    includeUntoggled: true,
+  });
   let computationMemo = new ComputationMemo(props);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);

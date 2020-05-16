@@ -34,24 +34,6 @@
                 <v-icon>delete</v-icon>
               </v-btn>
             </div>
-            <results-form
-              :model="rollResult.results"
-              :parent-target="model.target"
-              @change="({path, value, ack}) => $emit('change', {
-                path: ['rollResults', index, 'results', ...path],
-                value,
-                ack
-              })"
-              @push="({path, value, ack}) => $emit('push', {
-                path: ['rollResults', index, 'results', ...path],
-                value,
-                ack
-              })"
-              @pull="({path, ack}) => $emit('pull', {
-                path: ['rollResults', index, 'results', ...path],
-                ack
-              })"
-            />
             <v-divider class="my-4" />
           </div>
         </v-slide-x-transition>
@@ -84,14 +66,11 @@
 
 <script>
 	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
-	import RollResultsSchema from '/imports/api/properties/subSchemas/RollResultsSchema.js';
-	import ResultsForm from '/imports/ui/properties/forms/ResultsForm.vue';
 
 	export default {
 		components: {
 			FormSection,
 			FormSections,
-			ResultsForm,
 		},
 		props: {
 			stored: {
@@ -116,14 +95,6 @@
 		methods: {
 			acknowledgeAddResult(){
 				this.addResultLoading = false;
-			},
-			addResult(){
-				this.addResultLoading = true;
-				this.$emit('push', {
-					path: ['rollResults'],
-					value: RollResultsSchema.clean({}),
-					ack: this.acknowledgeAddResult,
-				});
 			},
 		},
 	};

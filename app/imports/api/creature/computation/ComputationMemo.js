@@ -1,22 +1,45 @@
-import { includes, cloneDeep, has } from 'lodash';
+import { includes, cloneDeep } from 'lodash';
 
+// The computation memo is an in-memory data structure used only during the
+// computation process
 export default class ComputationMemo {
   constructor(props){
     this.statsByVariableName = {};
+    this.extraStatsByVariableName = {};
+    this.statsById = {};
     this.originalPropsById = {};
     this.propsById = {};
     this.skillsByAbility = {};
     this.unassignedEffects = [];
-    this.classes = {};
-    props.filter((prop) => {
-      // skip effects, proficiencies, and class levels for the next pass
+    this.classLevelsById = {};
+    this.togglesById = {};
+    this.toggleIds = new Set();
+    // First note all the ids of all the toggles
+    props.forEach((prop) => {
       if (
-        prop.type === 'effect' ||
-        prop.type === 'proficiency' ||
-        prop.type === 'classLevel'
-      ) return true;
-      // Add all the stats
-      this.addStat(prop);
+        prop.type === 'toggle'
+      ) {
+        this.toggleIds.add(prop._id);
+      }
+    });
+    props.filter((prop) => {
+      if (
+        prop.type === 'toggle'
+      ) {
+        this.addToggle(prop);
+      } else {
+        return true;
+      }
+    }).filter((prop) => {
+      if (
+        prop.type === 'attribute' ||
+        prop.type === 'skill'
+      ) {
+        // Add all the stats
+        this.addStat(prop);
+      } else {
+        return true;
+      }
     }).forEach((prop) => {
       // Now add all effects and proficiencies
       if (prop.type === 'effect'){
@@ -32,8 +55,14 @@ export default class ComputationMemo {
     this.originalPropsById[prop._id] = cloneDeep(prop);
     this.propsById[prop._id] = prop;
     prop.computationDetails = propDetails(prop);
+    prop.ancestors.forEach(ancestor => {
+      if (this.toggleIds.has(ancestor.id)){
+        prop.computationDetails.toggleAncestors.push(ancestor.id);
+      }
+    });
     return prop;
   }
+  /*
   storeHighestClassLevel(name, prop, isBaseClass){
     // Only store the highest level classLevel
     let stat = this.statsByVariableName[name]
@@ -72,33 +101,51 @@ export default class ComputationMemo {
       level += this.classes[name].level || 0;
     }
     this.statsByVariableName['level'].value = level;
+  }*/
+  addToggle(prop){
+    prop = this.registerProperty(prop);
+    this.togglesById[prop._id] = prop;
   }
   addClassLevel(prop){
     prop = this.registerProperty(prop);
-    if (prop.variableName){
-      this.storeHighestClassLevel(prop.variableName, prop);
-    }
-    if (prop.baseClass){
-      this.storeHighestClassLevel(prop.baseClass, prop, true);
-    }
+    this.classLevelsById[prop._id] = prop;
   }
   addStat(prop){
-    prop = this.registerProperty(prop);
     let variableName = prop.variableName;
     if (!variableName) return;
-    if (this.statsByVariableName[variableName]){
-      prop.value = NaN;
-      prop.computationDetails.error = 'variableNameCollision';
-      if (Meteor.isClient) console.warn('variableNameCollision', prop);
-      return;
-    }
-    this.statsByVariableName[variableName] = prop;
-    if (
-      prop.type === 'skill' &&
-      isSkillCheck(prop) &&
-      prop.ability
-    ){
-      this.addSkillToAbility(prop, prop.ability)
+    let existingStat = this.statsByVariableName[variableName];
+    if (existingStat){
+      existingStat.computationDetails.idsOfSameName.push(prop._id);
+      this.originalPropsById[prop._id] = cloneDeep(prop);
+      if (prop.baseValueCalculation){
+        existingStat.computationDetails.effects.push({
+          operation: 'base',
+          calculation: prop.baseValueCalculation,
+          stats: [variableName],
+          computationDetails: propDetailsByType.effect(),
+          statBase: true,
+        });
+      }
+      if (prop.baseProficiency){
+        existingStat.computationDetails.proficiencies.push({
+          value: prop.baseProficiency,
+          stats: [variableName],
+          computationDetails: propDetailsByType.proficiency(),
+          type: 'proficiency',
+          statBase: true,
+        });
+      }
+    } else {
+      prop = this.registerProperty(prop);
+      this.statsById[prop._id] = prop;
+      this.statsByVariableName[variableName] = prop;
+      if (
+        prop.type === 'skill' &&
+        isSkillCheck(prop) &&
+        prop.ability
+      ){
+        this.addSkillToAbility(prop, prop.ability)
+      }
     }
   }
   addSkillToAbility(prop, ability){
@@ -152,9 +199,14 @@ export default class ComputationMemo {
       let target = this.statsByVariableName[statName];
       if (!target) return;
       targets.add(target);
-      if (isAbility(target) && isSkillCheck(prop)) {
+      if (isAbility(target)) {
         let extras = this.skillsByAbility[statName] || [];
-        targets.add(...extras)
+        extras.forEach(ex =>{
+          // Only pass on ability proficiencies to skills and checks
+          if (ex.skillType === 'skill' || ex.skillType === 'check'){
+            targets.add(ex)
+          }
+        });
       }
     });
     return targets;
@@ -188,11 +240,22 @@ function propDetails(prop){
 }
 
 const propDetailsByType = {
+  toggle(){
+    return {
+      computed: false,
+      busyComputing: false,
+      toggleAncestors: [],
+      disabledByToggle: false,
+    };
+  },
   attribute(){
     return {
       computed: false,
       busyComputing: false,
       effects: [],
+      toggleAncestors: [],
+      disabledByToggle: false,
+      idsOfSameName: [],
     };
   },
   skill(){
@@ -201,19 +264,30 @@ const propDetailsByType = {
       busyComputing: false,
       effects: [],
       proficiencies: [],
+      toggleAncestors: [],
+      disabledByToggle: false,
+      idsOfSameName: [],
     };
   },
   effect(){
     return {
       computed: false,
+      busyComputing: false,
+      toggleAncestors: [],
+      disabledByToggle: false,
     };
   },
   classLevel(){
     return {
       computed: true,
+      toggleAncestors: [],
+      disabledByToggle: false,
     };
   },
   proficiency(){
-    return {};
+    return {
+      toggleAncestors: [],
+      disabledByToggle: false,
+    };
   },
 }

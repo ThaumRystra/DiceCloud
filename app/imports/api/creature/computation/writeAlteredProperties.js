@@ -3,49 +3,58 @@ import { isEqual, forOwn } from 'lodash';
 import { ComputedOnlySkillSchema } from '/imports/api/properties/Skills.js';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedOnlyEffectSchema } from '/imports/api/properties/Effects.js';
+import { ComputedOnlyToggleSchema } from '/imports/api/properties/Toggles.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+
+const schemasByType = {
+  'skill': ComputedOnlySkillSchema,
+  'attribute': ComputedOnlyAttributeSchema,
+  'effect': ComputedOnlyEffectSchema,
+  'toggle': ComputedOnlyToggleSchema,
+};
 
 export default function writeAlteredProperties(memo){
   let bulkWriteOperations = [];
   // Loop through all properties on the memo
-  forOwn(memo.originalPropsById, (original, _id) => {
-    let changed = memo.propsById[_id];
-
-    let schema;
-    switch (changed.type){
-      case 'skill':
-        schema = ComputedOnlySkillSchema;
-        break;
-      case 'attribute':
-        schema = ComputedOnlyAttributeSchema;
-        break;
-      case 'effect':
-        schema = ComputedOnlyEffectSchema;
-        break;
-      default:
-        return;
+  forOwn(memo.propsById, changed => {
+    let schema = schemasByType[changed.type];
+    if (!schema) return;
+    let extraIds = changed.computationDetails.idsOfSameName;
+    let ids;
+    if (extraIds && extraIds.length){
+      ids = [changed._id, ...extraIds];
+    } else {
+      ids = [changed._id];
     }
-    let op = undefined;
-    // Loop through all keys that can be changed by computation
-    // and compile an operation that sets all those keys
-    for (let key of schema.objectKeys()){
-      if (!isEqual(original[key], changed[key])){
-        if (!op) op = newOperation(_id, changed.type);
-        let value = changed[key];
-        if (value === undefined){
-          // Unset values that become undefined
-          addUnsetOp(op, key);
-        } else {
-          // Set values that changed to something else
-          addSetOp(op, key, value);
-        }
+    ids.forEach(id => {
+      let op = undefined;
+      let original = memo.originalPropsById[id];
+      op = addChangedKeysToOp(op, schema.objectKeys(), original, changed);
+      if (op){
+        bulkWriteOperations.push(op);
       }
-    }
-    if (op){
-      bulkWriteOperations.push(op);
-    }
+    });
   });
   bulkWriteProperties(bulkWriteOperations);
+}
+
+function addChangedKeysToOp(op, keys, original, changed) {
+  // Loop through all keys that can be changed by computation
+  // and compile an operation that sets all those keys
+  for (let key of keys){
+    if (!isEqual(original[key], changed[key])){
+      if (!op) op = newOperation(original._id, changed.type);
+      let value = changed[key];
+      if (value === undefined){
+        // Unset values that become undefined
+        addUnsetOp(op, key);
+      } else {
+        // Set values that changed to something else
+        addSetOp(op, key, value);
+      }
+    }
+  }
+  return op;
 }
 
 function newOperation(_id, type){
@@ -92,7 +101,8 @@ function bulkWriteProperties(bulkWriteOps){
     );
   } else {
     bulkWriteOps.forEach(op => {
-      CreatureProperties.update(op.updateOne.filter, op.updateOne.update, {
+      let updateOneOrMany = op.updateOne || op.updateMany;
+      CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
         // The server code is bypassing collection 2 validation, so do the same
         // on the client
         // include this if bypass is off:

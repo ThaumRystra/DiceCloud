@@ -17,6 +17,7 @@ import SavingThrowForm from '/imports/ui/properties/forms/SavingThrowForm.vue';
 import SkillForm from '/imports/ui/properties/forms/SkillForm.vue';
 import SpellListForm from '/imports/ui/properties/forms/SpellListForm.vue';
 import SpellForm from '/imports/ui/properties/forms/SpellForm.vue';
+import ToggleForm from '/imports/ui/properties/forms/ToggleForm.vue';
 
 export default {
   action: ActionForm,
@@ -38,4 +39,5 @@ export default {
   skill: SkillForm,
   spellList: SpellListForm,
   spell: SpellForm,
+  toggle: ToggleForm,
 };

@@ -75,6 +75,10 @@ const PROPERTIES = Object.freeze({
     icon: 'category',
     name: 'Item'
   },
+  toggle: {
+    icon: 'power_settings_new',
+    name: 'Toggle'
+  },
 });
 
 export default PROPERTIES;

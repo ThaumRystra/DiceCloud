@@ -24,7 +24,10 @@ export const recomputeDamageMultipliers = new ValidatedMethod({
 
 export function recomputeDamageMultipliersById(creatureId){
   if (!creatureId) throw 'Creature ID is required';
-  let props = getActiveProperties(creatureId, {type: 'damageMultiplier'});
+  let props = getActiveProperties({
+    ancestorId: creatureId,
+    filter: {type: 'damageMultiplier'},
+  });
 
   // Count of how many weakness, resistances and immunities each damage type has
   let multipliersByName = {};

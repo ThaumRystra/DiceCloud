@@ -1,12 +1,19 @@
 import { each, forOwn } from 'lodash';
 import computeStat from '/imports/api/creature/computation/computeStat.js';
 import computeEffect from '/imports/api/creature/computation/computeEffect.js';
+import computeToggle from '/imports/api/creature/computation/computeToggle.js';
 
 export default function computeMemo(memo){
-  forOwn(memo.statsByVariableName, (stat) => {
+  // Compute all stats, even if they are overriden
+  forOwn(memo.statsById, stat => {
     computeStat (stat, memo);
   });
-  each(memo.unassignedEffects, (effect) => {
+  // Compute effects which didn't end up targeting a stat
+  each(memo.unassignedEffects, effect => {
     computeEffect(effect, memo);
   });
+  forOwn(memo.togglesById, toggle => {
+    computeToggle(toggle, memo);
+  });
+  // Compute class levels
 }

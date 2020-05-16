@@ -25,6 +25,9 @@ export default class EffectAggregator{
       case 'base':
         // Take the largest base value
         this.base = result > this.base ? result : this.base;
+        if (effect.statBase){
+          this.statBaseValue = result > this.statBaseValue ? result : this.statBaseValue;
+        }
         break;
       case 'add':
         // Add all adds together

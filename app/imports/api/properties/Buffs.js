@@ -1,6 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import { Random } from 'meteor/random';
-import { StoredEffectSchema } from '/imports/api/properties/Effects.js';
 
 let BuffSchema = new SimpleSchema({
 	name: {
@@ -15,20 +13,12 @@ let BuffSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
-});
-
-// The effects in the stored buff need to be resolved to a number before being
-// placed on other characters, if they are applied to self, they can remain as
-// calculations, provided they don't contain any rolls
-let StoredBuffSchema = new SimpleSchema({
-	effects: {
-		type: Array,
-		defaultValue: [],
-	},
-	'effects.$': {
-		type: StoredEffectSchema,
-	},
-	target: {
+  applied: {
+    type: Boolean,
+    defaultValue: false,
+    index: 1,
+  },
+  target: {
 		type: String,
 		allowedValues: [
       'self',  // the character who took the buff
@@ -37,21 +27,14 @@ let StoredBuffSchema = new SimpleSchema({
     ],
 		defaultValue: 'every',
 	},
-}).extend(BuffSchema);
-
-let StoredBuffWithIdSchema = new SimpleSchema({
-	_id: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
-      if (!this.isSet){
-        return Random.id();
-      }
-    },
-  },
-}).extend(StoredBuffSchema);
+});
 
 let AppliedBuffSchema = new SimpleSchema({
+  applied: {
+    type: Boolean,
+    defaultValue: true,
+    index: 1,
+  },
 	durationSpent: {
 		type: Number,
 		optional: true,
@@ -73,4 +56,4 @@ let AppliedBuffSchema = new SimpleSchema({
 	},
 }).extend(BuffSchema);
 
-export { AppliedBuffSchema, StoredBuffSchema, StoredBuffWithIdSchema };
+export { AppliedBuffSchema, BuffSchema };

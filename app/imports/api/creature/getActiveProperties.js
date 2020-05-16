@@ -1,19 +1,28 @@
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
-export default function getActiveProperties(ancestorId, filter = {}, options){
+export default function getActiveProperties({
+  ancestorId,
+  filter = {},
+  options,
+  includeUntoggled = false
+}){
   if (!ancestorId){
     throw 'Ancestor Id is required to get active properties'
   }
   // First get ids of disabled properties, unequiped items, unapplied buffs
-  let disabledAncestorIds = CreatureProperties.find({
+  let disabledAncestorsFilter = {
     'ancestors.id': ancestorId,
     $or: [
       {disabled: true},
       {equipped: false},
       {applied: false},
     ],
-  }, {
+  };
+  if (!includeUntoggled){
+    disabledAncestorsFilter.$or.push({toggleResult: false});
+  }
+  let disabledAncestorIds = CreatureProperties.find(disabledAncestorsFilter, {
     fields: {_id: 1},
   }).map(prop => prop._id);
 

@@ -276,13 +276,14 @@
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
   import AttackListTile from '/imports/ui/properties/components/actions/AttackListTile.vue';
+  import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
-  const getProperties = function(creatureId, filter = {}){
-    filter['ancestors.id'] = creatureId;
-    filter.removed = {$ne: true};
-    return CreatureProperties.find(filter, {
-			sort: {order: 1}
-		});
+  const getProperties = function(creatureId, filter){
+    return getActiveProperties({
+      ancestorId: creatureId,
+      filter,
+      options: {sort: {order: 1}},
+    });
   };
 
 	const getAttributeOfType = function(creatureId, type){

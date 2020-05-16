@@ -1,5 +1,5 @@
 import computeStat from '/imports/api/creature/computation/computeStat.js';
-
+import applyToggles from '/imports/api/creature/computation/applyToggles.js';
 
 export default function combineStat(stat, aggregator, memo){
   if (stat.type === 'attribute'){
@@ -37,7 +37,13 @@ function combineSkill(stat, aggregator, memo){
   stat.proficiency = stat.baseProficiency || 0;
   for (let i in stat.computationDetails.proficiencies){
     let prof = stat.computationDetails.proficiencies[i];
-    if (prof.value > stat.proficiency) stat.proficiency = prof.value;
+    applyToggles(prof, memo);
+    if (
+      !prof.computationDetails.disabledByToggle &&
+      prof.value > stat.proficiency
+    ){
+      stat.proficiency = prof.value;
+    }
   }
   // Get the character's proficiency bonus to apply
   let profBonusStat = memo.statsByVariableName['proficiencyBonus'];
