@@ -77,6 +77,10 @@ const userSchema = new SimpleSchema({
 		type: String,
     regEx: SimpleSchema.RegEx.Id,
 	},
+  profile: {
+    type: Object,
+    blackbox: true,
+  },
 });
 
 Meteor.users.attachSchema(userSchema);

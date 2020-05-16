@@ -9,9 +9,15 @@ Meteor.publish('user', function(){
       apiKey: 1,
       darkMode: 1,
       subscribedLibraries: 1,
+      profile: 1,
       'services.patreon.id': 1,
       'services.patreon.entitledCents': 1,
       'services.patreon.entitledCentsOverride': 1,
+      'services.google.id': 1,
+      'services.google.picture': 1,
+      'services.google.name': 1,
+      'services.google.email': 1,
+      'services.google.locale': 1,
     }}),
     Invites.find({
       $or: [

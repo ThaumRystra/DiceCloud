@@ -54,9 +54,20 @@
             Tier: {{ tier.name }}
           </v-list-tile-title>
         </v-list-tile>
+        <v-list-tile v-if="!user.services.google">
+          <v-btn
+            color="primary"
+            @click="linkWithGoogle"
+          >
+            Link Google Account
+          </v-btn>
+        </v-list-tile>
         <v-list-tile v-if="!user.services.patreon">
-          <v-btn @click="linkWithPatreon">
-            Link Patreon
+          <v-btn
+            color="primary"
+            @click="linkWithPatreon"
+          >
+            Link Patreon Account
           </v-btn>
         </v-list-tile>
       </v-list>
@@ -194,6 +205,11 @@
           component: 'invite-dialog',
           elementId: invite._id,
           data: {inviteId: invite._id},
+        });
+      },
+      linkWithGoogle(){
+        Meteor.linkWithGoogle(error => {
+          if (error) console.error(error);
         });
       },
       linkWithPatreon,
