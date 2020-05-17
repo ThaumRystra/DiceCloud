@@ -5,7 +5,10 @@
       name="Duration"
       :value="model.duration"
     />
-    <property-description :value="model.description" />
+    <property-description
+      v-if="model.description"
+      :value="model.description"
+    />
   </div>
 </template>
 

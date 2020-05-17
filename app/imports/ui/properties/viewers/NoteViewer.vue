@@ -1,8 +1,11 @@
 <template lang="html">
-	<div class="note-viewer">
-		<property-name :value="model.name"/>
-		<property-description :value="model.description"/>
-	</div>
+  <div class="note-viewer">
+    <property-name :value="model.name" />
+    <property-description
+      v-if="model.description"
+      :value="model.description"
+    />
+  </div>
 </template>
 
 <script>

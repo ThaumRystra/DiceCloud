@@ -34,7 +34,10 @@
       name="Base proficiency"
       :value="model.baseProficiency"
     />
-    <property-description :value="model.description" />
+    <property-description
+      v-if="model.description"
+      :value="model.description"
+    />
 
     <effect-viewer
       v-if="computationContext.creature && model.baseValue"
