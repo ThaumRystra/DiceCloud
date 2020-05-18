@@ -231,7 +231,7 @@
       </div>
 
       <div
-        v-if="actions.length || attacks.length"
+        v-if="actions.length"
         class="actions"
       >
         <v-card>
@@ -247,6 +247,18 @@
               :data-id="action._id"
               @click="clickProperty({_id: action._id})"
             />
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="attacks.length"
+        class="actions"
+      >
+        <v-card>
+          <v-list
+            two-line
+            subheader
+          >
             <v-subheader>Attacks</v-subheader>
             <attack-list-tile
               v-for="attack in attacks"
