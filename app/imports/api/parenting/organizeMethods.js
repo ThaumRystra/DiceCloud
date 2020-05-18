@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import { union } from 'lodash';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { updateParent } from '/imports/api/parenting/parenting.js';
 import { reorderDocs, safeUpdateDocOrder } from '/imports/api/parenting/order.js';
@@ -44,7 +45,7 @@ const organizeDoc = new ValidatedMethod({
     // Figure out which creatures need to be recalculated after this move
     let docCreatures = getCreatureAncestors(doc);
     let parentCreatures = getCreatureAncestors(parent);
-    let creaturesToRecompute = new Set(...docCreatures, ...parentCreatures);
+    let creaturesToRecompute = union(docCreatures, parentCreatures);
     // Recompute the creatures
     creaturesToRecompute.forEach(id => {
       recomputeCreatureById(id);
