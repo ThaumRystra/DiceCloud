@@ -1,9 +1,11 @@
 import ActionViewer from '/imports/ui/properties/viewers/ActionViewer.vue';
+import AdjustmentViewer from '/imports/ui/properties/viewers/AdjustmentViewer.vue';
 import AttackViewer from '/imports/ui/properties/viewers/AttackViewer.vue';
 import AttributeViewer from '/imports/ui/properties/viewers/AttributeViewer.vue';
 import BuffViewer from '/imports/ui/properties/viewers/BuffViewer.vue';
 import ContainerViewer from '/imports/ui/properties/viewers/ContainerViewer.vue';
 import ClassLevelViewer from '/imports/ui/properties/viewers/ClassLevelViewer.vue';
+import DamageViewer from '/imports/ui/properties/viewers/DamageViewer.vue';
 import DamageMultiplierViewer from '/imports/ui/properties/viewers/DamageMultiplierViewer.vue';
 import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
 import ExperienceViewer from '/imports/ui/properties/viewers/ExperienceViewer.vue';
@@ -19,11 +21,13 @@ import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
 
 export default {
   action: ActionViewer,
+  adjustment: AdjustmentViewer,
   attack: AttackViewer,
   attribute: AttributeViewer,
   buff: BuffViewer,
   container: ContainerViewer,
   classLevel: ClassLevelViewer,
+  damage: DamageViewer,
   damageMultiplier: DamageMultiplierViewer,
   experience: ExperienceViewer,
   effect: EffectViewer,

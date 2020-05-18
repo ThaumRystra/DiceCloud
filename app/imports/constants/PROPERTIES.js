@@ -5,7 +5,7 @@ const PROPERTIES = Object.freeze({
   },
   adjustment: {
     icon: 'warning',
-    name: 'Adjustment'
+    name: 'Attribute damage'
   },
   attack: {
     icon: 'bolt',

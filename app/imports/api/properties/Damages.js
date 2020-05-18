@@ -3,7 +3,7 @@ import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
 const DamageSchema = new SimpleSchema({
 	// The roll that determines how much to damage the attribute
-  damage: {
+  amount: {
     type: String,
     optional: true,
     defaultValue: '1d8 + strength.modifier',

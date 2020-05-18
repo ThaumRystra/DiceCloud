@@ -4,10 +4,10 @@
       <text-field
         label="Damage"
         style="flex-basis: 300px;"
-        :value="model.damage"
-        :error-messages="errors.damage"
+        :value="model.amount"
+        :error-messages="errors.amount"
         :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['damage'], value, ack})"
+        @change="(value, ack) => $emit('change', {path: ['amount'], value, ack})"
       />
       <smart-select
         label="Damage Type"
@@ -21,7 +21,6 @@
       />
     </div>
     <smart-select
-      v-if="parentTarget == 'multipleTargets'"
       label="Target"
       :hint="targetOptionHint"
       :items="targetOptions"

@@ -79,6 +79,9 @@ export default {
 </script>
 
 <style lang="css">
+  .computed {
+    display: inline-block;
+  }
   .computed.symbols-are-errors .math-symbol {
     color: red;
   }

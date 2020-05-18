@@ -2,7 +2,7 @@ import SimpleSchema from 'simpl-schema';
 
 const AdjustmentSchema = new SimpleSchema({
 	// The roll that determines how much to change the attribute
-  adjustment: {
+  amount: {
     type: String,
     optional: true,
     defaultValue: '1',
