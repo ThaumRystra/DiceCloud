@@ -15,8 +15,9 @@
     />
     <property-field
       name="Uses"
-      :value="model.uses"
-    />
+    >
+      <computed :value="model.uses"/>
+    </property-field>
     <property-field
       name="Uses used"
       :value="model.usesUsed"
@@ -34,9 +35,13 @@
 
 <script>
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
+import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 
 export default {
   mixins: [propertyViewerMixin],
+  components: {
+    Computed: ComputedForCreature,
+  },
   computed: {
     reset(){
       let reset = this.model.reset
