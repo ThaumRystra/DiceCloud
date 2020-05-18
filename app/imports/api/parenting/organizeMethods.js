@@ -6,6 +6,7 @@ import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
+import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
 
 const organizeDoc = new ValidatedMethod({
   name: 'organize.methods.organizeDoc',
@@ -39,6 +40,15 @@ const organizeDoc = new ValidatedMethod({
     if (newAncestorId !== oldAncestorId){
       reorderDocs({collection, ancestorId: newAncestorId});
     }
+
+    // Figure out which creatures need to be recalculated after this move
+    let docCreatures = getCreatureAncestors(doc);
+    let parentCreatures = getCreatureAncestors(parent);
+    let creaturesToRecompute = new Set(...docCreatures, ...parentCreatures);
+    // Recompute the creatures
+    creaturesToRecompute.forEach(id => {
+      recomputeCreatureById(id);
+    });
   },
 });
 
@@ -54,7 +64,11 @@ const reorderDoc = new ValidatedMethod({
   run({docRef, order}) {
     let doc = fetchDocByRef(docRef);
     assertDocEditPermission(doc, this.userId);
-    safeUpdateDocOrder({docRef, order})
+    safeUpdateDocOrder({docRef, order});
+    // Recompute the affected creatures
+    getCreatureAncestors(doc).forEach(id => {
+      recomputeCreatureById(id);
+    });
   },
 });
 
@@ -64,6 +78,21 @@ function getRootId(doc){
   } else {
     return doc._id;
   }
+}
+
+function getCreatureAncestors(doc){
+  let ids = [];
+  if(doc.type === 'pc' || doc.type === 'npc' || doc.type === 'monster'){
+    ids.push(doc._id);
+  }
+  if (doc.ancestors){
+    doc.ancestors.forEach(ancestorRef => {
+      if (ancestorRef.collection === 'creatures'){
+        ids.push(ancestorRef.id);
+      }
+    });
+  }
+  return ids;
 }
 
 export { organizeDoc, reorderDoc };
