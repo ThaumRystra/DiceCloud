@@ -29,7 +29,7 @@ export function getHighestOrder({collection, ancestorId}){
 export function setDocToLastOrder({collection, doc}){
   doc.order = getHighestOrder({
     collection,
-    parentId: doc.parent.id,
+    ancestorId: doc.ancestors[0].id,
   }) + 1;
 }
 
