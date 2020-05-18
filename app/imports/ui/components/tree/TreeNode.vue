@@ -46,16 +46,26 @@
         v-show="showExpanded"
         class="pl-3"
       >
-        <tree-node-list
-          :node="node"
-          :children="computedChildren"
-          :group="group"
-          :organize="organize"
-          :selected-node-id="selectedNodeId"
-          @reordered="e => $emit('reordered', e)"
-          @reorganized="e => $emit('reorganized', e)"
-          @selected="e => $emit('selected', e)"
-        />
+        <v-fade-transition leave-absolute>
+          <tree-node-list
+            v-if="showExpanded"
+            :node="node"
+            :children="computedChildren"
+            :group="group"
+            :organize="organize"
+            :selected-node-id="selectedNodeId"
+            @reordered="e => $emit('reordered', e)"
+            @reorganized="e => $emit('reorganized', e)"
+            @selected="e => $emit('selected', e)"
+          />
+          <div v-else>
+            <div
+              v-for="i in children.length"
+              :key="i"
+              class="dummy-node"
+            />
+          </div>
+        </v-fade-transition>
       </div>
     </v-expand-transition>
   </v-sheet>
@@ -156,4 +166,7 @@
 	.theme--light .tree-node-title:hover {
 		background: rgba(0,0,0,.04);
 	}
+  .dummy-node {
+    height: 40px;
+  }
 </style>
