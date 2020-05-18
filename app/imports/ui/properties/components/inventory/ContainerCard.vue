@@ -10,7 +10,7 @@
       </v-toolbar-title>
       <v-spacer />
     </template>
-    <v-card-text>
+    <v-card-text class="px-0">
       <creature-properties-tree
         :root="{collection: 'creatureProperties', id: model._id}"
         :filter="{type: {$in: ['container', 'item', 'folder']}}"
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 

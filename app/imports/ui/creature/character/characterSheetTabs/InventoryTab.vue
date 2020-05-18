@@ -2,40 +2,28 @@
   <div class="inventory">
     <column-layout>
       <div>
-        <v-card>
-          <v-card-text>
-            <v-switch
-              v-model="organize"
-              label="Organize"
-              class="justify-end"
-            />
-            <!-- Equipping things isn't implemented yet
-				<creature-properties-tree
-					:root="{collection: 'creatures', id: creatureId}"
-					:filter="{
-						equipped: true,
-						type: {$in: ['item']},
-						'ancestors.id': {$nin: containerIds}
-					}"
-					@selected="e => clickProperty(e)"
-					:organize="organize"
-					group="inventory"
-				/>
-				<v-divider/>
-				-->
+        <toolbar-card color="">
+          <v-spacer slot="toolbar" />
+          <v-switch
+            slot="toolbar"
+            v-model="organize"
+            label="Organize"
+            class="justify-end"
+          />
+          <v-card-text class="px-0">
             <creature-properties-tree
               :root="{collection: 'creatures', id: creatureId}"
               :filter="{
-                equipped: {$ne: true},
                 type: {$in: ['item']},
                 'ancestors.id': {$nin: containerIds}
               }"
               :organize="organize"
               group="inventory"
               @selected="e => clickProperty(e)"
+              @reorganized="({doc}) => setEquipped(doc, false)"
             />
           </v-card-text>
-        </v-card>
+        </toolbar-card>
       </div>
       <div
         v-for="container in containersWithoutAncestorContainers"
@@ -55,12 +43,15 @@ import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
+import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
+import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
 
 export default {
 	components: {
 		ColumnLayout,
 		CreaturePropertiesTree,
 		ContainerCard,
+    ToolbarCard,
 	},
 	props: {
 		creatureId: String,
@@ -104,6 +95,13 @@ export default {
 				data: {_id},
 			});
 		},
+    setEquipped(doc, equipped){
+      updateProperty.call({
+        _id: doc._id,
+        path: ['equipped'],
+        value: equipped
+      });
+    }
 	},
 }
 </script>

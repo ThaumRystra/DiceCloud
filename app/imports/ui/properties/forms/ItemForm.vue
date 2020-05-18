@@ -1,5 +1,14 @@
 <template lang="html">
   <div class="item-form">
+    <div class="layout column align-center">
+      <v-switch
+        label="Equipped"
+        class="no-flex"
+        :input-value="model.equipped"
+        :error-messages="errors.equipped"
+        @change="e => $emit('change', {path: ['equipped'], value: !!e})"
+      />
+    </div>
     <div class="layout row wrap">
       <text-field
         label="Name"

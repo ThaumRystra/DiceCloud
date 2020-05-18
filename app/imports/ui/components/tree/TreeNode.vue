@@ -33,16 +33,12 @@
         >
           drag_handle
         </v-icon>
-        <property-icon
-          v-if="node.type"
-          class="mr-2"
-          :type="node.type"
-          :class="selected && 'primary--text'"
+        <!--{{node && node.order}}-->
+        <component
+          :is="treeNodeView"
+          :model="node"
+          :selected="selected"
         />
-        <div class="text-no-wrap text-truncate">
-          <!--{{node && node.order}}-->
-          {{ getTitle }}
-        </div>
       </div>
     </div>
     <v-expand-transition>
@@ -72,14 +68,14 @@
 	* the tree view shows off the full character structure, and where each part of
 	* character comes from.
 	**/
-	import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 	import { canBeParent } from '/imports/api/parenting/parenting.js';
-	import PROPERTIES from '/imports/constants/PROPERTIES.js'
+	import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
+  import treeNodeViewIndex from '/imports/ui/properties/treeNodeViews/treeNodeViewIndex.js';
 
 	export default {
 		name: 'TreeNode',
 		components: {
-			PropertyIcon,
+      ...treeNodeViewIndex
 		},
 		props: {
 			node: Object,
@@ -94,6 +90,10 @@
 			expanded: false,
 		}},
 		computed: {
+      treeNodeView(){
+        let type = this.node.type;
+        return treeNodeViewIndex[type] || treeNodeViewIndex.default;
+      },
 			hasChildren(){
 				return this.children && this.children.length || this.lazy && !this.expanded;
 			},
@@ -113,20 +113,13 @@
 			canExpand(){
 				return canBeParent(this.node.type);
 			},
-			getTitle(){
-				let node = this.node;
-				if (!node) return;
-				if (node.name) return node.name;
-				let prop = PROPERTIES[this.node.type]
-				return prop && prop.name;
-			}
 		},
 		beforeCreate() {
-		  this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
+      this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
 		},
 		methods: {
 			icon(type){
-				return PROPERTY_ICONS[type];
+				return getPropertyIcon(type);
 			},
 		}
 	};
@@ -151,12 +144,15 @@
 		opacity: 0.4;
 	}
 	.ghost {
-	  opacity: 0.5;
-	  background: #c8ebfb;
+    opacity: 0.5;
+    background: #fbc8c8;
 	}
 	.v-icon.v-icon--disabled {
 		opacity: 0;
 	}
+  .v-icon {
+    transition: none !important;
+  }
 	.theme--light .tree-node-title:hover {
 		background: rgba(0,0,0,.04);
 	}
