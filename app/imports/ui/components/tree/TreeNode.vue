@@ -47,11 +47,10 @@
     </div>
     <v-expand-transition>
       <div
-        v-if="showExpanded"
+        v-show="showExpanded"
         class="pl-3"
       >
         <tree-node-list
-          v-if="showExpanded"
           :node="node"
           :children="computedChildren"
           :group="group"
