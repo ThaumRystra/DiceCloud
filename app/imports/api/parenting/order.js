@@ -1,53 +1,24 @@
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
+import getDescendantsInDepthFirstOrder from '/imports/api/parenting/getDescendantsInDepthFirstOrder.js'
 
-// Docs keep track of their order amongst their siblings and keep a copy of the
-// order of their ancestors. Order is first compared between oldest non-shared
-// ancestors, then by ancestors before children, then between order of siblings.
+// Docs keep track of their depth-first order amongst their entire ancestor tree
 export function compareOrder(docA, docB){
   // < 0 if A comes before B
   // = 0 if A and B are the same order
   // > 0 if B comes before A
 
-  // Documents are equal order to themselves
-  if (docA._id && docB._id && docA._id === docB._id){
-    return 0;
-  }
-
-  // If they are siblings, just compare order
-  if (docA.parent.id === docB.parent.id){
-    return docA.order - docB.order;
-  }
-
   // They must share a root ancestor to be meaningfully sorted
   if (docA.ancestors[0].id !== docB.ancestors[0].id){
     return 0;
+  } else {
+    return docA.order - docB.order;
   }
-
-  // Go through their ancestors after the root, and find the first order
-  // difference
-  // TODO ancestors don't store order yet
-  let i, difference;
-  const length = Math.min(docA.ancestors.length, docB.ancestors.length);
-  for (i = 1; i < length; i++){
-    difference = docA.ancestors[i].order - docB.ancestors[i].order;
-    if (difference){
-      return difference;
-    } else if (docA.ancestors[i].id !== docB.ancestors[i].id) {
-      throw new Meteor.Error('Sibling order clash',
-        'Sibling docs share the same order, sort failed');
-    }
-  }
-
-  // We haven't returned yet, all ancestors up to this point are shared and one
-  // doc has no more ancestors implying one is an ancestor of the other,
-  // return the difference in their ancestor list lengths, shorter comes first
-  return docA.ancestors.length - docB.ancestors.length
 }
 
-export function getHighestOrder({collection, parentId}){
+export function getHighestOrder({collection, ancestorId}){
   const highestOrderedDoc = collection.findOne({
-    'parent.id': parentId,
+    'ancestors.id': ancestorId,
   }, {
     fields: {order: 1},
     sort: {order: -1},
@@ -62,9 +33,9 @@ export function setDocToLastOrder({collection, doc}){
   }) + 1;
 }
 
-// update the order of a doc, and shift the siblings around to suit the new
+// update the order of a doc, and shift the related docs around to suit the new
 // order
-export function updateDocOrder({docRef, order}){
+function cheapUpdateDocOrder({docRef, order}){
   let doc = fetchDocByRef(docRef, {fields: {
     order: 1,
     parent: 1,
@@ -92,7 +63,7 @@ export function updateDocOrder({docRef, order}){
       increment = 1;
     }
     collection.update({
-      'parent.id': doc.parent.id,
+      'ancestors.id': doc.ancestors[0].id,
       order: inBetweenSelector,
     }, {
       $inc: {order: increment},
@@ -105,10 +76,10 @@ export function updateDocOrder({docRef, order}){
   }
 }
 
-export function removedDocAtOrder({collection, doc}){
+export function cheapRemovedDocAtOrder({collection, doc}){
   // Decrement the order of all docs after the removed doc
   collection.update({
-    'parent.id': doc.parent.id,
+    'ancestors.id': doc.ancestors[0].id,
     order: {$gt: doc.order},
   }, {
     $inc: {order: -1},
@@ -118,10 +89,10 @@ export function removedDocAtOrder({collection, doc}){
   });
 }
 
-export function insertedDocAtOrder({collection, parentId, order}){
+export function cheapInsertedDocAtOrder({collection, ancestorId, order}){
   // Increment the order of all docs after the inserted doc
   collection.update({
-    'parent.id': parentId,
+    'ancestors.id': ancestorId,
     order: {$gte: order},
   }, {
     $inc: {order: 1},
@@ -131,54 +102,28 @@ export function insertedDocAtOrder({collection, parentId, order}){
   });
 }
 
-// Update the order a single doc and re-order the entire sibling list
+// Update the order a single doc and re-order the entire related doc list
 // with the change
 export function safeUpdateDocOrder({docRef, order}){
   let collection = getCollectionByName(docRef.collection);
-  let movedDoc = fetchDocByRef(docRef, {fields: {
-    parent: 1, name: 1
-  }});
-  let parentId = movedDoc.parent.id;
-  let bulkWrite = [];
-  let docs = collection.find({
-    'parent.id': parentId,
-    '_id': {$ne: movedDoc._id},
+  // Put the new doc half a step in front of its new order
+  // to ensure it's in front of whichever doc was there before
+  collection.update(docRef.id, {
+    $set: {order}
   }, {
-    fields: {order: 1, name: 1},
-    sort: {order: 1}
-  }).fetch();
-  docs.splice(order, 0, movedDoc);
-  docs.forEach((doc, index) => {
-    if (doc.order !== index){
-      bulkWrite.push({
-        updateOne: {
-          filter: {_id: doc._id},
-          update: {$set: {order: index}},
-        },
-      });
-    }
+    selector: {type: 'any'}
   });
-  if (Meteor.isServer){
-    collection.rawCollection().bulkWrite(bulkWrite);
-  } else {
-    bulkWrite.forEach(op => {
-      collection.update(
-        op.updateOne.filter,
-        op.updateOne.update,
-        {selector: {type: 'any'}}
-      );
-    });
-  }
-};
+  // reorder all related docs so that order is back to being a continous
+  // set of whole numbers
+  let movedDoc = fetchDocByRef(docRef, {fields: {ancestors: 1}});
+  let ancestorId = movedDoc.ancestors[0].id;
+  reorderDocs({collection, ancestorId});
+}
 
-export function reorderDocs({collection, parentId}){
+export function reorderDocs({collection, ancestorId}){
+  let orderedDocs = getDescendantsInDepthFirstOrder({collection, ancestorId});
   let bulkWrite = [];
-  collection.find({
-    'parent.id': parentId,
-  }, {
-    fields: {order: 1},
-    sort: {order: 1}
-  }).forEach((doc, index) => {
+  orderedDocs.forEach((doc, index) => {
     if (doc.order !== index){
       bulkWrite.push({
         updateOne : {
@@ -189,10 +134,23 @@ export function reorderDocs({collection, parentId}){
     }
   });
   if (Meteor.isServer){
-    collection.rawCollection().bulkWrite(bulkWrite);
+    collection.rawCollection().bulkWrite(
+      bulkWrite,
+      {ordered : false},
+      function(e){
+        if (e) {
+          console.error('Bulk write failed: ');
+          console.error(e);
+        }
+      }
+    );
   } else {
     bulkWrite.forEach(op => {
-      collection.update(op.updateOne.filter, op.updateOne.update);
+      collection.update(
+        op.updateOne.filter,
+        op.updateOne.update,
+        {selector: {type: 'any'}}
+      );
     });
   }
 }

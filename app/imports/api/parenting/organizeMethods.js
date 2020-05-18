@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { updateParent } from '/imports/api/parenting/parenting.js';
-import { insertedDocAtOrder, removedDocAtOrder, safeUpdateDocOrder } from '/imports/api/parenting/order.js';
+import { reorderDocs, safeUpdateDocOrder } from '/imports/api/parenting/order.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
@@ -13,7 +14,7 @@ const organizeDoc = new ValidatedMethod({
     parentRef: RefSchema,
     order: {
       type: Number,
-      min: 0,
+      // Should end in 0.5 to place it reliably between two existing documents
     },
   }).validator(),
   run({docRef, parentRef, order}) {
@@ -25,14 +26,19 @@ const organizeDoc = new ValidatedMethod({
     let parent = fetchDocByRef(parentRef);
     assertDocEditPermission(parent, this.userId);
 
-    // Reorder the documents in the doc's old parent
-    removedDocAtOrder({collection, doc});
-    // Reorder the docs in the destination parent
-    insertedDocAtOrder({collection, parentId: parentRef.id, order});
     // Change the doc's parent
     updateParent({docRef, parentRef});
-    // Change the doc's order
+    // Change the doc's order to be a half step ahead of its target location
     collection.update(doc._id, {$set: {order}}, {selector: {type: 'any'}});
+
+    // Reorder both ancestors' documents
+    let oldAncestorId = doc.ancestors[0].id;
+    reorderDocs({collection, ancestorId: oldAncestorId});
+
+    let newAncestorId = getRootId(parent);
+    if (newAncestorId !== oldAncestorId){
+      reorderDocs({collection, ancestorId: newAncestorId});
+    }
   },
 });
 
@@ -42,7 +48,7 @@ const reorderDoc = new ValidatedMethod({
     docRef: RefSchema,
     order: {
       type: Number,
-      min: 0,
+      // Should end in 0.5 to place it reliably between two existing documents
     },
   }).validator(),
   run({docRef, order}) {
@@ -51,5 +57,13 @@ const reorderDoc = new ValidatedMethod({
     safeUpdateDocOrder({docRef, order})
   },
 });
+
+function getRootId(doc){
+  if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]){
+    return doc.ancestors[0].id;
+  } else {
+    return doc._id;
+  }
+}
 
 export { organizeDoc, reorderDoc };

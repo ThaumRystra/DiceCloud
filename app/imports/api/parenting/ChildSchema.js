@@ -14,7 +14,6 @@ const RefSchema = new SimpleSchema({
 let ChildSchema = new SimpleSchema({
   order: {
     type: Number,
-    min: 0,
   },
 	parent: {
     type: RefSchema,
