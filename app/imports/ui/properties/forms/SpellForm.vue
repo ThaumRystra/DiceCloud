@@ -4,8 +4,7 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <div class="layout row wrap">
       <smart-select
@@ -15,8 +14,7 @@
         :items="spellLevels"
         :value="model.level"
         :error-messages="errors.level"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['level'], value, ack})"
+        @change="change('level', ...arguments)"
       />
       <smart-select
         label="School"
@@ -25,94 +23,87 @@
         :items="magicSchools"
         :value="model.school"
         :error-messages="errors.school"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['school'], value, ack})"
+        @change="change('school', ...arguments)"
       />
     </div>
     <div class="layout row wrap">
-      <v-switch
+      <smart-switch
         label="Always prepared"
         style="width: 200px; flex-grow: 0;"
         class="ml-2"
-        :input-value="model.alwaysPrepared"
+        :value="model.alwaysPrepared"
         :error-messages="errors.alwaysPrepared"
-        @change="e => $emit('change', {path: ['alwaysPrepared'], value: !!e})"
+        @change="change('alwaysPrepared', ...arguments)"
       />
     </div>
     <text-field
       label="Casting Time"
       :value="model.castingTime"
       :error-messages="errors.castingTime"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['castingTime'], value, ack})"
+      @change="change('castingTime', ...arguments)"
     />
     <text-field
       label="Range"
       :value="model.range"
       :error-messages="errors.range"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['range'], value, ack})"
+      @change="change('range', ...arguments)"
     />
     <div class="layout row wrap justify-space-between">
-      <v-checkbox
+      <smart-checkbox
         label="Verbal"
-        :input-value="model.verbal"
+        :value="model.verbal"
         :error-messages="errors.verbal"
-        @change="(value) => $emit('change', {path: ['verbal'], value})"
+        @change="change('verbal', ...arguments)"
       />
-      <v-checkbox
+      <smart-checkbox
         label="Somatic"
-        :input-value="model.somatic"
+        :value="model.somatic"
         :error-messages="errors.somatic"
-        @change="(value) => $emit('change', {path: ['somatic'], value})"
+        @change="change('somatic', ...arguments)"
       />
-      <v-checkbox
+      <smart-checkbox
         label="Concentration"
-        :input-value="model.concentration"
+        :value="model.concentration"
         :error-messages="errors.concentration"
-        @change="(value) => $emit('change', {path: ['concentration'], value})"
+        @change="change('concentration', ...arguments)"
       />
-      <v-checkbox
+      <smart-checkbox
         label="Ritual"
-        :input-value="model.ritual"
+        :value="model.ritual"
         :error-messages="errors.ritual"
-        @change="(value) => $emit('change', {path: ['ritual'], value})"
+        @change="change('ritual', ...arguments)"
       />
     </div>
     <text-field
       label="Material"
       :value="model.material"
       :error-messages="errors.material"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['material'], value, ack})"
+      @change="change('material', ...arguments)"
     />
     <text-field
       label="Duration"
       :value="model.duration"
       :error-messages="errors.duration"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['duration'], value, ack})"
+      @change="change('duration', ...arguments)"
     />
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+      @change="change('description', ...arguments)"
     />
     <form-sections>
       <form-section
         name="Advanced"
       >
-        <v-combobox
+        <smart-combobox
           label="Spell lists"
           multiple
           chips
           deletable-chips
-          box
           :value="model.spellLists"
           :error-messages="errors.spellLists"
-          @change="(value) => $emit('change', {path: ['spellLists'], value})"
+          @change="change('spellLists', ...arguments)"
         />
       </form-section>
       <form-section
@@ -130,6 +121,7 @@
 <script>
 	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ActionForm from '/imports/ui/properties/forms/ActionForm.vue'
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {
 		components: {
@@ -137,20 +129,7 @@
 			FormSection,
       ActionForm,
 		},
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 		data(){return {
 			magicSchools: [
 				{

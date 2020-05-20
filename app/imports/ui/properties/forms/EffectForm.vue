@@ -4,8 +4,7 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <div class="layout row wrap justify-start">
       <smart-select
@@ -16,7 +15,7 @@
         :menu-props="{transition: 'slide-y-transition', lazy: true}"
         :items="operations"
         :value="model.operation"
-        @change="(value, ack) => $emit('change', {path: ['operation'], value, ack})"
+        @change="change('operation', ...arguments)"
       >
         <v-icon
           slot="prepend"
@@ -46,8 +45,7 @@
         :disabled="!needsValue"
         :error-messages="errors.calculation"
         :hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
+        @change="change('calculation', ...arguments)"
       />
     </div>
     <smart-combobox
@@ -59,33 +57,19 @@
       :value="model.stats"
       :items="attributeList"
       :error-messages="errors.stats"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['stats'], value, ack})"
+      @change="change('stats', ...arguments)"
     />
   </div>
 </template>
 
 <script>
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
 
 	const ICON_SPIN_DURATION = 300;
 	export default {
-    mixins: [attributeListMixin],
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin, attributeListMixin],
 		data(){ return {
 			displayedIcon: 'add',
 			iconClass: '',

@@ -4,19 +4,17 @@
       label="Roll"
       :value="model.roll"
       :error-messages="errors.roll"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['roll'], value, ack})"
+      @change="change('roll', ...arguments)"
     />
     <form-sections>
       <form-section name="Advanced">
-        <v-combobox
+        <smart-combobox
           label="Tags"
           multiple
           chips
           deletable-chips
-          box
           :value="model.tags"
-          @change="(value) => $emit('change', {path: ['tags'], value})"
+          @change="change('tags', ...arguments)"
         />
       </form-section>
     </form-sections>
@@ -25,29 +23,14 @@
 
 <script>
 	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {
 		components: {
 			FormSection,
 			FormSections,
 		},
-		props: {
-			stored: {
-				type: Boolean,
-			},
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 		data(){return {
 			addResultLoading: false,
 		}},

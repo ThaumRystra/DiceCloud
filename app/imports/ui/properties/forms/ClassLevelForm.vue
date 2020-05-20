@@ -7,8 +7,7 @@
         class="base-value-field text-xs-center large-format no-flex"
         :value="model.level"
         :error-messages="errors.level"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['level'], value, ack})"
+        @change="change('level', ...arguments)"
       />
     </div>
     <div class="layout row wrap">
@@ -16,8 +15,7 @@
         label="Name"
         :value="model.name"
         :error-messages="errors.name"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+        @change="change('name', ...arguments)"
       />
       <text-field
         label="Class variable name"
@@ -25,30 +23,17 @@
         style="flex-basis: 300px;"
         hint="This should be the same for each level in a class"
         :error-messages="errors.variableName"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
+        @change="change('variableName', ...arguments)"
       />
     </div>
   </div>
 </template>
 
 <script>
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 	};
 </script>
 

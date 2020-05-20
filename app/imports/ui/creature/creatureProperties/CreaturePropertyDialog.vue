@@ -111,6 +111,7 @@ import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { get, findLast } from 'lodash';
 
 let formIndex = {};
@@ -142,6 +143,14 @@ export default {
 		model(){
 			return CreatureProperties.findOne(this._id);
 		},
+    editPermission(){
+      try {
+        assertEditPermission(this.creature, Meteor.userId());
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
 	},
   computed: {
     creature(){
@@ -155,19 +164,19 @@ export default {
     }
   },
   reactiveProvide: {
-    name: 'computationContext',
-    include: ['creature'],
+    name: 'context',
+    include: ['creature', 'editPermission'],
   },
 	methods: {
 		getPropertyName,
 		change({path, value, ack}){
-			updateProperty.call({_id: this._id, path, value}, (error, result) =>{
+			updateProperty.call({_id: this._id, path, value}, (error) =>{
         if (error) console.warn(error);
 				ack && ack(error && error.reason || error);
 			});
 		},
 		push({path, value, ack}){
-			pushToProperty.call({_id: this._id, path, value}, (error, result) =>{
+			pushToProperty.call({_id: this._id, path, value}, (error) =>{
         if (error) console.warn(error);
 				ack && ack(error && error.reason || error);
 			});
@@ -175,7 +184,7 @@ export default {
 		pull({path, ack}){
 			let itemId = get(this.model, path)._id;
 			path.pop();
-			pullFromProperty.call({_id: this._id, path, itemId}, (error, result) =>{
+			pullFromProperty.call({_id: this._id, path, itemId}, (error) =>{
         if (error) console.warn(error);
 				ack && ack(error && error.reason || error);
 			});

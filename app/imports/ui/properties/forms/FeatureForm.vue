@@ -4,44 +4,30 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <text-area
       label="Summary"
       hint="This will appear in the feature card in the character sheet"
       :value="model.summary"
       :error-messages="errors.summary"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['summary'], value, ack})"
+      @change="change('summary', ...arguments)"
     />
     <text-area
       label="Description"
       hint="The rest of the description that doesn't fit in the summary goes here"
       :value="model.description"
       :error-messages="errors.description"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+      @change="change('description', ...arguments)"
     />
   </div>
 </template>
 
 <script>
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+
 	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 		data(){ return{
 			enabledOptions: [
 				{

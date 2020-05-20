@@ -4,8 +4,7 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <v-layout
       column
@@ -35,29 +34,17 @@
         label="Condition"
         :value="model.condition"
         :error-messages="errors.condition"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['condition'], value, ack})"
+        @change="change('condition', ...arguments)"
       />
     </v-fade-transition>
   </div>
 </template>
 
 <script>
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+
 	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
     computed: {
       radioSelection(){
         if (this.model.disabled){

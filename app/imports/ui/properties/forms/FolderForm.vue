@@ -6,29 +6,17 @@
         style="flex-basis: 300px;"
         :value="model.name"
         :error-messages="errors.name"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+        @change="change('name', ...arguments)"
       />
     </div>
   </div>
 </template>
 
 <script>
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+
 	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 	};
 </script>
 

@@ -11,7 +11,7 @@ import Computed from '/imports/ui/components/computation/Computed.vue';
 
 export default {
   inject: {
-    computationContext: { default: {} }
+    context: { default: {} }
   },
   components: {
     Computed,
@@ -24,8 +24,8 @@ export default {
   },
   computed: {
     scope(){
-      return this.computationContext.creature &&
-      this.computationContext.creature.variables;
+      return this.context.creature &&
+      this.context.creature.variables;
     }
   }
 }

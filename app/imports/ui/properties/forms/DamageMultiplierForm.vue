@@ -4,8 +4,7 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <div class="layout row wrap">
       <smart-select
@@ -16,8 +15,7 @@
         :value="model.damageTypes"
         :error-messages="errors.damageTypes"
         :menu-props="{auto: true, lazy: true}"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['damageTypes'], value, ack})"
+        @change="change('damageTypes', ...arguments)"
       />
       <smart-select
         label="Value"
@@ -26,30 +24,18 @@
         :value="model.value"
         :error-messages="errors.value"
         :menu-props="{auto: true, lazy: true}"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
+        @change="change('value', ...arguments)"
       />
     </div>
   </div>
 </template>
 
 <script>
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  
 	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
 		data(){return {
+      mixins: [propertyFormMixin],
 			damageTypes: [
         {
 					value: 'bludgeoning',

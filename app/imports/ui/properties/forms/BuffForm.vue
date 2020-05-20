@@ -4,47 +4,34 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+      @change="change('description', ...arguments)"
     />
     <text-field
       label="Duration"
       hint="How long the buff lasts"
       :value="model.duration"
       :error-messages="errors.duration"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['duration'], value, ack})"
+      @change="change('duration', ...arguments)"
     />
   </div>
 </template>
 
 <script>
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+
 	export default {
+    mixins: [propertyFormMixin],
 		props: {
-			stored: Boolean,
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
 			parentTarget: {
 				type: String,
         default: undefined,
 			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
 		},
 		computed: {
 			targetOptions(){

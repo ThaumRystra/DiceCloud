@@ -44,12 +44,17 @@ export default {
 		propertyName: String,
 		type: String,
 	},
+  reactiveProvide: {
+    name: 'context',
+    include: ['debounceTime'],
+  },
 	data(){return {
 		model: {
 			type: this.type,
 		},
 		schema: undefined,
 		validationContext: undefined,
+    debounceTime: 0,
 	};},
 	watch: {
 		type(newType){

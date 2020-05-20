@@ -4,8 +4,7 @@
       label="Name"
       :value="model.name"
       :error-messages="errors.name"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="change('name', ...arguments)"
     />
     <div class="layout row wrap justify-start proficiency-form">
       <smart-combobox
@@ -15,15 +14,14 @@
         :value="model.stats"
         :items="skillList"
         :error-messages="errors.stats"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['stats'], value, ack})"
+        @change="change('stats', ...arguments)"
       />
       <proficiency-select
         label="Proficiency"
         style="flex-basis: 300px;"
         :clearable="false"
         :value="model.value"
-        @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
+        @change="change('stats', ...arguments)"
       />
     </div>
   </div>
@@ -32,30 +30,13 @@
 <script>
 	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
   import skillListMixin from '/imports/ui/properties/forms/shared/lists/skillListMixin.js';
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {
 		components: {
 			ProficiencySelect,
 		},
-    mixins: [skillListMixin],
-		props: {
-      model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-			stats: {
-				type: Array,
-        default: () => [],
-			},
-		},
+    mixins: [propertyFormMixin, skillListMixin],
 	};
 </script>
 

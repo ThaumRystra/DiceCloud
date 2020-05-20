@@ -4,38 +4,24 @@
       label="DC"
       :value="model.dc"
       :error-messages="errors.dc"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['dc'], value, ack})"
+      @change="change('dc', ...arguments)"
     />
-    <text-field
-      label="Ability"
-      hint="Which ability the saving throw targets"
+    <smart-combobox
+      label="Save"
+      hint="Which save the saving throw targets"
       :value="model.ability"
+      :items="saveList"
       :error-messages="errors.ability"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['ability'], value, ack})"
+      @change="change('ability', ...arguments)"
     />
   </div>
 </template>
 
 <script>
-	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
-	};
-</script>
+import saveListMixin from '/imports/ui/properties/forms/shared/lists/saveListMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-<style lang="css" scoped>
-</style>
+export default {
+  mixins: [saveListMixin, propertyFormMixin],
+};
+</script>

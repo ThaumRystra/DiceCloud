@@ -5,8 +5,7 @@
         label="Name"
         :value="model.name"
         :error-messages="errors.name"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+        @change="change('name', ...arguments)"
       />
       <text-field
         label="Variable name"
@@ -14,8 +13,7 @@
         style="flex-basis: 300px;"
         hint="Use this name in formulae to reference this skill"
         :error-messages="errors.variableName"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['variableName'], value, ack})"
+        @change="change('variableName', ...arguments)"
       />
       <smart-combobox
         label="Ability"
@@ -24,8 +22,7 @@
         hint="Which ability is this skill based off of"
         :items="abilityScoreList"
         :error-messages="errors.ability"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['ability'], value, ack})"
+        @change="change('ability', ...arguments)"
       />
     </div>
     <smart-select
@@ -34,15 +31,13 @@
       :value="model.skillType"
       :error-messages="errors.skillType"
       :menu-props="{auto: true, lazy: true}"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['skillType'], value, ack})"
+      @change="change('skillType', ...arguments)"
     />
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+      @change="change('description', ...arguments)"
     />
     <form-section
       name="Advanced"
@@ -56,15 +51,14 @@
           :value="model.baseValue"
           hint="This is the value of the skill before effects are applied"
           :error-messages="errors.baseValue"
-          :debounce-time="debounceTime"
-          @change="(value, ack) => $emit('change', {path: ['baseValue'], value, ack})"
+          @change="change('baseValue', ...arguments)"
         />
         <proficiency-select
           style="flex-basis: 300px;"
           label="Base Proficiency"
           :value="model.baseProficiency"
           :error-messages="errors.baseProficiency"
-          @change="(value, ack) => {$emit('change', {path: ['baseProficiency'], value, ack})}"
+          @change="change('baseProficiency', ...arguments)"
         />
       </div>
     </form-section>
@@ -75,26 +69,14 @@
 	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {
 		components: {
 			ProficiencySelect,
 			FormSection,
 		},
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 		data(){return{
 			skillTypes: [
 				{

@@ -6,6 +6,7 @@
     :value="safeValue"
     :menu-props="{auto: true, lazy: true}"
     :search-input.sync="searchInput"
+    :disabled="isDisabled"
     box
     @change="customChange"
     @focus="focused = true"

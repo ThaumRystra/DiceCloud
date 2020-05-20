@@ -9,7 +9,7 @@
           <div style="flex-grow: 1;">
             <attribute-consumed-form
               :model="attribute"
-              @change="({path, value, ack}) => $emit('change', {path: [i, ...path], value, ack})"
+              @change="({path, value, ack}) => change([i, ...path], value, ack)"
             />
           </div>
           <v-btn
@@ -29,23 +29,12 @@
 
 <script>
 	import AttributeConsumedForm from '/imports/ui/properties/forms/AttributeConsumedForm.vue';
+  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {
 		components: {
 			AttributeConsumedForm,
 		},
-		props: {
-			model: {
-				type: Array,
-				default: () => ([]),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
+    mixins: [propertyFormMixin],
 	}
 </script>
-
-<style lang="css" scoped>
-</style>

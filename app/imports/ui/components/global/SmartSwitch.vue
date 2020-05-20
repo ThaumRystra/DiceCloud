@@ -1,14 +1,11 @@
 <template lang="html">
-  <v-text-field
+  <v-switch
     v-bind="$attrs"
     :loading="loading"
     :error-messages="errors"
-    :value="safeValue"
+    :input-value="safeValue"
     :disabled="isDisabled"
-    box
-    @input="input"
-    @focus="focused = true"
-    @blur="focused = false"
+    @change="change"
   />
 </template>
 

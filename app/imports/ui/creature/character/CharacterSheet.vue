@@ -80,7 +80,7 @@
       },
 		},
     reactiveProvide: {
-      name: 'computationContext',
+      name: 'context',
       include: ['creature'],
     },
     onMounted(){

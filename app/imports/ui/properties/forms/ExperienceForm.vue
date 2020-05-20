@@ -6,8 +6,7 @@
         style="flex-basis: 300px;"
         :value="model.name"
         :error-messages="errors.name"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+        @change="change('name', ...arguments)"
       />
       <text-field
         label="In-World date"
@@ -15,8 +14,7 @@
         style="flex-basis: 300px;"
         hint="The date in-game that the experience occured"
         :error-messages="errors.worldDate"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['worldDate'], value, ack})"
+        @change="change('worldDate', ...arguments)"
       />
       <date-picker
         label="Real date"
@@ -24,16 +22,14 @@
         style="flex-basis: 300px;"
         hint="Real life date"
         :error-messages="errors.date"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['date'], value, ack})"
+        @change="change('date', ...arguments)"
       />
     </div>
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+      @change="change('description', ...arguments)"
     />
     <div class="layout column align-end">
       <text-field
@@ -43,30 +39,18 @@
         hint="The number of experience points gained from this entry"
         :value="model.value"
         :error-messages="errors.value"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
+        @change="change('value', ...arguments)"
       />
     </div>
   </div>
 </template>
 
 <script>
-	export default {
-		props: {
-			model: {
-				type: Object,
-				default: () => ({}),
-			},
-			errors: {
-				type: Object,
-				default: () => ({}),
-			},
-      debounceTime: {
-        type: Number,
-        default: undefined,
-      },
-		},
-	};
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+
+export default {
+  mixins: [propertyFormMixin],
+};
 </script>
 
 <style lang="css" scoped>

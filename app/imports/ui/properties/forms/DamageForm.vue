@@ -6,8 +6,7 @@
         style="flex-basis: 300px;"
         :value="model.amount"
         :error-messages="errors.amount"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['amount'], value, ack})"
+        @change="change('amount', ...arguments)"
       />
       <smart-select
         label="Damage Type"
@@ -16,8 +15,7 @@
         :value="model.damageType"
         :error-messages="errors.damageType"
         :menu-props="{auto: true}"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['damageType'], value, ack})"
+        @change="change('damageType', ...arguments)"
       />
     </div>
     <smart-select
@@ -27,33 +25,22 @@
       :value="model.target"
       :error-messages="errors.target"
       :menu-props="{auto: true, lazy: true}"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['target'], value, ack})"
+      @change="change('target', ...arguments)"
     />
   </div>
 </template>
 
 <script>
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {
+  mixins: [propertyFormMixin],
 	props: {
-		model: {
-			type: Object,
-			default: () => ({}),
-		},
-		errors: {
-			type: Object,
-			default: () => ({}),
-		},
 		parentTarget: {
 			type: String,
       default: undefined,
 		},
-    debounceTime: {
-      type: Number,
-      default: undefined,
-    },
 	},
 	data(){return{
 		DAMAGE_TYPES,

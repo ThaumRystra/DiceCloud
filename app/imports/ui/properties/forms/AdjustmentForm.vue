@@ -8,8 +8,7 @@
         :items="attributeList"
         :value="model.stat"
         :error-messages="errors.stat"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['stat'], value, ack})"
+        @change="change('stat', ...arguments)"
       />
       <text-field
         label="Damage"
@@ -17,8 +16,7 @@
         style="flex-basis: 300px;"
         :value="model.amount"
         :error-messages="errors.amount"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['amount'], value, ack})"
+        @change="change('amount', ...arguments)"
       />
     </div>
     <smart-select
@@ -29,34 +27,22 @@
       :value="model.target"
       :error-messages="errors.target"
       :menu-props="{auto: true, lazy: true}"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['target'], value, ack})"
+      @change="change('target', ...arguments)"
     />
   </div>
 </template>
 
 <script>
 import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {
-  mixins: [attributeListMixin],
+  mixins: [propertyFormMixin, attributeListMixin],
 	props: {
-		model: {
-			type: Object,
-			default: () => ({}),
-		},
-		errors: {
-			type: Object,
-			default: () => ({}),
-		},
 		parentTarget: {
 			type: String,
       default: undefined,
 		},
-    debounceTime: {
-      type: Number,
-      default: undefined,
-    },
 	},
 	computed: {
 		targetOptions(){

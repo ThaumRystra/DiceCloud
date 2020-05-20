@@ -40,7 +40,7 @@
     />
 
     <effect-viewer
-      v-if="computationContext.creature && model.baseValue"
+      v-if="context.creature && model.baseValue"
       :model="{
         name: 'Base value',
         result: model.baseValue,
@@ -67,7 +67,7 @@ export default {
   },
 	mixins: [propertyViewerMixin],
   inject: {
-    computationContext: { default: {} }
+    context: { default: {} }
   },
   computed: {
     displayedModifier(){
@@ -96,8 +96,8 @@ export default {
   },
   meteor: {
     effects(){
-      if (this.computationContext.creature){
-        let creatureId = this.computationContext.creature._id;
+      if (this.context.creature){
+        let creatureId = this.context.creature._id;
         return CreatureProperties.find({
           'ancestors.id': creatureId,
           stats: this.model.variableName,

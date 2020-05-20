@@ -1,12 +1,12 @@
 <template lang="html">
   <div class="item-form">
     <div class="layout column align-center">
-      <v-switch
+      <smart-switch
         label="Equipped"
         class="no-flex"
-        :input-value="model.equipped"
+        :value="model.equipped"
         :error-messages="errors.equipped"
-        @change="e => $emit('change', {path: ['equipped'], value: !!e})"
+        @change="change('equipped', ...arguments)"
       />
     </div>
     <div class="layout row wrap">
@@ -14,15 +14,13 @@
         label="Name"
         :value="model.name"
         :error-messages="errors.name"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+        @change="change('name', ...arguments)"
       />
       <text-field
         label="Plural name"
         :value="model.plural"
         :error-messages="errors.plural"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['plural'], value, ack})"
+        @change="change('plural', ...arguments)"
       />
     </div>
     <div class="layout row wrap">
@@ -36,8 +34,7 @@
         style="flex-basis: 300px;"
         :value="model.value"
         :error-messages="errors.value"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['value'], value, ack})"
+        @change="change('value', ...arguments)"
       />
       <text-field
         label="Weight"
@@ -48,8 +45,7 @@
         style="flex-basis: 300px;"
         :value="model.weight"
         :error-messages="errors.weight"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['weight'], value, ack})"
+        @change="change('weight', ...arguments)"
       />
     </div>
     <text-field
@@ -58,25 +54,23 @@
       min="0"
       :value="model.quantity"
       :error-messages="errors.quantity"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['quantity'], value, ack})"
+      @change="change('quantity', ...arguments)"
     />
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
-      :debounce-time="debounceTime"
-      @change="(value, ack) => $emit('change', {path: ['description'], value, ack})"
+      @change="change('description', ...arguments)"
     />
     <form-section
       name="Advanced"
       standalone
     >
-      <v-switch
+      <smart-switch
         label="Show increment buttons"
-        :input-value="model.showIncrement"
+        :value="model.showIncrement"
         :error-messages="errors.showIncrement"
-        @change="value => $emit('change', {path: ['showIncrement'], value})"
+        @change="change('showIncrement', ...arguments)"
       />
       <smart-combobox
         label="Tags"
@@ -86,25 +80,24 @@
         deletable-chips
         :value="model.tags"
         :error-messages="errors.tags"
-        :debounce-time="debounceTime"
-        @change="(value, ack) => $emit('change', {path: ['tags'], value, ack})"
+        @change="change('tags', ...arguments)"
       />
-      <v-switch
+      <smart-switch
         label="Requires attunement"
-        :input-value="model.requiresAttunement"
+        :value="model.requiresAttunement"
         :error-messages="errors.requiresAttunement"
-        @change="value => $emit('change', {path: ['requiresAttunement'], value})"
+        @change="change('requiresAttunement', ...arguments)"
       />
       <v-expand-transition>
         <div
           v-show="model.requiresAttunement"
           style="padding-top: 0.1px;"
         >
-          <v-switch
+          <smart-switch
             label="Attuned"
-            :input-value="model.attuned"
+            :value="model.attuned"
             :error-messages="errors.attuned"
-            @change="value => $emit('change', {path: ['attuned'], value})"
+            @change="change('attuned', ...arguments)"
           />
         </div>
       </v-expand-transition>
@@ -114,24 +107,12 @@
 
 <script>
 import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {
 	components: {
 		FormSection,
 	},
-	props: {
-		model: {
-			type: Object,
-			default: () => ({}),
-		},
-		errors: {
-			type: Object,
-			default: () => ({}),
-		},
-		debounceTime: {
-      type: Number,
-      default: undefined,
-    },
-	},
+  mixins: [propertyFormMixin],
 	}
 </script>

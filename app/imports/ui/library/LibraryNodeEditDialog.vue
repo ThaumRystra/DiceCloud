@@ -41,57 +41,73 @@
 </template>
 
 <script>
-	import LibraryNodes, {
-		updateLibraryNode,
-		pushToLibraryNode,
-		pullFromLibraryNode,
-		softRemoveLibraryNode,
-	} from '/imports/api/library/LibraryNodes.js';
-	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-	import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-	import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
-	import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
-	import { get } from 'lodash';
+  import LibraryNodes, {
+    updateLibraryNode,
+    pushToLibraryNode,
+    pullFromLibraryNode,
+    softRemoveLibraryNode,
+  } from '/imports/api/library/LibraryNodes.js';
+  import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
+  import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+  import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+  import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
+  import { get } from 'lodash';
+  import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 
-	export default {
-	  components: {
-			...propertyFormIndex,
-			PropertyIcon,
-	    DialogBase,
-	  },
-		props: {
-			_id: String,
-		},
-		meteor: {
-			model(){
-				return LibraryNodes.findOne(this._id);
-			},
-		},
-		methods: {
-			getPropertyName,
-			change({path, value, ack}){
-	      updateLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
-					ack && ack(error && error.reason || error);
-				});
-			},
-	    push({path, value, ack}){
-				pushToLibraryNode.call({_id: this._id, path, value}, (error, result) =>{
-					ack && ack(error && error.reason || error);
-				});
-	    },
-	    pull({path, ack}){
-				let itemId = get(this.model, path)._id;
-				path.pop();
-				pullFromLibraryNode.call({_id: this._id, path, itemId}, (error, result) =>{
-					ack && ack(error && error.reason || error);
-				});
-	    },
-			remove(){
-				softRemoveLibraryNode.call({_id: this._id});
-				this.$store.dispatch('popDialogStack');
-			},
-		}
-	};
+  export default {
+    components: {
+      ...propertyFormIndex,
+      PropertyIcon,
+      DialogBase,
+    },
+    props: {
+      _id: String,
+    },
+    reactiveProvide: {
+      name: 'context',
+      include: ['debounceTime', 'editPermission'],
+    },
+    data(){return {
+      debounceTime: 0,
+    }},
+    meteor: {
+      model(){
+        return LibraryNodes.findOne(this._id);
+      },
+      editPermission(){
+        try {
+          assertDocEditPermission(this.model, Meteor.userId());
+          return true;
+        } catch (e) {
+          return false;
+        }
+      },
+    },
+    methods: {
+      getPropertyName,
+      change({path, value, ack}){
+        updateLibraryNode.call({_id: this._id, path, value}, (error) =>{
+          ack && ack(error && error.reason || error);
+        });
+      },
+      push({path, value, ack}){
+        pushToLibraryNode.call({_id: this._id, path, value}, (error) =>{
+          ack && ack(error && error.reason || error);
+        });
+      },
+      pull({path, ack}){
+        let itemId = get(this.model, path)._id;
+        path.pop();
+        pullFromLibraryNode.call({_id: this._id, path, itemId}, (error) =>{
+          ack && ack(error && error.reason || error);
+        });
+      },
+      remove(){
+        softRemoveLibraryNode.call({_id: this._id});
+        this.$store.dispatch('popDialogStack');
+      },
+    }
+  };
 </script>
 
 <style lang="css" scoped>
