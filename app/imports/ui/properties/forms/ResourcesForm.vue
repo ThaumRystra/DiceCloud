@@ -28,7 +28,7 @@
         <template #activator="{ on }">
           <v-btn
             :loading="addResourceLoading"
-            :disabled="addResourceLoading"
+            :disabled="addResourceLoading || context.editPermission === false"
             icon
             large
             outline
@@ -61,6 +61,9 @@
     components: {
       AttributesConsumedListForm,
       ItemsConsumedListForm,
+    },
+    inject: {
+      context: { default: {} }
     },
     mixins: [propertyFormMixin],
     props: {

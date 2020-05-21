@@ -1,8 +1,10 @@
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js'
 
 /**
  * Libraries are trees of library nodes where each node represents a character
@@ -38,6 +40,15 @@ const insertLibrary = new ValidatedMethod({
   ],
   schema: LibrarySchema.omit('owner', 'isDefault'),
   run(library) {
+    if (!this.userId) {
+      throw new Meteor.Error('Libraries.methods.insert.denied',
+      'You need to be logged in to insert a library');
+    }
+    let tier = getUserTier(this.userId);
+    if (!tier.paidBenefits){
+      throw new Meteor.Error('Libraries.methods.insert.denied',
+      `The ${tier.name} tier does not allow you to insert a library`);
+    }
     library.owner = this.userId;
 		return Libraries.insert(library);
   },

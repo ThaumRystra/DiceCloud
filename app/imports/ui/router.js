@@ -1,5 +1,4 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
 import { acceptInviteToken } from '/imports/api/users/Invites.js';
 
@@ -43,25 +42,6 @@ function ensureLoggedIn(to, from, next){
         next()
       } else {
         next({ name: 'signIn', query: { redirect: to.path} });
-      }
-    }
-  });
-}
-
-function ensurePaidFeatures(to, from, next){
-  Tracker.autorun((computation) => {
-    if (userSubscription.ready()){
-      computation.stop();
-      const user = Meteor.user();
-      if (!user){
-        next({ name: 'signIn', query: { redirect: to.path} });
-        return;
-      }
-      let tier = getUserTier(user);
-      if (tier && tier.paidBenefits){
-        next();
-      } else {
-        next('/patreon-level-too-low');
       }
     }
   });
@@ -118,7 +98,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character List',
       },
-      beforeEnter: ensurePaidFeatures,
+      beforeEnter: ensureLoggedIn,
     },{
       path: '/library',
       components: {
@@ -127,7 +107,7 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Library',
       },
-      beforeEnter: ensurePaidFeatures,
+      beforeEnter: ensureLoggedIn,
     },{
       name: 'singleLibrary',
       path: '/library/:id',
@@ -138,7 +118,6 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Library',
       },
-      beforeEnter: ensurePaidFeatures,
     },{
       path: '/character/:id/:urlName',
       components: {
@@ -149,7 +128,6 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character Sheet',
       },
-      beforeEnter: ensurePaidFeatures,
     },{
       path: '/character/:id',
       components: {
@@ -160,7 +138,6 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character Sheet',
       },
-      beforeEnter: ensurePaidFeatures,
     },{
       path: '/friends',
       components: {

@@ -59,7 +59,11 @@ export function getTierByEntitledCents(entitledCents = 0){
 export function getUserTier(user){
   if (!user) throw 'user must be provided';
   if (typeof user === 'string'){
-    user = Meteor.users.findOne(user);
+    user = Meteor.users.findOne(user, {
+      fields: {
+        'services.patreon': 1,
+      }
+    });
     if (!user) throw 'User not found';
   }
   const entitledCents = getEntitledCents(user);

@@ -1,5 +1,5 @@
-<template>
-  <div>
+<template lang="html">
+  <dialog-base>
     <v-layout
       column
       align-center
@@ -10,7 +10,7 @@
       </h2>
       <h3>
         You need to be at least Adventurer tier (or be invited by a Patron of
-        a higher tier) to access this beta
+        a higher tier) to perform this action
       </h3>
       <v-btn
         href="https://www.patreon.com/join/dicecloud/checkout?rid=3002853"
@@ -19,13 +19,25 @@
         Join now
       </v-btn>
     </v-layout>
-  </div>
+    <v-spacer slot="actions" />
+    <v-btn
+      slot="actions"
+      flat
+      @click="$store.dispatch('popDialogStack')"
+    >
+      Cancel
+    </v-btn>
+  </dialog-base>
 </template>
 
 <script>
 import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 export default {
+  components: {
+    DialogBase,
+  },
   meteor: {
     tier(){
       let user = Meteor.user();

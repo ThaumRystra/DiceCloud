@@ -53,6 +53,18 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-card>
+    <v-btn
+      color="accent"
+      fab
+      fixed
+      bottom
+      right
+      data-id="new-character-button"
+      @click="insertCharacter"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <!--
     <v-speed-dial
       v-model="fab"
       fixed
@@ -72,6 +84,7 @@
       <labeled-fab
         icon="face"
         label="New Character"
+        data-id="new-character-button"
         @click="insertCharacter"
       />
       <labeled-fab
@@ -79,6 +92,7 @@
         label="New Party"
       />
     </v-speed-dial>
+    -->
   </div>
 </template>
 
@@ -86,6 +100,7 @@
   import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
   import Parties from '/imports/api/campaign/Parties.js';
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
+  import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
   const characterTransform = function(char){
     char.url = `/character/${char._id}/${char.urlName || '-'}`;
@@ -136,26 +151,21 @@
     },
     methods: {
       insertCharacter(){
-        insertCreature.call((error, result) => {
-          if (error){
-            console.error(error);
-          } else {
-            this.$router.push({ path: `/character/${result}`})
-          }
-        });
-
-        /*
-        store.commit("pushDialogStack", {
-           component: CharacterCreationDialog,
-           data: {},
-           element: undefined,
-           returnElement: undefined,
-           callback(result){
-             if (!result) return;
-             insertCreature.call(result);
-           },
-        });
-        */
+        let tier = getUserTier(Meteor.userId());
+        if (tier.paidBenefits){
+          insertCreature.call((error, result) => {
+            if (error){
+              console.error(error);
+            } else {
+              this.$router.push({ path: `/character/${result}`})
+            }
+          });
+        } else {
+          this.$store.commit('pushDialogStack', {
+            component: 'tier-too-low-dialog',
+            elementId: 'new-character-button',
+          });
+        }
       },
     }
   };

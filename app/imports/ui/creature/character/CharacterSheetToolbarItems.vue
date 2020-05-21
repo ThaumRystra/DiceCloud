@@ -1,6 +1,7 @@
 <template lang="html">
   <v-toolbar-items v-if="creature">
     <v-btn
+      v-if="editPermission"
       flat
       icon
       @click="recompute(creature._id)"

@@ -4,6 +4,7 @@ import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 import '/imports/api/creature/removeCreature.js';
 
@@ -107,6 +108,11 @@ const insertCreature = new ValidatedMethod({
     if (!this.userId) {
       throw new Meteor.Error('Creatures.methods.insert.denied',
       'You need to be logged in to insert a creature');
+    }
+    let tier = getUserTier(this.userId);
+    if (!tier.paidBenefits){
+      throw new Meteor.Error('Creatures.methods.insert.denied',
+      `The ${tier.name} tier does not allow you to insert a creature`);
     }
 
 		// Create the creature document

@@ -1,17 +1,18 @@
 import { _ } from 'meteor/underscore';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 function assertIdValid(userId){
   if (!userId || typeof userId !== 'string'){
-    throw new Meteor.Error("Permission denied",
-      "No user ID given for edit permission check");
+    throw new Meteor.Error('Permission denied',
+      'No user ID given for edit permission check');
   }
 }
 
 function assertdocExists(doc){
   if (!doc){
-    throw new Meteor.Error("Permission denied",
-      `No such document exists`);
+    throw new Meteor.Error('Permission denied',
+      'No such document exists');
   }
 }
 
@@ -21,8 +22,8 @@ export function assertOwnership(doc, userId){
   if (doc.owner === userId ){
     return true;
   } else {
-    throw new Meteor.Error("Permission denied",
-      `You are not the owner of this document`);
+    throw new Meteor.Error('Permission denied',
+      'You are not the owner of this document');
   }
 }
 
@@ -35,11 +36,34 @@ export function assertOwnership(doc, userId){
 export function assertEditPermission(doc, userId) {
   assertIdValid(userId);
   assertdocExists(doc);
-  if (doc.owner === userId || _.contains(doc.writers, userId)){
+  let user = Meteor.users.findOne(userId, {
+    fields: {
+      'services.patreon': 1,
+      'roles': 1,
+    }
+  });
+
+  // Admin override
+  if (user.roles && user.roles.includes('admin')){
+    return true;
+  }
+
+  // Ensure the user is of a tier with paid benefits
+  let tier = getUserTier(user);
+  if (!tier.paidBenefits){
+    throw new Meteor.Error('Edit permission denied',
+      `The ${tier.name} tier does not allow you to edit this document`);
+  }
+
+  // Ensure the user is authorized for this specific document
+  if (
+    doc.owner === userId ||
+    _.contains(doc.writers, userId)
+  ){
     return true;
   } else {
-    throw new Meteor.Error("Edit permission denied",
-      `You do not have permission to edit this document`);
+    throw new Meteor.Error('Edit permission denied',
+      'You do not have permission to edit this document');
   }
 }
 
@@ -74,8 +98,8 @@ export function assertViewPermission(doc, userId) {
   ){
     return true;
   } else {
-    throw new Meteor.Error("View permission denied",
-      `You do not have permission to view this character`);
+    throw new Meteor.Error('View permission denied',
+      'You do not have permission to view this character');
   }
 }
 
