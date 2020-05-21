@@ -32,10 +32,10 @@
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  
+
 	export default {
+    mixins: [propertyFormMixin],
 		data(){return {
-      mixins: [propertyFormMixin],
 			damageTypes: [
         {
 					value: 'bludgeoning',

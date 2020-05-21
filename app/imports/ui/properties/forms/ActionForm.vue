@@ -82,7 +82,6 @@
           :value="model.reset"
           :error-messages="errors.reset"
           :menu-props="{auto: true, lazy: true}"
-          :debounce-time="debounceTime"
           @change="change('reset', ...arguments)"
         />
       </form-section>

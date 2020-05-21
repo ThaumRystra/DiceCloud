@@ -1,7 +1,7 @@
 export default {
   props: {
     model: {
-      type: Object,
+      type: [Object, Array],
       default: () => ({}),
     },
     errors: {
