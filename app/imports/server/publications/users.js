@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import '/imports/api/users/Users.js';
 import Invites from '/imports/api/users/Invites.js';
 
@@ -32,8 +33,19 @@ Meteor.publish('user', function(){
   ];
 });
 
+let userIdsSchema = new SimpleSchema({
+  ids: {
+    type: Array
+  },
+  'ids.$':{
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  }
+})
+
 Meteor.publish('userPublicProfiles', function(ids){
-	if (!this.userId || !Array.isArray(ids)) return [];
+  userIdsSchema.validate({ids});
+	if (!this.userId) return this.ready();
 	return Meteor.users.find({
 		_id: {$in: ids}
 	},{

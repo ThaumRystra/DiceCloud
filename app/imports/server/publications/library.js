@@ -1,44 +1,61 @@
+import SimpleSchema from 'simpl-schema';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 
 const standardLibraryIds = [
-	'SRDLibraryGA3XWsd',
+  'SRDLibraryGA3XWsd',
 ];
 
 Meteor.publish('standardLibraries', function(){
-	return Libraries.find({_id: {$in: standardLibraryIds}});
+  return Libraries.find({_id: {$in: standardLibraryIds}});
 });
 
 Meteor.publish('libraries', function(){
-  if (!this.userId) return [];
-	const user = Meteor.user();
-	const subs = user && user.subscribedLibraries || [];
-	return Libraries.find({
-		$or: [
-			{owner: this.userId},
-			{writers: this.userId},
-			{readers: this.userId},
-			{_id: {$in: subs}},
-		]
-	});
+  this.autorun(function (){
+    if (!this.userId) {
+      return this.ready();
+    }
+    const user = Meteor.users.findOne(this.userId, {
+      fields: {subscribedLibraries: 1}
+    });
+    const subs = user && user.subscribedLibraries || [];
+    return Libraries.find({
+      $or: [
+        {owner: this.userId},
+        {writers: this.userId},
+        {readers: this.userId},
+        {_id: {$in: subs}},
+      ]
+    });
+  });
+});
+
+let libraryIdSchema = new SimpleSchema({
+  libraryId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
 });
 
 Meteor.publish('library', function(libraryId){
-	if (!this.userId) return [];
-	let libraryCursor = Libraries.find({
-		_id: libraryId,
-		$or: [
-			{owner: this.userId},
-			{writers: this.userId},
-			{readers: this.userId},
-      {public: true},
-		],
-	});
-	if (!libraryCursor.count()) return [];
-	return [
-		libraryCursor,
-		LibraryNodes.find({
-			'ancestors.id': libraryId,
-		}),
-	];
+  libraryIdSchema.validate({libraryId});
+  this.autorun(function (){
+    if (!this.userId) return [];
+    let libraryCursor = Libraries.find({
+      _id: libraryId,
+      $or: [
+        {owner: this.userId},
+        {writers: this.userId},
+        {readers: this.userId},
+        {public: true},
+      ],
+    });
+    if (!libraryCursor.count()) return this.ready();
+    return [
+      libraryCursor,
+      LibraryNodes.find({
+        'ancestors.id': libraryId,
+      }),
+    ];
+  });
 });

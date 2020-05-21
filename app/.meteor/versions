@@ -27,6 +27,8 @@ caching-html-compiler@1.1.3
 callback-hook@1.3.0
 check@1.3.1
 chuangbo:marked@0.3.5_1
+coffeescript@2.4.1
+coffeescript-compiler@2.4.1
 dburles:collection-helpers@1.1.0
 dburles:mongo-collection-instances@0.3.5
 ddp@1.4.0
@@ -91,6 +93,12 @@ observe-sequence@1.0.16
 ongoworks:speakingurl@9.0.0
 ordered-dict@1.1.0
 patreon-oauth@0.1.0
+peerlibrary:assert@0.3.0
+peerlibrary:extend-publish@0.6.0
+peerlibrary:fiber-utils@0.10.0
+peerlibrary:reactive-mongo@0.4.0
+peerlibrary:reactive-publish@0.10.0
+peerlibrary:server-autorun@0.8.0
 percolate:migrations@0.9.8
 percolate:synced-cron@1.3.2
 promise@0.11.2
