@@ -35,7 +35,8 @@ Meteor.publish('user', function(){
 
 let userIdsSchema = new SimpleSchema({
   ids: {
-    type: Array
+    type: Array,
+    optional: true,
   },
   'ids.$':{
     type: String,
@@ -45,7 +46,7 @@ let userIdsSchema = new SimpleSchema({
 
 Meteor.publish('userPublicProfiles', function(ids){
   userIdsSchema.validate({ids});
-	if (!this.userId) return this.ready();
+	if (!this.userId || !ids) return this.ready();
 	return Meteor.users.find({
 		_id: {$in: ids}
 	},{
