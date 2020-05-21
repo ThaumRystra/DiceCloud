@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-toolbar-items>
+  <v-toolbar-items v-if="creature">
     <v-btn
       flat
       icon
@@ -142,7 +142,7 @@ export default {
       },
     },
     creature(){
-      return Creatures.findOne(this.creatureId) || {};
+      return Creatures.findOne(this.creatureId);
     },
     editPermission(){
       try {

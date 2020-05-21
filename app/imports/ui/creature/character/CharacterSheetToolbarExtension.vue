@@ -1,5 +1,6 @@
 <template lang="html">
   <v-tabs
+    v-if="creature"
     slot="extension"
     :value="value"
     centered
@@ -29,13 +30,20 @@
 </template>
 
 <script>
+import Creatures from '/imports/api/creature/Creatures.js';
+
 export default {
   props: {
     value: {
       type: Number,
       required: true,
     },
-  }
+  },
+  meteor: {
+    creature(){
+      return Creatures.findOne(this.$route.params.id);
+    },
+  },
 }
 </script>
 

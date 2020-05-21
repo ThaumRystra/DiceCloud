@@ -2,7 +2,35 @@
   <div class="character-sheet fill-height">
     <v-fade-transition mode="out-in">
       <div
-        v-if="$subReady.singleCharacter"
+        v-if="!$subReady.singleCharacter"
+        key="character-loading"
+        class="fill-height layout justify-center align-center"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="64"
+        />
+      </div>
+      <div
+        v-else-if="!creature"
+      >
+        <v-layout
+          column
+          align-center
+          justify-center
+        >
+          <h2 style="margin: 48px 28px 16px">
+            Character not found
+          </h2>
+          <h3>
+            Either this character does not exist, or you don't have permission
+            to view it.
+          </h3>
+        </v-layout>
+      </div>
+      <div
+        v-else
         key="character-tabs"
         class="fill-height"
       >
@@ -28,17 +56,6 @@
             <tree-tab :creature-id="creatureId" />
           </v-tab-item>
         </v-tabs-items>
-      </div>
-      <div
-        v-else
-        key="character-loading"
-        class="fill-height layout justify-center align-center"
-      >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="64"
-        />
       </div>
     </v-fade-transition>
   </div>
@@ -94,7 +111,7 @@
 				},
 			},
 			creature(){
-				return Creatures.findOne(this.creatureId) || {};
+				return Creatures.findOne(this.creatureId);
 			},
       editPermission(){
         try {
