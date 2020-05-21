@@ -1,37 +1,51 @@
 <template lang="html">
-	<v-card class="resource-card layout row" :class="hover ? 'elevation-8': ''">
-		<div class="buttons layout column justify-center pl-3">
-			<v-btn icon small :disabled="currentValue >= value" @click="increment(1)">
-				<v-icon>arrow_drop_up</v-icon>
-			</v-btn>
-			<v-btn icon small :disabled="currentValue <= 0" @click="increment(-1)">
-				<v-icon>arrow_drop_down</v-icon>
-			</v-btn>
-		</div>
-		<div
-			class="layout row align-center value pl-2 pr-3"
-		>
-			<div class="display-1">{{currentValue}}</div>
-			<div class="title ml-2 max-value">/{{value}}</div>
-		</div>
-		<div
-			class="content layout row align-center pr-3"
-			@click="click"
-			@mouseover="hover = true"
-			@mouseleave="hover = false"
-		>
-			<div class="text-truncate ">
-				{{name}}
-			</div>
-		</div>
-	</v-card>
+  <v-card
+    class="resource-card layout row"
+    :class="hover ? 'elevation-8': ''"
+  >
+    <div class="buttons layout column justify-center pl-3">
+      <v-btn
+        icon
+        small
+        :disabled="currentValue >= value || context.editPermission === false"
+        @click="increment(1)"
+      >
+        <v-icon>arrow_drop_up</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        small
+        :disabled="currentValue <= 0 || context.editPermission === false"
+        @click="increment(-1)"
+      >
+        <v-icon>arrow_drop_down</v-icon>
+      </v-btn>
+    </div>
+    <div
+      class="layout row align-center value pl-2 pr-3"
+    >
+      <div class="display-1">
+        {{ currentValue }}
+      </div>
+      <div class="title ml-2 max-value">
+        /{{ value }}
+      </div>
+    </div>
+    <div
+      class="content layout row align-center pr-3"
+      @click="click"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+    >
+      <div class="text-truncate ">
+        {{ name }}
+      </div>
+    </div>
+  </v-card>
 </template>
 
 <script>
 	export default {
-		data(){ return{
-			hover: false,
-		}},
 		props: {
 			_id: String,
 			name: String,
@@ -39,6 +53,12 @@
 			value: Number,
 			damage: Number,
 		},
+		data(){ return{
+			hover: false,
+		}},
+    inject: {
+      context: { default: {} }
+    },
 		computed: {
 			currentValue(){
 				return this.value - (this.damage || 0);

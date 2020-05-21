@@ -1,103 +1,128 @@
 <template>
-	<v-layout
-		row
-		wrap
-		align-center
-		justify-center
-		style="min-height: 48px;"
-		:class="{ hover }"
-		class="my-3 health-bar"
-		:data-id="_id"
-	>
-		<div
-			class="subheading text-truncate pa-2 name"
-			@mouseover="hover = true"
-			@mouseleave="hover = false"
-			@click="$emit('click')"
-		>
-			{{ name }}
-		</div>
-		<v-flex style="height: 20px; flex-basis: 300px; flex-grow: 100;">
-			<v-layout
-				column
-				align-center
-				@click="edit"
-				style="cursor: pointer;"
-				class="bar"
-			>
-				<v-progress-linear
-					:value="(value / maxValue) * 100"
-					height="20"
-					color="green lighten-1"
-					class="ma-0"
-				>
-				</v-progress-linear>
-				<span
-					class="value"
-					style="margin-top: -20px; z-index: 1; font-size: 15px; font-weight: 600; height: 20px;"
-				>
-					{{ value }} / {{ maxValue }}
-				</span>
-			</v-layout>
-			<transition name="transition">
-				<v-toolbar
-					v-if="editing"
-					justify-center
-					height="48"
-					flat
-					class="transparent toolbar"
-				>
-					<v-spacer />
-					<v-btn-toggle
-						:value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
-						@click="$refs.editInput.focus()"
-						class="mr-2"
-					>
-						<v-btn
-							@click="toggleAdd(); $nextTick(() => $refs.editInput.focus())"
-							class="filled"
-						>
-							<v-icon>add</v-icon>
-						</v-btn>
-						<v-btn
-							@click="toggleSubtract(); $nextTick(() => $refs.editInput.focus())"
-							class="filled"
-						>
-							<v-icon>remove</v-icon>
-						</v-btn>
-					</v-btn-toggle>
-					<v-text-field
-						solo
-						hide-details
-						type="number"
-						v-if="editing"
-						ref="editInput"
-						style="max-width: 120px;"
-						min="0"
-						:value="editValue"
-						:prepend-inner-icon="operationIcon(operation)"
-						@focus="$event.target.select()"
-						@keypress="keypress"
-					>
-					</v-text-field>
-					<v-btn small fab @click="commitEdit" class="filled" color="red">
-						<v-icon>done</v-icon>
-					</v-btn>
-					<v-btn small fab @click="cancelEdit" class="mx-0 filled">
-						<v-icon>close</v-icon>
-					</v-btn>
-					<v-spacer />
-				</v-toolbar>
-			</transition>
-		</v-flex>
-		<transition name="background-transition">
-			<div v-if="editing" class="page-tint" @click="cancelEdit" />
-		</transition>
-	</v-layout>
+  <v-layout
+    row
+    wrap
+    align-center
+    justify-center
+    style="min-height: 48px;"
+    :class="{ hover }"
+    class="my-3 health-bar"
+    :data-id="_id"
+  >
+    <div
+      class="subheading text-truncate pa-2 name"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+      @click="$emit('click')"
+    >
+      {{ name }}
+    </div>
+    <v-flex style="height: 20px; flex-basis: 300px; flex-grow: 100;">
+      <v-layout
+        column
+        align-center
+        style="cursor: pointer;"
+        class="bar"
+        @click="edit"
+      >
+        <v-progress-linear
+          :value="(value / maxValue) * 100"
+          height="20"
+          color="green lighten-1"
+          class="ma-0"
+        />
+        <span
+          class="value"
+          style="margin-top: -20px; z-index: 1; font-size: 15px; font-weight: 600; height: 20px;"
+        >
+          {{ value }} / {{ maxValue }}
+        </span>
+      </v-layout>
+      <transition name="transition">
+        <v-toolbar
+          v-if="editing"
+          justify-center
+          height="48"
+          flat
+          class="transparent toolbar"
+        >
+          <v-spacer />
+          <v-btn-toggle
+            :value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
+            class="mr-2"
+            @click="$refs.editInput.focus()"
+          >
+            <v-btn
+              :disabled="context.editPermission === false"
+              class="filled"
+              @click="toggleAdd(); $nextTick(() => $refs.editInput.focus())"
+            >
+              <v-icon>add</v-icon>
+            </v-btn>
+            <v-btn
+              :disabled="context.editPermission === false"
+              class="filled"
+              @click="toggleSubtract(); $nextTick(() => $refs.editInput.focus())"
+            >
+              <v-icon>remove</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+          <v-text-field
+            v-if="editing"
+            ref="editInput"
+            solo
+            hide-details
+            type="number"
+            style="max-width: 120px;"
+            min="0"
+            :value="editValue"
+            :prepend-inner-icon="operationIcon(operation)"
+            :disabled="context.editPermission === false"
+            @focus="$event.target.select()"
+            @keypress="keypress"
+          />
+          <v-btn
+            small
+            fab
+            class="filled"
+            color="red"
+            @click="commitEdit"
+          >
+            <v-icon>done</v-icon>
+          </v-btn>
+          <v-btn
+            small
+            fab
+            class="mx-0 filled"
+            @click="cancelEdit"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
+          <v-spacer />
+        </v-toolbar>
+      </transition>
+    </v-flex>
+    <transition name="background-transition">
+      <div
+        v-if="editing"
+        class="page-tint"
+        @click="cancelEdit"
+      />
+    </transition>
+  </v-layout>
 </template>
 
 <script>
 	export default {
+    inject: {
+      context: { default: {} }
+    },
+		props: {
+			value: Number,
+			maxValue: Number,
+			name: String,
+			_id: String,
+		},
 		data() {
 			return {
 				editing: false,
@@ -105,12 +130,6 @@
 				operation: 3,
 				hover: false,
 			};
-		},
-		props: {
-			value: Number,
-			maxValue: Number,
-			name: String,
-			_id: String,
 		},
 		methods: {
 			edit() {
@@ -138,7 +157,7 @@
 					case 'set':
 						return 'forward';
 					case 'add':
-					  return 'add';
+            return 'add';
 					case 'subtract':
 						return 'remove';
 				}

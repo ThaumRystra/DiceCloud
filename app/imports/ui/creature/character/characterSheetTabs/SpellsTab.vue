@@ -5,6 +5,7 @@
         <v-card>
           <v-card-text>
             <v-switch
+              v-if="context.editPermission !== false"
               v-model="organize"
               label="Organize"
               class="justify-end"
@@ -48,6 +49,9 @@ export default {
 		CreaturePropertiesTree,
 		SpellListCard,
 	},
+  inject: {
+    context: { default: {} }
+  },
 	props: {
 		creatureId: {
       type: String,

@@ -48,17 +48,13 @@
   //TODO add a "no character found" screen if shown on a false address
   // or on a character the user does not have permission to view
 	import Creatures from '/imports/api/creature/Creatures.js';
-	import removeCreature from '/imports/api/creature/removeCreature.js';
-	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
-	import { mapMutations } from 'vuex';
-	import { theme } from '/imports/ui/theme.js';
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
 	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
 	import PersonaTab from '/imports/ui/creature/character/characterSheetTabs/PersonaTab.vue';
 	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
-	import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
+  import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 
 	export default {
 		components: {
@@ -81,7 +77,7 @@
 		},
     reactiveProvide: {
       name: 'context',
-      include: ['creature'],
+      include: ['creature', 'editPermission'],
     },
     onMounted(){
       this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
@@ -100,6 +96,14 @@
 			creature(){
 				return Creatures.findOne(this.creatureId) || {};
 			},
+      editPermission(){
+        try {
+          assertEditPermission(this.creature, Meteor.userId());
+          return true;
+        } catch (e) {
+          return false;
+        }
+      },
 		},
 	}
 </script>

@@ -21,6 +21,7 @@
         >
           <v-spacer />
           <v-switch
+            v-if="context.editPermission !== false"
             v-model="organize"
             label="Organize"
             class="mx-3"
@@ -152,6 +153,9 @@
       PropertyViewer,
       PropertyIcon,
       LabeledFab,
+    },
+    inject: {
+      context: { default: {} }
     },
     props: {
       creatureId: {

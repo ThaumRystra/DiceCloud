@@ -17,7 +17,7 @@
           <v-btn
             icon
             small
-            :disabled="currentValue >= model.value"
+            :disabled="currentValue >= model.value || context.editPermission === false"
             @click="increment(1)"
           >
             <v-icon>arrow_drop_up</v-icon>
@@ -25,7 +25,7 @@
           <v-btn
             icon
             small
-            :disabled="currentValue <= 0"
+            :disabled="currentValue <= 0 || context.editPermission === false"
             @click="increment(-1)"
           >
             <v-icon>arrow_drop_down</v-icon>
@@ -68,6 +68,9 @@ import ComputedForCreature from '/imports/ui/components/computation/ComputedForC
 export default {
   components: {
     Computed: ComputedForCreature,
+  },
+  inject: {
+    context: { default: {} }
   },
 	props: {
     model: {

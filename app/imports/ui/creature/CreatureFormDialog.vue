@@ -6,6 +6,7 @@
     <div>
       <creature-form
         :model="model"
+        :disabled="editPermission === false"
         @change="change"
       />
     </div>
@@ -25,6 +26,7 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import {updateCreature} from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import CreatureForm from '/imports/ui/creature/CreatureForm.vue'
+import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 
 export default {
 	components: {
@@ -39,6 +41,14 @@ export default {
 		model(){
 			return Creatures.findOne(this._id);
 		},
+    editPermission(){
+      try {
+        assertEditPermission(this.model, Meteor.userId());
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
 	},
 	methods: {
 		change({path, value, ack}){

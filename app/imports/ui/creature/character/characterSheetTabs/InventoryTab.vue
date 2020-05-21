@@ -5,6 +5,7 @@
         <toolbar-card color="">
           <v-spacer slot="toolbar" />
           <v-switch
+            v-if="context.editPermission !== false"
             slot="toolbar"
             v-model="organize"
             label="Organize"
@@ -53,6 +54,9 @@ export default {
 		ContainerCard,
     ToolbarCard,
 	},
+  inject: {
+    context: { default: {} }
+  },
 	props: {
 		creatureId: String,
 	},
