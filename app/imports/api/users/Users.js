@@ -80,6 +80,7 @@ const userSchema = new SimpleSchema({
   profile: {
     type: Object,
     blackbox: true,
+    optional: true,
   },
 });
 
