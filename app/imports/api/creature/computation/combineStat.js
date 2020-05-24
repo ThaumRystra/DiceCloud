@@ -51,7 +51,7 @@ function combineSkill(stat, aggregator, memo){
 
   if (typeof profBonus !== 'number' && memo.statsByVariableName['level']){
     let level = memo.statsByVariableName['level'].value;
-    profBonus = Math.floor(level / 4 + 1.75);
+    profBonus = Math.ceil(level / 4) + 1;
   }
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;
@@ -60,7 +60,6 @@ function combineSkill(stat, aggregator, memo){
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;
   result = Math.floor(result);
-  if (aggregator.base > result) result = aggregator.base;
   stat.value = result;
   // Advantage/disadvantage
   if (aggregator.advantage && !aggregator.disadvantage){
