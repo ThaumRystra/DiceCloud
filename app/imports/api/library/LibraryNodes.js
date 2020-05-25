@@ -52,10 +52,27 @@ const insertNode = new ValidatedMethod({
   name: 'LibraryNodes.methods.insert',
 	validate: null,
   run(libraryNode) {
+    delete libraryNode._id;
     assertNodeEditPermission(libraryNode, this.userId);
 		return LibraryNodes.insert(libraryNode);
   },
 });
+
+const duplicateNode = new ValidatedMethod({
+  name: 'LibraryNodes.methods.duplicate',
+	validate: new SimpleSchema({
+    _id: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    }
+  }).validator(),
+  run({_id}) {
+    let libraryNode = LibraryNodes.findOne(_id);
+    assertNodeEditPermission(libraryNode, this.userId);
+    delete libraryNode._id;
+		return LibraryNodes.insert(libraryNode);
+  },
+})
 
 const updateLibraryNode = new ValidatedMethod({
   name: 'LibraryNodes.methods.update',
@@ -132,6 +149,7 @@ export default LibraryNodes;
 export {
 	LibraryNodeSchema,
 	insertNode,
+  duplicateNode,
 	updateLibraryNode,
 	pullFromLibraryNode,
 	pushToLibraryNode,

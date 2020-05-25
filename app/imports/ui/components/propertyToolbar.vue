@@ -39,10 +39,25 @@
             </v-btn>
           </template>
           <v-list>
+            <v-list-tile @click="$emit('duplicate')">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Duplicate
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-icon>file_copy</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
             <v-list-tile @click="$emit('remove')">
-              <v-list-tile-title>
-                Delete <v-icon>delete</v-icon>
-              </v-list-tile-title>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Delete
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-icon>delete</v-icon>
+              </v-list-tile-action>
             </v-list-tile>
           </v-list>
         </v-menu>

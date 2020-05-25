@@ -5,6 +5,7 @@
         :model="model"
         :editing="editing"
         :flat="flat"
+        @duplicate="duplicate"
         @remove="remove"
         @toggle-editing="editing = !editing"
         @color-changed="value => change({path: ['color'], value})"
@@ -47,6 +48,7 @@
 
 <script>
   import LibraryNodes, {
+    duplicateNode,
     updateLibraryNode,
     pushToLibraryNode,
     pullFromLibraryNode,
@@ -106,6 +108,16 @@
     },
     methods: {
       getPropertyName,
+      duplicate(){
+        duplicateNode.call({_id: this._id}, (error) => {
+          console.error(error);
+          if (this.embedded){
+            this.$emit('duplicated');
+          } else {
+            this.$store.dispatch('popDialogStack');
+          }
+        });
+      },
       change({path, value, ack}){
         updateLibraryNode.call({_id: this._id, path, value}, (error) =>{
           if (ack){
