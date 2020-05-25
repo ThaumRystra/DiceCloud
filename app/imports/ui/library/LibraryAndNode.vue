@@ -1,20 +1,20 @@
 <template lang="html">
-  <div
-    class="layout row"
-    style="background-color: inherit;"
-  >
+  <tree-detail-layout>
     <div
+      slot="tree"
       class="layout column"
       style="
-				background-color: inherit;
-				width: initial;
-				max-width: 100%;
-				min-width: 320px;
-			"
+        background-color: inherit;
+        width: initial;
+        max-width: 100%;
+        min-width: 320px;
+        height: 100%;
+      "
     >
       <v-toolbar
-        dense
         flat
+        :color="selectedNode && selectedNode.color || 'secondary'"
+        :dark="isDarkColor(selectedNode && selectedNode.color || $vuetify.theme.secondary)"
       >
         <v-spacer />
         <v-switch
@@ -28,91 +28,87 @@
         edit-mode
         :organize-mode="organize"
         :selected-node-id="selected"
-        @selected="e => selected = e"
+        style="overflow-y: auto;"
+        @selected="clickNode"
       />
     </div>
-    <v-divider vertical />
     <div
-      style="width: 100%; background-color: inherit;"
+      slot="detail"
       data-id="selected-node-card"
     >
-      <v-toolbar
-        dense
-        flat
-      >
-        <property-icon
-          :type="selectedNode && selectedNode.type"
-          class="mr-2"
-        />
-        <div class="title">
-          {{ getPropertyName(selectedNode && selectedNode.type) }}
-        </div>
-        <v-spacer />
-        <v-btn
-          v-if="selectedNode"
-          flat
-          icon
-          @click="editLibraryNode"
-        >
-          <v-icon>create</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text style="overflow-y: auto;">
-        <property-viewer :model="selectedNode" />
-      </v-card-text>
+      <library-node-dialog
+        :_id="selected"
+        embedded
+        @removed="selected = undefined"
+      />
     </div>
-  </div>
+  </tree-detail-layout>
 </template>
 
 <script>
+import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
 import LibraryBrowser from '/imports/ui/library/LibraryBrowser.vue';
-import PropertyViewer from '/imports/ui/properties/shared/PropertyViewer.vue';
+import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import Libraries from '/imports/api/library/Libraries.js';
-import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 
 export default {
-	components: {
-		LibraryBrowser,
-		PropertyViewer,
-		PropertyIcon,
-	},
-	data(){ return {
-		organize: false,
-		selected: undefined,
-	};},
-	watch:{
-		selectedNode(val){
-			this.$emit('selected', val)
-		},
-	},
-	methods: {
-		editLibraryNode(){
-			this.$store.commit('pushDialogStack', {
-				component: 'library-node-edit-dialog',
-				elementId: 'selected-node-card',
-				data: {_id: this.selected},
-			});
-		},
-		getPropertyName,
-	},
-	meteor: {
-		$subscribe: {
-			'libraries': [],
-		},
-		libraries(){
-			return Libraries.find({}, {
-				sort: {name: 1}
-			}).fetch();
-		},
-		selectedNode(){
-			return LibraryNodes.findOne({
-				_id: this.selected,
-				removed: {$ne: true}
-			});
-		}
-	}
+  components: {
+    TreeDetailLayout,
+    LibraryBrowser,
+    LibraryNodeDialog,
+  },
+  data(){ return {
+    organize: false,
+    selected: undefined,
+  };},
+  watch:{
+    selectedNode(val){
+      this.$emit('selected', val)
+    },
+  },
+  methods: {
+    editLibraryNode(){
+      this.$store.commit('pushDialogStack', {
+        component: 'library-node-edit-dialog',
+        elementId: 'selected-node-card',
+        data: {_id: this.selected},
+      });
+    },
+    clickNode(id){
+      if (this.$vuetify.breakpoint.mdAndUp){
+        this.selected = id;
+      } else {
+        this.$store.commit('pushDialogStack', {
+          component: 'library-node-dialog',
+          elementId: `tree-node-${id}`,
+          data: {
+            _id: id,
+          },
+        });
+      }
+    },
+    getPropertyName,
+    isDarkColor,
+  },
+  meteor: {
+    $subscribe: {
+      'libraries': [],
+    },
+    libraries(){
+      return Libraries.find({}, {
+        sort: {name: 1}
+      }).fetch();
+    },
+    selectedNode(){
+      return LibraryNodes.findOne({
+        _id: this.selected,
+        removed: {$ne: true}
+      });
+    },
+  }
 };
 </script>
 

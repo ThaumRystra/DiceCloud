@@ -1,0 +1,116 @@
+<template lang="html">
+  <v-toolbar
+    :color="color || 'secondary'"
+    :dark="isDark"
+    :flat="flat"
+  >
+    <property-icon
+      :type="model && model.type"
+      class="mr-2"
+    />
+    <v-toolbar-title v-if="model">
+      {{ model.name || getPropertyName(model.type) }}
+    </v-toolbar-title>
+    <v-spacer />
+    <v-slide-y-transition
+      hide-on-leave
+    >
+      <v-layout
+        v-if="editing && model"
+        key="edit-buttons"
+      >
+        <v-spacer />
+        <color-picker
+          v-if="false"
+          :value="model.color"
+          @input="colorChanged"
+        />
+        <v-menu
+          bottom
+          left
+          transition="slide-y-transition"
+        >
+          <template #activator="{ on }">
+            <v-btn
+              icon
+              v-on="on"
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-tile @click="$emit('remove')">
+              <v-list-tile-title>
+                Delete <v-icon>delete</v-icon>
+              </v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </v-layout>
+      <v-layout
+        v-else
+        key="blank"
+      />
+    </v-slide-y-transition>
+    <v-btn
+      icon
+      @click="$emit('toggle-editing')"
+    >
+      <v-slide-y-transition
+        hide-on-leave
+      >
+        <v-icon
+          v-if="editing"
+          key="doneIcon"
+        >
+          done
+        </v-icon>
+        <v-icon
+          v-else
+          key="createIcon"
+        >
+          create
+        </v-icon>
+      </v-slide-y-transition>
+    </v-btn>
+  </v-toolbar>
+</template>
+
+<script>
+import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import ColorPicker from '/imports/ui/components/ColorPicker.vue';
+
+export default {
+  components: {
+    PropertyIcon,
+    ColorPicker,
+  },
+  props: {
+    model: {
+      type: Object,
+      default: undefined,
+    },
+    flat: Boolean,
+    editing: Boolean,
+  },
+  computed: {
+    isDark(){
+      return isDarkColor(this.color);
+    },
+    color(){
+      return this.model && this.model.color || this.$vuetify.theme.secondary;
+    }
+  },
+  methods: {
+    colorChanged(value){
+      this.$emit('color-changed', value);
+    },
+    getPropertyName,
+  }
+}
+</script>
+
+<style lang="css" scoped>
+</style>

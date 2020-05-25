@@ -2,6 +2,7 @@
   <v-tabs
     v-if="creature"
     slot="extension"
+    color="secondary"
     :value="value"
     centered
     grow

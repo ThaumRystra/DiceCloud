@@ -46,7 +46,7 @@
         v-show="showExpanded"
         class="pl-3"
       >
-        <v-fade-transition leave-absolute>
+        <v-fade-transition hide-on-leave>
           <tree-node-list
             v-if="showExpanded"
             :node="node"

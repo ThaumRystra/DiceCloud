@@ -1,106 +1,100 @@
 <template lang="html">
   <div
-    class="tree-tab pa-4"
+    class="tree-tab pa-4 layout column align-center"
     style="height: calc(100vh - 96px); display: flex;"
   >
     <v-card
-      class="layout row"
-      style="height: 100%;"
+      style="height: 100%; width: 100%; max-width: 1800px;"
       data-id="creature-tree-card"
     >
-      <div
-        class="layout column justify-start"
-        :style="
-          $vuetify.breakpoint.mdAndUp &&
-            'width: 320px; flex-shrink: 0; flex-grow: 0;'
-        "
-      >
-        <v-toolbar
-          flat
-          dense
-        >
-          <v-spacer />
-          <v-switch
-            v-if="context.editPermission !== false"
-            v-model="organize"
-            label="Organize"
-            class="mx-3"
-            :disabled="organizeDisabled"
-            style="flex-grow: 0; height: 32px;"
-          />
-          <v-combobox
-            ref="searchBox"
-            slot="extension"
-            v-model="filterString"
-            :items="filterOptions"
-            prepend-inner-icon="search"
-            class="mx-4"
-            hide-no-data
-            hide-selected
-            multiple
-            clearable
-            small-chips
-            deletable-chips
-          />
-        </v-toolbar>
-        <creature-properties-tree
-          class="pt-2 flex"
-          style="overflow-y: auto;"
-          :root="{collection: 'creatures', id: creatureId}"
-          :organize="organize"
-          :selected-node-id="selected"
-          :filter="filter"
-          @selected="clickNode"
-        />
-      </div>
-      <template v-if="$vuetify.breakpoint.mdAndUp">
-        <v-divider vertical />
-        <div
-          class="flex layout column"
-          style="background-color: inherit; overflow: hidden;"
-          data-id="selected-node-card"
-        >
+      <tree-detail-layout>
+        <template slot="tree">
           <v-toolbar
-            dense
             flat
-            extended
+            dense
           >
-            <v-fade-transition mode="out-in">
-              <div
-                :key="selectedProperty && selectedProperty._id"
-                class="title"
-              >
-                <property-icon
-                  :key="selectedProperty && selectedProperty._id"
-                  :type="selectedProperty && selectedProperty.type"
-                  class="mr-2"
-                />
-                {{ getPropertyName(selectedProperty && selectedProperty.type) }}
-              </div>
-            </v-fade-transition>
             <v-spacer />
-            <v-btn
-              v-if="selectedProperty"
-              flat
-              icon
-              @click="editCreatureProperty"
-            >
-              <v-icon>create</v-icon>
-            </v-btn>
+            <v-switch
+              v-if="context.editPermission !== false"
+              v-model="organize"
+              label="Organize"
+              class="mx-3"
+              :disabled="organizeDisabled"
+              style="flex-grow: 0; height: 32px;"
+            />
+            <v-combobox
+              ref="searchBox"
+              slot="extension"
+              v-model="filterString"
+              :items="filterOptions"
+              prepend-inner-icon="search"
+              class="mx-4"
+              hide-no-data
+              hide-selected
+              multiple
+              clearable
+              small-chips
+              deletable-chips
+            />
           </v-toolbar>
-          <v-card-text
-            class="flex"
-            style="overflow-y: auto"
+          <creature-properties-tree
+            class="pt-2 flex"
+            style="overflow-y: auto;"
+            :root="{collection: 'creatures', id: creatureId}"
+            :organize="organize"
+            :selected-node-id="selected"
+            :filter="filter"
+            @selected="clickNode"
+          />
+        </template>
+        <template slot="detail">
+          <div
+            class="flex layout column"
+            style="background-color: inherit; overflow: hidden;"
+            data-id="selected-node-card"
           >
-            <v-fade-transition mode="out-in">
-              <property-viewer
-                :key="selectedProperty && selectedProperty._id"
-                :model="selectedProperty"
-              />
-            </v-fade-transition>
-          </v-card-text>
-        </div>
-      </template>
+            <v-toolbar
+              dense
+              flat
+              extended
+            >
+              <v-fade-transition mode="out-in">
+                <div
+                  :key="selectedProperty && selectedProperty._id"
+                  class="title"
+                >
+                  <property-icon
+                    :key="selectedProperty && selectedProperty._id"
+                    :type="selectedProperty && selectedProperty.type"
+                    class="mr-2"
+                  />
+                  {{ getPropertyName(selectedProperty && selectedProperty.type) }}
+                </div>
+              </v-fade-transition>
+              <v-spacer />
+              <v-btn
+                v-if="selectedProperty"
+                flat
+                icon
+                @click="editCreatureProperty"
+              >
+                <v-icon>create</v-icon>
+              </v-btn>
+            </v-toolbar>
+            <v-card-text
+              class="flex"
+              style="overflow-y: auto"
+            >
+              <v-fade-transition mode="out-in">
+                <property-viewer
+                  :key="selectedProperty && selectedProperty._id"
+                  :model="selectedProperty"
+                />
+              </v-fade-transition>
+            </v-card-text>
+          </div>
+        </template>
+      </tree-detail-layout>
     </v-card>
     <v-speed-dial
       v-model="fab"
@@ -136,19 +130,22 @@
 </template>
 
 <script>
+  import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
   import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+  import PropertyViewer from '/imports/ui/properties/shared/PropertyViewer.vue';
+  import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+  import LabeledFab from '/imports/ui/components/LabeledFab.vue';
+
   import CreatureProperties, {
     insertProperty,
     insertPropertyFromLibraryNode
   } from '/imports/api/creature/CreatureProperties.js';
-  import PropertyViewer from '/imports/ui/properties/shared/PropertyViewer.vue';
   import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-  import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-  import LabeledFab from '/imports/ui/components/LabeledFab.vue';
 
   export default {
     components: {
+      TreeDetailLayout,
       CreaturePropertiesTree,
       PropertyViewer,
       PropertyIcon,

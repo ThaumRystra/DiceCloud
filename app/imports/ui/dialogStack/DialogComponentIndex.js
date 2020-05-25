@@ -7,7 +7,7 @@ import InviteDialog from '/imports/ui/user/InviteDialog.vue';
 import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
 import LibraryEditDialog from '/imports/ui/library/LibraryEditDialog.vue';
 import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
-import LibraryNodeEditDialog from '/imports/ui/library/LibraryNodeEditDialog.vue';
+import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
 import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
 import TierTooLowDialog from '/imports/ui/user/TierTooLowDialog.vue';
 import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
@@ -23,7 +23,7 @@ export default {
   LibraryCreationDialog,
   LibraryEditDialog,
   LibraryNodeCreationDialog,
-  LibraryNodeEditDialog,
+  LibraryNodeDialog,
 	ShareDialog,
   TierTooLowDialog,
   UsernameDialog,

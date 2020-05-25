@@ -1,193 +1,232 @@
 <template lang="html">
-	<v-menu
-		:close-on-content-click="false"
+  <v-menu
+    v-model="opened"
+    :close-on-content-click="false"
     transition="slide-y-transition"
-		lazy
-		v-model="opened"
-	>
-		<v-btn
-		  slot="activator"
-			icon
-		>
-		  <v-icon>format_paint</v-icon>
-		</v-btn>
-		<v-card class="overflow-hidden">
-			<v-card-text>
-				<v-item-group v-model="color" mandatory>
-		      <v-layout row wrap>
-	          <v-item
-							v-for="kebabColorOption in colors"
-		          :key="kebabColorOption"
-							:value="kebabToCamelCase(kebabColorOption)"
-						>
-	            <div
-	              slot-scope="{ active, toggle }"
-	              :class="[kebabColorOption, kebabShade]"
-								class="color-swatch d-flex align-center"
-	              @click="toggle"
-	            >
-	              <v-scroll-y-transition>
-	                <v-icon
-	                  v-if="active"
-										:class="{dark: isDark(kebabColorOption, kebabShade)}"
-	                >check</v-icon>
-	              </v-scroll-y-transition>
-	            </div>
-	          </v-item>
-						<div class="spacer" v-for="i in 8"/>
-		      </v-layout>
-			  </v-item-group>
-				<v-item-group class="mt-2" v-model="shade" mandatory>
-		      <v-layout wrap>
-	          <v-item
-							v-for="kebabShadeOption in shades"
-							:key="kebabShadeOption"
-							:value="kebabToCamelCase(kebabShadeOption)"
-						>
-	            <div
-	              slot-scope="{ active, toggle }"
-	              :class="[kebabColor, kebabShadeOption]"
-								class="shade-swatch d-flex align-center"
-	              @click="toggle"
-	            >
-	              <v-scroll-y-transition>
-	                <v-icon
-	                  v-if="active"
-										:class="{dark: isDark(kebabColor, kebabShadeOption)}"
-	                >check</v-icon>
-	              </v-scroll-y-transition>
-	            </div>
-	          </v-item>
-						<div class="spacer" v-for="i in 8"/>
-		      </v-layout>
-			  </v-item-group>
-			</v-card-text>
-			<v-card-actions>
-				<v-spacer/>
-				<v-btn flat @click="opened = false">Done</v-btn>
-			</v-card-actions>
-		</v-card>
+    lazy
+    left
+  >
+    <v-btn
+      slot="activator"
+      icon
+    >
+      <v-icon>format_paint</v-icon>
+    </v-btn>
+    <v-card class="overflow-hidden">
+      <v-card-text>
+        <v-layout
+          row
+          wrap
+        >
+          <div
+            v-for="colorOption in colors"
+            :key="colorOption"
+            :class="[colorOption, shade]"
+            class="color-swatch d-flex align-center"
+            @click="color = colorOption"
+          >
+            <v-scroll-y-transition>
+              <v-icon
+                v-if="colorOption === color"
+                :class="{dark: isDark(colorOption, shade)}"
+              >
+                check
+              </v-icon>
+            </v-scroll-y-transition>
+          </div>
+          <div
+            v-for="i in 8"
+            :key="i"
+            class="spacer"
+          />
+        </v-layout>
+        <v-fade-transition>
+          <v-layout
+            v-show="color"
+            wrap
+            class="mt-2"
+          >
+            <div
+              v-for="shadeOption in shades"
+              :key="shadeOption"
+              :class="[color, shadeOption]"
+              class="shade-swatch d-flex align-center"
+              @click="shade = shadeOption"
+            >
+              <v-scroll-y-transition>
+                <v-icon
+                  v-if="shade === shadeOption"
+                  :class="{dark: isDark(color, shade)}"
+                >
+                  check
+                </v-icon>
+              </v-scroll-y-transition>
+            </div>
+            <div
+              v-for="i in 8"
+              :key="i"
+              class="spacer"
+            />
+          </v-layout>
+        </v-fade-transition>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          flat
+          @click="$emit('input')"
+        >
+          Clear
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          flat
+          @click="opened = false"
+        >
+          Done
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </v-menu>
 </template>
 
 <script>
-	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
-	import vuetifyColors from 'vuetify/es5/util/colors';
-	import { kebabToCamelCase, camelToKebabCase } from '/imports/ui/utility/swapCase.js';
+  import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+  import vuetifyColors from 'vuetify/es5/util/colors';
+  import { kebabToCamelCase, camelToKebabCase } from '/imports/ui/utility/swapCase.js';
 
-	function colorToHex(color, shade = 'base'){
-		color = kebabToCamelCase(color);
-		shade = kebabToCamelCase(shade);
-		return vuetifyColors[color][shade];
-	};
+  function colorToHex(color, shade = 'base'){
+    if (!color) return;
+    color = kebabToCamelCase(color);
+    shade = kebabToCamelCase(shade);
+    return vuetifyColors[color] && vuetifyColors[color][shade];
+  }
 
-	// Create an index of hex colors and what color/shade combination makes them
-	let colorIndex = {};
-	for (let color in vuetifyColors){
-		for (let shade in vuetifyColors[color]){
-			colorIndex[vuetifyColors[color][shade]] = {color, shade};
-		}
-	}
-	function hexToColor(hex){
-		return colorIndex[hex.toLowerCase()];
-	};
+  // Create an index of hex colors and what color/shade combination makes them
+  let colorIndex = {};
+  for (let color in vuetifyColors){
+    color = camelToKebabCase(color);
+    for (let shade in vuetifyColors[color]){
+      shade = camelToKebabCase(shade);
+      colorIndex[vuetifyColors[color][shade]] = {color, shade};
+    }
+  }
+  function hexToColor(hex){
+    if (!hex) return undefined;
+    return colorIndex[hex.toLowerCase()];
+  }
 
-	export default {
-		props: {
-			value: String, //hex string
-		},
-		data(){ return {
-			colors: [
-				'red',
-				'pink',
-				'purple',
-				'deep-purple',
-				'indigo',
-				'blue',
-				'light-blue',
-				'cyan',
-				'teal',
-				'green',
-				'light-green',
-				'lime',
-				'yellow',
-				'amber',
-				'orange',
-				'deep-orange',
-				'brown',
-				'grey',
-			],
-			shades: [
-				'lighten-4',
-				'lighten-3',
-				'lighten-2',
-				'lighten-1',
-				'base',
-				'darken-1',
-				'darken-2',
-				'darken-3',
-				'darken-4',
-			],
-			opened: false,
-		}},
-		methods: {
-			isDark(kebabColor, kebabShade){
-				color = colorToHex(kebabColor, kebabShade);
-				return isDarkColor(color);
-			},
-			kebabToCamelCase,
-		},
-		computed: {
-			combination (){
-				return hexToColor(this.value) || {};
-			},
-			color: {
-				get(){
-					return this.combination.color;
-				},
-				set(newColor){
-					this.$emit('input', colorToHex(newColor, this.shade));
-				},
-			},
-			shade: {
-				get(){
-					return this.combination.shade;
-				},
-				set(newShade){
-					this.$emit('input', colorToHex(this.color, newShade));
-				},
-			},
-			kebabColor(){
-				return camelToKebabCase(this.color);
-			},
-			kebabShade(){
-				return camelToKebabCase(this.shade);
-			},
-		},
-	};
+  export default {
+    props: {
+     //hex string
+      value: {
+        type: String,
+        default: undefined,
+      },
+    },
+    data(){ return {
+      colors: [
+        'red',
+        'pink',
+        'purple',
+        'deep-purple',
+        'indigo',
+        'blue',
+        'light-blue',
+        'cyan',
+        'teal',
+        'green',
+        'light-green',
+        'lime',
+        'yellow',
+        'amber',
+        'orange',
+        'deep-orange',
+        'brown',
+        'grey',
+      ],
+      shades: [
+        'lighten-4',
+        'lighten-3',
+        'lighten-2',
+        'lighten-1',
+        'base',
+        'darken-1',
+        'darken-2',
+        'darken-3',
+        'darken-4',
+      ],
+      opened: false,
+    }},
+    computed: {
+      combination (){
+        if (!this.value) return;
+        return hexToColor(this.value) || {};
+      },
+      color: {
+        get(){
+          return this.combination && this.combination.color;
+        },
+        set(newColor){
+          console.log(newColor, colorToHex(newColor, this.shade));
+          this.$emit('input', colorToHex(newColor, this.shade));
+        },
+      },
+      shade: {
+        get(){
+          return this.combination && this.combination.shade;
+        },
+        set(newShade){
+          console.log(newShade, colorToHex(this.color, newShade));
+          this.$emit('input', colorToHex(this.color, newShade));
+        },
+      },
+      kebabColor(){
+        return camelToKebabCase(this.color);
+      },
+      kebabShade(){
+        return camelToKebabCase(this.shade);
+      },
+    },
+    methods: {
+      isDark(kebabColor, kebabShade){
+        let color = colorToHex(kebabColor, kebabShade);
+        return isDarkColor(color);
+      },
+      kebabToCamelCase,
+    },
+  };
 </script>
 
 <style lang="css" scoped>
-	.color-swatch, .shade-swatch {
-		height: 30px;
-		width: 30px;
-		flex-grow: 1;
-	}
-	.v-icon {
-		height: 30px;
-	}
-	.v-icon {
-		color: black;
-	}
-	.dark.v-icon {
-		color: white;
-	}
-	.layout {
-		max-width: 270px;
-	}
-	.spacer {
-		width: 30px;
-		height: 0;
-		flex-grow: 1;
-	}
+  .color-swatch, .shade-swatch {
+    height: 30px;
+    width: 30px;
+    flex-grow: 1;
+    cursor: pointer;
+    transition: all 0.2s linear;
+  }
+  .color-swatch:hover{
+    z-index: 1;
+    transform: scale(1.1);
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),
+      0px 1px 1px 0px rgba(0,0,0,0.14),
+      0px 1px 3px 0px rgba(0,0,0,0.12);
+  }
+  .v-icon {
+    height: 30px;
+  }
+  .v-icon {
+    color: black;
+  }
+  .dark.v-icon {
+    color: white;
+  }
+  .layout {
+    max-width: 270px;
+  }
+  .spacer {
+    width: 30px;
+    height: 0;
+    flex-grow: 1;
+  }
 </style>

@@ -21,7 +21,7 @@
 		props: {
 			autoGrow: {
 				type: Boolean,
-				default: true,
+				default: false,
 			},
 		},
 	};
