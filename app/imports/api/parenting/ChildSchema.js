@@ -22,6 +22,7 @@ let ChildSchema = new SimpleSchema({
   ancestors: {
     type: Array,
     defaultValue: [],
+    max: 100,
   },
   'ancestors.$': {
     type: RefSchema,
