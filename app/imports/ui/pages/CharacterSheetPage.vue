@@ -2,7 +2,7 @@
   <character-sheet
     show-menu-button
     :creature-id="$route.params.id"
-    :tabs="tabs"
+    :tabs.sync="activeTab"
   />
 </template>
 
@@ -16,6 +16,16 @@ export default {
     tabs: {
       type: Number,
       required: true,
+    },
+  },
+  computed: {
+    activeTab: {
+      get(){
+        return this.tabs;
+      },
+      set(newTab){
+        this.$emit('update:tabs', newTab);
+      },
     },
   },
 }

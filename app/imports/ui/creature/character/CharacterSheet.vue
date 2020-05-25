@@ -35,7 +35,7 @@
         class="fill-height"
       >
         <v-tabs-items
-          v-model="tabs"
+          v-model="activeTab"
         >
           <v-tab-item>
             <stats-tab :creature-id="creatureId" />
@@ -102,6 +102,16 @@
     watch: {
       'creature.name'(value){
         this.$store.commit('setPageTitle', value || 'Character Sheet');
+      },
+    },
+    computed: {
+      activeTab: {
+        get(){
+          return this.tabs;
+        },
+        set(newTab){
+          this.$emit('update:tabs', newTab);
+        },
       },
     },
 		meteor: {

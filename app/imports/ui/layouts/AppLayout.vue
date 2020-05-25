@@ -67,7 +67,7 @@
       <v-fade-transition
         mode="out-in"
       >
-        <router-view :tabs="tabs" />
+        <router-view :tabs.sync="tabs" />
       </v-fade-transition>
     </v-content>
 
