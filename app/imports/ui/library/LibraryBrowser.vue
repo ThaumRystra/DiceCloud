@@ -76,6 +76,7 @@ import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { getAncestry } from  '/imports/api/parenting/parenting.js';
 
 export default {
   components: {
@@ -139,13 +140,20 @@ export default {
     },
     insertLibraryNode(libraryId){
       if (this.paidBenefits){
+        let parentRef;
+        if (this.organizeMode && this.selectedNodeId){
+          parentRef = {collection: 'libraryNodes', id: this.selectedNodeId}
+        } else {
+          parentRef = {collection: 'libraries', id: libraryId};
+        }
+        let {ancestors} = getAncestry({parentRef});
         this.$store.commit('pushDialogStack', {
           component: 'library-node-creation-dialog',
           elementId: `insert-node-${libraryId}`,
           callback(libraryNode){
             if (!libraryNode) return;
-            libraryNode.parent = {collection: 'libraries', id: libraryId};
-            libraryNode.ancestors = [ {collection: 'libraries', id: libraryId}];
+            libraryNode.parent = parentRef;
+            libraryNode.ancestors = ancestors;
             setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
             let libraryNodeId = insertNode.call(libraryNode);
             return `tree-node-${libraryNodeId}`;
