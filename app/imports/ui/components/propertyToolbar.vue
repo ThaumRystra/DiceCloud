@@ -26,6 +26,11 @@
           @input="colorChanged"
         />
         <v-menu
+          v-if="$listeners && (
+            $listeners.move ||
+            $listeners.duplicate ||
+            $listeners.remove
+          )"
           bottom
           left
           transition="slide-y-transition"

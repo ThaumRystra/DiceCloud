@@ -74,10 +74,28 @@ const insertProperty = new ValidatedMethod({
   name: 'CreatureProperties.methods.insert',
 	validate: null,
   run({creatureProperty}) {
+    delete creatureProperty._id;
     assertPropertyEditPermission(creatureProperty, this.userId);
 		let _id = CreatureProperties.insert(creatureProperty);
 		let property = CreatureProperties.findOne(_id);
 		recomputeCreatures(property);
+  },
+});
+
+const duplicateProperty = new ValidatedMethod({
+  name: 'CreatureProperties.methods.duplicate',
+  validate: new SimpleSchema({
+    _id: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    }
+  }).validator(),
+  run({_id}) {
+    let creatureProperty = CreatureProperties.findOne(_id);
+    assertPropertyEditPermission(creatureProperty, this.userId);
+    delete creatureProperty._id;
+		CreatureProperties.insert(creatureProperty);
+    recomputeCreatures(creatureProperty);
   },
 });
 
@@ -290,6 +308,7 @@ export default CreatureProperties;
 export {
 	CreaturePropertySchema,
 	insertProperty,
+  duplicateProperty,
 	insertPropertyFromLibraryNode,
 	updateProperty,
 	damageProperty,

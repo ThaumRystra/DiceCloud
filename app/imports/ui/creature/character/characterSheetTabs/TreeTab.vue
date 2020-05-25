@@ -48,51 +48,11 @@
           />
         </template>
         <template slot="detail">
-          <div
-            class="flex layout column"
-            style="background-color: inherit; overflow: hidden;"
-            data-id="selected-node-card"
-          >
-            <v-toolbar
-              dense
-              flat
-              extended
-            >
-              <v-fade-transition mode="out-in">
-                <div
-                  :key="selectedProperty && selectedProperty._id"
-                  class="title"
-                >
-                  <property-icon
-                    :key="selectedProperty && selectedProperty._id"
-                    :type="selectedProperty && selectedProperty.type"
-                    class="mr-2"
-                  />
-                  {{ getPropertyName(selectedProperty && selectedProperty.type) }}
-                </div>
-              </v-fade-transition>
-              <v-spacer />
-              <v-btn
-                v-if="selectedProperty"
-                flat
-                icon
-                @click="editCreatureProperty"
-              >
-                <v-icon>create</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text
-              class="flex"
-              style="overflow-y: auto"
-            >
-              <v-fade-transition mode="out-in">
-                <property-viewer
-                  :key="selectedProperty && selectedProperty._id"
-                  :model="selectedProperty"
-                />
-              </v-fade-transition>
-            </v-card-text>
-          </div>
+          <creature-property-dialog
+            embedded
+            :_id="selected"
+            @removed="selected = undefined"
+          />
         </template>
       </tree-detail-layout>
     </v-card>
@@ -132,8 +92,7 @@
 <script>
   import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
   import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
-  import PropertyViewer from '/imports/ui/properties/shared/PropertyViewer.vue';
-  import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+  import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
 
   import CreatureProperties, {
@@ -147,8 +106,7 @@
     components: {
       TreeDetailLayout,
       CreaturePropertiesTree,
-      PropertyViewer,
-      PropertyIcon,
+      CreaturePropertyDialog,
       LabeledFab,
     },
     inject: {
