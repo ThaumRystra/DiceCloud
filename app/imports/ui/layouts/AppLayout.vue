@@ -54,16 +54,6 @@
       </v-fade-transition>
     </v-toolbar>
     <v-content>
-      <v-alert
-        v-if="$route.path !== '/countdown'"
-        icon="priority_high"
-        type="error"
-        dismissible
-        :value="true"
-      >
-        This version of DiceCloud is in beta. Some data stored here may be destroyed by
-        future updates.
-      </v-alert>
       <v-fade-transition
         mode="out-in"
       >

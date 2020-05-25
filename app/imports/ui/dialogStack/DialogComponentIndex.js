@@ -8,6 +8,7 @@ import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue
 import LibraryEditDialog from '/imports/ui/library/LibraryEditDialog.vue';
 import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
 import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
+import MoveLibraryNodeDialog from '/imports/ui/library/MoveLibraryNodeDialog.vue'
 import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
 import TierTooLowDialog from '/imports/ui/user/TierTooLowDialog.vue';
 import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
@@ -24,6 +25,7 @@ export default {
   LibraryEditDialog,
   LibraryNodeCreationDialog,
   LibraryNodeDialog,
+  MoveLibraryNodeDialog,
 	ShareDialog,
   TierTooLowDialog,
   UsernameDialog,

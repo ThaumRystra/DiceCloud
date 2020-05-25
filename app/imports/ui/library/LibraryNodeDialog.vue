@@ -6,6 +6,7 @@
         :editing="editing"
         :flat="flat"
         @duplicate="duplicate"
+        @move="move"
         @remove="remove"
         @toggle-editing="editing = !editing"
         @color-changed="value => change({path: ['color'], value})"
@@ -78,6 +79,7 @@
   import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
   import { get } from 'lodash';
   import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+  import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
 
   let formIndex = {};
   for (let key in propertyFormIndex){
@@ -132,6 +134,29 @@
             this.$emit('duplicated');
           } else {
             this.$store.dispatch('popDialogStack');
+          }
+        });
+      },
+      move(){
+        let that = this;
+        this.$store.commit('pushDialogStack', {
+          component: 'move-library-node-dialog',
+          elementId: 'property-toolbar-menu-button',
+          callback(parentId){
+            if (!parentId) return;
+            organizeDoc.call({
+              docRef: {
+                collection: 'libraryNodes',
+                id: that._id,
+              },
+              parentRef: {
+                collection: 'libraryNodes',
+                id: parentId
+              },
+              order: -0.5
+            }, (error) => {
+              if (error) console.error(error);
+            });
           }
         });
       },
