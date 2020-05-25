@@ -4,6 +4,7 @@
       class="mr-2"
       :type="model.type"
       :class="selected && 'primary--text'"
+      :color="model.color"
     />
     <div
       class="text-no-wrap text-truncate"

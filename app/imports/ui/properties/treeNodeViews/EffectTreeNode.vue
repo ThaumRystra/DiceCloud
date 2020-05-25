@@ -3,6 +3,7 @@
     <v-icon
       class="mr-2"
       :class="selected && 'primary--text'"
+      :color="model.color"
     >
       {{ effectIcon }}
     </v-icon>

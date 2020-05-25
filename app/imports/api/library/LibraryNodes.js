@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
+import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import Libraries from '/imports/api/library/Libraries.js';
@@ -28,6 +29,7 @@ let LibraryNodeSchema = new SimpleSchema({
 for (let key in propertySchemasIndex){
 	let schema = new SimpleSchema({});
 	schema.extend(LibraryNodeSchema);
+  schema.extend(ColorSchema);
 	schema.extend(propertySchemasIndex[key]);
 	schema.extend(ChildSchema);
 	schema.extend(SoftRemovableSchema);

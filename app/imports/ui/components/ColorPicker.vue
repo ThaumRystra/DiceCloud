@@ -27,7 +27,7 @@
           >
             <v-scroll-y-transition>
               <v-icon
-                v-if="colorOption === color"
+                v-if="kebabColor === colorOption"
                 :class="{dark: isDark(colorOption, shade)}"
               >
                 check
@@ -49,13 +49,13 @@
             <div
               v-for="shadeOption in shades"
               :key="shadeOption"
-              :class="[color, shadeOption]"
+              :class="[kebabColor, shadeOption]"
               class="shade-swatch d-flex align-center"
               @click="shade = shadeOption"
             >
               <v-scroll-y-transition>
                 <v-icon
-                  v-if="shade === shadeOption"
+                  v-if="kebabShade === shadeOption"
                   :class="{dark: isDark(color, shade)}"
                 >
                   check
@@ -104,9 +104,9 @@
   // Create an index of hex colors and what color/shade combination makes them
   let colorIndex = {};
   for (let color in vuetifyColors){
-    color = camelToKebabCase(color);
+    color = kebabToCamelCase(color);
     for (let shade in vuetifyColors[color]){
-      shade = camelToKebabCase(shade);
+      shade = kebabToCamelCase(shade);
       colorIndex[vuetifyColors[color][shade]] = {color, shade};
     }
   }
@@ -167,7 +167,6 @@
           return this.combination && this.combination.color;
         },
         set(newColor){
-          console.log(newColor, colorToHex(newColor, this.shade));
           this.$emit('input', colorToHex(newColor, this.shade));
         },
       },
@@ -176,7 +175,6 @@
           return this.combination && this.combination.shade;
         },
         set(newShade){
-          console.log(newShade, colorToHex(this.color, newShade));
           this.$emit('input', colorToHex(this.color, newShade));
         },
       },

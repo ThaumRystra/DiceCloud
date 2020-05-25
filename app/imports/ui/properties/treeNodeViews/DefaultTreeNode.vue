@@ -3,6 +3,7 @@
     <property-icon
       class="mr-2"
       :type="model.type"
+      :color="model.color"
       :class="selected && 'primary--text'"
     />
     <div class="text-no-wrap text-truncate">

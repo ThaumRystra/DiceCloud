@@ -3,6 +3,7 @@
     <v-icon
       class="mr-2"
       :class="selected && 'primary--text'"
+      :color="model.color"
     >
       {{ model.equipped ? 'check_box' : 'check_box_outline_blank' }}
     </v-icon>

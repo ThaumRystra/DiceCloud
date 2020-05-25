@@ -21,7 +21,7 @@
       >
         <v-spacer />
         <color-picker
-          v-if="false"
+          v-if="$listeners && $listeners['color-changed']"
           :value="model.color"
           @input="colorChanged"
         />

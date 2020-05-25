@@ -133,7 +133,7 @@ export function reorderDocs({collection, ancestorId}){
       });
     }
   });
-  if (Meteor.isServer){
+  if (Meteor.isServer && bulkWrite.length){
     collection.rawCollection().bulkWrite(
       bulkWrite,
       {ordered : false},
