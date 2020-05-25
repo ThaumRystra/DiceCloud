@@ -1,5 +1,5 @@
 <template lang="html">
-  <dialog-base :key="_id">
+  <dialog-base>
     <template #replace-toolbar="{flat}">
       <property-toolbar
         :model="model"
@@ -13,24 +13,28 @@
       />
     </template>
     <template v-if="model">
-      <component
-        :is="model.type + 'Form'"
-        v-if="editing"
-        class="library-node-form"
-        :model="model"
-        @change="change"
-        @push="push"
-        @pull="pull"
-      />
-      <component
-        :is="model.type + 'Viewer'"
-        v-else-if="!editing && $options.components[model.type + 'Viewer']"
-        class="creature-property-viewer"
-        :model="model"
-      />
-      <p v-else>
-        This property can't be viewed yet.
-      </p>
+      <v-fade-transition
+        mode="out-in"
+      >
+        <component
+          :is="model.type + 'Form'"
+          v-if="editing"
+          class="library-node-form"
+          :model="model"
+          @change="change"
+          @push="push"
+          @pull="pull"
+        />
+        <component
+          :is="model.type + 'Viewer'"
+          v-else-if="!editing && $options.components[model.type + 'Viewer']"
+          class="creature-property-viewer"
+          :model="model"
+        />
+        <p v-else>
+          This property can't be viewed yet.
+        </p>
+      </v-fade-transition>
     </template>
     <div
       v-if="!embedded"
