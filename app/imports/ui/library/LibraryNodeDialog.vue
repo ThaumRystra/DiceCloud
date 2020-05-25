@@ -36,7 +36,23 @@
       slot="actions"
       class="layout row justify-end"
     >
+      <template v-if="selection">
+        <v-btn
+          flat
+          @click="$store.dispatch('popDialogStack', false)"
+        >
+          Cancel
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          flat
+          @click="$store.dispatch('popDialogStack', true)"
+        >
+          Select
+        </v-btn>
+      </template>
       <v-btn
+        v-else
         flat
         @click="$store.dispatch('popDialogStack')"
       >
@@ -84,7 +100,8 @@
     props: {
       _id: String,
       startInEditTab: Boolean,
-      embedded: Boolean, //This dialog is embedded in a page
+      embedded: Boolean, // This dialog is embedded in a page
+      selection: Boolean, // This dialog is being used to select a node
     },
     reactiveProvide: {
       name: 'context',

@@ -60,6 +60,9 @@ export default {
     LibraryBrowser,
     LibraryNodeDialog,
   },
+  props: {
+    selection: Boolean,
+  },
   data(){ return {
     organize: false,
     selected: undefined,
@@ -86,6 +89,13 @@ export default {
           elementId: `tree-node-${id}`,
           data: {
             _id: id,
+            selection: this.selection,
+          },
+          callback: result => {
+            console.log(result)
+            if (result){
+              this.selected = id;
+            }
           },
         });
       }

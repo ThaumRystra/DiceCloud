@@ -6,6 +6,7 @@
     <library-and-node
       slot="unwrapped-content"
       style="height: 100%;"
+      selection
       @selected="val => node = val"
     />
     <template slot="actions">
