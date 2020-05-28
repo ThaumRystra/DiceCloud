@@ -93,6 +93,11 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
 		type: SimpleSchema.Integer,
 		optional: true,
 	},
+  // Should this attribute hide
+  hide: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedAttributeSchema = new SimpleSchema()

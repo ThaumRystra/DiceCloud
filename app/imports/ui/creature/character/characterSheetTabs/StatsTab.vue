@@ -1,5 +1,8 @@
 <template lang="html">
-  <div class="stats-tab ma-2">
+  <div
+    v-if="creature"
+    class="stats-tab ma-2"
+  >
     <div class="px-2 pt-2">
       <health-bar-card-container :creature-id="creatureId" />
     </div>
@@ -290,23 +293,27 @@
   import AttackListTile from '/imports/ui/properties/components/actions/AttackListTile.vue';
   import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
-  const getProperties = function(creatureId, filter){
+  const getProperties = function(creature, filter,){
+    if (!creature) return;
+    if (creature.settings.hideUnusedStats){
+      filter.hide = {$ne: true};
+    }
     return getActiveProperties({
-      ancestorId: creatureId,
+      ancestorId: creature._id,
       filter,
       options: {sort: {order: 1}},
     });
   };
 
-	const getAttributeOfType = function(creatureId, type){
-    return getProperties(creatureId, {
+	const getAttributeOfType = function(creature, type){
+    return getProperties(creature, {
       type: 'attribute',
       attributeType: type,
     });
 	};
 
-  const getSkillOfType = function(creatureId, type){
-    return getProperties(creatureId, {
+  const getSkillOfType = function(creature, type){
+    return getProperties(creature, {
       type: 'skill',
       skillType: type,
     });
@@ -337,49 +344,49 @@
         return Creatures.findOne(this.creatureId);
       },
 			abilities(){
-				return getAttributeOfType(this.creatureId, 'ability');
+				return getAttributeOfType(this.creature, 'ability');
 			},
 			stats(){
-				return getAttributeOfType(this.creatureId, 'stat');
+				return getAttributeOfType(this.creature, 'stat');
 			},
 			modifiers(){
-				return getAttributeOfType(this.creatureId, 'modifier');
+				return getAttributeOfType(this.creature, 'modifier');
 			},
 			resources(){
-				return getAttributeOfType(this.creatureId, 'resource');
+				return getAttributeOfType(this.creature, 'resource');
 			},
 			spellSlots(){
-				return getAttributeOfType(this.creatureId, 'spellSlot');
+				return getAttributeOfType(this.creature, 'spellSlot');
 			},
 			hitDice(){
-        return getAttributeOfType(this.creatureId, 'hitDice');
+        return getAttributeOfType(this.creature, 'hitDice');
 			},
 			checks(){
-        return getSkillOfType(this.creatureId, 'check');
+        return getSkillOfType(this.creature, 'check');
 			},
 			savingThrows(){
-        return getSkillOfType(this.creatureId, 'save');
+        return getSkillOfType(this.creature, 'save');
 			},
 			skills(){
-        return getSkillOfType(this.creatureId, 'skill');
+        return getSkillOfType(this.creature, 'skill');
 			},
       tools(){
-        return getSkillOfType(this.creatureId, 'tool');
+        return getSkillOfType(this.creature, 'tool');
 			},
       weapons(){
-        return getSkillOfType(this.creatureId, 'weapon');
+        return getSkillOfType(this.creature, 'weapon');
 			},
       armors(){
-        return getSkillOfType(this.creatureId, 'armor');
+        return getSkillOfType(this.creature, 'armor');
 			},
       languages(){
-        return getSkillOfType(this.creatureId, 'language');
+        return getSkillOfType(this.creature, 'language');
 			},
       actions(){
-        return getProperties(this.creatureId, {type: 'action'});
+        return getProperties(this.creature, {type: 'action'});
 			},
       attacks(){
-        return getProperties(this.creatureId, {type: 'attack'});
+        return getProperties(this.creature, {type: 'attack'});
 			},
 		},
 		methods: {

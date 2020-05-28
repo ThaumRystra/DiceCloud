@@ -27,6 +27,11 @@ let CreatureSettingsSchema = new SimpleSchema({
 		type: Boolean,
 		optional: true,
 	},
+  // Hide all the unused stats
+  hideUnusedStats: {
+    type: Boolean,
+    optional: true,
+  }
 });
 
 let CreatureSchema = new SimpleSchema({

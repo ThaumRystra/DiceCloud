@@ -42,9 +42,16 @@
       :disabled="disabled"
       @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
     />
-    <!--
-		<form-sections>
-			<form-section name="settings">
+    <form-sections>
+      <form-section name="settings">
+        <v-switch
+          label="Hide redundant stats"
+          :input-value="model.settings.hideUnusedStats"
+          :error-messages="errors.hideUnusedStats"
+          :disabled="disabled"
+          @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value || null})"
+        />
+      <!--
 				<v-switch
 					label="Use variant encumbrance"
 					:input-value="model.settings.useVariantEncumbrance"
@@ -66,9 +73,9 @@
           :disabled="disabled"
 					@change="value => $emit('change', {path: ['settings','swapStatAndModifier'], value})"
 				/>
-			</form-section>
-		</form-sections>
-    -->
+        -->
+      </form-section>
+    </form-sections>
   </div>
 </template>
 

@@ -36,6 +36,9 @@ function combineAttribute(stat, aggregator){
     stat.modifier = Math.floor((stat.value - 10) / 2);
   }
   stat.currentValue = stat.value - (stat.damage || 0);
+  stat.hide = aggregator.hasNoEffects &&
+    stat.baseValue === undefined ||
+    undefined
 }
 
 function combineSkill(stat, aggregator, memo){
@@ -73,7 +76,12 @@ function combineSkill(stat, aggregator, memo){
   let result = (stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;
-  result = Math.floor(result);
+  if (aggregator.set !== undefined) {
+    result = aggregator.set;
+  }
+  if (Number.isFinite(result)){
+    result = Math.floor(result);
+  }
   stat.value = result;
   // Advantage/disadvantage
   if (aggregator.advantage && !aggregator.disadvantage){
@@ -93,6 +101,10 @@ function combineSkill(stat, aggregator, memo){
   stat.fail = aggregator.fail;
   // Rollbonus
   stat.rollBonuses = aggregator.rollBonus;
+  // Hide
+  stat.hide = aggregator.hasNoEffects &&
+    stat.proficiency == 0 ||
+    undefined;
 }
 
 function combineDamageMultiplier(stat){

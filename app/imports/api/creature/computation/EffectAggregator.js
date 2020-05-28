@@ -24,15 +24,19 @@ export default class EffectAggregator{
     this.set = undefined;
     this.conditional = [];
     this.rollBonus = [];
+    this.hasNoEffects = true;
   }
   addEffect(effect){
     let result = effect.result;
+    if (this.hasNoEffects) this.hasNoEffects = false;
     switch(effect.operation){
       case 'base':
         // Take the largest base value
         this.base = result > this.base ? result : this.base;
         if (effect.statBase){
-          this.statBaseValue = result > this.statBaseValue ? result : this.statBaseValue;
+          if (this.statBaseValue === undefined || result > this.statBaseValue){
+            this.statBaseValue = result;
+          }
         }
         break;
       case 'add':
