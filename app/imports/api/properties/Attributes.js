@@ -14,7 +14,7 @@ let AttributeSchema = new SimpleSchema({
   variableName: {
     type: String,
 		regEx: VARIABLE_NAME_REGEX,
-    min: 3,
+    min: 2,
     defaultValue: 'newAttribute',
   },
 	// How it is displayed and computed is determined by type

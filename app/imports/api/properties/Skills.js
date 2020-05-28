@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
@@ -13,7 +14,8 @@ let SkillSchema = new SimpleSchema({
   // Ignored for skilltype = save
   variableName: {
     type: String,
-		regEx: /^\w*[a-z]\w*$/i,
+    regEx: VARIABLE_NAME_REGEX,
+    min: 2,
   },
 	// The variable name of the ability this skill relies on
   ability: {

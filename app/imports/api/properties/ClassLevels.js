@@ -9,6 +9,7 @@ let ClassLevelSchema = new SimpleSchema({
 	// The name of this class level's variable
 	variableName: {
     type: String,
+    min: 2,
 		regEx: VARIABLE_NAME_REGEX,
   },
 	level: {
