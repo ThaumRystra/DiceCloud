@@ -25,7 +25,13 @@ export default function computeToggle(toggle, memo){
   } else if (Number.isFinite(+toggle.condition)){
     toggle.toggleResult = !!+toggle.condition;
   } else {
-    toggle.toggleResult = evaluateCalculation(toggle.condition, memo);
+    let {value, errors} = evaluateCalculation(toggle.condition, memo);
+    toggle.toggleResult = value;
+    if (errors.length){
+      toggle.errors = errors;
+    } else {
+      delete toggle.errors;
+    }
   }
   toggle.computationDetails.computed = true;
   toggle.computationDetails.busyComputing = false;

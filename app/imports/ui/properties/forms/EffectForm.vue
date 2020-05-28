@@ -6,48 +6,35 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-    <div class="layout row wrap justify-start">
-      <smart-select
-        label="Operation"
-        append-icon="arrow_drop_down"
-        class="mx-2"
-        :error-messages="errors.operation"
-        :menu-props="{transition: 'slide-y-transition', lazy: true}"
-        :items="operations"
-        :value="model.operation"
-        @change="change('operation', ...arguments)"
+    <smart-select
+      label="Operation"
+      append-icon="arrow_drop_down"
+      class="mx-2"
+      :error-messages="errors.operation"
+      :menu-props="{transition: 'slide-y-transition', lazy: true}"
+      :items="operations"
+      :value="model.operation"
+      @change="change('operation', ...arguments)"
+    >
+      <v-icon
+        slot="prepend"
+        class="icon"
+        :class="iconClass"
+      >
+        {{ displayedIcon }}
+      </v-icon>
+      <template
+        slot="item"
+        slot-scope="item"
       >
         <v-icon
-          slot="prepend"
-          class="icon"
-          :class="iconClass"
+          class="icon mr-2"
         >
-          {{ displayedIcon }}
+          {{ getEffectIcon(item.item.value, 1) }}
         </v-icon>
-        <template
-          slot="item"
-          slot-scope="item"
-        >
-          <v-icon
-            class="icon mr-2"
-          >
-            {{ getEffectIcon(item.item.value, 1) }}
-          </v-icon>
-          {{ item.item.text }}
-        </template>
-      </smart-select>
-
-      <text-field
-        label="Value"
-        class="mr-2"
-        :persistent-hint="needsValue"
-        :value="needsValue ? (model.calculation) : ' '"
-        :disabled="!needsValue"
-        :error-messages="errors.calculation"
-        :hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
-        @change="change('calculation', ...arguments)"
-      />
-    </div>
+        {{ item.item.text }}
+      </template>
+    </smart-select>
     <smart-combobox
       label="Stats"
       class="mr-2"
@@ -59,6 +46,36 @@
       :error-messages="errors.stats"
       @change="change('stats', ...arguments)"
     />
+    <text-field
+      label="Value"
+      class="mr-2"
+      :persistent-hint="needsValue"
+      :value="needsValue ? (model.calculation) : ' '"
+      :disabled="!needsValue"
+      :error-messages="errors.calculation"
+      :hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
+      @change="change('calculation', ...arguments)"
+    />
+    <div
+      v-if="model.errors && model.errors.length"
+      two-line
+    >
+      <v-slide-x-transition
+        group
+        leave-absolute
+      >
+        <v-alert
+          v-for="error in model.errors"
+          :key="error.message"
+          :value="true"
+          :icon="errorIcon(error.type)"
+          :color="errorColor(error.type)"
+          outline
+        >
+          {{ error.message }}
+        </v-alert>
+      </v-slide-x-transition>
+    </div>
   </div>
 </template>
 
@@ -128,6 +145,24 @@
 			},
 		},
 		methods: {
+      errorIcon(type){
+        if (type === 'subsitution'){
+          return 'info';
+        } else if (type === 'evaluation'){
+          return 'warning';
+        } else {
+          return 'error'
+        }
+      },
+      errorColor(type){
+        if (type === 'subsitution'){
+          return 'info';
+        } else if (type === 'evaluation'){
+          return 'warning';
+        } else {
+          return 'error'
+        }
+      },
 			getEffectIcon,
 		}
 	};

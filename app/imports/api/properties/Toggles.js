@@ -27,6 +27,14 @@ const ComputedOnlyToggleSchema = new SimpleSchema({
 		type: SimpleSchema.oneOf(Number, String, Boolean),
 		optional: true,
 	},
+  // The errors encountered while computing the result
+  errors: {
+    type: Array,
+    optional: true,
+  },
+  'errors.$':{
+    type: String,
+  },
 });
 
 const ComputedToggleSchema = new SimpleSchema()

@@ -20,6 +20,7 @@ export default function computeEffect(effect, memo){
   applyToggles(effect, memo);
 
   // Determine result of effect calculation
+  delete effect.errors;
   if (!effect.calculation){
     if(effect.operation === 'add' || effect.operation === 'base'){
       effect.result = 0;
@@ -31,7 +32,11 @@ export default function computeEffect(effect, memo){
   } else if(_.contains(['advantage', 'disadvantage', 'fail'], effect.operation)){
     effect.result = 1;
   } else {
-    effect.result = evaluateCalculation(effect.calculation, memo);
+    let {value, errors} = evaluateCalculation(effect.calculation, memo);
+    effect.result = value;
+    if (errors.length){
+      effect.errors = errors;
+    }
   }
   effect.computationDetails.computed = true;
   effect.computationDetails.busyComputing = false;

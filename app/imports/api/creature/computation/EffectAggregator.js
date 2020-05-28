@@ -3,8 +3,14 @@ import evaluateCalculation from '/imports/api/creature/computation/evaluateCalcu
 export default class EffectAggregator{
   constructor(stat, memo){
     if (stat.baseValueCalculation){
-      this.statBaseValue = evaluateCalculation(stat.baseValueCalculation, memo);
-      this.base = +this.statBaseValue;
+      let {value, errors} = evaluateCalculation(stat.baseValueCalculation, memo);
+      this.statBaseValue = value;
+      if (errors.length){
+        this.baseValueErrors = errors;
+      } else {
+        delete this.baseValueErrors;
+      }
+      this.base = this.statBaseValue;
     } else {
       this.base = 0;
     }

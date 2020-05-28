@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 /*
  * Effects are reason-value attached to skills and abilities
  * that modify their final value or presentation in some way
@@ -48,7 +48,15 @@ const ComputedOnlyEffectSchema = new SimpleSchema({
 		type: SimpleSchema.oneOf(Number, String, Boolean),
 		optional: true,
 	},
-})
+  // The errors encountered while computing the result
+  errors: {
+    type: Array,
+    optional: true,
+  },
+  'errors.$':{
+    type: ErrorSchema,
+  },
+});
 
 const ComputedEffectSchema = new SimpleSchema()
 	.extend(ComputedOnlyEffectSchema)
