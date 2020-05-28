@@ -34,11 +34,11 @@ let DamageMultiplierSchema = new SimpleSchema({
     type: String,
   },
   // Tags which must be present to be affected by this multiplier (AND)
-  targetTags: {
+  includeTags: {
     type: Array,
     defaultValue: [],
   },
-  'targetTags.$': {
+  'includeTags.$': {
     type: String,
   },
 });
