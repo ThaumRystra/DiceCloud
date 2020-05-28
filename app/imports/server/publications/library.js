@@ -40,16 +40,23 @@ let libraryIdSchema = new SimpleSchema({
 Meteor.publish('library', function(libraryId){
   libraryIdSchema.validate({libraryId});
   this.autorun(function (){
-    if (!this.userId) return [];
-    let libraryCursor = Libraries.find({
-      _id: libraryId,
-      $or: [
-        {owner: this.userId},
-        {writers: this.userId},
-        {readers: this.userId},
-        {public: true},
-      ],
-    });
+    let libraryCursor
+    if (this.userId) {
+      libraryCursor = Libraries.find({
+        _id: libraryId,
+        $or: [
+          {owner: this.userId},
+          {writers: this.userId},
+          {readers: this.userId},
+          {public: true},
+        ],
+      });
+    } else {
+      libraryCursor = Libraries.find({
+        _id: libraryId,
+        public: true,
+      });
+    }
     if (!libraryCursor.count()) return this.ready();
     return [
       libraryCursor,
