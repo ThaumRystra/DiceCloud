@@ -32,6 +32,7 @@ export default function evaluateCalculation(string, memo){
   // Evaluate the expression to a number or return with substitutions
   try {
     let value = substitutedCalc.evaluate(memo.statsByVariableName);
+    if (typeof value === 'object') value = value.toString();
     return {errors, value};
   } catch (e){
     errors.push({
