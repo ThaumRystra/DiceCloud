@@ -4,7 +4,11 @@
       class="mr-2"
       :value="model.amount"
       :expect-number="false"
-    /> {{ model.damageType }} damage
+    />
+    {{ model.damageType }}
+    <span v-if="model.damageType !== 'healing'">
+      damage
+    </span>
   </div>
 </template>
 
