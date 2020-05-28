@@ -63,46 +63,6 @@ export default class ComputationMemo {
     });
     return prop;
   }
-  /*
-  storeHighestClassLevel(name, prop, isBaseClass){
-    // Only store the highest level classLevel
-    let stat = this.statsByVariableName[name]
-    if (!stat){
-      this.statsByVariableName[name] = prop;
-      if (isBaseClass){
-        this.classes[name] = prop;
-      }
-    } else if (!has(stat, 'level')){
-      // Stat is overriden by an attribute
-      return;
-    } else if (stat.level < prop.level) {
-      this.statsByVariableName[name] = prop;
-      if (isBaseClass){
-        this.classes[name] = prop;
-      }
-    }
-    this.updateLevel();
-  }
-  updateLevel(){
-    let currentLevel = this.statsByVariableName['level'];
-    if (!currentLevel){
-      currentLevel = {
-        value: 0,
-        computationDetails: {
-          builtIn: true,
-          computed: true,
-        }
-      };
-      this.statsByVariableName['level'] = currentLevel;
-    }
-    // bail out if overriden by an attribute
-    if (!currentLevel.computationDetails.builtIn) return;
-    let level = 0;
-    for (let name in this.classes){
-      level += this.classes[name].level || 0;
-    }
-    this.statsByVariableName['level'].value = level;
-  }*/
   addToggle(prop){
     prop = this.registerProperty(prop);
     this.togglesById[prop._id] = prop;

@@ -16,6 +16,7 @@ export default class EffectAggregator{
     this.disadvantage = 0;
     this.passiveAdd = 0;
     this.fail = 0;
+    this.set = undefined;
     this.conditional = [];
     this.rollBonus = [];
   }
@@ -44,6 +45,10 @@ export default class EffectAggregator{
       case 'max':
         // Take the smallest max value
         this.max = result < this.max ? result : this.max;
+        break;
+      case 'set':
+        // Take the highest set value
+        this.set = this.set === undefined || result > this.set ? result : this.set;
         break;
       case 'advantage':
         // Sum number of advantages

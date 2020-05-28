@@ -18,6 +18,7 @@ let EffectSchema = new SimpleSchema({
 			'mul',
 			'min',
 			'max',
+      'set',
 			'advantage',
 			'disadvantage',
 			'passiveAdd',

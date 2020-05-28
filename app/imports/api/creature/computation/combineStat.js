@@ -15,6 +15,7 @@ function combineAttribute(stat, aggregator){
   let result = (aggregator.base + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;
+  if (aggregator.set !== undefined) result = aggregator.set;
   if (!stat.decimal) result = Math.floor(result);
   stat.value = result;
   stat.baseValue = aggregator.statBaseValue;

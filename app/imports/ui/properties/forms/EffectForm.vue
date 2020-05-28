@@ -78,7 +78,8 @@
 				{value: 'add', text: 'Add'},
 				{value: 'mul', text: 'Multiply'},
 				{value: 'min', text: 'Minimum'},
-				{value: 'max', text: 'Maximum'},
+        {value: 'max', text: 'Maximum'},
+				{value: 'set', text: 'Set'},
 				{value: 'advantage', text: 'Advantage'},
 				{value: 'disadvantage', text: 'Disadvantage'},
 				{value: 'passiveAdd', text: 'Passive Bonus'},
@@ -93,7 +94,8 @@
 					case 'add': return true;
 					case 'mul': return true;
 					case 'min': return true;
-					case 'max': return true;
+          case 'max': return true;
+					case 'set': return true;
 					case 'advantage': return false;
 					case 'disadvantage': return false;
 					case 'passiveAdd': return true;
