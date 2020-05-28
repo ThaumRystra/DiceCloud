@@ -1,6 +1,12 @@
 <template lang="html">
   <div class="saving-throw-form">
     <text-field
+      label="Name"
+      :value="model.name"
+      :error-messages="errors.name"
+      @change="change('name', ...arguments)"
+    />
+    <text-field
       label="DC"
       :value="model.dc"
       :error-messages="errors.dc"
@@ -9,10 +15,10 @@
     <smart-combobox
       label="Save"
       hint="Which save the saving throw targets"
-      :value="model.ability"
+      :value="model.stat"
       :items="saveList"
-      :error-messages="errors.ability"
-      @change="change('ability', ...arguments)"
+      :error-messages="errors.stat"
+      @change="change('stat', ...arguments)"
     />
   </div>
 </template>
