@@ -3,7 +3,7 @@
     <div class="content">
       <section>
         <v-parallax
-          src="/png/paper-dice-crown.png"
+          src="/images/paper-dice-crown.png"
           height="300"
         >
           <v-layout
@@ -78,9 +78,7 @@
               Inventory manager
             </h3>
             <p>
-              Equiping items changes your characters stats automatically. Drag
-              items to other characters, or between sheets open on different
-              tabs.
+              Equiping items changes your characters stats automatically.
             </p>
           </v-layout>
         </v-layout>
@@ -117,7 +115,6 @@
         >
           <v-btn
             v-for="btn in [
-              {link: 'https://reddit.com/r/dicecloud', name: 'Reddit'},
               {link: 'https://discord.gg/qEvdfeB', name: 'Discord'},
               {link: 'https://www.patreon.com/dicecloud', name: 'Patreon'},
               {link: 'https://github.com/ThaumRystra/DiceCloud', name: 'Github'},

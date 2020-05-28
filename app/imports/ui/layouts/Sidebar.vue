@@ -136,8 +136,9 @@
           {title: 'Home', icon: 'home', to: '/'},
           {title: 'Characters', icon: 'portrait', to: '/characterList', requireLogin: true},
           {title: 'Library', icon: 'book', to: '/library', requireLogin: true},
-          {title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
-          {title: 'Send Feedback', icon: 'bug_report', to: '/feedback'},
+          //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
+          {title: 'Feedback', icon: 'bug_report', to: '/feedback'},
+          {title: 'About', icon: 'subject', to: '/about'},
           {title: 'Patreon', icon: '', href: 'https://www.patreon.com/dicecloud'},
           {title: 'Github', icon: '', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
         ];

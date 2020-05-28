@@ -4,6 +4,7 @@ import { acceptInviteToken } from '/imports/api/users/Invites.js';
 
 // Components
 import Home from '/imports/ui/pages/Home.vue';
+import About from '/imports/ui/pages/About.vue';
 import CharacterList from '/imports/ui/pages/CharacterList.vue';
 import Library from '/imports/ui/pages/Library.vue';
 import SingleLibraryPage from '/imports/ui/pages/SingleLibraryPage.vue'
@@ -181,6 +182,14 @@ RouterFactory.configure(factory => {
       },
       meta: {
         title: 'Feedback',
+      },
+    },{
+      path: '/about',
+      components: {
+        default: About,
+      },
+      meta: {
+        title: 'About DiceCloud',
       },
     },{
       path: '/invite/:inviteToken',

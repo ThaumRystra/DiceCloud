@@ -1,20 +1,15 @@
 <template lang="html">
-  <div
-    class="pa-4 layout column align-center"
-    style="height: calc(100vh - 96px); display: flex;"
-  >
-    <v-card
-      style="height: 100%; width: 100%; max-width: 1800px;"
-    >
-      <library-and-node />
-    </v-card>
-  </div>
+  <single-card-layout>
+    <library-and-node />
+  </single-card-layout>
 </template>
 
 <script>
+  import SingleCardLayout from '/imports/ui/layouts/SingleCardLayout.vue';
 	import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
 	export default {
 		components: {
+      SingleCardLayout,
 			LibraryAndNode,
 		},
 	};
