@@ -73,7 +73,7 @@ export default {
       avatar: 'kira'
     },{
       name: 'Satherian',
-      title: '',
+      title: 'Defender of Naptime',
       avatar: 'satherian'
     },{
       name: 'Vinton',
