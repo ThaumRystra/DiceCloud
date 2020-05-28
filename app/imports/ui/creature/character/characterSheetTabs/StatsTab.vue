@@ -1,6 +1,5 @@
 <template lang="html">
   <div
-    v-if="creature"
     class="stats-tab ma-2"
   >
     <div class="px-2 pt-2">
@@ -8,6 +7,20 @@
     </div>
 
     <column-layout>
+      <div class="character-buttons">
+        <v-card>
+          <v-card-text class="layout column align-center">
+            <rest-button
+              :creature-id="creatureId"
+              type="shortRest"
+            />
+            <rest-button
+              :creature-id="creatureId"
+              type="longRest"
+            />
+          </v-card-text>
+        </v-card>
+      </div>
       <div class="ability-scores">
         <v-card>
           <v-list>
@@ -291,6 +304,7 @@
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
   import AttackListTile from '/imports/ui/properties/components/actions/AttackListTile.vue';
+  import RestButton from '/imports/ui/creature/RestButton.vue';
   import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
   const getProperties = function(creature, filter,){
@@ -321,6 +335,7 @@
 
 	export default {
 		components: {
+      RestButton,
 			AbilityListTile,
 			AttributeCard,
 			ColumnLayout,

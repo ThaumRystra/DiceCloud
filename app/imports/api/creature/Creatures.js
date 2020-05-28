@@ -7,6 +7,7 @@ import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 import '/imports/api/creature/removeCreature.js';
+import '/imports/api/creature/restCreature.js';
 
 //set up the collection for creatures
 let Creatures = new Mongo.Collection('creatures');
@@ -31,6 +32,13 @@ let CreatureSettingsSchema = new SimpleSchema({
   hideUnusedStats: {
     type: Boolean,
     optional: true,
+  },
+  // How much each hitDice resets on a long rest
+  hitDiceResetMultiplier: {
+    type: Number,
+    optional: true,
+    min: 0,
+    max: 1,
   }
 });
 

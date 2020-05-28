@@ -47,9 +47,21 @@
         <v-switch
           label="Hide redundant stats"
           :input-value="model.settings.hideUnusedStats"
-          :error-messages="errors.hideUnusedStats"
           :disabled="disabled"
-          @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value || null})"
+          @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value})"
+        />
+        <text-field
+          label="Hit Dice reset multiplier"
+          hint="What fraction of your hit dice are reset every long rest"
+          placeholder="0.5"
+          type="number"
+          min="0"
+          max="1"
+          step="0.1"
+          :value="model.settings.hitDiceResetMultiplier"
+          :debounce-time="debounceTime"
+          :disabled="disabled"
+          @change="(value, ack) => $emit('change', {path: ['settings','hitDiceResetMultiplier'], value, ack})"
         />
       <!--
 				<v-switch

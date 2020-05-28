@@ -88,6 +88,12 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
 		defaultValue: 0,
     optional: true,
   },
+  // The computed value of the attribute minus the damage
+  currentValue: {
+    type: SimpleSchema.oneOf(Number, String, Boolean),
+		defaultValue: 0,
+    optional: true,
+  },
 	// The computed modifier, provided the attribute type is `ability`
 	modifier: {
 		type: SimpleSchema.Integer,

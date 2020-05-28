@@ -7,6 +7,15 @@ export default function getActiveProperties({
   options,
   includeUntoggled = false
 }){
+  filter = getActivePropertyFilter({ancestorId, filter, includeUntoggled});
+  return CreatureProperties.find(filter, options).fetch();
+}
+
+export function getActivePropertyFilter({
+  ancestorId,
+  filter = {},
+  includeUntoggled = false
+}){
   if (!ancestorId){
     throw 'Ancestor Id is required to get active properties'
   }
@@ -14,9 +23,9 @@ export default function getActiveProperties({
   let disabledAncestorsFilter = {
     'ancestors.id': ancestorId,
     $or: [
-      {disabled: true},
-      {equipped: false},
-      {applied: false},
+      {disabled: true}, // Everything can be disabled
+      {equipped: false}, // Items can be equipped
+      {applied: false}, // Buffs can be applied
     ],
   };
   if (!includeUntoggled){
@@ -48,5 +57,5 @@ export default function getActiveProperties({
   filter._id = {
     $nin: disabledAncestorIds,
   }
-  return CreatureProperties.find(filter, options).fetch();
+  return filter;
 }
