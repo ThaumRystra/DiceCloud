@@ -56,26 +56,7 @@
       :hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
       @change="change('calculation', ...arguments)"
     />
-    <div
-      v-if="model.errors && model.errors.length"
-      two-line
-    >
-      <v-slide-x-transition
-        group
-        leave-absolute
-      >
-        <v-alert
-          v-for="error in model.errors"
-          :key="error.message"
-          :value="true"
-          :icon="errorIcon(error.type)"
-          :color="errorColor(error.type)"
-          outline
-        >
-          {{ error.message }}
-        </v-alert>
-      </v-slide-x-transition>
-    </div>
+    <calculation-error-list :errors="model.errors" />
   </div>
 </template>
 
@@ -83,9 +64,13 @@
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	const ICON_SPIN_DURATION = 300;
 	export default {
+    components: {
+      CalculationErrorList,
+    },
     mixins: [propertyFormMixin, attributeListMixin],
 		data(){ return {
 			displayedIcon: 'add',
@@ -145,24 +130,6 @@
 			},
 		},
 		methods: {
-      errorIcon(type){
-        if (type === 'subsitution'){
-          return 'info';
-        } else if (type === 'evaluation'){
-          return 'warning';
-        } else {
-          return 'error'
-        }
-      },
-      errorColor(type){
-        if (type === 'subsitution'){
-          return 'info';
-        } else if (type === 'evaluation'){
-          return 'warning';
-        } else {
-          return 'error'
-        }
-      },
 			getEffectIcon,
 		}
 	};

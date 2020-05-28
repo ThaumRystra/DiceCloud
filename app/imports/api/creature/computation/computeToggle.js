@@ -16,6 +16,7 @@ export default function computeToggle(toggle, memo){
   toggle.computationDetails.busyComputing = true;
 
   // Do work
+  delete toggle.errors;
   if (toggle.enabled){
     toggle.toggleResult = true;
   } else if (toggle.disabled){
@@ -29,8 +30,6 @@ export default function computeToggle(toggle, memo){
     toggle.toggleResult = value;
     if (errors.length){
       toggle.errors = errors;
-    } else {
-      delete toggle.errors;
     }
   }
   toggle.computationDetails.computed = true;

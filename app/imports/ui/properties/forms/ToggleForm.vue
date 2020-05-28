@@ -37,13 +37,18 @@
         @change="change('condition', ...arguments)"
       />
     </v-fade-transition>
+    <calculation-error-list :errors="model.errors" />
   </div>
 </template>
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
+    components: {
+      CalculationErrorList,
+    },
     mixins: [propertyFormMixin],
     computed: {
       radioSelection(){

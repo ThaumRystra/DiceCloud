@@ -11,6 +11,7 @@
         @change="change('baseValueCalculation', ...arguments)"
       />
     </div>
+    <calculation-error-list :errors="model.baseValueErrors" />
     <div class="layout row wrap">
       <text-field
         label="Name"
@@ -100,10 +101,12 @@
 <script>
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
 		components: {
 			FormSection,
+      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
 		data(){

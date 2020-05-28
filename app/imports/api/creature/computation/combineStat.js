@@ -31,6 +31,7 @@ function getAggregatorResult(stat, aggregator){
 function combineAttribute(stat, aggregator){
   stat.value = getAggregatorResult(stat, aggregator);
   stat.baseValue = aggregator.statBaseValue;
+  stat.baseValueErrors = aggregator.baseValueErrors;
   if (stat.attributeType === 'ability') {
     stat.modifier = Math.floor((stat.value - 10) / 2);
   }

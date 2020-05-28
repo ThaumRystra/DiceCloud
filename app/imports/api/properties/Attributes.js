@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 /*
@@ -73,6 +74,13 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
   baseValue: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
     optional: true,
+  },
+  baseValueErrors: {
+    type: Array,
+    optional: true,
+  },
+  'baseValueErrors.$': {
+    type: ErrorSchema,
   },
 	// The computed value of the attribute
   value: {

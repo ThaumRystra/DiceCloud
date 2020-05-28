@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 const ToggleSchema = new SimpleSchema({
   name: {
@@ -32,8 +33,8 @@ const ComputedOnlyToggleSchema = new SimpleSchema({
     type: Array,
     optional: true,
   },
-  'errors.$':{
-    type: String,
+  'errors.$': {
+    type: ErrorSchema,
   },
 });
 
