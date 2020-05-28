@@ -3,8 +3,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import getActiveProperties, { getActivePropertyFilter } from '/imports/api/creature/getActiveProperties.js';
-import {assertEditPermission} from '/imports/api/creature/creaturePermissions.js';
-import recomputeCreatureById from '/imports/api/creature/computation/recomputeCreature.js';
+import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
 
 const restCreature = new ValidatedMethod({
   name: 'creature.methods.longRest',
