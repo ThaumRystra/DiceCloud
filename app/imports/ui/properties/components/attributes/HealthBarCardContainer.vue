@@ -7,26 +7,40 @@
 </template>
 
 <script>
-	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
+  import Creatures from '/imports/api/creature/Creatures.js';
+	import { damageProperty } from '/imports/api/creature/CreatureProperties.js';
 	import HealthBarCard from '/imports/ui/properties/components/attributes/HealthBarCard.vue';
+  import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
 	export default {
 		components: {
 			HealthBarCard,
 		},
 		props: {
-			creatureId: String,
+			creatureId: {
+        type: String,
+        required: true
+      },
 		},
 		meteor: {
+      creature(){
+        return Creatures.findOne(this.creatureId, {fields: {settings: 1}});
+      },
 			attributes(){
-				return CreatureProperties.find({
-					'ancestors.id': this.creatureId,
-					type: 'attribute',
+        let creature = this.creature;
+        if (!creature) return;
+        let filter = {
+          type: 'attribute',
 					attributeType: 'healthBar',
-          removed: {$ne: true},
-				}, {
-					sort: {order: 1},
-				});
+        };
+        if (creature.settings.hideUnusedStats){
+          filter.hide = {$ne: true};
+        }
+        return getActiveProperties({
+          ancestorId: creature._id,
+          filter,
+          options: {sort: {order: 1}},
+        });
 			},
 		},
 		methods: {

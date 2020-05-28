@@ -292,7 +292,7 @@
 
 <script>
   import Creatures from '/imports/api/creature/Creatures.js';
-	import CreatureProperties, { damageProperty } from '/imports/api/creature/CreatureProperties.js';
+	import { damageProperty } from '/imports/api/creature/CreatureProperties.js';
 	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
