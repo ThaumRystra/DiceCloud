@@ -11,16 +11,28 @@ export default function combineStat(stat, aggregator, memo){
   }
 }
 
-function combineAttribute(stat, aggregator){
+function getAggregatorResult(stat, aggregator){
   let result = (aggregator.base + aggregator.add) * aggregator.mul;
-  if (result < aggregator.min) result = aggregator.min;
-  if (result > aggregator.max) result = aggregator.max;
-  if (aggregator.set !== undefined) result = aggregator.set;
-  if (!stat.decimal) result = Math.floor(result);
-  stat.value = result;
+  if (result < aggregator.min) {
+    result = aggregator.min;
+  }
+  if (result > aggregator.max) {
+    result = aggregator.max;
+  }
+  if (aggregator.set !== undefined) {
+    result = aggregator.set;
+  }
+  if (!stat.decimal && Number.isFinite(result)){
+    result = Math.floor(result);
+  }
+  return result;
+}
+
+function combineAttribute(stat, aggregator){
+  stat.value = getAggregatorResult(stat, aggregator);
   stat.baseValue = aggregator.statBaseValue;
   if (stat.attributeType === 'ability') {
-    stat.modifier = Math.floor((result - 10) / 2);
+    stat.modifier = Math.floor((stat.value - 10) / 2);
   }
   stat.currentValue = stat.value - (stat.damage || 0);
 }
