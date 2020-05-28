@@ -24,6 +24,8 @@ export default function computeEffect(effect, memo){
   if (!effect.calculation){
     if(effect.operation === 'add' || effect.operation === 'base'){
       effect.result = 0;
+    } else {
+      delete effect.result
     }
   } else if (Number.isFinite(+effect.calculation)){
     effect.result = +effect.calculation;
