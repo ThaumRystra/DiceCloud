@@ -4,6 +4,7 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import getActiveProperties, { getActivePropertyFilter } from '/imports/api/creature/getActiveProperties.js';
 import {assertEditPermission} from '/imports/api/creature/creaturePermissions.js';
+import recomputeCreatureById from '/imports/api/creature/computation/recomputeCreature.js';
 
 const restCreature = new ValidatedMethod({
   name: 'creature.methods.longRest',
@@ -87,7 +88,8 @@ const restCreature = new ValidatedMethod({
       let amountToRecover, resultingDamage;
       hitDice.forEach(hd => {
         if (!recoverableHd) return;
-        amountToRecover = Math.min(recoverableHd, hd.damage);
+        amountToRecover = Math.min(recoverableHd, hd.damage || 0);
+        if (!amountToRecover) return;
         recoverableHd -= amountToRecover;
         resultingDamage = hd.damage - amountToRecover;
         CreatureProperties.update(hd._id, {
@@ -97,6 +99,7 @@ const restCreature = new ValidatedMethod({
         });
       });
     }
+    recomputeCreatureById(creatureId);
   },
 });
 
