@@ -175,7 +175,11 @@ export default {
 		},
 		remove(){
 			softRemoveProperty.call({_id: this._id});
-			this.$store.dispatch('popDialogStack');
+      if (this.embedded){
+        this.$emit('removed');
+      } else {
+        this.$store.dispatch('popDialogStack');
+      }
 		},
 		selectSubProperty(_id){
 			this.$store.commit('pushDialogStack', {
