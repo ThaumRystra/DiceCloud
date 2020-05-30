@@ -17,7 +17,13 @@
     >
       {{ name }}
     </div>
-    <v-flex style="height: 20px; flex-basis: 300px; flex-grow: 100;">
+    <v-flex
+      style="
+        height: 20px;
+        flex-basis: 300px;
+        flex-grow: 100;
+      "
+    >
       <v-layout
         column
         align-center
@@ -33,7 +39,13 @@
         />
         <span
           class="value"
-          style="margin-top: -20px; z-index: 1; font-size: 15px; font-weight: 600; height: 20px;"
+          style="
+            margin-top: -20px;
+            z-index: 1;
+            font-size: 15px;
+            font-weight: 600;
+            height: 20px;
+          "
         >
           {{ value }} / {{ maxValue }}
         </span>
@@ -80,6 +92,7 @@
             :disabled="context.editPermission === false"
             @focus="$event.target.select()"
             @keypress="keypress"
+            @input="input"
           />
           <v-btn
             small
@@ -127,7 +140,7 @@
 			return {
 				editing: false,
 				editValue: 0,
-				operation: 3,
+				operation: 'set',
 				hover: false,
 			};
 		},
@@ -182,7 +195,13 @@
 				} else if (!digitsOnly.test(key)){
 					event.preventDefault();
 				}
-			}
+			},
+      input(value){
+        if (+value < 0){
+          this.editValue = -value;
+          this.operation = 'subtract';
+        }
+      }
 		},
 	};
 </script>
