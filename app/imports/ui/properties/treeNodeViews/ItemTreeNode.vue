@@ -18,9 +18,27 @@
 
 <script>
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
 
 export default {
   mixins: [treeNodeViewMixin],
+  computed: {
+    title(){
+      let model = this.model;
+      if (!model) return;
+      if (model.quantity > 1){
+        if (model.plural){
+          return `${model.quantity} ${model.plural}`;
+        } else if (model.name){
+          return `${model.quantity} ${model.name}`;
+        }
+      } else if (model.name) {
+        return model.name;
+      }
+      let prop = PROPERTIES[model.type]
+      return prop && prop.name;
+    }
+  }
 }
 </script>
 
