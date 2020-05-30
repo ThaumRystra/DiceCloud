@@ -77,13 +77,9 @@
 			reset(){
 				let reset = this.model.reset
 				if (reset === 'shortRest'){
-					return `Reset${
-						this.model.resetMultiplier && ' x' + this.model.resetMultiplier
-					} on a short rest`;
+					return 'Reset on a short rest';
 				} else if (reset === 'longRest'){
-					return `Reset${
-						this.model.resetMultiplier && ' x' + this.model.resetMultiplier
-					} on a long rest`;
+					return 'Reset on a long rest';
 				}
         return undefined;
 			}
