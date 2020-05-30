@@ -72,13 +72,11 @@ const calculationPropertyTypes = [
  * - Write the computed results back to the database
  */
 export function recomputeCreatureById(creatureId){
-  // Skipping computation on the client can result in the server being made to
-  // do work that isn't possible, in exchange for dramatic performance gains
-  if (Meteor.isClient) return;
   let props = getActiveProperties({
     ancestorId: creatureId,
     filter: {type: {$in: calculationPropertyTypes}},
     includeUntoggled: true,
+    // TODO filter out expensive fields, particularly icon field
   });
   let computationMemo = new ComputationMemo(props);
   computeMemo(computationMemo);
