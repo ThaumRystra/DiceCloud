@@ -51,82 +51,31 @@
         </span>
       </v-layout>
       <transition name="transition">
-        <v-toolbar
+        <increment-menu
+          v-show="editing"
+          :value="value"
+          :open="editing"
+          @change="changeIncrementMenu"
+          @close="cancelEdit"
+        />
+      </transition>
+      <transition name="background-transition">
+        <div
           v-if="editing"
-          justify-center
-          height="48"
-          flat
-          class="transparent toolbar"
-        >
-          <v-spacer />
-          <v-btn-toggle
-            :value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
-            class="mr-2"
-            @click="$refs.editInput.focus()"
-          >
-            <v-btn
-              :disabled="context.editPermission === false"
-              class="filled"
-              @click="toggleAdd(); $nextTick(() => $refs.editInput.focus())"
-            >
-              <v-icon>add</v-icon>
-            </v-btn>
-            <v-btn
-              :disabled="context.editPermission === false"
-              class="filled"
-              @click="toggleSubtract(); $nextTick(() => $refs.editInput.focus())"
-            >
-              <v-icon>remove</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-          <v-text-field
-            v-if="editing"
-            ref="editInput"
-            solo
-            hide-details
-            type="number"
-            style="max-width: 120px;"
-            min="0"
-            :value="editValue"
-            :prepend-inner-icon="operationIcon(operation)"
-            :disabled="context.editPermission === false"
-            @focus="$event.target.select()"
-            @keypress="keypress"
-            @input="input"
-          />
-          <v-btn
-            small
-            fab
-            class="filled"
-            color="red"
-            @click="commitEdit"
-          >
-            <v-icon>done</v-icon>
-          </v-btn>
-          <v-btn
-            small
-            fab
-            class="mx-0 filled"
-            @click="cancelEdit"
-          >
-            <v-icon>close</v-icon>
-          </v-btn>
-          <v-spacer />
-        </v-toolbar>
+          class="page-tint"
+          @click="cancelEdit"
+        />
       </transition>
     </v-flex>
-    <transition name="background-transition">
-      <div
-        v-if="editing"
-        class="page-tint"
-        @click="cancelEdit"
-      />
-    </transition>
   </v-layout>
 </template>
 
 <script>
+import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 	export default {
+    components: {
+      IncrementMenu
+    },
     inject: {
       context: { default: {} }
     },
@@ -139,72 +88,34 @@
 		data() {
 			return {
 				editing: false,
-				editValue: 0,
-				operation: 'set',
 				hover: false,
 			};
 		},
 		methods: {
 			edit() {
 				this.editing = true;
-				this.operation = 'set';
-				this.editValue = this.value;
-				this.$nextTick(function() {
-					this.$refs.editInput.focus();
-				});
 			},
 			cancelEdit() {
 				this.editing = false;
 			},
-			commitEdit() {
-				this.editing = false;
-				let value = +this.$refs.editInput.lazyValue;
-				if (this.operation === 'add') {
-					value = -value;
-				}
-				let type = this.operation === 'set' ? 'set' : 'increment';
-				this.$emit('change', { type, value });
-			},
-			operationIcon(operation) {
-				switch (operation) {
-					case 'set':
-						return 'forward';
-					case 'add':
-            return 'add';
-					case 'subtract':
-						return 'remove';
-				}
-			},
-			toggleAdd(){
-				this.operation = (this.operation === 'add') ? 'set': 'add';
-			},
-			toggleSubtract(){
-				this.operation = (this.operation === 'subtract') ? 'set': 'subtract';
-			},
-			keypress(event) {
-				let digitsOnly = /[0-9]/;
-				let key = event.key;
-				if (key === '+') {
-					this.toggleAdd();
-					event.preventDefault();
-				} else if (key === '-') {
-					this.toggleSubtract();
-					event.preventDefault();
-				} else if (key === 'Enter') {
-					this.commitEdit();
-				} else if (!digitsOnly.test(key)){
-					event.preventDefault();
-				}
-			},
-      input(value){
-        if (+value < 0){
-          this.editValue = -value;
-          this.operation = 'subtract';
-        }
+      changeIncrementMenu(e){
+        this.$emit('change', e);
+        this.editing = false;
       }
 		},
 	};
 </script>
+
+<style>
+.health-bar .increment-menu {
+  margin-left: -50%;
+  margin-right: -50%;
+  width: 200%;
+  margin-top: -34px !important;
+  z-index: 4;
+  position: relative;
+}
+</style>
 
 <style scoped>
 	.health-bar {
@@ -227,13 +138,6 @@
 	.bar:hover {
 		box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
 			0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
-	}
-	.toolbar {
-		margin-left: -50%;
-		margin-right: -50%;
-		width: 200%;
-		margin-top: -34px !important;
-		z-index: 4;
 	}
 	.hover {
 		background: #f5f5f5 !important;

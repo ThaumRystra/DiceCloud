@@ -264,6 +264,48 @@ const damageProperty = new ValidatedMethod({
   },
 });
 
+const adjustQuantity = new ValidatedMethod({
+  name: 'CreatureProperties.methods.adjustQuantity',
+  validate: new SimpleSchema({
+    _id: SimpleSchema.RegEx.Id,
+    operation: {
+      type: String,
+      allowedValues: ['set', 'increment']
+    },
+    value: Number,
+  }).validator(),
+  run({_id, operation, value}) {
+		let currentProperty = CreatureProperties.findOne(_id);
+		// Check permissions
+		assertPropertyEditPermission(currentProperty, this.userId);
+		// Check if property can take damage
+		let schema = CreatureProperties.simpleSchema(currentProperty);
+		if (!schema.allowsKey('quantity')){
+			throw new Meteor.Error(
+				'Adjust quantity failed',
+				`Property of type "${currentProperty.type}" doesn't have a quantity`
+			);
+		}
+		if (operation === 'set'){
+			CreatureProperties.update(_id, {
+				$set: {quantity: value}
+			}, {
+				selector: currentProperty
+			});
+		} else if (operation === 'increment'){
+      // value here is 'damage'
+      value = -value;
+			let currentQuantity = currentProperty.quantity;
+      if (currentQuantity + value < 0) value = -currentQuantity;
+			CreatureProperties.update(_id, {
+				$inc: {quantity: value}
+			}, {
+				selector: currentProperty
+			});
+		}
+  },
+});
+
 const pushToProperty = new ValidatedMethod({
 	name: 'CreatureProperties.methods.push',
 	validate: null,
@@ -317,6 +359,7 @@ export {
 	insertPropertyFromLibraryNode,
 	updateProperty,
 	damageProperty,
+  adjustQuantity,
 	pushToProperty,
 	pullFromProperty,
 	softRemoveProperty,

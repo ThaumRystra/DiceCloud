@@ -33,7 +33,7 @@ export default {
     title(){
       let model = this.model;
       if (!model) return;
-      if (model.quantity > 1){
+      if (model.quantity !== 1){
         if (model.plural){
           return `${model.quantity} ${model.plural}`;
         } else if (model.name){

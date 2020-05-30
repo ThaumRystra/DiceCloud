@@ -9,7 +9,7 @@
       class="mr-2"
     />
     <v-toolbar-title v-if="model">
-      {{ model.name || getPropertyName(model.type) }}
+      {{ title }}
     </v-toolbar-title>
     <v-spacer />
     <v-slide-y-transition
@@ -141,13 +141,25 @@ export default {
     },
     color(){
       return this.model && this.model.color || this.$vuetify.theme.secondary;
+    },
+    title(){
+      let model = this.model;
+      if (model.quantity !== 1 && model.quantity !== undefined){
+        if (model.plural){
+          return `${model.quantity} ${model.plural}`;
+        } else if (model.name) {
+          return `${model.quantity} ${model.name}`;
+        } else {
+          return `${model.quantity} × ${getPropertyName(model.type)}`
+        }
+      }
+      return model.name || getPropertyName(model.type);
     }
   },
   methods: {
     colorChanged(value){
       this.$emit('color-changed', value);
     },
-    getPropertyName,
   }
 }
 </script>

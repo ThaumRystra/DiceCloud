@@ -24,13 +24,13 @@ const ItemSchema = new SimpleSchema({
 	weight: {
 		type: Number,
 		min: 0,
-		defaultValue: 0,
+    optional: true,
 	},
 	// Value per item in the stack, in gold pieces
 	value: {
 		type: Number,
 		min: 0,
-		defaultValue: 0,
+    optional: true,
 	},
 	// If this item is equipped, it requires attunement
 	// Being equipped is `enabled === true`
