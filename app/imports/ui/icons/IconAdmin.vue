@@ -8,47 +8,17 @@
             align-center
           >
             <upload-btn
-              :file-changed-callback="fileChanged"
+              title="Metadata JSON"
+              @file-update="metadataFileChanged"
             />
-            <v-text-field
-              ref="iconSearchField"
-              label="Search"
-              append-icon="search"
-              @click:append="updateSearchString"
-              @keydown.enter="updateSearchString"
+            <upload-btn
+              title="Sprite JSON"
+              @file-update="fileChanged"
             />
-            <v-container
-              grid-list-md
-              fill-height
-            >
-              <v-layout
-                row
-                wrap
-              >
-                <v-flex
-                  v-for="icon in icons"
-                  :key="icon._id._str || icon._id"
-                  xs3
-                  md2
-                  xl1
-                >
-                  <v-card>
-                    <v-card-title class="title">
-                      {{ icon.name }}
-                    </v-card-title>
-                    <v-card-text>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                      ><path
-                        fill="#000"
-                        :d="icon.shape"
-                      /></svg>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-            </v-container>
+            <icon-picker
+              :value="testIcon"
+              @change="testIconChange"
+            />
           </v-layout>
         </v-card-text>
       </v-card>
@@ -57,29 +27,31 @@
 </template>
 
 <script>
-  import importIcons from '/imports/ui/icons/importIcons.js';
-  import Icons from '/imports/api/icons/Icons.js';
+  import {importIcons, importIconMetadata} from '/imports/ui/icons/importIcons.js';
+  import IconPicker from '/imports/ui/components/global/IconPicker.vue';
+  import UploadButton from 'vuetify-upload-button';
 
   export default {
+    components: {
+      IconPicker,
+      UploadBtn: UploadButton,
+    },
     data(){ return {
       searchString: '',
+      testIcon: undefined,
     }},
     methods: {
       fileChanged (file) {
         importIcons(file);
       },
-      updateSearchString(){
-        this.searchString = this.$refs.iconSearchField.internalValue;
+      metadataFileChanged(file){
+        importIconMetadata(file);
       },
-    },
-    meteor: {
-      $subscribe: {
-        searchIcons() {
-          return [this.searchString];
-        },
-      },
-      icons(){
-        return Icons.find({}, { sort: [['score', 'desc']] });
+      testIconChange(value, ack){
+        setTimeout(() => {
+          this.testIcon = value;
+          ack();
+        }, 1000);
       },
     },
   };

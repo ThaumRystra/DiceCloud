@@ -23,7 +23,7 @@ export default {
     inputValue: this.value,
   };},
   props: {
-    value: [String, Number, Date, Array, Boolean],
+    value: [String, Number, Date, Array, Object, Boolean],
     errorMessages: [String, Array],
     disabled: Boolean,
   },

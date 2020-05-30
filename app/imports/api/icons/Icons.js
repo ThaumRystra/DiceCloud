@@ -1,8 +1,10 @@
 import SimpleSchema from 'simpl-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
 
 let Icons = new Mongo.Collection('icons');
 
-iconsSchema = new SimpleSchema({
+let iconsSchema = new SimpleSchema({
 	name: {
 		type: String,
     unique: true,
@@ -33,21 +35,57 @@ if (Meteor.isServer) {
   });
 }
 
+const storedIconsSchema = new SimpleSchema({
+  name: {
+    type: String,
+  },
+  shape: {
+    type: String,
+  },
+});
+
 Icons.attachSchema(iconsSchema);
 
-/*
-console.warn("Write Icons is not secure, disable before deployment")
+// This method does not validate icons against the schema, use wisely;
 const writeIcons = new ValidatedMethod({
-	name: 'writeIcons',
+	name: 'icons.methods.write',
 	validate: null,
 	run(icons){
+    assertAdmin(this.userId);
     if (Meteor.isServer){
       this.unblock();
       Icons.rawCollection().insert(icons, {ordered: false});
     }
 	}
 });
-*/
 
-export { writeIcons };
+const findIcons = new ValidatedMethod({
+  name: 'icons.methods.find',
+  validate: new SimpleSchema({
+    search: {
+      type: String,
+      max: 30,
+      optional: true,
+    },
+  }).validator(),
+  run({search}){
+    if (!search) return [];
+    if (!Meteor.isServer) return;
+    return Icons.find(
+      { $text: {$search: search} },
+      {
+        // relevant documents have a higher score.
+        fields: {
+          score: { $meta: 'textScore' }
+        },
+        // `score` property specified in the projection fields above.
+        sort: {
+          score: { $meta: 'textScore' }
+        }
+      }
+    ).fetch();
+  }
+})
+
+export { writeIcons, findIcons, storedIconsSchema };
 export default Icons;

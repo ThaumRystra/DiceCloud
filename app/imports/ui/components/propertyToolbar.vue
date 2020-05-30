@@ -5,7 +5,7 @@
     :flat="flat"
   >
     <property-icon
-      :type="model && model.type"
+      :model="model"
       class="mr-2"
     />
     <v-toolbar-title v-if="model">

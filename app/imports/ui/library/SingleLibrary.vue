@@ -41,7 +41,7 @@
         flat
       >
         <property-icon
-          :type="selectedNode && selectedNode.type"
+          :model="selectedNode"
           class="mr-2"
         />
         <div class="title">

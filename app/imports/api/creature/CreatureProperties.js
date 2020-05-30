@@ -17,6 +17,7 @@ import {
 	renewDocIds
 } from '/imports/api/parenting/parenting.js';
 import {setDocToLastOrder} from '/imports/api/parenting/order.js';
+import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
@@ -36,6 +37,10 @@ let CreaturePropertySchema = new SimpleSchema({
 		type: Boolean,
 		optional: true,
 	},
+  icon: {
+    type: storedIconsSchema,
+    optional: true,
+  }
 });
 
 for (let key in propertySchemasIndex){

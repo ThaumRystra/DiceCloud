@@ -14,7 +14,8 @@ import CharacterSheetToolbarItems from '/imports/ui/creature/character/Character
 import CharacterSheetToolbarExtension from '/imports/ui/creature/character/CharacterSheetToolbarExtension.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue';
-import Friends from '/imports/ui/pages/Friends.vue' ;
+import IconAdmin from '/imports/ui/icons/IconAdmin.vue';
+//import Friends from '/imports/ui/pages/Friends.vue' ;
 import Feedback from '/imports/ui/pages/Feedback.vue' ;
 import Account from '/imports/ui/pages/Account.vue' ;
 import InviteSuccess from '/imports/ui/pages/InviteSuccess.vue' ;
@@ -41,6 +42,24 @@ function ensureLoggedIn(to, from, next){
       const user = Meteor.user();
       if (user){
         next()
+      } else {
+        next({ name: 'signIn', query: { redirect: to.path} });
+      }
+    }
+  });
+}
+
+function ensureAdmin(to, from, next){
+  Tracker.autorun((computation) => {
+    if (userSubscription.ready()){
+      computation.stop();
+      const user = Meteor.user();
+      if (user){
+        if (user.roles && user.roles.includes('admin')){
+          next()
+        } else {
+          next({name: 'home'});
+        }
       } else {
         next({ name: 'signIn', query: { redirect: to.path} });
       }
@@ -222,19 +241,13 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Patreon Tier Too Low',
       },
+    },{
+      path: '/icon-admin',
+      name: 'iconAdmin',
+      component: IconAdmin,
+      beforeEnter: ensureAdmin,
     },
   ]);
-  // Icon admin routes
-  if (Meteor.isDevelopment){
-    let IconAdmin = require('/imports/ui/icons/IconAdmin.vue').default;
-    factory.addRoutes([
-      {
-        path: '/icon-admin',
-        name: 'iconAdmin',
-        component: IconAdmin,
-      },
-    ]);
-  }
 });
 
 // Not found route has lowest priority

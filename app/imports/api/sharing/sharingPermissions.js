@@ -113,3 +113,17 @@ export function assertDocViewPermission(doc, userId){
   let root = getRoot(doc);
   assertViewPermission(root, userId);
 }
+
+export function assertAdmin(userId){
+  assertIdValid(userId);
+  let user = Meteor.users.findOne(userId, {fields: {roles: 1}});
+  if (!user){
+    throw new Meteor.Error('Permission denied',
+      'UserId does not match any existing user');
+  }
+  let isAdmin = user.roles && user.roles.includes('admin')
+  if (!isAdmin){
+    throw new Meteor.Error('Permission denied',
+      'User does not have the admin role');
+  }
+}

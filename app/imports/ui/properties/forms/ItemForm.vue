@@ -1,13 +1,22 @@
 <template lang="html">
   <div class="item-form">
-    <div class="layout column align-center">
-      <smart-switch
-        label="Equipped"
-        class="no-flex"
-        :value="model.equipped"
-        :error-messages="errors.equipped"
-        @change="change('equipped', ...arguments)"
-      />
+    <div class="layout row justify-space-around">
+      <div>
+        <icon-picker
+          label="Icon"
+          :value="model.icon"
+          :error-messages="errors.icon"
+          @change="change('icon', ...arguments)"
+        />
+      </div>
+      <div>
+        <smart-switch
+          label="Equipped"
+          :value="model.equipped"
+          :error-messages="errors.equipped"
+          @change="change('equipped', ...arguments)"
+        />
+      </div>
     </div>
     <div class="layout row wrap">
       <text-field
@@ -66,12 +75,14 @@
       name="Advanced"
       standalone
     >
+      <!--
       <smart-switch
         label="Show increment buttons"
         :value="model.showIncrement"
         :error-messages="errors.showIncrement"
         @change="change('showIncrement', ...arguments)"
       />
+      -->
       <smart-combobox
         label="Tags"
         class="mr-2"

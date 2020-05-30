@@ -2,7 +2,7 @@
   <div class="layout row align-center justify-start">
     <property-icon
       class="mr-2"
-      :type="model.type"
+      :model="model"
       :color="model.color"
       :class="selected && 'primary--text'"
     />

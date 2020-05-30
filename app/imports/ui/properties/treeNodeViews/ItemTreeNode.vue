@@ -1,11 +1,18 @@
 <template lang="html">
   <div class="layout row align-center justify-start">
+    <property-icon
+      class="mr-2"
+      :model="model"
+      :color="model.color"
+      :class="selected && 'primary--text'"
+    />
     <v-icon
+      v-if="model.equipped"
       class="mr-2"
       :class="selected && 'primary--text'"
-      :color="model.color"
+      small
     >
-      {{ model.equipped ? 'check_box' : 'check_box_outline_blank' }}
+      pan_tool
     </v-icon>
     <div
       class="text-no-wrap text-truncate"
