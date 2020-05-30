@@ -72,8 +72,11 @@ function combineSkill(stat, aggregator, memo){
   }
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;
+  // Base value
+  stat.baseValue = aggregator.statBaseValue;
+  stat.baseValueErrors = aggregator.baseValueErrors;
   // Combine everything to get the final result
-  let result = (stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
+  let result = (aggregator.base + stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;
   if (aggregator.set !== undefined) {
@@ -103,6 +106,7 @@ function combineSkill(stat, aggregator, memo){
   stat.rollBonuses = aggregator.rollBonus;
   // Hide
   stat.hide = aggregator.hasNoEffects &&
+    stat.baseValue === undefined &&
     stat.proficiency == 0 ||
     undefined;
 }

@@ -46,12 +46,11 @@
       <div class="layout row justify-center">
         <text-field
           label="Base Value"
-          type="number"
-          class="base-value-field text-xs-center large-format no-flex"
-          :value="model.baseValue"
+          class="base-value-field no-flex"
+          :value="model.baseValueCalculation"
           hint="This is the value of the skill before effects are applied"
-          :error-messages="errors.baseValue"
-          @change="change('baseValue', ...arguments)"
+          :error-messages="errors.baseValueCalculation"
+          @change="change('baseValueCalculation', ...arguments)"
         />
         <proficiency-select
           style="flex-basis: 300px;"
@@ -61,6 +60,7 @@
           @change="change('baseProficiency', ...arguments)"
         />
       </div>
+      <calculation-error-list :errors="model.baseValueErrors" />
     </form-section>
   </div>
 </template>
@@ -70,11 +70,13 @@
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
 		components: {
 			ProficiencySelect,
 			FormSection,
+      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
 		data(){return{

@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
@@ -37,9 +38,9 @@ let SkillSchema = new SimpleSchema({
     ],
     defaultValue: 'skill',
   },
-	// If the baseValue is higher than the computed value, it will be used as `value`
-	baseValue: {
-		type: Number,
+  // The starting value, before effects
+	baseValueCalculation: {
+		type: String,
 		optional: true,
 	},
 	// The base proficiency of this skill
@@ -59,6 +60,18 @@ let ComputedOnlySkillSchema = new SimpleSchema({
   value: {
     type: Number,
 		defaultValue: 0,
+  },
+  // The result of baseValueCalculation
+  baseValue: {
+    type: SimpleSchema.oneOf(Number, String, Boolean),
+    optional: true,
+  },
+  baseValueErrors: {
+    type: Array,
+    optional: true,
+  },
+  'baseValueErrors.$': {
+    type: ErrorSchema,
   },
 	// Computed value added by the ability
 	abilityMod: {
