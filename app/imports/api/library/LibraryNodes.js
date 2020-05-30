@@ -9,6 +9,7 @@ import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
+import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -24,6 +25,10 @@ let LibraryNodeSchema = new SimpleSchema({
 	'tags.$': {
 		type: String,
 	},
+  icon: {
+    type: storedIconsSchema,
+    optional: true,
+  }
 });
 
 for (let key in propertySchemasIndex){
