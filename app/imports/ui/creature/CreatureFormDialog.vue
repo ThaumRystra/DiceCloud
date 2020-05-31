@@ -1,8 +1,15 @@
 <template lang="html">
-  <dialog-base>
-    <v-toolbar-title slot="toolbar">
-      Creature Form Dialog
-    </v-toolbar-title>
+  <dialog-base :color="model.color">
+    <template slot="toolbar">
+      <v-toolbar-title>
+        Creature Form Dialog
+      </v-toolbar-title>
+      <v-spacer />
+      <color-picker
+        :value="model.color"
+        @input="value => change({path: ['color'], value})"
+      />
+    </template>
     <div>
       <creature-form
         :model="model"
@@ -27,11 +34,13 @@ import {updateCreature} from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import CreatureForm from '/imports/ui/creature/CreatureForm.vue'
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 
 export default {
 	components: {
 		DialogBase,
 		CreatureForm,
+    ColorPicker,
 	},
 	props: {
 		_id: String,
@@ -52,8 +61,16 @@ export default {
 	},
 	methods: {
 		change({path, value, ack}){
-			updateCreature.call({_id: this._id, path, value}, (error, result) =>{
-				ack && ack(error && error.reason || error);
+			updateCreature.call({_id: this._id, path, value}, (error) =>{
+        if (error){
+          if(ack){
+            ack(error && error.reason || error)
+          } else {
+            console.error(error)
+          }
+        } else if (ack) {
+          ack();
+        }
 			});
 		},
 	}

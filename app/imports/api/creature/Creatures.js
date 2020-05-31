@@ -143,7 +143,15 @@ const updateCreature = new ValidatedMethod({
   validate({_id, path}){
 		if (!_id) return false;
 		// Allowed fields
-		let allowedFields = ['name', 'alignment', 'gender', 'picture', 'avatarPicture', 'settings'];
+		let allowedFields = [
+      'name',
+      'alignment',
+      'gender',
+      'picture',
+      'avatarPicture',
+      'color',
+      'settings',
+    ];
 		if (!allowedFields.includes(path[0])){
 			throw new Meteor.Error('Creatures.methods.update.denied',
       'This field can\'t be updated using this method');
@@ -152,9 +160,15 @@ const updateCreature = new ValidatedMethod({
   run({_id, path, value}) {
 		let creature = Creatures.findOne(_id);
     assertEditPermission(creature, this.userId);
-		Creatures.update(_id, {
-			$set: {[path.join('.')]: value},
-		});
+    if (value === undefined || value === null){
+      Creatures.update(_id, {
+        $unset: {[path.join('.')]: 1},
+      });
+    } else {
+      Creatures.update(_id, {
+        $set: {[path.join('.')]: value},
+      });
+    }
   },
 });
 

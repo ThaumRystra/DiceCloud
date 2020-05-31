@@ -1,5 +1,4 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
 import { acceptInviteToken } from '/imports/api/users/Invites.js';
 
 // Components
@@ -10,8 +9,7 @@ import Library from '/imports/ui/pages/Library.vue';
 import SingleLibraryPage from '/imports/ui/pages/SingleLibraryPage.vue'
 import SingleLibraryToolbarItems from '/imports/ui/library/SingleLibraryToolbarItems.vue'
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
-import CharacterSheetToolbarItems from '/imports/ui/creature/character/CharacterSheetToolbarItems.vue';
-import CharacterSheetToolbarExtension from '/imports/ui/creature/character/CharacterSheetToolbarExtension.vue';
+import CharacterSheetToolbar from '/imports/ui/creature/character/CharacterSheetToolbar.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue';
 import IconAdmin from '/imports/ui/icons/IconAdmin.vue';
@@ -22,7 +20,6 @@ import InviteSuccess from '/imports/ui/pages/InviteSuccess.vue' ;
 import InviteError from '/imports/ui/pages/InviteError.vue' ;
 import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
 import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
-import LaunchCountdown from '/imports/ui/pages/LaunchCountdown.vue';
 
 let userSubscription = Meteor.subscribe('user');
 
@@ -91,17 +88,7 @@ function claimInvite(to, from, next){
 }
 
 RouterFactory.configure(factory => {
-  factory.addRoutes([
-    {
-      path: '/countdown',
-      name: 'Countdown',
-      components: {
-        default: LaunchCountdown,
-      },
-      meta: {
-        title: 'Countdown to Launch',
-      },
-    },{
+  factory.addRoutes([{
       path: '/',
       name: 'home',
       components: {
@@ -142,8 +129,7 @@ RouterFactory.configure(factory => {
       path: '/character/:id/:urlName',
       components: {
         default: CharacterSheetPage,
-        toolbarExtension: CharacterSheetToolbarExtension,
-        toolbarItems: CharacterSheetToolbarItems,
+        toolbar: CharacterSheetToolbar,
       },
       meta: {
         title: 'Character Sheet',
@@ -152,8 +138,7 @@ RouterFactory.configure(factory => {
       path: '/character/:id',
       components: {
         default: CharacterSheetPage,
-        toolbarExtension: CharacterSheetToolbarExtension,
-        toolbarItems: CharacterSheetToolbarItems,
+        toolbar: CharacterSheetToolbar,
       },
       meta: {
         title: 'Character Sheet',
@@ -263,13 +248,10 @@ const router = routerFactory.create();
 router.beforeEach((to, from, next) => {
   let user = Meteor.user();
   if (
-    to.path === '/countdown' ||
     to.path === '/sign-in' ||
     (user && user.roles && user.roles.includes('admin'))
   ){
     next();
-  } else if (new Date() < LAUNCH_DATE){
-    next('/countdown');
   } else {
     next();
   }

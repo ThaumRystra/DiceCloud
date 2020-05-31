@@ -2,7 +2,7 @@
   <div class="inventory">
     <column-layout>
       <div>
-        <toolbar-card color="">
+        <toolbar-card :color="$vuetify.theme.secondary">
           <v-spacer slot="toolbar" />
           <v-switch
             v-if="context.editPermission !== false"

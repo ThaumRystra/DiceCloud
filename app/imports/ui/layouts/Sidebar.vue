@@ -1,7 +1,6 @@
 <template>
   <div class="sidebar">
     <v-alert
-      v-if="$route.path !== '/countdown'"
       icon="priority_high"
       type="error"
       dismissible

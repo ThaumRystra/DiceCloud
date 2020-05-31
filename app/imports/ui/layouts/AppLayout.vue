@@ -4,14 +4,17 @@
     :light="!darkMode"
   >
     <v-navigation-drawer
-      v-if="$route.path !== '/countdown'"
       v-model="drawer"
       app
     >
       <Sidebar />
     </v-navigation-drawer>
+    <router-view
+      v-model="tabs"
+      name="toolbar"
+    />
     <v-toolbar
-      v-if="$route.path !== '/countdown'"
+      v-if="!$route.matched[0].components.toolbar"
       app
       color="secondary"
       dark
@@ -116,6 +119,9 @@
         'toggleDrawer',
       ]),
     },
+    mounted(){
+      console.log(this.$route);
+    }
   };
 </script>
 
