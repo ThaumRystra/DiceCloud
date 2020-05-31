@@ -1,42 +1,42 @@
 const PROPERTIES = Object.freeze({
   action: {
-    icon: 'offline_bolt',
+    icon: '$vuetify.icons.action',
     name: 'Action'
   },
   adjustment: {
-    icon: 'warning',
+    icon: '$vuetify.icons.attribute_damage',
     name: 'Attribute damage'
   },
   attack: {
-    icon: 'bolt',
+    icon: '$vuetify.icons.attack',
     name: 'Attack'
   },
   attribute: {
-    icon: 'donut_small',
+    icon: '$vuetify.icons.attribute',
     name: 'Attribute'
   },
   buff: {
-    icon: 'star',
+    icon: '$vuetify.icons.buff',
     name: 'Buff'
   },
   classLevel: {
-    icon: 'school',
+    icon: '$vuetify.icons.class_level',
     name: 'Class level'
   },
   damage: {
-    icon: 'report',
+    icon: '$vuetify.icons.damage',
     name: 'Damage'
   },
   damageMultiplier: {
-    icon: 'layers',
+    icon: '$vuetify.icons.damage_multiplier',
     name: 'Damage multiplier'
   },
   effect: {
-    icon: 'show_chart',
+    icon: '$vuetify.icons.effect',
     name: 'Effect'
   },
   experience: {
-    icon: 'add',
+    icon: '$vuetify.icons.experience',
     name: 'Experience'
   },
   feature: {
@@ -56,23 +56,23 @@ const PROPERTIES = Object.freeze({
     name: 'Proficiency'
   },
   roll: {
-    icon: 'flare',
+    icon: '$vuetify.icons.roll',
     name: 'Roll'
   },
   savingThrow: {
-    icon: 'all_out',
+    icon: '$vuetify.icons.saving_throw',
     name: 'Saving throw'
   },
   skill: {
-    icon: 'check_box',
+    icon: '$vuetify.icons.skill',
     name: 'Skill'
   },
   spellList: {
-    icon: 'list',
+    icon: '$vuetify.icons.spell_list',
     name: 'Spell list'
   },
   spell: {
-    icon: 'whatshot',
+    icon: '$vuetify.icons.spell',
     name: 'Spell'
   },
   container: {
@@ -80,11 +80,11 @@ const PROPERTIES = Object.freeze({
     name: 'Container'
   },
   item: {
-    icon: 'category',
+    icon: '$vuetify.icons.item',
     name: 'Item'
   },
   toggle: {
-    icon: 'power_settings_new',
+    icon: '$vuetify.icons.toggle',
     name: 'Toggle'
   },
 });
