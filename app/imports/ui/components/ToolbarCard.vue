@@ -9,6 +9,7 @@
       :style="`transform: none; ${hasToolbarClickListener ? 'cursor: pointer;' : ''}`"
       :color="color"
       :dark="isDark"
+      :light="!isDark"
       @click="$emit('toolbarclick')"
     >
       <slot name="toolbar" />

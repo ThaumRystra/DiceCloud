@@ -2,6 +2,7 @@
   <v-toolbar
     :color="color || 'secondary'"
     :dark="isDark"
+    :light="!isDark"
     :flat="flat"
   >
     <property-icon

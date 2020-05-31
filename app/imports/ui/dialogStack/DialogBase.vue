@@ -10,6 +10,7 @@
       <v-toolbar
         :color="computedColor"
         :dark="isDark"
+        :light="!isDark"
         class="base-dialog-toolbar"
         :flat="!offsetTop"
       >

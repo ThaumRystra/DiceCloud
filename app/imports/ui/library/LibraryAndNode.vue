@@ -14,7 +14,8 @@
       <v-toolbar
         flat
         :color="selectedNode && selectedNode.color || 'secondary'"
-        :dark="isDarkColor(selectedNode && selectedNode.color || $vuetify.theme.secondary)"
+        :dark="isToolbarDark"
+        :light="!isToolbarDark"
       >
         <v-spacer />
         <v-switch
@@ -67,6 +68,14 @@ export default {
     organize: false,
     selected: undefined,
   };},
+  computed: {
+    isToolbarDark(){
+      return isDarkColor(
+        this.selectedNode && this.selectedNode.color ||
+        this.$vuetify.theme.secondary
+      );
+    }
+  },
   watch:{
     selectedNode(val){
       this.$emit('selected', val)
@@ -101,7 +110,6 @@ export default {
       }
     },
     getPropertyName,
-    isDarkColor,
   },
   meteor: {
     $subscribe: {

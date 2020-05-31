@@ -53,7 +53,6 @@
 <script>
 import Creatures from '/imports/api/creature/Creatures.js';
 import removeCreature from '/imports/api/creature/removeCreature.js';
-import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import { mapMutations } from 'vuex';
 import { theme } from '/imports/ui/theme.js';
 import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
@@ -134,7 +133,6 @@ export default {
         }
       });
     },
-		isDarkColor,
   },
   meteor: {
     $subscribe: {

@@ -12,7 +12,7 @@ function hexToRgb(hex) {
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
     } : null;
-};
+}
 
 export default function isDarkColor(hexColor){
   let rgb = hexToRgb(hexColor);
@@ -22,4 +22,4 @@ export default function isDarkColor(hexColor){
     / 1000
   );
   return brightness <= 125;
-};
+}

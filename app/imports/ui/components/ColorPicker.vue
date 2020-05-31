@@ -56,7 +56,7 @@
               <v-scroll-y-transition>
                 <v-icon
                   v-if="kebabShade === shadeOption"
-                  :class="{dark: isDark(color, shade)}"
+                  :class="isDark(color, shade) ? 'dark' : 'light'"
                 >
                   check
                 </v-icon>
