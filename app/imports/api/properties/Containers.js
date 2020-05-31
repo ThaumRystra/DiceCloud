@@ -18,12 +18,12 @@ let ContainerSchema = new SimpleSchema({
 	weight: {
 		type: Number,
 		min: 0,
-		defaultValue: 0
+    optional: true,
 	},
 	value: {
 		type: Number,
 		min: 0,
-		defaultValue: 0
+    optional: true,
 	},
 	description: {
 		type: String,
