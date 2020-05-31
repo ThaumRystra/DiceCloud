@@ -2,8 +2,9 @@
   <v-toolbar
     app
     class="character-sheet-toolbar"
-    :color="creature && creature.color || 'secondary'"
-    dark
+    :color="toolbarColor"
+    :dark="isDark"
+    :light="!isDark"
     tabs
     dense
   >
@@ -122,6 +123,7 @@ import { theme } from '/imports/ui/theme.js';
 import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
+import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 
 export default {
   props: {
@@ -136,6 +138,16 @@ export default {
   computed: {
     creatureId(){
       return this.$route.params.id;
+    },
+    toolbarColor(){
+      if (this.creature && this.creature.color){
+        return this.creature.color;
+      } else {
+        return this.$vuetify.theme.secondary;
+      }
+    },
+    isDark(){
+      return isDarkColor(this.toolbarColor);
     },
   },
   methods: {
