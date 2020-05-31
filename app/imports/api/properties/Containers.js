@@ -32,4 +32,16 @@ let ContainerSchema = new SimpleSchema({
 	},
 });
 
-export { ContainerSchema };
+const ComputedOnlyContainerSchema = new SimpleSchema({
+  // Weight of all the contents, zero if `contentsWeightless` is true
+  contentsWeight:{
+    type: Number,
+    optional: true,
+  },
+});
+
+const ComputedContainerSchema = new SimpleSchema()
+	.extend(ComputedOnlyContainerSchema)
+	.extend(ContainerSchema);
+
+export { ContainerSchema, ComputedContainerSchema };

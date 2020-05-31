@@ -1,14 +1,9 @@
 <template lang="html">
   <div class="item-viewer">
-    <div
-      v-if="tagString"
-      class="tags ma-3"
-    >
-      {{ tagString }}
-    </div>
+    <property-tags :tags="model.tags" />
     <div
       v-if="model.quantity > 1 || model.showIncrement"
-      class="layout column justify-center align-center"
+      class="layout row justify-center align-center wrap"
     >
       <div class="display-1">
         {{ model.quantity }}
@@ -22,9 +17,7 @@
         :value="model.quantity"
         @change="changeQuantity"
       >
-        <svg-icon
-          :shape="getIcon('abacus').shape"
-        />
+        <v-icon>$vuetify.icons.abacus</v-icon>
       </increment-button>
     </div>
     <div class="layout row wrap justify-space-around">
@@ -38,11 +31,12 @@
           align-center
           class="mb-2"
         >
-          <svg-icon
-            :shape="getIcon('cash').shape"
+          <v-icon
             class="mr-2"
             x-large
-          />
+          >
+            $vuetify.icons.cash
+          </v-icon>
           <coin-value
             class="title"
             :value="totalValue"
@@ -52,11 +46,12 @@
           row
           align-center
         >
-          <svg-icon
-            :shape="getIcon('two-coins').shape"
+          <v-icon
             class="mr-2"
             x-large
-          />
+          >
+            $vuetify.icons.two_coins
+          </v-icon>
           <coin-value
             class="title mr-2"
             :value="model.value"
@@ -83,11 +78,12 @@
           <span class="title">
             {{ totalWeight }} lb
           </span>
-          <svg-icon
-            :shape="getIcon('injustice').shape"
+          <v-icon
             class="ml-2"
             x-large
-          />
+          >
+            $vuetify.icons.injustice
+          </v-icon>
         </v-layout>
         <v-layout
           row
@@ -103,11 +99,12 @@
           >
             each
           </span>
-          <svg-icon
-            :shape="getIcon('weight').shape"
+          <v-icon
             class="ml-2"
             x-large
-          />
+          >
+            $vuetify.icons.weight
+          </v-icon>
         </v-layout>
       </div>
     </div>
@@ -135,9 +132,6 @@ export default {
     context: { default: {} }
   },
   computed:{
-    tagString(){
-      return this.model.tags && this.model.tags.join(', ');
-    },
     totalValue(){
       return this.model.value * this.model.quantity;
     },

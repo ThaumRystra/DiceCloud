@@ -1,11 +1,22 @@
 <template lang="html">
   <div class="attribute-form">
-    <text-field
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
+    <div class="layout row justify-space-between wrap">
+      <text-field
+        label="Name"
+        :value="model.name"
+        :error-messages="errors.name"
+        @change="change('name', ...arguments)"
+      />
+      <div>
+        <smart-switch
+          label="Carried"
+          class="mx-3"
+          :value="model.carried"
+          :error-messages="errors.carried"
+          @change="change('carried', ...arguments)"
+        />
+      </div>
+    </div>
     <div class="layout row wrap">
       <text-field
         label="Value"
@@ -15,17 +26,19 @@
         hint="The value of the item in gold pieces, using decimals for values less than 1 gp"
         class="mx-1"
         style="flex-basis: 300px;"
+        prepend-inner-icon="$vuetify.icons.two_coins"
         :value="model.value"
         :error-messages="errors.value"
         @change="change('value', ...arguments)"
       />
       <text-field
         label="Weight"
-        suffix="lbs"
+        suffix="lb"
         type="number"
         min="0"
         class="mx-1"
         style="flex-basis: 300px;"
+        prepend-inner-icon="$vuetify.icons.weight"
         :value="model.weight"
         :error-messages="errors.weight"
         @change="change('weight', ...arguments)"
@@ -41,18 +54,16 @@
       name="Advanced"
       standalone
     >
-      <smart-switch
-        label="Carried"
-        :value="model.carried"
-        :error-messages="errors.carried"
-        @change="change('carried', ...arguments)"
-      />
-      <smart-switch
-        label="Contents are weightless"
-        :value="model.contentsWeightless"
-        :error-messages="errors.contentsWeightless"
-        @change="change('contentsWeightless', ...arguments)"
-      />
+      <div class="layout row justify-center">
+        <div>
+          <smart-switch
+            label="Contents are weightless"
+            :value="model.contentsWeightless"
+            :error-messages="errors.contentsWeightless"
+            @change="change('contentsWeightless', ...arguments)"
+          />
+        </div>
+      </div>
     </form-section>
   </div>
 </template>
