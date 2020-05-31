@@ -3,10 +3,6 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.action',
     name: 'Action'
   },
-  adjustment: {
-    icon: '$vuetify.icons.attribute_damage',
-    name: 'Attribute damage'
-  },
   attack: {
     icon: '$vuetify.icons.attack',
     name: 'Attack'
@@ -15,6 +11,10 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.attribute',
     name: 'Attribute'
   },
+  adjustment: {
+    icon: '$vuetify.icons.attribute_damage',
+    name: 'Attribute damage'
+  },
   buff: {
     icon: '$vuetify.icons.buff',
     name: 'Buff'
@@ -22,6 +22,10 @@ const PROPERTIES = Object.freeze({
   classLevel: {
     icon: '$vuetify.icons.class_level',
     name: 'Class level'
+  },
+  container: {
+    icon: 'work',
+    name: 'Container'
   },
   damage: {
     icon: '$vuetify.icons.damage',
@@ -46,6 +50,10 @@ const PROPERTIES = Object.freeze({
   folder: {
     icon: 'folder',
     name: 'Folder'
+  },
+  item: {
+    icon: '$vuetify.icons.item',
+    name: 'Item'
   },
   note: {
     icon: 'note',
@@ -74,14 +82,6 @@ const PROPERTIES = Object.freeze({
   spell: {
     icon: '$vuetify.icons.spell',
     name: 'Spell'
-  },
-  container: {
-    icon: 'work',
-    name: 'Container'
-  },
-  item: {
-    icon: '$vuetify.icons.item',
-    name: 'Item'
   },
   toggle: {
     icon: '$vuetify.icons.toggle',
