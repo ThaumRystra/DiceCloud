@@ -7,11 +7,6 @@
             column
             align-center
           >
-            <v-icon>$vuetify.icons.abacus</v-icon>
-            <v-input
-              prepend-icon="$vuetify.icons.abacus"
-              label="cat"
-            />
             <upload-btn
               title="Metadata JSON"
               @file-update="metadataFileChanged"

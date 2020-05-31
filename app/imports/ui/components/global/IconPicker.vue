@@ -99,6 +99,17 @@ export default {
     searchString: '',
     icons: [],
 	};},
+  watch: {
+    menu(value){
+      if (value){
+        setTimeout(() => {
+          if (this.$refs.iconSearchField){
+            this.$refs.iconSearchField.$children[0].focus();
+          }
+        }, 100);
+      }
+    },
+  },
 	methods: {
     search(value, ack){
       this.searchString = value;
