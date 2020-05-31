@@ -40,9 +40,6 @@
       searchString: '',
       testIcon: undefined,
     }},
-    mounted(){
-      console.log(this.$vuetify);
-    },
     methods: {
       fileChanged (file) {
         importIcons(file);

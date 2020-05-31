@@ -29,7 +29,6 @@ export default {
   }},
   meteor: {
     library(){
-      console.log(this.$route);
       return Libraries.findOne(this.$route.params.id);
     },
     subscribed(){
@@ -41,7 +40,6 @@ export default {
       let userId = Meteor.userId();
       let library = this.library;
       if (!library) return;
-      console.log({library, userId});
       if (
         library.readers.includes(userId) ||
         library.writers.includes(userId) ||
@@ -55,10 +53,8 @@ export default {
     canEdit(){
       try {
         assertDocEditPermission(this.library, Meteor.userId());
-        console.log('can edit');
         return true
       } catch (e) {
-        console.log(e);
         return false;
       }
     }

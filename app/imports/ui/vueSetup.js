@@ -22,7 +22,6 @@ for (const name in SVG_ICONS) {
     }
   }
 }
-console.log(icons);
 
 Vue.use(VueMeteorTracker);
 Vue.config.meteor.freeze = true

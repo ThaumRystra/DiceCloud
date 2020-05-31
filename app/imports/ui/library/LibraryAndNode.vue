@@ -101,7 +101,6 @@ export default {
             selection: this.selection,
           },
           callback: result => {
-            console.log(result)
             if (result){
               this.selected = id;
             }

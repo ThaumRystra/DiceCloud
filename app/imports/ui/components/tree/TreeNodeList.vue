@@ -107,7 +107,6 @@
 				let allowed = isParentAllowed({parentType, childType});
 				return allowed;
 			},
-      log: console.log,
 		},
 	};
 </script>
