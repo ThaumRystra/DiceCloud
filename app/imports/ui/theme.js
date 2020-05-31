@@ -10,7 +10,7 @@ const theme = {
 
 const darkTheme = {
   primary: '#f44336',
-  secondary: '#757575',
+  secondary: '#212121',
   accent: '#f44336',
   error: '#FF6D00',
   warning: '#FFB300',
