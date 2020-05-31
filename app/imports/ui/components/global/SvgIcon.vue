@@ -1,5 +1,6 @@
 <template lang="html">
   <i
+    ref="icon"
     aria-hidden
     role="img"
     class="v-icon"
@@ -50,6 +51,9 @@ export default {
     large: Boolean,
     xLarge: Boolean,
   },
+  data(){return {
+    inheritedSize: undefined,
+  }},
   computed: {
     isDark () {
       if (this.dark === true) {
@@ -70,6 +74,7 @@ export default {
       }
     },
     size() {
+      if (this.inheritedSize) return this.inheritedSize;
       if (this.xSmall) return SIZE_MAP['xSmall'];
       if (this.small)  return SIZE_MAP['small'];
       if (this.medium) return SIZE_MAP['medium'];
@@ -77,6 +82,9 @@ export default {
       if (this.xLarge) return SIZE_MAP['xLarge'];
       return SIZE_MAP['default'];
     },
+  },
+  mounted(){
+    this.inheritedSize = this.$refs.icon.style.fontSize;
   }
 }
 </script>

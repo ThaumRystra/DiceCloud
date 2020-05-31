@@ -7,6 +7,11 @@
             column
             align-center
           >
+            <v-icon>$vuetify.icons.abacus</v-icon>
+            <v-input
+              prepend-icon="$vuetify.icons.abacus"
+              label="cat"
+            />
             <upload-btn
               title="Metadata JSON"
               @file-update="metadataFileChanged"
@@ -40,6 +45,9 @@
       searchString: '',
       testIcon: undefined,
     }},
+    mounted(){
+      console.log(this.$vuetify);
+    },
     methods: {
       fileChanged (file) {
         importIcons(file);
