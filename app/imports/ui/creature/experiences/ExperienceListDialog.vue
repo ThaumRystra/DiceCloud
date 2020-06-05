@@ -21,7 +21,27 @@
         <v-icon>refresh</v-icon>
       </v-btn>
     </template>
-    <v-list>
+    <div
+      v-if="!$subReady.experiences"
+      class="layout column align-center justify-center fill-height"
+    >
+      <v-progress-circular
+        indeterminate
+        size="240"
+      />
+    </div>
+    <div
+      v-else-if="experiences.length === 0"
+      class="layout column align-center justify-center fill-height"
+    >
+      <v-icon style="font-size: 240px; width: 240px; height: 240px;">
+        $vuetify.icons.baby_face
+      </v-icon>
+      <p class="headline">
+        No experiences
+      </p>
+    </div>
+    <v-list v-else>
       <v-slide-x-transition
         group
         mode="out"

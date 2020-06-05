@@ -8,7 +8,6 @@ import ClassLevelViewer from '/imports/ui/properties/viewers/ClassLevelViewer.vu
 import DamageViewer from '/imports/ui/properties/viewers/DamageViewer.vue';
 import DamageMultiplierViewer from '/imports/ui/properties/viewers/DamageMultiplierViewer.vue';
 import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
-import ExperienceViewer from '/imports/ui/properties/viewers/ExperienceViewer.vue';
 import FeatureViewer from '/imports/ui/properties/viewers/FeatureViewer.vue';
 import FolderViewer from '/imports/ui/properties/viewers/FolderViewer.vue';
 import ItemViewer from '/imports/ui/properties/viewers/ItemViewer.vue';
@@ -29,7 +28,6 @@ export default {
   classLevel: ClassLevelViewer,
   damage: DamageViewer,
   damageMultiplier: DamageMultiplierViewer,
-  experience: ExperienceViewer,
   effect: EffectViewer,
   feature: FeatureViewer,
   folder: FolderViewer,

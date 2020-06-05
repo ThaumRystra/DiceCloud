@@ -21,6 +21,7 @@
         type="number"
         class="base-value-field text-xs-center large-format no-flex"
         suffix="XP"
+        autofocus
         :value="model.xp"
         :error-messages="errors.xp"
         @change="change('xp', ...arguments)"
@@ -28,6 +29,7 @@
     </div>
     <text-field
       label="Name"
+      :autofocus="milestone"
       :value="model.name"
       :error-messages="errors.name"
       @change="change('name', ...arguments)"

@@ -8,7 +8,6 @@ import ContainerForm from '/imports/ui/properties/forms/ContainerForm.vue';
 import DamageForm from '/imports/ui/properties/forms/DamageForm.vue';
 import DamageMultiplierForm from '/imports/ui/properties/forms/DamageMultiplierForm.vue';
 import EffectForm from '/imports/ui/properties/forms/EffectForm.vue';
-import ExperienceForm from '/imports/ui/properties/forms/ExperienceForm.vue';
 import FeatureForm from '/imports/ui/properties/forms/FeatureForm.vue';
 import FolderForm from '/imports/ui/properties/forms/FolderForm.vue';
 import ItemForm from '/imports/ui/properties/forms/ItemForm.vue';
@@ -31,7 +30,6 @@ export default {
   classLevel: ClassLevelForm,
   damage: DamageForm,
   damageMultiplier: DamageMultiplierForm,
-  experience:ExperienceForm,
   effect: EffectForm,
   feature: FeatureForm,
   folder: FolderForm,
