@@ -1,23 +1,14 @@
 <template lang="html">
-	<div class="class-level-viewer">
-		<div>
-			<span class="name headline">
-				{{model.name}}
-			</span>
-			<span
-				class="display-2"
-				v-if="model.level"
-			>
-				{{model.level}}
-			</span>
-		</div>
-		<p class="my-2">
-			<code>{{model.variableName}}</code>
-		</p>
-		<p class="my-2" v-if="model.baseClass">
-			Base class: <code>{{model.baseClass}}</code>
-		</p>
-	</div>
+  <div class="class-level-viewer">
+    <div>
+      <span class="name headline">
+        {{ model.name }} {{ model.level }}
+      </span>
+    </div>
+    <p class="my-2">
+      <code>{{ model.variableName }}</code>
+    </p>
+  </div>
 </template>
 
 <script>
