@@ -6,7 +6,8 @@ import computeMemo from '/imports/api/creature/computation/computeMemo.js';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
 import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
-import { recomputeDamageMultipliersById } from '/imports/api/creature/damageMultiplierDenormalise/recomputeDamageMultipliers.js'
+import { recomputeDamageMultipliersById } from '/imports/api/creature/damageMultiplierDenormalise/recomputeDamageMultipliers.js';
+import Creatures from '/imports/api/creature/Creatures.js';
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -17,8 +18,9 @@ export const recomputeCreature = new ValidatedMethod({
   }).validator(),
 
   run({charId}) {
+    let creature = Creatures.findOne(charId);
     // Permission
-    assertEditPermission(charId, this.userId);
+    assertEditPermission(creature, this.userId);
     // Work, call this direcly if you are already in a method that has checked
     // for permission to edit a given character
     recomputeCreatureById(charId);
@@ -34,6 +36,11 @@ const calculationPropertyTypes = [
   'classLevel',
   'toggle',
 ];
+
+export function recomputeCreatureById(creatureId){
+  let creature = Creatures.findOne(creatureId);
+  recomputeCreatureByDoc(creature);
+}
 
 /**
  * This function is the heart of DiceCloud. It recomputes a creature's stats,
@@ -71,14 +78,15 @@ const calculationPropertyTypes = [
  *   - Mark the stat as computed
  * - Write the computed results back to the database
  */
-export function recomputeCreatureById(creatureId){
+function recomputeCreatureByDoc(creature){
+  const creatureId = creature._id;
   let props = getActiveProperties({
     ancestorId: creatureId,
     filter: {type: {$in: calculationPropertyTypes}},
     includeUntoggled: true,
     // TODO filter out expensive fields, particularly icon field
   });
-  let computationMemo = new ComputationMemo(props);
+  let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
   writeCreatureVariables(computationMemo, creatureId);

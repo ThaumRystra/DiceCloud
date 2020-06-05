@@ -28,14 +28,23 @@
           >
             Level {{ creature.variables.level.value }}
           </v-card-title>
-          <v-list v-if="highestClassLevels.length">
+          <v-list>
             <v-list-tile>
               <v-list-tile-content>
-                <v-list-tile-title v-if="creature.xpLevels">
-                  {{ creature.xpLevels }} Levels gained
+                <v-list-tile-title
+                  v-if="
+                    creature.variables.milestoneLevels &&
+                      creature.variables.milestoneLevels.value
+                  "
+                >
+                  {{ creature.variables.milestoneLevels.value }} Milestone levels
                 </v-list-tile-title>
                 <v-list-tile-title v-else>
-                  {{ creature.xp }} XP
+                  {{
+                    creature.variables.xp &&
+                      creature.variables.xp.value ||
+                      0
+                  }} XP
                 </v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
@@ -161,7 +170,8 @@ export default {
 				elementId: 'experience-add-button',
 				data: {
 					creatureIds: [this.creatureId],
-          startAsMilestone: !!this.creature.xpLevels
+          startAsMilestone: this.creature.variables.milestoneLevels &&
+            !!this.creature.variables.milestoneLevels.value,
 				},
 			});
     },
@@ -171,6 +181,8 @@ export default {
 				elementId: 'experience-info-button',
 				data: {
 					creatureId: this.creatureId,
+          startAsMilestone: this.creature.variables.milestoneLevels &&
+            !!this.creature.variables.milestoneLevels.value,
 				},
 			});
     },

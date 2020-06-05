@@ -3,7 +3,7 @@ import { includes, cloneDeep } from 'lodash';
 // The computation memo is an in-memory data structure used only during the
 // computation process
 export default class ComputationMemo {
-  constructor(props){
+  constructor(props, creature){
     this.statsByVariableName = {};
     this.extraStatsByVariableName = {};
     this.statsById = {};
@@ -51,6 +51,15 @@ export default class ComputationMemo {
         this.addClassLevel(prop);
       }
     });
+    for (let name in creature.denormalizedStats){
+      if (!this.statsByVariableName[name]){
+        this.statsByVariableName[name] = {
+          variableName: name,
+          value: creature.denormalizedStats[name],
+          computationDetails: propDetailsByType.denormalizedStat(),
+        }
+      }
+    }
   }
   registerProperty(prop){
     this.originalPropsById[prop._id] = cloneDeep(prop);
@@ -251,4 +260,10 @@ const propDetailsByType = {
       disabledByToggle: false,
     };
   },
+  denormalizedStat(){
+    return {
+      toggleAncestors: [],
+      disabledByToggle: false,
+    };
+  }
 }

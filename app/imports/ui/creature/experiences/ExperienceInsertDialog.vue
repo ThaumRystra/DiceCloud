@@ -8,12 +8,6 @@
       @push="push"
       @pull="pull"
     />
-    <p
-      v-if="error"
-      class="error"
-    >
-      {{ error }}
-    </p>
     <div
       slot="actions"
       class="layout row justify-end"
@@ -21,7 +15,6 @@
       <v-btn
         flat
         :disabled="!valid"
-        :loading="loading"
         @click="insertExperience"
       >
         Insert
@@ -67,26 +60,20 @@ export default {
       schema: schema,
       validationContext: schema.newContext(),
       debounceTime: 0,
-      loading: false,
-      error: undefined,
     };
   },
   methods:{
     insertExperience(){
-      this.loading = true;
       let experience = this.schema.clean(this.model);
-      insertExperience.call({
+      let id = insertExperience.call({
         experience,
         creatureIds: this.creatureIds,
       }, (error) =>  {
-        this.loading = false;
         if (error){
-          this.error = error.message || error;
           console.error(error);
-        } else {
-          this.$store.dispatch('popDialogStack');
         }
       });
+      this.$store.dispatch('popDialogStack', id);
     }
   }
 }

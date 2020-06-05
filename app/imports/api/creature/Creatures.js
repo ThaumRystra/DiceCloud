@@ -70,22 +70,24 @@ let CreatureSchema = new SimpleSchema({
 		type: deathSaveSchema,
 		defaultValue: {},
 	},
+  // Stats that are computed and denormalised outside of recomputation
+  denormalizedStats: {
+    type: Object,
+    defaultValue: {},
+  },
   // Sum of all XP gained by this character
-	xp: {
+	'denormalizedStats.xp': {
 		type: SimpleSchema.Integer,
 		defaultValue: 0,
 	},
   // Sum of all levels granted by milestone XP
-  xpLevels: {
+  'denormalizedStats.milestoneLevels': {
     type: SimpleSchema.Integer,
     defaultValue: 0,
   },
-	weightCarried: {
+  // Sum of all weights of items and containers that are carried
+	'denormalizedStats.weightCarried': {
 		type: Number,
-		defaultValue: 0,
-	},
-	level: {
-		type: SimpleSchema.Integer,
 		defaultValue: 0,
 	},
 	type: {
