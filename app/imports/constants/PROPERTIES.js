@@ -39,10 +39,6 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.effect',
     name: 'Effect'
   },
-  experience: {
-    icon: '$vuetify.icons.experience',
-    name: 'Experience'
-  },
   feature: {
     icon: 'subject',
     name: 'Feature'

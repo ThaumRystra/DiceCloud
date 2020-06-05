@@ -8,7 +8,6 @@ import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
 import { DamageSchema } from '/imports/api/properties/Damages.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
 import { EffectSchema } from '/imports/api/properties/Effects.js';
-import { ExperienceSchema } from '/imports/api/properties/Experiences.js';
 import { FeatureSchema } from '/imports/api/properties/Features.js';
 import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { NoteSchema } from '/imports/api/properties/Notes.js';
@@ -33,7 +32,6 @@ const propertySchemasIndex = {
   damage: DamageSchema,
   damageMultiplier: DamageMultiplierSchema,
   effect: EffectSchema,
-  experience: ExperienceSchema,
   feature: FeatureSchema,
   folder: FolderSchema,
   note: NoteSchema,

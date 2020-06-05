@@ -3,6 +3,8 @@ import CreaturePropertyCreationDialog from '/imports/ui/creature/creaturePropert
 import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue'
 import CreaturePropertyFromLibraryDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue'
 import DeleteConfirmationDialog from '/imports/ui/dialogStack/DeleteConfirmationDialog.vue';
+import ExperienceInsertDialog from  '/imports/ui/creature/experiences/ExperienceInsertDialog.vue';
+import ExperienceListDialog from  '/imports/ui/creature/experiences/ExperienceListDialog.vue';
 import InviteDialog from '/imports/ui/user/InviteDialog.vue';
 import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
 import LibraryEditDialog from '/imports/ui/library/LibraryEditDialog.vue';
@@ -13,13 +15,14 @@ import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
 import TierTooLowDialog from '/imports/ui/user/TierTooLowDialog.vue';
 import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
 
-
 export default {
   CreatureFormDialog,
   CreaturePropertyCreationDialog,
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,
   DeleteConfirmationDialog,
+  ExperienceInsertDialog,
+  ExperienceListDialog,
   InviteDialog,
   LibraryCreationDialog,
   LibraryEditDialog,

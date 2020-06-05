@@ -1,18 +1,13 @@
 import SimpleSchema from 'simpl-schema';
 
 let ExperienceSchema = new SimpleSchema({
-	name: {
+	title: {
 		type: String,
 		optional: true,
 	},
 	// Potentially long description of the event
 	description: {
 		type: String,
-		optional: true,
-	},
-	// The amount of XP this experience gives
-	value: {
-		type: SimpleSchema.Integer,
 		optional: true,
 	},
 	// The real-world date that it occured
@@ -30,6 +25,20 @@ let ExperienceSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+  // Tags to better find this entry later
+  tags: {
+    type: Array,
+    defaultValue: [],
+  },
+  'tags.$': {
+    type: String,
+  },
+  // ID of the journal this entry belongs to
+  journalId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    index: 1,
+  }
 });
 
 export { ExperienceSchema };

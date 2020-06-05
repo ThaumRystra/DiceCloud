@@ -9,7 +9,6 @@ import { ContainerSchema } from '/imports/api/properties/Containers.js';
 import { DamageSchema } from '/imports/api/properties/Damages.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
 import { ComputedEffectSchema } from '/imports/api/properties/Effects.js';
-import { ExperienceSchema } from '/imports/api/properties/Experiences.js';
 import { FeatureSchema } from '/imports/api/properties/Features.js';
 import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { ItemSchema } from '/imports/api/properties/Items.js';
@@ -33,7 +32,6 @@ const propertySchemasIndex = {
   damage: DamageSchema,
   damageMultiplier: DamageMultiplierSchema,
   effect: ComputedEffectSchema,
-  experience: ExperienceSchema,
   feature: FeatureSchema,
   folder: FolderSchema,
   note: NoteSchema,

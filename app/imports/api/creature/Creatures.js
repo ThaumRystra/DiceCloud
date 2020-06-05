@@ -65,16 +65,21 @@ let CreatureSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-
 	// Mechanics
 	deathSave: {
 		type: deathSaveSchema,
 		defaultValue: {},
 	},
+  // Sum of all XP gained by this character
 	xp: {
 		type: SimpleSchema.Integer,
 		defaultValue: 0,
 	},
+  // Sum of all levels granted by milestone XP
+  xpLevels: {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+  },
 	weightCarried: {
 		type: Number,
 		defaultValue: 0,
