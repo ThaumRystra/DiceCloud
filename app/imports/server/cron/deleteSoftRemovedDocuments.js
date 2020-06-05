@@ -1,11 +1,18 @@
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
+import { SyncedCron } from 'meteor/percolate:synced-cron';
 
-let collections = [LibraryNodes];
+Meteor.startup(() => {
+	const collections = [
+		CreatureProperties,
+    LibraryNodes,
+	];
 
-if (Meteor.isServer) Meteor.startup(() => {
 	/**
 	 * Deletes all soft removed documents that were removed more than 30 minutes ago
 	 * and were not restored
+	 * @return {Number} Number of documents removed
 	 */
 	const deleteOldSoftRemovedDocs = function(){
 		const now = new Date();
@@ -14,30 +21,30 @@ if (Meteor.isServer) Meteor.startup(() => {
 			collection.remove({
 				removed: true,
 				removedAt: {$lt: thirtyMinutesAgo} // dates *before* 30 minutes ago
-			}, error => {
-				if (error) console.error(error);
+			}, function(error){
+				if (error){
+					console.error(error);
+				}
 			});
 		});
-		return;
 	};
 
 	SyncedCron.add({
-		name: "Delete all soft removed items that haven't been restored",
+		name: 'deleteSoftRemovedDocs',
 		schedule: function(parser) {
-			return parser.text('every 6 hours');
+			return parser.text('every 2 hours');
 		},
-		job: function() {
-			deleteOldSoftRemovedDocs();
-		}
+		job: deleteOldSoftRemovedDocs,
 	});
+
+	SyncedCron.start();
 
 	// Add a method to manually trigger removal
 	Meteor.methods({
 		deleteOldSoftRemovedDocs() {
-			const user = Meteor.users.findOne(this.userId);
-			if (user && _.contains(user.roles, "admin")){
-				return deleteOldSoftRemovedDocs();
-			}
+      assertAdmin(this.userId);
+			this.unblock();
+			deleteOldSoftRemovedDocs();
 		},
 	});
 });
