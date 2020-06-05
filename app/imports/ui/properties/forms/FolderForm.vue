@@ -2,6 +2,7 @@
   <div class="folder-form">
     <div class="layout row wrap">
       <text-field
+        ref="focusFirst"
         label="Name"
         style="flex-basis: 300px;"
         :value="model.name"

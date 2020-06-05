@@ -1,5 +1,6 @@
 <template lang="html">
   <v-text-field
+    ref="input"
     v-bind="$attrs"
     :loading="loading"
     :error-messages="errors"

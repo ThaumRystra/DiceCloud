@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="effect-form">
     <text-field
+      ref="focusFirst"
       label="Name"
       :value="model.name"
       :error-messages="errors.name"

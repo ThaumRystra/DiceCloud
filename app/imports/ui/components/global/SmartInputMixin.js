@@ -93,6 +93,9 @@ export default {
       this.safeValue = null;
       this.$nextTick(() => this.safeValue = this.value);
     },
+    focus(){
+      this.$refs.input.focus();
+    }
   },
   computed: {
     errors(){

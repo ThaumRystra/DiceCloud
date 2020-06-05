@@ -2,6 +2,7 @@
   <div class="attribute-form">
     <div class="layout column align-center">
       <text-field
+        ref="focusFirst"
         label="Base Value"
         class="base-value-field"
         hint="This is the value of the attribute before effects are applied"

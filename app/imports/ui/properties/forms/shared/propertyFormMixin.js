@@ -9,6 +9,11 @@ export default {
       default: () => ({}),
     },
   },
+  mounted(){
+    if (this.$refs.focusFirst){
+      setTimeout(() => this.$refs.focusFirst.focus(), 300);
+    }
+  },
   methods: {
     change(path, value, ack){
       if (!Array.isArray(path)){
@@ -16,5 +21,5 @@ export default {
       }
       this.$emit('change', {path, value, ack});
     }
-  }
+  },
 }

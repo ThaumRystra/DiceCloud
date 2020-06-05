@@ -12,6 +12,7 @@
     </div>
     <div class="layout row wrap">
       <text-field
+        ref="focusFirst"
         label="Name"
         :value="model.name"
         :error-messages="errors.name"

@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="roll-form">
     <text-field
+      ref="focusFirst"
       label="Roll"
       :value="model.roll"
       :error-messages="errors.roll"

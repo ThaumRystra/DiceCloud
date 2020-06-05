@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="feature-form">
     <text-field
+      ref="focusFirst"
       label="Name"
       :value="model.name"
       :error-messages="errors.name"

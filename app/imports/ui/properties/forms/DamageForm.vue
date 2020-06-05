@@ -2,6 +2,7 @@
   <div>
     <div class="layout row">
       <text-field
+        ref="focusFirst"
         label="Damage"
         style="flex-basis: 300px;"
         :value="model.amount"
