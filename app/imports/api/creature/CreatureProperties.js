@@ -243,7 +243,7 @@ const damageProperty = new ValidatedMethod({
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
+    numRequests: 20,
     timeInterval: 5000,
   },
   run({_id, operation, value}) {
