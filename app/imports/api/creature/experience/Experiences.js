@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import Creatures from '/imports/api/creature/Creatures.js';
@@ -78,6 +79,11 @@ const insertExperience = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({experience, creatureIds}) {
     let userId = this.userId;
     if (!userId) {
@@ -106,6 +112,11 @@ const removeExperience = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({experienceId}) {
     let userId = this.userId;
     if (!userId) {
@@ -146,6 +157,11 @@ const recomputeExperiences = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({creatureId}) {
     let userId = this.userId;
     if (!userId) {

@@ -1,4 +1,5 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
@@ -65,6 +66,11 @@ const updateLibraryName = new ValidatedMethod({
 			type: String,
 		},
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id, name}){
 		let library = Libraries.findOne(_id);
 		assertEditPermission(library, this.userId);
@@ -83,6 +89,11 @@ const setLibraryDefault = new ValidatedMethod({
 			type: Boolean,
 		},
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id, isDefault}) {
 		if (!Meteor.users.isAdmin()){
 			throw new Meteor.Error('Permission denied', 'User must be admin to set libraries as default');
@@ -99,6 +110,11 @@ const removeLibrary = new ValidatedMethod({
 			regEx: SimpleSchema.RegEx.id
 		},
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id}){
 		let library = Libraries.findOne(_id);
 		assertOwnership(library, this.userId);

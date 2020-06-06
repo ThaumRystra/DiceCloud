@@ -4,6 +4,7 @@ import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 
 const setPublic = new ValidatedMethod({
   name: 'sharing.setPublic',
@@ -11,6 +12,11 @@ const setPublic = new ValidatedMethod({
 		docRef: RefSchema,
     isPublic: { type: Boolean },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({docRef, isPublic}){
 		let doc = fetchDocByRef(docRef);
 		assertOwnership(doc, this.userId);
@@ -33,6 +39,11 @@ const updateUserSharePermissions = new ValidatedMethod({
       allowedValues: ['reader', 'writer', 'none'],
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({docRef, userId, role}){
 		let doc = fetchDocByRef(docRef);
     if (role === 'none'){

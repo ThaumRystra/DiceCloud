@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 let Invites= new Mongo.Collection('invites');
@@ -92,6 +93,11 @@ const getInviteToken = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({inviteId}) {
     let invite = Invites.findOne(inviteId);
     if (this.userId !== invite.inviter) {
@@ -115,6 +121,11 @@ const acceptInviteToken = new ValidatedMethod({
       type: String,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({inviteToken}) {
     if (!this.userId) {
       throw new Meteor.Error('Invites.methods.acceptToken.denied',
@@ -153,6 +164,11 @@ const revokeInvite = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({inviteId}) {
     if (!this.userId) {
       throw new Meteor.Error('Invites.methods.revokeInvite.denied',

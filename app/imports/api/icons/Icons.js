@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
 
 let Icons = new Mongo.Collection('icons');
@@ -68,6 +69,11 @@ const findIcons = new ValidatedMethod({
       optional: true,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({search}){
     if (!search) return [];
     if (!Meteor.isServer) return;

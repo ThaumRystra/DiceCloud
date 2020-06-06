@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 
 const userSchema = new SimpleSchema({
 	username: {
@@ -89,6 +90,11 @@ Meteor.users.attachSchema(userSchema);
 Meteor.users.generateApiKey = new ValidatedMethod({
   name: 'users.generateApiKey',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run(){
 		if(Meteor.isClient) return;
 		var user = Meteor.users.findOne(this.userId);
@@ -104,6 +110,11 @@ Meteor.users.setDarkMode = new ValidatedMethod({
 	validate: new SimpleSchema({
     darkMode: { type: Boolean },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({darkMode}){
 		if (!this.userId) return;
 		Meteor.users.update(this.userId, {$set: {darkMode}});
@@ -121,6 +132,11 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 			type: String,
 		},
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({userId, address}){
 		userId = this.userId || userId;
 		let user = Meteor.users.findOne(userId);
@@ -145,6 +161,11 @@ Meteor.users.isAdmin = function(userId){
 Meteor.users.canPickUsername = new ValidatedMethod({
 	name: 'users.canPickUsername',
 	validate: userSchema.pick('username').validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({username}){
 		if (Meteor.isClient) return;
 		let user = Accounts.findUserByUsername(username);
@@ -159,6 +180,11 @@ Meteor.users.canPickUsername = new ValidatedMethod({
 Meteor.users.setUsername = new ValidatedMethod({
   name: 'users.setUsername',
 	validate: userSchema.pick('username').validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({username}){
 		if (!this.userId) throw 'Can only set your username if logged in';
     if (Meteor.isClient) return;
@@ -177,6 +203,11 @@ Meteor.users.subscribeToLibrary = new ValidatedMethod({
       type: Boolean,
     },
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({libraryId, subscribe}){
 		if (!this.userId) throw 'Can only subscribe if logged in';
     if (subscribe){
@@ -198,6 +229,11 @@ Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
 			type: String,
 		},
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({usernameOrEmail}){
 		if (Meteor.isClient) return;
 		let user = Accounts.findUserByUsername(usernameOrEmail) ||

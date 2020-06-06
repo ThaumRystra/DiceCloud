@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { union } from 'lodash';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { updateParent } from '/imports/api/parenting/parenting.js';
 import { reorderDocs, safeUpdateDocOrder } from '/imports/api/parenting/order.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
@@ -19,6 +20,11 @@ const organizeDoc = new ValidatedMethod({
       // Should end in 0.5 to place it reliably between two existing documents
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({docRef, parentRef, order}) {
     let doc = fetchDocByRef(docRef);
     let collection = getCollectionByName(docRef.collection);
@@ -62,6 +68,11 @@ const reorderDoc = new ValidatedMethod({
       // Should end in 0.5 to place it reliably between two existing documents
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({docRef, order}) {
     let doc = fetchDocByRef(docRef);
     assertDocEditPermission(doc, this.userId);

@@ -1,4 +1,5 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import Creatures from '/imports/api/creature/Creatures.js';
@@ -11,6 +12,12 @@ export const recomputeDamageMultipliers = new ValidatedMethod({
   validate: new SimpleSchema({
     creatureId: { type: String }
   }).validator(),
+
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 
   run({creatureId}) {
     // Permission

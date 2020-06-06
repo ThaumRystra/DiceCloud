@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
@@ -78,6 +79,11 @@ function recomputeCreatures(property){
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({creatureProperty}) {
     delete creatureProperty._id;
     assertPropertyEditPermission(creatureProperty, this.userId);
@@ -95,6 +101,11 @@ const duplicateProperty = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     }
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id}) {
     let creatureProperty = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(creatureProperty, this.userId);
@@ -115,6 +126,11 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 			type: RefSchema,
 		},
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({nodeId, parentRef}) {
 		// get the new ancestry for the properties
 		let {parentDoc, ancestors} = getAncestry({parentRef});
@@ -192,6 +208,11 @@ const updateProperty = new ValidatedMethod({
 				'This property can\'t be updated directly');
 		}
   },
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id, path, value}) {
     let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);
@@ -220,6 +241,11 @@ const damageProperty = new ValidatedMethod({
     },
     value: Number,
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id, operation, value}) {
 		let currentProperty = CreatureProperties.findOne(_id);
 		// Check permissions
@@ -274,6 +300,11 @@ const adjustQuantity = new ValidatedMethod({
     },
     value: Number,
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id, operation, value}) {
 		let currentProperty = CreatureProperties.findOne(_id);
 		// Check permissions
@@ -309,6 +340,11 @@ const adjustQuantity = new ValidatedMethod({
 const pushToProperty = new ValidatedMethod({
 	name: 'creatureProperties.push',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id, path, value}){
 		let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);
@@ -324,6 +360,11 @@ const pushToProperty = new ValidatedMethod({
 const pullFromProperty = new ValidatedMethod({
 	name: 'creatureProperties.pull',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id, path, itemId}){
 		let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);
@@ -342,6 +383,11 @@ const softRemoveProperty = new ValidatedMethod({
 	validate: new SimpleSchema({
 		_id: SimpleSchema.RegEx.Id
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id}){
 		let property = CreatureProperties.findOne(_id);
     assertPropertyEditPermission(property, this.userId);

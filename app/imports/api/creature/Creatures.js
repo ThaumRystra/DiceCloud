@@ -1,4 +1,5 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
@@ -124,6 +125,12 @@ const insertCreature = new ValidatedMethod({
 
   validate: null,
 
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+
   run() {
     if (!this.userId) {
       throw new Meteor.Error('Creatures.methods.insert.denied',
@@ -163,6 +170,11 @@ const updateCreature = new ValidatedMethod({
 			throw new Meteor.Error('Creatures.methods.update.denied',
       'This field can\'t be updated using this method');
 		}
+  },
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
   },
   run({_id, path, value}) {
 		let creature = Creatures.findOne(_id);

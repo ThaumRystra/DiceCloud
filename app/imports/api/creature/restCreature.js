@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import getActiveProperties, { getActivePropertyFilter } from '/imports/api/creature/getActiveProperties.js';
@@ -18,6 +19,11 @@ const restCreature = new ValidatedMethod({
       allowedValues: ['shortRest', 'longRest'],
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({creatureId, restType}) {
     let creature = Creatures.findOne(creatureId, {
       fields: {

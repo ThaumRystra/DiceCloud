@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import ChildSchema from '/imports/api/parenting/ChildSchema.js';
@@ -58,6 +59,11 @@ function assertNodeEditPermission(node, userId){
 const insertNode = new ValidatedMethod({
   name: 'libraryNodes.insert',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run(libraryNode) {
     delete libraryNode._id;
     assertNodeEditPermission(libraryNode, this.userId);
@@ -73,6 +79,11 @@ const duplicateNode = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     }
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id}) {
     let libraryNode = LibraryNodes.findOne(_id);
     assertNodeEditPermission(libraryNode, this.userId);
@@ -94,6 +105,11 @@ const updateLibraryNode = new ValidatedMethod({
 				return false;
 		}
   },
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({_id, path, value}) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
@@ -114,6 +130,11 @@ const updateLibraryNode = new ValidatedMethod({
 const pushToLibraryNode = new ValidatedMethod({
 	name: 'libraryNodes.push',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id, path, value}){
 		let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
@@ -128,6 +149,11 @@ const pushToLibraryNode = new ValidatedMethod({
 const pullFromLibraryNode = new ValidatedMethod({
 	name: 'libraryNodes.pull',
 	validate: null,
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id, path, itemId}){
 		let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
@@ -145,6 +171,11 @@ const softRemoveLibraryNode = new ValidatedMethod({
 	validate: new SimpleSchema({
 		_id: SimpleSchema.RegEx.Id
 	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
 	run({_id}){
 		let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);

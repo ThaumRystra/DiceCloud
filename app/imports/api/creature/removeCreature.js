@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js'
 import { assertOwnership } from '/imports/api/creature/creaturePermissions.js';
@@ -18,6 +19,11 @@ const removeCreature = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
   run({charId}) {
     assertOwnership(charId, this.userId)
     Creatures.remove(charId);
