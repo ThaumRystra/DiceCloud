@@ -50,3 +50,5 @@ akryum:vue-component
 accounts-patreon
 bozhao:link-accounts
 peerlibrary:reactive-publish
+simple:rest
+simple:rest-method-mixin

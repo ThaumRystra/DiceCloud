@@ -34,7 +34,7 @@ Libraries.attachSchema(LibrarySchema);
 export default Libraries;
 
 const insertLibrary = new ValidatedMethod({
-  name: 'Libraries.methods.insert',
+  name: 'libraries.insert',
 	mixins: [
 		simpleSchemaMixin,
   ],
@@ -55,7 +55,7 @@ const insertLibrary = new ValidatedMethod({
 });
 
 const updateLibraryName = new ValidatedMethod({
-	name: 'Libraries.methods.updateName',
+	name: 'libraries.updateName',
 	validate: new SimpleSchema({
 		_id: {
 			type: String,
@@ -73,7 +73,7 @@ const updateLibraryName = new ValidatedMethod({
 });
 
 const setLibraryDefault = new ValidatedMethod({
-  name: 'Libraries.methods.makeLibraryDefault',
+  name: 'libraries.makeLibraryDefault',
 	validate: new SimpleSchema({
 		_id: {
 			type: String,
@@ -92,7 +92,7 @@ const setLibraryDefault = new ValidatedMethod({
 });
 
 const removeLibrary = new ValidatedMethod({
-	name: 'Libraries.methods.remove',
+	name: 'libraries.remove',
 	validate: new SimpleSchema({
 		_id: {
 			type: String,

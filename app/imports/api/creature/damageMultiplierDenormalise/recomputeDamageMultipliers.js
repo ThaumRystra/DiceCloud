@@ -6,7 +6,7 @@ import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
 export const recomputeDamageMultipliers = new ValidatedMethod({
 
-  name: 'Creatures.methods.recomputeDamageMultipliers',
+  name: 'creatures.recomputeDamageMultipliers',
 
   validate: new SimpleSchema({
     creatureId: { type: String }

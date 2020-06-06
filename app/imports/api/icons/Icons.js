@@ -48,7 +48,7 @@ Icons.attachSchema(iconsSchema);
 
 // This method does not validate icons against the schema, use wisely;
 const writeIcons = new ValidatedMethod({
-	name: 'icons.methods.write',
+	name: 'icons.write',
 	validate: null,
 	run(icons){
     assertAdmin(this.userId);
@@ -60,7 +60,7 @@ const writeIcons = new ValidatedMethod({
 });
 
 const findIcons = new ValidatedMethod({
-  name: 'icons.methods.find',
+  name: 'icons.find',
   validate: new SimpleSchema({
     search: {
       type: String,

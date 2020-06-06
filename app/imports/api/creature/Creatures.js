@@ -120,7 +120,7 @@ Creatures.attachSchema(CreatureSchema);
 
 const insertCreature = new ValidatedMethod({
 
-  name: 'Creatures.methods.insertCreature',
+  name: 'creatures.insertCreature',
 
   validate: null,
 
@@ -146,7 +146,7 @@ const insertCreature = new ValidatedMethod({
 });
 
 const updateCreature = new ValidatedMethod({
-  name: 'Creatures.methods.update',
+  name: 'creatures.update',
   validate({_id, path}){
 		if (!_id) return false;
 		// Allowed fields

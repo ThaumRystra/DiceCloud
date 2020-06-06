@@ -64,7 +64,7 @@ const insertExperienceForCreature = function({experience, creatureId, userId}){
 };
 
 const insertExperience = new ValidatedMethod({
-  name: 'Experiences.methods.insert',
+  name: 'experiences.insert',
   validate: new SimpleSchema({
     experience: {
       type: ExperienceSchema.omit('creatureId'),
@@ -99,7 +99,7 @@ const insertExperience = new ValidatedMethod({
 });
 
 const removeExperience = new ValidatedMethod({
-  name: 'Experiences.methods.remove',
+  name: 'experiences.remove',
   validate: new SimpleSchema({
     experienceId: {
       type: String,
@@ -139,7 +139,7 @@ const removeExperience = new ValidatedMethod({
 });
 
 const recomputeExperiences = new ValidatedMethod({
-  name: 'Experiences.methods.recompute',
+  name: 'experiences.recompute',
   validate: new SimpleSchema({
     creatureId: {
       type: String,

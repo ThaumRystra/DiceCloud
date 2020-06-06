@@ -10,7 +10,7 @@ import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
 
 const organizeDoc = new ValidatedMethod({
-  name: 'organize.methods.organizeDoc',
+  name: 'organize.organizeDoc',
   validate: new SimpleSchema({
     docRef: RefSchema,
     parentRef: RefSchema,
@@ -54,7 +54,7 @@ const organizeDoc = new ValidatedMethod({
 });
 
 const reorderDoc = new ValidatedMethod({
-  name: 'organize.methods.reorderDoc',
+  name: 'organize.reorderDoc',
   validate: new SimpleSchema({
     docRef: RefSchema,
     order: {

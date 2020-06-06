@@ -85,7 +85,7 @@ function alignInvitesWithPatreonTier(user){
 }
 
 const getInviteToken = new ValidatedMethod({
-  name: 'Invites.methods.getToken',
+  name: 'invites.getToken',
   validate: new SimpleSchema({
     inviteId: {
       type: String,
@@ -109,7 +109,7 @@ const getInviteToken = new ValidatedMethod({
 });
 
 const acceptInviteToken = new ValidatedMethod({
-  name: 'Invites.methods.acceptToken',
+  name: 'invites.acceptToken',
   validate: new SimpleSchema({
     inviteToken: {
       type: String,
@@ -146,7 +146,7 @@ const acceptInviteToken = new ValidatedMethod({
 });
 
 const revokeInvite = new ValidatedMethod({
-  name: 'Invites.methods.revokeInvite',
+  name: 'invites.revokeInvite',
   validate: new SimpleSchema({
     inviteId: {
       type: String,

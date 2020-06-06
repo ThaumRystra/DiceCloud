@@ -56,7 +56,7 @@ function assertNodeEditPermission(node, userId){
 }
 
 const insertNode = new ValidatedMethod({
-  name: 'LibraryNodes.methods.insert',
+  name: 'libraryNodes.insert',
 	validate: null,
   run(libraryNode) {
     delete libraryNode._id;
@@ -66,7 +66,7 @@ const insertNode = new ValidatedMethod({
 });
 
 const duplicateNode = new ValidatedMethod({
-  name: 'LibraryNodes.methods.duplicate',
+  name: 'libraryNodes.duplicate',
 	validate: new SimpleSchema({
     _id: {
       type: String,
@@ -82,7 +82,7 @@ const duplicateNode = new ValidatedMethod({
 })
 
 const updateLibraryNode = new ValidatedMethod({
-  name: 'LibraryNodes.methods.update',
+  name: 'libraryNodes.update',
   validate({_id, path}){
 		if (!_id) return false;
 		// We cannot change these fields with a simple update
@@ -112,7 +112,7 @@ const updateLibraryNode = new ValidatedMethod({
 });
 
 const pushToLibraryNode = new ValidatedMethod({
-	name: 'LibraryNodes.methods.push',
+	name: 'libraryNodes.push',
 	validate: null,
 	run({_id, path, value}){
 		let node = LibraryNodes.findOne(_id);
@@ -126,7 +126,7 @@ const pushToLibraryNode = new ValidatedMethod({
 });
 
 const pullFromLibraryNode = new ValidatedMethod({
-	name: 'LibraryNodes.methods.pull',
+	name: 'libraryNodes.pull',
 	validate: null,
 	run({_id, path, itemId}){
 		let node = LibraryNodes.findOne(_id);
@@ -141,7 +141,7 @@ const pullFromLibraryNode = new ValidatedMethod({
 });
 
 const softRemoveLibraryNode = new ValidatedMethod({
-	name: 'LibraryNodes.methods.softRemove',
+	name: 'libraryNodes.softRemove',
 	validate: new SimpleSchema({
 		_id: SimpleSchema.RegEx.Id
 	}).validator(),

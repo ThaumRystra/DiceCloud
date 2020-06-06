@@ -115,6 +115,9 @@ service-configuration@1.0.11
 session@1.2.0
 sha@1.0.9
 shell-server@0.5.0
+simple:json-routes@2.1.0
+simple:rest@1.1.1
+simple:rest-method-mixin@1.0.1
 socket-stream-client@0.3.0
 spacebars@1.0.15
 spacebars-compiler@1.1.3

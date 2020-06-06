@@ -11,7 +11,7 @@ import Creatures from '/imports/api/creature/Creatures.js';
 
 export const recomputeCreature = new ValidatedMethod({
 
-  name: 'Creatures.methods.recomputeCreature',
+  name: 'creatures.recomputeCreature',
 
   validate: new SimpleSchema({
     charId: { type: String }

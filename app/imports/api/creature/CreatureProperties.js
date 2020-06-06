@@ -76,7 +76,7 @@ function recomputeCreatures(property){
 }
 
 const insertProperty = new ValidatedMethod({
-  name: 'CreatureProperties.methods.insert',
+  name: 'creatureProperties.insert',
 	validate: null,
   run({creatureProperty}) {
     delete creatureProperty._id;
@@ -88,7 +88,7 @@ const insertProperty = new ValidatedMethod({
 });
 
 const duplicateProperty = new ValidatedMethod({
-  name: 'CreatureProperties.methods.duplicate',
+  name: 'creatureProperties.duplicate',
   validate: new SimpleSchema({
     _id: {
       type: String,
@@ -105,7 +105,7 @@ const duplicateProperty = new ValidatedMethod({
 });
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
-	name: 'CreatureProperties.methods.insertPropertyFromLibraryNode',
+	name: 'creatureProperties.insertPropertyFromLibraryNode',
 	validate: new SimpleSchema({
 		nodeId: {
 			type: String,
@@ -178,7 +178,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 })
 
 const updateProperty = new ValidatedMethod({
-  name: 'CreatureProperties.methods.update',
+  name: 'creatureProperties.update',
   validate({_id, path}){
 		if (!_id) return false;
 		// We cannot change these fields with a simple update
@@ -211,7 +211,7 @@ const updateProperty = new ValidatedMethod({
 });
 
 const damageProperty = new ValidatedMethod({
-  name: 'CreatureProperties.methods.adjust',
+  name: 'creatureProperties.damage',
   validate: new SimpleSchema({
     _id: SimpleSchema.RegEx.Id,
     operation: {
@@ -265,7 +265,7 @@ const damageProperty = new ValidatedMethod({
 });
 
 const adjustQuantity = new ValidatedMethod({
-  name: 'CreatureProperties.methods.adjustQuantity',
+  name: 'creatureProperties.adjustQuantity',
   validate: new SimpleSchema({
     _id: SimpleSchema.RegEx.Id,
     operation: {
@@ -307,7 +307,7 @@ const adjustQuantity = new ValidatedMethod({
 });
 
 const pushToProperty = new ValidatedMethod({
-	name: 'CreatureProperties.methods.push',
+	name: 'creatureProperties.push',
 	validate: null,
 	run({_id, path, value}){
 		let property = CreatureProperties.findOne(_id);
@@ -322,7 +322,7 @@ const pushToProperty = new ValidatedMethod({
 });
 
 const pullFromProperty = new ValidatedMethod({
-	name: 'CreatureProperties.methods.pull',
+	name: 'creatureProperties.pull',
 	validate: null,
 	run({_id, path, itemId}){
 		let property = CreatureProperties.findOne(_id);
@@ -338,7 +338,7 @@ const pullFromProperty = new ValidatedMethod({
 });
 
 const softRemoveProperty = new ValidatedMethod({
-	name: 'CreatureProperties.methods.softRemove',
+	name: 'creatureProperties.softRemove',
 	validate: new SimpleSchema({
 		_id: SimpleSchema.RegEx.Id
 	}).validator(),

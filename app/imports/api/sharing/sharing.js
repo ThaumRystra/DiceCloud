@@ -6,7 +6,7 @@ import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 const setPublic = new ValidatedMethod({
-  name: 'sharing.methods.setPublic',
+  name: 'sharing.setPublic',
 	validate: new SimpleSchema({
 		docRef: RefSchema,
     isPublic: { type: Boolean },
@@ -21,7 +21,7 @@ const setPublic = new ValidatedMethod({
 });
 
 const updateUserSharePermissions = new ValidatedMethod({
-  name: 'sharing.methods.updateUserSharePermissions',
+  name: 'sharing.updateUserSharePermissions',
 	validate: new SimpleSchema({
 		docRef: RefSchema,
     userId: {

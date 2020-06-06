@@ -87,7 +87,7 @@ const userSchema = new SimpleSchema({
 Meteor.users.attachSchema(userSchema);
 
 Meteor.users.generateApiKey = new ValidatedMethod({
-  name: 'Users.methods.generateApiKey',
+  name: 'users.generateApiKey',
 	validate: null,
   run(){
 		if(Meteor.isClient) return;
@@ -100,7 +100,7 @@ Meteor.users.generateApiKey = new ValidatedMethod({
 });
 
 Meteor.users.setDarkMode = new ValidatedMethod({
-  name: 'Users.methods.setDarkMode',
+  name: 'users.setDarkMode',
 	validate: new SimpleSchema({
     darkMode: { type: Boolean },
   }).validator(),
@@ -111,7 +111,7 @@ Meteor.users.setDarkMode = new ValidatedMethod({
 });
 
 Meteor.users.sendVerificationEmail = new ValidatedMethod({
-	name: 'Users.methods.sendVerificationEmail',
+	name: 'users.sendVerificationEmail',
 	validate: new SimpleSchema({
 		userId:{
 			type: String,
@@ -143,7 +143,7 @@ Meteor.users.isAdmin = function(userId){
 }
 
 Meteor.users.canPickUsername = new ValidatedMethod({
-	name: 'Users.methods.canPickUsername',
+	name: 'users.canPickUsername',
 	validate: userSchema.pick('username').validator(),
 	run({username}){
 		if (Meteor.isClient) return;
@@ -157,7 +157,7 @@ Meteor.users.canPickUsername = new ValidatedMethod({
 });
 
 Meteor.users.setUsername = new ValidatedMethod({
-  name: 'Users.methods.setUsername',
+  name: 'users.setUsername',
 	validate: userSchema.pick('username').validator(),
 	run({username}){
 		if (!this.userId) throw 'Can only set your username if logged in';
@@ -167,7 +167,7 @@ Meteor.users.setUsername = new ValidatedMethod({
 });
 
 Meteor.users.subscribeToLibrary = new ValidatedMethod({
-  name: 'Users.methods.subscribeToLibrary',
+  name: 'users.subscribeToLibrary',
 	validate: new SimpleSchema({
 		libraryId:{
 			type: String,
@@ -192,7 +192,7 @@ Meteor.users.subscribeToLibrary = new ValidatedMethod({
 });
 
 Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
-	name: 'Users.methods.findUserByUsernameOrEmail',
+	name: 'users.findUserByUsernameOrEmail',
 	validate: new SimpleSchema({
 		usernameOrEmail:{
 			type: String,
