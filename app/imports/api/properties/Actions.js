@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ResourcesSchema from '/imports/api/properties/subSchemas/ResourcesSchema.js'
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 /*
  * Actions are things a character can do
@@ -64,4 +65,39 @@ let ActionSchema = new SimpleSchema({
 	},
 });
 
-export { ActionSchema };
+const ComputedOnlyActionSchema = new SimpleSchema({
+  usesResult: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  usesErrors: {
+    type: Array,
+    optional: true,
+  },
+  'usesErrors.$':{
+    type: ErrorSchema,
+  },
+  resources: Object,
+  'resources.itemsConsumed': Array,
+  'resources.itemsConsumed.$': Object,
+  'resources.itemsConsumed.$.available': {
+    type: Number,
+    optional: true,
+  },
+  'resources.attributesConsumed': Array,
+  'resources.attributesConsumed.$': Object,
+  'resources.attributesConsumed.$.available': {
+    type: Number,
+    optional: true,
+  },
+  insufficientResources: {
+    type: Boolean,
+    optional: true,
+  },
+});
+
+const ComputedActionSchema = new SimpleSchema()
+  .extend(ActionSchema)
+  .extend(ComputedOnlyActionSchema);
+
+export { ActionSchema, ComputedOnlyActionSchema, ComputedActionSchema};

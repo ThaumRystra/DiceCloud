@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import { ActionSchema } from '/imports/api/properties/Actions.js';
+import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 // Attacks are special instances of actions
 let AttackSchema = new SimpleSchema()
@@ -25,4 +26,24 @@ let AttackSchema = new SimpleSchema()
     },
   });
 
-export { AttackSchema };
+const ComputedOnlyAttackSchema = new SimpleSchema()
+  .extend(ComputedOnlyActionSchema)
+  .extend({
+    rollBonusResult: {
+      type: Number,
+      optional: true,
+    },
+    rollBonusErrors: {
+      type: Array,
+      optional: true,
+    },
+    'rollBonusErrors.$':{
+      type: ErrorSchema,
+    },
+  });
+
+const ComputedAttackSchema = new SimpleSchema()
+  .extend(AttackSchema)
+  .extend(ComputedOnlyAttackSchema);
+
+export { AttackSchema, ComputedOnlyAttackSchema, ComputedAttackSchema };

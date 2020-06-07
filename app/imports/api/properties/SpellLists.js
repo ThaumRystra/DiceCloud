@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 let SpellListSchema = new SimpleSchema({
 	name: {
@@ -16,4 +17,22 @@ let SpellListSchema = new SimpleSchema({
 	},
 });
 
-export { SpellListSchema }
+const ComputedOnlySpellListSchema = new SimpleSchema({
+  maxPreparedResult: {
+    type: Number,
+    optional: true,
+  },
+  maxPreparedErrors: {
+    type: Array,
+    optional: true,
+  },
+  'maxPreparedErrors.$':{
+    type: ErrorSchema,
+  },
+});
+
+const ComputedSpellListSchema = new SimpleSchema()
+  .extend(SpellListSchema)
+  .extend(ComputedOnlySpellListSchema);
+
+export { SpellListSchema, ComputedOnlySpellListSchema, ComputedSpellListSchema };

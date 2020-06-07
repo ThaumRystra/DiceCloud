@@ -276,9 +276,10 @@
             subheader
           >
             <v-subheader>Attacks</v-subheader>
-            <attack-list-tile
+            <action-list-tile
               v-for="attack in attacks"
               :key="attack._id"
+              attack
               :model="attack"
               :data-id="attack._id"
               @click="clickProperty({_id: attack._id})"
@@ -303,7 +304,6 @@
 	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
-  import AttackListTile from '/imports/ui/properties/components/actions/AttackListTile.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
@@ -346,7 +346,6 @@
 			ResourceCard,
 			SpellSlotListTile,
       ActionListTile,
-      AttackListTile,
 		},
 		props: {
 			creatureId: {
@@ -398,10 +397,24 @@
         return getSkillOfType(this.creature, 'language');
 			},
       actions(){
-        return getProperties(this.creature, {type: 'action'});
+        let props = getProperties(this.creature, {type: 'action'}).map(action => {
+          action.children = getActiveProperties({
+            ancestorId: action._id,
+            options: {sort: {order: 1}},
+          });
+          return action;
+        });
+        return props;
 			},
       attacks(){
-        return getProperties(this.creature, {type: 'attack'});
+        let props = getProperties(this.creature, {type: 'attack'}).map(attack => {
+          attack.children = getActiveProperties({
+            ancestorId: attack._id,
+            options: {sort: {order: 1}},
+          });
+          return attack;
+        });
+        return props;
 			},
 		},
 		methods: {

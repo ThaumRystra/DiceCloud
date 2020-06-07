@@ -1,16 +1,29 @@
 import { Meteor } from 'meteor/meteor'
 import { isEqual, forOwn } from 'lodash';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+// Schemas
+// Calculated props
 import { ComputedOnlySkillSchema } from '/imports/api/properties/Skills.js';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedOnlyEffectSchema } from '/imports/api/properties/Effects.js';
 import { ComputedOnlyToggleSchema } from '/imports/api/properties/Toggles.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+// End step props
+import { ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
+import { ComputedOnlyAttackSchema } from '/imports/api/properties/Attacks.js';
+import { ComputedOnlySavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
+import { ComputedOnlySpellListSchema } from '/imports/api/properties/SpellLists.js';
+import { ComputedOnlySpellSchema } from '/imports/api/properties/Spells.js';
 
 const schemasByType = {
   'skill': ComputedOnlySkillSchema,
   'attribute': ComputedOnlyAttributeSchema,
   'effect': ComputedOnlyEffectSchema,
   'toggle': ComputedOnlyToggleSchema,
+  'action': ComputedOnlyActionSchema,
+  'attack': ComputedOnlyAttackSchema,
+  'savingThrow': ComputedOnlySavingThrowSchema,
+  'spellList': ComputedOnlySpellListSchema,
+  'spell': ComputedOnlySpellSchema,
 };
 
 export default function writeAlteredProperties(memo){

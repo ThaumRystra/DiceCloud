@@ -3,7 +3,7 @@ import math from '/imports/math.js';
 
 /* Convert a calculation into a constant output and errors*/
 export default function evaluateCalculation(string, memo){
-  if (!string) return string;
+  if (!string) return {errors: [], value: string};
   let errors = [];
   // Parse the string using mathjs
   let calc;

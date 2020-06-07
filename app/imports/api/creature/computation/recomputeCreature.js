@@ -42,6 +42,12 @@ const calculationPropertyTypes = [
   'proficiency',
   'classLevel',
   'toggle',
+  // End step types
+  'action',
+  'attack',
+  'savingThrow',
+  'spellList',
+  'spell',
 ];
 
 export function recomputeCreatureById(creatureId){

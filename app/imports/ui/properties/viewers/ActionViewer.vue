@@ -1,31 +1,33 @@
 <template lang="html">
   <div class="action-viewer">
-    <property-field
-      name="Action type"
-      :value="model.actionType"
-    />
-    <property-field
-      name="Target"
-      :value="model.target"
-    />
-    <property-field
-      v-if="model.tags.length"
-      name="tags"
-      :value="model.tags.join(', ')"
-    />
-    <property-field
-      name="Uses"
+    <div class="layout row wrap align-center">
+      <div>
+        {{ model.actionType }}
+      </div>
+      <div class="flex">
+        <property-tags :tags="model.tags" />
+      </div>
+      <div v-if="model.usesResult">
+        {{ model.usesResult - (model.usesUsed) }}/{{ model.usesResult }}
+      </div>
+    </div>
+    <div
+      v-if="attack"
+      class="layout row justify-center align-center ma-3"
     >
-      <computed :value="model.uses"/>
-    </property-field>
-    <property-field
-      name="Uses used"
-      :value="model.usesUsed"
-    />
-    <property-field
-      name="Reset"
-      :value="reset"
-    />
+      <div class="headline mr-2">
+        {{ rollBonus }}
+      </div>
+      <em>
+        to hit
+      </em>
+    </div>
+    <div
+      v-if="reset"
+      class="my-2"
+    >
+      {{ reset }}
+    </div>
     <property-description
       v-if="model.description"
       :value="model.description"
@@ -35,12 +37,12 @@
 
 <script>
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
-import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 export default {
   mixins: [propertyViewerMixin],
-  components: {
-    Computed: ComputedForCreature,
+  props: {
+    attack: Boolean,
   },
   computed: {
     reset(){
@@ -51,7 +53,10 @@ export default {
         return 'Reset on a long rest';
       }
       return undefined;
-    }
+    },
+    rollBonus(){
+      return numberToSignedString(this.model.rollBonusResult);
+    },
   },
 }
 </script>

@@ -15,6 +15,8 @@ export default class ComputationMemo {
     this.classes = {};
     this.togglesById = {};
     this.toggleIds = new Set();
+    // Properties that have calculations, but don't impact other properties
+    this.endStepPropsById = {};
     // First note all the ids of all the toggles
     props.forEach((prop) => {
       if (
@@ -49,6 +51,8 @@ export default class ComputationMemo {
         this.addProficiency(prop);
       } else if (prop.type === 'classLevel'){
         this.addClassLevel(prop);
+      } else {
+        this.addEndStepProp(prop);
       }
     });
     for (let name in creature.denormalizedStats){
@@ -181,6 +185,10 @@ export default class ComputationMemo {
     });
     return targets;
   }
+  addEndStepProp(prop){
+    prop = this.registerProperty(prop);
+    this.endStepPropsById[prop._id] = prop;
+  }
 }
 
 function isAbility(prop){
@@ -206,7 +214,7 @@ function isSkillOperation(prop){
 }
 
 function propDetails(prop){
-  return propDetailsByType[prop.type]() || {};
+  return propDetailsByType[prop.type] && propDetailsByType[prop.type]() || {};
 }
 
 const propDetailsByType = {

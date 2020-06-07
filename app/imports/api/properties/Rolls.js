@@ -19,7 +19,7 @@ import SimpleSchema from 'simpl-schema';
  *  child rolls are applied
  */
 let RollSchema = new SimpleSchema({
-  // The roll
+  // The roll, can be simplified, but only computed in context
   roll: {
     type: String,
     optional: true,

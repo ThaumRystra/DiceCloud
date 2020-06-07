@@ -7,7 +7,7 @@
     />
     {{ model.damageType }}
     <span v-if="model.damageType !== 'healing'">
-      damage
+      &nbsp;damage
     </span>
   </div>
 </template>

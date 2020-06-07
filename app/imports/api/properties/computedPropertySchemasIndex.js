@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
-import { ActionSchema } from '/imports/api/properties/Actions.js';
+import { ComputedActionSchema } from '/imports/api/properties/Actions.js';
 import { AdjustmentSchema } from '/imports/api/properties/Adjustments.js';
-import { AttackSchema } from '/imports/api/properties/Attacks.js';
+import { ComputedAttackSchema } from '/imports/api/properties/Attacks.js';
 import { ComputedAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { BuffSchema } from '/imports/api/properties/Buffs.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
@@ -15,17 +15,17 @@ import { ItemSchema } from '/imports/api/properties/Items.js';
 import { NoteSchema } from '/imports/api/properties/Notes.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
-import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
+import { ComputedSavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { ComputedSkillSchema } from '/imports/api/properties/Skills.js';
 import { SlotSchema } from '/imports/api/properties/Slots.js';
-import { SpellSchema } from '/imports/api/properties/Spells.js';
-import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
+import { ComputedSpellSchema } from '/imports/api/properties/Spells.js';
+import { ComputedSpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ToggleSchema } from '/imports/api/properties/Toggles.js';
 
 const propertySchemasIndex = {
-  action: ActionSchema,
+  action: ComputedActionSchema,
   adjustment: AdjustmentSchema,
-  attack: AttackSchema,
+  attack: ComputedAttackSchema,
   attribute: ComputedAttributeSchema,
   buff: BuffSchema,
   classLevel: ClassLevelSchema,
@@ -37,11 +37,11 @@ const propertySchemasIndex = {
   note: NoteSchema,
   proficiency: ProficiencySchema,
   roll: RollSchema,
-  savingThrow: SavingThrowSchema,
+  savingThrow: ComputedSavingThrowSchema,
   skill: ComputedSkillSchema,
   slot: SlotSchema,
-  spellList: SpellListSchema,
-  spell: SpellSchema,
+  spellList: ComputedSpellSchema,
+  spell: ComputedSpellListSchema,
   toggle: ToggleSchema,
   container: ContainerSchema,
   item: ItemSchema,

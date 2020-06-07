@@ -1,4 +1,4 @@
-import { ActionSchema } from '/imports/api/properties/Actions.js';
+import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
 import SimpleSchema from 'simpl-schema';
 
 const magicSchools = [
@@ -93,4 +93,11 @@ let SpellSchema = new SimpleSchema({})
 	},
 });
 
-export { SpellSchema };
+const ComputedOnlySpellSchema = new SimpleSchema()
+  .extend(ComputedOnlyActionSchema);
+
+const ComputedSpellSchema = new SimpleSchema()
+  .extend(SpellSchema)
+  .extend(ComputedOnlySpellSchema);
+
+export { SpellSchema, ComputedOnlySpellSchema, ComputedSpellSchema };
