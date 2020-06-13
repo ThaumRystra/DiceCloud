@@ -20,6 +20,7 @@ export default function computeEndStepProperty(prop, memo){
 }
 
 function computeAction(prop, memo){
+  // Uses
   let {value, errors} = evaluateCalculation(prop.uses, memo);
   prop.usesResult = value;
   if (errors.length){
@@ -27,10 +28,28 @@ function computeAction(prop, memo){
   } else {
     delete prop.usesErrors;
   }
-  // TODO compute resources.$.$.available and insufficientResources
+  prop.insufficientResources = undefined;
+  if (prop.usesUsed >= prop.usesResult){
+    prop.insufficientResources = true;
+  }
+  // Attributes consumed
+  prop.resources.attributesConsumed.forEach((attConsumed, i) => {
+    if (attConsumed.variableName){
+      let stat = memo.statsByVariableName[attConsumed.variableName];
+      prop.resources.attributesConsumed[i].statId = stat && stat._id;
+      let available = stat && stat.currentValue || 0;
+      prop.resources.attributesConsumed[i].available = available;
+      if (available < attConsumed.quantity){
+        prop.insufficientResources = true;
+      }
+    }
+  });
+  // Items consumed
+  // TODO
 }
 
 function computeAttack(prop, memo){
+  // Roll bonus
   let {value, errors} = evaluateCalculation(prop.rollBonus, memo);
   prop.rollBonusResult = value;
   if (errors.length){

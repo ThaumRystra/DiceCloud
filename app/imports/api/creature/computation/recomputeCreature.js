@@ -91,7 +91,7 @@ export function recomputeCreatureById(creatureId){
  *   - Mark the stat as computed
  * - Write the computed results back to the database
  */
-function recomputeCreatureByDoc(creature){
+export function recomputeCreatureByDoc(creature){
   const creatureId = creature._id;
   let props = getActiveProperties({
     ancestorId: creatureId,

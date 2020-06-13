@@ -247,24 +247,15 @@
       </div>
 
       <div
-        v-if="actions.length"
+        v-for="action in actions"
+        :key="action._id"
         class="actions"
       >
-        <v-card>
-          <v-list
-            two-line
-            subheader
-          >
-            <v-subheader>Actions</v-subheader>
-            <action-list-tile
-              v-for="action in actions"
-              :key="action._id"
-              :model="action"
-              :data-id="action._id"
-              @click="clickProperty({_id: action._id})"
-            />
-          </v-list>
-        </v-card>
+        <action-card
+          :model="action"
+          :data-id="action._id"
+          @click="clickProperty({_id: action._id})"
+        />
       </div>
       <div
         v-if="attacks.length"
@@ -304,6 +295,7 @@
 	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
+  import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
@@ -346,6 +338,7 @@
 			ResourceCard,
 			SpellSlotListTile,
       ActionListTile,
+      ActionCard,
 		},
 		props: {
 			creatureId: {

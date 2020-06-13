@@ -20,6 +20,8 @@ import {
 import {setDocToLastOrder} from '/imports/api/parenting/order.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 
+import '/imports/api/creature/actions/doAction.js';
+
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
 let CreaturePropertySchema = new SimpleSchema({
@@ -56,7 +58,7 @@ for (let key in propertySchemasIndex){
 	});
 }
 
-function getCreature(property){
+export function getCreature(property){
   if (!property) throw new Meteor.Error('No property provided');
   let creature = Creatures.findOne(property.ancestors[0].id);
   if (!creature) throw new Meteor.Error('Creature does not exist');
@@ -231,6 +233,37 @@ const updateProperty = new ValidatedMethod({
   },
 });
 
+export function damagePropertyWork({property, operation, value}){
+  if (operation === 'set'){
+    let currentValue = property.value;
+    // Set represents what we want the value to be after damage
+    // So we need the actual damage to get to that value
+    let damage = currentValue - value;
+    // Damage can't exceed total value
+    if (damage > currentValue) damage = currentValue;
+    // Damage must be positive
+    if (damage < 0) damage = 0;
+    CreatureProperties.update(property._id, {
+      $set: {damage}
+    }, {
+      selector: property
+    });
+  } else if (operation === 'increment'){
+    let currentValue = property.value - (property.damage || 0);
+    let currentDamage = property.damage;
+    let increment = value;
+    // Can't increase damage above the remaining value
+    if (increment > currentValue) increment = currentValue;
+    // Can't decrease damage below zero
+    if (-increment > currentDamage) increment = -currentDamage;
+    CreatureProperties.update(property._id, {
+      $inc: {damage: increment}
+    }, {
+      selector: property
+    });
+  }
+}
+
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',
   validate: new SimpleSchema({
@@ -258,37 +291,38 @@ const damageProperty = new ValidatedMethod({
 				`Property of type "${currentProperty.type}" can't be damaged`
 			);
 		}
-		if (operation === 'set'){
-			let currentValue = currentProperty.value;
-			// Set represents what we want the value to be after damage
-			// So we need the actual damage to get to that value
-			let damage = currentValue - value;
-			// Damage can't exceed total value
-			if (damage > currentValue) damage = currentValue;
-			// Damage must be positive
-			if (damage < 0) damage = 0;
-			CreatureProperties.update(_id, {
-				$set: {damage}
-			}, {
-				selector: currentProperty
-			});
-		} else if (operation === 'increment'){
-			let currentValue = currentProperty.value - (currentProperty.damage || 0);
-			let currentDamage = currentProperty.damage;
-			let increment = value;
-			// Can't increase damage above the remaining value
-			if (increment > currentValue) increment = currentValue;
-			// Can't decrease damage below zero
-			if (-increment > currentDamage) increment = -currentDamage;
-			CreatureProperties.update(_id, {
-				$inc: {damage: increment}
-			}, {
-				selector: currentProperty
-			});
-		}
+		damagePropertyWork({property: currentProperty, operation, value})
 		recomputeCreatures(currentProperty);
   },
 });
+
+export function adjustQuantityWork({property, operation, value}){
+  // Check if property has quantity
+  let schema = CreatureProperties.simpleSchema(property);
+  if (!schema.allowsKey('quantity')){
+    throw new Meteor.Error(
+      'Adjust quantity failed',
+      `Property of type "${property.type}" doesn't have a quantity`
+    );
+  }
+  if (operation === 'set'){
+    CreatureProperties.update(property._id, {
+      $set: {quantity: value}
+    }, {
+      selector: property
+    });
+  } else if (operation === 'increment'){
+    // value here is 'damage'
+    value = -value;
+    let currentQuantity = property.quantity;
+    if (currentQuantity + value < 0) value = -currentQuantity;
+    CreatureProperties.update(property._id, {
+      $inc: {quantity: value}
+    }, {
+      selector: property
+    });
+  }
+}
 
 const adjustQuantity = new ValidatedMethod({
   name: 'creatureProperties.adjustQuantity',
@@ -309,31 +343,7 @@ const adjustQuantity = new ValidatedMethod({
 		let currentProperty = CreatureProperties.findOne(_id);
 		// Check permissions
 		assertPropertyEditPermission(currentProperty, this.userId);
-		// Check if property can take damage
-		let schema = CreatureProperties.simpleSchema(currentProperty);
-		if (!schema.allowsKey('quantity')){
-			throw new Meteor.Error(
-				'Adjust quantity failed',
-				`Property of type "${currentProperty.type}" doesn't have a quantity`
-			);
-		}
-		if (operation === 'set'){
-			CreatureProperties.update(_id, {
-				$set: {quantity: value}
-			}, {
-				selector: currentProperty
-			});
-		} else if (operation === 'increment'){
-      // value here is 'damage'
-      value = -value;
-			let currentQuantity = currentProperty.quantity;
-      if (currentQuantity + value < 0) value = -currentQuantity;
-			CreatureProperties.update(_id, {
-				$inc: {quantity: value}
-			}, {
-				selector: currentProperty
-			});
-		}
+    adjustQuantityWork({property: currentProperty, operation, value})
   },
 });
 

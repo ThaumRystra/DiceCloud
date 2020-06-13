@@ -17,6 +17,10 @@ const ItemConsumedSchema = new SimpleSchema({
     type: Number,
     defaultValue: 1,
   },
+  itemId: {
+    type: String,
+    optional: true,
+  },
 });
 
 export default ItemConsumedSchema;

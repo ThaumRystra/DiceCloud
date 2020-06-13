@@ -83,6 +83,7 @@
 				this.addResourceLoading = false;
 			},
       addAttributesConsumed(){
+        console.log(AttributeConsumedSchema.clean({}));
 				this.addResourceLoading = true;
 				this.$emit('push', {
 					path: ['attributesConsumed'],

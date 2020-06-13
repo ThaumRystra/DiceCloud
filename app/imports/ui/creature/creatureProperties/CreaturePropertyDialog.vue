@@ -160,6 +160,7 @@ export default {
 			});
 		},
 		push({path, value, ack}){
+      console.log({path, value, ack});
 			pushToProperty.call({_id: this._id, path, value}, (error) =>{
         if (error) console.warn(error);
 				ack && ack(error && error.reason || error);

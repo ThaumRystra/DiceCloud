@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import ResourcesSchema from '/imports/api/properties/subSchemas/ResourcesSchema.js'
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 /*
@@ -41,13 +40,60 @@ let ActionSchema = new SimpleSchema({
   'tags.$': {
     type: String,
   },
+  // Duplicate the ResourceSchema here so we can extend it elegantly.
   resources: {
-    type: ResourcesSchema,
+    type: Object,
     defaultValue: {},
   },
+  'resources.itemsConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.itemsConsumed.$': {
+    type: Object,
+  },
+  'resources.itemsConsumed.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
+  },
+  'resources.itemsConsumed.$.tag': {
+    type: String,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.quantity': {
+    type: Number,
+    defaultValue: 1,
+  },
+  'resources.itemsConsumed.$.itemId': {
+    type: String,
+    optional: true,
+  },
+  'resources.attributesConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.attributesConsumed.$': {
+    type: Object,
+  },
+  'resources.attributesConsumed.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
+  },
+  'resources.attributesConsumed.$.variableName': {
+    type: String,
+    optional: true,
+  },
+  'resources.attributesConsumed.$.quantity': {
+    type: Number,
+    defaultValue: 1,
+  },
 	// Calculation of how many times this action can be used
-	// Only set if this action tracks its own uses, rather than adjusting
-	// resources
 	uses: {
 		type: String,
 		optional: true,
@@ -84,10 +130,21 @@ const ComputedOnlyActionSchema = new SimpleSchema({
     type: Number,
     optional: true,
   },
+  // This appears both in the computed and uncomputed schema because it can be
+  // set by both a computation or a form
+  'resources.itemsConsumed.$.itemId': {
+    type: String,
+    optional: true,
+  },
   'resources.attributesConsumed': Array,
   'resources.attributesConsumed.$': Object,
   'resources.attributesConsumed.$.available': {
     type: Number,
+    optional: true,
+  },
+  'resources.attributesConsumed.$.statId': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
   insufficientResources: {

@@ -1,36 +1,46 @@
 <template lang="html">
-  <v-list-tile
-    class="ability-list-tile"
-    v-on="hasClickListener ? {click} : {}"
+  <v-card
+    class="action"
+    @click="$emit('click')"
   >
-    <v-list-tile-action
-      v-if="attack"
+    <v-card-title
+      primary-title
+      class="layout row pa-2"
     >
-      <v-btn
-        flat
-        icon
-        class="headline"
-        :disabled="model.insufficientResources"
-        @click.stop="doAction"
-      >
-        {{ rollBonus }}
-      </v-btn>
-    </v-list-tile-action>
-    <v-list-tile-content>
-      <v-list-tile-title>
-        {{ model.name }}
-      </v-list-tile-title>
-      <v-list-tile-sub-title
-        v-if="childText"
-        v-html="childText"
-      />
-    </v-list-tile-content>
-    <v-list-tile-action v-if="model.usesResult">
-      <v-list-tile-action-text>
+      <div class="avatar">
+        <v-btn
+          flat
+          icon
+          class="headline"
+          :disabled="model.insufficientResources"
+          @click.stop="doAction"
+        >
+          <template v-if="rollBonus">
+            {{ rollBonus }}
+          </template>
+          <v-icon v-else>
+            $vuetify.icons.action
+          </v-icon>
+        </v-btn>
+      </div>
+      <div class="action-header flex">
+        <div class="action-title">
+          {{ model.name }}
+        </div>
+        <div class="action-type">
+          action type text
+        </div>
+      </div>
+      <div class="action-uses">
         {{ usesLeft }}/{{ totalUses }}
-      </v-list-tile-action-text>
-    </v-list-tile-action>
-  </v-list-tile>
+      </div>
+    </v-card-title>
+    <v-card-text
+      v-if="childText"
+      class="action-details"
+      v-html="childText"
+    />
+  </v-card>
 </template>
 
 <script>
