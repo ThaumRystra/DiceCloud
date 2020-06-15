@@ -34,8 +34,7 @@
           drag_handle
         </v-icon>
         <!--{{node && node.order}}-->
-        <component
-          :is="treeNodeView"
+        <tree-node-view
           :model="node"
           :selected="selected"
         />
@@ -80,13 +79,13 @@
 	**/
 	import { canBeParent } from '/imports/api/parenting/parenting.js';
 	import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
-  import treeNodeViewIndex from '/imports/ui/properties/treeNodeViews/treeNodeViewIndex.js';
+  import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 	export default {
 		name: 'TreeNode',
-		components: {
-      ...treeNodeViewIndex
-		},
+    components: {
+      TreeNodeView,
+    },
 		props: {
 			node: Object,
 			group: String,
@@ -100,10 +99,6 @@
 			expanded: false,
 		}},
 		computed: {
-      treeNodeView(){
-        let type = this.node.type;
-        return treeNodeViewIndex[type] || treeNodeViewIndex.default;
-      },
 			hasChildren(){
 				return this.children && this.children.length || this.lazy && !this.expanded;
 			},

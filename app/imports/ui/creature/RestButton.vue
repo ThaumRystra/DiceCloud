@@ -1,7 +1,6 @@
 <template lang="html">
   <v-btn
     :loading="loading"
-    :disabled="loading"
     outline
     style="width: 160px;"
     @click="rest"

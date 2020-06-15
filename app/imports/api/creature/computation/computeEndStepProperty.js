@@ -37,6 +37,7 @@ function computeAction(prop, memo){
     if (attConsumed.variableName){
       let stat = memo.statsByVariableName[attConsumed.variableName];
       prop.resources.attributesConsumed[i].statId = stat && stat._id;
+      prop.resources.attributesConsumed[i].statName = stat && stat.name;
       let available = stat && stat.currentValue || 0;
       prop.resources.attributesConsumed[i].available = available;
       if (available < attConsumed.quantity){
@@ -45,7 +46,22 @@ function computeAction(prop, memo){
     }
   });
   // Items consumed
-  // TODO
+  prop.resources.itemsConsumed.forEach((itemConsumed, i) => {
+    let item = itemConsumed.itemId && memo.equipmentById[itemConsumed.itemId];
+    prop.resources.itemsConsumed[i].itemId = item && item._id;
+    let available = item && item.quantity || 0;
+    prop.resources.itemsConsumed[i].available = available;
+    let name = item && item.name;
+    if (item && item.quantity !== 1 && item.plural){
+      name = item.plural;
+    }
+    prop.resources.itemsConsumed[i].itemName = name;
+    prop.resources.itemsConsumed[i].itemIcon = item && item.icon;
+    prop.resources.itemsConsumed[i].itemColor = item && item.color;
+    if (!item || available < itemConsumed.quantity){
+      prop.insufficientResources = true;
+    }
+  });
 }
 
 function computeAttack(prop, memo){

@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import { storedIconsSchema } from '/imports/api/icons/Icons.js'
 
 /*
  * Actions are things a character can do
@@ -134,6 +135,19 @@ const ComputedOnlyActionSchema = new SimpleSchema({
   // set by both a computation or a form
   'resources.itemsConsumed.$.itemId': {
     type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemName': {
+    type: String,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemIcon': {
+    type: storedIconsSchema,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemColor': {
+    type: String,
     optional: true,
   },
   'resources.attributesConsumed': Array,
@@ -147,6 +161,12 @@ const ComputedOnlyActionSchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
+  'resources.attributesConsumed.$.statName': {
+    type: String,
+    optional: true,
+  },
+  // True if the uses left is zero, or any item or attribute consumed is
+  // insufficient
   insufficientResources: {
     type: Boolean,
     optional: true,

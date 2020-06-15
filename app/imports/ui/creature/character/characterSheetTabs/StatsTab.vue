@@ -258,25 +258,16 @@
         />
       </div>
       <div
-        v-if="attacks.length"
-        class="actions"
+        v-for="attack in attacks"
+        :key="attack._id"
+        class="attacks"
       >
-        <v-card>
-          <v-list
-            two-line
-            subheader
-          >
-            <v-subheader>Attacks</v-subheader>
-            <action-list-tile
-              v-for="attack in attacks"
-              :key="attack._id"
-              attack
-              :model="attack"
-              :data-id="attack._id"
-              @click="clickProperty({_id: attack._id})"
-            />
-          </v-list>
-        </v-card>
+        <action-card
+          attack
+          :model="attack"
+          :data-id="attack._id"
+          @click="clickProperty({_id: attack._id})"
+        />
       </div>
     </column-layout>
   </div>
@@ -294,7 +285,6 @@
 	import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
 	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
-  import ActionListTile from '/imports/ui/properties/components/actions/ActionListTile.vue';
   import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
@@ -337,7 +327,6 @@
 			SkillListTile,
 			ResourceCard,
 			SpellSlotListTile,
-      ActionListTile,
       ActionCard,
 		},
 		props: {
@@ -390,14 +379,7 @@
         return getSkillOfType(this.creature, 'language');
 			},
       actions(){
-        let props = getProperties(this.creature, {type: 'action'}).map(action => {
-          action.children = getActiveProperties({
-            ancestorId: action._id,
-            options: {sort: {order: 1}},
-          });
-          return action;
-        });
-        return props;
+        return getProperties(this.creature, {type: 'action'});
 			},
       attacks(){
         let props = getProperties(this.creature, {type: 'attack'}).map(attack => {

@@ -343,7 +343,45 @@ const adjustQuantity = new ValidatedMethod({
 		let currentProperty = CreatureProperties.findOne(_id);
 		// Check permissions
 		assertPropertyEditPermission(currentProperty, this.userId);
-    adjustQuantityWork({property: currentProperty, operation, value})
+    adjustQuantityWork({property: currentProperty, operation, value});
+    recomputeCreatures(currentProperty);
+  },
+});
+
+const selectAmmoItem = new ValidatedMethod({
+  name: 'creatureProperties.selectAmmoItem',
+  validate: new SimpleSchema({
+    actionId: SimpleSchema.RegEx.Id,
+    itemId: SimpleSchema.RegEx.Id,
+    itemConsumedIndex: Number,
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  run({actionId, itemId, itemConsumedIndex}) {
+		let action = CreatureProperties.findOne(actionId);
+		// Check permissions
+		assertPropertyEditPermission(action, this.userId);
+    // Check that this index has a document to edit
+    let itemConsumed = action.resources.itemsConsumed[itemConsumedIndex];
+    if (!itemConsumed){
+      throw new Meteor.Error('Resouce not found',
+        'Could not set ammo, because the ammo document was not found');
+    }
+    let itemToLink = CreatureProperties.findOne(itemId);
+    if (!itemToLink){
+      throw new Meteor.Error('Item not found',
+        'Could not set ammo: the item was not found');
+    }
+    let path = `resources.itemsConsumed.${itemConsumedIndex}.itemId`;
+    CreatureProperties.update(actionId, {
+      $set: {[path]: itemId}
+    }, {
+      selector: action,
+    });
+    recomputeCreatures(action);
   },
 });
 
@@ -416,6 +454,7 @@ export {
 	updateProperty,
 	damageProperty,
   adjustQuantity,
+  selectAmmoItem,
 	pushToProperty,
 	pullFromProperty,
 	softRemoveProperty,

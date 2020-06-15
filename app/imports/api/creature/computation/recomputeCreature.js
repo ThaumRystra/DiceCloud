@@ -42,6 +42,7 @@ const calculationPropertyTypes = [
   'proficiency',
   'classLevel',
   'toggle',
+  'item',
   // End step types
   'action',
   'attack',

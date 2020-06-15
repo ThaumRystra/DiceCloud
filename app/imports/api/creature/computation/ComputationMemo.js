@@ -15,6 +15,8 @@ export default class ComputationMemo {
     this.classes = {};
     this.togglesById = {};
     this.toggleIds = new Set();
+    // Equipped items that might be used as ammo
+    this.equipmentById = {};
     // Properties that have calculations, but don't impact other properties
     this.endStepPropsById = {};
     // First note all the ids of all the toggles
@@ -40,6 +42,10 @@ export default class ComputationMemo {
       ) {
         // Add all the stats
         this.addStat(prop);
+      } else if (
+        prop.type === 'item'
+      ) {
+        this.addEquipment(prop);
       } else {
         return true;
       }
@@ -184,6 +190,10 @@ export default class ComputationMemo {
       }
     });
     return targets;
+  }
+  addEquipment(prop){
+    prop = this.registerProperty(prop);
+    this.equipmentById[prop._id] = prop;
   }
   addEndStepProp(prop){
     prop = this.registerProperty(prop);
