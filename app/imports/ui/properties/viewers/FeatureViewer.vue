@@ -3,10 +3,7 @@
     <property-name :value="model.name" />
     <property-description :value="model.summary" />
     <v-divider class="mt-3 mb-3" />
-    <property-description
-      v-if="model.description"
-      :value="model.description"
-    />
+    <property-description :value="model.description" />
   </div>
 </template>
 

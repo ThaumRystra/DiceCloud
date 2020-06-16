@@ -24,7 +24,15 @@
       @change="change('rollBonus', ...arguments)"
     />
     <text-area
+      label="Summary"
+      hint="This will appear in the action card in the character sheet"
+      :value="model.summary"
+      :error-messages="errors.summary"
+      @change="change('summary', ...arguments)"
+    />
+    <text-area
       label="Description"
+      hint="The rest of the description that doesn't fit in the summary goes here"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"

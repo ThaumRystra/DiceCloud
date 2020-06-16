@@ -1,6 +1,5 @@
 <template lang="html">
   <v-card
-    ref="card"
     class="action-card"
     :class="cardClasses"
     :elevation="hovering ? 8 : undefined"
@@ -14,7 +13,7 @@
           style="margin-left: -4px; font-size: 18px;"
           color="primary"
           :loading="doActionLoading"
-          :disabled="model.insufficientResources"
+          :disabled="model.insufficientResources || !context.editPermission"
           @click.stop="doAction"
         >
           <template v-if="attack && !rollBonusTooLong">
@@ -35,7 +34,7 @@
         <div
           class="action-title my-1"
         >
-          {{ model.name }}
+          {{ model.name || propertyName }}
         </div>
         <div class="action-sub-title layout row align-center">
           <div class="flex">
@@ -48,26 +47,35 @@
       </div>
     </div>
     <div class="px-3 pb-3">
-      <attribute-consumed-view
-        v-for="attributeConsumed in model.resources.attributesConsumed"
-        :key="attributeConsumed._id"
-        class="action-child"
-        :model="attributeConsumed"
-      />
-      <item-consumed-view
-        v-for="itemConsumed in model.resources.itemsConsumed"
-        :key="itemConsumed._id"
-        class="action-child"
-        :model="itemConsumed"
-        :action="model"
-      />
-      <v-divider
-        v-if="
-          model.resources.attributesConsumed.length ||
-            model.resources.itemsConsumed.length
-        "
-        class="my-2"
-      />
+      <template
+        v-if="model.resources.attributesConsumed.length ||
+          model.resources.itemsConsumed.length"
+      >
+        <attribute-consumed-view
+          v-for="attributeConsumed in model.resources.attributesConsumed"
+          :key="attributeConsumed._id"
+          class="action-child"
+          :model="attributeConsumed"
+        />
+        <item-consumed-view
+          v-for="itemConsumed in model.resources.itemsConsumed"
+          :key="itemConsumed._id"
+          class="action-child"
+          :model="itemConsumed"
+          :action="model"
+        />
+        <v-divider
+          v-if="model.summary || children.length"
+          class="my-2"
+        />
+      </template>
+      <template v-if="model.summary">
+        <property-description :value="model.summary" />
+        <v-divider
+          v-if="children.length"
+          class="my-2"
+        />
+      </template>
       <tree-node-view
         v-for="child in children"
         :key="child._id"
@@ -79,18 +87,21 @@
 </template>
 
 <script>
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import doAction from '/imports/api/creature/actions/doAction.js';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
+import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 
 export default {
   components: {
     TreeNodeView,
     AttributeConsumedView,
     ItemConsumedView,
+    PropertyDescription,
   },
   inject: {
     context: {
@@ -117,9 +128,6 @@ export default {
     hovering: false,
   }},
   computed: {
-		hasClickListener(){
-      return this.$listeners && this.$listeners.click
-		},
     rollBonus(){
       if (!this.attack) return;
       return numberToSignedString(this.model.rollBonusResult);
@@ -132,6 +140,9 @@ export default {
     },
     usesLeft(){
       return Math.max(this.model.usesResult - this.model.usesUsed, 0);
+    },
+    propertyName(){
+      return getPropertyName(this.model.type);
     },
     cardClasses() {
       return {
@@ -201,7 +212,6 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: .3s cubic-bezier(.25,.8,.5,1);
   width: 100%;
 }
 .action-child {
@@ -224,5 +234,8 @@ export default {
 }
 .action-card.theme--dark.muted-text .v-icon {
   color: hsla(0,0%,100%,.3) !important;
+}
+.action-card .property-description > p:last-of-type {
+  margin-bottom: 0;
 }
 </style>

@@ -1,49 +1,115 @@
 <template lang="html">
   <div class="action-viewer">
-    <div class="layout row wrap align-center">
-      <div>
+    <div class="action-sub-title layout row align-center justify-space-between wrap mb-3">
+      <property-tags
+        :tags="model.tags"
+        no-margin
+        class="mx-2"
+      />
+      <div
+        v-if="!attack"
+        class="mx-2"
+      >
         {{ model.actionType }}
       </div>
-      <div class="flex">
-        <property-tags :tags="model.tags" />
-      </div>
-      <div v-if="model.usesResult">
-        {{ model.usesResult - (model.usesUsed) }}/{{ model.usesResult }}
+    </div>
+    <div class="layout row align-center justify-space-around">
+      <v-btn
+        flat
+        outline
+        style="font-size: 18px;"
+        class="ma-2"
+        color="primary"
+        :icon="!rollBonusTooLong"
+        :loading="doActionLoading"
+        :disabled="model.insufficientResources || !context.editPermission"
+        @click.stop="doAction"
+      >
+        <template v-if="attack">
+          {{ rollBonus }}
+        </template>
+        <v-icon v-else>
+          {{ actionTypeIcon }}
+        </v-icon>
+      </v-btn>
+      <div v-if="model.uses">
+        <span
+          class="uses mx-2"
+        >
+          {{ usesLeft }}/{{ model.usesResult }} uses
+        </span>
+        <span
+          v-if="reset"
+          class="mx-2"
+        >
+          {{ reset }}
+        </span>
+        <v-btn
+          v-if="context.creature"
+          outline
+          color="primary"
+          :disabled="!model.usesUsed || !context.editPermission"
+          @click="resetUses"
+        >
+          Reset
+        </v-btn>
       </div>
     </div>
-    <div
-      v-if="attack"
-      class="layout row justify-center align-center ma-3"
-    >
-      <div class="headline mr-2">
-        {{ rollBonus }}
-      </div>
-      <em>
-        to hit
-      </em>
-    </div>
-    <div
-      v-if="reset"
-      class="my-2"
-    >
-      {{ reset }}
-    </div>
-    <property-description
-      v-if="model.description"
-      :value="model.description"
+    <attribute-consumed-view
+      v-for="attributeConsumed in model.resources.attributesConsumed"
+      :key="attributeConsumed._id"
+      class="action-child"
+      :model="attributeConsumed"
+      style="padding-left: 44px;"
     />
+    <item-consumed-view
+      v-for="itemConsumed in model.resources.itemsConsumed"
+      :key="itemConsumed._id"
+      class="action-child"
+      :model="itemConsumed"
+      :action="model"
+      left-pad
+    />
+    <v-divider
+      v-if="model.summary || model.description"
+      class="my-3"
+    />
+    <template v-if="model.summary">
+      <property-description :value="model.summary" />
+      <v-divider
+        v-if="model.description"
+        class="my-3"
+      />
+    </template>
+    <property-description :value="model.description" />
   </div>
 </template>
 
 <script>
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import doAction from '/imports/api/creature/actions/doAction.js';
+import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
+import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
+import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
 
 export default {
+  components: {
+    AttributeConsumedView,
+    ItemConsumedView,
+  },
   mixins: [propertyViewerMixin],
   props: {
     attack: Boolean,
   },
+  inject: {
+    context: {
+      default: {},
+    },
+  },
+  data(){return {
+    doActionLoading: false,
+  }},
   computed: {
     reset(){
       let reset = this.model.reset
@@ -55,11 +121,50 @@ export default {
       return undefined;
     },
     rollBonus(){
+      if (!this.attack) return;
       return numberToSignedString(this.model.rollBonusResult);
+    },
+    rollBonusTooLong(){
+      return this.rollBonus && this.rollBonus.length > 3;
+    },
+    totalUses(){
+      return Math.max(this.model.usesResult, 0);
+    },
+    usesLeft(){
+      return Math.max(this.model.usesResult - this.model.usesUsed, 0);
+    },
+    actionTypeIcon() {
+      return `$vuetify.icons.${this.model.actionType}`;
+    },
+  },
+  methods: {
+    doAction(){
+      this.doActionLoading = true;
+      doAction.call({actionId: this.model._id}, error => {
+        this.doActionLoading = false;
+        if (error){
+          console.error(error);
+        }
+      });
+    },
+    resetUses(){
+      updateProperty.call({
+        _id: this.model._id,
+        path: ['usesUsed'],
+        value: 0,
+      });
     },
   },
 }
 </script>
 
 <style lang="css" scoped>
+.action-sub-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.action-child {
+  height: 40px;
+}
 </style>

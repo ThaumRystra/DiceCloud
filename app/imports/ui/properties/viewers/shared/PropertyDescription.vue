@@ -1,5 +1,6 @@
 <template lang="html">
   <computed
+    v-if="value"
     class="property-description"
     embedded
     :value="value"

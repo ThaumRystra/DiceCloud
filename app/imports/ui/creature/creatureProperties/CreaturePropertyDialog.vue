@@ -35,7 +35,7 @@
         </p>
       </v-fade-transition>
       <template v-if="!editing && !embedded">
-        <v-divider />
+        <v-divider class="my-2" />
         <creature-properties-tree
           v-if="!editing"
           :root="{collection: 'creatureProperties', id: model._id}"

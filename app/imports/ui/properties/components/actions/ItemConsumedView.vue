@@ -16,25 +16,27 @@
           :class="{
             'error--text': insufficient,
             'clickable': context.editPermission,
+            'left-pad': leftPad,
           }"
           v-on="on"
         >
-          <div
-            class="mr-2"
-            style="width: 24px; text-align: center;"
-          >
-            <template v-if="model.quantity === 1">
-              {{ model.available }}
-            </template>
-            <template v-else-if="model.quantity !== 0">
-              {{ model.available }} / {{ model.quantity }}
-            </template>
-          </div>
           <svg-icon
             v-if="model.itemIcon"
+            class="mr-2"
             :shape="model.itemIcon.shape"
             :color="model.itemColor"
           />
+          <div
+            class="mr-2 text-no-wrap"
+            style="min-width: 24px; text-align: center;"
+          >
+            <template v-if="model.quantity !== 0 && insufficient">
+              {{ model.available }} / {{ model.quantity }}
+            </template>
+            <template v-else>
+              {{ model.available }}
+            </template>
+          </div>
           <div
             class="text-no-wrap text-truncate flex"
           >
@@ -86,6 +88,7 @@ export default {
       type: Object,
       required: true,
     },
+    leftPad: Boolean,
   },
   computed: {
     insufficient(){
@@ -104,5 +107,8 @@ export default {
 }
 .theme--dark .clickable:hover {
   background: hsla(0,0%,100%,.08);
+}
+.left-pad {
+  padding-left: 44px;
 }
 </style>

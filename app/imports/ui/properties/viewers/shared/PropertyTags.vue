@@ -1,7 +1,8 @@
 <template lang="html">
   <div
     v-if="tagString"
-    class="tags ma-3 "
+    class="tags"
+    :class="{'ma-3': !noMargin}"
   >
     {{ tagString }}
   </div>
@@ -13,7 +14,8 @@ export default {
     tags: {
       type: Array,
       default: () => [],
-    }
+    },
+    noMargin: Boolean,
   },
   computed:{
     tagString(){
