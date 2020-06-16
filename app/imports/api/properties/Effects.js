@@ -38,7 +38,6 @@ let EffectSchema = new SimpleSchema({
 	},
 	'stats.$': {
 		type: String,
-		optional: true,
 	},
 });
 

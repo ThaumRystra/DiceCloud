@@ -9,9 +9,11 @@
     />
     <div class="layout row wrap justify-start proficiency-form">
       <smart-combobox
-        label="Skill"
+        label="Skills"
         class="mr-2"
         multiple
+        chips
+        deletable-chips
         :value="model.stats"
         :items="skillList"
         :error-messages="errors.stats"
@@ -22,7 +24,7 @@
         style="flex-basis: 300px;"
         :clearable="false"
         :value="model.value"
-        @change="change('stats', ...arguments)"
+        @change="change('value', ...arguments)"
       />
     </div>
   </div>

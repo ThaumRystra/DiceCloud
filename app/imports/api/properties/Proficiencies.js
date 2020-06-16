@@ -12,7 +12,6 @@ let ProficiencySchema = new SimpleSchema({
 	},
 	'stats.$': {
 		type: String,
-		optional: true,
 	},
 	// A number representing how proficient the character is
 	value: {
