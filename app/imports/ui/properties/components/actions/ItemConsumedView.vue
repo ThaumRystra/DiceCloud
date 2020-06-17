@@ -6,8 +6,10 @@
     }"
   >
     <v-menu
+      v-if="context.creature"
       transition="slide-y-transition"
       lazy
+      :disabled="!context.editPermission"
     >
       <template #activator="{ on }">
         <div
@@ -15,7 +17,7 @@
           style="height: 100%;"
           :class="{
             'error--text': insufficient,
-            'clickable': context.editPermission,
+            'clickable': context.creature && context.editPermission,
             'left-pad': leftPad,
           }"
           v-on="on"
@@ -60,6 +62,23 @@
         :item-consumed="model"
       />
     </v-menu>
+    <div
+      v-else
+      class="layout row align-center justify-start"
+      :class="{'left-pad': leftPad}"
+    >
+      <div
+        class="mr-2"
+        style="width: 24px; text-align: center;"
+      >
+        {{ model.quantity }}
+      </div>
+      <div
+        class="text-no-wrap text-truncate"
+      >
+        [{{ model.tag }}]
+      </div>
+    </div>
   </div>
 </template>
 

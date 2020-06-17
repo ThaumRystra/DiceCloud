@@ -12,7 +12,7 @@
     <div
       class="text-no-wrap text-truncate"
     >
-      {{ model.statName }}
+      {{ model.statName || model.variableName }}
     </div>
   </div>
 </template>

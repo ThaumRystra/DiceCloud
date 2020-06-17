@@ -1,5 +1,13 @@
 <template lang="html">
   <div :class="attackForm ? 'attack-form' : 'action-form'">
+    <div class="layout column align-center">
+      <icon-picker
+        label="Icon"
+        :value="model.icon"
+        :error-messages="errors.icon"
+        @change="change('icon', ...arguments)"
+      />
+    </div>
     <text-field
       ref="focusFirst"
       label="Name"

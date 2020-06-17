@@ -11,7 +11,7 @@
           icon
           outline
           style="margin-left: -4px; font-size: 18px;"
-          color="primary"
+          :color="model.color || 'primary'"
           :loading="doActionLoading"
           :disabled="model.insufficientResources || !context.editPermission"
           @click.stop="doAction"
@@ -19,9 +19,10 @@
           <template v-if="attack && !rollBonusTooLong">
             {{ rollBonus }}
           </template>
-          <v-icon v-else>
-            {{ actionTypeIcon }}
-          </v-icon>
+          <property-icon
+            v-else
+            :model="model"
+          />
         </v-btn>
       </div>
       <div
@@ -95,6 +96,7 @@ import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue'
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
+import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 
 export default {
   components: {
@@ -102,6 +104,7 @@ export default {
     AttributeConsumedView,
     ItemConsumedView,
     PropertyDescription,
+    PropertyIcon,
   },
   inject: {
     context: {

@@ -15,11 +15,12 @@
     </div>
     <div class="layout row align-center justify-space-around">
       <v-btn
+        v-if="context.creature"
         flat
         outline
         style="font-size: 18px;"
         class="ma-2"
-        color="primary"
+        :color="model.color || 'primary'"
         :icon="!rollBonusTooLong"
         :loading="doActionLoading"
         :disabled="model.insufficientResources || !context.editPermission"
@@ -28,15 +29,34 @@
         <template v-if="attack">
           {{ rollBonus }}
         </template>
-        <v-icon v-else>
-          {{ actionTypeIcon }}
-        </v-icon>
+        <property-icon
+          v-else
+          :model="model"
+        />
       </v-btn>
+      <div
+        v-else-if="attack"
+        style="font-size: 18px;"
+        class="ma-2"
+      >
+        <code>{{ model.rollBonus }}</code>
+        <span
+          class="mx-1"
+          style="font-size: 14px"
+        >to hit</span>
+      </div>
       <div v-if="model.uses">
         <span
+          v-if="context.creature"
           class="uses mx-2"
         >
           {{ usesLeft }}/{{ model.usesResult }} uses
+        </span>
+        <span v-else>
+          <code>{{ model.uses }}</code>
+          <span class="mx-1">
+            uses
+          </span>
         </span>
         <span
           v-if="reset"
@@ -55,6 +75,13 @@
         </v-btn>
       </div>
     </div>
+    <v-subheader
+      v-if="model.resources.attributesConsumed.length ||
+        model.resources.itemsConsumed.length"
+      style="height: 32px"
+    >
+      Resources
+    </v-subheader>
     <attribute-consumed-view
       v-for="attributeConsumed in model.resources.attributesConsumed"
       :key="attributeConsumed._id"
@@ -91,12 +118,14 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import doAction from '/imports/api/creature/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
+import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
 
 export default {
   components: {
     AttributeConsumedView,
     ItemConsumedView,
+    PropertyIcon,
   },
   mixins: [propertyViewerMixin],
   props: {
