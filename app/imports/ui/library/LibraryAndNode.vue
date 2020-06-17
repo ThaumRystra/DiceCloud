@@ -36,6 +36,7 @@
     <div
       slot="detail"
       data-id="selected-node-card"
+      style="overflow: hidden;"
     >
       <library-node-dialog
         :_id="selected"
