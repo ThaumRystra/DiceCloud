@@ -21,6 +21,39 @@
           </v-card-text>
         </v-card>
       </div>
+
+      <div
+        v-if="appliedBuffs.length"
+        class="buffs"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>Buffs and conditions</v-subheader>
+            <v-list-tile
+              v-for="buff in appliedBuffs"
+              :key="buff._id"
+              :data-id="buff._id"
+              @click="clickProperty({_id: buff._id})"
+            >
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{ buff.name }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-btn
+                  icon
+                  flat
+                  @click.stop="softRemove(buff._id)"
+                >
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </div>
+
       <div class="ability-scores">
         <v-card>
           <v-list>
@@ -275,7 +308,7 @@
 
 <script>
   import Creatures from '/imports/api/creature/Creatures.js';
-	import { damageProperty } from '/imports/api/creature/CreatureProperties.js';
+	import { damageProperty, softRemoveProperty } from '/imports/api/creature/CreatureProperties.js';
 	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
@@ -381,6 +414,9 @@
       actions(){
         return getProperties(this.creature, {type: 'action'});
 			},
+      appliedBuffs(){
+        return getProperties(this.creature, {type: 'buff', applied: true});
+			},
       attacks(){
         let props = getProperties(this.creature, {type: 'attack'}).map(attack => {
           attack.children = getActiveProperties({
@@ -409,6 +445,11 @@
         if (!obj) return 0;
         return Object.keys(obj).length;
       },
+      softRemove(_id){
+        softRemoveProperty.call({_id}, error => {
+          if (error) console.error(error);
+        });
+      }
 		},
 	};
 </script>
