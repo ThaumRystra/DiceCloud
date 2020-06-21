@@ -13,12 +13,23 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <!-- Duration not implemented yet
     <text-field
       label="Duration"
       hint="How long the buff lasts"
       :value="model.duration"
       :error-messages="errors.duration"
       @change="change('duration', ...arguments)"
+    />
+    -->
+    <smart-select
+      label="Target"
+      :hint="targetOptionHint"
+      :items="targetOptions"
+      :value="model.target"
+      :error-messages="errors.target"
+      :menu-props="{auto: true, lazy: true}"
+      @change="change('target', ...arguments)"
     />
   </div>
 </template>

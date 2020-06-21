@@ -130,7 +130,7 @@ export function renewDocIds({docArray, collectionMap}){
   const remapReference = ref => {
     if (idMap[ref.id]){
       ref.id = idMap[ref.id];
-      ref.collection = collectionMap[ref.collection] || ref.collection;
+      ref.collection = collectionMap && collectionMap[ref.collection] || ref.collection;
     }
   }
   docArray.forEach(doc => {
@@ -204,17 +204,11 @@ export function getName(doc){
   }
 }
 
-export function nodesToTree({collection, ancestorId, filter, options}){
+export function nodeArrayToTree(nodes){
   // Store a dict of all the nodes
   let nodeIndex = {};
   let nodeList = [];
-  if (!options) options = {};
-  options.sort = {order: 1};
-  collection.find({
-    'ancestors.id': ancestorId,
-		removed: {$ne: true},
-    ...filter,
-  }, options).forEach( node => {
+  nodes.forEach( node => {
     let treeNode = {
       node: node,
       children: [],
@@ -237,4 +231,15 @@ export function nodesToTree({collection, ancestorId, filter, options}){
     }
   });
   return forest;
+}
+
+export function nodesToTree({collection, ancestorId, filter, options}){
+  if (!options) options = {};
+  options.sort = {order: 1};
+  let nodes = collection.find({
+    'ancestors.id': ancestorId,
+		removed: {$ne: true},
+    ...filter,
+  }, options);
+  return nodeArrayToTree(nodes);
 }

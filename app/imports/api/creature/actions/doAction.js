@@ -1,88 +1,61 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties, { getCreature, damagePropertyWork, adjustQuantityWork } from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties, { getCreature } from '/imports/api/creature/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/recomputeCreature.js';
+import { nodesToTree } from '/imports/api/parenting/parenting.js';
+import applyProperties from '/imports/api/creature/actions/applyProperties.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
   validate: new SimpleSchema({
     actionId: SimpleSchema.RegEx.Id,
+    targetId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      optional: true,
+    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({actionId}) {
+  run({actionId, targetId}) {
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
     let creature = getCreature(action);
     assertEditPermission(creature, this.userId);
-		doActionWork(action);
+    let target = undefined;
+    if (targetId) {
+      target = getCreature(targetId);
+      assertEditPermission(target, this.userId);
+    }
+		doActionWork({action, creature, target});
     // Note this only recomputes the top-level creature, not the nearest one
 		recomputeCreatureByDoc(creature);
+    if (target){
+      recomputeCreatureByDoc(target);
+    }
   },
 });
 
-function doActionWork(action){
-  spendResources(action);
-}
-
-function spendResources(action){
-  // Check Uses
-  if (action.usesUsed >= action.usesResult){
-    throw new Meteor.Error('Insufficient Uses',
-      'This action has no uses left');
-  }
-  // Resources
-  if (action.insufficientResources){
-    throw new Meteor.Error('Insufficient Resources',
-      'This creature doesn\'t have sufficient resources to perform this action');
-  }
-  // Items
-  let itemQuantityAdjustments = [];
-  action.resources.itemsConsumed.forEach(itemConsumed => {
-    if (!itemConsumed.itemId){
-      throw new Meteor.Error('Ammo not selected',
-        'No ammo was selected for this action');
-    }
-    let item = CreatureProperties.findOne(itemConsumed.itemId);
-    if (!item || item.ancestors[0].id !== action.ancestors[0].id){
-      throw new Meteor.Error('Ammo not found',
-        'The action\'s ammo was not found on the creature');
-    }
-    if (!item.equipped){
-      throw new Meteor.Error('Ammo not equipped',
-        'The selected ammo is not equipped');
-    }
-    if (!itemConsumed.quantity) return;
-    itemQuantityAdjustments.push({
-      property: item,
-      operation: 'increment',
-      value: itemConsumed.quantity,
-    });
+function doActionWork({action, creature, target}){
+  let actionContext = {};
+  let decendantForest = nodesToTree({
+    collection: CreatureProperties,
+    ancestorId: action._id,
   });
-  // No more errors should be thrown after this line
-  // Now that we have confirmed that there are no errors, do actual work
-  //Items
-  itemQuantityAdjustments.forEach(adjustQuantityWork);
-  // Use uses
-  CreatureProperties.update(action._id, {
-    $inc: {usesUsed: 1}
-  }, {
-    selector: action
-  });
-  // Damage stats
-  action.resources.attributesConsumed.forEach(attConsumed => {
-    if (!attConsumed.quantity) return;
-    let stat = CreatureProperties.findOne(attConsumed.statId);
-    damagePropertyWork({
-      property: stat,
-      operation: 'increment',
-      value: attConsumed.quantity,
-    });
+  let startingForest = [{
+    node: action,
+    children: decendantForest,
+  }];
+  applyProperties({
+    forest: startingForest,
+    creature,
+    target,
+    actionContext
   });
 }
 
