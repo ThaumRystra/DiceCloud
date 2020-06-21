@@ -75,7 +75,9 @@ export default {
 				this.ackErrors = null;
 			} else if (typeof error === 'string'){
 				this.ackErrors = error;
-			} else {
+			} else if (error.reason){
+        this.ackErrors = error.reason;
+      } else {
 				this.ackErrors = 'Something went wrong'
 				console.error(error);
 			}

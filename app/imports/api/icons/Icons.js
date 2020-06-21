@@ -71,8 +71,8 @@ const findIcons = new ValidatedMethod({
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
+    numRequests: 20,
+    timeInterval: 10000,
   },
   run({search}){
     if (!search) return [];
