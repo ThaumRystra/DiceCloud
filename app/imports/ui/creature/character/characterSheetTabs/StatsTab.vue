@@ -166,6 +166,30 @@
       </div>
 
       <div
+        v-for="action in actions"
+        :key="action._id"
+        class="actions"
+      >
+        <action-card
+          :model="action"
+          :data-id="action._id"
+          @click="clickProperty({_id: action._id})"
+        />
+      </div>
+      <div
+        v-for="attack in attacks"
+        :key="attack._id"
+        class="attacks"
+      >
+        <action-card
+          attack
+          :model="attack"
+          :data-id="attack._id"
+          @click="clickProperty({_id: attack._id})"
+        />
+      </div>
+
+      <div
         v-if="weapons && weapons.length"
         class="weapon-proficiencies"
       >
@@ -187,7 +211,7 @@
       </div>
       <div
         v-if="armors && armors.length"
-        class="weapon-proficiencies"
+        class="armor-proficiencies"
       >
         <v-card>
           <v-list>
@@ -207,7 +231,7 @@
       </div>
       <div
         v-if="tools && tools.length"
-        class="weapon-proficiencies"
+        class="tool-proficiencies"
       >
         <v-card>
           <v-list>
@@ -244,30 +268,6 @@
             />
           </v-list>
         </v-card>
-      </div>
-
-      <div
-        v-for="action in actions"
-        :key="action._id"
-        class="actions"
-      >
-        <action-card
-          :model="action"
-          :data-id="action._id"
-          @click="clickProperty({_id: action._id})"
-        />
-      </div>
-      <div
-        v-for="attack in attacks"
-        :key="attack._id"
-        class="attacks"
-      >
-        <action-card
-          attack
-          :model="attack"
-          :data-id="attack._id"
-          @click="clickProperty({_id: attack._id})"
-        />
       </div>
     </column-layout>
   </div>
