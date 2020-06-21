@@ -158,7 +158,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 			'ancestors.id': nodeId,
 			removed: {$ne: true},
 		}).fetch();
-		// The root node is last in the array of nodes
+    // The root node is last in the array of nodes
 		nodes.push(node);
 
 		// re-map all the ancestors
@@ -181,17 +181,16 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		});
 
 		// Insert the creature properties
-		let docId;
-		nodes.forEach(doc => {
-			docId = CreatureProperties.insert(doc);
-		});
+    let insertedDocIds = CreatureProperties.batchInsert(nodes);
+
+    // get the root inserted doc
+    let rootId = insertedDocIds[insertedDocIds.length - 1];
 
 		// Recompute the creatures doc was attached to
-		let doc = CreatureProperties.findOne(docId);
-		recomputeCreatures(doc);
+		recomputeCreatures(node);
 
 		// Return the docId of the last property, the inserted root property
-		return docId;
+		return rootId;
 	},
 })
 
