@@ -25,6 +25,10 @@ let SpellSchema = new SimpleSchema({})
 		type: Boolean,
 		optional: true,
 	},
+  prepared: {
+		type: Boolean,
+		optional: true,
+	},
   // This spell ignores spell slot rules
   castWithoutSpellSlots: {
     type: Boolean,
