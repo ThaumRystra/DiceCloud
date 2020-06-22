@@ -1,9 +1,10 @@
 import computeStat from '/imports/api/creature/computation/computeStat.js';
 import applyToggles from '/imports/api/creature/computation/applyToggles.js';
+import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
 
 export default function combineStat(stat, aggregator, memo){
   if (stat.type === 'attribute'){
-    combineAttribute(stat, aggregator);
+    combineAttribute(stat, aggregator, memo);
   } else if (stat.type === 'skill'){
     combineSkill(stat, aggregator, memo);
   } else if (stat.type === 'damageMultiplier'){
@@ -28,12 +29,17 @@ function getAggregatorResult(stat, aggregator){
   return result;
 }
 
-function combineAttribute(stat, aggregator){
+function combineAttribute(stat, aggregator, memo){
   stat.value = getAggregatorResult(stat, aggregator);
   stat.baseValue = aggregator.statBaseValue;
   stat.baseValueErrors = aggregator.baseValueErrors;
   if (stat.attributeType === 'ability') {
     stat.modifier = Math.floor((stat.value - 10) / 2);
+  }
+  if (stat.attributeType === 'spellSlot'){
+    let {value, errors} = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
+    stat.spellSlotLevelValue = value,
+    stat.spellSlotLevelErrors = errors;
   }
   stat.currentValue = stat.value - (stat.damage || 0);
   stat.hide = aggregator.hasNoEffects &&

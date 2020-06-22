@@ -47,6 +47,14 @@
       :menu-props="{auto: true, lazy: true}"
       @change="change('hitDiceSize', ...arguments)"
     />
+    <text-field
+      v-if="model.attributeType === 'spellSlot'"
+      label="Spell slot level"
+      :value="model.spellSlotLevelCalculation"
+      :error-messages="errors.spellSlotLevelCalculation"
+      @change="change('spellSlotLevelCalculation', ...arguments)"
+    />
+    <calculation-error-list :errors="model.spellSlotLevelErrors" />
     <text-area
       label="Description"
       :value="model.description"

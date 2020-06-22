@@ -40,6 +40,11 @@ let AttributeSchema = new SimpleSchema({
     allowedValues: ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'],
     optional: true,
   },
+  // For type spellSlot, the level needs to be stored separately
+  spellSlotLevelCalculation: {
+    type: String,
+		optional: true,
+  },
 	// The starting value, before effects
 	baseValueCalculation: {
 		type: String,
@@ -80,6 +85,18 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
     optional: true,
   },
   'baseValueErrors.$': {
+    type: ErrorSchema,
+  },
+  // The result of spellSlotLevelCalculation
+  spellSlotLevelValue: {
+    type: SimpleSchema.oneOf(Number, String, Boolean),
+    optional: true,
+  },
+  spellSlotLevelErrors: {
+    type: Array,
+    optional: true,
+  },
+  'spellSlotLevelErrors.$': {
     type: ErrorSchema,
   },
 	// The computed value of the attribute
