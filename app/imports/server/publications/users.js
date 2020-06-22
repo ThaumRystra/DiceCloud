@@ -11,6 +11,7 @@ Meteor.publish('user', function(){
       darkMode: 1,
       subscribedLibraries: 1,
       profile: 1,
+      preferences: 1,
       'services.patreon.id': 1,
       'services.patreon.entitledCents': 1,
       'services.patreon.entitledCentsOverride': 1,

@@ -6,10 +6,21 @@
     >
       <v-list>
         <v-list-tile>
-          <v-switch
-            :input-value="darkMode"
+          <smart-switch
+            :value="darkMode"
             label="Dark mode"
             @change="setDarkMode"
+          />
+        </v-list-tile>
+        <v-list-tile>
+          <smart-switch
+            label="Swap ability scores and modifiers"
+            :value="
+              user &&
+                user.preferences &&
+                user.preferences.swapAbilityScoresAndModifiers
+            "
+            @change="swapAbilityScoresAndModifiers"
           />
         </v-list-tile>
 
@@ -186,8 +197,14 @@
         Meteor.logout();
         router.push('/');
       },
-      setDarkMode(value){
-        Meteor.users.setDarkMode.call({darkMode: !!value});
+      setDarkMode(value, ack){
+        Meteor.users.setDarkMode.call({darkMode: !!value}, ack);
+      },
+      swapAbilityScoresAndModifiers(value, ack){
+        Meteor.users.setPreference.call({
+          preference: 'swapAbilityScoresAndModifiers',
+          value: !!value,
+        }, ack);
       },
       generateKey(){
         Meteor.users.gnerateApiKey.call(error => {

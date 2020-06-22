@@ -5,10 +5,20 @@
   >
     <v-list-tile-action class="mr-4">
       <div class="display-1 mod">
-        {{ numberToSignedString(model.modifier) }}
+        <template v-if="swapScoresAndMods">
+          {{ model.value }}
+        </template>
+        <template v-else>
+          {{ numberToSignedString(model.modifier) }}
+        </template>
       </div>
       <div class="title value">
-        {{ model.value }}
+        <template v-if="swapScoresAndMods">
+          {{ numberToSignedString(model.modifier) }}
+        </template>
+        <template v-else>
+          {{ model.value }}
+        </template>
       </div>
     </v-list-tile-action>
 
@@ -36,7 +46,15 @@ export default {
 		click(e){
 			this.$emit('click', e);
 		},
-	}
+	},
+  meteor: {
+    swapScoresAndMods(){
+      let user = Meteor.user();
+      return user &&
+        user.preferences &&
+        user.preferences.swapAbilityScoresAndModifiers;
+    }
+  }
 }
 </script>
 

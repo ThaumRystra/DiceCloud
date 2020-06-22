@@ -83,6 +83,15 @@ const userSchema = new SimpleSchema({
     blackbox: true,
     optional: true,
   },
+  preferences: {
+    type: Object,
+    optional: true,
+    defaultValue: {},
+  },
+  'preferences.swapAbilityScoresAndModifiers': {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 Meteor.users.attachSchema(userSchema);
@@ -190,6 +199,36 @@ Meteor.users.setUsername = new ValidatedMethod({
     if (Meteor.isClient) return;
     return Accounts.setUsername(this.userId, username)
 	}
+});
+
+Meteor.users.setPreference = new ValidatedMethod({
+  name: 'users.setPreference',
+	validate: new SimpleSchema({
+    preference:{
+      type: String,
+    },
+    value: {
+      type: SimpleSchema.oneOf(Boolean),
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+	run({preference, value}){
+		if (!this.userId) throw 'You can only set preferences once logged in';
+    let prefPath = `preferences.${preference}`
+    if (value == true){
+      return Meteor.users.update(this.userId, {
+        $set: {[prefPath]: true},
+      });
+    } else {
+      return Meteor.users.update(this.userId, {
+        $unset: {[prefPath]: 1},
+      });
+    }
+	},
 });
 
 Meteor.users.subscribeToLibrary = new ValidatedMethod({
