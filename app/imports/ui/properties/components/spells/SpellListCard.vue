@@ -10,32 +10,45 @@
       </v-toolbar-title>
       <v-spacer />
     </template>
-    <v-card-text>
-      <creature-properties-tree
-        :root="{collection: 'creatureProperties', id: model._id}"
-        :filter="{type: {$in: ['spellList', 'spell', 'folder']}}"
-        :organize="organize"
-        group="spells"
-        @selected="e => clickProperty(e)"
+    <v-list
+      two-line
+      dense
+    >
+      <spell-list-tile
+        v-for="spell in spells"
+        :key="spell._id"
+        :data-id="`spell-list-tile-${spell._id}`"
+        :model="spell"
+        @click="clickProperty(spell._id)"
       />
-    </v-card-text>
+    </v-list>
   </toolbar-card>
 </template>
 
 <script>
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
 export default {
 	components: {
 		ToolbarCard,
-		CreaturePropertiesTree,
+    SpellListTile,
 	},
 	props: {
 		model: Object,
 		organize: Boolean,
 	},
+  meteor: {
+    spells(){
+      return getActiveProperties({
+        ancestorId: this.model._id,
+        filter: {
+          type: 'spell',
+        },
+      });
+    },
+  },
 	methods: {
 		clickSpellList(_id){
 			this.$store.commit('pushDialogStack', {
@@ -47,7 +60,7 @@ export default {
 		clickProperty(_id){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-property-dialog',
-				elementId: `tree-node-${_id}`,
+				elementId: `spell-list-tile-${_id}`,
 				data: {_id},
 			});
 		},

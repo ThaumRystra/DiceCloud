@@ -5,16 +5,23 @@ export default function getActiveProperties({
   ancestorId,
   filter = {},
   options,
-  includeUntoggled = false
+  includeUntoggled = false,
+  excludeAncestors,
 }){
-  filter = getActivePropertyFilter({ancestorId, filter, includeUntoggled});
+  filter = getActivePropertyFilter({
+    ancestorId,
+    filter,
+    includeUntoggled,
+    excludeAncestors,
+  });
   return CreatureProperties.find(filter, options).fetch();
 }
 
 export function getActivePropertyFilter({
   ancestorId,
   filter = {},
-  includeUntoggled = false
+  includeUntoggled = false,
+  excludeAncestors = [],
 }){
   if (!ancestorId){
     throw 'Ancestor Id is required to get active properties'
@@ -47,9 +54,12 @@ export function getActivePropertyFilter({
 
   // Get all the properties that are decendents of the ancestor of interest but
   // aren't from the excluded decendents
+  if (filter['ancestors.id'] && Meteor.isClient){
+    console.warn('Filtering on ancestor id is ignored')
+  }
   filter['ancestors.id'] = {
     $eq: ancestorId,
-    $nin: disabledAncestorIds,
+    $nin: disabledAncestorIds.concat(excludeAncestors),
   };
   // Get properties that aren't removed
   filter.removed = {$ne: true};

@@ -1,5 +1,6 @@
 import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
 import SimpleSchema from 'simpl-schema';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 const magicSchools = [
 	'abjuration',
@@ -38,13 +39,15 @@ let SpellSchema = new SimpleSchema({})
     type: Boolean,
     optional: true,
   },
-	// Spell lists that this spell appears on
+	// Spell list that this spell appears on
   spellLists: {
     type: Array,
     defaultValue: [],
   },
   'spellLists.$': {
     type: String,
+		regEx: VARIABLE_NAME_REGEX,
+    min: 2,
   },
 	description: {
 		type: String,

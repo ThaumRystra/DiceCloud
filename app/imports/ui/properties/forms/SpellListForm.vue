@@ -8,6 +8,14 @@
         :error-messages="errors.name"
         @change="change('name', ...arguments)"
       />
+      <text-field
+        label="Variable name"
+        :value="model.variableName"
+        style="flex-basis: 300px;"
+        hint="This name is used by spells to reference which lists they appear on"
+        :error-messages="errors.variableName"
+        @change="change('variableName', ...arguments)"
+      />
     </div>
     <text-area
       label="Description"

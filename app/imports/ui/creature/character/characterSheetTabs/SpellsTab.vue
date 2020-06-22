@@ -1,27 +1,20 @@
 <template lang="html">
   <div class="spells">
-    <column-layout>
+    <column-layout wide-columns>
       <div>
         <v-card>
-          <v-card-text>
-            <v-switch
-              v-if="context.editPermission !== false"
-              v-model="organize"
-              label="Organize"
-              class="justify-end"
+          <v-list
+            two-line
+            dense
+          >
+            <spell-list-tile
+              v-for="spell in spellsWithoutList"
+              :key="spell._id"
+              :data-id="`spell-list-tile-${spell._id}`"
+              :model="spell"
+              @click="clickProperty(spell._id)"
             />
-            <creature-properties-tree
-              :root="{collection: 'creatures', id: creatureId}"
-              :filter="{
-                equipped: {$ne: true},
-                type: 'spell',
-                'ancestors.id': {$nin: spellListIds}
-              }"
-              :organize="organize"
-              group="spells"
-              @selected="e => clickProperty(e)"
-            />
-          </v-card-text>
+          </v-list>
         </v-card>
       </div>
       <div
@@ -41,12 +34,15 @@
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';
+import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
 
 export default {
 	components: {
 		ColumnLayout,
 		CreaturePropertiesTree,
+    SpellListTile,
 		SpellListCard,
 	},
   inject: {
@@ -63,25 +59,30 @@ export default {
 	}},
 	meteor: {
 		spellLists(){
-			return CreatureProperties.find({
-				'ancestors.id': this.creatureId,
-				type: 'spellList',
-				removed: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
+      return getActiveProperties({
+        ancestorId: this.creatureId,
+        filter: {
+          type: 'spellList',
+        },
+      });
 		},
+    spellsWithoutList(){
+      return getActiveProperties({
+        ancestorId: this.creatureId,
+        excludeAncestors: this.spellListIds,
+        filter: {
+          type: 'spell',
+        },
+      });
+    },
 		spellListsWithoutAncestorSpellLists(){
-			return CreatureProperties.find({
-				'ancestors.id': {
-					$eq: this.creatureId,
-					$nin: this.spellListIds
-				},
-				type: 'spellList',
-				removed: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
+      return getActiveProperties({
+        ancestorId: this.creatureId,
+        excludeAncestors: this.spellListIds,
+        filter: {
+          type: 'spellList',
+        },
+      });
 		},
 	},
 	computed: {
@@ -93,7 +94,7 @@ export default {
 		clickProperty(_id){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-property-dialog',
-				elementId: `tree-node-${_id}`,
+				elementId: `spell-list-tile-${_id}`,
 				data: {_id},
 			});
 		},
