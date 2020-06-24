@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="spells">
     <column-layout wide-columns>
-      <div>
+      <div v-if="spellsWithoutList.length">
         <v-card>
           <v-list
             two-line
