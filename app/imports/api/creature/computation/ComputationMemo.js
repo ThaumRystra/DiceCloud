@@ -224,10 +224,17 @@ function isSkillOperation(prop){
 }
 
 function propDetails(prop){
-  return propDetailsByType[prop.type] && propDetailsByType[prop.type]() || {};
+  return propDetailsByType[prop.type] && propDetailsByType[prop.type]() ||
+    propDetailsByType.default();
 }
 
 const propDetailsByType = {
+  default(){
+    return {
+      toggleAncestors: [],
+      disabledByToggle: false,
+    };
+  },
   toggle(){
     return {
       computed: false,
