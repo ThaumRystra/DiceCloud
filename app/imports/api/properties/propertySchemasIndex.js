@@ -39,7 +39,7 @@ const propertySchemasIndex = {
   roll: RollSchema,
   savingThrow: SavingThrowSchema,
   skill: SkillSchema,
-  slot: SlotSchema,
+  propertySlot: SlotSchema,
   spellList: SpellListSchema,
   spell: SpellSchema,
   toggle: ToggleSchema,

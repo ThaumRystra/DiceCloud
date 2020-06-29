@@ -49,6 +49,7 @@ const calculationPropertyTypes = [
   'savingThrow',
   'spellList',
   'spell',
+  'propertySlot',
 ];
 
 export function recomputeCreatureById(creatureId){

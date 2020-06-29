@@ -13,6 +13,7 @@ import { ComputedOnlyAttackSchema } from '/imports/api/properties/Attacks.js';
 import { ComputedOnlySavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { ComputedOnlySpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ComputedOnlySpellSchema } from '/imports/api/properties/Spells.js';
+import { ComputedOnlySlotSchema } from '/imports/api/properties/Slots.js';
 
 const schemasByType = {
   'skill': ComputedOnlySkillSchema,
@@ -24,6 +25,7 @@ const schemasByType = {
   'savingThrow': ComputedOnlySavingThrowSchema,
   'spellList': ComputedOnlySpellListSchema,
   'spell': ComputedOnlySpellSchema,
+  'propertySlot': ComputedOnlySlotSchema,
 };
 
 export default function writeAlteredProperties(memo){

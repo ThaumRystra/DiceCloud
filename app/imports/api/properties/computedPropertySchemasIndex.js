@@ -17,7 +17,7 @@ import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
 import { ComputedSavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { ComputedSkillSchema } from '/imports/api/properties/Skills.js';
-import { SlotSchema } from '/imports/api/properties/Slots.js';
+import { ComputedSlotSchema } from '/imports/api/properties/Slots.js';
 import { ComputedSpellSchema } from '/imports/api/properties/Spells.js';
 import { ComputedSpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ToggleSchema } from '/imports/api/properties/Toggles.js';
@@ -39,7 +39,7 @@ const propertySchemasIndex = {
   roll: RollSchema,
   savingThrow: ComputedSavingThrowSchema,
   skill: ComputedSkillSchema,
-  slot: SlotSchema,
+  propertySlot: ComputedSlotSchema,
   spellList: ComputedSpellListSchema,
   spell: ComputedSpellSchema,
   toggle: ToggleSchema,

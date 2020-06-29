@@ -71,6 +71,10 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.skill',
     name: 'Skill'
   },
+  propertySlot: {
+    icon: 'tab_unselected',
+    name: 'Slot'
+  },
   spellList: {
     icon: '$vuetify.icons.spell_list',
     name: 'Spell list'

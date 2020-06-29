@@ -16,6 +16,8 @@ export default function computeEndStepProperty(prop, memo){
     case 'spellList':
       computeSpellList(prop, memo);
       break;
+    case 'propertySlot':
+      computeSlot(prop, memo);
   }
 }
 
@@ -92,5 +94,15 @@ function computeSpellList(prop, memo){
     prop.maxPreparedErrors = errors;
   } else {
     delete prop.maxPreparedErrors;
+  }
+}
+
+function computeSlot(prop, memo){
+  let {value, errors} = evaluateCalculation(prop.slotCondition, memo);
+  prop.slotConditionResult = value;
+  if (errors.length){
+    prop.slotConditionErrors = errors;
+  } else {
+    delete prop.slotConditionErrors;
   }
 }
