@@ -4,7 +4,7 @@ import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 export default function getActiveProperties({
   ancestorId,
   filter = {},
-  options,
+  options = {sort: {order: 1}},
   includeUntoggled = false,
   excludeAncestors,
 }){

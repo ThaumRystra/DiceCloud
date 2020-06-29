@@ -3,18 +3,7 @@
     <column-layout wide-columns>
       <div v-if="spellsWithoutList.length">
         <v-card>
-          <v-list
-            two-line
-            dense
-          >
-            <spell-list-tile
-              v-for="spell in spellsWithoutList"
-              :key="spell._id"
-              :data-id="`spell-list-tile-${spell._id}`"
-              :model="spell"
-              @click="clickProperty(spell._id)"
-            />
-          </v-list>
+          <spell-list :spells="spellsWithoutList" />
         </v-card>
       </div>
       <div
@@ -31,18 +20,15 @@
 </template>
 
 <script>
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';
-import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 
 export default {
 	components: {
 		ColumnLayout,
-		CreaturePropertiesTree,
-    SpellListTile,
+    SpellList,
 		SpellListCard,
 	},
   inject: {
@@ -72,6 +58,12 @@ export default {
         excludeAncestors: this.spellListIds,
         filter: {
           type: 'spell',
+        },
+        options: {
+          sort: {
+            level: 1,
+            order: 1,
+          },
         },
       });
     },

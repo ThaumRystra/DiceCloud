@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="inventory">
-    <column-layout>
+    <column-layout wide-columns>
       <div>
         <toolbar-card :color="$vuetify.theme.secondary">
           <v-spacer slot="toolbar" />

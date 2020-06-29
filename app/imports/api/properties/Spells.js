@@ -39,16 +39,6 @@ let SpellSchema = new SimpleSchema({})
     type: Boolean,
     optional: true,
   },
-	// Spell list that this spell appears on
-  spellLists: {
-    type: Array,
-    defaultValue: [],
-  },
-  'spellLists.$': {
-    type: String,
-		regEx: VARIABLE_NAME_REGEX,
-    min: 2,
-  },
 	description: {
 		type: String,
 		optional: true,

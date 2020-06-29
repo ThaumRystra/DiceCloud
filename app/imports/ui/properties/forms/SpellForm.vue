@@ -103,19 +103,6 @@
     />
     <form-sections>
       <form-section
-        name="Advanced"
-      >
-        <smart-combobox
-          label="Spell lists"
-          multiple
-          chips
-          deletable-chips
-          :value="model.spellLists"
-          :error-messages="errors.spellLists"
-          @change="change('spellLists', ...arguments)"
-        />
-      </form-section>
-      <form-section
         name="Casting"
       >
         <action-form

@@ -17,11 +17,6 @@
         {{ components }}
       </v-list-tile-sub-title>
     </v-list-tile-content>
-    <v-list-tile-action>
-      <v-list-tile-action-text>
-        {{ levelText }}
-      </v-list-tile-action-text>
-    </v-list-tile-action>
   </v-list-tile>
 </template>
 
@@ -41,9 +36,6 @@ export default {
       if (this.model.somatic) components.push('S');
       if (this.model.material) components.push(`M (${this.model.material})`);
       return components.join(', ');
-    },
-    levelText(){
-      return this.model.level || 'Cantrip'
     },
   },
   methods: {

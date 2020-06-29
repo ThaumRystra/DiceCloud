@@ -10,30 +10,19 @@
       </v-toolbar-title>
       <v-spacer />
     </template>
-    <v-list
-      two-line
-      dense
-    >
-      <spell-list-tile
-        v-for="spell in spells"
-        :key="spell._id"
-        :data-id="`spell-list-tile-${spell._id}`"
-        :model="spell"
-        @click="clickProperty(spell._id)"
-      />
-    </v-list>
+    <spell-list :spells="spells" />
   </toolbar-card>
 </template>
 
 <script>
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
 export default {
 	components: {
 		ToolbarCard,
-    SpellListTile,
+    SpellList,
 	},
 	props: {
 		model: Object,
@@ -46,6 +35,12 @@ export default {
         filter: {
           type: 'spell',
         },
+        options: {
+          sort: {
+            level: 1,
+            order: 1,
+          },
+        },
       });
     },
   },
@@ -54,13 +49,6 @@ export default {
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-property-dialog',
 				elementId: `${_id}`,
-				data: {_id},
-			});
-		},
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `spell-list-tile-${_id}`,
 				data: {_id},
 			});
 		},
