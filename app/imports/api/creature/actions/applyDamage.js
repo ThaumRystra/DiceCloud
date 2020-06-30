@@ -1,4 +1,4 @@
-import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+import evaluateAndRollString from '/imports/api/creature/computation/afterComputation/evaluateAndRollString.js';
 
 export default function applyDamage({
   prop,
@@ -11,9 +11,9 @@ export default function applyDamage({
     ...creature.variables,
     ...actionContext,
   };
-  let {result, errors} = evaluateString(prop.amount, scope);
-  if (Meteor.isClient) errors.forEach(e => console.error(e));
-  if (Number.isFinite(result)) {
-    damageTargets.forEach()
+  let {result, errors} = evaluateAndRollString(prop.amount, scope);
+  if (Meteor.isClient){
+    errors.forEach(e => console.error(e));
+    console.log(result);
   }
 }
