@@ -205,7 +205,7 @@ export function getName(doc){
 }
 
 export function nodeArrayToTree(nodes){
-  // Store a dict of all the nodes
+  // Store a dict and list of all the nodes
   let nodeIndex = {};
   let nodeList = [];
   nodes.forEach( node => {
@@ -233,13 +233,11 @@ export function nodeArrayToTree(nodes){
   return forest;
 }
 
-export function nodesToTree({collection, ancestorId, filter, options}){
-  if (!options) options = {};
-  options.sort = {order: 1};
-  let nodes = collection.find({
-    'ancestors.id': ancestorId,
-		removed: {$ne: true},
-    ...filter,
-  }, options);
+export function nodesToTree({collection, ancestorId, filter = {}, options = {}}){
+  if (!('ancestors.id' in filter)) filter['ancestors.id'] = ancestorId;
+  if (!('removed' in filter)) filter['removed'] = {$ne: true};
+  if (!options.sort) options.sort = {order: 1};
+  if (!('order' in options.sort)) options.sort.order = 1;
+  let nodes = collection.find(filter, options);
   return nodeArrayToTree(nodes);
 }

@@ -1,4 +1,5 @@
 import applyAction from '/imports/api/creature/actions/applyAction.js';
+import applyAttack from '/imports/api/creature/actions/applyAttack.js';
 import applyDamage from '/imports/api/creature/actions/applyDamage.js';
 import applyBuff from '/imports/api/creature/actions/applyBuff.js';
 
@@ -15,7 +16,10 @@ function applyProperty(options){
   switch (prop.type){
     case 'action':
     case 'spell':
+      applyAction(options);
+      return true;
     case 'attack':
+      applyAttack(options);
       applyAction(options);
       return true;
     case 'damage':
