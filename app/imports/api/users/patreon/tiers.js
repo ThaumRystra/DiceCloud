@@ -77,5 +77,13 @@ export function getUserTier(user){
   }
 }
 
+export function assertUserHasPaidBenefits(user){
+  let tier = getUserTier(user);
+  if (!tier.paidBenefits){
+    throw new Meteor.Error('Creatures.methods.insert.denied',
+    `The ${tier.name} tier does not allow you to insert a creature`);
+  }
+}
+
 export default TIERS;
 export { GUEST_TIER };

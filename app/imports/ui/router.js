@@ -20,6 +20,9 @@ import InviteSuccess from '/imports/ui/pages/InviteSuccess.vue' ;
 import InviteError from '/imports/ui/pages/InviteError.vue' ;
 import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
 import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
+import Tabletops from '/imports/ui/pages/Tabletops.vue';
+import Tabletop from '/imports/ui/pages/Tabletop.vue';
+import TabletopToolbar from '/imports/ui/tabletop/TabletopToolbar.vue';
 
 let userSubscription = Meteor.subscribe('user');
 
@@ -143,6 +146,19 @@ RouterFactory.configure(factory => {
       meta: {
         title: 'Character Sheet',
       },
+    },{
+      path: '/tabletops',
+      name: 'tabletops',
+      component: Tabletops,
+      beforeEnter: ensureLoggedIn,
+    },{
+      path: '/tabletop/:id',
+      name: 'tabletop',
+      components: {
+        default: Tabletop,
+        toolbar: TabletopToolbar,
+      },
+      beforeEnter: ensureLoggedIn,
     },{
       path: '/friends',
       components: {

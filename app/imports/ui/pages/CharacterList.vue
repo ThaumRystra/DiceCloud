@@ -2,30 +2,12 @@
   <div>
     <v-card class="ma-4">
       <v-list v-if="CreaturesWithNoParty.length">
-        <v-list-tile
+        <creature-list-tile
           v-for="character in CreaturesWithNoParty"
           :key="character._id"
           :to="character.url"
-        >
-          <v-list-tile-avatar :color="character.color || 'grey'">
-            <img
-              v-if="character.avatarPicture"
-              :src="character.avatarPicture"
-              :alt="character.name"
-            >
-            <template v-else>
-              {{ character.initial }}
-            </template>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>
-              {{ character.name }}
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
-              {{ character.alignment }} {{ character.gender }} {{ character.race }}
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          :model="character"
+        />
       </v-list>
       <v-expansion-panel popout>
         <v-expansion-panel-content
@@ -98,9 +80,10 @@
 
 <script>
   import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
-  import Parties from '/imports/api/campaign/Parties.js';
+  import Parties from '/imports/api/creature/Parties.js';
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+  import CreatureListTile from '/imports/ui/creature/CreatureListTile.vue';
 
   const characterTransform = function(char){
     char.url = `/character/${char._id}/${char.urlName || '-'}`;
@@ -110,6 +93,7 @@
   export default {
     components: {
       LabeledFab,
+      CreatureListTile,
     },
     data(){ return{
       fab: false,

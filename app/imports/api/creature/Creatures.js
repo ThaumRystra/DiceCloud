@@ -5,7 +5,7 @@ import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
 
 import '/imports/api/creature/removeCreature.js';
 import '/imports/api/creature/restCreature.js';
@@ -107,6 +107,17 @@ let CreatureSchema = new SimpleSchema({
 		defaultValue: {}
 	},
 
+  // Tabletop
+  tabletop: {
+    type: String,
+    regEx: SimpleSchema.RegEx.id,
+    optional: true,
+  },
+  initiativeRoll: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+
 	// Settings
 	settings: {
 		type: CreatureSettingsSchema,
@@ -136,11 +147,7 @@ const insertCreature = new ValidatedMethod({
       throw new Meteor.Error('Creatures.methods.insert.denied',
       'You need to be logged in to insert a creature');
     }
-    let tier = getUserTier(this.userId);
-    if (!tier.paidBenefits){
-      throw new Meteor.Error('Creatures.methods.insert.denied',
-      `The ${tier.name} tier does not allow you to insert a creature`);
-    }
+    assertUserHasPaidBenefits(this.userId);
 
 		// Create the creature document
     let charId = Creatures.insert({
