@@ -1,5 +1,6 @@
 <template lang="html">
   <v-list-tile
+    class="spell"
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-tile-avatar class="spell-avatar">
@@ -57,5 +58,8 @@ export default {
 <style lang="css" scoped>
 .spell-avatar {
   min-width: 32px;
+}
+.spell {
+  background-color: inherit;
 }
 </style>
