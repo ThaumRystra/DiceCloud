@@ -1,7 +1,7 @@
 import math from '/imports/math.js';
-if (Meteor.isServer){
-  var sendWebhook = require('/imports/server/discord/webhook.js').default;
-}
+//if (Meteor.isServer){
+//  var sendWebhook = require('/imports/server/discord/webhook.js').default;
+//}
 
 export default function applyAttack({
   prop,
@@ -14,8 +14,8 @@ export default function applyAttack({
   if (Meteor.isClient){
     console.log(`${creature.name} makes a ${prop.name} attack! Rolls ${result} to hit`);
   }
-  if (Meteor.isServer) sendWebhook({
-    webhook: creature.webhook,
-    message: `${creature.name} makes a ${prop.name} attack! Rolls ${result} to hit`,
-  });
+  //if (Meteor.isServer) sendWebhook({
+  //  webhook: creature.webhook,
+  //  message: `${creature.name} makes a ${prop.name} attack! Rolls ${result} to hit`,
+  //});
 }
