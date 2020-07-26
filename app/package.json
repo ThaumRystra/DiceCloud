@@ -27,7 +27,7 @@
     "ddp-rate-limiter-mixin": "^1.1.10",
     "discord.js": "^12.2.0",
     "dompurify": "^2.0.10",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "marked": "^0.8.2",
     "mathjs": "^6.6.4",
     "meteor-node-stubs": "^0.3.3",
