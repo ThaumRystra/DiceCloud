@@ -139,7 +139,7 @@ export default {
       let highestLevels = {};
       let highestLevelsList = [];
       this.classLevels.forEach(classLevel => {
-        let name = classLevel.vairableName;
+        let name = classLevel.variableName;
         if (
           !highestLevels[name] ||
           highestLevels[name].level < classLevel.level
