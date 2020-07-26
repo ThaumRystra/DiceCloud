@@ -2,7 +2,7 @@
   lang="html"
   functional
 >
-  <v-list-tile>
+  <v-list-tile v-bind="$attrs">
     <v-list-tile-avatar :color="model.color || 'grey'">
       <img
         v-if="model.avatarPicture"

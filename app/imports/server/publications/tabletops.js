@@ -1,5 +1,6 @@
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
 import Creatures from '/imports/api/creature/Creatures.js';
+import Messages from '/imports/api/tabletop/Messages.js';
 
 Meteor.publish('tabletops', function(){
   var userId = this.userId;
@@ -46,6 +47,14 @@ Meteor.publish('tabletop', function(tabletopId){
         initiativeRoll: 1,
       },
     });
-    return [ tabletopCursor, creatureSummaries]
+    let recentMessages = Messages.find({
+      tabletopId,
+    }, {
+      sort: {
+        timeStamp: -1,
+      },
+      limit: 100,
+    });
+    return [ tabletopCursor, creatureSummaries, recentMessages]
   })
 });

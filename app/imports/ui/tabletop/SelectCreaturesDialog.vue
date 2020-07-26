@@ -4,6 +4,9 @@
       Add Characters
     </v-toolbar-title>
     <v-list>
+      <p v-if="!creatures.length">
+        There are no creatures to add or you have already added them all
+      </p>
       <creature-list-tile
         v-for="creature in creatures"
         :key="creature._id"
@@ -43,11 +46,11 @@ export default {
     },
   },
   data(){return {
-    selected: new Set(this.startingSelection),
+    selected: new Set(),
   }},
   meteor: {
     creatures(){
-      return Creatures.find({});
+      return Creatures.find({_id: {$nin: this.startingSelection}});
     },
   },
   methods: {

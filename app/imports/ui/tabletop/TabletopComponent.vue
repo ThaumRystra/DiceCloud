@@ -23,7 +23,7 @@
     </section>
     <section class="play-area">
       <tabletop-map />
-      <tabletop-log />
+      <tabletop-log :tabletop-id="model._id" />
     </section>
     <section class="action-row">
       <mini-character-sheet />

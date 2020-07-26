@@ -64,7 +64,7 @@ function assertUserIsTabletopOwner(tabletopId, userId){
   }
 }
 
-function assertUserInTabletop(tabletopId, userId){
+export function assertUserInTabletop(tabletopId, userId){
   let tabletop = Tabletops.findOne(tabletopId);
   if (!tabletop){
     throw new Meteor.Error('Tabletop does not exist',
@@ -73,6 +73,13 @@ function assertUserInTabletop(tabletopId, userId){
   if (tabletop.gameMaster !== userId && !tabletop.players.includes(userId)){
     throw new Meteor.Error('Not in tabletop',
     'The user is not the gamemaster or a player in the given tabletop');
+  }
+}
+
+function assertUserIsAdmin(userId){
+  if (!Meteor.users.isAdmin(userId)){
+    throw new Meteor.Error('Admin only',
+    'This is restricted to admins for now');
   }
 }
 
@@ -94,6 +101,7 @@ const insertTabletop = new ValidatedMethod({
       'You need to be logged in to insert a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
+    assertUserIsAdmin(this.userId);
 
     return Tabletops.insert({
 			gameMaster: this.userId,
@@ -126,6 +134,8 @@ const removeTabletop = new ValidatedMethod({
     }
     assertUserHasPaidBenefits(this.userId);
     assertUserIsTabletopOwner(tabletopId, this.userId);
+    assertUserIsAdmin(this.userId);
+
     let removed = Tabletops.remove({
 			_id: tabletopId,
 		});
@@ -170,6 +180,8 @@ const addCreaturesToTabletop = new ValidatedMethod({
     }
     assertUserHasPaidBenefits(this.userId);
     assertUserInTabletop(tabletopId, this.userId);
+    assertUserIsAdmin(this.userId);
+
     Creatures.update({
       _id: {$in: creatureIds},
       $or: [
