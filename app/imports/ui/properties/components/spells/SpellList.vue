@@ -4,26 +4,62 @@
     dense
     class="spell-list"
   >
-    <template v-for="level in levels">
-      <v-subheader :key="`${level}-header`">
-        {{ level === 0 ? 'Cantrips' : `Level ${level}` }}
-      </v-subheader>
-      <spell-list-tile
-        v-for="spell in spellsByLevel[level]"
-        :key="spell._id"
-        :data-id="`spell-list-tile-${spell._id}`"
-        :model="spell"
-        @click="clickProperty(spell._id)"
-      />
-    </template>
+    <draggable
+      v-model="computedSpells"
+      :group="`spell-list`"
+      ghost-class="ghost"
+      draggable=".item"
+      handle=".handle"
+      :animation="200"
+      @change="change"
+    >
+      <template v-for="spell in computedSpells">
+        <v-subheader
+          v-if="spell.isSubheader"
+          :key="`${spell.level}-header`"
+          class="item"
+        >
+          {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+        </v-subheader>
+        <spell-list-tile
+          v-else
+          :key="spell._id"
+          class="item"
+          :data-id="`spell-list-tile-${spell._id}`"
+          :model="spell"
+          @click="clickProperty(spell._id)"
+        />
+      </template>
+    </draggable>
   </v-list>
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
+
+function spellsWithSubheaders(spells = []){
+  let result = [];
+  let lastSpell = undefined;
+  let sortedSpells = [...spells].sort((a, b) => a.level - b.level)
+  sortedSpells.forEach(spell => {
+    if (spell.isSubheader) return;
+    if (!lastSpell || spell.level > lastSpell.level){
+      result.push({
+        isSubheader: true,
+        level: spell.level,
+      });
+    }
+    result.push(spell);
+    lastSpell = spell;
+  });
+  return result;
+}
 
 export default {
   components: {
+    draggable,
     SpellListTile,
   },
   props: {
@@ -31,24 +67,36 @@ export default {
       type: Array,
       default: () => [],
     },
+    parentRef: {
+      type: Object,
+      required: true,
+    },
   },
+  data(){ return {
+    dataSpells: [],
+  }},
   computed: {
     levels(){
       let levels = new Set();
       this.spells.forEach(spell => levels.add(spell.level));
       return levels;
     },
-    spellsByLevel(){
-      let spellsByLevel = {};
-      this.spells.forEach(spell => {
-        if (!spellsByLevel[spell.level]){
-          spellsByLevel[spell.level] = [spell];
-        } else {
-          spellsByLevel[spell.level].push(spell);
-        }
-      });
-      return spellsByLevel;
-    },
+    computedSpells: {
+      get(){
+        return spellsWithSubheaders(this.dataSpells);
+      },
+      set(value){
+        this.dataSpells = value;
+      },
+    }
+  },
+  watch: {
+    spells(value){
+      this.dataSpells = spellsWithSubheaders(value);
+    }
+  },
+  mounted(){
+    this.dataSpells = spellsWithSubheaders(this.spells);
   },
   methods: {
 		clickProperty(_id){
@@ -58,6 +106,31 @@ export default {
 				data: {_id},
 			});
 		},
+    change({added, moved}){
+      let event = added || moved;
+      if (event){
+        // If this spell is now adjacent to another, set the order accordingly
+        let order;
+        let before = this.dataSpells[event.newIndex - 1];
+        let after = this.dataSpells[event.newIndex + 1];
+        if (before && before._id){
+          order = before.order + 0.5;
+        } else if (after && after._id) {
+          order = after.order - 0.5;
+        } else {
+          order = -0.5;
+        }
+        let doc = event.element;
+        organizeDoc.call({
+          docRef: {
+            id: doc._id,
+            collection: 'creatureProperties',
+          },
+          parentRef: this.parentRef,
+          order,
+        });
+      }
+    },
 	}
 }
 </script>

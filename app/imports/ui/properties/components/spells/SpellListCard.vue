@@ -10,7 +10,10 @@
       </v-toolbar-title>
       <v-spacer />
     </template>
-    <spell-list :spells="spells" />
+    <spell-list
+      :spells="spells"
+      :parent-ref="{id: model._id, collection: 'creatureProperties'}"
+    />
   </toolbar-card>
 </template>
 

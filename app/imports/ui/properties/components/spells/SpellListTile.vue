@@ -17,6 +17,14 @@
         {{ components }}
       </v-list-tile-sub-title>
     </v-list-tile-content>
+    <v-list-tile-action>
+      <v-icon
+        style="height: 100%; width: 40px; cursor: move;"
+        class="handle"
+      >
+        drag_indicator
+      </v-icon>
+    </v-list-tile-action>
   </v-list-tile>
 </template>
 

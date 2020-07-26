@@ -3,7 +3,10 @@
     <column-layout wide-columns>
       <div v-if="spellsWithoutList.length">
         <v-card>
-          <spell-list :spells="spellsWithoutList" />
+          <spell-list
+            :spells="spellsWithoutList"
+            :parent-ref="{id: creatureId, collection: 'creatures'}"
+          />
         </v-card>
       </div>
       <div

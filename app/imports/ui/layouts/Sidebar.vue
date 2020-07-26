@@ -135,7 +135,7 @@
           {title: 'Home', icon: 'home', to: '/'},
           {title: 'Characters', icon: 'portrait', to: '/characterList', requireLogin: true},
           {title: 'Library', icon: 'book', to: '/library', requireLogin: true},
-          {title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
+          //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
           //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
           {title: 'Feedback', icon: 'bug_report', to: '/feedback'},
           {title: 'About', icon: 'subject', to: '/about'},
