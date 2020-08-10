@@ -8,6 +8,7 @@
     <v-expansion-panel
       v-model="expandedLibrary"
       style="box-shadow: none;"
+      expand
     >
       <v-expansion-panel-content
         v-for="library in libraries"

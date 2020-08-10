@@ -1,14 +1,13 @@
 <template lang="html">
-	<tree-node-list
-
-		:children="libraryChildren"
-		:group="library && library._id"
-		:organize="organizeMode"
-		:selected-node-id="selectedNodeId"
-		@selected="e => $emit('selected', e)"
-		@reordered="reordered"
-		@reorganized="reorganized"
-	/>
+  <tree-node-list
+    group="library"
+    :children="libraryChildren"
+    :organize="organizeMode"
+    :selected-node-id="selectedNodeId"
+    @selected="e => $emit('selected', e)"
+    @reordered="reordered"
+    @reorganized="reorganized"
+  />
 </template>
 
 <script>
