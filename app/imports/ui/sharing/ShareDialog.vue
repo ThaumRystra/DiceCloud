@@ -15,7 +15,7 @@
       />
       <text-field
         v-if="model.public && docRef.collection === 'libraries'"
-        disabled
+        readonly
         label="Link"
         :value="'https://beta.dicecloud.com' + this.$router.resolve({
           name: 'singleLibrary',
