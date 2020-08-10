@@ -79,7 +79,7 @@ function symbolSubtitutor(scope, errors){
           return new math.ConstantNode(0);
         }
       }
-    } else if (node.isAccessorNode){
+    } else if (node.isAccessorNode && node.object.isSymbolNode){
       try {
         let value = node.evaluate(scope);
         if (value === undefined) throw 'Not found';
