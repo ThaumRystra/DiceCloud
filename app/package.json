@@ -20,7 +20,7 @@
     "@babel/runtime": "^7.9.2",
     "@chenfengyuan/vue-countdown": "^1.1.5",
     "animejs": "^2.2.0",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "core-js": "^2.6.11",
     "css-box-shadow": "^1.0.0-3",
     "date-fns": "^1.30.1",
