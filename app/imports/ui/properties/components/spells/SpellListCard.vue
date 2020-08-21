@@ -88,6 +88,7 @@ export default {
             order: 1,
           },
         },
+        includeUnprepared: this.preparingSpells,
       });
     },
     numPrepared(){

@@ -6,12 +6,14 @@ export default function getActiveProperties({
   filter = {},
   options = {sort: {order: 1}},
   includeUntoggled = false,
+  includeUnprepared = false,
   excludeAncestors,
 }){
   filter = getActivePropertyFilter({
     ancestorId,
     filter,
     includeUntoggled,
+    includeUnprepared,
     excludeAncestors,
   });
   return CreatureProperties.find(filter, options).fetch();
@@ -21,6 +23,7 @@ export function getActivePropertyFilter({
   ancestorId,
   filter = {},
   includeUntoggled = false,
+  includeUnprepared = false,
   excludeAncestors = [],
 }){
   if (!ancestorId){
@@ -37,6 +40,12 @@ export function getActivePropertyFilter({
   };
   if (!includeUntoggled){
     disabledAncestorsFilter.$or.push({toggleResult: false});
+  }
+  if (!includeUnprepared){
+    disabledAncestorsFilter.$or.push({
+      prepared: false,
+      alwaysPrepared: false
+    });
   }
   let disabledAncestorIds = CreatureProperties.find(disabledAncestorsFilter, {
     fields: {_id: 1},
