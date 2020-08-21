@@ -30,13 +30,18 @@
       :error-messages="errors.maxPrepared"
       @change="change('maxPrepared', ...arguments)"
     />
+    <calculation-error-list :errors="model.maxPreparedErrors" />
   </div>
 </template>
 
 <script>
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
+  components: {
+    CalculationErrorList,
+  },
   mixins: [propertyFormMixin],
 };
 </script>

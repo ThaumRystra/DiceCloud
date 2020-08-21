@@ -4,7 +4,7 @@
     <property-variable-name :value="model.variableName" />
     <property-field
       name="Maximum prepared spells"
-      :value="model.maxPrepared"
+      :value="model.maxPreparedResult"
     />
     <property-description
       v-if="model.description"

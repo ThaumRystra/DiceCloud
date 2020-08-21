@@ -27,6 +27,7 @@
           class="item"
           :data-id="`spell-list-tile-${spell._id}`"
           :model="spell"
+          :preparing-spells="preparingSpells"
           @click="clickProperty(spell._id)"
         />
       </template>
@@ -71,6 +72,7 @@ export default {
       type: Object,
       required: true,
     },
+    preparingSpells: Boolean,
   },
   data(){ return {
     dataSpells: [],

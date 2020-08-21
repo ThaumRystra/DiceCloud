@@ -2,20 +2,21 @@
   <div class="spell-form">
     <div class="layout row wrap justify-space-between">
       <smart-switch
-        label="Prepared"
-        style="width: 200px; flex-grow: 0;"
-        class="mx-2"
-        :value="model.prepared"
-        :error-messages="errors.prepared"
-        @change="change('prepared', ...arguments)"
-      />
-      <smart-switch
         label="Always prepared"
         style="width: 200px; flex-grow: 0;"
         class="mx-2"
         :value="model.alwaysPrepared"
         :error-messages="errors.alwaysPrepared"
         @change="change('alwaysPrepared', ...arguments)"
+      />
+      <smart-switch
+        v-show="!model.alwaysPrepared"
+        label="Prepared"
+        style="width: 200px; flex-grow: 0;"
+        class="mx-2"
+        :value="model.prepared"
+        :error-messages="errors.prepared"
+        @change="change('prepared', ...arguments)"
       />
     </div>
     <text-field

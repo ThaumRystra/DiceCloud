@@ -9,10 +9,48 @@
         {{ model.name }}
       </v-toolbar-title>
       <v-spacer />
+      <v-menu
+        bottom
+        left
+        transition="slide-y-transition"
+        style="margin-right: -12px;"
+      >
+        <template #activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+            @click.stop
+          >
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+        </template>
+        <v-list class="pa-2">
+          <v-switch
+            v-model="preparingSpells"
+            class="ma-2"
+            label="Change prepared spells"
+            hide-details
+          />
+        </v-list>
+      </v-menu>
     </template>
+    <v-expand-transition>
+      <v-card-text
+        v-if="preparedError || preparingSpells"
+        :class="{'error--text' : preparedError}"
+        class="pb-0"
+      >
+        {{ numPrepared }}/{{ model.maxPreparedResult }} spells prepared
+        <v-switch
+          v-model="preparingSpells"
+          label="Change prepared spells"
+        />
+      </v-card-text>
+    </v-expand-transition>
     <spell-list
       :spells="spells"
       :parent-ref="{id: model._id, collection: 'creatureProperties'}"
+      :preparing-spells="preparingSpells"
     />
   </toolbar-card>
 </template>
@@ -28,9 +66,15 @@ export default {
     SpellList,
 	},
 	props: {
-		model: Object,
+		model: {
+      type: Object,
+      required: true,
+    },
 		organize: Boolean,
 	},
+  data(){ return {
+    preparingSpells: false,
+  }},
   meteor: {
     spells(){
       return getActiveProperties({
@@ -45,6 +89,21 @@ export default {
           },
         },
       });
+    },
+    numPrepared(){
+      return getActiveProperties({
+        ancestorId: this.model._id,
+        filter: {
+          type: 'spell',
+          prepared: true,
+          alwaysPrepared: {$ne: true},
+        },
+      }).length;
+    },
+    preparedError(){
+      let numPrepared = this.numPrepared;
+      let maxPrepared = this.model.maxPreparedResult;
+      return numPrepared !== maxPrepared
     },
   },
 	methods: {

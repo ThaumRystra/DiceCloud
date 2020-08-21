@@ -19,7 +19,15 @@
       </v-list-tile-sub-title>
     </v-list-tile-content>
     <v-list-tile-action>
+      <smart-checkbox
+        v-if="preparingSpells"
+        :value="model.prepared || model.alwaysPrepared"
+        :disabled="model.alwaysPrepared"
+        @click.native.stop="() => {}"
+        @change="setPrepared"
+      />
       <v-icon
+        v-else
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
@@ -31,8 +39,13 @@
 
 <script>
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
+import {updateProperty} from '/imports/api/creature/CreatureProperties.js';
+
 export default {
   mixins: [treeNodeViewMixin],
+  props: {
+    preparingSpells: Boolean,
+  },
   computed: {
     hasClickListener(){
       return this.$listeners && !!this.$listeners.click;
@@ -51,6 +64,13 @@ export default {
     click(e){
 			this.$emit('click', e);
 		},
+    setPrepared(val, ack){
+      updateProperty.call({
+        _id: this.model._id,
+        path: ['prepared'],
+        value: val
+      }, ack);
+    }
   },
 }
 </script>
