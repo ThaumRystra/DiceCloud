@@ -154,6 +154,14 @@ export function updateParent({docRef, parentRef}){
   // Get the parent and its ancestry
   let {parentDoc, parent, ancestors} = getAncestry({parentRef});
 
+  // Check that the doc isn't its own ancestor
+  ancestors.forEach(ancestor => {
+    if (docRef.id === ancestor.id){
+      throw new Meteor.Error('invalid parenting',
+        'A doc can\'t be its own ancestor')
+    }
+  });
+
   // If the doc and its parent are in the same collection, apply the allowed
   // parent rules based on type
   if (docRef.collection === parentRef.collection){

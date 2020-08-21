@@ -7,6 +7,7 @@ export default function getActiveProperties({
   options = {sort: {order: 1}},
   includeUntoggled = false,
   includeUnprepared = false,
+  includeUnequipped = false,
   excludeAncestors,
 }){
   filter = getActivePropertyFilter({
@@ -14,6 +15,7 @@ export default function getActiveProperties({
     filter,
     includeUntoggled,
     includeUnprepared,
+    includeUnequipped,
     excludeAncestors,
   });
   return CreatureProperties.find(filter, options).fetch();
@@ -24,6 +26,7 @@ export function getActivePropertyFilter({
   filter = {},
   includeUntoggled = false,
   includeUnprepared = false,
+  includeUnequipped = false,
   excludeAncestors = [],
 }){
   if (!ancestorId){
@@ -34,17 +37,20 @@ export function getActivePropertyFilter({
     'ancestors.id': ancestorId,
     $or: [
       {disabled: true}, // Everything can be disabled
-      {equipped: false}, // Items can be equipped
       {applied: false}, // Buffs can be applied
     ],
   };
+  if (!includeUnequipped){
+    disabledAncestorsFilter.$or.push({type: 'item', equipped: {$ne: true}});
+  }
   if (!includeUntoggled){
     disabledAncestorsFilter.$or.push({toggleResult: false});
   }
   if (!includeUnprepared){
     disabledAncestorsFilter.$or.push({
-      prepared: false,
-      alwaysPrepared: false
+      type: 'spell',
+      prepared: {$ne: true},
+      alwaysPrepared: {$ne: true}
     });
   }
   let disabledAncestorIds = CreatureProperties.find(disabledAncestorsFilter, {

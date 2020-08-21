@@ -11,12 +11,9 @@
       <v-spacer />
     </template>
     <v-card-text class="px-0">
-      <creature-properties-tree
-        :root="{collection: 'creatureProperties', id: model._id}"
-        :filter="{type: {$in: ['container', 'item', 'folder']}}"
-        :organize="organize"
-        group="inventory"
-        @selected="e => clickProperty(e)"
+      <item-list
+        :items="items"
+        :parent-ref="{id: model._id, collection: 'creatureProperties'}"
       />
     </v-card-text>
   </toolbar-card>
@@ -24,16 +21,19 @@
 
 <script>
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 
 export default {
 	components: {
 		ToolbarCard,
-		CreaturePropertiesTree,
+    ItemList,
 	},
 	props: {
-		model: Object,
-		organize: Boolean,
+		model: {
+      type: Object,
+      required: true,
+    },
 	},
 	methods: {
 		clickContainer(_id){
@@ -50,7 +50,20 @@ export default {
 				data: {_id},
 			});
 		},
-	}
+	},
+  meteor: {
+    items(){
+      return getActiveProperties({
+        ancestorId: this.model._id,
+        includeUnequipped: true,
+        filter: {
+          type: {$in: ['item', 'container']},
+          'parent.id': this.model._id,
+          equipped: {$ne: true},
+        },
+      });
+    },
+  }
 };
 </script>
 

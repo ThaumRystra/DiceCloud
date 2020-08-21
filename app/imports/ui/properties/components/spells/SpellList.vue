@@ -6,6 +6,7 @@
   >
     <draggable
       v-model="computedSpells"
+      style="min-height: 24px;"
       :group="`spell-list`"
       ghost-class="ghost"
       draggable=".item"

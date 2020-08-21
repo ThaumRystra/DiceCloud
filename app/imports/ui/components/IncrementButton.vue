@@ -11,6 +11,7 @@
       <v-btn
         v-bind="$attrs"
         v-on="on"
+        @click.stop
       >
         <slot>
           <v-icon>add</v-icon>
