@@ -11,11 +11,13 @@ export default class ConstantNode extends ParseNode {
   compile(){
     return this;
   }
-  reduce(){
-    if (this.type === 'numberArray'){
-	    return this.value.reduce((total, num) => total + num, 0);
-		} else {
-			return this;
-		}
+  toString(){
+    return `${this.value}`;
+  }
+  get isNumber(){
+    return this.type === 'number';
+  }
+  get isInteger(){
+    return this.isNumberNode && Number.isInteger(this.value);
   }
 }

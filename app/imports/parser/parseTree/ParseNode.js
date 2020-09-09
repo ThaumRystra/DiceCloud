@@ -1,7 +1,10 @@
 export default class ParseNode {
-  // Compiling a node must return a ConstantNode
   compile(){
-    throw new Meteor.Error('Compile not implemented on ' + this);
+    // Returns a ParseNode, a ConstantNode if possible
+    throw new Meteor.Error('Compile not implemented on ' + this.constructor.name);
+  }
+  toString(){
+    throw new Meteor.Error('toString not implemented on ' + this.constructor.name);
   }
 	// Compile, but turn rolls into arrays
   roll(){
@@ -9,6 +12,6 @@ export default class ParseNode {
   }
 	// Compile, turn rolls into arrays, and reduce those arrays into single values
 	reduce(){
-		return this.compileAndRoll()
+		return this.roll();
 	}
 }

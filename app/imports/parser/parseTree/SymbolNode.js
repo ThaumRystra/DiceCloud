@@ -6,6 +6,9 @@ export default class SymbolNode extends ParseNode {
 		super();
     this.name = name;
   }
+  toString(){
+    return `${this.name}`
+  }
   compile(scope){
     let value = scope && scope[this.name];
     let type = typeof value;

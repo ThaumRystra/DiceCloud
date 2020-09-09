@@ -2,11 +2,16 @@
 // http://github.com/Hardmath123/nearley
 function id(x) { return x[0]; }
 
+  import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
 	import CallNode from '/imports/parser/parseTree/CallNode.js';
 	import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
-	import IfNode from '/imports/parser/parseTree/IfNode.js';
+  import IfNode from '/imports/parser/parseTree/IfNode.js';
+	import IndexNode from '/imports/parser/parseTree/IndexNode.js';
 	import OperatorNode from '/imports/parser/parseTree/OperatorNode.js';
-	import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+  import ParenthesisNode from '/imports/parser/parseTree/ParenthesisNode.js';
+  import RollNode from '/imports/parser/parseTree/RollNode.js';
+  import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+
 	import moo from 'moo';
 
   const lexer = moo.compile({
@@ -25,7 +30,8 @@ function id(x) { return x[0]; }
       match: /\s+/,
       lineBreaks: true,
     },
-    separators: [',', '.'],
+    separator: [',', ';'],
+    period: ['.'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
@@ -35,7 +41,7 @@ function id(x) { return x[0]; }
     stringDelimiters: ['\"', '\''],
     equalityOperator: ['=', '==', '===', '!=', '!=='],
     relationalOperator: ['>', '<', '>=', '<='],
-    brackets: ['(', ')', '{', '}'],
+    brackets: ['(', ')', '{', '}', '[', ']'],
   });
 
   function nuller() { return null; }
@@ -49,11 +55,11 @@ function id(x) { return x[0]; }
   }
 let Lexer = lexer;
 let ParserRules = [
-    {"name": "ifStatement", "symbols": [{"literal":"if"}, "_", {"literal":"("}, "_", "expression", "_", {"literal":")"}, "_", "ifStatement", "_", {"literal":"else"}, "_", "ifStatement"], "postprocess": 
+    {"name": "expression", "symbols": ["ifStatement"], "postprocess": d => d[0]},
+    {"name": "ifStatement", "symbols": ["_", "expression", "_", {"literal":"?"}, "_", "expression", "_", {"literal":":"}, "_", "expression"], "postprocess": 
         d => new IfNode({condition: d[4], consequent: d[8], alternative: d[12]})
           },
-    {"name": "ifStatement", "symbols": ["expression"], "postprocess": id},
-    {"name": "expression", "symbols": ["equalityExpression"], "postprocess": d => d[0]},
+    {"name": "ifStatement", "symbols": ["equalityExpression"], "postprocess": id},
     {"name": "equalityExpression", "symbols": ["equalityExpression", "_", (lexer.has("equalityOperator") ? {type: "equalityOperator"} : equalityOperator), "_", "relationalExpression"], "postprocess": d => operator(d, 'equality')},
     {"name": "equalityExpression", "symbols": ["relationalExpression"], "postprocess": id},
     {"name": "relationalExpression", "symbols": ["relationalExpression", "_", (lexer.has("relationalOperator") ? {type: "relationalOperator"} : relationalOperator), "_", "orExpression"], "postprocess": d => operator(d, 'relation')},
@@ -66,33 +72,47 @@ let ParserRules = [
     {"name": "additiveExpression", "symbols": ["multiplicativeExpression"], "postprocess": id},
     {"name": "multiplicativeExpression", "symbols": ["multiplicativeExpression", "_", (lexer.has("multiplicativeOperator") ? {type: "multiplicativeOperator"} : multiplicativeOperator), "_", "rollExpression"], "postprocess": d => operator(d, 'multiply')},
     {"name": "multiplicativeExpression", "symbols": ["rollExpression"], "postprocess": id},
-    {"name": "rollExpression", "symbols": ["rollExpression", "_", {"literal":"d"}, "_", "exponentExpression"], "postprocess": d => operator(d, 'roll')},
-    {"name": "rollExpression", "symbols": ["exponentExpression"], "postprocess": id},
+    {"name": "rollExpression", "symbols": ["rollExpression", "_", {"literal":"d"}, "_", "exponentExpression"], "postprocess": d => new RollNode({left: d[0], right: d[4]})},
+    {"name": "rollExpression", "symbols": ["singleRollExpression"], "postprocess": id},
+    {"name": "singleRollExpression", "symbols": [{"literal":"d"}, "_", "exponentExpression"], "postprocess": d => new RollNode({left: new ConstantNode({value: 1, type: 'number'}), right: d[2]})},
+    {"name": "singleRollExpression", "symbols": ["exponentExpression"], "postprocess": id},
     {"name": "exponentExpression", "symbols": ["callExpression", "_", (lexer.has("exponentOperator") ? {type: "exponentOperator"} : exponentOperator), "_", "exponentExpression"], "postprocess": d => operator(d, 'exponent')},
     {"name": "exponentExpression", "symbols": ["callExpression"], "postprocess": id},
     {"name": "callExpression", "symbols": ["name", "_", "arguments"], "postprocess": 
         d => new CallNode ({type: "call", fn: d[0], arguments: d[2]})
           },
-    {"name": "callExpression", "symbols": ["parenthesizedExpression"], "postprocess": id},
+    {"name": "callExpression", "symbols": ["indexExpression"], "postprocess": id},
     {"name": "arguments$ebnf$1$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
     {"name": "arguments$ebnf$1", "symbols": ["arguments$ebnf$1$subexpression$1"], "postprocess": id},
     {"name": "arguments$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
     {"name": "arguments$ebnf$2", "symbols": []},
-    {"name": "arguments$ebnf$2$subexpression$1", "symbols": ["_", {"literal":","}, "_", "expression"], "postprocess": d => d[3]},
+    {"name": "arguments$ebnf$2$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
     {"name": "arguments$ebnf$2", "symbols": ["arguments$ebnf$2", "arguments$ebnf$2$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "arguments", "symbols": [{"literal":"("}, "_", "arguments$ebnf$1", "arguments$ebnf$2", "_", {"literal":")"}], "postprocess": 
         d => [d[2], ...d[3]]
+        },
+    {"name": "indexExpression", "symbols": ["arrayExpression", {"literal":"["}, "_", "expression", "_", {"literal":"]"}], "postprocess": d => new IndexNode ({array: d[0], index: d[3]})},
+    {"name": "indexExpression", "symbols": ["arrayExpression"], "postprocess": id},
+    {"name": "arrayExpression$ebnf$1$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
+    {"name": "arrayExpression$ebnf$1", "symbols": ["arrayExpression$ebnf$1$subexpression$1"], "postprocess": id},
+    {"name": "arrayExpression$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "arrayExpression$ebnf$2", "symbols": []},
+    {"name": "arrayExpression$ebnf$2$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
+    {"name": "arrayExpression$ebnf$2", "symbols": ["arrayExpression$ebnf$2", "arrayExpression$ebnf$2$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "arrayExpression", "symbols": [{"literal":"["}, "_", "arrayExpression$ebnf$1", "arrayExpression$ebnf$2", "_", {"literal":"]"}], "postprocess": 
+        d => new ArrayNode({values: [d[2], ...d[3]]})
           },
-    {"name": "parenthesizedExpression", "symbols": [{"literal":"("}, "_", "expression", "_", {"literal":")"}], "postprocess": d => d[2]},
+    {"name": "arrayExpression", "symbols": ["parenthesizedExpression"], "postprocess": id},
+    {"name": "parenthesizedExpression", "symbols": [{"literal":"("}, "_", "expression", "_", {"literal":")"}], "postprocess": d => new ParenthesisNode({content: d[2]})},
     {"name": "parenthesizedExpression", "symbols": ["valueExpression"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["name"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["number"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["string"], "postprocess": id},
-    {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": d => new ConstantNode({value: d[0].value, type: 'number'})},
+    {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": d => new ConstantNode({value: +d[0].value, type: 'number'})},
     {"name": "name", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => new SymbolNode({name: d[0].value})},
     {"name": "string", "symbols": [(lexer.has("string") ? {type: "string"} : string)], "postprocess": d => new ConstantNode({value: d[0].value, type: 'string'})},
     {"name": "_", "symbols": []},
     {"name": "_", "symbols": [(lexer.has("space") ? {type: "space"} : space)], "postprocess": nuller}
 ];
-let ParserStart = "ifStatement";
+let ParserStart = "expression";
 export default { Lexer, ParserRules, ParserStart };

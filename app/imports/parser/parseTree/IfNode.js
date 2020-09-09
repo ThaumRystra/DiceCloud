@@ -8,6 +8,10 @@ export default class IfNode extends ParseNode {
     this.consequent = consequent;
     this.alternative = alternative;
   }
+  toString(){
+    let {condition, consequent, alternative} = this;
+    return `${condition.toString()} ? ${consequent.toString()} : ${alternative.toString()}`
+  }
   compile(){
     let condition = this.condition.compile();
     let consequent = this.consequent.compile();
@@ -19,7 +23,7 @@ export default class IfNode extends ParseNode {
     ){
       // Handle unresolved condition
       return new ConstantNode({
-        value: `if (${condition.value}) ${consequent.value} else ${alternative.value}`,
+        value: `${condition.value}) ${consequent.value} else ${alternative.value}`,
         type: 'uncompiledNode',
         errors: [
           ...condition.errors,
