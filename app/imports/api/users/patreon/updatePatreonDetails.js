@@ -1,5 +1,4 @@
 import request from 'request';
-
 if (!Meteor.isServer) throw 'Server only, do not import this code in the client';
 
 const config = ServiceConfiguration.configurations.findOne({service: 'patreon'});
@@ -85,7 +84,7 @@ const updatePatreonDetails = function(user){
     throw new Meteor.Error('no-patreon-access', 'Patreon access token not found for this user');
   }
   let accessToken = user.services.patreon.accessToken;
-  if (user.services.patreon.tokenExpiryDate < new Date()){
+  if (user.services.patreon.expiresAt < new Date()){
     // Token expired, refresh it before continuing
     accessToken = refreshAccessToken(user.services.patreon.refreshToken, user._id);
   }
@@ -96,7 +95,7 @@ Meteor.methods({
   updateMyPatreonDetails(){
     const userId = this.userId;
     if (!userId) throw new Meteor.Error('not-logged-in', 'You must be logged in to update Patreon details');
-    const user = Meteor.users.findOne(userId, {fields: {patreon: 1}});
+    const user = Meteor.users.findOne(userId, {fields: {services: 1}});
     updatePatreonDetails(user);
   },
 });
@@ -115,7 +114,7 @@ const writePatreonToken = function(userId, {
     $set: {
       'patreon.accessToken': access_token,
       'patreon.refreshToken': refresh_token,
-      'patreon.tokenExpiryDate': expiryDate,
+      'patreon.expiresAt': expiryDate,
     },
     $unset: {
       'patreon.error': 1,
@@ -127,6 +126,7 @@ const writeEntitledCents = function(userId, amount){
   Meteor.users.update(userId, {
     $set: {
       'services.patreon.entitledCents': amount,
+      'services.patreon.lastUpdatedIdentity': new Date(),
     },
     $unset: {
       'patreon.error': 1,
@@ -134,4 +134,4 @@ const writeEntitledCents = function(userId, amount){
   });
 };
 
-export { updatePatreonDetails };
+export default updatePatreonDetails;

@@ -3,7 +3,7 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-accounts-password@1.6.0
+accounts-password@1.6.2
 accounts-ui@1.3.1
 random@1.2.0
 dburles:collection-helpers
@@ -13,7 +13,7 @@ momentjs:moment
 dburles:mongo-collection-instances
 percolate:migrations
 accounts-google@1.3.3
-email@1.2.3
+email@2.0.0
 meteorhacks:subs-manager
 chuangbo:marked
 meteor-base@1.4.0
@@ -38,7 +38,7 @@ ongoworks:speakingurl
 service-configuration@1.0.11
 google-config-ui@1.0.1
 dynamic-import@0.5.2
-ddp-rate-limiter@1.0.7
+ddp-rate-limiter@1.0.9
 rate-limit@1.0.9
 meteortesting:mocha
 mdg:validated-method

@@ -61,6 +61,20 @@
           Patreon
         </v-subheader>
         <v-list-tile>
+          <v-list-tile-action>
+            <v-tooltip right>
+              <span>Refresh Patreon status</span>
+              <v-btn
+                slot="activator"
+                icon
+                flat
+                :loading="updatePatreonLoading"
+                @click="updatePatreon"
+              >
+                <v-icon>refresh</v-icon>
+              </v-btn>
+            </v-tooltip>
+          </v-list-tile-action>
           <v-list-tile-title>
             Tier: {{ tier.name }}
           </v-list-tile-title>
@@ -177,6 +191,10 @@
       signOutBusy: false,
       apiKeyGenerationError: null,
       emailVerificationError: null,
+      linkGoogleError: '',
+      linkPatreonError: '',
+      updatePatreonError: '',
+      updatePatreonLoading: false,
     }},
     computed: {
       entitledCents(){
@@ -225,11 +243,31 @@
         });
       },
       linkWithGoogle(){
+        this.linkGoogleError = '';
         Meteor.linkWithGoogle(error => {
-          if (error) console.error(error);
+          if (error) this.linkGoogleError = error;
         });
       },
-      linkWithPatreon,
+      linkWithPatreon(){
+        this.linkPatreonError = '';
+        linkWithPatreon(error => {
+          if (error) {
+            this.linkPatreonError = error;
+          } else {
+            Meteor.call('updateMyPatreonDetails', error => {
+              if (error) this.linkPatreonError = error;
+            });
+          }
+        });
+      },
+      updatePatreon(){
+        this.updatePatreonLoading = true;
+        this.updatePatreonError = '';
+        Meteor.call('updateMyPatreonDetails', error => {
+          this.updatePatreonLoading = false;
+          if (error) this.updatePatreonError = error;
+        });
+      }
     },
   }
 </script>
