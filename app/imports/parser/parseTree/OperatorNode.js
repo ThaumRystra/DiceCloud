@@ -3,22 +3,32 @@ import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default class OperatorNode extends ParseNode {
   constructor({left, right, operator, fn}) {
-		super();
+		super(...arguments);
     this.left = left;
     this.right = right;
     this.fn = fn;
     this.operator = operator;
   }
-  compile(){
-    let leftNode = this.left.compile();
-    let rightNode = this.right.compile();
+  compile(scope){
+    return this.resolve('compile', scope);
+  }
+  roll(scope){
+    return this.resolve('roll', scope);
+  }
+  reduce(scope){
+    return this.resolve('reduce', scope);
+  }
+  resolve(fn, scope){
+    let leftNode = this.left[fn](scope);
+    let rightNode = this.right[fn](scope);
     let left, right;
     if (leftNode.type !== 'number' || rightNode.type !== 'number'){
       return new OperatorNode({
         left: leftNode,
         right: rightNode,
         operator: this.operator,
-        fn: this.fn
+        fn: this.fn,
+        previousNodes: [this],
       });
     } else {
       left = leftNode.value;
@@ -44,7 +54,11 @@ export default class OperatorNode extends ParseNode {
       case '>=': result = left >= right; break;
       case '<=': result = left <= right; break;
     }
-    return new ConstantNode({value: result, type: typeof result});
+    return new ConstantNode({
+      value: result,
+      type: typeof result,
+      previousNodes: [this, leftNode, rightNode],
+    });
   }
   toString(){
     let {left, right, operator} = this;

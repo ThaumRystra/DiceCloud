@@ -1,12 +1,12 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 
 export default class ConstantNode extends ParseNode {
-  constructor({value, type, errors}){
-		super();
+  constructor({value, type, rollTable}){
+		super(...arguments);
     // string, number, boolean, numberArray, uncompiledNode
     this.type = type;
     this.value = value;
-    if (errors) this.errors = errors;
+    if (rollTable) this.rollTable = rollTable;
   }
   compile(){
     return this;
@@ -18,6 +18,6 @@ export default class ConstantNode extends ParseNode {
     return this.type === 'number';
   }
   get isInteger(){
-    return this.isNumberNode && Number.isInteger(this.value);
+    return this.type === 'number' && Number.isInteger(this.value);
   }
 }

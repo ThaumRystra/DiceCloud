@@ -103,7 +103,7 @@ exponentExpression ->
 
 callExpression ->
   name _ arguments {%
-    d => new CallNode ({type: "call", fn: d[0], arguments: d[2]})
+    d => new CallNode ({functionName: d[0].name, args: d[2]})
   %}
 | indexExpression {% id %}
 

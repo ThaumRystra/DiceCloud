@@ -2,15 +2,24 @@ import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 
 export default class ParenthesisNode extends ParseNode {
   constructor({content}) {
-		super();
+		super(...arguments);
     this.content = content;
   }
-  compile(){
-    let content = this.content.compile();
+  compile(scope){
+    return this.resolve('compile', scope);
+  }
+  roll(scope){
+    return this.resolve('roll', scope);
+  }
+  reduce(scope){
+    return this.resolve('reduce', scope);
+  }
+  resolve(fn, scope){
+    let content = this.content[fn](scope);
     if (content.constructor.name === 'ConstantNode'){
       return content;
     } else {
-      return new ParenthesisNode({content});
+      return new ParenthesisNode({content, previousNodes: [this]});
     }
   }
   toString(){

@@ -18,6 +18,21 @@
           readonly
           label="compiled"
         />
+        <v-text-field
+          v-model="rolled"
+          readonly
+          label="rolled"
+        />
+        <v-text-field
+          v-model="reduced"
+          readonly
+          label="reduced"
+        />
+        <v-textarea
+          v-model="reducedJson"
+          readonly
+          label="reduced"
+        />
       </v-card-text>
     </v-card>
   </div>
@@ -32,6 +47,9 @@ export default {
     output: null,
     compiled: null,
     string: null,
+    rolled: null,
+    reduced: null,
+    reducedJson: null,
   }},
   watch: {
     input(val){
@@ -41,7 +59,11 @@ export default {
       this.output = JSON.stringify(output, null, 2);
       if (!output) return;
       this.string = output;
-      this.compiled = output.compile();
+      let scope = {cat: 1, dog: 2, mouse: 3};
+      this.compiled = output.compile(scope);
+      this.rolled = output.roll(scope);
+      this.reduced = output.reduce(scope);
+      this.reducedJson = JSON.stringify(this.reduced, null, 2)
     }
   },
 }

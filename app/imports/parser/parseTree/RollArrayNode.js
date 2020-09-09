@@ -1,8 +1,9 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
+import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default class RollArrayNode extends ParseNode {
   constructor({values}) {
-		super();
+		super(...arguments);
     this.values = values;
   }
   compile(){
@@ -12,6 +13,11 @@ export default class RollArrayNode extends ParseNode {
     return `[${this.values.join(', ')}]`;
   }
   reduce(){
-    //TODO sum and return values
+    let total = this.values.reduce((a, b) => a + b);
+    return new ConstantNode({
+      value: total,
+      type: 'number',
+      previousNodes: [this],
+    });
   }
 }

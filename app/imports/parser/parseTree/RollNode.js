@@ -1,17 +1,17 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
-import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
+import RollArrayNode from '/imports/parser/parseTree/RollArrayNode.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 
 export default class RollNode extends ParseNode {
   constructor({left, right}) {
-		super();
+		super(...arguments);
     this.left = left;
     this.right = right;
   }
-  compile(){
-    let left = this.left.compile();
-    let right = this.right.compile();
-    return new RollNode({left, right});
+  compile(scope){
+    let left = this.left.compile(scope);
+    let right = this.right.compile(scope);
+    return new RollNode({left, right, previousNodes: [this]});
   }
   toString(){
     if (
@@ -22,19 +22,21 @@ export default class RollNode extends ParseNode {
       return `${this.left.toString()}d${this.right.toString()}`;
     }
   }
-  roll(){
-    let left = this.left.reduce();
-    let right = this.right.reduce();
+  roll(scope){
+    let left = this.left.reduce(scope);
+    let right = this.right.reduce(scope);
     if (!left.isInteger){
       return new ErrorNode({
         node: this,
-        error: 'Number of dice is not an integer'
+        error: 'Number of dice is not an integer',
+        previousNodes: [this, left, right],
       });
     }
     if (!right.isInteger){
       return new ErrorNode({
         node: this,
-        error: 'Dice size is not an integer'
+        error: 'Dice size is not an integer',
+        previousNodes: [this, left, right],
       });
     }
     let number = left.value;
@@ -44,14 +46,18 @@ export default class RollNode extends ParseNode {
     });
     let diceSize = right.value;
     let randomSrc = DDP.randomStream('diceRoller');
-    let rolls = [];
+    let values = [];
     for (let i = 0; i < number; i++){
       let roll = ~~(randomSrc.fraction() * diceSize) + 1
-      rolls.push(roll);
+      values.push(roll);
     }
-    return new ArrayNode({values: rolls});
+    return new RollArrayNode({
+      values,
+      detail: {number, diceSize, values},
+      previousNodes: [this, left, right],
+    });
   }
-  reduce(){
-    this.roll().reduce();
+  reduce(scope){
+    return this.roll(scope).reduce(scope);
   }
 }

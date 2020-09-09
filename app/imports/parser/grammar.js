@@ -79,7 +79,7 @@ let ParserRules = [
     {"name": "exponentExpression", "symbols": ["callExpression", "_", (lexer.has("exponentOperator") ? {type: "exponentOperator"} : exponentOperator), "_", "exponentExpression"], "postprocess": d => operator(d, 'exponent')},
     {"name": "exponentExpression", "symbols": ["callExpression"], "postprocess": id},
     {"name": "callExpression", "symbols": ["name", "_", "arguments"], "postprocess": 
-        d => new CallNode ({type: "call", fn: d[0], arguments: d[2]})
+        d => new CallNode ({functionName: d[0].name, args: d[2]})
           },
     {"name": "callExpression", "symbols": ["indexExpression"], "postprocess": id},
     {"name": "arguments$ebnf$1$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},

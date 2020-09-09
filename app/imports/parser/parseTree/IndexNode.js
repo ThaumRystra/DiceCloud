@@ -2,22 +2,34 @@ import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 
 export default class IndexNode extends ParseNode {
   constructor({array, index}) {
-		super();
+		super(...arguments);
     this.array = array;
     this.index = index;
   }
-  compile(){
-    let index = this.index.compile();
-    if (index.constructor.name === 'ConstantNode' && index.type === 'number'){
-      let selection = this.array.values[index.value];
+  resolve(fn, scope){
+    let index = this.index[fn](scope);
+    if (index.isInteger){
+      let selection = this.array.values[index.value - 1];
       if (selection){
-        return selection.compile();
+        let result = selection[fn](scope);
+        result.inheritDetails([index, this]);
+        return result;
       }
     }
     return new IndexNode({
-      array: this.array.compile(),
-      index: this.index.compile(),
+      array: this.array[fn](scope),
+      index: this.index[fn](scope),
+      previousNodes: [this],
     });
+  }
+  compile(scope){
+    return this.resolve('compile', scope);
+  }
+  roll(scope){
+    return this.resolve('roll', scope);
+  }
+  reduce(scope){
+    return this.resolve('reduce', scope);
   }
   toString(){
     return `${this.array.toString()}[${this.index.toString()}]`;

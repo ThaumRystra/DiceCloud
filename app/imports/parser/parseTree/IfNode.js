@@ -1,9 +1,8 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
-import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default class IfNode extends ParseNode {
   constructor({condition, consequent, alternative}){
-		super();
+		super(...arguments);
     this.condition = condition;
     this.consequent = consequent;
     this.alternative = alternative;
@@ -12,33 +11,26 @@ export default class IfNode extends ParseNode {
     let {condition, consequent, alternative} = this;
     return `${condition.toString()} ? ${consequent.toString()} : ${alternative.toString()}`
   }
-  compile(){
-    let condition = this.condition.compile();
-    let consequent = this.consequent.compile();
-    let alternative = this.alternative.compile();
-    if (
-      condition.type !== 'string' &&
-			condition.type !== 'number' &&
-			condition.type !== 'boolean'
-    ){
-      // Handle unresolved condition
-      return new ConstantNode({
-        value: `${condition.value}) ${consequent.value} else ${alternative.value}`,
-        type: 'uncompiledNode',
-        errors: [
-          ...condition.errors,
-          ...consequent.errors,
-          ...alternative.errors,
-        ],
-      });
+  compile(scope){
+    return this.resolve('compile', scope);
+  }
+  roll(scope){
+    return this.resolve('roll', scope);
+  }
+  reduce(scope){
+    return this.resolve('reduce', scope);
+  }
+  resolve(fn, scope){
+    let condition = this.condition[fn](scope);
+    let consequent = this.consequent[fn](scope);
+    let alternative = this.alternative[fn](scope);
+    this.resolve(condition, consequent, alternative);
+    if (condition.value){
+      consequent.inheritDetails([condition, this]);
+      return consequent;
     } else {
-			// So long as the condition reolves, return the correct alternative,
-			// even if it's unresolved
-      if (condition.value){
-        return consequent;
-      } else {
-        return alternative;
-      }
+      alternative.inheritDetails([condition, this]);
+      return alternative;
     }
   }
 }
