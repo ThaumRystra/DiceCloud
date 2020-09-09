@@ -5,6 +5,9 @@
       style="flex-basis: 900px"
     >
       <v-list>
+        <v-subheader>
+          Preferences
+        </v-subheader>
         <v-list-tile>
           <smart-switch
             :value="darkMode"
