@@ -1,5 +1,6 @@
 @preprocessor esmodule
 @{%
+  import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
   import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
 	import CallNode from '/imports/parser/parseTree/CallNode.js';
 	import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
@@ -21,7 +22,7 @@
     name: {
       match: /[a-zA-Z]+\w*?/,
       type: moo.keywords({
-        'keywords': ['if', 'else', 'd'],
+        'keywords': ['d'],
       }),
     },
     space: {
@@ -30,6 +31,7 @@
     },
     separator: [',', ';'],
     period: ['.'],
+    ternaryOperator: ['?', ':'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
@@ -60,8 +62,8 @@ expression ->
   ifStatement {% d => d[0] %}
 
 ifStatement ->
-  _ expression _ "?" _ expression _ ":" _ expression {%
-     d => new IfNode({condition: d[4], consequent: d[8], alternative: d[12]})
+  _ equalityExpression _ "?" _ equalityExpression _ ":" _ ifStatement {%
+     d => new IfNode({condition: d[1], consequent: d[5], alternative: d[9]})
   %}
 | equalityExpression {% id %}
 
@@ -118,12 +120,16 @@ indexExpression ->
 
 arrayExpression ->
   "[" _ (expression {% d => d[0] %}):? ( _ %separator _ expression {% d => d[3] %} ):* _ "]" {%
-    d => new ArrayNode({values: [d[2], ...d[3]]})
+    d => new ArrayNode({values: d[2] ? [d[2], ...d[3]] : []})
   %}
 | parenthesizedExpression {% id %}
 
 parenthesizedExpression ->
   "(" _ expression _ ")" {% d => new ParenthesisNode({content: d[2]}) %}
+| accessorExpression {% id %}
+
+accessorExpression ->
+  name ( "." name {% d => d[1].name %} ):+ {% d=> new AccessorNode({name: d[0], path: d[1]}) %}
 | valueExpression {% id %}
 
 valueExpression ->

@@ -2,6 +2,7 @@
 // http://github.com/Hardmath123/nearley
 function id(x) { return x[0]; }
 
+  import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
   import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
 	import CallNode from '/imports/parser/parseTree/CallNode.js';
 	import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
@@ -23,7 +24,7 @@ function id(x) { return x[0]; }
     name: {
       match: /[a-zA-Z]+\w*?/,
       type: moo.keywords({
-        'keywords': ['if', 'else', 'd'],
+        'keywords': ['d'],
       }),
     },
     space: {
@@ -32,6 +33,7 @@ function id(x) { return x[0]; }
     },
     separator: [',', ';'],
     period: ['.'],
+    ternaryOperator: ['?', ':'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
@@ -56,8 +58,8 @@ function id(x) { return x[0]; }
 let Lexer = lexer;
 let ParserRules = [
     {"name": "expression", "symbols": ["ifStatement"], "postprocess": d => d[0]},
-    {"name": "ifStatement", "symbols": ["_", "expression", "_", {"literal":"?"}, "_", "expression", "_", {"literal":":"}, "_", "expression"], "postprocess": 
-        d => new IfNode({condition: d[4], consequent: d[8], alternative: d[12]})
+    {"name": "ifStatement", "symbols": ["_", "equalityExpression", "_", {"literal":"?"}, "_", "equalityExpression", "_", {"literal":":"}, "_", "ifStatement"], "postprocess": 
+        d => new IfNode({condition: d[1], consequent: d[5], alternative: d[9]})
           },
     {"name": "ifStatement", "symbols": ["equalityExpression"], "postprocess": id},
     {"name": "equalityExpression", "symbols": ["equalityExpression", "_", (lexer.has("equalityOperator") ? {type: "equalityOperator"} : equalityOperator), "_", "relationalExpression"], "postprocess": d => operator(d, 'equality')},
@@ -100,11 +102,17 @@ let ParserRules = [
     {"name": "arrayExpression$ebnf$2$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
     {"name": "arrayExpression$ebnf$2", "symbols": ["arrayExpression$ebnf$2", "arrayExpression$ebnf$2$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "arrayExpression", "symbols": [{"literal":"["}, "_", "arrayExpression$ebnf$1", "arrayExpression$ebnf$2", "_", {"literal":"]"}], "postprocess": 
-        d => new ArrayNode({values: [d[2], ...d[3]]})
+        d => new ArrayNode({values: d[2] ? [d[2], ...d[3]] : []})
           },
     {"name": "arrayExpression", "symbols": ["parenthesizedExpression"], "postprocess": id},
     {"name": "parenthesizedExpression", "symbols": [{"literal":"("}, "_", "expression", "_", {"literal":")"}], "postprocess": d => new ParenthesisNode({content: d[2]})},
-    {"name": "parenthesizedExpression", "symbols": ["valueExpression"], "postprocess": id},
+    {"name": "parenthesizedExpression", "symbols": ["accessorExpression"], "postprocess": id},
+    {"name": "accessorExpression$ebnf$1$subexpression$1", "symbols": [{"literal":"."}, "name"], "postprocess": d => d[1].name},
+    {"name": "accessorExpression$ebnf$1", "symbols": ["accessorExpression$ebnf$1$subexpression$1"]},
+    {"name": "accessorExpression$ebnf$1$subexpression$2", "symbols": [{"literal":"."}, "name"], "postprocess": d => d[1].name},
+    {"name": "accessorExpression$ebnf$1", "symbols": ["accessorExpression$ebnf$1", "accessorExpression$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "accessorExpression", "symbols": ["name", "accessorExpression$ebnf$1"], "postprocess": d=> new AccessorNode({name: d[0], path: d[1]})},
+    {"name": "accessorExpression", "symbols": ["valueExpression"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["name"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["number"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["string"], "postprocess": id},

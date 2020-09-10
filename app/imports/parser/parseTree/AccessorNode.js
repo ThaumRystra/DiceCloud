@@ -1,28 +1,27 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
-import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
+import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
-export default class SymbolNode extends ParseNode {
-  constructor({name}){
-		super(...arguments);
+export default class AccessorNode extends ParseNode {
+  constructor({name, path}) {
+    super(...arguments);
     this.name = name;
-  }
-  toString(){
-    return `${this.name}`
+    this.path = path;
   }
   compile(scope){
     let value = scope && scope[this.name];
-    let type = typeof value;
     // For objects, get their value
-    if (type === 'object'){
-      value = value.value;
-      type = typeof value;
-    }
+    this.path.forEach(name => {
+      if (value === undefined) return;
+      value = value[name];
+    });
+    let type = typeof value;
     if (type === 'string' || type === 'number' || type === 'boolean'){
       return new ConstantNode({value, type, previousNodes: [this]});
     } else if (type === 'undefined'){
-      return new SymbolNode({
+      return new AccessorNode({
         name: this.name,
+        path: this.path,
         previousNodes: [this],
       });
     } else {
@@ -31,7 +30,7 @@ export default class SymbolNode extends ParseNode {
   }
   reduce(scope){
     let result = this.compile(scope);
-    if (result instanceof SymbolNode){
+    if (result instanceof AccessorNode){
       return new ErrorNode({
         node: result,
         error: `${this.toString()} could not be resolved`,
@@ -40,5 +39,8 @@ export default class SymbolNode extends ParseNode {
     } else {
       return result;
     }
+  }
+  toString(){
+    return `${this.name}.${this.path.join('.')}`;
   }
 }

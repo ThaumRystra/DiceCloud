@@ -59,7 +59,7 @@ export default {
       this.output = JSON.stringify(output, null, 2);
       if (!output) return;
       this.string = output;
-      let scope = {cat: 1, dog: 2, mouse: 3};
+      let scope = {strength: {value: 16}, hitpoints: {value: 32, currentValue: 8}, mouse: 3};
       this.compiled = output.compile(scope);
       this.rolled = output.roll(scope);
       this.reduced = output.reduce(scope);

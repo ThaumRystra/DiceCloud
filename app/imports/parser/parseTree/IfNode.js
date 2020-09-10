@@ -22,13 +22,12 @@ export default class IfNode extends ParseNode {
   }
   resolve(fn, scope){
     let condition = this.condition[fn](scope);
-    let consequent = this.consequent[fn](scope);
-    let alternative = this.alternative[fn](scope);
-    this.resolve(condition, consequent, alternative);
     if (condition.value){
+      let consequent = this.consequent[fn](scope);
       consequent.inheritDetails([condition, this]);
-      return consequent;
+      return this.consequent[fn](scope);
     } else {
+      let alternative = this.alternative[fn](scope);
       alternative.inheritDetails([condition, this]);
       return alternative;
     }
