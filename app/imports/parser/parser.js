@@ -8,7 +8,7 @@ export default function parser(){
 }
 
 export class CompilationContext {
-  constructor({doubleRolls}){
+  constructor({doubleRolls} = {}){
     this.errors = [];
     this.rolls = [];
     this.doubleRolls = doubleRolls;

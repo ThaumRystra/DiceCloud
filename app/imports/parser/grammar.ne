@@ -10,6 +10,7 @@
   import ParenthesisNode from '/imports/parser/parseTree/ParenthesisNode.js';
   import RollNode from '/imports/parser/parseTree/RollNode.js';
   import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+  import UnaryOperatorNode from '/imports/parser/parseTree/UnaryOperatorNode.js';
 
 	import moo from 'moo';
 
@@ -35,7 +36,6 @@
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
-    unaryOperator: ['-'],
     andOperator: ['&', '&&'],
     orOperator: ['|', '||'],
     stringDelimiters: ['\"', '\''],
@@ -101,6 +101,10 @@ singleRollExpression ->
 
 exponentExpression ->
   callExpression _ %exponentOperator _ exponentExpression {% d => operator(d, 'exponent') %}
+| unaryExpression {% id %}
+
+unaryExpression ->
+  %additiveOperator _ unaryExpression {% d => new UnaryOperatorNode({operator: d[0].value, right: d[2]})%}
 | callExpression {% id %}
 
 callExpression ->
