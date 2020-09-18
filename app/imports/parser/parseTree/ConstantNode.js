@@ -1,12 +1,11 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 
 export default class ConstantNode extends ParseNode {
-  constructor({value, type, rollTable}){
+  constructor({value, type}){
 		super(...arguments);
-    // string, number, boolean, numberArray, uncompiledNode
+    // string, number, boolean, uncompiledNode
     this.type = type;
     this.value = value;
-    if (rollTable) this.rollTable = rollTable;
   }
   compile(){
     return this;

@@ -9,15 +9,6 @@ export default class OperatorNode extends ParseNode {
     this.fn = fn;
     this.operator = operator;
   }
-  compile(scope){
-    return this.resolve('compile', scope);
-  }
-  roll(scope){
-    return this.resolve('roll', scope);
-  }
-  reduce(scope){
-    return this.resolve('reduce', scope);
-  }
   resolve(fn, scope){
     let leftNode = this.left[fn](scope);
     let rightNode = this.right[fn](scope);

@@ -5,9 +5,9 @@ export default class ArrayNode extends ParseNode {
     super(...arguments);
     this.values = values;
   }
-  compile(scope){
-    let values = this.values.map(node => node.compile(scope));
-    return new ArrayNode({values, previousNodes: [this]});
+  resolve(fn, scope, context){
+    let values = this.values.map(node => node[fn](scope, context));
+    return new ArrayNode({values});
   }
   toString(){
     return `[${this.values.map(node => node.toString()).join(', ')}]`;

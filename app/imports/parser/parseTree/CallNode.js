@@ -8,21 +8,12 @@ export default class CallNode extends ParseNode {
     this.functionName = functionName;
     this.args = args;
   }
-  compile(scope){
-    return this.resolve('compile', scope);
-  }
-  roll(scope){
-    return this.resolve('roll', scope);
-  }
-  reduce(scope){
-    return this.resolve('reduce', scope);
-  }
-  resolve(fn, scope){
+  resolve(fn, scope, context){
     let func = functions[this.functionName];
     if (!func) return new ErrorNode({
       node: this,
       error: `${this.functionName} is not a function`,
-      previousNodes: [this],
+      context,
     });
     let args = castArgsToType({fn, scope, args: this.args, type: func.argumentType});
     if (args.failed){
@@ -30,25 +21,30 @@ export default class CallNode extends ParseNode {
         return new ErrorNode({
           node: this,
           error: 'Could not convert all arguments to the correct type',
-          previousNodes: [this],
+          context,
         });
       } else {
         return new CallNode({
           functionName: this.functionName,
           args: args,
-          previousNodes: [this],
         });
       }
     } else {
-      let value = func.fn.apply(null, args);
-      console.log({args})
-      return new ConstantNode({
-        value,
-        type: 'number',
-        previousNodes: [this],
-      });
+      try {
+        let value = func.fn.apply(null, args);
+        return new ConstantNode({
+          value,
+          type: 'number',
+          previousNodes: [this],
+        });
+      } catch (error) {
+        return new ErrorNode({
+          node: this,
+          error,
+          context,
+        });
+      }
     }
-
   }
   toString(){
     return `${this.functionName}(${this.args.map(node => node.toString()).join(', ')})`;

@@ -1,5 +1,4 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
-import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default class AccessorNode extends ParseNode {
@@ -22,19 +21,21 @@ export default class AccessorNode extends ParseNode {
       return new AccessorNode({
         name: this.name,
         path: this.path,
-        previousNodes: [this],
       });
     } else {
       throw new Meteor.Error(`Unexpected case: ${this.name} resolved to ${value}`);
     }
   }
-  reduce(scope){
+  reduce(scope, context){
     let result = this.compile(scope);
     if (result instanceof AccessorNode){
-      return new ErrorNode({
-        node: result,
-        error: `${this.toString()} could not be resolved`,
-        previousNodes: [result],
+      context.storeError({
+        type: 'info',
+        message: `${result.toString()} not found, set to 0`
+      });
+      return new ConstantNode({
+        type: 'number',
+        value: 0,
       });
     } else {
       return result;

@@ -22,15 +22,6 @@ export default class IndexNode extends ParseNode {
       previousNodes: [this],
     });
   }
-  compile(scope){
-    return this.resolve('compile', scope);
-  }
-  roll(scope){
-    return this.resolve('roll', scope);
-  }
-  reduce(scope){
-    return this.resolve('reduce', scope);
-  }
   toString(){
     return `${this.array.toString()}[${this.index.toString()}]`;
   }

@@ -5,21 +5,15 @@ export default class ParenthesisNode extends ParseNode {
 		super(...arguments);
     this.content = content;
   }
-  compile(scope){
-    return this.resolve('compile', scope);
-  }
-  roll(scope){
-    return this.resolve('roll', scope);
-  }
-  reduce(scope){
-    return this.resolve('reduce', scope);
-  }
   resolve(fn, scope){
     let content = this.content[fn](scope);
-    if (content.constructor.name === 'ConstantNode'){
-      return content;
-    } else {
+    if (
+      content.constructor.name === 'IfNode' ||
+      content.constructor.name === 'OperatorNode'
+    ){
       return new ParenthesisNode({content, previousNodes: [this]});
+    } else {
+      return content;
     }
   }
   toString(){

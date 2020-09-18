@@ -22,7 +22,7 @@ export default class RollNode extends ParseNode {
       return `${this.left.toString()}d${this.right.toString()}`;
     }
   }
-  roll(scope){
+  roll(scope, context){
     let left = this.left.reduce(scope);
     let right = this.right.reduce(scope);
     if (!left.isInteger){
@@ -51,11 +51,10 @@ export default class RollNode extends ParseNode {
       let roll = ~~(randomSrc.fraction() * diceSize) + 1
       values.push(roll);
     }
-    return new RollArrayNode({
-      values,
-      detail: {number, diceSize, values},
-      previousNodes: [this, left, right],
-    });
+    if (context){
+      context.storeRoll({number, diceSize, values});
+    }
+    return new RollArrayNode({values});
   }
   reduce(scope){
     return this.roll(scope).reduce(scope);
