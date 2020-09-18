@@ -1,6 +1,7 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+import functions from '/imports/parser/functions.js';
 
 export default class CallNode extends ParseNode {
   constructor({functionName, args}) {
@@ -15,7 +16,7 @@ export default class CallNode extends ParseNode {
       error: `${this.functionName} is not a function`,
       context,
     });
-    let args = castArgsToType({fn, scope, args: this.args, type: func.argumentType});
+    let args = castArgsToType({fn, scope, context, args: this.args, type: func.argumentType});
     if (args.failed){
       if (fn === 'reduce'){
         return new ErrorNode({
@@ -51,17 +52,8 @@ export default class CallNode extends ParseNode {
   }
 }
 
-const functions = {
-  'min': {
-    comment: 'Returns the lowest of the given numbers',
-    argumentType: 'number',
-    resultType: 'number',
-    fn: Math.min,
-  },
-}
-
-function castArgsToType({fn, scope, args, type}){
-  let resolvedArgs = args.map(node => node[fn](scope))
+function castArgsToType({fn, scope, context, args, type}){
+  let resolvedArgs = args.map(node => node[fn](scope, context))
   let result = [];
   if (type === 'number'){
     resolvedArgs.forEach(node => {

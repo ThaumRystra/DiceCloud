@@ -27,9 +27,9 @@ export default class AccessorNode extends ParseNode {
     }
   }
   reduce(scope, context){
-    let result = this.compile(scope);
+    let result = this.compile(scope, context);
     if (result instanceof AccessorNode){
-      context.storeError({
+      if (context) context.storeError({
         type: 'info',
         message: `${result.toString()} not found, set to 0`
       });

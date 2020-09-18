@@ -12,15 +12,15 @@ export default class IfNode extends ParseNode {
     let {condition, consequent, alternative} = this;
     return `${condition.toString()} ? ${consequent.toString()} : ${alternative.toString()}`
   }
-  resolve(fn, scope){
-    let condition = this.condition[fn](scope);
+  resolve(fn, scope, context){
+    let condition = this.condition[fn](scope, context);
     if (condition instanceof ConstantNode){
       if (condition.value){
-        let consequent = this.consequent[fn](scope);
+        let consequent = this.consequent[fn](scope, context);
         consequent.inheritDetails([condition, this]);
         return this.consequent[fn](scope);
       } else {
-        let alternative = this.alternative[fn](scope);
+        let alternative = this.alternative[fn](scope, context);
         alternative.inheritDetails([condition, this]);
         return alternative;
       }

@@ -17,7 +17,6 @@ export default class RollArrayNode extends ParseNode {
     return new ConstantNode({
       value: total,
       type: 'number',
-      previousNodes: [this],
     });
   }
 }

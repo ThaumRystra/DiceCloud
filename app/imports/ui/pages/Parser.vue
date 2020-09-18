@@ -2,7 +2,16 @@
   <div class="layout column align-center justify-center pa-4">
     <v-card style="width: 100%; max-width: 400px;">
       <v-card-text>
-        <v-text-field v-model="input" />
+        <v-text-field
+          v-model="input"
+          label="input"
+        />
+        <v-btn
+          icon
+          @click="recompute"
+        >
+          <v-icon>refresh</v-icon>
+        </v-btn>
         <v-textarea
           v-model="output"
           readonly
@@ -33,15 +42,25 @@
           readonly
           label="reduced"
         />
+        <v-textarea
+          :value="contextJSON"
+          readonly
+          label="reduced"
+        />
+        <function-reference />
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
-import Parser from '/imports/parser/parser.js';
-console.log(Parser);
+import { parse, CompilationContext } from '/imports/parser/parser.js';
+import FunctionReference from '/imports/ui/documentation/FunctionReference.vue';
+console.log(parse);
 export default {
+  components: {
+    FunctionReference,
+  },
   data(){return {
     input: null,
     output: null,
@@ -50,22 +69,35 @@ export default {
     rolled: null,
     reduced: null,
     reducedJson: null,
+    context: null,
   }},
+  computed: {
+    contextJSON(){
+      return JSON.stringify(this.context, null, 2);
+    }
+  },
   watch: {
-    input(val){
+    input(){
+      this.recompute();
+    }
+  },
+  methods: {
+    recompute(){
+      let val = this.input;
       this.output = this.compiled = this.string = '';
-      let output = new Parser().feed(val).finish()[0];
+      let output = parse(val);
       console.log(output);
       this.output = JSON.stringify(output, null, 2);
       if (!output) return;
       this.string = output;
       let scope = {strength: {value: 16}, hitpoints: {value: 32, currentValue: 8}, mouse: 3};
-      this.compiled = output.compile(scope);
-      this.rolled = output.roll(scope);
-      this.reduced = output.reduce(scope);
+      this.context = new CompilationContext();
+      this.compiled = output.compile(scope, this.context);
+      this.rolled = this.compiled.roll(scope, this.context);
+      this.reduced = this.rolled.reduce(scope, this.context);
       this.reducedJson = JSON.stringify(this.reduced, null, 2)
     }
-  },
+  }
 }
 </script>
 

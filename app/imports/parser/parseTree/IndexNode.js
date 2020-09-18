@@ -6,19 +6,19 @@ export default class IndexNode extends ParseNode {
     this.array = array;
     this.index = index;
   }
-  resolve(fn, scope){
-    let index = this.index[fn](scope);
+  resolve(fn, scope, context){
+    let index = this.index[fn](scope, context);
     if (index.isInteger){
       let selection = this.array.values[index.value - 1];
       if (selection){
-        let result = selection[fn](scope);
+        let result = selection[fn](scope, context);
         result.inheritDetails([index, this]);
         return result;
       }
     }
     return new IndexNode({
-      array: this.array[fn](scope),
-      index: this.index[fn](scope),
+      array: this.array[fn](scope, context),
+      index: this.index[fn](scope, context),
       previousNodes: [this],
     });
   }

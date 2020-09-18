@@ -8,9 +8,9 @@ export default class RollNode extends ParseNode {
     this.left = left;
     this.right = right;
   }
-  compile(scope){
-    let left = this.left.compile(scope);
-    let right = this.right.compile(scope);
+  compile(scope, context){
+    let left = this.left.compile(scope, context);
+    let right = this.right.compile(scope, context);
     return new RollNode({left, right, previousNodes: [this]});
   }
   toString(){
@@ -23,8 +23,8 @@ export default class RollNode extends ParseNode {
     }
   }
   roll(scope, context){
-    let left = this.left.reduce(scope);
-    let right = this.right.reduce(scope);
+    let left = this.left.reduce(scope, context);
+    let right = this.right.reduce(scope, context);
     if (!left.isInteger){
       return new ErrorNode({
         node: this,
@@ -56,7 +56,7 @@ export default class RollNode extends ParseNode {
     }
     return new RollArrayNode({values});
   }
-  reduce(scope){
-    return this.roll(scope).reduce(scope);
+  reduce(scope, context){
+    return this.roll(scope, context).reduce(scope, context);
   }
 }

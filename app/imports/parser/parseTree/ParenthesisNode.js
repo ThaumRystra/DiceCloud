@@ -5,8 +5,8 @@ export default class ParenthesisNode extends ParseNode {
 		super(...arguments);
     this.content = content;
   }
-  resolve(fn, scope){
-    let content = this.content[fn](scope);
+  resolve(fn, scope, context){
+    let content = this.content[fn](scope, context);
     if (
       content.constructor.name === 'IfNode' ||
       content.constructor.name === 'OperatorNode'

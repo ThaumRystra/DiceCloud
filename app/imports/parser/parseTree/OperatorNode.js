@@ -9,9 +9,9 @@ export default class OperatorNode extends ParseNode {
     this.fn = fn;
     this.operator = operator;
   }
-  resolve(fn, scope){
-    let leftNode = this.left[fn](scope);
-    let rightNode = this.right[fn](scope);
+  resolve(fn, scope, context){
+    let leftNode = this.left[fn](scope, context);
+    let rightNode = this.right[fn](scope, context);
     let left, right;
     if (leftNode.type !== 'number' || rightNode.type !== 'number'){
       return new OperatorNode({
