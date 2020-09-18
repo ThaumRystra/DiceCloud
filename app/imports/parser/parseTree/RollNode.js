@@ -40,9 +40,13 @@ export default class RollNode extends ParseNode {
       });
     }
     let number = left.value;
+    if (context.doubleRolls){
+      number *= 2;
+    }
     if (number > 100) return new ErrorNode({
       node: this,
-      error: 'Can\'t roll more than 100 dice at once'
+      error: 'Can\'t roll more than 100 dice at once',
+      context,
     });
     let diceSize = right.value;
     let randomSrc = DDP.randomStream('diceRoller');

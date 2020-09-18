@@ -16,13 +16,9 @@ export default class IfNode extends ParseNode {
     let condition = this.condition[fn](scope, context);
     if (condition instanceof ConstantNode){
       if (condition.value){
-        let consequent = this.consequent[fn](scope, context);
-        consequent.inheritDetails([condition, this]);
-        return this.consequent[fn](scope);
+        return this.consequent[fn](scope, context);
       } else {
-        let alternative = this.alternative[fn](scope, context);
-        alternative.inheritDetails([condition, this]);
-        return alternative;
+        return this.alternative[fn](scope, context);
       }
     } else {
       return new IfNode({
