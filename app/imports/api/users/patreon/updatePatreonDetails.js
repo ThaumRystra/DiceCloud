@@ -112,9 +112,9 @@ const writePatreonToken = function(userId, {
   // Write
   Meteor.users.update(userId, {
     $set: {
-      'patreon.accessToken': access_token,
-      'patreon.refreshToken': refresh_token,
-      'patreon.expiresAt': expiryDate,
+      'services.patreon.accessToken': access_token,
+      'services.patreon.refreshToken': refresh_token,
+      'services.patreon.expiresAt': expiryDate,
     },
     $unset: {
       'patreon.error': 1,
