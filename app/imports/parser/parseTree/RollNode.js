@@ -1,6 +1,7 @@
 import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 import RollArrayNode from '/imports/parser/parseTree/RollArrayNode.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
+import roll from '/imports/parser/roll.js';
 
 export default class RollNode extends ParseNode {
   constructor({left, right}) {
@@ -49,12 +50,7 @@ export default class RollNode extends ParseNode {
       context,
     });
     let diceSize = right.value;
-    let randomSrc = DDP.randomStream('diceRoller');
-    let values = [];
-    for (let i = 0; i < number; i++){
-      let roll = ~~(randomSrc.fraction() * diceSize) + 1
-      values.push(roll);
-    }
+    let values = roll(number, diceSize);
     if (context){
       context.storeRoll({number, diceSize, values});
     }
