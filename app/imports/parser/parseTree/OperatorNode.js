@@ -19,7 +19,6 @@ export default class OperatorNode extends ParseNode {
         right: rightNode,
         operator: this.operator,
         fn: this.fn,
-        previousNodes: [this],
       });
     } else {
       left = leftNode.value;
@@ -48,7 +47,6 @@ export default class OperatorNode extends ParseNode {
     return new ConstantNode({
       value: result,
       type: typeof result,
-      previousNodes: [this, leftNode, rightNode],
     });
   }
   toString(){

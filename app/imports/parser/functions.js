@@ -80,4 +80,15 @@ export default {
     resultType: 'number',
     fn: Math.trunc,
   },
+  'sign': {
+    comment: 'Returns either a positive or negative 1, indicating the sign of a number, or zero',
+    examples: [
+      {input: 'sign(-3)', result: '-1'},
+      {input: 'sign(3)', result: '1'},
+      {input: 'sign(0)', result: '0'},
+    ],
+    argumentType: 'number',
+    resultType: 'number',
+    fn: Math.sign,
+  }
 }

@@ -12,6 +12,7 @@ function id(x) { return x[0]; }
   import ParenthesisNode from '/imports/parser/parseTree/ParenthesisNode.js';
   import RollNode from '/imports/parser/parseTree/RollNode.js';
   import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+  import UnaryOperatorNode from '/imports/parser/parseTree/UnaryOperatorNode.js';
 
 	import moo from 'moo';
 
@@ -37,7 +38,6 @@ function id(x) { return x[0]; }
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
-    unaryOperator: ['-'],
     andOperator: ['&', '&&'],
     orOperator: ['|', '||'],
     stringDelimiters: ['\"', '\''],
@@ -79,7 +79,9 @@ let ParserRules = [
     {"name": "singleRollExpression", "symbols": [{"literal":"d"}, "_", "exponentExpression"], "postprocess": d => new RollNode({left: new ConstantNode({value: 1, type: 'number'}), right: d[2]})},
     {"name": "singleRollExpression", "symbols": ["exponentExpression"], "postprocess": id},
     {"name": "exponentExpression", "symbols": ["callExpression", "_", (lexer.has("exponentOperator") ? {type: "exponentOperator"} : exponentOperator), "_", "exponentExpression"], "postprocess": d => operator(d, 'exponent')},
-    {"name": "exponentExpression", "symbols": ["callExpression"], "postprocess": id},
+    {"name": "exponentExpression", "symbols": ["unaryExpression"], "postprocess": id},
+    {"name": "unaryExpression", "symbols": [(lexer.has("additiveOperator") ? {type: "additiveOperator"} : additiveOperator), "_", "unaryExpression"], "postprocess": d => new UnaryOperatorNode({operator: d[0].value, right: d[2]})},
+    {"name": "unaryExpression", "symbols": ["callExpression"], "postprocess": id},
     {"name": "callExpression", "symbols": ["name", "_", "arguments"], "postprocess": 
         d => new CallNode ({functionName: d[0].name, args: d[2]})
           },
