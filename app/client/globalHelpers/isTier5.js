@@ -3,5 +3,5 @@ Template.registerHelper("isTier5", function(){
   if (!user) return false;
   patreon = user.patreon;
   if (!patreon) return false;
-  return patreon.entitledCents >= 500 || patreon.entitledCentsOverride >= 500;
+  return patreon.entitledCents >= 300 || patreon.entitledCentsOverride >= 300;
 });

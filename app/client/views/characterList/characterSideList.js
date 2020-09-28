@@ -48,4 +48,30 @@ Template.characterSideList.events({
 		}
 		instance.openedParties.set(openedParties);
 	},
+  "dragover .characterRepresentative, dragenter .characterRepresentative":
+	function(event, instance){
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			event.preventDefault();
+		}
+	},
+  "drop .characterRepresentative": function(event, instance) {
+		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
+			var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
+			if (event.ctrlKey){
+				//split the stack to the container
+				pushDialogStack({
+					template: "splitStackDialog",
+					data: {
+						id: itemId,
+						parentCollection: "Characters",
+						parentId: this._id,
+					},
+				});
+			} else {
+				//move item to the character
+				Meteor.call("moveItemToCharacter", itemId, this._id);
+			}
+			Session.set("inventory.dragItemId", null);
+		}
+	},
 });
