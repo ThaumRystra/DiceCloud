@@ -19,8 +19,8 @@ function applyProperty(options){
       applyAction(options);
       return true;
     case 'attack':
-      applyAttack(options);
       applyAction(options);
+      applyAttack(options);
       return true;
     case 'damage':
       applyDamage(options);

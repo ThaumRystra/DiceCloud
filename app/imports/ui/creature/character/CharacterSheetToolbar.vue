@@ -92,6 +92,9 @@
           @change="e => $emit('input', e)"
         >
           <v-tab>
+            Log
+          </v-tab>
+          <v-tab>
             Stats
           </v-tab>
           <v-tab>

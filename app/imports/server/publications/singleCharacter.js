@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 
 let schema = new SimpleSchema({
   creatureId: {
@@ -27,6 +28,12 @@ Meteor.publish('singleCharacter', function(creatureId){
       creatureCursor,
       CreatureProperties.find({
         'ancestors.id': creatureId,
+      }),
+      CreatureLogs.find({
+        creatureId,
+      }, {
+        limit: 20,
+        sort: {date: -1},
       }),
     ];
   });

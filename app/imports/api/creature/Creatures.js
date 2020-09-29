@@ -40,7 +40,12 @@ let CreatureSettingsSchema = new SimpleSchema({
     optional: true,
     min: 0,
     max: 1,
-  }
+  },
+  discordWebhook: {
+    type: String,
+    optional: true,
+    max: 200,
+  },
 });
 
 let CreatureSchema = new SimpleSchema({

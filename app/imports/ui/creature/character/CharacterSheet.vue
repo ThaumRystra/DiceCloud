@@ -38,6 +38,9 @@
           v-model="activeTab"
         >
           <v-tab-item>
+            <log-tab :creature-id="creatureId" />
+          </v-tab-item>
+          <v-tab-item>
             <stats-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
@@ -58,6 +61,19 @@
         </v-tabs-items>
       </div>
     </v-fade-transition>
+    <v-snackbar
+      v-for="(snackbar, index) in snackbars"
+      :key="index"
+      v-model="snackbar.open"
+    >
+      {{ snackbar.text }}
+      <v-btn
+        flat
+        @click="snackbar.open = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -65,6 +81,7 @@
   //TODO add a "no character found" screen if shown on a false address
   // or on a character the user does not have permission to view
 	import Creatures from '/imports/api/creature/Creatures.js';
+  import LogTab from '/imports/ui/creature/character/characterSheetTabs/LogTab.vue';
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
@@ -72,9 +89,11 @@
 	import PersonaTab from '/imports/ui/creature/character/characterSheetTabs/PersonaTab.vue';
 	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
   import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+  import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 
 	export default {
 		components: {
+      LogTab,
 			StatsTab,
 			FeaturesTab,
 			InventoryTab,
@@ -92,17 +111,12 @@
         required: true,
       },
 		},
+    data(){return {
+      snackbars: new Set(),
+    }},
     reactiveProvide: {
       name: 'context',
       include: ['creature', 'editPermission'],
-    },
-    onMounted(){
-      this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
-    },
-    watch: {
-      'creature.name'(value){
-        this.$store.commit('setPageTitle', value || 'Character Sheet');
-      },
     },
     computed: {
       activeTab: {
@@ -113,6 +127,25 @@
           this.$emit('update:tabs', newTab);
         },
       },
+    },
+    watch: {
+      'creature.name'(value){
+        this.$store.commit('setPageTitle', value || 'Character Sheet');
+      },
+    },
+    mounted(){
+      this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
+      let that = this;
+      let observer = CreatureLogs.find({
+        creatureId: this.creatureId,
+      }).observe({
+        added(doc){
+          console.log({added: doc});
+          that.snackbars.add(doc);
+          setTimeout(function(){that.snackbars.remove(doc)}, 8000);
+        },
+      });
+      console.log(observer);
     },
 		meteor: {
 			$subscribe: {
