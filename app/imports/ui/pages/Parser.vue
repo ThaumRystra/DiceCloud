@@ -48,6 +48,20 @@
           label="reduced"
         />
         <function-reference />
+        <v-dialog
+          width="500"
+        >
+          <template #activator="{ on }">
+            <v-btn
+              color="red lighten-2"
+              dark
+              v-on="on"
+            >
+              Click Me
+            </v-btn>
+          </template>
+          <check :bonus="4" />
+        </v-dialog>
       </v-card-text>
     </v-card>
   </div>
@@ -56,10 +70,12 @@
 <script>
 import { parse, CompilationContext } from '/imports/parser/parser.js';
 import FunctionReference from '/imports/ui/documentation/FunctionReference.vue';
+import Check from '/imports/ui/components/rolls/Check.vue';
 console.log(parse);
 export default {
   components: {
     FunctionReference,
+    Check,
   },
   data(){return {
     input: null,
