@@ -78,6 +78,7 @@ meteor-base@1.4.0
 meteorhacks:subs-manager@1.6.4
 minifier-css@1.5.3
 minimongo@1.6.0
+mixmax:smart-disconnect@0.0.4
 mobile-experience@1.1.0
 mobile-status-bar@1.1.0
 modern-browsers@0.1.5

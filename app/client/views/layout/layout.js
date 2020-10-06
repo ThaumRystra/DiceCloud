@@ -2,6 +2,16 @@ Template.layout.onCreated(function() {
 	this.subscribe("user");
 });
 
+Template.layout.helpers({
+  connectionStatus: function(){
+    let status = Meteor.status()
+    return status.reason || status.status;
+  },
+  disconnected: function(){
+    return !Meteor.status().connected;
+  },
+});
+
 Template.appDrawer.helpers({
 	profileLink: function() {
 		var user = Meteor.user();

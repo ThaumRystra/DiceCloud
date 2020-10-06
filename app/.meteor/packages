@@ -54,3 +54,4 @@ iron:router
 littledata:synced-cron
 montiapm:agent
 zodern:standard-minifier-js
+mixmax:smart-disconnect
