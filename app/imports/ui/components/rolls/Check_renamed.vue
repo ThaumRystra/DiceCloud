@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import { doCheckWork } from '/imports/api/creature/actions/doCheck.js'
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
   props: {
