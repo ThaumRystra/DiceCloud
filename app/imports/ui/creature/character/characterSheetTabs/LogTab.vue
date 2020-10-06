@@ -1,15 +1,21 @@
 <template lang="html">
   <div
-    style="min-height: calc(100vh - 96px);"
-    class="layout column justify-end"
+    style="height: calc(100vh - 96px); overflow: hidden;"
+    class="log-tab layout column justify-end"
   >
-    <div class="log flex layout column reverse">
-      <div
+    <div
+      class="log flex layout column reverse align-start pa-3"
+      style="overflow: auto;"
+    >
+      <v-card
         v-for="log in logs"
         :key="log._id"
+        class="ma-2"
       >
-        {{ log.text }}
-      </div>
+        <v-card-text class="pa-2">
+          <markdown-text :markdown="log.text" />
+        </v-card-text>
+      </v-card>
     </div>
     <v-card>
       <v-text-field
@@ -17,22 +23,28 @@
         solo
         persistent-hint
         style="flex-grow: 0"
+        append-outer-icon="send"
         :hint="inputHint"
-        :error="inputError"
+        :error-messages="inputError"
         :disabled="!editPermission"
-        @input="inputChanged"
+        @click:append-outer="submit"
+        @keyup.enter="submit"
       />
     </v-card>
   </div>
 </template>
 
 <script>
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
+import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { parse } from '/imports/parser/parser.js';
+import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 export default {
+  components: {
+    MarkdownText,
+  },
   props: {
     creatureId: {
       type: String,
@@ -71,6 +83,18 @@ export default {
       }
     },
   },
+  methods: {
+    submit(){
+      if (this.inputError) return;
+      logRoll.call({
+        roll: this.input,
+        creatureId: this.creatureId,
+      }, (error) => {
+        if (error) console.error(error);
+      });
+      this.input = '';
+    },
+  },
   meteor: {
     logs(){
       return CreatureLogs.find({
@@ -95,5 +119,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+  .log-tab p:last-child {
+    margin-bottom: 0;
+  }
 </style>

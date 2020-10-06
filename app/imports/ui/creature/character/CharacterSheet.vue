@@ -64,7 +64,7 @@
     <v-snackbar
       v-for="(snackbar, index) in snackbars"
       :key="index"
-      v-model="snackbar.open"
+      :value="true"
     >
       {{ snackbar.text }}
       <v-btn
@@ -142,7 +142,7 @@
         added(doc){
           console.log({added: doc});
           that.snackbars.add(doc);
-          setTimeout(function(){that.snackbars.remove(doc)}, 8000);
+          setTimeout(function(){that.snackbars.delete(doc)}, 8000);
         },
       });
       console.log(observer);
