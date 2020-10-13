@@ -1,13 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/Creatures.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js'
 import { assertOwnership } from '/imports/api/creature/creaturePermissions.js';
+import Creatures from '/imports/api/creature/Creatures.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
 
 function removeRelatedDocuments(creatureId){
   CreatureProperties.remove({'ancestors.id': creatureId});
+  CreatureLogs.remove({creatureId});
   Experiences.remove({creatureId});
 }
 
