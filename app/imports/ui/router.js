@@ -10,6 +10,7 @@ import SingleLibraryPage from '/imports/ui/pages/SingleLibraryPage.vue'
 import SingleLibraryToolbarItems from '/imports/ui/library/SingleLibraryToolbarItems.vue'
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
 import CharacterSheetToolbar from '/imports/ui/creature/character/CharacterSheetToolbar.vue';
+import CharacterSheetRightDrawer from '/imports/ui/creature/character/CharacterSheetRightDrawer.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
 import Register from '/imports/ui/pages/Register.vue';
 import IconAdmin from '/imports/ui/icons/IconAdmin.vue';
@@ -142,6 +143,7 @@ RouterFactory.configure(factory => {
       components: {
         default: CharacterSheetPage,
         toolbar: CharacterSheetToolbar,
+        rightDrawer: CharacterSheetRightDrawer,
       },
       meta: {
         title: 'Character Sheet',
@@ -151,6 +153,7 @@ RouterFactory.configure(factory => {
       components: {
         default: CharacterSheetPage,
         toolbar: CharacterSheetToolbar,
+        rightDrawer: CharacterSheetRightDrawer,
       },
       meta: {
         title: 'Character Sheet',

@@ -10,14 +10,21 @@ const store = new Vuex.Store({
   },
   state: {
     drawer: undefined,
+    rightDrawer: undefined,
     pageTitle: undefined,
   },
   mutations: {
     toggleDrawer (state) {
       state.drawer = !state.drawer;
     },
+    toggleRightDrawer (state) {
+      state.rightDrawer = !state.rightDrawer;
+    },
     setDrawer (state, value) {
       state.drawer = value;
+    },
+    setRightDrawer (state, value) {
+      state.rightDrawer = value;
     },
     setPageTitle (state, value) {
       state.pageTitle = value;

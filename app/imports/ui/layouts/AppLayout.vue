@@ -63,7 +63,9 @@
         <router-view :tabs.sync="tabs" />
       </v-fade-transition>
     </v-content>
-
+    <router-view
+      name="rightDrawer"
+    />
     <dialog-stack />
   </v-app>
 </template>

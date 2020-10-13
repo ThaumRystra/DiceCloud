@@ -38,9 +38,6 @@
           v-model="activeTab"
         >
           <v-tab-item>
-            <log-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
             <stats-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
@@ -62,16 +59,17 @@
       </div>
     </v-fade-transition>
     <v-snackbar
-      v-for="(snackbar, index) in snackbars"
-      :key="index"
-      :value="true"
+      v-for="snackbar in snackbars"
+      :key="snackbar._id"
+      :value="snackbar.open"
     >
-      {{ snackbar.text }}
+      {{ snackbar.text.split(/\n+/).pop() }}
       <v-btn
         flat
+        icon
         @click="snackbar.open = false"
       >
-        Close
+        <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
   </div>
@@ -112,7 +110,7 @@
       },
 		},
     data(){return {
-      snackbars: new Set(),
+      snackbars: [],
     }},
     reactiveProvide: {
       name: 'context',
@@ -136,16 +134,23 @@
     mounted(){
       this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
       let that = this;
-      let observer = CreatureLogs.find({
+      this.logObserver = CreatureLogs.find({
         creatureId: this.creatureId,
       }).observe({
         added(doc){
-          console.log({added: doc});
-          that.snackbars.add(doc);
-          setTimeout(function(){that.snackbars.delete(doc)}, 8000);
+          if (!that.$subReady.singleCharacter) return;
+          if (that.activeTab === 0) return;
+          if (that.snackbars.some(o => o._id === doc._id)) return;
+          doc.open = true;
+          that.snackbars.push(doc);
+          setTimeout(function(){
+            that.snackbars = that.snackbars.filter(bar => bar._id === doc._id);
+          }, 8000);
         },
       });
-      console.log(observer);
+    },
+    beforeDestroy(){
+      this.logObserver.stop();
     },
 		meteor: {
 			$subscribe: {
@@ -164,6 +169,9 @@
           return false;
         }
       },
+      snackbars(){
+
+      }
 		},
 	}
 </script>

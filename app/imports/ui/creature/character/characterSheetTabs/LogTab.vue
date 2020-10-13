@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    style="height: calc(100vh - 96px); overflow: hidden;"
+    style="height: 100%; overflow: hidden;"
     class="log-tab layout column justify-end"
   >
     <div
@@ -20,7 +20,7 @@
     <v-card>
       <v-text-field
         v-model="input"
-        solo
+        class="mx-2 mb-2"
         persistent-hint
         style="flex-grow: 0"
         append-outer-icon="send"

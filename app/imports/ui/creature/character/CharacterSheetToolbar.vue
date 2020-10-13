@@ -71,6 +71,7 @@
               </v-list-tile>
             </v-list>
           </v-menu>
+          <v-toolbar-side-icon @click="toggleRightDrawer" />
         </v-toolbar-items>
       </div>
     </v-fade-transition>
@@ -91,9 +92,6 @@
           max="100px"
           @change="e => $emit('input', e)"
         >
-          <v-tab>
-            Log
-          </v-tab>
           <v-tab>
             Stats
           </v-tab>
@@ -156,6 +154,7 @@ export default {
   methods: {
     ...mapMutations([
       'toggleDrawer',
+      'toggleRightDrawer',
     ]),
 		recompute(charId){
 			recomputeCreature.call({charId});
