@@ -4,7 +4,7 @@
     class="log-tab layout column justify-end"
   >
     <div
-      class="log flex layout column reverse align-start pa-3"
+      class="log flex layout column reverse align-end pa-3"
       style="overflow: auto;"
     >
       <v-card
