@@ -60,6 +60,7 @@ export default {
     input(value){
       this.input = value;
       this.inputHint = this.inputError = undefined;
+      if (!this.input) return;
       let result;
       try {
         result = parse(value);
@@ -85,7 +86,7 @@ export default {
   },
   methods: {
     submit(){
-      if (this.inputError) return;
+      if (this.inputError || !this.input) return;
       logRoll.call({
         roll: this.input,
         creatureId: this.creatureId,
