@@ -74,12 +74,9 @@ const insertCreatureLog = new ValidatedMethod({
   },
 	validate: new SimpleSchema({
 		log: CreatureLogSchema.omit('type', 'date'),
-		creatureId: {
-			type: String,
-			regEx: SimpleSchema.RegEx.Id,
-		},
 	}).validator(),
-  run({log, creatureId}){
+  run({log}){
+    const creatureId = log.creatureId;
     const creature = Creatures.findOne(creatureId, {fields: {
       readers: 1,
       writers: 1,
@@ -93,10 +90,6 @@ const insertCreatureLog = new ValidatedMethod({
     if (typeof log === 'string'){
       log = {text: log};
     }
-    if (Meteor.isServer){
-      Meteor._sleepForMs(5000);
-    }
-    log.creatureId = creatureId;
     log.date = new Date();
     // Insert it
     let id = CreatureLogs.insert(log);

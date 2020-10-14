@@ -4,7 +4,8 @@ import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 export default function applyAction({prop, creature}){
   spendResources(prop);
   insertCreatureLog.call({
-    log: prop.name,
-    creatureId: creature._id,
+    log: {
+      text: prop.name,
+      creatureId: creature._id},
   });
 }

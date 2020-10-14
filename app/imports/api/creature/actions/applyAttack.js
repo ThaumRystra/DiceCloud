@@ -10,7 +10,9 @@ export default function applyAttack({
 }){
   let result = math.roll(1, 20) + prop.rollBonusResult;
   insertCreatureLog.call({
-    log: `${prop.name} attack. ${result} to hit`,
-    creatureId: creature._id,
+    log: {
+      text: `${prop.name} attack. ${result} to hit`,
+      creatureId: creature._id,
+    }
   });
 }
