@@ -33,11 +33,6 @@ let SlotSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  // How many properties have been selected to fill this slot
-  quantityFilled: {
-    type: SimpleSchema.Integer,
-    defaultValue: 0,
-  },
 });
 
 const ComputedOnlySlotSchema = new SimpleSchema({

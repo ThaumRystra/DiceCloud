@@ -53,15 +53,6 @@
       name="Advanced"
       standalone
     >
-      <text-field
-        label="Quantity filled"
-        type="number"
-        min="0"
-        hint="How many properties have already been selected to fill this slot"
-        :value="model.quantityFilled"
-        :error-messages="errors.quantityFilled"
-        @change="change('quantityFilled', ...arguments)"
-      />
       <div class="layout row wrap justify-space-between">
         <smart-switch
           label="Ignored"

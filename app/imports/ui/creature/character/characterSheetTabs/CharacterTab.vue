@@ -21,6 +21,13 @@
         </v-card>
       </div>
       <div>
+        <v-card>
+          <v-card-text>
+            <slots :creature-id="creatureId" />
+          </v-card-text>
+        </v-card>
+      </div>
+      <div>
         <v-card class="class-details">
           <v-card-title
             v-if="creature.variables.level"
@@ -101,12 +108,14 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js'
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import Slots from '/imports/ui/creature/slots/Slots.vue';
 
 export default {
 	components: {
 		ColumnLayout,
 		NoteCard,
+    Slots,
 	},
 	props: {
 		creatureId: {

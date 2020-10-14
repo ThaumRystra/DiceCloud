@@ -22,7 +22,7 @@
       Spells
     </v-tab>
     <v-tab>
-      Persona
+      Character
     </v-tab>
     <v-tab>
       Tree

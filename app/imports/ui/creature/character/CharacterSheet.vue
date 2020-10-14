@@ -83,8 +83,8 @@
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
 	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
-	import PersonaTab from '/imports/ui/creature/character/characterSheetTabs/PersonaTab.vue';
-	import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
+	import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/CharacterTab.vue';
+  import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
   import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
   import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 
@@ -94,7 +94,7 @@
 			FeaturesTab,
 			InventoryTab,
 			SpellsTab,
-			PersonaTab,
+			CharacterTab,
 			TreeTab,
 		},
 		props: {

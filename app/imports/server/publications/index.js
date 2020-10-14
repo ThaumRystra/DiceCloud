@@ -6,3 +6,4 @@ import '/imports/server/publications/experiences.js';
 import '/imports/server/publications/users.js';
 import '/imports/server/publications/icons.js';
 import '/imports/server/publications/tabletops.js';
+import '/imports/server/publications/slotFillers.js'
