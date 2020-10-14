@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     style="height: 100%; overflow: hidden;"
-    class="log-tab layout column justify-end"
+    class="character-log layout column justify-end"
   >
     <div
       class="log flex layout column reverse align-end pa-3"

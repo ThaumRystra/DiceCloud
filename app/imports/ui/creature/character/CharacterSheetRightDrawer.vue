@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import LogTab from '/imports/ui/creature/character/characterSheetTabs/LogTab.vue';
+import LogTab from '/imports/ui/creature/character/CharacterLog.vue';
 export default {
   components: {
     LogTab,
