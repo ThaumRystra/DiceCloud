@@ -101,8 +101,8 @@ export default {
       return CreatureLogs.find({
         creatureId: this.creatureId,
       }, {
-        limit: 20,
         sort: {date: -1},
+        limit: 20
       });
     },
     creature(){

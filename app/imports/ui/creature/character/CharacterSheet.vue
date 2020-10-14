@@ -137,7 +137,7 @@
       }).observe({
         added(doc){
           if (!that.$subReady.singleCharacter) return;
-          if (this.$store.state.rightDrawer) return;
+          if (that.$store.state.rightDrawer) return;
           if (that.snackbars.some(o => o._id === doc._id)) return;
           doc.open = true;
           that.snackbars.push(doc);

@@ -41,16 +41,7 @@ let CreatureLogSchema = new SimpleSchema({
 
 CreatureLogs.attachSchema(CreatureLogSchema);
 
-// This function should only be called by trusted code. No permission checks
-const insertCreatureLog = function({log, creature}){
-  const creatureId = creature._id;
-  // Build the new log
-  if (typeof log === 'string'){
-    log = {text: log};
-  }
-  log.creatureId = creatureId;
-  // Insert it
-  let id = CreatureLogs.insert(log);
+function removeOldLogs(creatureId){
   // Find the first log that is over the limit
   let firstExpiredLog = CreatureLogs.find({
     creatureId
@@ -63,16 +54,61 @@ const insertCreatureLog = function({log, creature}){
     creatureId,
     date: {$lte: firstExpiredLog.date},
   });
-  //TODO unblock before sending webhooks
-  // Send webhooks
+}
+
+function logWebhook({log, creature}){
   if (Meteor.isServer){
     sendWebhookAsCreature({
       creature,
       content: log.text,
     });
   }
-  return id;
-};
+}
+
+const insertCreatureLog = new ValidatedMethod({
+  name: 'creatureLogs.methods.insertCreatureLog',
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+	validate: new SimpleSchema({
+		log: CreatureLogSchema.omit('type', 'date'),
+		creatureId: {
+			type: String,
+			regEx: SimpleSchema.RegEx.Id,
+		},
+	}).validator(),
+  run({log, creatureId}){
+    const creature = Creatures.findOne(creatureId, {fields: {
+      readers: 1,
+      writers: 1,
+      owner: 1,
+      'settings.discordWebhook': 1,
+      name: 1,
+      avatarPicture: 1,
+    }});
+    assertEditPermission(creature, this.userId);
+    // Build the new log
+    if (typeof log === 'string'){
+      log = {text: log};
+    }
+    if (Meteor.isServer){
+      Meteor._sleepForMs(5000);
+    }
+    log.creatureId = creatureId;
+    log.date = new Date();
+    // Insert it
+    let id = CreatureLogs.insert(log);
+    if (Meteor.isServer){
+      this.unblock();
+      removeOldLogs(creatureId);
+      logWebhook({log, creature});
+    }
+    return id;
+  },
+});
+
 
 function equalIgnoringWhitespace(a, b){
   if (typeof a !== 'string' || typeof b !== 'string') return a === b;
@@ -96,15 +132,23 @@ const logRoll = new ValidatedMethod({
 		},
 	}).validator(),
   run({roll, creatureId}){
-    const creature = Creatures.findOne(creatureId);
+    const creature = Creatures.findOne(creatureId, {fields: {
+      variables: 1,
+      readers: 1,
+      writers: 1,
+      owner: 1,
+      'settings.discordWebhook': 1,
+      name: 1,
+      avatarPicture: 1,
+    }});
     assertEditPermission(creature, this.userId);
     let parsedResult = parse(roll);
-    let log;
+    let logText;
     if (parsedResult === null) {
-      log = 'Unexpected end of input';
+      logText = 'Unexpected end of input';
     }
     else try {
-      let logText = [];
+      logText = [];
       let rollContext = new CompilationContext();
       let compiled = parsedResult.compile(creature.variables, rollContext);
       let compiledString = compiled.toString();
@@ -116,11 +160,22 @@ const logRoll = new ValidatedMethod({
       let result = rolled.reduce(creature.variables, rollContext);
       let resultString = result.toString();
       if (resultString !== rolledString) logText.push(resultString);
-      log = logText.join('\n\n');
+      logText = logText.join('\n\n');
     } catch (e){
-      log = 'Calculation error';
+      logText = 'Calculation error';
     }
-    return insertCreatureLog({log, creature});
+    const log = {
+      text: logText,
+      creatureId,
+      date: new Date(),
+    };
+    let id = CreatureLogs.insert(log);
+    if (Meteor.isServer){
+      this.unblock();
+      removeOldLogs(creatureId);
+      logWebhook({log, creature});
+    }
+    return id;
   },
 });
 
