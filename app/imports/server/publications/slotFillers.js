@@ -8,7 +8,6 @@ Meteor.publish('slotFillers', function(slotId){
       return this.ready();
     }
     // Get the slot
-    console.log({slotId});
     let slot = CreatureProperties.findOne(slotId);
     if (!slot){
       return this.ready()
@@ -30,8 +29,6 @@ Meteor.publish('slotFillers', function(slotId){
       fields: {_id: 1},
     }).map(lib => lib._id);
 
-    console.log(libraryIds);
-
     // Build a filter for nodes in those libraries that match the slot
     let filter = {
       'ancestors.id': {$in: libraryIds},
@@ -40,8 +37,6 @@ Meteor.publish('slotFillers', function(slotId){
     if (slot.slotType){
       filter.type = slot.slotType;
     }
-    console.log(filter);
-    console.log(LibraryNodes.find(filter).fetch());
     return LibraryNodes.find(filter);
   });
 });

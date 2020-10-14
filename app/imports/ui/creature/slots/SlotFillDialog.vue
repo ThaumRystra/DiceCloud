@@ -81,7 +81,6 @@ export default {
       if (this.model.slotType){
         filter.type = this.model.slotType;
       }
-      console.log(filter);
       return LibraryNodes.find(filter);
     },
   }
