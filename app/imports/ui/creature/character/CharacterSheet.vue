@@ -79,7 +79,6 @@
   //TODO add a "no character found" screen if shown on a false address
   // or on a character the user does not have permission to view
 	import Creatures from '/imports/api/creature/Creatures.js';
-  import LogTab from '/imports/ui/creature/character/characterSheetTabs/LogTab.vue';
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
@@ -91,7 +90,6 @@
 
 	export default {
 		components: {
-      LogTab,
 			StatsTab,
 			FeaturesTab,
 			InventoryTab,
@@ -139,7 +137,7 @@
       }).observe({
         added(doc){
           if (!that.$subReady.singleCharacter) return;
-          if (that.activeTab === 0) return;
+          if (this.$store.state.rightDrawer) return;
           if (that.snackbars.some(o => o._id === doc._id)) return;
           doc.open = true;
           that.snackbars.push(doc);
