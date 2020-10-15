@@ -58,6 +58,15 @@
       @change="change('calculation', ...arguments)"
     />
     <calculation-error-list :errors="model.errors" />
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 

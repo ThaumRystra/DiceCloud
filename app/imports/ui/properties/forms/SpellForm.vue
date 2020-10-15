@@ -102,6 +102,15 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
+    />
     <form-sections>
       <form-section
         name="Casting"

@@ -35,6 +35,15 @@
       :error-messages="errors.slotFillerCondition"
       @change="change('slotFillerCondition', ...arguments)"
     />
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 
