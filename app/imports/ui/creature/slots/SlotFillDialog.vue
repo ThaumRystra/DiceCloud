@@ -7,19 +7,45 @@
     </template>
     <div class="library-nodes">
       <v-fade-transition mode="out-in">
-        <v-list v-if="$subReady.slotFillers && libraryNodes.length">
-          <v-list-tile
+        <column-layout
+          v-if="$subReady.slotFillers && libraryNodes.length"
+          wide-columns
+        >
+          <div
             v-for="node in libraryNodes"
             :key="node._id"
-            :class="node._id === (selectedNode && selectedNode._id) && 'primary--text'"
-            @click="selectedNode = node"
           >
-            <tree-node-view
-              :model="node"
-              :selected="node._id === (selectedNode && selectedNode._id)"
-            />
-          </v-list-tile>
-        </v-list>
+            <v-card
+              style="max-width: 500px;"
+              hover
+              ripple
+              :class="{'primary theme--dark': node._id === (selectedNode && selectedNode._id)}"
+              @click="selectedNode = node"
+            >
+              <v-img
+                v-if="node.picture"
+                :src="node.picture"
+                :max-height="200"
+                position="top center"
+              />
+              <v-card-title primary-title>
+                <div>
+                  <h3 class="title mb-0">
+                    <property-icon
+                      class="mr-2"
+                      :model="node"
+                      :color="node.color"
+                    />
+                    {{ getTitle(node) }}
+                  </h3>
+                  <div v-if="node.description">
+                    {{ node.description }}
+                  </div>
+                </div>
+              </v-card-title>
+            </v-card>
+          </div>
+        </column-layout>
         <div
           v-else-if="$subReady.slotFillers"
           class="ma-4"
@@ -77,14 +103,17 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import { parse, CompilationContext } from '/imports/parser/parser.js';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 
 export default {
   components: {
 		DialogBase,
-    TreeNodeView,
+    ColumnLayout,
+    PropertyIcon,
 	},
   props:{
     slotId: {
@@ -109,6 +138,14 @@ export default {
       if (!this.model.slotType) return 'property';
       let propName = getPropertyName(this.model.slotType);
       return propName && propName.toLowerCase();
+    },
+  },
+  methods:{
+    getTitle(model){
+      if (!model) return;
+      if (model.name) return model.name;
+      let prop = PROPERTIES[model.type]
+      return prop && prop.name;
     },
   },
   meteor: {
