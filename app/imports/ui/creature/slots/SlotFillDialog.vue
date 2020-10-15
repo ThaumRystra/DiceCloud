@@ -164,7 +164,7 @@ export default {
     },
     libraryNodes(){
       let filter = {};
-      if (this.model.tags.length){
+      if (this.model.slotTags.length){
         filter.tags = {$all: this.model.slotTags};
       }
       if (this.model.slotType){
