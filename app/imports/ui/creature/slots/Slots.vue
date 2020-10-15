@@ -49,7 +49,7 @@
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { softRemoveProperty, insertPropertyFromLibraryNode } from '/imports/api/creature/CreatureProperties.js';
-
+import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 export default {
   components: {
     TreeNodeView,
@@ -96,18 +96,15 @@ export default {
   },
   meteor: {
     slots(){
-      return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
-        type: 'propertySlot',
-        $or: [
-          {slotConditionResult: true},
-          {slotConditionResult: {$exists: false}},
-        ]
-      }, {
-        sort: {
-          order: 1,
-          name: 1,
-        },
+      return getActiveProperties({
+        ancestorId: this.creatureId,
+        filter: {
+          type: 'propertySlot',
+          $or: [
+            {slotConditionResult: true},
+            {slotConditionResult: {$exists: false}},
+          ],
+        }
       }).map(slot => {
         slot.children = CreatureProperties.find({
           'parent.id': slot._id,
