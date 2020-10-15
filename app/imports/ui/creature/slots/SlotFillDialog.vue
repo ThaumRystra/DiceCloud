@@ -32,6 +32,7 @@
                 <div>
                   <h3 class="title mb-0">
                     <property-icon
+                      v-if="!node.picture"
                       class="mr-2"
                       :model="node"
                       :color="node.color"
