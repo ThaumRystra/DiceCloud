@@ -4,6 +4,10 @@ export default function sendWebhook({webhookURL, message, options}){
   let urlArray = webhookURL.split('/');
   let token = urlArray.pop();
   let id = urlArray.pop();
+  
+  // prevent discord mention exploit
+  options.disableMentions = 'all';
+  
   const hook = new Discord.WebhookClient(id, token);
   // Send a message using the webhook
   hook.send(message, options)
