@@ -27,6 +27,14 @@
         @change="change('variableName', ...arguments)"
       />
     </div>
+    <text-field
+      label="Condition"
+      hint="A caclulation to determine if this can be added to the character"
+      placeholder="Always active"
+      :value="model.slotFillerCondition"
+      :error-messages="errors.slotFillerCondition"
+      @change="change('slotFillerCondition', ...arguments)"
+    />
   </div>
 </template>
 

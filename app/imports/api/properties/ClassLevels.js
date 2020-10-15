@@ -23,6 +23,11 @@ let ClassLevelSchema = new SimpleSchema({
 	'nextLevelTags.$': {
 		type: String,
 	},
+  // Same as in SlotFillers.js
+  slotFillerCondition: {
+    type: String,
+    optional: true,
+  },
 });
 
 export { ClassLevelSchema };

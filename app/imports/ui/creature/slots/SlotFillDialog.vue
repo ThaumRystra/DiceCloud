@@ -179,17 +179,18 @@ export default {
       // Filter out slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes = nodes.filter(node => {
-        if (node.type === 'slotFiller'){
-          if (node.slotFillerCondition){
-            let context = new CompilationContext();
-            let conditionResult = parse(node.slotFillerCondition)
-            .reduce(this.creature.variables, context);
-            if (conditionResult && !conditionResult.value) return false;
-          }
-          console.log({numToFill: this.numToFill, node});
-          if (this.numToFill > 0 && node.slotQuantityFilled > this.numToFill){
-            return false;
-          }
+        if (node.slotFillerCondition){
+          let context = new CompilationContext();
+          let conditionResult = parse(node.slotFillerCondition)
+          .reduce(this.creature.variables, context);
+          if (conditionResult && !conditionResult.value) return false;
+        }
+        if (
+          node.type === 'slotFiller' &&
+          this.numToFill > 0 &&
+          node.slotQuantityFilled > this.numToFill
+        ){
+          return false;
         }
         return true;
       });
