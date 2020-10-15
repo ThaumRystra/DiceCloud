@@ -24,14 +24,6 @@
     >
       <div :key="$route.meta.title">
         <v-toolbar-items v-if="creature">
-          <v-btn
-            v-if="editPermission"
-            flat
-            icon
-            @click="recompute(creature._id)"
-          >
-            <v-icon>refresh</v-icon>
-          </v-btn>
           <v-menu
             bottom
             left
@@ -121,7 +113,6 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import removeCreature from '/imports/api/creature/removeCreature.js';
 import { mapMutations } from 'vuex';
 import { theme } from '/imports/ui/theme.js';
-import { recomputeCreature } from '/imports/api/creature/computation/recomputeCreature.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
@@ -156,9 +147,6 @@ export default {
       'toggleDrawer',
       'toggleRightDrawer',
     ]),
-		recompute(charId){
-			recomputeCreature.call({charId});
-		},
 		showCharacterForm(){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-form-dialog',
