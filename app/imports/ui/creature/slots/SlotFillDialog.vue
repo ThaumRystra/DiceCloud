@@ -6,25 +6,38 @@
       </v-toolbar-title>
     </template>
     <div class="library-nodes">
-      <v-list>
-        <v-list-tile
-          v-for="node in libraryNodes"
-          :key="node._id"
-          :class="node._id === (selectedNode && selectedNode._id) && 'primary--text'"
-          @click="selectedNode = node"
+      <v-fade-transition mode="out-in">
+        <v-list v-if="$subReady.slotFillers">
+          <v-list-tile
+            v-for="node in libraryNodes"
+            :key="node._id"
+            :class="node._id === (selectedNode && selectedNode._id) && 'primary--text'"
+            @click="selectedNode = node"
+          >
+            <tree-node-view
+              :model="node"
+              :selected="node._id === (selectedNode && selectedNode._id)"
+            />
+          </v-list-tile>
+        </v-list>
+        <h4
+          v-else-if="$subReady.slotFillers"
+          class="ma-4"
         >
-          <tree-node-view
-            :model="node"
-            :selected="node._id === (selectedNode && selectedNode._id)"
+          Nothing suitable was found in your libraries
+        </h4>
+        <div
+          v-else
+          key="character-loading"
+          class="fill-height layout justify-center align-center"
+        >
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            size="64"
           />
-        </v-list-tile>
-      </v-list>
-      <h4
-        v-if="!libraryNodes.length"
-        class="ma-4"
-      >
-        Nothing suitable was found in your libraries
-      </h4>
+        </div>
+      </v-fade-transition>
     </div>
     <template slot="actions">
       <v-spacer />

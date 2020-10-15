@@ -36,6 +36,7 @@
         v-if="slot.quantityExpected > slot.children.length"
         icon
         :data-id="`slot-add-button-${slot._id}`"
+        style="background-color: inherit;"
         @click="fillSlot(slot._id)"
       >
         <v-icon>add</v-icon>
@@ -112,4 +113,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
+  div {
+    background-color: inherit;
+  }
 </style>

@@ -50,7 +50,7 @@
             <spells-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
-            <persona-tab :creature-id="creatureId" />
+            <character-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
             <tree-tab :creature-id="creatureId" />

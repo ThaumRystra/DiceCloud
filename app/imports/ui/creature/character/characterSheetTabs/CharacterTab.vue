@@ -22,7 +22,7 @@
       </div>
       <div>
         <v-card>
-          <v-card-text>
+          <v-card-text style="background-color: inherit;">
             <slots :creature-id="creatureId" />
           </v-card-text>
         </v-card>
