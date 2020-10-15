@@ -24,6 +24,7 @@ let SlotSchema = new SimpleSchema({
   quantityExpected: {
     type: SimpleSchema.Integer,
     defaultValue: 1,
+    min: 0,
   },
   ignored: {
     type: Boolean,

@@ -2,7 +2,7 @@
   <dialog-base :color="model.color">
     <template slot="toolbar">
       <v-toolbar-title>
-        Creature Form Dialog
+        Character Details
       </v-toolbar-title>
       <v-spacer />
       <color-picker

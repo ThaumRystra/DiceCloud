@@ -7,7 +7,7 @@
     </template>
     <div class="library-nodes">
       <v-fade-transition mode="out-in">
-        <v-list v-if="$subReady.slotFillers">
+        <v-list v-if="$subReady.slotFillers && libraryNodes.length">
           <v-list-tile
             v-for="node in libraryNodes"
             :key="node._id"
@@ -20,12 +20,26 @@
             />
           </v-list-tile>
         </v-list>
-        <h4
+        <div
           v-else-if="$subReady.slotFillers"
           class="ma-4"
         >
-          Nothing suitable was found in your libraries
-        </h4>
+          <h4>
+            Nothing suitable was found in your libraries
+          </h4>
+          <p>
+            This slot requires a {{ slotPropertyTypeName }}
+            <template v-if="model.slotTags.length">
+              with the following tags:
+              <span
+                v-for="(tag, index) in model.slotTags"
+                :key="index"
+              >
+                <code>{{ tag }}</code>,
+              </span>
+            </template>
+          </p>
+        </div>
         <div
           v-else
           key="character-loading"
@@ -63,7 +77,7 @@ import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
-
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 export default {
   components: {
 		DialogBase,
@@ -78,6 +92,14 @@ export default {
   data(){return {
     selectedNode: undefined,
   }},
+  computed: {
+    slotPropertyTypeName(){
+      if (!this.model) return;
+      if (!this.model.slotType) return 'property';
+      let propName = getPropertyName(this.model.slotType);
+      return propName && propName.toLowerCase();
+    },
+  },
   meteor: {
     $subscribe: {
       'slotFillers'(){
@@ -94,7 +116,9 @@ export default {
       if (this.model.slotType){
         filter.type = this.model.slotType;
       }
-      return LibraryNodes.find(filter);
+      let nodes = LibraryNodes.find(filter).fetch();
+      if (nodes.length === 1) this.selectedNode = nodes[0];
+      return nodes;
     },
   }
 }

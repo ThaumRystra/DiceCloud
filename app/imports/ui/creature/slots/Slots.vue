@@ -33,7 +33,7 @@
         </v-btn>
       </div>
       <v-btn
-        v-if="slot.quantityExpected > slot.children.length"
+        v-if="!slot.quantityExpected || slot.quantityExpected > slot.children.length"
         icon
         :data-id="`slot-add-button-${slot._id}`"
         style="background-color: inherit;"
