@@ -18,6 +18,7 @@ import { RollSchema } from '/imports/api/properties/Rolls.js';
 import { ComputedSavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { ComputedSkillSchema } from '/imports/api/properties/Skills.js';
 import { ComputedSlotSchema } from '/imports/api/properties/Slots.js';
+import { SlotFillerSchema } from '/imports/api/properties/SlotFillers.js';
 import { ComputedSpellSchema } from '/imports/api/properties/Spells.js';
 import { ComputedSpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ToggleSchema } from '/imports/api/properties/Toggles.js';
@@ -36,10 +37,11 @@ const propertySchemasIndex = {
   folder: FolderSchema,
   note: NoteSchema,
   proficiency: ProficiencySchema,
+  propertySlot: ComputedSlotSchema,
   roll: RollSchema,
   savingThrow: ComputedSavingThrowSchema,
   skill: ComputedSkillSchema,
-  propertySlot: ComputedSlotSchema,
+  slotFiller: SlotFillerSchema,
   spellList: ComputedSpellListSchema,
   spell: ComputedSpellSchema,
   toggle: ToggleSchema,

@@ -1,5 +1,13 @@
 <template lang="html">
-  <div class="slot-form">
+  <div class="slot-filler-form">
+    <div class="layout column align-center">
+      <icon-picker
+        label="Icon"
+        :value="model.icon"
+        :error-messages="errors.icon"
+        @change="change('icon', ...arguments)"
+      />
+    </div>
     <text-field
       ref="focusFirst"
       label="Name"
@@ -7,41 +15,47 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
+    <text-field
+      label="Picture URL"
+      hint="A link to an image representing this property"
+      :value="model.picture"
+      :error-messages="errors.picture"
+      @change="change('picture', ...arguments)"
+    />
     <smart-select
       label="Type"
       style="flex-basis: 300px;"
       clearable
       :items="slotTypes"
-      :value="model.slotType"
-      :error-messages="errors.slotType"
-      @change="change('slotType', ...arguments)"
+      :value="model.slotFillerType"
+      :error-messages="errors.slotFillerType"
+      @change="change('slotFillerType', ...arguments)"
     />
     <smart-combobox
       label="Tags"
-      hint="The slot must be filled with a property which has all the listed tags"
       multiple
       chips
       deletable-chips
-      :value="model.slotTags"
-      :error-messages="errors.slotTags"
-      @change="change('slotTags', ...arguments)"
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
     />
     <text-field
       label="Quantity"
       type="number"
       min="0"
-      hint="How many matching properties must be used to fill this slot, 0 is unlimited"
-      :value="model.quantityExpected"
-      :error-messages="errors.quantityExpected"
-      @change="change('quantityExpected', ...arguments)"
+      hint="How many properties this counts as when filling a slot"
+      :value="model.slotQuantityFilled"
+      :error-messages="errors.slotQuantityFilled"
+      @change="change('slotQuantityFilled', ...arguments)"
     />
     <text-field
       label="Condition"
-      hint="A caclulation to determine if this slot should be active"
+      hint="A caclulation to determine if this can be added to the character"
       placeholder="Always active"
-      :value="model.slotCondition"
-      :error-messages="errors.slotCondition"
-      @change="change('slotCondition', ...arguments)"
+      :value="model.slotFillerCondition"
+      :error-messages="errors.slotFillerCondition"
+      @change="change('slotFillerCondition', ...arguments)"
     />
     <calculation-error-list :errors="model.slotConditionErrors" />
     <text-area
@@ -50,33 +64,16 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <div class="layout row wrap justify-space-between">
-        <smart-switch
-          label="Ignored"
-          style="width: 200px; flex-grow: 0;"
-          class="mx-2"
-          :value="model.ignored"
-          :error-messages="errors.ignored"
-          @change="change('ignored', ...arguments)"
-        />
-      </div>
-    </form-section>
   </div>
 </template>
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
 
 	export default {
     components: {
-			FormSection,
       CalculationErrorList,
 		},
     mixins: [propertyFormMixin],

@@ -73,11 +73,14 @@
 </template>
 
 <script>
+import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import { parse, CompilationContext } from '/imports/parser/parser.js';
+
 export default {
   components: {
 		DialogBase,
@@ -87,7 +90,15 @@ export default {
     slotId: {
       type: String,
       required: true,
-    }
+    },
+    creatureId: {
+      type: String,
+      required: true,
+    },
+    numToFill: {
+      type: Number,
+      required: true,
+    },
   },
   data(){return {
     selectedNode: undefined,
@@ -109,14 +120,41 @@ export default {
     model(){
       return CreatureProperties.findOne(this.slotId);
     },
+    creature(){
+      return Creatures.findOne(this.creatureId);
+    },
     libraryNodes(){
-      let filter = {
-        tags: {$all: this.model.slotTags},
-      };
+      let filter = {};
+      if (this.model.tags.length){
+        filter.tags = {$all: this.model.slotTags};
+      }
       if (this.model.slotType){
-        filter.type = this.model.slotType;
+        filter.$or = [{
+            type: this.model.slotType
+          },{
+            type: 'slotFiller',
+            slotFillerType: this.model.slotType,
+        }];
       }
       let nodes = LibraryNodes.find(filter).fetch();
+      // Filter out slotFillers whose condition isn't met or are too big to fit
+      // the quantity to fill
+      nodes = nodes.filter(node => {
+        if (node.type === 'slotFiller'){
+          if (node.slotFillerCondition){
+            let context = new CompilationContext();
+            let conditionResult = parse(node.slotFillerCondition)
+            .reduce(this.creature.variables, context);
+            if (conditionResult && !conditionResult.value) return false;
+          }
+          console.log({numToFill: this.numToFill, node});
+          if (this.numToFill > 0 && node.slotQuantityFilled > this.numToFill){
+            return false;
+          }
+        }
+        return true;
+      });
+      // Filter out slotFillers whose
       if (nodes.length === 1) this.selectedNode = nodes[0];
       return nodes;
     },

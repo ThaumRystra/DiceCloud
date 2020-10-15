@@ -9,7 +9,7 @@
         {{ slot.name }}
         <v-spacer />
         <span v-if="slot.quantityExpected > 1">
-          {{ slot.children.length }} / {{ slot.quantityExpected }}
+          {{ slot.totalFilled }} / {{ slot.quantityExpected }}
         </span>
       </h3>
       <div
@@ -33,11 +33,11 @@
         </v-btn>
       </div>
       <v-btn
-        v-if="!slot.quantityExpected || slot.quantityExpected > slot.children.length"
+        v-if="!slot.quantityExpected || slot.quantityExpected > slot.totalFilled"
         icon
         :data-id="`slot-add-button-${slot._id}`"
         style="background-color: inherit;"
-        @click="fillSlot(slot._id)"
+        @click="fillSlot(slot)"
       >
         <v-icon>add</v-icon>
       </v-btn>
@@ -64,11 +64,19 @@ export default {
     },
   },
   methods: {
-    fillSlot(slotId){
+    fillSlot(slot){
+      let slotId = slot._id;
+      let creatureId = this.creatureId;
+      let numToFill = slot.quantityExpected === 0 ?
+        0 : slot.quantityExpected - slot.totalFilled;
       this.$store.commit('pushDialogStack', {
         component: 'slot-fill-dialog',
         elementId: `slot-add-button-${slotId}`,
-        data: {slotId},
+        data: {
+          slotId,
+          creatureId,
+          numToFill,
+        },
         callback(node){
 					if(!node) return;
           let newPropertyId = insertPropertyFromLibraryNode.call({
@@ -105,6 +113,14 @@ export default {
           'parent.id': slot._id,
           removed: {$ne: true},
         }).fetch();
+        slot.totalFilled = 0;
+        slot.children.forEach(child => {
+          if (child.type === 'slotFiller'){
+            slot.totalFilled += child.slotQuantityFilled;
+          } else {
+            slot.totalFilled++;
+          }
+        });
         return slot;
       });
     },

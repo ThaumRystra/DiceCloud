@@ -33,10 +33,17 @@ Meteor.publish('slotFillers', function(slotId){
     // Build a filter for nodes in those libraries that match the slot
     let filter = {
       'ancestors.id': {$in: libraryIds},
-      'tags': {$all: slot.slotTags},
     };
+    if (slot.tags.length){
+      filter.tags = {$all: slot.slotTags};
+    }
     if (slot.slotType){
-      filter.type = slot.slotType;
+      filter.$or = [{
+          type: slot.slotType
+        },{
+          type: 'slotFiller',
+          slotFillerType: slot.slotType,
+      }];
     }
     return LibraryNodes.find(filter);
   });
