@@ -34,6 +34,7 @@
                     <property-icon
                       v-if="!node.picture"
                       class="mr-2"
+                      :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
                       :model="node"
                       :color="node.color"
                     />
