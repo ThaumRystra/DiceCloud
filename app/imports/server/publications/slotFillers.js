@@ -4,17 +4,18 @@ import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 Meteor.publish('slotFillers', function(slotId){
   this.autorun(function (){
-    if (!this.userId) {
-      return this.ready();
+    let userId = this.userId;
+    if (!userId) {
+      return [];
     }
     // Get the slot
     let slot = CreatureProperties.findOne(slotId);
     if (!slot){
-      return this.ready()
+      return [];
     }
 
     // Get all the ids of libraries the user can access
-    const user = Meteor.users.findOne(this.userId, {
+    const user = Meteor.users.findOne(userId, {
       fields: {subscribedLibraries: 1}
     });
     const subs = user && user.subscribedLibraries || [];

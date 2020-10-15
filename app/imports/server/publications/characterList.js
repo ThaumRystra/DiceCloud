@@ -5,7 +5,7 @@ Meteor.publish('characterList', function(){
   this.autorun(function (){
     var userId = this.userId;
     if (!userId) {
-      return this.ready();
+      return [];
     }
     const user = Meteor.users.findOne(this.userId, {
       fields: {subscribedCharacters: 1}

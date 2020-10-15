@@ -12,10 +12,11 @@ Meteor.publish('standardLibraries', function(){
 
 Meteor.publish('libraries', function(){
   this.autorun(function (){
-    if (!this.userId) {
-      return this.ready();
+    let userId = this.userId;
+    if (!userId) {
+      return [];
     }
-    const user = Meteor.users.findOne(this.userId, {
+    const user = Meteor.users.findOne(userId, {
       fields: {subscribedLibraries: 1}
     });
     const subs = user && user.subscribedLibraries || [];

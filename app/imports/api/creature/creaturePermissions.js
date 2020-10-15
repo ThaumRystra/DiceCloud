@@ -24,6 +24,6 @@ export function assertEditPermission(creature, userId) {
 }
 
 export function assertViewPermission(creature, userId) {
-  creature = getCreature(creature, {owner: 1, writers: 1, public: 1});
+  creature = getCreature(creature, {owner: 1, readers:1, writers: 1, public: 1});
   viewPermission(creature, userId);
 }

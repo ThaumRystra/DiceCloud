@@ -99,7 +99,7 @@ export function assertViewPermission(doc, userId) {
     return true;
   } else {
     throw new Meteor.Error('View permission denied',
-      'You do not have permission to view this character');
+      'You do not have permission to view this document');
   }
 }
 

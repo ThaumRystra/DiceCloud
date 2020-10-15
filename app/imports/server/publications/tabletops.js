@@ -5,7 +5,7 @@ import Messages from '/imports/api/tabletop/Messages.js';
 Meteor.publish('tabletops', function(){
   var userId = this.userId;
   if (!userId) {
-    return this.ready();
+    return [];
   }
   return Tabletops.find({
     $or: [
@@ -18,7 +18,7 @@ Meteor.publish('tabletops', function(){
 Meteor.publish('tabletop', function(tabletopId){
   var userId = this.userId;
   if (!userId) {
-    return this.ready();
+    return [];
   }
   this.autorun(function (){
     let tabletopCursor = Tabletops.find({
@@ -30,7 +30,7 @@ Meteor.publish('tabletop', function(tabletopId){
     });
     let tabletop = tabletopCursor.fetch()[0];
     if (!tabletop){
-      return this.ready();
+      return [];
     }
     // Warning, this leaks data to users of the same tabletop who may not have
     // read permission of this specific creature, so publish as few fields as
