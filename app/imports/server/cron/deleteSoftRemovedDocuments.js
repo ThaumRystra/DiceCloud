@@ -23,7 +23,7 @@ Meteor.startup(() => {
 				removedAt: {$lt: thirtyMinutesAgo} // dates *before* 30 minutes ago
 			}, function(error){
 				if (error){
-					console.error(error);
+					console.error(JSON.stringify(error, null, 2));
 				}
 			});
 		});
