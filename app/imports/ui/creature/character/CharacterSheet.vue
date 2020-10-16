@@ -58,20 +58,6 @@
         </v-tabs-items>
       </div>
     </v-fade-transition>
-    <v-snackbar
-      v-for="snackbar in snackbars"
-      :key="snackbar._id"
-      :value="snackbar.open"
-    >
-      {{ snackbar.text.split(/\n+/).pop() }}
-      <v-btn
-        flat
-        icon
-        @click="snackbar.open = false"
-      >
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-snackbar>
   </div>
 </template>
 
@@ -140,10 +126,9 @@
           if (that.$store.state.rightDrawer) return;
           if (that.snackbars.some(o => o._id === doc._id)) return;
           doc.open = true;
-          that.snackbars.push(doc);
-          setTimeout(function(){
-            that.snackbars = that.snackbars.filter(bar => bar._id === doc._id);
-          }, 8000);
+          that.$store.commit('snackbar', {
+            doc
+          });
         },
       });
     },

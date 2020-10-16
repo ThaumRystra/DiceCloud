@@ -67,6 +67,31 @@
       name="rightDrawer"
     />
     <dialog-stack />
+    <v-snackbar
+      v-for="snackbar in snackbars"
+      :key="snackbar._id"
+      :value="snackbar.open"
+      auto-height
+      bottom
+    >
+      {{ snackbar.text.split(/\n+/).pop() }}
+      <v-btn
+        v-if="snackbar.callback"
+        flat
+        icon
+        @click="snackbar.callback"
+      >
+        <v-icon>{{ snackbar.callbackName }}</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="snackbar.showCloseButton"
+        flat
+        icon
+        @click="snackbar.open = false"
+      >
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 

@@ -12,6 +12,8 @@ const store = new Vuex.Store({
     drawer: undefined,
     rightDrawer: undefined,
     pageTitle: undefined,
+    snackbars: [],
+    snackbarTimout: undefined,
   },
   mutations: {
     toggleDrawer (state) {
@@ -30,7 +32,43 @@ const store = new Vuex.Store({
       state.pageTitle = value;
       document.title = value;
     },
+    addSnackbar(state, value){
+      value.open = true;
+      state.snackbars.push(value)
+    },
+    closeCurrentSnackbar (state){
+      state.snackbars.shift();
+    },
+    cancelSnackbarTimeout (state){
+      if(state.snackbarTimout){
+        clearTimeout(state.snackbarTimout);
+      }
+    },
+    setSnackbarTimout(state, value){
+      state.snackbarTimout = value;
+    },
   },
+  actions: {
+    snackbar({commit}, value){
+      // value = {
+      //   text,
+      //   showCloseButton,
+      //   callback,
+      //   callbackName
+      // }
+      commit('addSnackbar', value);
+    },
+    closeSnackbar({dispatch, commit, state}){
+      commit('closeCurrentSnackbar');
+      commit('cancelSnackbarTimeout');
+      if (state.snackbars.length){
+        commit('setSnackbarTimout');
+        state.snackbarTimout = setTimeout(() => {
+          dispatch('closeSnackbar');
+        }, 5000);
+      }
+    },
+  }
 });
 
 export default store;
