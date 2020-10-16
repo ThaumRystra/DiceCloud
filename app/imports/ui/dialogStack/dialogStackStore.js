@@ -20,10 +20,10 @@ const dialogStackStore = {
       });
       updateHistory();
     },
-    replaceDialog(stat, {component, data, elementId, callback}){
+    replaceDialog(state, {component, data, elementId, callback}){
       const _id = Random.id();
       if (!state.dialogs.length){
-        throw new Meteor.Error("can't replace dialog if no dialogs are open");
+        throw new Meteor.Error('can\'t replace dialog if no dialogs are open');
       }
       state.dialogs.$set(0, {
         _id,
@@ -52,10 +52,10 @@ const dialogStackStore = {
   actions: {
     popDialogStack(context, result){
       if (history && history.state && history.state.openDialogs){
-        context.commit("setCurrentResult", result);
+        context.commit('setCurrentResult', result);
         history.back();
       } else {
-        context.commit("popDialogStackMutation", result);
+        context.commit('popDialogStackMutation', result);
       }
     }
   }
@@ -74,7 +74,7 @@ const updateHistory = function(){
   if (!history.state || !_.isFinite(history.state.openDialogs)){
     let newState = _.clone(history.state)  || {};
     newState.openDialogs = 0;
-    history.replaceState(newState, "");
+    history.replaceState(newState, '');
   }
 
   const numDialogs = dialogStackStore.state.dialogs.length;
@@ -93,14 +93,14 @@ const updateHistory = function(){
       // but should replace with correct count
       let newState = _.clone(history.state) || {};
       newState.openDialogs = dialogStackStore.state.dialogs.length;
-      history.replaceState(newState, "");
+      history.replaceState(newState, '');
     }
   } else if (numDialogs > 0 && stateDialogs === 0){
     // On the zero state, push a dialog count
-    history.pushState({openDialogs: numDialogs}, "");
+    history.pushState({openDialogs: numDialogs}, '');
   } else {
     console.warn(
-      "History could not be updated correctly, unexpected case",
+      'History could not be updated correctly, unexpected case',
       {stateDialogs, numDialogs},
     )
   }
