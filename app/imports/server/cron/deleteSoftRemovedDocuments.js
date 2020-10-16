@@ -32,7 +32,7 @@ Meteor.startup(() => {
 	SyncedCron.add({
 		name: 'deleteSoftRemovedDocs',
 		schedule: function(parser) {
-			return parser.text('every 2 hours');
+			return parser.text('every 10 minutes');
 		},
 		job: deleteOldSoftRemovedDocs,
 	});
