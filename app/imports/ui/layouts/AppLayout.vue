@@ -67,31 +67,7 @@
       name="rightDrawer"
     />
     <dialog-stack />
-    <v-snackbar
-      v-for="snackbar in snackbars"
-      :key="snackbar._id"
-      :value="snackbar.open"
-      auto-height
-      bottom
-    >
-      {{ snackbar.text.split(/\n+/).pop() }}
-      <v-btn
-        v-if="snackbar.callback"
-        flat
-        icon
-        @click="snackbar.callback"
-      >
-        <v-icon>{{ snackbar.callbackName }}</v-icon>
-      </v-btn>
-      <v-btn
-        v-if="snackbar.showCloseButton"
-        flat
-        icon
-        @click="snackbar.open = false"
-      >
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-snackbar>
+    <snackbars />
   </v-app>
 </template>
 
@@ -101,11 +77,13 @@
   import DialogStack from '/imports/ui/dialogStack/DialogStack.vue';
 	import { theme, darkTheme } from '/imports/ui/theme.js';
   import { mapMutations } from 'vuex';
+  import Snackbars from '/imports/ui/components/snackbars/Snackbars.vue';
 
   export default {
     components: {
       Sidebar,
       DialogStack,
+      Snackbars,
     },
     data(){return {
       name: 'Home',
