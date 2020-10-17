@@ -27,6 +27,13 @@
         @change="change('variableName', ...arguments)"
       />
     </div>
+    <text-area
+      label="Description"
+      hint="A brief description of what this class level gives a character"
+      :value="model.description"
+      :error-messages="errors.description"
+      @change="change('description', ...arguments)"
+    />
     <text-field
       label="Condition"
       hint="A caclulation to determine if this can be added to the character"

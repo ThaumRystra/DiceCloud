@@ -6,6 +6,10 @@ let ClassLevelSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+  description: {
+    type: String,
+    optional: true,
+  },
 	// The name of this class level's variable
 	variableName: {
     type: String,
