@@ -15,6 +15,12 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
+    <text-area
+      label="Description"
+      :value="model.description"
+      :error-messages="errors.description"
+      @change="change('description', ...arguments)"
+    />
     <text-field
       label="Picture URL"
       hint="A link to an image representing this property"
@@ -30,15 +36,6 @@
       :value="model.slotFillerType"
       :error-messages="errors.slotFillerType"
       @change="change('slotFillerType', ...arguments)"
-    />
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      :value="model.tags"
-      :error-messages="errors.tags"
-      @change="change('tags', ...arguments)"
     />
     <text-field
       label="Quantity"
@@ -57,25 +54,23 @@
       :error-messages="errors.slotFillerCondition"
       @change="change('slotFillerCondition', ...arguments)"
     />
-    <calculation-error-list :errors="model.slotConditionErrors" />
-    <text-area
-      label="Description"
-      :value="model.description"
-      :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
     />
   </div>
 </template>
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
 
 	export default {
-    components: {
-      CalculationErrorList,
-		},
     mixins: [propertyFormMixin],
     data(){
       let slotTypes = [];

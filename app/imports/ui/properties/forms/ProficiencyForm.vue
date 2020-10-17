@@ -27,6 +27,14 @@
         @change="change('value', ...arguments)"
       />
     </div>
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 

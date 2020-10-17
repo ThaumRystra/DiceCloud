@@ -44,6 +44,14 @@
       name="Advanced"
       standalone
     >
+      <smart-combobox
+        label="Tags"
+        multiple
+        chips
+        deletable-chips
+        :value="model.tags"
+        @change="change('tags', ...arguments)"
+      />
       <div class="layout row justify-center">
         <text-field
           label="Base Value"

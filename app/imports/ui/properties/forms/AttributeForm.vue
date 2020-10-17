@@ -65,6 +65,14 @@
       name="Advanced"
       standalone
     >
+      <smart-combobox
+        label="Tags"
+        multiple
+        chips
+        deletable-chips
+        :value="model.tags"
+        @change="change('tags', ...arguments)"
+      />
       <div class="layout column align-center">
         <smart-switch
           v-if="model.attributeType !== 'hitDice'"

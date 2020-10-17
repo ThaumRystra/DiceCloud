@@ -28,6 +28,16 @@
       :menu-props="{auto: true, lazy: true}"
       @change="change('target', ...arguments)"
     />
+    <smart-combobox
+      label="Tags"
+      class="mr-2"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 
