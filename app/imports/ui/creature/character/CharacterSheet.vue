@@ -121,7 +121,6 @@
         added(doc){
           if (!that.$subReady.singleCharacter) return;
           if (that.$store.state.rightDrawer) return;
-          if (that.$store.state.snackbars.snackbars.some(o => o._id === doc._id)) return;
           that.$store.dispatch('snackbar', {
             text: doc.text,
             showCloseButton: true,

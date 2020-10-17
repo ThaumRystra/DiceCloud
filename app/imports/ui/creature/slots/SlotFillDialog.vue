@@ -19,7 +19,8 @@
               style="max-width: 500px;"
               hover
               ripple
-              :class="{'primary theme--dark': node._id === (selectedNode && selectedNode._id)}"
+              :class="{'primary': node._id === (selectedNode && selectedNode._id)}"
+              :dark="node._id === (selectedNode && selectedNode._id)"
               @click="selectedNode = node"
             >
               <v-img
@@ -31,14 +32,13 @@
               <v-card-title primary-title>
                 <div>
                   <h3 class="title mb-0">
-                    <property-icon
-                      v-if="!node.picture"
+                    <tree-node-view
                       class="mr-2"
                       :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
+                      :hide-icon="node.picture"
                       :model="node"
                       :color="node.color"
                     />
-                    {{ getTitle(node) }}
                   </h3>
                   <div v-if="node.description">
                     {{ node.description }}
@@ -108,14 +108,14 @@ import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import { parse, CompilationContext } from '/imports/parser/parser.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
+import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 export default {
   components: {
 		DialogBase,
     ColumnLayout,
-    PropertyIcon,
+    TreeNodeView,
 	},
   props:{
     slotId: {

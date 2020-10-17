@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="layout row align-center justify-start">
     <property-icon
+      v-if="!hideIcon"
       class="mr-2"
       :model="model"
       :color="model.color"

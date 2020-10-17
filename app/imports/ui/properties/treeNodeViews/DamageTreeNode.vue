@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="layout row align-center justify-start">
     <v-icon
+      v-if="!hideIcon"
       class="mr-2"
       :color="model.color"
       :class="selected && 'primary--text'"
