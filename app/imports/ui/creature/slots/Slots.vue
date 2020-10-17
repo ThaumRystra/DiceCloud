@@ -27,7 +27,7 @@
           icon
           flat
           small
-          @click="remove(child._id)"
+          @click="remove(child)"
         >
           <v-icon>delete</v-icon>
         </v-btn>
@@ -48,8 +48,14 @@
 <script>
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
-import { softRemoveProperty, insertPropertyFromLibraryNode } from '/imports/api/creature/CreatureProperties.js';
+import {
+  insertPropertyFromLibraryNode,
+  softRemoveProperty,
+  restoreProperty
+} from '/imports/api/creature/CreatureProperties.js';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
+
 export default {
   components: {
     TreeNodeView,
@@ -90,8 +96,15 @@ export default {
 				}
       });
     },
-    remove(_id){
-      softRemoveProperty.call({_id});
+    remove(model){
+      softRemoveProperty.call({_id: model._id});
+      this.$store.dispatch('snackbar', {
+        text: `Deleted ${getPropertyTitle(model)}`,
+        callbackName: 'undo',
+        callback(){
+          restoreProperty.call({_id: model._id});
+        },
+      });
     }
   },
   meteor: {

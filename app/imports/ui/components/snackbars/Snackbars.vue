@@ -10,11 +10,12 @@
     {{ snackbar.text }}
     <v-btn
       v-if="snackbar.callback"
+      class="primary--text"
       flat
       icon
-      @click="snackbar.callback"
+      @click="doCallback"
     >
-      <v-icon>{{ snackbar.callbackName }}</v-icon>
+      {{ snackbar.callbackName }}
     </v-btn>
     <v-btn
       v-if="snackbar.showCloseButton"
@@ -34,6 +35,12 @@ export default {
       return this.$store.state.snackbars.snackbars[0];
     }
   },
+  methods: {
+    doCallback(){
+      this.snackbar.callback();
+      this.$store.dispatch('closeSnackbar')
+    }
+  }
 }
 </script>
 
