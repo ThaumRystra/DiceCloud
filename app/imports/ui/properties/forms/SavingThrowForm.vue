@@ -21,6 +21,16 @@
       :error-messages="errors.stat"
       @change="change('stat', ...arguments)"
     />
+    <smart-combobox
+      label="Tags"
+      class="mr-2"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      :error-messages="errors.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 

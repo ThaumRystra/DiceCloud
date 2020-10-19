@@ -31,6 +31,14 @@
       @change="change('maxPrepared', ...arguments)"
     />
     <calculation-error-list :errors="model.maxPreparedErrors" />
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 

@@ -39,6 +39,14 @@
       />
     </v-fade-transition>
     <calculation-error-list :errors="model.errors" />
+    <smart-combobox
+      label="Tags"
+      multiple
+      chips
+      deletable-chips
+      :value="model.tags"
+      @change="change('tags', ...arguments)"
+    />
   </div>
 </template>
 

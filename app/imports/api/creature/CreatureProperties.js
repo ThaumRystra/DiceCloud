@@ -9,7 +9,7 @@ import { recomputeCreature } from '/imports/api/creature/computation/recomputeCr
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { softRemove } from '/imports/api/parenting/softRemove.js';
+import { softRemove, restore } from '/imports/api/parenting/softRemove.js';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
 import {
@@ -445,6 +445,23 @@ const softRemoveProperty = new ValidatedMethod({
 	}
 });
 
+const restoreProperty = new ValidatedMethod({
+	name: 'creatureProperties.restore',
+	validate: new SimpleSchema({
+		_id: SimpleSchema.RegEx.Id
+	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+	run({_id}){
+		let property = CreatureProperties.findOne(_id);
+    assertPropertyEditPermission(property, this.userId);
+		restore({_id, collection: CreatureProperties});
+		recomputeCreatures(property);
+	}
+});
 
 export default CreatureProperties;
 export {
@@ -458,5 +475,6 @@ export {
   selectAmmoItem,
 	pushToProperty,
 	pullFromProperty,
-	softRemoveProperty,
+  softRemoveProperty,
+	restoreProperty,
 };

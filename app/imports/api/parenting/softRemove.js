@@ -41,16 +41,21 @@ const restoreError = function(){
 };
 
 export function restore({_id, collection}){
-  collection = getCollectionByName(collection);
+  if (typeof collection === 'string') {
+    collection = getCollectionByName(collection);
+  }
   let numUpdated = collection.update({
     _id,
     removedWith: {$exists: false}
   }, { $unset: {
     removed: 1,
     removedAt: 1,
-  }});
+  }}, {
+    selector: {type: 'any'},
+  },);
   if (numUpdated === 0) restoreError();
   updateDescendants({
+    collection,
     ancestorId: _id,
     filter: {
       removedWith: _id,

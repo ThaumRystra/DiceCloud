@@ -79,12 +79,6 @@
       name="Advanced"
       standalone
     >
-      <smart-switch
-        label="Show increment button"
-        :value="model.showIncrement"
-        :error-messages="errors.showIncrement"
-        @change="change('showIncrement', ...arguments)"
-      />
       <smart-combobox
         label="Tags"
         class="mr-2"
@@ -94,6 +88,12 @@
         :value="model.tags"
         :error-messages="errors.tags"
         @change="change('tags', ...arguments)"
+      />
+      <smart-switch
+        label="Show increment button"
+        :value="model.showIncrement"
+        :error-messages="errors.showIncrement"
+        @change="change('showIncrement', ...arguments)"
       />
       <smart-switch
         label="Requires attunement"

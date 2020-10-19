@@ -66,6 +66,7 @@ import CreatureProperties, {
 	pushToProperty,
 	pullFromProperty,
 	softRemoveProperty,
+  restoreProperty,
 } from '/imports/api/creature/CreatureProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import PropertyToolbar from '/imports/ui/components/propertyToolbar.vue';
@@ -75,6 +76,7 @@ import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { get, findLast } from 'lodash';
 
@@ -174,12 +176,20 @@ export default {
 			});
 		},
 		remove(){
-			softRemoveProperty.call({_id: this._id});
+      const _id = this._id;
+			softRemoveProperty.call({_id});
       if (this.embedded){
         this.$emit('removed');
       } else {
         this.$store.dispatch('popDialogStack');
       }
+      this.$store.dispatch('snackbar', {
+        text: `Deleted ${getPropertyTitle(this.model)}`,
+        callbackName: 'undo',
+        callback(){
+          restoreProperty.call({_id});
+        },
+      });
 		},
 		selectSubProperty(_id){
 			this.$store.commit('pushDialogStack', {

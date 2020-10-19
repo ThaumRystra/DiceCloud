@@ -12,26 +12,31 @@
           {{ slot.totalFilled }} / {{ slot.quantityExpected }}
         </span>
       </h3>
-      <div
-        v-for="child in slot.children"
-        :key="child._id"
-        class="layout row"
-        :data-id="`slot-child-${child._id}`"
-      >
-        <tree-node-view
-          class="slotChild"
-          :model="child"
-        />
-        <v-spacer />
-        <v-btn
-          icon
-          flat
-          small
-          @click="remove(child._id)"
+      <v-list v-if="slot.children.length">
+        <v-list-tile
+          v-for="child in slot.children"
+          :key="child._id"
+          :data-id="`slot-child-${child._id}`"
+          @click="clickSlotChild(child)"
         >
-          <v-icon>delete</v-icon>
-        </v-btn>
-      </div>
+          <v-list-tile-content>
+            <tree-node-view
+              class="slotChild"
+              :model="child"
+            />
+          </v-list-tile-content>
+          <v-list-tile-action>
+            <v-btn
+              icon
+              flat
+              small
+              @click.stop="remove(child)"
+            >
+              <v-icon>delete</v-icon>
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
       <v-btn
         v-if="!slot.quantityExpected || slot.quantityExpected > slot.totalFilled"
         icon
@@ -48,8 +53,14 @@
 <script>
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
-import { softRemoveProperty, insertPropertyFromLibraryNode } from '/imports/api/creature/CreatureProperties.js';
+import {
+  insertPropertyFromLibraryNode,
+  softRemoveProperty,
+  restoreProperty
+} from '/imports/api/creature/CreatureProperties.js';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
+
 export default {
   components: {
     TreeNodeView,
@@ -64,6 +75,13 @@ export default {
     },
   },
   methods: {
+    clickSlotChild({_id}){
+			this.$store.commit('pushDialogStack', {
+				component: 'creature-property-dialog',
+				elementId: `slot-child-${_id}`,
+				data: {_id},
+			});
+    },
     fillSlot(slot){
       let slotId = slot._id;
       let creatureId = this.creatureId;
@@ -90,8 +108,15 @@ export default {
 				}
       });
     },
-    remove(_id){
-      softRemoveProperty.call({_id});
+    remove(model){
+      softRemoveProperty.call({_id: model._id});
+      this.$store.dispatch('snackbar', {
+        text: `Deleted ${getPropertyTitle(model)}`,
+        callbackName: 'undo',
+        callback(){
+          restoreProperty.call({_id: model._id});
+        },
+      });
     }
   },
   meteor: {
@@ -126,7 +151,4 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  div {
-    background-color: inherit;
-  }
 </style>

@@ -93,9 +93,6 @@
         required: true,
       },
 		},
-    data(){return {
-      snackbars: [],
-    }},
     reactiveProvide: {
       name: 'context',
       include: ['creature', 'editPermission'],
@@ -124,10 +121,9 @@
         added(doc){
           if (!that.$subReady.singleCharacter) return;
           if (that.$store.state.rightDrawer) return;
-          if (that.snackbars.some(o => o._id === doc._id)) return;
-          doc.open = true;
-          that.$store.commit('snackbar', {
-            doc
+          that.$store.dispatch('snackbar', {
+            text: doc.text,
+            showCloseButton: true,
           });
         },
       });

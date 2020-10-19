@@ -17,7 +17,7 @@
       @change="change('slotType', ...arguments)"
     />
     <smart-combobox
-      label="Tags"
+      label="Tags Required"
       hint="The slot must be filled with a property which has all the listed tags"
       multiple
       chips
@@ -54,6 +54,14 @@
       name="Advanced"
       standalone
     >
+      <smart-combobox
+        label="Tags"
+        multiple
+        chips
+        deletable-chips
+        :value="model.tags"
+        @change="change('tags', ...arguments)"
+      />
       <div class="layout row wrap justify-space-between">
         <smart-switch
           label="Ignored"

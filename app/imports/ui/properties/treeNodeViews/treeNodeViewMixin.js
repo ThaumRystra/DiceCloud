@@ -11,6 +11,7 @@ export default {
       default: () => ({}),
     },
     selected: Boolean,
+    hideIcon: Boolean,
   },
   computed: {
     title(){
