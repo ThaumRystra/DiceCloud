@@ -19,6 +19,7 @@ import {
 } from '/imports/api/parenting/parenting.js';
 import {setDocToLastOrder} from '/imports/api/parenting/order.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
+import { reorderDocs } from '/imports/api/parenting/order.js';
 
 import '/imports/api/creature/actions/doAction.js';
 
@@ -73,6 +74,7 @@ function assertPropertyEditPermission(property, userId){
 function recomputeCreatures(property){
 	for (let ref of property.ancestors){
 		if (ref.collection === 'creatures') {
+      reorderDocs({collection: CreatureProperties, ancestorId: ref.id});
 			recomputeCreature.call({charId: ref.id});
 		}
 	}
