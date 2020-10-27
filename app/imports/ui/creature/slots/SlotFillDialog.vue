@@ -40,9 +40,10 @@
                       :color="node.color"
                     />
                   </h3>
-                  <div v-if="node.description">
-                    {{ node.description }}
-                  </div>
+                  <markdown-text
+                    v-if="node.description"
+                    :markdown="node.description"
+                  />
                 </div>
               </v-card-title>
             </v-card>
@@ -110,12 +111,14 @@ import { parse, CompilationContext } from '/imports/parser/parser.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 export default {
   components: {
 		DialogBase,
     ColumnLayout,
     TreeNodeView,
+    MarkdownText,
 	},
   props:{
     slotId: {
