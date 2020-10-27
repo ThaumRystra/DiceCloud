@@ -40,9 +40,10 @@
                       :color="node.color"
                     />
                   </h3>
-                  <div v-if="node.description">
-                    {{ node.description }}
-                  </div>
+                  <property-description
+                    v-if="node.description"
+                    :value="node.description"
+                  />
                 </div>
               </v-card-title>
             </v-card>
@@ -110,12 +111,14 @@ import { parse, CompilationContext } from '/imports/parser/parser.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
 
 export default {
   components: {
 		DialogBase,
     ColumnLayout,
     TreeNodeView,
+    PropertyDescription,
 	},
   props:{
     slotId: {
@@ -141,6 +144,10 @@ export default {
       let propName = getPropertyName(this.model.slotType);
       return propName && propName.toLowerCase();
     },
+  },
+  reactiveProvide: {
+    name: 'context',
+    include: ['creature'],
   },
   methods:{
     getTitle(model){
