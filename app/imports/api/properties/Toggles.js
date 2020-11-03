@@ -25,7 +25,7 @@ const ToggleSchema = new SimpleSchema({
 const ComputedOnlyToggleSchema = new SimpleSchema({
 	// The computed result of the effect
 	toggleResult: {
-		type: SimpleSchema.oneOf(Number, String, Boolean),
+		type: Boolean,
 		optional: true,
 	},
   // The errors encountered while computing the result

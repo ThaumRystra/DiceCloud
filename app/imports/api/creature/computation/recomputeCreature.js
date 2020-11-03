@@ -3,11 +3,13 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import computeMemo from '/imports/api/creature/computation/computeMemo.js';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
 import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
-import { recomputeDamageMultipliersById } from '/imports/api/creature/damageMultiplierDenormalise/recomputeDamageMultipliers.js';
+import { recomputeDamageMultipliersById } from '/imports/api/creature/denormalise/recomputeDamageMultipliers.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 
 export const recomputeCreature = new ValidatedMethod({
@@ -95,12 +97,18 @@ export function recomputeCreatureById(creatureId){
  */
 export function recomputeCreatureByDoc(creature){
   const creatureId = creature._id;
-  let props = getActiveProperties({
+  recomputeInactiveProperties(creatureId);
+  let props = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    inactive: {$ne: true},
+    type: {$in: calculationPropertyTypes},
+  }).fetch();
+  /*getActiveProperties({
     ancestorId: creatureId,
     filter: {type: {$in: calculationPropertyTypes}},
     includeUntoggled: true,
     // TODO filter out expensive fields, particularly icon field
-  });
+  });*/
   let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);

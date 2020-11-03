@@ -44,7 +44,13 @@ let CreaturePropertySchema = new SimpleSchema({
   icon: {
     type: storedIconsSchema,
     optional: true,
-  }
+  },
+  // Denormalised flag if this property is inactive on the sheet for any reason
+  // Including being disabled, or a decendent of a disabled property
+  inactive: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 for (let key in propertySchemasIndex){

@@ -8,7 +8,7 @@
     <div class="library-nodes">
       <v-fade-transition mode="out-in">
         <column-layout
-          v-if="$subReady.slotFillers && libraryNodes.length"
+          v-if="$subReady.slotFillers && libraryNodes && libraryNodes.length"
           wide-columns
         >
           <div
@@ -171,7 +171,7 @@ export default {
     },
     libraryNodes(){
       let filter = {};
-      if (this.model.slotTags.length){
+      if (this.model.slotTags && this.model.slotTags.length){
         filter.tags = {$all: this.model.slotTags};
       }
       if (this.model.slotType){

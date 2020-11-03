@@ -34,7 +34,7 @@ Meteor.publish('slotFillers', function(slotId){
     let filter = {
       'ancestors.id': {$in: libraryIds},
     };
-    if (slot.slotTags.length){
+    if (slot.slotTags && slot.slotTags.length){
       filter.tags = {$all: slot.slotTags};
     }
     if (slot.slotType){

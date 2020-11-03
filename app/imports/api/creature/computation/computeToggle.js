@@ -27,7 +27,7 @@ export default function computeToggle(toggle, memo){
     toggle.toggleResult = !!+toggle.condition;
   } else {
     let {value, errors} = evaluateCalculation(toggle.condition, memo);
-    toggle.toggleResult = value;
+    toggle.toggleResult = !!value;
     if (errors.length){
       toggle.errors = errors;
     }
