@@ -49,7 +49,7 @@
     </div>
     <div class="px-3 pb-3">
       <template
-        v-if="model.resources.attributesConsumed.length ||
+        v-if="model.resources && model.resources.attributesConsumed.length ||
           model.resources.itemsConsumed.length"
       >
         <attribute-consumed-view

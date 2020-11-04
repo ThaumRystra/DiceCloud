@@ -3,6 +3,8 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creaturePermissions.js';
+import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
+import VERSION from '/imports/constants/VERSION.js';
 
 let schema = new SimpleSchema({
   creatureId: {
@@ -28,8 +30,13 @@ Meteor.publish('singleCharacter', function(creatureId){
       ],
     });
     try {
-      assertViewPermission(creatureCursor.fetch()[0], userId);
+      let creature = creatureCursor.fetch()[0];
+      assertViewPermission(creature, userId);
+      if (creature.computeVersion !== VERSION){
+        recomputeCreatureById(creatureId)
+      }
     } catch (e){
+      console.error(e);
       return [];
     }
     return [

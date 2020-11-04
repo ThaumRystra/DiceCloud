@@ -102,12 +102,12 @@ export function recomputeCreatureByDoc(creature){
     'ancestors.id': creatureId,
     inactive: {$ne: true},
     type: {$in: calculationPropertyTypes},
+    // TODO filter out expensive fields, particularly icon field
   }).fetch();
   /*getActiveProperties({
     ancestorId: creatureId,
     filter: {type: {$in: calculationPropertyTypes}},
     includeUntoggled: true,
-    // TODO filter out expensive fields, particularly icon field
   });*/
   let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);

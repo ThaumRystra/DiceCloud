@@ -1,5 +1,6 @@
 import { pick, forOwn } from 'lodash';
 import Creatures from '/imports/api/creature/Creatures.js';
+import VERSION from '/imports/constants/VERSION.js';
 
 export default function writeCreatureVariables(memo, creatureId) {
   const fields = [
@@ -31,5 +32,8 @@ export default function writeCreatureVariables(memo, creatureId) {
     let condensedStat = pick(stat, fields);
     memo.creatureVariables[variableName] = condensedStat;
   });
-  Creatures.update(creatureId, {$set: {variables: memo.creatureVariables}});
+  Creatures.update(creatureId, {$set: {
+    variables: memo.creatureVariables,
+    computeVersion: VERSION,
+  }});
 }

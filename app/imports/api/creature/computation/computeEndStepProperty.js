@@ -34,6 +34,7 @@ function computeAction(prop, memo){
   if (prop.usesUsed >= prop.usesResult){
     prop.insufficientResources = true;
   }
+  if (!prop.resources) return;
   // Attributes consumed
   prop.resources.attributesConsumed.forEach((attConsumed, i) => {
     if (attConsumed.variableName){

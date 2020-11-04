@@ -96,6 +96,11 @@ let CreatureSchema = new SimpleSchema({
 		type: Number,
 		defaultValue: 0,
 	},
+  // Version of computation engine that was last used to compute this creature
+  computeVersion: {
+		type: String,
+    optional: true,
+	},
 	type: {
 		type: String,
 		defaultValue: 'pc',
