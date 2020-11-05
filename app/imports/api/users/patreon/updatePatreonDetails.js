@@ -61,7 +61,7 @@ const updateIdentity = Meteor.wrapAsync(function(accessToken, userId, callback){
     }
     try {
       let identity = JSON.parse(body);
-      let membership = identity.included[0];
+      let membership = identity.included && identity.included[0];
       let entitledAmount = membership && membership.attributes
         .currently_entitled_amount_cents || 0;
       writeEntitledCents(userId, entitledAmount);
