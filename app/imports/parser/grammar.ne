@@ -11,6 +11,7 @@
   import RollNode from '/imports/parser/parseTree/RollNode.js';
   import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
   import UnaryOperatorNode from '/imports/parser/parseTree/UnaryOperatorNode.js';
+  import NotOperatorNode from '/imports/parser/parseTree/NotOperatorNode.js';
 
 	import moo from 'moo';
 
@@ -35,6 +36,7 @@
     ternaryOperator: ['?', ':'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
+    notOperator: ['!'],
     additiveOperator: ['+', '-'],
     andOperator: ['&', '&&'],
     orOperator: ['|', '||'],
@@ -105,6 +107,10 @@ exponentExpression ->
 
 unaryExpression ->
   %additiveOperator _ unaryExpression {% d => new UnaryOperatorNode({operator: d[0].value, right: d[2]})%}
+| notExpression {% id %}
+
+notExpression ->
+  %notOperator _ notExpression {% d => new NotOperatorNode({right: d[2]})%}
 | callExpression {% id %}
 
 callExpression ->

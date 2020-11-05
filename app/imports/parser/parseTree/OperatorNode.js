@@ -13,7 +13,7 @@ export default class OperatorNode extends ParseNode {
     let leftNode = this.left[fn](scope, context);
     let rightNode = this.right[fn](scope, context);
     let left, right;
-    if (leftNode.type !== 'number' || rightNode.type !== 'number'){
+    if (!(leftNode instanceof ConstantNode) || !(rightNode instanceof ConstantNode)){
       return new OperatorNode({
         left: leftNode,
         right: rightNode,
