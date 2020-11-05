@@ -1,9 +1,12 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Slots
+      Build
     </v-toolbar-title>
-    <slots creature-id="creatureId" />
+    <slots
+      :creature-id="creatureId"
+      show-hidden-slots
+    />
   </dialog-base>
 </template>
 

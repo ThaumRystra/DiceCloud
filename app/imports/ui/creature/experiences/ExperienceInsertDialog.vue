@@ -1,5 +1,8 @@
 <template lang="html">
   <dialog-base>
+    <v-toolbar-title slot="toolbar">
+      Add Experience
+    </v-toolbar-title>
     <experience-form
       :start-as-milestone="startAsMilestone"
       :model="model"

@@ -1,6 +1,7 @@
 <template lang="html">
   <v-card
     :hover="hasClickListener"
+    :elevation="hovering ? 8 : undefined"
     class="toolbar-card"
     @click="$emit('click')"
   >
@@ -11,6 +12,8 @@
       :dark="isDark"
       :light="!isDark"
       @click="$emit('toolbarclick')"
+      @mouseover="hoverToolbar(true)"
+      @mouseleave="hoverToolbar(false)"
     >
       <slot name="toolbar" />
     </v-toolbar>
@@ -31,17 +34,27 @@
 				},
 			},
 		},
+    data(){ return {
+      hovering: false,
+    }},
 		computed: {
 			isDark(){
 				return isDarkColor(this.color);
 			},
 			hasClickListener(){
-	    	return this.$listeners && !!this.$listeners.click;
+        return this.$listeners && !!this.$listeners.click;
 			},
 			hasToolbarClickListener(){
-	    	return this.$listeners && !!this.$listeners.toolbarclick;
+        return this.$listeners && !!this.$listeners.toolbarclick;
 			},
-		}
+		},
+    methods: {
+      hoverToolbar(val){
+        this.hovering = this.$listeners &&
+          !!this.$listeners.toolbarclick &&
+          val;
+      }
+    }
 	};
 </script>
 

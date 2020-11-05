@@ -2,7 +2,7 @@
   <toolbar-card
     :id="model._id"
     :color="model.color"
-    @click="$emit('click')"
+    @toolbarclick="$emit('click')"
   >
     <template slot="toolbar">
       <v-toolbar-title>

@@ -21,11 +21,17 @@
         </v-card>
       </div>
       <div>
-        <v-card>
+        <toolbar-card
+          data-id="slot-card"
+          @toolbarclick="showSlotDialog"
+        >
+          <v-toolbar-title slot="toolbar">
+            Build
+          </v-toolbar-title>
           <v-card-text style="background-color: inherit;">
             <slots :creature-id="creatureId" />
           </v-card-text>
-        </v-card>
+        </toolbar-card>
       </div>
       <div>
         <v-card class="class-details">
@@ -110,12 +116,14 @@ import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
 import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import Slots from '/imports/ui/creature/slots/Slots.vue';
+import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 
 export default {
 	components: {
 		ColumnLayout,
 		NoteCard,
     Slots,
+    ToolbarCard,
 	},
 	props: {
 		creatureId: {
@@ -192,6 +200,15 @@ export default {
 					creatureId: this.creatureId,
           startAsMilestone: this.creature.variables.milestoneLevels &&
             !!this.creature.variables.milestoneLevels.value,
+				},
+			});
+    },
+    showSlotDialog(){
+      this.$store.commit('pushDialogStack', {
+				component: 'slot-details-dialog',
+				elementId: 'slot-card',
+				data: {
+					creatureId: this.creatureId,
 				},
 			});
     },
