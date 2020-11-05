@@ -34,6 +34,10 @@ let SlotSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  hideWhenFull: {
+    type: Boolean,
+    optional: true,
+  }
 });
 
 const ComputedOnlySlotSchema = new SimpleSchema({
@@ -53,7 +57,11 @@ const ComputedOnlySlotSchema = new SimpleSchema({
   totalFilled: {
     type: SimpleSchema.Integer,
     defaultValue: 0,
-  }
+  },
+  spaceLeft: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
 });
 
 const ComputedSlotSchema = new SimpleSchema()

@@ -8,6 +8,8 @@ export default function recomputeSlotFullness(ancestorId){
     let children = CreatureProperties.find({
       'parent.id': slot._id,
       removed: {$ne: true},
+    }, {
+      fields: {slotQuantityFilled: 1}
     }).fetch();
     let totalFilled = 0;
     children.forEach(child => {
@@ -17,9 +19,15 @@ export default function recomputeSlotFullness(ancestorId){
         totalFilled++;
       }
     });
-    if (slot.totalFilled !== totalFilled){
+    let spaceLeft;
+    if (slot.quantityExpected === 0){
+      spaceLeft = null;
+    } else {
+      spaceLeft = slot.quantityExpected - totalFilled;
+    }
+    if (slot.totalFilled !== totalFilled || slot.spaceLeft !== spaceLeft){
       CreatureProperties.update(slot._id, {
-        $set: {totalFilled},
+        $set: {totalFilled, spaceLeft},
       }, {
         selector: {type: 'propertySlot'}
       });

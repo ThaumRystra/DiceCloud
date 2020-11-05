@@ -54,15 +54,15 @@
       name="Advanced"
       standalone
     >
-      <smart-combobox
-        label="Tags"
-        multiple
-        chips
-        deletable-chips
-        :value="model.tags"
-        @change="change('tags', ...arguments)"
-      />
       <div class="layout row wrap justify-space-between">
+        <smart-switch
+          label="Hide when full"
+          style="width: 200px; flex-grow: 0;"
+          class="mx-2"
+          :value="model.hideWhenFull"
+          :error-messages="errors.hideWhenFull"
+          @change="change('hideWhenFull', ...arguments)"
+        />
         <smart-switch
           label="Ignored"
           style="width: 200px; flex-grow: 0;"
@@ -72,6 +72,14 @@
           @change="change('ignored', ...arguments)"
         />
       </div>
+      <smart-combobox
+        label="Tags"
+        multiple
+        chips
+        deletable-chips
+        :value="model.tags"
+        @change="change('tags', ...arguments)"
+      />
     </form-section>
   </div>
 </template>

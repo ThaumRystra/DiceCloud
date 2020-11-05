@@ -129,10 +129,6 @@ export default {
       type: String,
       required: true,
     },
-    numToFill: {
-      type: Number,
-      required: true,
-    },
   },
   data(){return {
     selectedNode: undefined,
@@ -194,8 +190,8 @@ export default {
         }
         if (
           node.type === 'slotFiller' &&
-          this.numToFill > 0 &&
-          node.slotQuantityFilled > this.numToFill
+          this.model.spaceLeft > 0 &&
+          node.slotQuantityFilled > this.model.spaceLeft
         ){
           return false;
         }

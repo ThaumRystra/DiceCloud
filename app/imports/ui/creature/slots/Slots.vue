@@ -38,7 +38,7 @@
         </v-list-tile>
       </v-list>
       <v-btn
-        v-if="!slot.quantityExpected || slot.quantityExpected > slot.totalFilled"
+        v-if="!slot.quantityExpected || slot.spaceLeft"
         icon
         :data-id="`slot-add-button-${slot._id}`"
         style="background-color: inherit;"
@@ -73,6 +73,9 @@ export default {
       type: String,
       required: true,
     },
+    showHiddenSlots: {
+      type: Boolean,
+    },
   },
   methods: {
     clickSlotChild({_id}){
@@ -85,15 +88,12 @@ export default {
     fillSlot(slot){
       let slotId = slot._id;
       let creatureId = this.creatureId;
-      let numToFill = slot.quantityExpected === 0 ?
-        0 : slot.quantityExpected - slot.totalFilled;
       this.$store.commit('pushDialogStack', {
         component: 'slot-fill-dialog',
         elementId: `slot-add-button-${slotId}`,
         data: {
           slotId,
           creatureId,
-          numToFill,
         },
         callback(node){
 					if(!node) return;
@@ -136,7 +136,13 @@ export default {
           removed: {$ne: true},
         }).fetch();
         return slot;
-      });
+      }).filter(slot => !( // Hide full and ignored slots
+        !this.showHiddenSlots &&
+        slot.hideWhenFull &&
+        slot.quantityExpected > 0 &&
+        slot.totalFilled >= slot.quantityExpected ||
+        slot.ignored
+      ));
     },
   },
 }
