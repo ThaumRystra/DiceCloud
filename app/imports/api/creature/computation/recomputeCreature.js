@@ -9,6 +9,7 @@ import writeAlteredProperties from '/imports/api/creature/computation/writeAlter
 import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
 import { recomputeDamageMultipliersById } from '/imports/api/creature/denormalise/recomputeDamageMultipliers.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
+import recomputeSlotFullness from '/imports/api/creature/denormalise/recomputeSlotFullness.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 
 export const recomputeCreature = new ValidatedMethod({
@@ -117,5 +118,6 @@ export function recomputeCreatureByDoc(creature){
   writeAlteredProperties(computationMemo);
   writeCreatureVariables(computationMemo, creatureId);
   recomputeDamageMultipliersById(creatureId);
+  recomputeSlotFullness(creatureId);
   return computationMemo;
 }

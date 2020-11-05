@@ -135,14 +135,6 @@ export default {
           'parent.id': slot._id,
           removed: {$ne: true},
         }).fetch();
-        slot.totalFilled = 0;
-        slot.children.forEach(child => {
-          if (child.type === 'slotFiller'){
-            slot.totalFilled += child.slotQuantityFilled;
-          } else {
-            slot.totalFilled++;
-          }
-        });
         return slot;
       });
     },

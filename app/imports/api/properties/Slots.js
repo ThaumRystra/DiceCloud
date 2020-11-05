@@ -50,6 +50,10 @@ const ComputedOnlySlotSchema = new SimpleSchema({
   'slotConditionErrors.$':{
     type: ErrorSchema,
   },
+  totalFilled: {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+  }
 });
 
 const ComputedSlotSchema = new SimpleSchema()
