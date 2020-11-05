@@ -21,7 +21,7 @@
       value: s => s.slice(1, -1),
     },
     name: {
-      match: /[a-zA-Z]+\w*?/,
+      match: /[a-zA-Z_]+/,
       type: moo.keywords({
         'keywords': ['d'],
       }),
