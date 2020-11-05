@@ -5,7 +5,6 @@ import { assertEditPermission } from '/imports/api/creature/creaturePermissions.
 import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import computeMemo from '/imports/api/creature/computation/computeMemo.js';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
 import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
 import { recomputeDamageMultipliersById } from '/imports/api/creature/denormalise/recomputeDamageMultipliers.js';
@@ -101,14 +100,18 @@ export function recomputeCreatureByDoc(creature){
   let props = CreatureProperties.find({
     'ancestors.id': creatureId,
     inactive: {$ne: true},
+    removed: {$ne: true},
     type: {$in: calculationPropertyTypes},
-    // TODO filter out expensive fields, particularly icon field
+  }, {
+    fields: { // Filter out potentially large fields
+      icon: 0,
+      summary: 0,
+      description: 0,
+    },
+    sort: {
+      order: 1,
+    }
   }).fetch();
-  /*getActiveProperties({
-    ancestorId: creatureId,
-    filter: {type: {$in: calculationPropertyTypes}},
-    includeUntoggled: true,
-  });*/
   let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
