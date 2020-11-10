@@ -26,4 +26,8 @@ export default class ParseNode {
       return this.roll(scope, context);
     }
 	}
+  // If traverse isn't implemented, just apply it to the current node
+  traverse(fn){
+    fn(this);
+  }
 }

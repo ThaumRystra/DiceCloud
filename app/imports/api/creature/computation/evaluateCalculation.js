@@ -1,98 +1,41 @@
 import computeStat from '/imports/api/creature/computation/computeStat.js';
-import math from '/imports/math.js';
+import { parse, CompilationContext } from '/imports/parser/parser.js';
+import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
+import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 /* Convert a calculation into a constant output and errors*/
-export default function evaluateCalculation(string, memo){
-  if (!string) return {errors: [], value: string};
+export default function evaluateCalculation(string, memo, fn = 'reduce'){
+  if (!string) return {
+    context: {errors: []},
+    result: new ConstantNode({value: string, type: 'string'}),
+  };
   let errors = [];
-  // Parse the string using mathjs
+  // Parse the string
   let calc;
   try {
-    calc = math.parse(string);
+    calc = parse(string);
   } catch (e) {
     errors.push({
       type: 'parsing',
       message: e.message || e
     });
-    return {errors, value: string};
+    return {
+      context: {errors},
+      result: new ConstantNode({value: string, type: 'string'}),
+    };
   }
   // Ensure all symbol nodes are defined and coputed
   calc.traverse(node => {
-    if (node.isSymbolNode){
+    if (node instanceof SymbolNode || node instanceof AccessorNode){
       let stat = memo.statsByVariableName[node.name];
       if (stat && !stat.computationDetails.computed){
         computeStat(stat, memo);
       }
     }
   });
-  // Replace all symbols with their subtitution
-  let substitutedCalc = calc.transform(
-    symbolSubtitutor(memo.statsByVariableName, errors)
-  );
-  // Evaluate the expression to a number or return with substitutions
-  try {
-    let value = substitutedCalc.evaluate(memo.statsByVariableName);
-    if (typeof value === 'object') value = value.toString();
-    return {errors, value};
-  } catch (e){
-    errors.push({
-      type: 'evaluation',
-      message: e.message || e
-    });
-    let value = substitutedCalc.toString();
-    return {errors, value};
-  }
-}
-
-// returns a function to replace all symbols with either their resolved value
-// or zero, keeping the errors
-function symbolSubtitutor(scope, errors){
-  return function(node){
-    // mark symbol nodes that are children of function nodes to be skipped
-    if (node.isFunctionNode){
-      let fn = node.fn;
-      if (fn && fn.isSymbolNode){
-        fn.skipReplacement = true;
-      }
-      return node;
-    } else if (node.isSymbolNode && node.skipReplacement !== true){
-      //bare symbols of name "stat", should search for stat.value
-      let stat = scope[node.name];
-      if (stat){
-        if (stat.value === undefined){
-          errors.push({
-            type: 'subsitution',
-            message: `${node.name} does not have a value, set to 0`
-          });
-          return new math.ConstantNode(0);
-        } else {
-          return new math.ConstantNode(stat.value);
-        }
-      } else {
-        try {
-          return new math.ConstantNode(node.evaluate(scope));
-        } catch (e) {
-          errors.push({
-            type: 'subsitution',
-            message: `${node.name} not found, set to 0`
-          });
-          return new math.ConstantNode(0);
-        }
-      }
-    } else if (node.isAccessorNode && node.object.isSymbolNode){
-      try {
-        let value = node.evaluate(scope);
-        if (value === undefined) throw 'Not found';
-        return new math.ConstantNode(value);
-      } catch (e) {
-        errors.push({
-          type: 'subsitution',
-          message: `${node.toString()} not found, set to 0`
-        });
-        return new math.ConstantNode(0);
-      }
-    } else {
-      return node;
-    }
-  }
+  // Evaluate
+  let context = new CompilationContext();
+  let result = calc[fn](memo.statsByVariableName, context);
+  return {result, context};
 }

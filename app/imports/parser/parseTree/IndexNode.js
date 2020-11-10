@@ -24,4 +24,9 @@ export default class IndexNode extends ParseNode {
   toString(){
     return `${this.array.toString()}[${this.index.toString()}]`;
   }
+  traverse(fn){
+    fn(this);
+    this.array.traverse(fn);
+    this.index.traverse(fn);
+  }
 }

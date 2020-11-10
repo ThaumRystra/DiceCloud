@@ -50,6 +50,10 @@ export default class CallNode extends ParseNode {
   toString(){
     return `${this.functionName}(${this.args.map(node => node.toString()).join(', ')})`;
   }
+  traverse(fn){
+    fn(this);
+    this.args.forEach(arg => arg.traverse(fn));
+  }
 }
 
 function castArgsToType({fn, scope, context, args, type}){
@@ -65,6 +69,5 @@ function castArgsToType({fn, scope, context, args, type}){
     })
   }
   if (resolvedArgs.failed) return resolvedArgs;
-  console.log({result})
   return result;
 }

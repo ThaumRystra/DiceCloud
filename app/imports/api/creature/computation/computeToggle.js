@@ -26,10 +26,10 @@ export default function computeToggle(toggle, memo){
   } else if (Number.isFinite(+toggle.condition)){
     toggle.toggleResult = !!+toggle.condition;
   } else {
-    let {value, errors} = evaluateCalculation(toggle.condition, memo);
-    toggle.toggleResult = !!value;
-    if (errors.length){
-      toggle.errors = errors;
+    let {result, context} = evaluateCalculation(toggle.condition, memo);
+    toggle.toggleResult = !!result.value;
+    if (context.errors.length){
+      toggle.errors = context.errors;
     }
   }
   toggle.computationDetails.computed = true;

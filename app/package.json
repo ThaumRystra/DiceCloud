@@ -29,7 +29,6 @@
     "dompurify": "^2.0.10",
     "lodash": "^4.17.20",
     "marked": "^0.8.2",
-    "mathjs": "^6.6.4",
     "meteor-node-stubs": "^0.3.3",
     "moo": "^0.5.1",
     "nearley": "^2.19.1",

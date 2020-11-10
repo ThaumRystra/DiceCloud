@@ -30,4 +30,8 @@ export default class UnaryOperatorNode extends ParseNode {
     let {right, operator} = this;
     return `${operator}${right.toString()}`;
   }
+  traverse(fn){
+    fn(this);
+    this.right.traverse(fn);
+  }
 }

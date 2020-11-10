@@ -12,4 +12,8 @@ export default class ArrayNode extends ParseNode {
   toString(){
     return `[${this.values.map(node => node.toString()).join(', ')}]`;
   }
+  traverse(fn){
+    fn(this);
+    this.values.forEach(value => value.traverse(fn));
+  }
 }

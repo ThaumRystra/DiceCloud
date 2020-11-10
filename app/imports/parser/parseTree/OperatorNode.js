@@ -53,4 +53,9 @@ export default class OperatorNode extends ParseNode {
     let {left, right, operator} = this;
     return `${left.toString()} ${operator} ${right.toString()}`;
   }
+  traverse(fn){
+    fn(this);
+    this.left.traverse(fn);
+    this.right.traverse(fn);
+  }
 }

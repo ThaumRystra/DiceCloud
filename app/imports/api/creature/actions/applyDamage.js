@@ -1,4 +1,4 @@
-import evaluateAndRollString from '/imports/api/creature/computation/afterComputation/evaluateAndRollString.js';
+import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 
 //if (Meteor.isServer){
 //  var sendWebhook = require('/imports/server/discord/webhook.js').default;
@@ -15,7 +15,7 @@ export default function applyDamage({
     ...creature.variables,
     ...actionContext,
   };
-  let {result, errors} = evaluateAndRollString(prop.amount, scope);
+  let {result, errors} = evaluateString(prop.amount, scope, 'reduce');
   if (Meteor.isClient){
     errors.forEach(e => console.error(e));
     console.log(`${result} ${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`);

@@ -37,9 +37,9 @@ function combineAttribute(stat, aggregator, memo){
     stat.modifier = Math.floor((stat.value - 10) / 2);
   }
   if (stat.attributeType === 'spellSlot'){
-    let {value, errors} = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
-    stat.spellSlotLevelValue = value,
-    stat.spellSlotLevelErrors = errors;
+    let {result, context} = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
+    stat.spellSlotLevelValue = result.value;
+    stat.spellSlotLevelErrors = context.errors;
   }
   stat.currentValue = stat.value - (stat.damage || 0);
   stat.hide = aggregator.hasNoEffects &&

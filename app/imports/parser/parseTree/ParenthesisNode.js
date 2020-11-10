@@ -20,4 +20,8 @@ export default class ParenthesisNode extends ParseNode {
   toString(){
     return `(${this.content.toString()})`;
   }
+  traverse(fn){
+    fn(this);
+    this.content.traverse(fn);
+  }
 }

@@ -1,4 +1,4 @@
-import math from '/imports/math.js';
+import roll from '/imports/parser/roll.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 
 export default function applyAttack({
@@ -8,7 +8,7 @@ export default function applyAttack({
   //targets,
   //actionContext
 }){
-  let result = math.roll(1, 20) + prop.rollBonusResult;
+  let result = roll(1, 20) + prop.rollBonusResult;
   insertCreatureLog.call({
     log: {
       text: `${prop.name} attack. ${result} to hit`,

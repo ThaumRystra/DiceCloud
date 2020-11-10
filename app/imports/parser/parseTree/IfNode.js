@@ -28,4 +28,10 @@ export default class IfNode extends ParseNode {
       });
     }
   }
+  traverse(fn){
+    fn(this);
+    this.condition.traverse(fn);
+    this.consequent.traverse(fn);
+    this.alternative.traverse(fn);
+  }
 }

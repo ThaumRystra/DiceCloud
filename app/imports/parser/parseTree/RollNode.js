@@ -59,4 +59,9 @@ export default class RollNode extends ParseNode {
   reduce(scope, context){
     return this.roll(scope, context).reduce(scope, context);
   }
+  traverse(fn){
+    fn(this);
+    this.left.traverse(fn);
+    this.right.traverse(fn);
+  }
 }

@@ -23,10 +23,10 @@ export default function computeEndStepProperty(prop, memo){
 
 function computeAction(prop, memo){
   // Uses
-  let {value, errors} = evaluateCalculation(prop.uses, memo);
-  prop.usesResult = value;
-  if (errors.length){
-    prop.usesErrors = errors;
+  let {result, context} = evaluateCalculation(prop.uses, memo);
+  prop.usesResult = result.value;
+  if (context.errors.length){
+    prop.usesErrors = context.errors;
   } else {
     delete prop.usesErrors;
   }
@@ -69,40 +69,40 @@ function computeAction(prop, memo){
 
 function computeAttack(prop, memo){
   // Roll bonus
-  let {value, errors} = evaluateCalculation(prop.rollBonus, memo);
-  prop.rollBonusResult = value;
-  if (errors.length){
-    prop.rollBonusErrors = errors;
+  let {result, context} = evaluateCalculation(prop.rollBonus, memo);
+  prop.rollBonusResult = result.value;
+  if (context.errors.length){
+    prop.rollBonusErrors = context.errors;
   } else {
     delete prop.rollBonusErrors;
   }
 }
 
 function computeSavingThrow(prop, memo){
-  let {value, errors} = evaluateCalculation(prop.dc, memo);
-  prop.dcResult = value;
-  if (errors.length){
-    prop.dcErrors = errors;
+  let {result, context} = evaluateCalculation(prop.dc, memo);
+  prop.dcResult = result.value;
+  if (context.errors.length){
+    prop.dcErrors = context.errors;
   } else {
     delete prop.dcErrors;
   }
 }
 
 function computeSpellList(prop, memo){
-  let {value, errors} = evaluateCalculation(prop.maxPrepared, memo);
-  prop.maxPreparedResult = value;
-  if (errors.length){
-    prop.maxPreparedErrors = errors;
+  let {result, context} = evaluateCalculation(prop.maxPrepared, memo);
+  prop.maxPreparedResult = result.value;
+  if (context.errors.length){
+    prop.maxPreparedErrors = context.errors;
   } else {
     delete prop.maxPreparedErrors;
   }
 }
 
 function computeSlot(prop, memo){
-  let {value, errors} = evaluateCalculation(prop.slotCondition, memo);
-  prop.slotConditionResult = value;
-  if (errors.length){
-    prop.slotConditionErrors = errors;
+  let {result, context} = evaluateCalculation(prop.slotCondition, memo);
+  prop.slotConditionResult = result.value;
+  if (context.errors.length){
+    prop.slotConditionErrors = context.errors;
   } else {
     delete prop.slotConditionErrors;
   }

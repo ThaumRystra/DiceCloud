@@ -24,4 +24,8 @@ export default class NotOperatorNode extends ParseNode {
     let {right} = this;
     return `!${right.toString()}`;
   }
+  traverse(fn){
+    fn(this);
+    this.right.traverse(fn);
+  }
 }

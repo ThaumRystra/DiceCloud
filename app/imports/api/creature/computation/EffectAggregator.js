@@ -4,10 +4,10 @@ export default class EffectAggregator{
   constructor(stat, memo){
     delete this.baseValueErrors;
     if (stat.baseValueCalculation){
-      let {value, errors} = evaluateCalculation(stat.baseValueCalculation, memo);
-      this.statBaseValue = value;
-      if (errors.length){
-        this.baseValueErrors = errors;
+      let {result, context} = evaluateCalculation(stat.baseValueCalculation, memo);
+      this.statBaseValue = result.value;
+      if (context.errors.length){
+        this.baseValueErrors = context.errors;
       }
       this.base = this.statBaseValue;
     } else {
