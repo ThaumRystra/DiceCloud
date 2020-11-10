@@ -1,6 +1,16 @@
 
-const VERSION = Meteor.isClient ? 'CLIENT' : process.env.SOURCE_VERSION || require('child_process')
-  .execSync('git rev-parse --short HEAD')
-  .toString().trim();
+const VERSION = Meteor.isClient ?
+  'CLIENT' :
+  process.env.SOURCE_VERSION || getVersionFromGit();
 
 export default VERSION;
+
+function getVersionFromGit(){
+  try {
+    return require('child_process')
+      .execSync('git rev-parse --short HEAD')
+      .toString().trim();
+  } catch (e){
+    return 'GIT_VERSION_FAIL'
+  }
+}
