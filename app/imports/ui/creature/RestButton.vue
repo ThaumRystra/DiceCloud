@@ -1,6 +1,7 @@
 <template lang="html">
   <v-btn
     :loading="loading"
+    :disabled="context.editPermission === false"
     outline
     style="width: 160px;"
     @click="rest"
@@ -16,6 +17,9 @@
 import restCreature from '/imports/api/creature/restCreature.js';
 
 export default {
+  inject: {
+    context: { default: {} }
+  },
   props:{
     type: {
       type: String,
