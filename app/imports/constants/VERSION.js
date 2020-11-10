@@ -1,7 +1,7 @@
 
 const VERSION = Meteor.isClient ?
   'CLIENT' :
-  process.env.SOURCE_VERSION || getVersionFromGit();
+  process.env.CONTAINER_VERSION || getVersionFromGit();
 
 export default VERSION;
 
