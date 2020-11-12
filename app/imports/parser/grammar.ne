@@ -36,12 +36,12 @@
     ternaryOperator: ['?', ':'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
-    notOperator: ['!'],
     additiveOperator: ['+', '-'],
     andOperator: ['&', '&&'],
     orOperator: ['|', '||'],
     stringDelimiters: ['\"', '\''],
     equalityOperator: ['=', '==', '===', '!=', '!=='],
+    notOperator: ['!'],
     relationalOperator: ['>', '<', '>=', '<='],
     brackets: ['(', ')', '{', '}', '[', ']'],
   });
@@ -67,14 +67,6 @@ ifStatement ->
   _ equalityExpression _ "?" _ equalityExpression _ ":" _ ifStatement {%
      d => new IfNode({condition: d[1], consequent: d[5], alternative: d[9]})
   %}
-| equalityExpression {% id %}
-
-equalityExpression ->
-  equalityExpression _ %equalityOperator _ relationalExpression {% d => operator(d, 'equality') %}
-| relationalExpression {% id %}
-
-relationalExpression ->
-  relationalExpression _ %relationalOperator _ orExpression {% d => operator(d, 'relation') %}
 | orExpression {% id %}
 
 orExpression ->
@@ -83,6 +75,14 @@ orExpression ->
 
 andExpression ->
   andExpression _ %andOperator _ additiveExpression {% d => operator(d, 'and') %}
+| equalityExpression {% id %}
+
+equalityExpression ->
+  equalityExpression _ %equalityOperator _ relationalExpression {% d => operator(d, 'equality') %}
+| relationalExpression {% id %}
+
+relationalExpression ->
+  relationalExpression _ %relationalOperator _ orExpression {% d => operator(d, 'relation') %}
 | additiveExpression {% id %}
 
 additiveExpression ->
