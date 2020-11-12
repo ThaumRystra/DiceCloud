@@ -60,6 +60,7 @@ function id(x) { return x[0]; }
   }
 let Lexer = lexer;
 let ParserRules = [
+    {"name": "spacedExpression", "symbols": ["_", "expression", "_"], "postprocess": d => d[1]},
     {"name": "expression", "symbols": ["ifStatement"], "postprocess": id},
     {"name": "ifStatement", "symbols": ["orExpression", "_", (lexer.has("ifOperator") ? {type: "ifOperator"} : ifOperator), "_", "orExpression", "_", (lexer.has("elseOperator") ? {type: "elseOperator"} : elseOperator), "_", "ifStatement"], "postprocess": 
         d => new IfNode({condition: d[0], consequent: d[4], alternative: d[8]})
@@ -132,5 +133,5 @@ let ParserRules = [
     {"name": "_", "symbols": []},
     {"name": "_", "symbols": [(lexer.has("space") ? {type: "space"} : space)], "postprocess": nuller}
 ];
-let ParserStart = "expression";
+let ParserStart = "spacedExpression";
 export default { Lexer, ParserRules, ParserStart };

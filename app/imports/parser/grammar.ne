@@ -61,6 +61,9 @@
 # Use the Moo lexer
 @lexer lexer
 
+spacedExpression ->
+  _ expression _ {% d => d[1] %}
+
 expression ->
   ifStatement {% id %}
 
