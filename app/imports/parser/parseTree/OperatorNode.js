@@ -36,9 +36,10 @@ export default class OperatorNode extends ParseNode {
       case '|':
       case '||': result = left || right; break;
       case '=':
-      case '==':
-      case '===': result = left == right; break;
-      case '!=':
+      case '==':  result = left == right; break;
+      case '===': result = left === right; break;
+      case '!=':  result = left != right; break;
+      case '!==': result = left !== right; break;
       case '>': result = left > right; break;
       case '<': result = left < right; break;
       case '>=': result = left >= right; break;
