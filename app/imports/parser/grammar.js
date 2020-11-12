@@ -26,7 +26,7 @@ function id(x) { return x[0]; }
     name: {
       match: /[a-zA-Z_]+/,
       type: moo.keywords({
-        'keywords': ['d'],
+        'keywords': ['d', 'true', 'false'],
       }),
     },
     space: {
@@ -35,7 +35,8 @@ function id(x) { return x[0]; }
     },
     separator: [',', ';'],
     period: ['.'],
-    ternaryOperator: ['?', ':'],
+    ifOperator: ['?'],
+    elseOperator: [':'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
@@ -59,9 +60,9 @@ function id(x) { return x[0]; }
   }
 let Lexer = lexer;
 let ParserRules = [
-    {"name": "expression", "symbols": ["ifStatement"], "postprocess": d => d[0]},
-    {"name": "ifStatement", "symbols": ["_", "equalityExpression", "_", {"literal":"?"}, "_", "equalityExpression", "_", {"literal":":"}, "_", "ifStatement"], "postprocess": 
-        d => new IfNode({condition: d[1], consequent: d[5], alternative: d[9]})
+    {"name": "expression", "symbols": ["ifStatement"], "postprocess": id},
+    {"name": "ifStatement", "symbols": ["orExpression", "_", (lexer.has("ifOperator") ? {type: "ifOperator"} : ifOperator), "_", "orExpression", "_", (lexer.has("elseOperator") ? {type: "elseOperator"} : elseOperator), "_", "ifStatement"], "postprocess": 
+        d => new IfNode({condition: d[0], consequent: d[4], alternative: d[8]})
           },
     {"name": "ifStatement", "symbols": ["orExpression"], "postprocess": id},
     {"name": "orExpression", "symbols": ["orExpression", "_", (lexer.has("orOperator") ? {type: "orOperator"} : orOperator), "_", "andExpression"], "postprocess": d => operator(d, 'or')},
@@ -122,9 +123,12 @@ let ParserRules = [
     {"name": "valueExpression", "symbols": ["name"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["number"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["string"], "postprocess": id},
+    {"name": "valueExpression", "symbols": ["boolean"], "postprocess": id},
     {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": d => new ConstantNode({value: +d[0].value, type: 'number'})},
     {"name": "name", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => new SymbolNode({name: d[0].value})},
     {"name": "string", "symbols": [(lexer.has("string") ? {type: "string"} : string)], "postprocess": d => new ConstantNode({value: d[0].value, type: 'string'})},
+    {"name": "boolean", "symbols": [{"literal":"true"}], "postprocess": d => new ConstantNode({value: true, type: 'boolean'})},
+    {"name": "boolean", "symbols": [{"literal":"false"}], "postprocess": d => new ConstantNode({value: false, type: 'boolean'})},
     {"name": "_", "symbols": []},
     {"name": "_", "symbols": [(lexer.has("space") ? {type: "space"} : space)], "postprocess": nuller}
 ];

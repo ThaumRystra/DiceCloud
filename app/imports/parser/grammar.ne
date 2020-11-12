@@ -24,7 +24,7 @@
     name: {
       match: /[a-zA-Z_]+/,
       type: moo.keywords({
-        'keywords': ['d'],
+        'keywords': ['d', 'true', 'false'],
       }),
     },
     space: {
@@ -33,7 +33,8 @@
     },
     separator: [',', ';'],
     period: ['.'],
-    ternaryOperator: ['?', ':'],
+    ifOperator: ['?'],
+    elseOperator: [':'],
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
@@ -61,11 +62,11 @@
 @lexer lexer
 
 expression ->
-  ifStatement {% d => d[0] %}
+  ifStatement {% id %}
 
 ifStatement ->
-  _ equalityExpression _ "?" _ equalityExpression _ ":" _ ifStatement {%
-     d => new IfNode({condition: d[1], consequent: d[5], alternative: d[9]})
+  orExpression _ %ifOperator _ orExpression _ %elseOperator _ ifStatement {%
+     d => new IfNode({condition: d[0], consequent: d[4], alternative: d[8]})
   %}
 | orExpression {% id %}
 
@@ -146,6 +147,7 @@ valueExpression ->
   name {% id %}
 | number {% id %}
 | string {% id %}
+| boolean {% id %}
 
 # A number or a function of a number
 number ->
@@ -156,6 +158,10 @@ name ->
 
 string ->
   %string {% d => new ConstantNode({value: d[0].value, type: 'string'}) %}
+
+boolean ->
+  "true" {% d => new ConstantNode({value: true, type: 'boolean'}) %}
+| "false" {% d => new ConstantNode({value: false, type: 'boolean'}) %}
 
 _ ->
   null
