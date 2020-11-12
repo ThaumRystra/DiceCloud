@@ -74,7 +74,7 @@ orExpression ->
 | andExpression {% id %}
 
 andExpression ->
-  andExpression _ %andOperator _ additiveExpression {% d => operator(d, 'and') %}
+  andExpression _ %andOperator _ equalityExpression {% d => operator(d, 'and') %}
 | equalityExpression {% id %}
 
 equalityExpression ->
@@ -82,7 +82,7 @@ equalityExpression ->
 | relationalExpression {% id %}
 
 relationalExpression ->
-  relationalExpression _ %relationalOperator _ orExpression {% d => operator(d, 'relation') %}
+  relationalExpression _ %relationalOperator _ additiveExpression {% d => operator(d, 'relation') %}
 | additiveExpression {% id %}
 
 additiveExpression ->
