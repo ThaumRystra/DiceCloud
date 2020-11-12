@@ -33,15 +33,15 @@ function combineAttribute(stat, aggregator, memo){
   stat.value = getAggregatorResult(stat, aggregator);
   stat.baseValue = aggregator.statBaseValue;
   stat.baseValueErrors = aggregator.baseValueErrors;
-  if (stat.attributeType === 'ability') {
-    stat.modifier = Math.floor((stat.value - 10) / 2);
-  }
   if (stat.attributeType === 'spellSlot'){
     let {result, context} = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
     stat.spellSlotLevelValue = result.value;
     stat.spellSlotLevelErrors = context.errors;
   }
   stat.currentValue = stat.value - (stat.damage || 0);
+  if (stat.attributeType === 'ability') {
+    stat.modifier = Math.floor((stat.currentValue - 10) / 2);
+  }
   stat.hide = aggregator.hasNoEffects &&
     stat.baseValue === undefined ||
     undefined

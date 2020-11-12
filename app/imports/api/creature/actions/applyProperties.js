@@ -1,4 +1,5 @@
 import applyAction from '/imports/api/creature/actions/applyAction.js';
+import applyAdjustment from '/imports/api/creature/actions/applyAdjustment.js';
 import applyAttack from '/imports/api/creature/actions/applyAttack.js';
 import applyDamage from '/imports/api/creature/actions/applyDamage.js';
 import applyBuff from '/imports/api/creature/actions/applyBuff.js';
@@ -26,7 +27,7 @@ function applyProperty(options){
       applyDamage(options);
       return true;
     case 'adjustment':
-      // applyAdjustment(options);
+      applyAdjustment(options);
       return true;
     case 'buff':
       applyBuff(options);

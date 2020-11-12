@@ -67,43 +67,28 @@ function computeAction(prop, memo){
   });
 }
 
-function computeAttack(prop, memo){
-  // Roll bonus
-  let {result, context} = evaluateCalculation(prop.rollBonus, memo);
-  prop.rollBonusResult = result.value;
+function computePropertyField(prop, memo, fieldName, fn){
+  let {result, context} = evaluateCalculation(prop[fieldName], memo, fn);
+  prop[`${fieldName}Result`] = result.value;
   if (context.errors.length){
-    prop.rollBonusErrors = context.errors;
+    prop[`${fieldName}Errors`] = context.errors;
   } else {
-    delete prop.rollBonusErrors;
+    delete prop[`${fieldName}Errors`];
   }
+}
+
+function computeAttack(prop, memo){
+  computePropertyField(prop, memo, 'rollBonus');
 }
 
 function computeSavingThrow(prop, memo){
-  let {result, context} = evaluateCalculation(prop.dc, memo);
-  prop.dcResult = result.value;
-  if (context.errors.length){
-    prop.dcErrors = context.errors;
-  } else {
-    delete prop.dcErrors;
-  }
+  computePropertyField(prop, memo, 'dc');
 }
 
 function computeSpellList(prop, memo){
-  let {result, context} = evaluateCalculation(prop.maxPrepared, memo);
-  prop.maxPreparedResult = result.value;
-  if (context.errors.length){
-    prop.maxPreparedErrors = context.errors;
-  } else {
-    delete prop.maxPreparedErrors;
-  }
+  computePropertyField(prop, memo, 'maxPrepared');
 }
 
 function computeSlot(prop, memo){
-  let {result, context} = evaluateCalculation(prop.slotCondition, memo);
-  prop.slotConditionResult = result.value;
-  if (context.errors.length){
-    prop.slotConditionErrors = context.errors;
-  } else {
-    delete prop.slotConditionErrors;
-  }
+  computePropertyField(prop, memo, 'slotCondition');
 }

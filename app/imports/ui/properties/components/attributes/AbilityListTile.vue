@@ -6,7 +6,9 @@
     <v-list-tile-action class="mr-4">
       <div class="display-1 mod">
         <template v-if="swapScoresAndMods">
-          {{ model.value }}
+          <span :class="{'primary--text': model.currentValue !== model.value}">
+            {{ model.currentValue }}
+          </span>
         </template>
         <template v-else>
           {{ numberToSignedString(model.modifier) }}
@@ -17,7 +19,9 @@
           {{ numberToSignedString(model.modifier) }}
         </template>
         <template v-else>
-          {{ model.value }}
+          <span :class="{'primary--text': model.currentValue !== model.value}">
+            {{ model.currentValue }}
+          </span>
         </template>
       </div>
     </v-list-tile-action>

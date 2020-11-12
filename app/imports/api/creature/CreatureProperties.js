@@ -255,6 +255,7 @@ export function damagePropertyWork({property, operation, value}){
     }, {
       selector: property
     });
+    return currentValue - damage;
   } else if (operation === 'increment'){
     let currentValue = property.value - (property.damage || 0);
     let currentDamage = property.damage;
@@ -268,8 +269,46 @@ export function damagePropertyWork({property, operation, value}){
     }, {
       selector: property
     });
+    return increment;
   }
 }
+
+const damagePropertiesByName = new ValidatedMethod({
+  name: 'CreatureProperties.damagePropertiesByName',
+  validate: new SimpleSchema({
+    creatureId: SimpleSchema.RegEx.Id,
+    variableName: {
+      type: String,
+    },
+    operation: {
+      type: String,
+      allowedValues: ['set', 'increment']
+    },
+    value: Number,
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 20,
+    timeInterval: 5000,
+  },
+  run({creatureId, variableName, operation, value}) {
+		// Check permissions
+    assertEditPermission(creatureId, this.userId);
+    CreatureProperties.find({
+      'ancestors.id': creatureId,
+      variableName,
+      removed: {$ne: false},
+      inactive: {$ne: true},
+    }).forEach(property => {
+      // Check if property can take damage
+      let schema = CreatureProperties.simpleSchema(property);
+      if (!schema.allowsKey('damage')) return;
+      // Damage the property
+      damagePropertyWork({property: property, operation, value})
+    });
+    recomputeCreature.call({charId: creatureId});
+  }
+})
 
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',
@@ -300,6 +339,58 @@ const damageProperty = new ValidatedMethod({
 		}
 		damagePropertyWork({property: currentProperty, operation, value})
 		recomputeCreatures(currentProperty);
+  },
+});
+
+const dealDamage = new ValidatedMethod({
+  name: 'creatureProperties.dealDamage',
+  validate: new SimpleSchema({
+    creatureId: SimpleSchema.RegEx.Id,
+    damageType: {
+      type: String,
+    },
+    amount: Number,
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 20,
+    timeInterval: 5000,
+  },
+  run({creatureId, damageType, amount}) {
+    let creature = Creatures.findOne(creatureId, {
+      fields: {
+        damageMultipliers: 1,
+        owner: 1,
+        readers: 1,
+        writers: 1,
+      },
+    });
+		// Check permissions
+    assertEditPermission(creatureId, this.userId);
+    let healthBars = CreatureProperties.find({
+      'ancestors.id': creatureId,
+      type: 'attribute',
+      attributeType:'healthBar',
+      removed: {$ne: true},
+      inactive: {$ne: true},
+    }, {
+      sort: {order: -1},
+    });
+    let multiplier = creature.damageMultipliers[damageType];
+    if (multiplier === undefined) multiplier = 1;
+    let totalDamage = Math.floor(amount * multiplier);
+    let damageLeft = totalDamage;
+    healthBars.forEach(healthBar => {
+      if (damageLeft === 0) return;
+      let damageAdded = damagePropertyWork({
+        property: healthBar,
+        operation: 'increment',
+        value: damageLeft,
+      });
+      damageLeft -= damageAdded;
+    });
+    recomputeCreature.call({charId: creatureId});
+    return totalDamage;
   },
 });
 
@@ -476,6 +567,8 @@ export {
   duplicateProperty,
 	insertPropertyFromLibraryNode,
 	updateProperty,
+  dealDamage,
+  damagePropertiesByName,
 	damageProperty,
   adjustQuantity,
   selectAmmoItem,

@@ -23,6 +23,11 @@ const AdjustmentSchema = new SimpleSchema({
 		type: String,
     optional: true,
 	},
+  operation: {
+    type: String,
+    allowedValues: ['set', 'increment'],
+    defaultValue: 'increment',
+  },
 });
 
 export { AdjustmentSchema };

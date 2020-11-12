@@ -8,7 +8,7 @@ export default function applyAttack({
   //targets,
   //actionContext
 }){
-  let result = roll(1, 20) + prop.rollBonusResult;
+  let result = roll(1, 20)[0] + prop.rollBonusResult;
   insertCreatureLog.call({
     log: {
       text: `${prop.name} attack. ${result} to hit`,

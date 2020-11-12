@@ -1,8 +1,8 @@
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
-import { dealDamage } from '/imports/api/creature/CreatureProperties.js';
+import { damagePropertiesByName } from '/imports/api/creature/CreatureProperties.js';
 
-export default function applyDamage({
+export default function applyAdjustment({
   prop,
   creature,
   targets,
@@ -17,7 +17,7 @@ export default function applyDamage({
     var {result, errors} = evaluateString(prop.amount, scope, 'reduce');
     if (typeof result !== 'number') {
       return insertCreatureLog.call({ log: {
-        text: errors.join(', '),
+        text: errors.join(', ') || 'Something went wrong',
         creatureId: creature._id,
       }});
     }
@@ -32,30 +32,23 @@ export default function applyDamage({
       if (prop.target === 'each'){
         result = evaluateString(prop.amount, scope, 'reduce');
       }
-      let damageDealt = dealDamage.call({
+      damagePropertiesByName.call({
         creatureId: target._id,
-        damageType: prop.damageType,
-        amount: result,
+        variableName: prop.stat,
+        operation: prop.operation || 'increment',
+        value: result
       });
       insertCreatureLog.call({
         log: {
-          text: `Recieved ${damageDealt} ${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`,
+          text: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''} ${-result}`,
           creatureId: target._id,
         }
       });
-      if (target._id !== creature._id){
-        insertCreatureLog.call({
-          log: {
-            text: `Dealt ${damageDealt} ${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`,
-            creatureId: creature._id,
-          }
-        });
-      }
     });
   } else {
     insertCreatureLog.call({
       log: {
-        text: `${result} ${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`,
+        text: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''} ${-result}`,
         creatureId: creature._id,
       }
     });

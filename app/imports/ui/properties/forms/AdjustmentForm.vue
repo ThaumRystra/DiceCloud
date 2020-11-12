@@ -20,6 +20,15 @@
       />
     </div>
     <smart-select
+      label="Operation"
+      class="mx-1"
+      style="flex-basis: 300px;"
+      :items="adjustmentOps"
+      :value="model.operation"
+      :error-messages="errors.operation"
+      @change="change('operation', ...arguments)"
+    />
+    <smart-select
       v-if="parentTarget !== 'self'"
       label="Target"
       :hint="targetOptionHint"
@@ -52,6 +61,12 @@ export default {
       default: undefined,
 		},
 	},
+  data(){return {
+    adjustmentOps: [
+      {text: 'Damage', value: 'increment'},
+      {text: 'Set', value: 'set'},
+    ],
+  }},
 	computed: {
 		targetOptions(){
 			if (this.parentTarget === 'singleTarget') {
