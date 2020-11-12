@@ -380,6 +380,7 @@ const dealDamage = new ValidatedMethod({
     if (multiplier === undefined) multiplier = 1;
     let totalDamage = Math.floor(amount * multiplier);
     let damageLeft = totalDamage;
+    if (damageType === 'healing') damageLeft = -totalDamage;
     healthBars.forEach(healthBar => {
       if (damageLeft === 0) return;
       let damageAdded = damagePropertyWork({
