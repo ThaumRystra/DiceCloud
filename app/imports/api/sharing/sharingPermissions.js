@@ -88,11 +88,11 @@ export function assertDocEditPermission(doc, userId){
 }
 
 export function assertViewPermission(doc, userId) {
-  assertIdValid(userId);
   assertdocExists(doc);
+  if (doc.public) return true;
+  assertIdValid(userId);
   if (
     doc.owner === userId ||
-    doc.public ||
     _.contains(doc.readers, userId) ||
     _.contains(doc.writers, userId)
   ){

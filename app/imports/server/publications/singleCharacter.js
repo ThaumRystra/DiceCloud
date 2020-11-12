@@ -17,27 +17,16 @@ Meteor.publish('singleCharacter', function(creatureId){
   schema.validate({ creatureId });
   this.autorun(function (){
     let userId = this.userId;
-    if (!userId) {
-      return [];
-    }
-    let creatureCursor = Creatures.find({
+    let creatureCursor
+    creatureCursor = Creatures.find({
       _id: creatureId,
-      $or: [
-        {readers: userId},
-        {writers: userId},
-        {owner: userId},
-        {public: true},
-      ],
     });
-    try {
-      let creature = creatureCursor.fetch()[0];
-      assertViewPermission(creature, userId);
-      if (creature.computeVersion !== VERSION){
-        recomputeCreatureById(creatureId)
-      }
-    } catch (e){
-      console.error(e);
-      return [];
+    let creature = creatureCursor.fetch()[0];
+    try { assertViewPermission(creature, userId) }
+    catch(e){ return [] }
+    if (creature.computeVersion !== VERSION){
+      try { recomputeCreatureById(creatureId) }
+      catch(e){ console.error(e) }
     }
     return [
       creatureCursor,

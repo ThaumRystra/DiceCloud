@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-
+import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
 const standardLibraryIds = [
   'SRDLibraryGA3XWsd',
 ];
@@ -41,24 +41,13 @@ let libraryIdSchema = new SimpleSchema({
 Meteor.publish('library', function(libraryId){
   libraryIdSchema.validate({libraryId});
   this.autorun(function (){
-    let libraryCursor
-    if (this.userId) {
-      libraryCursor = Libraries.find({
-        _id: libraryId,
-        $or: [
-          {owner: this.userId},
-          {writers: this.userId},
-          {readers: this.userId},
-          {public: true},
-        ],
-      });
-    } else {
-      libraryCursor = Libraries.find({
-        _id: libraryId,
-        public: true,
-      });
-    }
-    if (!libraryCursor.count()) return this.ready();
+    let userId = this.userId;
+    let libraryCursor = Libraries.find({
+      _id: libraryId,
+    });
+    let library = libraryCursor.fetch()[0];
+    try { assertViewPermission(library, userId) }
+    catch(e){ return [] }
     return [
       libraryCursor,
       LibraryNodes.find({
