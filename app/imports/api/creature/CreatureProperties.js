@@ -293,7 +293,15 @@ const damagePropertiesByName = new ValidatedMethod({
   },
   run({creatureId, variableName, operation, value}) {
 		// Check permissions
-    assertEditPermission(creatureId, this.userId);
+    let creature = Creatures.findOne(creatureId, {
+      fields: {
+        damageMultipliers: 1,
+        owner: 1,
+        readers: 1,
+        writers: 1,
+      },
+    });
+    assertEditPermission(creature, this.userId);
     CreatureProperties.find({
       'ancestors.id': creatureId,
       variableName,
@@ -366,7 +374,7 @@ const dealDamage = new ValidatedMethod({
       },
     });
 		// Check permissions
-    assertEditPermission(creatureId, this.userId);
+    assertEditPermission(creature, this.userId);
     let healthBars = CreatureProperties.find({
       'ancestors.id': creatureId,
       type: 'attribute',
