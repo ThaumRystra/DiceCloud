@@ -22,15 +22,16 @@
       value: s => s.slice(1, -1),
     },
     name: {
-      match: /[a-zA-Z_]+/,
+      match: /[a-zA-Z_]*[a-ce-zA-Z_][a-zA-Z0-9_]*/,
       type: moo.keywords({
-        'keywords': ['d', 'true', 'false'],
+        'keywords': ['true', 'false'],
       }),
     },
     space: {
       match: /\s+/,
       lineBreaks: true,
     },
+    diceOperator: ['d'],
     separator: [',', ';'],
     period: ['.'],
     ifOperator: ['?'],
@@ -98,11 +99,11 @@ multiplicativeExpression ->
 | rollExpression {% id %}
 
 rollExpression ->
-  rollExpression _ "d" _ exponentExpression {% d => new RollNode({left: d[0], right: d[4]}) %}
+  rollExpression _ %diceOperator _ exponentExpression {% d => new RollNode({left: d[0], right: d[4]}) %}
 | singleRollExpression {% id %}
 
 singleRollExpression ->
-  "d" _ exponentExpression {% d => new RollNode({left: new ConstantNode({value: 1, type: 'number'}), right: d[2]}) %}
+  "d" _ singleRollExpression {% d => new RollNode({left: new ConstantNode({value: 1, type: 'number'}), right: d[2]}) %}
 | exponentExpression {% id %}
 
 exponentExpression ->
