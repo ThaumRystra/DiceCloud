@@ -79,7 +79,11 @@ export default {
       name: 'Vinton',
       title: 'The Gravekeeper',
       avatar: 'vinton'
-    }],
+    },{
+      name: 'Lord of Junk',
+      title: 'Archwizard of the Odd',
+      avatar: 'lordOfJunk'
+    },],
   }},
 }
 </script>
