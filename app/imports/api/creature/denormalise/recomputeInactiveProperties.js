@@ -7,7 +7,6 @@ export default function recomputeInactiveProperties(ancestorId){
       {disabled: true}, // Everything can be disabled
       {type: 'buff', applied: false}, // Buffs can be applied
       {type: 'item', equipped: {$ne: true}},
-      {type: 'toggle', toggleResult: false},
       {type: 'spell', prepared: {$ne: true}, alwaysPrepared: {$ne: true}},
     ],
   };
