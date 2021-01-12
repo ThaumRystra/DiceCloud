@@ -9,10 +9,14 @@ export default function recomputeSlotFullness(ancestorId){
       'parent.id': slot._id,
       removed: {$ne: true},
     }, {
-      fields: {slotQuantityFilled: 1}
+      fields: {
+        slotQuantityFilled: 1,
+        type: 1
+      }
     }).fetch();
     let totalFilled = 0;
     children.forEach(child => {
+      console.log(child);
       if (child.type === 'slotFiller'){
         totalFilled += child.slotQuantityFilled;
       } else {
