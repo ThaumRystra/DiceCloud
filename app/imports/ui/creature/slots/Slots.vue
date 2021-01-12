@@ -131,16 +131,25 @@ export default {
           ],
         }
       }).map(slot => {
-        slot.children = CreatureProperties.find({
-          'parent.id': slot._id,
-          removed: {$ne: true},
-        }, {
-          sort: { order: 1 },
-        }).fetch();
+        if (
+          !this.showHiddenSlots &&
+          slot.quantityExpected === 0 &&
+          slot.hideWhenFull
+        ){
+          slot.children = []
+        } else {
+          slot.children = CreatureProperties.find({
+            'parent.id': slot._id,
+            removed: {$ne: true},
+          }, {
+            sort: { order: 1 },
+          }).fetch();
+        }
         return slot;
       }).filter(slot => !( // Hide full and ignored slots
         !this.showHiddenSlots &&
         slot.hideWhenFull &&
+        slot.quantityExpected > 0 &&
         slot.totalFilled >= slot.quantityExpected ||
         slot.ignored
       ));
