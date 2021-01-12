@@ -79,7 +79,7 @@
         class="stat"
       >
         <attribute-card
-          v-bind="stat"
+          :model="stat"
           :data-id="stat._id"
           @click="clickProperty({_id: stat._id})"
         />
@@ -91,8 +91,7 @@
         class="modifier"
       >
         <attribute-card
-          modifier
-          v-bind="modifier"
+          :model="modifier"
           :data-id="modifier._id"
           @click="clickProperty({_id: modifier._id})"
         />
@@ -105,7 +104,7 @@
       >
         <attribute-card
           modifier
-          v-bind="check"
+          :model="check"
           :data-id="check._id"
           @click="clickProperty({_id: check._id})"
         />
