@@ -141,7 +141,6 @@ export default {
       }).filter(slot => !( // Hide full and ignored slots
         !this.showHiddenSlots &&
         slot.hideWhenFull &&
-        slot.quantityExpected > 0 &&
         slot.totalFilled >= slot.quantityExpected ||
         slot.ignored
       ));
