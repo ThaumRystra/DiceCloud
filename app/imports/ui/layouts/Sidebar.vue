@@ -1,14 +1,5 @@
 <template>
   <div class="sidebar">
-    <v-alert
-      icon="priority_high"
-      type="error"
-      dismissible
-      :value="true"
-    >
-      This version of DiceCloud is in beta. Some data stored here may be destroyed by
-      future updates.
-    </v-alert>
     <v-layout
       v-if="!signedIn"
       row
