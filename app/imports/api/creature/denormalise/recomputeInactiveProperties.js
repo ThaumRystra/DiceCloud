@@ -15,28 +15,43 @@ export default function recomputeInactiveProperties(ancestorId){
     fields: {_id: 1},
   }).map(prop => prop._id);
 
-  // Set all the properties inactive that aren't already inactive but should be
+  // Deactivate relevant properties
+  // Inactive properties
   CreatureProperties.update({
     'ancestors.id': ancestorId,
-    $or: [{
-      '_id': {$in: disabledIds}
-    }, {
-      'ancestors.id': {$in: disabledIds}
-    }],
-    inactive: {$ne: true},
+    '_id': {$in: disabledIds},
+    $or: [{inactive: {$ne: true}}, {deactivatedByAncestor: true}],
   }, {
     $set: {inactive: true},
+    $unset: {deactivatedByAncestor: 1},
   }, {
     multi: true,
     selector: {type: 'any'},
   });
+  // Decendants of inactive properties
+  CreatureProperties.update({
+    'ancestors.id': {$eq: ancestorId, $in: disabledIds},
+    $or: [{inactive: {$ne: true}}, {deactivatedByAncestor: {$ne: true}}],
+  }, {
+    $set: {
+      inactive: true,
+      deactivatedByAncestor: true,
+    },
+  }, {
+    multi: true,
+    selector: {type: 'any'},
+  });
+
   // Remove inactive from all the properties that are inactive but shouldn't be
   CreatureProperties.update({
     'ancestors.id': {$eq: ancestorId, $nin: disabledIds},
     '_id': {$nin: disabledIds},
-    inactive: true,
+    $or: [{inactive: true}, {deactivatedByAncestor: true}],
   }, {
-    $unset: {inactive: 1},
+    $unset: {
+      inactive: 1,
+      deactivatedByAncestor: 1,
+    },
   }, {
     multi: true,
     selector: {type: 'any'},

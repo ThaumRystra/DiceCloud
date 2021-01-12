@@ -22,6 +22,7 @@ import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
 
 import '/imports/api/creature/actions/doAction.js';
+import '/imports/api/creature/creatureProperties/manageEquipment.js';
 
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
@@ -50,6 +51,15 @@ let CreaturePropertySchema = new SimpleSchema({
   inactive: {
     type: Boolean,
     optional: true,
+    index: 1,
+  },
+  // Denormalised flag if this property was made inactive by an inactive
+  // ancestor. True if this property has an inactive ancestor even if this
+  // property is itself inactive
+  deactivatedByAncestor: {
+    type: Boolean,
+    optional: true,
+    index: 1,
   },
 });
 
@@ -205,7 +215,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 const updateProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
   validate({_id, path}){
-		if (!_id) return false;
+		if (!_id) throw new Meteor.Error('No _id', '_id is required');
 		// We cannot change these fields with a simple update
 		switch (path[0]){
 			case 'type':

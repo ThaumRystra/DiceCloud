@@ -60,12 +60,12 @@
 
 <script>
 import CreatureProperties, {
-	updateProperty,
-	damageProperty,
+  updateProperty,
+  damageProperty,
   duplicateProperty,
-	pushToProperty,
-	pullFromProperty,
-	softRemoveProperty,
+  pushToProperty,
+  pullFromProperty,
+  softRemoveProperty,
   restoreProperty,
 } from '/imports/api/creature/CreatureProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
@@ -79,38 +79,39 @@ import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/Crea
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { get, findLast } from 'lodash';
+import { equipItem } from '/imports/api/creature/creatureProperties/manageEquipment.js';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
-	formIndex[key + 'Form'] = propertyFormIndex[key];
+  formIndex[key + 'Form'] = propertyFormIndex[key];
 }
 
 let viewerIndex = {};
 for (let key in propertyViewerIndex){
-	formIndex[key + 'Viewer'] = propertyViewerIndex[key];
+  formIndex[key + 'Viewer'] = propertyViewerIndex[key];
 }
 
 export default {
-	components: {
-		...formIndex,
-		...viewerIndex,
-		PropertyIcon,
-		DialogBase,
+  components: {
+    ...formIndex,
+    ...viewerIndex,
+    PropertyIcon,
+    DialogBase,
     PropertyToolbar,
-		CreaturePropertiesTree,
-	},
-	props: {
-		_id: String,
+    CreaturePropertiesTree,
+  },
+  props: {
+    _id: String,
     embedded: Boolean, // This dialog is embedded in a page
-		startInEditTab: Boolean,
-	},
-	data(){ return {
-		editing: !!this.startInEditTab,
-	}},
-	meteor: {
-		model(){
-			return CreatureProperties.findOne(this._id);
-		},
+    startInEditTab: Boolean,
+  },
+  data(){ return {
+    editing: !!this.startInEditTab,
+  }},
+  meteor: {
+    model(){
+      return CreatureProperties.findOne(this._id);
+    },
     editPermission(){
       try {
         assertEditPermission(this.creature, Meteor.userId());
@@ -119,7 +120,7 @@ export default {
         return false;
       }
     },
-	},
+  },
   computed: {
     creature(){
       if (!this.model) return;
@@ -135,8 +136,8 @@ export default {
     name: 'context',
     include: ['creature', 'editPermission'],
   },
-	methods: {
-		getPropertyName,
+  methods: {
+    getPropertyName,
     duplicate(){
       duplicateProperty.call({_id: this._id}, (error) => {
         if (error) {
@@ -149,35 +150,43 @@ export default {
         }
       });
     },
-		change({path, value, ack}){
-			updateProperty.call({_id: this._id, path, value}, (error) =>{
+    change({path, value, ack}){
+      console.log({path, value})
+      if (path && path[0] === 'equipped'){
+        equipItem.call({_id: this._id, equipped: value}, (error) =>{
+          if (error) console.warn(error);
+          ack && ack(error && error.reason || error);
+        });
+        return;
+      }
+      updateProperty.call({_id: this._id, path, value}, (error) =>{
         if (error) console.warn(error);
-				ack && ack(error && error.reason || error);
-			});
-		},
+        ack && ack(error && error.reason || error);
+      });
+    },
     damage({operation, value, ack}){
-			damageProperty.call({_id: this._id, operation, value}, (error) =>{
+      damageProperty.call({_id: this._id, operation, value}, (error) =>{
         if (error) console.warn(error);
-				ack && ack(error && error.reason || error);
-			});
-		},
-		push({path, value, ack}){
-			pushToProperty.call({_id: this._id, path, value}, (error) =>{
+        ack && ack(error && error.reason || error);
+      });
+    },
+    push({path, value, ack}){
+      pushToProperty.call({_id: this._id, path, value}, (error) =>{
         if (error) console.warn(error);
-				ack && ack(error && error.reason || error);
-			});
-		},
-		pull({path, ack}){
-			let itemId = get(this.model, path)._id;
-			path.pop();
-			pullFromProperty.call({_id: this._id, path, itemId}, (error) =>{
+        ack && ack(error && error.reason || error);
+      });
+    },
+    pull({path, ack}){
+      let itemId = get(this.model, path)._id;
+      path.pop();
+      pullFromProperty.call({_id: this._id, path, itemId}, (error) =>{
         if (error) console.warn(error);
-				ack && ack(error && error.reason || error);
-			});
-		},
-		remove(){
+        ack && ack(error && error.reason || error);
+      });
+    },
+    remove(){
       const _id = this._id;
-			softRemoveProperty.call({_id});
+      softRemoveProperty.call({_id});
       if (this.embedded){
         this.$emit('removed');
       } else {
@@ -190,15 +199,15 @@ export default {
           restoreProperty.call({_id});
         },
       });
-		},
-		selectSubProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `tree-node-${_id}`,
-				data: {_id},
-			});
-		}
-	}
+    },
+    selectSubProperty(_id){
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `tree-node-${_id}`,
+        data: {_id},
+      });
+    }
+  }
 };
 </script>
 
