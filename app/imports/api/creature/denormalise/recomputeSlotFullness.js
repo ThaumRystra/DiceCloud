@@ -16,7 +16,6 @@ export default function recomputeSlotFullness(ancestorId){
     }).fetch();
     let totalFilled = 0;
     children.forEach(child => {
-      console.log(child);
       if (child.type === 'slotFiller'){
         totalFilled += child.slotQuantityFilled;
       } else {

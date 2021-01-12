@@ -151,7 +151,6 @@ export default {
       });
     },
     change({path, value, ack}){
-      console.log({path, value})
       if (path && path[0] === 'equipped'){
         equipItem.call({_id: this._id, equipped: value}, (error) =>{
           if (error) console.warn(error);
