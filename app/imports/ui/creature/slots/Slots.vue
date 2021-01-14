@@ -41,6 +41,7 @@
         v-if="!slot.quantityExpected || slot.spaceLeft"
         icon
         :data-id="`slot-add-button-${slot._id}`"
+        class="slot-add-button"
         style="background-color: inherit;"
         @click="fillSlot(slot)"
       >

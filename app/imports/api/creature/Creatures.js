@@ -4,6 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
 
@@ -160,11 +161,25 @@ const insertCreature = new ValidatedMethod({
     assertUserHasPaidBenefits(this.userId);
 
 		// Create the creature document
-    let charId = Creatures.insert({
+    let creatureId = Creatures.insert({
 			owner: this.userId,
 		});
+    CreatureProperties.insert({
+      slotTags: ['base'],
+      quantityExpected: 1,
+      type: 'propertySlot',
+      name: 'Base',
+      description: 'Choose a starting point for your character, this will define the basic setup of your character sheet. Without a base, your sheet will be empty.',
+      hideWhenFull: true,
+      parent: {collection: 'creatures', id: creatureId},
+      ancestors: [{collection: 'creatures', id: creatureId}],
+      order: 0,
+      tags: [],
+      spaceLeft: 1,
+      totalFilled: 0,
+    });
 		this.unblock();
-		return charId;
+		return creatureId;
   },
 
 });

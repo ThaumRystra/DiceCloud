@@ -141,7 +141,12 @@
             if (error){
               console.error(error);
             } else {
-              this.$router.push({ path: `/character/${result}`})
+              this.$store.commit(
+                'setTabForCharacterSheet',
+                {id: result, tab: 4}
+              );
+              this.$store.commit('setShowBuildDialog', true);
+              this.$router.push({ path: `/character/${result}`});
             }
           });
         } else {

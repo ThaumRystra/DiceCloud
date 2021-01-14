@@ -119,38 +119,18 @@ import Slots from '/imports/ui/creature/slots/Slots.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 
 export default {
-	components: {
-		ColumnLayout,
-		NoteCard,
+  components: {
+    ColumnLayout,
+    NoteCard,
     Slots,
     ToolbarCard,
-	},
-	props: {
-		creatureId: {
+  },
+  props: {
+    creatureId: {
       type: String,
       required: true,
     },
-	},
-	meteor: {
-		notes(){
-			return CreatureProperties.find({
-				'ancestors.id': this.creatureId,
-				type: 'note',
-				removed: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
-		},
-		creature(){
-			return Creatures.findOne(this.creatureId);
-		},
-    classLevels(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        filter: {type: 'classLevel'},
-      });
-    },
-	},
+  },
   computed: {
     highestClassLevels(){
       let highestLevels = {};
@@ -171,48 +151,74 @@ export default {
       return highestLevelsList;
     },
   },
-	methods: {
-		showCharacterForm(){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-form-dialog',
-				elementId: 'creature-summary',
-				data: {
-					_id: this.creatureId,
-				},
-			});
-		},
+  mounted(){
+    if (this.$store.state.showBuildDialog){
+      this.$store.commit('setShowBuildDialog', false);
+      this.showSlotDialog();
+    }
+  },
+  meteor: {
+    notes(){
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'note',
+        removed: {$ne: true},
+      }, {
+        sort: {order: 1},
+      });
+    },
+    creature(){
+      return Creatures.findOne(this.creatureId);
+    },
+    classLevels(){
+      return getActiveProperties({
+        ancestorId: this.creatureId,
+        filter: {type: 'classLevel'},
+      });
+    },
+  },
+  methods: {
+    showCharacterForm(){
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-form-dialog',
+        elementId: 'creature-summary',
+        data: {
+          _id: this.creatureId,
+        },
+      });
+    },
     addExperience(){
       this.$store.commit('pushDialogStack', {
-				component: 'experience-insert-dialog',
-				elementId: 'experience-add-button',
-				data: {
-					creatureIds: [this.creatureId],
+        component: 'experience-insert-dialog',
+        elementId: 'experience-add-button',
+        data: {
+          creatureIds: [this.creatureId],
           startAsMilestone: this.creature.variables.milestoneLevels &&
             !!this.creature.variables.milestoneLevels.value,
-				},
-			});
+        },
+      });
     },
     showExperienceList(){
       this.$store.commit('pushDialogStack', {
-				component: 'experience-list-dialog',
-				elementId: 'experience-info-button',
-				data: {
-					creatureId: this.creatureId,
+        component: 'experience-list-dialog',
+        elementId: 'experience-info-button',
+        data: {
+          creatureId: this.creatureId,
           startAsMilestone: this.creature.variables.milestoneLevels &&
             !!this.creature.variables.milestoneLevels.value,
-				},
-			});
+        },
+      });
     },
     showSlotDialog(){
       this.$store.commit('pushDialogStack', {
-				component: 'slot-details-dialog',
-				elementId: 'slot-card',
-				data: {
-					creatureId: this.creatureId,
-				},
-			});
+        component: 'slot-details-dialog',
+        elementId: 'slot-card',
+        data: {
+          creatureId: this.creatureId,
+        },
+      });
     },
-	},
+  },
 };
 </script>
 
