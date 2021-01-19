@@ -90,7 +90,7 @@ export default {
           order = -0.5;
         }
         let doc = event.element;
-          organizeDoc.call({
+        organizeDoc.call({
           docRef: {
             id: doc._id,
             collection: 'creatureProperties',

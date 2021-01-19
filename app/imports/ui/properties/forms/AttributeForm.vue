@@ -92,6 +92,7 @@
             class="damage-field text-xs-center"
             style="max-width: 300px;"
             hint="The attribute's final value is reduced by this amount"
+            disabled
             :value="model.damage"
             :error-messages="errors.damage"
             @change="change('damage', ...arguments)"

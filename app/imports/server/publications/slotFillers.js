@@ -33,6 +33,7 @@ Meteor.publish('slotFillers', function(slotId){
     // Build a filter for nodes in those libraries that match the slot
     let filter = {
       'ancestors.id': {$in: libraryIds},
+      removed: {$ne: true},
     };
     if (slot.slotTags && slot.slotTags.length){
       filter.tags = {$all: slot.slotTags};

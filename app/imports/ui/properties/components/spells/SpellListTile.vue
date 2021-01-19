@@ -27,7 +27,7 @@
         @change="setPrepared"
       />
       <v-icon
-        v-else
+        v-else-if="!hideHandle"
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
@@ -45,6 +45,7 @@ export default {
   mixins: [treeNodeViewMixin],
   props: {
     preparingSpells: Boolean,
+    hideHandle: Boolean,
   },
   computed: {
     hasClickListener(){
@@ -81,5 +82,8 @@ export default {
 }
 .spell {
   background-color: inherit;
+}
+.primary--text .v-icon, .primary--text .v-list__tile__sub-title {
+  color: #b71c1c
 }
 </style>

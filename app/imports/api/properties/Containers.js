@@ -38,6 +38,10 @@ const ComputedOnlyContainerSchema = new SimpleSchema({
     type: Number,
     optional: true,
   },
+  contentsValue:{
+    type: Number,
+    optional: true,
+  },
 });
 
 const ComputedContainerSchema = new SimpleSchema()

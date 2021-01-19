@@ -10,7 +10,6 @@
       <Sidebar />
     </v-navigation-drawer>
     <router-view
-      v-model="tabs"
       name="toolbar"
     />
     <v-toolbar
@@ -50,7 +49,6 @@
           style="width: 100%"
         >
           <router-view
-            v-model="tabs"
             name="toolbarExtension"
           />
         </div>
@@ -60,7 +58,7 @@
       <v-fade-transition
         mode="out-in"
       >
-        <router-view :tabs.sync="tabs" />
+        <router-view />
       </v-fade-transition>
     </v-content>
     <router-view

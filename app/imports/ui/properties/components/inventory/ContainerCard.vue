@@ -22,7 +22,7 @@
 <script>
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 export default {
 	components: {
@@ -53,14 +53,11 @@ export default {
 	},
   meteor: {
     items(){
-      return getActiveProperties({
-        ancestorId: this.model._id,
-        includeUnequipped: true,
-        filter: {
-          type: {$in: ['item', 'container']},
-          'parent.id': this.model._id,
-          equipped: {$ne: true},
-        },
+      return CreatureProperties.find({
+        'parent.id': this.model._id,
+        type: {$in: ['item', 'container']},
+        equipped: {$ne: true},
+        deactivatedByAncestor: {$ne: true},
       });
     },
   }

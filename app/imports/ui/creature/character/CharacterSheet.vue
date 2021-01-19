@@ -35,7 +35,11 @@
         class="fill-height"
       >
         <v-tabs-items
-          v-model="activeTab"
+          :value="$store.state.characterSheetTabs[$route.params.id]"
+          @change="e => $store.commit(
+            'setTabForCharacterSheet',
+            {id: $route.params.id, tab: e}
+          )"
         >
           <v-tab-item>
             <stats-tab :creature-id="creatureId" />
@@ -86,10 +90,6 @@
 		props: {
 			creatureId: {
         type: String,
-        required: true,
-      },
-      tabs: {
-        type: Number,
         required: true,
       },
 		},

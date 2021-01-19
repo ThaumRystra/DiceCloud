@@ -79,7 +79,7 @@
         class="stat"
       >
         <attribute-card
-          v-bind="stat"
+          :model="stat"
           :data-id="stat._id"
           @click="clickProperty({_id: stat._id})"
         />
@@ -91,8 +91,7 @@
         class="modifier"
       >
         <attribute-card
-          modifier
-          v-bind="modifier"
+          :model="modifier"
           :data-id="modifier._id"
           @click="clickProperty({_id: modifier._id})"
         />
@@ -105,7 +104,7 @@
       >
         <attribute-card
           modifier
-          v-bind="check"
+          :model="check"
           :data-id="check._id"
           @click="clickProperty({_id: check._id})"
         />
@@ -150,15 +149,18 @@
         class="spell-slots"
       >
         <v-card>
-          <v-list>
+          <v-list
+            two-line
+            subheader
+          >
             <v-subheader>Spell Slots</v-subheader>
             <spell-slot-list-tile
               v-for="spellSlot in spellSlots"
               :key="spellSlot._id"
-              v-bind="spellSlot"
+              :model="spellSlot"
               :data-id="spellSlot._id"
               @click="clickProperty({_id: spellSlot._id})"
-              @change="e => incrementChange(spellSlot._id, e)"
+              @cast="castSpellWithSlot(spellSlot._id)"
             />
           </v-list>
         </v-card>
@@ -321,6 +323,7 @@
   import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+  import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
 
   const getProperties = function(creature, filter,){
     if (!creature) return;
@@ -449,6 +452,22 @@
         softRemoveProperty.call({_id}, error => {
           if (error) console.error(error);
         });
+      },
+      castSpellWithSlot(slotId){
+        this.$store.commit('pushDialogStack', {
+					component: 'cast-spell-with-slot-dialog',
+					elementId: `spell-slot-cast-btn-${slotId}`,
+					data: {
+            creatureId: this.creatureId,
+            slotId,
+          },
+          callback({spellId, slotId} = {}){
+            if (!spellId) return;
+            castSpellWithSlot.call({spellId, slotId}, error => {
+              if (error) console.error(error);
+            });
+          },
+				});
       }
 		},
 	};

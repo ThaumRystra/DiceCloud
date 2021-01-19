@@ -12,7 +12,7 @@
             <item-list
               equipment
               :items="equippedItems"
-              :parent-ref="{id: creatureId, collection: 'creatures'}"
+              :parent-ref="equipmentParentRef"
             />
           </v-card-text>
         </toolbar-card>
@@ -27,7 +27,7 @@
           <v-card-text class="px-0">
             <item-list
               :items="carriedItems"
-              :parent-ref="{id: creatureId, collection: 'creatures'}"
+              :parent-ref="carriedParentRef"
             />
           </v-card-text>
         </toolbar-card>
@@ -51,7 +51,8 @@ import ContainerCard from '/imports/ui/properties/components/inventory/Container
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import { getParentRefByTag } from '/imports/api/creature/creatureProperties/manageEquipment.js';
+import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
 
 export default {
 	components: {
@@ -78,6 +79,7 @@ export default {
 				'ancestors.id': this.creatureId,
 				type: 'container',
 				removed: {$ne: true},
+        inactive: {$ne: true},
 			}, {
 				sort: {order: 1},
 			});
@@ -90,29 +92,43 @@ export default {
 				},
 				type: 'container',
 				removed: {$ne: true},
+        inactive: {$ne: true},
 			}, {
 				sort: {order: 1},
 			});
 		},
     carriedItems(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        includeUnequipped: true,
-        filter: {
-          type: 'item',
-          equipped: {$ne: true},
-          'parent.id': this.creatureId
-        },
-      });
+      return CreatureProperties.find({
+        'ancestors.id': {
+					$eq: this.creatureId,
+					$nin: this.containerIds
+				},
+				type: 'item',
+        equipped: {$ne: true},
+				removed: {$ne: true},
+        deactivatedByAncestor: {$ne: true},
+			}, {
+				sort: {order: 1},
+			});
     },
     equippedItems(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        filter: {
-          type: 'item',
-          equipped: true,
-        },
-      });
+      return CreatureProperties.find({
+        'ancestors.id': {
+					$eq: this.creatureId,
+				},
+				type: 'item',
+        equipped: true,
+				removed: {$ne: true},
+        inactive: {$ne: true},
+			}, {
+				sort: {order: 1},
+			});
+    },
+    equipmentParentRef(){
+      return getParentRefByTag(this.creatureId, INVENTORY_TAGS.equipment);
+    },
+    carriedParentRef(){
+      return getParentRefByTag(this.creatureId, INVENTORY_TAGS.carried);
     },
 	},
 	computed: {

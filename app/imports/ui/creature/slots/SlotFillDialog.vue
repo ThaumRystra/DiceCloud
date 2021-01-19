@@ -67,6 +67,9 @@
                 <code>{{ tag }}</code>,
               </span>
             </template>
+            <span v-if="model.spaceLeft">
+              that fills less than {{ model.spaceLeft }} slots
+            </span>
           </p>
         </div>
         <div
@@ -166,7 +169,9 @@ export default {
       return Creatures.findOne(this.creatureId);
     },
     libraryNodes(){
-      let filter = {};
+      let filter = {
+        removed: {$ne: true},
+      };
       if (this.model.slotTags && this.model.slotTags.length){
         filter.tags = {$all: this.model.slotTags};
       }

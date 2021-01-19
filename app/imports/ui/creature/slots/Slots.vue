@@ -41,6 +41,7 @@
         v-if="!slot.quantityExpected || slot.spaceLeft"
         icon
         :data-id="`slot-add-button-${slot._id}`"
+        class="slot-add-button"
         style="background-color: inherit;"
         @click="fillSlot(slot)"
       >
@@ -131,10 +132,20 @@ export default {
           ],
         }
       }).map(slot => {
-        slot.children = CreatureProperties.find({
-          'parent.id': slot._id,
-          removed: {$ne: true},
-        }).fetch();
+        if (
+          !this.showHiddenSlots &&
+          slot.quantityExpected === 0 &&
+          slot.hideWhenFull
+        ){
+          slot.children = []
+        } else {
+          slot.children = CreatureProperties.find({
+            'parent.id': slot._id,
+            removed: {$ne: true},
+          }, {
+            sort: { order: 1 },
+          }).fetch();
+        }
         return slot;
       }).filter(slot => !( // Hide full and ignored slots
         !this.showHiddenSlots &&

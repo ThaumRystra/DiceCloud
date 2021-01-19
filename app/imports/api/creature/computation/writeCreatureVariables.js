@@ -7,6 +7,7 @@ export default function writeCreatureVariables(memo, creatureId) {
     'name',
     'attributeType',
     'baseValue',
+    'spellSlotLevelValue',
     'damage',
     'decimal',
     'reset',

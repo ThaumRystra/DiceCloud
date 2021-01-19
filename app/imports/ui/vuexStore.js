@@ -14,6 +14,8 @@ const store = new Vuex.Store({
     drawer: undefined,
     rightDrawer: undefined,
     pageTitle: undefined,
+    characterSheetTabs: {},
+    showBuildDialog: false,
   },
   mutations: {
     toggleDrawer (state) {
@@ -31,6 +33,12 @@ const store = new Vuex.Store({
     setPageTitle (state, value) {
       state.pageTitle = value;
       document.title = value;
+    },
+    setTabForCharacterSheet(state, {tab, id}){
+      Vue.set(state.characterSheetTabs, id, tab);
+    },
+    setShowBuildDialog(state, value){
+      state.showBuildDialog = value;
     },
   },
 });

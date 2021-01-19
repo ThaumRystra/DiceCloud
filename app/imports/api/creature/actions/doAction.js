@@ -41,8 +41,7 @@ const doAction = new ValidatedMethod({
   },
 });
 
-function doActionWork({action, creature, target}){
-  let actionContext = {};
+export function doActionWork({action, creature, target, context = {}}){
   let decendantForest = nodesToTree({
     collection: CreatureProperties,
     ancestorId: action._id,
@@ -53,9 +52,9 @@ function doActionWork({action, creature, target}){
   }];
   applyProperties({
     forest: startingForest,
+    actionContext: context,
     creature,
     target,
-    actionContext
   });
 }
 

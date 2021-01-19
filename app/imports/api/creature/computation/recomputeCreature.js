@@ -97,12 +97,26 @@ export function recomputeCreatureById(creatureId){
  */
 export function recomputeCreatureByDoc(creature){
   const creatureId = creature._id;
-  recomputeInactiveProperties(creatureId);
+  // find all toggles that have conditions, even if they are inactive
+  let toggleIds = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    type: 'toggle',
+    removed: {$ne: true},
+    condition: { $exists: true },
+  }, {
+    fields: {_id: 1},
+  }).map(t => t._id);
+  // Find all the active properties
   let props = CreatureProperties.find({
     'ancestors.id': creatureId,
-    inactive: {$ne: true},
     removed: {$ne: true},
     type: {$in: calculationPropertyTypes},
+    $or: [
+      {inactive: {$ne: true}},
+      // But also the inactive computed toggles and their decendants
+      {'ancestors.id': {$in: toggleIds}},
+      {_id: {$in: toggleIds}},
+    ]
   }, {
     fields: { // Filter out potentially large fields
       icon: 0,
@@ -114,6 +128,7 @@ export function recomputeCreatureByDoc(creature){
     }
   }).fetch();
   let computationMemo = new ComputationMemo(props, creature);
+  recomputeInactiveProperties(creatureId);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
   writeCreatureVariables(computationMemo, creatureId);

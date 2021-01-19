@@ -78,11 +78,14 @@
         <v-tabs
           v-if="creature"
           slot="extension"
-          :value="value"
           centered
           grow
           max="100px"
-          @change="e => $emit('input', e)"
+          :value="$store.state.characterSheetTabs[$route.params.id]"
+          @change="e => $store.commit(
+            'setTabForCharacterSheet',
+            {id: $route.params.id, tab: e}
+          )"
         >
           <v-tab>
             Stats
@@ -118,12 +121,6 @@ import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 
 export default {
-  props: {
-    value: {
-      type: Number,
-      required: true,
-    },
-  },
   data(){return {
     theme,
   }},
