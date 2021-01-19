@@ -40,24 +40,7 @@
 import draggable from 'vuedraggable';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-
-function spellsWithSubheaders(spells = []){
-  let result = [];
-  let lastSpell = undefined;
-  let sortedSpells = [...spells].sort((a, b) => a.level - b.level)
-  sortedSpells.forEach(spell => {
-    if (spell.isSubheader) return;
-    if (!lastSpell || spell.level > lastSpell.level){
-      result.push({
-        isSubheader: true,
-        level: spell.level,
-      });
-    }
-    result.push(spell);
-    lastSpell = spell;
-  });
-  return result;
-}
+import spellsWithSubheaders from '/imports/ui/properties/components/spells/spellsWithSubheaders.js';
 
 export default {
   components: {

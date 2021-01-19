@@ -22,6 +22,7 @@ import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
 
 import '/imports/api/creature/actions/doAction.js';
+import '/imports/api/creature/actions/castSpellWithSlot.js';
 import '/imports/api/creature/creatureProperties/manageEquipment.js';
 
 let CreatureProperties = new Mongo.Collection('creatureProperties');
