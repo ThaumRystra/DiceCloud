@@ -42,8 +42,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
-  import anime from 'animejs';
   import '/imports/ui/dialogStack/dialogStackWindowEvents.js';
   import mockElement from '/imports/ui/dialogStack/mockElement.js';
   import DialogComponentIndex from '/imports/ui/dialogStack/DialogComponentIndex.js';
