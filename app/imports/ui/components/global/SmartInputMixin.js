@@ -26,6 +26,10 @@ export default {
     value: [String, Number, Date, Array, Object, Boolean],
     errorMessages: [String, Array],
     disabled: Boolean,
+    debounce: {
+      type: Number,
+      default: undefined,
+    },
   },
   watch: {
     focused(newFocus){
@@ -113,7 +117,9 @@ export default {
       return this.context.editPermission === false || this.disabled;
     },
     debounceTime() {
-      if (Number.isFinite(this.context.debounceTime)){
+      if (Number.isFinite(this.debounce)){
+        return this.debounce;
+      } else if (Number.isFinite(this.context.debounceTime)){
         return this.context.debounceTime;
       } else {
         return 750;
