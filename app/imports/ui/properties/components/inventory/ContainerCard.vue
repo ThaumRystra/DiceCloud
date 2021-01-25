@@ -56,6 +56,7 @@ export default {
       return CreatureProperties.find({
         'parent.id': this.model._id,
         type: {$in: ['item', 'container']},
+        removed: {$ne: true},
         equipped: {$ne: true},
         deactivatedByAncestor: {$ne: true},
       });
