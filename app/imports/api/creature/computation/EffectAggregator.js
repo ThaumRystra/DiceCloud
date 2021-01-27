@@ -4,8 +4,13 @@ export default class EffectAggregator{
   constructor(stat, memo){
     delete this.baseValueErrors;
     if (stat.baseValueCalculation){
-      let {result, context} = evaluateCalculation(stat.baseValueCalculation, memo);
+      let {
+        result,
+        context,
+        dependencies
+      } = evaluateCalculation(stat.baseValueCalculation, memo);
       this.statBaseValue = result.value;
+      stat.dependencies.push(...dependencies);
       if (context.errors.length){
         this.baseValueErrors = context.errors;
       }

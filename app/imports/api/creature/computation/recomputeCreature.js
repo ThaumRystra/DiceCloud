@@ -96,7 +96,9 @@ export function recomputeCreatureById(creatureId){
  * - Write the computed results back to the database
  */
 export function recomputeCreatureByDoc(creature){
+  console.time('recomputeCreatureByDoc');
   const creatureId = creature._id;
+  console.time('findToggles');
   // find all toggles that have conditions, even if they are inactive
   let toggleIds = CreatureProperties.find({
     'ancestors.id': creatureId,
@@ -106,6 +108,8 @@ export function recomputeCreatureByDoc(creature){
   }, {
     fields: {_id: 1},
   }).map(t => t._id);
+  console.timeEnd('findToggles');
+  console.time('findActiveProperties');
   // Find all the active properties
   let props = CreatureProperties.find({
     'ancestors.id': creatureId,
@@ -127,12 +131,28 @@ export function recomputeCreatureByDoc(creature){
       order: 1,
     }
   }).fetch();
+  console.timeEnd('findActiveProperties');
+  console.time('build computation memo');
   let computationMemo = new ComputationMemo(props, creature);
+  console.timeEnd('build computation memo');
+  console.time('recomputeInactiveProperties');
   recomputeInactiveProperties(creatureId);
+  console.timeEnd('recomputeInactiveProperties');
+  console.time('computeMemo');
   computeMemo(computationMemo);
+  console.timeEnd('computeMemo');
+  console.time('writeAlteredProperties');
   writeAlteredProperties(computationMemo);
+  console.timeEnd('writeAlteredProperties');
+  console.time('writeCreatureVariables');
   writeCreatureVariables(computationMemo, creatureId);
+  console.timeEnd('writeCreatureVariables');
+  console.time('recomputeDamageMultipliersById');
   recomputeDamageMultipliersById(creatureId);
+  console.timeEnd('recomputeDamageMultipliersById');
+  console.time('recomputeSlotFullness');
   recomputeSlotFullness(creatureId);
+  console.timeEnd('recomputeSlotFullness');
+  console.timeEnd('recomputeCreatureByDoc');
   return computationMemo;
 }

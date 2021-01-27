@@ -74,6 +74,7 @@ export default class ComputationMemo {
   registerProperty(prop){
     this.originalPropsById[prop._id] = cloneDeep(prop);
     this.propsById[prop._id] = prop;
+    prop.dependencies = [];
     prop.computationDetails = propDetails(prop);
     prop.ancestors.forEach(ancestor => {
       if (this.toggleIds.has(ancestor.id)){
@@ -104,6 +105,7 @@ export default class ComputationMemo {
           stats: [variableName],
           computationDetails: propDetailsByType.effect(),
           statBase: true,
+          dependencies: [],
         });
       }
       if (prop.baseProficiency){
@@ -113,6 +115,7 @@ export default class ComputationMemo {
           computationDetails: propDetailsByType.proficiency(),
           type: 'proficiency',
           statBase: true,
+          dependencies: [],
         });
       }
     } else {

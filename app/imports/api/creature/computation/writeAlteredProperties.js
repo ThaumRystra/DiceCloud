@@ -44,7 +44,8 @@ export default function writeAlteredProperties(memo){
     ids.forEach(id => {
       let op = undefined;
       let original = memo.originalPropsById[id];
-      op = addChangedKeysToOp(op, schema.objectKeys(), original, changed);
+      let keys = ['dependencies', ...schema.objectKeys()];
+      op = addChangedKeysToOp(op, keys, original, changed);
       if (op){
         bulkWriteOperations.push(op);
       }

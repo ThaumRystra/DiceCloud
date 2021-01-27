@@ -6,11 +6,13 @@ import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 /* Convert a calculation into a constant output and errors*/
 export default function evaluateCalculation(string, memo, fn = 'reduce'){
-  if (!string) return {
-    context: {errors: []},
-    result: new ConstantNode({value: string, type: 'string'}),
-  };
+  let dependencies = [];
   let errors = [];
+  if (!string) return {
+    context: {errors},
+    result: new ConstantNode({value: string, type: 'string'}),
+    dependencies,
+  };
   // Parse the string
   let calc;
   try {
@@ -23,19 +25,21 @@ export default function evaluateCalculation(string, memo, fn = 'reduce'){
     return {
       context: {errors},
       result: new ConstantNode({value: string, type: 'string'}),
+      dependencies,
     };
   }
-  // Ensure all symbol nodes are defined and coputed
+  // Ensure all symbol nodes are defined and computed
   calc.traverse(node => {
     if (node instanceof SymbolNode || node instanceof AccessorNode){
       let stat = memo.statsByVariableName[node.name];
       if (stat && !stat.computationDetails.computed){
         computeStat(stat, memo);
       }
+      if (stat) dependencies.push(stat._id || node.name, ...stat.dependencies);
     }
   });
   // Evaluate
   let context = new CompilationContext();
   let result = calc[fn](memo.statsByVariableName, context);
-  return {result, context};
+  return {result, context, dependencies};
 }
