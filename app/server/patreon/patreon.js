@@ -68,8 +68,8 @@ if (
         Authorization: "Bearer " + accessToken,
       },
       qs: {
-        "include": "memberships",
-        "fields[member]": "currently_entitled_amount_cents",
+        'include': 'memberships.currently_entitled_tiers',
+        'fields[tier]': 'amount_cents,title',
       }
     }, callback);
   };
@@ -112,9 +112,18 @@ if (
       }
       try {
         let identity = JSON.parse(body);
-        let membership = identity.included[0];
-        let entitledAmount = membership && membership.attributes
-          .currently_entitled_amount_cents || 0;
+        let entitledAmount = 0;
+        if (identity && identity.included){
+          identity.included.forEach(doc => {
+            if (
+              doc.type === 'tier' &&
+              doc.attributes &&
+              doc.attributes.amount_cents > entitledAmount
+            ){
+              entitledAmount = doc.attributes.amount_cents;
+            }
+          });
+        }
         let patreonUserId = identity.data.id;
         writeEntitledCentsAndId(userId, entitledAmount, patreonUserId);
         if (callback) callback();
