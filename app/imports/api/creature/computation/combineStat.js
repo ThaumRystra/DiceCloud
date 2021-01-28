@@ -46,6 +46,8 @@ function combineAttribute(stat, aggregator, memo){
   stat.currentValue = stat.value - (stat.damage || 0);
   if (stat.attributeType === 'ability') {
     stat.modifier = Math.floor((stat.currentValue - 10) / 2);
+  } else {
+    stat.modifier = undefined;
   }
   stat.hide = aggregator.hasNoEffects &&
     stat.baseValue === undefined ||
