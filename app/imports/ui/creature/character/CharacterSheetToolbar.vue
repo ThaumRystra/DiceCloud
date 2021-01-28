@@ -81,7 +81,7 @@
           centered
           grow
           max="100px"
-          :value="$store.state.characterSheetTabs[$route.params.id]"
+          :value="$store.getters.tabById($route.params.id)"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}

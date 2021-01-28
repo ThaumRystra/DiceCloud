@@ -17,6 +17,16 @@ const store = new Vuex.Store({
     characterSheetTabs: {},
     showBuildDialog: false,
   },
+  getters: {
+    // ...
+    tabById: (state) => (id) => {
+      if (id in state.characterSheetTabs){
+        return state.characterSheetTabs[id];
+      } else {
+        return 0;
+      }
+    }
+  },
   mutations: {
     toggleDrawer (state) {
       state.drawer = !state.drawer;

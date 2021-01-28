@@ -35,7 +35,7 @@
         class="fill-height"
       >
         <v-tabs-items
-          :value="$store.state.characterSheetTabs[$route.params.id]"
+          :value="$store.getters.tabById($route.params.id)"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}
