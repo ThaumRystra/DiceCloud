@@ -31,7 +31,7 @@
         <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
           *
         </template>
-        <template v-if="model.passiveBonus">
+        <template v-if="'passiveBonus' in model">
           ({{ passiveScore }})
         </template>
       </v-list-tile-title>

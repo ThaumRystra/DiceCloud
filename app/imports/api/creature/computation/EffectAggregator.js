@@ -24,7 +24,7 @@ export default class EffectAggregator{
     this.max = Number.POSITIVE_INFINITY;
     this.advantage = 0;
     this.disadvantage = 0;
-    this.passiveAdd = 0;
+    this.passiveAdd = undefined;
     this.fail = 0;
     this.set = undefined;
     this.conditional = [];
@@ -74,6 +74,7 @@ export default class EffectAggregator{
         break;
       case 'passiveAdd':
         // Add all passive adds together
+        if (this.passiveAdd === undefined) this.passiveAdd = 0;
         this.passiveAdd += result;
         break;
       case 'fail':
