@@ -1,5 +1,8 @@
 <template lang="html">
-  <dialog-base :color="model.color">
+  <dialog-base
+    :color="model.color"
+    dark-body
+  >
     <template slot="toolbar">
       <v-toolbar-title>
         {{ model.name }}
@@ -16,9 +19,9 @@
             :key="node._id"
           >
             <v-card
-              style="max-width: 500px;"
               hover
               ripple
+              class="slot-card"
               :class="{'primary': node._id === (selectedNode && selectedNode._id)}"
               :dark="node._id === (selectedNode && selectedNode._id)"
               @click="selectedNode = node"
@@ -26,8 +29,8 @@
               <v-img
                 v-if="node.picture"
                 :src="node.picture"
-                :max-height="200"
-                position="top center"
+                :height="200"
+                contain
               />
               <v-card-title primary-title>
                 <div>
@@ -211,4 +214,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.slot-card {
+  max-width: 500px;
+  width: 100%;
+  display: inline-block;
+}
 </style>
