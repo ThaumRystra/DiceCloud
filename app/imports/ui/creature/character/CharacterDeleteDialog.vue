@@ -55,7 +55,7 @@ export default {
 	},
 	meteor: {
 		name(){
-			let creature = Creatures.findOne(this.id);
+			let creature = Creatures.findOne(this.id, {fields: {name: 1}});
 			return creature && creature.name;
 		},
 	},

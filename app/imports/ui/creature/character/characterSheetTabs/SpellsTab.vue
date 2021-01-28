@@ -24,7 +24,7 @@
 
 <script>
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 
@@ -48,35 +48,42 @@ export default {
 	}},
 	meteor: {
 		spellLists(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        filter: {
-          type: 'spellList',
-        },
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'spellList',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
       });
 		},
     spellsWithoutList(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        excludeAncestors: this.spellListIds,
-        filter: {
-          type: 'spell',
+      return CreatureProperties.find({
+        'ancestors.id': {
+          $eq: this.creatureId,
+          $nin: this.spellListIds,
         },
-        options: {
-          sort: {
-            level: 1,
-            order: 1,
-          },
-        },
+        type: 'spell',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {
+          level: 1,
+          order: 1,
+        }
       });
     },
 		spellListsWithoutAncestorSpellLists(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        excludeAncestors: this.spellListIds,
-        filter: {
-          type: 'spellList',
+      return CreatureProperties.find({
+        'ancestors.id': {
+          $eq: this.creatureId,
+          $nin: this.spellListIds,
         },
+        type: 'spellList',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
       });
 		},
 	},

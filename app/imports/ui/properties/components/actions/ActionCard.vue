@@ -90,8 +90,8 @@
 <script>
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import doAction from '/imports/api/creature/actions/doAction.js';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
@@ -161,10 +161,12 @@ export default {
 	},
   meteor: {
     children(){
-      return getActiveProperties({
-        ancestorId: this.model._id,
-        filter: {'parent.id': this.model._id},
-        options: {sort: {order: 1}},
+      return CreatureProperties.find({
+        'parent.id': this.model._id,
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
       });
     },
   },

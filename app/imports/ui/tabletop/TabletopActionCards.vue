@@ -9,14 +9,18 @@
 </template>
 
 <script>
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
 
 function getProperties(ancestorId, type){
   if (!ancestorId) return [];
-  return getActiveProperties({
-    ancestorId,
-    filter: {type},
+  return CreatureProperties.find({
+    'ancestors.id': ancestorId,
+    type,
+    removed: {$ne: true},
+    inactive: {$ne: true},
+  }, {
+    sort: {order: 1}
   });
 }
 

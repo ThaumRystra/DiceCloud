@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+  import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 	import FeatureCard from '/imports/ui/properties/components/features/FeatureCard.vue';
 
@@ -33,11 +33,13 @@ import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 		},
 		meteor: {
 			features(){
-        return getActiveProperties({
-          ancestorId: this.creatureId,
-          filter: {
-            type: 'feature',
-          },
+        return CreatureProperties.find({
+          'ancestors.id': this.creatureId,
+          type: 'feature',
+          removed: {$ne: true},
+          inactive: {$ne: true},
+        }, {
+          sort: {order: 1}
         });
 			},
 		},

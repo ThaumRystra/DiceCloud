@@ -59,7 +59,6 @@ import {
   softRemoveProperty,
   restoreProperty
 } from '/imports/api/creature/CreatureProperties.js';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 
 export default {
@@ -122,15 +121,17 @@ export default {
   },
   meteor: {
     slots(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        filter: {
-          type: 'propertySlot',
-          $or: [
-            {slotConditionResult: true},
-            {slotConditionResult: {$exists: false}},
-          ],
-        }
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'propertySlot',
+        $or: [
+          {slotConditionResult: true},
+          {slotConditionResult: {$exists: false}},
+        ],
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
       }).map(slot => {
         if (
           !this.showHiddenSlots &&

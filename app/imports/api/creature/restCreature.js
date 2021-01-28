@@ -3,7 +3,6 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
-import getActiveProperties, { getActivePropertyFilter } from '/imports/api/creature/getActiveProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
 
@@ -43,11 +42,12 @@ const restCreature = new ValidatedMethod({
       resetFilter = {$in: ['shortRest', 'longRest']}
     }
     // Only apply to active properties
-    let filter = getActivePropertyFilter({
-      filter: {reset: resetFilter},
-      ancestorId: creatureId,
-      includeUntoggled: true,
-    });
+    let filter = {
+      'ancestors.id': creatureId,
+      reset: resetFilter,
+      removed: {$ne: true},
+      inactive: {$ne: true},
+    };
     // update all attribute's damage
     filter.type = 'attribute';
     CreatureProperties.update(filter, {
@@ -70,14 +70,18 @@ const restCreature = new ValidatedMethod({
     });
     // Reset half hit dice on a long rest, starting with the highest dice
     if (restType === 'longRest'){
-      let hitDice = getActiveProperties({
-        ancestorId: creatureId,
-        filter: {type: 'attribute', attributeType: 'hitDice'},
-        options: {fields: {
+      let hitDice = CreatureProperties.find({
+        'ancestors.id': creatureId,
+        type: 'attribute',
+        attributeType: 'hitDice',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        fields: {
           hitDiceSize: 1,
           damage: 1,
           value: 1,
-        }},
+        }
       });
       // Use a collator to do sorting in natural order
       let collator = new Intl.Collator('en', {
