@@ -60,7 +60,7 @@
 <script>
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 export default {
 	components: {
@@ -79,29 +79,32 @@ export default {
   }},
   meteor: {
     spells(){
-      return getActiveProperties({
-        ancestorId: this.model._id,
-        filter: {
-          type: 'spell',
-        },
-        options: {
-          sort: {
-            level: 1,
-            order: 1,
-          },
-        },
-        includeUnprepared: this.preparingSpells,
+      let filter = {
+        'ancestors.id': this.model._id,
+        type: 'spell',
+        removed: {$ne: true},
+      };
+      if (this.preparingSpells){
+        filter.deactivatedByAncestor = {$ne: true};
+      } else {
+        filter.inactive = {$ne: true};
+      }
+      return CreatureProperties.find(filter, {
+        sort: {
+          level: 1,
+          order: 1,
+        }
       });
     },
     numPrepared(){
-      return getActiveProperties({
-        ancestorId: this.model._id,
-        filter: {
-          type: 'spell',
-          prepared: true,
-          alwaysPrepared: {$ne: true},
-        },
-      }).length;
+      return CreatureProperties.find({
+        'ancestors.id': this.model._id,
+        type: 'spell',
+        removed: {$ne: true},
+        prepared: true,
+        alwaysPrepared: {$ne: true},
+        deactivatedByAncestor: {$ne: true},
+      }).count();
     },
     preparedError(){
       if (!this.model.maxPrepared) return;

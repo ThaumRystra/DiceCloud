@@ -27,6 +27,8 @@ export default function computeStat(stat, memo){
     let aggregator = new EffectAggregator(stat, memo)
     each(stat.computationDetails.effects, (effect) => {
       computeEffect(effect, memo);
+      if (effect._id) stat.dependencies.push(effect._id);
+      stat.dependencies.push(...effect.dependencies);
       if (!effect.computationDetails.disabledByToggle){
         aggregator.addEffect(effect);
       }

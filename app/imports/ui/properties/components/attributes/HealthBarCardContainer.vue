@@ -10,7 +10,7 @@
   import Creatures from '/imports/api/creature/Creatures.js';
 	import { damageProperty } from '/imports/api/creature/CreatureProperties.js';
 	import HealthBarCard from '/imports/ui/properties/components/attributes/HealthBarCard.vue';
-  import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+  import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 	export default {
 		components: {
@@ -30,16 +30,17 @@
         let creature = this.creature;
         if (!creature) return;
         let filter = {
+          'ancestors.id': creature._id,
           type: 'attribute',
 					attributeType: 'healthBar',
+          removed: {$ne: true},
+          inactive: {$ne: true},
         };
         if (creature.settings.hideUnusedStats){
           filter.hide = {$ne: true};
         }
-        return getActiveProperties({
-          ancestorId: creature._id,
-          filter,
-          options: {sort: {order: 1}},
+        return CreatureProperties.find(filter, {
+          sort: {order: 1}
         });
 			},
 		},

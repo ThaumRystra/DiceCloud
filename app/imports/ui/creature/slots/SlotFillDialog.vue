@@ -1,11 +1,26 @@
 <template lang="html">
-  <dialog-base :color="model.color">
+  <dialog-base
+    :color="model.color"
+    dark-body
+  >
     <template slot="toolbar">
       <v-toolbar-title>
         {{ model.name }}
       </v-toolbar-title>
+      <v-spacer />
+      <text-field
+        prepend-inner-icon="search"
+        regular
+        hide-details
+        :value="searchValue"
+        :debounce="200"
+        @change="searchChanged"
+        @keyup.enter="insert"
+      />
     </template>
-    <div class="library-nodes">
+    <div
+      class="library-nodes"
+    >
       <v-fade-transition mode="out-in">
         <column-layout
           v-if="$subReady.slotFillers && libraryNodes && libraryNodes.length"
@@ -16,9 +31,9 @@
             :key="node._id"
           >
             <v-card
-              style="max-width: 500px;"
               hover
               ripple
+              class="slot-card"
               :class="{'primary': node._id === (selectedNode && selectedNode._id)}"
               :dark="node._id === (selectedNode && selectedNode._id)"
               @click="selectedNode = node"
@@ -26,8 +41,8 @@
               <v-img
                 v-if="node.picture"
                 :src="node.picture"
-                :max-height="200"
-                position="top center"
+                :height="200"
+                contain
               />
               <v-card-title primary-title>
                 <div>
@@ -55,10 +70,16 @@
         >
           <h4>
             Nothing suitable was found in your libraries
+            <span v-if="searchValue">
+              matching "{{ searchValue }}"
+            </span>
           </h4>
           <p>
             This slot requires a {{ slotPropertyTypeName }}
-            <template v-if="model.slotTags.length">
+            <template v-if="model.slotTags.length == 1">
+              with the tag <code>{{ model.slotTags[0] }}</code>,
+            </template>
+            <template v-else-if="model.slotTags.length > 1">
               with the following tags:
               <span
                 v-for="(tag, index) in model.slotTags"
@@ -68,7 +89,7 @@
               </span>
             </template>
             <span v-if="model.spaceLeft">
-              that fills less than {{ model.spaceLeft }} slots
+              that fills less than {{ model.spaceLeft }} {{ model.spaceLeft == 1 && 'slot' || 'slots' }}
             </span>
           </p>
         </div>
@@ -96,7 +117,7 @@
       <v-btn
         flat
         :disabled="!selectedNode"
-        @click="$store.dispatch('popDialogStack', selectedNode)"
+        @click="insert"
       >
         Insert
       </v-btn>
@@ -135,6 +156,7 @@ export default {
   },
   data(){return {
     selectedNode: undefined,
+    searchValue: undefined,
   }},
   computed: {
     slotPropertyTypeName(){
@@ -155,6 +177,15 @@ export default {
       let prop = PROPERTIES[model.type]
       return prop && prop.name;
     },
+    searchChanged(val, ack){
+      this.selectedNode = undefined;
+      this.searchValue = val;
+      setTimeout(ack, 200);
+    },
+    insert(){
+      if (!this.selectedNode) return;
+      this.$store.dispatch('popDialogStack', this.selectedNode);
+    }
   },
   meteor: {
     $subscribe: {
@@ -172,6 +203,12 @@ export default {
       let filter = {
         removed: {$ne: true},
       };
+      if (this.searchValue){
+        filter.name = {
+          $regex: this.searchValue.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'),
+          $options: 'i'
+        };
+      }
       if (this.model.slotTags && this.model.slotTags.length){
         filter.tags = {$all: this.model.slotTags};
       }
@@ -211,4 +248,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.slot-card {
+  max-width: 500px;
+  width: 100%;
+  display: inline-block;
+}
 </style>

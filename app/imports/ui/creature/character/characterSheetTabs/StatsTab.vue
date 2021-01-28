@@ -322,7 +322,7 @@
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
-  import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+  import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
   import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
 
   const getProperties = function(creature, filter,){
@@ -330,10 +330,11 @@
     if (creature.settings.hideUnusedStats){
       filter.hide = {$ne: true};
     }
-    return getActiveProperties({
-      ancestorId: creature._id,
-      filter,
-      options: {sort: {order: 1}},
+    filter['ancestors.id'] = creature._id;
+    filter.removed = {$ne: true};
+    filter.inactive = {$ne: true};
+    return CreatureProperties.find(filter, {
+      sort: {order: 1}
     });
   };
 
@@ -422,9 +423,12 @@
 			},
       attacks(){
         let props = getProperties(this.creature, {type: 'attack'}).map(attack => {
-          attack.children = getActiveProperties({
-            ancestorId: attack._id,
-            options: {sort: {order: 1}},
+          attack.children = CreatureProperties.find({
+            'ancestors.id': attack._id,
+            removed: {$ne: true},
+            inactive: {$ne: true},
+          }, {
+            sort: {order: 1}
           });
           return attack;
         });

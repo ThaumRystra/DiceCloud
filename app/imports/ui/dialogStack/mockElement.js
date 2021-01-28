@@ -48,8 +48,11 @@ export default function mockElement({source, target, offset = {x: 0, y: 0}}){
   // Mock the source
   target.style.transform = `translate(${deltaLeft}px, ${deltaTop}px) ` +
 		`scale(${deltaWidth}, ${deltaHeight})`;
-
-	target.style.backgroundColor = getComputedStyle(source).backgroundColor;
+  // Mock the background color unless it's completely transparent
+  let backgroundColor = getComputedStyle(source).backgroundColor
+  if (backgroundColor !== 'rgba(0, 0, 0, 0)'){
+    target.style.backgroundColor = backgroundColor;
+  }
 	// Edge might not combine all border radii into a single value,
 	// So we just sample the top left one if we need to
 	let oldRadius = getComputedStyle(source).borderRadius ||
@@ -60,4 +63,4 @@ export default function mockElement({source, target, offset = {x: 0, y: 0}}){
 		getComputedStyle(source).boxShadow, deltaWidth, deltaHeight
 	);
 	target.style.setProperty('box-shadow', boxShadow, 'important');
-};
+}

@@ -6,10 +6,11 @@
     :error-messages="errors"
     :value="safeValue"
     :disabled="isDisabled"
-    box
+    :box="!regular"
     @input="input"
     @focus="focused = true"
     @blur="focused = false"
+    @keyup="e => $emit('keyup', e)"
   />
 </template>
 
@@ -18,5 +19,8 @@
 
   export default {
     mixins: [SmartInput],
+    props: {
+      regular: Boolean,
+    },
   };
 </script>

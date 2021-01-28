@@ -26,8 +26,13 @@ export default function computeToggle(toggle, memo){
   } else if (Number.isFinite(+toggle.condition)){
     toggle.toggleResult = !!+toggle.condition;
   } else {
-    let {result, context} = evaluateCalculation(toggle.condition, memo);
+    let {
+      result,
+      context,
+      dependencies,
+    } = evaluateCalculation(toggle.condition, memo);
     toggle.toggleResult = !!result.value;
+    toggle.dependencies.push(...dependencies);
     if (context.errors.length){
       toggle.errors = context.errors;
     }

@@ -34,13 +34,20 @@ function combineAttribute(stat, aggregator, memo){
   stat.baseValue = aggregator.statBaseValue;
   stat.baseValueErrors = aggregator.baseValueErrors;
   if (stat.attributeType === 'spellSlot'){
-    let {result, context} = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
+    let {
+      result,
+      context,
+      dependencies
+    } = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
     stat.spellSlotLevelValue = result.value;
     stat.spellSlotLevelErrors = context.errors;
+    stat.dependencies.push(...dependencies);
   }
   stat.currentValue = stat.value - (stat.damage || 0);
   if (stat.attributeType === 'ability') {
     stat.modifier = Math.floor((stat.currentValue - 10) / 2);
+  } else {
+    stat.modifier = undefined;
   }
   stat.hide = aggregator.hasNoEffects &&
     stat.baseValue === undefined ||
@@ -55,6 +62,7 @@ function combineSkill(stat, aggregator, memo){
       computeStat(ability, memo);
     }
     stat.abilityMod = ability.modifier;
+    stat.dependencies.push(ability._id, ...ability.dependencies);
   }
   // Combine all the child proficiencies
   stat.proficiency = stat.baseProficiency || 0;
@@ -66,6 +74,7 @@ function combineSkill(stat, aggregator, memo){
       prof.value > stat.proficiency
     ){
       stat.proficiency = prof.value;
+      stat.dependencies.push(prof._id, ...prof.dependencies);
     }
   }
   // Get the character's proficiency bonus to apply
@@ -75,6 +84,10 @@ function combineSkill(stat, aggregator, memo){
   if (typeof profBonus !== 'number' && memo.statsByVariableName['level']){
     let level = memo.statsByVariableName['level'].value;
     profBonus = Math.ceil(level / 4) + 1;
+    if (level._id) stat.dependencies.push(level._id);
+    if (level.dependencies) stat.dependencies.push(...level.dependencies);
+  } else {
+    stat.dependencies.push(profBonusStat._id, ...profBonusStat.dependencies);
   }
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;

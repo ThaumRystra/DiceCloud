@@ -3,7 +3,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import Creatures from '/imports/api/creature/Creatures.js';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 
 export const recomputeDamageMultipliers = new ValidatedMethod({
 
@@ -31,9 +31,13 @@ export const recomputeDamageMultipliers = new ValidatedMethod({
 
 export function recomputeDamageMultipliersById(creatureId){
   if (!creatureId) throw 'Creature ID is required';
-  let props = getActiveProperties({
-    ancestorId: creatureId,
-    filter: {type: 'damageMultiplier'},
+  let props = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    type: 'damageMultiplier',
+    removed: {$ne: true},
+    inactive: {$ne: true},
+  }, {
+    sort: {order: 1}
   });
 
   // Count of how many weakness, resistances and immunities each damage type has

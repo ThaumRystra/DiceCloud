@@ -20,7 +20,7 @@
 
 <script>
 import ItemTreeNode from '/imports/ui/properties/treeNodeViews/ItemTreeNode.vue';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
+import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import { selectAmmoItem } from '/imports/api/creature/CreatureProperties.js';
 import { findIndex } from 'lodash';
 export default {
@@ -39,15 +39,16 @@ export default {
   },
   meteor: {
     items(){
-      return getActiveProperties({
-        ancestorId: this.action.ancestors[0].id,
-        filter: {
-          tags: this.itemConsumed.tag,
-          equipped: true,
-        },
-        options: {
-          fields: {equipped: false},
-        }
+      return CreatureProperties.find({
+        'ancestors.id': this.action.ancestors[0].id,
+        type: 'item',
+        equipped: true,
+        tags: this.itemConsumed.tag,
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1},
+        fields: {equipped: false},
       });
     }
   },

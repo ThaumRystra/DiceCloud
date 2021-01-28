@@ -5,7 +5,66 @@
         Cast a Spell
       </v-toolbar-title>
       <v-spacer />
-      <v-input icon="search" />
+      <text-field
+        ref="focusFirst"
+        label="Name"
+        prepend-inner-icon="search"
+        regular
+        hide-details
+        :value="searchValue"
+        :error-messages="searchError"
+        :debounce="200"
+        @change="searchChanged"
+      />
+      <v-menu
+        v-model="filterMenuOpen"
+        left
+        :close-on-content-click="false"
+      >
+        <template #activator="{ on }">
+          <v-btn
+            icon
+            flat
+            :class="{'primary--text': filtersApplied}"
+            v-on="on"
+          >
+            <v-icon>filter_list</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-tile
+            v-for="filter in booleanFilters"
+            :key="filter.name"
+            style="height: 52px;"
+          >
+            <v-checkbox
+              v-model="filter.enabled"
+              style="flex-grow: 0; margin-right: 8px;"
+            />
+            <v-switch
+              v-model="filter.value"
+              :disabled="!filter.enabled"
+              :label="filter.name"
+            />
+          </v-list-tile>
+          <div class="layout row">
+            <v-btn
+              flat
+              @click="clearBooleanFilters"
+            >
+              Clear
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              flat
+              class="primary--text"
+              @click="filterMenuOpen = false"
+            >
+              Done
+            </v-btn>
+          </div>
+        </v-list>
+      </v-menu>
     </template>
     <split-list-layout>
       <template slot="left">
@@ -56,9 +115,11 @@
             v-else
             :key="spell._id"
             hide-handle
+            show-info-button
             :class="{ 'primary--text': selectedSpellId === spell._id}"
             :model="spell"
             @click="selectedSpellId = spell._id"
+            @show-info="spellDialog(spell._id)"
           />
         </template>
       </template>
@@ -119,6 +180,16 @@ export default {
     searchString: undefined,
     selectedSlotId: this.slotId,
     selectedSpellId: this.spellId,
+    searchValue: undefined,
+    searchError: undefined,
+    filterMenuOpen: false,
+    booleanFilters: {
+      verbal: {name: 'Verbal', enabled: false, value: false},
+      somatic: {name: 'Somatic', enabled: false, value: false},
+      material: {name: 'Material', enabled: false, value: false},
+      concentration: {name: 'Concentration', enabled: false, value: false},
+      ritual: {name: 'Ritual', enabled: false, value: false},
+    },
   }},
   computed: {
     computedSpells(){
@@ -135,7 +206,15 @@ export default {
       } else {
         return slot.spellSlotLevelValue >= spell.level;
       }
-    }
+    },
+    filtersApplied(){
+      for (let key in this.booleanFilters){
+        if (this.booleanFilters[key].enabled){
+          return true;
+        }
+      }
+      return false;
+    },
   },
   watch: {
     selectedSpell(spell){
@@ -152,16 +231,53 @@ export default {
       }
     },
   },
+  methods: {
+    clearBooleanFilters(){
+      for (let key in this.booleanFilters){
+        this.booleanFilters[key].enabled = false;
+      }
+    },
+    spellDialog(_id){
+      this.$store.commit('pushDialogStack', {
+				component: 'creature-property-dialog',
+				elementId: `spell-info-btn-${_id}`,
+				data: {_id},
+			});
+    },
+    searchChanged(val, ack){
+      this.searchValue = val;
+      setTimeout(ack, 200);
+    },
+  },
   meteor: {
     spells(){
       let slotLevel = this.selectedSlot && this.selectedSlot.spellSlotLevelValue || 0;
-      return CreatureProperties.find({
+      let filter = {
         'ancestors.id': this.creatureId,
         removed: {$ne: true},
         inactive: {$ne: true},
         prepared: true,
         level: {$lte: slotLevel},
-      }, {
+      };
+      // Apply the filters from the filter menu
+      for (let key in this.booleanFilters){
+        if (this.booleanFilters[key].enabled){
+          let value = this.booleanFilters[key].value;
+          if (key === 'material'){
+            filter[key] = {$exists: this.booleanFilters[key].value};
+          } else {
+            filter[key] = value ? true: {$ne: true};
+          }
+        }
+      }
+      // Apply the search string to the name field
+      if (this.searchValue){
+        filter.name = {
+          $regex: this.searchValue.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'),
+          $options: 'i'
+        };
+      }
+      return CreatureProperties.find(filter, {
         sort: {order: 1}
       });
     },
@@ -186,7 +302,7 @@ export default {
     },
     selectedSpell(){
       return CreatureProperties.findOne(this.selectedSpellId);
-    }
+    },
   },
 }
 </script>

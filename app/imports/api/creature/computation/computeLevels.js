@@ -7,6 +7,8 @@ export default function computeLevels(memo){
 
 function computeClassLevels(memo){
   forOwn(memo.classLevelsById, classLevel => {
+    //  class levels are mutually dependent
+    classLevel.dependencies.push(Object.keys(memo.classLevelsById));
     let name = classLevel.variableName;
     let stat = memo.statsByVariableName[name];
     if (!stat){
@@ -27,6 +29,7 @@ function computeTotalLevel(memo){
   if (!currentLevel){
     currentLevel = {
       value: 0,
+      dependencies: [],
       computationDetails: {
         builtIn: true,
         computed: true,
@@ -38,7 +41,10 @@ function computeTotalLevel(memo){
   if (!currentLevel.computationDetails.builtIn) return;
   let level = 0;
   for (let name in memo.classes){
-    level += memo.classes[name].level || 0;
+    let cls = memo.classes[name];
+    level += cls.level || 0;
+    if (cls._id) currentLevel.dependencies.push(cls._id);
+    if (cls.dependencies) currentLevel.dependencies.push(...cls.dependencies);
   }
-  memo.statsByVariableName['level'].value = level;
+  currentLevel.value = level;
 }

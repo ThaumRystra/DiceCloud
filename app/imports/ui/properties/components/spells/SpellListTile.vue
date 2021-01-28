@@ -33,6 +33,16 @@
       >
         drag_indicator
       </v-icon>
+      <v-btn
+        v-else-if="showInfoButton"
+        icon
+        flat
+        class="info-icon"
+        :data-id="`spell-info-btn-${model._id}`"
+        @click.stop="$emit('show-info')"
+      >
+        <v-icon>info</v-icon>
+      </v-btn>
     </v-list-tile-action>
   </v-list-tile>
 </template>
@@ -46,6 +56,7 @@ export default {
   props: {
     preparingSpells: Boolean,
     hideHandle: Boolean,
+    showInfoButton: Boolean,
   },
   computed: {
     hasClickListener(){
@@ -85,5 +96,8 @@ export default {
 }
 .primary--text .v-icon, .primary--text .v-list__tile__sub-title {
   color: #b71c1c
+}
+.theme--light.info-icon{
+  color: rgba(0,0,0,.54) !important;
 }
 </style>

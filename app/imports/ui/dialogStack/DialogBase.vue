@@ -34,6 +34,7 @@
       v-if="!$slots['unwrapped-content']"
       id="base-dialog-body"
       v-scroll:#base-dialog-body="onScroll"
+      :class="{'dark-body': darkBody}"
     >
       <slot />
     </v-card-text>
@@ -56,6 +57,7 @@
         type: Function,
         default: undefined,
       },
+      darkBody: Boolean,
 		},
 		data(){ return {
 			offsetTop: 0,
@@ -95,4 +97,10 @@
 		flex-grow: 1;
 		overflow: auto;
 	}
+  #base-dialog-body.dark-body {
+    background-color: #fafafa;
+  }
+  .theme--dark #base-dialog-body.dark-body {
+    background-color: #303030;
+  }
 </style>

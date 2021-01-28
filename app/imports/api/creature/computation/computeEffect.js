@@ -34,8 +34,13 @@ export default function computeEffect(effect, memo){
   } else if(_.contains(['advantage', 'disadvantage', 'fail'], effect.operation)){
     effect.result = 1;
   } else {
-    let {result, context} = evaluateCalculation(effect.calculation, memo);
+    let {
+      result,
+      context,
+      dependencies,
+    } = evaluateCalculation(effect.calculation, memo);
     effect.result = result.value;
+    effect.dependencies.push(...dependencies);
     if (context.errors.length){
       effect.errors = context.errors;
     }

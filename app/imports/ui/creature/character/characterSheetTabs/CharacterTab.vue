@@ -114,7 +114,6 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
-import getActiveProperties from '/imports/api/creature/getActiveProperties.js';
 import Slots from '/imports/ui/creature/slots/Slots.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 
@@ -171,9 +170,13 @@ export default {
       return Creatures.findOne(this.creatureId);
     },
     classLevels(){
-      return getActiveProperties({
-        ancestorId: this.creatureId,
-        filter: {type: 'classLevel'},
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'classLevel',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
       });
     },
   },

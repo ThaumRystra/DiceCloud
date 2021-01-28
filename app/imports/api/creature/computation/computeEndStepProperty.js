@@ -23,8 +23,13 @@ export default function computeEndStepProperty(prop, memo){
 
 function computeAction(prop, memo){
   // Uses
-  let {result, context} = evaluateCalculation(prop.uses, memo);
+  let {
+    result,
+    context,
+    dependencies,
+  } = evaluateCalculation(prop.uses, memo);
   prop.usesResult = result.value;
+  prop.dependencies.push(...dependencies);
   if (context.errors.length){
     prop.usesErrors = context.errors;
   } else {
@@ -46,6 +51,7 @@ function computeAction(prop, memo){
       if (available < attConsumed.quantity){
         prop.insufficientResources = true;
       }
+      if (stat) prop.dependencies.push(stat._id, ...stat.dependencies);
     }
   });
   // Items consumed
@@ -64,12 +70,18 @@ function computeAction(prop, memo){
     if (!item || available < itemConsumed.quantity){
       prop.insufficientResources = true;
     }
+    if (item) prop.dependencies.push(item._id, ...item.dependencies);
   });
 }
 
 function computePropertyField(prop, memo, fieldName, fn){
-  let {result, context} = evaluateCalculation(prop[fieldName], memo, fn);
+  let {
+    result,
+    context,
+    dependencies,
+  } = evaluateCalculation(prop[fieldName], memo, fn);
   prop[`${fieldName}Result`] = result.value;
+  prop.dependencies.push(...dependencies);
   if (context.errors.length){
     prop[`${fieldName}Errors`] = context.errors;
   } else {
