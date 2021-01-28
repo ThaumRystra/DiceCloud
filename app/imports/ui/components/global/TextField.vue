@@ -10,6 +10,7 @@
     @input="input"
     @focus="focused = true"
     @blur="focused = false"
+    @keyup="e => $emit('keyup', e)"
   />
 </template>
 
