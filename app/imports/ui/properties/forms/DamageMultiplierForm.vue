@@ -56,6 +56,15 @@
 					value: 'slashing',
 					text: 'Slashing',
 				}, {
+					value: 'magical bludgeoning',
+					text: 'Magical Bludgeoning',
+				}, {
+					value: 'magical piercing',
+					text: 'Magical Piercing',
+				}, {
+					value: 'magical slashing',
+					text: 'Magical Slashing',
+				}, {
 					value: 'acid',
 					text: 'Acid',
 				}, {
