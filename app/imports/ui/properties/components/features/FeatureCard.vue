@@ -12,8 +12,8 @@
     </template>
     <v-card-text v-if="model.summary">
       <computed
-        embedded
-        :value="model.summary"
+        :string="model.summary"
+        :calculations="model.summaryCalculations"
       />
     </v-card-text>
   </toolbar-card>
@@ -21,12 +21,12 @@
 
 <script>
 	import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-  import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
+  import EmbedInlineComputations from '/imports/ui/components/computation/EmbedInlineComputations.vue';
 
 	export default {
 		components: {
 			ToolbarCard,
-      Computed: ComputedForCreature,
+      Computed: EmbedInlineComputations,
 		},
 		props: {
 			model: {
