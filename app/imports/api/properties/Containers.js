@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 
 let ContainerSchema = new SimpleSchema({
 	name: {
@@ -33,6 +34,11 @@ let ContainerSchema = new SimpleSchema({
 });
 
 const ComputedOnlyContainerSchema = new SimpleSchema({
+  descriptionCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'descriptionCalculations.$': InlineComputationSchema,
   // Weight of all the contents, zero if `contentsWeightless` is true
   contentsWeight:{
     type: Number,
@@ -48,4 +54,4 @@ const ComputedContainerSchema = new SimpleSchema()
 	.extend(ComputedOnlyContainerSchema)
 	.extend(ContainerSchema);
 
-export { ContainerSchema, ComputedContainerSchema };
+export { ContainerSchema, ComputedOnlyContainerSchema, ComputedContainerSchema };

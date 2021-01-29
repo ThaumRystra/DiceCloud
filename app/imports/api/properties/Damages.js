@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 const DamageSchema = new SimpleSchema({
 	// The roll that determines how much to damage the attribute
@@ -26,4 +27,22 @@ const DamageSchema = new SimpleSchema({
 	},
 });
 
-export { DamageSchema };
+const ComputedOnlyDamageSchema = new SimpleSchema({
+  amountResult: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  amountErrors: {
+    type: Array,
+    optional: true,
+  },
+  'amountErrors.$':{
+    type: ErrorSchema,
+  },
+});
+
+const ComputedDamageSchema = new SimpleSchema()
+  .extend(DamageSchema)
+  .extend(ComputedOnlyDamageSchema);
+
+export { DamageSchema, ComputedDamageSchema, ComputedOnlyDamageSchema };

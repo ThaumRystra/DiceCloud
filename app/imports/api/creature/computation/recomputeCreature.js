@@ -3,7 +3,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import getComputationProperties from '/imports/api/creature/computation/getComputationProperties.js';
 import computeMemo from '/imports/api/creature/computation/computeMemo.js';
 import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
 import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
@@ -36,23 +36,6 @@ export const recomputeCreature = new ValidatedMethod({
   },
 
 });
-
-const calculationPropertyTypes = [
-  'attribute',
-  'skill',
-  'effect',
-  'proficiency',
-  'classLevel',
-  'toggle',
-  'item',
-  // End step types
-  'action',
-  'attack',
-  'savingThrow',
-  'spellList',
-  'spell',
-  'propertySlot',
-];
 
 export function recomputeCreatureById(creatureId){
   let creature = Creatures.findOne(creatureId);
@@ -97,38 +80,13 @@ export function recomputeCreatureById(creatureId){
  */
 export function recomputeCreatureByDoc(creature){
   const creatureId = creature._id;
-  // find all toggles that have conditions, even if they are inactive
-  let toggleIds = CreatureProperties.find({
-    'ancestors.id': creatureId,
-    type: 'toggle',
-    removed: {$ne: true},
-    condition: { $exists: true },
-  }, {
-    fields: {_id: 1},
-  }).map(t => t._id);
-  // Find all the active properties
-  let props = CreatureProperties.find({
-    'ancestors.id': creatureId,
-    removed: {$ne: true},
-    type: {$in: calculationPropertyTypes},
-    $or: [
-      {inactive: {$ne: true}},
-      // But also the inactive computed toggles and their decendants
-      {'ancestors.id': {$in: toggleIds}},
-      {_id: {$in: toggleIds}},
-    ]
-  }, {
-    fields: { // Filter out potentially large fields
-      icon: 0,
-      summary: 0,
-      description: 0,
-    },
-    sort: {
-      order: 1,
-    }
-  }).fetch();
-  let computationMemo = new ComputationMemo(props, creature);
+
+  // Make sure the active state of all properties is correct before doing work
+  // TODO: Separate this into it's own recompute function and only call it
+  //       when things change activation state
   recomputeInactiveProperties(creatureId);
+  let props = getComputationProperties(creatureId);
+  let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
   writeCreatureVariables(computationMemo, creatureId);

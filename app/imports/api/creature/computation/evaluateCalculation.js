@@ -28,6 +28,13 @@ export default function evaluateCalculation(string, memo, fn = 'reduce'){
       dependencies,
     };
   }
+  if (!calc){
+    return {
+      context: {errors},
+      result: new ConstantNode({value: calc, type: 'string'}),
+      dependencies,
+    };
+  }
   // Ensure all symbol nodes are defined and computed
   calc.traverse(node => {
     if (node instanceof SymbolNode || node instanceof AccessorNode){

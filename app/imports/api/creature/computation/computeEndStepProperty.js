@@ -18,6 +18,7 @@ export default function computeEndStepProperty(prop, memo){
       break;
     case 'propertySlot':
       computeSlot(prop, memo);
+      break;
   }
 }
 

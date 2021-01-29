@@ -2,6 +2,8 @@ import evaluateString from '/imports/api/creature/computation/afterComputation/e
 
 // Strings can have computations in bracers like so: {computation}
 export default function evalutateStringWithEmbeddedCalculations(string, scope){
+  console.warn('evalutateStringWithEmbeddedCalculations should be replaced with ' +
+  'fetching the result from the compuations on the property doc');
 	if (!string) return string;
   // Compute everything inside bracers
 	return string.replace(/\{([^{}]*)\}/g, function(match, p1){

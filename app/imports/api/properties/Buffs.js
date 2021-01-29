@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 
 let BuffSchema = new SimpleSchema({
 	name: {
@@ -29,12 +30,12 @@ let BuffSchema = new SimpleSchema({
 	},
 });
 
-let AppliedBuffSchema = new SimpleSchema({
-  applied: {
-    type: Boolean,
-    defaultValue: true,
-    index: 1,
+let ComputedOnlyBuffSchema = new SimpleSchema({
+  descriptionCalculations: {
+    type: Array,
+    maxCount: 32,
   },
+  'descriptionCalculations.$': InlineComputationSchema,
 	durationSpent: {
 		type: Number,
 		optional: true,
@@ -54,6 +55,10 @@ let AppliedBuffSchema = new SimpleSchema({
 	'appliedBy.collection': {
 		type: String,
 	},
-}).extend(BuffSchema);
+})
 
-export { AppliedBuffSchema, BuffSchema };
+const ComputedBuffSchema = new SimpleSchema()
+  .extend(BuffSchema)
+  .extend(ComputedOnlyBuffSchema);
+
+export { BuffSchema, ComputedOnlyBuffSchema, ComputedBuffSchema };

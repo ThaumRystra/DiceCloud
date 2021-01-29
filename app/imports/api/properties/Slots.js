@@ -41,12 +41,11 @@ let SlotSchema = new SimpleSchema({
 });
 
 const ComputedOnlySlotSchema = new SimpleSchema({
-	// The computed result of the effect
+	// Condition calculation results
 	slotConditionResult: {
 		type: SimpleSchema.oneOf(Number, String, Boolean),
 		optional: true,
 	},
-  // The errors encountered while computing the result
   slotConditionErrors: {
     type: Array,
     optional: true,
@@ -54,6 +53,21 @@ const ComputedOnlySlotSchema = new SimpleSchema({
   'slotConditionErrors.$':{
     type: ErrorSchema,
   },
+
+  // Quantity Expected calculation results
+  quantityExpectedResult: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  quantityExpectedErrors: {
+    type: Array,
+    optional: true,
+  },
+  'quantityExpectedErrors.$':{
+    type: ErrorSchema,
+  },
+
+  // Denormalised fields
   totalFilled: {
     type: SimpleSchema.Integer,
     defaultValue: 0,

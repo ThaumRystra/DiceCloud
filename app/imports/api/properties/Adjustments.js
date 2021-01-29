@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 const AdjustmentSchema = new SimpleSchema({
 	// The roll that determines how much to change the attribute
@@ -13,7 +14,7 @@ const AdjustmentSchema = new SimpleSchema({
 		type: String,
     defaultValue: 'every',
 		allowedValues: [
-      'self',   // the character who took the action
+      'self',   // the character who took the Adjustment
       'each',   // rolled once for `each` target
       'every',  // rolled once and applied to `every` target
     ],
@@ -30,4 +31,22 @@ const AdjustmentSchema = new SimpleSchema({
   },
 });
 
-export { AdjustmentSchema };
+const ComputedOnlyAdjustmentSchema = new SimpleSchema({
+  amountResult: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  amountErrors: {
+    type: Array,
+    optional: true,
+  },
+  'amountErrors.$':{
+    type: ErrorSchema,
+  },
+});
+
+const ComputedAdjustmentSchema = new SimpleSchema()
+  .extend(AdjustmentSchema)
+  .extend(ComputedOnlyAdjustmentSchema);
+
+export { AdjustmentSchema, ComputedAdjustmentSchema, ComputedOnlyAdjustmentSchema };

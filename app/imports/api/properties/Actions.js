@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js'
-
 /*
  * Actions are things a character can do
  * Any rolls that are children of actions will be rolled when taking the action
@@ -117,6 +117,18 @@ let ActionSchema = new SimpleSchema({
 });
 
 const ComputedOnlyActionSchema = new SimpleSchema({
+  summaryCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'summaryCalculations.$': InlineComputationSchema,
+  
+  descriptionCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'descriptionCalculations.$': InlineComputationSchema,
+
   usesResult: {
     type: SimpleSchema.Integer,
     optional: true,

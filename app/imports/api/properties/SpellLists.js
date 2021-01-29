@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 
 let SpellListSchema = new SimpleSchema({
 	name: {
@@ -25,6 +26,12 @@ let SpellListSchema = new SimpleSchema({
 });
 
 const ComputedOnlySpellListSchema = new SimpleSchema({
+  descriptionCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'descriptionCalculations.$': InlineComputationSchema,
+
   maxPreparedResult: {
     type: Number,
     optional: true,

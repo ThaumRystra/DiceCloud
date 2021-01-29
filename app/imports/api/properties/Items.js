@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 
 const ItemSchema = new SimpleSchema({
 	name: {
@@ -33,7 +34,6 @@ const ItemSchema = new SimpleSchema({
     optional: true,
 	},
 	// If this item is equipped, it requires attunement
-	// Being equipped is `enabled === true`
 	requiresAttunement: {
 		type: Boolean,
 		optional: true,
@@ -54,4 +54,16 @@ const ItemSchema = new SimpleSchema({
 	},
 });
 
-export { ItemSchema };
+let ComputedOnlyItemSchema = new SimpleSchema({
+  descriptionCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'descriptionCalculations.$': InlineComputationSchema,
+});
+
+const ComputedItemSchema = new SimpleSchema()
+  .extend(ItemSchema)
+  .extend(ComputedOnlyItemSchema);
+
+export { ItemSchema, ComputedItemSchema, ComputedOnlyItemSchema };

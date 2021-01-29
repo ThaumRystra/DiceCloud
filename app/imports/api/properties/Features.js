@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 
 let FeatureSchema = new SimpleSchema({
 	name: {
@@ -14,4 +15,24 @@ let FeatureSchema = new SimpleSchema({
 	},
 });
 
-export { FeatureSchema }
+let ComputedOnlyFeatureSchema = new SimpleSchema({
+
+  summaryCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'summaryCalculations.$': InlineComputationSchema,
+
+  descriptionCalculations: {
+    type: Array,
+    maxCount: 32,
+  },
+  'descriptionCalculations.$': InlineComputationSchema,
+
+});
+
+const ComputedFeatureSchema = new SimpleSchema()
+  .extend(FeatureSchema)
+  .extend(ComputedOnlyFeatureSchema);
+
+export { FeatureSchema, ComputedFeatureSchema, ComputedOnlyFeatureSchema }

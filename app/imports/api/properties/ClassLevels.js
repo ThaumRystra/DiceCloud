@@ -6,6 +6,7 @@ let ClassLevelSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+  // Only used by slot filling dialog, not computed
   description: {
     type: String,
     optional: true,

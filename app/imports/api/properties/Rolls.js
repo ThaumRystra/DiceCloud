@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 /**
  * Rolls are children to actions or other rolls, they are triggered with 0 or
@@ -35,4 +36,22 @@ let RollSchema = new SimpleSchema({
   },
 });
 
-export { RollSchema };
+let ComputedOnlyRollSchema = new SimpleSchema({
+  rollResult: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  rollErrors: {
+    type: Array,
+    optional: true,
+  },
+  'rollErrors.$':{
+    type: ErrorSchema,
+  },
+});
+
+const ComputedRollSchema = new SimpleSchema()
+  .extend(RollSchema)
+  .extend(ComputedOnlyRollSchema);
+
+export { RollSchema, ComputedRollSchema, ComputedOnlyRollSchema };

@@ -4,6 +4,7 @@ import computeStat from '/imports/api/creature/computation/computeStat.js';
 import computeEffect from '/imports/api/creature/computation/computeEffect.js';
 import computeToggle from '/imports/api/creature/computation/computeToggle.js';
 import computeEndStepProperty from '/imports/api/creature/computation/computeEndStepProperty.js';
+import computeInlineCalculations from '/imports/api/creature/computation/computeInlineCalculations.js';
 
 export default function computeMemo(memo){
   // Compute level
@@ -23,5 +24,9 @@ export default function computeMemo(memo){
   // Compute end step properties
   forOwn(memo.endStepPropsById, prop => {
     computeEndStepProperty(prop, memo);
+  });
+  // Compute inline calculations
+  forOwn(memo.propsById, prop => {
+    computeInlineCalculations(prop, memo);
   });
 }
