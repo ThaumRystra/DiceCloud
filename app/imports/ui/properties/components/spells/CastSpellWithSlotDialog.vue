@@ -256,7 +256,10 @@ export default {
         'ancestors.id': this.creatureId,
         removed: {$ne: true},
         inactive: {$ne: true},
-        prepared: true,
+        $or: [
+          {prepared: true},
+          {alwaysPrepared: true},
+        ],
         level: {$lte: slotLevel},
       };
       // Apply the filters from the filter menu
