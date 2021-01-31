@@ -78,6 +78,7 @@ let AttributeSchema = new SimpleSchema({
 let ComputedOnlyAttributeSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'descriptionCalculations.$': InlineComputationSchema,

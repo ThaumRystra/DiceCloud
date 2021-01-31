@@ -119,12 +119,14 @@ let ActionSchema = new SimpleSchema({
 const ComputedOnlyActionSchema = new SimpleSchema({
   summaryCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'summaryCalculations.$': InlineComputationSchema,
-  
+
   descriptionCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'descriptionCalculations.$': InlineComputationSchema,

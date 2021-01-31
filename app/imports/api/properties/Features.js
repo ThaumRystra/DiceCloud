@@ -19,12 +19,14 @@ let ComputedOnlyFeatureSchema = new SimpleSchema({
 
   summaryCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'summaryCalculations.$': InlineComputationSchema,
 
   descriptionCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'descriptionCalculations.$': InlineComputationSchema,

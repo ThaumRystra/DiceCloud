@@ -28,6 +28,7 @@ let SpellListSchema = new SimpleSchema({
 const ComputedOnlySpellListSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'descriptionCalculations.$': InlineComputationSchema,

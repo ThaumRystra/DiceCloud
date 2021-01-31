@@ -33,6 +33,7 @@ let BuffSchema = new SimpleSchema({
 let ComputedOnlyBuffSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'descriptionCalculations.$': InlineComputationSchema,

@@ -36,6 +36,7 @@ let ContainerSchema = new SimpleSchema({
 const ComputedOnlyContainerSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
+    defaultValue: [],
     maxCount: 32,
   },
   'descriptionCalculations.$': InlineComputationSchema,
