@@ -53,13 +53,14 @@
       @mouseleave="hover = false"
     >
       <v-list-tile-title>
-        {{ model.hitDiceSize }} {{ model.constitutionMod }}
+        {{ model.hitDiceSize }} {{ signedConMod }}
       </v-list-tile-title>
     </v-list-tile-content>
   </v-list-tile>
 </template>
 
 <script>
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
   inject: {
     context: { default: {} }
@@ -76,7 +77,10 @@ export default {
   computed: {
     currentValue(){
       return this.model.value - (this.model.damage || 0);
-    }
+    },
+    signedConMod(){
+      return numberToSignedString(this.model.constitutionMod);
+    },
   },
 	methods: {
 		click(e){

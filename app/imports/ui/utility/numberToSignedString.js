@@ -7,4 +7,4 @@ export default function numberToSignedString(number){
   } else {
     return `${number}`;
   }
-};
+}
