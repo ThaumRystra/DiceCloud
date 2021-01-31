@@ -138,7 +138,9 @@
 				},
 			},
 			creature(){
-				return Creatures.findOne(this.creatureId);
+				return Creatures.findOne(this.creatureId, {
+          fields: {variables: 0}
+        });
 			},
       editPermission(){
         try {
