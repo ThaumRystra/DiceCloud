@@ -11,30 +11,19 @@
     <div
       class="text-no-wrap text-truncate"
     >
-      <computed
-        class="mr-1"
-        :value="model.amount"
-        :expect-number="false"
-      />
-      <span class="mr-1">
-        {{ model.damageType }}
-      </span>
-      <span v-if="model.damageType !== 'healing'">
-        damage
-      </span>
+      {{ model.amountResult }}
+      {{ model.damageType }}<span
+        v-if="model.damageType !== 'healing'"
+      >&nbsp;damage</span>
     </div>
   </div>
 </template>
 
 <script>
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 
 export default {
-  components: {
-    Computed: ComputedForCreature,
-  },
   mixins: [treeNodeViewMixin],
   computed: {
 		icon(){

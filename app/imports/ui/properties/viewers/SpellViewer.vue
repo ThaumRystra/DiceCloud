@@ -18,8 +18,8 @@
       :value="`${model.level} ${model.school}`"
     />
     <property-description
-      v-if="model.description"
-      :value="model.description"
+      :string="model.description"
+      :calculations="model.descriptionCalculations"
     />
   </div>
 </template>

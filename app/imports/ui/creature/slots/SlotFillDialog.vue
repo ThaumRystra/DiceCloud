@@ -56,8 +56,8 @@
                     />
                   </h3>
                   <property-description
-                    v-if="node.description"
-                    :value="node.description"
+                    :string="model.description"
+                    :calculations="model.descriptionCalculations"
                   />
                 </div>
               </v-card-title>

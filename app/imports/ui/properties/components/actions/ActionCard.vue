@@ -71,7 +71,10 @@
         />
       </template>
       <template v-if="model.summary">
-        <property-description :value="model.summary" />
+        <property-description
+          :string="model.summary"
+          :calculations="model.summaryCalculations"
+        />
         <v-divider
           v-if="children.length"
           class="my-2"

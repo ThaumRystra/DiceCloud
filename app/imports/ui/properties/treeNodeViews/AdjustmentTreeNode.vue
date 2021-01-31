@@ -10,24 +10,15 @@
     <div
       class="text-no-wrap text-truncate"
     >
-      <computed
-        class="mr-1"
-        :value="model.amount"
-        :expect-number="false"
-      />
-      {{ model.stat }} damage
+      {{ model.amountResult }} {{ model.stat }} damage
     </div>
   </div>
 </template>
 
 <script>
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 
 export default {
-  components: {
-    Computed: ComputedForCreature,
-  },
   mixins: [treeNodeViewMixin],
 }
 </script>

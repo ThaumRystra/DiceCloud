@@ -122,6 +122,11 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
 		type: SimpleSchema.Integer,
 		optional: true,
 	},
+  // The computed creature constitution modifier
+  constitutionMod: {
+    type: Number,
+		optional: true,
+  },
   // Should this attribute hide
   hide: {
     type: Boolean,

@@ -1,21 +1,30 @@
 <template lang="html">
   <computed
-    v-if="value"
+    v-if="string"
     class="property-description"
-    embedded
-    :value="value"
+    :string="string"
+    :calculations="calculations"
   />
 </template>
 
 <script>
-import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
+import EmbedInlineComputations from 'imports/ui/components/computation/EmbedInlineComputations.vue';
 
 export default {
 	components: {
-    Computed: ComputedForCreature,
+    Computed: EmbedInlineComputations,
 	},
 	props: {
-		value: String,
+		string: {
+      type: String,
+      default: '',
+    },
+    calculations: {
+      type: Array,
+      default(){
+        return [];
+      },
+    },
 	},
 }
 </script>

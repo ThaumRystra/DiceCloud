@@ -44,11 +44,22 @@ function combineAttribute(stat, aggregator, memo){
     stat.dependencies.push(...dependencies);
   }
   stat.currentValue = stat.value - (stat.damage || 0);
+  // Ability scores get modifiers
   if (stat.attributeType === 'ability') {
     stat.modifier = Math.floor((stat.currentValue - 10) / 2);
   } else {
     stat.modifier = undefined;
   }
+  // Hit dice get constitution modifiers
+  stat.constitutionMod = undefined;
+  if (stat.attributeType === 'hitDice') {
+    let conStat = memo.statsByVariableName['constitution'];
+    if (conStat && 'modifier' in conStat){
+      stat.constitutionMod = conStat.modifier;
+      stat.dependencies.push(conStat._id, ...conStat.dependencies);
+    }
+  }
+  // Stats that have no effects can be hidden based on a sheet setting
   stat.hide = aggregator.hasNoEffects &&
     stat.baseValue === undefined ||
     undefined

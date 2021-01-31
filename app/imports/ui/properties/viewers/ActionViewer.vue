@@ -102,13 +102,19 @@
       class="my-3"
     />
     <template v-if="model.summary">
-      <property-description :value="model.summary" />
+      <property-description
+        :string="model.summary"
+        :calculations="model.summaryCalculations"
+      />
       <v-divider
         v-if="model.description"
         class="my-3"
       />
     </template>
-    <property-description :value="model.description" />
+    <property-description
+      :string="model.description"
+      :calculations="model.descriptionCalculations"
+    />
   </div>
 </template>
 

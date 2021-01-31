@@ -6,6 +6,10 @@ export default function computeEndStepProperty(prop, memo){
     case 'spell':
       computeAction(prop, memo);
       break;
+    case 'adjustment':
+    case 'damage':
+      computePropertyField(prop, memo, 'amount', 'compile');
+      break;
     case 'attack':
       computeAction(prop, memo);
       computeAttack(prop, memo);

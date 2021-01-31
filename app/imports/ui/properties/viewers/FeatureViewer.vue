@@ -1,9 +1,15 @@
 <template lang="html">
   <div class="feature-viewer">
     <property-name :value="model.name" />
-    <property-description :value="model.summary" />
+    <property-description
+      :string="model.summary"
+      :calculations="model.summaryCalculations"
+    />
     <v-divider class="mt-3 mb-3" />
-    <property-description :value="model.description" />
+    <property-description
+      :string="model.description"
+      :calculations="model.descriptionCalculations"
+    />
   </div>
 </template>
 

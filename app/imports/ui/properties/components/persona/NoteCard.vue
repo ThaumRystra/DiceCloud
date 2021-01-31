@@ -11,7 +11,10 @@
       {{ model.name }}
     </v-card-title>
     <v-card-text>
-      <property-description :value="model.description" />
+      <property-description
+        :string="model.description"
+        :calculations="model.descriptionCalculations"
+      />
     </v-card-text>
   </v-card>
 </template>

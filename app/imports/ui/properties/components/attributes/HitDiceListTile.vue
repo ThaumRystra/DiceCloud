@@ -53,22 +53,14 @@
       @mouseleave="hover = false"
     >
       <v-list-tile-title>
-        {{ model.hitDiceSize }} <computed
-          class="d-inline"
-          signed
-          value="constitution.modifier"
-        />
+        {{ model.hitDiceSize }} {{ model.constitutionMod }}
       </v-list-tile-title>
     </v-list-tile-content>
   </v-list-tile>
 </template>
 
 <script>
-import ComputedForCreature from '/imports/ui/components/computation/ComputedForCreature.vue';
 export default {
-  components: {
-    Computed: ComputedForCreature,
-  },
   inject: {
     context: { default: {} }
   },

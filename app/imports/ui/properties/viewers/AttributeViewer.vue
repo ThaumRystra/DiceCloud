@@ -39,8 +39,8 @@
       :value="reset"
     />
     <property-description
-      v-if="model.description"
-      :value="model.description"
+      :string="model.description"
+      :calculations="model.descriptionCalculations"
     />
 
     <effect-viewer

@@ -17,6 +17,7 @@ export default {
 				case 0: return 'Immunity';
 				case 0.5: return 'Resistance';
 				case 2: return 'Vulnerability';
+        default: return '';
 			}
 		},
 	},
