@@ -82,7 +82,7 @@ const restCreature = new ValidatedMethod({
           damage: 1,
           value: 1,
         }
-      });
+      }).fetch();
       // Use a collator to do sorting in natural order
       let collator = new Intl.Collator('en', {
         numeric: true, sensitivity: 'base'
