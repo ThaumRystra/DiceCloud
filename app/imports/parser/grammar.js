@@ -116,11 +116,14 @@ let ParserRules = [
     {"name": "arrayExpression", "symbols": ["parenthesizedExpression"], "postprocess": id},
     {"name": "parenthesizedExpression", "symbols": [{"literal":"("}, "_", "expression", "_", {"literal":")"}], "postprocess": d => new ParenthesisNode({content: d[2]})},
     {"name": "parenthesizedExpression", "symbols": ["accessorExpression"], "postprocess": id},
-    {"name": "accessorExpression$ebnf$1$subexpression$1", "symbols": [{"literal":"."}, "name"], "postprocess": d => d[1].name},
+    {"name": "accessorExpression$subexpression$1", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => d[0].value},
+    {"name": "accessorExpression$ebnf$1$subexpression$1", "symbols": [{"literal":"."}, (lexer.has("name") ? {type: "name"} : name)], "postprocess": d => d[1].value},
     {"name": "accessorExpression$ebnf$1", "symbols": ["accessorExpression$ebnf$1$subexpression$1"]},
-    {"name": "accessorExpression$ebnf$1$subexpression$2", "symbols": [{"literal":"."}, "name"], "postprocess": d => d[1].name},
+    {"name": "accessorExpression$ebnf$1$subexpression$2", "symbols": [{"literal":"."}, (lexer.has("name") ? {type: "name"} : name)], "postprocess": d => d[1].value},
     {"name": "accessorExpression$ebnf$1", "symbols": ["accessorExpression$ebnf$1", "accessorExpression$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "accessorExpression", "symbols": ["name", "accessorExpression$ebnf$1"], "postprocess": d=> new AccessorNode({name: d[0], path: d[1]})},
+    {"name": "accessorExpression", "symbols": ["accessorExpression$subexpression$1", "accessorExpression$ebnf$1"], "postprocess": 
+        d=> new AccessorNode({name: d[0], path: d[1]})
+          },
     {"name": "accessorExpression", "symbols": ["valueExpression"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["name"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["number"], "postprocess": id},

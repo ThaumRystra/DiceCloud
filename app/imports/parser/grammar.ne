@@ -144,7 +144,9 @@ parenthesizedExpression ->
 | accessorExpression {% id %}
 
 accessorExpression ->
-  name ( "." name {% d => d[1].name %} ):+ {% d=> new AccessorNode({name: d[0], path: d[1]}) %}
+  (%name {% d => d[0].value %}) ( "." %name {% d => d[1].value %} ):+ {%
+    d=> new AccessorNode({name: d[0], path: d[1]})
+  %}
 | valueExpression {% id %}
 
 valueExpression ->
