@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
+import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default function computeEndStepProperty(prop, memo){
   switch (prop.type){
@@ -85,7 +86,11 @@ function computePropertyField(prop, memo, fieldName, fn){
     context,
     dependencies,
   } = evaluateCalculation(prop[fieldName], memo, fn);
-  prop[`${fieldName}Result`] = result.value;
+  if (result instanceof ConstantNode){
+    prop[`${fieldName}Result`] = result.value;
+  } else {
+    prop[`${fieldName}Result`] = result.toString();
+  }
   prop.dependencies.push(...dependencies);
   if (context.errors.length){
     prop[`${fieldName}Errors`] = context.errors;

@@ -29,7 +29,7 @@ const DamageSchema = new SimpleSchema({
 
 const ComputedOnlyDamageSchema = new SimpleSchema({
   amountResult: {
-    type: SimpleSchema.Integer,
+    type: SimpleSchema.oneOf(String, SimpleSchema.Integer),
     optional: true,
   },
   amountErrors: {

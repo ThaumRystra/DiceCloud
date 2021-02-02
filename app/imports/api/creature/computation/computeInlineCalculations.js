@@ -22,7 +22,7 @@ function computeInlineCalcsForField(prop, memo, field){
     } = evaluateCalculation(calculation, memo, 'compile');
     let computation = {
       calculation,
-      result: result.value,
+      result: result.toString(),
     };
     if (context.errors.length){
       computation.errors = context.errors;
