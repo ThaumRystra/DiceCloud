@@ -8,13 +8,12 @@ export default class ParenthesisNode extends ParseNode {
   resolve(fn, scope, context){
     let content = this.content[fn](scope, context);
     if (
-      content.constructor.name === 'IfNode' ||
-      content.constructor.name === 'OperatorNode' ||
-      content.constructor.name === 'RollNode'
+      content.constructor.name === 'ConstantNode' ||
+      content.constructor.name === 'ErrorNode'
     ){
-      return new ParenthesisNode({content, previousNodes: [this]});
-    } else {
       return content;
+    } else {
+      return new ParenthesisNode({content});
     }
   }
   toString(){
