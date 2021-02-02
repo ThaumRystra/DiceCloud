@@ -7,7 +7,7 @@ export default class AccessorNode extends ParseNode {
     this.name = name;
     this.path = path;
   }
-  compile(scope){
+  compile(scope, context){
     let value = scope && scope[this.name];
     // For objects, get their value
     this.path.forEach(name => {
@@ -16,14 +16,21 @@ export default class AccessorNode extends ParseNode {
     });
     let type = typeof value;
     if (type === 'string' || type === 'number' || type === 'boolean'){
-      return new ConstantNode({value, type, previousNodes: [this]});
+      return new ConstantNode({value, type});
     } else if (type === 'undefined'){
       return new AccessorNode({
         name: this.name,
         path: this.path,
       });
     } else {
-      throw new Meteor.Error(`Unexpected case: ${this.name} resolved to ${value}`);
+      if (context) context.storeError({
+        type: 'error',
+        message: `${this.name} returned an unexpected type`
+      });
+      return new AccessorNode({
+        name: this.name,
+        path: this.path,
+      });
     }
   }
   reduce(scope, context){

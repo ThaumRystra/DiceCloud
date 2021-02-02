@@ -33,7 +33,7 @@ function computeAction(prop, memo){
     result,
     context,
     dependencies,
-  } = evaluateCalculation(prop.uses, memo);
+  } = evaluateCalculation({ string: prop.uses, prop, memo});
   prop.usesResult = result.value;
   prop.dependencies.push(...dependencies);
   if (context.errors.length){
@@ -85,7 +85,7 @@ function computePropertyField(prop, memo, fieldName, fn){
     result,
     context,
     dependencies,
-  } = evaluateCalculation(prop[fieldName], memo, fn);
+  } = evaluateCalculation({string: prop[fieldName], prop, memo, fn});
   if (result instanceof ConstantNode){
     prop[`${fieldName}Result`] = result.value;
   } else {

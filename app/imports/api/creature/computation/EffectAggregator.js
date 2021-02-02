@@ -8,7 +8,11 @@ export default class EffectAggregator{
         result,
         context,
         dependencies
-      } = evaluateCalculation(stat.baseValueCalculation, memo);
+      } = evaluateCalculation({
+        string: stat.baseValueCalculation,
+        prop: stat,
+        memo
+      });
       this.statBaseValue = result.value;
       stat.dependencies.push(...dependencies);
       if (context.errors.length){

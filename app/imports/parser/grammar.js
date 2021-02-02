@@ -24,7 +24,7 @@ function id(x) { return x[0]; }
       value: s => s.slice(1, -1),
     },
     name: {
-      match: /[a-zA-Z_]*[a-ce-zA-Z_][a-zA-Z0-9_]*/,
+      match: /[a-zA-Z_#]*[a-ce-zA-Z_#][a-zA-Z0-9_#]*/,
       type: moo.keywords({
         'keywords': ['true', 'false'],
       }),

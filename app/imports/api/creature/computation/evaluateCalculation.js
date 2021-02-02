@@ -3,9 +3,15 @@ import { parse, CompilationContext } from '/imports/parser/parser.js';
 import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+import findAncestorByType from '/imports/api/creature/computation/findAncestorByType.js';
 
 /* Convert a calculation into a constant output and errors*/
-export default function evaluateCalculation(string, memo, fn = 'reduce'){
+export default function evaluateCalculation({
+  string,
+  prop,
+  memo,
+  fn = 'reduce',
+}){
   let dependencies = [];
   let errors = [];
   if (!string) return {
@@ -38,8 +44,15 @@ export default function evaluateCalculation(string, memo, fn = 'reduce'){
   // Ensure all symbol nodes are defined and computed
   calc.traverse(node => {
     if (node instanceof SymbolNode || node instanceof AccessorNode){
-      let stat = memo.statsByVariableName[node.name];
-      if (stat && !stat.computationDetails.computed){
+      // References up the tree start with $
+      let stat;
+      if (node.name[0] === '#'){
+        stat = findAncestorByType({type: node.name.slice(1), prop, memo});
+        memo.statsByVariableName[node.name] = stat;
+      } else {
+        stat = memo.statsByVariableName[node.name];
+      }
+      if (stat && stat.computationDetails && !stat.computationDetails.computed){
         computeStat(stat, memo);
       }
       if (stat) dependencies.push(stat._id || node.name, ...stat.dependencies);

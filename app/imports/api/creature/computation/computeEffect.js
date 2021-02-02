@@ -38,7 +38,11 @@ export default function computeEffect(effect, memo){
       result,
       context,
       dependencies,
-    } = evaluateCalculation(effect.calculation, memo);
+    } = evaluateCalculation({
+      string: effect.calculation,
+      prop: effect,
+      memo
+    });
     effect.result = result.value;
     effect.dependencies.push(...dependencies);
     if (context.errors.length){

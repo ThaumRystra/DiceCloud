@@ -1,4 +1,5 @@
 import { includes, cloneDeep } from 'lodash';
+import findAncestorByType from '/imports/api/creature/computation/findAncestorByType.js';
 
 // The computation memo is an in-memory data structure used only during the
 // computation process
@@ -141,7 +142,7 @@ export default class ComputationMemo {
     prop = this.registerProperty(prop);
     let targets = this.getEffectTargets(prop);
     targets.forEach(target => {
-      if (target.computationDetails.effects){
+      if (target.computationDetails && target.computationDetails.effects){
         target.computationDetails.effects.push(prop);
       }
     });
@@ -153,7 +154,16 @@ export default class ComputationMemo {
     let targets = new Set();
     if (!prop.stats) return targets;
     prop.stats.forEach((statName) => {
-      let target = this.statsByVariableName[statName];
+      let target;
+      if (statName[0] === '#'){
+        target = findAncestorByType({
+          type: statName.slice(1),
+          prop,
+          memo: this
+        });
+      } else {
+        target = this.statsByVariableName[statName];
+      }
       if (!target) return;
       targets.add(target);
       if (isSkillOperation(prop) && isAbility(target)){

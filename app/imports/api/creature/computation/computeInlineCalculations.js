@@ -19,7 +19,7 @@ function computeInlineCalcsForField(prop, memo, field){
       result,
       context,
       dependencies,
-    } = evaluateCalculation(calculation, memo, 'compile');
+    } = evaluateCalculation({string: calculation, prop, memo, fn: 'compile'});
     let computation = {
       calculation,
       result: result.toString(),

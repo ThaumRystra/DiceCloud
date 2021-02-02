@@ -30,7 +30,7 @@ export default function computeToggle(toggle, memo){
       result,
       context,
       dependencies,
-    } = evaluateCalculation(toggle.condition, memo);
+    } = evaluateCalculation({string: toggle.condition, prop: toggle, memo});
     toggle.toggleResult = !!result.value;
     toggle.dependencies.push(...dependencies);
     if (context.errors.length){

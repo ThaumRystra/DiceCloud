@@ -38,7 +38,11 @@ function combineAttribute(stat, aggregator, memo){
       result,
       context,
       dependencies
-    } = evaluateCalculation(stat.spellSlotLevelCalculation, memo);
+    } = evaluateCalculation({
+      string: stat.spellSlotLevelCalculation,
+      memo,
+      prop: stat,
+    });
     stat.spellSlotLevelValue = result.value;
     stat.spellSlotLevelErrors = context.errors;
     stat.dependencies.push(...dependencies);
