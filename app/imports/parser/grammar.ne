@@ -39,6 +39,7 @@
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
+    moduloOperator: ['%'],
     andOperator: ['&', '&&'],
     orOperator: ['|', '||'],
     stringDelimiters: ['\"', '\''],
@@ -91,7 +92,11 @@ relationalExpression ->
 | additiveExpression {% id %}
 
 additiveExpression ->
-  additiveExpression _ %additiveOperator _ multiplicativeExpression {% d => operator(d, 'add') %}
+  additiveExpression _ %additiveOperator _ remainderExpression {% d => operator(d, 'add') %}
+| remainderExpression {% id %}
+
+remainderExpression ->
+  remainderExpression _ %moduloOperator _ multiplicativeExpression {% d => operator(d, 'remainder') %}
 | multiplicativeExpression {% id %}
 
 multiplicativeExpression ->
