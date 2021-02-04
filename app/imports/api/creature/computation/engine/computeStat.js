@@ -2,7 +2,7 @@ import combineStat from '/imports/api/creature/computation/engine/combineStat.js
 import computeEffect from '/imports/api/creature/computation/engine/computeEffect.js';
 import EffectAggregator from '/imports/api/creature/computation/engine/EffectAggregator.js';
 import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
-import { each } from 'lodash';
+import { each, union } from 'lodash';
 
 export default function computeStat(stat, memo){
   // If the stat is already computed, skip it
@@ -27,8 +27,16 @@ export default function computeStat(stat, memo){
     let aggregator = new EffectAggregator(stat, memo)
     each(stat.computationDetails.effects, (effect) => {
       computeEffect(effect, memo);
-      if (effect._id) stat.dependencies.push(effect._id);
-      stat.dependencies.push(...effect.dependencies);
+      if (effect._id){
+        stat.dependencies = union(
+          stat.dependencies,
+          [effect._id]
+        );
+      }
+      stat.dependencies = union(
+        stat.dependencies,
+        effect.dependencies
+      )
       if (!effect.computationDetails.disabledByToggle){
         aggregator.addEffect(effect);
       }

@@ -4,6 +4,7 @@ import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 import findAncestorByType from '/imports/api/creature/computation/engine/findAncestorByType.js';
+import { union } from 'lodash';
 
 /* Convert a calculation into a constant output and errors*/
 export default function evaluateCalculation({
@@ -55,7 +56,12 @@ export default function evaluateCalculation({
       if (stat && stat.computationDetails && !stat.computationDetails.computed){
         computeStat(stat, memo);
       }
-      if (stat) dependencies.push(stat._id || node.name, ...stat.dependencies);
+      if (stat){
+        dependencies = union(dependencies, [
+          stat._id || node.name,
+          ...stat.dependencies
+        ]);
+      }
     }
   });
   // Evaluate

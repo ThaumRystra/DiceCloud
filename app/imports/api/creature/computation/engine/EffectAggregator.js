@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import { union } from 'lodash';
 
 export default class EffectAggregator{
   constructor(stat, memo){
@@ -14,7 +15,10 @@ export default class EffectAggregator{
         memo
       });
       this.statBaseValue = result.value;
-      stat.dependencies.push(...dependencies);
+      stat.dependencies = union(
+        stat.dependencies,
+        dependencies,
+      );
       if (context.errors.length){
         this.baseValueErrors = context.errors;
       }

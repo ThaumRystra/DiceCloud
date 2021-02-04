@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import { union } from 'lodash';
 
 export default function computeToggle(toggle, memo){
   if (toggle.computationDetails.computed) return;
@@ -32,7 +33,10 @@ export default function computeToggle(toggle, memo){
       dependencies,
     } = evaluateCalculation({string: toggle.condition, prop: toggle, memo});
     toggle.toggleResult = !!result.value;
-    toggle.dependencies.push(...dependencies);
+    toggle.dependencies = union(
+      toggle.dependencies,
+      dependencies,
+    );
     if (context.errors.length){
       toggle.errors = context.errors;
     }

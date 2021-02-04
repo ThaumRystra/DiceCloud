@@ -48,7 +48,8 @@ const dealDamage = new ValidatedMethod({
     let totalDamage = Math.floor(amount * multiplier);
     let damageLeft = totalDamage;
     if (damageType === 'healing') damageLeft = -totalDamage;
-    let dependencies = [];
+    let propertyIds = [];
+    let propertiesDependedAponIds = [];
     healthBars.forEach(healthBar => {
       if (damageLeft === 0) return;
       let damageAdded = damagePropertyWork({
@@ -57,10 +58,14 @@ const dealDamage = new ValidatedMethod({
         value: damageLeft,
       });
       damageLeft -= damageAdded;
-      dependencies.push(healthBar.variableName);
-      dependencies.push(...healthBar.dependencies);
+      propertyIds.push(healthBar._id);
+      propertiesDependedAponIds.push(...healthBar.dependencies);
     });
-    recomputeCreatureByDependencies({creature, dependencies});
+    recomputeCreatureByDependencies({
+      creature,
+      propertyIds,
+      propertiesDependedAponIds,
+    });
     return totalDamage;
   },
 });

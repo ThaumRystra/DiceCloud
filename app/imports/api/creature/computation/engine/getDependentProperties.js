@@ -1,13 +1,18 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { union } from 'lodash';
 
-export default function getDependentProperties({creatureId, dependencies}){
+export default function getDependentProperties({
+  creatureId,
+  propertyIds,
+  propertiesDependedAponIds,
+ }){
   // find ids of all dependant toggles that have conditions, even if inactive
   let toggleIds = CreatureProperties.find({
     'ancestors.id': creatureId,
     type: 'toggle',
     removed: {$ne: true},
     condition: { $exists: true },
-    dependencies: {$in: dependencies},
+    dependencies: {$in: propertyIds},
   }, {
     fields: {_id: 1},
   }).map(t => t._id);
@@ -15,7 +20,7 @@ export default function getDependentProperties({creatureId, dependencies}){
   let props = CreatureProperties.find({
     'ancestors.id': creatureId,
     removed: {$ne: true},
-    dependencies: {$in: dependencies},
+    dependencies: {$in: propertyIds},
     $or: [
       // All active properties
       {inactive: {$ne: true}},
@@ -25,18 +30,22 @@ export default function getDependentProperties({creatureId, dependencies}){
       // All decendents of the above toggles
       {'ancestors.id': {$in: toggleIds}},
     ]
-  }, {
-    // Filter out fields never used by calculations
-    fields: {
-      icon: 0,
-    },
-    sort: {
-      order: 1,
-    }
-  }).fetch();
-  // Add on all the properties th
-  CreatureProperties.find({_id: {$in: dependencies}}).forEach(prop => {
-    props.push(prop)
+  }, { fields: {_id: 1, dependencies: 1} }).fetch();
+  // Add all the properties that changing props depend on, but haven't yet been
+  // included to make an array of every property we need
+  let allConnectedPropIds = [...propertyIds, ...propertiesDependedAponIds];
+  props.forEach(prop => {
+    allConnectedPropIds = union(
+      allConnectedPropIds,
+      prop.dependencies,
+      [prop._id]);
   });
-  return props;
+  // Add on all the properties and the objects they depend apon
+  return CreatureProperties.find({
+    _id: {$in: allConnectedPropIds}
+  }, {
+    // Ignore fields not used in computations
+    fields: {icon: 0},
+    sort: {order: 1},
+  }).fetch();
 }

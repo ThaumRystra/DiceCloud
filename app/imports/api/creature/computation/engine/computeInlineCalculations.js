@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import { union } from 'lodash';
 
 export default function computeInlineCalculations(prop, memo){
   if (prop.summary){
@@ -28,7 +29,7 @@ function computeInlineCalcsForField(prop, memo, field){
       computation.errors = context.errors;
     }
     inlineComputations.push(computation);
-    prop.dependencies.push(...dependencies);
+    prop.dependencies = union(prop.dependencies, dependencies);
   }
   prop[`${field}Calculations`] = inlineComputations;
 }

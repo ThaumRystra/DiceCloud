@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { recomputePropertyDependencies, recomputeCreatureByDoc, recomputeCreature } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { recomputePropertyDependencies } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',

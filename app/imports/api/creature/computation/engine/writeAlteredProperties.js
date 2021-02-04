@@ -26,7 +26,7 @@ export default function writeAlteredProperties(memo){
       }
     });
   });
-  bulkWriteProperties(bulkWriteOperations);
+  writePropertiesSequentially(bulkWriteOperations);
 }
 
 function addChangedKeysToOp(op, keys, original, changed) {
@@ -77,11 +77,28 @@ function addUnsetOp(op, key){
   }
 }
 
+// We use this instead of bulkWriteProperties because it functions with latency
+// compensation without needing to roll back changes, which causes multiple
+// expensive redraws of the character sheet
+function writePropertiesSequentially(bulkWriteOps){
+  bulkWriteOps.forEach(op => {
+    let updateOneOrMany = op.updateOne || op.updateMany;
+    CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
+      // The bulk code is bypassing validation, so do the same here
+      // selector: {type: op.type} // include this if bypass is off
+      bypassCollection2: true,
+    });
+  });
+}
+
+// This is more efficient on the database, but significantly less efficient
+// in the UI because of incompatibility with latency compensation. If the
+// duplicate redraws can be fixed, this is a strictly better way of processing
+// writes
 function bulkWriteProperties(bulkWriteOps){
   if (!bulkWriteOps.length) return;
-  // Only use bulk writing if there are many writes to do
-  // it makes latency compensation janky, so we avoid it for smaller writes
-  if (Meteor.isServer && bulkWriteOps.length > 16){
+  // bulkWrite is only available on the server
+  if (Meteor.isServer){
     CreatureProperties.rawCollection().bulkWrite(
       bulkWriteOps,
       {ordered : false},
@@ -93,13 +110,6 @@ function bulkWriteProperties(bulkWriteOps){
       }
     );
   } else {
-    bulkWriteOps.forEach(op => {
-      let updateOneOrMany = op.updateOne || op.updateMany;
-      CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
-        // The bulk code is bypassing validation, so do the same here
-        // selector: {type: op.type} // include this if bypass is off
-        bypassCollection2: true,
-      });
-    });
+    writePropertiesSequentially(bulkWriteOps);
   }
 }

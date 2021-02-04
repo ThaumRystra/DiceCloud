@@ -59,13 +59,12 @@
 </template>
 
 <script>
-import CreatureProperties, {
-  damageProperty,
-  pushToProperty,
-  pullFromProperty,
-  softRemoveProperty,
-  restoreProperty,
-} from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty.js';
+import pullFromProperty from '/imports/api/creature/creatureProperties/methods/pullFromProperty.js';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
+import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 import duplicateProperty from '/imports/api/creature/creatureProperties/methods/duplicateProperty.js';
 import Creatures from '/imports/api/creature/Creatures.js';

@@ -12,6 +12,7 @@ import recomputeSlotFullness from '/imports/api/creature/denormalise/recomputeSl
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import getDependentProperties from '/imports/api/creature/computation/engine/getDependentProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 
 export const recomputeCreature = new ValidatedMethod({
 
@@ -88,6 +89,7 @@ export function recomputeCreatureByDoc(creature){
   writeCreatureVariables(computationMemo, creatureId);
   recomputeDamageMultipliersById(creatureId);
   recomputeSlotFullness(creatureId);
+  recomputeInactiveProperties(creatureId);
   return computationMemo;
 }
 
@@ -95,17 +97,24 @@ export function recomputePropertyDependencies(property){
   let creature = getRootCreatureAncestor(property);
   recomputeCreatureByDependencies({
     creature,
-    dependencies: [property._id],
+    propertyIds: [property._id],
+    propertiesDependedAponIds: property.dependencies,
   });
 }
 
-export function recomputeCreatureByDependencies({creature, dependencies}){
+export function recomputeCreatureByDependencies({
+  creature,
+  propertyIds,
+  propertiesDependedAponIds
+}){
   let props = getDependentProperties({
     creatureId: creature._id,
-    dependencies,
+    propertyIds,
+    propertiesDependedAponIds,
   });
   let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
+  recomputeInactiveProperties(creature._id);
   return computationMemo;
 }

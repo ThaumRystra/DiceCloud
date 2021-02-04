@@ -1,5 +1,6 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+import { union } from 'lodash';
 
 export default function computeEndStepProperty(prop, memo){
   switch (prop.type){
@@ -35,7 +36,7 @@ function computeAction(prop, memo){
     dependencies,
   } = evaluateCalculation({ string: prop.uses, prop, memo});
   prop.usesResult = result.value;
-  prop.dependencies.push(...dependencies);
+  prop.dependencies = union(prop.dependencies, dependencies);
   if (context.errors.length){
     prop.usesErrors = context.errors;
   } else {
@@ -57,7 +58,13 @@ function computeAction(prop, memo){
       if (available < attConsumed.quantity){
         prop.insufficientResources = true;
       }
-      if (stat) prop.dependencies.push(stat._id, ...stat.dependencies);
+      if (stat){
+        prop.dependencies = union(
+          prop.dependencies,
+          [stat._id],
+          stat.dependencies
+        );
+      }
     }
   });
   // Items consumed
@@ -76,7 +83,13 @@ function computeAction(prop, memo){
     if (!item || available < itemConsumed.quantity){
       prop.insufficientResources = true;
     }
-    if (item) prop.dependencies.push(item._id, ...item.dependencies);
+    if (item){
+      prop.dependencies = union(
+        prop.dependencies,
+        [item._id],
+        item.dependencies
+      );
+    }
   });
 }
 
@@ -91,7 +104,7 @@ function computePropertyField(prop, memo, fieldName, fn){
   } else {
     prop[`${fieldName}Result`] = result.toString();
   }
-  prop.dependencies.push(...dependencies);
+  prop.dependencies = union(prop.dependencies, dependencies);
   if (context.errors.length){
     prop[`${fieldName}Errors`] = context.errors;
   } else {

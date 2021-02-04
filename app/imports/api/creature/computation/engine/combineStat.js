@@ -1,6 +1,7 @@
 import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
 import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import { union } from 'lodash';
 
 export default function combineStat(stat, aggregator, memo){
   if (stat.type === 'attribute'){
@@ -45,7 +46,7 @@ function combineAttribute(stat, aggregator, memo){
     });
     stat.spellSlotLevelValue = result.value;
     stat.spellSlotLevelErrors = context.errors;
-    stat.dependencies.push(...dependencies);
+    stat.dependencies = union(stat.dependencies, dependencies);
   }
   stat.currentValue = stat.value - (stat.damage || 0);
   // Ability scores get modifiers
@@ -60,7 +61,11 @@ function combineAttribute(stat, aggregator, memo){
     let conStat = memo.statsByVariableName['constitution'];
     if (conStat && 'modifier' in conStat){
       stat.constitutionMod = conStat.modifier;
-      stat.dependencies.push(conStat._id, ...conStat.dependencies);
+      stat.dependencies = union(
+        stat.dependencies,
+        [conStat._id],
+        conStat.dependencies,
+      );
     }
   }
   // Stats that have no effects can be hidden based on a sheet setting
@@ -77,7 +82,11 @@ function combineSkill(stat, aggregator, memo){
       computeStat(ability, memo);
     }
     stat.abilityMod = ability.modifier;
-    stat.dependencies.push(ability._id, ...ability.dependencies);
+    stat.dependencies = union(
+      stat.dependencies,
+      [ability._id],
+      ability.dependencies,
+    );
   }
   // Combine all the child proficiencies
   stat.proficiency = stat.baseProficiency || 0;
@@ -89,7 +98,11 @@ function combineSkill(stat, aggregator, memo){
       prof.value > stat.proficiency
     ){
       stat.proficiency = prof.value;
-      stat.dependencies.push(prof._id, ...prof.dependencies);
+      stat.dependencies = union(
+        stat.dependencies,
+        [prof._id],
+        prof.dependencies,
+      );
     }
   }
   // Get the character's proficiency bonus to apply
@@ -99,10 +112,18 @@ function combineSkill(stat, aggregator, memo){
   if (typeof profBonus !== 'number' && memo.statsByVariableName['level']){
     let level = memo.statsByVariableName['level'].value;
     profBonus = Math.ceil(level / 4) + 1;
-    if (level._id) stat.dependencies.push(level._id);
-    if (level.dependencies) stat.dependencies.push(...level.dependencies);
+    if (level._id){
+      stat.dependencies = union(stat.dependencies, [level._id]);
+    }
+    if (level.dependencies){
+      stat.dependencies = union(stat.dependencies, level.dependencies);
+    }
   } else {
-    stat.dependencies.push(profBonusStat._id, ...profBonusStat.dependencies);
+    stat.dependencies = union(
+      stat.dependencies,
+      [profBonusStat._id],
+      profBonusStat.dependencies,
+    );
   }
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;

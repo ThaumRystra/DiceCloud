@@ -1,5 +1,6 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
+import { union } from 'lodash';
 
 export default function computeEffect(effect, memo){
   if (effect.computationDetails.computed) return;
@@ -44,7 +45,7 @@ export default function computeEffect(effect, memo){
       memo
     });
     effect.result = result.value;
-    effect.dependencies.push(...dependencies);
+    effect.dependencies = union(effect.dependencies, dependencies);
     if (context.errors.length){
       effect.errors = context.errors;
     }
