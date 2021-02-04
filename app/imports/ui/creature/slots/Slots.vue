@@ -52,14 +52,14 @@
 </template>
 
 <script>
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import {
-  insertPropertyFromLibraryNode,
   softRemoveProperty,
   restoreProperty
-} from '/imports/api/creature/CreatureProperties.js';
+} from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
 export default {
   components: {

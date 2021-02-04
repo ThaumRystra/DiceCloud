@@ -63,7 +63,7 @@
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
-  import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 	export default {
     inject: {

@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 // n + 1 database queries + n potential updates for n slots. Could be sped up.
 export default function recomputeSlotFullness(ancestorId){
   CreatureProperties.find({

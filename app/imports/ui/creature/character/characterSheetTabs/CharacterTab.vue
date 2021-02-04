@@ -111,7 +111,7 @@
 
 <script>
 import Creatures from '/imports/api/creature/Creatures.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
 import Slots from '/imports/ui/creature/slots/Slots.vue';

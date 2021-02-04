@@ -94,3 +94,17 @@ export function recomputeCreatureByDoc(creature){
   recomputeSlotFullness(creatureId);
   return computationMemo;
 }
+
+// TODO
+export function recomputePropertyDependencies(property){
+  // Placeholder functionality, just recompute the whole creature
+  let creature = Creatures.findOne(property.ancestors[0].id);
+  recomputeCreatureByDoc(creature);
+}
+
+// TODO
+export function recomputeCreatureByIdAndDependencies({creatureId, dependencies}){
+  // Placeholder functionality, just recompute the whole creature
+  let creature = Creatures.findOne(creatureId);
+  recomputeCreatureByDoc(creature);
+}

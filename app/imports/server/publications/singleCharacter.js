@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/Creatures.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';

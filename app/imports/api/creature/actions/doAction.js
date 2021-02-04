@@ -1,7 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties, { getCreature } from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import Creatures from '/imports/api/creature/Creatures.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/recomputeCreature.js';
 import { nodesToTree } from '/imports/api/parenting/parenting.js';
@@ -25,11 +27,11 @@ const doAction = new ValidatedMethod({
   run({actionId, targetId}) {
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
-    let creature = getCreature(action);
+    let creature = getRootCreatureAncestor(action);
     assertEditPermission(creature, this.userId);
     let target = undefined;
     if (targetId) {
-      target = getCreature(targetId);
+      target = Creatures.findOne(targetId);
       assertEditPermission(target, this.userId);
     }
 		doActionWork({action, creature, target});

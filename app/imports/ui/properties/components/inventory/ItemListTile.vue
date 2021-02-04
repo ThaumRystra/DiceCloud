@@ -43,7 +43,7 @@
 <script>
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import { adjustQuantity } from '/imports/api/creature/CreatureProperties.js';
+import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
 
 export default {

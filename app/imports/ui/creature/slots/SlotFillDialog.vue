@@ -127,7 +127,7 @@
 
 <script>
 import Creatures from '/imports/api/creature/Creatures.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

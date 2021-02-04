@@ -120,7 +120,7 @@ import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
-import { adjustQuantity } from '/imports/api/creature/CreatureProperties.js';
+import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 
 export default {
   components:{

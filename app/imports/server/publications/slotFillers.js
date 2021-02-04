@@ -1,6 +1,6 @@
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 Meteor.publish('slotFillers', function(slotId){
   this.autorun(function (){

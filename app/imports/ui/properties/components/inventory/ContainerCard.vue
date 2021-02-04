@@ -22,7 +22,7 @@
 <script>
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 export default {
 	components: {

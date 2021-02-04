@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 
 export default function createListOfProperties(filter = {}){

@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 export default function getComputationProperties(creatureId){
   // find ids of all toggles that have conditions, even if they are inactive

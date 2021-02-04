@@ -45,13 +45,12 @@
 </template>
 
 <script>
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
-import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
-import { getParentRefByTag } from '/imports/api/creature/creatureProperties/manageEquipment.js';
+import { getParentRefByTag } from '/imports/api/creature/creatureProperties/methods/equipItem.js';
 import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
 
 export default {
@@ -144,13 +143,6 @@ export default {
 				data: {_id},
 			});
 		},
-    setEquipped(doc, equipped){
-      updateProperty.call({
-        _id: doc._id,
-        path: ['equipped'],
-        value: equipped
-      });
-    }
 	},
 }
 </script>

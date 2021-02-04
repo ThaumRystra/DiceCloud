@@ -95,10 +95,9 @@
   import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
 
-  import CreatureProperties, {
-    insertProperty,
-    insertPropertyFromLibraryNode
-  } from '/imports/api/creature/CreatureProperties.js';
+  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+  import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+  import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
   import { setDocToLastOrder } from '/imports/api/parenting/order.js';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 

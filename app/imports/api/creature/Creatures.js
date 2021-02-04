@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
 

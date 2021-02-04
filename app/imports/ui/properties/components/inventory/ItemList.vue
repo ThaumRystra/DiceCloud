@@ -30,7 +30,7 @@
 import draggable from 'vuedraggable';
 import ItemListTile from '/imports/ui/properties/components/inventory/ItemListTile.vue';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 
 export default {
   components: {
@@ -99,7 +99,7 @@ export default {
           order,
         });
         if (doc.type === 'item' && doc.equipped != this.equipment){
-          updateProperty.call({
+          updateCreatureProperty.call({
             _id: doc._id,
             path: ['equipped'],
             value: !!this.equipment,

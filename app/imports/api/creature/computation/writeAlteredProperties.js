@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { isEqual, forOwn } from 'lodash';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import propertySchemasIndex from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 
 export default function writeAlteredProperties(memo){

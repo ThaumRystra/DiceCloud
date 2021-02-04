@@ -1,6 +1,6 @@
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
-import { damagePropertiesByName } from '/imports/api/creature/CreatureProperties.js';
+import damagePropertiesByName from '/imports/api/creature/creatureProperties/methods/damagePropertiesByName.js';
 
 export default function applyAdjustment({
   prop,

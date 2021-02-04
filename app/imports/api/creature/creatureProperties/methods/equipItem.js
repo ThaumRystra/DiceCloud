@@ -1,12 +1,12 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-import getClosestPropertyAncestorCreature from '/imports/api/creature/creatureProperties/getClosestPropertyAncestorCreature.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
 
-function getParentRefByTag(creatureId, tag){
+export function getParentRefByTag(creatureId, tag){
   let prop = CreatureProperties.findOne({
     'ancestors.id': creatureId,
     removed: {$ne: true},
@@ -40,7 +40,7 @@ const equipItem = new ValidatedMethod({
     let item = CreatureProperties.findOne(_id);
     if (item.type !== 'item') throw new Meteor.Error('wrong type',
     'Equip and unequip can only be performed on items');
-    let creature = getClosestPropertyAncestorCreature(item);
+    let creature = getRootCreatureAncestor(item);
     assertEditPermission(creature, this.userId);
     CreatureProperties.update(_id, {
       $set: {equipped},
@@ -61,4 +61,4 @@ const equipItem = new ValidatedMethod({
   },
 });
 
-export { equipItem, getParentRefByTag }
+export default equipItem;

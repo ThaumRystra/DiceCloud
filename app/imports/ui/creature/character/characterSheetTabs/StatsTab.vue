@@ -310,7 +310,8 @@
 
 <script>
   import Creatures from '/imports/api/creature/Creatures.js';
-	import { damageProperty, softRemoveProperty } from '/imports/api/creature/CreatureProperties.js';
+	import { softRemoveProperty } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+  import { damageProperty } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
 	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
@@ -322,7 +323,7 @@
 	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
   import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
-  import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
 
   const getProperties = function(creature, filter,){

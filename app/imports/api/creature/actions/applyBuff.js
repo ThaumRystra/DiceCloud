@@ -3,7 +3,7 @@ import {
 	renewDocIds
 } from '/imports/api/parenting/parenting.js';
 import {setDocToLastOrder} from '/imports/api/parenting/order.js';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 export default function applyBuff({
   prop,

@@ -60,14 +60,14 @@
 
 <script>
 import CreatureProperties, {
-  updateProperty,
   damageProperty,
-  duplicateProperty,
   pushToProperty,
   pullFromProperty,
   softRemoveProperty,
   restoreProperty,
-} from '/imports/api/creature/CreatureProperties.js';
+} from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import duplicateProperty from '/imports/api/creature/creatureProperties/methods/duplicateProperty.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import PropertyToolbar from '/imports/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
@@ -79,7 +79,7 @@ import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/Crea
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { get, findLast } from 'lodash';
-import { equipItem } from '/imports/api/creature/creatureProperties/manageEquipment.js';
+import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem.js';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -158,7 +158,7 @@ export default {
         });
         return;
       }
-      updateProperty.call({_id: this._id, path, value}, (error) =>{
+      updateCreatureProperty.call({_id: this._id, path, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });

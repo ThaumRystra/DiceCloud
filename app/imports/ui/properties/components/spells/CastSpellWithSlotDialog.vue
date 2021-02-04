@@ -150,7 +150,7 @@
 <script>
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import SplitListLayout from '/imports/ui/properties/components/attributes/SplitListLayout.vue';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import spellsWithSubheaders from '/imports/ui/properties/components/spells/spellsWithSubheaders.js';
 import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';

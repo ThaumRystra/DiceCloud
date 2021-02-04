@@ -49,7 +49,7 @@
 
 <script>
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import {updateProperty} from '/imports/api/creature/CreatureProperties.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 
 export default {
   mixins: [treeNodeViewMixin],
@@ -77,7 +77,7 @@ export default {
 			this.$emit('click', e);
 		},
     setPrepared(val, ack){
-      updateProperty.call({
+      updateCreatureProperty.call({
         _id: this.model._id,
         path: ['prepared'],
         value: val

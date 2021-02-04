@@ -24,7 +24,7 @@
 
 <script>
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 

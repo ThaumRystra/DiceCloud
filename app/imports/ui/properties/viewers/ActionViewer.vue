@@ -125,7 +125,7 @@ import doAction from '/imports/api/creature/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
-import { updateProperty } from '/imports/api/creature/CreatureProperties.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 
 export default {
   components: {
@@ -183,7 +183,7 @@ export default {
       });
     },
     resetUses(){
-      updateProperty.call({
+      updateCreatureProperty.call({
         _id: this.model._id,
         path: ['usesUsed'],
         value: 0,

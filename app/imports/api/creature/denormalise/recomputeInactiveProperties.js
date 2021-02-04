@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 export default function recomputeInactiveProperties(ancestorId){
   let disabledFilter = {

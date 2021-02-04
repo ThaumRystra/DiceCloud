@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import nodesToTree from '/imports/api/parenting/parenting.js';
 
 export default function recomputeInventory(creatureId){
