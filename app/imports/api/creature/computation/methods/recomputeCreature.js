@@ -8,7 +8,6 @@ import computeMemo from '/imports/api/creature/computation/engine/computeMemo.js
 import writeAlteredProperties from '/imports/api/creature/computation/engine/writeAlteredProperties.js';
 import writeCreatureVariables from '/imports/api/creature/computation/engine/writeCreatureVariables.js';
 import { recomputeDamageMultipliersById } from '/imports/api/creature/denormalise/recomputeDamageMultipliers.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import recomputeSlotFullness from '/imports/api/creature/denormalise/recomputeSlotFullness.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import getDependentProperties from '/imports/api/creature/computation/engine/getDependentProperties.js';
@@ -82,11 +81,6 @@ export function recomputeCreatureById(creatureId){
  */
 export function recomputeCreatureByDoc(creature){
   const creatureId = creature._id;
-
-  // Make sure the active state of all properties is correct before doing work
-  // TODO: Separate this into it's own recompute function and only call it
-  //       when things change activation state
-  recomputeInactiveProperties(creatureId);
   let props = getComputationProperties(creatureId);
   let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
@@ -96,7 +90,6 @@ export function recomputeCreatureByDoc(creature){
   recomputeSlotFullness(creatureId);
   return computationMemo;
 }
-
 
 export function recomputePropertyDependencies(property){
   let creature = getRootCreatureAncestor(property);

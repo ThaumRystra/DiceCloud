@@ -9,6 +9,7 @@ import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 
 const organizeDoc = new ValidatedMethod({
   name: 'organize.organizeDoc',
@@ -54,6 +55,10 @@ const organizeDoc = new ValidatedMethod({
     let creaturesToRecompute = union(docCreatures, parentCreatures);
     // Recompute the creatures
     creaturesToRecompute.forEach(id => {
+      // The active status of some properties might change due to a change in
+      // ancestry
+      recomputeInactiveProperties(id);
+      // Some Dependencies depend on ancestry, so a full recompute is needed
       recomputeCreatureById(id);
     });
   },

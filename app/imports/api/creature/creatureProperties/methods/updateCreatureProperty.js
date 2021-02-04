@@ -4,6 +4,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 
 const updateCreatureProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
@@ -32,7 +33,7 @@ const updateCreatureProperty = new ValidatedMethod({
     });
     let rootCreature = getRootCreatureAncestor(property);
     assertEditPermission(rootCreature, this.userId);
-    
+
     let pathString = path.join('.');
     let modifier;
     // unset empty values
@@ -45,8 +46,13 @@ const updateCreatureProperty = new ValidatedMethod({
 			selector: {type: property.type},
 		});
 
-    // Updating a property might change dependencies, unless we are certain
-    // it did not, a full recompute is required
+    // Some updates might cause other properties to become inactive
+    if ([
+      'applied', 'equipped', 'prepared', 'alwaysPrepared', 'disabled'
+    ].includes(path[0])){
+      recomputeInactiveProperties(rootCreature._id);
+    }
+    // Updating a property is likely to change dependencies, do a full recompute
     recomputeCreatureByDoc(rootCreature);
   },
 });

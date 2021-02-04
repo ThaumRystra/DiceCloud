@@ -5,6 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import {
@@ -92,6 +93,8 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
       ancestorId: rootCreature._id,
     });
 
+    // The library properties need to denormalise which of them are inactive
+    recomputeInactiveProperties(rootId);
 		// Inserting a creature property invalidates dependencies: full recompute
     recomputeCreatureByDoc(rootCreature);
 
