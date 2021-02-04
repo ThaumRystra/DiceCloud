@@ -31,6 +31,7 @@ export default class OperatorNode extends ParseNode {
       case '*': result = left * right; break;
       case '/': result = left / right; break;
       case '^': result = Math.pow(left, right); break;
+      case '%': result = left % right; break;
       case '&':
       case '&&': result = left && right; break;
       case '|':

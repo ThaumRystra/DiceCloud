@@ -39,6 +39,7 @@
     multiplicativeOperator: ['*', '/'],
     exponentOperator: ['^'],
     additiveOperator: ['+', '-'],
+    moduloOperator: ['%'],
     andOperator: ['&', '&&'],
     orOperator: ['|', '||'],
     stringDelimiters: ['\"', '\''],
@@ -91,7 +92,11 @@ relationalExpression ->
 | additiveExpression {% id %}
 
 additiveExpression ->
-  additiveExpression _ %additiveOperator _ multiplicativeExpression {% d => operator(d, 'add') %}
+  additiveExpression _ %additiveOperator _ remainderExpression {% d => operator(d, 'add') %}
+| remainderExpression {% id %}
+
+remainderExpression ->
+  remainderExpression _ %moduloOperator _ multiplicativeExpression {% d => operator(d, 'remainder') %}
 | multiplicativeExpression {% id %}
 
 multiplicativeExpression ->
@@ -144,7 +149,9 @@ parenthesizedExpression ->
 | accessorExpression {% id %}
 
 accessorExpression ->
-  name ( "." name {% d => d[1].name %} ):+ {% d=> new AccessorNode({name: d[0], path: d[1]}) %}
+  (%name {% d => d[0].value %}) ( "." %name {% d => d[1].value %} ):+ {%
+    d=> new AccessorNode({name: d[0], path: d[1]})
+  %}
 | valueExpression {% id %}
 
 valueExpression ->
