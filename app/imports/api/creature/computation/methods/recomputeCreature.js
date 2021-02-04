@@ -115,6 +115,7 @@ export function recomputeCreatureByDependencies({
   let computationMemo = new ComputationMemo(props, creature);
   computeMemo(computationMemo);
   writeAlteredProperties(computationMemo);
+  writeCreatureVariables(computationMemo, creature._id, false)
   recomputeInactiveProperties(creature._id);
   return computationMemo;
 }
