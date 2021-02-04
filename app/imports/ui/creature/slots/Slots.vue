@@ -54,10 +54,8 @@
 <script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
-import {
-  softRemoveProperty,
-  restoreProperty
-} from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
+import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
