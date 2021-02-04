@@ -1,9 +1,9 @@
-import computeStat from '/imports/api/creature/computation/computeStat.js';
+import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
 import { parse, CompilationContext } from '/imports/parser/parser.js';
 import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
-import findAncestorByType from '/imports/api/creature/computation/findAncestorByType.js';
+import findAncestorByType from '/imports/api/creature/computation/engine/findAncestorByType.js';
 
 /* Convert a calculation into a constant output and errors*/
 export default function evaluateCalculation({

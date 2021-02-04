@@ -1,4 +1,4 @@
-import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
+import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 
 export default class EffectAggregator{
   constructor(stat, memo){

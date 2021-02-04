@@ -5,7 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import { recomputeCreatureByIdAndDependencies } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureByDependencies } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const dealDamage = new ValidatedMethod({
   name: 'creatureProperties.dealDamage',
@@ -60,7 +60,7 @@ const dealDamage = new ValidatedMethod({
       dependencies.push(healthBar.variableName);
       dependencies.push(...healthBar.dependencies);
     });
-    recomputeCreatureByIdAndDependencies({creatureId, dependencies});
+    recomputeCreatureByDependencies({creature, dependencies});
     return totalDamage;
   },
 });

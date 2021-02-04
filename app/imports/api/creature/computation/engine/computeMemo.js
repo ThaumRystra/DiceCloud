@@ -1,10 +1,10 @@
 import { each, forOwn } from 'lodash';
-import computeLevels from '/imports/api/creature/computation/computeLevels.js';
-import computeStat from '/imports/api/creature/computation/computeStat.js';
-import computeEffect from '/imports/api/creature/computation/computeEffect.js';
-import computeToggle from '/imports/api/creature/computation/computeToggle.js';
-import computeEndStepProperty from '/imports/api/creature/computation/computeEndStepProperty.js';
-import computeInlineCalculations from '/imports/api/creature/computation/computeInlineCalculations.js';
+import computeLevels from '/imports/api/creature/computation/engine/computeLevels.js';
+import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
+import computeEffect from '/imports/api/creature/computation/engine/computeEffect.js';
+import computeToggle from '/imports/api/creature/computation/engine/computeToggle.js';
+import computeEndStepProperty from '/imports/api/creature/computation/engine/computeEndStepProperty.js';
+import computeInlineCalculations from '/imports/api/creature/computation/engine/computeInlineCalculations.js';
 
 export default function computeMemo(memo){
   // Compute level

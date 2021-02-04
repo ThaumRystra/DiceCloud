@@ -1,5 +1,5 @@
-import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
-import applyToggles from '/imports/api/creature/computation/applyToggles.js';
+import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
 
 export default function computeEffect(effect, memo){
   if (effect.computationDetails.computed) return;

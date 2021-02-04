@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import Creatures from '/imports/api/creature/Creatures.js';
-import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 let Experiences = new Mongo.Collection('experiences');
 

@@ -1,4 +1,4 @@
-import computeToggle from '/imports/api/creature/computation/computeToggle.js';
+import computeToggle from '/imports/api/creature/computation/engine/computeToggle.js';
 
 export default function applyToggles(prop, memo){
   prop.computationDetails.toggleAncestors.forEach(toggleId => {

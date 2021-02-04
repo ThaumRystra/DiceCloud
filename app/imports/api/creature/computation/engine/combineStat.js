@@ -1,6 +1,6 @@
-import computeStat from '/imports/api/creature/computation/computeStat.js';
-import applyToggles from '/imports/api/creature/computation/applyToggles.js';
-import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
+import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
+import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
+import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 
 export default function combineStat(stat, aggregator, memo){
   if (stat.type === 'attribute'){

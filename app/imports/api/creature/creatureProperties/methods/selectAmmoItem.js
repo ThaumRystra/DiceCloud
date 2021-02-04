@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const selectAmmoItem = new ValidatedMethod({
   name: 'creatureProperties.selectAmmoItem',

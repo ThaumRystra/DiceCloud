@@ -1,7 +1,7 @@
-import combineStat from '/imports/api/creature/computation/combineStat.js';
-import computeEffect from '/imports/api/creature/computation/computeEffect.js';
-import EffectAggregator from '/imports/api/creature/computation/EffectAggregator.js';
-import applyToggles from '/imports/api/creature/computation/applyToggles.js';
+import combineStat from '/imports/api/creature/computation/engine/combineStat.js';
+import computeEffect from '/imports/api/creature/computation/engine/computeEffect.js';
+import EffectAggregator from '/imports/api/creature/computation/engine/EffectAggregator.js';
+import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
 import { each } from 'lodash';
 
 export default function computeStat(stat, memo){

@@ -1,5 +1,5 @@
 import { includes, cloneDeep } from 'lodash';
-import findAncestorByType from '/imports/api/creature/computation/findAncestorByType.js';
+import findAncestorByType from '/imports/api/creature/computation/engine/findAncestorByType.js';
 
 // The computation memo is an in-memory data structure used only during the
 // computation process

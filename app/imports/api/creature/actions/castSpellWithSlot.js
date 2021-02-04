@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties, { getCreature } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { doActionWork } from '/imports/api/creature/actions/doAction.js';
 
 const castSpellWithSlot = new ValidatedMethod({

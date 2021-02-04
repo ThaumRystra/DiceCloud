@@ -8,7 +8,7 @@
 
 <script>
   import Creatures from '/imports/api/creature/Creatures.js';
-  import { damageProperty } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+  import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 
 	import HealthBarCard from '/imports/ui/properties/components/attributes/HealthBarCard.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

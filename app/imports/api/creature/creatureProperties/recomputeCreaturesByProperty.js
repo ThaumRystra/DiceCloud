@@ -1,4 +1,4 @@
-import { recomputeCreatureById } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 /**
  * Recomputes all ancestor creatures of this property

@@ -1,4 +1,4 @@
-import evaluateCalculation from '/imports/api/creature/computation/evaluateCalculation.js';
+import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default function computeEndStepProperty(prop, memo){

@@ -2,14 +2,16 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
-import ComputationMemo from '/imports/api/creature/computation/ComputationMemo.js';
-import getComputationProperties from '/imports/api/creature/computation/getComputationProperties.js';
-import computeMemo from '/imports/api/creature/computation/computeMemo.js';
-import writeAlteredProperties from '/imports/api/creature/computation/writeAlteredProperties.js';
-import writeCreatureVariables from '/imports/api/creature/computation/writeCreatureVariables.js';
+import ComputationMemo from '/imports/api/creature/computation/engine/ComputationMemo.js';
+import getComputationProperties from '/imports/api/creature/computation/engine/getComputationProperties.js';
+import computeMemo from '/imports/api/creature/computation/engine/computeMemo.js';
+import writeAlteredProperties from '/imports/api/creature/computation/engine/writeAlteredProperties.js';
+import writeCreatureVariables from '/imports/api/creature/computation/engine/writeCreatureVariables.js';
 import { recomputeDamageMultipliersById } from '/imports/api/creature/denormalise/recomputeDamageMultipliers.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import recomputeSlotFullness from '/imports/api/creature/denormalise/recomputeSlotFullness.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import getDependentProperties from '/imports/api/creature/computation/engine/getDependentProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 
 export const recomputeCreature = new ValidatedMethod({
@@ -95,16 +97,22 @@ export function recomputeCreatureByDoc(creature){
   return computationMemo;
 }
 
-// TODO
+
 export function recomputePropertyDependencies(property){
-  // Placeholder functionality, just recompute the whole creature
-  let creature = Creatures.findOne(property.ancestors[0].id);
-  recomputeCreatureByDoc(creature);
+  let creature = getRootCreatureAncestor(property);
+  recomputeCreatureByDependencies({
+    creature,
+    dependencies: [property._id],
+  });
 }
 
-// TODO
-export function recomputeCreatureByIdAndDependencies({creatureId, dependencies}){
-  // Placeholder functionality, just recompute the whole creature
-  let creature = Creatures.findOne(creatureId);
-  recomputeCreatureByDoc(creature);
+export function recomputeCreatureByDependencies({creature, dependencies}){
+  let props = getDependentProperties({
+    creatureId: creature._id,
+    dependencies,
+  });
+  let computationMemo = new ComputationMemo(props, creature);
+  computeMemo(computationMemo);
+  writeAlteredProperties(computationMemo);
+  return computationMemo;
 }

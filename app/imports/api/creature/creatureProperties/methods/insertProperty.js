@@ -4,7 +4,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',

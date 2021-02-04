@@ -5,7 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import { recomputePropertyDependencies } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputePropertyDependencies } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const damagePropertiesByName = new ValidatedMethod({
   name: 'CreatureProperties.damagePropertiesByName',

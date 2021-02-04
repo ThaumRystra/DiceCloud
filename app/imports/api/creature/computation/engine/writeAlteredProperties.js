@@ -79,7 +79,9 @@ function addUnsetOp(op, key){
 
 function bulkWriteProperties(bulkWriteOps){
   if (!bulkWriteOps.length) return;
-  if (Meteor.isServer){
+  // Only use bulk writing if there are many writes to do
+  // it makes latency compensation janky, so we avoid it for smaller writes
+  if (Meteor.isServer && bulkWriteOps.length > 16){
     CreatureProperties.rawCollection().bulkWrite(
       bulkWriteOps,
       {ordered : false},
@@ -94,10 +96,8 @@ function bulkWriteProperties(bulkWriteOps){
     bulkWriteOps.forEach(op => {
       let updateOneOrMany = op.updateOne || op.updateMany;
       CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
-        // The server code is bypassing collection 2 validation, so do the same
-        // on the client
-        // include this if bypass is off:
-        // selector: {type: op.type}
+        // The bulk code is bypassing validation, so do the same here
+        // selector: {type: op.type} // include this if bypass is off
         bypassCollection2: true,
       });
     });

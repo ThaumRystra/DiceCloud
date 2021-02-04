@@ -5,7 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/recomputeCreature.js';
+import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import {
 	setLineageOfDocs,
