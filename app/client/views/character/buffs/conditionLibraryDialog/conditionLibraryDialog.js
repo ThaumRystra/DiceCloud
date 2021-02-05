@@ -163,4 +163,23 @@ LIBRARY_CONDITIONS = {
 			description: "You have died of exhaustion",
 		},
 	},
+
+	inspiration: {
+		buff: {
+			name: "Inspiration",
+			description: "Single use advantage on an attack roll, saving throw, or ability check"
+		}
+	},
+	bardicInspiration: {
+		buff: {
+			name: "Bardic Inspiration",
+			description: "For the next 10 minutes the creature can roll the die(based on bard level) given to roll in addition to one ability check, attack roll, or saving throw it makes. This additional die roll can be made after rolling the d20 but must be before the DM says whether the roll succeeds or fails. A createure can have only one Bardic Inspiration die at a time and once used it is lost.\n\n1d6 die starting a level 1 and becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level."
+		}
+	},
+	combatBardicInspiration: {
+		buff: {
+			name: "Bardic Inspiration - Combat",
+			description: "For the next 10 minutes the creature can roll the die(based on bard level) given to roll in addition to one ability check, attack roll, weapon damage, or saving throw it makes. This additional die roll can be made after rolling the d20 but must be before the DM says whether the roll succeeds or fails.\n\nAlternatively, when an attack roll is made against the creature, it can use its reaction to roll the Bardic Inspiration die and add the number rolled to its AC against that attack, after seeing the roll but before knowing whether it hits or misses. A createure can have only one Bardic Inspiration die at a time and once used it is lost.\n\n1d6 die starting a level 1 and becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level."
+		}
+	}
 };
