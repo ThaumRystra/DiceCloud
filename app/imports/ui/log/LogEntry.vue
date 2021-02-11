@@ -30,14 +30,23 @@
           v-if="content.result"
           class="subheading font-weight-bold mx-1"
         >{{ content.result }}</span>
-        {{ content.details }}
+        <markdown-text
+          v-if="content.details"
+          class="details"
+          :markdown="content.details"
+        />
       </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
+import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+
 export default {
+  components: {
+    MarkdownText,
+  },
   props: {
     model: {
       type: Object,
@@ -50,5 +59,8 @@ export default {
 <style lang="css" scoped>
 .content-line {
   min-height: 24px;
+}
+.content-line .details {
+  display: inline-block;
 }
 </style>

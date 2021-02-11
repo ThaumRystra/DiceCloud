@@ -6,6 +6,7 @@
 
 <script>
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+import embedInlineCalculations from '/imports/api/creature/computation/afterComputation/embedInlineCalculations.js';
 
 export default {
   components: {
@@ -26,13 +27,8 @@ export default {
   },
   computed: {
     computedValue(){
-      if (!this.string) return '';
       if (this.inactive) return this.string;
-      let index = 0;
-      return this.string.replace(/\{([^{}]*)\}/g, () => {
-        let comp = this.calculations && this.calculations[index++];
-        return comp && comp.result;
-      });
+      return embedInlineCalculations(this.string, this.calculations);
     }
   }
 }

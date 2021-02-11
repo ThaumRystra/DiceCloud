@@ -36,17 +36,30 @@ export default function applyDamage({
         damageType: prop.damageType,
         amount: result,
       });
-      insertCreatureLog.call({
-        log: {
-          text: `Recieved ${damageDealt} ${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`,
-          creatureId: target._id,
-        }
-      });
-      if (target._id !== creature._id){
+      if (target._id === creature._id){
         log.content.push({
           result: damageDealt,
-          details: `${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}` +
+          details: `${prop.damageType}`+
+            `${prop.damageType !== 'healing' ? ' damage': ''} to self`,
+        });
+      } else {
+        log.content.push({
+          resultPrefix: 'Dealt ',
+          result: damageDealt,
+          details: `${prop.damageType}` +
+            `${prop.damageType !== 'healing'? ' damage': ''}` +
             `${target.name && ' to '}${target.name}`,
+        });
+        insertCreatureLog.call({
+          log: {
+            content: [{
+              resultPrefix: 'Recieved ',
+              result: damageDealt,
+              details: `${prop.damageType}` +
+                `${prop.damageType !== 'healing'? ' damage': ''}`
+            }],
+            creatureId: target._id,
+          }
         });
       }
     });
