@@ -2,9 +2,7 @@
   <div
     class="stats-tab ma-2"
   >
-    <div class="px-2 pt-2">
-      <health-bar-card-container :creature-id="creatureId" />
-    </div>
+    <health-bar-card-container :creature-id="creatureId" />
 
     <column-layout>
       <div class="character-buttons">
@@ -54,7 +52,10 @@
         </v-card>
       </div>
 
-      <div class="ability-scores">
+      <div
+        v-if="abilities.length"
+        class="ability-scores"
+      >
         <v-card>
           <v-list>
             <template v-for="(ability, index) in abilities">
@@ -110,7 +111,10 @@
         />
       </div>
 
-      <div class="hit-dice">
+      <div
+        v-if="hitDice.length"
+        class="hit-dice"
+      >
         <v-card>
           <v-list>
             <v-subheader>Hit Dice</v-subheader>
@@ -170,7 +174,10 @@
         <damage-multiplier-card :model="creature.damageMultipliers" />
       </div>
 
-      <div class="saving-throws">
+      <div
+        v-if="savingThrows.length"
+        class="saving-throws"
+      >
         <v-card>
           <v-list>
             <v-subheader>Saving Throws</v-subheader>
@@ -185,7 +192,10 @@
         </v-card>
       </div>
 
-      <div class="skills">
+      <div
+        v-if="skills.length"
+        class="skills"
+      >
         <v-card>
           <v-list>
             <v-subheader>Skills</v-subheader>

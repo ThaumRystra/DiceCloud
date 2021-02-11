@@ -1,9 +1,14 @@
 <template lang="html">
-  <health-bar-card
-    :attributes="attributes"
-    @change="healthBarChanged"
-    @click="healthBarClicked"
-  />
+  <div
+    v-if="attributes.length"
+    class="px-2 pt-2"
+  >
+    <health-bar-card
+      :attributes="attributes"
+      @change="healthBarChanged"
+      @click="healthBarClicked"
+    />
+  </div>
 </template>
 
 <script>
