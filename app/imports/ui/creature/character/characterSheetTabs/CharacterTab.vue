@@ -162,6 +162,7 @@ export default {
         'ancestors.id': this.creatureId,
         type: 'note',
         removed: {$ne: true},
+        inactive: {$ne: true},
       }, {
         sort: {order: 1},
       });
