@@ -76,9 +76,6 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
     components: {
       IncrementMenu
     },
-    inject: {
-      context: { default: {} }
-    },
 		props: {
 			value: Number,
 			maxValue: Number,

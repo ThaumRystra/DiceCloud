@@ -65,9 +65,6 @@ export default {
     dark: Boolean,
     hideCastButton: Boolean,
 	},
-  inject: {
-    context: { default: {} }
-  },
 	computed: {
 		currentValue(){
 			return this.value - this.damage;

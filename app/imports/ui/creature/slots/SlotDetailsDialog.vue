@@ -28,13 +28,8 @@ export default {
   },
   reactiveProvide: {
     name: 'context',
-    include: ['creature'],
+    include: ['creatureId'],
   },
-  meteor: {
-    creature(){
-      return Creatures.findOne(this.creatureId);
-    },
-  }
 }
 </script>
 

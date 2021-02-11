@@ -44,7 +44,7 @@
     />
 
     <effect-viewer
-      v-if="context.creature && model.baseValueCalculation"
+      v-if="context.creatureId && model.baseValueCalculation"
       :model="{
         name: 'Base value',
         result: model.baseValue,
@@ -89,8 +89,8 @@
 		},
     meteor: {
       effects(){
-        if (this.context.creature){
-          let creatureId = this.context.creature._id;
+        if (this.context.creatureId){
+          let creatureId = this.context.creatureId;
           return CreatureProperties.find({
             'ancestors.id': creatureId,
             'stats': this.model.variableName,

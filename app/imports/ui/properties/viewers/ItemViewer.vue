@@ -9,7 +9,7 @@
         {{ model.quantity }}
       </div>
       <increment-button
-        v-if="context.creature && model.showIncrement"
+        v-if="context.creatureId && model.showIncrement"
         icon
         large
         outline

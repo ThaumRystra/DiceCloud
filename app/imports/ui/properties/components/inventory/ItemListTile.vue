@@ -17,7 +17,7 @@
     </v-list-tile-content>
     <v-list-tile-action>
       <increment-button
-        v-if="context.creature && model.showIncrement"
+        v-if="context.creatureId && model.showIncrement"
         icon
         flat
         color="primary"

@@ -17,9 +17,6 @@
 	import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.vue';
 
 	export default {
-    inject: {
-      context: { default: {} }
-    },
 		components: {
 			HealthBar,
 		},

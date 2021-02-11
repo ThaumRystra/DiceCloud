@@ -168,7 +168,7 @@ export default {
   },
   reactiveProvide: {
     name: 'context',
-    include: ['creature'],
+    include: ['creatureId'],
   },
   methods:{
     getTitle(model){

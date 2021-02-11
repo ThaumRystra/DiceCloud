@@ -129,11 +129,14 @@ export default {
       );
       if (!nearestCreatureAncestor) return;
       return Creatures.findOne(nearestCreatureAncestor.id);
-    }
+    },
+    creatureId(){
+      return this.creature && this.creature._id;
+    },
   },
   reactiveProvide: {
     name: 'context',
-    include: ['creature', 'editPermission'],
+    include: ['creatureId', 'editPermission'],
   },
   methods: {
     getPropertyName,

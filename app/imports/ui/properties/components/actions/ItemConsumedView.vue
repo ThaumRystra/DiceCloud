@@ -6,7 +6,7 @@
     }"
   >
     <v-menu
-      v-if="context.creature"
+      v-if="context.creatureId"
       transition="slide-y-transition"
       lazy
       :disabled="!context.editPermission"
@@ -17,7 +17,7 @@
           style="height: 100%;"
           :class="{
             'error--text': insufficient,
-            'clickable': context.creature && context.editPermission,
+            'clickable': context.creatureId && context.editPermission,
             'left-pad': leftPad,
           }"
           v-on="on"

@@ -95,7 +95,7 @@
 		},
     reactiveProvide: {
       name: 'context',
-      include: ['creature', 'editPermission'],
+      include: ['creatureId', 'editPermission'],
     },
     computed: {
       activeTab: {
@@ -150,9 +150,6 @@
           return false;
         }
       },
-      snackbars(){
-
-      }
 		},
 	}
 </script>

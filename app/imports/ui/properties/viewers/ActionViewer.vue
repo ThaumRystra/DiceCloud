@@ -15,7 +15,7 @@
     </div>
     <div class="layout row align-center justify-space-around">
       <v-btn
-        v-if="context.creature"
+        v-if="context.creatureId"
         flat
         outline
         style="font-size: 18px;"
@@ -47,7 +47,7 @@
       </div>
       <div v-if="model.uses">
         <span
-          v-if="context.creature"
+          v-if="context.creatureId"
           class="uses mx-2"
         >
           {{ usesLeft }}/{{ model.usesResult }} uses
@@ -65,7 +65,7 @@
           {{ reset }}
         </span>
         <v-btn
-          v-if="context.creature"
+          v-if="context.creatureId"
           outline
           color="primary"
           :disabled="!model.usesUsed || !context.editPermission"

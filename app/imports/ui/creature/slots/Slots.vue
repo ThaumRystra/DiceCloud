@@ -63,9 +63,6 @@ export default {
   components: {
     TreeNodeView,
   },
-  inject: {
-    context: { default: {} }
-  },
   props: {
     creatureId: {
       type: String,

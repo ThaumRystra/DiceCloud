@@ -3,7 +3,7 @@
     <column-layout wide-columns>
       <div>
         <toolbar-card
-          :color="context.creature.color"
+          :color="creature.color"
         >
           <v-toolbar-title slot="toolbar">
             Equipped
@@ -19,7 +19,7 @@
       </div>
       <div>
         <toolbar-card
-          :color="context.creature.color"
+          :color="creature.color"
         >
           <v-toolbar-title slot="toolbar">
             Carried
@@ -46,6 +46,7 @@
 
 <script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import Creatures from '/imports/api/creature/Creatures.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
@@ -60,9 +61,6 @@ export default {
     ToolbarCard,
     ItemList,
 	},
-  inject: {
-    context: { default: {} }
-  },
 	props: {
 		creatureId: {
       type: String,
@@ -83,6 +81,9 @@ export default {
 				sort: {order: 1},
 			});
 		},
+    creature(){
+      return Creatures.findOne(this.creatureId, {fields: {color: 1}});
+    },
 		containersWithoutAncestorContainers(){
 			return CreatureProperties.find({
 				'ancestors.id': {
