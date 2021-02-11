@@ -44,8 +44,11 @@ export default function evaluateCalculation({
   }
 
   // Replace constants with their parsed constant
-  let failed = replaceConstants({calc, memo, prop, dependencies, errors})
-  if (failed){
+  let replaceResults = replaceConstants({
+    calc, memo, prop, dependencies, errors
+  });
+  dependencies = replaceResults.dependencies;
+  if (replaceResults.failed){
     return {
       context: {errors},
       result: new ConstantNode({value: string, type: 'string'}),
@@ -54,7 +57,7 @@ export default function evaluateCalculation({
   }
 
   // Ensure all symbol nodes are defined and computed
-  computeSymbols({calc, memo, prop, dependencies})
+  dependencies = computeSymbols({calc, memo, prop, dependencies})
 
   // Evaluate
   let context = new CompilationContext();
@@ -102,7 +105,10 @@ function replaceConstants({calc, memo, prop, dependencies, errors}){
       message: `${name} is a constant property with parsing errors`
     });
   });
-  return !!constFailed.length;
+  return {
+    failed: !!constFailed.length,
+    dependencies,
+  };
 }
 
   // Ensure all symbol nodes are defined and computed
@@ -128,4 +134,5 @@ function computeSymbols({calc, memo, prop, dependencies}){
       }
     }
   });
+  return dependencies;
 }
