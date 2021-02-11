@@ -1,4 +1,5 @@
-import CreatureProperties, { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 
 export default function spendResources(action){
