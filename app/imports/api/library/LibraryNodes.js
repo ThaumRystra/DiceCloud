@@ -32,6 +32,14 @@ let LibraryNodeSchema = new SimpleSchema({
   }
 });
 
+// Set up server side search index
+if (Meteor.isServer) {
+  LibraryNodes._ensureIndex({
+    'name': 'text',
+		'tags': 'text',
+  });
+}
+
 for (let key in propertySchemasIndex){
 	let schema = new SimpleSchema({});
 	schema.extend(LibraryNodeSchema);

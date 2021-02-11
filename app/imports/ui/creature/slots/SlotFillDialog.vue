@@ -13,7 +13,7 @@
         regular
         hide-details
         :value="searchValue"
-        :debounce="200"
+        :debounce="300"
         @change="searchChanged"
         @keyup.enter="insert"
       />
@@ -22,49 +22,60 @@
       class="library-nodes"
     >
       <v-fade-transition mode="out-in">
-        <column-layout
-          v-if="$subReady.slotFillers && libraryNodes && libraryNodes.length"
-          wide-columns
-        >
-          <div
-            v-for="node in libraryNodes"
-            :key="node._id"
+        <div v-if="libraryNodes && libraryNodes.length">
+          <column-layout
+            wide-columns
           >
-            <v-card
-              hover
-              ripple
-              class="slot-card"
-              :class="{'primary': node._id === (selectedNode && selectedNode._id)}"
-              :dark="node._id === (selectedNode && selectedNode._id)"
-              @click="selectedNode = node"
+            <div
+              v-for="node in libraryNodes"
+              :key="node._id"
             >
-              <v-img
-                v-if="node.picture"
-                :src="node.picture"
-                :height="200"
-                contain
-              />
-              <v-card-title primary-title>
-                <div>
-                  <h3 class="title mb-0">
-                    <tree-node-view
-                      class="mr-2"
-                      :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
-                      :hide-icon="node.picture"
-                      :model="node"
-                      :color="node.color"
+              <v-card
+                hover
+                ripple
+                class="slot-card"
+                :class="{'primary': node._id === (selectedNode && selectedNode._id)}"
+                :dark="node._id === (selectedNode && selectedNode._id)"
+                @click="selectedNode = node"
+              >
+                <v-img
+                  v-if="node.picture"
+                  :src="node.picture"
+                  :height="200"
+                  contain
+                />
+                <v-card-title primary-title>
+                  <div>
+                    <h3 class="title mb-0">
+                      <tree-node-view
+                        class="mr-2"
+                        :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
+                        :hide-icon="node.picture"
+                        :model="node"
+                        :color="node.color"
+                      />
+                    </h3>
+                    <property-description
+                      :string="model.description"
+                      :calculations="model.descriptionCalculations"
+                      :inactive="model.inactive"
                     />
-                  </h3>
-                  <property-description
-                    :string="model.description"
-                    :calculations="model.descriptionCalculations"
-                    :inactive="model.inactive"
-                  />
-                </div>
-              </v-card-title>
-            </v-card>
+                  </div>
+                </v-card-title>
+              </v-card>
+            </div>
+          </column-layout>
+          <div class="layout row justify-center">
+            <v-btn
+              v-if="currentLimit < countAll"
+              :loading="!$subReady.slotFillers"
+              class="primary"
+              @click="loadMore"
+            >
+              Load More
+            </v-btn>
           </div>
-        </column-layout>
+        </div>
         <div
           v-else-if="$subReady.slotFillers"
           class="ma-4"
@@ -94,8 +105,10 @@
             </span>
           </p>
         </div>
+      </v-fade-transition>
+      <v-fade-transition mode="out-in">
         <div
-          v-else
+          v-if="!$subReady.slotFillers"
           key="character-loading"
           class="fill-height layout justify-center align-center"
         >
@@ -179,9 +192,15 @@ export default {
       return prop && prop.name;
     },
     searchChanged(val, ack){
+      this._subs['slotFillers'].setData('searchTerm', val);
+      this._subs['slotFillers'].setData('limit', undefined);
       this.selectedNode = undefined;
       this.searchValue = val;
       setTimeout(ack, 200);
+    },
+    loadMore(){
+      if (this.currentLimit >= this.countAll) return;
+      this._subs['slotFillers'].setData('limit', this.currentLimit + 16);
     },
     insert(){
       if (!this.selectedNode) return;
@@ -200,16 +219,16 @@ export default {
     creature(){
       return Creatures.findOne(this.creatureId);
     },
+    currentLimit(){
+      return this._subs['slotFillers'].data('limit') || 16;
+    },
+    countAll(){
+      return this._subs['slotFillers'].data('countAll');
+    },
     libraryNodes(){
       let filter = {
         removed: {$ne: true},
       };
-      if (this.searchValue){
-        filter.name = {
-          $regex: this.searchValue.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'),
-          $options: 'i'
-        };
-      }
       if (this.model.slotTags && this.model.slotTags.length){
         filter.tags = {$all: this.model.slotTags};
       }
@@ -221,7 +240,9 @@ export default {
             slotFillerType: this.model.slotType,
         }];
       }
-      let nodes = LibraryNodes.find(filter).fetch();
+      let nodes = LibraryNodes.find(filter, {
+        sort: {name: 1, order: 1}
+      }).fetch();
       // Filter out slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes = nodes.filter(node => {

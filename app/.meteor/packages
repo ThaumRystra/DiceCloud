@@ -53,3 +53,4 @@ peerlibrary:reactive-publish
 simple:rest
 simple:rest-method-mixin
 mikowals:batch-insert
+peerlibrary:subscription-data

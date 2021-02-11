@@ -1,8 +1,10 @@
+import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 Meteor.publish('slotFillers', function(slotId){
+  let self = this;
   this.autorun(function (){
     let userId = this.userId;
     if (!userId) {
@@ -46,6 +48,44 @@ Meteor.publish('slotFillers', function(slotId){
           slotFillerType: slot.slotType,
       }];
     }
-    return LibraryNodes.find(filter);
+    this.autorun(function(){
+      // Get the limit of the documents the user can fetch
+      var limit = self.data('limit') || 16;
+      check(limit, Number);
+
+      // Get the search term
+      let searchTerm = self.data('searchTerm') || '';
+      check(searchTerm, String);
+
+      let options = undefined;
+      if (searchTerm){
+        filter.$text = {$search: searchTerm};
+        options = {
+          // relevant documents have a higher score.
+          fields: {
+            score: { $meta: 'textScore' }
+          },
+          sort: {
+            // `score` property specified in the projection fields above.
+            score: { $meta: 'textScore' },
+            name: 1,
+            order: 1,
+          }
+        }
+      } else {
+        options = {sort: {
+          name: 1,
+          order: 1,
+        }};
+      }
+      options.limit = limit;
+
+      self.autorun(function () {
+        self.setData('countAll', LibraryNodes.find(filter).count());
+      });
+      self.autorun(function () {
+        return LibraryNodes.find(filter, options);
+      });
+    });
   });
 });
