@@ -96,6 +96,7 @@
             'ancestors.id': creatureId,
             'stats': this.model.variableName,
             removed: {$ne: true},
+            inactive: {$ne: true},
           });
         } else {
           return [];
