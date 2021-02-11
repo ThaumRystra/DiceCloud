@@ -4,11 +4,13 @@
     <property-description
       :string="model.summary"
       :calculations="model.summaryCalculations"
+      :inactive="model.inactive"
     />
     <v-divider class="mt-3 mb-3" />
     <property-description
       :string="model.description"
       :calculations="model.descriptionCalculations"
+      :inactive="model.inactive"
     />
   </div>
 </template>

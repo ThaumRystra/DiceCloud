@@ -14,6 +14,7 @@
       <computed
         :string="model.summary"
         :calculations="model.summaryCalculations"
+        :inactive="model.inactive"
       />
     </v-card-text>
   </toolbar-card>

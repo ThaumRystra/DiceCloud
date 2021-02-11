@@ -4,6 +4,7 @@
     class="property-description"
     :string="string"
     :calculations="calculations"
+    :inactive="inactive"
   />
 </template>
 
@@ -25,6 +26,7 @@ export default {
         return [];
       },
     },
+    inactive: Boolean,
 	},
 }
 </script>

@@ -105,6 +105,7 @@
       <property-description
         :string="model.summary"
         :calculations="model.summaryCalculations"
+        :inactive="model.inactive"
       />
       <v-divider
         v-if="model.description"
@@ -114,6 +115,7 @@
     <property-description
       :string="model.description"
       :calculations="model.descriptionCalculations"
+      :inactive="model.inactive"
     />
   </div>
 </template>

@@ -74,6 +74,7 @@
         <property-description
           :string="model.summary"
           :calculations="model.summaryCalculations"
+          :inactive="model.inactive"
         />
         <v-divider
           v-if="children.length"

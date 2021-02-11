@@ -22,10 +22,12 @@ export default {
         return [];
       },
     },
+    inactive: Boolean,
   },
   computed: {
     computedValue(){
       if (!this.string) return '';
+      if (this.inactive) return this.string;
       let index = 0;
       return this.string.replace(/\{([^{}]*)\}/g, () => {
         let comp = this.calculations && this.calculations[index++];

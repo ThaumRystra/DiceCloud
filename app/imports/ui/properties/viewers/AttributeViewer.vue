@@ -41,6 +41,7 @@
     <property-description
       :string="model.description"
       :calculations="model.descriptionCalculations"
+      :inactive="model.inactive"
     />
 
     <effect-viewer

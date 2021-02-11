@@ -14,6 +14,7 @@
       <property-description
         :string="model.description"
         :calculations="model.descriptionCalculations"
+        :inactive="model.inactive"
       />
     </v-card-text>
   </v-card>
