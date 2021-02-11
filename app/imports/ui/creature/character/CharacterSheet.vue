@@ -122,7 +122,7 @@
           if (!that.$subReady.singleCharacter) return;
           if (that.$store.state.rightDrawer) return;
           that.$store.dispatch('snackbar', {
-            text: doc.text,
+            text: doc.name,
             showCloseButton: true,
           });
         },
