@@ -23,49 +23,47 @@
     >
       <v-fade-transition mode="out-in">
         <div v-if="libraryNodes && libraryNodes.length">
-          <column-layout
-            wide-columns
+          <section
+            class="layout row wrap justify-between"
           >
-            <div
+            <v-card
               v-for="node in libraryNodes"
               :key="node._id"
+              hover
+              ripple
+              class="slot-card layout column justify-end"
+              :class="{'selected': node._id === (selectedNode && selectedNode._id)}"
+              :dark="node._id === (selectedNode && selectedNode._id)"
+              @click="selectedNode = node"
             >
-              <v-card
-                hover
-                ripple
-                class="slot-card"
-                :class="{'primary': node._id === (selectedNode && selectedNode._id)}"
-                :dark="node._id === (selectedNode && selectedNode._id)"
-                @click="selectedNode = node"
-              >
-                <v-img
-                  v-if="node.picture"
-                  :src="node.picture"
-                  :height="200"
-                  contain
+              <v-img
+                v-if="node.picture"
+                :src="node.picture"
+                :height="200"
+                contain
+                class="slot-card-image"
+              />
+              <v-card-title primary-title>
+                <tree-node-view
+                  class="mr-2 title mb-0"
+                  :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
+                  :hide-icon="node.picture"
+                  :model="node"
+                  :color="node.color"
                 />
-                <v-card-title primary-title>
-                  <div>
-                    <h3 class="title mb-0">
-                      <tree-node-view
-                        class="mr-2"
-                        :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
-                        :hide-icon="node.picture"
-                        :model="node"
-                        :color="node.color"
-                      />
-                    </h3>
-                    <property-description
-                      :string="model.description"
-                      :calculations="model.descriptionCalculations"
-                      :inactive="model.inactive"
-                    />
-                  </div>
-                </v-card-title>
-              </v-card>
-            </div>
-          </column-layout>
-          <div class="layout row justify-center">
+              </v-card-title>
+              <v-card-text
+                v-if="node.description"
+                class="pt-0"
+              >
+                <property-description
+                  class="slot-card-text line-clamp"
+                  :string="node.description"
+                />
+              </v-card-text>
+            </v-card>
+          </section>
+          <div class="layout row justify-center align-stretch">
             <v-btn
               v-if="currentLimit < countAll"
               :loading="!$subReady.slotFillers"
@@ -147,14 +145,12 @@ import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import { parse, CompilationContext } from '/imports/parser/parser.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
 
 export default {
   components: {
 		DialogBase,
-    ColumnLayout,
     TreeNodeView,
     PropertyDescription,
 	},
@@ -270,9 +266,17 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.slot-card {
-  max-width: 500px;
-  width: 100%;
-  display: inline-block;
-}
+  .slot-card {
+    max-width: 500px;
+    width: 300px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin: 4px;
+  }
+  .slot-card-text.line-clamp {
+    -webkit-line-clamp: 5;
+  }
+  .slot-card.selected {
+    background: #8E1B1B;
+  }
 </style>
