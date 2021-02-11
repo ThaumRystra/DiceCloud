@@ -59,8 +59,10 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 			'ancestors.id': nodeId,
 			removed: {$ne: true},
 		}).fetch();
-    // The root node is last in the array of nodes
-		nodes.push(node);
+
+    // The root node is first in the array of nodes
+    // It must get the first generated ID to prevent flickering
+		nodes = [node, ...nodes];
 
 		// re-map all the ancestors
 		setLineageOfDocs({
@@ -82,10 +84,10 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		});
 
 		// Insert the creature properties
-    let insertedDocIds = CreatureProperties.batchInsert(nodes);
+    CreatureProperties.batchInsert(nodes);
 
     // get the root inserted doc
-    let rootId = insertedDocIds[insertedDocIds.length - 1];
+    let rootId = node._id;
 
     // Tree structure changed by inserts, reorder the tree
     reorderDocs({
@@ -97,7 +99,6 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     recomputeInactiveProperties(rootId);
 		// Inserting a creature property invalidates dependencies: full recompute
     recomputeCreatureByDoc(rootCreature);
-
 		// Return the docId of the last property, the inserted root property
 		return rootId;
 	},

@@ -120,13 +120,19 @@ export function setLineageOfDocs({docArray, oldParent, newAncestry}){
 export function renewDocIds({docArray, collectionMap}){
   // map of {oldId: newId}
   let idMap = {};
-  // Give new ids and map the changes
+
+  // Get a random generator that's consistent on client and server
+  let randomSrc = DDP.randomStream('renewDocIds');
+
+  // Give new ids and map the changes as {oldId: newId}
   docArray.forEach(doc => {
     let oldId = doc._id;
-    let newId = Random.id();
+    let newId = randomSrc.id();
     doc._id = newId;
     idMap[oldId] = newId;
   });
+
+  // Remap all references using the new IDs
   const remapReference = ref => {
     if (idMap[ref.id]){
       ref.id = idMap[ref.id];
