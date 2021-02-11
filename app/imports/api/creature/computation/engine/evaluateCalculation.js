@@ -48,6 +48,7 @@ export default function evaluateCalculation({
     calc, memo, prop, dependencies, errors
   });
   dependencies = replaceResults.dependencies;
+  calc = replaceResults.calc;
   if (replaceResults.failed){
     return {
       context: {errors},
@@ -68,7 +69,7 @@ export default function evaluateCalculation({
 // Replace constants in the calc with the right ParseNodes
 function replaceConstants({calc, memo, prop, dependencies, errors}){
   let constFailed = [];
-  calc.replaceNodes(node => {
+  calc = calc.replaceNodes(node => {
     if (!(node instanceof SymbolNode)) return;
     let stat, constant;
     if (node.name[0] !== '#'){
@@ -108,6 +109,7 @@ function replaceConstants({calc, memo, prop, dependencies, errors}){
   return {
     failed: !!constFailed.length,
     dependencies,
+    calc,
   };
 }
 
