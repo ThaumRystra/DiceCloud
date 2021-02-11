@@ -6,6 +6,7 @@ import findAncestorByType from '/imports/api/creature/computation/engine/findAnc
 export default class ComputationMemo {
   constructor(props, creature){
     this.statsByVariableName = {};
+    this.constantsByVariableName = {};
     this.extraStatsByVariableName = {};
     this.statsById = {};
     this.originalPropsById = {};
@@ -51,13 +52,15 @@ export default class ComputationMemo {
         return true;
       }
     }).forEach((prop) => {
-      // Now add all effects and proficiencies
+      // Now add everything else
       if (prop.type === 'effect'){
         this.addEffect(prop);
       } else if (prop.type === 'proficiency') {
         this.addProficiency(prop);
       } else if (prop.type === 'classLevel'){
         this.addClassLevel(prop);
+      } else if (prop.type === 'constant'){
+        this.addConstant(prop);
       } else {
         this.addEndStepProp(prop);
       }
@@ -70,6 +73,14 @@ export default class ComputationMemo {
           computationDetails: propDetailsByType.denormalizedStat(),
         }
       }
+    }
+  }
+  addConstant(prop){
+    prop = this.registerProperty(prop);
+    if (
+      !this.constantsByVariableName[prop.variableName]
+    ){
+      this.constantsByVariableName[prop.variableName] = prop
     }
   }
   registerProperty(prop){

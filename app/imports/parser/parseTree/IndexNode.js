@@ -29,4 +29,8 @@ export default class IndexNode extends ParseNode {
     this.array.traverse(fn);
     this.index.traverse(fn);
   }
+  replaceChildren(fn){
+    this.array = this.array.replaceNodes(fn);
+    this.index = this.index.replaceNodes(fn);
+  }
 }

@@ -54,6 +54,9 @@ export default class CallNode extends ParseNode {
     fn(this);
     this.args.forEach(arg => arg.traverse(fn));
   }
+  replaceChildren(fn){
+    this.args = this.args.map(arg => arg.replaceNodes(fn));
+  }
 }
 
 function castArgsToType({fn, scope, context, args, type}){

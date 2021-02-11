@@ -28,4 +28,7 @@ export default class NotOperatorNode extends ParseNode {
     fn(this);
     this.right.traverse(fn);
   }
+  replaceChildren(fn){
+    this.right = this.right.replaceNodes(fn);
+  }
 }

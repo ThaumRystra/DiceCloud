@@ -18,7 +18,12 @@ export default function evaluateString(string, scope, fn = 'compile'){
     errors.push(e);
     return {result: string, errors};
   }
-
+  // Parsing failed
+  if (node === null){
+    errors.push('...');
+    return {result: string, errors};
+  }
+  console.log(node);
   let context = new CompilationContext();
   let result = node[fn](scope, context);
   if (result instanceof ConstantNode){

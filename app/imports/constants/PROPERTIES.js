@@ -23,6 +23,10 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.class_level',
     name: 'Class level'
   },
+  constant: {
+    icon: 'anchor',
+    name: 'Constant'
+  },
   container: {
     icon: 'work',
     name: 'Container'

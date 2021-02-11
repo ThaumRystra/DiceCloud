@@ -5,6 +5,7 @@ import { AttackSchema } from '/imports/api/properties/Attacks.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
 import { BuffSchema } from '/imports/api/properties/Buffs.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
+import { ConstantSchema } from '/imports/api/properties/Constants.js';
 import { DamageSchema } from '/imports/api/properties/Damages.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
 import { EffectSchema } from '/imports/api/properties/Effects.js';
@@ -30,6 +31,7 @@ const propertySchemasIndex = {
   attribute: AttributeSchema,
   buff: BuffSchema,
   classLevel: ClassLevelSchema,
+  constant: ConstantSchema,
   damage: DamageSchema,
   damageMultiplier: DamageMultiplierSchema,
   effect: EffectSchema,

@@ -42,11 +42,75 @@ export default function evaluateCalculation({
       dependencies,
     };
   }
+
+  // Replace constants with their parsed constant
+  let failed = replaceConstants({calc, memo, prop, dependencies, errors})
+  if (failed){
+    return {
+      context: {errors},
+      result: new ConstantNode({value: string, type: 'string'}),
+      dependencies,
+    };
+  }
+
   // Ensure all symbol nodes are defined and computed
+  computeSymbols({calc, memo, prop, dependencies})
+
+  // Evaluate
+  let context = new CompilationContext();
+  let result = calc[fn](memo.statsByVariableName, context);
+  return {result, context, dependencies};
+}
+
+// Replace constants in the calc with the right ParseNodes
+function replaceConstants({calc, memo, prop, dependencies, errors}){
+  let constFailed = [];
+  calc.replaceNodes(node => {
+    if (!(node instanceof SymbolNode)) return;
+    let stat, constant;
+    if (node.name[0] !== '#'){
+      stat = memo.statsByVariableName[node.name]
+      constant = memo.constantsByVariableName[node.name];
+    } else if (node.name === '#constant'){
+      constant = findAncestorByType({type: 'constant', prop, memo});
+    }
+    // replace constants that aren't overridden by stats
+    if (constant && !stat){
+      dependencies = union(dependencies, [
+        constant._id,
+        ...constant.dependencies
+      ]);
+      // Fail if the constant has errors
+      if (constant.errors && constant.errors.length){
+        constFailed.push(node.name);
+        return;
+      }
+      let parsedConstantNode;
+      try {
+        parsedConstantNode = parse(constant.calculation);
+      } catch(e){
+        constFailed.push(node.name);
+        return;
+      }
+      if (!parsedConstantNode) constFailed.push(node.name);
+      return parsedConstantNode;
+    }
+  });
+  constFailed.forEach(name => {
+    errors.push({
+      type: 'error',
+      message: `${name} is a constant property with parsing errors`
+    });
+  });
+  return !!constFailed.length;
+}
+
+  // Ensure all symbol nodes are defined and computed
+function computeSymbols({calc, memo, prop, dependencies}){
   calc.traverse(node => {
     if (node instanceof SymbolNode || node instanceof AccessorNode){
-      // References up the tree start with $
       let stat;
+      // References up the tree start with #
       if (node.name[0] === '#'){
         stat = findAncestorByType({type: node.name.slice(1), prop, memo});
         memo.statsByVariableName[node.name] = stat;
@@ -64,8 +128,4 @@ export default function evaluateCalculation({
       }
     }
   });
-  // Evaluate
-  let context = new CompilationContext();
-  let result = calc[fn](memo.statsByVariableName, context);
-  return {result, context, dependencies};
 }

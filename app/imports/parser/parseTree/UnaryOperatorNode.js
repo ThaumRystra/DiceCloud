@@ -34,4 +34,7 @@ export default class UnaryOperatorNode extends ParseNode {
     fn(this);
     this.right.traverse(fn);
   }
+  replaceChildren(fn){
+    this.right = this.right.replaceNodes(fn);
+  }
 }

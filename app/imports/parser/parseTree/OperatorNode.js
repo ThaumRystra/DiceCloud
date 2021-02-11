@@ -60,4 +60,8 @@ export default class OperatorNode extends ParseNode {
     this.left.traverse(fn);
     this.right.traverse(fn);
   }
+  replaceChildren(fn){
+    this.left = this.left.replaceNodes(fn);
+    this.right = this.right.replaceNodes(fn);
+  }
 }

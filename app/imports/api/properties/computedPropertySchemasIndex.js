@@ -5,6 +5,7 @@ import { ComputedAttackSchema } from '/imports/api/properties/Attacks.js';
 import { ComputedAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedBuffSchema } from '/imports/api/properties/Buffs.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
+import { ConstantSchema } from '/imports/api/properties/Constants.js';
 import { ComputedContainerSchema } from '/imports/api/properties/Containers.js';
 import { ComputedDamageSchema } from '/imports/api/properties/Damages.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
@@ -30,6 +31,7 @@ const propertySchemasIndex = {
   attribute: ComputedAttributeSchema,
   buff: ComputedBuffSchema,
   classLevel: ClassLevelSchema,
+  constant: ConstantSchema,
   damage: ComputedDamageSchema,
   damageMultiplier: DamageMultiplierSchema,
   effect: ComputedEffectSchema,

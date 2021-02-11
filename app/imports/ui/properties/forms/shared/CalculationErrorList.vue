@@ -15,7 +15,7 @@
         :color="errorColor(error.type)"
         outline
       >
-        {{ error.message }}
+        <pre>{{ error.message }}</pre>
       </v-alert>
     </v-slide-x-transition>
   </div>

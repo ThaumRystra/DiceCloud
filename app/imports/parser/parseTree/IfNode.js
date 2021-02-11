@@ -34,4 +34,9 @@ export default class IfNode extends ParseNode {
     this.consequent.traverse(fn);
     this.alternative.traverse(fn);
   }
+  replaceChildren(fn){
+    this.condition = this.condition.replaceNodes(fn);
+    this.consequent = this.consequent.replaceNodes(fn);
+    this.alternative = this.alternative.replaceNodes(fn);
+  }
 }

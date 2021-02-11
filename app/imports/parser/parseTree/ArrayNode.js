@@ -33,4 +33,7 @@ export default class ArrayNode extends ParseNode {
     fn(this);
     this.values.forEach(value => value.traverse(fn));
   }
+  replaceChildren(fn){
+    this.values = this.values.map(node => node.replaceNodes(fn));
+  }
 }

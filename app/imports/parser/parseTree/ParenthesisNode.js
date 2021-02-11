@@ -23,4 +23,7 @@ export default class ParenthesisNode extends ParseNode {
     fn(this);
     this.content.traverse(fn);
   }
+  replaceChildren(fn){
+    this.content = this.content.replaceNodes(fn);
+  }
 }

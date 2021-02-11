@@ -30,4 +30,14 @@ export default class ParseNode {
   traverse(fn){
     fn(this);
   }
+  // replace nodes, only replace nodes if fn returns a value
+  replaceNodes(fn){
+    let newNode = fn(this);
+    if (newNode) {
+      return newNode;
+    } else {
+      if (this.replaceChildren) this.replaceChildren(fn)
+      return this;
+    }
+  }
 }
