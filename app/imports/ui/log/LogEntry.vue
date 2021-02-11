@@ -30,10 +30,13 @@
           v-if="content.result"
           class="subheading font-weight-bold mx-1"
         >{{ content.result }}</span>
-        <markdown-text
+        <span
           v-if="content.details"
+        >{{ content.details }}</span>
+        <markdown-text
+          v-if="content.description"
           class="details"
-          :markdown="content.details"
+          :markdown="content.description"
         />
       </div>
     </v-card-text>
@@ -59,6 +62,8 @@ export default {
 <style lang="css" scoped>
 .content-line {
   min-height: 24px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 .content-line .details {
   display: inline-block;

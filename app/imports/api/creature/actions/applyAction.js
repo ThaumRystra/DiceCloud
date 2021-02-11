@@ -9,14 +9,14 @@ export default function applyAction({prop, log}){
   }
   if (prop.summary){
     log.content.push({
-      details: embedInlineCalculations(
+      description: embedInlineCalculations(
         prop.summary, prop.summaryCalculations
       ),
     });
   }
   if (prop.description){
     log.content.push({
-      details: embedInlineCalculations(
+      description: embedInlineCalculations(
         prop.description, prop.descriptionCalculations
       ),
     });

@@ -27,6 +27,10 @@ let LogContentSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  description: {
+    type: String,
+    optional: true,
+  },
   context: {
     type: Object,
     optional: true,

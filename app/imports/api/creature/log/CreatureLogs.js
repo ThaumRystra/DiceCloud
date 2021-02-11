@@ -160,7 +160,7 @@ const logRoll = new ValidatedMethod({
       let compiled = parsedResult.compile(creature.variables, rollContext);
       let compiledString = compiled.toString();
       if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
-        result: roll
+        details: roll
       });
       logContent.push({
         details: compiledString
@@ -168,7 +168,7 @@ const logRoll = new ValidatedMethod({
       let rolled = compiled.roll(creature.variables, rollContext);
       let rolledString = rolled.toString();
       if (rolledString !== compiledString) logContent.push({
-        details: rolled.toString()
+        result: rolled.toString()
       });
       let result = rolled.reduce(creature.variables, rollContext);
       let resultString = result.toString();
