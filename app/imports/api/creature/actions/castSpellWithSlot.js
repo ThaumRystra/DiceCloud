@@ -1,11 +1,13 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties, { getCreature } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import Creatures from '/imports/api/creature/Creatures.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { doActionWork } from '/imports/api/creature/actions/doAction.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 
 const castSpellWithSlot = new ValidatedMethod({
   name: 'creatureProperties.castSpellWithSlot',
@@ -30,11 +32,11 @@ const castSpellWithSlot = new ValidatedMethod({
   run({spellId, slotId, targetId}) {
     let spell = CreatureProperties.findOne(spellId);
 		// Check permissions
-    let creature = getCreature(spell);
+    let creature = getRootCreatureAncestor(spell);
     assertEditPermission(creature, this.userId);
     let target = undefined;
     if (targetId) {
-      target = getCreature(targetId);
+      target = Creatures.findOne(targetId);
       assertEditPermission(target, this.userId);
     }
     let slotLevel = spell.level || 0;
