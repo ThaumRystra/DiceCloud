@@ -1,12 +1,12 @@
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
-import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 import damagePropertiesByName from '/imports/api/creature/creatureProperties/methods/damagePropertiesByName.js';
 
 export default function applyAdjustment({
   prop,
   creature,
   targets,
-  actionContext
+  actionContext,
+  log
 }){
   let damageTargets = prop.target === 'self' ? [creature] : targets;
   let scope = {
@@ -16,16 +16,10 @@ export default function applyAdjustment({
   try {
     var {result, errors} = evaluateString(prop.amount, scope, 'reduce');
     if (typeof result !== 'number') {
-      return insertCreatureLog.call({ log: {
-        text: errors.join(', ') || 'Something went wrong',
-        creatureId: creature._id,
-      }});
+      log.content.push({error: errors.join(', ') || 'Something went wrong'});
     }
   } catch (e){
-    return insertCreatureLog.call({ log: {
-      text: e.toString(),
-      creatureId: creature._id,
-    }});
+    log.content.push({error: e.toString()});
   }
   if (damageTargets) {
     damageTargets.forEach(target => {
@@ -38,19 +32,15 @@ export default function applyAdjustment({
         operation: prop.operation || 'increment',
         value: result
       });
-      insertCreatureLog.call({
-        log: {
-          text: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''} ${-result}`,
-          creatureId: target._id,
-        }
+      log.content.push({
+        resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
+        result: `${-result}`,
       });
     });
   } else {
-    insertCreatureLog.call({
-      log: {
-        text: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''} ${-result}`,
-        creatureId: creature._id,
-      }
+    log.content.push({
+      resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
+      result: `${-result}`,
     });
   }
 }

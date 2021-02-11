@@ -39,8 +39,7 @@ export default {
   computed: {
     // We can't rely on autoValue running in every form, so recalculate errors
     clientErrors(){
-      let validationContext = ConstantSchema.newContext();
-      let cleanModel = validationContext.clean(this.model);
+      let cleanModel = ConstantSchema.clean(this.model);
       return cleanModel.errors;
     }
   }

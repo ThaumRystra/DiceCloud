@@ -7,15 +7,11 @@
       class="log flex layout column reverse align-end pa-3"
       style="overflow: auto;"
     >
-      <v-card
+      <log-entry
         v-for="log in logs"
         :key="log._id"
-        class="ma-2"
-      >
-        <v-card-text class="pa-2">
-          <markdown-text :markdown="log.text" />
-        </v-card-text>
-      </v-card>
+        :model="log"
+      />
     </div>
     <v-card>
       <v-text-field
@@ -39,11 +35,11 @@ import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { parse } from '/imports/parser/parser.js';
-import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+import LogEntry from '/imports/ui/log/LogEntry.vue';
 
 export default {
   components: {
-    MarkdownText,
+    LogEntry,
   },
   props: {
     creatureId: {

@@ -6,46 +6,49 @@ import applyBuff from '/imports/api/creature/actions/applyBuff.js';
 
 function applyProperty(options){
   let prop = options.prop;
-  if (
-    prop.disabled === true || // ignore disabled props
-    prop.equipped === false || // ignore unequipped items
-    prop.toggleResult === false || // ignore untoggled toggles
-    prop.applied === true // ignore buffs that are already applied
-  ){
+  if (prop.type === 'buff'){
+    // ignore only applied buffs
+    if (prop.applied === true){
+      return false;
+    }
+  // Ignore inactive props of other types
+  } else if (prop.inactive === true){
     return false;
   }
   switch (prop.type){
     case 'action':
     case 'spell':
       applyAction(options);
-      return true;
+      break;
     case 'attack':
       applyAction(options);
       applyAttack(options);
-      return true;
+      break;
     case 'damage':
       applyDamage(options);
-      return true;
+      break;
     case 'adjustment':
       applyAdjustment(options);
-      return true;
+      break;
     case 'buff':
       applyBuff(options);
-      return false;
+      break;
     case 'roll':
       // applyRoll(options);
-      return true;
+      break;
     case 'savingThrow':
       // applySavingThrow(options);
-      return false;
+      break;
   }
+  return true;
 }
 
 export default function applyProperties({
   forest,
   creature,
   targets,
-  actionContext
+  actionContext,
+  log,
 }){
   forest.forEach(child => {
     let walkChildren = applyProperty({
@@ -53,14 +56,16 @@ export default function applyProperties({
       children: child.children,
       creature,
       targets,
-      actionContext
+      actionContext,
+      log,
     });
     if (walkChildren){
       applyProperties({
         forest: child.children,
         creature,
         targets,
-        actionContext
+        actionContext,
+        log,
       });
     }
   });

@@ -1,18 +1,14 @@
 import roll from '/imports/parser/roll.js';
-import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 
 export default function applyAttack({
   prop,
-  //children,
-  creature,
-  //targets,
-  //actionContext
+  log,
 }){
   let result = roll(1, 20)[0] + prop.rollBonusResult;
-  insertCreatureLog.call({
-    log: {
-      text: `${prop.name} attack. ${result} to hit`,
-      creatureId: creature._id,
-    }
+  log.content.push({
+    // If this is not the first item in the log content, give it a name
+    name: log.content.length ? prop.name + ' attack' : undefined,
+    result,
+    details: 'to hit',
   });
 }

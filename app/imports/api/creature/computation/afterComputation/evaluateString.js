@@ -23,7 +23,6 @@ export default function evaluateString(string, scope, fn = 'compile'){
     errors.push('...');
     return {result: string, errors};
   }
-  console.log(node);
   let context = new CompilationContext();
   let result = node[fn](scope, context);
   if (result instanceof ConstantNode){

@@ -30,14 +30,12 @@ export default class RollNode extends ParseNode {
       return new ErrorNode({
         node: this,
         error: 'Number of dice is not an integer',
-        previousNodes: [this, left, right],
       });
     }
     if (!right.isInteger){
       return new ErrorNode({
         node: this,
         error: 'Dice size is not an integer',
-        previousNodes: [this, left, right],
       });
     }
     let number = left.value;

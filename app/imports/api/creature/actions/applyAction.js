@@ -1,11 +1,9 @@
 import spendResources from '/imports/api/creature/actions/spendResources.js'
-import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 
-export default function applyAction({prop, creature}){
+export default function applyAction({prop, log}){
   spendResources(prop);
-  insertCreatureLog.call({
-    log: {
-      text: prop.name,
-      creatureId: creature._id},
-  });
+  // If this is not the top level action, we can add its name to the log
+  if (log.content.length){
+    log.content.push({name: prop.name});
+  }
 }

@@ -3,6 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
+import CreatureLogs, { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
@@ -13,10 +14,15 @@ const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
   validate: new SimpleSchema({
     actionId: SimpleSchema.RegEx.Id,
-    targetId: {
+    targetIds: {
+      type: Array,
+      defaultValue: [],
+      maxCount: 10,
+      optional: true,
+    },
+    'targetIds.$': {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
-      optional: true,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -24,26 +30,41 @@ const doAction = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({actionId, targetId}) {
+  run({actionId, targetIds = []}) {
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
     let creature = getRootCreatureAncestor(action);
     assertEditPermission(creature, this.userId);
-    let target = undefined;
-    if (targetId) {
-      target = Creatures.findOne(targetId);
+    let targets = [];
+    targetIds.forEach(targetId => {
+      let target = Creatures.findOne(targetId);
       assertEditPermission(target, this.userId);
-    }
-		doActionWork({action, creature, target});
-    // Note this only recomputes the top-level creature, not the nearest one
+      targets.push(target);
+    });
+		doActionWork({action, creature, targets, method: this});
+
+    // recompute creatures
 		recomputeCreatureByDoc(creature);
-    if (target){
+    targets.forEach(target => {
       recomputeCreatureByDoc(target);
-    }
+    });
   },
 });
 
-export function doActionWork({action, creature, target, context = {}}){
+export function doActionWork({
+  action,
+  creature,
+  targets,
+  context = {},
+  method
+}){
+  // Create the log
+  let log = CreatureLogSchema.clean({
+    name: action.name,
+    creatureId: creature._id,
+    creatureName: creature.name,
+  });
+
   let decendantForest = nodesToTree({
     collection: CreatureProperties,
     ancestorId: action._id,
@@ -56,8 +77,10 @@ export function doActionWork({action, creature, target, context = {}}){
     forest: startingForest,
     actionContext: context,
     creature,
-    target,
+    targets,
+    log,
   });
+  insertCreatureLogWork({log, creature, method});
 }
 
 export default doAction;

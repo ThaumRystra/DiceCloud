@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/Creatures.js';
+import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import {assertEditPermission} from '/imports/api/creature/creaturePermissions.js';
@@ -13,13 +14,16 @@ if (Meteor.isServer){
 let CreatureLogs = new Mongo.Collection('creatureLogs');
 
 let CreatureLogSchema = new SimpleSchema({
-	text: {
+	name: {
 		type: String,
+    optional: true,
 	},
-  type: {
-    type: String,
-    allowedValues: ['roll', 'change', 'damage', 'info'],
-    defaultValue: 'info',
+  content: {
+    type: Array,
+    defaultValue: [],
+  },
+  'content.$': {
+    type: LogContentSchema,
   },
 	// The real-world date that it occured, usually sorted by date
 	date: {
@@ -36,6 +40,10 @@ let CreatureLogSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     index: 1,
+  },
+  creatureName: {
+    type: String,
+    optional: true,
   },
 });
 
@@ -73,7 +81,7 @@ const insertCreatureLog = new ValidatedMethod({
     timeInterval: 5000,
   },
 	validate: new SimpleSchema({
-		log: CreatureLogSchema.omit('type', 'date'),
+		log: CreatureLogSchema.omit('date'),
 	}).validator(),
   run({log}){
     const creatureId = log.creatureId;
@@ -87,20 +95,26 @@ const insertCreatureLog = new ValidatedMethod({
     }});
     assertEditPermission(creature, this.userId);
     // Build the new log
-    if (typeof log === 'string'){
-      log = {text: log};
-    }
-    log.date = new Date();
-    // Insert it
-    let id = CreatureLogs.insert(log);
-    if (Meteor.isServer){
-      this.unblock();
-      removeOldLogs(creatureId);
-      logWebhook({log, creature});
-    }
+    let id = insertCreatureLogWork({log, creature, method: this})
     return id;
   },
 });
+
+export function insertCreatureLogWork({log, creature, method}){
+  // Build the new log
+  if (typeof log === 'string'){
+    log = {text: log};
+  }
+  log.date = new Date();
+  // Insert it
+  let id = CreatureLogs.insert(log);
+  if (Meteor.isServer){
+    method.unblock();
+    removeOldLogs(creature._id);
+    logWebhook({log, creature});
+  }
+  return id;
+}
 
 
 function equalIgnoringWhitespace(a, b){
@@ -136,38 +150,42 @@ const logRoll = new ValidatedMethod({
     }});
     assertEditPermission(creature, this.userId);
     let parsedResult = parse(roll);
-    let logText;
+    let logContent;
     if (parsedResult === null) {
-      logText = 'Unexpected end of input';
+      logContent = [{error: 'Unexpected end of input'}];
     }
     else try {
-      logText = [];
+      logContent = [];
       let rollContext = new CompilationContext();
       let compiled = parsedResult.compile(creature.variables, rollContext);
       let compiledString = compiled.toString();
-      if (!equalIgnoringWhitespace(compiledString, roll)) logText.push(roll);
-      logText.push(compiledString);
+      if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
+        result: roll
+      });
+      logContent.push({
+        details: compiledString
+      });
       let rolled = compiled.roll(creature.variables, rollContext);
       let rolledString = rolled.toString();
-      if (rolledString !== compiledString) logText.push(rolled.toString());
+      if (rolledString !== compiledString) logContent.push({
+        details: rolled.toString()
+      });
       let result = rolled.reduce(creature.variables, rollContext);
       let resultString = result.toString();
-      if (resultString !== rolledString) logText.push(resultString);
-      logText = logText.join('\n\n');
+      if (resultString !== rolledString) logContent.push({
+        result: resultString
+      });
     } catch (e){
-      logText = 'Calculation error';
+      logContent = [{error: 'Calculation error'}];
     }
     const log = {
-      text: logText,
+      content: logContent,
       creatureId,
       date: new Date(),
     };
-    let id = CreatureLogs.insert(log);
-    if (Meteor.isServer){
-      this.unblock();
-      removeOldLogs(creatureId);
-      logWebhook({log, creature});
-    }
+
+    let id = insertCreatureLogWork({log, creature, method: this});
+
     return id;
   },
 });

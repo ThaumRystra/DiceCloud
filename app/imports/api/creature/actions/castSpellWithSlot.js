@@ -66,6 +66,7 @@ const castSpellWithSlot = new ValidatedMethod({
       context: {slotLevel},
       creature,
       target,
+      method: this,
     });
     // Note this only recomputes the top-level creature, not the nearest one
 		recomputeCreatureByDoc(creature);
