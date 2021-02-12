@@ -10,6 +10,7 @@ import 'vuetify/dist/vuetify.min.css';
 import '/imports/ui/components/global/globalIndex.js';
 import SvgIconByName from '/imports/ui/icons/SvgIconByName.vue';
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
+import '/imports/ui/markdownCofig.js';
 
 let icons = {};
 

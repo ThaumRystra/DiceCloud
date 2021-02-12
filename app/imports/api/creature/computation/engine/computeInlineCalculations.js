@@ -23,7 +23,7 @@ function computeInlineCalcsForField(prop, memo, field){
       dependencies,
     } = evaluateCalculation({string: calculation, prop, memo, fn: 'compile'});
     if (result instanceof ErrorNode){
-      result = `<code>${result.toString()}</code>`;
+      result = '`Calculation Error`';
     }
     let computation = {
       calculation,
