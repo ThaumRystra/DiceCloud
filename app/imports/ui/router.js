@@ -24,7 +24,6 @@ import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
 import Tabletops from '/imports/ui/pages/Tabletops.vue';
 import Tabletop from '/imports/ui/pages/Tabletop.vue';
 import TabletopToolbar from '/imports/ui/tabletop/TabletopToolbar.vue';
-import Parser from '/imports/ui/pages/Parser.vue';
 
 let userSubscription = Meteor.subscribe('user');
 
@@ -111,14 +110,6 @@ RouterFactory.configure(factory => {
         title: 'Character List',
       },
       beforeEnter: ensureLoggedIn,
-    },{
-      path: '/parser',
-      components: {
-        default: Parser,
-      },
-      meta: {
-        title: 'Parser',
-      },
     },{
       path: '/library',
       components: {

@@ -1,8 +1,9 @@
 import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
-import { parse, CompilationContext } from '/imports/parser/parser.js';
+import { prettifyParseError, parse, CompilationContext } from '/imports/parser/parser.js';
 import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import findAncestorByType from '/imports/api/creature/computation/engine/findAncestorByType.js';
 import { union } from 'lodash';
 
@@ -14,10 +15,10 @@ export default function evaluateCalculation({
   fn = 'reduce',
 }){
   let dependencies = [];
-  let errors = [];
+  let context = new CompilationContext();
   if (!string) return {
-    context: {errors},
     result: new ConstantNode({value: string, type: 'string'}),
+    context,
     dependencies,
   };
   // Parse the string
@@ -25,34 +26,24 @@ export default function evaluateCalculation({
   try {
     calc = parse(string);
   } catch (e) {
-    errors.push({
-      type: 'parsing',
-      message: e.message || e
-    });
+    let error = prettifyParseError(e);
     return {
-      context: {errors},
-      result: new ConstantNode({value: string, type: 'string'}),
-      dependencies,
-    };
-  }
-  if (!calc){
-    return {
-      context: {errors},
-      result: new ConstantNode({value: calc, type: 'string'}),
+      result: new ErrorNode({context, error}),
+      context,
       dependencies,
     };
   }
 
   // Replace constants with their parsed constant
   let replaceResults = replaceConstants({
-    calc, memo, prop, dependencies, errors
+    calc, memo, prop, dependencies, context
   });
   dependencies = replaceResults.dependencies;
   calc = replaceResults.calc;
   if (replaceResults.failed){
     return {
-      context: {errors},
       result: new ConstantNode({value: string, type: 'string'}),
+      context,
       dependencies,
     };
   }
@@ -61,13 +52,12 @@ export default function evaluateCalculation({
   dependencies = computeSymbols({calc, memo, prop, dependencies})
 
   // Evaluate
-  let context = new CompilationContext();
   let result = calc[fn](memo.statsByVariableName, context);
   return {result, context, dependencies};
 }
 
 // Replace constants in the calc with the right ParseNodes
-function replaceConstants({calc, memo, prop, dependencies, errors}){
+function replaceConstants({calc, memo, prop, dependencies, context}){
   let constFailed = [];
   calc = calc.replaceNodes(node => {
     if (!(node instanceof SymbolNode)) return;
@@ -101,16 +91,16 @@ function replaceConstants({calc, memo, prop, dependencies, errors}){
     }
   });
   constFailed.forEach(name => {
-    errors.push({
+    context.storeError({
       type: 'error',
       message: `${name} is a constant property with parsing errors`
     });
   });
-  return {
-    failed: !!constFailed.length,
-    dependencies,
-    calc,
-  };
+  let failed = !!constFailed.length;
+  if (failed){
+    calc = new ErrorNode({error: 'Failed to replace constants'});
+  }
+  return { failed, dependencies, calc };
 }
 
   // Ensure all symbol nodes are defined and computed

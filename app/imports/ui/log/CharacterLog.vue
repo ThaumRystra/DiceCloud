@@ -34,7 +34,7 @@
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
-import { parse } from '/imports/parser/parser.js';
+import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import LogEntry from '/imports/ui/log/LogEntry.vue';
 
 export default {
@@ -61,12 +61,12 @@ export default {
       try {
         result = parse(value);
       } catch (e){
-        console.error(e);
-        this.inputError = 'Invalid syntax';
-        return;
-      }
-      if (result === null){
-        this.inputError =  '...';
+        if (e.constructor.name === 'EndOfInputError'){
+          this.inputError = '...';
+        } else {
+          let error = prettifyParseError(e);
+          this.inputError = error;
+        }
         return;
       }
       try {
@@ -74,7 +74,7 @@ export default {
         this.inputHint = compiled.toString();
         return;
       } catch (e){
-        console.error(e);
+        console.warn(e);
         this.inputError = 'Compilation error';
         return;
       }

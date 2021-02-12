@@ -16,6 +16,6 @@ export default class ErrorNode extends ParseNode {
     return this;
   }
   toString(){
-    return '###';
+    return this.error.toString();
   }
 }

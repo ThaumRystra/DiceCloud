@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import { union } from 'lodash';
 
 export default function computeInlineCalculations(prop, memo){
@@ -21,9 +22,12 @@ function computeInlineCalcsForField(prop, memo, field){
       context,
       dependencies,
     } = evaluateCalculation({string: calculation, prop, memo, fn: 'compile'});
+    if (result instanceof ErrorNode){
+      result = `<code>${result.toString()}</code>`;
+    }
     let computation = {
       calculation,
-      result: result.toString(),
+      result: result && result.toString(),
     };
     if (context.errors.length){
       computation.errors = context.errors;

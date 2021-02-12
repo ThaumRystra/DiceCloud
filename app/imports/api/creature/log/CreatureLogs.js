@@ -4,7 +4,11 @@ import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import {assertEditPermission} from '/imports/api/creature/creaturePermissions.js';
-import { parse, CompilationContext } from '/imports/parser/parser.js';
+import {
+  parse,
+  CompilationContext,
+  prettifyParseError
+} from '/imports/parser/parser.js';
 const PER_CREATURE_LOG_LIMIT = 100;
 
 if (Meteor.isServer){
@@ -149,13 +153,15 @@ const logRoll = new ValidatedMethod({
       avatarPicture: 1,
     }});
     assertEditPermission(creature, this.userId);
-    let parsedResult = parse(roll);
-    let logContent;
-    if (parsedResult === null) {
-      logContent = [{error: 'Unexpected end of input'}];
+    let logContent = []
+    let parsedResult = undefined;
+    try {
+      parsedResult = parse(roll);
+    } catch (e){
+      let error = prettifyParseError(e);
+      logContent.push({error});
     }
-    else try {
-      logContent = [];
+    if (parsedResult) try {
       let rollContext = new CompilationContext();
       let compiled = parsedResult.compile(creature.variables, rollContext);
       let compiledString = compiled.toString();

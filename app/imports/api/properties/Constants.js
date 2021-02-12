@@ -1,7 +1,11 @@
 import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
-import { parse, CompilationContext } from '/imports/parser/parser.js';
+import {
+  parse,
+  CompilationContext,
+  prettifyParseError,
+} from '/imports/parser/parser.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
 import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 /*
@@ -35,19 +39,19 @@ let ConstantSchema = new SimpleSchema({
       }
       let string = calc.value;
       // Evaluate the calculation with no scope
-      let {result, errors} = parseString(string);
-      // Any errors will result in a failure
-      if (errors.length) return errors;
+      let {result, context} = parseString(string);
+      // Any existing errors will result in an early failure
+      if (context.errors.length) return context.errors;
       // Ban variables in constants if necessary
       result && result.traverse(node => {
         if (node instanceof SymbolNode || node instanceof AccessorNode){
-          errors.push({
+          context.storeError()({
             type: 'error',
             message: 'Variables can\'t be used to define a constant'
           });
         }
       });
-      return errors;
+      return context.errors;
     }
   },
   'errors.$':{
@@ -56,9 +60,9 @@ let ConstantSchema = new SimpleSchema({
 });
 
 function parseString(string, fn = 'compile'){
-  let errors = [];
+  let context = new CompilationContext();
   if (!string){
-    return {result: string, errors};
+    return {result: string, errors: []};
   }
 
   // Parse the string using mathjs
@@ -66,18 +70,12 @@ function parseString(string, fn = 'compile'){
   try {
     node = parse(string);
   } catch (e) {
-    let message = e.toString().split('.')[0];
-    errors.push({type: 'error', message});
-    return {result: string, errors};
+    let message = prettifyParseError(e);
+    context.storeError({type: 'error', message});
+    return {result: string, errors: context.errors};
   }
-  // Parsing incomplete
-  if (node === null){
-    errors.push({type: 'warning', message: 'Unexpected end of input'});
-    return {result: string, errors};
-  }
-  let context = new CompilationContext();
   let result = node[fn]({/*empty scope*/}, context);
-  return {result, errors: context.errors}
+  return {result, context}
 }
 
 export { ConstantSchema };

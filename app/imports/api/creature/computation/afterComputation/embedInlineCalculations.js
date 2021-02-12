@@ -4,6 +4,6 @@ export default function embedInlineCalculations(string, calculations){
   let index = 0;
   return string.replace(/\{([^{}]*)\}/g, () => {
     let comp = calculations && calculations[index++];
-    return comp && comp.result;
+    return comp && comp.result ? comp.result : string;
   });
 }

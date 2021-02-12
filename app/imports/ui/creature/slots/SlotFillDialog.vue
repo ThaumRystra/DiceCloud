@@ -244,8 +244,13 @@ export default {
       nodes = nodes.filter(node => {
         if (node.slotFillerCondition){
           let context = new CompilationContext();
-          let conditionResult = parse(node.slotFillerCondition)
-          .reduce(this.creature.variables, context);
+          let conditionResult;
+          try {
+            conditionResult = parse(node.slotFillerCondition)
+            .reduce(this.creature.variables, context);
+          } catch (e){
+            console.warn(e);
+          }
           if (conditionResult && !conditionResult.value) return false;
         }
         if (
