@@ -7,12 +7,25 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
+
+    <text-area
+      label="Summary"
+      hint="This will appear in the action card in the character sheet"
+      :value="model.summary"
+      :error-messages="errors.summary"
+      @change="change('summary', ...arguments)"
+    />
+    <calculation-error-list :calculations="model.summaryCalculations" />
+    
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
+
     <smart-combobox
       label="Tags"
       multiple

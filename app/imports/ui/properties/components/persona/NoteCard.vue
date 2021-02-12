@@ -12,8 +12,8 @@
     </v-card-title>
     <v-card-text>
       <property-description
-        :string="model.description"
-        :calculations="model.descriptionCalculations"
+        :string="model.summary"
+        :calculations="model.summaryCalculations"
         :inactive="model.inactive"
       />
     </v-card-text>

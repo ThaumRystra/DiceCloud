@@ -6,6 +6,10 @@ let NoteSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+  summary: {
+		type: String,
+		optional: true,
+	},
 	description: {
 		type: String,
 		optional: true,
