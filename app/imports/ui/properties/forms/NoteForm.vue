@@ -16,7 +16,7 @@
       @change="change('summary', ...arguments)"
     />
     <calculation-error-list :calculations="model.summaryCalculations" />
-    
+
     <text-area
       label="Description"
       :value="model.description"
@@ -39,8 +39,12 @@
 
 <script>
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
+  components: {
+    CalculationErrorList,
+  },
   mixins: [propertyFormMixin],
 }
 </script>
