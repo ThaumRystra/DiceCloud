@@ -24,6 +24,7 @@
       :hint="actionTypeHints[model.actionType]"
       @change="change('actionType', ...arguments)"
     />
+
     <text-field
       v-if="attackForm"
       label="Roll bonus"
@@ -31,6 +32,8 @@
       :error-messages="errors.rollBonus"
       @change="change('rollBonus', ...arguments)"
     />
+    <calculation-error-list :errors="model.rollBonusErrors" />
+
     <text-area
       label="Summary"
       hint="This will appear in the action card in the character sheet"
@@ -38,6 +41,8 @@
       :error-messages="errors.summary"
       @change="change('summary', ...arguments)"
     />
+    <calculation-error-list :calculations="model.summaryCalculations" />
+
     <text-area
       label="Description"
       hint="The rest of the description that doesn't fit in the summary goes here"
@@ -45,6 +50,8 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <form-sections>
       <form-section name="Resources">
         <resources-form
@@ -81,6 +88,7 @@
             :error-messages="errors.uses"
             @change="change('uses', ...arguments)"
           />
+          <calculation-error-list :errors="model.usesErrors" />
           <text-field
             label="Uses used"
             type="number"
@@ -110,12 +118,14 @@
   import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
   export default {
     components: {
       FormSection,
       FormSections,
       ResourcesForm,
+      CalculationErrorList,
     },
     mixins: [propertyFormMixin],
     props: {

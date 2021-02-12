@@ -14,6 +14,8 @@
       :error-messages="errors.summary"
       @change="change('summary', ...arguments)"
     />
+    <calculation-error-list :calculations="model.summaryCalculations" />
+
     <text-area
       label="Description"
       hint="The rest of the description that doesn't fit in the summary goes here"
@@ -21,6 +23,8 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <smart-combobox
       label="Tags"
       multiple
@@ -35,8 +39,12 @@
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
+    components: {
+      CalculationErrorList,
+    },
     mixins: [propertyFormMixin],
 		data(){ return{
 			enabledOptions: [

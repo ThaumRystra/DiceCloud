@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="errors && errors.length"
+    v-if="computedErrors.length"
     class="error-list"
   >
     <v-slide-x-transition
@@ -8,7 +8,7 @@
       hide-on-leave
     >
       <v-alert
-        v-for="error in errors"
+        v-for="error in computedErrors"
         :key="error.message"
         :value="true"
         :icon="errorIcon(error.type)"
@@ -27,6 +27,25 @@ export default {
     errors: {
       type: Array,
       default: undefined,
+    },
+    calculations: {
+      type: Array,
+      default: undefined,
+    },
+  },
+  computed: {
+    computedErrors(){
+      if (this.errors) {
+        return this.errors;
+      } else if (this.calculations){
+        let errors = [];
+        this.calculations.forEach(calc => {
+          if (calc.errors) errors.push(...calc.errors)
+        });
+        return errors;
+      } else {
+        return [];
+      }
     },
   },
   methods: {

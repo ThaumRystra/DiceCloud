@@ -34,12 +34,15 @@
       :menu-props="{auto: true, lazy: true}"
       @change="change('skillType', ...arguments)"
     />
+
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+    
     <form-section
       name="Advanced"
       standalone

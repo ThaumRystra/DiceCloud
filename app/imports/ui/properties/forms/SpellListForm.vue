@@ -17,12 +17,15 @@
         @change="change('variableName', ...arguments)"
       />
     </div>
+
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+    
     <text-field
       label="Maximum prepared spells"
       :value="model.maxPrepared"
@@ -31,6 +34,7 @@
       @change="change('maxPrepared', ...arguments)"
     />
     <calculation-error-list :errors="model.maxPreparedErrors" />
+
     <smart-combobox
       label="Tags"
       multiple

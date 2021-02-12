@@ -15,12 +15,15 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
+
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <text-field
       label="Picture URL"
       hint="A link to an image representing this property"
@@ -69,8 +72,12 @@
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
+    components: {
+      CalculationErrorList,
+    },
     mixins: [propertyFormMixin],
     data(){
       let slotTypes = [];

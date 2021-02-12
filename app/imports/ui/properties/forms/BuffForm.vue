@@ -13,6 +13,8 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <!-- Duration not implemented yet
     <text-field
       label="Duration"
@@ -44,8 +46,12 @@
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
+    components: {
+      CalculationErrorList,
+    },
     mixins: [propertyFormMixin],
 		props: {
 			parentTarget: {

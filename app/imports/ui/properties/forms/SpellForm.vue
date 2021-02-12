@@ -96,12 +96,15 @@
       :error-messages="errors.duration"
       @change="change('duration', ...arguments)"
     />
+
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <smart-combobox
       label="Tags"
       multiple
@@ -128,12 +131,14 @@
 	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ActionForm from '/imports/ui/properties/forms/ActionForm.vue'
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
 		components: {
       FormSections,
 			FormSection,
       ActionForm,
+      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
 		data(){return {

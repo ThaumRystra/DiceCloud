@@ -51,6 +51,8 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <form-section
       name="Advanced"
       standalone
@@ -80,10 +82,12 @@
 <script>
 import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
 	components: {
 		FormSection,
+    CalculationErrorList,
 	},
   mixins: [propertyFormMixin],
 }

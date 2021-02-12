@@ -44,12 +44,15 @@
       @change="change('slotCondition', ...arguments)"
     />
     <calculation-error-list :errors="model.slotConditionErrors" />
+
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <form-section
       name="Advanced"
       standalone

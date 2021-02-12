@@ -61,6 +61,8 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+
     <form-section
       name="Advanced"
       standalone

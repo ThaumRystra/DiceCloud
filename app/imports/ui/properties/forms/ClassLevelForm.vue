@@ -27,6 +27,7 @@
         @change="change('variableName', ...arguments)"
       />
     </div>
+
     <text-area
       label="Description"
       hint="A brief description of what this class level gives a character"
@@ -34,6 +35,8 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
+    <calculation-error-list :calculations="model.descriptionCalculations" />
+    
     <text-field
       label="Condition"
       hint="A caclulation to determine if this can be added to the character"
@@ -56,8 +59,12 @@
 
 <script>
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
+    components: {
+      CalculationErrorList,
+    },
     mixins: [propertyFormMixin],
 	};
 </script>
