@@ -22,12 +22,13 @@
       <smart-checkbox
         v-if="preparingSpells"
         :value="model.prepared || model.alwaysPrepared"
-        :disabled="model.alwaysPrepared"
+        :disabled="model.alwaysPrepared || context.editPermission === false"
         @click.native.stop="() => {}"
         @change="setPrepared"
       />
       <v-icon
         v-else-if="!hideHandle"
+        :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
@@ -57,6 +58,9 @@ export default {
     preparingSpells: Boolean,
     hideHandle: Boolean,
     showInfoButton: Boolean,
+  },
+  inject: {
+    context: { default: {} }
   },
   computed: {
     hasClickListener(){

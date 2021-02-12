@@ -7,6 +7,7 @@
     <draggable
       v-model="dataItems"
       style="min-height: 24px;"
+      :disabled="context.editPermission === false"
       :group="`item-list`"
       ghost-class="ghost"
       draggable=".item"
@@ -36,6 +37,9 @@ export default {
   components: {
     draggable,
     ItemListTile,
+  },
+  inject: {
+    context: { default: {} }
   },
   props: {
     items: {

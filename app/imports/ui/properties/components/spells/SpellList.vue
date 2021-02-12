@@ -26,6 +26,7 @@
           v-else
           :key="spell._id"
           class="item"
+          :disabled="context.editPermission === false"
           :data-id="`spell-list-tile-${spell._id}`"
           :model="spell"
           :preparing-spells="preparingSpells"
@@ -46,6 +47,9 @@ export default {
   components: {
     draggable,
     SpellListTile,
+  },
+  inject: {
+    context: { default: {} }
   },
   props: {
     spells: {

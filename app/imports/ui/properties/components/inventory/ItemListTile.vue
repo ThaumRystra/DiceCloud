@@ -21,6 +21,7 @@
         icon
         flat
         color="primary"
+        :disabled="context.editPermission === false"
         :value="model.quantity"
         @change="changeQuantity"
       >
@@ -31,6 +32,7 @@
     </v-list-tile-action>
     <v-list-tile-action>
       <v-icon
+        :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
