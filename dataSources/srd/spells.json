@@ -1676,6 +1676,22 @@
 			"material": "a tiny ball of bat guano and sulfur"
 		}
 	},
+		{
+		"castingTime": "action",
+		"description": "You hurl a mote of fire at a creature or objeet within range. Make a ranged spell attack against the target. On a hit, the target takes 1dlO fire damage. A flammable object hit by this spell ignites if it isn't being worn or carried. This spell's damage increases by 1dlO when you reach",
+		"duration": "Instantaneous",
+		"level": 0,
+		"range": "120 feet",
+		"school": "Instantaneous",
+		"ritual": false,
+		"name": "Fire Bolt",
+		"components": {
+			"verbal": true,
+			"somatic": true,
+			"concentration": false,
+			"material": ""
+		}
+	},
 	{
 		"castingTime": "action",
 		"description": "Thin and wispy flames wreathe your body for the duration, shedding bright light in a 10-foot radius and dim light for an additional 10 feet. You can end the spell early by using an action to dismiss it.\n\nThe flames provide you with a warm shield or a chill shield, as you choose. The warm shield grants you resistance to cold damage, and the chill shield grants you resistance to fire damage.\n\nIn addition, whenever a creature within 5 feet of you hits you with a melee attack, the shield erupts with flame. The attacker takes 2d8 fire damage from a warm shield, or 2d8 cold damage from a cold shield.",
@@ -1688,8 +1704,7 @@
 		"components": {
 			"verbal": true,
 			"somatic": true,
-			"concentration": false,
-			"material": "a bit of phosphorus or a firefly"
+			"concentration": false
 		}
 	},
 	{
