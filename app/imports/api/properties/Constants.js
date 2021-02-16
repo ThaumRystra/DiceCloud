@@ -46,7 +46,7 @@ let ConstantSchema = new SimpleSchema({
       // Ban variables in constants if necessary
       result && result.traverse(node => {
         if (node instanceof SymbolNode || node instanceof AccessorNode){
-          context.storeError()({
+          context.storeError({
             type: 'error',
             message: 'Variables can\'t be used to define a constant'
           });
