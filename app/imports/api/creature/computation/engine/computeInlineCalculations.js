@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import { union } from 'lodash';
 
@@ -14,7 +15,7 @@ export default function computeInlineCalculations(prop, memo){
 function computeInlineCalcsForField(prop, memo, field){
   let string = prop[field];
   let inlineComputations = [];
-  let matches = string.matchAll(/\{([^{}]*)\}/g);
+  let matches = string.matchAll(INLINE_CALCULATION_REGEX);
   for (let match of matches){
     let calculation = match[1];
     let {
