@@ -38,10 +38,11 @@ let ConstantSchema = new SimpleSchema({
         return;
       }
       let string = calc.value;
+      if (!string) return [];
       // Evaluate the calculation with no scope
       let {result, context} = parseString(string);
       // Any existing errors will result in an early failure
-      if (context.errors.length) return context.errors;
+      if (context && context.errors.length) return context.errors;
       // Ban variables in constants if necessary
       result && result.traverse(node => {
         if (node instanceof SymbolNode || node instanceof AccessorNode){
@@ -51,7 +52,7 @@ let ConstantSchema = new SimpleSchema({
           });
         }
       });
-      return context.errors;
+      return context && context.errors || [];
     }
   },
   'errors.$':{
@@ -62,7 +63,7 @@ let ConstantSchema = new SimpleSchema({
 function parseString(string, fn = 'compile'){
   let context = new CompilationContext();
   if (!string){
-    return {result: string, errors: []};
+    return {result: string, context};
   }
 
   // Parse the string using mathjs
@@ -72,7 +73,7 @@ function parseString(string, fn = 'compile'){
   } catch (e) {
     let message = prettifyParseError(e);
     context.storeError({type: 'error', message});
-    return {result: string, errors: context.errors};
+    return {context};
   }
   let result = node[fn]({/*empty scope*/}, context);
   return {result, context}
