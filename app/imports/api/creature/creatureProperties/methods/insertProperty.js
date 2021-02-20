@@ -18,7 +18,7 @@ const insertProperty = new ValidatedMethod({
   run({creatureProperty}) {
     let rootCreature = getRootCreatureAncestor(creatureProperty);
     assertEditPermission(rootCreature, this.userId);
-		insertPropertyWork({
+		return insertPropertyWork({
       property: creatureProperty,
       creature: rootCreature,
     });

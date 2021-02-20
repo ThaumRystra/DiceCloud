@@ -205,8 +205,8 @@
             creatureProperty.parent = {collection: 'creatures', id: that.creatureId};
             creatureProperty.ancestors = [ {collection: 'creatures', id: that.creatureId}];
             setDocToLastOrder({collection: CreatureProperties, doc: creatureProperty});
-            let creaturePropertyId = insertProperty.call({creatureProperty});
-            return creaturePropertyId;
+            let id = insertProperty.call({creatureProperty});
+            return `tree-node-${id}`;
           }
         });
       },
@@ -217,10 +217,11 @@
           elementId: 'insert-creature-property-fab',
           callback(libraryNode){
             if (!libraryNode) return;
-            insertPropertyFromLibraryNode.call({
+            let id = insertPropertyFromLibraryNode.call({
               nodeId: libraryNode._id,
               parentRef: {collection: 'creatures', id: that.creatureId},
             });
+            return `tree-node-${id}`;
           }
         });
       },
