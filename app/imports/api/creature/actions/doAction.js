@@ -3,7 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/Creatures.js';
-import CreatureLogs, { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
+import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
@@ -60,7 +60,6 @@ export function doActionWork({
 }){
   // Create the log
   let log = CreatureLogSchema.clean({
-    name: action.name,
     creatureId: creature._id,
     creatureName: creature.name,
   });

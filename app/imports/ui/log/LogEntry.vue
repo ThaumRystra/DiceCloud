@@ -1,26 +1,19 @@
 <template lang="html">
   <v-card
-    class="ma-2"
+    class="ma-2 log-entry"
   >
-    <v-card-title
-      v-if="model.name"
-      class="pa-2"
-    >
-      <h3>
-        {{ model.name }}
-      </h3>
-    </v-card-title>
     <v-card-text
       v-if="model.text || (model.content && model.content.length)"
       class="pa-2"
     >
-      {{ model.text }}
       <div
         v-for="(content, index) in model.content"
         :key="index"
         class="content-line"
       >
-        {{ content.name }}
+        <h4>
+          {{ content.name }}
+        </h4>
         <span
           v-if="content.error"
           class="error"
@@ -35,7 +28,7 @@
         >{{ content.details }}</span>
         <markdown-text
           v-if="content.description"
-          class="details"
+          class="description"
           :markdown="content.description"
         />
       </div>
@@ -68,4 +61,10 @@ export default {
 .content-line .details {
   display: inline-block;
 }
+</style>
+
+<style lang="css">
+  .log-entry .description > p:last-of-type{
+    margin-bottom: 0;
+  }
 </style>

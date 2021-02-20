@@ -16,10 +16,16 @@ export default function applyAdjustment({
   try {
     var {result, errors} = evaluateString(prop.amount, scope, 'reduce');
     if (typeof result !== 'number') {
-      log.content.push({error: errors.join(', ') || 'Something went wrong'});
+      log.content.push({
+        name: 'Attribute damage',
+        error: errors.join(', ') || 'Something went wrong',
+      });
     }
   } catch (e){
-    log.content.push({error: e.toString()});
+    log.content.push({
+      name: 'Attribute damage',
+      error: e.toString(),
+    });
   }
   if (damageTargets) {
     damageTargets.forEach(target => {
@@ -33,12 +39,14 @@ export default function applyAdjustment({
         value: result
       });
       log.content.push({
+        name: 'Attribute damage',
         resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
         result: `${-result}`,
       });
     });
   } else {
     log.content.push({
+      name: 'Attribute damage',
       resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
       result: `${-result}`,
     });

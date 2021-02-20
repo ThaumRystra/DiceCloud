@@ -18,13 +18,10 @@ if (Meteor.isServer){
 let CreatureLogs = new Mongo.Collection('creatureLogs');
 
 let CreatureLogSchema = new SimpleSchema({
-	name: {
-		type: String,
-    optional: true,
-	},
   content: {
     type: Array,
     defaultValue: [],
+    maxCount: 25,
   },
   'content.$': {
     type: LogContentSchema,
@@ -68,11 +65,45 @@ function removeOldLogs(creatureId){
   });
 }
 
+function logToMessageData(log){
+  let embed = {
+    fields: [],
+  };
+  log.content.forEach(c => {
+    let field = {};
+    let descriptionField = {};
+    if (c.name) field.name = c.name;
+    let valueArray = [];
+    if (c.error) valueArray.push(`*${c.error}*`);
+    if (c.resultPrefix) valueArray.push(`${c.resultPrefix}`);
+    if (c.result) valueArray.push(`\`${c.result}\``);
+    if (c.details) valueArray.push(c.details);
+    if (valueArray.length) field.value = valueArray.join(' ');
+    if (c.description){
+      if (!field.value){
+        field.value = c.description;
+      } else {
+        descriptionField.value = c.description;
+      }
+    }
+    if (field.name || field.value){
+      if (!field.name) field.name = '\u200b';
+      if (!field.value) field.value = '\u200b';
+      embed.fields.push(field);
+    }
+    if (descriptionField.value){
+      descriptionField.name = '\u200b';
+      embed.fields.push(descriptionField);
+    }
+  });
+  return { embeds: [embed] };
+}
+
 function logWebhook({log, creature}){
   if (Meteor.isServer){
     sendWebhookAsCreature({
       creature,
-      content: log.text,
+      data: logToMessageData(log),
     });
   }
 }

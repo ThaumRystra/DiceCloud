@@ -28,6 +28,9 @@ export default function applyDamage({
   }
   if (damageTargets && damageTargets.length) {
     damageTargets.forEach(target => {
+      let name = prop.damageType === 'healing' ? 'Healing' : 'Damage';
+      let suffix = prop.damageType +
+        prop.damageType !== 'healing' ? ' damage': '';
       if (prop.target === 'each'){
         result = evaluateString(prop.amount, scope, 'reduce');
       }
@@ -38,25 +41,24 @@ export default function applyDamage({
       });
       if (target._id === creature._id){
         log.content.push({
+          name,
           result: damageDealt,
-          details: `${prop.damageType}`+
-            `${prop.damageType !== 'healing' ? ' damage': ''} to self`,
+          details: suffix + 'to self',
         });
       } else {
         log.content.push({
+          name,
           resultPrefix: 'Dealt ',
           result: damageDealt,
-          details: `${prop.damageType}` +
-            `${prop.damageType !== 'healing'? ' damage': ''}` +
-            `${target.name && ' to '}${target.name}`,
+          details: suffix + `${target.name && ' to '}${target.name}`,
         });
         insertCreatureLog.call({
           log: {
             content: [{
+              name,
               resultPrefix: 'Recieved ',
               result: damageDealt,
-              details: `${prop.damageType}` +
-                `${prop.damageType !== 'healing'? ' damage': ''}`
+              details: suffix,
             }],
             creatureId: target._id,
           }
@@ -65,6 +67,7 @@ export default function applyDamage({
     });
   } else {
     log.content.push({
+      name: prop.damageType === 'healing' ? 'Healing' : 'Damage',
       result,
       details: `${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`,
     });
