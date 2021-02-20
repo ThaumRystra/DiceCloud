@@ -59,6 +59,8 @@ export default {
         removed: {$ne: true},
         equipped: {$ne: true},
         deactivatedByAncestor: {$ne: true},
+      }, {
+        sort: {order: 1},
       });
     },
   }
