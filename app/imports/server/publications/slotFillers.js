@@ -73,6 +73,7 @@ Meteor.publish('slotFillers', function(slotId){
           }
         }
       } else {
+        delete filter.$text
         options = {sort: {
           name: 1,
           order: 1,
