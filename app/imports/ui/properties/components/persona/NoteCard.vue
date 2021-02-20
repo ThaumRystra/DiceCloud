@@ -10,7 +10,7 @@
     <v-card-title class="title">
       {{ model.name }}
     </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="model.summary">
       <property-description
         :string="model.summary"
         :calculations="model.summaryCalculations"
