@@ -1,6 +1,5 @@
 <template lang="html">
   <v-list
-    two-line
     dense
     class="item-list"
   >
