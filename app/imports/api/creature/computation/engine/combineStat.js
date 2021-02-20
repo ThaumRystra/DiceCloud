@@ -76,7 +76,7 @@ function combineAttribute(stat, aggregator, memo){
 
 function combineSkill(stat, aggregator, memo){
   // Skills are based on some ability Modifier
-  let ability = memo.statsByVariableName[stat.ability]
+  let ability = stat.ability && memo.statsByVariableName[stat.ability]
   if (stat.ability && ability){
     if (!ability.computationDetails.computed){
       computeStat(ability, memo);
@@ -87,6 +87,8 @@ function combineSkill(stat, aggregator, memo){
       [ability._id],
       ability.dependencies,
     );
+  } else {
+    stat.abilityMod = 0;
   }
   // Combine all the child proficiencies
   stat.proficiency = stat.baseProficiency || 0;
