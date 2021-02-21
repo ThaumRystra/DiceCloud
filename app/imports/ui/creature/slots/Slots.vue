@@ -120,7 +120,7 @@ export default {
         'ancestors.id': this.creatureId,
         type: 'propertySlot',
         $or: [
-          {slotConditionResult: true},
+          {slotConditionResult: {$nin: [false, 0, '']}},
           {slotConditionResult: {$exists: false}},
         ],
         removed: {$ne: true},
