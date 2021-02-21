@@ -320,7 +320,7 @@
 
 <script>
   import Creatures from '/imports/api/creature/Creatures.js';
-	import { softRemoveProperty } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+	import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
