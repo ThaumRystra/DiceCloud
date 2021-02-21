@@ -52,6 +52,8 @@ Meteor.publish('library', function(libraryId){
       libraryCursor,
       LibraryNodes.find({
         'ancestors.id': libraryId,
+      }, {
+        sort: {order: 1},
       }),
     ];
   });
