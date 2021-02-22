@@ -8,11 +8,22 @@ let SavingThrowSchema = new SimpleSchema ({
     type: String,
     optional: true,
   },
+  // The computed DC
   dc: {
     type: String,
     optional: true,
   },
-  // The variable name of ability the save to roll
+  // Who this saving throw applies to
+	target: {
+		type: String,
+    defaultValue: 'every',
+		allowedValues: [
+      'self',   // the character who took the action
+      'each',   // rolled once for `each` target
+      'every',  // rolled once and applied to `every` target
+    ],
+	},
+  // The variable name of save to roll
   stat: {
     type: String,
     optional: true,

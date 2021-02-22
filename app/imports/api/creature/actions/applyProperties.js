@@ -5,6 +5,7 @@ import applyBuff from '/imports/api/creature/actions/applyBuff.js';
 import applyDamage from '/imports/api/creature/actions/applyDamage.js';
 import applyRoll from '/imports/api/creature/actions/applyRoll.js';
 import applyToggle from '/imports/api/creature/actions/applyToggle.js';
+import applySave from '/imports/api/creature/actions/applySave.js';
 
 function applyProperty(options){
   let prop = options.prop;
@@ -46,8 +47,7 @@ function applyProperty(options){
       applyRoll(options);
       break;
     case 'savingThrow':
-      // applySavingThrow(options);
-      break;
+      return applySave(options);
   }
   return true;
 }

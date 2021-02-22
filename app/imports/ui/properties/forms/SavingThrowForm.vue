@@ -8,6 +8,7 @@
       @change="change('name', ...arguments)"
     />
     <text-field
+      ref="focusFirst"
       label="DC"
       :value="model.dc"
       :error-messages="errors.dc"
@@ -20,6 +21,15 @@
       :items="saveList"
       :error-messages="errors.stat"
       @change="change('stat', ...arguments)"
+    />
+    <smart-select
+      label="Target"
+      :hint="targetOptionHint"
+      :items="targetOptions"
+      :value="model.target"
+      :error-messages="errors.target"
+      :menu-props="{auto: true, lazy: true}"
+      @change="change('target', ...arguments)"
     />
     <smart-combobox
       label="Tags"
@@ -40,5 +50,34 @@ import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormM
 
 export default {
   mixins: [saveListMixin, propertyFormMixin],
+  computed: {
+		targetOptions(){
+			return [
+				{
+					text: 'Self',
+					value: 'self',
+				}, {
+					text: 'Roll once for each target',
+					value: 'each',
+				}, {
+					text: 'Roll once and apply to every target',
+					value: 'every',
+				},
+			];
+		},
+		targetOptionHint(){
+			let hints = {
+				self: 'The damage will be applied to the character\'s own attribute when taking the action',
+				target: 'The damage will be applied to the target of the action',
+				each: 'The damage will be rolled separately for each of the targets of the action',
+				every: 'The damage will be rolled once and applied to each of the targets of the action',
+			};
+			if (this.parentTarget === 'singleTarget'){
+				hints.each = hints.target;
+				hints.every = hints.target;
+			}
+			return hints[this.model.target];
+		}
+	},
 };
 </script>
