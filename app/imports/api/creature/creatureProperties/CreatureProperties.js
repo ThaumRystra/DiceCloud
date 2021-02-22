@@ -43,6 +43,13 @@ let CreaturePropertySchema = new SimpleSchema({
     optional: true,
     index: 1,
   },
+  // Denormalised flag if this property was made inactive because of its own
+  // state
+  deactivatedBySelf: {
+    type: Boolean,
+    optional: true,
+    index: 1,
+  },
   // Denormalised list of all properties or creatures this property depends on
   dependencies: {
     type: Array,

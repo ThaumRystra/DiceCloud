@@ -20,9 +20,16 @@ export default function recomputeInactiveProperties(ancestorId){
   CreatureProperties.update({
     'ancestors.id': ancestorId,
     '_id': {$in: disabledIds},
-    $or: [{inactive: {$ne: true}}, {deactivatedByAncestor: true}],
+    $or: [
+      {inactive: {$ne: true}},
+      {deactivatedBySelf: {$ne: true}},
+      {deactivatedByAncestor: true},
+    ],
   }, {
-    $set: {inactive: true},
+    $set: {
+      inactive: true,
+      deactivatedBySelf: true,
+    },
     $unset: {deactivatedByAncestor: 1},
   }, {
     multi: true,
@@ -31,7 +38,10 @@ export default function recomputeInactiveProperties(ancestorId){
   // Decendants of inactive properties
   CreatureProperties.update({
     'ancestors.id': {$eq: ancestorId, $in: disabledIds},
-    $or: [{inactive: {$ne: true}}, {deactivatedByAncestor: {$ne: true}}],
+    $or: [
+      {inactive: {$ne: true}},
+      {deactivatedByAncestor: {$ne: true}},
+    ],
   }, {
     $set: {
       inactive: true,
@@ -46,7 +56,10 @@ export default function recomputeInactiveProperties(ancestorId){
   CreatureProperties.update({
     'ancestors.id': {$eq: ancestorId, $nin: disabledIds},
     '_id': {$nin: disabledIds},
-    $or: [{inactive: true}, {deactivatedByAncestor: true}],
+    $or: [
+      {inactive: true},
+      {deactivatedByAncestor: true},
+    ],
   }, {
     $unset: {
       inactive: 1,

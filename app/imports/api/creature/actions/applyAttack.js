@@ -8,6 +8,7 @@ export default function applyAttack({
   let value = roll(1, 20)[0];
   actionContext.attackRoll = {value};
   let result = value + prop.rollBonusResult;
+  actionContext.toHit = {value: result};
   log.content.push({
     name: 'To Hit',
     resultPrefix: `1d20 [${value}] + ${prop.rollBonusResult} = `,

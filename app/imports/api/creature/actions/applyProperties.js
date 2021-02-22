@@ -3,6 +3,7 @@ import applyAdjustment from '/imports/api/creature/actions/applyAdjustment.js';
 import applyAttack from '/imports/api/creature/actions/applyAttack.js';
 import applyDamage from '/imports/api/creature/actions/applyDamage.js';
 import applyBuff from '/imports/api/creature/actions/applyBuff.js';
+import applyToggle from '/imports/api/creature/actions/applyToggle.js';
 
 function applyProperty(options){
   let prop = options.prop;
@@ -11,8 +12,13 @@ function applyProperty(options){
     if (prop.applied === true){
       return false;
     }
+  // Only ignore toggles if they wont be computed
+  } else if (prop.type === 'toggle') {
+    if (prop.disabled) return false;
+    if (prop.enabled) return true;
+    if (!prop.condition) return false;
   // Ignore inactive props of other types
-  } else if (prop.inactive === true){
+  } else if (prop.deactivatedBySelf === true){
     return false;
   }
   switch (prop.type){
@@ -33,6 +39,8 @@ function applyProperty(options){
     case 'buff':
       applyBuff(options);
       break;
+    case 'toggle':
+      return applyToggle(options);
     case 'roll':
       // applyRoll(options);
       break;
