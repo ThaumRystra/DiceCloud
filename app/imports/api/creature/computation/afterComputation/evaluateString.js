@@ -1,7 +1,7 @@
 import { parse, CompilationContext } from '/imports/parser/parser.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
-export default function evaluateString(string, scope, fn = 'compile'){
+export default function evaluateString(string, scope, fn = 'compile', context){
   let errors = [];
   if (!string){
     errors.push('No string provided');
@@ -18,7 +18,9 @@ export default function evaluateString(string, scope, fn = 'compile'){
     errors.push(e);
     return {result: string, errors};
   }
-  let context = new CompilationContext();
+  if (!context){
+    context = new CompilationContext({});
+  }
   let result = node[fn](scope, context);
   if (result instanceof ConstantNode){
     return {result: result.value, errors: context.errors}

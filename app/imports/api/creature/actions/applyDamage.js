@@ -1,6 +1,7 @@
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import dealDamage from '/imports/api/creature/creatureProperties/methods/dealDamage.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
+import { CompilationContext } from '/imports/parser/parser.js';
 
 export default function applyDamage({
   prop,
@@ -14,8 +15,19 @@ export default function applyDamage({
     ...creature.variables,
     ...actionContext,
   };
+  if (targets.length === 1){
+    scope.target = targets[0].variables;
+  }
+  let criticalHit = !!(
+    actionContext.criticalHit &&
+    actionContext.criticalHit.value &&
+    prop.damageType !== 'healing' // Can't critically heal
+  );
+  let context = new CompilationContext({
+    doubleRolls: criticalHit,
+  });
   try {
-    var {result, errors} = evaluateString(prop.amount, scope, 'reduce');
+    var {result, errors} = evaluateString(prop.amount, scope, 'reduce', context);
     if (typeof result !== 'number') {
       log.content.push({
         error: errors.join(', '),
@@ -26,11 +38,13 @@ export default function applyDamage({
       error: e.toString(),
     });
   }
+  let suffix = (criticalHit ? ' critical ' : '') +
+    prop.damageType +
+    (prop.damageType !== 'healing' ? ' damage': '');
+
   if (damageTargets && damageTargets.length) {
     damageTargets.forEach(target => {
       let name = prop.damageType === 'healing' ? 'Healing' : 'Damage';
-      let suffix = prop.damageType +
-        prop.damageType !== 'healing' ? ' damage': '';
       if (prop.target === 'each'){
         result = evaluateString(prop.amount, scope, 'reduce');
       }
@@ -69,7 +83,7 @@ export default function applyDamage({
     log.content.push({
       name: prop.damageType === 'healing' ? 'Healing' : 'Damage',
       result,
-      details: `${prop.damageType}${prop.damageType !== 'healing'? ' damage': ''}`,
+      details: suffix,
     });
   }
 }
