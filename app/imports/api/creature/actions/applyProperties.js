@@ -62,7 +62,7 @@ function applyPropertyAndWalkChildren({prop, child, targets, ...options}){
 export default function applyProperties({ forest, targets, ...options}){
   forest.forEach(child => {
     let prop = child.node;
-    if (shouldSplit(prop)){
+    if (shouldSplit(prop) && targets.length){
       targets.forEach(target => {
         let targets = [target]
         applyPropertyAndWalkChildren({ targets, prop, child, ...options});
