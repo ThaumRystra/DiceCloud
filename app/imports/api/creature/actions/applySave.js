@@ -69,6 +69,7 @@ export default function applySave({
       return !saveSuccess;
     } else {
       // TODO
+      return true;
     }
   } catch (e){
     log.content.push({
