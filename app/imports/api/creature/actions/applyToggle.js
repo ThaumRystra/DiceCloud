@@ -1,6 +1,6 @@
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 
-export default function applyDamage({
+export default function applyToggle({
   prop,
   creature,
   actionContext,

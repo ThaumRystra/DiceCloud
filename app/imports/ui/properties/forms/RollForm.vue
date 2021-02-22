@@ -1,5 +1,21 @@
 <template lang="html">
   <div class="roll-form">
+    <div class="layout row wrap">
+      <text-field
+        label="Name"
+        :value="model.name"
+        :error-messages="errors.name"
+        @change="change('name', ...arguments)"
+      />
+      <text-field
+        label="Variable name"
+        :value="model.variableName"
+        style="flex-basis: 300px;"
+        hint="Use this name in action formulae to refer to the result of this roll"
+        :error-messages="errors.variableName"
+        @change="change('variableName', ...arguments)"
+      />
+    </div>
     <text-field
       ref="focusFirst"
       label="Roll"

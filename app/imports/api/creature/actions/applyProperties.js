@@ -1,8 +1,9 @@
 import applyAction from '/imports/api/creature/actions/applyAction.js';
 import applyAdjustment from '/imports/api/creature/actions/applyAdjustment.js';
 import applyAttack from '/imports/api/creature/actions/applyAttack.js';
-import applyDamage from '/imports/api/creature/actions/applyDamage.js';
 import applyBuff from '/imports/api/creature/actions/applyBuff.js';
+import applyDamage from '/imports/api/creature/actions/applyDamage.js';
+import applyRoll from '/imports/api/creature/actions/applyRoll.js';
 import applyToggle from '/imports/api/creature/actions/applyToggle.js';
 
 function applyProperty(options){
@@ -42,7 +43,7 @@ function applyProperty(options){
     case 'toggle':
       return applyToggle(options);
     case 'roll':
-      // applyRoll(options);
+      applyRoll(options);
       break;
     case 'savingThrow':
       // applySavingThrow(options);

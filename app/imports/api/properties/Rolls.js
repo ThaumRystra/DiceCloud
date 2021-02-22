@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 /**
  * Rolls are children to actions or other rolls, they are triggered with 0 or
@@ -20,6 +21,17 @@ import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
  *  child rolls are applied
  */
 let RollSchema = new SimpleSchema({
+  name: {
+		type: String,
+    defaultValue: 'New Roll',
+	},
+  // The technical, lowercase, single-word name used in formulae
+  variableName: {
+    type: String,
+		regEx: VARIABLE_NAME_REGEX,
+    min: 2,
+    defaultValue: 'newRoll',
+  },
   // The roll, can be simplified, but only computed in context
   roll: {
     type: String,
