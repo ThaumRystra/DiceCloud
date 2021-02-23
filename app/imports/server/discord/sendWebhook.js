@@ -10,7 +10,6 @@ export default function sendWebhook({webhookURL, data = {}}){
 
   const hook = new Discord.WebhookClient(id, token);
   // Send a message using the webhook
-  console.log(JSON.stringify(data, null, 2));
   hook.send(data);
 }
 
