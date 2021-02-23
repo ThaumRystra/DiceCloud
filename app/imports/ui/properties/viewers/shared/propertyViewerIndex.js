@@ -5,6 +5,7 @@ import AttributeViewer from '/imports/ui/properties/viewers/AttributeViewer.vue'
 import BuffViewer from '/imports/ui/properties/viewers/BuffViewer.vue';
 import ContainerViewer from '/imports/ui/properties/viewers/ContainerViewer.vue';
 import ClassLevelViewer from '/imports/ui/properties/viewers/ClassLevelViewer.vue';
+import ConstantViewer from '/imports/ui/properties/viewers/ConstantViewer.vue';
 import DamageViewer from '/imports/ui/properties/viewers/DamageViewer.vue';
 import DamageMultiplierViewer from '/imports/ui/properties/viewers/DamageMultiplierViewer.vue';
 import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
@@ -26,6 +27,7 @@ export default {
   buff: BuffViewer,
   container: ContainerViewer,
   classLevel: ClassLevelViewer,
+  constant: ConstantViewer,
   damage: DamageViewer,
   damageMultiplier: DamageMultiplierViewer,
   effect: EffectViewer,
