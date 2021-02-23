@@ -21,6 +21,7 @@ import SlotViewer from '/imports/ui/properties/viewers/SlotViewer.vue';
 import SlotFillerViewer from '/imports/ui/properties/viewers/SlotFillerViewer.vue';
 import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue';
 import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
+import ToggleViewer from '/imports/ui/properties/viewers/ToggleViewer.vue';
 
 export default {
   action: ActionViewer,
@@ -46,4 +47,5 @@ export default {
   skill: SkillViewer,
   spellList: SpellListViewer,
   spell: SpellViewer,
+  toggle: ToggleViewer,
 };

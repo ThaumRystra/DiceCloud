@@ -11,7 +11,12 @@
     />
     <property-field
       name="Condition"
-      :value="'slotConditionResult' in model ? model.slotConditionResult : model.slotCondition"
+      :value="model.slotCondition"
+    />
+    <property-field
+      v-if="'slotConditionResult' in model"
+      name="Condition result"
+      :value="model.slotConditionResult"
     />
     <template v-if="model.tags.length">
       <div class="caption">
