@@ -21,6 +21,9 @@ export default function evaluateCalculation({
     context,
     dependencies,
   };
+  if (typeof string !== 'string'){
+    string = string.toString();
+  }
   // Parse the string
   let calc;
   try {

@@ -28,8 +28,6 @@
     />
     <text-field
       label="Quantity"
-      type="number"
-      min="0"
       hint="How many matching properties must be used to fill this slot, 0 is unlimited"
       :value="model.quantityExpected"
       :error-messages="errors.quantityExpected"

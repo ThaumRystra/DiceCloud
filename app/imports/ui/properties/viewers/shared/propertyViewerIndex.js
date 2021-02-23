@@ -17,6 +17,7 @@ import ProficiencyViewer from '/imports/ui/properties/viewers/ProficiencyViewer.
 import RollViewer from '/imports/ui/properties/viewers/RollViewer.vue';
 import SkillViewer from '/imports/ui/properties/viewers/SkillViewer.vue';
 import SavingThrowViewer from '/imports/ui/properties/viewers/SavingThrowViewer.vue';
+import SlotViewer from '/imports/ui/properties/viewers/SlotViewer.vue';
 import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue';
 import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
 
@@ -39,6 +40,7 @@ export default {
   proficiency: ProficiencyViewer,
   roll: RollViewer,
   savingThrow: SavingThrowViewer,
+  propertySlot: SlotViewer,
   skill: SkillViewer,
   spellList: SpellListViewer,
   spell: SpellViewer,

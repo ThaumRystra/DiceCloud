@@ -23,10 +23,14 @@ export default function recomputeSlotFullness(ancestorId){
       }
     });
     let spaceLeft;
-    if (slot.quantityExpected === 0){
+    let expected = slot.quantityExpectedResult;
+    if (typeof expected !== 'number'){
+      expected = 1;
+    }
+    if (expected === 0){
       spaceLeft = null;
     } else {
-      spaceLeft = slot.quantityExpected - totalFilled;
+      spaceLeft = expected - totalFilled;
     }
     if (slot.totalFilled !== totalFilled || slot.spaceLeft !== spaceLeft){
       CreatureProperties.update(slot._id, {

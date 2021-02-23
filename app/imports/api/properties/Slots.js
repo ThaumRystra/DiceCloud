@@ -22,9 +22,9 @@ let SlotSchema = new SimpleSchema({
 		type: String,
 	},
   quantityExpected: {
-    type: SimpleSchema.Integer,
-    defaultValue: 1,
-    min: 0,
+    type: String,
+    optional: true,
+    defaultValue: '1',
   },
   ignored: {
     type: Boolean,

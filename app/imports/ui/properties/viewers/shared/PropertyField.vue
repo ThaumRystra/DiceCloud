@@ -1,11 +1,11 @@
 <template lang="html">
   <div v-if="value !== undefined || $slots.default">
-  	<div class="caption">
-  		{{name}}
-  	</div>
+    <div class="caption">
+      {{ name }}
+    </div>
     <p class="ml-2 subheading">
       <slot>
-        {{value}}
+        {{ value }}
       </slot>
     </p>
   </div>
@@ -15,7 +15,7 @@
 export default {
 	props: {
 		name: String,
-		value: [String, Number],
+		value: [String, Number, Boolean],
 	}
 }
 </script>

@@ -23,6 +23,7 @@ export default function computeEndStepProperty(prop, memo){
       computePropertyField(prop, memo, 'maxPrepared');
       break;
     case 'propertySlot':
+      computePropertyField(prop, memo, 'quantityExpected');
       computePropertyField(prop, memo, 'slotCondition');
       break;
     case 'roll':

@@ -8,8 +8,8 @@
       <h3 class="layout row align-center">
         {{ slot.name }}
         <v-spacer />
-        <span v-if="slot.quantityExpected > 1">
-          {{ slot.totalFilled }} / {{ slot.quantityExpected }}
+        <span v-if="slot.quantityExpectedResult > 1">
+          {{ slot.totalFilled }} / {{ slot.quantityExpectedResult }}
         </span>
       </h3>
       <v-list v-if="slot.children.length">
@@ -38,7 +38,7 @@
         </v-list-tile>
       </v-list>
       <v-btn
-        v-if="!slot.quantityExpected || slot.spaceLeft"
+        v-if="!slot.quantityExpectedResult || slot.spaceLeft"
         icon
         :data-id="`slot-add-button-${slot._id}`"
         class="slot-add-button"
