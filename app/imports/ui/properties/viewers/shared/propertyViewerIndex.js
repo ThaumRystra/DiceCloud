@@ -14,7 +14,7 @@ import FolderViewer from '/imports/ui/properties/viewers/FolderViewer.vue';
 import ItemViewer from '/imports/ui/properties/viewers/ItemViewer.vue';
 import NoteViewer from '/imports/ui/properties/viewers/NoteViewer.vue';
 import ProficiencyViewer from '/imports/ui/properties/viewers/ProficiencyViewer.vue';
-//import RollViewer from '/imports/ui/properties/viewers/RollViewer.vue';
+import RollViewer from '/imports/ui/properties/viewers/RollViewer.vue';
 import SkillViewer from '/imports/ui/properties/viewers/SkillViewer.vue';
 import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue';
 import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
@@ -36,7 +36,7 @@ export default {
   item: ItemViewer,
   note: NoteViewer,
   proficiency: ProficiencyViewer,
-//  roll: RollViewer,
+  roll: RollViewer,
   skill: SkillViewer,
   spellList: SpellListViewer,
   spell: SpellViewer,

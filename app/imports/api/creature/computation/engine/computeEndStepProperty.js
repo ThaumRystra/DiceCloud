@@ -14,16 +14,19 @@ export default function computeEndStepProperty(prop, memo){
       break;
     case 'attack':
       computeAction(prop, memo);
-      computeAttack(prop, memo);
+      computePropertyField(prop, memo, 'rollBonus');
       break;
     case 'savingThrow':
-      computeSavingThrow(prop, memo);
+      computePropertyField(prop, memo, 'dc');
       break;
     case 'spellList':
-      computeSpellList(prop, memo);
+      computePropertyField(prop, memo, 'maxPrepared');
       break;
     case 'propertySlot':
-      computeSlot(prop, memo);
+      computePropertyField(prop, memo, 'slotCondition');
+      break;
+    case 'roll':
+      computePropertyField(prop, memo, 'roll', 'compile');
       break;
   }
 }
@@ -110,20 +113,4 @@ function computePropertyField(prop, memo, fieldName, fn){
   } else {
     delete prop[`${fieldName}Errors`];
   }
-}
-
-function computeAttack(prop, memo){
-  computePropertyField(prop, memo, 'rollBonus');
-}
-
-function computeSavingThrow(prop, memo){
-  computePropertyField(prop, memo, 'dc');
-}
-
-function computeSpellList(prop, memo){
-  computePropertyField(prop, memo, 'maxPrepared');
-}
-
-function computeSlot(prop, memo){
-  computePropertyField(prop, memo, 'slotCondition');
 }
