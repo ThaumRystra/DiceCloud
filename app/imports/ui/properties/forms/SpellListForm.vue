@@ -25,7 +25,7 @@
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
-    
+
     <text-field
       label="Maximum prepared spells"
       :value="model.maxPrepared"
@@ -34,6 +34,24 @@
       @change="change('maxPrepared', ...arguments)"
     />
     <calculation-error-list :errors="model.maxPreparedErrors" />
+
+    <text-field
+      label="Spell save DC"
+      :value="model.dc"
+      hint="The spell save DC of spells in this list"
+      :error-messages="errors.dc"
+      @change="change('dc', ...arguments)"
+    />
+    <calculation-error-list :errors="model.dcErrors" />
+
+    <text-field
+      label="Attack roll bonus"
+      :value="model.attackRollBonus"
+      hint="The attack roll bonus of spell attacks made by spells in this list"
+      :error-messages="errors.attackRollBonus"
+      @change="change('attackRollBonus', ...arguments)"
+    />
+    <calculation-error-list :errors="model.attackRollBonusErrors" />
 
     <smart-combobox
       label="Tags"

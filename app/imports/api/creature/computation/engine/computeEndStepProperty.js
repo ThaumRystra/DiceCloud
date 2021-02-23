@@ -21,6 +21,8 @@ export default function computeEndStepProperty(prop, memo){
       break;
     case 'spellList':
       computePropertyField(prop, memo, 'maxPrepared');
+      computePropertyField(prop, memo, 'attackRollBonus');
+      computePropertyField(prop, memo, 'dc');
       break;
     case 'propertySlot':
       computePropertyField(prop, memo, 'quantityExpected');

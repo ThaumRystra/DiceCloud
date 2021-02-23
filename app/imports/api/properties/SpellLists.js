@@ -23,6 +23,16 @@ let SpellListSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
+  // Calculation of The attack roll bonus used by spell attacks in this list
+  attackRollBonus: {
+		type: String,
+		optional: true,
+	},
+  // Calculation of the save dc used by spells in this list
+  dc: {
+		type: String,
+		optional: true,
+	},
 });
 
 const ComputedOnlySpellListSchema = new SimpleSchema({
@@ -33,6 +43,7 @@ const ComputedOnlySpellListSchema = new SimpleSchema({
   },
   'descriptionCalculations.$': InlineComputationSchema,
 
+  // maxPrepared
   maxPreparedResult: {
     type: Number,
     optional: true,
@@ -42,6 +53,32 @@ const ComputedOnlySpellListSchema = new SimpleSchema({
     optional: true,
   },
   'maxPreparedErrors.$':{
+    type: ErrorSchema,
+  },
+
+  // attackRollBonus
+  attackRollBonusResult: {
+    type: Number,
+    optional: true,
+  },
+  attackRollBonusErrors: {
+    type: Array,
+    optional: true,
+  },
+  'attackRollBonusErrors.$':{
+    type: ErrorSchema,
+  },
+
+  // dc
+  dcResult: {
+    type: Number,
+    optional: true,
+  },
+  dcErrors: {
+    type: Array,
+    optional: true,
+  },
+  'dcErrors.$':{
     type: ErrorSchema,
   },
 });

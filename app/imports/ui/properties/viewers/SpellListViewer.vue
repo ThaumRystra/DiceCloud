@@ -4,7 +4,15 @@
     <property-variable-name :value="model.variableName" />
     <property-field
       name="Maximum prepared spells"
-      :value="model.maxPreparedResult"
+      :value="'maxPreparedResult' in model ? model.maxPreparedResult : model.maxPrepared"
+    />
+    <property-field
+      name="Spell Save DC"
+      :value="'dcResult' in model ? model.dcResult : model.dcResult"
+    />
+    <property-field
+      name="Attack roll bonus"
+      :value="'attackRollBonusResult' in model ? model.attackRollBonusResult : model.attackRollBonus"
     />
     <property-description
       :string="model.description"
