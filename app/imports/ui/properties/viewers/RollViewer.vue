@@ -4,7 +4,7 @@
     <property-variable-name :value="model.variableName" />
     <property-field
       name="Roll"
-      :value="model.rollResult || model.roll"
+      :value="'rollResult' in model ? model.rollResult : model.roll"
     />
     <calculation-error-list :errors="model.rollErrors" />
   </div>

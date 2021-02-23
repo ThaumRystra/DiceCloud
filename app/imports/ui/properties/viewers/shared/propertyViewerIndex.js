@@ -16,6 +16,7 @@ import NoteViewer from '/imports/ui/properties/viewers/NoteViewer.vue';
 import ProficiencyViewer from '/imports/ui/properties/viewers/ProficiencyViewer.vue';
 import RollViewer from '/imports/ui/properties/viewers/RollViewer.vue';
 import SkillViewer from '/imports/ui/properties/viewers/SkillViewer.vue';
+import SavingThrowViewer from '/imports/ui/properties/viewers/SavingThrowViewer.vue';
 import SpellListViewer from '/imports/ui/properties/viewers/SpellListViewer.vue';
 import SpellViewer from '/imports/ui/properties/viewers/SpellViewer.vue';
 
@@ -37,6 +38,7 @@ export default {
   note: NoteViewer,
   proficiency: ProficiencyViewer,
   roll: RollViewer,
+  savingThrow: SavingThrowViewer,
   skill: SkillViewer,
   spellList: SpellListViewer,
   spell: SpellViewer,

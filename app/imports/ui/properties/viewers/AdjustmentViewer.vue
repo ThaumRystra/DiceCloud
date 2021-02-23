@@ -40,27 +40,32 @@
     computed: {
       effectIcon(){
         let effectOp = this.model.operation === 'increment' ? 'add' : 'base';
-				let value = this.model.amountResult;
+				let value = this.value;
         if (typeof value === 'string'){
           value = 1;
         }
         return getEffectIcon(effectOp, -value);
 			},
+      value(){
+        return 'amountResult' in this.model ?
+          this.model.amountResult :
+          this.model.amount;
+      },
       displayedValue(){
         if (
-          typeof this.model.amountResult === 'number' &&
+          typeof this.value === 'number' &&
           this.model.operation !== 'set'
         ){
-          return Math.abs(this.model.amountResult);
+          return Math.abs(this.value);
         } else {
-          return this.model.amountResult;
+          return this.value;
         }
       },
       tooltip(){
         if (this.model.operation === 'increment'){
           if (
-            typeof this.model.amountResult === 'string' ||
-            this.model.amountResult >= 0
+            typeof this.value === 'string' ||
+            this.value >= 0
           ){
             return 'Minus';
           } else {
