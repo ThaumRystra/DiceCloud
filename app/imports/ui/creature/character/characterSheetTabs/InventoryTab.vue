@@ -2,6 +2,59 @@
   <div class="inventory">
     <column-layout wide-columns>
       <div>
+        <v-card>
+          <v-list>
+            <v-list-tile>
+              <v-list-tile-avatar>
+                <v-icon>$vuetify.icons.injustice</v-icon>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Weight Carried
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-list-tile-title>
+                  {{ creature.denormalizedStats.weightCarried || 0 }} lbs
+                </v-list-tile-title>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-avatar>
+                <v-icon>$vuetify.icons.cash</v-icon>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Net worth
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-list-tile-title>
+                  <coin-value
+                    :value="creature.denormalizedStats.valueTotal || 0"
+                  />
+                </v-list-tile-title>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-list-tile v-if="creature.denormalizedStats.itemsAttuned">
+              <v-list-tile-avatar>
+                <v-icon>$vuetify.icons.spell</v-icon>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Items attuned
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-list-tile-title>
+                  {{ creature.denormalizedStats.itemsAttuned }}
+                </v-list-tile-title>
+              </v-list-tile-action>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </div>
+      <div>
         <toolbar-card
           :color="creature.color"
         >
@@ -53,6 +106,7 @@ import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import { getParentRefByTag } from '/imports/api/creature/creatureProperties/methods/equipItem.js';
 import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
+import CoinValue from '/imports/ui/components/CoinValue.vue';
 
 export default {
 	components: {
@@ -60,6 +114,7 @@ export default {
 		ContainerCard,
     ToolbarCard,
     ItemList,
+    CoinValue,
 	},
 	props: {
 		creatureId: {
@@ -82,7 +137,10 @@ export default {
 			});
 		},
     creature(){
-      return Creatures.findOne(this.creatureId, {fields: {color: 1}});
+      return Creatures.findOne(this.creatureId, {fields: {
+        color: 1,
+        denormalizedStats: 1,
+      }});
     },
 		containersWithoutAncestorContainers(){
 			return CreatureProperties.find({

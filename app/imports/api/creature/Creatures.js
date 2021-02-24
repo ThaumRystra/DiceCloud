@@ -92,8 +92,32 @@ let CreatureSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
     defaultValue: 0,
   },
-  // Sum of all weights of items and containers that are carried
-	'denormalizedStats.weightCarried': {
+  // Inventory
+	'denormalizedStats.weightTotal': {
+		type: Number,
+		defaultValue: 0,
+	},
+  'denormalizedStats.weightEquipment': {
+		type: Number,
+		defaultValue: 0,
+	},
+  'denormalizedStats.weightCarried': {
+		type: Number,
+		defaultValue: 0,
+	},
+  'denormalizedStats.valueTotal': {
+		type: Number,
+		defaultValue: 0,
+	},
+  'denormalizedStats.valueEquipment': {
+		type: Number,
+		defaultValue: 0,
+	},
+  'denormalizedStats.valueCarried': {
+		type: Number,
+		defaultValue: 0,
+	},
+  'denormalizedStats.itemsAttuned': {
 		type: Number,
 		defaultValue: 0,
 	},

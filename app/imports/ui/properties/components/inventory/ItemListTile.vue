@@ -15,7 +15,13 @@
         {{ title }}
       </v-list-tile-title>
     </v-list-tile-content>
-    <v-list-tile-action>
+    <v-list-tile-action
+      v-if="model.attuned"
+      style="min-width: 40px;"
+    >
+      <v-icon>$vuetify.icons.spell</v-icon>
+    </v-list-tile-action>
+    <v-list-tile-action style="min-width: 40px;">
       <increment-button
         v-if="context.creatureId && model.showIncrement"
         icon

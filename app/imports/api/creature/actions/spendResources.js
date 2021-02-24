@@ -51,7 +51,7 @@ export default function spendResources({prop, log}){
   // Now that we have confirmed that there are no errors, do actual work
   //Items
   itemQuantityAdjustments.forEach(adjustQuantityWork);
-
+  
   // Use uses
   if (prop.usesResult){
     CreatureProperties.update(prop._id, {

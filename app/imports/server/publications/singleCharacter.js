@@ -3,6 +3,7 @@ import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creaturePermissions.js';
+import recomputeInvetory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
 
@@ -25,7 +26,10 @@ Meteor.publish('singleCharacter', function(creatureId){
     try { assertViewPermission(creature, userId) }
     catch(e){ return [] }
     if (creature.computeVersion !== VERSION){
-      try { recomputeCreatureById(creatureId) }
+      try {
+        recomputeInvetory(creatureId);
+        recomputeCreatureById(creatureId)
+      }
       catch(e){ console.error(e) }
     }
     return [

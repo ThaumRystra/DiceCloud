@@ -7,6 +7,7 @@ import { restore } from '/imports/api/parenting/softRemove.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 
 const restoreProperty = new ValidatedMethod({
 	name: 'creatureProperties.restore',
@@ -27,6 +28,8 @@ const restoreProperty = new ValidatedMethod({
     // Do work
     restore({_id, collection: CreatureProperties});
 
+    // Items and containers might be restored
+    recomputeInventory(rootCreature._id);
     // Parents active status may have changed while it was deleted
     recomputeInactiveProperties(rootCreature._id);
     // Changes dependency tree by restoring children

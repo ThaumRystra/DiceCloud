@@ -15,6 +15,7 @@ import {
 } from '/imports/api/parenting/parenting.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
 	name: 'creatureProperties.insertPropertyFromLibraryNode',
@@ -97,6 +98,8 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 
     // The library properties need to denormalise which of them are inactive
     recomputeInactiveProperties(rootId);
+    // Some of the library properties may be items or containers
+    recomputeInventory(rootCreature._id);
 		// Inserting a creature property invalidates dependencies: full recompute
     recomputeCreatureByDoc(rootCreature);
 		// Return the docId of the last property, the inserted root property

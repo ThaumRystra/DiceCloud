@@ -89,6 +89,7 @@
           row
           align-center
           justify-end
+          :class="{'mb-2': model.attuned}"
         >
           <span class="title mr-2">
             {{ model.weight }} lb
@@ -104,6 +105,22 @@
             x-large
           >
             $vuetify.icons.weight
+          </v-icon>
+        </v-layout>
+        <v-layout
+          v-if="model.attuned"
+          row
+          align-center
+          justify-end
+        >
+          <span class="title">
+            Attuned
+          </span>
+          <v-icon
+            class="ml-2"
+            x-large
+          >
+            $vuetify.icons.spell
           </v-icon>
         </v-layout>
       </div>

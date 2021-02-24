@@ -4,6 +4,8 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
 
 export function getParentRefByTag(creatureId, tag){
@@ -49,7 +51,7 @@ const equipItem = new ValidatedMethod({
 		});
     let tag = equipped ? INVENTORY_TAGS.equipment : INVENTORY_TAGS.carried;
     let parentRef = getParentRefByTag(creature._id, tag);
-    // organizeDoc handles recompuation
+
     organizeDoc.call({
       docRef: {
         id: _id,
@@ -57,7 +59,11 @@ const equipItem = new ValidatedMethod({
       },
       parentRef,
       order: Number.MAX_SAFE_INTEGER,
+      skipRecompute: true,
     });
+
+    recomputeInventory(creature._id);
+    recomputeCreatureByDoc(creature);
   },
 });
 

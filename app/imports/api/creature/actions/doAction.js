@@ -9,6 +9,7 @@ import { assertEditPermission } from '/imports/api/creature/creaturePermissions.
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { nodesToTree } from '/imports/api/parenting/parenting.js';
 import applyProperties from '/imports/api/creature/actions/applyProperties.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -43,6 +44,8 @@ const doAction = new ValidatedMethod({
     });
 		doActionWork({action, creature, targets, method: this});
 
+    // The acting creature might have used ammo
+    recomputeInventory(creature._id);
     // recompute creatures
 		recomputeCreatureByDoc(creature);
     targets.forEach(target => {

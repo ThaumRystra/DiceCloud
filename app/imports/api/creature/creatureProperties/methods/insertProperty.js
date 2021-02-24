@@ -6,6 +6,7 @@ import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js
 import { reorderDocs } from '/imports/api/parenting/order.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
@@ -35,6 +36,11 @@ export function insertPropertyWork({property, creature}){
   });
   // Inserting the active status of the property needs to be denormalised
   recomputeInactiveProperties(creature._id);
+
+  // Recompute the inventory if it has changed
+  if (property.type === 'item' || property.type === 'container'){
+    recomputeInventory(creature._id);
+  }
   // Inserting a creature property invalidates dependencies: full recompute
   recomputeCreatureByDoc(creature);
   return _id;

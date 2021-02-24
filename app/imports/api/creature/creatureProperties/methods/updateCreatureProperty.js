@@ -5,6 +5,7 @@ import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 
 const updateCreatureProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
@@ -51,6 +52,11 @@ const updateCreatureProperty = new ValidatedMethod({
       'applied', 'equipped', 'prepared', 'alwaysPrepared', 'disabled'
     ].includes(path[0])){
       recomputeInactiveProperties(rootCreature._id);
+    }
+
+    if (property.type === 'item' || property.type === 'container'){
+      // Potentially changes items and containers
+      recomputeInventory(rootCreature._id);
     }
     // Updating a property is likely to change dependencies, do a full recompute
     recomputeCreatureByDoc(rootCreature);

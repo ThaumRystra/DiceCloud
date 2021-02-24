@@ -20,13 +20,14 @@ const organizeDoc = new ValidatedMethod({
       type: Number,
       // Should end in 0.5 to place it reliably between two existing documents
     },
+    skipRecompute: Boolean,
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({docRef, parentRef, order}) {
+  run({docRef, parentRef, order, skipRecompute}) {
     let doc = fetchDocByRef(docRef);
     let collection = getCollectionByName(docRef.collection);
     // The user must be able to edit both the doc and its parent to move it
@@ -52,15 +53,17 @@ const organizeDoc = new ValidatedMethod({
     // Figure out which creatures need to be recalculated after this move
     let docCreatures = getCreatureAncestors(doc);
     let parentCreatures = getCreatureAncestors(parent);
-    let creaturesToRecompute = union(docCreatures, parentCreatures);
-    // Recompute the creatures
-    creaturesToRecompute.forEach(id => {
-      // The active status of some properties might change due to a change in
-      // ancestry
-      recomputeInactiveProperties(id);
-      // Some Dependencies depend on ancestry, so a full recompute is needed
-      recomputeCreatureById(id);
-    });
+    if (!skipRecompute){
+      let creaturesToRecompute = union(docCreatures, parentCreatures);
+      // Recompute the creatures
+      creaturesToRecompute.forEach(id => {
+        // The active status of some properties might change due to a change in
+        // ancestry
+        recomputeInactiveProperties(id);
+        // Some Dependencies depend on ancestry, so a full recompute is needed
+        recomputeCreatureById(id);
+      });
+    }
   },
 });
 
