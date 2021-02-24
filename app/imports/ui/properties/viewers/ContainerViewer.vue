@@ -65,29 +65,39 @@
           row
           align-center
           justify-end
+          :class="{'mb-2': model.contentsWeightless}"
         >
-          <template v-if="model.contentsWeightless">
-            <span
-              class="title"
-            >
-              contents weightless
-            </span>
-          </template>
-          <template v-else>
-            <span class="title mr-2">
-              {{ model.contentsWeight }} lb
-            </span>
-            <span
-              class="title"
-            >
-              contents
-            </span>
-          </template>
+          <span class="title mr-2">
+            {{ model.contentsWeight }} lb
+          </span>
+          <span
+            class="title"
+          >
+            contents
+          </span>
           <v-icon
             class="ml-2"
             x-large
           >
             $vuetify.icons.injustice
+          </v-icon>
+        </v-layout>
+        <v-layout
+          v-if="model.contentsWeightless"
+          row
+          align-center
+          justify-end
+        >
+          <span
+            class="title"
+          >
+            Contents weightless
+          </span>
+          <v-icon
+            class="ml-2"
+            x-large
+          >
+            $vuetify.icons.weightless
           </v-icon>
         </v-layout>
       </div>

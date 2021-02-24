@@ -17,7 +17,7 @@
         >
           $vuetify.icons.weight
         </v-icon>
-        {{ (model.contentsWeight || 0) + (model.weight || 0) }}
+        {{ (model.contentsWeight ? 0 : model.contentsWeight || 0) + (model.weight || 0) }}
       </v-toolbar-title>
       <v-toolbar-title
         class="layout row align-center"

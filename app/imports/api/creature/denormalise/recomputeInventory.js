@@ -95,12 +95,7 @@ function getInventoryData(tree, containersToWrite){
 }
 
 function storeContentsData(node, childData, containersToWrite){
-  let newContentsWeight;
-  if (node.contentsWeightless){
-    newContentsWeight = 0;
-  } else {
-    newContentsWeight = childData.weightCarried
-  }
+  let newContentsWeight = childData.weightCarried
   if (node.contentsWeight !== newContentsWeight){
     node.contentsWeight = newContentsWeight;
     node.contentsWeightChanged = true;
