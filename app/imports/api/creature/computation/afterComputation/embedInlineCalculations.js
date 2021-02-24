@@ -4,8 +4,8 @@ export default function embedInlineCalculations(string, calculations){
   if (!string) return '';
   if (!calculations) return string;
   let index = 0;
-  return string.replace(INLINE_CALCULATION_REGEX, () => {
+  return string.replace(INLINE_CALCULATION_REGEX, substring => {
     let comp = calculations && calculations[index++];
-    return comp && comp.result ? comp.result : string;
+    return (comp && 'result' in comp) ? comp.result : substring;
   });
 }
