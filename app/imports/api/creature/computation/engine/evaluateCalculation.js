@@ -122,10 +122,14 @@ function computeSymbols({calc, memo, prop, dependencies}){
         computeStat(stat, memo);
       }
       if (stat){
-        dependencies = union(dependencies, [
-          stat._id || node.name,
-          ...stat.dependencies
-        ]);
+        if (stat.dependencies){
+          dependencies = union(dependencies, [
+            stat._id || node.name,
+            ...stat.dependencies
+          ]);
+        } else {
+          dependencies = union(dependencies, [stat._id || node.name]);
+        }
       }
     }
   });
