@@ -9,6 +9,31 @@
         {{ model.name }}
       </v-toolbar-title>
       <v-spacer />
+      <v-toolbar-title>
+        <v-icon
+          small
+          style="width: 16px;"
+          class="mr-1"
+        >
+          $vuetify.icons.weight
+        </v-icon>
+        {{ (model.contentsWeight || 0) + (model.weight || 0) }}
+      </v-toolbar-title>
+      <v-toolbar-title
+        class="layout row align-center"
+        style="flex-grow: 0;"
+      >
+        <v-icon
+          small
+          style="width: 16px;"
+          class="mr-1"
+        >
+          $vuetify.icons.two_coins
+        </v-icon>
+        <coin-value
+          :value="(model.contentsValue || 0) + (model.value || 0)"
+        />
+      </v-toolbar-title>
     </template>
     <v-card-text class="px-0">
       <item-list
@@ -23,11 +48,13 @@
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CoinValue from '/imports/ui/components/CoinValue.vue';
 
 export default {
 	components: {
 		ToolbarCard,
     ItemList,
+    CoinValue,
 	},
 	props: {
 		model: {

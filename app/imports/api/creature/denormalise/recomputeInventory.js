@@ -88,6 +88,9 @@ function getInventoryData(tree, containersToWrite){
     data.weightCarried = 0;
     data.valueCarried = 0;
   }
+  if (node.contentsWeightless){
+    data.weightCarried = node.weight;
+  }
   return data
 }
 

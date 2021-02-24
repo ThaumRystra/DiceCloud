@@ -15,7 +15,7 @@
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-list-tile-title>
-                  {{ creature.denormalizedStats.weightCarried || 0 }} lbs
+                  {{ creature.denormalizedStats.weightCarried || 0 }} lb
                 </v-list-tile-title>
               </v-list-tile-action>
             </v-list-tile>

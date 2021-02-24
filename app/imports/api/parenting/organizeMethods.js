@@ -10,7 +10,7 @@ import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 const organizeDoc = new ValidatedMethod({
   name: 'organize.organizeDoc',
   validate: new SimpleSchema({
@@ -20,7 +20,10 @@ const organizeDoc = new ValidatedMethod({
       type: Number,
       // Should end in 0.5 to place it reliably between two existing documents
     },
-    skipRecompute: Boolean,
+    skipRecompute: {
+      type: Boolean,
+      optional: true,
+    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
@@ -60,6 +63,9 @@ const organizeDoc = new ValidatedMethod({
         // The active status of some properties might change due to a change in
         // ancestry
         recomputeInactiveProperties(id);
+        if (doc.type === 'container' || doc.type === 'item'){
+          recomputeInventory(id);
+        }
         // Some Dependencies depend on ancestry, so a full recompute is needed
         recomputeCreatureById(id);
       });
