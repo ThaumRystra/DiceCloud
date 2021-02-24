@@ -41,7 +41,7 @@
           >
             Level {{ creature.variables.level.value }}
           </v-card-title>
-          <v-list>
+          <v-list two-line>
             <v-list-tile>
               <v-list-tile-content>
                 <v-list-tile-title
@@ -52,7 +52,14 @@
                 >
                   {{ creature.variables.milestoneLevels.value }} Milestone levels
                 </v-list-tile-title>
-                <v-list-tile-title v-else>
+                <v-list-tile-title
+                  v-if="
+                    !(creature.variables.milestoneLevels &&
+                      creature.variables.milestoneLevels.value) ||
+                      (creature.variables.xp &&
+                        creature.variables.xp.value)
+                  "
+                >
                   {{
                     creature.variables.xp &&
                       creature.variables.xp.value ||
