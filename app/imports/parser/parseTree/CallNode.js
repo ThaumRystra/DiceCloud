@@ -11,40 +11,64 @@ export default class CallNode extends ParseNode {
   }
   resolve(fn, scope, context){
     let func = functions[this.functionName];
+    // Check that the function exists
     if (!func) return new ErrorNode({
       node: this,
-      error: `${this.functionName} is not a function`,
+      error: `${this.functionName} is not a supported function`,
       context,
     });
-    let args = castArgsToType({fn, scope, context, args: this.args, type: func.argumentType});
-    if (args.failed){
-      if (fn === 'reduce'){
+
+    // Resolve the arguments
+    let resolvedArgs = this.args.map(node => node[fn](scope, context));
+
+    // Check that the arguments match what is expected
+    let checkFailed = this.checkArugments({
+      fn,
+      context,
+      resolvedArgs,
+      argumentsExpected: func.arguments
+    });
+
+    if (checkFailed){
+      if (fn !== 'reduce'){
         return new ErrorNode({
           node: this,
-          error: 'Could not convert all arguments to the correct type',
-          context,
+          error: `Invalid arguments to ${this.functionName} function`,
         });
       } else {
         return new CallNode({
           functionName: this.functionName,
-          args: args,
+          args: resolvedArgs,
         });
       }
-    } else {
-      try {
-        let value = func.fn.apply(null, args);
-        return new ConstantNode({
-          value,
-          type: 'number',
-          previousNodes: [this],
-        });
-      } catch (error) {
-        return new ErrorNode({
-          node: this,
-          error,
-          context,
-        });
+    }
+
+    // Map contant nodes to constants before attempting to run the function
+    let mappedArgs = resolvedArgs.map(node => {
+      if (node instanceof ConstantNode){
+        return node.value;
+      } else {
+        return node;
       }
+    });
+
+    try {
+      // Run the function
+      let value = func.fn.apply(null, mappedArgs);
+
+      let type = typeof value;
+      if (type === 'number' || type === 'string' || type === 'boolean'){
+        // Convert constant results into constant nodes
+        return new ConstantNode({ value, type });
+      } else {
+        return value;
+      }
+    } catch (error) {
+      return new ErrorNode({
+        node: this,
+        error: error.message || error,
+        context,
+      });
     }
   }
   toString(){
@@ -57,20 +81,47 @@ export default class CallNode extends ParseNode {
   replaceChildren(fn){
     this.args = this.args.map(arg => arg.replaceNodes(fn));
   }
-}
+  checkArugments({fn, context, argumentsExpected, resolvedArgs}){
+    // Check that the number of arguments matches the number expected
+    if (
+      !argumentsExpected.anyLength &&
+      argumentsExpected.length !== resolvedArgs.length
+    ){
+      context.storeError({
+        type: 'error',
+        message: 'Incorrect number of arguments ' +
+          `to ${this.functionName} function, ` +
+          `expected ${argumentsExpected.length} got ${resolvedArgs.length}`
+        });
+      return true;
+    }
 
-function castArgsToType({fn, scope, context, args, type}){
-  let resolvedArgs = args.map(node => node[fn](scope, context))
-  let result = [];
-  if (type === 'number'){
-    resolvedArgs.forEach(node => {
-      if (node.isNumber){
-        result.push(node.value);
+    let failed = false;
+    // Check that each argument is of the correct type
+    resolvedArgs.forEach((node, index) => {
+      let type;
+      if (argumentsExpected.anyLength){
+        type = argumentsExpected[0];
       } else {
-        resolvedArgs.failed = true;
+        type = argumentsExpected[index];
       }
-    })
+      if (typeof type === 'string'){
+        // Type being a string means a constant node with matching type
+        if (node.type !== type) failed = true;
+      } else {
+        // Otherwise check that the node is an instance of the given type
+        if (!(node instanceof type)) failed = true;
+      }
+      if (failed && fn === 'reduce'){
+        let typeName = typeof type === 'string' ? type : type.constructor.name;
+        let nodeName = node.type || node.constructor.name
+        context.storeError({
+          type: 'error',
+          message: `Incorrect arguments to ${this.functionName} function` +
+          `expected ${typeName} got ${nodeName}`
+        });
+      }
+    });
+    return failed;
   }
-  if (resolvedArgs.failed) return resolvedArgs;
-  return result;
 }

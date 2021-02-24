@@ -1,3 +1,5 @@
+import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
+
 export default {
   'abs': {
     comment: 'Returns the absolute value of a number',
@@ -5,7 +7,7 @@ export default {
       {input: 'abs(9)', result: '9'},
       {input: 'abs(-3)', result: '3'},
     ],
-    argumentType: 'number',
+    arguments: ['number'],
     resultType: 'number',
     fn: Math.abs,
   },
@@ -15,21 +17,21 @@ export default {
       {input: 'sqrt(16)', result: '4'},
       {input: 'sqrt(10)', result: '3.1622776601683795'},
     ],
-    argumentType: 'number',
+    arguments: ['number'],
     resultType: 'number',
     fn: Math.sqrt,
   },
   'max': {
     comment: 'Returns the largest of the given numbers',
-    examples: [{input: 'min(12, 6, 3, 168)', result: '168'}],
-    argumentType: 'number',
+    examples: [{input: 'max(12, 6, 3, 168)', result: '168'}],
+    arguments: anyNumberOf('number'),
     resultType: 'number',
     fn: Math.max,
   },
   'min': {
     comment: 'Returns the smallest of the given numbers',
     examples: [{input: 'min(12, 6, 3, 168)', result: '3'}],
-    argumentType: 'number',
+    arguments: anyNumberOf('number'),
     resultType: 'number',
     fn: Math.min,
   },
@@ -40,7 +42,7 @@ export default {
       {input: 'round(5.5)', result: '6'},
       {input: 'round(5.05)', result: '5'},
     ],
-    argumentType: 'number',
+    arguments: ['number'],
     resultType: 'number',
     fn: Math.round,
   },
@@ -52,7 +54,7 @@ export default {
       {input: 'floor(5)', result: '5'},
       {input: 'floor(-5.5)', result: '-6'},
     ],
-    argumentType: 'number',
+    arguments: ['number'],
     resultType: 'number',
     fn: Math.floor,
   },
@@ -64,7 +66,7 @@ export default {
       {input: 'ceil(5)', result: '5'},
       {input: 'ceil(-5.5)', result: '-5'},
     ],
-    argumentType: 'number',
+    arguments: ['number'],
     resultType: 'number',
     fn: Math.ceil,
   },
@@ -76,7 +78,7 @@ export default {
       {input: 'trunc(5)', result: '5'},
       {input: 'trunc(-5.5)', result: '-5'},
     ],
-    argumentType: 'number',
+    arguments:[ 'number'],
     resultType: 'number',
     fn: Math.trunc,
   },
@@ -87,8 +89,32 @@ export default {
       {input: 'sign(3)', result: '1'},
       {input: 'sign(0)', result: '0'},
     ],
-    argumentType: 'number',
+    arguments: ['number'],
     resultType: 'number',
     fn: Math.sign,
+  },
+  'tableLookup': {
+    comment: 'Returns the index of the last value in the array that is less than the specified amount',
+    examples: [
+      {input: 'tableLookup([100, 300, 900], 457)', result: '2'},
+      {input: 'tableLookup([100, 300, 900], 23)', result: '0'},
+      {input: 'tableLookup([100, 300, 900, 1200], 900)', result: '3'},
+      {input: 'tableLookup([100, 300], 594)', result: '2'},
+    ],
+    arguments: [ArrayNode, 'number'],
+    resultType: 'number',
+    fn: function tableLookup(arrayNode, number){
+      for(let i in arrayNode.values){
+        let node = arrayNode.values[i];
+        if (node.value > number) return i;
+      }
+      return arrayNode.values.length;
+    }
   }
+}
+
+function anyNumberOf(type){
+  let argumentArray = [type];
+  argumentArray.anyLength = true;
+  return argumentArray;
 }
