@@ -10,7 +10,7 @@ export default {
     },
   },
   mounted(){
-    if (this.$refs.focusFirst){
+    if (this.$refs.focusFirst && this.$refs.focusFirst.focus){
       setTimeout(() => this.$refs.focusFirst.focus(), 300);
     }
   },
