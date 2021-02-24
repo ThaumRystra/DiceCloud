@@ -196,7 +196,7 @@ export default {
     },
     loadMore(){
       if (this.currentLimit >= this.countAll) return;
-      this._subs['slotFillers'].setData('limit', this.currentLimit + 16);
+      this._subs['slotFillers'].setData('limit', this.currentLimit + 20);
     },
     insert(){
       if (!this.selectedNode) return;
