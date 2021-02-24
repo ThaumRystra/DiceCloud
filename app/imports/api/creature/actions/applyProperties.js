@@ -52,23 +52,24 @@ function applyProperty(options){
   return true;
 }
 
-function applyPropertyAndWalkChildren({prop, child, targets, ...options}){
-  let shouldKeepWalking = applyProperty({ prop, targets, ...options });
+function applyPropertyAndWalkChildren({prop, children, targets, ...options}){
+  let shouldKeepWalking = applyProperty({ prop, children, targets, ...options });
   if (shouldKeepWalking){
-    applyProperties({ forest: child.children, targets, ...options,});
+    applyProperties({ forest: children, targets, ...options,});
   }
 }
 
 export default function applyProperties({ forest, targets, ...options}){
-  forest.forEach(child => {
-    let prop = child.node;
+  forest.forEach(node => {
+    let prop = node.node;
+    let children = node.children;
     if (shouldSplit(prop) && targets.length){
       targets.forEach(target => {
         let targets = [target]
-        applyPropertyAndWalkChildren({ targets, prop, child, ...options});
+        applyPropertyAndWalkChildren({ targets, prop, children, ...options});
       });
     } else {
-      applyPropertyAndWalkChildren({prop, child, targets, ...options});
+      applyPropertyAndWalkChildren({prop, children, targets, ...options});
     }
   });
 }
