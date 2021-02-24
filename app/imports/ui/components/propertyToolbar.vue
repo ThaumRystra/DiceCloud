@@ -19,6 +19,7 @@
       <v-layout
         v-if="editing && model"
         key="edit-buttons"
+        style="flex-shrink: 0;"
       >
         <v-spacer />
         <color-picker
