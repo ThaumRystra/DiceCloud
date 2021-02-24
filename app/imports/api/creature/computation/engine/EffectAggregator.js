@@ -14,7 +14,7 @@ export default class EffectAggregator{
         prop: stat,
         memo
       });
-      this.statBaseValue = result.value;
+      this.statBaseValue = +result.value;
       stat.dependencies = union(
         stat.dependencies,
         dependencies,
