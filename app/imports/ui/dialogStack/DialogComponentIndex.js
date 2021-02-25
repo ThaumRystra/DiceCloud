@@ -4,6 +4,7 @@ import CreaturePropertyCreationDialog from '/imports/ui/creature/creaturePropert
 import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue'
 import CreaturePropertyFromLibraryDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue'
 import DeleteConfirmationDialog from '/imports/ui/dialogStack/DeleteConfirmationDialog.vue';
+import DeleteUserAccountDialog from '/imports/ui/user/DeleteUserAccountDialog.vue';
 import ExperienceInsertDialog from  '/imports/ui/creature/experiences/ExperienceInsertDialog.vue';
 import ExperienceListDialog from  '/imports/ui/creature/experiences/ExperienceListDialog.vue';
 import InviteDialog from '/imports/ui/user/InviteDialog.vue';
@@ -26,6 +27,7 @@ export default {
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,
   DeleteConfirmationDialog,
+  DeleteUserAccountDialog,
   ExperienceInsertDialog,
   ExperienceListDialog,
   InviteDialog,

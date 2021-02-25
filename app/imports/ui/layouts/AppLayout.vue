@@ -13,7 +13,7 @@
       name="toolbar"
     />
     <v-toolbar
-      v-if="!$route.matched[0].components.toolbar"
+      v-if="!$route.matched[0] || !$route.matched[0].components.toolbar"
       app
       color="secondary"
       dark

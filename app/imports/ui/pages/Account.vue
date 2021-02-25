@@ -141,6 +141,19 @@
           </template>
         </v-list>
       </template>
+      <v-layout
+        row
+        justify-end
+        class="mt-3"
+      >
+        <v-btn
+          color="error"
+          data-id="delete-account-btn"
+          @click="deleteAccount"
+        >
+          Delete Account
+        </v-btn>
+      </v-layout>
     </v-card>
   </div>
 </template>
@@ -269,6 +282,12 @@
         Meteor.call('updateMyPatreonDetails', error => {
           this.updatePatreonLoading = false;
           if (error) this.updatePatreonError = error;
+        });
+      },
+      deleteAccount(){
+        this.$store.commit('pushDialogStack', {
+          component: 'delete-user-account-dialog',
+          elementId: 'delete-account-btn',
         });
       }
     },

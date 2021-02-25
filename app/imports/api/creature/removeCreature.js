@@ -28,10 +28,14 @@ const removeCreature = new ValidatedMethod({
   },
   run({charId}) {
     assertOwnership(charId, this.userId)
-    Creatures.remove(charId);
-		this.unblock();
-		removeRelatedDocuments(charId);
+    this.unblock();
+    removeCreatureWork(charId)
   },
 });
+
+export function removeCreatureWork(creatureId){
+  Creatures.remove(creatureId);
+  removeRelatedDocuments(creatureId);
+}
 
 export default removeCreature;

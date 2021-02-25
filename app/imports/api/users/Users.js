@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
+import '/imports/api/users/deleteMyAccount.js';
 
 const userSchema = new SimpleSchema({
 	username: {

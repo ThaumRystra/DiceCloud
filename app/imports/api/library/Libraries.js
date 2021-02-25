@@ -118,10 +118,14 @@ const removeLibrary = new ValidatedMethod({
 	run({_id}){
 		let library = Libraries.findOne(_id);
 		assertOwnership(library, this.userId);
-		Libraries.remove(_id);
-		this.unblock();
-		LibraryNodes.remove({'ancestors.id': _id});
+    this.unblock();
+    removeLibaryWork(_id)
 	}
-})
+});
+
+export function removeLibaryWork(libraryId){
+  Libraries.remove(libraryId);
+  LibraryNodes.remove({'ancestors.id': libraryId});
+}
 
 export { LibrarySchema, insertLibrary, setLibraryDefault, updateLibraryName, removeLibrary };
