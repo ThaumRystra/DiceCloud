@@ -108,6 +108,7 @@
             Tree
           </v-tab>
         </v-tabs>
+        <v-spacer />
         <character-sheet-fab
           class="character-sheet-fab"
           :edit-permission="editPermission"

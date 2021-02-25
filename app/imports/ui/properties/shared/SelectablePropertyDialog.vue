@@ -8,7 +8,7 @@
       <v-toolbar-title slot="toolbar">
         Add Library Content
       </v-toolbar-title>
-      <property-selector @select="property => $emit('input', property)" />
+      <property-selector @select="type => $emit('input', type)" />
     </dialog-base>
     <div
       v-show="value"
