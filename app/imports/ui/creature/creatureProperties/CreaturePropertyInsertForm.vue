@@ -70,14 +70,22 @@ export default {
 	};},
 	watch: {
 		type(newType){
-			if (!newType) return;
-			this.schema = propertySchemasIndex[newType];
-			this.validationContext = this.schema.newContext();
-			let model = this.schema.clean({});
-			model.type = newType;
-			this.model = model;
+      this.changeType(newType);
 		},
 	},
+  mounted(){
+    this.changeType(this.type);
+  },
+  methods:{
+    changeType(type){
+      if (!type) return;
+			this.schema = propertySchemasIndex[type];
+			this.validationContext = this.schema.newContext();
+			let model = this.schema.clean({});
+			model.type = type;
+			this.model = model;
+    }
+  },
 }
 </script>
 

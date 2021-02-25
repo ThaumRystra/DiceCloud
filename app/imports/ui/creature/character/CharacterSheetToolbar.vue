@@ -5,6 +5,7 @@
     :color="toolbarColor"
     :dark="isDark"
     :light="!isDark"
+    extended
     tabs
     dense
   >
@@ -73,11 +74,12 @@
     >
       <div
         :key="$route.meta.title"
-        style="width: 100%"
+        class="layout row"
       >
         <v-tabs
           v-if="creature"
-          slot="extension"
+          class="flex"
+          style="min-width: 0"
           centered
           grow
           max="100px"
@@ -106,6 +108,10 @@
             Tree
           </v-tab>
         </v-tabs>
+        <character-sheet-fab
+          class="character-sheet-fab"
+          :edit-permission="editPermission"
+        />
       </div>
     </v-fade-transition>
   </v-toolbar>
@@ -119,8 +125,15 @@ import { theme } from '/imports/ui/theme.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+import CharacterSheetFab from '/imports/ui/creature/character/CharacterSheetFab.vue';
 
 export default {
+  inject: {
+    context: { default: {} }
+  },
+  components: {
+    CharacterSheetFab,
+  },
   data(){return {
     theme,
   }},
@@ -230,5 +243,9 @@ export default {
 }
 .character-sheet-toolbar .v-tabs__bar {
   background: none !important;
+}
+.character-sheet-fab {
+  bottom: -24px;
+  margin-right: -8px;
 }
 </style>

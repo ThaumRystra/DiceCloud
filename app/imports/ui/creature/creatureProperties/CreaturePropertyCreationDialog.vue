@@ -1,11 +1,11 @@
 <template lang="html">
-	<selectable-property-dialog v-model="type">
-		<creature-property-insert-form
-			:type="type"
-			:property-name="getPropertyName(type)"
-			@back="type = undefined"
-		/>
-	</selectable-property-dialog>
+  <selectable-property-dialog :value="forcedType || type">
+    <creature-property-insert-form
+      :type="forcedType || type"
+      :property-name="getPropertyName(forcedType || type)"
+      @back="back"
+    />
+  </selectable-property-dialog>
 </template>
 
 <script>
@@ -14,15 +14,28 @@ import CreaturePropertyInsertForm from '/imports/ui/creature/creatureProperties/
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default {
-  data() { return {
-    type: undefined,
-  };},
   components: {
     SelectablePropertyDialog,
 		CreaturePropertyInsertForm,
   },
+  props: {
+    forcedType: {
+      type: String,
+      default: undefined,
+    },
+  },
+  data() { return {
+    type: undefined,
+  };},
 	methods: {
 		getPropertyName,
+    back(){
+      if (this.forcedType){
+        this.$store.dispatch('popDialogStack');
+      } else {
+        this.type = undefined;
+      }
+    },
 	},
 };
 </script>

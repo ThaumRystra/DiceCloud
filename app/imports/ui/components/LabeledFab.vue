@@ -3,6 +3,8 @@
     fab
     small
     v-bind="$attrs"
+    :disabled="disabled"
+    :style="disabled ? 'background-color: #616161 !important;' : ''"
     @click="$emit('click')"
   >
     <v-icon>{{ icon }}</v-icon>
@@ -18,7 +20,7 @@
    * component creates a v-btn with a label.
    */
   export default {
-    props: ['icon', 'label'],
+    props: ['icon', 'label', 'disabled'],
   }
 </script>
 

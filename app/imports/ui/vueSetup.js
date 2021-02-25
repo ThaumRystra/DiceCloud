@@ -25,7 +25,8 @@ for (const name in SVG_ICONS) {
 }
 
 Vue.use(VueMeteorTracker);
-Vue.config.meteor.freeze = true
+Vue.config.meteor.freeze = true;
+Vue.config.devtools = true;
 Vue.use(Vuetify, {
   theme,
   iconfont: 'md',
