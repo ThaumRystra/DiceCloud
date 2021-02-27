@@ -94,6 +94,17 @@ export default {
   meteor: {
     $subscribe: {
       'libraries': [],
+      'libraryNodes'(){
+        if (!this.expandedLibrary) return [[]];
+        let libraryIds = [];
+        this.expandedLibrary.forEach((expanded, index) => {
+          if (expanded){
+            let library = this.libraries[index];
+            if (library) libraryIds.push(library._id)
+          }
+        });
+        return [libraryIds];
+      }
     },
     libraries(){
       return Libraries.find({}, {

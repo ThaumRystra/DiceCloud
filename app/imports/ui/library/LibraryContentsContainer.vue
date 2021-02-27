@@ -27,11 +27,6 @@
 			selectedNodeId: String,
 		},
 		meteor: {
-			$subscribe: {
-				'library'(){
-					return [this.libraryId]
-				},
-			},
 			library(){
 				return Libraries.findOne(this.libraryId);
 			},

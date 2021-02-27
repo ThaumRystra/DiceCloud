@@ -112,9 +112,6 @@ export default {
     getPropertyName,
   },
   meteor: {
-    $subscribe: {
-      'libraries': [],
-    },
     libraries(){
       return Libraries.find({}, {
         sort: {name: 1}
