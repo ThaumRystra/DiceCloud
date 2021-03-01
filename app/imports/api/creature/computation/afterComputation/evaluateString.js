@@ -1,6 +1,8 @@
 import { parse, CompilationContext } from '/imports/parser/parser.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
+//TODO replace constants with their parsed node
+
 export default function evaluateString(string, scope, fn = 'compile', context){
   let errors = [];
   if (!string){
