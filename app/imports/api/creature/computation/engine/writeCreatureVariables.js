@@ -33,6 +33,8 @@ export default function writeCreatureVariables(memo, creatureId, fullRecompute =
   if (fullRecompute){
     memo.creatureVariables = {};
     forOwn(memo.statsByVariableName, (stat, variableName) => {
+      // Don't save context variables
+      if (variableName[0] === '#') return;
       let condensedStat = pick(stat, fields);
       memo.creatureVariables[variableName] = condensedStat;
     });
