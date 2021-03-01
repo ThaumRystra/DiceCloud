@@ -168,7 +168,7 @@ export default {
       return Math.max(this.model.usesResult, 0);
     },
     usesLeft(){
-      return Math.max(this.model.usesResult - this.model.usesUsed, 0);
+      return Math.max(this.model.usesResult - (this.model.usesUsed || 0), 0);
     },
     actionTypeIcon() {
       return `$vuetify.icons.${this.model.actionType}`;
