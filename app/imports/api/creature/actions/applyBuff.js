@@ -4,7 +4,6 @@ import {
 } from '/imports/api/parenting/parenting.js';
 import {setDocToLastOrder} from '/imports/api/parenting/order.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 export default function applyBuff({
   prop,
@@ -58,10 +57,5 @@ function copyNodeListToTarget(propList, target, oldParent){
     collection: CreatureProperties,
     doc: propList[0],
   });
-
-  CreatureProperties.batchInsert(propList, () => {
-    // This insert is racing the main recompute, recmpute again after it's
-    // certainly finished
-    recomputeCreatureByDoc(target);
-  });
+  CreatureProperties.batchInsert(propList);
 }

@@ -10,6 +10,7 @@ import { recomputeCreatureByDoc } from '/imports/api/creature/computation/method
 import { nodesToTree } from '/imports/api/parenting/parenting.js';
 import applyProperties from '/imports/api/creature/actions/applyProperties.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -46,9 +47,14 @@ const doAction = new ValidatedMethod({
 
     // The acting creature might have used ammo
     recomputeInventory(creature._id);
+
+    // The action might add properties which need to be activated
+    recomputeInactiveProperties(creature._id);
+
     // recompute creatures
 		recomputeCreatureByDoc(creature);
     targets.forEach(target => {
+      recomputeInactiveProperties(target._id);
       recomputeCreatureByDoc(target);
     });
   },
