@@ -24,6 +24,9 @@ const damageProperty = new ValidatedMethod({
   run({_id, operation, value}) {
     // Check permissions
 		let property = CreatureProperties.findOne(_id);
+    if (!property) throw new Meteor.Error(
+      'Damage property failed', 'Property doesn\'t exist'
+    );
     let rootCreature = getRootCreatureAncestor(property);
     assertEditPermission(rootCreature, this.userId);
 		// Check if property can take damage
@@ -34,9 +37,10 @@ const damageProperty = new ValidatedMethod({
 				`Property of type "${property.type}" can't be damaged`
 			);
 		}
-		damagePropertyWork({property, operation, value});
+		let result = damagePropertyWork({property, operation, value});
     // Dependencies can't be changed through damage, only recompute deps
     recomputePropertyDependencies(property);
+    return result;
   },
 });
 
