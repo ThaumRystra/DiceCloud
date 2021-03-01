@@ -5,6 +5,7 @@ import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
 
@@ -62,6 +63,7 @@ const equipItem = new ValidatedMethod({
       skipRecompute: true,
     });
 
+    recomputeInactiveProperties(creature._id);
     recomputeInventory(creature._id);
     recomputeCreatureByDoc(creature);
   },

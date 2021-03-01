@@ -1,15 +1,6 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 export default function getComputationProperties(creatureId){
-  // find ids of all toggles that have conditions, even if they are inactive
-  let toggleIds = CreatureProperties.find({
-    'ancestors.id': creatureId,
-    type: 'toggle',
-    removed: {$ne: true},
-    condition: { $exists: true },
-  }, {
-    fields: {_id: 1},
-  }).map(t => t._id);
   // Find all the relevant properties
   return CreatureProperties.find({
     'ancestors.id': creatureId,
@@ -17,17 +8,15 @@ export default function getComputationProperties(creatureId){
     $or: [
       // All active properties
       {inactive: {$ne: true}},
-      // All active and inactive toggles with conditions
-      // Same as {$in: toggleIds}, but should be slightly faster
-      {type: 'toggle', condition: { $exists: true }},
-      // All decendents of the above toggles
-      {'ancestors.id': {$in: toggleIds}},
+      // Unless they were deactivated because of a toggle
+      {deactivatedByToggle: true},
     ]
   }, {
     // Filter out fields never used by calculations
     fields: {
       icon: 0,
     },
+    // Obey tree order
     sort: {
       order: 1,
     }
