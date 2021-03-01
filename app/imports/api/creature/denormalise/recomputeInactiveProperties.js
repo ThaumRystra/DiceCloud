@@ -60,11 +60,13 @@ export default function recomputeInactiveProperties(ancestorId){
     $or: [
       {inactive: true},
       {deactivatedByAncestor: true},
+      {deactivatedBySelf: true}
     ],
   }, {
     $unset: {
       inactive: 1,
       deactivatedByAncestor: 1,
+      deactivatedBySelf: 1,
     },
   }, {
     multi: true,
