@@ -71,8 +71,8 @@ function replaceConstants({calc, memo, prop, dependencies, context}){
     } else if (node.name === '#constant'){
       constant = findAncestorByType({type: 'constant', prop, memo});
     }
-    // replace constants that aren't overridden by stats
-    if (constant && !stat){
+    // replace constants that aren't overridden by stats or disabled by a toggle
+    if (constant && !constant.deactivatedByToggle && !stat){
       dependencies = union(dependencies, [
         constant._id,
         ...constant.dependencies

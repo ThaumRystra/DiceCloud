@@ -5,8 +5,13 @@ import computeEffect from '/imports/api/creature/computation/engine/computeEffec
 import computeToggle from '/imports/api/creature/computation/engine/computeToggle.js';
 import computeEndStepProperty from '/imports/api/creature/computation/engine/computeEndStepProperty.js';
 import computeInlineCalculations from '/imports/api/creature/computation/engine/computeInlineCalculations.js';
+import computeConstant from '/imports/api/creature/computation/engine/computeConstant.js';
 
 export default function computeMemo(memo){
+  // Compute all constants that could be used
+  forOwn(memo.constantsByVariableName, constant => {
+    computeConstant (constant, memo);
+  });
   // Compute level
   computeLevels(memo);
   // Compute all stats, even if they are overriden
