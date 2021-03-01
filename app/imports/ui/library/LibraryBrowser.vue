@@ -56,7 +56,7 @@
       </v-expansion-panel-content>
     </v-expansion-panel>
     <v-btn
-      v-show="expandedLibrary === null"
+      v-show="noLibrariesExpanded"
       v-if="editMode"
       flat
       color="primary"
@@ -114,6 +114,16 @@ export default {
     paidBenefits(){
       let tier = getUserTier(Meteor.userId());
       return tier && tier.paidBenefits;
+    },
+  },
+  computed: {
+    noLibrariesExpanded(){
+      if (!this.expandedLibrary) return true;
+      let noneExpanded = true;
+      this.expandedLibrary.forEach(lib => {
+        if(lib) noneExpanded = false;
+      });
+      return noneExpanded;
     },
   },
   methods: {
