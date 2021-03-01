@@ -75,26 +75,33 @@ function computeAction(prop, memo){
   });
   // Items consumed
   prop.resources.itemsConsumed.forEach((itemConsumed, i) => {
-    let item = itemConsumed.itemId && memo.equipmentById[itemConsumed.itemId];
-    prop.resources.itemsConsumed[i].itemId = item && item._id;
-    let available = item && item.quantity || 0;
+    let item = itemConsumed.itemId ?
+      memo.equipmentById[itemConsumed.itemId] :
+      undefined;
+    let available = item ? item.quantity : 0;
     prop.resources.itemsConsumed[i].available = available;
-    let name = item && item.name;
-    if (item && item.quantity !== 1 && item.plural){
-      name = item.plural;
-    }
-    prop.resources.itemsConsumed[i].itemName = name;
-    prop.resources.itemsConsumed[i].itemIcon = item && item.icon;
-    prop.resources.itemsConsumed[i].itemColor = item && item.color;
     if (!item || available < itemConsumed.quantity){
       prop.insufficientResources = true;
     }
     if (item){
+      prop.resources.itemsConsumed[i].itemId = item._id;
+      let name = item.name;
+      if (item.quantity !== 1 && item.plural){
+        name = item.plural;
+      }
+      if (name) prop.resources.itemsConsumed[i].itemName = name;
+      if (item.icon) prop.resources.itemsConsumed[i].itemIcon = item.icon;
+      if (item.color) prop.resources.itemsConsumed[i].itemColor = item.color;
       prop.dependencies = union(
         prop.dependencies,
         [item._id],
         item.dependencies
       );
+    } else {
+      delete prop.resources.itemsConsumed[i].itemId;
+      delete prop.resources.itemsConsumed[i].itemName;
+      delete prop.resources.itemsConsumed[i].itemIcon;
+      delete prop.resources.itemsConsumed[i].itemColor;
     }
   });
 }
