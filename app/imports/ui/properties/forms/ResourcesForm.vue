@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="resources-form">
     <div
-      v-if="model.attributesConsumed.length"
+      v-if="model.attributesConsumed && model.attributesConsumed.length"
       class="subheading"
     >
       Attributes

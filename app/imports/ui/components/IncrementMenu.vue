@@ -73,7 +73,7 @@
 		props: {
 			value: {
         type: Number,
-        required: true,
+        default: 0,
       },
       open: Boolean,
       flat: Boolean,
