@@ -1,5 +1,8 @@
 <template lang="html">
-  <selectable-property-dialog :value="forcedType || type">
+  <selectable-property-dialog
+    :value="forcedType || type"
+    @input="e => type = e"
+  >
     <creature-property-insert-form
       :type="forcedType || type"
       :property-name="getPropertyName(forcedType || type)"

@@ -67,7 +67,7 @@
         return this.speedDialsByTab[tabs[this.tabNumber]];
       },
       speedDialsByTab() { return {
-        'stats': ['attribute', 'skill'],
+        'stats': ['attribute', 'skill', 'action', 'attack'],
         'features': ['feature'],
         'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
