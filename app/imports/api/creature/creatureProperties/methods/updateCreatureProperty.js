@@ -3,7 +3,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 
@@ -59,7 +59,8 @@ const updateCreatureProperty = new ValidatedMethod({
       recomputeInventory(rootCreature._id);
     }
     // Updating a property is likely to change dependencies, do a full recompute
-    recomputeCreatureByDoc(rootCreature);
+    // denormalised stats might change, so fetch the creature again
+    recomputeCreatureById(rootCreature._id);
   },
 });
 
