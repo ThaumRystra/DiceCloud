@@ -13,42 +13,43 @@ export default function applyAdjustment({
     ...creature.variables,
     ...actionContext,
   };
-  try {
-    var {result, errors} = evaluateString(prop.amount, scope, 'reduce');
-    if (typeof result !== 'number') {
-      log.content.push({
-        name: 'Attribute damage',
-        error: errors.join(', ') || 'Something went wrong',
-      });
-    }
-  } catch (e){
+  var {result, context} = evaluateString({
+    string: prop.amount,
+    scope,
+    fn: 'reduce'
+  });
+  context.errors.forEach(e => {
     log.content.push({
-      name: 'Attribute damage',
-      error: e.toString(),
+      name: 'Attribute damage error',
+      error: e.message || e.toString(),
     });
-  }
+  });
   if (damageTargets) {
     damageTargets.forEach(target => {
       if (prop.target === 'each'){
-        result = evaluateString(prop.amount, scope, 'reduce');
+        ({result} = evaluateString({
+          string: prop.amount,
+          scope,
+          fn: 'reduce'
+        }));
       }
       damagePropertiesByName.call({
         creatureId: target._id,
         variableName: prop.stat,
         operation: prop.operation || 'increment',
-        value: result
+        value: result.value,
       });
       log.content.push({
         name: 'Attribute damage',
         resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
-        result: `${-result}`,
+        result: `${result.isNumber ? -result.value : result.toString()}`,
       });
     });
   } else {
     log.content.push({
       name: 'Attribute damage',
       resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
-      result: `${-result}`,
+      result: `${result.isNumber ? -result.value : result.toString()}`,
     });
   }
 }

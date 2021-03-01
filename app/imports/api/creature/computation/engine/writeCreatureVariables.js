@@ -4,28 +4,30 @@ import VERSION from '/imports/constants/VERSION.js';
 
 export default function writeCreatureVariables(memo, creatureId, fullRecompute = true) {
   const fields = [
-    'name',
-    'attributeType',
-    'baseValue',
-    'spellSlotLevelValue',
-    'damage',
-    'decimal',
-    'reset',
-    'resetMultiplier',
-    'value',
-    'currentValue',
-    'modifier',
     'ability',
-    'skillType',
-    'baseProficiency',
     'abilityMod',
     'advantage',
-    'passiveBonus',
-    'proficiency',
+    'attributeType',
+    'baseProficiency',
+    'baseValue',
+    'calculation',
     'conditionalBenefits',
-    'rollBonuses',
+    'currentValue',
+    'damage',
+    'decimal',
     'fail',
     'level',
+    'modifier',
+    'name',
+    'passiveBonus',
+    'proficiency',
+    'reset',
+    'resetMultiplier',
+    'rollBonuses',
+    'skillType',
+    'spellSlotLevelValue',
+    'type',
+    'value',
   ];
 
   if (fullRecompute){
@@ -33,6 +35,12 @@ export default function writeCreatureVariables(memo, creatureId, fullRecompute =
     forOwn(memo.statsByVariableName, (stat, variableName) => {
       let condensedStat = pick(stat, fields);
       memo.creatureVariables[variableName] = condensedStat;
+    });
+    forOwn(memo.constantsByVariableName, (stat, variableName) => {
+      let condensedStat = pick(stat, fields);
+      if (!memo.creatureVariables[variableName]){
+        memo.creatureVariables[variableName] = condensedStat;
+      }
     });
     Creatures.update(creatureId, {$set: {
       variables: memo.creatureVariables,

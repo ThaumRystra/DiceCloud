@@ -15,49 +15,79 @@ export default function applyDamage({
     ...creature.variables,
     ...actionContext,
   };
+  // Add the target's variables to the scope
   if (targets.length === 1){
     scope.target = targets[0].variables;
   }
+  // Determine if the hit is critical
   let criticalHit = !!(
     actionContext.criticalHit &&
     actionContext.criticalHit.value &&
     prop.damageType !== 'healing' // Can't critically heal
   );
+  // Double the damage rolls if the hit is critical
   let context = new CompilationContext({
     doubleRolls: criticalHit,
   });
-  try {
-    var {result, errors} = evaluateString(prop.amount, scope, 'reduce', context);
-    if (typeof result !== 'number') {
-      log.content.push({
-        error: errors.join(', '),
-      });
-    }
-  } catch (e){
+
+  // Compute the roll the first time, logging any errors
+  var {result} = evaluateString({
+    string: prop.amount,
+    scope,
+    fn: 'reduce',
+    context
+  });
+
+  // If the result is an error bail out now
+  if (result.constructor.name === 'ErrorNode'){
     log.content.push({
-      error: e.toString(),
+      name: 'Damage error',
+      error: result.toString(),
     });
+    return;
   }
+
+  // Memoise the damage suffix for the log
   let suffix = (criticalHit ? ' critical ' : '') +
     prop.damageType +
     (prop.damageType !== 'healing' ? ' damage': '');
 
   if (damageTargets && damageTargets.length) {
+    // Iterate through all the targets
     damageTargets.forEach(target => {
       let name = prop.damageType === 'healing' ? 'Healing' : 'Damage';
+
+      // Reroll the damage if needed
       if (prop.target === 'each'){
-        result = evaluateString(prop.amount, scope, 'reduce');
+        ({result, context} = evaluateString({
+          string: prop.amount,
+          scope,
+          fn: 'reduce'
+        }));
       }
+      // If the result is an error or not a number bail out now
+      if (result.constructor.name === 'ErrorNode' || !result.isNumber){
+        log.content.push({
+          name: 'Damage error',
+          error: result.toString(),
+        });
+        return;
+      }
+
+      // Deal the damage to the target
       let damageDealt = dealDamage.call({
         creatureId: target._id,
         damageType: prop.damageType,
-        amount: result,
+        amount: result.value,
       });
+
+      // Log the damage done
       if (target._id === creature._id){
+        // Target is same as self, log damage as such
         log.content.push({
           name,
           result: damageDealt,
-          details: suffix + 'to self',
+          details: suffix + ' to self',
         });
       } else {
         log.content.push({
@@ -66,6 +96,7 @@ export default function applyDamage({
           result: damageDealt,
           details: suffix + `${target.name && ' to '}${target.name}`,
         });
+        // Log the damage received on that creature's log as well
         insertCreatureLog.call({
           log: {
             content: [{
@@ -80,9 +111,10 @@ export default function applyDamage({
       }
     });
   } else {
+    // There are no targets, just log the result
     log.content.push({
       name: prop.damageType === 'healing' ? 'Healing' : 'Damage',
-      result,
+      result: result.toString(),
       details: suffix,
     });
   }

@@ -14,19 +14,17 @@ export default function applySave({
   };
   try {
     // Calculate the DC
-    var {result, errors} = evaluateString(prop.dc, scope, 'reduce');
-    let dc = result;
+    var {result} = evaluateString({
+      string: prop.dc,
+      scope,
+      fn: 'reduce'
+    });
+    let dc = result.value;
     log.content.push({
       name: prop.name,
       resultPrefix: ' DC ',
-      result,
+      result: result.toString(),
     });
-    if (errors.length) {
-      log.content.push({
-        error: errors.join(', '),
-      });
-      return false;
-    }
     if (prop.target === 'self'){
       let save = CreaturesProperties.findOne({
         'ancestors.id': creature._id,

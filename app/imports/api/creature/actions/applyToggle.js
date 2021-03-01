@@ -13,23 +13,22 @@ export default function applyToggle({
   if (Number.isFinite(+prop.condition)){
     return !!+prop.condition;
   }
-  try {
-    var {result, errors} = evaluateString(prop.condition, scope, 'reduce');
-    if (typeof result !== 'number' && typeof result !== 'boolean') {
-      log.content.push({
-        error: errors.join(', '),
-      });
-      return false;
-    }
+  var {result} = evaluateString({
+    string: prop.condition,
+    scope,
+    fn: 'reduce'
+  });
+  if (result.constructor.name === 'ErrorNode') {
     log.content.push({
-      name: prop.name,
-      resultPrefix: prop.condition + ' = ',
-      result,
+      name: 'Toggle error',
+      error: result.toString(),
     });
-    return !!result;
-  } catch (e){
-    log.content.push({
-      error: e.toString(),
-    });
+    return false;
   }
+  log.content.push({
+    name: prop.name || 'Toggle',
+    resultPrefix: prop.condition + ' = ',
+    result: result.toString(),
+  });
+  return !!result.value;
 }

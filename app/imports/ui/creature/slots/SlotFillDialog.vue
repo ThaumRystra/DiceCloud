@@ -143,10 +143,10 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import { parse, CompilationContext } from '/imports/parser/parser.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
+import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 
 export default {
   components: {
@@ -243,15 +243,12 @@ export default {
       // the quantity to fill
       nodes = nodes.filter(node => {
         if (node.slotFillerCondition){
-          let context = new CompilationContext();
-          let conditionResult;
-          try {
-            conditionResult = parse(node.slotFillerCondition)
-            .reduce(this.creature.variables, context);
-          } catch (e){
-            console.warn(e);
-          }
-          if (conditionResult && !conditionResult.value) return false;
+          let {result} = evaluateString({
+            string: node.slotFillerCondition,
+            scope: this.creature.variables,
+            fn: 'reduce',
+          });
+          if (!result.value) return false;
         }
         if (
           node.type === 'slotFiller' &&
