@@ -11,7 +11,9 @@ export default function applyToggles(prop, memo){
       toggle.dependencies,
     );
     if (!toggle.toggleResult){
-      prop.computationDetails.disabledByToggle = true;
+      prop.inactive = true;
+      prop.deactivatedByAncestor = true;
+      prop.deactivatedByToggle = true;
     }
   });
 }

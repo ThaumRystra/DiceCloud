@@ -89,7 +89,6 @@ export function recomputeCreatureByDoc(creature){
   writeCreatureVariables(computationMemo, creatureId);
   recomputeDamageMultipliersById(creatureId);
   recomputeSlotFullness(creatureId);
-  recomputeInactiveProperties(creatureId);
   return computationMemo;
 }
 

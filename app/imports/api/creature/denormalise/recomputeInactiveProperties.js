@@ -7,7 +7,6 @@ export default function recomputeInactiveProperties(ancestorId){
       {disabled: true}, // Everything can be disabled
       {type: 'buff', applied: false}, // Buffs can be applied
       {type: 'item', equipped: {$ne: true}},
-      {type: 'toggle', toggleResult: false},
       {type: 'spell', prepared: {$ne: true}, alwaysPrepared: {$ne: true}},
     ],
   };
@@ -56,6 +55,8 @@ export default function recomputeInactiveProperties(ancestorId){
   CreatureProperties.update({
     'ancestors.id': {$eq: ancestorId, $nin: disabledIds},
     '_id': {$nin: disabledIds},
+    // if it was a toggle responsible, we leave it alone
+    deactivatedByToggle: {$ne: true},
     $or: [
       {inactive: true},
       {deactivatedByAncestor: true},

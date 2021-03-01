@@ -22,7 +22,7 @@ export default function computeStat(stat, memo){
   // Apply any toggles
   applyToggles(stat, memo);
 
-  if (!stat.computationDetails.disabledByToggle){
+  if (!stat.deactivatedByToggle){
     // Compute and aggregate all the effects
     let aggregator = new EffectAggregator(stat, memo)
     each(stat.computationDetails.effects, (effect) => {
@@ -37,7 +37,7 @@ export default function computeStat(stat, memo){
         stat.dependencies,
         effect.dependencies
       )
-      if (!effect.computationDetails.disabledByToggle){
+      if (!effect.deactivatedByToggle){
         aggregator.addEffect(effect);
       }
     });

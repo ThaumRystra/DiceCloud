@@ -1,4 +1,5 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
 import { union } from 'lodash';
 
 export default function computeToggle(toggle, memo){
@@ -15,6 +16,9 @@ export default function computeToggle(toggle, memo){
   }
   // Before doing any work, mark this toggle as busy
   toggle.computationDetails.busyComputing = true;
+
+  // Apply any parent toggles
+  applyToggles(toggle, memo);
 
   // Do work
   delete toggle.errors;
@@ -40,6 +44,11 @@ export default function computeToggle(toggle, memo){
     if (context.errors.length){
       toggle.errors = context.errors;
     }
+  }
+  if (!toggle.toggleResult){
+    toggle.inactive = true;
+    toggle.deactivatedBySelf = true;
+    toggle.deactivatedByToggle = true;
   }
   toggle.computationDetails.computed = true;
   toggle.computationDetails.busyComputing = false;

@@ -96,7 +96,7 @@ function combineSkill(stat, aggregator, memo){
     let prof = stat.computationDetails.proficiencies[i];
     applyToggles(prof, memo);
     if (
-      !prof.computationDetails.disabledByToggle &&
+      !prof.deactivatedByToggle &&
       prof.value > stat.proficiency
     ){
       stat.proficiency = prof.value;

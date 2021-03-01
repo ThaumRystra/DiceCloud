@@ -256,7 +256,6 @@ const propDetailsByType = {
   default(){
     return {
       toggleAncestors: [],
-      disabledByToggle: false,
     };
   },
   toggle(){
@@ -264,7 +263,6 @@ const propDetailsByType = {
       computed: false,
       busyComputing: false,
       toggleAncestors: [],
-      disabledByToggle: false,
     };
   },
   attribute(){
@@ -273,7 +271,6 @@ const propDetailsByType = {
       busyComputing: false,
       effects: [],
       toggleAncestors: [],
-      disabledByToggle: false,
       idsOfSameName: [],
     };
   },
@@ -284,7 +281,6 @@ const propDetailsByType = {
       effects: [],
       proficiencies: [],
       toggleAncestors: [],
-      disabledByToggle: false,
       idsOfSameName: [],
     };
   },
@@ -293,26 +289,22 @@ const propDetailsByType = {
       computed: false,
       busyComputing: false,
       toggleAncestors: [],
-      disabledByToggle: false,
     };
   },
   classLevel(){
     return {
       computed: true,
       toggleAncestors: [],
-      disabledByToggle: false,
     };
   },
   proficiency(){
     return {
       toggleAncestors: [],
-      disabledByToggle: false,
     };
   },
   denormalizedStat(){
     return {
       toggleAncestors: [],
-      disabledByToggle: false,
     };
   }
 }

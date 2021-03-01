@@ -50,6 +50,13 @@ let CreaturePropertySchema = new SimpleSchema({
     optional: true,
     index: 1,
   },
+  // Denormalised flag if this property was made inactive because of a toggle
+  // calculation. Either an ancestor toggle calculation or its own.
+  deactivatedByToggle: {
+    type: Boolean,
+    optional: true,
+    index: 1,
+  },
   // Denormalised list of all properties or creatures this property depends on
   dependencies: {
     type: Array,

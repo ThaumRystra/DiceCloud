@@ -10,7 +10,7 @@ import applySave from '/imports/api/creature/actions/applySave.js';
 function applyProperty(options){
   let prop = options.prop;
   if (prop.type === 'buff'){
-    // ignore only applied buffs
+    // ignore only applied buffs, don't apply them again
     if (prop.applied === true){
       return false;
     }
@@ -40,7 +40,7 @@ function applyProperty(options){
       break;
     case 'buff':
       applyBuff(options);
-      break;
+      return false;
     case 'toggle':
       return applyToggle(options);
     case 'roll':
