@@ -32,31 +32,25 @@ Meteor.publish('libraries', function(){
 });
 
 let libraryIdSchema = new SimpleSchema({
-  libraryIds: {
-    type: Array,
-  },
-  'libraryIds.$':{
+  libraryId:{
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
 });
 
-Meteor.publish('libraryNodes', function(libraryIds){
-  libraryIdSchema.validate({libraryIds});
-  if (!libraryIds.length) return [];
+Meteor.publish('libraryNodes', function(libraryId){
+  if (!libraryId) return [];
+  libraryIdSchema.validate({libraryId});
   this.autorun(function (){
     let userId = this.userId;
-    for (let i in libraryIds){
-      let libraryId = libraryIds[i];
-      let library = Libraries.findOne(libraryId);
-      try { assertViewPermission(library, userId) }
-      catch(e){
-        return this.error(e);
-      }
+    let library = Libraries.findOne(libraryId);
+    try { assertViewPermission(library, userId) }
+    catch(e){
+      return this.error(e);
     }
     return [
       LibraryNodes.find({
-        'ancestors.id': {$in: libraryIds},
+        'ancestors.id': libraryId,
       }, {
         sort: {order: 1},
       }),

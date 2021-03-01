@@ -11,7 +11,7 @@
       expand
     >
       <v-expansion-panel-content
-        v-for="library in libraries"
+        v-for="(library, index) in libraries"
         :key="library._id"
         lazy
         :data-id="library._id"
@@ -27,6 +27,7 @@
             :organize-mode="organizeMode"
             :edit-mode="editMode"
             :selected-node-id="selectedNodeId"
+            :should-subscribe="isExpanded(index)"
             @selected="e => $emit('selected', e)"
           />
           <v-card-actions>
@@ -94,17 +95,6 @@ export default {
   meteor: {
     $subscribe: {
       'libraries': [],
-      'libraryNodes'(){
-        if (!this.expandedLibrary) return [[]];
-        let libraryIds = [];
-        this.expandedLibrary.forEach((expanded, index) => {
-          if (expanded){
-            let library = this.libraries[index];
-            if (library) libraryIds.push(library._id)
-          }
-        });
-        return [libraryIds];
-      }
     },
     libraries(){
       return Libraries.find({}, {
@@ -127,6 +117,9 @@ export default {
     },
   },
   methods: {
+    isExpanded(index){
+      return this.expandedLibrary && this.expandedLibrary[index];
+    },
     insertLibrary(){
       if (this.paidBenefits){
         this.$store.commit('pushDialogStack', {

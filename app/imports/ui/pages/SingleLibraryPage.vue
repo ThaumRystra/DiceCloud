@@ -1,9 +1,7 @@
 <template lang="html">
-  <div>
-    <v-card class="ma-4">
-      <single-library />
-    </v-card>
-  </div>
+  <single-card-layout>
+    <single-library />
+  </single-card-layout>
 </template>
 
 <script>
