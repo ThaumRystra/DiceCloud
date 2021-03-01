@@ -8,6 +8,7 @@ export default class ParenthesisNode extends ParseNode {
   resolve(fn, scope, context){
     let content = this.content[fn](scope, context);
     if (
+      fn === 'reduce' ||
       content.constructor.name === 'ConstantNode' ||
       content.constructor.name === 'ErrorNode'
     ){
