@@ -112,13 +112,14 @@ function combineSkill(stat, aggregator, memo){
   let profBonus = profBonusStat && profBonusStat.value;
 
   if (typeof profBonus !== 'number' && memo.statsByVariableName['level']){
-    let level = memo.statsByVariableName['level'].value;
+    let levelProp = memo.statsByVariableName['level'];
+    let level = levelProp.value;
     profBonus = Math.ceil(level / 4) + 1;
-    if (level._id){
-      stat.dependencies = union(stat.dependencies, [level._id]);
+    if (levelProp._id){
+      stat.dependencies = union(stat.dependencies, [levelProp._id]);
     }
-    if (level.dependencies){
-      stat.dependencies = union(stat.dependencies, level.dependencies);
+    if (levelProp.dependencies){
+      stat.dependencies = union(stat.dependencies, levelProp.dependencies);
     }
   } else {
     stat.dependencies = union(
