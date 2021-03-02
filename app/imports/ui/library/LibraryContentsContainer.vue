@@ -1,20 +1,30 @@
 <template lang="html">
-  <tree-node-list
-    v-if="$subReady.libraryNodes"
-    group="library"
-    :children="libraryChildren"
-    :organize="organizeMode"
-    :selected-node-id="selectedNodeId"
-    @selected="e => $emit('selected', e)"
-    @reordered="reordered"
-    @reorganized="reorganized"
-  />
-  <v-progress-circular
-    v-else
-    color="primary"
-    indeterminate
-    style="width: 95%;"
-  />
+  <v-fade-transition
+    hide-on-leave
+  >
+    <tree-node-list
+      v-if="slowShouldSubscribe && $subReady.libraryNodes"
+      group="library"
+      :children="libraryChildren"
+      :organize="organizeMode"
+      :selected-node-id="selectedNodeId"
+      @selected="e => $emit('selected', e)"
+      @reordered="reordered"
+      @reorganized="reorganized"
+    />
+    <v-layout
+      v-else
+      row
+      align-center
+      justify-center
+      style="width: 100%;"
+    >
+      <v-progress-circular
+        color="primary"
+        :indeterminate="slowShouldSubscribe"
+      />
+    </v-layout>
+  </v-fade-transition>
 </template>
 
 <script>

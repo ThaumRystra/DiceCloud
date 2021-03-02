@@ -6,8 +6,7 @@ import Home from '/imports/ui/pages/Home.vue';
 import About from '/imports/ui/pages/About.vue';
 import CharacterList from '/imports/ui/pages/CharacterList.vue';
 import Library from '/imports/ui/pages/Library.vue';
-import SingleLibraryPage from '/imports/ui/pages/SingleLibraryPage.vue'
-import SingleLibraryToolbarItems from '/imports/ui/library/SingleLibraryToolbarItems.vue'
+import SingleLibraryToolbar from '/imports/ui/library/SingleLibraryToolbar.vue';
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
 import CharacterSheetToolbar from '/imports/ui/creature/character/CharacterSheetToolbar.vue';
 import CharacterSheetRightDrawer from '/imports/ui/creature/character/CharacterSheetRightDrawer.vue';
@@ -123,8 +122,8 @@ RouterFactory.configure(factory => {
       name: 'singleLibrary',
       path: '/library/:id',
       components: {
-        default: SingleLibraryPage,
-        toolbarItems: SingleLibraryToolbarItems,
+        default: Library,
+        toolbar: SingleLibraryToolbar,
       },
       meta: {
         title: 'Library',

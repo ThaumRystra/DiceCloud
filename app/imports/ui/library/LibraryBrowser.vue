@@ -24,10 +24,10 @@
         <v-card flat>
           <library-contents-container
             :library-id="library._id"
-            :organize-mode="organizeMode"
+            :organize-mode="organizeMode && editPermission(library)"
             :edit-mode="editMode"
             :selected-node-id="selectedNodeId"
-            :should-subscribe="isExpanded(index)"
+            :should-subscribe="expandedLibrary[index]"
             @selected="e => $emit('selected', e)"
           />
           <v-card-actions>
@@ -48,9 +48,9 @@
               small
               icon
               :disabled="!editPermission(library)"
-              @click="editLibrary(library._id)"
+              @click="$router.push(`/library/${library._id}`)"
             >
-              <v-icon>create</v-icon>
+              <v-icon>arrow_forward</v-icon>
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -90,7 +90,7 @@ export default {
     selectedNodeId: String,
   },
   data(){ return {
-    expandedLibrary: null,
+    expandedLibrary: [],
   };},
   meteor: {
     $subscribe: {
@@ -117,9 +117,7 @@ export default {
     },
   },
   methods: {
-    isExpanded(index){
-      return this.expandedLibrary && this.expandedLibrary[index];
-    },
+    log: console.log,
     insertLibrary(){
       if (this.paidBenefits){
         this.$store.commit('pushDialogStack', {

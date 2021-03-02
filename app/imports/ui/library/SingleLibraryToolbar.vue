@@ -1,28 +1,53 @@
 <template lang="html">
-  <v-toolbar-items>
-    <v-btn
-      v-if="showSubscribeButton"
-      flat
-      :loading="loading"
-      @click="subscribe(!subscribed)"
-    >
-      {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
-    </v-btn>
-    <v-btn
-      v-if="canEdit"
-      flat
-      icon
-      data-id="library-edit-button"
-      @click="editLibrary(library._id)"
-    >
-      <v-icon>create</v-icon>
-    </v-btn>
-  </v-toolbar-items>
+  <v-toolbar
+    app
+    color="secondary"
+    dark
+    tabs
+    extended
+    dense
+  >
+    <v-toolbar-side-icon @click="toggleDrawer" />
+    <v-toolbar-items>
+      <v-btn
+        flat
+        icon
+        @click="$router.push('/library')"
+      >
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+    </v-toolbar-items>
+    <v-toolbar-title>
+      {{ library && library.name }}
+    </v-toolbar-title>
+    <v-spacer />
+    <v-toolbar-items>
+      <v-btn
+        v-if="showSubscribeButton"
+        flat
+        :loading="loading"
+        @click="subscribe(!subscribed)"
+      >
+        {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
+      </v-btn>
+      <v-btn
+        v-if="canEdit"
+        flat
+        icon
+        data-id="library-edit-button"
+        @click="editLibrary(library._id)"
+      >
+        <v-icon>settings</v-icon>
+      </v-btn>
+    </v-toolbar-items>
+  </v-toolbar>
 </template>
 
 <script>
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { mapMutations } from 'vuex';
+
 export default {
   data(){ return {
     loading: false,
@@ -33,8 +58,10 @@ export default {
     },
     subscribed(){
       let libraryId = this.$route.params.id;
-      let subs = Meteor.user().subscribedLibraries;
-      return subs.includes(libraryId);
+      let user = Meteor.user();
+      if (!user) return false;
+      let subs = user.subscribedLibraries;
+      return subs && subs.includes(libraryId);
     },
     showSubscribeButton(){
       let userId = Meteor.userId();
@@ -60,6 +87,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'toggleDrawer',
+    ]),
     subscribe(value){
       this.loading = true;
       Meteor.users.subscribeToLibrary.call({

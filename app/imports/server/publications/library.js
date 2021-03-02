@@ -25,8 +25,26 @@ Meteor.publish('libraries', function(){
         {owner: this.userId},
         {writers: this.userId},
         {readers: this.userId},
-        {_id: {$in: subs}},
+        { _id: {$in: subs}, public: true },
       ]
+    }, {
+      sort: {name: 1}
+    });
+  });
+});
+
+Meteor.publish('library', function(libraryId){
+  if (!libraryId) return [];
+  libraryIdSchema.validate({libraryId});
+  this.autorun(function (){
+    let userId = this.userId;
+    let library = Libraries.findOne(libraryId);
+    try { assertViewPermission(library, userId) }
+    catch(e){
+      return this.error(e);
+    }
+    return Libraries.find({
+      _id: libraryId,
     });
   });
 });
