@@ -9,7 +9,7 @@ import computeConstant from '/imports/api/creature/computation/engine/computeCon
 
 export default function computeMemo(memo){
   // Compute all constants that could be used
-  forOwn(memo.constantsByVariableName, constant => {
+  forOwn(memo.constantsById, constant => {
     computeConstant (constant, memo);
   });
   // Compute level

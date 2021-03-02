@@ -8,7 +8,10 @@ export default function writeAlteredProperties(memo){
   // Loop through all properties on the memo
   forOwn(memo.propsById, changed => {
     let schema = propertySchemasIndex[changed.type];
-    if (!schema) return;
+    if (!schema){
+      console.warn('No schema for ' + changed.type);
+      return;
+    }
     let extraIds = changed.computationDetails.idsOfSameName;
     let ids;
     if (extraIds && extraIds.length){

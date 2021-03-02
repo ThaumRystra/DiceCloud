@@ -7,6 +7,7 @@ export default class ComputationMemo {
   constructor(props, creature){
     this.statsByVariableName = {};
     this.constantsByVariableName = {};
+    this.constantsById = {};
     this.extraStatsByVariableName = {};
     this.statsById = {};
     this.originalPropsById = {};
@@ -77,11 +78,7 @@ export default class ComputationMemo {
   }
   addConstant(prop){
     prop = this.registerProperty(prop);
-    if (
-      !this.constantsByVariableName[prop.variableName]
-    ){
-      this.constantsByVariableName[prop.variableName] = prop
-    }
+    this.constantsById[prop._id] = prop;
   }
   registerProperty(prop){
     this.originalPropsById[prop._id] = cloneDeep(prop);

@@ -1,4 +1,5 @@
 import { forOwn, has, union } from 'lodash';
+import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
 
 export default function computeLevels(memo){
   computeClassLevels(memo);
@@ -7,11 +8,13 @@ export default function computeLevels(memo){
 
 function computeClassLevels(memo){
   forOwn(memo.classLevelsById, classLevel => {
+    applyToggles(classLevel, memo);
     //  class levels are mutually dependent
     classLevel.dependencies = union(
       classLevel.dependencies,
       Object.keys(memo.classLevelsById)
     );
+    if (classLevel.deactivatedByToggle) return;
     let name = classLevel.variableName;
     let stat = memo.statsByVariableName[name];
     if (!stat){
@@ -29,7 +32,7 @@ function computeClassLevels(memo){
 
 function computeTotalLevel(memo){
   let currentLevel = memo.statsByVariableName['level'];
-  if (!currentLevel){
+  if (!currentLevel || currentLevel.deactivatedByToggle){
     currentLevel = {
       value: 0,
       dependencies: [],

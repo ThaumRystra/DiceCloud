@@ -22,28 +22,25 @@ export default function computeStat(stat, memo){
   // Apply any toggles
   applyToggles(stat, memo);
 
-  if (!stat.deactivatedByToggle){
-    // Compute and aggregate all the effects
-    let aggregator = new EffectAggregator(stat, memo)
-    each(stat.computationDetails.effects, (effect) => {
-      computeEffect(effect, memo);
-      if (effect._id){
-        stat.dependencies = union(
-          stat.dependencies,
-          [effect._id]
-        );
-      }
+  // Compute and aggregate all the effects
+  let aggregator = new EffectAggregator(stat, memo)
+  each(stat.computationDetails.effects, (effect) => {
+    computeEffect(effect, memo);
+    if (effect.deactivatedByToggle) return;
+    if (effect._id){
       stat.dependencies = union(
         stat.dependencies,
-        effect.dependencies
-      )
-      if (!effect.deactivatedByToggle){
-        aggregator.addEffect(effect);
-      }
-    });
-    // Conglomerate all the effects to compute the final stat values
-    combineStat(stat, aggregator, memo);
-  }
+        [effect._id]
+      );
+    }
+    stat.dependencies = union(
+      stat.dependencies,
+      effect.dependencies
+    )
+    aggregator.addEffect(effect);
+  });
+  // Conglomerate all the effects to compute the final stat values
+  combineStat(stat, aggregator, memo);
   // Mark the attribute as computed
   stat.computationDetails.computed = true;
   stat.computationDetails.busyComputing = false;

@@ -1,8 +1,11 @@
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
 import { union } from 'lodash';
 
 export default function computeEndStepProperty(prop, memo){
+  applyToggles(prop, memo);
+
   switch (prop.type){
     case 'action':
     case 'spell':
