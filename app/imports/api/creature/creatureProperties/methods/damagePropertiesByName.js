@@ -50,7 +50,7 @@ const damagePropertiesByName = new ValidatedMethod({
       damagePropertyWork({property, operation, value});
       lastProperty = property;
     });
-    recomputePropertyDependencies(lastProperty);
+    if (lastProperty) recomputePropertyDependencies(lastProperty);
   }
 });
 
