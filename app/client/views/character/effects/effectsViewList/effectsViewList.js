@@ -10,6 +10,9 @@ Template.effectsViewList.helpers({
 		let effects =  Effects.find(selector, {
 			fields: {parent: 0},
 		}).fetch();
-		return _.sortBy(effects, effect => statOrder[effect.stat] || 999);
+		return _.sortBy(effects, effect => {
+			if (!statOrder[effect.stat] && statOrder[effect.stat] !== 0) { return 999; }
+			return statOrder[effect.stat]
+		});
 	}
 });
