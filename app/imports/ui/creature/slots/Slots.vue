@@ -130,7 +130,7 @@ export default {
       }).map(slot => {
         if (
           !this.showHiddenSlots &&
-          slot.quantityExpected === 0 &&
+          slot.quantityExpectedResult === 0 &&
           slot.hideWhenFull
         ){
           slot.children = []
@@ -144,11 +144,12 @@ export default {
         }
         return slot;
       }).filter(slot => !( // Hide full and ignored slots
-        !this.showHiddenSlots &&
-        slot.hideWhenFull &&
-        slot.quantityExpected > 0 &&
-        slot.totalFilled >= slot.quantityExpected ||
-        slot.ignored
+        !this.showHiddenSlots && (
+          slot.hideWhenFull &&
+          slot.quantityExpectedResult > 0 &&
+          slot.spaceLeft <= 0 ||
+          slot.ignored
+        )
       ));
     },
   },
