@@ -6,13 +6,13 @@
     "
   >
     <v-expansion-panel
-      v-model="expandedLibrary"
       style="box-shadow: none;"
       expand
     >
       <v-expansion-panel-content
         v-for="(library, index) in libraries"
         :key="library._id"
+        v-model="expandedLibrary[index]"
         lazy
         :data-id="library._id"
       >
@@ -87,11 +87,25 @@ export default {
   props: {
     organizeMode: Boolean,
     editMode: Boolean,
-    selectedNodeId: String,
+    selectedNodeId: {
+      type: String,
+      default: undefined,
+    },
   },
   data(){ return {
     expandedLibrary: [],
+    expandedLibraryContent: [],
   };},
+  computed: {
+    noLibrariesExpanded(){
+      if (!this.expandedLibrary) return true;
+      let noneExpanded = true;
+      this.expandedLibrary.forEach(lib => {
+        if(lib) noneExpanded = false;
+      });
+      return noneExpanded;
+    },
+  },
   meteor: {
     $subscribe: {
       'libraries': [],
@@ -104,16 +118,6 @@ export default {
     paidBenefits(){
       let tier = getUserTier(Meteor.userId());
       return tier && tier.paidBenefits;
-    },
-  },
-  computed: {
-    noLibrariesExpanded(){
-      if (!this.expandedLibrary) return true;
-      let noneExpanded = true;
-      this.expandedLibrary.forEach(lib => {
-        if(lib) noneExpanded = false;
-      });
-      return noneExpanded;
     },
   },
   methods: {

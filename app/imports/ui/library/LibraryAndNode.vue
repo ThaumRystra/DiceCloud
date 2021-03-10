@@ -19,7 +19,7 @@
       >
         <v-spacer />
         <v-switch
-          v-if="!$route.params.id || canEditLibrary"
+          v-if="!libraryId || canEditLibrary"
           v-model="organize"
           label="Organize"
           class="mx-3"
@@ -27,11 +27,11 @@
         />
       </v-toolbar>
       <div
-        v-if="$route.params.id"
+        v-if="libraryId"
         style="width: 100%; height: 100%; overflow: auto;"
       >
         <library-contents-container
-          :library-id="$route.params.id"
+          :library-id="libraryId"
           :organize-mode="organize"
           :selected-node-id="selected"
           should-subscribe
@@ -81,6 +81,10 @@ export default {
   },
   props: {
     selection: Boolean,
+    libraryId: {
+      type: String,
+      default: undefined,
+    },
   },
   data(){ return {
     organize: false,
@@ -131,8 +135,8 @@ export default {
   meteor: {
     $subscribe: {
       'library'(){
-        if (this.$route.params.id){
-          return [this.$route.params.id];
+        if (this.libraryId){
+          return [this.libraryId]
         } else {
           return [];
         }
@@ -144,12 +148,12 @@ export default {
       }).fetch();
     },
     library(){
-      let libraryId = this.$route.params.id;
+      let libraryId = this.libraryId;
       if (!libraryId) return;
       return Libraries.findOne(libraryId);
     },
     canEditLibrary(){
-      if (!this.$route.params.id) return;
+      if (!this.libraryId) return;
       try {
         assertEditPermission(this.library, Meteor.userId());
         return true;

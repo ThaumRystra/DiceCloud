@@ -1,6 +1,8 @@
 <template lang="html">
   <single-card-layout>
-    <library-and-node />
+    <library-and-node
+      :library-id="$route.params.id"
+    />
   </single-card-layout>
 </template>
 
