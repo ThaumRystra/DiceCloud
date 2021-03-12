@@ -47,7 +47,6 @@
               flat
               small
               icon
-              :disabled="!editPermission(library)"
               @click="$router.push(`/library/${library._id}`)"
             >
               <v-icon>arrow_forward</v-icon>
