@@ -7,10 +7,10 @@ services:
     environment:
       - NODE_ENV="production"
       - MONGO_URL="mongodb://dice:dice@dicecloud_mongodb_1:27017"
-      - ROOT_URL=http://127.0.0.1:3000
+      - ROOT_URL=http://127.0.0.1
+      - PORT=3000
     ports:
       - "3000:3000"
-      - "3003:3003"
   mongodb:
     restart: always
     image: mongo:latest

@@ -68,3 +68,30 @@ You should see this:
 
 Now, visiting [](http://localhost:3000/) should show you an empty instance of
 DiceCloud running.
+
+Docker Instructions
+-------------------
+
+To build and run DiceCloud locally with docker, please have docker and 
+docker-compose installed. You will also need at least 4GB of RAM to build.
+
+Afterwards, edit the docker-compose.yml file, and change the ROOT_URL
+environment variable to the Fully-Qualified Domain Name of the machine
+
+```
+ROOT_URL=https://dicecloud.example.com
+```
+
+If you plan on having the instance be public, change the mongodb root user
+and password (presently set to dice) in the docker-compose.yml to something 
+more secure.
+
+Once you've finished editing the docker-compose.yml to your needs, you can run
+
+```
+docker-compose up --build
+```
+In the directory with the Dockerfile. Building the image will take time, but one
+built it will take considerably less time to start new instances. 
+
+Note: You should rebuild the image often in order to keep the Ubuntu base up to date.
