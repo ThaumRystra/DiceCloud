@@ -8,6 +8,11 @@
     <p class="my-2">
       <code>{{ model.variableName }}</code>
     </p>
+    <property-description
+      :string="model.description"
+      :calculations="model.descriptionCalculations"
+      :inactive="model.inactive"
+    />
   </div>
 </template>
 
