@@ -1,6 +1,6 @@
 <template lang="html">
   <v-list v-if="items.length">
-    <v-list-tile
+    <v-list-item
       v-for="item in items"
       :key="item._id"
       @click="selectItem(item._id)"
@@ -9,7 +9,7 @@
         :model="item"
         :selected="itemConsumed.itemId === item._id"
       />
-    </v-list-tile>
+    </v-list-item>
   </v-list>
   <v-card v-else>
     <v-card-text>
@@ -18,7 +18,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import ItemTreeNode from '/imports/ui/properties/treeNodeViews/ItemTreeNode.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import selectAmmoItem from '/imports/api/creature/creatureProperties/methods/selectAmmoItem.js';

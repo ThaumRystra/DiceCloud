@@ -13,7 +13,7 @@
         {{ model.actionType }}
       </div>
     </div>
-    <div class="layout row align-center justify-space-around">
+    <div class="layout align-center justify-space-around">
       <v-btn
         v-if="context.creatureId"
         flat
@@ -120,7 +120,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import doAction from '/imports/api/creature/actions/doAction.js';

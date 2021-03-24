@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';

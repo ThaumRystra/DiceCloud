@@ -70,7 +70,7 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="js">
 import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 	export default {
     components: {

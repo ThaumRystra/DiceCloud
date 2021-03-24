@@ -7,7 +7,7 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <smart-select
         label="Damage Type"
         style="flex-basis: 300px;"
@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 	export default {

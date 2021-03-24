@@ -12,7 +12,7 @@
     <router-view
       name="toolbar"
     />
-    <v-toolbar
+    <v-app-bar
       v-if="!$route.matched[0] || !$route.matched[0].components.toolbar"
       app
       color="secondary"
@@ -20,7 +20,7 @@
       tabs
       dense
     >
-      <v-toolbar-side-icon @click="toggleDrawer" />
+      <v-app-bar-nav-icon @click="toggleDrawer" />
       <v-toolbar-title>
         <v-fade-transition
           mode="out-in"
@@ -53,14 +53,14 @@
           />
         </div>
       </v-fade-transition>
-    </v-toolbar>
-    <v-content>
+    </v-app-bar>
+    <v-main>
       <v-fade-transition
         mode="out-in"
       >
         <router-view />
       </v-fade-transition>
-    </v-content>
+    </v-main>
     <router-view
       name="rightDrawer"
     />
@@ -69,11 +69,10 @@
   </v-app>
 </template>
 
-<script>
+<script lang="js">
 	import '/imports/api/users/Users.js';
   import Sidebar from '/imports/ui/layouts/Sidebar.vue';
   import DialogStack from '/imports/ui/dialogStack/DialogStack.vue';
-	import { theme, darkTheme } from '/imports/ui/theme.js';
   import { mapMutations } from 'vuex';
   import Snackbars from '/imports/ui/components/snackbars/Snackbars.vue';
 
@@ -107,10 +106,7 @@
 			darkMode: {
 				immediate: true,
 				handler(newDarkModeValue){
-					let newTheme = newDarkModeValue ? darkTheme : theme;
-					for (let key in newTheme){
-						this.$vuetify.theme[key] = newTheme[key];
-					}
+          this.$vuetify.theme.dark = newDarkModeValue;
 				},
 			},
       '$route' (to) {

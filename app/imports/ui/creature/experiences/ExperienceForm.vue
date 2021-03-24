@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

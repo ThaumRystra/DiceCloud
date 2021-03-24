@@ -13,7 +13,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 	import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 
 	export default {

@@ -12,7 +12,7 @@
   </v-icon>
 </template>
 
-<script>
+<script lang="js">
 import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 
 export default {

@@ -10,7 +10,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Slots from '/imports/ui/creature/slots/Slots.vue'

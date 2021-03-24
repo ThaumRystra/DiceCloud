@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
 

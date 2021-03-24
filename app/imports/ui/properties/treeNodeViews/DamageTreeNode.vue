@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="layout row align-center justify-start">
+  <div class="layout align-center justify-start">
     <v-icon
       v-if="!hideIcon"
       class="mr-2"
@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 

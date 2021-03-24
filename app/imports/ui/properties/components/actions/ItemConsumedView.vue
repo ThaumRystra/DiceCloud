@@ -13,7 +13,7 @@
     >
       <template #activator="{ on }">
         <div
-          class="layout row align-center justify-start"
+          class="layout align-center justify-start"
           style="height: 100%;"
           :class="{
             'error--text': insufficient,
@@ -64,7 +64,7 @@
     </v-menu>
     <div
       v-else
-      class="layout row align-center justify-start"
+      class="layout align-center justify-start"
       :class="{'left-pad': leftPad}"
     >
       <div
@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import SelectItemToConsume from '/imports/ui/properties/components/actions/SelectItemToConsume.vue';
 export default {
   components: {

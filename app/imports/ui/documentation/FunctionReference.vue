@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import functions from '/imports/parser/functions.js';
 export default {
   computed:{

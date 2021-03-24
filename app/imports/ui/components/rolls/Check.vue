@@ -2,15 +2,15 @@
   <v-card>
     <template v-if="!result">
       <v-btn-toggle v-model="advantage">
-        <v-btn flat>
+        <v-btn text>
           Advantage
         </v-btn>
-        <v-btn flat>
+        <v-btn text>
           Disadvantage
         </v-btn>
       </v-btn-toggle>
       <v-card-text>
-        <div class="layout row justify-center align-center">
+        <div class="layout justify-center align-center">
           <v-btn
             large
             fab
@@ -47,7 +47,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
   props: {

@@ -4,17 +4,17 @@
       v-if="tabletops.length"
       class="tabletops"
     >
-      <v-list-tile
+      <v-list-item
         v-for="tabletop in tabletops"
         :key="tabletop._id"
         :to="`/tabletop/${tabletop._id}`"
       >
-        <v-list-tile-content>
-          <v-list-tile-title>
+        <v-list-item-content>
+          <v-list-item-title>
             {{ tabletop.name || 'Unnamed Tabletop' }}
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
     <v-card-text v-else>
       You don't own or belong to any tabletops yet
@@ -33,7 +33,7 @@
   </single-card-layout>
 </template>
 
-<script>
+<script lang="js">
 import SingleCardLayout from '/imports/ui/layouts/SingleCardLayout.vue'
 import Tabletops, { insertTabletop } from '/imports/api/tabletop/Tabletops.js';
 

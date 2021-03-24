@@ -61,7 +61,7 @@
   </tree-detail-layout>
 </template>
 
-<script>
+<script lang="js">
 import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
 import LibraryBrowser from '/imports/ui/library/LibraryBrowser.vue';
 import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';

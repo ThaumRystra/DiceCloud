@@ -46,7 +46,7 @@
     <div
       v-if="!embedded"
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <v-btn
         flat
@@ -58,7 +58,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty.js';

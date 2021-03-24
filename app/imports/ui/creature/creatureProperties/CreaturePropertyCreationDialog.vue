@@ -11,7 +11,7 @@
   </selectable-property-dialog>
 </template>
 
-<script>
+<script lang="js">
 import SelectablePropertyDialog from '/imports/ui/properties/shared/SelectablePropertyDialog.vue';
 import CreaturePropertyInsertForm from '/imports/ui/creature/creatureProperties/CreaturePropertyInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

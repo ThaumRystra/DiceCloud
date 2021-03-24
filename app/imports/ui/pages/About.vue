@@ -42,29 +42,29 @@
           two-line
           style="background: inherit;"
         >
-          <v-list-tile
+          <v-list-item
             v-for="paragon in paragons"
             :key="paragon.name"
           >
-            <v-list-tile-avatar>
+            <v-list-item-avatar>
               <v-img :src="`/images/paragons/${paragon.avatar}.png`" />
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
                 {{ paragon.name }}
-              </v-list-tile-title>
-              <v-list-tile-sub-title>
+              </v-list-item-title>
+              <v-list-item-subtitle>
                 {{ paragon.title }}
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </div>
     </section>
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
   data(){ return {
     paragons:[{

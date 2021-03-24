@@ -89,7 +89,7 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="js">
   import isDarkColor from '/imports/ui/utility/isDarkColor.js';
   import vuetifyColors from 'vuetify/es5/util/colors';
   import { kebabToCamelCase, camelToKebabCase } from '/imports/ui/utility/swapCase.js';

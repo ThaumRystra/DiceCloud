@@ -8,7 +8,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 import EmbedInlineComputations from '/imports/ui/components/computation/EmbedInlineComputations.vue';
 
 export default {

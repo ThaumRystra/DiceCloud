@@ -76,7 +76,7 @@
     </div>
     <div
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <v-btn
         flat
@@ -88,7 +88,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/Creatures.js';
 import Libraries from '/imports/api/library/Libraries.js';

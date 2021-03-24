@@ -42,7 +42,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Libraries, { updateLibraryName, removeLibrary } from '/imports/api/library/Libraries.js';
 

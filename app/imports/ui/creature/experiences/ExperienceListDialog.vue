@@ -46,32 +46,32 @@
         group
         mode="out"
       >
-        <v-list-tile
+        <v-list-item
           v-for="experience in experiences"
           :key="experience._id"
           :data-id="experience._id"
         >
-          <v-list-tile-action class="mr-3">
-            <v-list-tile-action-text>
+          <v-list-item-action class="mr-3">
+            <v-list-item-action-text>
               {{ formatDate(experience.date) }}
-            </v-list-tile-action-text>
-          </v-list-tile-action>
-          <v-list-tile-content>
+            </v-list-item-action-text>
+          </v-list-item-action>
+          <v-list-item-content>
             <template v-if="experience.name">
-              <v-list-tile-title>
+              <v-list-item-title>
                 {{ experience.name }}
-              </v-list-tile-title>
-              <v-list-tile-sub-title>
+              </v-list-item-title>
+              <v-list-item-subtitle>
                 {{ xpText(experience) }}
-              </v-list-tile-sub-title>
+              </v-list-item-subtitle>
             </template>
             <template v-else>
-              <v-list-tile-title>
+              <v-list-item-title>
                 {{ xpText(experience) }}
-              </v-list-tile-title>
+              </v-list-item-title>
             </template>
-          </v-list-tile-content>
-          <v-list-tile-action>
+          </v-list-item-content>
+          <v-list-item-action>
             <v-btn
               icon
               flat
@@ -80,14 +80,14 @@
             >
               <v-icon>delete</v-icon>
             </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
+          </v-list-item-action>
+        </v-list-item>
       </v-slide-x-transition>
     </v-list>
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import { format } from 'date-fns';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Experiences, { removeExperience, recomputeExperiences } from '/imports/api/creature/experience/Experiences.js';

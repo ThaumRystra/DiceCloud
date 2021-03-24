@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Messages, { sendMessage } from '/imports/api/tabletop/Messages.js';
 export default {
   props: {

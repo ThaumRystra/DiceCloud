@@ -2,7 +2,6 @@
   <div class="sidebar">
     <v-layout
       v-if="!signedIn"
-      row
       justify-center
     >
       <v-btn
@@ -13,51 +12,54 @@
       </v-btn>
     </v-layout>
     <v-list>
-      <v-list-tile v-if="signedIn">
-        <v-list-tile-content>
-          <v-list-tile-title>
+      <v-list-item v-if="signedIn">
+        <v-list-item-content>
+          <v-list-item-title>
             {{ userName }}
-          </v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-action>
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
           <v-tooltip bottom>
-            <v-btn
-              slot="activator"
-              flat
-              icon
-              to="/account"
+            <template
+              #activator="{ on }"
             >
-              <v-icon>settings</v-icon>
-            </v-btn>
+              <v-btn
+                icon
+                to="/account"
+                v-on="on"
+              >
+                <v-icon>settings</v-icon>
+              </v-btn>
+            </template>
             <span>Account Settings</span>
           </v-tooltip>
-        </v-list-tile-action>
-      </v-list-tile>
+        </v-list-item-action>
+      </v-list-item>
 
-      <v-list-tile
+      <v-list-item
         v-for="(link, i) in links"
         :key="i"
         :to="link.to"
         :href="link.href"
       >
-        <v-list-tile-action>
+        <v-list-item-action>
           <v-icon>{{ link.icon }}</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-title>
+        </v-list-item-action>
+        <v-list-item-title>
           {{ link.title }}
-        </v-list-tile-title>
-      </v-list-tile>
+        </v-list-item-title>
+      </v-list-item>
       <v-divider />
     </v-list>
     <v-list
       avatar
     >
-      <v-list-tile
+      <v-list-item
         v-for="character in CreaturesWithNoParty"
         :key="character._id"
         :to="character.url"
       >
-        <v-list-tile-avatar :color="character.color || 'grey'">
+        <v-list-item-avatar :color="character.color || 'grey'">
           <img
             v-if="character.avatarPicture"
             :src="character.avatarPicture"
@@ -66,26 +68,26 @@
           <template v-else>
             {{ character.initial }}
           </template>
-        </v-list-tile-avatar>
-        <v-list-tile-title>
+        </v-list-item-avatar>
+        <v-list-item-title>
           {{ character.name }}
-        </v-list-tile-title>
-      </v-list-tile>
+        </v-list-item-title>
+      </v-list-item>
       <v-list-group
         v-for="party in parties"
         :key="party._id"
       >
-        <v-list-tile slot="activator">
-          <v-list-tile-title>
+        <v-list-item slot="activator">
+          <v-list-item-title>
             {{ party.name }}
-          </v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item
           v-for="character in characterDocs"
           :key="character._id"
           :to="character.url"
         >
-          <v-list-tile-avatar :color="character.color || 'grey'">
+          <v-list-item-avatar :color="character.color || 'grey'">
             <img
               v-if="character.avatarPicture"
               :src="character.avatarPicture"
@@ -94,17 +96,17 @@
             <template v-else>
               {{ character.initial }}
             </template>
-          </v-list-tile-avatar>
-          <v-list-tile-title>
+          </v-list-item-avatar>
+          <v-list-item-title>
             {{ character.name }}
-          </v-list-tile-title>
-        </v-list-tile>
+          </v-list-item-title>
+        </v-list-item>
       </v-list-group>
     </v-list>
   </div>
 </template>
 
-<script>
+<script lang="js">
   import Creatures from '/imports/api/creature/Creatures.js';
   import Parties from '/imports/api/creature/Parties.js';
 

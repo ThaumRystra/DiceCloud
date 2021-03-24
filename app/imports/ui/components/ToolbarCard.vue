@@ -23,7 +23,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 	export default {
 		props: {

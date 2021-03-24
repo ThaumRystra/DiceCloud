@@ -1,14 +1,14 @@
 <template lang="html">
-  <v-list-tile
+  <v-list-item
     class="skill-list-tile"
     height="32px"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-tile-action class="prof-icon">
+    <v-list-item-action class="prof-icon">
       <v-icon>{{ icon }}</v-icon>
-    </v-list-tile-action>
-    <v-list-tile-content>
-      <v-list-tile-title>
+    </v-list-item-action>
+    <v-list-item-content>
+      <v-list-item-title>
         <span
           v-if="!hideModifier"
           class="prof-mod"
@@ -34,12 +34,12 @@
         <template v-if="'passiveBonus' in model">
           ({{ passiveScore }})
         </template>
-      </v-list-tile-title>
-    </v-list-tile-content>
-  </v-list-tile>
+      </v-list-item-title>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 export default {

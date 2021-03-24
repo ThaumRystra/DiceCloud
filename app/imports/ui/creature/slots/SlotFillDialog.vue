@@ -24,7 +24,7 @@
       <v-fade-transition mode="out-in">
         <div v-if="libraryNodes && libraryNodes.length">
           <section
-            class="layout row wrap justify-between"
+            class="layout wrap justify-between"
           >
             <v-card
               v-for="node in libraryNodes"
@@ -63,7 +63,7 @@
               </v-card-text>
             </v-card>
           </section>
-          <div class="layout row justify-center align-stretch">
+          <div class="layout justify-center align-stretch">
             <v-btn
               v-if="currentLimit < countAll"
               :loading="!$subReady.slotFillers"
@@ -137,7 +137,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';

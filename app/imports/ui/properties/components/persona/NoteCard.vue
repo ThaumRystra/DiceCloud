@@ -20,7 +20,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 

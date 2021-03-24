@@ -42,17 +42,17 @@
             Level {{ creature.variables.level.value }}
           </v-card-title>
           <v-list two-line>
-            <v-list-tile>
-              <v-list-tile-content>
-                <v-list-tile-title
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title
                   v-if="
                     creature.variables.milestoneLevels &&
                       creature.variables.milestoneLevels.value
                   "
                 >
                   {{ creature.variables.milestoneLevels.value }} Milestone levels
-                </v-list-tile-title>
-                <v-list-tile-title
+                </v-list-item-title>
+                <v-list-item-title
                   v-if="
                     !(creature.variables.milestoneLevels &&
                       creature.variables.milestoneLevels.value) ||
@@ -65,9 +65,9 @@
                       creature.variables.xp.value ||
                       0
                   }} XP
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-btn
                   flat
                   icon
@@ -76,8 +76,8 @@
                 >
                   <v-icon>info</v-icon>
                 </v-btn>
-              </v-list-tile-action>
-              <v-list-tile-action>
+              </v-list-item-action>
+              <v-list-item-action>
                 <v-btn
                   flat
                   icon
@@ -86,21 +86,21 @@
                 >
                   <v-icon>add</v-icon>
                 </v-btn>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-list-tile
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item
               v-for="classLevel in highestClassLevels"
               :key="classLevel._id"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   {{ classLevel.name }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-avatar>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-avatar>
                 {{ classLevel.level }}
-              </v-list-tile-avatar>
-            </v-list-tile>
+              </v-list-item-avatar>
+            </v-list-item>
           </v-list>
         </v-card>
       </div>
@@ -116,7 +116,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';

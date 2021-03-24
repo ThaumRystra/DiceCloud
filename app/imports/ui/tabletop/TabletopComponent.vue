@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import { addCreaturesToTabletop } from '/imports/api/tabletop/Tabletops.js';
 
 import TabletopCreatureCard from '/imports/ui/tabletop/TabletopCreatureCard.vue';

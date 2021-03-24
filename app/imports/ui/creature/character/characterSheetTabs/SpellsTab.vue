@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';

@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import saveListMixin from '/imports/ui/properties/forms/shared/lists/saveListMixin.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 

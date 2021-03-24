@@ -4,7 +4,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 import SvgIcon from '/imports/ui/components/global/SvgIcon.vue'
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 

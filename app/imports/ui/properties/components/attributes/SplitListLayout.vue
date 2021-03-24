@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     v-if="$vuetify.breakpoint.smAndUp"
-    class="layout row split"
+    class="layout split"
   >
     <v-list
       class="left"
@@ -51,7 +51,7 @@
   </v-list>
 </template>
 
-<script>
+<script lang="js">
 export default {
 }
 </script>

@@ -5,7 +5,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 import ActionViewer from '/imports/ui/properties/viewers/ActionViewer.vue';
 export default {

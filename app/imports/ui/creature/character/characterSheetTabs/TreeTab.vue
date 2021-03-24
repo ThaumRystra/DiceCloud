@@ -89,7 +89,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
   import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
   import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue';

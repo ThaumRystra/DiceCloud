@@ -79,7 +79,7 @@
           :menu-props="{auto: true, lazy: true}"
           @change="change('target', ...arguments)"
         />
-        <div class="layout row wrap">
+        <div class="layout wrap">
           <text-field
             label="Uses"
             hint="How many times this action can be used before needing to be reset"
@@ -114,7 +114,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';

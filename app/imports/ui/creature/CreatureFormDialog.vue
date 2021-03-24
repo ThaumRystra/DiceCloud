@@ -28,7 +28,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import {updateCreature} from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';

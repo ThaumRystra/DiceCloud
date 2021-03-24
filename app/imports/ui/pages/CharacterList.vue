@@ -19,17 +19,17 @@
           </div>
           <v-card>
             <v-list>
-              <v-list-tile
+              <v-list-item
                 v-for="character in party.characterDocs"
                 :key="character._id"
               >
-                <v-list-tile-avatar>
+                <v-list-item-avatar>
                   <img
                     :src="character.picture"
                     alt="character.name"
                   >
-                </v-list-tile-avatar>
-              </v-list-tile>
+                </v-list-item-avatar>
+              </v-list-item>
             </v-list>
           </v-card>
         </v-expansion-panel-content>
@@ -78,7 +78,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
   import Parties from '/imports/api/creature/Parties.js';
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';

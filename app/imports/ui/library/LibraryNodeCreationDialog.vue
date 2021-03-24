@@ -8,7 +8,7 @@
 	</selectable-property-dialog>
 </template>
 
-<script>
+<script lang="js">
 import SelectablePropertyDialog from '/imports/ui/properties/shared/SelectablePropertyDialog.vue';
 import LibraryNodeInsertForm from '/imports/ui/library/LibraryNodeInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

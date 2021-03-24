@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="layout row align-center justify-start">
+  <div class="layout align-center justify-start">
     <v-icon
       v-if="!hideIcon"
       class="mr-2"
@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 // Most of this was copied from EffectViewer and should probably be generalised
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';

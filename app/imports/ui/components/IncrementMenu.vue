@@ -65,7 +65,7 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="js">
 	export default {
     inject: {
       context: { default: {} }

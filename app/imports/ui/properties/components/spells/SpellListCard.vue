@@ -57,7 +57,7 @@
   </toolbar-card>
 </template>
 
-<script>
+<script lang="js">
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

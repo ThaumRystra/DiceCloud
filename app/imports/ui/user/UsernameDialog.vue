@@ -24,7 +24,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 export default {

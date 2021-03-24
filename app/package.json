@@ -42,22 +42,27 @@
     "vue-reactive-provide": "^0.3.0",
     "vue-router": "^3.1.6",
     "vuedraggable": "^2.23.2",
-    "vuetify": "^1.5.24",
+    "vuetify": "^2.4.8",
     "vuetify-upload-button": "^2.0.2",
     "vuex": "^3.1.3"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^7.0.0-alpha.0",
-    "mem": "^6.0.1"
+    "eslint-plugin-vuetify": "^1.0.0-beta.8",
+    "ignore-styles": "^5.0.1",
+    "mem": "^6.0.1",
+    "sass": "^1.32.8"
   },
   "eslintConfig": {
     "extends": [
       "eslint:recommended",
-      "plugin:vue/recommended"
+      "plugin:vue/recommended",
+      "plugin:vue/base"
     ],
     "plugins": [
-      "vue"
+      "vue",
+      "vuetify"
     ],
     "overrides": [
       {
@@ -92,7 +97,8 @@
       "quotes": [
         "error",
         "single"
-      ]
+      ],
+      "vuetify/no-deprecated-classes": "error"
     }
   }
 }

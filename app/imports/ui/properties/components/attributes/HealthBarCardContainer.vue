@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import Creatures from '/imports/api/creature/Creatures.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 

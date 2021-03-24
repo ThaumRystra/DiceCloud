@@ -5,7 +5,7 @@
     :data-id="`tree-node-${node._id}`"
   >
     <div
-      class="layout row align-center justify-start tree-node-title"
+      class="layout align-center justify-start tree-node-title"
       style="cursor: pointer;"
       :class="selected && 'primary--text'"
       @click.stop="$emit('selected', node._id)"
@@ -22,7 +22,7 @@
         </v-icon>
       </v-btn>
       <div
-        class="layout row align-center justify-start pr-1"
+        class="layout align-center justify-start pr-1"
         style="flex-grow: 0;"
       >
         <v-icon
@@ -70,7 +70,7 @@
   </v-sheet>
 </template>
 
-<script>
+<script lang="js">
 	/**
 	* TreeNode's are list item views of character properties. Every property which
 	* can belong to the character is shown in the tree view of the character

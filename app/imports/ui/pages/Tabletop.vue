@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
 import TabletopComponent from '/imports/ui/tabletop/TabletopComponent.vue';
 

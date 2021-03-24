@@ -22,7 +22,7 @@
             @click="$emit('select', type)"
           >
             <div
-              class="layout row align-center justify-center"
+              class="layout align-center justify-center"
               style="min-height: 70px;"
             >
               <v-icon x-large>
@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 export default {
 	data(){return {

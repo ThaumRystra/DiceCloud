@@ -40,28 +40,28 @@
               </v-btn>
             </template>
             <v-list v-if="editPermission">
-              <v-list-tile @click="deleteCharacter">
-                <v-list-tile-title>
+              <v-list-item @click="deleteCharacter">
+                <v-list-item-title>
                   <v-icon>delete</v-icon> Delete
-                </v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="showCharacterForm">
-                <v-list-tile-title>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="showCharacterForm">
+                <v-list-item-title>
                   <v-icon>create</v-icon> Edit details
-                </v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="showShareDialog">
-                <v-list-tile-title>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="showShareDialog">
+                <v-list-item-title>
                   <v-icon>share</v-icon> Sharing
-                </v-list-tile-title>
-              </v-list-tile>
+                </v-list-item-title>
+              </v-list-item>
             </v-list>
             <v-list v-else>
-              <v-list-tile @click="unshareWithMe">
-                <v-list-tile-title>
+              <v-list-item @click="unshareWithMe">
+                <v-list-item-title>
                   <v-icon>delete</v-icon> Unshare with me
-                </v-list-tile-title>
-              </v-list-tile>
+                </v-list-item-title>
+              </v-list-item>
             </v-list>
           </v-menu>
           <v-toolbar-side-icon @click="toggleRightDrawer" />
@@ -74,7 +74,7 @@
     >
       <div
         :key="$route.meta.title"
-        class="layout row"
+        class="layout"
       >
         <v-tabs
           v-if="creature"
@@ -118,11 +118,10 @@
   </v-toolbar>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import removeCreature from '/imports/api/creature/removeCreature.js';
 import { mapMutations } from 'vuex';
-import { theme } from '/imports/ui/theme.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
@@ -135,9 +134,6 @@ export default {
   components: {
     CharacterSheetFab,
   },
-  data(){return {
-    theme,
-  }},
   computed: {
     creatureId(){
       return this.$route.params.id;

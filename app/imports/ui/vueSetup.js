@@ -1,12 +1,11 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify';
+import Vuetify from 'vuetify/lib';
 import store from '/imports/ui/vuexStore.js';
 import VueMeteorTracker from 'vue-meteor-tracker';
 import AppLayout from '/imports/ui/layouts/AppLayout.vue';
 import ReactiveProvide from 'vue-reactive-provide';
 import router from '/imports/ui/router.js';
-import { theme } from '/imports/ui/theme.js';
-import 'vuetify/dist/vuetify.min.css';
+import themes from '/imports/ui/themes.js';
 import '/imports/ui/components/global/globalIndex.js';
 import SvgIconByName from '/imports/ui/icons/SvgIconByName.vue';
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
@@ -27,11 +26,7 @@ for (const name in SVG_ICONS) {
 Vue.use(VueMeteorTracker);
 Vue.config.meteor.freeze = true;
 Vue.config.devtools = true;
-Vue.use(Vuetify, {
-  theme,
-  iconfont: 'md',
-  icons,
-});
+Vue.use(Vuetify);
 Vue.use(ReactiveProvide, {
   name: 'reactiveProvide', // default value
 })
@@ -42,6 +37,16 @@ Meteor.startup(() => {
   new Vue({
     router,
     store,
+    vuetify: new Vuetify({
+      theme: {
+        dark: false,
+        themes,
+      },
+      icons: {
+        iconfont: 'md',
+        values: icons,
+      }
+    }),
     ...AppLayout,
   }).$mount('#app');
 });

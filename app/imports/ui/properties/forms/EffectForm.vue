@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';

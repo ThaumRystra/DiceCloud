@@ -19,7 +19,7 @@
   </smart-select>
 </template>
 
-<script>
+<script lang="js">
 	const ICON_SPIN_DURATION = 300;
 	let proficiencyIcon = function(value){
 		if (value == 0.5){

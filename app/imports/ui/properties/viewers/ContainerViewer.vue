@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="container-viewer">
     <property-tags :tags="model.tags" />
-    <div class="layout row wrap justify-space-around">
+    <div class="layout wrap justify-space-around">
       <div
         class="mr-3 my-3"
       >
@@ -110,7 +110,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {

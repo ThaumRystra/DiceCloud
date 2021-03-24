@@ -43,7 +43,7 @@
   </v-toolbar>
 </template>
 
-<script>
+<script lang="js">
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { mapMutations } from 'vuex';

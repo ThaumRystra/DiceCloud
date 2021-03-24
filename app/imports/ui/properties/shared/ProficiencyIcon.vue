@@ -2,7 +2,7 @@
 	<v-icon v-if="value !== undefined">{{displayedIcon}}</v-icon>
 </template>
 
-<script>
+<script lang="js">
 export default {
 	props: {
 		value: Number,

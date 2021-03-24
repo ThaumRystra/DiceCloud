@@ -21,7 +21,7 @@
   </transition-group>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
 

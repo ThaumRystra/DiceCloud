@@ -27,18 +27,18 @@
         <v-card>
           <v-list>
             <v-subheader>Buffs and conditions</v-subheader>
-            <v-list-tile
+            <v-list-item
               v-for="buff in appliedBuffs"
               :key="buff._id"
               :data-id="buff._id"
               @click="clickProperty({_id: buff._id})"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   {{ buff.name }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-btn
                   icon
                   flat
@@ -46,8 +46,8 @@
                 >
                   <v-icon>delete</v-icon>
                 </v-btn>
-              </v-list-tile-action>
-            </v-list-tile>
+              </v-list-item-action>
+            </v-list-item>
           </v-list>
         </v-card>
       </div>
@@ -318,7 +318,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import Creatures from '/imports/api/creature/Creatures.js';
 	import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';

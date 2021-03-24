@@ -47,45 +47,45 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-tile
+            <v-list-item
               v-if="$listeners && $listeners.duplicate"
               @click="$emit('duplicate')"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   Duplicate
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-icon>file_copy</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-list-tile
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item
               v-if="$listeners && $listeners.move"
               @click="$emit('move')"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   Move
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-icon>send</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-list-tile
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item
               v-if="$listeners && $listeners.remove"
               @click="$emit('remove')"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   Delete
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-icon>delete</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
+              </v-list-item-action>
+            </v-list-item>
           </v-list>
         </v-menu>
       </v-layout>
@@ -118,7 +118,7 @@
   </v-toolbar>
 </template>
 
-<script>
+<script lang="js">
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

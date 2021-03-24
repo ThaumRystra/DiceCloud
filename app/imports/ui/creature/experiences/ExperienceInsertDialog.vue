@@ -13,7 +13,7 @@
     />
     <div
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <v-btn
         flat
@@ -26,7 +26,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import ExperienceForm from '/imports/ui/creature/experiences/ExperienceForm.vue';
 import { ExperienceSchema, insertExperience } from '/imports/api/creature/experience/Experiences.js';

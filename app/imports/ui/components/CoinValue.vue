@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import valueToCoins from '/imports/ui/utility/valueToCoins.js';
 
 export default {

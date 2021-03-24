@@ -8,7 +8,7 @@
     style="overflow-y: auto;"
   >
     <template #activator="{ on }">
-      <div class="layout row align-center">
+      <div class="layout align-center">
         <v-label>{{ label }}</v-label>
         <v-btn
           :loading="loading"
@@ -32,7 +32,7 @@
     </template>
     <v-card>
       <v-card-text>
-        <div class="layout row">
+        <div class="layout">
           <text-field
             ref="iconSearchField"
             label="Search icons"
@@ -78,7 +78,7 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="js">
 import SvgIcon from '/imports/ui/components/global/SvgIcon.vue';
 import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 import { findIcons } from '/imports/api/icons/Icons.js';

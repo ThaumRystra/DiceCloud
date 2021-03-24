@@ -1,9 +1,9 @@
 <template lang="html">
-  <v-list-tile
+  <v-list-item
     class="hit-dice-list-tile"
     :class="{hover}"
   >
-    <v-list-tile-action class="mr-4">
+    <v-list-item-action class="mr-4">
       <v-layout
         row
         align-center
@@ -44,22 +44,22 @@
           </div>
         </v-layout>
       </v-layout>
-    </v-list-tile-action>
+    </v-list-item-action>
 
-    <v-list-tile-content
+    <v-list-item-content
       class="content"
       @click="click"
       @mouseover="hover = true"
       @mouseleave="hover = false"
     >
-      <v-list-tile-title>
+      <v-list-item-title>
         {{ model.hitDiceSize }} {{ signedConMod }}
-      </v-list-tile-title>
-    </v-list-tile-content>
-  </v-list-tile>
+      </v-list-item-title>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
   inject: {

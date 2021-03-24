@@ -55,7 +55,7 @@
       name="Advanced"
       standalone
     >
-      <div class="layout row wrap justify-space-between">
+      <div class="layout wrap justify-space-between">
         <smart-switch
           label="Hide when full"
           style="width: 200px; flex-grow: 0;"
@@ -85,7 +85,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';

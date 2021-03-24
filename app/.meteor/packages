@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 accounts-password@1.7.0
-accounts-ui@1.3.2
 random@1.2.0
 dburles:collection-helpers
 reactive-var@1.0.11
@@ -33,7 +32,6 @@ reactive-dict@1.3.0
 percolate:synced-cron
 ongoworks:speakingurl
 service-configuration@1.0.11
-google-config-ui@1.0.1
 dynamic-import@0.6.0
 ddp-rate-limiter@1.0.9
 rate-limit@1.0.9
@@ -42,7 +40,7 @@ akryum:vue-router2
 static-html
 aldeed:collection2@3.0.0
 aldeed:schema-index
-akryum:vue-component
+zer0th:meteor-vuetify-loader
 accounts-patreon
 bozhao:link-accounts
 peerlibrary:reactive-publish
@@ -51,3 +49,5 @@ simple:rest-method-mixin
 mikowals:batch-insert
 peerlibrary:subscription-data
 seba:minifiers-autoprefixer
+akryum:vue-component
+akryum:vue-sass

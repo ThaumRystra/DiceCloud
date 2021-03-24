@@ -13,7 +13,7 @@
   </v-btn>
 </template>
 
-<script>
+<script lang="js">
 import restCreature from '/imports/api/creature/restCreature.js';
 
 export default {

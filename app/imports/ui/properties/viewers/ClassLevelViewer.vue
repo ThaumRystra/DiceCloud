@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 
 export default {

@@ -30,7 +30,7 @@
   </v-speed-dial>
 </template>
 
-<script>
+<script lang="js">
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
   import { setDocToLastOrder } from '/imports/api/parenting/order.js';
   import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';

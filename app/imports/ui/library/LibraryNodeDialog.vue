@@ -39,7 +39,7 @@
     <div
       v-if="!embedded"
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <template v-if="selection">
         <v-btn
@@ -67,7 +67,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
   import LibraryNodes, {
     duplicateNode,
     updateLibraryNode,

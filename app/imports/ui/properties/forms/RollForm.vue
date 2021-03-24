@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="roll-form">
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         label="Name"
         :value="model.name"
@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 

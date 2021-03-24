@@ -28,7 +28,7 @@
   </v-snackbar>
 </template>
 
-<script>
+<script lang="js">
 export default {
   computed: {
     snackbar(){

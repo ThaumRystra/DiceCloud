@@ -3,7 +3,7 @@
     <property-tags :tags="model.tags" />
     <div
       v-if="model.quantity > 1 || model.showIncrement"
-      class="layout row justify-center align-center wrap"
+      class="layout justify-center align-center wrap"
     >
       <div class="display-1">
         {{ model.quantity }}
@@ -20,7 +20,7 @@
         <v-icon>$vuetify.icons.abacus</v-icon>
       </increment-button>
     </div>
-    <div class="layout row wrap justify-space-around">
+    <div class="layout wrap justify-space-around">
       <div
         v-if="model.value !== undefined"
         class="mr-3 my-3"
@@ -133,7 +133,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 import CoinValue from '/imports/ui/components/CoinValue.vue';

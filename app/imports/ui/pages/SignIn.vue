@@ -29,7 +29,7 @@
           required
           @keyup.enter="submit"
         />
-        <v-btn flat>
+        <v-btn text>
           Reset Password
         </v-btn>
         <div class="error--text">
@@ -79,7 +79,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import { Meteor } from 'meteor/meteor'
 	export default{
 		data: () => ({

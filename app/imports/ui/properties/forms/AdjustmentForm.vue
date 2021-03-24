@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="adjustment-form">
-    <div class="layout row">
+    <div class="layout">
       <smart-combobox
         label="Attribute"
         hint="The attribute this adjustment will apply to"
@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 

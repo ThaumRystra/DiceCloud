@@ -29,7 +29,7 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="js">
 import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 import { format } from 'date-fns';
 

@@ -13,7 +13,7 @@
   </v-toolbar>
 </template>
 
-<script>
+<script lang="js">
 import { mapMutations } from 'vuex';
 
 export default {

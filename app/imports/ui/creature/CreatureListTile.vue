@@ -2,8 +2,8 @@
   lang="html"
   functional
 >
-  <v-list-tile v-bind="$attrs">
-    <v-list-tile-avatar :color="model.color || 'grey'">
+  <v-list-item v-bind="$attrs">
+    <v-list-item-avatar :color="model.color || 'grey'">
       <img
         v-if="model.avatarPicture"
         :src="model.avatarPicture"
@@ -12,22 +12,22 @@
       <template v-else>
         {{ model.initial }}
       </template>
-    </v-list-tile-avatar>
-    <v-list-tile-content>
-      <v-list-tile-title>
+    </v-list-item-avatar>
+    <v-list-item-content>
+      <v-list-item-title>
         {{ model.name }}
-      </v-list-tile-title>
-      <v-list-tile-sub-title>
+      </v-list-item-title>
+      <v-list-item-subtitle>
         {{ model.alignment }} {{ model.gender }} {{ model.race }}
-      </v-list-tile-sub-title>
-    </v-list-tile-content>
-    <v-list-tile-action v-if="selection">
+      </v-list-item-subtitle>
+    </v-list-item-content>
+    <v-list-item-action v-if="selection">
       <v-checkbox
         :input-value="selected && selected.has(model._id)"
         @change="$emit('select')"
       />
-    </v-list-tile-action>
-  </v-list-tile>
+    </v-list-item-action>
+  </v-list-item>
 </template>
 
 <script type="text/javascript">

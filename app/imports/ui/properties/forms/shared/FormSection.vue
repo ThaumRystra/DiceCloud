@@ -25,7 +25,7 @@
   </v-expansion-panel-content>
 </template>
 
-<script>
+<script lang="js">
 import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
 export default {
 	components: {

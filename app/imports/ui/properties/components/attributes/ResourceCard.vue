@@ -22,7 +22,7 @@
       </v-btn>
     </div>
     <div
-      class="layout row align-center value pl-2 pr-3"
+      class="layout align-center value pl-2 pr-3"
     >
       <div class="display-1">
         {{ currentValue }}
@@ -44,7 +44,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 	export default {
 		props: {
 			_id: String,

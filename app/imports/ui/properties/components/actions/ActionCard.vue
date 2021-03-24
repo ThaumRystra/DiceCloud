@@ -4,7 +4,7 @@
     :class="cardClasses"
     :elevation="hovering ? 8 : undefined"
   >
-    <div class="layout row align-center px-3">
+    <div class="layout align-center px-3">
       <div class="avatar">
         <v-btn
           flat
@@ -91,7 +91,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

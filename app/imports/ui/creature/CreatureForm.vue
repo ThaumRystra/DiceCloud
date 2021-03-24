@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
 
 export default {

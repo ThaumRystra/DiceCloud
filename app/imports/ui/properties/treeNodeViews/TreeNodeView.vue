@@ -6,7 +6,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 import treeNodeViewIndex from '/imports/ui/properties/treeNodeViews/treeNodeViewIndex.js';
 
 export default {

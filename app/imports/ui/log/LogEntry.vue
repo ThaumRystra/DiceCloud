@@ -36,7 +36,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 export default {

@@ -4,7 +4,7 @@
     @click="click"
   >
     <v-card-text>
-      <div class="layout row align-center">
+      <div class="layout align-center">
         <div class="value display-1 mr-1">
           {{ computedValue }}
         </div>
@@ -16,7 +16,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
   import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
   export default {
     props: {

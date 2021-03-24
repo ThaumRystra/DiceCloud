@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
 import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
