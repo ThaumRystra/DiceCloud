@@ -5,7 +5,7 @@
       v-if="model.quantity > 1 || model.showIncrement"
       class="layout justify-center align-center wrap"
     >
-      <div class="display-1">
+      <div class="text-h4">
         {{ model.quantity }}
       </div>
       <increment-button
@@ -27,7 +27,6 @@
       >
         <v-layout
           v-if="model.quantity > 1"
-          row
           align-center
           class="mb-2"
         >
@@ -38,12 +37,11 @@
             $vuetify.icons.cash
           </v-icon>
           <coin-value
-            class="title"
+            class="text-h6"
             :value="totalValue"
           />
         </v-layout>
         <v-layout
-          row
           align-center
         >
           <v-icon
@@ -53,12 +51,12 @@
             $vuetify.icons.two_coins
           </v-icon>
           <coin-value
-            class="title mr-2"
+            class="text-h6 mr-2"
             :value="model.value"
           />
           <span
             v-if="model.quantity > 1"
-            class="title"
+            class="text-h6"
           >
             each
           </span>
@@ -70,12 +68,11 @@
       >
         <v-layout
           v-if="model.quantity > 1"
-          row
           align-center
           justify-end
           class="mb-2"
         >
-          <span class="title">
+          <span class="text-h6">
             {{ totalWeight }} lb
           </span>
           <v-icon
@@ -86,17 +83,16 @@
           </v-icon>
         </v-layout>
         <v-layout
-          row
           align-center
           justify-end
           :class="{'mb-2': model.attuned}"
         >
-          <span class="title mr-2">
+          <span class="text-h6 mr-2">
             {{ model.weight }} lb
           </span>
           <span
             v-if="model.quantity > 1"
-            class="title"
+            class="text-h6"
           >
             each
           </span>
@@ -109,11 +105,10 @@
         </v-layout>
         <v-layout
           v-if="model.attuned"
-          row
           align-center
           justify-end
         >
-          <span class="title">
+          <span class="text-h6">
             Attuned
           </span>
           <v-icon

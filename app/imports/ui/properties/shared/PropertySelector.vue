@@ -6,7 +6,6 @@
       fill-height
     >
       <v-layout
-        row
         wrap
         fill-height
       >

@@ -16,7 +16,7 @@
     </v-list-item-avatar>
     <v-list-item-action
       v-if="showValue"
-      class="headline"
+      class="text-h5"
     >
       {{ displayedValue }}
     </v-list-item-action>

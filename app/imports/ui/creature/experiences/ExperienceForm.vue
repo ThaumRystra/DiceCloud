@@ -11,7 +11,7 @@
         v-if="milestone"
         label="Levels"
         type="number"
-        class="base-value-field text-xs-center large-format no-flex"
+        class="base-value-field text-center large-format no-flex"
         :value="model.levels"
         :error-messages="errors.levels"
         @change="change('levels', ...arguments)"
@@ -19,7 +19,7 @@
       <text-field
         v-else
         type="number"
-        class="base-value-field text-xs-center large-format no-flex"
+        class="base-value-field text-center large-format no-flex"
         suffix="XP"
         autofocus
         :value="model.xp"

@@ -17,7 +17,7 @@
         <span>{{ tooltip }}</span>
       </v-tooltip>
     </v-list-item-avatar>
-    <v-list-item-action class="headline">
+    <v-list-item-action class="text-h5">
       {{ displayedValue }}
     </v-list-item-action>
     <v-list-item-content>

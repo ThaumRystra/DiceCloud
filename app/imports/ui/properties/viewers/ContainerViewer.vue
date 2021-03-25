@@ -7,7 +7,6 @@
       >
         <v-layout
           v-if="model.value !== undefined"
-          row
           align-center
           class="mb-2"
         >
@@ -18,12 +17,11 @@
             $vuetify.icons.two_coins
           </v-icon>
           <coin-value
-            class="title mr-2"
+            class="text-h6 mr-2"
             :value="model.value"
           />
         </v-layout>
         <v-layout
-          row
           align-center
         >
           <v-icon
@@ -33,10 +31,10 @@
             $vuetify.icons.cash
           </v-icon>
           <coin-value
-            class="title mr-2"
+            class="text-h6 mr-2"
             :value="model.contentsValue"
           />
-          <span class="title">
+          <span class="text-h6">
             contents
           </span>
         </v-layout>
@@ -46,12 +44,11 @@
       >
         <v-layout
           v-if="model.weight !== undefined"
-          row
           align-center
           justify-end
           class="mb-2"
         >
-          <span class="title mr-2">
+          <span class="text-h6 mr-2">
             {{ model.weight }} lb
           </span>
           <v-icon
@@ -62,16 +59,15 @@
           </v-icon>
         </v-layout>
         <v-layout
-          row
           align-center
           justify-end
           :class="{'mb-2': model.contentsWeightless}"
         >
-          <span class="title mr-2">
+          <span class="text-h6 mr-2">
             {{ model.contentsWeight }} lb
           </span>
           <span
-            class="title"
+            class="text-h6"
           >
             contents
           </span>
@@ -84,12 +80,11 @@
         </v-layout>
         <v-layout
           v-if="model.contentsWeightless"
-          row
           align-center
           justify-end
         >
           <span
-            class="title"
+            class="text-h6"
           >
             Contents weightless
           </span>

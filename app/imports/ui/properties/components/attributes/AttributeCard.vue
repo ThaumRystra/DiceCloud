@@ -5,7 +5,7 @@
   >
     <v-card-text>
       <div class="layout align-center">
-        <div class="value display-1 mr-1">
+        <div class="value text-h4 mr-1">
           {{ computedValue }}
         </div>
         <div class="name text-truncate">

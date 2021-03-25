@@ -15,7 +15,6 @@
     <v-card class="overflow-hidden">
       <v-card-text>
         <v-layout
-          row
           wrap
         >
           <div

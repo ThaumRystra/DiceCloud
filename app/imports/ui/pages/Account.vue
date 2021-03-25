@@ -100,7 +100,6 @@
         </v-list-item>
       </v-list>
       <v-layout
-        row
         justify-end
       >
         <v-btn
@@ -142,7 +141,6 @@
         </v-list>
       </template>
       <v-layout
-        row
         justify-end
         class="mt-3"
       >

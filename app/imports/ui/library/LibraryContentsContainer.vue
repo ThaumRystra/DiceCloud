@@ -14,7 +14,6 @@
     />
     <v-layout
       v-else
-      row
       align-center
       justify-center
       style="width: 100%;"

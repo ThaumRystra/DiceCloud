@@ -4,7 +4,7 @@
       <text-field
         label="Level"
         type="number"
-        class="base-value-field text-xs-center large-format no-flex"
+        class="base-value-field text-center large-format no-flex"
         :value="model.level"
         :error-messages="errors.level"
         @change="change('level', ...arguments)"
@@ -36,7 +36,7 @@
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
-    
+
     <text-field
       label="Condition"
       hint="A caclulation to determine if this can be added to the character"

@@ -45,7 +45,7 @@
               />
               <v-card-title primary-title>
                 <tree-node-view
-                  class="mr-2 title mb-0"
+                  class="mr-2 text-h6 mb-0"
                   :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
                   :hide-icon="node.picture"
                   :model="node"

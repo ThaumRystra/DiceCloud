@@ -70,7 +70,7 @@
       <template slot="left">
         <div
           key="slot-title"
-          class="title my-3"
+          class="text-h6 my-3"
         >
           Slot
         </div>
@@ -82,7 +82,7 @@
           @click="selectedSlotId = undefined"
         >
           <v-list-item-content>
-            <v-list-item-title class="title">
+            <v-list-item-title class="text-h6">
               Cantrip
             </v-list-item-title>
           </v-list-item-content>
@@ -99,7 +99,7 @@
       <template slot="right">
         <div
           key="spell-title"
-          class="title my-3"
+          class="text-h6 my-3"
         >
           Spell
         </div>

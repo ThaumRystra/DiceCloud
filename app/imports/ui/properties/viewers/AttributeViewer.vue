@@ -6,7 +6,7 @@
     >
       <div
         v-if="model.value !== undefined"
-        class="display-1"
+        class="text-h4"
       >
         <div
           v-if="model.damage !== undefined"
@@ -19,7 +19,7 @@
       </div>
       <div
         v-if="model.modifier !== undefined"
-        class="title"
+        class="text-h6"
       >
         {{ numberToSignedString(model.modifier) }}
       </div>

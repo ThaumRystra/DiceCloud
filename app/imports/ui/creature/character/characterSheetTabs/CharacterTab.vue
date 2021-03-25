@@ -11,7 +11,7 @@
             v-if="creature.picture"
             :src="creature.picture"
           />
-          <v-card-title class="title">
+          <v-card-title class="text-h6">
             {{ creature.name }}
           </v-card-title>
           <v-card-text>
@@ -37,7 +37,7 @@
         <v-card class="class-details">
           <v-card-title
             v-if="creature.variables.level"
-            class="title"
+            class="text-h6"
           >
             Level {{ creature.variables.level.value }}
           </v-card-title>

@@ -1,11 +1,11 @@
 <template lang="html">
-	<selectable-property-dialog v-model="type">
-		<library-node-insert-form
-			:type="type"
-			:property-name="getPropertyName(type)"
-			@back="type = undefined"
-		/>
-	</selectable-property-dialog>
+  <selectable-property-dialog v-model="type">
+    <library-node-insert-form
+      :type="type"
+      :property-name="getPropertyName(type)"
+      @back="type = undefined"
+    />
+  </selectable-property-dialog>
 </template>
 
 <script lang="js">
@@ -14,13 +14,13 @@ import LibraryNodeInsertForm from '/imports/ui/library/LibraryNodeInsertForm.vue
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default {
-  data() { return {
-    type: undefined,
-  };},
   components: {
     SelectablePropertyDialog,
 		LibraryNodeInsertForm,
   },
+  data() { return {
+    type: undefined,
+  };},
 	methods: {
 		getPropertyName,
 	},

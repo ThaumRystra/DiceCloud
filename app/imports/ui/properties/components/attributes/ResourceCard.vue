@@ -24,10 +24,10 @@
     <div
       class="layout align-center value pl-2 pr-3"
     >
-      <div class="display-1">
+      <div class="text-h4">
         {{ currentValue }}
       </div>
-      <div class="title ml-2 max-value">
+      <div class="text-h6 ml-2 max-value">
         /{{ value }}
       </div>
     </div>

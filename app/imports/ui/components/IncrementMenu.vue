@@ -1,6 +1,5 @@
 <template>
   <v-layout
-    row
     align-center
     justify-center
     class="increment-menu"

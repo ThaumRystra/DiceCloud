@@ -4,7 +4,7 @@
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-action class="mr-4">
-      <div class="display-1 mod">
+      <div class="text-h4 mod">
         <template v-if="swapScoresAndMods">
           <span :class="{'primary--text': model.currentValue !== model.value}">
             {{ model.currentValue }}
@@ -14,7 +14,7 @@
           {{ numberToSignedString(model.modifier) }}
         </template>
       </div>
-      <div class="title value">
+      <div class="text-h6 value">
         <template v-if="swapScoresAndMods">
           {{ numberToSignedString(model.modifier) }}
         </template>

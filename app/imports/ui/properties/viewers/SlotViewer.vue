@@ -19,7 +19,7 @@
       :value="model.slotConditionResult"
     />
     <template v-if="model.tags.length">
-      <div class="caption">
+      <div class="text-caption">
         Tags
       </div>
       <property-tags :tags="model.tags" />

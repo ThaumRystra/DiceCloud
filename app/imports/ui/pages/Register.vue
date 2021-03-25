@@ -48,7 +48,7 @@
         <div class="error--text">
           {{ error }}
         </div>
-        <v-layout row>
+        <v-layout>
           <v-btn
             :disabled="!valid"
             color="accent"

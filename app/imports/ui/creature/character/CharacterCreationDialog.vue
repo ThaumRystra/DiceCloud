@@ -52,7 +52,6 @@
             label="Race"
           />
           <v-layout
-            row
             justify-center
             align-center
           >
@@ -225,7 +224,6 @@
             :items="hitDiceItems"
             label="Hit Dice"
           />
-          </v-text-field>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>

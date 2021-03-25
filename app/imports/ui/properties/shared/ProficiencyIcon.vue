@@ -1,5 +1,7 @@
 <template lang="html">
-	<v-icon v-if="value !== undefined">{{displayedIcon}}</v-icon>
+  <v-icon v-if="value !== undefined">
+    {{ displayedIcon }}
+  </v-icon>
 </template>
 
 <script lang="js">

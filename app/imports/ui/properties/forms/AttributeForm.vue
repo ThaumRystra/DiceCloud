@@ -91,7 +91,7 @@
           <text-field
             label="Damage"
             type="number"
-            class="damage-field text-xs-center"
+            class="damage-field text-center"
             style="max-width: 300px;"
             hint="The attribute's final value is reduced by this amount"
             disabled

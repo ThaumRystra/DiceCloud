@@ -12,7 +12,7 @@
           class="white--text"
         >
           <p
-            class="white--text ma-2 headline text-xs-center"
+            class="white--text ma-2 text-h5 text-center"
             style="max-width: 1200px;"
           >
             DiceCloud is a single-developer project started in 2014 with the aim of
@@ -25,7 +25,7 @@
     </section>
     <section class="layout column align-center ma-2 mt-4">
       <div>
-        <h3 class="headline mb-2">
+        <h3 class="text-h5 mb-2">
           Special Thanks
         </h3>
         <p>
@@ -34,7 +34,7 @@
           <b>The "Heroes" of Asaea</b> The D&amp;D party whose joy was the fuel
           with which DiceCloud was powered
         </p>
-        <h3 class="title">
+        <h3 class="text-h6">
           Paragon tier Patrons
         </h3>
         <v-list

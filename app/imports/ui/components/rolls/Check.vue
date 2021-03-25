@@ -17,7 +17,7 @@
             outline
             @click="makeRoll"
           >
-            <div class="display-1">
+            <div class="text-h4">
               {{ numberToSignedString(bonus) }}
             </div>
           </v-btn>
@@ -26,7 +26,7 @@
     </template>
     <template v-else>
       <div>
-        <div class="title">
+        <div class="text-h6">
           <span
             v-for="(roll, index) of rolls"
             :key="index"
@@ -39,7 +39,7 @@
             {{ numberToSignedString(bonus) }}
           </span>
         </div>
-        <div class="display-1">
+        <div class="text-h4">
           {{ result }}
         </div>
       </div>

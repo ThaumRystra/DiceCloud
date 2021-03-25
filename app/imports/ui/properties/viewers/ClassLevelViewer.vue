@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="class-level-viewer">
     <div>
-      <span class="name headline">
+      <span class="name text-h5">
         {{ model.name }} {{ model.level }}
       </span>
     </div>

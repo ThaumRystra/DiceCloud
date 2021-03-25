@@ -1,6 +1,6 @@
 <template lang="html">
   <div v-if="value !== undefined || $slots.default">
-    <div class="caption">
+    <div class="text-caption">
       {{ name }}
     </div>
     <p class="ml-2 subheading">

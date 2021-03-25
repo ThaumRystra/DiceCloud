@@ -51,7 +51,6 @@
           </v-btn>
         </div>
         <v-layout
-          row
           wrap
           style="max-height: 400px; overflow-y: auto;"
         >

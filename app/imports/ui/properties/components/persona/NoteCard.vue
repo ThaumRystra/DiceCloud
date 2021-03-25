@@ -7,7 +7,7 @@
     :light="model.color && !isDark"
     @click="clickProperty(model._id)"
   >
-    <v-card-title class="title">
+    <v-card-title class="text-h6">
       {{ model.name }}
     </v-card-title>
     <v-card-text v-if="model.summary">

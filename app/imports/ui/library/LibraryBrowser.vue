@@ -17,7 +17,7 @@
         :data-id="library._id"
       >
         <template #header>
-          <div class="title">
+          <div class="text-h6">
             {{ library.name }}
           </div>
         </template>

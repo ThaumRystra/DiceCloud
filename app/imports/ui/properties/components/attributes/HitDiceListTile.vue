@@ -5,9 +5,8 @@
   >
     <v-list-item-action class="mr-4">
       <v-layout
-        row
         align-center
-        class="left"
+        class="float-left"
       >
         <v-layout
           column
@@ -33,13 +32,12 @@
         </v-layout>
 
         <v-layout
-          row
           align-end
         >
-          <div class="display-1">
+          <div class="text-h4">
             {{ currentValue }}
           </div>
-          <div class="title max-value ml-2">
+          <div class="text-h6 max-value ml-2">
             /{{ model.value }}
           </div>
         </v-layout>
