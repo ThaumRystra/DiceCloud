@@ -229,14 +229,14 @@
     </v-stepper>
     <template slot="actions">
       <v-btn
-        flat
+        text
         @click="$emit('pop')"
       >
         Cancel
       </v-btn>
       <v-btn
         v-if="step > 1"
-        flat
+        text
         @click="step--"
       >
         Back

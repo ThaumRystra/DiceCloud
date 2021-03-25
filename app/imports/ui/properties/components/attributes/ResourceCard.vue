@@ -1,46 +1,48 @@
 <template lang="html">
   <v-card
-    class="resource-card layout row"
+    class="resource-card"
     :class="hover ? 'elevation-8': ''"
   >
-    <div class="buttons layout column justify-center pl-3">
-      <v-btn
-        icon
-        small
-        :disabled="currentValue >= value || context.editPermission === false"
-        @click="increment(1)"
+    <v-layout>
+      <div class="buttons layout column justify-center pl-3">
+        <v-btn
+          icon
+          small
+          :disabled="currentValue >= value || context.editPermission === false"
+          @click="increment(1)"
+        >
+          <v-icon>arrow_drop_up</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          small
+          :disabled="currentValue <= 0 || context.editPermission === false"
+          @click="increment(-1)"
+        >
+          <v-icon>arrow_drop_down</v-icon>
+        </v-btn>
+      </div>
+      <div
+        class="layout align-center value pl-2 pr-3"
       >
-        <v-icon>arrow_drop_up</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        small
-        :disabled="currentValue <= 0 || context.editPermission === false"
-        @click="increment(-1)"
+        <div class="text-h4">
+          {{ currentValue }}
+        </div>
+        <div class="text-h6 ml-2 max-value">
+          /{{ value }}
+        </div>
+      </div>
+      <div
+        class="content layout align-center pr-3"
+        @click="click"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
       >
-        <v-icon>arrow_drop_down</v-icon>
-      </v-btn>
-    </div>
-    <div
-      class="layout align-center value pl-2 pr-3"
-    >
-      <div class="text-h4">
-        {{ currentValue }}
+        <div class="text-truncate ">
+          {{ name }}
+        </div>
       </div>
-      <div class="text-h6 ml-2 max-value">
-        /{{ value }}
-      </div>
-    </div>
-    <div
-      class="content layout row align-center pr-3"
-      @click="click"
-      @mouseover="hover = true"
-      @mouseleave="hover = false"
-    >
-      <div class="text-truncate ">
-        {{ name }}
-      </div>
-    </div>
+    </v-layout>
   </v-card>
 </template>
 

@@ -16,7 +16,7 @@
       class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         :disabled="!valid"
         @click="insertExperience"
       >

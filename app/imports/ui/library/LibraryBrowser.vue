@@ -1,38 +1,40 @@
 <template lang="html">
   <div
+    class="library-browser"
     style="
       background-color: inherit;
       overflow-y: auto;
     "
   >
-    <v-expansion-panel
-      style="box-shadow: none;"
-      expand
+    <v-expansion-panels
+      v-model="expandedLibrary"
+      accordian
+      flat
+      multiple
     >
-      <v-expansion-panel-content
+      <v-expansion-panel
         v-for="(library, index) in libraries"
         :key="library._id"
-        v-model="expandedLibrary[index]"
-        lazy
         :data-id="library._id"
       >
-        <template #header>
+        <v-expansion-panel-header>
           <div class="text-h6">
             {{ library.name }}
           </div>
-        </template>
-        <v-card flat>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
           <library-contents-container
             :library-id="library._id"
             :organize-mode="organizeMode && editPermission(library)"
             :edit-mode="editMode"
             :selected-node-id="selectedNodeId"
-            :should-subscribe="expandedLibrary[index]"
+            :should-subscribe="expandedLibrary.includes(index)"
+            class="mb-4"
             @selected="e => $emit('selected', e)"
           />
-          <v-card-actions>
+          <v-layout>
             <v-btn
-              flat
+              text
               small
               style="background-color: inherit; margin-top: 0;"
               :disabled="!editPermission(library)"
@@ -44,21 +46,20 @@
             </v-btn>
             <v-spacer />
             <v-btn
-              flat
               small
               icon
               @click="$router.push(`/library/${library._id}`)"
             >
               <v-icon>arrow_forward</v-icon>
             </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
+          </v-layout>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <v-btn
       v-show="noLibrariesExpanded"
       v-if="editMode"
-      flat
+      text
       color="primary"
       style="background-color: inherit;"
       data-id="insert-library-button"
@@ -97,12 +98,7 @@ export default {
   };},
   computed: {
     noLibrariesExpanded(){
-      if (!this.expandedLibrary) return true;
-      let noneExpanded = true;
-      this.expandedLibrary.forEach(lib => {
-        if(lib) noneExpanded = false;
-      });
-      return noneExpanded;
+      return !this.expandedLibrary || this.expandedLibrary.length === 0;
     },
   },
   meteor: {
@@ -186,5 +182,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.v-expansion-panel-content__wrap, .v-expansion-panel-header {
+  padding: 0 !important;
+}
 </style>

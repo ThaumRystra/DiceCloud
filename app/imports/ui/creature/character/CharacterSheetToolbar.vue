@@ -1,16 +1,17 @@
 <template lang="html">
-  <v-toolbar
+  <v-app-bar
     app
     class="character-sheet-toolbar"
     :color="toolbarColor"
     :dark="isDark"
     :light="!isDark"
+    clipped-right
     extended
     tabs
     dense
   >
-    <v-toolbar-side-icon @click="toggleDrawer" />
-    <v-toolbar-title>
+    <v-app-bar-nav-icon @click="toggleDrawer" />
+    <v-app-bar-title>
       <v-fade-transition
         mode="out-in"
       >
@@ -18,13 +19,13 @@
           {{ $store.state.pageTitle }}
         </div>
       </v-fade-transition>
-    </v-toolbar-title>
+    </v-app-bar-title>
     <v-spacer />
     <v-fade-transition
       mode="out-in"
     >
       <div :key="$route.meta.title">
-        <v-toolbar-items v-if="creature">
+        <template v-if="creature">
           <v-menu
             bottom
             left
@@ -64,8 +65,8 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-toolbar-side-icon @click="toggleRightDrawer" />
-        </v-toolbar-items>
+          <v-app-bar-nav-icon @click="toggleRightDrawer" />
+        </template>
       </div>
     </v-fade-transition>
     <v-fade-transition
@@ -83,7 +84,9 @@
           centered
           grow
           max="100px"
+          color="primary"
           :value="$store.getters.tabById($route.params.id)"
+          :background-color="toolbarColor"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}
@@ -115,7 +118,7 @@
         />
       </div>
     </v-fade-transition>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script lang="js">
@@ -142,7 +145,7 @@ export default {
       if (this.creature && this.creature.color){
         return this.creature.color;
       } else {
-        return this.$vuetify.theme.secondary;
+        return this.$vuetify.theme.themes.light.secondary;
       }
     },
     isDark(){

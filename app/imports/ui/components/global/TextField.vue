@@ -6,7 +6,7 @@
     :error-messages="errors"
     :value="safeValue"
     :disabled="isDisabled"
-    :box="!regular"
+    :filled="!regular"
     @input="input"
     @focus="focused = true"
     @blur="focused = false"

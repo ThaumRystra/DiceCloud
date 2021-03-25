@@ -11,10 +11,12 @@
             <rest-button
               :creature-id="creatureId"
               type="shortRest"
+              class="ma-1"
             />
             <rest-button
               :creature-id="creatureId"
               type="longRest"
+              class="ma-1"
             />
           </v-card-text>
         </v-card>
@@ -41,7 +43,6 @@
               <v-list-item-action>
                 <v-btn
                   icon
-                  flat
                   @click.stop="softRemove(buff._id)"
                 >
                   <v-icon>delete</v-icon>

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="damage-viewer layout row align-center">
+  <div class="damage-viewer layout align-center">
     {{ model.amountResult }}
     {{ model.damageType }}<span
       v-if="model.damageType !== 'healing'"

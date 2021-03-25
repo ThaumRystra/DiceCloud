@@ -12,7 +12,7 @@
         v-if="context.creatureId && model.showIncrement"
         icon
         large
-        outline
+        outlined
         color="primary"
         :value="model.quantity"
         @change="changeQuantity"

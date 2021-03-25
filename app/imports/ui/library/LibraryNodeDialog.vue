@@ -43,14 +43,14 @@
     >
       <template v-if="selection">
         <v-btn
-          flat
+          text
           @click="$store.dispatch('popDialogStack', false)"
         >
           Cancel
         </v-btn>
         <v-spacer />
         <v-btn
-          flat
+          text
           @click="$store.dispatch('popDialogStack', true)"
         >
           Select
@@ -58,7 +58,7 @@
       </template>
       <v-btn
         v-else
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Done

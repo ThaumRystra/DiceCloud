@@ -16,7 +16,7 @@
         :loading="loading"
         :error-messages="errors"
         :disabled="isDisabled"
-        box
+        filled
         v-on="on"
         @focus="focused = true"
         @blur="focused = false"

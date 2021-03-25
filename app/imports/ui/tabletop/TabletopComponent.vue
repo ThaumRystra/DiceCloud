@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="tabletop">
-    <section class="initiative-row layout row center">
+    <section class="initiative-row layout center">
       <tabletop-creature-card
         v-for="creature in creatures"
         :key="creature._id"
@@ -13,7 +13,7 @@
         hover
         @click="addCreature"
       >
-        <div class="flex layout row justify-center align-center">
+        <div class="flex layout justify-center align-center">
           <v-icon>add</v-icon>
         </div>
         <v-card-title>

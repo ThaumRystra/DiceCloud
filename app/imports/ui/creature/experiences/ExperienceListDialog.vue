@@ -7,7 +7,6 @@
       <v-spacer />
       <v-btn
         icon
-        flat
         data-id="experience-add-button"
         @click="addExperience"
       >
@@ -15,7 +14,6 @@
       </v-btn>
       <v-btn
         icon
-        flat
         @click="recompute"
       >
         <v-icon>refresh</v-icon>
@@ -37,7 +35,7 @@
       <v-icon style="font-size: 240px; width: 240px; height: 240px;">
         $vuetify.icons.baby_face
       </v-icon>
-      <p class="headline">
+      <p class="text-h5">
         No experiences
       </p>
     </div>

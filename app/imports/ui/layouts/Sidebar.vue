@@ -5,7 +5,7 @@
       justify-center
     >
       <v-btn
-        flat
+        text
         to="/sign-in"
       >
         Sign in

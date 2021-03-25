@@ -37,7 +37,6 @@
       <v-btn
         v-else-if="showInfoButton"
         icon
-        flat
         class="info-icon"
         :data-id="`spell-info-btn-${model._id}`"
         @click.stop="$emit('show-info')"

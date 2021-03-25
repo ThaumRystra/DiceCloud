@@ -14,7 +14,7 @@
           <v-btn
             large
             fab
-            outline
+            outlined
             @click="makeRoll"
           >
             <div class="text-h4">

@@ -1,13 +1,13 @@
 <template lang="html">
   <v-list-item
     class="skill-list-tile"
-    height="32px"
+    style="min-height: 36px;"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-item-action class="prof-icon">
-      <v-icon>{{ icon }}</v-icon>
-    </v-list-item-action>
-    <v-list-item-content>
+    <v-icon class="prof-icon">
+      {{ icon }}
+    </v-icon>
+    <v-list-item-content class="py-1">
       <v-list-item-title>
         <span
           v-if="!hideModifier"
@@ -100,4 +100,8 @@ export default {
 		width: 45px;
 		text-align: center;
 	}
+</style>
+
+<style lang="scss">
+  $list-item-min-height: 32px;
 </style>

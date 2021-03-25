@@ -13,7 +13,7 @@
             />
           </div>
           <v-btn
-            outline
+            outlined
             icon
             large
             class="ma-3"

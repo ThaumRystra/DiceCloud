@@ -7,10 +7,10 @@
     <div class="layout align-center px-3">
       <div class="avatar">
         <v-btn
-          flat
           icon
-          outline
-          style="margin-left: -4px; font-size: 18px;"
+          outlined
+          style="font-size: 18px;"
+          class="mr-2"
           :color="model.color || 'primary'"
           :loading="doActionLoading"
           :disabled="model.insufficientResources || !context.editPermission"
@@ -37,7 +37,7 @@
         >
           {{ model.name || propertyName }}
         </div>
-        <div class="action-sub-title layout row align-center">
+        <div class="action-sub-title layout align-center">
           <div class="flex">
             {{ model.actionType }}
           </div>

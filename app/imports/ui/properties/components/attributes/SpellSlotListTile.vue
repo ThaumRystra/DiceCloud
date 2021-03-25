@@ -43,7 +43,7 @@
     <v-list-item-avatar v-if="!hideCastButton">
       <v-btn
         icon
-        flat
+        text
         class="primary--text"
         :data-id="`spell-slot-cast-btn-${model._id}`"
         @click.stop="$emit('cast')"

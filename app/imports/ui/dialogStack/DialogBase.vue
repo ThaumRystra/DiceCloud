@@ -16,7 +16,6 @@
       >
         <v-btn
           icon
-          flat
           @click="back"
         >
           <v-icon>arrow_back</v-icon>
@@ -67,7 +66,7 @@
         return isDarkColor(this.computedColor);
       },
       computedColor(){
-        return this.color || this.$vuetify.theme.secondary;
+        return this.color || this.$vuetify.theme.themes.light.secondary;
       }
     },
 		methods: {

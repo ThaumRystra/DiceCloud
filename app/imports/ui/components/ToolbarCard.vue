@@ -30,7 +30,7 @@
 			color: {
 				type: String,
 				default(){
-					return this.$vuetify.theme.secondary;
+					return this.$vuetify.theme.themes.light.secondary;
 				},
 			},
 		},

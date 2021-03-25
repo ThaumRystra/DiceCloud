@@ -6,7 +6,7 @@
     :value="safeValue"
     :menu-props="{auto: true, lazy: true}"
     :disabled="isDisabled"
-    box
+    filled
     @change="change"
     @focus="focused = true"
     @blur="focused = false"

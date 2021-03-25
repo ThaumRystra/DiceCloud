@@ -142,7 +142,7 @@ export default {
       return isDarkColor(this.color);
     },
     color(){
-      return this.model && this.model.color || this.$vuetify.theme.secondary;
+      return this.model && this.model.color || this.$vuetify.theme.themes.light.secondary;
     },
     title(){
       let model = this.model;

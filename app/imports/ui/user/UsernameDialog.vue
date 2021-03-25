@@ -14,7 +14,7 @@
     <v-spacer slot="actions" />
     <v-btn
       slot="actions"
-      flat
+      text
       :disabled="!valid"
       :loading="loading"
       @click="setUsername"

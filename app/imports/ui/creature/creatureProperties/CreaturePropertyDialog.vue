@@ -5,6 +5,7 @@
         :model="model"
         :editing="editing"
         :flat="flat"
+        style="flex-grow: 0;"
         @duplicate="duplicate"
         @remove="remove"
         @toggle-editing="editing = !editing"
@@ -49,7 +50,7 @@
       class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Done

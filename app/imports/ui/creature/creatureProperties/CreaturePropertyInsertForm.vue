@@ -28,7 +28,7 @@
       class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', model)"
       >

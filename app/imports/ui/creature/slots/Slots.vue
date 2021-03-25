@@ -28,7 +28,6 @@
           <v-list-item-action>
             <v-btn
               icon
-              flat
               small
               @click.stop="remove(child)"
             >

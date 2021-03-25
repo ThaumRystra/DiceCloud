@@ -24,7 +24,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-          flat
+          text
           color="primary"
           href="https://discord.gg/qEvdfeB"
         >

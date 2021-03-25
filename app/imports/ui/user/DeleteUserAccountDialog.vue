@@ -9,7 +9,7 @@
         :value="true"
         icon="warning"
         color="error"
-        outline
+        outlined
       >
         Deleted accounts can not be recovered
       </v-alert>
@@ -79,7 +79,7 @@
       class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel

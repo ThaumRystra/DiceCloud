@@ -12,6 +12,7 @@
           <v-toolbar
             flat
             dense
+            style="flex-grow: 0;"
           >
             <v-spacer />
             <v-switch

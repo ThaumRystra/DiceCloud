@@ -2,7 +2,7 @@
   <v-btn
     :loading="loading"
     :disabled="context.editPermission === false"
-    outline
+    outlined
     style="width: 160px;"
     @click="rest"
   >

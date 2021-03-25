@@ -11,7 +11,6 @@
     <v-btn
       v-if="snackbar.callback"
       class="primary--text"
-      flat
       icon
       @click="doCallback"
     >
@@ -19,7 +18,6 @@
     </v-btn>
     <v-btn
       v-if="snackbar.showCloseButton"
-      flat
       icon
       @click="$store.dispatch('closeSnackbar')"
     >

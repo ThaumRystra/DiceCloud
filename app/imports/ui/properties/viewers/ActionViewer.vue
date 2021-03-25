@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="action-viewer">
-    <div class="action-sub-title layout row align-center justify-space-between wrap mb-3">
+    <div class="action-sub-title layout align-center justify-space-between wrap mb-3">
       <property-tags
         :tags="model.tags"
         no-margin
@@ -16,8 +16,7 @@
     <div class="layout align-center justify-space-around">
       <v-btn
         v-if="context.creatureId"
-        flat
-        outline
+        outlined
         style="font-size: 18px;"
         class="ma-2"
         :color="model.color || 'primary'"
@@ -66,7 +65,7 @@
         </span>
         <v-btn
           v-if="context.creatureId"
-          outline
+          outlined
           color="primary"
           :disabled="!model.usesUsed || !context.editPermission"
           @click="resetUses"

@@ -12,8 +12,12 @@
         data-id="insert-creature-property-fab"
         small
       >
-        <v-icon>add</v-icon>
-        <v-icon>close</v-icon>
+        <v-icon v-if="fab">
+          close
+        </v-icon>
+        <v-icon v-else>
+          add
+        </v-icon>
       </v-btn>
     </template>
 

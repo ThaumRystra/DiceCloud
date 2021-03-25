@@ -28,7 +28,7 @@
       </v-toolbar>
       <div
         v-if="libraryId"
-        style="width: 100%; height: 100%; overflow: auto;"
+        style="width: 100%; height: 100%; overflow: auto; padding: 12px;"
       >
         <library-contents-container
           :library-id="libraryId"
@@ -43,7 +43,7 @@
         edit-mode
         :organize-mode="organize"
         :selected-node-id="selected"
-        style="overflow-y: auto;"
+        style="overflow-y: auto; padding: 12px;"
         @selected="clickNode"
       />
     </div>
@@ -94,7 +94,7 @@ export default {
     isToolbarDark(){
       return isDarkColor(
         this.selectedNode && this.selectedNode.color ||
-        this.$vuetify.theme.secondary
+        this.$vuetify.theme.themes.light.secondary
       );
     }
   },

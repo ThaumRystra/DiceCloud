@@ -6,12 +6,14 @@
     lazy
     left
   >
-    <v-btn
-      slot="activator"
-      icon
-    >
-      <v-icon>format_paint</v-icon>
-    </v-btn>
+    <template #activator="{ on }">
+      <v-btn
+        icon
+        v-on="on"
+      >
+        <v-icon>format_paint</v-icon>
+      </v-btn>
+    </template>
     <v-card class="overflow-hidden">
       <v-card-text>
         <v-layout
@@ -71,14 +73,14 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
-          flat
+          text
           @click="$emit('input')"
         >
           Clear
         </v-btn>
         <v-spacer />
         <v-btn
-          flat
+          text
           @click="opened = false"
         >
           Done

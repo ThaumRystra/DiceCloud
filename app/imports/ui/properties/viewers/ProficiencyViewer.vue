@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="proficiency-viewer">
-    <div class="text-h5 layout row">
+    <div class="text-h5 layout">
       {{ model.skill }}
       <proficiency-icon
         :value="model.value"

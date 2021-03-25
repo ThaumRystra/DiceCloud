@@ -16,7 +16,7 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', library)"
       >

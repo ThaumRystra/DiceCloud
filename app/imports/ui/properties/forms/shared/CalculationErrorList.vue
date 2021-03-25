@@ -13,7 +13,7 @@
         :value="true"
         :icon="errorIcon(error.type)"
         :color="errorColor(error.type)"
-        outline
+        outlined
       >
         <pre>{{ error.message }}</pre>
       </v-alert>

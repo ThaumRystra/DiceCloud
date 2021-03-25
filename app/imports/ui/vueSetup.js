@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
 import store from '/imports/ui/vuexStore.js';
 import VueMeteorTracker from 'vue-meteor-tracker';
 import AppLayout from '/imports/ui/layouts/AppLayout.vue';
@@ -10,6 +9,9 @@ import '/imports/ui/components/global/globalIndex.js';
 import SvgIconByName from '/imports/ui/icons/SvgIconByName.vue';
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 import '/imports/ui/markdownCofig.js';
+
+import Vuetify from 'vuetify/lib';
+import { Scroll } from 'vuetify/lib/directives'
 
 let icons = {};
 
@@ -26,7 +28,11 @@ for (const name in SVG_ICONS) {
 Vue.use(VueMeteorTracker);
 Vue.config.meteor.freeze = true;
 Vue.config.devtools = true;
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  directives: {
+    Scroll,
+  },
+});
 Vue.use(ReactiveProvide, {
   name: 'reactiveProvide', // default value
 })
@@ -41,6 +47,7 @@ Meteor.startup(() => {
       theme: {
         dark: false,
         themes,
+        options: { customProperties: true },
       },
       icons: {
         iconfont: 'md',

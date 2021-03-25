@@ -105,7 +105,7 @@
     <v-spacer slot="actions" />
     <v-btn
       slot="actions"
-      flat
+      text
       @click="$store.dispatch('popDialogStack')"
     >
       Done

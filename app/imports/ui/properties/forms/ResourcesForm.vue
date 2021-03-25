@@ -31,7 +31,7 @@
             :disabled="addResourceLoading || context.editPermission === false"
             icon
             large
-            outline
+            outlined
             v-on="on"
           >
             <v-icon>add</v-icon>

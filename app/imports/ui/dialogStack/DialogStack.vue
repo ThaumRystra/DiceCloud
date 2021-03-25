@@ -213,7 +213,7 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
-    z-index: 4;
+    z-index: 6;
     pointer-events: initial;
   }
   .backdrop-fade-enter-active, .backdrop-fade-leave-active {
@@ -229,7 +229,7 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
-    z-index: 4;
+    z-index: 6;
   }
   .dialog-sizer {
     position: relative;
@@ -239,7 +239,7 @@
     height: 80%;
     height: calc(100% - 64px);
     max-height: 800px;
-    z-index: 5;
+    z-index: 7;
     flex: initial;
   }
   /* sm */

@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-toolbar
+  <v-app-bar
     app
     color="secondary"
     dark
@@ -7,40 +7,34 @@
     extended
     dense
   >
-    <v-toolbar-side-icon @click="toggleDrawer" />
-    <v-toolbar-items>
-      <v-btn
-        flat
-        icon
-        @click="$router.push('/library')"
-      >
-        <v-icon>arrow_back</v-icon>
-      </v-btn>
-    </v-toolbar-items>
+    <v-app-bar-nav-icon @click="toggleDrawer" />
+    <v-btn
+      icon
+      @click="$router.push('/library')"
+    >
+      <v-icon>arrow_back</v-icon>
+    </v-btn>
     <v-toolbar-title>
       {{ library && library.name }}
     </v-toolbar-title>
     <v-spacer />
-    <v-toolbar-items>
-      <v-btn
-        v-if="showSubscribeButton"
-        flat
-        :loading="loading"
-        @click="subscribe(!subscribed)"
-      >
-        {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
-      </v-btn>
-      <v-btn
-        v-if="canEdit"
-        flat
-        icon
-        data-id="library-edit-button"
-        @click="editLibrary(library._id)"
-      >
-        <v-icon>settings</v-icon>
-      </v-btn>
-    </v-toolbar-items>
-  </v-toolbar>
+    <v-btn
+      v-if="showSubscribeButton"
+      text
+      :loading="loading"
+      @click="subscribe(!subscribed)"
+    >
+      {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
+    </v-btn>
+    <v-btn
+      v-if="canEdit"
+      icon
+      data-id="library-edit-button"
+      @click="editLibrary(library._id)"
+    >
+      <v-icon>settings</v-icon>
+    </v-btn>
+  </v-app-bar>
 </template>
 
 <script lang="js">

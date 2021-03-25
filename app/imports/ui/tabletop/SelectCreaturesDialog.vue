@@ -19,7 +19,7 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         color="primary"
         @click="$store.dispatch('popDialogStack', selected)"
       >

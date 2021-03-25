@@ -25,7 +25,6 @@
       <increment-button
         v-if="context.creatureId && model.showIncrement"
         icon
-        flat
         color="primary"
         :disabled="context.editPermission === false"
         :value="model.quantity"

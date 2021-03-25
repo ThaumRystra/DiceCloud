@@ -69,7 +69,6 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-btn
-                  flat
                   icon
                   data-id="experience-info-button"
                   @click="showExperienceList"
@@ -79,7 +78,6 @@
               </v-list-item-action>
               <v-list-item-action>
                 <v-btn
-                  flat
                   icon
                   data-id="experience-add-button"
                   @click="addExperience"

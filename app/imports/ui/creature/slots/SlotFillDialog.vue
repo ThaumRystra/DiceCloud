@@ -121,13 +121,13 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel
       </v-btn>
       <v-btn
-        flat
+        text
         :disabled="!selectedNode"
         @click="insert"
       >

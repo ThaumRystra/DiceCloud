@@ -161,7 +161,7 @@
 	.theme--light .tree-node-title:hover {
 		background: rgba(0,0,0,.04);
 	}
-  .dummy-node {
+  .tree-node-title, .dummy-node {
     height: 40px;
   }
 </style>

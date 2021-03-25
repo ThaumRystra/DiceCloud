@@ -43,9 +43,9 @@
     <v-btn
       :small="!flat"
       :fab="!flat"
-      :flat="flat"
+      :text="flat"
       :icon="flat"
-      class="filled"
+      class="mx-2 filled"
       @click="commitEdit"
     >
       <v-icon>done</v-icon>
@@ -53,9 +53,9 @@
     <v-btn
       :small="!flat"
       :fab="!flat"
-      :flat="flat"
+      :text="flat"
       :icon="flat"
-      class="mx-0 filled"
+      class="filled"
       @click="cancelEdit"
     >
       <v-icon>close</v-icon>

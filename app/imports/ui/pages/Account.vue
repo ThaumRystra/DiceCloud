@@ -37,7 +37,6 @@
               <v-btn
                 slot="activator"
                 icon
-                flat
                 @click="changeUsername"
               >
                 <v-icon>create</v-icon>
@@ -70,7 +69,6 @@
               <v-btn
                 slot="activator"
                 icon
-                flat
                 :loading="updatePatreonLoading"
                 @click="updatePatreon"
               >

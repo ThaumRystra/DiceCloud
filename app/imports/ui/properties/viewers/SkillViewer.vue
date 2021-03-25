@@ -6,7 +6,7 @@
     >
       <div
         v-if="model.value !== undefined"
-        class="text-h4 layout row align-center"
+        class="text-h4 layout align-center"
       >
         <v-icon class="mr-4">
           {{ icon }}

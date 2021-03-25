@@ -24,7 +24,6 @@
         <template #activator="{ on }">
           <v-btn
             icon
-            flat
             :class="{'primary--text': filtersApplied}"
             v-on="on"
           >
@@ -49,14 +48,14 @@
           </v-list-item>
           <div class="layout">
             <v-btn
-              flat
+              text
               @click="clearBooleanFilters"
             >
               Clear
             </v-btn>
             <v-spacer />
             <v-btn
-              flat
+              text
               class="primary--text"
               @click="filterMenuOpen = false"
             >
@@ -127,13 +126,13 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel
       </v-btn>
       <v-btn
-        flat
+        text
         :disabled="!canCast"
         class="primary--text"
         @click="$store.dispatch('popDialogStack', {
