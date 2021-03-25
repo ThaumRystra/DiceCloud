@@ -78,6 +78,9 @@
 </script>
 
 <style lang="css" scoped>
+  .resource-card {
+    transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
 	.resource-card > div {
 		padding-top: 16px;
 		padding-bottom: 16px;

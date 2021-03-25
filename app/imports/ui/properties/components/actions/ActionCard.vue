@@ -2,7 +2,6 @@
   <v-card
     class="action-card"
     :class="cardClasses"
-    :elevation="hovering ? 8 : undefined"
   >
     <div class="layout align-center px-3">
       <div class="avatar">
@@ -157,6 +156,7 @@ export default {
         'theme--light': !this.theme.isDark,
         'muted-text': this.model.insufficientResources,
         'shrink': this.activated,
+        'elevation-8': this.hovering,
       }
     },
     actionTypeIcon() {
@@ -199,6 +199,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.action-card {
+  transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 .action-title {
   font-size: 16px;
   font-weight: 400;

@@ -47,7 +47,7 @@ Meteor.startup(() => {
       theme: {
         dark: false,
         themes,
-        options: { customProperties: true },
+        //options: { customProperties: true },
       },
       icons: {
         iconfont: 'md',
