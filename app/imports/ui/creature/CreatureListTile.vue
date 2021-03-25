@@ -30,7 +30,7 @@
   </v-list-item>
 </template>
 
-<script type="text/javascript">
+<script lang="js">
 export default {
   props: {
     model: {

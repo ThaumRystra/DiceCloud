@@ -33,14 +33,16 @@
         <v-list-item data-id="username">
           <v-list-item-action>
             <v-tooltip right>
+              <template #activator="{ on }">
+                <v-btn
+                  icon
+                  v-on="on"
+                  @click="changeUsername"
+                >
+                  <v-icon>create</v-icon>
+                </v-btn>
+              </template>
               <span>Change Username</span>
-              <v-btn
-                slot="activator"
-                icon
-                @click="changeUsername"
-              >
-                <v-icon>create</v-icon>
-              </v-btn>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-title>
@@ -65,15 +67,17 @@
         <v-list-item>
           <v-list-item-action>
             <v-tooltip right>
+              <template #activator="{ on }">
+                <v-btn
+                  icon
+                  :loading="updatePatreonLoading"
+                  v-on="on"
+                  @click="updatePatreon"
+                >
+                  <v-icon>refresh</v-icon>
+                </v-btn>
+              </template>
               <span>Refresh Patreon status</span>
-              <v-btn
-                slot="activator"
-                icon
-                :loading="updatePatreonLoading"
-                @click="updatePatreon"
-              >
-                <v-icon>refresh</v-icon>
-              </v-btn>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-title>
