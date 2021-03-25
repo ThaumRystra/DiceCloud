@@ -13,7 +13,7 @@
       multiple
     >
       <v-expansion-panel
-        v-for="(library, index) in libraries"
+        v-for="library in libraries"
         :key="library._id"
         :data-id="library._id"
       >
@@ -28,7 +28,7 @@
             :organize-mode="organizeMode && editPermission(library)"
             :edit-mode="editMode"
             :selected-node-id="selectedNodeId"
-            :should-subscribe="expandedLibrary.includes(index)"
+            should-subscribe
             class="mb-4"
             @selected="e => $emit('selected', e)"
           />
