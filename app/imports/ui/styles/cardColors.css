@@ -1,0 +1,10 @@
+.theme--dark.v-sheet {
+  background-color: #303030;
+}
+
+.theme--dark .card-background {
+  background: #000;
+}
+.card-background {
+  background: #fafafa;
+}

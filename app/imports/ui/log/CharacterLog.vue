@@ -6,7 +6,7 @@
     <v-slide-y-reverse-transition
       group
       hide-on-leave
-      class="log-entries flex layout column reverse align-end pa-3"
+      class="card-background flex layout column reverse align-end pa-3"
       style="overflow: auto;"
     >
       <log-entry
@@ -121,11 +121,5 @@ export default {
 <style lang="css">
   .log-tab p:last-child {
     margin-bottom: 0;
-  }
-  .theme--dark .log-entries {
-    background: #303030;
-  }
-  .log-entries {
-    background: #fafafa;
   }
 </style>

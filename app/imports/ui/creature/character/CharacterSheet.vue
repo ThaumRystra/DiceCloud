@@ -36,6 +36,7 @@
       >
         <v-tabs-items
           :value="$store.getters.tabById($route.params.id)"
+          class="card-background"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}
