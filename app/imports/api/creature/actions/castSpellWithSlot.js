@@ -65,7 +65,7 @@ const castSpellWithSlot = new ValidatedMethod({
       action: spell,
       context: {slotLevel},
       creature,
-      targets: [target],
+      targets: target ? [target] : [],
       method: this,
     });
     // Note this only recomputes the top-level creature, not the nearest one
