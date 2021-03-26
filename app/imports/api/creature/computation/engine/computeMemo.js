@@ -8,12 +8,12 @@ import computeInlineCalculations from '/imports/api/creature/computation/engine/
 import computeConstant from '/imports/api/creature/computation/engine/computeConstant.js';
 
 export default function computeMemo(memo){
+  // Compute level
+  computeLevels(memo);
   // Compute all constants that could be used
   forOwn(memo.constantsById, constant => {
     computeConstant (constant, memo);
   });
-  // Compute level
-  computeLevels(memo);
   // Compute all stats, even if they are overriden
   forOwn(memo.statsById, stat => {
     computeStat (stat, memo);
