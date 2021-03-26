@@ -2,7 +2,6 @@
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
-    lazy
     transition="slide-y-transition"
     min-width="290px"
     style="overflow-y: auto;"

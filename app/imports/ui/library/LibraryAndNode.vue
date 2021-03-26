@@ -25,6 +25,11 @@
           class="mx-3"
           style="flex-grow: 0; height: 32px;"
         />
+        <insert-library-node-button
+          v-if="libraryId"
+          style="bottom: -32px"
+          :library-id="libraryId"
+        />
       </v-toolbar>
       <div
         v-if="libraryId"
@@ -68,6 +73,7 @@ import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
+import InsertLibraryNodeButton from '/imports/ui/library/InsertLibraryNodeButton.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
@@ -78,6 +84,7 @@ export default {
     LibraryBrowser,
     LibraryNodeDialog,
     LibraryContentsContainer,
+    InsertLibraryNodeButton,
   },
   props: {
     selection: Boolean,

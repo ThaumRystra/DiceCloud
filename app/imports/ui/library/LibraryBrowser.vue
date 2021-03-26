@@ -73,12 +73,9 @@
 
 <script lang="js">
 import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { getAncestry } from  '/imports/api/parenting/parenting.js';
 
 export default {
   components: {
@@ -149,34 +146,6 @@ export default {
         elementId: _id,
         data: {_id},
       });
-    },
-    insertLibraryNode(libraryId){
-      if (this.paidBenefits){
-        let parentRef;
-        if (this.organizeMode && this.selectedNodeId){
-          parentRef = {collection: 'libraryNodes', id: this.selectedNodeId}
-        } else {
-          parentRef = {collection: 'libraries', id: libraryId};
-        }
-        let {ancestors} = getAncestry({parentRef});
-        this.$store.commit('pushDialogStack', {
-          component: 'library-node-creation-dialog',
-          elementId: `insert-node-${libraryId}`,
-          callback(libraryNode){
-            if (!libraryNode) return;
-            libraryNode.parent = parentRef;
-            libraryNode.ancestors = ancestors;
-            setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
-            let libraryNodeId = insertNode.call(libraryNode);
-            return `tree-node-${libraryNodeId}`;
-          }
-        });
-      } else {
-        this.$store.commit('pushDialogStack', {
-          component: 'tier-too-low-dialog',
-          elementId: `insert-node-${libraryId}`,
-        });
-      }
     },
   },
 }

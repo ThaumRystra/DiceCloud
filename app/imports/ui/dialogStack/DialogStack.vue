@@ -166,7 +166,7 @@
         let source = this.getTopElementByDataId(elementId);
         if (!source){
           console.warn(`Can't find source for ${elementId}`);
-          this.hiddenElement.style.opacity = null;
+          if (this.hiddenElement) this.hiddenElement.style.opacity = null;
           done();
           return;
         }

@@ -3,7 +3,6 @@
     v-model="opened"
     :close-on-content-click="false"
     transition="slide-y-transition"
-    lazy
     left
   >
     <template #activator="{ on }">
