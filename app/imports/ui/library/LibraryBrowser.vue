@@ -183,7 +183,7 @@ export default {
 </script>
 
 <style lang="css">
-.v-expansion-panel-content__wrap, .v-expansion-panel-header {
+.library-browser .v-expansion-panel-content__wrap, .library-browser .v-expansion-panel-header {
   padding: 0 !important;
 }
 </style>
