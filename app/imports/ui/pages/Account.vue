@@ -1,5 +1,8 @@
 <template>
-  <div class="layout justify-center card-background">
+  <div
+    class="layout justify-center card-background"
+    style="height: 100%;"
+  >
     <v-card
       class="ma-4 pa-2"
       style="flex-basis: 900px"

@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <v-card class="ma-4">
+  <div
+    class="card-background pa-4"
+    style="height: 100%"
+  >
+    <v-card>
       <v-list v-if="CreaturesWithNoParty.length">
         <creature-list-tile
           v-for="character in CreaturesWithNoParty"
@@ -9,31 +12,6 @@
           :model="character"
         />
       </v-list>
-      <v-expansion-panel popout>
-        <v-expansion-panel-content
-          v-for="party in parties"
-          :key="party._id"
-        >
-          <div slot="header">
-            {{ party.name }}
-          </div>
-          <v-card>
-            <v-list>
-              <v-list-item
-                v-for="character in party.characterDocs"
-                :key="character._id"
-              >
-                <v-list-item-avatar>
-                  <img
-                    :src="character.picture"
-                    alt="character.name"
-                  >
-                </v-list-item-avatar>
-              </v-list-item>
-            </v-list>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
     </v-card>
     <v-btn
       color="accent"
@@ -46,42 +24,12 @@
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <!--
-    <v-speed-dial
-      v-model="fab"
-      fixed
-      bottom
-      right
-      transition="slide-y-reverse-transition"
-    >
-      <v-btn
-        slot="activator"
-        v-model="fab"
-        color="accent"
-        fab
-      >
-        <v-icon>add</v-icon>
-        <v-icon>close</v-icon>
-      </v-btn>
-      <labeled-fab
-        icon="face"
-        label="New Character"
-        data-id="new-character-button"
-        @click="insertCharacter"
-      />
-      <labeled-fab
-        icon="group"
-        label="New Party"
-      />
-    </v-speed-dial>
-    -->
   </div>
 </template>
 
 <script lang="js">
   import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
   import Parties from '/imports/api/creature/Parties.js';
-  import LabeledFab from '/imports/ui/components/LabeledFab.vue';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
   import CreatureListTile from '/imports/ui/creature/CreatureListTile.vue';
 
@@ -92,7 +40,6 @@
   };
   export default {
     components: {
-      LabeledFab,
       CreatureListTile,
     },
     data(){ return{
