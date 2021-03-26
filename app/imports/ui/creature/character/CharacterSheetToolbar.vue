@@ -84,7 +84,7 @@
           centered
           grow
           max="100px"
-          color="primary"
+          :color="$vuetify.theme.themes.dark.primary"
           :value="$store.getters.tabById($route.params.id)"
           :background-color="toolbarColor"
           @change="e => $store.commit(
