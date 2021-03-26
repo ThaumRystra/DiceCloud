@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="card-raised-background">
     <v-container
       fluid
       grid-list-lg

@@ -6,7 +6,7 @@
     <v-slide-y-reverse-transition
       group
       hide-on-leave
-      class="card-background flex layout column reverse align-end pa-3"
+      class="card-raised-background flex layout column reverse align-end pa-3"
       style="overflow: auto;"
     >
       <log-entry

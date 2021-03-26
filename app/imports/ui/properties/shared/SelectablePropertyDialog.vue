@@ -8,7 +8,10 @@
       <v-toolbar-title slot="toolbar">
         Add Library Content
       </v-toolbar-title>
-      <property-selector @select="type => $emit('input', type)" />
+      <property-selector
+        slot="unwrapped-content"
+        @select="type => $emit('input', type)"
+      />
     </dialog-base>
     <div
       v-show="value"
