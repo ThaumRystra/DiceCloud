@@ -1,9 +1,9 @@
 <template lang="html">
   <v-card
     :hover="hasClickListener"
-    :elevation="hovering ? 8 : undefined"
     class="toolbar-card"
-    @click="$emit('click')"
+    :class="hovering ? 'elevation-8': ''"
+    @click.native="$emit('click')"
   >
     <v-toolbar
       flat
@@ -61,5 +61,8 @@
 <style lang="css">
 .toolbar-card .v-toolbar__title {
   font-size: 14px;
+}
+.toolbar-card {
+  transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 </style>
