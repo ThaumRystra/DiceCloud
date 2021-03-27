@@ -3,16 +3,14 @@
     :hover="hasClickListener"
     @click="click"
   >
-    <v-card-text>
-      <div class="layout align-center">
-        <div class="value text-h4 mr-1">
-          {{ computedValue }}
-        </div>
-        <div class="name text-truncate">
-          {{ model.name }}
-        </div>
-      </div>
-    </v-card-text>
+    <div class="layout align-center">
+      <v-card-title class="value text-h4">
+        {{ computedValue }}
+      </v-card-title>
+      <v-card-title class="name text-subtitle-1 text-truncate pl-0">
+        {{ model.name }}
+      </v-card-title>
+    </div>
   </v-card>
 </template>
 
@@ -53,6 +51,6 @@
 <style lang="css" scoped>
   .value {
     min-width: 64px;
-    text-align: center;
+    justify-content: center;
   }
 </style>
