@@ -3,7 +3,10 @@
     class="ability-list-tile"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-item-action class="mr-4">
+    <v-list-item-action
+      class="mr-4"
+      style="min-width: 40px;"
+    >
       <div class="text-h4 mod">
         <template v-if="swapScoresAndMods">
           <span :class="{'primary--text': model.currentValue !== model.value}">
