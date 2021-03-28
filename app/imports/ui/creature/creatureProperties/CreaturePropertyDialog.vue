@@ -19,6 +19,7 @@
         <component
           :is="model.type + 'Form'"
           v-if="editing"
+          :key="_id"
           class="creature-property-form"
           :model="model"
           @change="change"
@@ -28,6 +29,7 @@
         <component
           :is="model.type + 'Viewer'"
           v-else-if="!editing && $options.components[model.type + 'Viewer']"
+          :key="_id"
           class="creature-property-viewer"
           :model="model"
         />
@@ -108,10 +110,13 @@ export default {
   },
   data(){ return {
     editing: !!this.startInEditTab,
+    // CurrentId lags behind Id by one tick so that events fired by destroying
+    // forms keyed to the old ID are applied before the new ID overwrites it
+    currentId: undefined,
   }},
   meteor: {
     model(){
-      return CreatureProperties.findOne(this._id);
+      return CreatureProperties.findOne(this.currentId);
     },
     editPermission(){
       try {
@@ -136,6 +141,16 @@ export default {
       return this.creature && this.creature._id;
     },
   },
+  watch: {
+    _id: {
+      immediate: true,
+      handler(newId){
+        this.$nextTick(() => {
+          this.currentId = newId;
+        });
+      }
+    },
+  },
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -143,7 +158,7 @@ export default {
   methods: {
     getPropertyName,
     duplicate(){
-      duplicateProperty.call({_id: this._id}, (error) => {
+      duplicateProperty.call({_id: this.currentId}, (error) => {
         if (error) {
           console.error(error);
         }
@@ -156,25 +171,25 @@ export default {
     },
     change({path, value, ack}){
       if (path && path[0] === 'equipped'){
-        equipItem.call({_id: this._id, equipped: value}, (error) =>{
+        equipItem.call({_id: this.currentId, equipped: value}, (error) =>{
           if (error) console.warn(error);
           ack && ack(error && error.reason || error);
         });
         return;
       }
-      updateCreatureProperty.call({_id: this._id, path, value}, (error) =>{
+      updateCreatureProperty.call({_id: this.currentId, path, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
     },
     damage({operation, value, ack}){
-      damageProperty.call({_id: this._id, operation, value}, (error) =>{
+      damageProperty.call({_id: this.currentId, operation, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
     },
     push({path, value, ack}){
-      pushToProperty.call({_id: this._id, path, value}, (error) =>{
+      pushToProperty.call({_id: this.currentId, path, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
@@ -182,13 +197,13 @@ export default {
     pull({path, ack}){
       let itemId = get(this.model, path)._id;
       path.pop();
-      pullFromProperty.call({_id: this._id, path, itemId}, (error) =>{
+      pullFromProperty.call({_id: this.currentId, path, itemId}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
     },
     remove(){
-      const _id = this._id;
+      const _id = this.currentId;
       softRemoveProperty.call({_id});
       if (this.embedded){
         this.$emit('removed');

@@ -19,6 +19,7 @@
         <component
           :is="model.type + 'Form'"
           v-if="editing"
+          :key="_id"
           class="library-node-form"
           :model="model"
           @change="change"
@@ -28,6 +29,7 @@
         <component
           :is="model.type + 'Viewer'"
           v-else-if="!editing && $options.components[model.type + 'Viewer']"
+          :key="_id"
           class="creature-property-viewer"
           :model="model"
         />
@@ -115,10 +117,23 @@
     },
     data(){return {
       editing: !!this.startInEditTab,
+      // CurrentId lags behind Id by one tick so that events fired by destroying
+      // forms keyed to the old ID are applied before the new ID overwrites it
+      currentId: undefined,
     }},
+    watch: {
+      _id: {
+        immediate: true,
+        handler(newId){
+          this.$nextTick(() => {
+            this.currentId = newId;
+          });
+        }
+      },
+    },
     meteor: {
       model(){
-        return LibraryNodes.findOne(this._id);
+        return LibraryNodes.findOne(this.currentId);
       },
       editPermission(){
         try {
@@ -132,7 +147,7 @@
     methods: {
       getPropertyName,
       duplicate(){
-        duplicateNode.call({_id: this._id}, (error) => {
+        duplicateNode.call({_id: this.currentId}, (error) => {
           console.error(error);
           if (this.embedded){
             this.$emit('duplicated');
@@ -165,7 +180,7 @@
         });
       },
       change({path, value, ack}){
-        updateLibraryNode.call({_id: this._id, path, value}, (error) =>{
+        updateLibraryNode.call({_id: this.currentId, path, value}, (error) =>{
           if (ack){
             ack(error && error.reason || error);
           } else if (error){
@@ -174,7 +189,7 @@
         });
       },
       push({path, value, ack}){
-        pushToLibraryNode.call({_id: this._id, path, value}, (error) =>{
+        pushToLibraryNode.call({_id: this.currentId, path, value}, (error) =>{
           if (ack){
             ack(error && error.reason || error);
           } else if (error){
@@ -185,7 +200,7 @@
       pull({path, ack}){
         let itemId = get(this.model, path)._id;
         path.pop();
-        pullFromLibraryNode.call({_id: this._id, path, itemId}, (error) =>{
+        pullFromLibraryNode.call({_id: this.currentId, path, itemId}, (error) =>{
           if (ack){
             ack(error && error.reason || error);
           } else if (error){
@@ -194,7 +209,7 @@
         });
       },
       remove(){
-        softRemoveLibraryNode.call({_id: this._id});
+        softRemoveLibraryNode.call({_id: this.currentId});
         if (this.embedded){
           this.$emit('removed');
         } else {
