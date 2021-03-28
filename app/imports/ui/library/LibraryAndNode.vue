@@ -77,6 +77,7 @@ import InsertLibraryNodeButton from '/imports/ui/library/InsertLibraryNodeButton
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
 
 export default {
   components: {
@@ -101,7 +102,7 @@ export default {
     isToolbarDark(){
       return isDarkColor(
         this.selectedNode && this.selectedNode.color ||
-        this.$vuetify.theme.themes.light.secondary
+        getThemeColor('secondary')
       );
     }
   },

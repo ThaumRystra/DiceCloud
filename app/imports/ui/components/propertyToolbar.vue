@@ -123,6 +123,7 @@ import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import ColorPicker from '/imports/ui/components/ColorPicker.vue';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
 
 export default {
   components: {
@@ -142,7 +143,7 @@ export default {
       return isDarkColor(this.color);
     },
     color(){
-      return this.model && this.model.color || this.$vuetify.theme.themes.light.secondary;
+      return this.model && this.model.color || getThemeColor('secondary');
     },
     title(){
       let model = this.model;

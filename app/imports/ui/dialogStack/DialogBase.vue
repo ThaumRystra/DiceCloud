@@ -44,6 +44,7 @@
 </template>
 
 <script lang="js">
+  import getThemeColor from '/imports/ui/utility/getThemeColor.js';
   import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 
 	export default {
@@ -66,7 +67,7 @@
         return isDarkColor(this.computedColor);
       },
       computedColor(){
-        return this.color || this.$vuetify.theme.themes.light.secondary;
+        return this.color || getThemeColor('secondary');
       }
     },
 		methods: {

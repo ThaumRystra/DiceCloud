@@ -25,12 +25,14 @@
 
 <script lang="js">
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+  import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+
 	export default {
 		props: {
 			color: {
 				type: String,
 				default(){
-					return this.$vuetify.theme.themes.light.secondary;
+          return getThemeColor('secondary');
 				},
 			},
 		},

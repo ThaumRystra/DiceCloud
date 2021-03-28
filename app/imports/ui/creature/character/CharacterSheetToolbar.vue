@@ -129,6 +129,7 @@ import { assertEditPermission } from '/imports/api/creature/creaturePermissions.
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import CharacterSheetFab from '/imports/ui/creature/character/CharacterSheetFab.vue';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
 
 export default {
   inject: {
@@ -145,7 +146,7 @@ export default {
       if (this.creature && this.creature.color){
         return this.creature.color;
       } else {
-        return this.$vuetify.theme.themes.light.secondary;
+        return getThemeColor('secondary');
       }
     },
     isDark(){
