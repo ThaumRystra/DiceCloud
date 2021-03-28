@@ -105,7 +105,4 @@ export default {
 	.theme--dark .max-value {
 		color: rgba(255, 255, 255, 0.54);
 	}
-  .primary--text .v-icon, .primary--text .max-value, .primary--text .current-value, .primary--text .v-list__tile__sub-title {
-    color: #b71c1c
-  }
 </style>
