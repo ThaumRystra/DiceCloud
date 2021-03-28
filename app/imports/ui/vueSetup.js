@@ -47,8 +47,8 @@ Meteor.startup(() => {
     store,
     vuetify: new Vuetify({
       theme: {
-        dark: false,
         themes,
+        options: { variations: false },
         //options: { customProperties: true },
       },
       icons: {

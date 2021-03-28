@@ -1,8 +1,5 @@
 <template>
-  <v-app
-    :dark="darkMode"
-    :light="!darkMode"
-  >
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -106,7 +103,9 @@
 			darkMode: {
 				immediate: true,
 				handler(newDarkModeValue){
-          this.$vuetify.theme.dark = newDarkModeValue;
+          if (typeof newDarkModeValue === 'boolean'){
+            this.$vuetify.theme.dark = newDarkModeValue;
+          }
 				},
 			},
       '$route' (to) {

@@ -159,8 +159,14 @@
     transition: none !important;
   }
 	.theme--light .tree-node-title:hover {
-		background: rgba(0,0,0,.04);
+		background-color: rgba(0,0,0,.04);
 	}
+  .theme--dark .tree-node-title:hover {
+		background-color: rgba(255,255,255,.04);
+	}
+  .tree-node-title{
+    transition: background ease 0.3s, color ease 0.15s;
+  }
   .tree-node-title, .dummy-node {
     height: 40px;
   }
