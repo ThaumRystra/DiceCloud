@@ -3,6 +3,7 @@ import store from '/imports/ui/vuexStore.js';
 import VueMeteorTracker from 'vue-meteor-tracker';
 import AppLayout from '/imports/ui/layouts/AppLayout.vue';
 import ReactiveProvide from 'vue-reactive-provide';
+import VueObserverUtils from '@tozd/vue-observer-utils';
 import router from '/imports/ui/router.js';
 import themes from '/imports/ui/themes.js';
 import '/imports/ui/components/global/globalIndex.js';
@@ -35,7 +36,8 @@ Vue.use(Vuetify, {
 });
 Vue.use(ReactiveProvide, {
   name: 'reactiveProvide', // default value
-})
+});
+Vue.use(VueObserverUtils);
 
 // App start
 Meteor.startup(() => {

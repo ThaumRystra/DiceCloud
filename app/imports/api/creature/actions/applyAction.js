@@ -4,7 +4,7 @@ import embedInlineCalculations from '/imports/api/creature/computation/afterComp
 export default function applyAction({prop, log}){
   let content = { name: prop.name };
   if (prop.summary){
-    content.description = embedInlineCalculations(
+    content.value = embedInlineCalculations(
       prop.summary, prop.summaryCalculations
     );
   }

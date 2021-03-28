@@ -65,7 +65,7 @@
       name="rightDrawer"
     />
     <dialog-stack />
-    <snackbars />
+    <snackbar-queue />
   </v-app>
 </template>
 
@@ -74,13 +74,13 @@
   import Sidebar from '/imports/ui/layouts/Sidebar.vue';
   import DialogStack from '/imports/ui/dialogStack/DialogStack.vue';
   import { mapMutations } from 'vuex';
-  import Snackbars from '/imports/ui/components/snackbars/Snackbars.vue';
+  import SnackbarQueue from '/imports/ui/components/snackbars/SnackbarQueue.vue';
 
   export default {
     components: {
       Sidebar,
       DialogStack,
-      Snackbars,
+      SnackbarQueue,
     },
     data(){return {
       name: 'Home',

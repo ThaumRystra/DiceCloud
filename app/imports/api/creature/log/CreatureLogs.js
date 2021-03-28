@@ -58,6 +58,7 @@ function removeOldLogs(creatureId){
     sort: {date: -1},
     skip: PER_CREATURE_LOG_LIMIT,
   });
+  if (!firstExpiredLog) return;
   // Remove all logs older than the one over the limit
   CreatureLogs.remove({
     creatureId,
@@ -69,32 +70,10 @@ function logToMessageData(log){
   let embed = {
     fields: [],
   };
-  log.content.forEach(c => {
-    let field = {};
-    let descriptionField = {};
-    if (c.name) field.name = c.name;
-    let valueArray = [];
-    if (c.error) valueArray.push(`*${c.error}*`);
-    if (c.resultPrefix) valueArray.push(`${c.resultPrefix}`);
-    if (c.result) valueArray.push(`\`${c.result}\``);
-    if (c.details) valueArray.push(c.details);
-    if (valueArray.length) field.value = valueArray.join(' ');
-    if (c.description){
-      if (!field.value){
-        field.value = c.description;
-      } else {
-        descriptionField.value = c.description;
-      }
-    }
-    if (field.name || field.value){
-      if (!field.name) field.name = '\u200b';
-      if (!field.value) field.value = '\u200b';
-      embed.fields.push(field);
-    }
-    if (descriptionField.value){
-      descriptionField.name = '\u200b';
-      embed.fields.push(descriptionField);
-    }
+  log.content.forEach(field => {
+    if (!field.name) field.name = '\u200b';
+    if (!field.value) field.value = '\u200b';
+    embed.fields.push(field);
   });
   return { embeds: [embed] };
 }
@@ -109,7 +88,7 @@ function logWebhook({log, creature}){
 }
 
 const insertCreatureLog = new ValidatedMethod({
-  name: 'creatureLogs.methods.insertCreatureLog',
+  name: 'creatureLogs.methods.insert',
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
@@ -138,7 +117,7 @@ const insertCreatureLog = new ValidatedMethod({
 export function insertCreatureLogWork({log, creature, method}){
   // Build the new log
   if (typeof log === 'string'){
-    log = {text: log};
+    log = {content: [{value: log}]};
   }
   log.date = new Date();
   // Insert it
@@ -190,30 +169,30 @@ const logRoll = new ValidatedMethod({
       parsedResult = parse(roll);
     } catch (e){
       let error = prettifyParseError(e);
-      logContent.push({error});
+      logContent.push({name: 'Parse Error', value: error});
     }
     if (parsedResult) try {
       let rollContext = new CompilationContext();
       let compiled = parsedResult.compile(creature.variables, rollContext);
       let compiledString = compiled.toString();
       if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
-        details: roll
+        value: roll
       });
       logContent.push({
-        details: compiledString
+        value: compiledString
       });
       let rolled = compiled.roll(creature.variables, rollContext);
       let rolledString = rolled.toString();
       if (rolledString !== compiledString) logContent.push({
-        result: rolled.toString()
+        value: rolled.toString()
       });
       let result = rolled.reduce(creature.variables, rollContext);
       let resultString = result.toString();
       if (resultString !== rolledString) logContent.push({
-        result: resultString
+        value: resultString
       });
     } catch (e){
-      logContent = [{error: 'Calculation error'}];
+      logContent = [{name: 'Calculation error'}];
     }
     const log = {
       content: logContent,

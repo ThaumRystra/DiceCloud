@@ -42,15 +42,15 @@ export default function applyDamage({
   if (result.constructor.name === 'ErrorNode'){
     log.content.push({
       name: 'Damage error',
-      error: result.toString(),
+      value: result.toString(),
     });
     return;
   }
 
   // Memoise the damage suffix for the log
-  let suffix = (criticalHit ? ' critical ' : '') +
+  let suffix = (criticalHit ? ' critical ' : ' ') +
     prop.damageType +
-    (prop.damageType !== 'healing' ? ' damage': '');
+    (prop.damageType !== ' healing ' ? ' damage ': '');
 
   if (damageTargets && damageTargets.length) {
     // Iterate through all the targets
@@ -69,7 +69,7 @@ export default function applyDamage({
       if (result.constructor.name === 'ErrorNode' || !result.isNumber){
         log.content.push({
           name: 'Damage error',
-          error: result.toString(),
+          value: result.toString(),
         });
         return;
       }
@@ -86,26 +86,21 @@ export default function applyDamage({
         // Target is same as self, log damage as such
         log.content.push({
           name,
-          result: damageDealt,
-          details: suffix + ' to self',
+          value: damageDealt + suffix + ' to self',
         });
       } else {
         log.content.push({
           name,
-          resultPrefix: 'Dealt ',
-          result: damageDealt,
-          details: suffix + `${target.name && ' to '}${target.name}`,
+          value: 'Dealt ' + damageDealt + suffix + ` ${target.name && ' to '}${target.name}`,
         });
         // Log the damage received on that creature's log as well
         insertCreatureLog.call({
           log: {
+            creatureId: target._id,
             content: [{
               name,
-              resultPrefix: 'Recieved ',
-              result: damageDealt,
-              details: suffix,
+              value: 'Recieved ' + damageDealt + suffix,
             }],
-            creatureId: target._id,
           }
         });
       }
@@ -114,8 +109,7 @@ export default function applyDamage({
     // There are no targets, just log the result
     log.content.push({
       name: prop.damageType === 'healing' ? 'Healing' : 'Damage',
-      result: result.toString(),
-      details: suffix,
+      value: result.toString() + suffix,
     });
   }
 }

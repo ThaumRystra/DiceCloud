@@ -57,6 +57,7 @@ import softRemoveProperty from '/imports/api/creature/creatureProperties/methods
 import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -104,7 +105,7 @@ export default {
     },
     remove(model){
       softRemoveProperty.call({_id: model._id});
-      this.$store.dispatch('snackbar', {
+      snackbar({
         text: `Deleted ${getPropertyTitle(model)}`,
         callbackName: 'undo',
         callback(){

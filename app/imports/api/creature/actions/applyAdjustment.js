@@ -21,7 +21,7 @@ export default function applyAdjustment({
   context.errors.forEach(e => {
     log.content.push({
       name: 'Attribute damage error',
-      error: e.message || e.toString(),
+      value: e.message || e.toString(),
     });
   });
   if (damageTargets) {
@@ -41,15 +41,15 @@ export default function applyAdjustment({
       });
       log.content.push({
         name: 'Attribute damage',
-        resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
-        result: `${result.isNumber ? -result.value : result.toString()}`,
+        value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+        ` ${result.isNumber ? -result.value : result.toString()}`,
       });
     });
   } else {
     log.content.push({
       name: 'Attribute damage',
-      resultPrefix: `${prop.stat} ${prop.operation === 'set' ? 'set to' : ''}`,
-      result: `${result.isNumber ? -result.value : result.toString()}`,
+      value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+      ` ${result.isNumber ? -result.value : result.toString()}`,
     });
   }
 }

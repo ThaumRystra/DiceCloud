@@ -17,7 +17,6 @@ export default function applyAttack({
 
   log.content.push({
     name: criticalHit ? 'Critical Hit!' : 'To Hit',
-    resultPrefix: `1d20 [${value}] + ${prop.rollBonusResult} = `,
-    result,
+    value: `1d20 [${value}] + ${prop.rollBonusResult} = ` + result,
   });
 }

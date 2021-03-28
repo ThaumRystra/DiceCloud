@@ -53,6 +53,10 @@ export default class OperatorNode extends ParseNode {
   }
   toString(){
     let {left, right, operator} = this;
+    // special case of adding a negative number
+    if (operator === '+' && right.isNumber && right.value < 0){
+      return `${left.toString()} - ${-right.value}`
+    }
     return `${left.toString()} ${operator} ${right.toString()}`;
   }
   traverse(fn){

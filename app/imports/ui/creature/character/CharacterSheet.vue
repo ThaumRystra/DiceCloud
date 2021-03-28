@@ -78,6 +78,7 @@
   import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
   import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
   import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
+  import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 	export default {
 		components: {
@@ -119,13 +120,10 @@
       this.logObserver = CreatureLogs.find({
         creatureId: this.creatureId,
       }).observe({
-        added(doc){
+        added({content}){
           if (!that.$subReady.singleCharacter) return;
           if (that.$store.state.rightDrawer) return;
-          that.$store.dispatch('snackbar', {
-            text: doc.name,
-            showCloseButton: true,
-          });
+          snackbar({content});
         },
       });
     },

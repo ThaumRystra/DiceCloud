@@ -80,6 +80,7 @@ import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js'
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { get, findLast } from 'lodash';
 import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -194,7 +195,7 @@ export default {
       } else {
         this.$store.dispatch('popDialogStack');
       }
-      this.$store.dispatch('snackbar', {
+      snackbar({
         text: `Deleted ${getPropertyTitle(this.model)}`,
         callbackName: 'undo',
         callback(){
