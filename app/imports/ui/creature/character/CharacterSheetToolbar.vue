@@ -11,15 +11,15 @@
     dense
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />
-    <v-app-bar-title>
-      <v-fade-transition
-        mode="out-in"
-      >
-        <div :key="$store.state.pageTitle">
+    <v-fade-transition
+      mode="out-in"
+    >
+      <v-app-bar-title :key="$store.state.pageTitle">
+        <div>
           {{ $store.state.pageTitle }}
         </div>
-      </v-fade-transition>
-    </v-app-bar-title>
+      </v-app-bar-title>
+    </v-fade-transition>
     <v-spacer />
     <v-fade-transition
       mode="out-in"
