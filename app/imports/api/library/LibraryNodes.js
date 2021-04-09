@@ -11,6 +11,7 @@ import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js
 import { softRemove } from '/imports/api/parenting/softRemove.js';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
+import '/imports/api/library/methods/index.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -78,27 +79,6 @@ const insertNode = new ValidatedMethod({
 		return LibraryNodes.insert(libraryNode);
   },
 });
-
-const duplicateNode = new ValidatedMethod({
-  name: 'libraryNodes.duplicate',
-	validate: new SimpleSchema({
-    _id: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
-    }
-  }).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  run({_id}) {
-    let libraryNode = LibraryNodes.findOne(_id);
-    assertNodeEditPermission(libraryNode, this.userId);
-    delete libraryNode._id;
-		return LibraryNodes.insert(libraryNode);
-  },
-})
 
 const updateLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.update',
@@ -195,7 +175,6 @@ export default LibraryNodes;
 export {
 	LibraryNodeSchema,
 	insertNode,
-  duplicateNode,
 	updateLibraryNode,
 	pullFromLibraryNode,
 	pushToLibraryNode,

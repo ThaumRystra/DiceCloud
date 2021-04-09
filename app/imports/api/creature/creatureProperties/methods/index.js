@@ -1,4 +1,4 @@
-import '//imports/api/creature/creatureProperties/methods/adjustQuantity.js';
+import '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import '/imports/api/creature/creatureProperties/methods/damagePropertiesByName.js';
 import '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import '/imports/api/creature/creatureProperties/methods/dealDamage.js';
