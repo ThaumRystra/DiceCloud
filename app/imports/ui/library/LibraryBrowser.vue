@@ -23,36 +23,32 @@
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
+          <v-layout
+            justify-space-around
+            class="ma-2"
+          >
+            <insert-library-node-button
+              :library-id="library._id"
+              :selected-node-id="selectedNodeId"
+              @selected="e => $emit('selected', e)"
+            />
+            <v-btn
+              color="primary"
+              outlined
+              small
+              @click="$router.push(`/library/${library._id}`)"
+            >
+              <v-icon>arrow_forward</v-icon>
+            </v-btn>
+          </v-layout>
           <library-contents-container
             :library-id="library._id"
             :organize-mode="organizeMode && editPermission(library)"
             :edit-mode="editMode"
             :selected-node-id="selectedNodeId"
             should-subscribe
-            class="mb-4"
             @selected="e => $emit('selected', e)"
           />
-          <v-layout>
-            <v-btn
-              text
-              small
-              style="background-color: inherit; margin-top: 0;"
-              :disabled="!editPermission(library)"
-              :data-id="`insert-node-${library._id}`"
-              @click="insertLibraryNode(library._id)"
-            >
-              <v-icon>add</v-icon>
-              New property
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              small
-              icon
-              @click="$router.push(`/library/${library._id}`)"
-            >
-              <v-icon>arrow_forward</v-icon>
-            </v-btn>
-          </v-layout>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -76,10 +72,12 @@ import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContain
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import InsertLibraryNodeButton from '/imports/ui/library/InsertLibraryNodeButton.vue';
 
 export default {
   components: {
     LibraryContentsContainer,
+    InsertLibraryNodeButton,
   },
   props: {
     organizeMode: Boolean,

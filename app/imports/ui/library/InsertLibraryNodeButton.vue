@@ -1,12 +1,14 @@
 <template lang="html">
   <v-btn
-    fab
+    :fab="fab"
+    :outlined="!fab"
     small
     color="primary"
     data-id="insert-library-node-button"
     @click="insertLibraryNode"
   >
     <v-icon>add</v-icon>
+    <slot />
   </v-btn>
 </template>
 
@@ -22,43 +24,73 @@ export default {
       type: String,
       required: true,
     },
-    parentId: {
+    selectedNodeId: {
       type: String,
       default: undefined,
     },
-    parentCollection: {
-      type: String,
-      default: undefined,
-    },
+    fab: Boolean,
   },
   methods: {
     insertLibraryNode(){
       let libraryId = this.libraryId;
-      let tier = getUserTier(Meteor.userId())
-      if (tier && tier.paidBenefits){
-        let parentRef = {
-          id: this.parentId || libraryId,
-          collection: this.parentCollection || 'libraries',
-        };
-        let {ancestors} = getAncestry({parentRef});
-        this.$store.commit('pushDialogStack', {
-          component: 'library-node-creation-dialog',
-          elementId: 'insert-library-node-button',
-          callback(libraryNode){
-            if (!libraryNode) return;
-            libraryNode.parent = parentRef;
-            libraryNode.ancestors = ancestors;
-            setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
-            let libraryNodeId = insertNode.call(libraryNode);
-            return `tree-node-${libraryNodeId}`;
-          }
-        });
-      } else {
+
+      // Check tier has paid benefits
+      let tier = getUserTier(Meteor.userId());
+      if (!(tier && tier.paidBenefits)){
         this.$store.commit('pushDialogStack', {
           component: 'tier-too-low-dialog',
           elementId: 'insert-library-node-button',
         });
+        return;
       }
+
+      // Get ancestry reference
+      let order, parentRef;
+      let selectedComponent = document.querySelector(
+        `[data-id="tree-node-${this.selectedNodeId}"]`
+      );
+      if (selectedComponent){
+        let vueInstance = selectedComponent.__vue__.$parent;
+        if (vueInstance.showExpanded){
+          parentRef = {
+            id: this.selectedNodeId,
+            collection: 'libraryNodes',
+          };
+        } else {
+          parentRef = vueInstance.node.parent;
+          order = vueInstance.node.order + 0.5;
+        }
+      } else {
+        parentRef = {
+          id: libraryId,
+          collection: 'libraries',
+        };
+      }
+      let {ancestors} = getAncestry({parentRef});
+
+      // Insert form dialog
+      let that = this;
+      this.$store.commit('pushDialogStack', {
+        component: 'library-node-creation-dialog',
+        elementId: 'insert-library-node-button',
+        callback(libraryNode){
+          if (!libraryNode) return;
+
+          // Set ancestry and order
+          libraryNode.parent = parentRef;
+          libraryNode.ancestors = ancestors;
+          if (order){
+            libraryNode.order = order;
+          } else {
+            setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
+          }
+
+          // Insert doc
+          let libraryNodeId = insertNode.call(libraryNode);
+          that.$emit('selected', libraryNodeId);
+          return `tree-node-${libraryNodeId}`;
+        }
+      });
     },
   }
 }

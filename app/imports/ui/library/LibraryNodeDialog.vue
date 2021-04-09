@@ -71,12 +71,12 @@
 
 <script lang="js">
   import LibraryNodes, {
-    duplicateNode,
     updateLibraryNode,
     pushToLibraryNode,
     pullFromLibraryNode,
     softRemoveLibraryNode,
   } from '/imports/api/library/LibraryNodes.js';
+  import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode.js';
   import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
   import PropertyToolbar from '/imports/ui/components/propertyToolbar.vue';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
@@ -147,10 +147,12 @@
     methods: {
       getPropertyName,
       duplicate(){
-        duplicateNode.call({_id: this.currentId}, (error) => {
-          console.error(error);
+        duplicateLibraryNode.call({
+          _id: this.currentId
+        }, (error, duplicateId) => {
+          if (error) console.error(error);
           if (this.embedded){
-            this.$emit('duplicated');
+            this.$emit('duplicated', duplicateId);
           } else {
             this.$store.dispatch('popDialogStack');
           }

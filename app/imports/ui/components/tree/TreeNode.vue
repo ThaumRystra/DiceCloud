@@ -100,7 +100,7 @@
 		}},
 		computed: {
 			hasChildren(){
-				return this.children && this.children.length || this.lazy && !this.expanded;
+				return this.children && !!this.children.length || this.lazy && !this.expanded;
 			},
 			showExpanded(){
 				return this.expanded && (this.organize || this.hasChildren)

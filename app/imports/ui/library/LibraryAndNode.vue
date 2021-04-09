@@ -28,7 +28,10 @@
         <insert-library-node-button
           v-if="libraryId"
           style="bottom: -32px"
+          fab
           :library-id="libraryId"
+          :selected-node-id="selected"
+          @selected="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
         />
       </v-toolbar>
       <div
@@ -61,6 +64,7 @@
         :_id="selected"
         embedded
         @removed="selected = undefined"
+        @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
       />
     </div>
   </tree-detail-layout>
