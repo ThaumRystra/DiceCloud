@@ -34,7 +34,9 @@ const duplicateLibraryNode = new ValidatedMethod({
   run({_id}) {
     let libraryNode = LibraryNodes.findOne(_id);
     assertDocEditPermission(libraryNode, this.userId);
-    let libraryNodeId = Random.id();
+
+    let randomSrc = DDP.randomStream('duplicateLibraryNode');
+    let libraryNodeId = randomSrc.id();
     libraryNode._id = libraryNodeId;
 
     let nodes = LibraryNodes.find({

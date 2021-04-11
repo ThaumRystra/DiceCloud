@@ -10,7 +10,11 @@ const InlineComputationSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  errors: ErrorSchema,
+  errors: {
+    type: Array,
+    optional: true,
+  },
+  'errors.$': ErrorSchema,
 });
 
 export default InlineComputationSchema;

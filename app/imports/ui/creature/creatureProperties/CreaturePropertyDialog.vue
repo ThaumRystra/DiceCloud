@@ -158,12 +158,12 @@ export default {
   methods: {
     getPropertyName,
     duplicate(){
-      duplicateProperty.call({_id: this.currentId}, (error) => {
+      duplicateProperty.call({_id: this.currentId}, (error, id) => {
         if (error) {
           console.error(error);
         }
         if (this.embedded){
-          this.$emit('duplicated');
+          this.$emit('duplicated', id);
         } else {
           this.$store.dispatch('popDialogStack');
         }

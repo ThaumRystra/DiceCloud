@@ -53,6 +53,7 @@
             embedded
             :_id="selected"
             @removed="selected = undefined"
+            @duplicated="id => selected = id"
           />
         </template>
       </tree-detail-layout>

@@ -33,7 +33,7 @@ const AdjustmentSchema = new SimpleSchema({
 
 const ComputedOnlyAdjustmentSchema = new SimpleSchema({
   amountResult: {
-    type: SimpleSchema.Integer,
+    type: SimpleSchema.oneOf(String, Number),
     optional: true,
   },
   amountErrors: {
