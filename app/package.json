@@ -29,6 +29,7 @@
     "discord.js": "^12.2.0",
     "dompurify": "^2.0.10",
     "ignore": "^5.1.8",
+    "ignore-styles": "^5.0.1",
     "lodash": "^4.17.20",
     "marked": "^0.8.2",
     "meteor-node-stubs": "^1.0.3",
@@ -53,7 +54,6 @@
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^7.0.0-alpha.0",
     "eslint-plugin-vuetify": "^1.0.0-beta.8",
-    "ignore-styles": "^5.0.1",
     "mem": "^6.0.1",
     "sass": "^1.32.8"
   },
