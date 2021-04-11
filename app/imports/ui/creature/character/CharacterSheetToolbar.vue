@@ -101,7 +101,7 @@
           <v-tab>
             Inventory
           </v-tab>
-          <v-tab v-if="!creature.settings.hideSpellsTab">
+          <v-tab v-show="!creature.settings.hideSpellsTab">
             Spells
           </v-tab>
           <v-tab>

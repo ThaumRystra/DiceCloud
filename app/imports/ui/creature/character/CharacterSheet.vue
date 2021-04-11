@@ -51,7 +51,7 @@
           <v-tab-item>
             <inventory-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item v-if="!creature.settings.hideSpellsTab">
+          <v-tab-item v-show="!creature.settings.hideSpellsTab">
             <spells-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
