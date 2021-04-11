@@ -36,16 +36,26 @@
       :disabled="!editPermission"
       @click="insertPropertyOfType(type)"
     />
-    <labeled-fab
-      v-if="tabNumber === 5"
-      key="property"
-      color="primary"
-      data-id="insert-creature-property-btn"
-      label="New Property"
-      icon="add"
-      :disabled="!editPermission"
-      @click="insertTreeProperty"
-    />
+    <template v-if="tabNumber === 5">
+      <labeled-fab
+        key="property"
+        color="primary"
+        data-id="insert-creature-property-btn"
+        label="New Property"
+        icon="create"
+        :disabled="!editPermission"
+        @click="insertTreeProperty"
+      />
+      <labeled-fab
+        key="property"
+        color="primary"
+        data-id="insert-creature-property-from-library-btn"
+        label="Property From Library"
+        icon="book"
+        :disabled="!editPermission"
+        @click="propertyFromLibrary"
+      />
+    </template>
   </v-speed-dial>
 </template>
 
@@ -55,6 +65,54 @@
   import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
+  import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+
+  function getParentAndOrderFromSelectedTreeNode(creatureId){
+    // find the parent based on the currently selected property
+    let el = document.querySelector('.tree-tab .tree-node-title.primary--text');
+    let selectedComponent = el && el.parentElement.__vue__.$parent;
+    let parentRef, order;
+    if (selectedComponent){
+      if (selectedComponent.showExpanded){
+        parentRef = {
+          id: selectedComponent.node._id,
+          collection: 'creatureProperties',
+        };
+        order = getHighestOrder({
+          collection: CreatureProperties,
+          ancestorId: parentRef.id,
+        }) + 0.5;
+      } else {
+        parentRef = selectedComponent.node.parent;
+        order = selectedComponent.node.order + 0.5;
+      }
+    } else {
+      parentRef = {collection: 'creatures', id: creatureId};
+      order = getHighestOrder({
+        collection: CreatureProperties,
+        ancestorId: parentRef.id,
+      }) + 0.5;
+    }
+    return {parentRef, order}
+  }
+
+  function hideFab(){
+    let fab = document.querySelector('.insert-creature-property-fab');
+    if (fab) fab.style.opacity = '0';
+    return fab;
+  }
+
+  function revealFab(fab){
+    if (!fab) return;
+    // Bring back the fab with scale up animation
+    fab.style.transition = 'none';
+    fab.style.opacity = '';
+    fab.style.transform = 'scale(0)';
+    setTimeout(()=> {
+      fab.style.transform = '';
+      fab.style.transition = '';
+    }, 400);
+  }
 
   const tabs = [
     'stats',
@@ -100,9 +158,7 @@
     methods: {
       insertPropertyOfType(type){
         let creatureId = this.creatureId;
-        // hide the whole fab
-        let fab = document.querySelector('.insert-creature-property-fab');
-        if (fab) fab.style.opacity = '0'
+        let fab = hideFab();
 
         // Open the dialog to insert the property
         this.$store.commit('pushDialogStack', {
@@ -113,17 +169,7 @@
           },
           callback(creatureProperty){
             if (!creatureProperty) return 'insert-creature-property-fab';
-
-            // Bring back the fab with scale up animation
-            if (fab){
-              fab.style.transition = 'none';
-              fab.style.opacity = '';
-              fab.style.transform = 'scale(0)';
-              setTimeout(()=> {
-                fab.style.transform = '';
-                fab.style.transition = '';
-              }, 400);
-            }
+            revealFab(fab);
 
             // Insert the property
             creatureProperty.order = getHighestOrder({
@@ -140,56 +186,40 @@
       },
       insertTreeProperty(){
         let creatureId = this.creatureId;
-        // hide the whole fab
-        let fab = document.querySelector('.insert-creature-property-fab');
-        if (fab) fab.style.opacity = '0'
-
+        let fab = hideFab();
         // Open the dialog to insert the property
         this.$store.commit('pushDialogStack', {
           component: 'creature-property-creation-dialog',
           elementId: 'insert-creature-property-btn',
           callback(creatureProperty){
             if (!creatureProperty) return 'insert-creature-property-fab';
+            revealFab(fab);
 
-            // Bring back the fab with scale up animation
-            if (fab){
-              fab.style.transition = 'none';
-              fab.style.opacity = '';
-              fab.style.transform = 'scale(0)';
-              setTimeout(()=> {
-                fab.style.transform = '';
-                fab.style.transition = '';
-              }, 400);
-            }
-
-            // find the parent based on the currently selected property
-            let el = document.querySelector('.tree-node-title.primary--text');
-            let selectedComponent = el && el.parentElement.__vue__.$parent;
-            let parentRef;
-            if (selectedComponent){
-              if (selectedComponent.showExpanded){
-                parentRef = {
-                  id: selectedComponent.node._id,
-                  collection: 'creatureProperties',
-                };
-                creatureProperty.order = getHighestOrder({
-                  collection: CreatureProperties,
-                  ancestorId: parentRef.id,
-                }) + 0.5;
-              } else {
-                parentRef = selectedComponent.node.parent;
-                creatureProperty.order = selectedComponent.node.order + 0.5;
-              }
-            } else {
-              parentRef = {collection: 'creatures', id: creatureId};
-              creatureProperty.order = getHighestOrder({
-                collection: CreatureProperties,
-                ancestorId: parentRef.id,
-              }) + 0.5;
-            }
+            // Get order and parent
+            let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
+            creatureProperty.order = order;
 
             // Insert the property
             let id = insertProperty.call({creatureProperty, parentRef});
+            return `tree-node-${id}`;
+          }
+        });
+      },
+      propertyFromLibrary(){
+        let creatureId = this.creatureId;
+        let fab = hideFab();
+
+        this.$store.commit('pushDialogStack', {
+          component: 'creature-property-from-library-dialog',
+          elementId: 'insert-creature-property-from-library-btn',
+          callback(libraryNode){
+            if (!libraryNode) return;
+            revealFab(fab);
+
+            let nodeId = libraryNode._id;
+            let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
+
+            let id = insertPropertyFromLibraryNode.call({nodeId, parentRef, order});
             return `tree-node-${id}`;
           }
         });

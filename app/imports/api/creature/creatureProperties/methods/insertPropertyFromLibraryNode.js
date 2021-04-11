@@ -27,13 +27,17 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		parentRef: {
 			type: RefSchema,
 		},
+    order: {
+      type: Number,
+      optional: true,
+    },
 	}).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-	run({nodeId, parentRef}) {
+	run({nodeId, parentRef, order}) {
 		// get the new ancestry for the properties
 		let {parentDoc, ancestors} = getAncestry({parentRef});
 
@@ -79,10 +83,14 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		});
 
 		// Order the root node
-		setDocToLastOrder({
-			collection: CreatureProperties,
-			doc: node,
-		});
+    if (order === undefined){
+      setDocToLastOrder({
+        collection: CreatureProperties,
+        doc: node,
+      });
+    } else {
+      node.order = order;
+    }
 
 		// Insert the creature properties
     CreatureProperties.batchInsert(nodes);

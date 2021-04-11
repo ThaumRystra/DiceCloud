@@ -248,5 +248,6 @@ export default {
 .character-sheet-fab {
   bottom: -24px;
   right: 8px;
+  margin-left: 16px;
 }
 </style>
