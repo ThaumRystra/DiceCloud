@@ -18,6 +18,8 @@
           type="text"
           label="Username or email"
           :rules="nameRules"
+          class="ma-2"
+          outlined
           required
           @keyup.enter="submit"
         />
@@ -26,6 +28,8 @@
           type="password"
           label="Password"
           :rules="passwordRules"
+          class="ma-2"
+          outlined
           required
           @keyup.enter="submit"
         />
@@ -39,6 +43,7 @@
           <v-btn
             :disabled="!valid"
             color="accent"
+            class="ma-2"
             @click="submit"
           >
             Sign In
@@ -46,6 +51,7 @@
           <v-btn
             color="accent"
             :to="{ name: 'register', query: { redirect: this.$route.query.redirect} }"
+            class="ma-2"
           >
             Register
           </v-btn>
@@ -62,6 +68,7 @@
       </div>
       <v-btn
         color="accent"
+        class="ma-2"
         @click="googleLogin"
       >
         Sign in with Google
@@ -71,6 +78,7 @@
       </div>
       <v-btn
         color="accent"
+        class="ma-2"
         @click="patreonLogin"
       >
         Sign in with Patreon
@@ -80,8 +88,7 @@
 </template>
 
 <script lang="js">
-  import { Meteor } from 'meteor/meteor'
-	export default{
+	export default {
 		data: () => ({
       valid: true,
       name: '',
