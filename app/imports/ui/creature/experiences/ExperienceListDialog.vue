@@ -32,7 +32,7 @@
       v-else-if="experiences.length === 0"
       class="layout column align-center justify-center fill-height"
     >
-      <v-icon style="font-size: 240px; width: 240px; height: 240px;">
+      <v-icon class="big-icon">
         $vuetify.icons.baby_face
       </v-icon>
       <p class="text-h5">
@@ -168,5 +168,9 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.big-icon, .big-icon * {
+  width: 240px !important;
+  height: 240px !important;
+}
 </style>
