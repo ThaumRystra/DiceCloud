@@ -1,6 +1,6 @@
 <template lang="html">
   <v-speed-dial
-    v-if="speedDials && speedDials.length"
+    v-if="speedDials"
     v-model="fab"
     direction="bottom"
   >
@@ -36,12 +36,22 @@
       :disabled="!editPermission"
       @click="insertPropertyOfType(type)"
     />
+    <labeled-fab
+      v-if="tabNumber === 5"
+      key="property"
+      color="primary"
+      data-id="insert-creature-property-btn"
+      label="New Property"
+      icon="add"
+      :disabled="!editPermission"
+      @click="insertTreeProperty"
+    />
   </v-speed-dial>
 </template>
 
 <script lang="js">
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
-  import { setDocToLastOrder } from '/imports/api/parenting/order.js';
+  import { getHighestOrder } from '/imports/api/parenting/order.js';
   import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
@@ -81,6 +91,7 @@
         'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
         'character': ['note'],
+        'tree': [],
       };},
       properties(){
         return PROPERTIES;
@@ -88,7 +99,7 @@
     },
     methods: {
       insertPropertyOfType(type){
-        let that = this;
+        let creatureId = this.creatureId;
         // hide the whole fab
         let fab = document.querySelector('.insert-creature-property-fab');
         if (fab) fab.style.opacity = '0'
@@ -115,14 +126,74 @@
             }
 
             // Insert the property
-            creatureProperty.parent = {collection: 'creatures', id: that.creatureId};
-            creatureProperty.ancestors = [ {collection: 'creatures', id: that.creatureId}];
-            setDocToLastOrder({collection: CreatureProperties, doc: creatureProperty});
-            let id = insertProperty.call({creatureProperty});
+            creatureProperty.order = getHighestOrder({
+              collection: CreatureProperties,
+              ancestorId: creatureId
+            }) + 1;
+            let id = insertProperty.call({
+              creatureProperty,
+              parentRef: {collection: 'creatures', id: creatureId},
+            });
             return id;
           }
         });
-      }
+      },
+      insertTreeProperty(){
+        let creatureId = this.creatureId;
+        // hide the whole fab
+        let fab = document.querySelector('.insert-creature-property-fab');
+        if (fab) fab.style.opacity = '0'
+
+        // Open the dialog to insert the property
+        this.$store.commit('pushDialogStack', {
+          component: 'creature-property-creation-dialog',
+          elementId: 'insert-creature-property-btn',
+          callback(creatureProperty){
+            if (!creatureProperty) return 'insert-creature-property-fab';
+
+            // Bring back the fab with scale up animation
+            if (fab){
+              fab.style.transition = 'none';
+              fab.style.opacity = '';
+              fab.style.transform = 'scale(0)';
+              setTimeout(()=> {
+                fab.style.transform = '';
+                fab.style.transition = '';
+              }, 400);
+            }
+
+            // find the parent based on the currently selected property
+            let el = document.querySelector('.tree-node-title.primary--text');
+            let selectedComponent = el && el.parentElement.__vue__.$parent;
+            let parentRef;
+            if (selectedComponent){
+              if (selectedComponent.showExpanded){
+                parentRef = {
+                  id: selectedComponent.node._id,
+                  collection: 'creatureProperties',
+                };
+                creatureProperty.order = getHighestOrder({
+                  collection: CreatureProperties,
+                  ancestorId: parentRef.id,
+                }) + 0.5;
+              } else {
+                parentRef = selectedComponent.node.parent;
+                creatureProperty.order = selectedComponent.node.order + 0.5;
+              }
+            } else {
+              parentRef = {collection: 'creatures', id: creatureId};
+              creatureProperty.order = getHighestOrder({
+                collection: CreatureProperties,
+                ancestorId: parentRef.id,
+              }) + 0.5;
+            }
+
+            // Insert the property
+            let id = insertProperty.call({creatureProperty, parentRef});
+            return `tree-node-${id}`;
+          }
+        });
+      },
     }
   }
 </script>
