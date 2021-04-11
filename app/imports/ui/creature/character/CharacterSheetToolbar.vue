@@ -78,7 +78,7 @@
         class="layout"
       >
         <v-tabs
-          v-if="creature"
+          v-if="creature && creature.settings"
           class="flex"
           style="min-width: 0"
           centered
@@ -101,13 +101,13 @@
           <v-tab>
             Inventory
           </v-tab>
-          <v-tab>
+          <v-tab v-if="!creature.settings.hideSpellsTab">
             Spells
           </v-tab>
           <v-tab>
             Character
           </v-tab>
-          <v-tab>
+          <v-tab v-if="creature.settings.showTreeTab">
             Tree
           </v-tab>
         </v-tabs>

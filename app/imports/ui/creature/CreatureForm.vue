@@ -39,6 +39,28 @@
           :input-value="model.settings.hideUnusedStats"
           @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value})"
         />
+        <v-switch
+          label="Show spells tab"
+          :input-value="!model.settings.hideSpellsTab"
+          @change="value => {
+            $emit('change', {path: ['settings','hideSpellsTab'], value: !value});
+            $store.commit(
+              'setTabForCharacterSheet',
+              {id: model._id, tab: 0}
+            );
+          }"
+        />
+        <v-switch
+          label="Show tree tab"
+          :input-value="model.settings.showTreeTab"
+          @change="value => {
+            $emit('change', {path: ['settings','showTreeTab'], value: !!value});
+            $store.commit(
+              'setTabForCharacterSheet',
+              {id: model._id, tab: 0}
+            );
+          }"
+        />
         <text-field
           label="Hit Dice reset multiplier"
           hint="What fraction of your hit dice are reset every long rest"

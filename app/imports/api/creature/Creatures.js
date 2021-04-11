@@ -35,6 +35,16 @@ let CreatureSettingsSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  // Show the tree tab
+  showTreeTab: {
+    type: Boolean,
+    optional: true,
+  },
+  // Hide the spells tab
+  hideSpellsTab: {
+    type: Boolean,
+    optional: true,
+  },
   // How much each hitDice resets on a long rest
   hitDiceResetMultiplier: {
     type: Number,
