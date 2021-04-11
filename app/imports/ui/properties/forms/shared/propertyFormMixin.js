@@ -10,9 +10,14 @@ export default {
     },
   },
   mounted(){
-    if (this.$refs.focusFirst && this.$refs.focusFirst.focus){
-      setTimeout(() => this.$refs.focusFirst.focus(), 300);
-    }
+    // Don't autofocus on mobile, it brings up the on-screen keyboard
+    if (this.$vuetify.breakpoint.smAndDown) return;
+
+    setTimeout(() => {
+      if (this.$refs.focusFirst && this.$refs.focusFirst.focus){
+        this.$refs.focusFirst.focus()
+      }
+    }, 300);
   },
   methods: {
     change(path, value, ack){
