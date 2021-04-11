@@ -7,6 +7,7 @@ import { reorderDocs } from '/imports/api/parenting/order.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import { getAncestry } from '/imports/api/parenting/parenting.js';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
@@ -16,9 +17,24 @@ const insertProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({creatureProperty}) {
-    let rootCreature = getRootCreatureAncestor(creatureProperty);
+  run({creatureProperty, parentRef}) {
+    // get the new ancestry for the properties
+		let {parentDoc, ancestors} = getAncestry({parentRef});
+
+		// Check permission to edit
+    let rootCreature;
+		if (parentRef.collection === 'creatures'){
+      rootCreature = parentDoc;
+		} else if (parentRef.collection === 'creatureProperties'){
+      rootCreature = getRootCreatureAncestor(parentDoc);
+		} else {
+			throw `${parentRef.collection} is not a valid parent collection`
+		}
     assertEditPermission(rootCreature, this.userId);
+
+    creatureProperty.parent = parentRef;
+    creatureProperty.ancestors = ancestors;
+
 		return insertPropertyWork({
       property: creatureProperty,
       creature: rootCreature,
