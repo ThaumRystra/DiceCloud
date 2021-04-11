@@ -213,7 +213,7 @@
           component: 'creature-property-from-library-dialog',
           elementId: 'insert-creature-property-from-library-btn',
           callback(libraryNode){
-            if (!libraryNode) return;
+            if (!libraryNode) return 'insert-creature-property-fab';
             revealFab(fab);
 
             let nodeId = libraryNode._id;
