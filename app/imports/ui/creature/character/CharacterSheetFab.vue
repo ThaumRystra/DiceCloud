@@ -10,14 +10,19 @@
         color="primary"
         fab
         data-id="insert-creature-property-fab"
+        class="insert-creature-property-fab"
         small
       >
-        <v-icon v-if="fab">
-          close
-        </v-icon>
-        <v-icon v-else>
-          add
-        </v-icon>
+        <transition
+          name="fab-rotate"
+        >
+          <v-icon
+            style="transition: transform 0.2s ease-in-out"
+            :style="fab && 'transform: rotate(45deg)'"
+          >
+            add
+          </v-icon>
+        </transition>
       </v-btn>
     </template>
 
@@ -84,6 +89,11 @@
     methods: {
       insertPropertyOfType(type){
         let that = this;
+        // hide the whole fab
+        let fab = document.querySelector('.insert-creature-property-fab');
+        if (fab) fab.style.opacity = '0'
+
+        // Open the dialog to insert the property
         this.$store.commit('pushDialogStack', {
           component: 'creature-property-creation-dialog',
           elementId: 'insert-creature-property-type-' + type,
@@ -91,7 +101,20 @@
             forcedType: type,
           },
           callback(creatureProperty){
-            if (!creatureProperty) return;
+            if (!creatureProperty) return 'insert-creature-property-fab';
+
+            // Bring back the fab with scale up animation
+            if (fab){
+              fab.style.transition = 'none';
+              fab.style.opacity = '';
+              fab.style.transform = 'scale(0)';
+              setTimeout(()=> {
+                fab.style.transform = '';
+                fab.style.transition = '';
+              }, 400);
+            }
+
+            // Insert the property
             creatureProperty.parent = {collection: 'creatures', id: that.creatureId};
             creatureProperty.ancestors = [ {collection: 'creatures', id: that.creatureId}];
             setDocToLastOrder({collection: CreatureProperties, doc: creatureProperty});
@@ -105,4 +128,7 @@
 </script>
 
 <style lang="css" scoped>
+  .insert-creature-property-fab {
+    transition: transform 0.07s cubic-bezier(0.5, 0.2, 0.8, 0.4) 0s;
+  }
 </style>
