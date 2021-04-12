@@ -7,7 +7,7 @@
     :menu-props="{auto: true, lazy: true}"
     :search-input.sync="searchInput"
     :disabled="isDisabled"
-    filled
+    outlined
     @change="customChange"
     @focus="focused = true"
     @blur="focused = false"

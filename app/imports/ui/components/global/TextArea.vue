@@ -6,7 +6,7 @@
     :value="safeValue"
     :disabled="isDisabled"
     :auto-grow="autoGrow"
-    filled
+    outlined
     @input="input"
     @focus="focused = true"
     @blur="focused = false"
