@@ -62,7 +62,7 @@
 <script lang="js">
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
   import { getHighestOrder } from '/imports/api/parenting/order.js';
-  import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
+  import insertProperty, { insertPropertyAsChildOfTag } from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
   import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
@@ -176,9 +176,24 @@
               collection: CreatureProperties,
               ancestorId: creatureId
             }) + 1;
-            let id = insertProperty.call({
+
+            let tagDetails;
+            switch (type){
+              case 'item':
+                tagDetails = {tag: 'carried', name: 'Carried'};
+                break;
+              case 'container':
+                tagDetails = {tag: 'inventory', name: 'Inventory'};
+                break;
+              default:
+                tagDetails = {tag: `${type}s`};
+                break;
+            }
+            let id = insertPropertyAsChildOfTag.call({
               creatureProperty,
-              parentRef: {collection: 'creatures', id: creatureId},
+              creatureId,
+              tag: tagDetails.tag,
+              tagDefaultName: tagDetails.name,
             });
             return id;
           }

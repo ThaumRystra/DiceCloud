@@ -11,6 +11,7 @@ import recomputeInventory from '/imports/api/creature/denormalise/recomputeInven
 import { getAncestry } from '/imports/api/parenting/parenting.js';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { getHighestOrder } from '/imports/api/parenting/order.js';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
@@ -66,13 +67,18 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
       type: String,
       max: 20,
     },
+    tagDefaultName: {
+      type: String,
+      max: 20,
+      optional: true,
+    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({creatureProperty, creatureId, tag}) {
+  run({creatureProperty, creatureId, tag, tagDefaultName}) {
     let parentRef = getParentRefByTag(creatureId, tag);
 
     if (!parentRef){
@@ -97,17 +103,23 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
 
     // Add the folder first if we need to
     if (insertFolderFirst){
+      let order = getHighestOrder({
+        collection: CreatureProperties,
+        ancestorId: parentRef.id,
+      }) + 1;
       let id = CreatureProperties.insert({
         type: 'folder',
-        name: tag.charAt(0).toUpperCase() + tag.slice(1),
+        name: tagDefaultName || (tag.charAt(0).toUpperCase() + tag.slice(1)),
         tags: [tag],
         parent: parentRef,
         ancestors: [parentRef],
+        order,
       });
       // Make the folder our new parent
       let newParentRef = {id, collection: 'creatureProperties'};
       ancestors = [parentRef, newParentRef];
       parentRef = newParentRef;
+      creatureProperty.order = order + 1;
     }
 
     creatureProperty.parent = parentRef;
