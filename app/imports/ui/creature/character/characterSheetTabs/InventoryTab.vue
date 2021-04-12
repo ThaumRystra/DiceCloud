@@ -104,8 +104,8 @@ import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
-import { getParentRefByTag } from '/imports/api/creature/creatureProperties/methods/equipItem.js';
-import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
+import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 
 export default {
@@ -183,10 +183,10 @@ export default {
 			});
     },
     equipmentParentRef(){
-      return getParentRefByTag(this.creatureId, INVENTORY_TAGS.equipment);
+      return getParentRefByTag(this.creatureId, BUILT_IN_TAGS.equipment);
     },
     carriedParentRef(){
-      return getParentRefByTag(this.creatureId, INVENTORY_TAGS.carried);
+      return getParentRefByTag(this.creatureId, BUILT_IN_TAGS.carried);
     },
 	},
 	computed: {
