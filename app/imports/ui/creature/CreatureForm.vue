@@ -42,24 +42,12 @@
         <v-switch
           label="Show spells tab"
           :input-value="!model.settings.hideSpellsTab"
-          @change="value => {
-            $emit('change', {path: ['settings','hideSpellsTab'], value: !value});
-            $store.commit(
-              'setTabForCharacterSheet',
-              {id: model._id, tab: 0}
-            );
-          }"
+          @change="changeHideSpellsTab"
         />
         <v-switch
           label="Show tree tab"
           :input-value="model.settings.showTreeTab"
-          @change="value => {
-            $emit('change', {path: ['settings','showTreeTab'], value: !!value});
-            $store.commit(
-              'setTabForCharacterSheet',
-              {id: model._id, tab: 0}
-            );
-          }"
+          @change="changeShowTreeTab"
         />
         <text-field
           label="Hit Dice reset multiplier"
@@ -129,6 +117,34 @@ export default {
 		},
     disabled: Boolean,
 	},
+  methods: {
+    changeShowTreeTab(value){
+      this.$emit('change', {
+        path: ['settings','showTreeTab'],
+        value: !!value
+      });
+      let currentTab = this.$store.getters.tabById(this.model._id);
+      if (!value && currentTab === 5){
+        this.$store.commit(
+          'setTabForCharacterSheet',
+          {id: this.model._id, tab: 4}
+        );
+      }
+    },
+    changeHideSpellsTab(value){
+      this.$emit('change', {
+        path: ['settings','hideSpellsTab'],
+        value: !value
+      });
+      let currentTab = this.$store.getters.tabById(this.model._id);
+      if (!value && currentTab === 3){
+        this.$store.commit(
+          'setTabForCharacterSheet',
+          {id: this.model._id, tab: 4}
+        );
+      }
+    },
+  },
 };
 </script>
 
