@@ -279,6 +279,7 @@
     pointer-events: initial;
     z-index: 1;
     overflow: hidden;
+    transition: all .3s ease;
   }
   .dialog > * {
     height: 100%;
