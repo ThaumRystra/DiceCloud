@@ -6,7 +6,7 @@
       class="step-1"
     >
       <v-toolbar-title slot="toolbar">
-        Add Library Content
+        Property Type
       </v-toolbar-title>
       <property-selector
         slot="unwrapped-content"

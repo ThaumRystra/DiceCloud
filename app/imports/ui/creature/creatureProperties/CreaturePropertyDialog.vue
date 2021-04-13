@@ -44,6 +44,14 @@
           :root="{collection: 'creatureProperties', id: model._id}"
           @selected="selectSubProperty"
         />
+        <v-btn
+          text
+          data-id="insert-creature-property-btn"
+          @click="addProperty"
+        >
+          <v-icon>add</v-icon>
+          Property
+        </v-btn>
       </template>
     </template>
     <div
@@ -83,6 +91,8 @@ import { assertEditPermission } from '/imports/api/creature/creaturePermissions.
 import { get, findLast } from 'lodash';
 import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { getHighestOrder } from '/imports/api/parenting/order.js';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -223,6 +233,30 @@ export default {
         component: 'creature-property-dialog',
         elementId: `tree-node-${_id}`,
         data: {_id},
+      });
+    },
+    addProperty(){
+      let parentPropertyId = this.model._id;
+      // Open the dialog to insert the property
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-creation-dialog',
+        elementId: 'insert-creature-property-btn',
+        callback(creatureProperty){
+          if (!creatureProperty) return;
+          // Get order and parent
+          let parentRef = {
+            id: parentPropertyId,
+            collection: 'creatureProperties',
+          };
+          creatureProperty.order = getHighestOrder({
+            collection: CreatureProperties,
+            ancestorId: parentRef.id,
+          }) + 0.5;
+
+          // Insert the property
+          let id = insertProperty.call({creatureProperty, parentRef});
+          return `tree-node-${id}`;
+        }
       });
     }
   }
