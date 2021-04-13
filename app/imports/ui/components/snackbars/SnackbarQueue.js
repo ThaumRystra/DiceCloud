@@ -6,7 +6,7 @@ let lastSnackbarId = 0;
 
 function snackbar(data) {
   globalState.queue.push({
-    data,
+    data, //{text OR content, callback, callbackName} // content is logContent
     id: ++lastSnackbarId,
     enqueuedAt: new Date(),
     shown: false,

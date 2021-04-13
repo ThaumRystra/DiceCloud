@@ -34,6 +34,7 @@
 import Creatures from '/imports/api/creature/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import removeCreature from '/imports/api/creature/removeCreature.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
 	components: {
@@ -61,12 +62,12 @@ export default {
 	},
 	methods: {
 		remove(){
+      this.$router.push('/characterList');
+      this.$store.dispatch('popDialogStack');
 			removeCreature.call({charId: this.id}, (error) => {
 				if (error) {
 					console.error(error);
-				} else {
-					this.$router.push('/characterList');
-					this.$store.dispatch('popDialogStack');
+          snackbar({text: error.message || error.toString()});
 				}
 			});
 		}
