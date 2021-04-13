@@ -434,7 +434,8 @@
         return getProperties(this.creature, {type: 'buff', applied: true});
 			},
       attacks(){
-        let props = getProperties(this.creature, {type: 'attack'}).map(attack => {
+        let props = getProperties(this.creature, {type: 'attack'})
+        return props && props.map(attack => {
           attack.children = CreatureProperties.find({
             'ancestors.id': attack._id,
             removed: {$ne: true},
@@ -444,7 +445,6 @@
           });
           return attack;
         });
-        return props;
 			},
 		},
 		methods: {
