@@ -5,6 +5,12 @@
     :light="!isDark"
     :flat="flat"
   >
+    <v-btn
+      icon
+      @click="back"
+    >
+      <v-icon>arrow_back</v-icon>
+    </v-btn>
     <property-icon
       :model="model"
       class="mr-2"
@@ -162,6 +168,9 @@ export default {
   methods: {
     colorChanged(value){
       this.$emit('color-changed', value);
+    },
+    back(){
+      this.$store.dispatch('popDialogStack');
     },
   }
 }

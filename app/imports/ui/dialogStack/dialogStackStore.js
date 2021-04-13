@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 let dialogStack = {};
 dialogStack.dialogs = [];
 
@@ -25,7 +27,7 @@ const dialogStackStore = {
       if (!state.dialogs.length){
         throw new Meteor.Error('can\'t replace dialog if no dialogs are open');
       }
-      state.dialogs.$set(0, {
+      Vue.set(state.dialogs, state.dialogs.length - 1, {
         _id,
         component,
         data,
@@ -57,8 +59,24 @@ const dialogStackStore = {
       } else {
         context.commit('popDialogStackMutation', result);
       }
-    }
-  }
+    },
+    popDialogStacks(context, quantity){
+      if (quantity <= 0) return;
+      let iterationsLeft = quantity;
+      let intervalId = setInterval(() => {
+        if (history && history.state && history.state.openDialogs){
+          context.commit('setCurrentResult');
+          history.back();
+        } else {
+          context.commit('popDialogStackMutation');
+        }
+        iterationsLeft -= 1;
+        if (iterationsLeft === 0){
+          clearInterval(intervalId);
+        }
+      }, 150);
+    },
+  },
 };
 
 export default dialogStackStore;

@@ -13,6 +13,9 @@
       />
     </template>
     <template v-if="model">
+      <template v-if="!editing && !embedded">
+        <breadcrumbs :model="model" />
+      </template>
       <v-fade-transition
         mode="out-in"
       >
@@ -93,6 +96,7 @@ import equipItem from '/imports/api/creature/creatureProperties/methods/equipIte
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import { getHighestOrder } from '/imports/api/parenting/order.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
+import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -112,6 +116,7 @@ export default {
     DialogBase,
     PropertyToolbar,
     CreaturePropertiesTree,
+    Breadcrumbs,
   },
   props: {
     _id: String,
