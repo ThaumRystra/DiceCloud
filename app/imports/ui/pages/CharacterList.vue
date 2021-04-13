@@ -92,7 +92,7 @@
                 'setTabForCharacterSheet',
                 {id: result, tab: 4}
               );
-              this.$store.commit('setShowBuildDialog', true);
+              this.$store.commit('setShowDetailsDialog', true);
               this.$router.push({ path: `/character/${result}`});
             }
           });

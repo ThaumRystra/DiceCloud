@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     rightDrawer: undefined,
     pageTitle: undefined,
     characterSheetTabs: {},
-    showBuildDialog: false,
+    showDetailsDialog: false,
   },
   getters: {
     // ...
@@ -45,8 +45,8 @@ const store = new Vuex.Store({
     setTabForCharacterSheet(state, {tab, id}){
       Vue.set(state.characterSheetTabs, id, tab);
     },
-    setShowBuildDialog(state, value){
-      state.showBuildDialog = value;
+    setShowDetailsDialog(state, value){
+      state.showDetailsDialog = value;
     },
   },
 });

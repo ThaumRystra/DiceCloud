@@ -156,9 +156,9 @@ export default {
     },
   },
   mounted(){
-    if (this.$store.state.showBuildDialog){
-      this.$store.commit('setShowBuildDialog', false);
-      this.showSlotDialog();
+    if (this.$store.state.showDetailsDialog){
+      this.$store.commit('setShowDetailsDialog', false);
+      this.showCharacterForm();
     }
   },
   meteor: {
