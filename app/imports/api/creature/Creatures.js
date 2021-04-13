@@ -8,7 +8,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
 import defaultCharacterProperties from '/imports/api/creature/defaultCharacterProperties.js';
-
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import '/imports/api/creature/removeCreature.js';
 import '/imports/api/creature/restCreature.js';
 
@@ -202,9 +202,22 @@ const insertCreature = new ValidatedMethod({
 
     // Insert the default properties
     // Not batchInsert because we want the properties cleaned by the schema
+    let baseId;
     defaultCharacterProperties(creatureId).forEach(prop => {
-      CreatureProperties.insert(prop);
+      let id = CreatureProperties.insert(prop);
+      if (prop.name === 'Ruleset'){
+        baseId = id;
+      }
     });
+
+    if (Meteor.isServer){
+      // Insert the 5e ruleset as the default base
+      insertPropertyFromLibraryNode.call({
+        nodeId: 'iHbhfcg3AL5isSWbw',
+        parentRef: {id: baseId, collection: 'creatureProperties'},
+        order: 0.5,
+      });
+    }
 
 		this.unblock();
 		return creatureId;

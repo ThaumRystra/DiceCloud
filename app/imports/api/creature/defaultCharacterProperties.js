@@ -1,31 +1,5 @@
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 
-const properties = [
-  {
-    type: 'propertySlot',
-    name: 'Base',
-    description: 'Choose a starting point for your character, this will define the basic setup of your character sheet. Without a base, your sheet will be empty.',
-    slotTags: ['base'],
-    tags: [],
-    quantityExpected: 1,
-    hideWhenFull: true,
-    spaceLeft: 1,
-    totalFilled: 0,
-  }, {
-    type: 'folder',
-    name: 'Inventory',
-    tags: [BUILT_IN_TAGS.inventory],
-  }, {
-    type: 'folder',
-    name: 'Equipment',
-    tags: [BUILT_IN_TAGS.equipment],
-  }, {
-    type: 'folder',
-    name: 'Carried',
-    tags: [BUILT_IN_TAGS.carried],
-  },
-];
-
 export default function defaultCharacterProperties(creatureId){
   if (!creatureId) throw 'creatureId is required';
   const creatureRef = {collection: 'creatures', id: creatureId};
@@ -35,7 +9,7 @@ export default function defaultCharacterProperties(creatureId){
   return [
     {
       type: 'propertySlot',
-      name: 'Base',
+      name: 'Ruleset',
       description: 'Choose a starting point for your character, this will define the basic setup of your character sheet. Without a base, your sheet will be empty.',
       slotTags: ['base'],
       tags: [],
