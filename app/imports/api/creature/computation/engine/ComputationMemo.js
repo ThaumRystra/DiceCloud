@@ -190,7 +190,9 @@ export default class ComputationMemo {
     prop = this.registerProperty(prop);
     let targets = this.getProficiencyTargets(prop);
     targets.forEach(target => {
-      target.computationDetails.proficiencies.push(prop);
+      if(target.computationDetails.proficiencies){
+        target.computationDetails.proficiencies.push(prop);
+      }
     });
   }
   getProficiencyTargets(prop){
@@ -267,6 +269,7 @@ const propDetailsByType = {
       computed: false,
       busyComputing: false,
       effects: [],
+      proficiencies: [],
       toggleAncestors: [],
       idsOfSameName: [],
     };
