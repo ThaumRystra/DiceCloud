@@ -6,6 +6,7 @@
     :flat="flat"
   >
     <v-btn
+      v-if="!embedded"
       icon
       @click="back"
     >
@@ -143,6 +144,7 @@ export default {
     },
     flat: Boolean,
     editing: Boolean,
+    embedded: Boolean,
   },
   computed: {
     isDark(){

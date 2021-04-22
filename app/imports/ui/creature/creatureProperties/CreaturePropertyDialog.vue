@@ -5,6 +5,7 @@
         :model="model"
         :editing="editing"
         :flat="flat"
+        :embedded="embedded"
         style="flex-grow: 0;"
         @duplicate="duplicate"
         @remove="remove"
