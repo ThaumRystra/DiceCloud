@@ -170,8 +170,6 @@ function combineSkill(stat, aggregator, memo){
     stat.baseValue === undefined &&
     stat.proficiency == 0 ||
     undefined;
-
-  console.log(stat);
 }
 
 function combineDamageMultiplier(stat){
