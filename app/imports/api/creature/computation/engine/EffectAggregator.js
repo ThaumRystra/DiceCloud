@@ -1,31 +1,6 @@
-import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
-import { union } from 'lodash';
-
 export default class EffectAggregator{
-  constructor(stat, memo){
-    delete this.baseValueErrors;
-    if (stat.baseValueCalculation){
-      let {
-        result,
-        context,
-        dependencies
-      } = evaluateCalculation({
-        string: stat.baseValueCalculation,
-        prop: stat,
-        memo
-      });
-      this.statBaseValue = +result.value;
-      stat.dependencies = union(
-        stat.dependencies,
-        dependencies,
-      );
-      if (context.errors.length){
-        this.baseValueErrors = context.errors;
-      }
-      this.base = this.statBaseValue;
-    } else {
-      this.base = 0;
-    }
+  constructor(){
+    this.base = 0;
     this.add = 0;
     this.mul = 1;
     this.min = Number.NEGATIVE_INFINITY;
@@ -46,11 +21,6 @@ export default class EffectAggregator{
       case 'base':
         // Take the largest base value
         this.base = result > this.base ? result : this.base;
-        if (effect.statBase){
-          if (this.statBaseValue === undefined || result > this.statBaseValue){
-            this.statBaseValue = result;
-          }
-        }
         break;
       case 'add':
         // Add all adds together

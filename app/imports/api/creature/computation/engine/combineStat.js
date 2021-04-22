@@ -1,5 +1,5 @@
 import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
-import applyToggles from '/imports/api/creature/computation/engine/applyToggles.js';
+import computeProficiency from '/imports/api/creature/computation/engine/computeProficiency.js';
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
 import { union } from 'lodash';
 
@@ -14,7 +14,8 @@ export default function combineStat(stat, aggregator, memo){
 }
 
 function getAggregatorResult(stat, aggregator){
-  let result = (aggregator.base + aggregator.add) * aggregator.mul;
+  let base = Math.max(aggregator.base, stat.baseValue || 0);
+  let result = (base + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) {
     result = aggregator.min;
   }
@@ -32,8 +33,6 @@ function getAggregatorResult(stat, aggregator){
 
 function combineAttribute(stat, aggregator, memo){
   stat.value = getAggregatorResult(stat, aggregator);
-  stat.baseValue = aggregator.statBaseValue;
-  stat.baseValueErrors = aggregator.baseValueErrors;
   if (stat.attributeType === 'spellSlot'){
     let {
       result,
@@ -78,9 +77,7 @@ function combineSkill(stat, aggregator, memo){
   // Skills are based on some ability Modifier
   let ability = stat.ability && memo.statsByVariableName[stat.ability]
   if (stat.ability && ability){
-    if (!ability.computationDetails.computed){
-      computeStat(ability, memo);
-    }
+    computeStat(ability, memo);
     stat.abilityMod = ability.modifier;
     stat.dependencies = union(
       stat.dependencies,
@@ -91,10 +88,10 @@ function combineSkill(stat, aggregator, memo){
     stat.abilityMod = 0;
   }
   // Combine all the child proficiencies
-  stat.proficiency = stat.baseProficiency || 0;
+  stat.proficiency = 0;
   for (let i in stat.computationDetails.proficiencies){
     let prof = stat.computationDetails.proficiencies[i];
-    applyToggles(prof, memo);
+    computeProficiency(prof, memo);
     if (
       !prof.deactivatedByToggle &&
       prof.value > stat.proficiency
@@ -130,9 +127,6 @@ function combineSkill(stat, aggregator, memo){
   }
   // Multiply the proficiency bonus by the actual proficiency
   profBonus *= stat.proficiency;
-  // Base value
-  stat.baseValue = aggregator.statBaseValue;
-  stat.baseValueErrors = aggregator.baseValueErrors;
   // Combine everything to get the final result
   let result = (aggregator.base + stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
