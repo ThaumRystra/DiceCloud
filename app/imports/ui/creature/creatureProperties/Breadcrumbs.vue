@@ -1,5 +1,8 @@
 <template lang="html">
-  <div class="breadcrumbs layout align-center wrap">
+  <div
+    class="breadcrumbs layout align-center wrap"
+    :class="{'no-icons': noIcons}"
+  >
     <template v-for="(prop, index) in props">
       <v-icon
         v-if="index !== 0"
@@ -7,12 +10,25 @@
       >
         chevron_right
       </v-icon>
+      <span
+        v-if="noLinks"
+        :key="prop._id"
+      >
+        <tree-node-view
+          :model="prop"
+          class="breadcrumb-tree-node-view"
+        />
+      </span>
       <a
+        v-else
         :key="prop._id"
         :data-id="`breadcrumb-${prop._id}`"
         @click="click(prop._id)"
       >
-        <tree-node-view :model="prop" />
+        <tree-node-view
+          :model="prop"
+          class="breadcrumb-tree-node-view"
+        />
       </a>
     </template>
   </div>
@@ -31,6 +47,8 @@
         type: Object,
         required: true,
       },
+      noLinks: Boolean,
+      noIcons: Boolean,
     },
     computed:{
       props(){
@@ -75,4 +93,13 @@
   margin-bottom: 16px;
   opacity: 0.8;
 }
+.no-icons {
+
+}
+</style>
+
+<style lang="css">
+  .no-icons .breadcrumb-tree-node-view .v-icon {
+    display: none;
+  }
 </style>
