@@ -41,6 +41,7 @@
 					attributeType: 'healthBar',
           removed: {$ne: true},
           inactive: {$ne: true},
+          overridden: {$ne: true},
         };
         if (creature.settings.hideUnusedStats){
           filter.hide = {$ne: true};

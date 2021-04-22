@@ -345,6 +345,7 @@
     filter['ancestors.id'] = creature._id;
     filter.removed = {$ne: true};
     filter.inactive = {$ne: true};
+    filter.overridden = {$ne: true};
     return CreatureProperties.find(filter, {
       sort: {order: 1}
     });
