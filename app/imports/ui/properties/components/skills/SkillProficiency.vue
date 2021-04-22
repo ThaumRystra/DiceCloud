@@ -58,8 +58,10 @@
     },
     computed: {
       icon(){
-        if (this.model.value == 0.5){
-          return 'brightness_2';
+        if (this.model.value == 0.49){
+          return 'brightness_3';
+        } else if (this.model.value == 0.5) {
+          return 'brightness_2'
         } else if (this.model.value == 1) {
           return 'brightness_1'
         } else if (this.model.value == 2){
@@ -70,7 +72,8 @@
       },
       proficiencyText(){
         switch (this.model.value){
-          case 0.5: return 'Half proficiency bonus';
+          case 0.49: return 'Half proficiency bonus rounded down';
+          case 0.5: return 'Half proficiency bonus rounded up';
           case 1: return 'Proficient';
           case 2: return 'Double proficiency bonus';
           default: return '';
@@ -78,7 +81,11 @@
       },
       proficiencyValue(){
         if (!this.proficiencyBonus) return;
-        return Math.ceil(this.model.value * this.proficiencyBonus);
+        if (this.model.value === 0.49){
+          return Math.floor(0.5 * this.proficiencyBonus);
+        } else {
+          return Math.ceil(this.model.value * this.proficiencyBonus);
+        }
       },
     },
     methods: {

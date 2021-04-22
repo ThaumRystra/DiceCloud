@@ -108,6 +108,14 @@ function combineSkill(stat, aggregator, memo){
   let profBonusStat = memo.statsByVariableName['proficiencyBonus'];
   let profBonus = profBonusStat && profBonusStat.value;
 
+  if (profBonusStat){
+    stat.dependencies = union(
+      stat.dependencies,
+      [profBonusStat._id],
+      profBonusStat.dependencies,
+    );
+  }
+
   if (typeof profBonus !== 'number' && memo.statsByVariableName['level']){
     let levelProp = memo.statsByVariableName['level'];
     let level = levelProp.value;
@@ -118,15 +126,16 @@ function combineSkill(stat, aggregator, memo){
     if (levelProp.dependencies){
       stat.dependencies = union(stat.dependencies, levelProp.dependencies);
     }
-  } else {
-    stat.dependencies = union(
-      stat.dependencies,
-      [profBonusStat._id],
-      profBonusStat.dependencies,
-    );
   }
+
   // Multiply the proficiency bonus by the actual proficiency
-  profBonus *= stat.proficiency;
+  if(stat.proficiency === 0.49){
+    // Round down proficiency bonus in the special case
+    profBonus = Math.floor(profBonus * 0.5);
+  } else {
+    profBonus = Math.ceil(profBonus * stat.proficiency);
+  }
+
   // Combine everything to get the final result
   let result = (aggregator.base + stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
@@ -161,6 +170,8 @@ function combineSkill(stat, aggregator, memo){
     stat.baseValue === undefined &&
     stat.proficiency == 0 ||
     undefined;
+
+  console.log(stat);
 }
 
 function combineDamageMultiplier(stat){

@@ -109,7 +109,9 @@ export default {
 			}
 		},
     icon(){
-			if (this.model.proficiency == 0.5){
+			if (this.model.proficiency == 0.49){
+				return 'brightness_3';
+			} else if (this.model.proficiency == 0.5){
 				return 'brightness_2';
 			} else if (this.model.proficiency == 1) {
 				return 'brightness_1'

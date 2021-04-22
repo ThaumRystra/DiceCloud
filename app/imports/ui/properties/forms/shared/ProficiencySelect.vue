@@ -22,7 +22,9 @@
 <script lang="js">
 	const ICON_SPIN_DURATION = 300;
 	let proficiencyIcon = function(value){
-		if (value == 0.5){
+    if (value == 0.49){
+			return 'brightness_3';
+		} else if (value == 0.5){
 			return 'brightness_2';
 		} else if (value == 1) {
 			return 'brightness_1'
@@ -49,7 +51,8 @@
 			iconClass: '',
 			values: [
 				{value: 1, text: 'Proficient'},
-				{value: 0.5, text: 'Half proficiency bonus'},
+        {value: 0.49, text: 'Half proficiency bonus rounded down'},
+				{value: 0.5, text: 'Half proficiency bonus rounded up'},
 				{value: 2, text: 'Double proficiency bonus'},
 			],
 		}},
