@@ -25,9 +25,15 @@ export default function computeStat(stat, memo){
   let proficiencies = stat.computationDetails.proficiencies;
 
   // Get references to all the stats that share the variable name
-  let sameNameStats = stat.computationDetails.idsOfSameName.map(
-    id => memo.propsById[id]
-  );
+  let sameNameStats
+
+  if (stat.computationDetails.idsOfSameName){
+    sameNameStats = stat.computationDetails.idsOfSameName.map(
+      id => memo.propsById[id]
+    );
+  } else {
+    sameNameStats = [];
+  }
 
   let allStats = [stat, ...sameNameStats];
 
