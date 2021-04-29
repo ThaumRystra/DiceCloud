@@ -10,6 +10,7 @@
       </v-toolbar-title>
       <property-selector
         slot="unwrapped-content"
+        :no-library-only-props="noLibraryOnlyProps"
         @select="type => $emit('input', type)"
       />
     </dialog-base>
@@ -34,6 +35,7 @@ export default {
 		PropertySelector,
   },
 	props: {
+    noLibraryOnlyProps: Boolean,
 		value: {
 			type: String,
 		},
