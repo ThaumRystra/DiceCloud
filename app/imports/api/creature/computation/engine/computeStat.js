@@ -82,7 +82,9 @@ export default function computeStat(stat, memo){
         value: statInstance.baseProficiency,
         stats: [statInstance.variableName],
         type: 'proficiency',
-        dependencies: [],
+        dependencies: statInstance.overridden ?
+          union(statInstance.dependencies, [statInstance._id]) :
+          [],
         computationDetails: {
           computed: true,
         }
@@ -90,7 +92,7 @@ export default function computeStat(stat, memo){
     }
 
     // Compute each active stat's baseValue calculation and apply it
-    if (statInstance.baseValueCalculation) {
+    if (!statInstance.inactive) {
       let {
         result,
         context,
@@ -100,45 +102,38 @@ export default function computeStat(stat, memo){
         prop: statInstance,
         memo
       });
-      baseDependencies = union(baseDependencies, dependencies);
       statInstance.baseValue = +result.value;
+      statInstance.dependencies = union(statInstance.dependencies, dependencies);
       if (context.errors.length){
         statInstance.baseValueErrors = context.errors;
       }
       // Apply all the base values
-      if (!statInstance.inactive){
-        effects.push({
-          operation: 'base',
-          calculation: statInstance.baseValueCalculation,
-          result: statInstance.baseValue,
-          stats: [statInstance.variableName],
-          dependencies: [],
-          computationDetails: {
-            computed: true,
-          },
-        });
-      }
+      effects.push({
+        operation: 'base',
+        calculation: statInstance.baseValueCalculation,
+        result: statInstance.baseValue,
+        stats: [statInstance.variableName],
+        dependencies: statInstance.overridden ?
+          union(statInstance.dependencies, [statInstance._id]) :
+          [],
+        computationDetails: {
+          computed: true,
+        },
+      });
     }
-  });
-
-  // Apply all the base baseDependencies
-  allStats.forEach(statInstance => {
-    statInstance.dependencies = union(
-      statInstance.dependencies,
-      without(baseDependencies, statInstance._id)
-    );
   });
 
   // Compute and aggregate all the effects
   let aggregator = new EffectAggregator();
   let effectDeps = [];
+  if (Meteor.isClient) console.log({effects});
   each(effects, (effect) => {
     // Compute
     computeEffect(effect, memo);
     if (effect.deactivatedByToggle) return;
 
     // dependencies
-    if (effect._id) effectDeps = [effect._id];
+    if (effect._id) effectDeps = union(effectDeps, [effect._id]);
     effectDeps = union(effectDeps, effect.dependencies);
 
     // Add computed effect to aggregator
@@ -152,9 +147,9 @@ export default function computeStat(stat, memo){
     // Mark the stats as computed
     statInstance.computationDetails.computed = true;
     statInstance.computationDetails.busyComputing = false;
-    statInstance.dependencies = union(
-      statInstance.dependencies,
-      effectDeps
-    );
+    // Only the active stat instance depeneds on the effects
+    if (!statInstance.overridden){
+      statInstance.dependencies = union(statInstance.dependencies, effectDeps);
+    }
   });
 }
