@@ -22,7 +22,7 @@ export default function computeStat(stat, memo){
   stat.computationDetails.busyComputing = true;
 
   let effects = stat.computationDetails.effects || [];
-  let proficiencies = stat.computationDetails.proficiencies;
+  let proficiencies = stat.computationDetails.proficiencies || [];
 
   // Get references to all the stats that share the variable name
   let sameNameStats
