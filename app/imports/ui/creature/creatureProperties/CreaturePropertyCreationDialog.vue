@@ -1,6 +1,7 @@
 <template lang="html">
   <selectable-property-dialog
     :value="forcedType || type"
+    no-library-only-props
     @input="e => type = e"
   >
     <creature-property-insert-form

@@ -14,6 +14,7 @@ import FolderForm from '/imports/ui/properties/forms/FolderForm.vue';
 import ItemForm from '/imports/ui/properties/forms/ItemForm.vue';
 import NoteForm from '/imports/ui/properties/forms/NoteForm.vue';
 import ProficiencyForm from '/imports/ui/properties/forms/ProficiencyForm.vue';
+import ReferenceForm from '/imports/ui/properties/forms/ReferenceForm.vue';
 import RollForm from '/imports/ui/properties/forms/RollForm.vue';
 import SavingThrowForm from '/imports/ui/properties/forms/SavingThrowForm.vue';
 import SkillForm from '/imports/ui/properties/forms/SkillForm.vue';
@@ -41,6 +42,7 @@ export default {
   note: NoteForm,
   proficiency: ProficiencyForm,
   propertySlot: SlotForm,
+  reference: ReferenceForm,
   roll: RollForm,
   savingThrow: SavingThrowForm,
   skill: SkillForm,

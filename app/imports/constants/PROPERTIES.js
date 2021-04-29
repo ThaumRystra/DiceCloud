@@ -67,6 +67,11 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.roll',
     name: 'Roll'
   },
+  reference: {
+    icon: 'link',
+    name: 'Reference',
+    libraryOnly: true,
+  },
   savingThrow: {
     icon: '$vuetify.icons.saving_throw',
     name: 'Saving throw'

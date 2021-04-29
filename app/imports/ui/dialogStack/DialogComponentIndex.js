@@ -14,6 +14,7 @@ import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDi
 import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
 import MoveLibraryNodeDialog from '/imports/ui/library/MoveLibraryNodeDialog.vue'
 import SelectCreaturesDialog from '/imports/ui/tabletop/SelectCreaturesDialog.vue';
+import SelectLibraryNodeDialog from '/imports/ui/library/SelectLibraryNodeDialog.vue';
 import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
 import SlotDetailsDialog from '/imports/ui/creature/slots/SlotDetailsDialog.vue';
 import SlotFillDialog from '/imports/ui/creature/slots/SlotFillDialog.vue';
@@ -37,7 +38,8 @@ export default {
   LibraryNodeDialog,
   MoveLibraryNodeDialog,
   SelectCreaturesDialog,
-	ShareDialog,
+  SelectLibraryNodeDialog,
+  ShareDialog,
   SlotDetailsDialog,
   SlotFillDialog,
   TierTooLowDialog,

@@ -12,6 +12,7 @@ import { softRemove } from '/imports/api/parenting/softRemove.js';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import '/imports/api/library/methods/index.js';
+import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -76,7 +77,12 @@ const insertNode = new ValidatedMethod({
   run(libraryNode) {
     delete libraryNode._id;
     assertNodeEditPermission(libraryNode, this.userId);
-		return LibraryNodes.insert(libraryNode);
+		let nodeId = LibraryNodes.insert(libraryNode);
+    if (libraryNode.type == 'reference'){
+      libraryNode._id = nodeId;
+      updateReferenceNodeWork(libraryNode, this.userId);
+    }
+    return nodeId;
   },
 });
 
@@ -109,9 +115,14 @@ const updateLibraryNode = new ValidatedMethod({
     } else {
       modifier = {$set: {[pathString]: value}};
     }
-		return LibraryNodes.update(_id, modifier, {
+		let numUpdated = LibraryNodes.update(_id, modifier, {
 			selector: {type: node.type},
 		});
+    if (node.type == 'reference'){
+      node = LibraryNodes.findOne(_id);
+      updateReferenceNodeWork(node, this.userId);
+    }
+    return numUpdated;
   },
 });
 
