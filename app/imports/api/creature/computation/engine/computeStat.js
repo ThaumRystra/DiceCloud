@@ -21,7 +21,7 @@ export default function computeStat(stat, memo){
   // Before doing any work, mark this stat as busy
   stat.computationDetails.busyComputing = true;
 
-  let effects = stat.computationDetails.effects;
+  let effects = stat.computationDetails.effects || [];
   let proficiencies = stat.computationDetails.proficiencies;
 
   // Get references to all the stats that share the variable name
@@ -126,7 +126,6 @@ export default function computeStat(stat, memo){
   // Compute and aggregate all the effects
   let aggregator = new EffectAggregator();
   let effectDeps = [];
-  if (Meteor.isClient) console.log({effects});
   each(effects, (effect) => {
     // Compute
     computeEffect(effect, memo);
