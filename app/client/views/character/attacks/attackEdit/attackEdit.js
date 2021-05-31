@@ -12,6 +12,9 @@ var damageTypes = [
 	"psychic",
 	"radiant",
 	"thunder",
+	"magicbludgeoning",
+	"magicpiercing",
+	"magicslashing",
 ];
 
 Template.attackEdit.events({
