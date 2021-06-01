@@ -59,15 +59,15 @@
     computed: {
       icon(){
         if (this.model.value == 0.49){
-          return 'brightness_3';
+          return 'mdi-brightness-3';
         } else if (this.model.value == 0.5) {
-          return 'brightness_2'
+          return 'mdi-brightness-2'
         } else if (this.model.value == 1) {
-          return 'brightness_1'
+          return 'mdi-brightness-1'
         } else if (this.model.value == 2){
           return 'album'
         } else {
-          return 'radio_button_unchecked';
+          return 'mdi-radiobox-blank';
         }
       },
       proficiencyText(){

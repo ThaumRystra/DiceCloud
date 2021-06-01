@@ -53,7 +53,7 @@
           data-id="insert-creature-property-btn"
           @click="addProperty"
         >
-          <v-icon>add</v-icon>
+          <v-icon>mdi-plus</v-icon>
           Property
         </v-btn>
       </template>

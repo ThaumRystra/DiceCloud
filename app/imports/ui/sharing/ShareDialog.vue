@@ -62,7 +62,7 @@
                   icon
                   v-on="on"
                 >
-                  <v-icon>more_vert</v-icon>
+                  <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
               </template>
               <v-list>
@@ -71,7 +71,7 @@
                   @click="updateSharing(user._id, 'writer')"
                 >
                   <v-list-item-action>
-                    <v-icon>create</v-icon>
+                    <v-icon>mdi-pencil</v-icon>
                   </v-list-item-action>
                   <v-list-item-title>Can edit</v-list-item-title>
                 </v-list-item>
@@ -80,13 +80,13 @@
                   @click="updateSharing(user._id, 'reader')"
                 >
                   <v-list-item-action>
-                    <v-icon>remove_red_eye</v-icon>
+                    <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
                   <v-list-item-title>View only</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="updateSharing(user._id, 'none')">
                   <v-list-item-action>
-                    <v-icon>delete</v-icon>
+                    <v-icon>mdi-delete</v-icon>
                   </v-list-item-action>
                   <v-list-item-title>Remove</v-list-item-title>
                 </v-list-item>

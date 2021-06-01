@@ -21,7 +21,7 @@
         class="mx-2 mb-2"
         persistent-hint
         style="flex-grow: 0"
-        append-outer-icon="send"
+        append-outer-icon="mdi-send"
         :hint="inputHint"
         :error-messages="inputError"
         :disabled="!editPermission"

@@ -14,7 +14,7 @@
         @click="addCreature"
       >
         <div class="flex layout justify-center align-center">
-          <v-icon>add</v-icon>
+          <v-icon>mdi-plus</v-icon>
         </div>
         <v-card-title>
           Add creature

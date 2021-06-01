@@ -37,30 +37,30 @@
                 icon
                 v-on="on"
               >
-                <v-icon>more_vert</v-icon>
+                <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list v-if="editPermission">
               <v-list-item @click="deleteCharacter">
                 <v-list-item-title>
-                  <v-icon>delete</v-icon> Delete
+                  <v-icon>mdi-delete</v-icon> Delete
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showCharacterForm">
                 <v-list-item-title>
-                  <v-icon>create</v-icon> Edit details
+                  <v-icon>mdi-pencil</v-icon> Edit details
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showShareDialog">
                 <v-list-item-title>
-                  <v-icon>share</v-icon> Sharing
+                  <v-icon>mdi-share-variant</v-icon> Sharing
                 </v-list-item-title>
               </v-list-item>
             </v-list>
             <v-list v-else>
               <v-list-item @click="unshareWithMe">
                 <v-list-item-title>
-                  <v-icon>delete</v-icon> Unshare with me
+                  <v-icon>mdi-delete</v-icon> Unshare with me
                 </v-list-item-title>
               </v-list-item>
             </v-list>

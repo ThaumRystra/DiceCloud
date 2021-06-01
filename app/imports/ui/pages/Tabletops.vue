@@ -28,7 +28,7 @@
       :loading="addTabletopLoading"
       @click="addTabletop"
     >
-      <v-icon>add</v-icon>
+      <v-icon>mdi-plus</v-icon>
     </v-btn>
   </single-card-layout>
 </template>

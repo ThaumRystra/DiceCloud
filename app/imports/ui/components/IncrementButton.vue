@@ -14,7 +14,7 @@
         @click.stop
       >
         <slot>
-          <v-icon>add</v-icon>
+          <v-icon>mdi-plus</v-icon>
         </slot>
       </v-btn>
     </template>

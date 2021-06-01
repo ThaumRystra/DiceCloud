@@ -28,7 +28,7 @@
                 to="/account"
                 v-on="on"
               >
-                <v-icon>settings</v-icon>
+                <v-icon>mdi-cog</v-icon>
               </v-btn>
             </template>
             <span>Account Settings</span>
@@ -48,6 +48,9 @@
         <v-list-item-title>
           {{ link.title }}
         </v-list-item-title>
+        <v-icon v-if="link.href">
+          mdi-open-in-new
+        </v-icon>
       </v-list-item>
       <v-divider />
     </v-list>
@@ -125,15 +128,15 @@
       links(){
         let isLoggedIn = !!Meteor.userId();
         let links = [
-          {title: 'Home', icon: 'home', to: '/'},
-          {title: 'Characters', icon: 'portrait', to: '/characterList', requireLogin: true},
-          {title: 'Library', icon: 'book', to: '/library', requireLogin: true},
+          {title: 'Home', icon: 'mdi-home', to: '/'},
+          {title: 'Characters', icon: 'mdi-account-group', to: '/characterList', requireLogin: true},
+          {title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true},
           //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
           //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
-          {title: 'Feedback', icon: 'bug_report', to: '/feedback'},
-          {title: 'About', icon: 'subject', to: '/about'},
-          {title: 'Patreon', icon: '', href: 'https://www.patreon.com/dicecloud'},
-          {title: 'Github', icon: '', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
+          {title: 'Feedback', icon: 'mdi-bug', to: '/feedback'},
+          {title: 'About', icon: 'mdi-sign-text', to: '/about'},
+          {title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud'},
+          {title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
         ];
         return links.filter(link => !link.requireLogin || isLoggedIn);
       },

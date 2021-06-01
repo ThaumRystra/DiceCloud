@@ -32,7 +32,7 @@
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
-        drag_indicator
+        mdi-drag
       </v-icon>
       <v-btn
         v-else-if="showInfoButton"
@@ -41,7 +41,7 @@
         :data-id="`spell-info-btn-${model._id}`"
         @click.stop="$emit('show-info')"
       >
-        <v-icon>info</v-icon>
+        <v-icon>mdi-information</v-icon>
       </v-btn>
     </v-list-item-action>
   </v-list-item>

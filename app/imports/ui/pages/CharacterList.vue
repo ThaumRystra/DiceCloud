@@ -22,7 +22,7 @@
       data-id="new-character-button"
       @click="insertCharacter"
     >
-      <v-icon>add</v-icon>
+      <v-icon>mdi-plus</v-icon>
     </v-btn>
   </div>
 </template>

@@ -7,7 +7,7 @@
       <h2>Are you sure you want to delete your account?</h2>
       <v-alert
         :value="true"
-        icon="warning"
+        icon="mdi-alert"
         color="error"
         outlined
       >
@@ -55,14 +55,14 @@
           label="Type your username or email"
           style="width: 350px;"
           :error-messages="usernameInputValid ? undefined : ' '"
-          :append-icon="usernameInputValid ? 'done' : undefined"
+          :append-icon="usernameInputValid ? 'mdi-check' : undefined"
         />
         <v-text-field
           v-model="verificationInput"
           label="To verify type 'delete my account'"
           style="width: 350px;"
           :error-messages="verificationInputValid ? undefined : ' '"
-          :append-icon="verificationInputValid ? 'done' : undefined"
+          :append-icon="verificationInputValid ? 'mdi-check' : undefined"
         />
         <v-btn
           class="mt-4"

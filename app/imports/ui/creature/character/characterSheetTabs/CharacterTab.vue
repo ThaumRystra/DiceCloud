@@ -73,7 +73,7 @@
                   data-id="experience-info-button"
                   @click="showExperienceList"
                 >
-                  <v-icon>info</v-icon>
+                  <v-icon>mdi-information-outline</v-icon>
                 </v-btn>
               </v-list-item-action>
               <v-list-item-action>
@@ -82,7 +82,7 @@
                   data-id="experience-add-button"
                   @click="addExperience"
                 >
-                  <v-icon>add</v-icon>
+                  <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>

@@ -42,7 +42,7 @@
                   v-on="on"
                   @click="changeUsername"
                 >
-                  <v-icon>create</v-icon>
+                  <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
               <span>Change Username</span>
@@ -77,7 +77,7 @@
                   v-on="on"
                   @click="updatePatreon"
                 >
-                  <v-icon>refresh</v-icon>
+                  <v-icon>mdi-refresh</v-icon>
                 </v-btn>
               </template>
               <span>Refresh Patreon status</span>
@@ -136,7 +136,7 @@
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
-                <v-icon>mail_outline</v-icon>
+                <v-icon>mdi-email-outline</v-icon>
               </v-list-item-action>
             </v-list-item>
             <v-divider

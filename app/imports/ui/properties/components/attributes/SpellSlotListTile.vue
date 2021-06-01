@@ -30,8 +30,8 @@
           >
             {{
               i > model.currentValue ?
-                'radio_button_unchecked' :
-                'radio_button_checked'
+                'mdi-radiobox-blank' :
+                'mdi-radiobox-marked'
             }}
           </v-icon>
         </div>

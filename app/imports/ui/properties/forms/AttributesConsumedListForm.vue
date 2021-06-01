@@ -19,7 +19,7 @@
             class="ma-3"
             @click="$emit('pull', {path: [i]})"
           >
-            <v-icon>delete</v-icon>
+            <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
       </div>

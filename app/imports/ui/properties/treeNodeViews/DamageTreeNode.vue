@@ -28,7 +28,7 @@ export default {
   computed: {
 		icon(){
       if (this.model.damageType === 'healing'){
-        return 'group_work'
+        return 'mdi-hospital-box-outline'
       } else {
         return getPropertyIcon('damage');
       }

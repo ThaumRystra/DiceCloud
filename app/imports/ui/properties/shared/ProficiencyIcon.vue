@@ -13,13 +13,13 @@ export default {
 		displayedIcon(){
 			let value = this.value;
 			if (value == 0.5){
-				return 'brightness_2';
+				return 'mdi-brightness-2';
 			} else if (value == 1) {
-				return 'brightness_1'
+				return 'mdi-brightness-1'
 			} else if (value == 2){
 				return 'album'
 			} else {
-				return 'radio_button_unchecked';
+				return 'mdi-radiobox-blank';
 			}
 		}
 	}

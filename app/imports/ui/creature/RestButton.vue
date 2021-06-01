@@ -7,7 +7,7 @@
     @click="rest"
   >
     <v-icon left>
-      {{ type === 'shortRest' ? 'snooze' : 'bedtime' }}
+      {{ type === 'shortRest' ? 'mdi-music-rest-quarter' : 'mdi-bed' }}
     </v-icon>
     {{ type === 'shortRest' ? 'Short Rest' : 'Long Rest' }}
   </v-btn>
