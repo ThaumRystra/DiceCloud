@@ -72,26 +72,61 @@ DiceCloud running.
 Docker Instructions
 -------------------
 
-To build and run DiceCloud locally with docker, please have docker and 
-docker-compose installed. You will also need at least 4GB of RAM to build.
+To build and run DiceCloud locally with docker, you will need docker-compose. 
+You will also need at least 4GB of RAM to build.
 
-Afterwards, edit the docker-compose.yml file, and change the ROOT_URL
-environment variable to the Fully-Qualified Domain Name of the machine
+Copy the docker-compose.yml file to docker-compose.override.yml and proceed
+to make it look as follows:
+
+```
+version: "3.7"
+services:
+  web:
+    environment:
+      - MONGO_URL="mongodb://dice:dice@dicecloud_mongodb_1:27017"
+      - ROOT_URL=http://127.0.0.1
+  mongodb:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=dice
+      - MONGO_INITDB_ROOT_PASSWORD=dice
+```
+
+This is to ensure in future updates, should you pull from git, that your config
+stays the same. Afterwards, change `ROOT_URL` to be the IP of the machine or a 
+DNS resolvable name. e.g:
 
 ```
 ROOT_URL=https://dicecloud.example.com
+or
+ROOT_URL=http://192.168.1.100
 ```
 
 If you plan on having the instance be public, change the mongodb root user
-and password (presently set to dice) in the docker-compose.yml to something 
-more secure.
+and password (presently set to dice) to something more secure. e.g:
 
-Once you've finished editing the docker-compose.yml to your needs, you can run
+```
+MONGO_URL="mongodb://waffle:house@dicecloud_mongodb_1:27017"
+...
+MONGO_INITDB_ROOT_USERNAME=waffle
+MONGO_INITDB_ROOT_PASSWORD=house
+```
+
+**Note**: After the first run, the root user and password of the mongodb 
+container will be set and can't be changed via the docker-compose.override.yml
+file and will instead have to be changed manually through the CLI tool `mongo` or 
+via a GUI tool `MongoDB Compass` or similar. If you do change the password, 
+do update the `MONGO_URL` passage.
+
+Once you've finished editing the docker-compose.override.yml file to your needs, 
+you can run:
 
 ```
 docker-compose up --build
 ```
-In the directory with the Dockerfile. Building the image will take time, but one
-built it will take considerably less time to start new instances. 
 
-Note: You should rebuild the image often in order to keep the Ubuntu base up to date.
+Building the image will take time, but once built it will take considerably less time 
+to (re)start instances. DiceCloud will be reachable over port 3000, so long as the domain 
+name resolved or IP address entered matches `ROOT_URL`. MongoDB can be reached over its 
+standard 27017 port.
+
+**Note**: You should rebuild the image often in order to keep the Ubuntu base up to date.

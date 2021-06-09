@@ -11,7 +11,9 @@ COPY ./app/ /opt/dicecloud/src/
 RUN chown -R dicecloud /opt/dicecloud
 USER dicecloud
 RUN curl https://install.meteor.com | sh
+ENV PATH=$PATH:/home/dicecloud/.meteor
 WORKDIR /opt/dicecloud/src
+RUN meteor npm install
 RUN meteor build --directory ../app --server-only
 WORKDIR /opt/dicecloud/app/bundle/programs/server
 RUN npm install
