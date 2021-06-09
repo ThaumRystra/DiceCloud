@@ -104,31 +104,10 @@ export default class ComputationMemo {
     let variableName = prop.variableName;
     if (!variableName) return;
     let existingStat = this.statsByVariableName[variableName];
+    prop = this.registerProperty(prop);
     if (existingStat){
       existingStat.computationDetails.idsOfSameName.push(prop._id);
-      this.originalPropsById[prop._id] = cloneDeep(prop);
-      if (prop.baseValueCalculation){
-        existingStat.computationDetails.effects.push({
-          operation: 'base',
-          calculation: prop.baseValueCalculation,
-          stats: [variableName],
-          computationDetails: propDetailsByType.effect(),
-          statBase: true,
-          dependencies: [],
-        });
-      }
-      if (prop.baseProficiency){
-        existingStat.computationDetails.proficiencies.push({
-          value: prop.baseProficiency,
-          stats: [variableName],
-          computationDetails: propDetailsByType.proficiency(),
-          type: 'proficiency',
-          statBase: true,
-          dependencies: [],
-        });
-      }
     } else {
-      prop = this.registerProperty(prop);
       this.statsById[prop._id] = prop;
       this.statsByVariableName[variableName] = prop;
       if (
@@ -190,7 +169,9 @@ export default class ComputationMemo {
     prop = this.registerProperty(prop);
     let targets = this.getProficiencyTargets(prop);
     targets.forEach(target => {
-      target.computationDetails.proficiencies.push(prop);
+      if(target.computationDetails.proficiencies){
+        target.computationDetails.proficiencies.push(prop);
+      }
     });
   }
   getProficiencyTargets(prop){
@@ -267,6 +248,7 @@ const propDetailsByType = {
       computed: false,
       busyComputing: false,
       effects: [],
+      proficiencies: [],
       toggleAncestors: [],
       idsOfSameName: [],
     };

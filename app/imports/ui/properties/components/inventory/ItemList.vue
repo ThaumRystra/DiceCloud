@@ -26,7 +26,7 @@
   </v-list>
 </template>
 
-<script>
+<script lang="js">
 import draggable from 'vuedraggable';
 import ItemListTile from '/imports/ui/properties/components/inventory/ItemListTile.vue';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';

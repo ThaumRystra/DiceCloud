@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="skill-form">
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         ref="focusFirst"
         label="Name"
@@ -55,7 +55,7 @@
         :value="model.tags"
         @change="change('tags', ...arguments)"
       />
-      <div class="layout row justify-center">
+      <div class="layout justify-center">
         <text-field
           label="Base Value"
           class="base-value-field no-flex"
@@ -77,7 +77,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';

@@ -41,16 +41,20 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="js">
   import '/imports/ui/dialogStack/dialogStackWindowEvents.js';
   import mockElement from '/imports/ui/dialogStack/mockElement.js';
   import DialogComponentIndex from '/imports/ui/dialogStack/DialogComponentIndex.js';
+  import { VLayout } from 'vuetify/lib'
 
   const OFFSET = 16;
   const MOCK_DURATION = 400; // Keep in sync with css transition of .dialog
 
   export default {
-    components: DialogComponentIndex,
+    components: {
+      VLayout,
+      ...DialogComponentIndex,
+    },
     computed: {
       dialogs(){
         return this.$store.state.dialogStack.dialogs;
@@ -162,7 +166,7 @@
         let source = this.getTopElementByDataId(elementId);
         if (!source){
           console.warn(`Can't find source for ${elementId}`);
-          this.hiddenElement.style.opacity = null;
+          if (this.hiddenElement) this.hiddenElement.style.opacity = null;
           done();
           return;
         }
@@ -209,7 +213,7 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
-    z-index: 4;
+    z-index: 6;
     pointer-events: initial;
   }
   .backdrop-fade-enter-active, .backdrop-fade-leave-active {
@@ -225,7 +229,7 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
-    z-index: 4;
+    z-index: 6;
   }
   .dialog-sizer {
     position: relative;
@@ -235,7 +239,7 @@
     height: 80%;
     height: calc(100% - 64px);
     max-height: 800px;
-    z-index: 5;
+    z-index: 7;
     flex: initial;
   }
   /* sm */
@@ -275,6 +279,7 @@
     pointer-events: initial;
     z-index: 1;
     overflow: hidden;
+    transition: all .3s ease;
   }
   .dialog > * {
     height: 100%;

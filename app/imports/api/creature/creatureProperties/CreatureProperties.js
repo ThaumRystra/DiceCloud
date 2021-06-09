@@ -65,7 +65,6 @@ let CreaturePropertySchema = new SimpleSchema({
   },
   'dependencies.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
   },
 });
 

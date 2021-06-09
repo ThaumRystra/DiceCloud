@@ -30,7 +30,7 @@
   </draggable>
 </template>
 
-<script>
+<script lang="js">
 	import draggable from 'vuedraggable';
 	import TreeNode from '/imports/ui/components/tree/TreeNode.vue';
 	import { isParentAllowed } from '/imports/api/parenting/parenting.js';

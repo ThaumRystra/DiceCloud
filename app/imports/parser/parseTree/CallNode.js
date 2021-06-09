@@ -20,7 +20,6 @@ export default class CallNode extends ParseNode {
 
     // Resolve the arguments
     let resolvedArgs = this.args.map(node => node[fn](scope, context));
-
     // Check that the arguments match what is expected
     let checkFailed = this.checkArugments({
       fn,
@@ -30,7 +29,7 @@ export default class CallNode extends ParseNode {
     });
 
     if (checkFailed){
-      if (fn !== 'reduce'){
+      if (fn === 'reduce'){
         return new ErrorNode({
           node: this,
           error: `Invalid arguments to ${this.functionName} function`,

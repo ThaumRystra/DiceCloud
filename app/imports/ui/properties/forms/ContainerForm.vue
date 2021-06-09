@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="attribute-form">
-    <div class="layout row justify-space-between wrap">
+    <div class="layout justify-space-between wrap">
       <text-field
         ref="focusFirst"
         label="Name"
@@ -18,7 +18,7 @@
         />
       </div>
     </div>
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         label="Value"
         suffix="gp"
@@ -65,7 +65,7 @@
         :value="model.tags"
         @change="change('tags', ...arguments)"
       />
-      <div class="layout row justify-center">
+      <div class="layout justify-center">
         <div>
           <smart-switch
             label="Contents are weightless"
@@ -79,7 +79,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';

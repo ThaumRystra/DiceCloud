@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import Creatures from '/imports/api/creature/Creatures.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 
@@ -41,6 +41,7 @@
 					attributeType: 'healthBar',
           removed: {$ne: true},
           inactive: {$ne: true},
+          overridden: {$ne: true},
         };
         if (creature.settings.hideUnusedStats){
           filter.hide = {$ne: true};

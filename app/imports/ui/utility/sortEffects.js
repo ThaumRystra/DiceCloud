@@ -1,14 +1,14 @@
 const INDEX = {
-  "base": 1,
-  "add": 2,
-  "mul": 3,
-  "min": 4,
-  "max": 5,
-  "advantage": 6,
-  "disadvantage": 7,
-  "passiveAdd": 8,
-  "fail": 9,
-  "conditional": 10,
+  'base': 1,
+  'add': 2,
+  'mul': 3,
+  'min': 4,
+  'max': 5,
+  'advantage': 6,
+  'disadvantage': 7,
+  'passiveAdd': 8,
+  'fail': 9,
+  'conditional': 10,
 };
 
 function sortEffects(effects){

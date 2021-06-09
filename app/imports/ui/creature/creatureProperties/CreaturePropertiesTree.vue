@@ -11,7 +11,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 	import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 	import { nodesToTree } from '/imports/api/parenting/parenting.js'
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';

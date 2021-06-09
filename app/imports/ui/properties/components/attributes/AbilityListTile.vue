@@ -1,10 +1,13 @@
 <template lang="html">
-  <v-list-tile
+  <v-list-item
     class="ability-list-tile"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-tile-action class="mr-4">
-      <div class="display-1 mod">
+    <v-list-item-action
+      class="mr-4"
+      style="min-width: 40px;"
+    >
+      <div class="text-h4 mod">
         <template v-if="swapScoresAndMods">
           <span :class="{'primary--text': model.currentValue !== model.value}">
             {{ model.currentValue }}
@@ -14,7 +17,7 @@
           {{ numberToSignedString(model.modifier) }}
         </template>
       </div>
-      <div class="title value">
+      <div class="text-h6 value">
         <template v-if="swapScoresAndMods">
           {{ numberToSignedString(model.modifier) }}
         </template>
@@ -24,17 +27,17 @@
           </span>
         </template>
       </div>
-    </v-list-tile-action>
+    </v-list-item-action>
 
-    <v-list-tile-content>
-      <v-list-tile-title>
+    <v-list-item-content>
+      <v-list-item-title>
         {{ model.name }}
-      </v-list-tile-title>
-    </v-list-tile-content>
-  </v-list-tile>
+      </v-list-item-title>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
 	props: {

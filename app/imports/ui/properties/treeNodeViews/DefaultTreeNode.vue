@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="layout row align-center justify-start">
+  <div class="layout align-center justify-start">
     <property-icon
       v-if="!hideIcon"
       class="mr-2"
@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 
 export default {

@@ -7,23 +7,8 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
-import INVENTORY_TAGS from '/imports/constants/INVENTORY_TAGS.js';
-
-export function getParentRefByTag(creatureId, tag){
-  let prop = CreatureProperties.findOne({
-    'ancestors.id': creatureId,
-    removed: {$ne: true},
-    inactive: {$ne: true},
-    tags: tag,
-  }, {
-    sort: {order: 1},
-  });
-  if (prop){
-    return {id: prop._id, collection: 'creatureProperties'};
-  } else {
-    return {id: creatureId, collection: 'creatures'};
-  }
-}
+import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 
 // Equipping or unequipping an item will also change its parent
 const equipItem = new ValidatedMethod({
@@ -50,8 +35,9 @@ const equipItem = new ValidatedMethod({
     }, {
 			selector: {type: 'item'},
 		});
-    let tag = equipped ? INVENTORY_TAGS.equipment : INVENTORY_TAGS.carried;
+    let tag = equipped ? BUILT_IN_TAGS.equipment : BUILT_IN_TAGS.carried;
     let parentRef = getParentRefByTag(creature._id, tag);
+    if (!parentRef) parentRef = {id: creature._id, collection: 'creatures'};
 
     organizeDoc.call({
       docRef: {

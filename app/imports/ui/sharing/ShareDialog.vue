@@ -22,7 +22,7 @@
           params: { id: model._id },
         }).href"
       />
-      <div class="layout row">
+      <div class="layout">
         <text-field
           label="Username or email"
           :value="userSearched"
@@ -40,19 +40,19 @@
         two-lines
         class="sharedWith"
       >
-        <v-list-tile
+        <v-list-item
           v-for="user in sharedUsers"
           :key="user._id"
         >
-          <v-list-tile-content>
-            <v-list-tile-title>
+          <v-list-item-content>
+            <v-list-item-title>
               {{ user.username || user._id }}
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
+            </v-list-item-title>
+            <v-list-item-subtitle>
               {{ user.permission === 'writer' ? 'Can edit' : 'Can view' }}
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-          <v-list-tile-action>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-action>
             <v-menu
               bottom
               left
@@ -66,34 +66,34 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-tile
+                <v-list-item
                   v-if="user.permission === 'reader'"
                   @click="updateSharing(user._id, 'writer')"
                 >
-                  <v-list-tile-action>
+                  <v-list-item-action>
                     <v-icon>create</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-title>Can edit</v-list-tile-title>
-                </v-list-tile>
-                <v-list-tile
+                  </v-list-item-action>
+                  <v-list-item-title>Can edit</v-list-item-title>
+                </v-list-item>
+                <v-list-item
                   v-if="user.permission === 'writer'"
                   @click="updateSharing(user._id, 'reader')"
                 >
-                  <v-list-tile-action>
+                  <v-list-item-action>
                     <v-icon>remove_red_eye</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-title>View only</v-list-tile-title>
-                </v-list-tile>
-                <v-list-tile @click="updateSharing(user._id, 'none')">
-                  <v-list-tile-action>
+                  </v-list-item-action>
+                  <v-list-item-title>View only</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="updateSharing(user._id, 'none')">
+                  <v-list-item-action>
                     <v-icon>delete</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-title>Remove</v-list-tile-title>
-                </v-list-tile>
+                  </v-list-item-action>
+                  <v-list-item-title>Remove</v-list-item-title>
+                </v-list-item>
               </v-list>
             </v-menu>
-          </v-list-tile-action>
-        </v-list-tile>
+          </v-list-item-action>
+        </v-list-item>
       </v-list>
       <v-fade-transition>
         <v-progress-circular
@@ -105,7 +105,7 @@
     <v-spacer slot="actions" />
     <v-btn
       slot="actions"
-      flat
+      text
       @click="$store.dispatch('popDialogStack')"
     >
       Done
@@ -113,7 +113,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import {
   setPublic,
   updateUserSharePermissions

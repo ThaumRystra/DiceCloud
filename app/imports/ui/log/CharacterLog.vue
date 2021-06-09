@@ -6,7 +6,7 @@
     <v-slide-y-reverse-transition
       group
       hide-on-leave
-      class="log-entries flex layout column reverse align-end pa-3"
+      class="card-raised-background flex layout column reverse align-end pa-3"
       style="overflow: auto;"
     >
       <log-entry
@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/Creatures.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
@@ -121,11 +121,5 @@ export default {
 <style lang="css">
   .log-tab p:last-child {
     margin-bottom: 0;
-  }
-  .theme--dark .log-entries {
-    background: #303030;
-  }
-  .log-entries {
-    background: #fafafa;
   }
 </style>

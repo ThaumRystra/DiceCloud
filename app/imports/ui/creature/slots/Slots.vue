@@ -5,7 +5,7 @@
       :key="slot._id"
       class="slot"
     >
-      <h3 class="layout row align-center">
+      <h3 class="layout align-center">
         {{ slot.name }}
         <v-spacer />
         <span v-if="slot.quantityExpectedResult > 1">
@@ -13,29 +13,28 @@
         </span>
       </h3>
       <v-list v-if="slot.children.length">
-        <v-list-tile
+        <v-list-item
           v-for="child in slot.children"
           :key="child._id"
           :data-id="`slot-child-${child._id}`"
           @click="clickSlotChild(child)"
         >
-          <v-list-tile-content>
+          <v-list-item-content>
             <tree-node-view
               class="slotChild"
               :model="child"
             />
-          </v-list-tile-content>
-          <v-list-tile-action>
+          </v-list-item-content>
+          <v-list-item-action>
             <v-btn
               icon
-              flat
               small
               @click.stop="remove(child)"
             >
               <v-icon>delete</v-icon>
             </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
+          </v-list-item-action>
+        </v-list-item>
       </v-list>
       <v-btn
         v-if="!slot.quantityExpectedResult || slot.spaceLeft"
@@ -51,13 +50,14 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
 import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -105,7 +105,7 @@ export default {
     },
     remove(model){
       softRemoveProperty.call({_id: model._id});
-      this.$store.dispatch('snackbar', {
+      snackbar({
         text: `Deleted ${getPropertyTitle(model)}`,
         callbackName: 'undo',
         callback(){

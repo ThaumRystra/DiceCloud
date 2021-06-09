@@ -6,7 +6,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 	import ActionForm from '/imports/ui/properties/forms/ActionForm.vue';
 	export default {
 		components: {

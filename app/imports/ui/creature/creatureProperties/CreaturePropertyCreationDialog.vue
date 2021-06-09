@@ -1,6 +1,7 @@
 <template lang="html">
   <selectable-property-dialog
     :value="forcedType || type"
+    no-library-only-props
     @input="e => type = e"
   >
     <creature-property-insert-form
@@ -11,7 +12,7 @@
   </selectable-property-dialog>
 </template>
 
-<script>
+<script lang="js">
 import SelectablePropertyDialog from '/imports/ui/properties/shared/SelectablePropertyDialog.vue';
 import CreaturePropertyInsertForm from '/imports/ui/creature/creatureProperties/CreaturePropertyInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

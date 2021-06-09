@@ -1,6 +1,6 @@
 <template lang="html">
-  <v-list-tile class="effect-viewer">
-    <v-list-tile-avatar>
+  <v-list-item class="effect-viewer">
+    <v-list-item-avatar>
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-icon
@@ -13,29 +13,29 @@
         </template>
         <span>{{ operation }}</span>
       </v-tooltip>
-    </v-list-tile-avatar>
-    <v-list-tile-action
+    </v-list-item-avatar>
+    <v-list-item-action
       v-if="showValue"
-      class="headline"
+      class="text-h5"
     >
       {{ displayedValue }}
-    </v-list-tile-action>
-    <v-list-tile-content>
-      <v-list-tile-title>
+    </v-list-item-action>
+    <v-list-item-content>
+      <v-list-item-title>
         {{ model.name }}
-      </v-list-tile-title>
-      <v-list-tile-sub-title>
+      </v-list-item-title>
+      <v-list-item-subtitle>
         <code
           v-for="stat in model.stats"
           :key="stat"
           class="mr-1"
         >{{ stat }}</code>
-      </v-list-tile-sub-title>
-    </v-list-tile-content>
-  </v-list-tile>
+      </v-list-item-subtitle>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
   import { isFinite } from 'lodash';

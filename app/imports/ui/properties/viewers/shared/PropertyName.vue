@@ -1,10 +1,10 @@
 <template lang="html">
-	<div class="name headline mb-2">
-		{{value}}
-	</div>
+  <div class="name text-h5 mb-2">
+    {{ value }}
+  </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
 	props: {
 		value: String,

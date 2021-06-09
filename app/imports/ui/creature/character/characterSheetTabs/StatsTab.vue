@@ -11,10 +11,12 @@
             <rest-button
               :creature-id="creatureId"
               type="shortRest"
+              class="ma-1"
             />
             <rest-button
               :creature-id="creatureId"
               type="longRest"
+              class="ma-1"
             />
           </v-card-text>
         </v-card>
@@ -27,27 +29,26 @@
         <v-card>
           <v-list>
             <v-subheader>Buffs and conditions</v-subheader>
-            <v-list-tile
+            <v-list-item
               v-for="buff in appliedBuffs"
               :key="buff._id"
               :data-id="buff._id"
               @click="clickProperty({_id: buff._id})"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   {{ buff.name }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-btn
                   icon
-                  flat
                   @click.stop="softRemove(buff._id)"
                 >
                   <v-icon>delete</v-icon>
                 </v-btn>
-              </v-list-tile-action>
-            </v-list-tile>
+              </v-list-item-action>
+            </v-list-item>
           </v-list>
         </v-card>
       </div>
@@ -318,7 +319,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import Creatures from '/imports/api/creature/Creatures.js';
 	import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
@@ -344,6 +345,7 @@
     filter['ancestors.id'] = creature._id;
     filter.removed = {$ne: true};
     filter.inactive = {$ne: true};
+    filter.overridden = {$ne: true};
     return CreatureProperties.find(filter, {
       sort: {order: 1}
     });
@@ -433,7 +435,8 @@
         return getProperties(this.creature, {type: 'buff', applied: true});
 			},
       attacks(){
-        let props = getProperties(this.creature, {type: 'attack'}).map(attack => {
+        let props = getProperties(this.creature, {type: 'attack'})
+        return props && props.map(attack => {
           attack.children = CreatureProperties.find({
             'ancestors.id': attack._id,
             removed: {$ne: true},
@@ -443,7 +446,6 @@
           });
           return attack;
         });
-        return props;
 			},
 		},
 		methods: {

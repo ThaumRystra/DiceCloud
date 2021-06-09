@@ -16,7 +16,6 @@
       >
         <v-btn
           icon
-          flat
           @click="back"
         >
           <v-icon>arrow_back</v-icon>
@@ -44,7 +43,8 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="js">
+  import getThemeColor from '/imports/ui/utility/getThemeColor.js';
   import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 
 	export default {
@@ -67,7 +67,7 @@
         return isDarkColor(this.computedColor);
       },
       computedColor(){
-        return this.color || this.$vuetify.theme.secondary;
+        return this.color || getThemeColor('secondary');
       }
     },
 		methods: {

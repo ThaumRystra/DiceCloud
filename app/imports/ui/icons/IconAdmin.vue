@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import {importIcons, importIconMetadata} from '/imports/ui/icons/importIcons.js';
   import IconPicker from '/imports/ui/components/global/IconPicker.vue';
   import UploadButton from 'vuetify-upload-button';

@@ -2,7 +2,7 @@
   <div class="tabletop-map" />
 </template>
 
-<script>
+<script lang="js">
 export default {
 }
 </script>

@@ -6,9 +6,13 @@
       class="step-1"
     >
       <v-toolbar-title slot="toolbar">
-        Add Library Content
+        Property Type
       </v-toolbar-title>
-      <property-selector @select="type => $emit('input', type)" />
+      <property-selector
+        slot="unwrapped-content"
+        :no-library-only-props="noLibraryOnlyProps"
+        @select="type => $emit('input', type)"
+      />
     </dialog-base>
     <div
       v-show="value"
@@ -21,7 +25,7 @@
   </transition-group>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
 
@@ -31,6 +35,7 @@ export default {
 		PropertySelector,
   },
 	props: {
+    noLibraryOnlyProps: Boolean,
 		value: {
 			type: String,
 		},

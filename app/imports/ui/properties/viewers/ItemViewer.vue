@@ -3,16 +3,16 @@
     <property-tags :tags="model.tags" />
     <div
       v-if="model.quantity > 1 || model.showIncrement"
-      class="layout row justify-center align-center wrap"
+      class="layout justify-center align-center wrap"
     >
-      <div class="display-1">
+      <div class="text-h4">
         {{ model.quantity }}
       </div>
       <increment-button
         v-if="context.creatureId && model.showIncrement"
         icon
         large
-        outline
+        outlined
         color="primary"
         :value="model.quantity"
         @change="changeQuantity"
@@ -20,14 +20,13 @@
         <v-icon>$vuetify.icons.abacus</v-icon>
       </increment-button>
     </div>
-    <div class="layout row wrap justify-space-around">
+    <div class="layout wrap justify-space-around">
       <div
         v-if="model.value !== undefined"
         class="mr-3 my-3"
       >
         <v-layout
           v-if="model.quantity > 1"
-          row
           align-center
           class="mb-2"
         >
@@ -38,12 +37,11 @@
             $vuetify.icons.cash
           </v-icon>
           <coin-value
-            class="title"
+            class="text-h6"
             :value="totalValue"
           />
         </v-layout>
         <v-layout
-          row
           align-center
         >
           <v-icon
@@ -53,12 +51,12 @@
             $vuetify.icons.two_coins
           </v-icon>
           <coin-value
-            class="title mr-2"
+            class="text-h6 mr-2"
             :value="model.value"
           />
           <span
             v-if="model.quantity > 1"
-            class="title"
+            class="text-h6"
           >
             each
           </span>
@@ -70,12 +68,11 @@
       >
         <v-layout
           v-if="model.quantity > 1"
-          row
           align-center
           justify-end
           class="mb-2"
         >
-          <span class="title">
+          <span class="text-h6">
             {{ totalWeight }} lb
           </span>
           <v-icon
@@ -86,17 +83,16 @@
           </v-icon>
         </v-layout>
         <v-layout
-          row
           align-center
           justify-end
           :class="{'mb-2': model.attuned}"
         >
-          <span class="title mr-2">
+          <span class="text-h6 mr-2">
             {{ model.weight }} lb
           </span>
           <span
             v-if="model.quantity > 1"
-            class="title"
+            class="text-h6"
           >
             each
           </span>
@@ -109,11 +105,10 @@
         </v-layout>
         <v-layout
           v-if="model.attuned"
-          row
           align-center
           justify-end
         >
-          <span class="title">
+          <span class="text-h6">
             Attuned
           </span>
           <v-icon
@@ -133,7 +128,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 import CoinValue from '/imports/ui/components/CoinValue.vue';

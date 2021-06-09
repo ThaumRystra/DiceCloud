@@ -52,7 +52,6 @@
             label="Race"
           />
           <v-layout
-            row
             justify-center
             align-center
           >
@@ -225,20 +224,19 @@
             :items="hitDiceItems"
             label="Hit Dice"
           />
-          </v-text-field>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
     <template slot="actions">
       <v-btn
-        flat
+        text
         @click="$emit('pop')"
       >
         Cancel
       </v-btn>
       <v-btn
         v-if="step > 1"
-        flat
+        text
         @click="step--"
       >
         Back
@@ -262,7 +260,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
   import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 	const getCost = function(score){
 		const costs = {

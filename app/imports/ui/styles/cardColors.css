@@ -1,0 +1,20 @@
+.theme--dark.v-sheet,
+.theme--dark.v-expansion-panels .v-expansion-panel {
+  background-color: #303030;
+}
+
+.theme--dark .card-background {
+  background: #151515;
+}
+
+.theme--light .card-background {
+  background: #f6f6f6;
+}
+
+.theme--dark .card-raised-background {
+  background: #1d1d1d;
+}
+
+.theme--light .card-raised-background {
+  background: #fafafa;
+}

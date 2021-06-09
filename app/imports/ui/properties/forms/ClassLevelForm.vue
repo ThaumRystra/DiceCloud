@@ -4,13 +4,13 @@
       <text-field
         label="Level"
         type="number"
-        class="base-value-field text-xs-center large-format no-flex"
+        class="base-value-field text-center large-format no-flex"
         :value="model.level"
         :error-messages="errors.level"
         @change="change('level', ...arguments)"
       />
     </div>
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         ref="focusFirst"
         label="Name"
@@ -36,7 +36,7 @@
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
-    
+
     <text-field
       label="Condition"
       hint="A caclulation to determine if this can be added to the character"
@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 

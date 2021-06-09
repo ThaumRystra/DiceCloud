@@ -24,7 +24,6 @@
         <template #activator="{ on }">
           <v-btn
             icon
-            flat
             :class="{'primary--text': filtersApplied}"
             v-on="on"
           >
@@ -32,7 +31,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-tile
+          <v-list-item
             v-for="filter in booleanFilters"
             :key="filter.name"
             style="height: 52px;"
@@ -46,17 +45,17 @@
               :disabled="!filter.enabled"
               :label="filter.name"
             />
-          </v-list-tile>
-          <div class="layout row">
+          </v-list-item>
+          <div class="layout">
             <v-btn
-              flat
+              text
               @click="clearBooleanFilters"
             >
               Clear
             </v-btn>
             <v-spacer />
             <v-btn
-              flat
+              text
               class="primary--text"
               @click="filterMenuOpen = false"
             >
@@ -70,23 +69,23 @@
       <template slot="left">
         <div
           key="slot-title"
-          class="title my-3"
+          class="text-h6 my-3"
         >
           Slot
         </div>
-        <v-list-tile
+        <v-list-item
           v-if="!(selectedSpell && selectedSpell.level > 0)"
           key="cantrip-dummy-slot"
           class="spell-slot-list-tile"
           :class="{ 'primary--text': selectedSlotId === undefined}"
           @click="selectedSlotId = undefined"
         >
-          <v-list-tile-content>
-            <v-list-tile-title class="title">
+          <v-list-item-content>
+            <v-list-item-title class="text-h6">
               Cantrip
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <spell-slot-list-tile
           v-for="spellSlot in spellSlots"
           :key="spellSlot._id"
@@ -99,7 +98,7 @@
       <template slot="right">
         <div
           key="spell-title"
-          class="title my-3"
+          class="text-h6 my-3"
         >
           Spell
         </div>
@@ -127,13 +126,13 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel
       </v-btn>
       <v-btn
-        flat
+        text
         :disabled="!canCast"
         class="primary--text"
         @click="$store.dispatch('popDialogStack', {
@@ -147,7 +146,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import SplitListLayout from '/imports/ui/properties/components/attributes/SplitListLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

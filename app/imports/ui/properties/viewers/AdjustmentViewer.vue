@@ -1,6 +1,6 @@
 <template lang="html">
-  <v-list-tile class="effect-viewer">
-    <v-list-tile-avatar>
+  <v-list-item class="effect-viewer">
+    <v-list-item-avatar>
       <v-tooltip bottom>
         <template
           v-if="effectIcon !== 'remove'"
@@ -16,22 +16,22 @@
         </template>
         <span>{{ tooltip }}</span>
       </v-tooltip>
-    </v-list-tile-avatar>
-    <v-list-tile-action class="headline">
+    </v-list-item-avatar>
+    <v-list-item-action class="text-h5">
       {{ displayedValue }}
-    </v-list-tile-action>
-    <v-list-tile-content>
-      <v-list-tile-title>
+    </v-list-item-action>
+    <v-list-item-content>
+      <v-list-item-title>
         <code>{{ model.stat }}</code>
         <template v-if="effectIcon === 'remove'">
           damage
         </template>
-      </v-list-tile-title>
-    </v-list-tile-content>
-  </v-list-tile>
+      </v-list-item-title>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
   import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
 

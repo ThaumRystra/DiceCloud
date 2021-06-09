@@ -3,41 +3,41 @@
     <v-list
       three-line
     >
-      <v-list-tile v-if="weaknesses.length">
-        <v-list-tile-content>
-          <v-list-tile-title>
+      <v-list-item v-if="weaknesses.length">
+        <v-list-item-content>
+          <v-list-item-title>
             Vulnerabilities
-          </v-list-tile-title>
-          <v-list-tile-sub-title>
+          </v-list-item-title>
+          <v-list-item-subtitle>
             {{ weaknesses }}
-          </v-list-tile-sub-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-list-tile v-if="resistances.length">
-        <v-list-tile-content>
-          <v-list-tile-title>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item v-if="resistances.length">
+        <v-list-item-content>
+          <v-list-item-title>
             Resistances
-          </v-list-tile-title>
-          <v-list-tile-sub-title>
+          </v-list-item-title>
+          <v-list-item-subtitle>
             {{ resistances }}
-          </v-list-tile-sub-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-list-tile v-if="immunities.length">
-        <v-list-tile-content>
-          <v-list-tile-title>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item v-if="immunities.length">
+        <v-list-item-content>
+          <v-list-item-title>
             Immunities
-          </v-list-tile-title>
-          <v-list-tile-sub-title>
+          </v-list-item-title>
+          <v-list-item-subtitle>
             {{ immunities }}
-          </v-list-tile-sub-title>
-        </v-list-tile-content>
-      </v-list-tile>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 
 export default {
   props: {

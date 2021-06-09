@@ -7,7 +7,8 @@ import SharingSchema from '/imports/api/sharing/SharingSchema.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
-
+import defaultCharacterProperties from '/imports/api/creature/defaultCharacterProperties.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import '/imports/api/creature/removeCreature.js';
 import '/imports/api/creature/restCreature.js';
 
@@ -32,6 +33,16 @@ let CreatureSettingsSchema = new SimpleSchema({
 	},
   // Hide all the unused stats
   hideUnusedStats: {
+    type: Boolean,
+    optional: true,
+  },
+  // Show the tree tab
+  showTreeTab: {
+    type: Boolean,
+    optional: true,
+  },
+  // Hide the spells tab
+  hideSpellsTab: {
     type: Boolean,
     optional: true,
   },
@@ -188,24 +199,29 @@ const insertCreature = new ValidatedMethod({
     let creatureId = Creatures.insert({
 			owner: this.userId,
 		});
-    CreatureProperties.insert({
-      slotTags: ['base'],
-      quantityExpected: 1,
-      type: 'propertySlot',
-      name: 'Base',
-      description: 'Choose a starting point for your character, this will define the basic setup of your character sheet. Without a base, your sheet will be empty.',
-      hideWhenFull: true,
-      parent: {collection: 'creatures', id: creatureId},
-      ancestors: [{collection: 'creatures', id: creatureId}],
-      order: 0,
-      tags: [],
-      spaceLeft: 1,
-      totalFilled: 0,
+
+    // Insert the default properties
+    // Not batchInsert because we want the properties cleaned by the schema
+    let baseId;
+    defaultCharacterProperties(creatureId).forEach(prop => {
+      let id = CreatureProperties.insert(prop);
+      if (prop.name === 'Ruleset'){
+        baseId = id;
+      }
     });
+
+    if (Meteor.isServer){
+      // Insert the 5e ruleset as the default base
+      insertPropertyFromLibraryNode.call({
+        nodeId: 'iHbhfcg3AL5isSWbw',
+        parentRef: {id: baseId, collection: 'creatureProperties'},
+        order: 0.5,
+      });
+    }
+
 		this.unblock();
 		return creatureId;
   },
-
 });
 
 const updateCreature = new ValidatedMethod({

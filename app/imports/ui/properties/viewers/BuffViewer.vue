@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 

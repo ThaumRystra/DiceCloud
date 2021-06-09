@@ -1,30 +1,31 @@
 <template lang="html">
-  <v-toolbar
+  <v-app-bar
     app
     class="character-sheet-toolbar"
     :color="toolbarColor"
     :dark="isDark"
     :light="!isDark"
+    clipped-right
     extended
     tabs
     dense
   >
-    <v-toolbar-side-icon @click="toggleDrawer" />
-    <v-toolbar-title>
-      <v-fade-transition
-        mode="out-in"
-      >
-        <div :key="$store.state.pageTitle">
+    <v-app-bar-nav-icon @click="toggleDrawer" />
+    <v-fade-transition
+      mode="out-in"
+    >
+      <v-app-bar-title :key="$store.state.pageTitle">
+        <div>
           {{ $store.state.pageTitle }}
         </div>
-      </v-fade-transition>
-    </v-toolbar-title>
+      </v-app-bar-title>
+    </v-fade-transition>
     <v-spacer />
     <v-fade-transition
       mode="out-in"
     >
       <div :key="$route.meta.title">
-        <v-toolbar-items v-if="creature">
+        <template v-if="creature">
           <v-menu
             bottom
             left
@@ -40,32 +41,32 @@
               </v-btn>
             </template>
             <v-list v-if="editPermission">
-              <v-list-tile @click="deleteCharacter">
-                <v-list-tile-title>
+              <v-list-item @click="deleteCharacter">
+                <v-list-item-title>
                   <v-icon>delete</v-icon> Delete
-                </v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="showCharacterForm">
-                <v-list-tile-title>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="showCharacterForm">
+                <v-list-item-title>
                   <v-icon>create</v-icon> Edit details
-                </v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="showShareDialog">
-                <v-list-tile-title>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="showShareDialog">
+                <v-list-item-title>
                   <v-icon>share</v-icon> Sharing
-                </v-list-tile-title>
-              </v-list-tile>
+                </v-list-item-title>
+              </v-list-item>
             </v-list>
             <v-list v-else>
-              <v-list-tile @click="unshareWithMe">
-                <v-list-tile-title>
+              <v-list-item @click="unshareWithMe">
+                <v-list-item-title>
                   <v-icon>delete</v-icon> Unshare with me
-                </v-list-tile-title>
-              </v-list-tile>
+                </v-list-item-title>
+              </v-list-item>
             </v-list>
           </v-menu>
-          <v-toolbar-side-icon @click="toggleRightDrawer" />
-        </v-toolbar-items>
+          <v-app-bar-nav-icon @click="toggleRightDrawer" />
+        </template>
       </div>
     </v-fade-transition>
     <v-fade-transition
@@ -74,16 +75,18 @@
     >
       <div
         :key="$route.meta.title"
-        class="layout row"
+        class="layout"
       >
         <v-tabs
-          v-if="creature"
+          v-if="creature && creature.settings"
           class="flex"
           style="min-width: 0"
           centered
           grow
           max="100px"
+          :color="$vuetify.theme.themes.dark.primary"
           :value="$store.getters.tabById($route.params.id)"
+          :background-color="toolbarColor"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}
@@ -98,13 +101,13 @@
           <v-tab>
             Inventory
           </v-tab>
-          <v-tab>
+          <v-tab v-show="!creature.settings.hideSpellsTab">
             Spells
           </v-tab>
           <v-tab>
             Character
           </v-tab>
-          <v-tab>
+          <v-tab v-if="creature.settings.showTreeTab">
             Tree
           </v-tab>
         </v-tabs>
@@ -115,18 +118,18 @@
         />
       </div>
     </v-fade-transition>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import removeCreature from '/imports/api/creature/removeCreature.js';
 import { mapMutations } from 'vuex';
-import { theme } from '/imports/ui/theme.js';
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import CharacterSheetFab from '/imports/ui/creature/character/CharacterSheetFab.vue';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
 
 export default {
   inject: {
@@ -135,9 +138,6 @@ export default {
   components: {
     CharacterSheetFab,
   },
-  data(){return {
-    theme,
-  }},
   computed: {
     creatureId(){
       return this.$route.params.id;
@@ -146,7 +146,7 @@ export default {
       if (this.creature && this.creature.color){
         return this.creature.color;
       } else {
-        return this.$vuetify.theme.secondary;
+        return getThemeColor('secondary');
       }
     },
     isDark(){
@@ -247,6 +247,7 @@ export default {
 }
 .character-sheet-fab {
   bottom: -24px;
-  margin-right: -8px;
+  right: 8px;
+  margin-left: 16px;
 }
 </style>

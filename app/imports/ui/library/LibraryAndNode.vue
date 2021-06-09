@@ -25,10 +25,18 @@
           class="mx-3"
           style="flex-grow: 0; height: 32px;"
         />
+        <insert-library-node-button
+          v-if="libraryId"
+          style="bottom: -32px"
+          fab
+          :library-id="libraryId"
+          :selected-node-id="selected"
+          @selected="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
+        />
       </v-toolbar>
       <div
         v-if="libraryId"
-        style="width: 100%; height: 100%; overflow: auto;"
+        style="width: 100%; height: 100%; overflow: auto; padding: 12px;"
       >
         <library-contents-container
           :library-id="libraryId"
@@ -43,7 +51,7 @@
         edit-mode
         :organize-mode="organize"
         :selected-node-id="selected"
-        style="overflow-y: auto;"
+        style="overflow-y: auto; padding: 12px;"
         @selected="clickNode"
       />
     </div>
@@ -56,21 +64,24 @@
         :_id="selected"
         embedded
         @removed="selected = undefined"
+        @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
       />
     </div>
   </tree-detail-layout>
 </template>
 
-<script>
+<script lang="js">
 import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
 import LibraryBrowser from '/imports/ui/library/LibraryBrowser.vue';
 import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
+import InsertLibraryNodeButton from '/imports/ui/library/InsertLibraryNodeButton.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
 
 export default {
   components: {
@@ -78,6 +89,7 @@ export default {
     LibraryBrowser,
     LibraryNodeDialog,
     LibraryContentsContainer,
+    InsertLibraryNodeButton,
   },
   props: {
     selection: Boolean,
@@ -94,7 +106,7 @@ export default {
     isToolbarDark(){
       return isDarkColor(
         this.selectedNode && this.selectedNode.color ||
-        this.$vuetify.theme.secondary
+        getThemeColor('secondary')
       );
     }
   },

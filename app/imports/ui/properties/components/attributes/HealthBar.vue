@@ -1,6 +1,5 @@
 <template>
   <v-layout
-    row
     wrap
     align-center
     justify-center
@@ -70,7 +69,7 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="js">
 import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 	export default {
     components: {
@@ -109,7 +108,7 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
   margin-right: -50%;
   width: 200%;
   margin-top: -34px !important;
-  z-index: 4;
+  z-index: 7;
   position: relative;
 }
 </style>
@@ -179,6 +178,6 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 		left: 0;
 		right: 0;
 		background-color: rgba(0, 0, 0, 0.15);
-		z-index: 3;
+		z-index: 6;
 	}
 </style>

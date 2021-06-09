@@ -61,7 +61,7 @@ export default function spendResources({prop, log}){
     });
     log.content.push({
       name: 'Uses left',
-      result: prop.usesResult - (prop.usesUsed || 0) - 1,
+      value: prop.usesResult - (prop.usesUsed || 0) - 1,
     });
   }
 
@@ -84,10 +84,10 @@ export default function spendResources({prop, log}){
   // Log all the spending
   if (gainLog.length) log.content.push({
     name: 'Gained',
-    description: gainLog.join('\n'),
+    value: gainLog.join('\n'),
   });
   if (spendLog.length) log.content.push({
     name: 'Spent',
-    description: spendLog.join('\n'),
+    value: spendLog.join('\n'),
   });
 }

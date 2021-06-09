@@ -20,7 +20,6 @@ export default function applyRoll({
   }
   log.content.push({
     name: prop.name,
-    resultPrefix: prop.variableName + ' = ' + prop.roll + ' = ',
-    result: result.toString(),
+    value: prop.variableName + ' = ' + prop.roll + ' = ' + result.toString(),
   });
 }

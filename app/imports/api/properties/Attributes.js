@@ -133,6 +133,11 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  // Denormalised tag if stat is overridden by one with the same variable name
+  overridden: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedAttributeSchema = new SimpleSchema()

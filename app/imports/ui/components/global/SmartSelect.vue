@@ -6,7 +6,7 @@
     :value="safeValue"
     :menu-props="{auto: true, lazy: true}"
     :disabled="isDisabled"
-    box
+    outlined
     @change="change"
     @focus="focused = true"
     @blur="focused = false"
@@ -18,7 +18,7 @@
   </v-select>
 </template>
 
-<script>
+<script lang="js">
 	import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 
 	export default {

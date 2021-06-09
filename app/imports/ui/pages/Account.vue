@@ -1,5 +1,8 @@
 <template>
-  <div class="layout row justify-center">
+  <div
+    class="layout justify-center card-background"
+    style="height: 100%;"
+  >
     <v-card
       class="ma-4 pa-2"
       style="flex-basis: 900px"
@@ -8,14 +11,14 @@
         <v-subheader>
           Preferences
         </v-subheader>
-        <v-list-tile>
+        <v-list-item>
           <smart-switch
             :value="darkMode"
             label="Dark mode"
             @change="setDarkMode"
           />
-        </v-list-tile>
-        <v-list-tile>
+        </v-list-item>
+        <v-list-item>
           <smart-switch
             label="Swap ability scores and modifiers"
             :value="
@@ -25,82 +28,83 @@
             "
             @change="swapAbilityScoresAndModifiers"
           />
-        </v-list-tile>
+        </v-list-item>
 
         <v-subheader>
           Username
         </v-subheader>
-        <v-list-tile data-id="username">
-          <v-list-tile-action>
+        <v-list-item data-id="username">
+          <v-list-item-action>
             <v-tooltip right>
+              <template #activator="{ on }">
+                <v-btn
+                  icon
+                  v-on="on"
+                  @click="changeUsername"
+                >
+                  <v-icon>create</v-icon>
+                </v-btn>
+              </template>
               <span>Change Username</span>
-              <v-btn
-                slot="activator"
-                icon
-                flat
-                @click="changeUsername"
-              >
-                <v-icon>create</v-icon>
-              </v-btn>
             </v-tooltip>
-          </v-list-tile-action>
-          <v-list-tile-title>
+          </v-list-item-action>
+          <v-list-item-title>
             {{ user && user.username }}
-          </v-list-tile-title>
-        </v-list-tile>
+          </v-list-item-title>
+        </v-list-item>
 
         <v-subheader>
           Email
         </v-subheader>
-        <v-list-tile
+        <v-list-item
           v-for="email in emails"
           :key="email.address"
         >
-          <v-list-tile-title>
+          <v-list-item-title>
             {{ email.address }}
-          </v-list-tile-title>
-        </v-list-tile>
+          </v-list-item-title>
+        </v-list-item>
         <v-subheader>
           Patreon
         </v-subheader>
-        <v-list-tile>
-          <v-list-tile-action>
+        <v-list-item>
+          <v-list-item-action>
             <v-tooltip right>
+              <template #activator="{ on }">
+                <v-btn
+                  icon
+                  :loading="updatePatreonLoading"
+                  v-on="on"
+                  @click="updatePatreon"
+                >
+                  <v-icon>refresh</v-icon>
+                </v-btn>
+              </template>
               <span>Refresh Patreon status</span>
-              <v-btn
-                slot="activator"
-                icon
-                flat
-                :loading="updatePatreonLoading"
-                @click="updatePatreon"
-              >
-                <v-icon>refresh</v-icon>
-              </v-btn>
             </v-tooltip>
-          </v-list-tile-action>
-          <v-list-tile-title>
+          </v-list-item-action>
+          <v-list-item-title>
             Tier: {{ tier.name }}
-          </v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile v-if="!user.services.google">
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-if="!user.services.google">
           <v-btn
             color="primary"
             @click="linkWithGoogle"
           >
             Link Google Account
           </v-btn>
-        </v-list-tile>
-        <v-list-tile v-if="!user.services.patreon">
+        </v-list-item>
+        <v-list-item v-if="!user.services.patreon">
           <v-btn
             color="primary"
             @click="linkWithPatreon"
           >
             Link Patreon Account
           </v-btn>
-        </v-list-tile>
+        </v-list-item>
       </v-list>
       <v-layout
-        row
         justify-end
       >
         <v-btn
@@ -121,20 +125,20 @@
           <template
             v-for="(invite, index) in invites"
           >
-            <v-list-tile
+            <v-list-item
               :key="invite._id"
               :data-id="invite._id"
               @click="clickInvite(invite)"
             >
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-item-content>
+                <v-list-item-title>
                   {{ invite.inviteeName || invite.invitee || 'Available' }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-icon>mail_outline</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
+              </v-list-item-action>
+            </v-list-item>
             <v-divider
               :key="index"
             />
@@ -142,7 +146,6 @@
         </v-list>
       </template>
       <v-layout
-        row
         justify-end
         class="mt-3"
       >
@@ -158,7 +161,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import router from '/imports/ui/router.js';
   import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
   import Invites from '/imports/api/users/Invites.js';

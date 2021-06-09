@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';

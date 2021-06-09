@@ -2,15 +2,14 @@
   <v-card
     class="action-card"
     :class="cardClasses"
-    :elevation="hovering ? 8 : undefined"
   >
-    <div class="layout row align-center px-3">
+    <div class="layout align-center px-3">
       <div class="avatar">
         <v-btn
-          flat
           icon
-          outline
-          style="margin-left: -4px; font-size: 18px;"
+          outlined
+          style="font-size: 18px;"
+          class="mr-2"
           :color="model.color || 'primary'"
           :loading="doActionLoading"
           :disabled="model.insufficientResources || !context.editPermission"
@@ -37,7 +36,7 @@
         >
           {{ model.name || propertyName }}
         </div>
-        <div class="action-sub-title layout row align-center">
+        <div class="action-sub-title layout align-center">
           <div class="flex">
             {{ model.actionType }}
           </div>
@@ -91,7 +90,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
@@ -157,6 +156,7 @@ export default {
         'theme--light': !this.theme.isDark,
         'muted-text': this.model.insufficientResources,
         'shrink': this.activated,
+        'elevation-8': this.hovering,
       }
     },
     actionTypeIcon() {
@@ -199,6 +199,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.action-card {
+  transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 .action-title {
   font-size: 16px;
   font-weight: 400;

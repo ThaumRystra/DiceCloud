@@ -21,14 +21,13 @@ export default function applyToggle({
   if (result.constructor.name === 'ErrorNode') {
     log.content.push({
       name: 'Toggle error',
-      error: result.toString(),
+      value: result.toString(),
     });
     return false;
   }
   log.content.push({
     name: prop.name || 'Toggle',
-    resultPrefix: prop.condition + ' = ',
-    result: result.toString(),
+    value: prop.condition + ' = ' + result.toString(),
   });
   return !!result.value;
 }

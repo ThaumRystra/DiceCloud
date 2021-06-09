@@ -16,7 +16,7 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', library)"
       >
@@ -26,7 +26,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 	export default {

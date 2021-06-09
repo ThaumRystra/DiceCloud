@@ -5,6 +5,8 @@
         :model="model"
         :editing="editing"
         :flat="flat"
+        :embedded="embedded"
+        style="flex-grow: 0;"
         @duplicate="duplicate"
         @remove="remove"
         @toggle-editing="editing = !editing"
@@ -12,12 +14,16 @@
       />
     </template>
     <template v-if="model">
+      <template v-if="!editing && !embedded">
+        <breadcrumbs :model="model" />
+      </template>
       <v-fade-transition
         mode="out-in"
       >
         <component
           :is="model.type + 'Form'"
           v-if="editing"
+          :key="_id"
           class="creature-property-form"
           :model="model"
           @change="change"
@@ -27,6 +33,7 @@
         <component
           :is="model.type + 'Viewer'"
           v-else-if="!editing && $options.components[model.type + 'Viewer']"
+          :key="_id"
           class="creature-property-viewer"
           :model="model"
         />
@@ -41,15 +48,23 @@
           :root="{collection: 'creatureProperties', id: model._id}"
           @selected="selectSubProperty"
         />
+        <v-btn
+          text
+          data-id="insert-creature-property-btn"
+          @click="addProperty"
+        >
+          <v-icon>add</v-icon>
+          Property
+        </v-btn>
       </template>
     </template>
     <div
       v-if="!embedded"
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Done
@@ -58,7 +73,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty.js';
@@ -79,6 +94,10 @@ import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js'
 import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
 import { get, findLast } from 'lodash';
 import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { getHighestOrder } from '/imports/api/parenting/order.js';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
+import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -98,6 +117,7 @@ export default {
     DialogBase,
     PropertyToolbar,
     CreaturePropertiesTree,
+    Breadcrumbs,
   },
   props: {
     _id: String,
@@ -106,10 +126,13 @@ export default {
   },
   data(){ return {
     editing: !!this.startInEditTab,
+    // CurrentId lags behind Id by one tick so that events fired by destroying
+    // forms keyed to the old ID are applied before the new ID overwrites it
+    currentId: undefined,
   }},
   meteor: {
     model(){
-      return CreatureProperties.findOne(this._id);
+      return CreatureProperties.findOne(this.currentId);
     },
     editPermission(){
       try {
@@ -134,6 +157,16 @@ export default {
       return this.creature && this.creature._id;
     },
   },
+  watch: {
+    _id: {
+      immediate: true,
+      handler(newId){
+        this.$nextTick(() => {
+          this.currentId = newId;
+        });
+      }
+    },
+  },
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -141,12 +174,12 @@ export default {
   methods: {
     getPropertyName,
     duplicate(){
-      duplicateProperty.call({_id: this._id}, (error) => {
+      duplicateProperty.call({_id: this.currentId}, (error, id) => {
         if (error) {
           console.error(error);
         }
         if (this.embedded){
-          this.$emit('duplicated');
+          this.$emit('duplicated', id);
         } else {
           this.$store.dispatch('popDialogStack');
         }
@@ -154,25 +187,25 @@ export default {
     },
     change({path, value, ack}){
       if (path && path[0] === 'equipped'){
-        equipItem.call({_id: this._id, equipped: value}, (error) =>{
+        equipItem.call({_id: this.currentId, equipped: value}, (error) =>{
           if (error) console.warn(error);
           ack && ack(error && error.reason || error);
         });
         return;
       }
-      updateCreatureProperty.call({_id: this._id, path, value}, (error) =>{
+      updateCreatureProperty.call({_id: this.currentId, path, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
     },
     damage({operation, value, ack}){
-      damageProperty.call({_id: this._id, operation, value}, (error) =>{
+      damageProperty.call({_id: this.currentId, operation, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
     },
     push({path, value, ack}){
-      pushToProperty.call({_id: this._id, path, value}, (error) =>{
+      pushToProperty.call({_id: this.currentId, path, value}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
@@ -180,20 +213,20 @@ export default {
     pull({path, ack}){
       let itemId = get(this.model, path)._id;
       path.pop();
-      pullFromProperty.call({_id: this._id, path, itemId}, (error) =>{
+      pullFromProperty.call({_id: this.currentId, path, itemId}, (error) =>{
         if (error) console.warn(error);
         ack && ack(error && error.reason || error);
       });
     },
     remove(){
-      const _id = this._id;
+      const _id = this.currentId;
       softRemoveProperty.call({_id});
       if (this.embedded){
         this.$emit('removed');
       } else {
         this.$store.dispatch('popDialogStack');
       }
-      this.$store.dispatch('snackbar', {
+      snackbar({
         text: `Deleted ${getPropertyTitle(this.model)}`,
         callbackName: 'undo',
         callback(){
@@ -206,6 +239,30 @@ export default {
         component: 'creature-property-dialog',
         elementId: `tree-node-${_id}`,
         data: {_id},
+      });
+    },
+    addProperty(){
+      let parentPropertyId = this.model._id;
+      // Open the dialog to insert the property
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-creation-dialog',
+        elementId: 'insert-creature-property-btn',
+        callback(creatureProperty){
+          if (!creatureProperty) return;
+          // Get order and parent
+          let parentRef = {
+            id: parentPropertyId,
+            collection: 'creatureProperties',
+          };
+          creatureProperty.order = getHighestOrder({
+            collection: CreatureProperties,
+            ancestorId: parentRef.id,
+          }) + 0.5;
+
+          // Insert the property
+          let id = insertProperty.call({creatureProperty, parentRef});
+          return `tree-node-${id}`;
+        }
       });
     }
   }

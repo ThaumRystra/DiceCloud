@@ -2,22 +2,22 @@
   <v-card>
     <template v-if="!result">
       <v-btn-toggle v-model="advantage">
-        <v-btn flat>
+        <v-btn text>
           Advantage
         </v-btn>
-        <v-btn flat>
+        <v-btn text>
           Disadvantage
         </v-btn>
       </v-btn-toggle>
       <v-card-text>
-        <div class="layout row justify-center align-center">
+        <div class="layout justify-center align-center">
           <v-btn
             large
             fab
-            outline
+            outlined
             @click="makeRoll"
           >
-            <div class="display-1">
+            <div class="text-h4">
               {{ numberToSignedString(bonus) }}
             </div>
           </v-btn>
@@ -26,7 +26,7 @@
     </template>
     <template v-else>
       <div>
-        <div class="title">
+        <div class="text-h6">
           <span
             v-for="(roll, index) of rolls"
             :key="index"
@@ -39,7 +39,7 @@
             {{ numberToSignedString(bonus) }}
           </span>
         </div>
-        <div class="display-1">
+        <div class="text-h4">
           {{ result }}
         </div>
       </div>
@@ -47,7 +47,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
   props: {

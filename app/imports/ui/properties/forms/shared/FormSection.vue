@@ -1,31 +1,25 @@
 <template lang="html">
   <form-sections v-if="standalone">
-    <v-expansion-panel-content>
-      <div
-        slot="header"
-        class="subheading"
-      >
+    <v-expansion-panel>
+      <v-expansion-panel-header>
         {{ name }}
-      </div>
-      <v-card-text>
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
         <slot />
-      </v-card-text>
-    </v-expansion-panel-content>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
   </form-sections>
-  <v-expansion-panel-content v-else>
-    <div
-      slot="header"
-      class="subheading"
-    >
+  <v-expansion-panel v-else>
+    <v-expansion-panel-header>
       {{ name }}
-    </div>
-    <v-card-text>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content>
       <slot />
-    </v-card-text>
-  </v-expansion-panel-content>
+    </v-expansion-panel-content>
+  </v-expansion-panel>
 </template>
 
-<script>
+<script lang="js">
 import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
 export default {
 	components: {

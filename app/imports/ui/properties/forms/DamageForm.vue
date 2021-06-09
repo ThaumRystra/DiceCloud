@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div class="layout row">
+    <div class="layout">
       <text-field
         ref="focusFirst"
         label="Damage"
@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 

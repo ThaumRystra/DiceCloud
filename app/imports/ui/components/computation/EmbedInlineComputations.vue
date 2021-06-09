@@ -4,7 +4,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import embedInlineCalculations from '/imports/api/creature/computation/afterComputation/embedInlineCalculations.js';
 

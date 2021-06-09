@@ -7,7 +7,6 @@
       <v-spacer />
       <v-btn
         icon
-        flat
         data-id="experience-add-button"
         @click="addExperience"
       >
@@ -15,7 +14,6 @@
       </v-btn>
       <v-btn
         icon
-        flat
         @click="recompute"
       >
         <v-icon>refresh</v-icon>
@@ -34,10 +32,10 @@
       v-else-if="experiences.length === 0"
       class="layout column align-center justify-center fill-height"
     >
-      <v-icon style="font-size: 240px; width: 240px; height: 240px;">
+      <v-icon class="big-icon">
         $vuetify.icons.baby_face
       </v-icon>
-      <p class="headline">
+      <p class="text-h5">
         No experiences
       </p>
     </div>
@@ -46,32 +44,32 @@
         group
         mode="out"
       >
-        <v-list-tile
+        <v-list-item
           v-for="experience in experiences"
           :key="experience._id"
           :data-id="experience._id"
         >
-          <v-list-tile-action class="mr-3">
-            <v-list-tile-action-text>
+          <v-list-item-action class="mr-3">
+            <v-list-item-action-text>
               {{ formatDate(experience.date) }}
-            </v-list-tile-action-text>
-          </v-list-tile-action>
-          <v-list-tile-content>
+            </v-list-item-action-text>
+          </v-list-item-action>
+          <v-list-item-content>
             <template v-if="experience.name">
-              <v-list-tile-title>
+              <v-list-item-title>
                 {{ experience.name }}
-              </v-list-tile-title>
-              <v-list-tile-sub-title>
+              </v-list-item-title>
+              <v-list-item-subtitle>
                 {{ xpText(experience) }}
-              </v-list-tile-sub-title>
+              </v-list-item-subtitle>
             </template>
             <template v-else>
-              <v-list-tile-title>
+              <v-list-item-title>
                 {{ xpText(experience) }}
-              </v-list-tile-title>
+              </v-list-item-title>
             </template>
-          </v-list-tile-content>
-          <v-list-tile-action>
+          </v-list-item-content>
+          <v-list-item-action>
             <v-btn
               icon
               flat
@@ -80,14 +78,14 @@
             >
               <v-icon>delete</v-icon>
             </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
+          </v-list-item-action>
+        </v-list-item>
       </v-slide-x-transition>
     </v-list>
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import { format } from 'date-fns';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Experiences, { removeExperience, recomputeExperiences } from '/imports/api/creature/experience/Experiences.js';
@@ -170,5 +168,9 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.big-icon, .big-icon * {
+  width: 240px !important;
+  height: 240px !important;
+}
 </style>

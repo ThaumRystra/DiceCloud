@@ -1,13 +1,13 @@
 <template lang="html">
-  <v-list-tile
+  <v-list-item
     class="spell-slot-list-tile"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-tile-content>
-      <v-list-tile-title>
+    <v-list-item-content>
+      <v-list-item-title>
         <div
           v-if="model.value > 4"
-          class="layout row value"
+          class="layout value"
           style="align-items: baseline;"
         >
           <div
@@ -22,7 +22,7 @@
         </div>
         <div
           v-else
-          class="layout row align-center slot-bubbles"
+          class="layout align-center slot-bubbles"
         >
           <v-icon
             v-for="i in model.value"
@@ -35,26 +35,26 @@
             }}
           </v-icon>
         </div>
-      </v-list-tile-title>
-      <v-list-tile-sub-title>
+      </v-list-item-title>
+      <v-list-item-subtitle>
         {{ model.name }}
-      </v-list-tile-sub-title>
-    </v-list-tile-content>
-    <v-list-tile-avatar v-if="!hideCastButton">
+      </v-list-item-subtitle>
+    </v-list-item-content>
+    <v-list-item-avatar v-if="!hideCastButton">
       <v-btn
         icon
-        flat
+        text
         class="primary--text"
         :data-id="`spell-slot-cast-btn-${model._id}`"
         @click.stop="$emit('cast')"
       >
         <v-icon>$vuetify.icons.spell</v-icon>
       </v-btn>
-    </v-list-tile-avatar>
-  </v-list-tile>
+    </v-list-item-avatar>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
 	props: {
@@ -105,7 +105,4 @@ export default {
 	.theme--dark .max-value {
 		color: rgba(255, 255, 255, 0.54);
 	}
-  .primary--text .v-icon, .primary--text .max-value, .primary--text .current-value, .primary--text .v-list__tile__sub-title {
-    color: #b71c1c
-  }
 </style>

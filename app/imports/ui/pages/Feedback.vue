@@ -12,7 +12,7 @@
       />
       <v-card-title primary-title>
         <div>
-          <h3 class="headline mb-0">
+          <h3 class="text-h5 mb-0">
             DiceCloud Discord server
           </h3>
           <div>
@@ -24,7 +24,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-          flat
+          text
           color="primary"
           href="https://discord.gg/qEvdfeB"
         >
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
 }
 </script>

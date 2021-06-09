@@ -6,7 +6,7 @@
     >
       <div
         v-if="model.value !== undefined"
-        class="display-1"
+        class="text-h4"
       >
         <div
           v-if="model.damage !== undefined"
@@ -19,7 +19,7 @@
       </div>
       <div
         v-if="model.modifier !== undefined"
-        class="title"
+        class="text-h6"
       >
         {{ numberToSignedString(model.modifier) }}
       </div>
@@ -43,27 +43,30 @@
       :calculations="model.descriptionCalculations"
       :inactive="model.inactive"
     />
-
-    <effect-viewer
-      v-if="context.creatureId && model.baseValueCalculation"
-      :model="{
-        name: 'Base value',
-        result: model.baseValue,
-        operation: 'base'
-      }"
-    />
-    <effect-viewer
-      v-for="effect in effects"
-      :key="effect._id"
-      :model="effect"
-    />
+    <v-list>
+      <attribute-effect
+        v-for="effect in baseEffects"
+        :key="effect._id"
+        :model="effect"
+        :hide-breadcrumbs="effect._id === model._id"
+        :data-id="effect._id"
+        @click="effect._id !== model._id && clickEffect(effect._id)"
+      />
+      <attribute-effect
+        v-for="effect in effects"
+        :key="effect._id"
+        :model="effect"
+        :data-id="effect._id"
+        @click="clickEffect(effect._id)"
+      />
+    </v-list>
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
-	import EffectViewer from '/imports/ui/properties/viewers/EffectViewer.vue';
+	import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 	export default {
@@ -71,7 +74,7 @@
       context: { default: {} }
     },
 		components: {
-			EffectViewer,
+			AttributeEffect,
 		},
 		mixins: [propertyViewerMixin],
 		computed: {
@@ -87,8 +90,37 @@
 		},
 		methods: {
 			numberToSignedString,
+      clickEffect(id){
+        this.$store.commit('pushDialogStack', {
+          component: 'creature-property-dialog',
+          elementId: `${id}`,
+          data: {_id: id},
+        });
+      },
 		},
     meteor: {
+      baseEffects(){
+        if (this.context.creatureId){
+          let creatureId = this.context.creatureId;
+          return CreatureProperties.find({
+            'ancestors.id': creatureId,
+            type: 'attribute',
+            variableName: this.model.variableName,
+            removed: {$ne: true},
+            inactive: {$ne: true},
+          }).map( prop => ({
+            _id: prop._id,
+            name: 'Attribute base value',
+            operation: 'base',
+            calculation: prop.baseValueCalculation,
+            result: prop.baseValue,
+            stats: [prop.variableName],
+            ancestors: prop.ancestors,
+          }) ).filter(effect => effect.result);
+        } else {
+          return [];
+        }
+      },
       effects(){
         if (this.context.creatureId){
           let creatureId = this.context.creatureId;

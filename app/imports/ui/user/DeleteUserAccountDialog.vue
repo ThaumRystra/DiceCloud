@@ -9,7 +9,7 @@
         :value="true"
         icon="warning"
         color="error"
-        outline
+        outlined
       >
         Deleted accounts can not be recovered
       </v-alert>
@@ -76,10 +76,10 @@
     </div>
     <div
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel
@@ -88,7 +88,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/Creatures.js';
 import Libraries from '/imports/api/library/Libraries.js';

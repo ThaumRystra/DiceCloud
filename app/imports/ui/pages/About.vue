@@ -12,7 +12,7 @@
           class="white--text"
         >
           <p
-            class="white--text ma-2 headline text-xs-center"
+            class="white--text ma-2 text-h5 text-center"
             style="max-width: 1200px;"
           >
             DiceCloud is a single-developer project started in 2014 with the aim of
@@ -25,7 +25,7 @@
     </section>
     <section class="layout column align-center ma-2 mt-4">
       <div>
-        <h3 class="headline mb-2">
+        <h3 class="text-h5 mb-2">
           Special Thanks
         </h3>
         <p>
@@ -34,7 +34,7 @@
           <b>The "Heroes" of Asaea</b> The D&amp;D party whose joy was the fuel
           with which DiceCloud was powered
         </p>
-        <h3 class="title">
+        <h3 class="text-h6">
           Paragon tier Patrons
         </h3>
         <v-list
@@ -42,29 +42,29 @@
           two-line
           style="background: inherit;"
         >
-          <v-list-tile
+          <v-list-item
             v-for="paragon in paragons"
             :key="paragon.name"
           >
-            <v-list-tile-avatar>
+            <v-list-item-avatar>
               <v-img :src="`/images/paragons/${paragon.avatar}.png`" />
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
                 {{ paragon.name }}
-              </v-list-tile-title>
-              <v-list-tile-sub-title>
+              </v-list-item-title>
+              <v-list-item-subtitle>
                 {{ paragon.title }}
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </div>
     </section>
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
   data(){ return {
     paragons:[{

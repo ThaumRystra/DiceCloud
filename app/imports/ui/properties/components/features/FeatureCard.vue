@@ -20,7 +20,7 @@
   </toolbar-card>
 </template>
 
-<script>
+<script lang="js">
 	import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
   import EmbedInlineComputations from '/imports/ui/components/computation/EmbedInlineComputations.vue';
 

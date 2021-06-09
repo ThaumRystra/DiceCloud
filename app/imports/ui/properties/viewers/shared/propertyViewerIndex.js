@@ -14,6 +14,7 @@ import FolderViewer from '/imports/ui/properties/viewers/FolderViewer.vue';
 import ItemViewer from '/imports/ui/properties/viewers/ItemViewer.vue';
 import NoteViewer from '/imports/ui/properties/viewers/NoteViewer.vue';
 import ProficiencyViewer from '/imports/ui/properties/viewers/ProficiencyViewer.vue';
+import ReferenceViewer from '/imports/ui/properties/viewers/ReferenceViewer.vue';
 import RollViewer from '/imports/ui/properties/viewers/RollViewer.vue';
 import SkillViewer from '/imports/ui/properties/viewers/SkillViewer.vue';
 import SavingThrowViewer from '/imports/ui/properties/viewers/SavingThrowViewer.vue';
@@ -42,6 +43,7 @@ export default {
   proficiency: ProficiencyViewer,
   propertySlot: SlotViewer,
   roll: RollViewer,
+  reference: ReferenceViewer,
   savingThrow: SavingThrowViewer,
   slotFiller: SlotFillerViewer,
   skill: SkillViewer,

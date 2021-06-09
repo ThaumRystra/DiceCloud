@@ -14,9 +14,10 @@ let ProficiencySchema = new SimpleSchema({
 		type: String,
 	},
 	// A number representing how proficient the character is
+  // where 0.49 is half rounded down and 0.5 is half rounded up
 	value: {
 		type: Number,
-		allowedValues: [0.5, 1, 2],
+		allowedValues: [0.49, 0.5, 1, 2],
 		defaultValue: 1,
 	},
 });

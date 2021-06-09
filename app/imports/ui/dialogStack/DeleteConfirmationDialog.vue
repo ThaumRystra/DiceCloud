@@ -11,7 +11,7 @@
         v-if="name"
         v-model="inputName"
       />
-      <div class="layout row justify-center">
+      <div class="layout justify-center">
         <v-btn
           v-show="nameMatch"
           class="primary"
@@ -24,7 +24,7 @@
     <v-spacer slot="actions" />
     <v-btn
       slot="actions"
-      flat
+      text
       @click="$store.dispatch('popDialogStack')"
     >
       Cancel
@@ -32,7 +32,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 export default {

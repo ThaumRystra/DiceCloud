@@ -18,6 +18,8 @@
           type="text"
           label="Email"
           :rules="emailRules"
+          class="ma-2"
+          outlined
           required
           @keyup.enter="submit"
         />
@@ -26,6 +28,8 @@
           type="text"
           label="Username"
           :rules="usernameRules"
+          class="ma-2"
+          outlined
           required
           @keyup.enter="submit"
         />
@@ -34,6 +38,8 @@
           type="password"
           label="Password"
           :rules="passwordRules"
+          class="ma-2"
+          outlined
           required
           @keyup.enter="submit"
         />
@@ -42,13 +48,15 @@
           type="password"
           label="Password Again"
           :rules="password2Rules"
+          class="ma-2"
+          outlined
           required
           @keyup.enter="submit"
         />
         <div class="error--text">
           {{ error }}
         </div>
-        <v-layout row>
+        <v-layout>
           <v-btn
             :disabled="!valid"
             color="accent"
@@ -77,8 +85,8 @@
   </div>
 </template>
 
-<script>
-  export default{
+<script lang="js">
+  export default {
     data() {
       return {
         valid: true,
@@ -88,7 +96,7 @@
         ],
         email: '',
         emailRules: [
-          v => !!v || 'Name is required',
+          v => !!v || 'E-mail is required',
           v => /.+@.+/.test(v) || 'E-mail must be valid',
         ],
         password: '',

@@ -1,65 +1,61 @@
 <template lang="html">
   <div
+    class="library-browser"
     style="
       background-color: inherit;
       overflow-y: auto;
     "
   >
-    <v-expansion-panel
-      style="box-shadow: none;"
-      expand
+    <v-expansion-panels
+      v-model="expandedLibrary"
+      accordian
+      flat
+      multiple
     >
-      <v-expansion-panel-content
-        v-for="(library, index) in libraries"
+      <v-expansion-panel
+        v-for="library in libraries"
         :key="library._id"
-        v-model="expandedLibrary[index]"
-        lazy
         :data-id="library._id"
       >
-        <template #header>
-          <div class="title">
+        <v-expansion-panel-header>
+          <div class="text-h6">
             {{ library.name }}
           </div>
-        </template>
-        <v-card flat>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-layout
+            justify-space-around
+            class="ma-2"
+          >
+            <insert-library-node-button
+              :library-id="library._id"
+              :selected-node-id="selectedNodeId"
+              @selected="e => $emit('selected', e)"
+            />
+            <v-btn
+              color="primary"
+              outlined
+              small
+              @click="$router.push(`/library/${library._id}`)"
+            >
+              <v-icon>arrow_forward</v-icon>
+            </v-btn>
+          </v-layout>
           <library-contents-container
             :library-id="library._id"
             :organize-mode="organizeMode && editPermission(library)"
             :edit-mode="editMode"
             :selected-node-id="selectedNodeId"
-            :should-subscribe="expandedLibrary[index]"
+            should-subscribe
             @selected="e => $emit('selected', e)"
           />
-          <v-card-actions>
-            <v-btn
-              flat
-              small
-              style="background-color: inherit; margin-top: 0;"
-              :disabled="!editPermission(library)"
-              :data-id="`insert-node-${library._id}`"
-              @click="insertLibraryNode(library._id)"
-            >
-              <v-icon>add</v-icon>
-              New property
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              flat
-              small
-              icon
-              :disabled="!editPermission(library)"
-              @click="$router.push(`/library/${library._id}`)"
-            >
-              <v-icon>arrow_forward</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <v-btn
       v-show="noLibrariesExpanded"
       v-if="editMode"
-      flat
+      text
       color="primary"
       style="background-color: inherit;"
       data-id="insert-library-button"
@@ -71,18 +67,17 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import LibraryContentsContainer from '/imports/ui/library/LibraryContentsContainer.vue';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { getAncestry } from  '/imports/api/parenting/parenting.js';
+import InsertLibraryNodeButton from '/imports/ui/library/InsertLibraryNodeButton.vue';
 
 export default {
   components: {
     LibraryContentsContainer,
+    InsertLibraryNodeButton,
   },
   props: {
     organizeMode: Boolean,
@@ -98,12 +93,7 @@ export default {
   };},
   computed: {
     noLibrariesExpanded(){
-      if (!this.expandedLibrary) return true;
-      let noneExpanded = true;
-      this.expandedLibrary.forEach(lib => {
-        if(lib) noneExpanded = false;
-      });
-      return noneExpanded;
+      return !this.expandedLibrary || this.expandedLibrary.length === 0;
     },
   },
   meteor: {
@@ -155,37 +145,12 @@ export default {
         data: {_id},
       });
     },
-    insertLibraryNode(libraryId){
-      if (this.paidBenefits){
-        let parentRef;
-        if (this.organizeMode && this.selectedNodeId){
-          parentRef = {collection: 'libraryNodes', id: this.selectedNodeId}
-        } else {
-          parentRef = {collection: 'libraries', id: libraryId};
-        }
-        let {ancestors} = getAncestry({parentRef});
-        this.$store.commit('pushDialogStack', {
-          component: 'library-node-creation-dialog',
-          elementId: `insert-node-${libraryId}`,
-          callback(libraryNode){
-            if (!libraryNode) return;
-            libraryNode.parent = parentRef;
-            libraryNode.ancestors = ancestors;
-            setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
-            let libraryNodeId = insertNode.call(libraryNode);
-            return `tree-node-${libraryNodeId}`;
-          }
-        });
-      } else {
-        this.$store.commit('pushDialogStack', {
-          component: 'tier-too-low-dialog',
-          elementId: `insert-node-${libraryId}`,
-        });
-      }
-    },
   },
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.library-browser .v-expansion-panel-content__wrap, .library-browser .v-expansion-panel-header {
+  padding: 0 !important;
+}
 </style>

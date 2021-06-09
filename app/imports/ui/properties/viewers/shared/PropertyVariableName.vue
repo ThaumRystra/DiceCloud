@@ -1,10 +1,13 @@
 <template lang="html">
-	<div v-if="value" class="mb-3">
-		<code>{{value}}</code>
-	</div>
+  <div
+    v-if="value"
+    class="mb-3"
+  >
+    <code>{{ value }}</code>
+  </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
 	props: {
 		value: String,

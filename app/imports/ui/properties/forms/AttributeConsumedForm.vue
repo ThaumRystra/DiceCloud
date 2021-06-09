@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="layout row">
+  <div class="layout">
     <smart-combobox
       label="Attribute"
       hint="The attribute variable name that will be consumed"
@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
 

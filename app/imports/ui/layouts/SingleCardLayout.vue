@@ -3,7 +3,7 @@
   functional
 >
   <div
-    class="pa-4 layout column align-center"
+    class="pa-4 layout column align-center card-background"
     style="height: calc(100vh - 96px); display: flex;"
   >
     <v-card
@@ -13,3 +13,7 @@
     </v-card>
   </div>
 </template>
+
+<script lang="js">
+  export default {}
+</script>

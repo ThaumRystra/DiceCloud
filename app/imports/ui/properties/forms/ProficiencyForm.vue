@@ -7,7 +7,7 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-    <div class="layout row wrap justify-start proficiency-form">
+    <div class="layout wrap justify-start proficiency-form">
       <smart-combobox
         label="Skills"
         class="mr-2"
@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
   import skillListMixin from '/imports/ui/properties/forms/shared/lists/skillListMixin.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';

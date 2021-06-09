@@ -6,7 +6,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
 	import marked from 'marked';
 
 	export default {

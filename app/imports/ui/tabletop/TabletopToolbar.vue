@@ -5,7 +5,7 @@
     dark
     dense
   >
-    <v-toolbar-side-icon @click="toggleDrawer" />
+    <v-app-bar-nav-icon @click="toggleDrawer" />
     <v-toolbar-title>
       Tabletop
     </v-toolbar-title>
@@ -13,7 +13,7 @@
   </v-toolbar>
 </template>
 
-<script>
+<script lang="js">
 import { mapMutations } from 'vuex';
 
 export default {

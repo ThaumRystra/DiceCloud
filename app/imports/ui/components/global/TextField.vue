@@ -6,7 +6,7 @@
     :error-messages="errors"
     :value="safeValue"
     :disabled="isDisabled"
-    :box="!regular"
+    :outlined="!regular"
     @input="input"
     @focus="focused = true"
     @blur="focused = false"
@@ -14,7 +14,7 @@
   />
 </template>
 
-<script>
+<script lang="js">
   import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 
   export default {

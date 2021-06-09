@@ -14,7 +14,7 @@
     <v-spacer slot="actions" />
     <v-btn
       slot="actions"
-      flat
+      text
       :disabled="!valid"
       :loading="loading"
       @click="setUsername"
@@ -24,7 +24,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 export default {

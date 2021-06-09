@@ -18,7 +18,7 @@
       @push="({path, value, ack}) => $emit('push', {path: ['itemsConsumed', ...path], value, ack})"
       @pull="({path, ack}) => $emit('pull', {path: ['itemsConsumed', ...path], ack})"
     />
-    <div class="layout row justify-center">
+    <div class="layout justify-center">
       <v-menu
         origin="center center"
         transition="scale-transition"
@@ -31,26 +31,26 @@
             :disabled="addResourceLoading || context.editPermission === false"
             icon
             large
-            outline
+            outlined
             v-on="on"
           >
             <v-icon>add</v-icon>
           </v-btn>
         </template>
         <v-list>
-          <v-list-tile @click="addAttributesConsumed">
-            <v-list-tile-title>Add Resource</v-list-tile-title>
-          </v-list-tile>
-          <v-list-tile @click="addItemsConsumed">
-            <v-list-tile-title>Add Ammo</v-list-tile-title>
-          </v-list-tile>
+          <v-list-item @click="addAttributesConsumed">
+            <v-list-item-title>Add Resource</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="addItemsConsumed">
+            <v-list-item-title>Add Ammo</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="js">
   import AttributesConsumedListForm from '/imports/ui/properties/forms/AttributesConsumedListForm.vue';
   import ItemsConsumedListForm from '/imports/ui/properties/forms/ItemsConsumedListForm.vue';
   import ItemConsumedSchema from '/imports/api/properties/subSchemas/ItemConsumedSchema.js';

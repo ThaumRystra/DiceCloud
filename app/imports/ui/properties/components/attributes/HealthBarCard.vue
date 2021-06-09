@@ -13,7 +13,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 	import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.vue';
 
 	export default {

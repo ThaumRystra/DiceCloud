@@ -1,7 +1,7 @@
-const INVENTORY_TAGS = Object.freeze({
+const BUILT_IN_TAGS = Object.freeze({
   inventory: 'inventory',
   equipment: 'equipment',
   carried: 'carried',
 });
 
-export default INVENTORY_TAGS;
+export default BUILT_IN_TAGS;

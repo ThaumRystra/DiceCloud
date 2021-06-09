@@ -1,24 +1,24 @@
 <template lang="html">
-  <v-list-tile
+  <v-list-item
     class="spell"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-tile-avatar class="spell-avatar">
+    <v-list-item-avatar class="spell-avatar">
       <property-icon
         class="mr-2"
         :model="model"
         :color="model.color"
       />
-    </v-list-tile-avatar>
-    <v-list-tile-content>
-      <v-list-tile-title>
+    </v-list-item-avatar>
+    <v-list-item-content>
+      <v-list-item-title>
         {{ title }}
-      </v-list-tile-title>
-      <v-list-tile-sub-title v-if="components">
-        {{ components }}
-      </v-list-tile-sub-title>
-    </v-list-tile-content>
-    <v-list-tile-action>
+      </v-list-item-title>
+      <v-list-item-subtitle v-if="spellComponents">
+        {{ spellComponents }}
+      </v-list-item-subtitle>
+    </v-list-item-content>
+    <v-list-item-action>
       <smart-checkbox
         v-if="preparingSpells"
         :value="model.prepared || model.alwaysPrepared"
@@ -37,18 +37,17 @@
       <v-btn
         v-else-if="showInfoButton"
         icon
-        flat
         class="info-icon"
         :data-id="`spell-info-btn-${model._id}`"
         @click.stop="$emit('show-info')"
       >
         <v-icon>info</v-icon>
       </v-btn>
-    </v-list-tile-action>
-  </v-list-tile>
+    </v-list-item-action>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 
@@ -66,7 +65,7 @@ export default {
     hasClickListener(){
       return this.$listeners && !!this.$listeners.click;
     },
-    components(){
+    spellComponents(){
       let components = [];
       if (this.model.ritual) components.push('R');
       if (this.model.concentration) components.push('C');

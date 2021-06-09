@@ -22,8 +22,7 @@ export default function applySave({
     let dc = result.value;
     log.content.push({
       name: prop.name,
-      resultPrefix: ' DC ',
-      result: result.toString(),
+      value: ' DC ' + result.toString(),
     });
     if (prop.target === 'self'){
       let save = CreaturesProperties.findOne({
@@ -36,7 +35,8 @@ export default function applySave({
       });
       if (!save){
         log.content.push({
-          error: 'No saving throw found: ' + prop.stat,
+          name: 'Saving throw error',
+          value: 'No saving throw found: ' + prop.stat,
         });
         return;
       }
@@ -60,9 +60,7 @@ export default function applySave({
       let saveSuccess = result >= dc;
       log.content.push({
         name: 'Save',
-        resultPrefix,
-        result,
-        details: saveSuccess ? 'Passed' : 'Failed'
+        value: resultPrefix + result + (saveSuccess ? 'Passed' : 'Failed')
       });
       return !saveSuccess;
     } else {
@@ -71,7 +69,8 @@ export default function applySave({
     }
   } catch (e){
     log.content.push({
-      error: e.toString(),
+      name: 'Save error',
+      value: e.toString(),
     });
   }
 }

@@ -5,7 +5,7 @@
         v-for="(attribute, i) in model"
         :key="attribute._id || i"
       >
-        <div class="layout row align-center">
+        <div class="layout align-center">
           <div style="flex-grow: 1;">
             <attribute-consumed-form
               :model="attribute"
@@ -13,7 +13,7 @@
             />
           </div>
           <v-btn
-            outline
+            outlined
             icon
             large
             class="ma-3"
@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import AttributeConsumedForm from '/imports/ui/properties/forms/AttributeConsumedForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 

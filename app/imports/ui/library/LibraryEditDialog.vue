@@ -6,7 +6,6 @@
       </v-toolbar-title>
       <v-spacer />
       <v-btn
-        flat
         icon
         data-id="share-library-button"
         @click="share"
@@ -14,7 +13,6 @@
         <v-icon>share</v-icon>
       </v-btn>
       <v-btn
-        flat
         icon
         data-id="delete-library-button"
         @click="remove"
@@ -32,7 +30,7 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         data-id="delete-library-button"
         @click="$store.dispatch('popDialogStack')"
       >
@@ -42,7 +40,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Libraries, { updateLibraryName, removeLibrary } from '/imports/api/library/Libraries.js';
 

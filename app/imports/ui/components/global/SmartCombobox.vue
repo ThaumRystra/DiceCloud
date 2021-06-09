@@ -7,7 +7,7 @@
     :menu-props="{auto: true, lazy: true}"
     :search-input.sync="searchInput"
     :disabled="isDisabled"
-    box
+    outlined
     @change="customChange"
     @focus="focused = true"
     @blur="focused = false"
@@ -19,7 +19,7 @@
   </v-combobox>
 </template>
 
-<script>
+<script lang="js">
 	import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 
 	export default {

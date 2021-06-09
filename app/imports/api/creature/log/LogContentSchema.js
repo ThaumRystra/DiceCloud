@@ -3,31 +3,14 @@ import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import RollDetailsSchema from '/imports/api/properties/subSchemas/RollDetailsSchema.js';
 
 let LogContentSchema = new SimpleSchema({
+  // The name of the field, included in discord webhook message
   name: {
     type: String,
     optional: true,
   },
-  error: {
-    type: String,
-    optional: true,
-  },
-  resultPrefix: {
-    type: String,
-    optional: true,
-  },
-  result: {
-    type: String,
-    optional: true,
-  },
-  expandedResult: {
-    type: String,
-    optional: true,
-  },
-  details: {
-    type: String,
-    optional: true,
-  },
-  description: {
+  // The details of the field, included in discord webhook message
+  // Markdown support
+  value: {
     type: String,
     optional: true,
   },

@@ -20,7 +20,7 @@
         {{ (model.contentsWeightless ? 0 : model.contentsWeight || 0) + (model.weight || 0) }}
       </v-toolbar-title>
       <v-toolbar-title
-        class="layout row align-center"
+        class="layout align-center"
         style="flex-grow: 0;"
       >
         <v-icon
@@ -44,7 +44,7 @@
   </toolbar-card>
 </template>
 
-<script>
+<script lang="js">
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

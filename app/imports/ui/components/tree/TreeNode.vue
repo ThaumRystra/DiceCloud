@@ -5,7 +5,7 @@
     :data-id="`tree-node-${node._id}`"
   >
     <div
-      class="layout row align-center justify-start tree-node-title"
+      class="layout align-center justify-start tree-node-title"
       style="cursor: pointer;"
       :class="selected && 'primary--text'"
       @click.stop="$emit('selected', node._id)"
@@ -22,7 +22,7 @@
         </v-icon>
       </v-btn>
       <div
-        class="layout row align-center justify-start pr-1"
+        class="layout align-center justify-start pr-1"
         style="flex-grow: 0;"
       >
         <v-icon
@@ -70,7 +70,7 @@
   </v-sheet>
 </template>
 
-<script>
+<script lang="js">
 	/**
 	* TreeNode's are list item views of character properties. Every property which
 	* can belong to the character is shown in the tree view of the character
@@ -100,7 +100,7 @@
 		}},
 		computed: {
 			hasChildren(){
-				return this.children && this.children.length || this.lazy && !this.expanded;
+				return this.children && !!this.children.length || this.lazy && !this.expanded;
 			},
 			showExpanded(){
 				return this.expanded && (this.organize || this.hasChildren)
@@ -159,9 +159,15 @@
     transition: none !important;
   }
 	.theme--light .tree-node-title:hover {
-		background: rgba(0,0,0,.04);
+		background-color: rgba(0,0,0,.04);
 	}
-  .dummy-node {
+  .theme--dark .tree-node-title:hover {
+		background-color: rgba(255,255,255,.04);
+	}
+  .tree-node-title{
+    transition: background ease 0.3s, color ease 0.15s;
+  }
+  .tree-node-title, .dummy-node {
     height: 40px;
   }
 </style>

@@ -3,20 +3,18 @@
     :hover="hasClickListener"
     @click="click"
   >
-    <v-card-text>
-      <div class="layout row align-center">
-        <div class="value display-1 mr-1">
-          {{ computedValue }}
-        </div>
-        <div class="name text-truncate">
-          {{ model.name }}
-        </div>
-      </div>
-    </v-card-text>
+    <div class="layout align-center">
+      <v-card-title class="value text-h4">
+        {{ computedValue }}
+      </v-card-title>
+      <v-card-title class="name text-subtitle-1 text-truncate pl-0">
+        {{ model.name }}
+      </v-card-title>
+    </div>
   </v-card>
 </template>
 
-<script>
+<script lang="js">
   import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
   export default {
     props: {
@@ -53,6 +51,6 @@
 <style lang="css" scoped>
   .value {
     min-width: 64px;
-    text-align: center;
+    justify-content: center;
   }
 </style>

@@ -2,7 +2,7 @@
   <v-btn
     :loading="loading"
     :disabled="context.editPermission === false"
-    outline
+    outlined
     style="width: 160px;"
     @click="rest"
   >
@@ -13,7 +13,7 @@
   </v-btn>
 </template>
 
-<script>
+<script lang="js">
 import restCreature from '/imports/api/creature/restCreature.js';
 
 export default {

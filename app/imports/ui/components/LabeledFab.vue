@@ -14,7 +14,7 @@
   </v-btn>
 </template>
 
-<script>
+<script lang="js">
   /*
    * Because speed dials only work well with v-btn's as children, this hacky
    * component creates a v-btn with a label.

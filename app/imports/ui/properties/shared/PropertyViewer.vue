@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 export default {
 	components: {

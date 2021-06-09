@@ -37,7 +37,7 @@
   </v-list>
 </template>
 
-<script>
+<script lang="js">
 import draggable from 'vuedraggable';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';

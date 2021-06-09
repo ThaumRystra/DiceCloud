@@ -36,6 +36,7 @@
       >
         <v-tabs-items
           :value="$store.getters.tabById($route.params.id)"
+          class="card-background"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}
@@ -50,13 +51,13 @@
           <v-tab-item>
             <inventory-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item>
+          <v-tab-item v-show="!creature.settings.hideSpellsTab">
             <spells-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
             <character-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item>
+          <v-tab-item v-if="creature.settings.showTreeTab">
             <tree-tab :creature-id="creatureId" />
           </v-tab-item>
         </v-tabs-items>
@@ -65,7 +66,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   //TODO add a "no character found" screen if shown on a false address
   // or on a character the user does not have permission to view
 	import Creatures from '/imports/api/creature/Creatures.js';
@@ -77,6 +78,7 @@
   import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
   import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
   import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
+  import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 	export default {
 		components: {
@@ -118,13 +120,10 @@
       this.logObserver = CreatureLogs.find({
         creatureId: this.creatureId,
       }).observe({
-        added(doc){
+        added({content}){
           if (!that.$subReady.singleCharacter) return;
           if (that.$store.state.rightDrawer) return;
-          that.$store.dispatch('snackbar', {
-            text: doc.name,
-            showCloseButton: true,
-          });
+          snackbar({content});
         },
       });
     },

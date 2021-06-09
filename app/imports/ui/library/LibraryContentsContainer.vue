@@ -14,7 +14,6 @@
     />
     <v-layout
       v-else
-      row
       align-center
       justify-center
       style="width: 100%;"
@@ -27,7 +26,7 @@
   </v-fade-transition>
 </template>
 
-<script>
+<script lang="js">
 	import Libraries from '/imports/api/library/Libraries.js';
 	import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 	import { nodesToTree } from '/imports/api/parenting/parenting.js'

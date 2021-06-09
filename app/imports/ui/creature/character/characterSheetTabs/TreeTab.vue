@@ -12,6 +12,7 @@
           <v-toolbar
             flat
             dense
+            style="flex-grow: 0;"
           >
             <v-spacer />
             <v-switch
@@ -52,53 +53,20 @@
             embedded
             :_id="selected"
             @removed="selected = undefined"
+            @duplicated="id => selected = id"
           />
         </template>
       </tree-detail-layout>
     </v-card>
-    <v-speed-dial
-      v-model="fab"
-      fixed
-      bottom="bottom"
-      right="right"
-    >
-      <template #activator>
-        <v-btn
-          v-model="fab"
-          color="primary"
-          fab
-          data-id="insert-creature-property-fab"
-        >
-          <v-icon>add</v-icon>
-          <v-icon>close</v-icon>
-        </v-btn>
-      </template>
-      <labeled-fab
-        color="primary"
-        label="Property from library"
-        icon="book"
-        @click="propertyFromLibrary"
-      />
-      <labeled-fab
-        color="primary"
-        label="New property"
-        icon="edit"
-        @click="insertCreatureProperty"
-      />
-    </v-speed-dial>
   </div>
 </template>
 
-<script>
+<script lang="js">
   import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
   import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
   import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
-  import LabeledFab from '/imports/ui/components/LabeledFab.vue';
 
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-  import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-  import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
-  import { setDocToLastOrder } from '/imports/api/parenting/order.js';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
   export default {
@@ -106,7 +74,6 @@
       TreeDetailLayout,
       CreaturePropertiesTree,
       CreaturePropertyDialog,
-      LabeledFab,
     },
     inject: {
       context: { default: {} }
@@ -194,36 +161,6 @@
             },
           });
         }
-      },
-      insertCreatureProperty(){
-        let that = this;
-        this.$store.commit('pushDialogStack', {
-          component: 'creature-property-creation-dialog',
-          elementId: 'insert-creature-property-fab',
-          callback(creatureProperty){
-            if (!creatureProperty) return;
-            creatureProperty.parent = {collection: 'creatures', id: that.creatureId};
-            creatureProperty.ancestors = [ {collection: 'creatures', id: that.creatureId}];
-            setDocToLastOrder({collection: CreatureProperties, doc: creatureProperty});
-            let id = insertProperty.call({creatureProperty});
-            return `tree-node-${id}`;
-          }
-        });
-      },
-      propertyFromLibrary(){
-        let that = this;
-        this.$store.commit('pushDialogStack', {
-          component: 'creature-property-from-library-dialog',
-          elementId: 'insert-creature-property-fab',
-          callback(libraryNode){
-            if (!libraryNode) return;
-            let id = insertPropertyFromLibraryNode.call({
-              nodeId: libraryNode._id,
-              parentRef: {collection: 'creatures', id: that.creatureId},
-            });
-            return `tree-node-${id}`;
-          }
-        });
       },
       editCreatureProperty(){
         this.$store.commit('pushDialogStack', {

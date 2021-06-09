@@ -25,10 +25,10 @@
     />
     <div
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <v-btn
-        flat
+        text
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', model)"
       >
@@ -38,7 +38,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';

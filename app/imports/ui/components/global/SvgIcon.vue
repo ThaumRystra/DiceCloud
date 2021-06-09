@@ -19,7 +19,7 @@
   </i>
 </template>
 
-<script>
+<script lang="js">
 const SIZE_MAP = {
   xSmall: '12px',
   small: '16px',

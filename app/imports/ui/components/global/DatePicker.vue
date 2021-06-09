@@ -16,7 +16,7 @@
         :loading="loading"
         :error-messages="errors"
         :disabled="isDisabled"
-        box
+        outlined
         v-on="on"
         @focus="focused = true"
         @blur="focused = false"
@@ -29,7 +29,7 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="js">
 import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 import { format } from 'date-fns';
 

@@ -6,7 +6,7 @@
   </single-card-layout>
 </template>
 
-<script>
+<script lang="js">
   import SingleCardLayout from '/imports/ui/layouts/SingleCardLayout.vue';
 	import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
 	export default {

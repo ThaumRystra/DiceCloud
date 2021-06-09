@@ -24,7 +24,7 @@
       <v-fade-transition mode="out-in">
         <div v-if="libraryNodes && libraryNodes.length">
           <section
-            class="layout row wrap justify-between"
+            class="layout wrap justify-between"
           >
             <v-card
               v-for="node in libraryNodes"
@@ -45,7 +45,7 @@
               />
               <v-card-title primary-title>
                 <tree-node-view
-                  class="mr-2 title mb-0"
+                  class="mr-2 text-h6 mb-0"
                   :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
                   :hide-icon="node.picture"
                   :model="node"
@@ -63,16 +63,17 @@
               </v-card-text>
             </v-card>
           </section>
-          <div class="layout row justify-center align-stretch">
-            <v-btn
-              v-if="currentLimit < countAll"
-              :loading="!$subReady.slotFillers"
-              class="primary"
-              @click="loadMore"
-            >
-              Load More
-            </v-btn>
-          </div>
+        </div>
+        <div
+          v-else-if="countAll"
+          class="ma-4"
+        >
+          <h4 v-if="numFiltered">
+            Requirements of {{ numFiltered }} library properties were not met.
+          </h4>
+          <h4 v-else>
+            Nothing suitable was found in your libraries.
+          </h4>
         </div>
         <div
           v-else-if="$subReady.slotFillers"
@@ -117,17 +118,31 @@
           />
         </div>
       </v-fade-transition>
+      <v-fade-transition mode="out-in">
+        <div
+          v-if="currentLimit < countAll"
+          class="layout justify-center align-stretch"
+        >
+          <v-btn
+            :loading="!$subReady.slotFillers"
+            class="primary"
+            @click="loadMore"
+          >
+            Load More
+          </v-btn>
+        </div>
+      </v-fade-transition>
     </div>
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel
       </v-btn>
       <v-btn
-        flat
+        text
         :disabled="!selectedNode"
         @click="insert"
       >
@@ -137,7 +152,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 import Creatures from '/imports/api/creature/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
@@ -167,6 +182,7 @@ export default {
   data(){return {
     selectedNode: undefined,
     searchValue: undefined,
+    numFiltered: 0,
   }},
   computed: {
     slotPropertyTypeName(){
@@ -216,7 +232,7 @@ export default {
       return Creatures.findOne(this.creatureId);
     },
     currentLimit(){
-      return this._subs['slotFillers'].data('limit') || 16;
+      return this._subs['slotFillers'].data('limit') || 20;
     },
     countAll(){
       return this._subs['slotFillers'].data('countAll');
@@ -239,6 +255,7 @@ export default {
       let nodes = LibraryNodes.find(filter, {
         sort: {name: 1, order: 1}
       }).fetch();
+      let totalNodes = nodes.length;
       // Filter out slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes = nodes.filter(node => {
@@ -259,7 +276,7 @@ export default {
         }
         return true;
       });
-      // Filter out slotFillers whose
+      this.numFiltered = totalNodes - nodes.length;
       if (nodes.length === 1) this.selectedNode = nodes[0];
       return nodes;
     },

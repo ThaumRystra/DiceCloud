@@ -5,7 +5,7 @@
         v-for="(item, i) in model"
         :key="item._id || i"
       >
-        <div class="layout row align-center">
+        <div class="layout align-center">
           <div style="flex-grow: 1;">
             <item-consumed-form
               :model="item"
@@ -13,7 +13,7 @@
             />
           </div>
           <v-btn
-            outline
+            outlined
             icon
             large
             class="ma-3"
@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import ItemConsumedForm from '/imports/ui/properties/forms/ItemConsumedForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 

@@ -12,7 +12,7 @@
     <template slot="actions">
       <v-spacer />
       <v-btn
-        flat
+        text
         color="primary"
         @click="$store.dispatch('popDialogStack', node._id)"
       >
@@ -22,7 +22,7 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
 	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 	import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
 	export default {

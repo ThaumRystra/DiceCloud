@@ -19,6 +19,7 @@
         <component
           :is="model.type + 'Form'"
           v-if="editing"
+          :key="_id"
           class="library-node-form"
           :model="model"
           @change="change"
@@ -28,6 +29,7 @@
         <component
           :is="model.type + 'Viewer'"
           v-else-if="!editing && $options.components[model.type + 'Viewer']"
+          :key="_id"
           class="creature-property-viewer"
           :model="model"
         />
@@ -39,18 +41,18 @@
     <div
       v-if="!embedded"
       slot="actions"
-      class="layout row justify-end"
+      class="layout justify-end"
     >
       <template v-if="selection">
         <v-btn
-          flat
+          text
           @click="$store.dispatch('popDialogStack', false)"
         >
           Cancel
         </v-btn>
         <v-spacer />
         <v-btn
-          flat
+          text
           @click="$store.dispatch('popDialogStack', true)"
         >
           Select
@@ -58,7 +60,7 @@
       </template>
       <v-btn
         v-else
-        flat
+        text
         @click="$store.dispatch('popDialogStack')"
       >
         Done
@@ -67,14 +69,14 @@
   </dialog-base>
 </template>
 
-<script>
+<script lang="js">
   import LibraryNodes, {
-    duplicateNode,
     updateLibraryNode,
     pushToLibraryNode,
     pullFromLibraryNode,
     softRemoveLibraryNode,
   } from '/imports/api/library/LibraryNodes.js';
+  import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode.js';
   import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
   import PropertyToolbar from '/imports/ui/components/propertyToolbar.vue';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
@@ -115,10 +117,23 @@
     },
     data(){return {
       editing: !!this.startInEditTab,
+      // CurrentId lags behind Id by one tick so that events fired by destroying
+      // forms keyed to the old ID are applied before the new ID overwrites it
+      currentId: undefined,
     }},
+    watch: {
+      _id: {
+        immediate: true,
+        handler(newId){
+          this.$nextTick(() => {
+            this.currentId = newId;
+          });
+        }
+      },
+    },
     meteor: {
       model(){
-        return LibraryNodes.findOne(this._id);
+        return LibraryNodes.findOne(this.currentId);
       },
       editPermission(){
         try {
@@ -132,10 +147,12 @@
     methods: {
       getPropertyName,
       duplicate(){
-        duplicateNode.call({_id: this._id}, (error) => {
-          console.error(error);
+        duplicateLibraryNode.call({
+          _id: this.currentId
+        }, (error, duplicateId) => {
+          if (error) console.error(error);
           if (this.embedded){
-            this.$emit('duplicated');
+            this.$emit('duplicated', duplicateId);
           } else {
             this.$store.dispatch('popDialogStack');
           }
@@ -165,7 +182,7 @@
         });
       },
       change({path, value, ack}){
-        updateLibraryNode.call({_id: this._id, path, value}, (error) =>{
+        updateLibraryNode.call({_id: this.currentId, path, value}, (error) =>{
           if (ack){
             ack(error && error.reason || error);
           } else if (error){
@@ -174,7 +191,7 @@
         });
       },
       push({path, value, ack}){
-        pushToLibraryNode.call({_id: this._id, path, value}, (error) =>{
+        pushToLibraryNode.call({_id: this.currentId, path, value}, (error) =>{
           if (ack){
             ack(error && error.reason || error);
           } else if (error){
@@ -185,7 +202,7 @@
       pull({path, ack}){
         let itemId = get(this.model, path)._id;
         path.pop();
-        pullFromLibraryNode.call({_id: this._id, path, itemId}, (error) =>{
+        pullFromLibraryNode.call({_id: this.currentId, path, itemId}, (error) =>{
           if (ack){
             ack(error && error.reason || error);
           } else if (error){
@@ -194,7 +211,7 @@
         });
       },
       remove(){
-        softRemoveLibraryNode.call({_id: this._id});
+        softRemoveLibraryNode.call({_id: this.currentId});
         if (this.embedded){
           this.$emit('removed');
         } else {

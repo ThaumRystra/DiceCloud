@@ -3,19 +3,19 @@
     v-model="opened"
     :close-on-content-click="false"
     transition="slide-y-transition"
-    lazy
     left
   >
-    <v-btn
-      slot="activator"
-      icon
-    >
-      <v-icon>format_paint</v-icon>
-    </v-btn>
+    <template #activator="{ on }">
+      <v-btn
+        icon
+        v-on="on"
+      >
+        <v-icon>format_paint</v-icon>
+      </v-btn>
+    </template>
     <v-card class="overflow-hidden">
       <v-card-text>
         <v-layout
-          row
           wrap
         >
           <div
@@ -72,14 +72,14 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
-          flat
+          text
           @click="$emit('input')"
         >
           Clear
         </v-btn>
         <v-spacer />
         <v-btn
-          flat
+          text
           @click="opened = false"
         >
           Done
@@ -89,7 +89,7 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="js">
   import isDarkColor from '/imports/ui/utility/isDarkColor.js';
   import vuetifyColors from 'vuetify/es5/util/colors';
   import { kebabToCamelCase, camelToKebabCase } from '/imports/ui/utility/swapCase.js';

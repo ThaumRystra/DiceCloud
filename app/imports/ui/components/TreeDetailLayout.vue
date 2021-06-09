@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    class="layout row"
+    class="layout"
     style="height: 100%;"
   >
     <div
@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
   computed:{
     computedTreeStyle(){

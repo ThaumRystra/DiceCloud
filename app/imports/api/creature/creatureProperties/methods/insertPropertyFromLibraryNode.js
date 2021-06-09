@@ -16,6 +16,7 @@ import {
 import { reorderDocs } from '/imports/api/parenting/order.js';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
 	name: 'creatureProperties.insertPropertyFromLibraryNode',
@@ -27,13 +28,17 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		parentRef: {
 			type: RefSchema,
 		},
+    order: {
+      type: Number,
+      optional: true,
+    },
 	}).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-	run({nodeId, parentRef}) {
+	run({nodeId, parentRef, order}) {
 		// get the new ancestry for the properties
 		let {parentDoc, ancestors} = getAncestry({parentRef});
 
@@ -50,6 +55,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 
 		// Fetch the library node and its decendents, provided they have not been
 		// removed
+    // TODO: Check permission to read the library this node is in
 		let node = LibraryNodes.findOne({
 			_id: nodeId,
 			removed: {$ne: true},
@@ -60,6 +66,9 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 			'ancestors.id': nodeId,
 			removed: {$ne: true},
 		}).fetch();
+
+    // Convert all references into actual nodes
+    nodes = reifyNodeReferences(nodes);
 
     // The root node is first in the array of nodes
     // It must get the first generated ID to prevent flickering
@@ -79,10 +88,14 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		});
 
 		// Order the root node
-		setDocToLastOrder({
-			collection: CreatureProperties,
-			doc: node,
-		});
+    if (order === undefined){
+      setDocToLastOrder({
+        collection: CreatureProperties,
+        doc: node,
+      });
+    } else {
+      node.order = order;
+    }
 
 		// Insert the creature properties
     CreatureProperties.batchInsert(nodes);
@@ -106,5 +119,96 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		return rootId;
 	},
 });
+
+// Covert node references into actual nodes
+// TODO: check permissions for each library a reference node references
+function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0){
+  depth += 1;
+  // New nodes added this function
+  let newNodes = [];
+
+  // Filter out the reference nodes we replace
+  let resultingNodes = nodes.filter(node => {
+
+    // We have already visited this ref and replaced it
+    if (visitedRefs.has(node._id)) return false;
+
+    // Already replaced an ancestor node
+    for (let i; i < node.ancestors.length; i++){
+      if (visitedRefs.has(node.ancestors[i].id)) return false;
+    }
+
+    // This isn't a reference node, continue as normal
+    if (node.type !== 'reference') return true;
+
+    // We have gone too deep, keep the reference node as an error
+    if (depth > 10){
+      if (Meteor.isClient) console.warn('Reference depth limit exceeded');
+      node.cache = {error: 'Reference depth limit exceeded'};
+      return true;
+    }
+
+    let referencedNode
+    try {
+      referencedNode = fetchDocByRef(node.ref);
+      referencedNode.order = node.order;
+      // We are definitely replacing this node, so add it to the list
+      visitedRefs.add(node._id);
+    } catch (e){
+      node.cache = {error: e.reason || e.message || e.toString()};
+      return true;
+    }
+
+    // Get all the descendants of the referenced node
+    let descendents = LibraryNodes.find({
+      'ancestors.id': referencedNode._id,
+      removed: {$ne: true},
+    }, {
+      sort: {order: 1},
+    }).fetch();
+
+    // We are adding the referenced node and its descendants
+    let addedNodes = [referencedNode, ...descendents];
+
+    // re-map all the ancestors to parent the new sub-tree into our existing
+    // node tree
+		setLineageOfDocs({
+			docArray: addedNodes,
+			newAncestry: node.ancestors,
+			oldParent: referencedNode.parent,
+		});
+
+    // Remove all the looped references and descendents from the new nodes
+    // We can't rely on the reify recursion to do this, since the IDs are
+    // getting renewed before it is called
+    addedNodes = addedNodes.filter(node => {
+      // Exclude removed referenced
+      if (visitedRefs.has(node._id)) return false;
+
+      // Exclude descendants of removed references
+      for (let i; i < node.ancestors.length; i++){
+        if (visitedRefs.has(node.ancestors[i].id)) return false;
+      }
+      return true;
+    });
+
+    // Give the new referenced sub-tree new ids
+    renewDocIds({
+      docArray: addedNodes,
+    });
+
+    // Reify the subtree as well with recursion
+    addedNodes = reifyNodeReferences(addedNodes, visitedRefs, depth);
+
+    // Store the new nodes from this inner loop without altering the array
+    // we are looping over
+    newNodes.push(...addedNodes);
+  });
+
+  // We are done filtering the array, we can add the new nodes to it
+  resultingNodes.push(...newNodes);
+
+  return resultingNodes;
+}
 
 export default insertPropertyFromLibraryNode;

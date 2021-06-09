@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="item-form">
-    <div class="layout row justify-space-around">
+    <div class="layout justify-space-around">
       <div>
         <icon-picker
           label="Icon"
@@ -18,7 +18,7 @@
         />
       </div>
     </div>
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         ref="focusFirst"
         label="Name"
@@ -33,7 +33,7 @@
         @change="change('plural', ...arguments)"
       />
     </div>
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         label="Value"
         suffix="gp"
@@ -120,7 +120,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';

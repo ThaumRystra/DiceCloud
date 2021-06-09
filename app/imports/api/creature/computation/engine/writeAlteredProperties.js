@@ -12,29 +12,22 @@ export default function writeAlteredProperties(memo){
       console.warn('No schema for ' + changed.type);
       return;
     }
-    let extraIds = changed.computationDetails.idsOfSameName;
-    let ids;
-    if (extraIds && extraIds.length){
-      ids = [changed._id, ...extraIds];
-    } else {
-      ids = [changed._id];
+    let id = changed._id;
+    let op = undefined;
+    let original = memo.originalPropsById[id];
+    let keys = [
+      'dependencies',
+      'inactive',
+      'deactivatedBySelf',
+      'deactivatedByAncestor',
+      'deactivatedByToggle',
+      'damage',
+      ...schema.objectKeys(),
+    ];
+    op = addChangedKeysToOp(op, keys, original, changed);
+    if (op){
+      bulkWriteOperations.push(op);
     }
-    ids.forEach(id => {
-      let op = undefined;
-      let original = memo.originalPropsById[id];
-      let keys = [
-        'dependencies',
-        'inactive',
-        'deactivatedBySelf',
-        'deactivatedByAncestor',
-        'deactivatedByToggle',
-        ...schema.objectKeys(),
-      ];
-      op = addChangedKeysToOp(op, keys, original, changed);
-      if (op){
-        bulkWriteOperations.push(op);
-      }
-    });
   });
   writePropertiesSequentially(bulkWriteOperations);
 }

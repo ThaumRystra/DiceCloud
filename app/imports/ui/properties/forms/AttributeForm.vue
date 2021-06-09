@@ -13,7 +13,7 @@
       />
     </div>
     <calculation-error-list :errors="model.baseValueErrors" />
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <text-field
         label="Name"
         :value="model.name"
@@ -85,13 +85,13 @@
           @change="change('decimal', ...arguments)"
         />
         <div
-          class="layout row justify-center"
+          class="layout justify-center"
           style="align-self: stretch;"
         >
           <text-field
             label="Damage"
             type="number"
-            class="damage-field text-xs-center"
+            class="damage-field text-center"
             style="max-width: 300px;"
             hint="The attribute's final value is reduced by this amount"
             disabled
@@ -101,7 +101,7 @@
           />
         </div>
       </div>
-      <div class="layout row wrap">
+      <div class="layout wrap">
         <smart-select
           v-if="model.attributeType !== 'hitDice'"
           label="Reset"
@@ -118,7 +118,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="layout row">
+  <div class="layout">
     <text-field
       label="Item"
       hint="The item tag that will be consumed"
@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

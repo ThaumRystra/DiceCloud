@@ -1,12 +1,12 @@
 <template lang="html">
-  <v-expansion-panel
+  <v-expansion-panels
     popout
-    expand
+    multiple
   >
     <slot />
-  </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
-<script>
+<script lang="js">
 	export default {}
 </script>

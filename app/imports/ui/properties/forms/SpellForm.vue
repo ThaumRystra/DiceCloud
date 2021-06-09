@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="spell-form">
-    <div class="layout row wrap justify-space-between">
+    <div class="layout wrap justify-space-between">
       <smart-switch
         label="Always prepared"
         style="width: 200px; flex-grow: 0;"
@@ -26,7 +26,7 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-    <div class="layout row wrap">
+    <div class="layout wrap">
       <smart-select
         label="Level"
         class="mx-1"
@@ -58,7 +58,7 @@
       :error-messages="errors.range"
       @change="change('range', ...arguments)"
     />
-    <div class="layout row wrap justify-space-between">
+    <div class="layout wrap justify-space-between">
       <smart-checkbox
         label="Verbal"
         :value="model.verbal"
@@ -127,7 +127,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ActionForm from '/imports/ui/properties/forms/ActionForm.vue'
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';

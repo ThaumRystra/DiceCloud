@@ -1,9 +1,9 @@
 <template lang="html">
   <v-card
     :hover="hasClickListener"
-    :elevation="hovering ? 8 : undefined"
     class="toolbar-card"
-    @click="$emit('click')"
+    :class="hovering ? 'elevation-8': ''"
+    @click.native="$emit('click')"
   >
     <v-toolbar
       flat
@@ -23,14 +23,16 @@
   </v-card>
 </template>
 
-<script>
+<script lang="js">
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+  import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+
 	export default {
 		props: {
 			color: {
 				type: String,
 				default(){
-					return this.$vuetify.theme.secondary;
+          return getThemeColor('secondary');
 				},
 			},
 		},
@@ -61,5 +63,8 @@
 <style lang="css">
 .toolbar-card .v-toolbar__title {
   font-size: 14px;
+}
+.toolbar-card {
+  transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 </style>

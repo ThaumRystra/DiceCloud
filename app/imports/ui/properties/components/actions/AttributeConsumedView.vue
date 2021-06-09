@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    class="layout row align-center justify-start"
+    class="layout align-center justify-start"
     :class="insufficient && 'error--text'"
   >
     <div
@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
   props: {
     model: {

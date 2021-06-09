@@ -1,31 +1,30 @@
 <template lang="html">
-  <v-list-tile
+  <v-list-item
     class="item"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-tile-avatar class="item-avatar">
+    <v-list-item-avatar class="item-avatar">
       <property-icon
         class="mr-2"
         :model="model"
         :color="model.color"
       />
-    </v-list-tile-avatar>
-    <v-list-tile-content>
-      <v-list-tile-title>
+    </v-list-item-avatar>
+    <v-list-item-content>
+      <v-list-item-title>
         {{ title }}
-      </v-list-tile-title>
-    </v-list-tile-content>
-    <v-list-tile-action
+      </v-list-item-title>
+    </v-list-item-content>
+    <v-list-item-action
       v-if="model.attuned"
       style="min-width: 40px;"
     >
       <v-icon>$vuetify.icons.spell</v-icon>
-    </v-list-tile-action>
-    <v-list-tile-action style="min-width: 40px;">
+    </v-list-item-action>
+    <v-list-item-action style="min-width: 40px;">
       <increment-button
         v-if="context.creatureId && model.showIncrement"
         icon
-        flat
         color="primary"
         :disabled="context.editPermission === false"
         :value="model.quantity"
@@ -35,8 +34,8 @@
           $vuetify.icons.abacus
         </v-icon>
       </increment-button>
-    </v-list-tile-action>
-    <v-list-tile-action>
+    </v-list-item-action>
+    <v-list-item-action>
       <v-icon
         :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"
@@ -44,11 +43,11 @@
       >
         drag_indicator
       </v-icon>
-    </v-list-tile-action>
-  </v-list-tile>
+    </v-list-item-action>
+  </v-list-item>
 </template>
 
-<script>
+<script lang="js">
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
