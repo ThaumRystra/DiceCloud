@@ -111,7 +111,7 @@
 
 <script lang="js">
   import Creatures from '/imports/api/creature/Creatures.js';
-  import Parties from '/imports/api/creature/Parties.js';
+  import Parties from '/imports/api/creature/creatureFolders/CreatureFolders.js';
 
   export default {
     meteor: {

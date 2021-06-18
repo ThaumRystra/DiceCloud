@@ -29,7 +29,7 @@
 
 <script lang="js">
   import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
-  import Parties from '/imports/api/creature/Parties.js';
+  import Parties from '/imports/api/creature/creatureFolders/CreatureFolders.js';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
   import CreatureListTile from '/imports/ui/creature/CreatureListTile.vue';
 
