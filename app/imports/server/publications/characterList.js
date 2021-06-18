@@ -1,5 +1,5 @@
 import Creatures from '/imports/api/creature/Creatures.js';
-import Parties from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
 
 Meteor.publish('characterList', function(){
   this.autorun(function (){
@@ -36,7 +36,7 @@ Meteor.publish('characterList', function(){
           }
         }
       ),
-      Parties.find({owner: userId}),
+      CreatureFolders.find({owner: userId}),
     ];
   });
 });

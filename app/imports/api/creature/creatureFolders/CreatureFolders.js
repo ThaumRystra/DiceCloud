@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 
-let CreatureFolders = new Mongo.Collection('parties');
+let CreatureFolders = new Mongo.Collection('creatureFolders');
 
 let creatureFolderSchema = new SimpleSchema({
 	name: {
@@ -24,6 +24,10 @@ let creatureFolderSchema = new SimpleSchema({
   archived: {
     type: Boolean,
     defaultValue: true,
+  },
+  order: {
+    type: Number,
+    defaultValue: 0,
   },
 });
 
