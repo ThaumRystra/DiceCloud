@@ -113,13 +113,14 @@
     },
     reactiveProvide: {
       name: 'context',
-      include: ['editPermission'],
+      include: ['editPermission', 'isLibraryForm'],
     },
     data(){return {
       editing: !!this.startInEditTab,
       // CurrentId lags behind Id by one tick so that events fired by destroying
       // forms keyed to the old ID are applied before the new ID overwrites it
       currentId: undefined,
+      isLibraryForm: true,
     }},
     watch: {
       _id: {

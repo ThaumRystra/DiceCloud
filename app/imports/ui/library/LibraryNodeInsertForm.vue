@@ -58,7 +58,7 @@ export default {
 	},
   reactiveProvide: {
     name: 'context',
-    include: ['debounceTime'],
+    include: ['debounceTime', 'isLibraryForm'],
   },
 	data(){return {
 		model: {
@@ -67,6 +67,7 @@ export default {
 		schema: undefined,
 		validationContext: undefined,
     debounceTime: 0,
+    isLibraryForm: true,
 	};},
 	watch: {
 		type(newType){
