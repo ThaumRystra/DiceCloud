@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 
-let Parties = new Mongo.Collection('parties');
+let CreatureFolders = new Mongo.Collection('parties');
 
-let partySchema = new SimpleSchema({
+let creatureFolderSchema = new SimpleSchema({
 	name: {
 		type: String,
 		defaultValue: 'New Party',
@@ -21,8 +21,12 @@ let partySchema = new SimpleSchema({
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 	},
+  archived: {
+    type: Boolean,
+    defaultValue: true,
+  },
 });
 
-Parties.attachSchema(partySchema);
+CreatureFolders.attachSchema(creatureFolderSchema);
 
-export default Parties;
+export default CreatureFolders;
