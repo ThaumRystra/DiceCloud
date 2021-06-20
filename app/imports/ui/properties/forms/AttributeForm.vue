@@ -182,12 +182,6 @@
 			});
 			return data;
 		},
-    computed: {
-      cntxt(){
-        console.log(this.context);
-        return this.context;
-      }
-    },
     watch: {
       'model.attributeType': function(newVal, oldVal){
         if (newVal === 'hitDice' && !this.model.hitDiceSize){

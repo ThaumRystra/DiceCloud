@@ -70,7 +70,6 @@
             order = -0.5;
           }
           let doc = event.element;
-          console.log({doc, order, newIndex: event.newIndex, before, after});
           moveCreatureToFolder.call({
             creatureId: doc._id,
             folderId: this.folderId
