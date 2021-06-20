@@ -21,11 +21,18 @@
         {{ model.alignment }} {{ model.gender }} {{ model.race }}
       </v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-action v-if="selection">
+    <v-list-item-action>
       <v-checkbox
+        v-if="selection"
         :input-value="selected && selected.has(model._id)"
         @change="$emit('select')"
       />
+      <v-icon
+        style="height: 100%; width: 40px; cursor: move;"
+        class="handle"
+      >
+        mdi-drag
+      </v-icon>
     </v-list-item-action>
   </v-list-item>
 </template>

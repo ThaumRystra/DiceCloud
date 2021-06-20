@@ -36,6 +36,7 @@ const insertCreatureFolder = new ValidatedMethod({
     }
     // Insert
     return CreatureFolders.insert({
+      name: 'Folder',
       owner: userId,
       order,
     });

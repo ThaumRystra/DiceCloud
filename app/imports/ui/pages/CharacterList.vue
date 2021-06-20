@@ -4,16 +4,12 @@
     style="height: 100%"
   >
     <v-card :class="{'mb-4': folders && folders.length}">
-      <v-list v-if="CreaturesWithNoParty.length">
-        <creature-list-tile
-          v-for="creature in CreaturesWithNoParty"
-          :key="creature._id"
-          :to="creature.url"
-          :model="creature"
-        />
-      </v-list>
+      <creature-list :creatures="CreaturesWithNoParty" />
     </v-card>
-    <v-expansion-panels v-if="folders && folders.length">
+    <v-expansion-panels
+      v-if="folders && folders.length"
+      multiple
+    >
       <v-expansion-panel
         v-for="folder in folders"
         :key="folder._id"
@@ -57,24 +53,22 @@
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <v-list v-if="folder.creatures">
-            <creature-list-tile
-              v-for="creature in folder.creatures"
-              :key="creature._id"
-              :to="creature.url"
-              :model="creature"
-            />
-          </v-list>
+          <creature-list
+            :creatures="folder.creatures"
+            :folder-id="folder._id"
+          />
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-btn
-      text
-      :loading="loadingInsertFolder"
-      @click="insertFolder"
-    >
-      add folder
-    </v-btn>
+    <div class="layout justify-end mt-2">
+      <v-btn
+        text
+        :loading="loadingInsertFolder"
+        @click="insertFolder"
+      >
+        add folder
+      </v-btn>
+    </div>
     <v-btn
       color="accent"
       fab
@@ -93,13 +87,13 @@
   import Vue from 'vue';
   import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
   import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+  import CreatureList from '/imports/ui/creature/creatureList/CreatureList.vue';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-  import CreatureListTile from '/imports/ui/creature/CreatureListTile.vue';
   import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder.js';
   import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName.js';
   import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/removeCreatureFolder.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
-  
+
   const characterTransform = function(char){
     char.url = `/character/${char._id}/${char.urlName || '-'}`;
     char.initial = char.name && char.name[0] || '?';
@@ -107,7 +101,7 @@
   };
   export default {
     components: {
-      CreatureListTile,
+      CreatureList,
     },
     data(){ return{
       fab: false,
@@ -183,9 +177,9 @@
         }
       },
       insertFolder(){
-        loadingInsertFolder = true;
+        this.loadingInsertFolder = true;
         insertCreatureFolder.call(error => {
-          loadingInsertFolder = false;
+          this.loadingInsertFolder = false;
           if (!error) return;
           console.error(error);
           snackbar({

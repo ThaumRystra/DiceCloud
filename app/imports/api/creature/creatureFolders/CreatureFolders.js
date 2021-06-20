@@ -5,7 +5,6 @@ let CreatureFolders = new Mongo.Collection('creatureFolders');
 let creatureFolderSchema = new SimpleSchema({
 	name: {
 		type: String,
-		defaultValue: 'Folder',
 		trim: false,
 		optional: true,
 	},
