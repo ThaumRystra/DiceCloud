@@ -76,6 +76,7 @@
           {{ character.name }}
         </v-list-item-title>
       </v-list-item>
+      <!--
       <v-list-group
         v-for="party in parties"
         :key="party._id"
@@ -105,6 +106,7 @@
           </v-list-item-title>
         </v-list-item>
       </v-list-group>
+    -->
     </v-list>
   </div>
 </template>
@@ -140,31 +142,9 @@
         ];
         return links.filter(link => !link.requireLogin || isLoggedIn);
       },
-      parties(){
-        const userId = Meteor.userId();
-        return Parties.find(
-          {owner: userId},
-          {sort: {name: 1}},
-        ).map(party => {
-          party.characterDocs = Creatures.find(
-            {
-              _id: {$in: party.Creatures},
-              $or: [{readers: userId}, {writers: userId}, {owner: userId}],
-            }, {
-              sort: {name: 1},
-              fields: {name: 1, urlName: 1},
-            }
-          ).map(char => {
-            char.url = `/character/${char._id}/${char.urlName || '-'}`;
-            char.initial = char.name && char.name[0] || '?';
-            return char;
-          });
-          return party;
-        });
-      },
       CreaturesWithNoParty() {
         var userId = Meteor.userId();
-        var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
+        var charArrays = Parties.find({owner: userId}).map(p => p.creatures);
         var partyChars = _.uniq(_.flatten(charArrays));
         return Creatures.find(
           {

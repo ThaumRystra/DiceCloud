@@ -5,7 +5,7 @@ let CreatureFolders = new Mongo.Collection('creatureFolders');
 let creatureFolderSchema = new SimpleSchema({
 	name: {
 		type: String,
-		defaultValue: 'New Party',
+		defaultValue: 'Folder',
 		trim: false,
 		optional: true,
 	},
@@ -20,10 +20,11 @@ let creatureFolderSchema = new SimpleSchema({
 	owner: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
+    index: 1,
 	},
   archived: {
     type: Boolean,
-    defaultValue: true,
+    optional: true,
   },
   order: {
     type: Number,
@@ -33,4 +34,5 @@ let creatureFolderSchema = new SimpleSchema({
 
 CreatureFolders.attachSchema(creatureFolderSchema);
 
+import '/imports/api/creature/creatureFolders/methods.js/index.js';
 export default CreatureFolders;
