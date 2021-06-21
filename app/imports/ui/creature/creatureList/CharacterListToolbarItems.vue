@@ -7,6 +7,15 @@
     <template v-else>
       {{ characterSlots }}
     </template>
+    <v-btn
+      icon
+      data-id="open-archive-btn"
+      @click="openArchive"
+    >
+      <v-icon>
+        mdi-archive
+      </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -23,6 +32,14 @@ export default {
       return getUserTier(Meteor.userId()).characterSlots;
     }
   },
+  methods: {
+    openArchive(){
+      this.$store.commit('pushDialogStack', {
+        component: 'archive-dialog',
+        elementId: 'open-archive-btn',
+      });
+    }
+  }
 }
 </script>
 
