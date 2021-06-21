@@ -1,6 +1,5 @@
 import { _ } from 'meteor/underscore';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 function assertIdValid(userId){
   if (!userId || typeof userId !== 'string'){
@@ -46,13 +45,6 @@ export function assertEditPermission(doc, userId) {
   // Admin override
   if (user.roles && user.roles.includes('admin')){
     return true;
-  }
-
-  // Ensure the user is of a tier with paid benefits
-  let tier = getUserTier(user);
-  if (!tier.paidBenefits){
-    throw new Meteor.Error('Edit permission denied',
-      `The ${tier.name} tier does not allow you to edit this document`);
   }
 
   // Ensure the user is authorized for this specific document
