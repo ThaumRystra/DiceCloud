@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import defaultCharacterProperties from '/imports/api/creature/creatures/defaultCharacterProperties.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
@@ -23,7 +23,21 @@ const insertCreature = new ValidatedMethod({
       throw new Meteor.Error('Creatures.methods.insert.denied',
       'You need to be logged in to insert a creature');
     }
-    assertUserHasPaidBenefits(this.userId);
+    let tier = getUserTier(this.userId);
+
+    let currentCharacterCount = Creatures.find({
+      owner: this.userId,
+    }, {
+      fields: {_id: 1},
+    }).count();
+
+    if (
+      tier.characterSlots !== -1 &&
+      currentCharacterCount >= tier.characterSlots
+    ){
+      throw new Meteor.Error('Creatures.methods.insert.denied',
+      `You are already at your limit of ${tier.characterSlots} characters`)
+    }
 
 		// Create the creature document
     let creatureId = Creatures.insert({

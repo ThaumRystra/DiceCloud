@@ -3,6 +3,13 @@
     class="card-background pa-4"
     style="height: 100%"
   >
+    <v-alert
+      v-if="exceededCharacterSpace"
+      type="error"
+    >
+      You have exceeded your maximum number of character slots, archive or delete
+      some characters.
+    </v-alert>
     <v-card :class="{'mb-4': folders && folders.length}">
       <creature-list :creatures="CreaturesWithNoParty" />
     </v-card>
@@ -76,6 +83,7 @@
       bottom
       right
       data-id="new-character-button"
+      :disabled="!hasCharacterSpace"
       @click="insertCharacter"
     >
       <v-icon>mdi-plus</v-icon>
@@ -143,6 +151,28 @@
           {sort: {name: 1}}
         ).map(characterTransform);
       },
+      creatureCount(){
+        let userId = Meteor.userId();
+        return Creatures.find({
+          owner: userId,
+        }, {
+          fields: {_id: 1},
+        }).count();
+      },
+      tier(){
+        let userId = Meteor.userId();
+        return getUserTier(userId);
+      },
+      hasCharacterSpace(){
+        let tier = this.tier;
+        let currentCharacterCount = this.creatureCount;
+        return tier.characterSlots === -1 || currentCharacterCount < tier.characterSlots
+      },
+      exceededCharacterSpace(){
+        let tier = this.tier;
+        let currentCharacterCount = this.creatureCount;
+        return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
+      }
     },
     watch:{
       renamingFolder(newId){
@@ -156,26 +186,21 @@
     },
     methods: {
       insertCharacter(){
-        let tier = getUserTier(Meteor.userId());
-        if (tier.paidBenefits){
-          insertCreature.call((error, result) => {
-            if (error){
-              console.error(error);
-            } else {
-              this.$store.commit(
-                'setTabForCharacterSheet',
-                {id: result, tab: 4}
-              );
-              this.$store.commit('setShowDetailsDialog', true);
-              this.$router.push({ path: `/character/${result}`});
-            }
-          });
-        } else {
-          this.$store.commit('pushDialogStack', {
-            component: 'tier-too-low-dialog',
-            elementId: 'new-character-button',
-          });
-        }
+        insertCreature.call((error, result) => {
+          if (error){
+            console.error(error);
+            snackbar({
+              text: error.reason,
+            });
+          } else {
+            this.$store.commit(
+              'setTabForCharacterSheet',
+              {id: result, tab: 4}
+            );
+            this.$store.commit('setShowDetailsDialog', true);
+            this.$router.push({ path: `/character/${result}`});
+          }
+        });
       },
       insertFolder(){
         this.loadingInsertFolder = true;
