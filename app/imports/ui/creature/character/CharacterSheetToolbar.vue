@@ -26,6 +26,7 @@
     >
       <div :key="$route.meta.title">
         <template v-if="creature">
+          <shared-icon :model="creature" />
           <v-menu
             bottom
             left
@@ -130,6 +131,7 @@ import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import CharacterSheetFab from '/imports/ui/creature/character/CharacterSheetFab.vue';
 import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import SharedIcon from '/imports/ui/components/SharedIcon.vue';
 
 export default {
   inject: {
@@ -137,6 +139,7 @@ export default {
   },
   components: {
     CharacterSheetFab,
+    SharedIcon,
   },
   computed: {
     creatureId(){

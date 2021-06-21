@@ -22,6 +22,9 @@
       </v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action>
+      <shared-icon :model="model" />
+    </v-list-item-action>
+    <v-list-item-action>
       <v-checkbox
         v-if="selection"
         :input-value="selected && selected.has(model._id)"
@@ -38,7 +41,12 @@
 </template>
 
 <script lang="js">
+import SharedIcon from '/imports/ui/components/SharedIcon.vue';
+
 export default {
+  components: {
+    SharedIcon,
+  },
   props: {
     model: {
       type: Object,
