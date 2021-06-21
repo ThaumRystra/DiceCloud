@@ -31,7 +31,7 @@
 
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureListTile from '/imports/ui/creature/creatureList/CreatureListTile.vue';
 
 export default {

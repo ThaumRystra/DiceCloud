@@ -112,7 +112,7 @@
 </template>
 
 <script lang="js">
-  import Creatures from '/imports/api/creature/Creatures.js';
+  import Creatures from '/imports/api/creature/creatures/Creatures.js';
   import Parties from '/imports/api/creature/creatureFolders/CreatureFolders.js';
 
   export default {

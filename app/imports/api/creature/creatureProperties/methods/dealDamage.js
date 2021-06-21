@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { recomputeCreatureByDependencies } from '/imports/api/creature/computation/methods/recomputeCreature.js';

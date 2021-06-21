@@ -69,14 +69,14 @@
 <script lang="js">
   //TODO add a "no character found" screen if shown on a false address
   // or on a character the user does not have permission to view
-	import Creatures from '/imports/api/creature/Creatures.js';
+	import Creatures from '/imports/api/creature/creatures/Creatures.js';
 	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
 	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
 	import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/CharacterTab.vue';
   import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
-  import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+  import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
   import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
   import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 

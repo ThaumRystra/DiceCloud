@@ -1,4 +1,4 @@
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
 
 Meteor.publish('characterList', function(){

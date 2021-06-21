@@ -99,7 +99,7 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';

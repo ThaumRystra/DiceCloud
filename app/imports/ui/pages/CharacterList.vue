@@ -85,7 +85,8 @@
 
 <script lang="js">
   import Vue from 'vue';
-  import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
+  import Creatures from '/imports/api/creature/creatures/Creatures.js';
+  import insertCreature from '/imports/api/creature/creatures/methods/insertCreature.js';
   import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
   import CreatureList from '/imports/ui/creature/creatureList/CreatureList.vue';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';

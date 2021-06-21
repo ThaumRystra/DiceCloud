@@ -1,16 +1,7 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
-import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
-import defaultCharacterProperties from '/imports/api/creature/defaultCharacterProperties.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-import '/imports/api/creature/removeCreature.js';
-import '/imports/api/creature/restCreature.js';
 
 //set up the collection for creatures
 let Creatures = new Mongo.Collection('creatures');
@@ -176,92 +167,8 @@ CreatureSchema.extend(SharingSchema);
 
 Creatures.attachSchema(CreatureSchema);
 
-const insertCreature = new ValidatedMethod({
 
-  name: 'creatures.insertCreature',
-
-  validate: null,
-
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-
-  run() {
-    if (!this.userId) {
-      throw new Meteor.Error('Creatures.methods.insert.denied',
-      'You need to be logged in to insert a creature');
-    }
-    assertUserHasPaidBenefits(this.userId);
-
-		// Create the creature document
-    let creatureId = Creatures.insert({
-			owner: this.userId,
-		});
-
-    // Insert the default properties
-    // Not batchInsert because we want the properties cleaned by the schema
-    let baseId;
-    defaultCharacterProperties(creatureId).forEach(prop => {
-      let id = CreatureProperties.insert(prop);
-      if (prop.name === 'Ruleset'){
-        baseId = id;
-      }
-    });
-
-    if (Meteor.isServer){
-      // Insert the 5e ruleset as the default base
-      insertPropertyFromLibraryNode.call({
-        nodeId: 'iHbhfcg3AL5isSWbw',
-        parentRef: {id: baseId, collection: 'creatureProperties'},
-        order: 0.5,
-      });
-    }
-
-		this.unblock();
-		return creatureId;
-  },
-});
-
-const updateCreature = new ValidatedMethod({
-  name: 'creatures.update',
-  validate({_id, path}){
-		if (!_id) return false;
-		// Allowed fields
-		let allowedFields = [
-      'name',
-      'alignment',
-      'gender',
-      'picture',
-      'avatarPicture',
-      'color',
-      'settings',
-    ];
-		if (!allowedFields.includes(path[0])){
-			throw new Meteor.Error('Creatures.methods.update.denied',
-      'This field can\'t be updated using this method');
-		}
-  },
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  run({_id, path, value}) {
-		let creature = Creatures.findOne(_id);
-    assertEditPermission(creature, this.userId);
-    if (value === undefined || value === null){
-      Creatures.update(_id, {
-        $unset: {[path.join('.')]: 1},
-      });
-    } else {
-      Creatures.update(_id, {
-        $set: {[path.join('.')]: value},
-      });
-    }
-  },
-});
+import '/imports/api/creature/creatures/methods/index.js';
 
 export default Creatures;
-export { CreatureSchema, insertCreature, updateCreature };
+export { CreatureSchema };

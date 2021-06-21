@@ -1,5 +1,5 @@
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import Messages from '/imports/api/tabletop/Messages.js';
 
 Meteor.publish('tabletops', function(){

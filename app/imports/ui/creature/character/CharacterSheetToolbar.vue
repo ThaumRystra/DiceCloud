@@ -122,10 +122,10 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
-import removeCreature from '/imports/api/creature/removeCreature.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';
 import { mapMutations } from 'vuex';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import CharacterSheetFab from '/imports/ui/creature/character/CharacterSheetFab.vue';

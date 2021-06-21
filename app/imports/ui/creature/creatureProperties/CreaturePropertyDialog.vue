@@ -82,7 +82,7 @@ import softRemoveProperty from '/imports/api/creature/creatureProperties/methods
 import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 import duplicateProperty from '/imports/api/creature/creatureProperties/methods/duplicateProperty.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import PropertyToolbar from '/imports/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
@@ -91,7 +91,7 @@ import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormI
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { get, findLast } from 'lodash';
 import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';

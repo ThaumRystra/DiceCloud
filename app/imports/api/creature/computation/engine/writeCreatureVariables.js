@@ -1,5 +1,5 @@
 import { pick, forOwn } from 'lodash';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import VERSION from '/imports/constants/VERSION.js';
 
 export default function writeCreatureVariables(memo, creatureId, fullRecompute = true) {

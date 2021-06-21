@@ -115,7 +115,7 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';

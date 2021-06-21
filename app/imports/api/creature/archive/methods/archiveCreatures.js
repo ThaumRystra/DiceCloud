@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertOwnership } from '/imports/api/creature/creaturePermissions.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import { assertOwnership } from '/imports/api/creature/creatures/creaturePermissions.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
-import { removeCreatureWork } from '/imports/api/creature/removeCreature.js';
+import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchivedCreatures from '/imports/api/creature/archive/ArchivedCreatures.js';
 
 function archiveCreature(creatureId){

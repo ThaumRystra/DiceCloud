@@ -2,7 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 
 let Tabletops = new Mongo.Collection('tabletops');
 

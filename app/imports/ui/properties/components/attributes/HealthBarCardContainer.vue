@@ -12,7 +12,7 @@
 </template>
 
 <script lang="js">
-  import Creatures from '/imports/api/creature/Creatures.js';
+  import Creatures from '/imports/api/creature/creatures/Creatures.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 
 	import HealthBarCard from '/imports/ui/properties/components/attributes/HealthBarCard.vue';

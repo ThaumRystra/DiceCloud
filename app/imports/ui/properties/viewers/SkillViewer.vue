@@ -88,7 +88,7 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/ui/properties/components/skills/SkillProficiency.vue';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 
 export default {
   components: {

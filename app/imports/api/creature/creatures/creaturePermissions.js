@@ -1,4 +1,4 @@
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import {
   assertEditPermission as editPermission,
   assertViewPermission as viewPermission,
