@@ -13,33 +13,38 @@
           dense
           :value="model.name"
           @change="renameFolder"
-          @click.native.stop="()=>{}"
+          @click.native.stop=""
+          @input.native.stop=""
+          @keydown.native.stop=""
+          @keyup.native.stop=""
         />
       </v-list-item-title>
     </v-list-item-content>
-    <v-list-item-action v-if="!selection && (renaming || open)">
-      <v-btn
-        icon
-        style="flex-grow: 0"
-        @click.stop="renaming = !renaming"
-      >
-        <v-icon v-if="renaming">
-          mdi-check
-        </v-icon>
-        <v-icon v-else>
-          mdi-pencil
-        </v-icon>
-      </v-btn>
-    </v-list-item-action>
-    <v-list-item-action v-if="!selection && open">
-      <v-btn
-        icon
-        style="flex-grow: 0"
-        @click.stop="removeFolder"
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </v-list-item-action>
+    <template v-if="!selection && !dense">
+      <v-list-item-action v-if="renaming || open">
+        <v-btn
+          icon
+          style="flex-grow: 0"
+          @click.stop="renaming = !renaming"
+        >
+          <v-icon v-if="renaming">
+            mdi-check
+          </v-icon>
+          <v-icon v-else>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
+      </v-list-item-action>
+      <v-list-item-action v-if="open">
+        <v-btn
+          icon
+          style="flex-grow: 0"
+          @click.stop="removeFolder"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </v-list-item-action>
+    </template>
   </v-list-item>
 </template>
 
@@ -57,6 +62,7 @@
       },
       open: Boolean,
       selection: Boolean,
+      dense: Boolean,
     },
     data(){return {
       renaming: false,

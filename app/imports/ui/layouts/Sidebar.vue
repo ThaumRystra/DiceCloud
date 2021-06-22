@@ -54,68 +54,28 @@
       </v-list-item>
       <v-divider />
     </v-list>
-    <v-list
-      avatar
-    >
-      <v-list-item
-        v-for="character in CreaturesWithNoParty"
-        :key="character._id"
-        :to="character.url"
-      >
-        <v-list-item-avatar :color="character.color || 'grey'">
-          <img
-            v-if="character.avatarPicture"
-            :src="character.avatarPicture"
-            :alt="character.name"
-          >
-          <template v-else>
-            {{ character.initial }}
-          </template>
-        </v-list-item-avatar>
-        <v-list-item-title>
-          {{ character.name }}
-        </v-list-item-title>
-      </v-list-item>
-      <!--
-      <v-list-group
-        v-for="party in parties"
-        :key="party._id"
-      >
-        <v-list-item slot="activator">
-          <v-list-item-title>
-            {{ party.name }}
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item
-          v-for="character in characterDocs"
-          :key="character._id"
-          :to="character.url"
-        >
-          <v-list-item-avatar :color="character.color || 'grey'">
-            <img
-              v-if="character.avatarPicture"
-              :src="character.avatarPicture"
-              :alt="character.name"
-            >
-            <template v-else>
-              {{ character.initial }}
-            </template>
-          </v-list-item-avatar>
-          <v-list-item-title>
-            {{ character.name }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list-group>
-    -->
-    </v-list>
+    <creature-folder-list
+      dense
+      :creatures="CreaturesWithNoParty"
+      :folders="folders"
+    />
   </div>
 </template>
 
 <script lang="js">
   import Creatures from '/imports/api/creature/creatures/Creatures.js';
-  import Parties from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+  import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+  import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
 
+  const characterTransform = function(char){
+    char.url = `/character/${char._id}/${char.urlName || '-'}`;
+    char.initial = char.name && char.name[0] || '?';
+    return char;
+  };
   export default {
+    components: {
+      CreatureFolderList
+    },
     meteor: {
       $subscribe: {
         'characterList': [],
@@ -142,21 +102,36 @@
         ];
         return links.filter(link => !link.requireLogin || isLoggedIn);
       },
+      folders(){
+        const userId = Meteor.userId();
+        let folders =  CreatureFolders.find(
+          {owner: userId, archived: {$ne: true}},
+          {sort: {order: 1}},
+        ).map(folder => {
+          folder.creatures = Creatures.find(
+            {
+              _id: {$in: folder.creatures || []},
+              $or: [{readers: userId}, {writers: userId}, {owner: userId}],
+            }, {
+              sort: {name: 1},
+            }
+          ).map(characterTransform);
+          return folder;
+        });
+        folders = folders.filter(folder => !!folder.creatures.length);
+        return folders;
+      },
       CreaturesWithNoParty() {
         var userId = Meteor.userId();
-        var charArrays = Parties.find({owner: userId}).map(p => p.creatures);
-        var partyChars = _.uniq(_.flatten(charArrays));
+        var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
+        var folderChars = _.uniq(_.flatten(charArrays));
         return Creatures.find(
           {
-            _id: {$nin: partyChars},
+            _id: {$nin: folderChars},
             $or: [{readers: userId}, {writers: userId}, {owner: userId}],
           },
           {sort: {name: 1}}
-        ).map(char => {
-          char.url = `/character/${char._id}/${char.urlName || '-'}`;
-          char.initial = char.name && char.name[0] || '?';
-          return char;
-        });
+        ).map(characterTransform);
       },
     },
   };

@@ -1,9 +1,12 @@
 <template lang="html">
-  <v-list expand>
+  <v-list
+    expand
+  >
     <creature-list
       :creatures="creatures"
       :selection="selection"
       :selected-creature="selectedCreature"
+      :dense="dense"
       @creature-selected="id => $emit('creature-selected', id)"
     />
     <v-list-group
@@ -17,6 +20,7 @@
           :open="openFolders[folder._id]"
           :model="folder"
           :selection="selection"
+          :dense="dense"
         />
       </template>
       <creature-list
@@ -24,6 +28,7 @@
         :folder-id="folder._id"
         :selection="selection"
         :selected-creature="selectedCreature"
+        :dense="dense"
         @creature-selected="id => $emit('creature-selected', id)"
       />
     </v-list-group>
@@ -53,6 +58,7 @@ export default {
       type: String,
       default: undefined,
     },
+    dense: Boolean,
   },
   data(){return{
     openFolders: {},

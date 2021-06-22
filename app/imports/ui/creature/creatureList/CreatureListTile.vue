@@ -32,16 +32,16 @@
       <v-list-item-title>
         {{ model.name }}
       </v-list-item-title>
-      <v-list-item-subtitle>
+      <v-list-item-subtitle v-if="!dense">
         {{ model.alignment }} {{ model.gender }} {{ model.race }}
       </v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-action>
+    <v-list-item-action v-if="!dense">
       <shared-icon :model="model" />
     </v-list-item-action>
     <v-list-item-action>
       <v-icon
-        v-if="!selection"
+        v-if="!selection && !dense"
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
@@ -65,6 +65,7 @@ export default {
     },
     selection: Boolean,
     isSelected: Boolean,
+    dense: Boolean,
   }
 }
 </script>

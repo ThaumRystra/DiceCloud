@@ -18,6 +18,7 @@
       :selection="selection"
       :is-selected="selectedCreature === creature._id"
       v-bind="selection ? {} : {to: creature.url}"
+      :dense="dense"
       @click="$emit('creature-selected', creature._id)"
     />
   </draggable>
@@ -48,6 +49,7 @@
         type: String,
         default: undefined,
       },
+      dense: Boolean,
     },
     data(){return {
       dataCreatures: [],
