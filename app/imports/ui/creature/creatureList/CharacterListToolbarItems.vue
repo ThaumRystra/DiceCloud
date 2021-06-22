@@ -7,23 +7,19 @@
     <template v-else>
       {{ characterSlots }}
     </template>
-    <v-btn
-      icon
-      data-id="open-archive-btn"
-      @click="openArchive"
-    >
-      <v-icon>
-        mdi-archive
-      </v-icon>
-    </v-btn>
+    <archive-button />
   </div>
 </template>
 
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import ArchiveButton from '/imports/ui/creature/creatureList/ArchiveButton.vue';
 
 export default {
+  components: {
+    ArchiveButton,
+  },
   meteor: {
     creatureCount(){
       return Creatures.find({owner: Meteor.userId()}).count();
@@ -32,14 +28,6 @@ export default {
       return getUserTier(Meteor.userId()).characterSlots;
     }
   },
-  methods: {
-    openArchive(){
-      this.$store.commit('pushDialogStack', {
-        component: 'archive-dialog',
-        elementId: 'open-archive-btn',
-      });
-    }
-  }
 }
 </script>
 

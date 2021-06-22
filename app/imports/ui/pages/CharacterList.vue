@@ -1,107 +1,74 @@
 <template>
   <div
-    class="card-background pa-4"
+    class="card-background"
     style="height: 100%"
   >
-    <v-alert
-      v-if="exceededCharacterSpace"
-      type="error"
-    >
-      You have exceeded your maximum number of character slots, archive or delete
-      some characters.
-    </v-alert>
-    <v-card :class="{'mb-4': folders && folders.length}">
-      <creature-list :creatures="CreaturesWithNoParty" />
-    </v-card>
-    <v-expansion-panels
-      v-if="folders && folders.length"
-      multiple
-    >
-      <v-expansion-panel
-        v-for="folder in folders"
-        :key="folder._id"
-      >
-        <v-expansion-panel-header>
-          <template #default="{ open }">
-            <div v-if="renamingFolder !== folder._id">
-              {{ folder.name }}
-            </div>
-            <text-field
-              v-else
-              :ref="`name-input-${folder._id}`"
-              regular
-              hide-details
-              dense
-              :value="folder.name"
-              @change="(value, ack) => renameFolder(folder._id, value, ack)"
-              @click.native.stop="()=>{}"
+    <v-container>
+      <v-row justify="center">
+        <v-col
+          cols="12"
+          xl="8"
+        >
+          <v-alert
+            v-if="characterSpaceLeft < 0"
+            type="error"
+          >
+            You have exceeded your maximum number of character slots, archive or delete
+            some characters.
+          </v-alert>
+          <v-alert
+            v-else-if="characterSpaceLeft === 0"
+            type="info"
+          >
+            You have hit your maximum number of characters.
+            <archive-button
+              small
+              text
+              class="mx-2"
             />
+          </v-alert>
+          <v-card :class="{'mb-4': folders && folders.length}">
+            <creature-folder-list
+              :creatures="CreaturesWithNoParty"
+              :folders="folders"
+            />
+          </v-card>
+          <div class="layout justify-end mt-2">
             <v-btn
-              v-if="renamingFolder === folder._id || open"
-              icon
-              style="flex-grow: 0"
-              @click.stop="renamingFolder !== folder._id ? renamingFolder = folder._id : renamingFolder = undefined"
+              text
+              :loading="loadingInsertFolder"
+              @click="insertFolder"
             >
-              <v-icon v-if="renamingFolder !== folder._id">
-                mdi-pencil
-              </v-icon>
-              <v-icon v-else>
-                mdi-check
-              </v-icon>
+              add folder
             </v-btn>
-            <v-btn
-              v-if="open"
-              icon
-              style="flex-grow: 0"
-              @click.stop="removeFolder(folder._id)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <creature-list
-            :creatures="folder.creatures"
-            :folder-id="folder._id"
-          />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-    <div class="layout justify-end mt-2">
-      <v-btn
-        text
-        :loading="loadingInsertFolder"
-        @click="insertFolder"
-      >
-        add folder
-      </v-btn>
-    </div>
-    <v-btn
-      color="accent"
-      fab
-      fixed
-      bottom
-      right
-      data-id="new-character-button"
-      :disabled="!hasCharacterSpace"
-      @click="insertCharacter"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+          </div>
+          <v-btn
+            color="accent"
+            fab
+            fixed
+            bottom
+            right
+            data-id="new-character-button"
+            :disabled="characterSpaceLeft <= 0"
+            @click="insertCharacter"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script lang="js">
-  import Vue from 'vue';
   import Creatures from '/imports/api/creature/creatures/Creatures.js';
   import insertCreature from '/imports/api/creature/creatures/methods/insertCreature.js';
   import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
-  import CreatureList from '/imports/ui/creature/creatureList/CreatureList.vue';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
   import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder.js';
-  import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName.js';
-  import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/removeCreatureFolder.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+  import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
+  import ArchiveButton from '/imports/ui/creature/creatureList/ArchiveButton.vue';
 
   const characterTransform = function(char){
     char.url = `/character/${char._id}/${char.urlName || '-'}`;
@@ -110,7 +77,8 @@
   };
   export default {
     components: {
-      CreatureList,
+      CreatureFolderList,
+      ArchiveButton,
     },
     data(){ return{
       fab: false,
@@ -163,26 +131,17 @@
         let userId = Meteor.userId();
         return getUserTier(userId);
       },
-      hasCharacterSpace(){
+      characterSpaceLeft(){
         let tier = this.tier;
         let currentCharacterCount = this.creatureCount;
-        return tier.characterSlots === -1 || currentCharacterCount < tier.characterSlots
+        if (tier.characterSlots === -1) return Number.POSITIVE_INFINITY;
+        return tier.characterSlots - currentCharacterCount
       },
       exceededCharacterSpace(){
         let tier = this.tier;
         let currentCharacterCount = this.creatureCount;
         return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
-      }
-    },
-    watch:{
-      renamingFolder(newId){
-        if(newId){
-          Vue.nextTick(() => {
-            let input = this.$refs[`name-input-${newId}`];
-            input[0].focus();
-          });
-        }
-      }
+      },
     },
     methods: {
       insertCharacter(){
@@ -206,18 +165,6 @@
         this.loadingInsertFolder = true;
         insertCreatureFolder.call(error => {
           this.loadingInsertFolder = false;
-          if (!error) return;
-          console.error(error);
-          snackbar({
-            text: error.reason,
-          });
-        });
-      },
-      renameFolder(_id, name, ack){
-        updateCreatureFolderName.call({_id, name}, ack);
-      },
-      removeFolder(_id){
-        removeCreatureFolder.call({_id}, error => {
           if (!error) return;
           console.error(error);
           snackbar({

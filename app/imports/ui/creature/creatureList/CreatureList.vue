@@ -1,25 +1,26 @@
 <template lang="html">
-  <v-list>
-    <draggable
-      v-model="dataCreatures"
-      style="min-height: 24px;"
-      :sort="false"
-      :group="`creature-list`"
-      ghost-class="ghost"
-      draggable=".creature"
-      handle=".handle"
-      :animation="200"
-      @change="change"
-    >
-      <creature-list-tile
-        v-for="creature in dataCreatures"
-        :key="creature._id"
-        class="creature"
-        :to="creature.url"
-        :model="creature"
-      />
-    </draggable>
-  </v-list>
+  <draggable
+    v-model="dataCreatures"
+    style="min-height: 24px;"
+    :sort="false"
+    :group="`creature-list`"
+    ghost-class="ghost"
+    draggable=".creature"
+    handle=".handle"
+    :animation="200"
+    @change="draggableChange"
+  >
+    <creature-list-tile
+      v-for="creature in dataCreatures"
+      :key="creature._id"
+      class="creature"
+      :model="creature"
+      :selection="selection"
+      :is-selected="selectedCreature === creature._id"
+      v-bind="selection ? {} : {to: creature.url}"
+      @click="$emit('creature-selected', creature._id)"
+    />
+  </draggable>
 </template>
 
 <script lang="js">
@@ -42,6 +43,11 @@
         type: String,
         default: null,
       },
+      selection: Boolean,
+      selectedCreature: {
+        type: String,
+        default: undefined,
+      },
     },
     data(){return {
       dataCreatures: [],
@@ -55,9 +61,10 @@
       this.dataCreatures = this.creatures;
     },
     methods: {
-      change({added, moved}){
+      draggableChange({added, moved}){
         let event = added || moved;
         if (event){
+          /*
           // If this item is now adjacent to another, set the order accordingly
           let order;
           let before = this.dataCreatures[event.newIndex - 1];
@@ -69,6 +76,7 @@
           } else {
             order = -0.5;
           }
+          */
           let doc = event.element;
           moveCreatureToFolder.call({
             creatureId: doc._id,
@@ -81,6 +89,9 @@
             });
           });
         }
+      },
+      selectionChange(index){
+        this.$emit('creatureSelected', this.dataCreatures[index]._id)
       },
     }
   }

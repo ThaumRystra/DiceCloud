@@ -11,6 +11,7 @@ Meteor.publish('archivedCreatures', function(){
       }, {
         fields: {
           creature: 1,
+          owner: 1,
         }
       }
     );

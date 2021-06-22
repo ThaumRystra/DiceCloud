@@ -2,16 +2,31 @@
   lang="html"
   functional
 >
-  <v-list-item v-bind="$attrs">
-    <v-list-item-avatar :color="model.color || 'grey'">
-      <img
-        v-if="model.avatarPicture"
-        :src="model.avatarPicture"
-        :alt="model.name"
-      >
-      <template v-else>
-        {{ model.initial }}
-      </template>
+  <v-list-item
+    v-bind="$attrs"
+    :class="isSelected && 'primary--text v-list-item--active'"
+    v-on="selection ? { click() {$emit('click')} } : {}"
+  >
+    <v-list-item-avatar
+      :color="isSelected ? 'red darken-1' : model.color || 'grey'"
+      class="white--text"
+      style="transition: background 0.3s;"
+    >
+      <v-fade-transition leave-absolute>
+        <v-icon v-if="isSelected">
+          mdi-check
+        </v-icon>
+        <img
+          v-else-if="model.avatarPicture"
+          :src="model.avatarPicture"
+          :alt="model.name"
+        >
+        <template v-else>
+          <span>
+            {{ model.initial }}
+          </span>
+        </template>
+      </v-fade-transition>
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>
@@ -25,12 +40,8 @@
       <shared-icon :model="model" />
     </v-list-item-action>
     <v-list-item-action>
-      <v-checkbox
-        v-if="selection"
-        :input-value="selected && selected.has(model._id)"
-        @change="$emit('select')"
-      />
       <v-icon
+        v-if="!selection"
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
@@ -53,10 +64,7 @@ export default {
       required: true,
     },
     selection: Boolean,
-    selected: {
-      type: Set,
-      default: () => new Set(),
-    },
+    isSelected: Boolean,
   }
 }
 </script>

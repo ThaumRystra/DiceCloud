@@ -12,9 +12,9 @@ import ArchivedCreatures from '/imports/api/creature/archive/ArchivedCreatures.j
 function archiveCreature(creatureId){
   // Build the archive document
   const creature = Creatures.findOne(creatureId);
-  const properties = CreatureProperties.find({'ancestors.id': creatureId});
-  const experiences = Experiences.find({creatureId});
-  const logs = CreatureLogs.find({creatureId});
+  const properties = CreatureProperties.find({'ancestors.id': creatureId}).fetch();
+  const experiences = Experiences.find({creatureId}).fetch();
+  const logs = CreatureLogs.find({creatureId}).fetch();
   let archiveCreature = {
     owner: creature.owner,
     archiveDate: new Date(),
@@ -51,11 +51,11 @@ const archiveCreatures = new ValidatedMethod({
     timeInterval: 5000,
   },
   run({creatureIds}) {
-    for (let id in creatureIds){
+    for (let id of creatureIds){
       assertOwnership(id, this.userId)
     }
     let archivedIds = [];
-    for (let id in creatureIds){
+    for (let id of creatureIds){
       let archivedId = archiveCreature(id);
       archivedIds.push(archivedId);
     }
