@@ -72,7 +72,6 @@
           <v-list-item-action>
             <v-btn
               icon
-              flat
               :loading="experiencesRemovalLoading.has(experience._id)"
               @click="removeExperience(experience._id)"
             >
