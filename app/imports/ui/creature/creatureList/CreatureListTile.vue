@@ -39,9 +39,8 @@
     <v-list-item-action v-if="!dense">
       <shared-icon :model="model" />
     </v-list-item-action>
-    <v-list-item-action>
+    <v-list-item-action v-if="!selection && !dense">
       <v-icon
-        v-if="!selection && !dense"
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
