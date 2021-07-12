@@ -62,7 +62,6 @@
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
-    {{ cntxt }}
     <form-section
       name="Advanced"
       standalone
