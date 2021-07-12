@@ -102,24 +102,31 @@ export default function computeStat(stat, memo){
         prop: statInstance,
         memo
       });
-      statInstance.baseValue = +result.value;
+      result.value = +result.value;
+      if (!isNaN(result.value)){
+        statInstance.baseValue = result.value;
+      } else {
+        statInstance.baseValue = undefined;
+      }
       statInstance.dependencies = union(statInstance.dependencies, dependencies);
       if (context.errors.length){
         statInstance.baseValueErrors = context.errors;
       }
       // Apply all the base values
-      effects.push({
-        operation: 'base',
-        calculation: statInstance.baseValueCalculation,
-        result: statInstance.baseValue,
-        stats: [statInstance.variableName],
-        dependencies: statInstance.overridden ?
+      if (Number.isFinite(statInstance.baseValue)){
+        effects.push({
+          operation: 'base',
+          calculation: statInstance.baseValueCalculation,
+          result: statInstance.baseValue,
+          stats: [statInstance.variableName],
+          dependencies: statInstance.overridden ?
           union(statInstance.dependencies, [statInstance._id]) :
           [],
-        computationDetails: {
-          computed: true,
-        },
-      });
+          computationDetails: {
+            computed: true,
+          },
+        });
+      }
     }
   });
 
