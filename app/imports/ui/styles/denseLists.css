@@ -1,0 +1,4 @@
+.v-list--dense .v-list-item__avatar, .v-list--dense .v-list-item__action {
+  margin-top: 0;
+  margin-bottom: 0;
+}
