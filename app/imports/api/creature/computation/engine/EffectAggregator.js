@@ -1,6 +1,6 @@
 export default class EffectAggregator{
   constructor(){
-    this.base = 0;
+    this.base = undefined;
     this.add = 0;
     this.mul = 1;
     this.min = Number.NEGATIVE_INFINITY;
@@ -20,7 +20,11 @@ export default class EffectAggregator{
     switch(effect.operation){
       case 'base':
         // Take the largest base value
-        this.base = result > this.base ? result : this.base;
+        if(Number.isFinite(this.base)){
+          this.base = Math.max(this.base, result);
+        } else {
+          this.base = result;
+        }
         break;
       case 'add':
         // Add all adds together
