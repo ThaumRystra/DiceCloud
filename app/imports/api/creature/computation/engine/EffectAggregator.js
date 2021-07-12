@@ -20,10 +20,12 @@ export default class EffectAggregator{
     switch(effect.operation){
       case 'base':
         // Take the largest base value
-        if(Number.isFinite(this.base)){
-          this.base = Math.max(this.base, result);
-        } else {
-          this.base = result;
+        if (Number.isFinite(result)){
+          if(Number.isFinite(this.base)){
+            this.base = Math.max(this.base, result);
+          } else {
+            this.base = result;
+          }
         }
         break;
       case 'add':
