@@ -89,6 +89,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/ui/properties/components/skills/SkillProficiency.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
 
 export default {
   components: {
@@ -109,17 +110,7 @@ export default {
 			}
 		},
     icon(){
-			if (this.model.proficiency == 0.49){
-				return 'mdi-brightness-3';
-			} else if (this.model.proficiency == 0.5){
-				return 'mdi-brightness-2';
-			} else if (this.model.proficiency == 1) {
-				return 'mdi-brightness-1'
-			} else if (this.model.proficiency == 2){
-				return 'album'
-			} else {
-				return 'mdi-radiobox-blank';
-			}
+      return getProficiencyIcon(this.model.proficiency);
 		},
   },
   methods: {

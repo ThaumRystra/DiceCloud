@@ -4,9 +4,10 @@
     style="min-height: 36px;"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-icon class="prof-icon">
-      {{ icon }}
-    </v-icon>
+    <proficiency-icon
+      :value="model.proficiency"
+      class="prof-icon"
+    />
     <v-list-item-content class="py-1">
       <v-list-item-title>
         <span
@@ -41,8 +42,12 @@
 
 <script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import ProficiencyIcon from '/imports/ui/properties/shared/ProficiencyIcon.vue';
 
 export default {
+  components: {
+    ProficiencyIcon,
+  },
 	props: {
     model: {
       type: Object,
@@ -51,19 +56,6 @@ export default {
     hideModifier: Boolean,
 	},
 	computed: {
-		icon(){
-      if (this.model.proficiency == 0.49){
-				return 'mdi-brightness-3';
-			} else if (this.model.proficiency == 0.5){
-				return 'mdi-brightness-2';
-			} else if (this.model.proficiency == 1) {
-				return 'mdi-brightness-1'
-			} else if (this.model.proficiency == 2){
-				return 'album'
-			} else {
-				return 'mdi-radiobox-blank';
-			}
-		},
 		displayedModifier(){
 			let mod = this.model.value;
 			if (this.model.fail){

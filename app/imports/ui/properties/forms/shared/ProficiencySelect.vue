@@ -20,20 +20,9 @@
 </template>
 
 <script lang="js">
+  import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
+
 	const ICON_SPIN_DURATION = 300;
-	let proficiencyIcon = function(value){
-    if (value == 0.49){
-			return 'mdi-brightness-3';
-		} else if (value == 0.5){
-			return 'mdi-brightness-2';
-		} else if (value == 1) {
-			return 'mdi-brightness-1'
-		} else if (value == 2){
-			return 'album'
-		} else {
-			return 'mdi-radiobox-blank';
-		}
-	};
 
 	export default {
 		props: {
@@ -60,7 +49,7 @@
 			'value': {
 				immediate: true,
 				handler(newValue){
-					let newIcon = proficiencyIcon(newValue);
+					let newIcon = getProficiencyIcon(newValue);
 					this.iconClass='leaving';
 					setTimeout(() => {
 						this.displayedIcon = newIcon;

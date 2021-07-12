@@ -1,10 +1,12 @@
 <template lang="html">
   <div class="proficiency-viewer">
+    <div class="text-h5">
+      {{ model.stats && model.stats.join(' ') }}
+    </div>
     <div class="text-h5 layout">
-      {{ model.skill }}
       <proficiency-icon
         :value="model.value"
-        class="ml-3 mr-1"
+        class="mr-1"
       />
       <div>
         {{ proficiencyText }}
@@ -16,6 +18,7 @@
 <script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 import ProficiencyIcon from '/imports/ui/properties/shared/ProficiencyIcon.vue';
+
 export default {
   components: {
     ProficiencyIcon,

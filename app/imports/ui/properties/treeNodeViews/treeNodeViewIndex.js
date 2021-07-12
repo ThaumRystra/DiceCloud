@@ -4,6 +4,7 @@ import ItemTreeNode from '/imports/ui/properties/treeNodeViews/ItemTreeNode.vue'
 import DamageTreeNode from '/imports/ui/properties/treeNodeViews/DamageTreeNode.vue';
 import EffectTreeNode from '/imports/ui/properties/treeNodeViews/EffectTreeNode.vue';
 import ClassLevelTreeNode from '/imports/ui/properties/treeNodeViews/ClassLevelTreeNode.vue';
+import ProficiencyTreeNode from '/imports/ui/properties/treeNodeViews/ProficiencyTreeNode.vue';
 import ReferenceTreeNode from '/imports/ui/properties/treeNodeViews/ReferenceTreeNode.vue';
 
 export default {
@@ -13,5 +14,6 @@ export default {
   damage: DamageTreeNode,
   effect: EffectTreeNode,
   item: ItemTreeNode,
+  proficiency: ProficiencyTreeNode,
   reference: ReferenceTreeNode,
 }
