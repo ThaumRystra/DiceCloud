@@ -8,6 +8,7 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { doActionWork } from '/imports/api/creature/actions/doAction.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import getAncestorContext from '/imports/api/creature/actions/getAncestorContext.js';
 
 const castSpellWithSlot = new ValidatedMethod({
   name: 'creatureProperties.castSpellWithSlot',
@@ -61,9 +62,11 @@ const castSpellWithSlot = new ValidatedMethod({
         value: 1,
       });
     }
+    let actionContext = getAncestorContext(spell);
+
 		doActionWork({
       action: spell,
-      context: {slotLevel},
+      actionContext: {slotLevel, ...actionContext},
       creature,
       targets: target ? [target] : [],
       method: this,
