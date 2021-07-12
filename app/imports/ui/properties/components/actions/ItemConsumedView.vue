@@ -53,7 +53,7 @@
             </span>
           </div>
           <v-icon v-if="context.editPermission">
-            arrow_drop_down
+            mdi-menu-down
           </v-icon>
         </div>
       </template>

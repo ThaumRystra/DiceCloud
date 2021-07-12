@@ -20,13 +20,13 @@
           v-if="model.advantage > 0"
           size="20px"
         >
-          arrow_upward
+          mdi-chevron-double-up
         </v-icon>
         <v-icon
           v-if="model.advantage < 0"
           size="20px"
         >
-          arrow_downward
+          mdi-chevron-double-down
         </v-icon>
         {{ model.name }}
         <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">

@@ -13,7 +13,7 @@
       :class="selected && 'primary--text'"
       small
     >
-      pan_tool
+      mdi-account-arrow-left
     </v-icon>
     <div
       class="text-no-wrap text-truncate"
