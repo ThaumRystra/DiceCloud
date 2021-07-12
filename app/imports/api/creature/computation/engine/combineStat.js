@@ -35,7 +35,6 @@ function getAggregatorResult(stat, aggregator){
   if (!stat.decimal && Number.isFinite(result)){
     result = Math.floor(result);
   }
-  console.log({result, agg: aggregator.base, statBase: stat.baseValue, base, name: stat.name, stat});
   return result;
 }
 
