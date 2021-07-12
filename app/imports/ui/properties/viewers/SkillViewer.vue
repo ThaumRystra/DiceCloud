@@ -139,7 +139,7 @@ export default {
         let creatureId = this.context.creatureId;
         return CreatureProperties.find({
           'ancestors.id': creatureId,
-          type: 'attribute',
+          type: 'skill',
           variableName: this.model.variableName,
           removed: {$ne: true},
           inactive: {$ne: true},
