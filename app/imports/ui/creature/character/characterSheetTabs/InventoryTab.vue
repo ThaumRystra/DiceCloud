@@ -183,10 +183,24 @@ export default {
 			});
     },
     equipmentParentRef(){
-      return getParentRefByTag(this.creatureId, BUILT_IN_TAGS.equipment);
+      return getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.equipment
+      ) || getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.inventory
+      ) || {
+        id: this.creatureId,
+        collection: 'creatures'
+      };
     },
     carriedParentRef(){
-      return getParentRefByTag(this.creatureId, BUILT_IN_TAGS.carried);
+      return getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.carried
+      ) || getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.inventory
+      ) || {
+        id: this.creatureId,
+        collection: 'creatures'
+      };
     },
 	},
 	computed: {
