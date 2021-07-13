@@ -15,6 +15,8 @@
           <smart-switch
             :value="darkMode"
             label="Dark mode"
+            :disabled="!tier.paidBenefits"
+            :error-messages="tier.paidBenefits ? undefined : 'Patreon reward'"
             @change="setDarkMode"
           />
         </v-list-item>
@@ -188,7 +190,7 @@
         return user && user.emails;
       },
       darkMode(){
-        return this.user && this.user.darkMode;
+        return this.user && this.tier.paidBenefits && this.user.darkMode;
       },
       invites(){
         let usernames = {};
@@ -220,6 +222,7 @@
         return getEntitledCents(this.user);
       },
       tier(){
+        if (!this.user) return {};
         return getUserTier(this.user);
       },
     },
