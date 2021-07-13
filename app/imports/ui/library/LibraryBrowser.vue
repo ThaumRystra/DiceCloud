@@ -38,7 +38,7 @@
               small
               @click="$router.push(`/library/${library._id}`)"
             >
-              <v-icon>arrow_forward</v-icon>
+              <v-icon>mdi-arrow-right</v-icon>
             </v-btn>
           </v-layout>
           <library-contents-container
@@ -61,7 +61,7 @@
       data-id="insert-library-button"
       @click="insertLibrary"
     >
-      <v-icon>add</v-icon>
+      <v-icon>mdi-plus</v-icon>
       New library
     </v-btn>
   </div>

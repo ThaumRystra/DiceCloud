@@ -8,7 +8,7 @@
       <text-field
         ref="focusFirst"
         label="Name"
-        prepend-inner-icon="search"
+        prepend-inner-icon="mdi-search"
         regular
         hide-details
         :value="searchValue"
@@ -27,7 +27,7 @@
             :class="{'primary--text': filtersApplied}"
             v-on="on"
           >
-            <v-icon>filter_list</v-icon>
+            <v-icon>mdi-filter</v-icon>
           </v-btn>
         </template>
         <v-list>

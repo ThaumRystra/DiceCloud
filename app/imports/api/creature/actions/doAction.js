@@ -2,15 +2,16 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import { nodesToTree } from '/imports/api/parenting/parenting.js';
 import applyProperties from '/imports/api/creature/actions/applyProperties.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
+import getAncestorContext from '/imports/api/creature/actions/getAncestorContext.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -36,6 +37,10 @@ const doAction = new ValidatedMethod({
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
     let creature = getRootCreatureAncestor(action);
+
+    // Build ancestor context
+    let actionContext = getAncestorContext(action);
+
     assertEditPermission(creature, this.userId);
     let targets = [];
     targetIds.forEach(targetId => {
@@ -43,7 +48,7 @@ const doAction = new ValidatedMethod({
       assertEditPermission(target, this.userId);
       targets.push(target);
     });
-		doActionWork({action, creature, targets, method: this});
+		doActionWork({action, creature, targets, actionContext, method: this});
 
     // The acting creature might have used ammo
     recomputeInventory(creature._id);
@@ -64,7 +69,7 @@ export function doActionWork({
   action,
   creature,
   targets,
-  context = {},
+  actionContext = {},
   method
 }){
   // Create the log
@@ -83,7 +88,7 @@ export function doActionWork({
   }];
   applyProperties({
     forest: startingForest,
-    actionContext: context,
+    actionContext,
     creature,
     targets,
     log,

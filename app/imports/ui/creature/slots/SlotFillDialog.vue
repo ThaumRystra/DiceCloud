@@ -9,7 +9,7 @@
       </v-toolbar-title>
       <v-spacer />
       <text-field
-        prepend-inner-icon="search"
+        prepend-inner-icon="mdi-search"
         regular
         hide-details
         :value="searchValue"
@@ -153,7 +153,7 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';

@@ -18,7 +18,7 @@
           icon
           @click="back"
         >
-          <v-icon>arrow_back</v-icon>
+          <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <slot name="toolbar" />
       </v-toolbar>

@@ -11,7 +11,7 @@
           :disabled="currentValue >= value || context.editPermission === false"
           @click="increment(1)"
         >
-          <v-icon>arrow_drop_up</v-icon>
+          <v-icon>mdi-chevron-up</v-icon>
         </v-btn>
         <v-btn
           icon
@@ -19,7 +19,7 @@
           :disabled="currentValue <= 0 || context.editPermission === false"
           @click="increment(-1)"
         >
-          <v-icon>arrow_drop_down</v-icon>
+          <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
       </div>
       <div

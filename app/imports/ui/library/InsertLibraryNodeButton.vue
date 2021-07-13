@@ -7,7 +7,7 @@
     data-id="insert-library-node-button"
     @click="insertLibraryNode"
   >
-    <v-icon>add</v-icon>
+    <v-icon>mdi-plus</v-icon>
     <slot />
   </v-btn>
 </template>

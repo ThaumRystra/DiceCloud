@@ -24,11 +24,11 @@ const PROPERTIES = Object.freeze({
     name: 'Class level'
   },
   constant: {
-    icon: 'anchor',
+    icon: 'mdi-anchor',
     name: 'Constant'
   },
   container: {
-    icon: 'work',
+    icon: 'mdi-bag-personal-outline',
     name: 'Container'
   },
   damage: {
@@ -44,23 +44,23 @@ const PROPERTIES = Object.freeze({
     name: 'Effect'
   },
   feature: {
-    icon: 'subject',
+    icon: 'mdi-text-subject',
     name: 'Feature'
   },
   folder: {
-    icon: 'folder',
+    icon: 'mdi-folder-outline',
     name: 'Folder'
   },
   item: {
-    icon: '$vuetify.icons.item',
+    icon: 'mdi-cube-outline',
     name: 'Item'
   },
   note: {
-    icon: 'note',
+    icon: 'mdi-note-outline',
     name: 'Note'
   },
   proficiency: {
-    icon: 'radio_button_checked',
+    icon: 'mdi-brightness-1',
     name: 'Proficiency'
   },
   roll: {
@@ -68,7 +68,7 @@ const PROPERTIES = Object.freeze({
     name: 'Roll'
   },
   reference: {
-    icon: 'link',
+    icon: 'mdi-vector-link',
     name: 'Reference',
     libraryOnly: true,
   },
@@ -81,11 +81,11 @@ const PROPERTIES = Object.freeze({
     name: 'Skill'
   },
   propertySlot: {
-    icon: 'tab_unselected',
+    icon: 'mdi-power-socket-eu',
     name: 'Slot'
   },
   slotFiller: {
-    icon: 'picture_in_picture',
+    icon: 'mdi-power-plug-outline',
     name: 'Slot filler'
   },
   spellList: {

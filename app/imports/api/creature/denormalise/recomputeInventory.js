@@ -1,5 +1,5 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { nodesToTree } from '/imports/api/parenting/parenting.js';
 
 export default function recomputeInventory(creatureId){

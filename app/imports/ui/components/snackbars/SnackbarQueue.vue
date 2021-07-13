@@ -32,7 +32,7 @@
         v-bind="attrs"
         @click="closeSnackbar"
       >
-        <v-icon>close</v-icon>
+        <v-icon>mdi-close</v-icon>
       </v-btn>
     </template>
   </v-snackbar>

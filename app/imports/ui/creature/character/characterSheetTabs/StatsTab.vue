@@ -45,7 +45,7 @@
                   icon
                   @click.stop="softRemove(buff._id)"
                 >
-                  <v-icon>delete</v-icon>
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
@@ -320,7 +320,7 @@
 </template>
 
 <script lang="js">
-  import Creatures from '/imports/api/creature/Creatures.js';
+  import Creatures from '/imports/api/creature/creatures/Creatures.js';
 	import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';

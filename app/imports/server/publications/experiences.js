@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
-import { assertViewPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 
 let schema = new SimpleSchema({
   creatureId: {

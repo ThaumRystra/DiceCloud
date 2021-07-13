@@ -1,3 +1,4 @@
+import ArchiveDialog from '/imports/ui/creature/archive/ArchiveDialog.vue';
 import CastSpellWithSlotDialog from '/imports/ui/properties/components/spells/CastSpellWithSlotDialog.vue';
 import CreatureFormDialog from '/imports/ui/creature/CreatureFormDialog.vue';
 import CreaturePropertyCreationDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue';
@@ -22,6 +23,7 @@ import TierTooLowDialog from '/imports/ui/user/TierTooLowDialog.vue';
 import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
 
 export default {
+  ArchiveDialog,
   CastSpellWithSlotDialog,
   CreatureFormDialog,
   CreaturePropertyCreationDialog,

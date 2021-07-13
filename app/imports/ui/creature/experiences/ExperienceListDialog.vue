@@ -10,13 +10,13 @@
         data-id="experience-add-button"
         @click="addExperience"
       >
-        <v-icon>add</v-icon>
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-btn
         icon
         @click="recompute"
       >
-        <v-icon>refresh</v-icon>
+        <v-icon>mdi-refresh</v-icon>
       </v-btn>
     </template>
     <div
@@ -72,11 +72,10 @@
           <v-list-item-action>
             <v-btn
               icon
-              flat
               :loading="experiencesRemovalLoading.has(experience._id)"
               @click="removeExperience(experience._id)"
             >
-              <v-icon>delete</v-icon>
+              <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>

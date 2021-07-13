@@ -22,7 +22,7 @@ let vuetify = new Vuetify({
     //options: { customProperties: true },
   },
   icons: {
-    iconfont: 'md',
+    iconfont: 'mdi',
     values: icons,
   }
 });

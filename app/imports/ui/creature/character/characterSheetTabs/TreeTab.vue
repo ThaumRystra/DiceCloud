@@ -28,7 +28,7 @@
               slot="extension"
               v-model="filterString"
               :items="filterOptions"
-              prepend-inner-icon="search"
+              prepend-inner-icon="mdi-search"
               class="mx-4"
               hide-no-data
               hide-selected

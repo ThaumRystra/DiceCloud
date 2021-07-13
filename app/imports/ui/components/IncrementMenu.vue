@@ -15,14 +15,14 @@
         class="filled"
         @click="toggleAdd(); $nextTick(() => $refs.editInput.focus())"
       >
-        <v-icon>add</v-icon>
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-btn
         :disabled="context.editPermission === false"
         class="filled"
         @click="toggleSubtract(); $nextTick(() => $refs.editInput.focus())"
       >
-        <v-icon>remove</v-icon>
+        <v-icon>mdi-minus</v-icon>
       </v-btn>
     </v-btn-toggle>
     <v-text-field
@@ -48,7 +48,7 @@
       class="mx-2 filled"
       @click="commitEdit"
     >
-      <v-icon>done</v-icon>
+      <v-icon>mdi-check</v-icon>
     </v-btn>
     <v-btn
       :small="!flat"
@@ -58,7 +58,7 @@
       class="filled"
       @click="cancelEdit"
     >
-      <v-icon>close</v-icon>
+      <v-icon>mdi-close</v-icon>
     </v-btn>
     <v-spacer />
   </v-layout>
@@ -117,11 +117,11 @@
 			operationIcon(operation) {
 				switch (operation) {
 					case 'set':
-						return 'forward';
+						return 'mdi-forward';
 					case 'add':
-            return 'add';
+            return 'mdi-plus';
 					case 'subtract':
-						return 'remove';
+						return 'mdi-minus';
 				}
 			},
 			toggleAdd(){

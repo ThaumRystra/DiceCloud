@@ -14,7 +14,14 @@ export default function combineStat(stat, aggregator, memo){
 }
 
 function getAggregatorResult(stat, aggregator){
-  let base = Math.max(aggregator.base, stat.baseValue || 0);
+  let base;
+  if (!Number.isFinite(aggregator.base)){
+    base = stat.baseValue || 0;
+  } else if (!Number.isFinite(stat.baseValue)){
+    base = aggregator.base || 0;
+  } else {
+    base = Math.max(aggregator.base, stat.baseValue);
+  }
   let result = (base + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) {
     result = aggregator.min;
@@ -137,7 +144,8 @@ function combineSkill(stat, aggregator, memo){
   }
 
   // Combine everything to get the final result
-  let result = (aggregator.base + stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
+  let base = aggregator.base || 0;
+  let result = (base + stat.abilityMod + profBonus + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;
   if (aggregator.set !== undefined) {

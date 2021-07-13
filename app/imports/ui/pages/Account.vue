@@ -15,6 +15,8 @@
           <smart-switch
             :value="darkMode"
             label="Dark mode"
+            :disabled="!tier.paidBenefits"
+            :error-messages="tier.paidBenefits ? undefined : 'Patreon reward'"
             @change="setDarkMode"
           />
         </v-list-item>
@@ -42,7 +44,7 @@
                   v-on="on"
                   @click="changeUsername"
                 >
-                  <v-icon>create</v-icon>
+                  <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
               <span>Change Username</span>
@@ -77,7 +79,7 @@
                   v-on="on"
                   @click="updatePatreon"
                 >
-                  <v-icon>refresh</v-icon>
+                  <v-icon>mdi-refresh</v-icon>
                 </v-btn>
               </template>
               <span>Refresh Patreon status</span>
@@ -136,7 +138,7 @@
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
-                <v-icon>mail_outline</v-icon>
+                <v-icon>mdi-email-outline</v-icon>
               </v-list-item-action>
             </v-list-item>
             <v-divider
@@ -188,7 +190,7 @@
         return user && user.emails;
       },
       darkMode(){
-        return this.user && this.user.darkMode;
+        return this.user && this.tier.paidBenefits && this.user.darkMode;
       },
       invites(){
         let usernames = {};
@@ -220,6 +222,7 @@
         return getEntitledCents(this.user);
       },
       tier(){
+        if (!this.user) return {};
         return getUserTier(this.user);
       },
     },

@@ -41,7 +41,7 @@
         style="height: 100%; width: 40px; cursor: move;"
         class="handle"
       >
-        drag_indicator
+        mdi-drag
       </v-icon>
     </v-list-item-action>
   </v-list-item>

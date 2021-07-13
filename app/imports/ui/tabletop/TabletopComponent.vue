@@ -14,7 +14,7 @@
         @click="addCreature"
       >
         <div class="flex layout justify-center align-center">
-          <v-icon>add</v-icon>
+          <v-icon>mdi-plus</v-icon>
         </div>
         <v-card-title>
           Add creature
@@ -38,7 +38,7 @@ import { addCreaturesToTabletop } from '/imports/api/tabletop/Tabletops.js';
 import TabletopCreatureCard from '/imports/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/ui/tabletop/TabletopMap.vue';
 import TabletopLog from '/imports/ui/tabletop/TabletopLog.vue';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import TabletopActionCards from '/imports/ui/tabletop/TabletopActionCards.vue';
 import MiniCharacterSheet from '/imports/ui/creature/character/MiniCharacterSheet.vue';
 

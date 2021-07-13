@@ -29,11 +29,11 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
-import {updateCreature} from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import updateCreature from '/imports/api/creature/creatures/methods/updateCreature.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import CreatureForm from '/imports/ui/creature/CreatureForm.vue'
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 
 export default {

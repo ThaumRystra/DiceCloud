@@ -1,9 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const restCreature = new ValidatedMethod({

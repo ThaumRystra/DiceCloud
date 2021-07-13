@@ -10,7 +10,7 @@
         icon
         v-on="on"
       >
-        <v-icon>format_paint</v-icon>
+        <v-icon>mdi-format-paint</v-icon>
       </v-btn>
     </template>
     <v-card class="overflow-hidden">
@@ -30,7 +30,7 @@
                 v-if="kebabColor === colorOption"
                 :class="{dark: isDark(colorOption, shade)}"
               >
-                check
+                mdi-check
               </v-icon>
             </v-scroll-y-transition>
           </div>
@@ -58,7 +58,7 @@
                   v-if="kebabShade === shadeOption"
                   :class="isDark(color, shade) ? 'dark' : 'light'"
                 >
-                  check
+                  mdi-check
                 </v-icon>
               </v-scroll-y-transition>
             </div>

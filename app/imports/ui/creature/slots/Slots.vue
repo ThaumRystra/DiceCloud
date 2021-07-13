@@ -31,7 +31,7 @@
               small
               @click.stop="remove(child)"
             >
-              <v-icon>delete</v-icon>
+              <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -44,7 +44,7 @@
         style="background-color: inherit;"
         @click="fillSlot(slot)"
       >
-        <v-icon>add</v-icon>
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
     </div>
   </div>

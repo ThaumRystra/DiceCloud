@@ -72,6 +72,7 @@
   import DialogStack from '/imports/ui/dialogStack/DialogStack.vue';
   import { mapMutations } from 'vuex';
   import SnackbarQueue from '/imports/ui/components/snackbars/SnackbarQueue.vue';
+  import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
   export default {
     components: {
@@ -96,7 +97,9 @@
 		meteor: {
 			darkMode(){
 				let user = Meteor.user();
-				return user && user.darkMode;
+        if (!user) return;
+        let tier = getUserTier(user);
+				return tier.paidBenefits && user.darkMode;
 			},
 		},
 		watch: {

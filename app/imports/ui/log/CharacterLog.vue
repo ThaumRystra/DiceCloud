@@ -21,7 +21,7 @@
         class="mx-2 mb-2"
         persistent-hint
         style="flex-grow: 0"
-        append-outer-icon="send"
+        append-outer-icon="mdi-send"
         :hint="inputHint"
         :error-messages="inputError"
         :disabled="!editPermission"
@@ -34,8 +34,8 @@
 
 <script lang="js">
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
-import Creatures from '/imports/api/creature/Creatures.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import LogEntry from '/imports/ui/log/LogEntry.vue';
 

@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import ComputationMemo from '/imports/api/creature/computation/engine/ComputationMemo.js';
 import getComputationProperties from '/imports/api/creature/computation/engine/getComputationProperties.js';
 import computeMemo from '/imports/api/creature/computation/engine/computeMemo.js';
@@ -11,7 +11,7 @@ import { recomputeDamageMultipliersById } from '/imports/api/creature/denormalis
 import recomputeSlotFullness from '/imports/api/creature/denormalise/recomputeSlotFullness.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import getDependentProperties from '/imports/api/creature/computation/engine/getDependentProperties.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 
 export const recomputeCreature = new ValidatedMethod({

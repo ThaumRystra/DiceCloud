@@ -5,22 +5,18 @@
 </template>
 
 <script lang="js">
+import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
+
 export default {
 	props: {
-		value: Number,
+		value: {
+      type: Number,
+      default: undefined,
+    },
 	},
 	computed: {
 		displayedIcon(){
-			let value = this.value;
-			if (value == 0.5){
-				return 'brightness_2';
-			} else if (value == 1) {
-				return 'brightness_1'
-			} else if (value == 2){
-				return 'album'
-			} else {
-				return 'radio_button_unchecked';
-			}
+      return getProficiencyIcon(this.value);
 		}
 	}
 }

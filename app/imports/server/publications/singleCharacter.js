@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import { assertViewPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import recomputeInvetory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';

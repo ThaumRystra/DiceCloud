@@ -8,7 +8,7 @@
         v-if="index !== 0"
         :key="index"
       >
-        chevron_right
+        mdi-chevron-right
       </v-icon>
       <span
         v-if="noLinks"

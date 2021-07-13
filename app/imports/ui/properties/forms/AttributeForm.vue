@@ -62,7 +62,6 @@
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
-
     <form-section
       name="Advanced"
       standalone
@@ -94,7 +93,7 @@
             class="damage-field text-center"
             style="max-width: 300px;"
             hint="The attribute's final value is reduced by this amount"
-            disabled
+            :disabled="!context.isLibraryForm"
             :value="model.damage"
             :error-messages="errors.damage"
             @change="change('damage', ...arguments)"
@@ -124,6 +123,9 @@
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
+    inject: {
+      context: { default: {} }
+    },
 		components: {
 			FormSection,
       CalculationErrorList,
@@ -187,7 +189,7 @@
           this.$emit('change', {path: ['hitDiceSize'], value: undefined});
         }
       },
-    },
+    }
 	};
 </script>
 

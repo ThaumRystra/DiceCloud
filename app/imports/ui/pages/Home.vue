@@ -37,7 +37,7 @@
             x-large
             class="ma-2"
           >
-            money_off
+            mdi-currency-usd-off
           </v-icon>
           <h3 class="mb-2">
             Free, open source, community funded
@@ -55,7 +55,7 @@
             x-large
             class="ma-2"
           >
-            ballot
+            mdi-ballot-outline
           </v-icon>
           <h3 class="mb-2">
             Character sheets optimised for one ruleset
@@ -73,7 +73,7 @@
             x-large
             class="ma-2"
           >
-            scatter_plot
+            mdi-file-tree-outline
           </v-icon>
           <h3 class="mb-2">
             Inventory manager

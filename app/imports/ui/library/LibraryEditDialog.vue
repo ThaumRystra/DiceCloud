@@ -10,14 +10,14 @@
         data-id="share-library-button"
         @click="share"
       >
-        <v-icon>share</v-icon>
+        <v-icon>mdi-share-variant</v-icon>
       </v-btn>
       <v-btn
         icon
         data-id="delete-library-button"
         @click="remove"
       >
-        <v-icon>delete</v-icon>
+        <v-icon>mdi-delete</v-icon>
       </v-btn>
     </template>
     <template v-if="model">

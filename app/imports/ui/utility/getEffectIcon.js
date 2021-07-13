@@ -1,15 +1,15 @@
 export default function getEffectIcon(op, value){
   switch(op) {
-    case 'base': return 'forward';
-    case 'add': return value < 0 ? 'remove' : 'add';
-    case 'mul': return 'clear';
-    case 'min': return 'unfold_more';
-    case 'max': return 'unfold_less';
-    case 'set': return 'push_pin';
-    case 'advantage': return 'arrow_upward';
-    case 'disadvantage': return 'arrow_downward';
-    case 'passiveAdd': return value < 0 ? 'remove_circle_outline' : 'add_circle_outline';
-    case 'fail': return 'block';
-    case 'conditional': return '*' ;
+    case 'base': return 'mdi-forward';
+    case 'add': return value < 0 ? 'mdi-minus' : 'mdi-plus';
+    case 'mul': return 'mdi-close';
+    case 'min': return 'mdi-arrow-expand-up';
+    case 'max': return 'mdi-arrow-expand-down';
+    case 'set': return 'mdi-pin';
+    case 'advantage': return 'mdi-chevron-double-up';
+    case 'disadvantage': return 'mdi-chevron-double-down';
+    case 'passiveAdd': return value < 0 ? 'mdi-minus-circle-outline' : 'mdi-plus-circle-outline';
+    case 'fail': return 'mdi-cancel';
+    case 'conditional': return 'mdi-asterisk' ;
   }
 }

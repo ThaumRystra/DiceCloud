@@ -10,7 +10,7 @@
       icon
       @click="back"
     >
-      <v-icon>arrow_back</v-icon>
+      <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
     <property-icon
       :model="model"
@@ -50,7 +50,7 @@
               data-id="property-toolbar-menu-button"
               v-on="on"
             >
-              <v-icon>more_vert</v-icon>
+              <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -64,7 +64,7 @@
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
-                <v-icon>file_copy</v-icon>
+                <v-icon>mdi-content-copy</v-icon>
               </v-list-item-action>
             </v-list-item>
             <v-list-item
@@ -77,7 +77,7 @@
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
-                <v-icon>send</v-icon>
+                <v-icon>mdi-send</v-icon>
               </v-list-item-action>
             </v-list-item>
             <v-list-item
@@ -90,7 +90,7 @@
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
-                <v-icon>delete</v-icon>
+                <v-icon>mdi-delete</v-icon>
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -112,13 +112,13 @@
           v-if="editing"
           key="doneIcon"
         >
-          done
+          mdi-check
         </v-icon>
         <v-icon
           v-else
           key="createIcon"
         >
-          create
+          mdi-pencil
         </v-icon>
       </v-slide-y-transition>
     </v-btn>
