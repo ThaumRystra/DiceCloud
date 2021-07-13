@@ -8,40 +8,40 @@ const TIERS = Object.freeze([
     name: 'Commoner',
     minimumEntitledCents: 0,
     invites: 0,
-    characterSlots: 5,
+    characterSlots: 0, //5,
     paidBenefits: false,
   }, {
     name: 'Dreamer',
     minimumEntitledCents: 100,
     invites: 0,
-    characterSlots: 5,
+    characterSlots: 0, //5,
     paidBenefits: false,
   }, {
     name: 'Wanderer',
     minimumEntitledCents: 300,
     invites: 0,
-    characterSlots: 5,
+    characterSlots: 0, //5,
     paidBenefits: false,
   }, {
     //cost per user $5
     name: 'Adventurer',
     minimumEntitledCents: 500,
     invites: 0,
-    characterSlots: 20,
+    characterSlots: -1, //20,
     paidBenefits: true,
   }, {
     //cost per user $3.33
     name: 'Hero',
     minimumEntitledCents: 1000,
     invites: 2,
-    characterSlots: 50,
+    characterSlots: -1, //50,
     paidBenefits: true,
   }, {
     //cost per user $3.333
     name: 'Legend',
     minimumEntitledCents: 2000,
     invites: 5,
-    characterSlots: 120,
+    characterSlots: -1, //120,
     paidBenefits: true,
   }, {
     //cost per user $3.125
