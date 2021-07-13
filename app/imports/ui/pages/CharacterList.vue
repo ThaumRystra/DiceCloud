@@ -29,7 +29,7 @@
             or
             <v-btn
               href="https://www.patreon.com/join/dicecloud/"
-              class="ma-4"
+              class="mx-2"
               target="_blank"
               small
               text
