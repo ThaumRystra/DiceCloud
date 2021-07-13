@@ -58,7 +58,7 @@ const GUEST_TIER = Object.freeze({
   name: 'Companion',
   guest: true,
   invites: 0,
-  characterSlots: 20,
+  characterSlots: -1, //20,
   paidBenefits: true,
 });
 
