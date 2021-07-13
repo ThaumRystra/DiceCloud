@@ -26,6 +26,19 @@
               text
               class="mx-2"
             />
+            or
+            <v-btn
+              href="https://www.patreon.com/join/dicecloud/"
+              class="ma-4"
+              target="_blank"
+              small
+              text
+            >
+              Increase Patreon tier
+              <v-icon right>
+                mdi-patreon
+              </v-icon>
+            </v-btn>
           </v-alert>
           <v-card :class="{'mb-4': folders && folders.length}">
             <creature-folder-list

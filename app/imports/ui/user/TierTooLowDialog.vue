@@ -12,12 +12,27 @@
         You need to be at least Adventurer tier (or be invited by a Patron of
         a higher tier) to perform this action
       </h3>
-      <v-btn
-        href="https://www.patreon.com/join/dicecloud/checkout?rid=3002853"
-        color="accent"
+      <div
+        class="d-flex"
       >
-        Join now
-      </v-btn>
+        <v-btn
+          href="https://www.patreon.com/join/dicecloud/"
+          color="accent"
+          class="ma-4"
+          target="_blank"
+        >
+          Join now
+        </v-btn>
+        <template v-if="!user.services.patreon">
+          <v-btn
+            color="primary"
+            class="ma-4"
+            @click="linkWithPatreon"
+          >
+            Link Patreon Account
+          </v-btn>
+        </template>
+      </div>
     </v-layout>
     <v-spacer slot="actions" />
     <v-btn
@@ -33,17 +48,38 @@
 <script lang="js">
 import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
+import linkWithPatreon from '/imports/api/users/linkWithPatreon.js'
 
 export default {
   components: {
     DialogBase,
   },
+  data(){return {
+    linkPatreonError: '',
+  }},
   meteor: {
     tier(){
       let user = Meteor.user();
       if (!user) return TIERS[0];
       return getUserTier(user);
-    }
+    },
+    user(){
+      return Meteor.user();
+    },
   },
+  methods: {
+    linkWithPatreon(){
+      this.linkPatreonError = '';
+      linkWithPatreon(error => {
+        if (error) {
+          this.linkPatreonError = error;
+        } else {
+          Meteor.call('updateMyPatreonDetails', error => {
+            if (error) this.linkPatreonError = error;
+          });
+        }
+      });
+    },
+  }
 }
 </script>
