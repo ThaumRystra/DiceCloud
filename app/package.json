@@ -18,7 +18,6 @@
     "core-js": "^2.6.11",
     "file-saver": "^2.0.2",
     "meteor-node-stubs": "^0.3.3",
-    "patreon": "^0.4.1",
     "qrcode": "^1.4.4",
     "request": "^2.88.2",
     "source-map-support": "^0.5.19",

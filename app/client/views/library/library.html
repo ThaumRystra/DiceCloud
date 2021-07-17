@@ -8,49 +8,43 @@
 					<div class="flex layout horizontal center" style="height: 40px; margin-left: 8px;">
 						{{name}}
 					</div>
-					{{#if isTier5}}{{#if canUserEdit}}
+					{{#if canUserEdit}}
 						<paper-icon-button icon="settings" id="edit"></paper-icon-button>
-					{{/if}}{{/if}}
+					{{/if}}
 				</div>
-				{{#if isTier5}}
-					<div bottom-item class="layout horizontal center">
-						<paper-input label="Search" class="search-input">
-							<iron-icon icon="search" prefix></iron-icon>
-						</paper-input>
-						<div class="flex"></div>
-						{{#if canUserSubscribe}}
-							<paper-button style="color: rgba(255,255,255,0.87);" id="subscribe">
-								<iron-icon icon="add-circle"></iron-icon>
-								Subscribe
-							</paper-button>
-						{{else if canUserUnsubscribe}}
-							<paper-button style="color: rgba(255,255,255,0.87);" id="unsubscribe">
-								<iron-icon icon="remove-circle"></iron-icon>
-								Unsubscribe
-							</paper-button>
-						{{/if}}
-					</div>
-				{{/if}}
+				<div bottom-item class="layout horizontal center">
+					<paper-input label="Search" class="search-input">
+						<iron-icon icon="search" prefix></iron-icon>
+					</paper-input>
+					<div class="flex"></div>
+					{{#if canUserSubscribe}}
+						<paper-button style="color: rgba(255,255,255,0.87);" id="subscribe">
+							<iron-icon icon="add-circle"></iron-icon>
+							Subscribe
+						</paper-button>
+					{{else if canUserUnsubscribe}}
+						<paper-button style="color: rgba(255,255,255,0.87);" id="unsubscribe">
+							<iron-icon icon="remove-circle"></iron-icon>
+							Unsubscribe
+						</paper-button>
+					{{/if}}
+				</div>
 			</app-toolbar>
 		</app-header>
-		{{#if isTier5}}
-			<div class="flex layout vertical center" style="position: relative; padding: 0 16px;">
-				<paper-material class="card" style="padding: 32px; max-width: 800px; width: 100%;">
-					{{#each items}}
-						<paper-item data-id={{_id}} class="item">
-							<paper-item-body>
-								<div>{{displayName}}</div>
-							</paper-item-body>
-						</paper-item>
-					{{/each}}
-				</paper-material>
-			</div>
-			<div class="floatyButton">
-				<paper-fab id="addLibraryItem" icon="add"></paper-fab>
-				{{#simpleTooltip}}Add Library Item{{/simpleTooltip}}
-			</div>
-		{{else}}
-			{{> patronsOnly }}
-		{{/if}}
+		<div class="flex layout vertical center" style="position: relative; padding: 0 16px;">
+			<paper-material class="card" style="padding: 32px; max-width: 800px; width: 100%;">
+				{{#each items}}
+					<paper-item data-id={{_id}} class="item">
+						<paper-item-body>
+							<div>{{displayName}}</div>
+						</paper-item-body>
+					</paper-item>
+				{{/each}}
+			</paper-material>
+		</div>
+		<div class="floatyButton">
+			<paper-fab id="addLibraryItem" icon="add"></paper-fab>
+			{{#simpleTooltip}}Add Library Item{{/simpleTooltip}}
+		</div>
 	</div>
 </template>
