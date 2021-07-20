@@ -9,6 +9,7 @@
         :error-messages="errors.amount"
         @change="change('amount', ...arguments)"
       />
+      <calculation-error-list :errors="model.amountErrors" />
       <smart-select
         label="Damage Type"
         style="flex-basis: 200px;"

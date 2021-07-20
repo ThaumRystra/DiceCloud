@@ -33,6 +33,7 @@
       :error-messages="errors.quantityExpected"
       @change="change('quantityExpected', ...arguments)"
     />
+    <calculation-error-list :errors="model.quantityExpectedErrors" />
     <text-field
       label="Condition"
       hint="A caclulation to determine if this slot should be active"
