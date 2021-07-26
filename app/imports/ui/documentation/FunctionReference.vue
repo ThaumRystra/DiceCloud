@@ -18,7 +18,7 @@
             <code>{{ example.input }}</code>
           </td>
           <td>
-            <v-icon>arrow_right_alt</v-icon>
+            <v-icon>mdi-arrow-right-thick</v-icon>
           </td>
           <td>
             <code>{{ example.result }}</code>

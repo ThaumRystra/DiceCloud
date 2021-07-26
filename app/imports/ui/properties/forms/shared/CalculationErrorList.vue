@@ -51,11 +51,11 @@ export default {
   methods: {
     errorIcon(type){
       if (type === 'subsitution'){
-        return 'info';
+        return 'mdi-information';
       } else if (type === 'evaluation'){
-        return 'warning';
+        return 'mdi-alert-circle';
       } else {
-        return 'error'
+        return 'mdi-alert'
       }
     },
     errorColor(type){

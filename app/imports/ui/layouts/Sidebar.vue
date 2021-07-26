@@ -28,7 +28,7 @@
                 to="/account"
                 v-on="on"
               >
-                <v-icon>settings</v-icon>
+                <v-icon>mdi-cog</v-icon>
               </v-btn>
             </template>
             <span>Account Settings</span>
@@ -48,69 +48,34 @@
         <v-list-item-title>
           {{ link.title }}
         </v-list-item-title>
+        <v-icon v-if="link.href">
+          mdi-open-in-new
+        </v-icon>
       </v-list-item>
       <v-divider />
     </v-list>
-    <v-list
-      avatar
-    >
-      <v-list-item
-        v-for="character in CreaturesWithNoParty"
-        :key="character._id"
-        :to="character.url"
-      >
-        <v-list-item-avatar :color="character.color || 'grey'">
-          <img
-            v-if="character.avatarPicture"
-            :src="character.avatarPicture"
-            :alt="character.name"
-          >
-          <template v-else>
-            {{ character.initial }}
-          </template>
-        </v-list-item-avatar>
-        <v-list-item-title>
-          {{ character.name }}
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-group
-        v-for="party in parties"
-        :key="party._id"
-      >
-        <v-list-item slot="activator">
-          <v-list-item-title>
-            {{ party.name }}
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item
-          v-for="character in characterDocs"
-          :key="character._id"
-          :to="character.url"
-        >
-          <v-list-item-avatar :color="character.color || 'grey'">
-            <img
-              v-if="character.avatarPicture"
-              :src="character.avatarPicture"
-              :alt="character.name"
-            >
-            <template v-else>
-              {{ character.initial }}
-            </template>
-          </v-list-item-avatar>
-          <v-list-item-title>
-            {{ character.name }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list-group>
-    </v-list>
+    <creature-folder-list
+      dense
+      :creatures="CreaturesWithNoParty"
+      :folders="folders"
+    />
   </div>
 </template>
 
 <script lang="js">
-  import Creatures from '/imports/api/creature/Creatures.js';
-  import Parties from '/imports/api/creature/Parties.js';
+  import Creatures from '/imports/api/creature/creatures/Creatures.js';
+  import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+  import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
 
+  const characterTransform = function(char){
+    char.url = `/character/${char._id}/${char.urlName || '-'}`;
+    char.initial = char.name && char.name[0] || '?';
+    return char;
+  };
   export default {
+    components: {
+      CreatureFolderList
+    },
     meteor: {
       $subscribe: {
         'characterList': [],
@@ -125,55 +90,48 @@
       links(){
         let isLoggedIn = !!Meteor.userId();
         let links = [
-          {title: 'Home', icon: 'home', to: '/'},
-          {title: 'Characters', icon: 'portrait', to: '/characterList', requireLogin: true},
-          {title: 'Library', icon: 'book', to: '/library', requireLogin: true},
+          {title: 'Home', icon: 'mdi-home', to: '/'},
+          {title: 'Characters', icon: 'mdi-account-group', to: '/characterList', requireLogin: true},
+          {title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true},
           //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
           //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
-          {title: 'Feedback', icon: 'bug_report', to: '/feedback'},
-          {title: 'About', icon: 'subject', to: '/about'},
-          {title: 'Patreon', icon: '', href: 'https://www.patreon.com/dicecloud'},
-          {title: 'Github', icon: '', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
+          {title: 'Feedback', icon: 'mdi-bug', to: '/feedback'},
+          {title: 'About', icon: 'mdi-sign-text', to: '/about'},
+          {title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud'},
+          {title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
         ];
         return links.filter(link => !link.requireLogin || isLoggedIn);
       },
-      parties(){
+      folders(){
         const userId = Meteor.userId();
-        return Parties.find(
-          {owner: userId},
-          {sort: {name: 1}},
-        ).map(party => {
-          party.characterDocs = Creatures.find(
+        let folders =  CreatureFolders.find(
+          {owner: userId, archived: {$ne: true}},
+          {sort: {order: 1}},
+        ).map(folder => {
+          folder.creatures = Creatures.find(
             {
-              _id: {$in: party.Creatures},
+              _id: {$in: folder.creatures || []},
               $or: [{readers: userId}, {writers: userId}, {owner: userId}],
             }, {
               sort: {name: 1},
-              fields: {name: 1, urlName: 1},
             }
-          ).map(char => {
-            char.url = `/character/${char._id}/${char.urlName || '-'}`;
-            char.initial = char.name && char.name[0] || '?';
-            return char;
-          });
-          return party;
+          ).map(characterTransform);
+          return folder;
         });
+        folders = folders.filter(folder => !!folder.creatures.length);
+        return folders;
       },
       CreaturesWithNoParty() {
         var userId = Meteor.userId();
-        var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
-        var partyChars = _.uniq(_.flatten(charArrays));
+        var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
+        var folderChars = _.uniq(_.flatten(charArrays));
         return Creatures.find(
           {
-            _id: {$nin: partyChars},
+            _id: {$nin: folderChars},
             $or: [{readers: userId}, {writers: userId}, {owner: userId}],
           },
           {sort: {name: 1}}
-        ).map(char => {
-          char.url = `/character/${char._id}/${char.urlName || '-'}`;
-          char.initial = char.name && char.name[0] || '?';
-          return char;
-        });
+        ).map(characterTransform);
       },
     },
   };

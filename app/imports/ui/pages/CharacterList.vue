@@ -1,37 +1,87 @@
 <template>
   <div
-    class="card-background pa-4"
+    class="card-background"
     style="height: 100%"
   >
-    <v-card>
-      <v-list v-if="CreaturesWithNoParty.length">
-        <creature-list-tile
-          v-for="character in CreaturesWithNoParty"
-          :key="character._id"
-          :to="character.url"
-          :model="character"
-        />
-      </v-list>
-    </v-card>
-    <v-btn
-      color="accent"
-      fab
-      fixed
-      bottom
-      right
-      data-id="new-character-button"
-      @click="insertCharacter"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
+    <v-container>
+      <v-row justify="center">
+        <v-col
+          cols="12"
+          xl="8"
+        >
+          <v-alert
+            v-if="characterSpaceLeft < 0"
+            type="error"
+          >
+            You have exceeded your maximum number of character slots, archive or delete
+            some characters.
+          </v-alert>
+          <v-alert
+            v-else-if="characterSpaceLeft === 0"
+            type="info"
+          >
+            You have hit your maximum number of characters.
+            <archive-button
+              small
+              text
+              class="mx-2"
+            />
+            or
+            <v-btn
+              href="https://www.patreon.com/join/dicecloud/"
+              class="mx-2"
+              target="_blank"
+              small
+              text
+            >
+              Increase Patreon tier
+              <v-icon right>
+                mdi-patreon
+              </v-icon>
+            </v-btn>
+          </v-alert>
+          <v-card :class="{'mb-4': folders && folders.length}">
+            <creature-folder-list
+              :creatures="CreaturesWithNoParty"
+              :folders="folders"
+            />
+          </v-card>
+          <div class="layout justify-end mt-2">
+            <v-btn
+              text
+              :loading="loadingInsertFolder"
+              @click="insertFolder"
+            >
+              add folder
+            </v-btn>
+          </div>
+          <v-btn
+            color="accent"
+            fab
+            fixed
+            bottom
+            right
+            data-id="new-character-button"
+            :disabled="characterSpaceLeft <= 0"
+            @click="insertCharacter"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script lang="js">
-  import Creatures, {insertCreature} from '/imports/api/creature/Creatures.js';
-  import Parties from '/imports/api/creature/Parties.js';
+  import Creatures from '/imports/api/creature/creatures/Creatures.js';
+  import insertCreature from '/imports/api/creature/creatures/methods/insertCreature.js';
+  import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-  import CreatureListTile from '/imports/ui/creature/CreatureListTile.vue';
+  import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder.js';
+  import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+  import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
+  import ArchiveButton from '/imports/ui/creature/creatureList/ArchiveButton.vue';
 
   const characterTransform = function(char){
     char.url = `/character/${char._id}/${char.urlName || '-'}`;
@@ -40,69 +90,101 @@
   };
   export default {
     components: {
-      CreatureListTile,
+      CreatureFolderList,
+      ArchiveButton,
     },
     data(){ return{
       fab: false,
+      loadingInsertFolder: false,
+      renamingFolder: undefined,
     }},
     meteor: {
       $subscribe: {
         'characterList': [],
       },
-      parties(){
+      folders(){
         const userId = Meteor.userId();
-        let parties =  Parties.find(
-          {owner: userId},
-          {sort: {name: 1}},
-        ).map(party => {
-          party.characterDocs = Creatures.find(
+        let folders =  CreatureFolders.find(
+          {owner: userId, archived: {$ne: true}},
+          {sort: {order: 1}},
+        ).map(folder => {
+          folder.creatures = Creatures.find(
             {
-              _id: {$in: party.Creatures},
+              _id: {$in: folder.creatures || []},
               $or: [{readers: userId}, {writers: userId}, {owner: userId}],
             }, {
               sort: {name: 1},
             }
           ).map(characterTransform);
-          return party;
+          return folder;
         });
-        return parties;
+        return folders;
       },
       CreaturesWithNoParty() {
         var userId = Meteor.userId();
-        var charArrays = Parties.find({owner: userId}).map(p => p.Creatures);
-        var partyChars = _.uniq(_.flatten(charArrays));
+        var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
+        var folderChars = _.uniq(_.flatten(charArrays));
         return Creatures.find(
           {
-            _id: {$nin: partyChars},
+            _id: {$nin: folderChars},
             $or: [{readers: userId}, {writers: userId}, {owner: userId}],
           },
           {sort: {name: 1}}
         ).map(characterTransform);
       },
+      creatureCount(){
+        let userId = Meteor.userId();
+        return Creatures.find({
+          owner: userId,
+        }, {
+          fields: {_id: 1},
+        }).count();
+      },
+      tier(){
+        let userId = Meteor.userId();
+        return getUserTier(userId);
+      },
+      characterSpaceLeft(){
+        let tier = this.tier;
+        let currentCharacterCount = this.creatureCount;
+        if (tier.characterSlots === -1) return Number.POSITIVE_INFINITY;
+        return tier.characterSlots - currentCharacterCount
+      },
+      exceededCharacterSpace(){
+        let tier = this.tier;
+        let currentCharacterCount = this.creatureCount;
+        return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
+      },
     },
     methods: {
       insertCharacter(){
-        let tier = getUserTier(Meteor.userId());
-        if (tier.paidBenefits){
-          insertCreature.call((error, result) => {
-            if (error){
-              console.error(error);
-            } else {
-              this.$store.commit(
-                'setTabForCharacterSheet',
-                {id: result, tab: 4}
-              );
-              this.$store.commit('setShowDetailsDialog', true);
-              this.$router.push({ path: `/character/${result}`});
-            }
-          });
-        } else {
-          this.$store.commit('pushDialogStack', {
-            component: 'tier-too-low-dialog',
-            elementId: 'new-character-button',
-          });
-        }
+        insertCreature.call((error, result) => {
+          if (error){
+            console.error(error);
+            snackbar({
+              text: error.reason,
+            });
+          } else {
+            this.$store.commit(
+              'setTabForCharacterSheet',
+              {id: result, tab: 4}
+            );
+            this.$store.commit('setShowDetailsDialog', true);
+            this.$router.push({ path: `/character/${result}`});
+          }
+        });
       },
-    }
+      insertFolder(){
+        this.loadingInsertFolder = true;
+        insertCreatureFolder.call(error => {
+          this.loadingInsertFolder = false;
+          if (!error) return;
+          console.error(error);
+          snackbar({
+            text: error.reason,
+          });
+        });
+      },
+    },
   };
 </script>

@@ -192,6 +192,9 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0){
       return true;
     });
 
+    // TODO: Force the referencedNode to take the old id of the reference
+    // such that the reference's children can be kept
+    
     // Give the new referenced sub-tree new ids
     renewDocIds({
       docArray: addedNodes,

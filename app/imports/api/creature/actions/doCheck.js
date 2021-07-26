@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/Creatures.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import roll from '/imports/parser/roll.js';
 
 const doCheck = new ValidatedMethod({

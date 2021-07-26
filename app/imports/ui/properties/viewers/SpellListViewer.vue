@@ -8,7 +8,7 @@
     />
     <property-field
       name="Spell Save DC"
-      :value="'dcResult' in model ? model.dcResult : model.dcResult"
+      :value="'dcResult' in model ? model.dcResult : model.dc"
     />
     <property-field
       name="Attack roll bonus"

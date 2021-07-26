@@ -99,7 +99,7 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
@@ -183,10 +183,24 @@ export default {
 			});
     },
     equipmentParentRef(){
-      return getParentRefByTag(this.creatureId, BUILT_IN_TAGS.equipment);
+      return getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.equipment
+      ) || getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.inventory
+      ) || {
+        id: this.creatureId,
+        collection: 'creatures'
+      };
     },
     carriedParentRef(){
-      return getParentRefByTag(this.creatureId, BUILT_IN_TAGS.carried);
+      return getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.carried
+      ) || getParentRefByTag(
+        this.creatureId, BUILT_IN_TAGS.inventory
+      ) || {
+        id: this.creatureId,
+        collection: 'creatures'
+      };
     },
 	},
 	computed: {

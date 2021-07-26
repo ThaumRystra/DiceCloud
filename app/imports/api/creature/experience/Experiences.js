@@ -2,8 +2,8 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
-import Creatures from '/imports/api/creature/Creatures.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 let Experiences = new Mongo.Collection('experiences');

@@ -1,6 +1,6 @@
 <template lang="html">
   <smart-select
-    append-icon="arrow_drop_down"
+    append-icon="mdi-menu-down"
     :clearable="clearable"
     class="ml-3"
     v-bind="$attrs"
@@ -20,20 +20,9 @@
 </template>
 
 <script lang="js">
+  import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
+
 	const ICON_SPIN_DURATION = 300;
-	let proficiencyIcon = function(value){
-    if (value == 0.49){
-			return 'brightness_3';
-		} else if (value == 0.5){
-			return 'brightness_2';
-		} else if (value == 1) {
-			return 'brightness_1'
-		} else if (value == 2){
-			return 'album'
-		} else {
-			return 'radio_button_unchecked';
-		}
-	};
 
 	export default {
 		props: {
@@ -47,7 +36,7 @@
       },
 		},
 		data(){ return {
-			displayedIcon: 'radio_button_unchecked',
+			displayedIcon: 'mdi-radiobox-blank',
 			iconClass: '',
 			values: [
 				{value: 1, text: 'Proficient'},
@@ -60,7 +49,7 @@
 			'value': {
 				immediate: true,
 				handler(newValue){
-					let newIcon = proficiencyIcon(newValue);
+					let newIcon = getProficiencyIcon(newValue);
 					this.iconClass='leaving';
 					setTimeout(() => {
 						this.displayedIcon = newIcon;

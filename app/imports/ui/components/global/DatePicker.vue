@@ -11,7 +11,7 @@
       <v-text-field
         :value="formattedSafeValue"
         v-bind="$attrs"
-        prepend-icon="event"
+        prepend-icon="mdi-calendar"
         readonly
         :loading="loading"
         :error-messages="errors"

@@ -73,7 +73,7 @@
                   data-id="experience-info-button"
                   @click="showExperienceList"
                 >
-                  <v-icon>info</v-icon>
+                  <v-icon>mdi-information-outline</v-icon>
                 </v-btn>
               </v-list-item-action>
               <v-list-item-action>
@@ -82,7 +82,7 @@
                   data-id="experience-add-button"
                   @click="addExperience"
                 >
-                  <v-icon>add</v-icon>
+                  <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
@@ -115,7 +115,7 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';

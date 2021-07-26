@@ -7,14 +7,14 @@
     @click="rest"
   >
     <v-icon left>
-      {{ type === 'shortRest' ? 'snooze' : 'bedtime' }}
+      {{ type === 'shortRest' ? 'mdi-music-rest-quarter' : 'mdi-bed' }}
     </v-icon>
     {{ type === 'shortRest' ? 'Short Rest' : 'Long Rest' }}
   </v-btn>
 </template>
 
 <script lang="js">
-import restCreature from '/imports/api/creature/restCreature.js';
+import restCreature from '/imports/api/creature/creatures/methods/restCreature.js';
 
 export default {
   inject: {

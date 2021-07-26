@@ -12,7 +12,7 @@
       icon
       @click="$router.push('/library')"
     >
-      <v-icon>arrow_back</v-icon>
+      <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
     <v-toolbar-title>
       {{ library && library.name }}
@@ -32,7 +32,7 @@
       data-id="library-edit-button"
       @click="editLibrary(library._id)"
     >
-      <v-icon>settings</v-icon>
+      <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import '/imports/api/users/deleteMyAccount.js';
+const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 
 const userSchema = new SimpleSchema({
 	username: {
@@ -63,7 +64,7 @@ const userSchema = new SimpleSchema({
 	},
 	subscribedLibraries: {
 		type: Array,
-		defaultValue: [],
+		defaultValue: defaultLibraries,
 		max: 100,
 	},
 	'subscribedLibraries.$': {

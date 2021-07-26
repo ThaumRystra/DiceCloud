@@ -88,7 +88,8 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/ui/properties/components/skills/SkillProficiency.vue';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
 
 export default {
   components: {
@@ -109,17 +110,7 @@ export default {
 			}
 		},
     icon(){
-			if (this.model.proficiency == 0.49){
-				return 'brightness_3';
-			} else if (this.model.proficiency == 0.5){
-				return 'brightness_2';
-			} else if (this.model.proficiency == 1) {
-				return 'brightness_1'
-			} else if (this.model.proficiency == 2){
-				return 'album'
-			} else {
-				return 'radio_button_unchecked';
-			}
+      return getProficiencyIcon(this.model.proficiency);
 		},
   },
   methods: {
@@ -139,7 +130,7 @@ export default {
         let creatureId = this.context.creatureId;
         return CreatureProperties.find({
           'ancestors.id': creatureId,
-          type: 'attribute',
+          type: 'skill',
           variableName: this.model.variableName,
           removed: {$ne: true},
           inactive: {$ne: true},

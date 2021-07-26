@@ -31,9 +31,9 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import removeCreature from '/imports/api/creature/removeCreature.js';
+import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {

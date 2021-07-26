@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import Tabletops, { assertUserInTabletop } from '/imports/api/tabletop/Tabletops.js';
 
 let Messages = new Mongo.Collection('messages');

@@ -43,6 +43,7 @@
 <script lang="js">
   import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
   import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
+  import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
 
   export default {
     components: {
@@ -58,17 +59,7 @@
     },
     computed: {
       icon(){
-        if (this.model.value == 0.49){
-          return 'brightness_3';
-        } else if (this.model.value == 0.5) {
-          return 'brightness_2'
-        } else if (this.model.value == 1) {
-          return 'brightness_1'
-        } else if (this.model.value == 2){
-          return 'album'
-        } else {
-          return 'radio_button_unchecked';
-        }
+        return getProficiencyIcon(this.model.value);
       },
       proficiencyText(){
         switch (this.model.value){

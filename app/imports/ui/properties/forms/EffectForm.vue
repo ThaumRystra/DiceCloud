@@ -9,7 +9,7 @@
     />
     <smart-select
       label="Operation"
-      append-icon="arrow_drop_down"
+      append-icon="mdi-menu-down"
       class="mx-2"
       :error-messages="errors.operation"
       :menu-props="{transition: 'slide-y-transition', lazy: true}"

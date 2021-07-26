@@ -2,7 +2,7 @@ import {
   assertEditPermission,
   assertViewPermission,
   assertOwnership,
-} from '/imports/api/creature/creaturePermissions.js';
+} from '/imports/api/creature/creatures/creaturePermissions.js';
 
 // Checks if the method has permission to run on the document. If the document
 // has a charId, that creature is checked, otherwise if it has an _id and the

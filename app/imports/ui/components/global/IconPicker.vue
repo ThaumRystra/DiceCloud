@@ -24,29 +24,29 @@
             v-else
             large
           >
-            highlight_alt
+            mdi-select-search
           </v-icon>
         </v-btn>
       </div>
     </template>
     <v-card>
       <v-card-text>
-        <div class="layout">
+        <div class="layout row align-center">
           <text-field
             ref="iconSearchField"
             label="Search icons"
-            append-icon="search"
+            append-icon="mdi-search"
             clearable
+            hide-details
+            class="ma-2"
             :value="searchString"
             @change="search"
           />
           <v-btn
-            icon
+            text
             @click="select()"
           >
-            <v-icon>
-              cancel
-            </v-icon>
+            clear
           </v-btn>
         </div>
         <v-layout

@@ -1,4 +1,4 @@
-import Creatures from '/imports/api/creature/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import Libraries from '/imports/api/library/Libraries.js';
 
 Meteor.publish('ownedDocuments', function(){

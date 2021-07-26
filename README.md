@@ -66,6 +66,21 @@ You should see this:
 => App running at: http://localhost:3000/
 ```
 
+Environmental Variables
+-----------------------
+
+```
+MAIL_URL=smtp://<your smtp mail url>
+METEOR_SETTINGS={ "public": { "environment": "production", "patreon": { "clientId": "<your patreon client ID>", "campaignId": "<your campaign id>" } }, "patreon": { "clientSecret": "<your client secret>", "creatorAccessToken": "<your creator access token>" } }
+MONGO_OPLOG_URL=mongodb+srv://<your url for the oplog account of your mongo database>
+MONGO_URL=mongodb+srv://<your url for the read/write account of your mongo database>
+NPM_CONFIG_PRODUCTION=true
+PROJECT_DIR=app
+ROOT_URL=https://<url of your DiceCloud instance>
+DEFAULT_LIBRARIES=<comma separated list of library ids that will be subscribed by default: "abc123,def456">
+DISABLE_PATREON=<"true" if you want to prevent features being locked behind Patreon tiers>
+```
+
 Now, visiting [](http://localhost:3000/) should show you an empty instance of
 DiceCloud running.
 

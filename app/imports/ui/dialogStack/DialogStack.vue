@@ -55,6 +55,9 @@
       VLayout,
       ...DialogComponentIndex,
     },
+    data(){return {
+      hiddenElements: [],
+    }},
     computed: {
       dialogs(){
         return this.$store.state.dialogStack.dialogs;
@@ -130,7 +133,7 @@
         // hide the source
         source.style.transition = 'none';
         source.style.opacity = '0';
-        this.hiddenElement = source;
+        this.hiddenElements.push(source);
 
         // Instantly mock the source
         target.style.transition = 'none';
@@ -153,6 +156,7 @@
       },
       doLeave(target, done){
         let elementId;
+        let hiddenElement = this.hiddenElements.pop();
         let returnElementId = this.$store.state.dialogStack.currentReturnElement;
         if (returnElementId) {
           elementId = returnElementId;
@@ -166,7 +170,7 @@
         let source = this.getTopElementByDataId(elementId);
         if (!source){
           console.warn(`Can't find source for ${elementId}`);
-          if (this.hiddenElement) this.hiddenElement.style.opacity = null;
+          if (hiddenElement) hiddenElement.style.opacity = null;
           done();
           return;
         }
@@ -180,10 +184,10 @@
         // If the source and the hidden Element are different
         // hide the source and reveal the hidden element
         let originalSourceTransition = source.style.transition;
-        if (this.hiddenElement !== source){
+        if (hiddenElement !== source){
           source.style.transition = 'none';
           source.style.opacity = '0';
-          this.hiddenElement.style.opacity = null;
+          hiddenElement.style.opacity = null;
         }
         setTimeout(() => {
           source.style.opacity = null;

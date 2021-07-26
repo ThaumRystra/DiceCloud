@@ -20,7 +20,7 @@
             style="transition: transform 0.2s ease-in-out"
             :style="fab && 'transform: rotate(45deg)'"
           >
-            add
+            mdi-plus
           </v-icon>
         </transition>
       </v-btn>
@@ -42,7 +42,7 @@
         color="primary"
         data-id="insert-creature-property-btn"
         label="New Property"
-        icon="create"
+        icon="mdi-pencil"
         :disabled="!editPermission"
         @click="insertTreeProperty"
       />
@@ -51,7 +51,7 @@
         color="primary"
         data-id="insert-creature-property-from-library-btn"
         label="Property From Library"
-        icon="book"
+        icon="mdi-library-shelves"
         :disabled="!editPermission"
         @click="propertyFromLibrary"
       />

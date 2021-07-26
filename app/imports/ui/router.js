@@ -5,6 +5,7 @@ import { acceptInviteToken } from '/imports/api/users/Invites.js';
 import Home from '/imports/ui/pages/Home.vue';
 import About from '/imports/ui/pages/About.vue';
 import CharacterList from '/imports/ui/pages/CharacterList.vue';
+import CharacterListToolbarItems from '/imports/ui/creature/creatureList/CharacterListToolbarItems.vue';
 import Library from '/imports/ui/pages/Library.vue';
 import SingleLibraryToolbar from '/imports/ui/library/SingleLibraryToolbar.vue';
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
@@ -104,6 +105,7 @@ RouterFactory.configure(factory => {
       path: '/characterList',
       components: {
         default: CharacterList,
+        toolbarItems: CharacterListToolbarItems,
       },
       meta: {
         title: 'Character List',

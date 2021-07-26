@@ -26,6 +26,7 @@
     >
       <div :key="$route.meta.title">
         <template v-if="creature">
+          <shared-icon :model="creature" />
           <v-menu
             bottom
             left
@@ -37,30 +38,30 @@
                 icon
                 v-on="on"
               >
-                <v-icon>more_vert</v-icon>
+                <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list v-if="editPermission">
               <v-list-item @click="deleteCharacter">
                 <v-list-item-title>
-                  <v-icon>delete</v-icon> Delete
+                  <v-icon>mdi-delete</v-icon> Delete
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showCharacterForm">
                 <v-list-item-title>
-                  <v-icon>create</v-icon> Edit details
+                  <v-icon>mdi-pencil</v-icon> Edit details
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showShareDialog">
                 <v-list-item-title>
-                  <v-icon>share</v-icon> Sharing
+                  <v-icon>mdi-share-variant</v-icon> Sharing
                 </v-list-item-title>
               </v-list-item>
             </v-list>
             <v-list v-else>
               <v-list-item @click="unshareWithMe">
                 <v-list-item-title>
-                  <v-icon>delete</v-icon> Unshare with me
+                  <v-icon>mdi-delete</v-icon> Unshare with me
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -122,14 +123,15 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/Creatures.js';
-import removeCreature from '/imports/api/creature/removeCreature.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';
 import { mapMutations } from 'vuex';
-import { assertEditPermission } from '/imports/api/creature/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import CharacterSheetFab from '/imports/ui/creature/character/CharacterSheetFab.vue';
 import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import SharedIcon from '/imports/ui/components/SharedIcon.vue';
 
 export default {
   inject: {
@@ -137,6 +139,7 @@ export default {
   },
   components: {
     CharacterSheetFab,
+    SharedIcon,
   },
   computed: {
     creatureId(){

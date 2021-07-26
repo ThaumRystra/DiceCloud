@@ -18,7 +18,7 @@
         @click.stop="expanded = !expanded"
       >
         <v-icon v-if="canExpand && (hasChildren || organize)">
-          chevron_right
+          mdi-chevron-right
         </v-icon>
       </v-btn>
       <div
@@ -31,7 +31,7 @@
           :class="selected && 'primary--text'"
           :disabled="expanded"
         >
-          drag_handle
+          mdi-drag
         </v-icon>
         <!--{{node && node.order}}-->
         <tree-node-view
