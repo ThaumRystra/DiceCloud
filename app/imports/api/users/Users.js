@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import '/imports/api/users/deleteMyAccount.js';
+import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 
 const userSchema = new SimpleSchema({
@@ -94,6 +95,10 @@ const userSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  'preferences.hidePropertySelectDialogHelp': {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 Meteor.users.attachSchema(userSchema);
@@ -155,7 +160,7 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 			throw new Meteor.Error('User not found',
 				'Can\'t send a validation email to a user that does not exist');
 		}
-		if (!_.some(user.emails, email => email.address === address)) {
+		if (!some(user.emails, email => email.address === address)) {
 			throw new Meteor.Error('Email address not found',
 				'The specified email address wasn\'t found on this user account');
 		}

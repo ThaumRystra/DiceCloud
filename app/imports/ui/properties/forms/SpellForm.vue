@@ -31,6 +31,7 @@
         label="Level"
         class="mx-1"
         style="flex-basis: 300px;"
+        hint="The spell level"
         :items="spellLevels"
         :value="model.level"
         :error-messages="errors.level"
@@ -110,6 +111,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"

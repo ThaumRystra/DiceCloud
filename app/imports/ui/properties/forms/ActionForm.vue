@@ -30,6 +30,7 @@
       label="Roll bonus"
       :value="model.rollBonus"
       :error-messages="errors.rollBonus"
+      hint="A number (or calculation which returns a number) that is added to a d20 when making the attack roll"
       @change="change('rollBonus', ...arguments)"
     />
     <calculation-error-list :errors="model.rollBonusErrors" />
@@ -67,9 +68,11 @@
           multiple
           chips
           deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
           :value="model.tags"
           @change="change('tags', ...arguments)"
         />
+        <!--
         <smart-select
           label="Target"
           style="flex-basis: 300px;"
@@ -79,6 +82,7 @@
           :menu-props="{auto: true, lazy: true}"
           @change="change('target', ...arguments)"
         />
+        -->
         <div class="layout wrap">
           <text-field
             label="Uses"
@@ -92,7 +96,7 @@
           <text-field
             label="Uses used"
             type="number"
-            hint="How many times this action has already been used"
+            hint="How many times this action has already been used: should be 0 in most cases"
             style="flex-basis: 300px;"
             :value="model.usesUsed"
             :error-messages="errors.uses"
@@ -102,6 +106,7 @@
         <smart-select
           label="Reset"
           clearable
+          hint="When number of uses used should be reset to zero"
           style="flex-basis: 300px;"
           :items="resetOptions"
           :value="model.reset"

@@ -11,13 +11,14 @@
         label="Variable name"
         :value="model.variableName"
         style="flex-basis: 300px;"
-        hint="Use this name in formulae to reference this attribute"
+        hint="Use this name in calculations to reference this attribute"
         :error-messages="errors.variableName"
         @change="change('variableName', ...arguments)"
       />
     </div>
     <text-field
       label="Value"
+      hint="Calculation of the constant value, use 'text' for a string value, [1,2,3] for a matrix, or 123 for a number"
       :value="model.calculation"
       :error-messages="errors.calculation"
       @change="change('calculation', ...arguments)"

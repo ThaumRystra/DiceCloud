@@ -33,6 +33,7 @@
       <text-field
         v-show="radioSelection === 'calculated'"
         label="Condition"
+        hint="When this calculation returns a value that isn't false or zero the children will be active"
         :value="model.condition"
         :error-messages="errors.condition"
         @change="change('condition', ...arguments)"
@@ -44,6 +45,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />

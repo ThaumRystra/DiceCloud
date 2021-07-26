@@ -8,14 +8,6 @@
         :error-messages="errors.name"
         @change="change('name', ...arguments)"
       />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="This name is used by spells to reference which lists they appear on"
-        :error-messages="errors.variableName"
-        @change="change('variableName', ...arguments)"
-      />
     </div>
 
     <text-area
@@ -58,6 +50,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />

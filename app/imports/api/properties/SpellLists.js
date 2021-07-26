@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 
 let SpellListSchema = new SimpleSchema({
@@ -12,12 +11,6 @@ let SpellListSchema = new SimpleSchema({
 		type: String,
 		optional: true,
 	},
-  variableName: {
-    type: String,
-		regEx: VARIABLE_NAME_REGEX,
-    min: 2,
-    optional: true,
-  },
 	// Calculation of how many spells in this list can be prepared
 	maxPrepared: {
 		type: String,

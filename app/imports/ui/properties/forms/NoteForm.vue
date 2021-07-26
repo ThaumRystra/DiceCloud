@@ -10,7 +10,7 @@
 
     <text-area
       label="Summary"
-      hint="This will appear in the action card in the character sheet"
+      hint="This will appear in the card in the character sheet"
       :value="model.summary"
       :error-messages="errors.summary"
       @change="change('summary', ...arguments)"
@@ -19,18 +19,19 @@
 
     <text-area
       label="Description"
+      hint="Text that does not fit in the summary"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
 
-
     <smart-combobox
       label="Tags"
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />

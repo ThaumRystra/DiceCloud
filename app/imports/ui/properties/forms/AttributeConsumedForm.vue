@@ -11,7 +11,7 @@
     />
     <text-field
       label="Quantity"
-      hint="How much of the attribute will be consumed"
+      hint="How much of the attribute will be consumed. If this amount is not available in the attribute, the action can't be taken"
       style="flex-basis: 300px;"
       :value="model.quantity"
       :error-messages="errors.quantity"

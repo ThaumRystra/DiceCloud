@@ -8,15 +8,17 @@
       @change="change('name', ...arguments)"
     />
     <text-field
-      ref="focusFirst"
       label="DC"
+      hint="A calculation of the DC that the target of an action needs to save against in order to succeed. If the saving throw is lower than the DC, the children of this property will be activated."
       :value="model.dc"
       :error-messages="errors.dc"
       @change="change('dc', ...arguments)"
     />
+    <calculation-error-list :errors="model.dcErrors" />
+
     <smart-combobox
       label="Save"
-      hint="Which save the saving throw targets"
+      hint="Which stat the saving throw targets"
       :value="model.stat"
       :items="saveList"
       :error-messages="errors.stat"
@@ -37,6 +39,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"

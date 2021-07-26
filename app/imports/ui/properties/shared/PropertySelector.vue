@@ -13,28 +13,44 @@
           <v-flex
             v-if="!noLibraryOnlyProps || !property.libraryOnly"
             :key="type"
-            sm4
-            xs6
+            md4
+            sm6
+            xs12
           >
             <v-card
               hover
               style="height: 100%; overflow: hidden;"
               @click="$emit('select', type)"
             >
-              <div
-                class="layout align-center justify-center"
-                style="min-height: 70px;"
-              >
-                <v-icon x-large>
-                  {{ property.icon }}
-                </v-icon>
-              </div>
-              <h3
+              <v-card-title
                 class="subtitle pb-3"
                 style="text-align: center;"
               >
-                {{ property.name }}
-              </h3>
+                <v-avatar tile>
+                  <v-icon x-large>
+                    {{ property.icon }}
+                  </v-icon>
+                </v-avatar>
+                <span class="ml-3">
+                  {{ property.name }}
+                </span>
+              </v-card-title>
+              <v-expand-transition>
+                <div
+                  v-if="showPropertyHelp"
+                  class="mx-4"
+                >
+                  {{ property.helpText }}
+                  <div style="height: 16px;" />
+                  <div
+                    v-if="property.examples"
+                    class="text-caption"
+                  >
+                    {{ property.examples }}
+                    <div style="height: 16px;" />
+                  </div>
+                </div>
+              </v-expand-transition>
             </v-card>
           </v-flex>
         </template>
@@ -53,6 +69,12 @@ export default {
 	data(){ return {
 		PROPERTIES,
 	};},
+  meteor: {
+    showPropertyHelp(){
+      let user = Meteor.user();
+      return !(user?.preferences?.hidePropertySelectDialogHelp)
+    },
+  },
 }
 </script>
 

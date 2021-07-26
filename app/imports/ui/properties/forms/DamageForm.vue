@@ -5,6 +5,7 @@
         ref="focusFirst"
         label="Damage"
         style="flex-basis: 300px;"
+        hint="A caculation including dice rolls of the damge to deal to the target when activated by an action"
         :value="model.amount"
         :error-messages="errors.amount"
         @change="change('amount', ...arguments)"
@@ -13,6 +14,7 @@
       <smart-select
         label="Damage Type"
         style="flex-basis: 200px;"
+        hint="Use the Healing type to restore hit points"
         :items="DAMAGE_TYPES"
         :value="model.damageType"
         :error-messages="errors.damageType"
@@ -35,6 +37,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
@@ -45,8 +48,12 @@
 <script lang="js">
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
+  components: {
+    CalculationErrorList,
+  },
   mixins: [propertyFormMixin],
 	props: {
 		parentTarget: {

@@ -11,6 +11,7 @@
       label="Type"
       style="flex-basis: 300px;"
       clearable
+      hint="What property type is needed to fill this slot"
       :items="slotTypes"
       :value="model.slotType"
       :error-messages="errors.slotType"

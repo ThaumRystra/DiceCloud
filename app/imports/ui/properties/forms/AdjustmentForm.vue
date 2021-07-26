@@ -11,8 +11,8 @@
         @change="change('stat', ...arguments)"
       />
       <text-field
-        label="Damage"
-        hint="The amount of damage to apply to the selected stat, can be a calculation or roll"
+        label="Amount"
+        hint="The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead."
         style="flex-basis: 300px;"
         :value="model.amount"
         :error-messages="errors.amount"
@@ -23,6 +23,7 @@
       label="Operation"
       class="mx-1"
       style="flex-basis: 300px;"
+      hint="Should the attribute be damaged by the amount, or set to the amount"
       :items="adjustmentOps"
       :value="model.operation"
       :error-messages="errors.operation"
@@ -43,6 +44,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />
