@@ -1,7 +1,7 @@
 import { findLast } from 'lodash';
 import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
 import Invites from '/imports/api/users/Invites.js';
-const patreonDisabled = !!process.env.DISABLE_PATREON;
+const patreonDisabled = !!Meteor.settings?.public?.disablePatreon;
 
 const TIERS = Object.freeze([
   {
