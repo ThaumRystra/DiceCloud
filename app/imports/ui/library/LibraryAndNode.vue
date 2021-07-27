@@ -26,7 +26,7 @@
           style="flex-grow: 0; height: 32px;"
         />
         <insert-library-node-button
-          v-if="libraryId"
+          v-if="libraryId && canEditLibrary"
           style="bottom: -32px"
           fab
           :library-id="libraryId"

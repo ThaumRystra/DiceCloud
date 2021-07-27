@@ -28,6 +28,7 @@
             class="ma-2"
           >
             <insert-library-node-button
+              v-if="editPermission(library)"
               :library-id="library._id"
               :selected-node-id="selectedNodeId"
               @selected="e => $emit('selected', e)"
