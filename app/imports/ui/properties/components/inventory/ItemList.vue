@@ -18,7 +18,7 @@
         v-for="item in dataItems"
         :key="item._id"
         class="item"
-        :data-id="`item-list-tile-${item._id}`"
+        :data-id="item._id"
         :model="item"
         @click="clickProperty(item._id)"
       />
@@ -74,7 +74,7 @@ export default {
 		clickProperty(_id){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-property-dialog',
-				elementId: `item-list-tile-${_id}`,
+				elementId: _id,
 				data: {_id},
 			});
 		},
