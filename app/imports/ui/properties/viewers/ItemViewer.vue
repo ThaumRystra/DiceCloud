@@ -134,6 +134,7 @@ import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyV
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
+import stripFloatingPointOddities from '/imports/ui/utility/stripFloatingPointOddities.js';
 
 export default {
   components:{
@@ -146,10 +147,10 @@ export default {
   },
   computed:{
     totalValue(){
-      return this.model.value * this.model.quantity;
+      return stripFloatingPointOddities(this.model.value * this.model.quantity);
     },
     totalWeight(){
-      return this.model.weight * this.model.quantity;
+      return stripFloatingPointOddities(this.model.weight * this.model.quantity);
     },
   },
   methods: {
