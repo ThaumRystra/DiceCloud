@@ -34,6 +34,14 @@ let ReferenceSchema = new SimpleSchema({
   'cache.node.type': {
     type: String,
   },
+  'cache.node.level': {
+    type: Number,
+    optional: true,
+  },
+  'cache.node.value': {
+    type: Number,
+    optional: true,
+  },
   'cache.library': {
     type: Object,
     optional: true,
