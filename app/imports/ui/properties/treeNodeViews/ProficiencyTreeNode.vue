@@ -8,7 +8,7 @@
       :value="model.value"
     />
     <div class="text-no-wrap text-truncate">
-      <template v-if="model.stats && model.stats.length">
+      <template v-if="!model.name && model.stats && model.stats.length">
         {{ model.stats.join(', ') }}
       </template>
       <template v-else>
