@@ -6,7 +6,9 @@ services:
       context: ./
     environment:
       - NODE_ENV="production"
+      - METEOR_SETTINGS={ "public": { "environment": "production", "disabledPatreon": true } }
       - MONGO_URL="mongodb://dice:dice@dicecloud_mongodb_1:27017"
+      - NPM_CONFIG_PRODUCTION=true
       - ROOT_URL=http://127.0.0.1
       - PORT=3000
       - DISABLE_PATREON=true
