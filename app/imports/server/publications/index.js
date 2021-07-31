@@ -9,3 +9,4 @@ import '/imports/server/publications/tabletops.js';
 import '/imports/server/publications/slotFillers.js';
 import '/imports/server/publications/ownedDocuments.js';
 import '/imports/server/publications/archivedCreatures.js';
+import '/imports/server/publications/searchLibraryNodes.js';

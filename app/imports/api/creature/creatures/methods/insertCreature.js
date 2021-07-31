@@ -57,7 +57,7 @@ const insertCreature = new ValidatedMethod({
     if (Meteor.isServer){
       // Insert the 5e ruleset as the default base
       insertPropertyFromLibraryNode.call({
-        nodeId: 'iHbhfcg3AL5isSWbw',
+        nodeIds: ['iHbhfcg3AL5isSWbw'],
         parentRef: {id: baseId, collection: 'creatureProperties'},
         order: 0.5,
       });

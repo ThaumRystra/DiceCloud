@@ -29,7 +29,7 @@
 <script lang="js">
 	import Libraries from '/imports/api/library/Libraries.js';
 	import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-	import nodesToTree from '/imports/api/parenting/nodesToTree.js'
+	import nodesToTree from '/imports/api/parenting/nodesToTree.js';
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
 	import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
 

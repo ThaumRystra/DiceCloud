@@ -93,7 +93,7 @@ export default {
         callback(node){
 					if(!node) return;
           let newPropertyId = insertPropertyFromLibraryNode.call({
-            nodeId: node._id,
+            nodeIds: [node._id],
             parentRef: {
               'id': slotId,
               'collection': 'creatureProperties',

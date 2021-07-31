@@ -21,7 +21,11 @@ import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 const insertPropertyFromLibraryNode = new ValidatedMethod({
 	name: 'creatureProperties.insertPropertyFromLibraryNode',
 	validate: new SimpleSchema({
-		nodeId: {
+    nodeIds: {
+      type: Array,
+      max: 20,
+    },
+		'nodeIds.$': {
 			type: String,
 			regEx: SimpleSchema.RegEx.Id,
 		},
@@ -38,7 +42,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-	run({nodeId, parentRef, order}) {
+	run({nodeIds, parentRef, order}) {
 		// get the new ancestry for the properties
 		let {parentDoc, ancestors} = getAncestry({parentRef});
 
@@ -53,54 +57,15 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		}
     assertEditPermission(rootCreature, this.userId);
 
-		// Fetch the library node and its decendents, provided they have not been
-		// removed
-    // TODO: Check permission to read the library this node is in
-		let node = LibraryNodes.findOne({
-			_id: nodeId,
-			removed: {$ne: true},
-		});
-		if (!node) throw `Node not found for nodeId: ${nodeId}`;
-		let oldParent = node.parent;
-		let nodes = LibraryNodes.find({
-			'ancestors.id': nodeId,
-			removed: {$ne: true},
-		}).fetch();
+    // {libraryId: hasViewPermission}
+    //let libraryPermissionMemoir = {};
+    let node;
+		nodeIds.forEach(nodeId => {
+      // TODO: Check library view permission for each node before starting
+      node = insertPropertyFromNode(nodeId, ancestors, order);
+    });
 
-    // Convert all references into actual nodes
-    nodes = reifyNodeReferences(nodes);
-
-    // The root node is first in the array of nodes
-    // It must get the first generated ID to prevent flickering
-		nodes = [node, ...nodes];
-
-		// re-map all the ancestors
-		setLineageOfDocs({
-			docArray: nodes,
-			newAncestry: ancestors,
-			oldParent,
-		});
-
-		// Give the docs new IDs without breaking internal references
-		renewDocIds({
-			docArray: nodes,
-			collectionMap: {'libraryNodes': 'creatureProperties'}
-		});
-
-		// Order the root node
-    if (order === undefined){
-      setDocToLastOrder({
-        collection: CreatureProperties,
-        doc: node,
-      });
-    } else {
-      node.order = order;
-    }
-
-		// Insert the creature properties
-    CreatureProperties.batchInsert(nodes);
-
-    // get the root inserted doc
+    // get one of the root inserted docs
     let rootId = node._id;
 
     // Tree structure changed by inserts, reorder the tree
@@ -110,7 +75,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     });
 
     // The library properties need to denormalise which of them are inactive
-    recomputeInactiveProperties(rootId);
+    recomputeInactiveProperties(rootCreature._id);
     // Some of the library properties may be items or containers
     recomputeInventory(rootCreature._id);
 		// Inserting a creature property invalidates dependencies: full recompute
@@ -119,6 +84,56 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 		return rootId;
 	},
 });
+
+function insertPropertyFromNode(nodeId, ancestors, order){
+  // Fetch the library node and its decendents, provided they have not been
+  // removed
+  // TODO: Check permission to read the library this node is in
+  let node = LibraryNodes.findOne({
+    _id: nodeId,
+    removed: {$ne: true},
+  });
+  if (!node) throw `Node not found for nodeId: ${nodeId}`;
+  let oldParent = node.parent;
+  let nodes = LibraryNodes.find({
+    'ancestors.id': nodeId,
+    removed: {$ne: true},
+  }).fetch();
+
+  // Convert all references into actual nodes
+  nodes = reifyNodeReferences(nodes);
+
+  // The root node is first in the array of nodes
+  // It must get the first generated ID to prevent flickering
+  nodes = [node, ...nodes];
+
+  // re-map all the ancestors
+  setLineageOfDocs({
+    docArray: nodes,
+    newAncestry: ancestors,
+    oldParent,
+  });
+
+  // Give the docs new IDs without breaking internal references
+  renewDocIds({
+    docArray: nodes,
+    collectionMap: {'libraryNodes': 'creatureProperties'}
+  });
+
+  // Order the root node
+  if (order === undefined){
+    setDocToLastOrder({
+      collection: CreatureProperties,
+      doc: node,
+    });
+  } else {
+    node.order = order;
+  }
+
+  // Insert the creature properties
+  CreatureProperties.batchInsert(nodes);
+  return node;
+}
 
 // Covert node references into actual nodes
 // TODO: check permissions for each library a reference node references
@@ -194,7 +209,7 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0){
 
     // TODO: Force the referencedNode to take the old id of the reference
     // such that the reference's children can be kept
-    
+
     // Give the new referenced sub-tree new ids
     renewDocIds({
       docArray: addedNodes,

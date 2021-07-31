@@ -38,22 +38,13 @@
     />
     <template v-if="tabNumber === 5">
       <labeled-fab
-        key="property"
+        key="add-property"
         color="primary"
-        data-id="insert-creature-property-btn"
-        label="New Property"
+        data-id="add-creature-property-btn"
+        label="Add Property"
         icon="mdi-pencil"
         :disabled="!editPermission"
-        @click="insertTreeProperty"
-      />
-      <labeled-fab
-        key="property"
-        color="primary"
-        data-id="insert-creature-property-from-library-btn"
-        label="Property From Library"
-        icon="mdi-library-shelves"
-        :disabled="!editPermission"
-        @click="propertyFromLibrary"
+        @click="addProperty"
       />
     </template>
   </v-speed-dial>
@@ -234,8 +225,36 @@
             let nodeId = libraryNode._id;
             let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
 
-            let id = insertPropertyFromLibraryNode.call({nodeId, parentRef, order});
+            let id = insertPropertyFromLibraryNode.call({nodeIds: [nodeId], parentRef, order});
             return `tree-node-${id}`;
+          }
+        });
+      },
+      addProperty(){
+        let creatureId = this.creatureId;
+        let fab = hideFab();
+
+        this.$store.commit('pushDialogStack', {
+          component: 'add-creature-property-dialog',
+          elementId: 'add-creature-property-btn',
+          callback(result){
+            revealFab(fab);
+            if (!result){
+              return 'insert-creature-property-fab';
+            }
+            let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
+            if (Array.isArray(result)){
+              let nodeIds = result;
+              let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
+              return `tree-node-${id}`;
+            } else {
+              let creatureProperty = result;
+              // Get order and parent
+              creatureProperty.order = order;
+              // Insert the property
+              let id = insertProperty.call({creatureProperty, parentRef});
+              return `tree-node-${id}`;
+            }
           }
         });
       },

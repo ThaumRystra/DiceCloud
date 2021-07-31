@@ -9,7 +9,7 @@
       </v-toolbar-title>
       <v-spacer />
       <text-field
-        prepend-inner-icon="mdi-search"
+        prepend-inner-icon="mdi-magnify"
         regular
         hide-details
         :value="searchValue"
