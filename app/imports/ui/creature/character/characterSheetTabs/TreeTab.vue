@@ -43,7 +43,7 @@
             style="overflow-y: auto;"
             :root="{collection: 'creatures', id: creatureId}"
             :organize="organize"
-            :selected-node-id="selected"
+            :selected-node="selectedNode"
             :filter="filter"
             @selected="clickNode"
           />
@@ -51,9 +51,9 @@
         <template slot="detail">
           <creature-property-dialog
             embedded
-            :_id="selected"
-            @removed="selected = undefined"
-            @duplicated="id => selected = id"
+            :_id="selectedNodeId"
+            @removed="selectedNodeId = undefined"
+            @duplicated="id => selectedNodeId = id"
           />
         </template>
       </tree-detail-layout>
@@ -87,7 +87,7 @@
     data(){ return {
       organize: false,
       organizeDisabled: false,
-      selected: undefined,
+      selectedNodeId: undefined,
       fab: false,
       filterString: '',
       filterOptions: [
@@ -144,14 +144,14 @@
       },
       '$vuetify.breakpoint.mdAndUp'(mdAndUp){
         if (!mdAndUp){
-          this.selected = undefined;
+          this.selectedNodeId = undefined;
         }
       },
     },
     methods: {
       clickNode(id){
         if (this.$vuetify.breakpoint.mdAndUp){
-          this.selected = id;
+          this.selectedNodeId = id;
         } else {
           this.$store.commit('pushDialogStack', {
             component: 'creature-property-dialog',
@@ -167,7 +167,7 @@
           component: 'creature-property-dialog',
           elementId: 'selected-node-card',
           data: {
-            _id: this.selected,
+            _id: this.selectedNodeId,
             startInEditTab: true,
           },
         });
@@ -175,9 +175,9 @@
       getPropertyName,
     },
     meteor: {
-      selectedProperty(){
+      selectedNode(){
         return CreatureProperties.findOne({
-          _id: this.selected,
+          _id: this.selectedNodeId,
           removed: {$ne: true}
         });
       }

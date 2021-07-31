@@ -30,8 +30,8 @@
           style="bottom: -32px"
           fab
           :library-id="libraryId"
-          :selected-node-id="selected"
-          @selected="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
+          :selected-node-id="selectedNodeId"
+          @selected="id => {if ($vuetify.breakpoint.mdAndUp) selectedNodeId = id}"
         />
       </v-toolbar>
       <div
@@ -41,7 +41,7 @@
         <library-contents-container
           :library-id="libraryId"
           :organize-mode="organize"
-          :selected-node-id="selected"
+          :selected-node="selectedNode"
           should-subscribe
           @selected="clickNode"
         />
@@ -50,7 +50,7 @@
         v-else
         edit-mode
         :organize-mode="organize"
-        :selected-node-id="selected"
+        :selected-node="selectedNode"
         style="overflow-y: auto; padding: 12px;"
         @selected="clickNode"
       />
@@ -61,10 +61,10 @@
       style="overflow: hidden;"
     >
       <library-node-dialog
-        :_id="selected"
+        :_id="selectedNodeId"
         embedded
-        @removed="selected = undefined"
-        @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
+        @removed="selectedNodeId = undefined"
+        @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selectedNodeId = id}"
       />
     </div>
   </tree-detail-layout>
@@ -100,7 +100,7 @@ export default {
   },
   data(){ return {
     organize: false,
-    selected: undefined,
+    selectedNodeId: undefined,
   };},
   computed: {
     isToolbarDark(){
@@ -120,12 +120,12 @@ export default {
       this.$store.commit('pushDialogStack', {
         component: 'library-node-edit-dialog',
         elementId: 'selected-node-card',
-        data: {_id: this.selected},
+        data: {_id: this.selectedNodeId},
       });
     },
     clickNode(id){
       if (this.$vuetify.breakpoint.mdAndUp){
-        this.selected = id;
+        this.selectedNodeId = id;
       } else {
         this.$store.commit('pushDialogStack', {
           component: 'library-node-dialog',
@@ -136,7 +136,7 @@ export default {
           },
           callback: result => {
             if (result){
-              this.selected = id;
+              this.selectedNodeId = id;
             }
           },
         });
@@ -175,7 +175,7 @@ export default {
     },
     selectedNode(){
       return LibraryNodes.findOne({
-        _id: this.selected,
+        _id: this.selectedNodeId,
         removed: {$ne: true}
       });
     },

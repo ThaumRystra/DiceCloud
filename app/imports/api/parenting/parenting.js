@@ -1,6 +1,6 @@
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import { flatten, findLast } from 'lodash';
+import { flatten } from 'lodash';
 
 const generalParents = [
   'attribute',
@@ -216,42 +216,4 @@ export function getName(doc){
   while(i--) {
     if (doc.ancestors[i].name) return doc.ancestors[i].name;
   }
-}
-
-export function nodeArrayToTree(nodes){
-  // Store a dict and list of all the nodes
-  let nodeIndex = {};
-  let nodeList = [];
-  nodes.forEach( node => {
-    let treeNode = {
-      node: node,
-      children: [],
-    };
-    nodeIndex[node._id] = treeNode;
-    nodeList.push(treeNode);
-  });
-  // Create a forest of trees
-  let forest = [];
-  // Either the node is a child of its nearest found ancestor, or in the forest as a root
-  nodeList.forEach(treeNode => {
-    let ancestorInForest = findLast(
-      treeNode.node.ancestors,
-      ancestor => !!nodeIndex[ancestor.id]
-    );
-    if (ancestorInForest){
-      nodeIndex[ancestorInForest.id].children.push(treeNode);
-    } else {
-      forest.push(treeNode);
-    }
-  });
-  return forest;
-}
-
-export function nodesToTree({collection, ancestorId, filter = {}, options = {}}){
-  if (!('ancestors.id' in filter)) filter['ancestors.id'] = ancestorId;
-  if (!('removed' in filter)) filter['removed'] = {$ne: true};
-  if (!options.sort) options.sort = {order: 1};
-  if (!('order' in options.sort)) options.sort.order = 1;
-  let nodes = collection.find(filter, options);
-  return nodeArrayToTree(nodes);
 }

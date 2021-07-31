@@ -234,7 +234,8 @@ export default {
         },
       });
     },
-    selectSubProperty(_id){
+    selectSubProperty(doc){
+      let _id = doc && doc._id
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
         elementId: `tree-node-${_id}`,

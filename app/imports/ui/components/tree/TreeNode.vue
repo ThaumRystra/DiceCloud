@@ -1,7 +1,10 @@
 <template lang="html">
   <v-sheet
     class="tree-node"
-    :class="!hasChildren ? 'empty' : null"
+    :class="{
+      'empty': !hasChildren,
+      'found': node._matchedDocumentFilter,
+    }"
     :data-id="`tree-node-${node._id}`"
   >
     <div
@@ -52,7 +55,7 @@
             :children="computedChildren"
             :group="group"
             :organize="organize"
-            :selected-node-id="selectedNodeId"
+            :selected-node="selectedNode"
             @reordered="e => $emit('reordered', e)"
             @reorganized="e => $emit('reorganized', e)"
             @selected="e => $emit('selected', e)"
@@ -80,6 +83,7 @@
 	import { canBeParent } from '/imports/api/parenting/parenting.js';
 	import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
   import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+  import { some } from 'lodash';
 
 	export default {
 		name: 'TreeNode',
@@ -87,16 +91,33 @@
       TreeNodeView,
     },
 		props: {
-			node: Object,
-			group: String,
+			node: {
+        type: Object,
+        required: true,
+      },
+			group: {
+        type: String,
+        required: true,
+      },
 			organize: Boolean,
-			children: Array,
-			getChildren: Function,
-			selectedNodeId: String,
+			children: {
+        type: Array,
+        default: () => [],
+      },
+			getChildren: {
+        type: Function,
+        default: undefined,
+      },
+      selectedNode: {
+        type: Object,
+        default: undefined,
+      },
 			selected: Boolean,
 		},
-		data(){ return {
-			expanded: false,
+		data(){return {
+			expanded: this.node._ancestorOfMatchedDocument ||
+        some(this.selectedNode?.ancestors, ref => ref.id === this.node._id) ||
+        false,
 		}},
 		computed: {
 			hasChildren(){
@@ -119,6 +140,15 @@
 				return canBeParent(this.node.type);
 			},
 		},
+    watch: {
+      'node._ancestorOfMatchedDocument'(value){
+        this.expanded = !!value ||
+          some(this.selectedNode?.ancestors, ref => ref.id === this.node._id);
+      },
+      'selectedNode.ancestors'(value){
+        this.expanded = !!some(value, ref => ref.id === this.node._id) || this.expanded;
+      },
+    },
 		beforeCreate() {
       this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
 		},
@@ -148,9 +178,12 @@
 	.empty .v-btn {
 		opacity: 0.4;
 	}
+  .found {
+    background: rgba(200, 0, 0, 0.1);
+  }
 	.ghost {
     opacity: 0.5;
-    background: #fbc8c8;
+    background: rgba(251, 0, 0, 0.3);
 	}
 	.v-icon.v-icon--disabled {
 		opacity: 0;
