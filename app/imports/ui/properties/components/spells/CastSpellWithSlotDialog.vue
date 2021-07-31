@@ -8,7 +8,7 @@
       <text-field
         ref="focusFirst"
         label="Name"
-        prepend-inner-icon="mdi-search"
+        prepend-inner-icon="mdi-magnify"
         regular
         hide-details
         :value="searchValue"

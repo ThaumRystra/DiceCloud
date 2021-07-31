@@ -35,7 +35,7 @@
           <text-field
             ref="iconSearchField"
             label="Search icons"
-            append-icon="mdi-search"
+            append-icon="mdi-magnify"
             clearable
             hide-details
             class="ma-2"
