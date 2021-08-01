@@ -179,7 +179,7 @@
 		opacity: 0.4;
 	}
   .found {
-    background: rgba(200, 0, 0, 0.1);
+    background: rgba(200, 0, 0, 0.1) !important;
   }
 	.ghost {
     opacity: 0.5;
