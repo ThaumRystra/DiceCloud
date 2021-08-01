@@ -25,9 +25,16 @@
           class="mx-3"
           style="flex-grow: 0; height: 32px;"
         />
+        <tree-search-input
+          ref="searchBox"
+          slot="extension"
+          v-model="filter"
+          class="mx-4"
+        />
         <insert-library-node-button
           v-if="libraryId && canEditLibrary"
-          style="bottom: -32px"
+          slot="extension"
+          style="bottom: -24px"
           fab
           :library-id="libraryId"
           :selected-node-id="selectedNodeId"
@@ -43,6 +50,7 @@
           :organize-mode="organize"
           :selected-node="selectedNode"
           should-subscribe
+          :filter="filter"
           @selected="clickNode"
         />
       </div>
@@ -52,6 +60,7 @@
         :organize-mode="organize"
         :selected-node="selectedNode"
         style="overflow-y: auto; padding: 12px;"
+        :filter="filter"
         @selected="clickNode"
       />
     </div>
@@ -82,6 +91,7 @@ import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import TreeSearchInput from '/imports/ui/components/tree/TreeSearchInput.vue';
 
 export default {
   components: {
@@ -90,6 +100,7 @@ export default {
     LibraryNodeDialog,
     LibraryContentsContainer,
     InsertLibraryNodeButton,
+    TreeSearchInput,
   },
   props: {
     selection: Boolean,
@@ -101,6 +112,7 @@ export default {
   data(){ return {
     organize: false,
     selectedNodeId: undefined,
+    filter: undefined,
   };},
   computed: {
     isToolbarDark(){

@@ -38,13 +38,20 @@
 			TreeNodeList,
 		},
 		props: {
-			libraryId: String,
+			libraryId: {
+        type: String,
+        default: undefined,
+      },
 			organizeMode: Boolean,
 			selectedNode: {
         type: Object,
         default: undefined,
       },
       shouldSubscribe: Boolean,
+      filter: {
+        type: Object,
+        default: undefined,
+      },
 		},
     data(){return {
       slowShouldSubscribe: this.shouldSubscribe,
@@ -79,7 +86,13 @@
 			},
 			libraryChildren(){
 				if (!this.library) return;
-				return nodesToTree({collection: LibraryNodes, ancestorId: this.library._id});
+				return nodesToTree({
+          collection: LibraryNodes,
+          ancestorId: this.library._id,
+          filter: this.filter,
+          includeFilteredDocAncestors: true,
+          includeFilteredDocDescendants: true,
+        });
 			},
 		},
 		methods: {

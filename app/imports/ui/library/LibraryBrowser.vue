@@ -47,6 +47,7 @@
             :organize-mode="organizeMode && editPermission(library)"
             :edit-mode="editMode"
             :selected-node="selectedNode"
+            :filter="filter"
             should-subscribe
             @selected="e => $emit('selected', e)"
           />
@@ -84,6 +85,10 @@ export default {
     organizeMode: Boolean,
     editMode: Boolean,
     selectedNode: {
+      type: Object,
+      default: undefined,
+    },
+    filter: {
       type: Object,
       default: undefined,
     },

@@ -28,7 +28,10 @@
         type: Object,
         default: undefined,
       },
-			filter: Object,
+      filter: {
+        type: Object,
+        default: undefined,
+      },
 			group: {
 				type: String,
 				default: 'creatureProperties'
