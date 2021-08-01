@@ -21,6 +21,7 @@
       <property-selector
         slot="unwrapped-content"
         :no-library-only-props="noLibraryOnlyProps"
+        :parent-type="parentType"
         @select="type => $emit('input', type)"
       />
     </dialog-base>
@@ -49,7 +50,12 @@ export default {
     noLibraryOnlyProps: Boolean,
 		value: {
 			type: String,
+      default: undefined,
 		},
+    parentType: {
+      type: String,
+      default: undefined,
+    },
 	},
   meteor: {
     showPropertyHelp(){

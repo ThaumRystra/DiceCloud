@@ -2,77 +2,113 @@
   <div class="card-raised-background">
     <v-container
       fluid
-      grid-list-lg
-      fill-height
     >
-      <v-layout
+      <v-row
         wrap
-        fill-height
+        dense
+        justify="center"
+        justify-sm="start"
       >
-        <template v-for="(property, type) in PROPERTIES">
-          <v-flex
+        <template v-if="properties.suggested">
+          <v-col
+            cols="12"
+          >
+            <v-subheader>
+              Suggested
+            </v-subheader>
+          </v-col>
+          <template v-for="(property, type) in properties.suggested">
+            <v-col
+              v-if="!noLibraryOnlyProps || !property.libraryOnly"
+              :key="type"
+              md="4"
+              sm="6"
+              cols="10"
+            >
+              <property-select-card
+                :property="property"
+                @click="$emit('select', type)"
+              />
+            </v-col>
+          </template>
+        </template>
+        <v-col
+          v-if="properties.suggested"
+          cols="12"
+        >
+          <v-subheader>
+            More
+          </v-subheader>
+        </v-col>
+        <template v-for="(property, type) in properties.more">
+          <v-col
             v-if="!noLibraryOnlyProps || !property.libraryOnly"
             :key="type"
-            md4
-            sm6
-            xs12
+            md="4"
+            sm="6"
+            cols="10"
           >
-            <v-card
-              hover
-              style="height: 100%; overflow: hidden;"
+            <property-select-card
+              :property="property"
               @click="$emit('select', type)"
-            >
-              <v-card-title
-                class="subtitle pb-3"
-                style="text-align: center;"
-              >
-                <v-avatar tile>
-                  <v-icon x-large>
-                    {{ property.icon }}
-                  </v-icon>
-                </v-avatar>
-                <span class="ml-3">
-                  {{ property.name }}
-                </span>
-              </v-card-title>
-              <v-expand-transition>
-                <div
-                  v-if="showPropertyHelp"
-                  class="mx-4"
-                >
-                  {{ property.helpText }}
-                  <div style="height: 16px;" />
-                  <div
-                    v-if="property.examples"
-                    class="text-caption"
-                  >
-                    {{ property.examples }}
-                    <div style="height: 16px;" />
-                  </div>
-                </div>
-              </v-expand-transition>
-            </v-card>
-          </v-flex>
+            />
+          </v-col>
         </template>
-      </v-layout>
+      </v-row>
     </v-container>
   </div>
 </template>
 
 <script lang="js">
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
-
+import PropertySelectCard from '/imports/ui/properties/shared/PropertySelectCard.vue';
 export default {
+  components: {
+    PropertySelectCard,
+  },
   props: {
     noLibraryOnlyProps: Boolean,
+    parentType: {
+      type: String,
+      default: undefined,
+    },
+    suggestedTypes: {
+      type: Array,
+      default: undefined,
+    },
   },
 	data(){ return {
 		PROPERTIES,
 	};},
-  meteor: {
-    showPropertyHelp(){
-      let user = Meteor.user();
-      return !(user?.preferences?.hidePropertySelectDialogHelp)
+  computed:{
+    properties(){
+      let suggested;
+      let more = {};
+      if (this.suggestedTypes){
+        for (const key in PROPERTIES){
+          let prop = PROPERTIES[key];
+          if (this.suggestedTypes.includes(prop.type)){
+            if (!suggested) suggested = {};
+            suggested[key] = prop;
+          } else {
+            more[key] = prop;
+          }
+        }
+        return {suggested, more};
+      } else if (this.parentType) {
+          for (const key in PROPERTIES){
+            let prop = PROPERTIES[key];
+            if (prop.suggestedParents.includes(this.parentType)){
+              if (!suggested) suggested = {};
+              suggested[key] = prop;
+            } else {
+              more[key] = prop;
+            }
+          }
+          return {suggested, more};
+      } else {
+        return {more: PROPERTIES};
+      }
     },
   },
 }

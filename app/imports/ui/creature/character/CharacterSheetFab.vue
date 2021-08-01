@@ -31,10 +31,10 @@
       :key="type"
       color="primary"
       :data-id="`insert-creature-property-type-${type}`"
-      :label="'New ' + properties[type].name"
-      :icon="properties[type].icon"
+      :label="type ? 'New ' + properties[type].name : 'New Property'"
+      :icon="type ? properties[type].icon : 'mdi-plus'"
       :disabled="!editPermission"
-      @click="insertPropertyOfType(type)"
+      @click="addProperty(type)"
     />
     <template v-if="tabNumber === 5">
       <labeled-fab
@@ -42,7 +42,7 @@
         color="primary"
         data-id="add-creature-property-btn"
         label="Add Property"
-        icon="mdi-pencil"
+        icon="mdi-plus"
         :disabled="!editPermission"
         @click="addProperty"
       />
@@ -53,10 +53,11 @@
 <script lang="js">
   import LabeledFab from '/imports/ui/components/LabeledFab.vue';
   import { getHighestOrder } from '/imports/api/parenting/order.js';
-  import insertProperty, { insertPropertyAsChildOfTag } from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
+  import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
   import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+  import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
   function getParentAndOrderFromSelectedTreeNode(creatureId){
     // find the parent based on the currently selected property
@@ -140,120 +141,49 @@
         'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
         'character': ['note'],
-        'tree': [],
+        'tree': [null],
       };},
       properties(){
         return PROPERTIES;
       },
     },
     methods: {
-      insertPropertyOfType(type){
+      addProperty(forcedType){
         let creatureId = this.creatureId;
         let fab = hideFab();
 
-        // Open the dialog to insert the property
-        this.$store.commit('pushDialogStack', {
-          component: 'creature-property-creation-dialog',
-          elementId: 'insert-creature-property-type-' + type,
-          data: {
-            forcedType: type,
-          },
-          callback(creatureProperty){
-            if (!creatureProperty) return 'insert-creature-property-fab';
-            revealFab(fab);
-
-            // Insert the property
-            creatureProperty.order = getHighestOrder({
-              collection: CreatureProperties,
-              ancestorId: creatureId
-            }) + 1;
-
-            let tagDetails;
-            switch (type){
-              case 'item':
-                tagDetails = {tag: 'carried', name: 'Carried'};
-                break;
-              case 'container':
-                tagDetails = {tag: 'inventory', name: 'Inventory'};
-                break;
-              default:
-                tagDetails = {tag: `${type}s`};
-                break;
-            }
-            let id = insertPropertyAsChildOfTag.call({
-              creatureProperty,
-              creatureId,
-              tag: tagDetails.tag,
-              tagDefaultName: tagDetails.name,
-            });
-            return id;
-          }
-        });
-      },
-      insertTreeProperty(){
-        let creatureId = this.creatureId;
-        let fab = hideFab();
-        // Open the dialog to insert the property
-        this.$store.commit('pushDialogStack', {
-          component: 'creature-property-creation-dialog',
-          elementId: 'insert-creature-property-btn',
-          callback(creatureProperty){
-            if (!creatureProperty) return 'insert-creature-property-fab';
-            revealFab(fab);
-
-            // Get order and parent
-            let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
-            creatureProperty.order = order;
-
-            // Insert the property
-            let id = insertProperty.call({creatureProperty, parentRef});
-            return `tree-node-${id}`;
-          }
-        });
-      },
-      propertyFromLibrary(){
-        let creatureId = this.creatureId;
-        let fab = hideFab();
-
-        this.$store.commit('pushDialogStack', {
-          component: 'creature-property-from-library-dialog',
-          elementId: 'insert-creature-property-from-library-btn',
-          callback(libraryNode){
-            if (!libraryNode) return 'insert-creature-property-fab';
-            revealFab(fab);
-
-            let nodeId = libraryNode._id;
-            let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
-
-            let id = insertPropertyFromLibraryNode.call({nodeIds: [nodeId], parentRef, order});
-            return `tree-node-${id}`;
-          }
-        });
-      },
-      addProperty(){
-        let creatureId = this.creatureId;
-        let fab = hideFab();
+        let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
+        let parent;
+        try {
+          parent = fetchDocByRef(parentRef);
+        } catch (e) {
+          console.warn(e);
+        }
 
         this.$store.commit('pushDialogStack', {
           component: 'add-creature-property-dialog',
-          elementId: 'add-creature-property-btn',
+          elementId: 'insert-creature-property-type-' + forcedType,
+          data: {
+            parentDoc: forcedType ? undefined : parent,
+            forcedType,
+          },
           callback(result){
-            revealFab(fab);
             if (!result){
               return 'insert-creature-property-fab';
             }
-            let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
             if (Array.isArray(result)){
+              revealFab(fab);
               let nodeIds = result;
               let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
-              return `tree-node-${id}`;
+              return forcedType ? id : `tree-node-${id}`;
             } else {
+              revealFab(fab);
               let creatureProperty = result;
               // Get order and parent
               creatureProperty.order = order;
               // Insert the property
               let id = insertProperty.call({creatureProperty, parentRef});
-              return `tree-node-${id}`;
+              return forcedType ? id : `tree-node-${id}`;
             }
           }
         });

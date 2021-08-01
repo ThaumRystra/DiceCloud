@@ -47,7 +47,7 @@ const PROPERTIES = Object.freeze({
     name: 'Container',
     helpText: 'A container holds items in the inventory',
     examples: 'Coin pouch, backpack',
-    suggestedParents: [],
+    suggestedParents: ['folder'],
   },
   damage: {
     icon: '$vuetify.icons.damage',
