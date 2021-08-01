@@ -36,17 +36,6 @@
       :disabled="!editPermission"
       @click="addProperty(type)"
     />
-    <template v-if="tabNumber === 5">
-      <labeled-fab
-        key="add-property"
-        color="primary"
-        data-id="add-creature-property-btn"
-        label="Add Property"
-        icon="mdi-plus"
-        :disabled="!editPermission"
-        @click="addProperty"
-      />
-    </template>
   </v-speed-dial>
 </template>
 
