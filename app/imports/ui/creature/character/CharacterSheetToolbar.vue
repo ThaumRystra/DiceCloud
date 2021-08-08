@@ -41,27 +41,42 @@
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
-            <v-list v-if="editPermission">
-              <v-list-item @click="deleteCharacter">
+            <v-list>
+              <v-list-item
+                v-if="editPermission"
+                @click="deleteCharacter"
+              >
                 <v-list-item-title>
                   <v-icon>mdi-delete</v-icon> Delete
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item @click="showCharacterForm">
+              <v-list-item
+                v-if="editPermission"
+                @click="showCharacterForm"
+              >
                 <v-list-item-title>
                   <v-icon>mdi-pencil</v-icon> Edit details
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item @click="showShareDialog">
+              <v-list-item
+                v-if="editPermission"
+                @click="showShareDialog"
+              >
                 <v-list-item-title>
                   <v-icon>mdi-share-variant</v-icon> Sharing
                 </v-list-item-title>
               </v-list-item>
-            </v-list>
-            <v-list v-else>
-              <v-list-item @click="unshareWithMe">
+              <v-list-item
+                v-if="!editPermission"
+                @click="unshareWithMe"
+              >
                 <v-list-item-title>
                   <v-icon>mdi-delete</v-icon> Unshare with me
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="printSheet">
+                <v-list-item-title>
+                  <v-icon>mdi-printer</v-icon> Print
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -165,6 +180,10 @@ export default {
       'toggleDrawer',
       'toggleRightDrawer',
     ]),
+    printSheet(){
+      let route = this.$router.resolve({ path: `/characterPrint/${this.creatureId}/${this.urlName | '-'}`});
+      window.open(route.href, '_blank');
+    },
 		showCharacterForm(){
 			this.$store.commit('pushDialogStack', {
 				component: 'creature-form-dialog',

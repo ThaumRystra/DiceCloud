@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    class="stats-tab ma-2"
+    class="stats-tab"
   >
     <health-bar-card-container :creature-id="creatureId" />
 

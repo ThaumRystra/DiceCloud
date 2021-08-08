@@ -9,6 +9,7 @@ import CharacterListToolbarItems from '/imports/ui/creature/creatureList/Charact
 import Library from '/imports/ui/pages/Library.vue';
 import SingleLibraryToolbar from '/imports/ui/library/SingleLibraryToolbar.vue';
 import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
+import CharacterSheetPrintPage from '/imports/ui/pages/CharacterSheetPrintPage.vue';
 import CharacterSheetToolbar from '/imports/ui/creature/character/CharacterSheetToolbar.vue';
 import CharacterSheetRightDrawer from '/imports/ui/creature/character/CharacterSheetRightDrawer.vue';
 import SignIn from '/imports/ui/pages/SignIn.vue' ;
@@ -137,6 +138,22 @@ RouterFactory.configure(factory => {
         default: CharacterSheetPage,
         toolbar: CharacterSheetToolbar,
         rightDrawer: CharacterSheetRightDrawer,
+      },
+      meta: {
+        title: 'Character Sheet',
+      },
+    },{
+      path: '/characterPrint/:id/:urlName',
+      components: {
+        default: CharacterSheetPrintPage,
+      },
+      meta: {
+        title: 'Character Sheet',
+      },
+    },{
+      path: '/characterPrint/:id',
+      components: {
+        default: CharacterSheetPrintPage,
       },
       meta: {
         title: 'Character Sheet',
