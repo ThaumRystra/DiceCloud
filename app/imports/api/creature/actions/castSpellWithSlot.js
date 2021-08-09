@@ -9,6 +9,8 @@ import { recomputeCreatureByDoc } from '/imports/api/creature/computation/method
 import { doActionWork } from '/imports/api/creature/actions/doAction.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import getAncestorContext from '/imports/api/creature/actions/getAncestorContext.js';
+import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory';
+import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties';
 
 const castSpellWithSlot = new ValidatedMethod({
   name: 'creatureProperties.castSpellWithSlot',
@@ -64,16 +66,24 @@ const castSpellWithSlot = new ValidatedMethod({
     }
     let actionContext = getAncestorContext(spell);
 
-		doActionWork({
+    doActionWork({
       action: spell,
       actionContext: {slotLevel, ...actionContext},
       creature,
       targets: target ? [target] : [],
       method: this,
     });
-    // Note this only recomputes the top-level creature, not the nearest one
-		recomputeCreatureByDoc(creature);
+
+    // Note these lines only recompute the top-level creature, not the nearest one
+    // The acting creature might have a new item
+    recomputeInventory(creature._id);
+    // The spell might add properties which need to be activated
+    recomputeInactiveProperties(creature._id);
+    recomputeCreatureByDoc(creature);
+
     if (target){
+      recomputeInventory(target._id);
+      recomputeInactiveProperties(target._id);
       recomputeCreatureByDoc(target);
     }
   },
