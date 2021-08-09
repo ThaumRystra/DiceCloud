@@ -50,7 +50,7 @@ Meteor.publish('slotFillers', function(slotId){
     }
     this.autorun(function(){
       // Get the limit of the documents the user can fetch
-      var limit = self.data('limit') || 20;
+      var limit = self.data('limit') || 50;
       check(limit, Number);
 
       // Get the search term

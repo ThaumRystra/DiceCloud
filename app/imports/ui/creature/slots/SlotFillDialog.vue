@@ -212,7 +212,7 @@ export default {
     },
     loadMore(){
       if (this.currentLimit >= this.countAll) return;
-      this._subs['slotFillers'].setData('limit', this.currentLimit + 20);
+      this._subs['slotFillers'].setData('limit', this.currentLimit + 50);
     },
     insert(){
       if (!this.selectedNode) return;
@@ -232,7 +232,7 @@ export default {
       return Creatures.findOne(this.creatureId);
     },
     currentLimit(){
-      return this._subs['slotFillers'].data('limit') || 20;
+      return this._subs['slotFillers'].data('limit') || 50;
     },
     countAll(){
       return this._subs['slotFillers'].data('countAll');
