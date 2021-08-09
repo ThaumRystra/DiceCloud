@@ -39,6 +39,7 @@
     "request": "^2.88.2",
     "simpl-schema": "^1.12.0",
     "source-map-support": "^0.5.16",
+    "speakingurl": "^14.0.1",
     "styles": "^0.2.1",
     "underscore": "^1.13.1",
     "vue": "2.6.10",
