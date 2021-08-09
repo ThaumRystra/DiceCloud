@@ -80,12 +80,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-	.skill-list-tile >>> .v-list__tile {
-		height: 34px;
-	}
-	.skill-list-tile{
-		background: inherit;
-	}
 	.prof-icon {
 		min-width: 30px;
 	}
@@ -94,8 +88,4 @@ export default {
 		width: 45px;
 		text-align: center;
 	}
-</style>
-
-<style lang="scss">
-  $list-item-min-height: 32px;
 </style>
