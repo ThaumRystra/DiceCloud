@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const AdjustmentSchema = new SimpleSchema({
 	// The roll that determines how much to change the attribute
@@ -8,6 +9,7 @@ const AdjustmentSchema = new SimpleSchema({
     type: String,
     optional: true,
     defaultValue: '1',
+    max: STORAGE_LIMITS.calculation,
   },
 	// Who this adjustment applies to
 	target: {
@@ -23,6 +25,7 @@ const AdjustmentSchema = new SimpleSchema({
 	stat: {
 		type: String,
     optional: true,
+    max: STORAGE_LIMITS.variableName,
 	},
   operation: {
     type: String,
@@ -39,6 +42,7 @@ const ComputedOnlyAdjustmentSchema = new SimpleSchema({
   amountErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'amountErrors.$':{
     type: ErrorSchema,

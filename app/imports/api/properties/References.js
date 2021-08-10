@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let ReferenceSchema = new SimpleSchema({
   ref: {
@@ -13,6 +14,7 @@ let ReferenceSchema = new SimpleSchema({
   'ref.collection': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.collectionName,
   },
   // Denormalised store of referenced property's details
   cache: {
@@ -22,6 +24,7 @@ let ReferenceSchema = new SimpleSchema({
   'cache.error': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.errorMessage,
   },
   'cache.node': {
     type: Object,
@@ -30,9 +33,11 @@ let ReferenceSchema = new SimpleSchema({
   'cache.node.name': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
   'cache.node.type': {
     type: String,
+    max: STORAGE_LIMITS.variableName,
   },
   'cache.node.level': {
     type: Number,
@@ -49,6 +54,7 @@ let ReferenceSchema = new SimpleSchema({
   'cache.library.name': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
 });
 

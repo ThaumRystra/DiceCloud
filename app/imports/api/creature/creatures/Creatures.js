@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
 import SharingSchema from '/imports/api/sharing/SharingSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 //set up the collection for creatures
 let Creatures = new Mongo.Collection('creatures');
@@ -47,7 +48,7 @@ let CreatureSettingsSchema = new SimpleSchema({
   discordWebhook: {
     type: String,
     optional: true,
-    max: 200,
+    max: STORAGE_LIMITS.url,
   },
 });
 
@@ -57,22 +58,27 @@ let CreatureSchema = new SimpleSchema({
 		type: String,
 		defaultValue: '',
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	alignment: {
 		type: String,
-		optional: true
+		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	gender: {
 		type: String,
-		optional: true
+		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	picture: {
 		type: String,
-		optional: true
+		optional: true,
+    max: STORAGE_LIMITS.url,
 	},
   avatarPicture: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.url,
   },
 	// Mechanics
 	deathSave: {

@@ -8,6 +8,8 @@ import {
 } from '/imports/parser/parser.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
 import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+
 /*
  * Constants are primitive values that can be used elsewhere in computations
  */
@@ -15,6 +17,7 @@ let ConstantSchema = new SimpleSchema({
   name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
@@ -22,15 +25,18 @@ let ConstantSchema = new SimpleSchema({
 		regEx: VARIABLE_NAME_REGEX,
     min: 2,
     defaultValue: 'newConstant',
+    max: STORAGE_LIMITS.variableName,
   },
 	// The input value to be parsed, must return a constant node or an array
   // of constant nodes to be valid
 	calculation: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.calculation,
 	},
   errors: {
     type: Array,
+    maxCount: STORAGE_LIMITS.errorCount,
     autoValue(){
       let calc = this.field('calculation');
       if (!calc.isSet && this.isModifier) {

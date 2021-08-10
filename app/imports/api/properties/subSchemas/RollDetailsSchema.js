@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const RollDetailsSchema = new SimpleSchema({
   number: {
@@ -10,6 +11,7 @@ const RollDetailsSchema = new SimpleSchema({
   values: {
     type: Array,
     defaultValue: [],
+    maxCount: STORAGE_LIMITS.diceRollValuesCount,
   },
   'values.$': {
     type: Number,

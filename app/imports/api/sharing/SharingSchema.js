@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import '/imports/api/sharing/sharing.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let SharingSchema = new SimpleSchema({
   owner: {
@@ -11,9 +12,9 @@ let SharingSchema = new SimpleSchema({
 		type: Array,
 		defaultValue: [],
 		index: 1,
-    max: 50,
+    maxCount: STORAGE_LIMITS.readersCount,
 	},
-	"readers.$": {
+	'readers.$': {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id
 	},
@@ -21,9 +22,9 @@ let SharingSchema = new SimpleSchema({
 		type: Array,
 		defaultValue: [],
 		index: 1,
-    max: 20,
+    maxCount: STORAGE_LIMITS.writersCount,
 	},
-	"writers.$": {
+	'writers.$': {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id
 	},

@@ -1,30 +1,36 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let SlotSchema = new SimpleSchema({
   name: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
   description: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.description,
   },
   slotType: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.variableName,
   },
 	slotTags: {
     type: Array,
 		defaultValue: [],
+    maxCount: STORAGE_LIMITS.tagCount,
   },
 	'slotTags.$': {
 		type: String,
+    max: STORAGE_LIMITS.tagLength,
 	},
 	extraTags: {
     type: Array,
 		defaultValue: [],
-    maxCount: 5,
+    maxCount: STORAGE_LIMITS.extraTagsCount,
   },
 	'extraTags.$': {
 		type: Object,
@@ -39,17 +45,22 @@ let SlotSchema = new SimpleSchema({
   'extraTags.$.operation': {
 		type: String,
     allowedValues: ['OR', 'NOT'],
+    defaultValue: 'OR',
 	},
   'extraTags.$.tags': {
 		type: Array,
+    defaultValue: [],
+    maxCount: STORAGE_LIMITS.tagCount,
 	},
   'extraTags.$.tags.$': {
 		type: String,
+    max: STORAGE_LIMITS.tagLength,
 	},
   quantityExpected: {
     type: String,
     optional: true,
     defaultValue: '1',
+    max: STORAGE_LIMITS.calculation,
   },
   ignored: {
     type: Boolean,
@@ -58,6 +69,7 @@ let SlotSchema = new SimpleSchema({
   slotCondition: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.calculation,
   },
   hideWhenFull: {
     type: Boolean,
@@ -86,6 +98,7 @@ const ComputedOnlySlotSchema = new SimpleSchema({
   slotConditionErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'slotConditionErrors.$':{
     type: ErrorSchema,
@@ -99,6 +112,7 @@ const ComputedOnlySlotSchema = new SimpleSchema({
   quantityExpectedErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'quantityExpectedErrors.$':{
     type: ErrorSchema,

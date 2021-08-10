@@ -1,11 +1,13 @@
 import SimpleSchema from 'simpl-schema';
 import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let ContainerSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
-		trim: false
+		trim: false,
+    max: STORAGE_LIMITS.name,
 	},
 	carried: {
 		type: Boolean,
@@ -29,7 +31,8 @@ let ContainerSchema = new SimpleSchema({
 	description: {
 		type: String,
 		optional: true,
-		trim: false
+		trim: false,
+    max: STORAGE_LIMITS.description,
 	},
 });
 
@@ -37,7 +40,7 @@ const ComputedOnlyContainerSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
     defaultValue: [],
-    maxCount: 32,
+    maxCount: STORAGE_LIMITS.inlineCalculationCount,
   },
   'descriptionCalculations.$': InlineComputationSchema,
   // Weight of all the contents, zero if `contentsWeightless` is true

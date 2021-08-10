@@ -1,10 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let Experiences = new Mongo.Collection('experiences');
 
@@ -12,6 +12,7 @@ let ExperienceSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	// The amount of XP this experience gives
 	xp: {

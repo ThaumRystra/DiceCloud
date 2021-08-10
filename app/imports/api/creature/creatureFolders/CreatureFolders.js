@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let CreatureFolders = new Mongo.Collection('creatureFolders');
 
@@ -7,6 +8,7 @@ let creatureFolderSchema = new SimpleSchema({
 		type: String,
 		trim: false,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	creatures: {
 		type: Array,

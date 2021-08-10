@@ -5,6 +5,7 @@ import ChildSchema from '/imports/api/parenting/ChildSchema.js';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
@@ -16,9 +17,11 @@ let CreaturePropertySchema = new SimpleSchema({
 	tags: {
 		type: Array,
 		defaultValue: [],
+    maxCount: STORAGE_LIMITS.tagCount,
 	},
 	'tags.$': {
 		type: String,
+    max: STORAGE_LIMITS.tagLength,
 	},
 	disabled: {
 		type: Boolean,
@@ -27,6 +30,7 @@ let CreaturePropertySchema = new SimpleSchema({
   icon: {
     type: storedIconsSchema,
     optional: true,
+    max: STORAGE_LIMITS.icon,
   },
   // Reference to the library node that this property was copied from
   libraryNodeId: {

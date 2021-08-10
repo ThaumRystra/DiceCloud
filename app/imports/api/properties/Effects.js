@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+
 /*
  * Effects are reason-value attached to skills and abilities
  * that modify their final value or presentation in some way
@@ -8,6 +10,7 @@ let EffectSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	operation: {
 		type: String,
@@ -30,14 +33,17 @@ let EffectSchema = new SimpleSchema({
 	calculation: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.calculation,
 	},
 	//which stats the effect is applied to
 	stats: {
 		type: Array,
 		defaultValue: [],
+    maxCount: STORAGE_LIMITS.statsToTarget,
 	},
 	'stats.$': {
 		type: String,
+    max: STORAGE_LIMITS.variableName,
 	},
 });
 
@@ -51,6 +57,7 @@ const ComputedOnlyEffectSchema = new SimpleSchema({
   errors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'errors.$':{
     type: ErrorSchema,

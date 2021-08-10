@@ -43,15 +43,6 @@ let ActionSchema = new SimpleSchema({
 			'multipleTargets',
     ],
 	},
-  tags: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.tagCount,
-  },
-  'tags.$': {
-    type: String,
-    max: STORAGE_LIMITS.tagLength,
-  },
   // Duplicate the ResourceSchema here so we can extend it elegantly.
   resources: {
     type: Object,
@@ -75,6 +66,7 @@ let ActionSchema = new SimpleSchema({
   'resources.itemsConsumed.$.tag': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.tagLength,
   },
   'resources.itemsConsumed.$.quantity': {
     type: Number,
@@ -83,6 +75,7 @@ let ActionSchema = new SimpleSchema({
   'resources.itemsConsumed.$.itemId': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
   'resources.attributesConsumed': {
     type: Array,
@@ -102,6 +95,7 @@ let ActionSchema = new SimpleSchema({
   'resources.attributesConsumed.$.variableName': {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.variableName,
   },
   'resources.attributesConsumed.$.quantity': {
     type: Number,
@@ -175,6 +169,7 @@ const ComputedOnlyActionSchema = new SimpleSchema({
   'resources.itemsConsumed.$.itemIcon': {
     type: storedIconsSchema,
     optional: true,
+    max: STORAGE_LIMITS.icon,
   },
   'resources.itemsConsumed.$.itemColor': {
     type: String,
