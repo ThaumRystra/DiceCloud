@@ -32,7 +32,7 @@
         </template>
         <v-list>
           <v-list-item
-            v-for="filter in booleanFilters"
+            v-for="filter in activeBooleanFilters"
             :key="filter.name"
             style="height: 52px;"
           >
@@ -74,7 +74,7 @@
           Slot
         </div>
         <v-list-item
-          v-if="!(selectedSpell && selectedSpell.level > 0)"
+          v-if="!(selectedSpell && selectedSpell.level > 0) && !castRitual"
           key="cantrip-dummy-slot"
           class="spell-slot-list-tile"
           :class="{ 'primary--text': selectedSlotId === undefined}"
@@ -94,6 +94,12 @@
           hide-cast-button
           @click="selectedSlotId = spellSlot._id"
         />
+        <v-list-item key="ritual-dummy-slot">
+          <v-checkbox
+            v-model="castRitual"
+            label="Cast as a ritual"
+          ></v-checkbox>
+        </v-list-item>
       </template>
       <template slot="right">
         <div
@@ -138,6 +144,7 @@
         @click="$store.dispatch('popDialogStack', {
           spellId: selectedSpellId,
           slotId: selectedSlotId,
+          castRitual: castRitual
         })"
       >
         Cast
@@ -189,6 +196,7 @@ export default {
       concentration: {name: 'Concentration', enabled: false, value: false},
       ritual: {name: 'Ritual', enabled: false, value: false},
     },
+    castRitual: false
   }},
   computed: {
     computedSpells(){
@@ -214,12 +222,26 @@ export default {
       }
       return false;
     },
+    activeBooleanFilters() {
+      let that = this;
+      return Object.keys(this.booleanFilters).reduce(function (filtered, key) {
+        if (key !== 'ritual' || !that.castRitual)
+          filtered[key] = that.booleanFilters[key];
+        return filtered;
+      }, {});
+    },
   },
   watch: {
     selectedSpell(spell){
       if (!spell) return;
       if(spell.level === 0){
         this.selectedSlotId = undefined;
+      }
+      if(this.castRitual) {
+        for(let sp in this.spellSlots) {
+          if(spell.level === this.spellSlots[sp].spellSlotLevelValue)
+            this.selectedSlotId = this.spellSlots[sp]._id;
+        }
       }
     },
     selectedSlot(slot){
@@ -228,7 +250,10 @@ export default {
       if(slot.spellSlotLevelValue > 0 && this.selectedSpell.level === 0){
         this.selectedSpellId = undefined;
       }
-    },
+      if(this.castRitual && slot.spellSlotLevelValue !== this.selectedSpell.level) {
+        this.selectedSpellId = undefined;
+      }
+    }
   },
   methods: {
     clearBooleanFilters(){
@@ -249,18 +274,51 @@ export default {
     },
   },
   meteor: {
+    spellSlots(){
+      let filter = {
+        'ancestors.id': this.creatureId,
+        type: 'attribute',
+        attributeType: 'spellSlot',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      };
+      if(!this.castRitual) {
+        filter.currentValue = {$gte: 1};
+      }
+      if (this.selectedSpell && !this.castRitual){
+        filter.spellSlotLevelValue = {$gte: this.selectedSpell.level};
+      }
+      return CreatureProperties.find(filter, {
+        sort: {order: 1},
+      });
+    },
     spells(){
       let slotLevel = this.selectedSlot && this.selectedSlot.spellSlotLevelValue || 0;
+
+      // Any spell of any valid slot can be cast as a ritual
+      if(this.castRitual) {
+        let maximumSlot = CreatureProperties.findOne({
+          'ancestors.id': this.creatureId,
+          type: 'attribute',
+          attributeType: 'spellSlot',
+          removed: {$ne: true},
+          inactive: {$ne: true},
+        }, {
+          sort: {spellSlotLevelValue: -1}
+        });
+        if(maximumSlot !== undefined)
+          slotLevel = maximumSlot.spellSlotLevelValue;
+        else
+          slotLevel = 0;
+      }
+
       let filter = {
         'ancestors.id': this.creatureId,
         removed: {$ne: true},
         inactive: {$ne: true},
-        $or: [
-          {prepared: true},
-          {alwaysPrepared: true},
-        ],
         level: {$lte: slotLevel},
       };
+
       // Apply the filters from the filter menu
       for (let key in this.booleanFilters){
         if (this.booleanFilters[key].enabled){
@@ -272,6 +330,17 @@ export default {
           }
         }
       }
+
+      //If we cast a ritual, we need ritual spells; if not, we need prepared ones
+      if(this.castRitual)
+        filter.ritual = true;
+      else {
+        filter.$or = [
+          {prepared: true},
+          {alwaysPrepared: true},
+        ];
+      }
+
       // Apply the search string to the name field
       if (this.searchValue){
         filter.name = {
@@ -281,22 +350,6 @@ export default {
       }
       return CreatureProperties.find(filter, {
         sort: {order: 1}
-      });
-    },
-    spellSlots(){
-      let filter = {
-        'ancestors.id': this.creatureId,
-        type: 'attribute',
-        attributeType: 'spellSlot',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-        currentValue: {$gte: 1},
-      };
-      if (this.selectedSpell){
-        filter.spellSlotLevelValue = {$gte: this.selectedSpell.level};
-      }
-      return CreatureProperties.find(filter, {
-        sort: {order: 1},
       });
     },
     selectedSlot(){

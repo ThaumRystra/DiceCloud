@@ -478,9 +478,9 @@
             creatureId: this.creatureId,
             slotId,
           },
-          callback({spellId, slotId} = {}){
+          callback({spellId, slotId, castRitual} = {}){
             if (!spellId) return;
-            castSpellWithSlot.call({spellId, slotId}, error => {
+            castSpellWithSlot.call({spellId:spellId, slotId:slotId, castRitual:castRitual}, error => {
               if (error) console.error(error);
             });
           },

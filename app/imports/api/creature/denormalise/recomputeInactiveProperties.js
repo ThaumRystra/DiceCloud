@@ -7,7 +7,7 @@ export default function recomputeInactiveProperties(ancestorId){
       {disabled: true}, // Everything can be disabled
       {type: 'buff', applied: false}, // Buffs can be applied
       {type: 'item', equipped: {$ne: true}},
-      {type: 'spell', prepared: {$ne: true}, alwaysPrepared: {$ne: true}},
+      {type: 'spell', prepared: {$ne: true}, alwaysPrepared: {$ne: true}, ritual: {$ne: true}},
     ],
   };
   let disabledIds = CreatureProperties.find(disabledFilter, {

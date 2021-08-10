@@ -26,15 +26,21 @@ const castSpellWithSlot = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
       optional: true,
     },
+    castRitual: {
+      type: Boolean,
+      optional: true
+    }
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({spellId, slotId, targetId}) {
+  run({spellId, slotId, targetId, castRitual}) {
+    castRitual = castRitual === true;
+
     let spell = CreatureProperties.findOne(spellId);
-		// Check permissions
+    // Check permissions
     let creature = getRootCreatureAncestor(spell);
     assertEditPermission(creature, this.userId);
     let target = undefined;
@@ -49,7 +55,7 @@ const castSpellWithSlot = new ValidatedMethod({
         throw new Meteor.Error('No slot',
           'Slot not found to cast spell');
       }
-      if (!slot.currentValue){
+      if (!slot.currentValue && !castRitual){
         throw new Meteor.Error('No slot',
           'Slot depleted');
       }
@@ -58,11 +64,13 @@ const castSpellWithSlot = new ValidatedMethod({
           'Slot is not large enough to cast spell');
       }
       slotLevel = slot.spellSlotLevelValue;
-      damagePropertyWork({
-        property: slot,
-        operation: 'increment',
-        value: 1,
-      });
+      if(!castRitual) {
+        damagePropertyWork({
+          property: slot,
+          operation: 'increment',
+          value: 1,
+        });
+      }
     }
     let actionContext = getAncestorContext(spell);
 
