@@ -8,23 +8,21 @@
       @change="change('name', ...arguments)"
     />
     <smart-switch
-      v-if="context.isLibraryForm"
-      label="Add to character sheet already applied"
+      label="Applied"
       class="mt-0"
       :value="model.applied"
       :error-messages="errors.applied"
       @change="change('applied', ...arguments)"
     />
     <v-expand-transition>
-      <div v-if="context.isLibraryForm && model.applied">
+      <div v-if="model.applied">
         <v-alert
-          v-if="context.isLibraryForm && model.applied"
           type="info"
           outlined
         >
-          Buffs that are applied are active on the character sheet. This
-          should be turned off if a buff is going to be applied by an action or
-          spell.
+          When buffs are applied they become active on a creature.
+          Turn this off if the buff needs to be applied to a target by an action
+          or spell.
         </v-alert>
       </div>
     </v-expand-transition>
@@ -78,9 +76,6 @@
       CalculationErrorList,
     },
     mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
-    },
 		props: {
 			parentTarget: {
 				type: String,

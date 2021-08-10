@@ -31,7 +31,7 @@
       :key="type"
       color="primary"
       :data-id="`insert-creature-property-type-${type}`"
-      :label="type ? 'New ' + properties[type].name : 'New Property'"
+      :label="getPropertyLabel(type)"
       :icon="type ? properties[type].icon : 'mdi-plus'"
       :disabled="!editPermission"
       @click="addProperty(type)"
@@ -125,7 +125,7 @@
         return this.speedDialsByTab[tabs[this.tabNumber]];
       },
       speedDialsByTab() { return {
-        'stats': ['attribute', 'skill', 'action', 'attack'],
+        'stats': ['attribute', 'skill', 'action', 'attack', 'buff'],
         'features': ['feature'],
         'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
@@ -137,6 +137,10 @@
       },
     },
     methods: {
+      getPropertyLabel(type){
+        if (type === 'buff') return 'Buff or Condition';
+        return type ? PROPERTIES[type].name : 'Property'
+      },
       addProperty(forcedType){
         let creatureId = this.creatureId;
         let fab = hideFab();
