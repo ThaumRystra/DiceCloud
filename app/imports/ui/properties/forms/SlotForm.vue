@@ -92,6 +92,29 @@
     />
     <calculation-error-list :errors="model.slotConditionErrors" />
 
+    <smart-select
+      label="Unique"
+      style="flex-basis: 300px;"
+      clearable
+      hint="Do the properties that fill this slot need to be unique?"
+      :items="uniqueOptions"
+      :value="model.unique"
+      :error-messages="errors.unique"
+      @change="change('unique', ...arguments)"
+    />
+
+    <v-layout justify-center>
+      <v-btn
+        v-if="context.isLibraryForm"
+        color="accent"
+        class="ma-2 mb-4"
+        data-id="test-slot-button"
+        @click="testSlot"
+      >
+        Test Slot
+      </v-btn>
+    </v-layout>
+
     <text-area
       label="Description"
       :value="model.description"
@@ -122,16 +145,6 @@
           @change="change('ignored', ...arguments)"
         />
       </div>
-      <smart-select
-        label="Unique"
-        style="flex-basis: 300px;"
-        clearable
-        hint="Do the properties that fill this slot need to be unique?"
-        :items="uniqueOptions"
-        :value="model.unique"
-        :error-messages="errors.unique"
-        @change="change('unique', ...arguments)"
-      />
       <smart-combobox
         label="Tags"
         hint="This slot's own tags which will be used to fill other slots"
@@ -158,6 +171,9 @@
       CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
+    inject: {
+      context: { default: {} }
+    },
     data(){
       let slotTypes = [];
       for (let key in PROPERTIES){
@@ -199,6 +215,16 @@
 					ack: this.acknowledgeAddResult,
 				});
 			},
+      testSlot(){
+        if (!this.context.isLibraryForm) return;
+        this.$store.commit('pushDialogStack', {
+          component: 'slot-fill-dialog',
+          elementId: 'test-slot-button',
+          data: {
+            dummySlot: this.model,
+          },
+        });
+      }
 		},
 	};
 </script>

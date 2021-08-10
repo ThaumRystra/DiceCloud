@@ -60,8 +60,8 @@
                   v-if="libraryNode._disabledByAlreadyAdded"
                   class="my-0 py-0"
                   hide-details
-                  :value="true"
-                  :disabled="true"
+                  :input-value="true"
+                  disabled
                 />
                 <v-checkbox
                   v-else
@@ -160,26 +160,24 @@
       <v-btn
         text
         color="primary"
-        :disabled="!selectedNodeIds.length"
+        :disabled="!dummySlot && !selectedNodeIds.length"
         @click="$store.dispatch('popDialogStack', selectedNodeIds)"
       >
         <template v-if="model.spaceLeft">
           {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
-        Insert
+        <template v-if="slotId">
+          Insert
+        </template>
+        <template v-else>
+          Close Test
+        </template>
       </v-btn>
     </template>
   </dialog-base>
 </template>
 
 <script lang="js">
-/**
- * TODO
- * Enforce unique in slot/unique in character selection rules
- * Fix the dialog callback for multiple property inserting
- * Show the dialog in library view to test slots
- * Delete the old slot fill dialog
- */
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
@@ -192,6 +190,7 @@ import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/ui/properties/viewers/shared/PropertyTags.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import { clone } from 'lodash';
 
 export default {
   components: {
@@ -204,11 +203,15 @@ export default {
   props:{
     slotId: {
       type: String,
-      required: true,
+      default: undefined,
     },
     creatureId: {
       type: String,
-      required: true,
+      default: undefined,
+    },
+    dummySlot: {
+      type: Object,
+      default: undefined,
     },
   },
   data(){return {
@@ -287,9 +290,17 @@ export default {
       },
     },
     model(){
-      return CreatureProperties.findOne(this.slotId);
+      if (this.slotId){
+        return CreatureProperties.findOne(this.slotId);
+      } else if (this.dummySlot) {
+        let model = clone(this.dummySlot)
+        model.quantityExpectedResult = +model.quantityExpected;
+        model.spaceLeft = model.quantityExpectedResult;
+        return model;
+      }
     },
     creature(){
+      if (!this.creatureId) return {variables: {}};
       return Creatures.findOne(this.creatureId);
     },
     currentLimit(){
@@ -300,7 +311,7 @@ export default {
     },
     alreadyAdded(){
       let added = new Set();
-      if (this.model.unique) return added;
+      if (!this.model.unique) return added;
       let ancestorId;
       if (this.model.unique === 'uniqueInSlot'){
         ancestorId = this.model._id;
@@ -310,6 +321,7 @@ export default {
       CreatureProperties.find({
         'ancestors.id': ancestorId,
         libraryNodeId: {$exists: true},
+        removed: {$ne: true},
       }, {
         fields: {libraryNodeId: 1},
       }).forEach(prop => {
@@ -382,7 +394,13 @@ export default {
         }
       });
       this.disabledNodeCount = disabledNodeCount;
-      if (activeNodeCount === 1) this.selectedNodeIds = [lastActiveNodeId];
+      if (
+        activeNodeCount === 1 &&
+        this.$subReady.slotFillers &&
+        this.currentLimit >= this.countAll
+      ) {
+        this.selectedNodeIds = [lastActiveNodeId]
+      }
       return nodes;
     },
   }
