@@ -46,44 +46,44 @@ import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin.js';
 
 export default {
-	components: {
-		...propertyFormIndex,
-		DialogBase,
+  components: {
+    ...propertyFormIndex,
+    DialogBase,
     ColorPicker,
-	},
-	mixins: [schemaFormMixin],
-	props: {
-		propertyName: String,
-		type: String,
-	},
+  },
+  mixins: [schemaFormMixin],
+  props: {
+    propertyName: String,
+    type: String,
+  },
   reactiveProvide: {
     name: 'context',
     include: ['debounceTime'],
   },
-	data(){return {
-		model: {
-			type: this.type,
-		},
-		schema: undefined,
-		validationContext: undefined,
+  data(){return {
+    model: {
+      type: this.type,
+    },
+    schema: undefined,
+    validationContext: undefined,
     debounceTime: 0,
-	};},
-	watch: {
-		type(newType){
+  };},
+  watch: {
+    type(newType){
       this.changeType(newType);
-		},
-	},
+    },
+  },
   mounted(){
     this.changeType(this.type);
   },
   methods:{
     changeType(type){
       if (!type) return;
-			this.schema = propertySchemasIndex[type];
-			this.validationContext = this.schema.newContext();
-			let model = this.schema.clean({});
-			model.type = type;
-			this.model = model;
+      this.schema = propertySchemasIndex[type];
+      this.validationContext = this.schema.newContext();
+      let model = this.schema.clean({});
+      model.type = type;
+      this.model = model;
     }
   },
 }

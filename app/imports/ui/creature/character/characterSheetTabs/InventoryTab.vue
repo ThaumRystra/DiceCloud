@@ -15,7 +15,7 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-title>
-                  {{ creature.denormalizedStats.weightCarried || 0 }} lb
+                  {{ weightCarried }} lb
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
@@ -107,6 +107,7 @@ import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
+import stripFloatingPointOddities from '/imports/ui/utility/stripFloatingPointOddities.js';
 
 export default {
 	components: {
@@ -207,6 +208,11 @@ export default {
 		containerIds(){
 			return this.containers.map(container => container._id);
 		},
+    weightCarried(){
+      return stripFloatingPointOddities(
+        this.creature.denormalizedStats.weightCarried || 0
+      );
+    },
 	},
 	methods: {
 		clickProperty(_id){

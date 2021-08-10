@@ -14,6 +14,7 @@
         multiple
         chips
         deletable-chips
+        hint="Which skills does this proficiency apply to"
         :value="model.stats"
         :items="skillList"
         :error-messages="errors.stats"
@@ -32,6 +33,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />

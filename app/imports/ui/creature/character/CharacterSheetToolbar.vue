@@ -80,6 +80,10 @@
       >
         <v-tabs
           v-if="creature && creature.settings"
+          :key=" '' +
+            creature.settings.hideSpellsTab +
+            creature.settings.showTreeTab
+          "
           class="flex"
           style="min-width: 0"
           centered
@@ -102,7 +106,7 @@
           <v-tab>
             Inventory
           </v-tab>
-          <v-tab v-show="!creature.settings.hideSpellsTab">
+          <v-tab v-if="!creature.settings.hideSpellsTab">
             Spells
           </v-tab>
           <v-tab>
@@ -134,12 +138,12 @@ import getThemeColor from '/imports/ui/utility/getThemeColor.js';
 import SharedIcon from '/imports/ui/components/SharedIcon.vue';
 
 export default {
-  inject: {
-    context: { default: {} }
-  },
   components: {
     CharacterSheetFab,
     SharedIcon,
+  },
+  inject: {
+    context: { default: {} }
   },
   computed: {
     creatureId(){

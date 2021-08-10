@@ -1,10 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let Experiences = new Mongo.Collection('experiences');
 
@@ -12,6 +12,7 @@ let ExperienceSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	// The amount of XP this experience gives
 	xp: {
@@ -90,11 +91,6 @@ const insertExperience = new ValidatedMethod({
       throw new Meteor.Error('Experiences.methods.insert.denied',
       'You need to be logged in to insert an experience');
     }
-    let tier = getUserTier(this.userId);
-    if (!tier.paidBenefits){
-      throw new Meteor.Error('Experiences.methods.insert.denied',
-      `The ${tier.name} tier does not allow you to grant experience`);
-    }
     let insertedIds = [];
     creatureIds.forEach(creatureId => {
       let id = insertExperienceForCreature({experience, creatureId, userId});
@@ -122,11 +118,6 @@ const removeExperience = new ValidatedMethod({
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.remove.denied',
       'You need to be logged in to remove an experience');
-    }
-    let tier = getUserTier(this.userId);
-    if (!tier.paidBenefits){
-      throw new Meteor.Error('Experiences.methods.remove.denied',
-      `The ${tier.name} tier does not allow you to remove  an experience`);
     }
     let experience = Experiences.findOne(experienceId);
     if (!experience) return;
@@ -167,11 +158,6 @@ const recomputeExperiences = new ValidatedMethod({
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.recompute.denied',
       'You need to be logged in to recompute a creature\'s experiences');
-    }
-    let tier = getUserTier(this.userId);
-    if (!tier.paidBenefits){
-      throw new Meteor.Error('Experiences.methods.recompute.denied',
-      `The ${tier.name} tier does not allow you to recompute a creature's experiences`);
     }
     assertEditPermission(creatureId, userId);
 

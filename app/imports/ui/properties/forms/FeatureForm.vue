@@ -30,6 +30,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"

@@ -93,6 +93,7 @@ export default function computeStat(stat, memo){
 
     // Compute each active stat's baseValue calculation and apply it
     if (!statInstance.inactive) {
+      delete statInstance.baseValueErrors;
       let {
         result,
         context,

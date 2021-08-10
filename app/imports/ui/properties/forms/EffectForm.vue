@@ -11,6 +11,7 @@
       label="Operation"
       append-icon="mdi-menu-down"
       class="mx-2"
+      :hint="operationHint"
       :error-messages="errors.operation"
       :menu-props="{transition: 'slide-y-transition', lazy: true}"
       :items="operations"
@@ -42,6 +43,7 @@
       multiple
       chips
       deletable-chips
+      hint="Which stats will this effect apply to"
       :value="model.stats"
       :items="attributeList"
       :error-messages="errors.stats"
@@ -50,13 +52,21 @@
     <text-field
       label="Value"
       class="mr-2"
+      hint="Number or calculation to determine the value of this effect"
       :persistent-hint="needsValue"
       :value="needsValue ? (model.calculation) : ' '"
       :disabled="!needsValue"
       :error-messages="errors.calculation"
-      :hint="!isFinite(model.calculation) && model.result ? model.result + '' : '' "
       @change="change('calculation', ...arguments)"
     />
+    <v-expand-transition>
+      <text-field
+        v-if="!isFinite(+model.calculation) && model.result !== undefined"
+        disabled
+        label="Result"
+        :value="model.result"
+      />
+    </v-expand-transition>
     <calculation-error-list :errors="model.errors" />
     <smart-combobox
       label="Tags"
@@ -100,7 +110,7 @@
 			],
 		}},
 		computed: {
-			needsValue(){
+      needsValue(){
 				switch(this.model.operation) {
 					case 'base': return true;
 					case 'add': return true;
@@ -115,6 +125,23 @@
           case 'conditional': return false;
 					case 'rollBonus': return true;
           default: return true;
+				}
+			},
+      operationHint(){
+				switch(this.model.operation) {
+					case 'base': return 'Stats take their largest base value, and then apply all other effects';
+					case 'add': return 'Add this vaulue to the stat';
+					case 'mul': return 'Multiply the stat by this value';
+					case 'min': return 'The stat will be at least this value';
+          case 'max': return 'The stat will not exceed this value';
+					case 'set': return 'The stat will be set to this value';
+					case 'advantage': return 'If this stat is the basis for a check, that check will be at advantage';
+					case 'disadvantage': return 'If this stat is the basis for a check, that check will be at advantage';
+					case 'passiveAdd': return 'This value will be added to the passive check';
+					case 'fail': return 'Stat based on this attribute will always fail';
+          case 'conditional': return 'Add a text note to this stat';
+					case 'rollBonus': return 'Add this value to rolls based on this stat';
+          default: return '';
 				}
 			},
 		},

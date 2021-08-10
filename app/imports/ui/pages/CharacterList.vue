@@ -82,9 +82,10 @@
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
   import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
   import ArchiveButton from '/imports/ui/creature/creatureList/ArchiveButton.vue';
+  import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
 
   const characterTransform = function(char){
-    char.url = `/character/${char._id}/${char.urlName || '-'}`;
+    char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
     char.initial = char.name && char.name[0] || '?';
     return char;
   };

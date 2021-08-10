@@ -25,13 +25,20 @@
           class="mx-3"
           style="flex-grow: 0; height: 32px;"
         />
+        <tree-search-input
+          ref="searchBox"
+          slot="extension"
+          v-model="filter"
+          class="mx-4"
+        />
         <insert-library-node-button
-          v-if="libraryId"
-          style="bottom: -32px"
+          v-if="libraryId && canEditLibrary"
+          slot="extension"
+          style="bottom: -24px"
           fab
           :library-id="libraryId"
-          :selected-node-id="selected"
-          @selected="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
+          :selected-node-id="selectedNodeId"
+          @selected="id => {if ($vuetify.breakpoint.mdAndUp) selectedNodeId = id}"
         />
       </v-toolbar>
       <div
@@ -41,8 +48,9 @@
         <library-contents-container
           :library-id="libraryId"
           :organize-mode="organize"
-          :selected-node-id="selected"
+          :selected-node="selectedNode"
           should-subscribe
+          :filter="filter"
           @selected="clickNode"
         />
       </div>
@@ -50,8 +58,9 @@
         v-else
         edit-mode
         :organize-mode="organize"
-        :selected-node-id="selected"
+        :selected-node="selectedNode"
         style="overflow-y: auto; padding: 12px;"
+        :filter="filter"
         @selected="clickNode"
       />
     </div>
@@ -61,10 +70,10 @@
       style="overflow: hidden;"
     >
       <library-node-dialog
-        :_id="selected"
+        :_id="selectedNodeId"
         embedded
-        @removed="selected = undefined"
-        @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selected = id}"
+        @removed="selectedNodeId = undefined"
+        @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selectedNodeId = id}"
       />
     </div>
   </tree-detail-layout>
@@ -82,6 +91,7 @@ import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import TreeSearchInput from '/imports/ui/components/tree/TreeSearchInput.vue';
 
 export default {
   components: {
@@ -90,6 +100,7 @@ export default {
     LibraryNodeDialog,
     LibraryContentsContainer,
     InsertLibraryNodeButton,
+    TreeSearchInput,
   },
   props: {
     selection: Boolean,
@@ -100,7 +111,8 @@ export default {
   },
   data(){ return {
     organize: false,
-    selected: undefined,
+    selectedNodeId: undefined,
+    filter: undefined,
   };},
   computed: {
     isToolbarDark(){
@@ -120,12 +132,12 @@ export default {
       this.$store.commit('pushDialogStack', {
         component: 'library-node-edit-dialog',
         elementId: 'selected-node-card',
-        data: {_id: this.selected},
+        data: {_id: this.selectedNodeId},
       });
     },
     clickNode(id){
       if (this.$vuetify.breakpoint.mdAndUp){
-        this.selected = id;
+        this.selectedNodeId = id;
       } else {
         this.$store.commit('pushDialogStack', {
           component: 'library-node-dialog',
@@ -136,7 +148,7 @@ export default {
           },
           callback: result => {
             if (result){
-              this.selected = id;
+              this.selectedNodeId = id;
             }
           },
         });
@@ -175,7 +187,7 @@ export default {
     },
     selectedNode(){
       return LibraryNodes.findOne({
-        _id: this.selected,
+        _id: this.selectedNodeId,
         removed: {$ne: true}
       });
     },

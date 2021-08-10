@@ -4,7 +4,7 @@
     :children="children"
     :group="group"
     :organize="organize"
-    :selected-node-id="selectedNodeId"
+    :selected-node="selectedNode"
     @selected="e => $emit('selected', e)"
     @reordered="reordered"
     @reorganized="reorganized"
@@ -13,7 +13,7 @@
 
 <script lang="js">
 	import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-	import { nodesToTree } from '/imports/api/parenting/parenting.js'
+	import nodesToTree from '/imports/api/parenting/nodesToTree.js'
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
 	import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
 
@@ -24,8 +24,14 @@
 		props: {
 			root: Object,
 			organize: Boolean,
-			selectedNodeId: String,
-			filter: Object,
+			selectedNode: {
+        type: Object,
+        default: undefined,
+      },
+      filter: {
+        type: Object,
+        default: undefined,
+      },
 			group: {
 				type: String,
 				default: 'creatureProperties'
@@ -37,6 +43,8 @@
 					collection: CreatureProperties,
 					ancestorId: this.root.id,
 					filter: this.filter,
+          includeFilteredDocAncestors: true,
+          includeFilteredDocDescendants: true,
 				});
 			},
 		},

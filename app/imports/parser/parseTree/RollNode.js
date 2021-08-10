@@ -2,6 +2,7 @@ import ParseNode from '/imports/parser/parseTree/ParseNode.js';
 import RollArrayNode from '/imports/parser/parseTree/RollArrayNode.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import roll from '/imports/parser/roll.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 export default class RollNode extends ParseNode {
   constructor({left, right}) {
@@ -42,9 +43,9 @@ export default class RollNode extends ParseNode {
     if (context.doubleRolls){
       number *= 2;
     }
-    if (number > 100) return new ErrorNode({
+    if (number > STORAGE_LIMITS.diceRollValuesCount) return new ErrorNode({
       node: this,
-      error: 'Can\'t roll more than 100 dice at once',
+      error: `Can't roll more than ${STORAGE_LIMITS.diceRollValuesCount} dice at once`,
       context,
     });
     let diceSize = right.value;

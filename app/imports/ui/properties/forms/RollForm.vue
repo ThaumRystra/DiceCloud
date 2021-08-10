@@ -19,6 +19,7 @@
     <text-field
       ref="focusFirst"
       label="Roll"
+      hint="The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
       :value="model.roll"
       :error-messages="errors.roll"
       @change="change('roll', ...arguments)"
@@ -30,6 +31,7 @@
           multiple
           chips
           deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
           :value="model.tags"
           @change="change('tags', ...arguments)"
         />

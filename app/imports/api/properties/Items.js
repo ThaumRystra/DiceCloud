@@ -1,19 +1,23 @@
 import SimpleSchema from 'simpl-schema';
 import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const ItemSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	// Plural name of the item, if there is more than one
 	plural: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	description: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.description,
 	},
 	// Number currently held
 	quantity: {
@@ -58,7 +62,7 @@ let ComputedOnlyItemSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
     defaultValue: [],
-    maxCount: 32,
+    maxCount: STORAGE_LIMITS.inlineCalculationCount,
   },
   'descriptionCalculations.$': InlineComputationSchema,
 });

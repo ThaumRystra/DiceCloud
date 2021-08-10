@@ -10,7 +10,7 @@
     />
     <text-field
       label="Quantity"
-      hint="How much of the item will be consumed"
+      hint="How many will be consumed"
       style="flex-basis: 300px;"
       :value="model.quantity"
       :error-messages="errors.quantity"

@@ -12,6 +12,7 @@
         <smart-switch
           label="Carried"
           class="mx-3"
+          hint="Whether this container and its contents count towards the creature's weight carried"
           :value="model.carried"
           :error-messages="errors.carried"
           @change="change('carried', ...arguments)"
@@ -62,6 +63,7 @@
         multiple
         chips
         deletable-chips
+        hint="Used to let slots find this property in a library, should otherwise be left blank"
         :value="model.tags"
         @change="change('tags', ...arguments)"
       />

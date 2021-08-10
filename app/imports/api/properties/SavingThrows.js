@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 // These are the rolls made when saves are called for
 // For the saving throw bonus or proficiency, see ./Skills.js
@@ -7,11 +8,13 @@ let SavingThrowSchema = new SimpleSchema ({
   name: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
   // The computed DC
   dc: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.calculation,
   },
   // Who this saving throw applies to
 	target: {
@@ -27,6 +30,7 @@ let SavingThrowSchema = new SimpleSchema ({
   stat: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.variableName,
   },
 });
 
@@ -38,6 +42,7 @@ const ComputedOnlySavingThrowSchema = new SimpleSchema({
   dcErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'dcErrors.$':{
     type: ErrorSchema,

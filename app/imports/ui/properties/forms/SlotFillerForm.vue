@@ -35,6 +35,7 @@
       label="Type"
       style="flex-basis: 300px;"
       clearable
+      hint="The property type that this slot filler pretends to be when being searched for by a slot"
       :items="slotTypes"
       :value="model.slotFillerType"
       :error-messages="errors.slotFillerType"
@@ -62,6 +63,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this slot filler in a library"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"

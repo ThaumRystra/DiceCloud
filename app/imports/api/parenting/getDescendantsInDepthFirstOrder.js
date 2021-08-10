@@ -1,4 +1,4 @@
-import { nodesToTree } from '/imports/api/parenting/parenting.js';
+import nodesToTree from '/imports/api/parenting/nodesToTree.js';
 
 export default function getDescendantsInDepthFirstOrder({
   collection,

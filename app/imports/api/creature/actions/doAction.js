@@ -7,7 +7,7 @@ import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import { nodesToTree } from '/imports/api/parenting/parenting.js';
+import nodesToTree from '/imports/api/parenting/nodesToTree.js';
 import applyProperties from '/imports/api/creature/actions/applyProperties.js';
 import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';

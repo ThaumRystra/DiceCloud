@@ -13,6 +13,7 @@ import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import '/imports/api/library/methods/index.js';
 import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -24,13 +25,16 @@ let LibraryNodeSchema = new SimpleSchema({
 	tags: {
 		type: Array,
 		defaultValue: [],
+    maxCount: STORAGE_LIMITS.tagCount,
 	},
 	'tags.$': {
 		type: String,
+    max: STORAGE_LIMITS.tagLength,
 	},
   icon: {
     type: storedIconsSchema,
     optional: true,
+    max: STORAGE_LIMITS.icon,
   }
 });
 

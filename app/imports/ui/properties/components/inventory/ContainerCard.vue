@@ -17,7 +17,7 @@
         >
           $vuetify.icons.weight
         </v-icon>
-        {{ (model.contentsWeightless ? 0 : model.contentsWeight || 0) + (model.weight || 0) }}
+        {{ weight }}
       </v-toolbar-title>
       <v-toolbar-title
         class="layout align-center"
@@ -31,7 +31,7 @@
           $vuetify.icons.two_coins
         </v-icon>
         <coin-value
-          :value="(model.contentsValue || 0) + (model.value || 0)"
+          :value="value"
         />
       </v-toolbar-title>
     </template>
@@ -49,6 +49,7 @@ import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
+import stripFloatingPointOddities from '/imports/ui/utility/stripFloatingPointOddities.js';
 
 export default {
 	components: {
@@ -62,6 +63,20 @@ export default {
       required: true,
     },
 	},
+  computed: {
+    weight(){
+      const contentWeight = this.model.contentsWeightless ?
+        0 :
+        this.model.contentsWeight || 0;
+      const ownWeight = this.model.weight || 0;
+      return stripFloatingPointOddities(contentWeight + ownWeight);
+    },
+    value(){
+      const contentValue = this.model.contentsValue || 0;
+      const ownValue = this.model.value || 0;
+      return contentValue + ownValue;
+    }
+  },
 	methods: {
 		clickContainer(_id){
 			this.$store.commit('pushDialogStack', {

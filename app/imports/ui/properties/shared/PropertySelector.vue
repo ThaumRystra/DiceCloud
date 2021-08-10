@@ -2,57 +2,115 @@
   <div class="card-raised-background">
     <v-container
       fluid
-      grid-list-lg
-      fill-height
     >
-      <v-layout
+      <v-row
         wrap
-        fill-height
+        dense
+        justify="center"
+        justify-sm="start"
       >
-        <template v-for="(property, type) in PROPERTIES">
-          <v-flex
+        <template v-if="properties.suggested">
+          <v-col
+            cols="12"
+          >
+            <v-subheader>
+              Suggested
+            </v-subheader>
+          </v-col>
+          <template v-for="(property, type) in properties.suggested">
+            <v-col
+              v-if="!noLibraryOnlyProps || !property.libraryOnly"
+              :key="type"
+              md="4"
+              sm="6"
+              cols="10"
+            >
+              <property-select-card
+                :property="property"
+                @click="$emit('select', type)"
+              />
+            </v-col>
+          </template>
+        </template>
+        <v-col
+          v-if="properties.suggested"
+          cols="12"
+        >
+          <v-subheader>
+            More
+          </v-subheader>
+        </v-col>
+        <template v-for="(property, type) in properties.more">
+          <v-col
             v-if="!noLibraryOnlyProps || !property.libraryOnly"
             :key="type"
-            sm4
-            xs6
+            md="4"
+            sm="6"
+            cols="10"
           >
-            <v-card
-              hover
-              style="height: 100%; overflow: hidden;"
+            <property-select-card
+              :property="property"
               @click="$emit('select', type)"
-            >
-              <div
-                class="layout align-center justify-center"
-                style="min-height: 70px;"
-              >
-                <v-icon x-large>
-                  {{ property.icon }}
-                </v-icon>
-              </div>
-              <h3
-                class="subtitle pb-3"
-                style="text-align: center;"
-              >
-                {{ property.name }}
-              </h3>
-            </v-card>
-          </v-flex>
+            />
+          </v-col>
         </template>
-      </v-layout>
+      </v-row>
     </v-container>
   </div>
 </template>
 
 <script lang="js">
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
-
+import PropertySelectCard from '/imports/ui/properties/shared/PropertySelectCard.vue';
 export default {
+  components: {
+    PropertySelectCard,
+  },
   props: {
     noLibraryOnlyProps: Boolean,
+    parentType: {
+      type: String,
+      default: undefined,
+    },
+    suggestedTypes: {
+      type: Array,
+      default: undefined,
+    },
   },
 	data(){ return {
 		PROPERTIES,
 	};},
+  computed:{
+    properties(){
+      let suggested;
+      let more = {};
+      if (this.suggestedTypes){
+        for (const key in PROPERTIES){
+          let prop = PROPERTIES[key];
+          if (this.suggestedTypes.includes(prop.type)){
+            if (!suggested) suggested = {};
+            suggested[key] = prop;
+          } else {
+            more[key] = prop;
+          }
+        }
+        return {suggested, more};
+      } else if (this.parentType) {
+          for (const key in PROPERTIES){
+            let prop = PROPERTIES[key];
+            if (prop.suggestedParents.includes(this.parentType)){
+              if (!suggested) suggested = {};
+              suggested[key] = prop;
+            } else {
+              more[key] = prop;
+            }
+          }
+          return {suggested, more};
+      } else {
+        return {more: PROPERTIES};
+      }
+    },
+  },
 }
 </script>
 

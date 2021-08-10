@@ -7,7 +7,7 @@
       group="library"
       :children="libraryChildren"
       :organize="organizeMode"
-      :selected-node-id="selectedNodeId"
+      :selected-node="selectedNode"
       @selected="e => $emit('selected', e)"
       @reordered="reordered"
       @reorganized="reorganized"
@@ -29,7 +29,7 @@
 <script lang="js">
 	import Libraries from '/imports/api/library/Libraries.js';
 	import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-	import { nodesToTree } from '/imports/api/parenting/parenting.js'
+	import nodesToTree from '/imports/api/parenting/nodesToTree.js';
 	import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
 	import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
 
@@ -38,10 +38,20 @@
 			TreeNodeList,
 		},
 		props: {
-			libraryId: String,
+			libraryId: {
+        type: String,
+        default: undefined,
+      },
 			organizeMode: Boolean,
-			selectedNodeId: String,
+			selectedNode: {
+        type: Object,
+        default: undefined,
+      },
       shouldSubscribe: Boolean,
+      filter: {
+        type: Object,
+        default: undefined,
+      },
 		},
     data(){return {
       slowShouldSubscribe: this.shouldSubscribe,
@@ -76,7 +86,13 @@
 			},
 			libraryChildren(){
 				if (!this.library) return;
-				return nodesToTree({collection: LibraryNodes, ancestorId: this.library._id});
+				return nodesToTree({
+          collection: LibraryNodes,
+          ancestorId: this.library._id,
+          filter: this.filter,
+          includeFilteredDocAncestors: true,
+          includeFilteredDocDescendants: true,
+        });
 			},
 		},
 		methods: {

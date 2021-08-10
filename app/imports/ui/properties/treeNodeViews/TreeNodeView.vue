@@ -10,6 +10,7 @@
 import treeNodeViewIndex from '/imports/ui/properties/treeNodeViews/treeNodeViewIndex.js';
 
 export default {
+  name: 'TreeNodeView',
   components: {
     ...treeNodeViewIndex
   },

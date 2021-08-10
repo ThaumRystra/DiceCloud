@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const DamageSchema = new SimpleSchema({
 	// The roll that determines how much to damage the attribute
@@ -9,6 +10,7 @@ const DamageSchema = new SimpleSchema({
     type: String,
     optional: true,
     defaultValue: '1d8 + strength.modifier',
+    max: STORAGE_LIMITS.calculation,
   },
 	// Who this damage applies to
 	target: {
@@ -35,6 +37,7 @@ const ComputedOnlyDamageSchema = new SimpleSchema({
   amountErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'amountErrors.$':{
     type: ErrorSchema,

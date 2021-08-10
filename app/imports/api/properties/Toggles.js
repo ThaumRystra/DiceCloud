@@ -1,10 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const ToggleSchema = new SimpleSchema({
   name: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
   disabled: {
     type: Boolean,
@@ -19,6 +21,7 @@ const ToggleSchema = new SimpleSchema({
   condition: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.calculation,
   },
 });
 
@@ -32,6 +35,7 @@ const ComputedOnlyToggleSchema = new SimpleSchema({
   errors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'errors.$': {
     type: ErrorSchema,

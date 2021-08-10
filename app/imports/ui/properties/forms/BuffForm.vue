@@ -7,6 +7,25 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
+    <smart-switch
+      label="Applied"
+      class="mt-0"
+      :value="model.applied"
+      :error-messages="errors.applied"
+      @change="change('applied', ...arguments)"
+    />
+    <v-expand-transition>
+      <div v-if="model.applied">
+        <v-alert
+          type="info"
+          outlined
+        >
+          When buffs are applied they become active on a creature.
+          Turn this off if the buff needs to be applied to a target by an action
+          or spell.
+        </v-alert>
+      </div>
+    </v-expand-transition>
     <text-area
       label="Description"
       :value="model.description"
@@ -24,20 +43,24 @@
       @change="change('duration', ...arguments)"
     />
     -->
-    <smart-select
-      label="Target"
-      :hint="targetOptionHint"
-      :items="targetOptions"
-      :value="model.target"
-      :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('target', ...arguments)"
-    />
+    <v-expand-transition>
+      <smart-select
+        v-if="!model.applied"
+        label="Target"
+        :hint="targetOptionHint"
+        :items="targetOptions"
+        :value="model.target"
+        :error-messages="errors.target"
+        :menu-props="{auto: true, lazy: true}"
+        @change="change('target', ...arguments)"
+      />
+    </v-expand-transition>
     <smart-combobox
       label="Tags"
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library, should otherwise be left blank"
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />

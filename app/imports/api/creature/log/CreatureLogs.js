@@ -10,6 +10,7 @@ import {
   prettifyParseError
 } from '/imports/parser/parser.js';
 const PER_CREATURE_LOG_LIMIT = 100;
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 if (Meteor.isServer){
   var sendWebhookAsCreature = require('/imports/server/discord/sendWebhook.js').sendWebhookAsCreature;
@@ -21,7 +22,7 @@ let CreatureLogSchema = new SimpleSchema({
   content: {
     type: Array,
     defaultValue: [],
-    maxCount: 25,
+    maxCount: STORAGE_LIMITS.logContentCount,
   },
   'content.$': {
     type: LogContentSchema,
@@ -45,6 +46,7 @@ let CreatureLogSchema = new SimpleSchema({
   creatureName: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.name,
   },
 });
 

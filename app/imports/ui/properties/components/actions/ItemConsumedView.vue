@@ -8,7 +8,6 @@
     <v-menu
       v-if="context.creatureId"
       transition="slide-y-transition"
-      lazy
       :disabled="!context.editPermission"
     >
       <template #activator="{ on }">

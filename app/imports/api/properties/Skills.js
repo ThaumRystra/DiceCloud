@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
@@ -10,6 +11,7 @@ let SkillSchema = new SimpleSchema({
   name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
   // The technical, lowercase, single-word name used in formulae
   // Ignored for skilltype = save
@@ -17,11 +19,13 @@ let SkillSchema = new SimpleSchema({
     type: String,
     regEx: VARIABLE_NAME_REGEX,
     min: 2,
+    max: STORAGE_LIMITS.variableName,
   },
 	// The variable name of the ability this skill relies on
   ability: {
     type: String,
     optional: true,
+    max: STORAGE_LIMITS.variableName,
   },
 	// What type of skill is this
   skillType: {
@@ -42,6 +46,7 @@ let SkillSchema = new SimpleSchema({
 	baseValueCalculation: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.calculation,
 	},
 	// The base proficiency of this skill
 	baseProficiency: {
@@ -52,6 +57,7 @@ let SkillSchema = new SimpleSchema({
   description: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.description,
 	},
 });
 
@@ -69,6 +75,7 @@ let ComputedOnlySkillSchema = new SimpleSchema({
   baseValueErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'baseValueErrors.$': {
     type: ErrorSchema,
@@ -107,6 +114,7 @@ let ComputedOnlySkillSchema = new SimpleSchema({
   rollBonuses: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.rollBonusCount,
   },
   'rollBonuses.$': {
     type: String,

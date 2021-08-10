@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 /**
  * Rolls are children to actions or other rolls, they are triggered with 0 or
@@ -24,6 +25,7 @@ let RollSchema = new SimpleSchema({
   name: {
 		type: String,
     defaultValue: 'New Roll',
+    max: STORAGE_LIMITS.name,
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
@@ -31,20 +33,13 @@ let RollSchema = new SimpleSchema({
 		regEx: VARIABLE_NAME_REGEX,
     min: 2,
     defaultValue: 'newRoll',
+    max: STORAGE_LIMITS.variableName,
   },
   // The roll, can be simplified, but only computed in context
   roll: {
     type: String,
     optional: true,
-  },
-  // Effects can apply to this tag specifically
-  // Ranged spell attack, Ranged weapon attack, etc.
-  tags: {
-    type: Array,
-    defaultValue: [],
-  },
-  'tags.$': {
-    type: String,
+    max: STORAGE_LIMITS.calculation,
   },
 });
 
@@ -56,6 +51,7 @@ let ComputedOnlyRollSchema = new SimpleSchema({
   rollErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'rollErrors.$':{
     type: ErrorSchema,

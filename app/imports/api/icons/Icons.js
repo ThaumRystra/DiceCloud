@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let Icons = new Mongo.Collection('icons');
 
@@ -9,22 +10,27 @@ let iconsSchema = new SimpleSchema({
 	name: {
 		type: String,
     unique: true,
+    max: STORAGE_LIMITS.name,
     index: 1,
 	},
 	description: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.description,
 	},
   tags: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.tagCount,
     index: 1,
   },
   'tags.$': {
     type: String,
+    max: STORAGE_LIMITS.tagLength,
   },
   shape: {
     type: String,
+    max: STORAGE_LIMITS.icon,
   },
 });
 

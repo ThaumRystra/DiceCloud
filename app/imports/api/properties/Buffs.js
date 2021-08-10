@@ -1,18 +1,22 @@
 import SimpleSchema from 'simpl-schema';
 import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let BuffSchema = new SimpleSchema({
 	name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	description: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.description,
 	},
 	duration: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
   applied: {
     type: Boolean,
@@ -34,7 +38,7 @@ let ComputedOnlyBuffSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
     defaultValue: [],
-    maxCount: 32,
+    maxCount: STORAGE_LIMITS.inlineCalculationCount,
   },
   'descriptionCalculations.$': InlineComputationSchema,
 	durationSpent: {
@@ -48,6 +52,7 @@ let ComputedOnlyBuffSchema = new SimpleSchema({
 	},
 	'appliedBy.name': {
 		type: String,
+    max: STORAGE_LIMITS.name,
 	},
 	'appliedBy.id': {
 		type: String,
@@ -55,6 +60,7 @@ let ComputedOnlyBuffSchema = new SimpleSchema({
 	},
 	'appliedBy.collection': {
 		type: String,
+    max: STORAGE_LIMITS.collectionName,
 	},
 })
 

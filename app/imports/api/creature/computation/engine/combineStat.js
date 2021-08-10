@@ -1,6 +1,7 @@
 import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
 import computeProficiency from '/imports/api/creature/computation/engine/computeProficiency.js';
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
+import stripFloatingPointOddities from '/imports/ui/utility/stripFloatingPointOddities.js';
 import { union } from 'lodash';
 
 export default function combineStat(stat, aggregator, memo){
@@ -34,6 +35,8 @@ function getAggregatorResult(stat, aggregator){
   }
   if (!stat.decimal && Number.isFinite(result)){
     result = Math.floor(result);
+  } else if (Number.isFinite(result)){
+    result = stripFloatingPointOddities(result);
   }
   return result;
 }

@@ -23,19 +23,11 @@
               :disabled="organizeDisabled"
               style="flex-grow: 0; height: 32px;"
             />
-            <v-combobox
+            <tree-search-input
               ref="searchBox"
               slot="extension"
-              v-model="filterString"
-              :items="filterOptions"
-              prepend-inner-icon="mdi-search"
+              v-model="filter"
               class="mx-4"
-              hide-no-data
-              hide-selected
-              multiple
-              clearable
-              small-chips
-              deletable-chips
             />
           </v-toolbar>
           <creature-properties-tree
@@ -43,7 +35,7 @@
             style="overflow-y: auto;"
             :root="{collection: 'creatures', id: creatureId}"
             :organize="organize"
-            :selected-node-id="selected"
+            :selected-node="selectedNode"
             :filter="filter"
             @selected="clickNode"
           />
@@ -51,9 +43,9 @@
         <template slot="detail">
           <creature-property-dialog
             embedded
-            :_id="selected"
-            @removed="selected = undefined"
-            @duplicated="id => selected = id"
+            :_id="selectedNodeId"
+            @removed="selectedNodeId = undefined"
+            @duplicated="id => selectedNodeId = id"
           />
         </template>
       </tree-detail-layout>
@@ -65,13 +57,14 @@
   import TreeDetailLayout from '/imports/ui/components/TreeDetailLayout.vue';
   import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
   import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
-
+  import TreeSearchInput from '/imports/ui/components/tree/TreeSearchInput.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
   export default {
     components: {
       TreeDetailLayout,
+      TreeSearchInput,
       CreaturePropertiesTree,
       CreaturePropertyDialog,
     },
@@ -87,52 +80,10 @@
     data(){ return {
       organize: false,
       organizeDisabled: false,
-      selected: undefined,
+      selectedNodeId: undefined,
       fab: false,
-      filterString: '',
-      filterOptions: [
-        {text: 'Actions', value: 'action'},
-        {text: 'Attacks', value: 'attack'},
-        {text: 'Attributes', value: 'attribute'},
-        {text: 'Buffs', value: 'buff'},
-        {text: 'Class Levels', value: 'classLevel'},
-        {text: 'Damage Multipliers', value: 'damageMultiplier'},
-        {text: 'Effects', value: 'effect'},
-        {text: 'Experiences', value: 'experience'},
-        {text: 'Features', value: 'feature'},
-        {text: 'Folders', value: 'folder'},
-        {text: 'Notes', value: 'note'},
-        {text: 'Proficiencies', value: 'proficiency'},
-        {text: 'Rolls', value: 'roll'},
-        {text: 'Saving Throws', value: 'savingThrow'},
-        {text: 'Skills', value: 'skill'},
-        {text: 'Spell Lists', value: 'spellList'},
-        {text: 'Spells', value: 'spell'},
-        {text: 'Containers', value: 'container'},
-        {text: 'Items', value: 'item'},
-      ],
+      filter: undefined,
     };},
-    computed: {
-      filter(){
-        if (!this.filterString.length) return;
-        let typeFilters = [];
-        let nameFilters = [];
-        this.filterString.forEach(filter => {
-          if (filter.value){
-            typeFilters.push(filter.value);
-          } else {
-            // escape string
-            let term = filter.replace( /[-/\\^$*+?.()|[\]{}]/g, '\\$&' );
-            var reg = new RegExp( '.*' + term + '.*', 'i' );
-            nameFilters.push(reg)
-          }
-        });
-        return {$or: [
-          {type: {$in: typeFilters}},
-          {name: {$in: nameFilters}},
-        ]};
-      },
-    },
     watch: {
       filter(filter){
         if (filter) {
@@ -144,14 +95,14 @@
       },
       '$vuetify.breakpoint.mdAndUp'(mdAndUp){
         if (!mdAndUp){
-          this.selected = undefined;
+          this.selectedNodeId = undefined;
         }
       },
     },
     methods: {
       clickNode(id){
         if (this.$vuetify.breakpoint.mdAndUp){
-          this.selected = id;
+          this.selectedNodeId = id;
         } else {
           this.$store.commit('pushDialogStack', {
             component: 'creature-property-dialog',
@@ -167,7 +118,7 @@
           component: 'creature-property-dialog',
           elementId: 'selected-node-card',
           data: {
-            _id: this.selected,
+            _id: this.selectedNodeId,
             startInEditTab: true,
           },
         });
@@ -175,9 +126,9 @@
       getPropertyName,
     },
     meteor: {
-      selectedProperty(){
+      selectedNode(){
         return CreatureProperties.findOne({
-          _id: this.selected,
+          _id: this.selectedNodeId,
           removed: {$ne: true}
         });
       }

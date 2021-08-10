@@ -30,6 +30,7 @@
         label="Plural name"
         :value="model.plural"
         :error-messages="errors.plural"
+        hint="The plural name of your item. If your item's name is 'sword' plural name would be 'swords'"
         @change="change('plural', ...arguments)"
       />
     </div>
@@ -55,6 +56,7 @@
         class="mx-1"
         style="flex-basis: 300px;"
         prepend-inner-icon="$vuetify.icons.weight"
+        hint="The weight of a single item in lbs. Can be a decimal value"
         :value="model.weight"
         :error-messages="errors.weight"
         @change="change('weight', ...arguments)"
@@ -87,6 +89,7 @@
         multiple
         chips
         deletable-chips
+        hint="Used to let slots find this property in a library, should otherwise be left blank"
         :value="model.tags"
         :error-messages="errors.tags"
         @change="change('tags', ...arguments)"

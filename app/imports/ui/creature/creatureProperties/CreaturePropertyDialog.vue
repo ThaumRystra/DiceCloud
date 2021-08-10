@@ -98,6 +98,7 @@ import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import { getHighestOrder } from '/imports/api/parenting/order.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -243,28 +244,37 @@ export default {
     },
     addProperty(){
       let parentPropertyId = this.model._id;
-      // Open the dialog to insert the property
       this.$store.commit('pushDialogStack', {
-        component: 'creature-property-creation-dialog',
+        component: 'add-creature-property-dialog',
         elementId: 'insert-creature-property-btn',
-        callback(creatureProperty){
-          if (!creatureProperty) return;
-          // Get order and parent
+        data: {
+          parentDoc: this.model,
+        },
+        callback(result){
+          if (!result) return;
           let parentRef = {
             id: parentPropertyId,
             collection: 'creatureProperties',
           };
-          creatureProperty.order = getHighestOrder({
+          let order = getHighestOrder({
             collection: CreatureProperties,
             ancestorId: parentRef.id,
           }) + 0.5;
-
-          // Insert the property
-          let id = insertProperty.call({creatureProperty, parentRef});
-          return `tree-node-${id}`;
+          if (Array.isArray(result)){
+            let nodeIds = result;
+            let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
+            return `tree-node-${id}`;
+          } else {
+            let creatureProperty = result;
+            // Get order and parent
+            creatureProperty.order = order;
+            // Insert the property
+            let id = insertProperty.call({creatureProperty, parentRef});
+            return `tree-node-${id}`;
+          }
         }
       });
-    }
+    },
   }
 };
 </script>

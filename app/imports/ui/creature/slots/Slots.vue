@@ -90,10 +90,10 @@ export default {
           slotId,
           creatureId,
         },
-        callback(node){
-					if(!node) return;
+        callback(nodeIds){
+          if (!nodeIds || !nodeIds.length) return;
           let newPropertyId = insertPropertyFromLibraryNode.call({
-            nodeId: node._id,
+            nodeIds,
             parentRef: {
               'id': slotId,
               'collection': 'creatureProperties',

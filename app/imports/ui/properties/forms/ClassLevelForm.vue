@@ -22,7 +22,7 @@
         label="Class variable name"
         :value="model.variableName"
         style="flex-basis: 300px;"
-        hint="This should be the same for each level in a class"
+        hint="This should be the same for each level in a class, use `variablName.level` to reference the highest class level for a given class variable name in calculations"
         :error-messages="errors.variableName"
         @change="change('variableName', ...arguments)"
       />
@@ -50,6 +50,7 @@
       multiple
       chips
       deletable-chips
+      hint="Used to let slots find this property in a library"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"

@@ -53,15 +53,16 @@ export default {
     subscribed(){
       let libraryId = this.$route.params.id;
       let user = Meteor.user();
-      if (!user) return false;
-      let subs = user.subscribedLibraries;
-      return subs && subs.includes(libraryId);
+      return user?.subscribedLibraries?.includes(libraryId);
     },
     showSubscribeButton(){
-      let userId = Meteor.userId();
+      let user = Meteor.user();
       let library = this.library;
-      if (!library) return;
-      if (
+      if (!user || !library) return;
+      let userId = user._id;
+      if (user.subscribedLibraries.includes(library._id)){
+        return true
+      } else if (
         library.readers.includes(userId) ||
         library.writers.includes(userId) ||
         library.owner === userId

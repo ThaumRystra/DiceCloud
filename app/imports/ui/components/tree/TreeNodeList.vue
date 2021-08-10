@@ -18,8 +18,9 @@
       :node="child.node"
       :children="child.children"
       :group="group"
-      :selected-node-id="selectedNodeId"
-      :selected="selectedNodeId === child.node._id"
+      :selected-node="selectedNode"
+      :selected="selectedNode && selectedNode._id === child.node._id"
+      :ancestors-of-selected-node="ancestorsOfSelectedNode"
       :organize="organize"
       :lazy="lazy"
       @selected="e => $emit('selected', e)"
@@ -49,7 +50,14 @@
 				type: Array,
 				default: () => [],
 			},
-			selectedNodeId: String,
+			selectedNode: {
+        type: Object,
+        default: undefined,
+      },
+      ancestorsOfSelectedNode: {
+        type: Array,
+        default: () => [],
+      },
 		},
 		data(){ return {
 			expanded: false,

@@ -131,17 +131,8 @@ RouterFactory.configure(factory => {
         title: 'Library',
       },
     },{
-      path: '/character/:id/:urlName',
-      components: {
-        default: CharacterSheetPage,
-        toolbar: CharacterSheetToolbar,
-        rightDrawer: CharacterSheetRightDrawer,
-      },
-      meta: {
-        title: 'Character Sheet',
-      },
-    },{
       path: '/character/:id',
+      alias: '/character/:id/:urlName',
       components: {
         default: CharacterSheetPage,
         toolbar: CharacterSheetToolbar,

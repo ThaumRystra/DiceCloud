@@ -5,12 +5,23 @@
       key="left"
       class="step-1"
     >
-      <v-toolbar-title slot="toolbar">
-        Property Type
-      </v-toolbar-title>
+      <template slot="toolbar">
+        <v-toolbar-title>
+          Property Type
+        </v-toolbar-title>
+        <v-spacer />
+        <v-switch
+          :input-value="showPropertyHelp"
+          append-icon="mdi-help"
+          hide-details
+          flat
+          @change="propertyHelpChanged"
+        />
+      </template>
       <property-selector
         slot="unwrapped-content"
         :no-library-only-props="noLibraryOnlyProps"
+        :parent-type="parentType"
         @select="type => $emit('input', type)"
       />
     </dialog-base>
@@ -28,6 +39,7 @@
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -38,8 +50,33 @@ export default {
     noLibraryOnlyProps: Boolean,
 		value: {
 			type: String,
+      default: undefined,
 		},
+    parentType: {
+      type: String,
+      default: undefined,
+    },
 	},
+  meteor: {
+    showPropertyHelp(){
+      let user = Meteor.user();
+      return !(user?.preferences?.hidePropertySelectDialogHelp)
+    },
+  },
+  methods: {
+    propertyHelpChanged(value){
+      Meteor.users.setPreference.call({
+        preference: 'hidePropertySelectDialogHelp',
+        value: !value
+      }, error => {
+        if (!error) return;
+        console.error(error);
+        snackbar({
+          text: error.reason,
+        });
+      });
+    }
+  }
 };
 </script>
 

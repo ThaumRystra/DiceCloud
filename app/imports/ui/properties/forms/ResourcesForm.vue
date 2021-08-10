@@ -62,10 +62,10 @@
       AttributesConsumedListForm,
       ItemsConsumedListForm,
     },
+    mixins: [propertyFormMixin],
     inject: {
       context: { default: {} }
     },
-    mixins: [propertyFormMixin],
     props: {
       parentTarget: {
         type: String,

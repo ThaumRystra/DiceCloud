@@ -5,7 +5,7 @@
         ref="focusFirst"
         label="Base Value"
         class="base-value-field"
-        hint="This is the value of the attribute before effects are applied"
+        hint="This is the value of the attribute before effects are applied. Can be a number or a calculation"
         style="width: 332px;"
         :value="model.baseValueCalculation"
         :error-messages="errors.baseValueCalculation"
@@ -24,7 +24,7 @@
         label="Variable name"
         :value="model.variableName"
         style="flex-basis: 300px;"
-        hint="Use this name in formulae to reference this attribute"
+        hint="Use this name in calculations to reference this attribute"
         :error-messages="errors.variableName"
         @change="change('variableName', ...arguments)"
       />
@@ -71,6 +71,7 @@
         multiple
         chips
         deletable-chips
+        hint="Used to let slots find this property in a library, should otherwise be left blank"
         :value="model.tags"
         @change="change('tags', ...arguments)"
       />
@@ -92,7 +93,7 @@
             type="number"
             class="damage-field text-center"
             style="max-width: 300px;"
-            hint="The attribute's final value is reduced by this amount"
+            hint="The attribute's final value is reduced by this amount. Attribute damage can increase this value until it matches the attribute's computed value. Should mostly be left blank."
             :disabled="!context.isLibraryForm"
             :value="model.damage"
             :error-messages="errors.damage"
@@ -106,6 +107,7 @@
           label="Reset"
           clearable
           style="flex-basis: 300px;"
+          hint="When damage should be reset to zero"
           :items="resetOptions"
           :value="model.reset"
           :error-messages="errors.reset"
@@ -123,14 +125,14 @@
   import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    inject: {
-      context: { default: {} }
-    },
 		components: {
 			FormSection,
       CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
+    inject: {
+      context: { default: {} }
+    },
 		data(){
 			let data = {
 				attributeTypes: [

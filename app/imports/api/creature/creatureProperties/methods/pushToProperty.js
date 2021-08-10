@@ -4,6 +4,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { get } from 'lodash';
 
 const pushToProperty = new ValidatedMethod({
 	name: 'creatureProperties.push',
@@ -19,9 +20,26 @@ const pushToProperty = new ValidatedMethod({
     let rootCreature = getRootCreatureAncestor(property);
     assertEditPermission(rootCreature, this.userId);
 
+    let joinedPath = path.join('.');
+
+    // Respect maxCount
+    let schema = CreatureProperties.simpleSchema(property);
+    let maxCount = schema.get(joinedPath, 'maxCount');
+
+    if (Number.isFinite(maxCount)){
+      let array = get(property, path);
+      let currentCount = array ? array.length : 0;
+      if (currentCount >= maxCount){
+        throw new Meteor.Error(
+          'Array is full',
+          `Cannot have more than ${maxCount} values`
+        );
+      }
+    }
+
     // Do work
 		CreatureProperties.update(_id, {
-			$push: {[path.join('.')]: value},
+			$push: {[joinedPath]: value},
 		}, {
 			selector: {type: property.type},
 		});

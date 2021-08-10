@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 /*
  * Attributes are numbered stats of a character
@@ -10,6 +11,7 @@ let AttributeSchema = new SimpleSchema({
   name: {
 		type: String,
     defaultValue: 'New Attribute',
+    max: STORAGE_LIMITS.name,
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
@@ -17,6 +19,7 @@ let AttributeSchema = new SimpleSchema({
 		regEx: VARIABLE_NAME_REGEX,
     min: 2,
     defaultValue: 'newAttribute',
+    max: STORAGE_LIMITS.variableName,
   },
 	// How it is displayed and computed is determined by type
   attributeType: {
@@ -45,16 +48,19 @@ let AttributeSchema = new SimpleSchema({
   spellSlotLevelCalculation: {
     type: String,
 		optional: true,
+    max: STORAGE_LIMITS.calculation,
   },
 	// The starting value, before effects
 	baseValueCalculation: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.calculation,
 	},
   // Description of what the attribute is used for
   description: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.description,
 	},
 	// The damage done to the attribute, always positive
   damage: {
@@ -79,7 +85,7 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
   descriptionCalculations: {
     type: Array,
     defaultValue: [],
-    maxCount: 32,
+    maxCount: STORAGE_LIMITS.inlineCalculationCount,
   },
   'descriptionCalculations.$': InlineComputationSchema,
   // The result of baseValueCalculation
@@ -93,6 +99,7 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
   },
   'baseValueErrors.$': {
     type: ErrorSchema,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   // The result of spellSlotLevelCalculation
   spellSlotLevelValue: {
@@ -102,6 +109,7 @@ let ComputedOnlyAttributeSchema = new SimpleSchema({
   spellSlotLevelErrors: {
     type: Array,
     optional: true,
+    maxCount: STORAGE_LIMITS.errorCount,
   },
   'spellSlotLevelErrors.$': {
     type: ErrorSchema,

@@ -1,10 +1,22 @@
 <template lang="html">
   <div
-    v-if="tagString"
+    v-if="tags.length"
     class="tags"
-    :class="{'ma-3': !noMargin}"
+    :class="{'ma-2': !noMargin}"
   >
-    {{ tagString }}
+    <span
+      v-if="prefix"
+      class="mx-1 text-overline"
+    >
+      {{ prefix }}
+    </span>
+    <v-chip
+      v-for="(tag, i) in tags"
+      :key="tag + i"
+      class="mx-1"
+    >
+      {{ tag }}
+    </v-chip>
   </div>
 </template>
 
@@ -16,17 +28,13 @@ export default {
       default: () => [],
     },
     noMargin: Boolean,
+    prefix: {
+      type: String,
+      default: undefined,
+    }
   },
-  computed:{
-    tagString(){
-      return this.tags.join(', ');
-    },
-  }
 }
 </script>
 
 <style lang="css" scoped>
-.tags {
-  font-style: italic;
-}
 </style>

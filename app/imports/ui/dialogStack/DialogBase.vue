@@ -21,19 +21,25 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <slot name="toolbar" />
+        <slot
+          slot="extension"
+          name="toolbar-extension"
+        />
       </v-toolbar>
     </slot>
     <div
       v-if="$slots['unwrapped-content']"
+      id="base-dialog-body"
       class="unwrapped-content"
+      @scroll.passive="onScroll"
     >
       <slot name="unwrapped-content" />
     </div>
     <v-card-text
-      v-if="!$slots['unwrapped-content']"
+      v-else
       id="base-dialog-body"
-      v-scroll:#base-dialog-body="onScroll"
       :class="{'dark-body': darkBody}"
+      @scroll.passive="onScroll"
     >
       <slot />
     </v-card-text>
@@ -90,7 +96,7 @@
 
 <style scoped>
 	.base-dialog-toolbar {
-		z-index: 1;
+		z-index: 2;
 		border-radius: 2px 2px 0 0;
 	}
 	#base-dialog-body, .unwrapped-content {

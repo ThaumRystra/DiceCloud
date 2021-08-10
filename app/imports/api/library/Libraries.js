@@ -6,6 +6,7 @@ import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js
 import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js'
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 /**
  * Libraries are trees of library nodes where each node represents a character
@@ -21,11 +22,8 @@ let Libraries = new Mongo.Collection('libraries');
 let LibrarySchema = new SimpleSchema({
 	name: {
     type: String,
+    max: STORAGE_LIMITS.name,
   },
-	isDefault: {
-		type: Boolean,
-		optional: true,
-	},
 });
 
 LibrarySchema.extend(SharingSchema);
@@ -39,7 +37,7 @@ const insertLibrary = new ValidatedMethod({
 	mixins: [
 		simpleSchemaMixin,
   ],
-  schema: LibrarySchema.omit('owner', 'isDefault'),
+  schema: LibrarySchema.omit('owner'),
   run(library) {
     if (!this.userId) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
@@ -78,30 +76,6 @@ const updateLibraryName = new ValidatedMethod({
 	},
 });
 
-const setLibraryDefault = new ValidatedMethod({
-  name: 'libraries.makeLibraryDefault',
-	validate: new SimpleSchema({
-		_id: {
-			type: String,
-			regEx: SimpleSchema.RegEx.id
-		},
-		isDefault: {
-			type: Boolean,
-		},
-	}).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  run({_id, isDefault}) {
-		if (!Meteor.users.isAdmin()){
-			throw new Meteor.Error('Permission denied', 'User must be admin to set libraries as default');
-		}
-		return Libraries.update(_id, {$set: {isDefault}});
-  },
-});
-
 const removeLibrary = new ValidatedMethod({
 	name: 'libraries.remove',
 	validate: new SimpleSchema({
@@ -128,4 +102,4 @@ export function removeLibaryWork(libraryId){
   LibraryNodes.remove({'ancestors.id': libraryId});
 }
 
-export { LibrarySchema, insertLibrary, setLibraryDefault, updateLibraryName, removeLibrary };
+export { LibrarySchema, insertLibrary, updateLibraryName, removeLibrary };

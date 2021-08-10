@@ -1,4 +1,4 @@
-<template>
+if<template>
   <div class="character-sheet fill-height">
     <v-fade-transition mode="out-in">
       <div
@@ -35,6 +35,10 @@
         class="fill-height"
       >
         <v-tabs-items
+          :key=" '' +
+            creature.settings.hideSpellsTab +
+            creature.settings.showTreeTab
+          "
           :value="$store.getters.tabById($route.params.id)"
           class="card-background"
           @change="e => $store.commit(
@@ -51,13 +55,17 @@
           <v-tab-item>
             <inventory-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item v-show="!creature.settings.hideSpellsTab">
+          <v-tab-item
+            v-if="!creature.settings.hideSpellsTab"
+          >
             <spells-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
             <character-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item v-if="creature.settings.showTreeTab">
+          <v-tab-item
+            v-if="creature.settings.showTreeTab"
+          >
             <tree-tab :creature-id="creatureId" />
           </v-tab-item>
         </v-tabs-items>

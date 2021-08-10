@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const RefSchema = new SimpleSchema({
   id: {
@@ -12,7 +13,8 @@ const RefSchema = new SimpleSchema({
     index: 1
   },
   collection: {
-    type: String
+    type: String,
+    max: STORAGE_LIMITS.collectionName,
   },
 });
 
@@ -27,7 +29,7 @@ let ChildSchema = new SimpleSchema({
   ancestors: {
     type: Array,
     defaultValue: [],
-    max: 100,
+    maxCount: STORAGE_LIMITS.ancestorCount,
   },
   'ancestors.$': {
     type: RefSchema,

@@ -32,6 +32,7 @@
       :value="model.skillType"
       :error-messages="errors.skillType"
       :menu-props="{auto: true, lazy: true}"
+      :hint="skillTypeHints[model.skillType]"
       @change="change('skillType', ...arguments)"
     />
 
@@ -42,7 +43,7 @@
       @change="change('description', ...arguments)"
     />
     <calculation-error-list :calculations="model.descriptionCalculations" />
-    
+
     <form-section
       name="Advanced"
       standalone
@@ -118,7 +119,17 @@
 					text: 'Utility',
 					value: 'utility',
 				},
-			]
+			],
+      skillTypeHints: {
+        skill: 'A normal character sheet skill like Athletics, Deception, or Investigation',
+        'save': 'A saving throw the character can make: Strength Save, etc.',
+        'check': 'An ability check that might include a proficiency bonus later eg. Initiative',
+        'tool': 'A tool proficiency. Be sure to add a base proficiency in the advanced section.',
+        'weapon': 'A weapon proficiency. Be sure to add a base proficiency in the advanced section.',
+        'armor': 'A armor proficiency. Be sure to add a base proficiency in the advanced section.',
+        'language': 'A language proficiency. Be sure to add a base proficiency in the advanced section.',
+        'utility': 'A skill that does not show up in the sheet, but can be used by other caclulations',
+      }
 		};},
     meteor: {
       abilityScoreList(){

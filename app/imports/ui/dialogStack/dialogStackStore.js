@@ -22,17 +22,17 @@ const dialogStackStore = {
       });
       updateHistory();
     },
-    replaceDialog(state, {component, data, elementId, callback}){
-      const _id = Random.id();
+    replaceDialog(state, {component, data}){
       if (!state.dialogs.length){
         throw new Meteor.Error('can\'t replace dialog if no dialogs are open');
       }
+      let currentDialog = state.dialogs[state.dialogs.length - 1]
       Vue.set(state.dialogs, state.dialogs.length - 1, {
-        _id,
+        _id: currentDialog._id,
         component,
         data,
-        elementId,
-        callback,
+        elementId: currentDialog.elementId,
+        callback: currentDialog.callback,
       });
     },
     popDialogStackMutation (state, result){

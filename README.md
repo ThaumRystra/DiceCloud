@@ -78,8 +78,12 @@ NPM_CONFIG_PRODUCTION=true
 PROJECT_DIR=app
 ROOT_URL=https://<url of your DiceCloud instance>
 DEFAULT_LIBRARIES=<comma separated list of library ids that will be subscribed by default: "abc123,def456">
-DISABLE_PATREON=<"true" if you want to prevent features being locked behind Patreon tiers>
 ```
+
+To disable Patreon features and unlock all paid restrictions for all users of your deployment, replace
+`"patreon": { "clientId": ... }"` with `"disablePatreon": true` in the public key of the METEOR_SETTINGS environment variable.
+
+Alternatively run `meteor run --settings exampleMeteorSettings.json` to start the app with the example settings that disable Patreon by default.
 
 Now, visiting [](http://localhost:3000/) should show you an empty instance of
 DiceCloud running.

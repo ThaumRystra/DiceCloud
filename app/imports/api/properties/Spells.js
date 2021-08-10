@@ -1,5 +1,6 @@
 import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
 import SimpleSchema from 'simpl-schema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const magicSchools = [
 	'abjuration',
@@ -18,6 +19,7 @@ let SpellSchema = new SimpleSchema({})
 	name: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	// If it's always prepared, it doesn't count against the number of spells
 	// prepared in a spell list, and enabled should be true
@@ -42,15 +44,18 @@ let SpellSchema = new SimpleSchema({})
 		type: String,
 		optional: true,
 		defaultValue: 'action',
+    max: STORAGE_LIMITS.name,
 	},
 	range: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	duration: {
 		type: String,
 		optional: true,
 		defaultValue: 'Instantaneous',
+    max: STORAGE_LIMITS.name,
 	},
 	verbal: {
 		type: Boolean,
@@ -67,6 +72,7 @@ let SpellSchema = new SimpleSchema({})
 	material: {
 		type: String,
 		optional: true,
+    max: STORAGE_LIMITS.name,
 	},
 	ritual: {
 		type: Boolean,
