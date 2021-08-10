@@ -28,6 +28,12 @@ let CreaturePropertySchema = new SimpleSchema({
     type: storedIconsSchema,
     optional: true,
   },
+  // Reference to the library node that this property was copied from
+  libraryNodeId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
   // Denormalised flag if this property is inactive on the sheet for any reason
   // Including being disabled, or a decendent of a disabled property
   inactive: {

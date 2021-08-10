@@ -66,9 +66,10 @@
   import Creatures from '/imports/api/creature/creatures/Creatures.js';
   import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
   import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
+  import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
 
   const characterTransform = function(char){
-    char.url = `/character/${char._id}/${char.urlName || '-'}`;
+    char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
     char.initial = char.name && char.name[0] || '?';
     return char;
   };
