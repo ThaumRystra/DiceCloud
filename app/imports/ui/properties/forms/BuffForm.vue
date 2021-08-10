@@ -7,6 +7,27 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
+    <smart-switch
+      v-if="context.isLibraryForm"
+      label="Add to character sheet already applied"
+      class="mt-0"
+      :value="model.applied"
+      :error-messages="errors.applied"
+      @change="change('applied', ...arguments)"
+    />
+    <v-expand-transition>
+      <div v-if="context.isLibraryForm && model.applied">
+        <v-alert
+          v-if="context.isLibraryForm && model.applied"
+          type="info"
+          outlined
+        >
+          Buffs that are applied are active on the character sheet. This
+          should be turned off if a buff is going to be applied by an action or
+          spell.
+        </v-alert>
+      </div>
+    </v-expand-transition>
     <text-area
       label="Description"
       :value="model.description"
@@ -24,15 +45,18 @@
       @change="change('duration', ...arguments)"
     />
     -->
-    <smart-select
-      label="Target"
-      :hint="targetOptionHint"
-      :items="targetOptions"
-      :value="model.target"
-      :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('target', ...arguments)"
-    />
+    <v-expand-transition>
+      <smart-select
+        v-if="!model.applied"
+        label="Target"
+        :hint="targetOptionHint"
+        :items="targetOptions"
+        :value="model.target"
+        :error-messages="errors.target"
+        :menu-props="{auto: true, lazy: true}"
+        @change="change('target', ...arguments)"
+      />
+    </v-expand-transition>
     <smart-combobox
       label="Tags"
       multiple
@@ -54,6 +78,9 @@
       CalculationErrorList,
     },
     mixins: [propertyFormMixin],
+    inject: {
+      context: { default: {} }
+    },
 		props: {
 			parentTarget: {
 				type: String,
