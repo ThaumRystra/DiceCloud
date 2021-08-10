@@ -18,134 +18,97 @@
         @keyup.enter="insert"
       />
     </template>
-    <div
-      class="library-nodes"
+    <property-description
+      :string="model.description"
+    />
+    <v-expansion-panels
+      multiple
+      inset
     >
-      <v-fade-transition mode="out-in">
-        <div v-if="libraryNodes && libraryNodes.length">
-          <section
-            class="layout wrap justify-between"
-          >
-            <v-card
-              v-for="node in libraryNodes"
-              :key="node._id"
-              hover
-              ripple
-              class="slot-card layout column justify-end"
-              :class="{'selected': node._id === (selectedNode && selectedNode._id)}"
-              :dark="node._id === (selectedNode && selectedNode._id)"
-              @click="selectedNode = node"
-            >
-              <v-img
-                v-if="node.picture"
-                :src="node.picture"
-                :height="200"
-                contain
-                class="slot-card-image"
+      <template v-for="libraryNode in libraryNodes">
+        <v-expansion-panel
+          v-if="showDisabled || !libraryNode._disabledBySlotFillerCondition"
+          :key="libraryNode._id"
+          :model="libraryNode"
+          :data-id="libraryNode._id"
+          :class="{disabled: libraryNode._disabled}"
+        >
+          <v-expansion-panel-header>
+            <template #default="{ open }">
+              <v-checkbox
+                v-model="selectedNodeIds"
+                class="my-0 py-0 mr-2 flex-grow-0"
+                hide-details
+                :value="libraryNode._id"
+                :disabled="libraryNode._disabled"
+                @click.stop
               />
-              <v-card-title primary-title>
-                <tree-node-view
-                  class="mr-2 text-h6 mb-0"
-                  :class="{'theme--dark': node._id === (selectedNode && selectedNode._id)}"
-                  :hide-icon="node.picture"
-                  :model="node"
-                  :color="node.color"
-                />
-              </v-card-title>
-              <v-card-text
-                v-if="node.description"
-                class="pt-0"
-              >
-                <property-description
-                  class="slot-card-text line-clamp"
-                  :string="node.description"
-                />
-              </v-card-text>
-            </v-card>
-          </section>
-        </div>
-        <div
-          v-else-if="countAll"
-          class="ma-4"
-        >
-          <h4 v-if="numFiltered">
-            Requirements of {{ numFiltered }} library properties were not met.
-          </h4>
-          <h4 v-else>
-            Nothing suitable was found in your libraries.
-          </h4>
-        </div>
-        <div
-          v-else-if="$subReady.slotFillers"
-          class="ma-4"
-        >
-          <h4>
-            Nothing suitable was found in your libraries
-            <span v-if="searchValue">
-              matching "{{ searchValue }}"
-            </span>
-          </h4>
-          <p>
-            This slot requires a {{ slotPropertyTypeName }}
-            <template v-if="model.slotTags.length == 1">
-              with the tag <code>{{ model.slotTags[0] }}</code>,
+              <v-layout column>
+                <v-layout>
+                  <tree-node-view :model="libraryNode" />
+                  <div
+                    v-if="libraryNode._disabledBySlotFillerCondition"
+                    class="error--text"
+                  >
+                    {{ libraryNode.slotFillerCondition }}
+                  </div>
+                </v-layout>
+                <div class="text-caption">
+                  {{ libraryNames[libraryNode.ancestors[0].id ] }}
+                </div>
+              </v-layout>
+              <template v-if="open">
+                <v-btn
+                  icon
+                  class="flex-grow-0"
+                  @click.stop="openPropertyDetails(libraryNode._id)"
+                >
+                  <v-icon>mdi-window-restore</v-icon>
+                </v-btn>
+              </template>
             </template>
-            <template v-else-if="model.slotTags.length > 1">
-              with the following tags:
-              <span
-                v-for="(tag, index) in model.slotTags"
-                :key="index"
-              >
-                <code>{{ tag }}</code>,
-              </span>
-            </template>
-            <span v-if="model.spaceLeft">
-              that fills less than {{ model.spaceLeft }} {{ model.spaceLeft == 1 && 'slot' || 'slots' }}
-            </span>
-          </p>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <library-node-expansion-content :model="libraryNode" />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </template>
+    </v-expansion-panels>
+    <template v-if="!showDisabled && disabledNodeCount">
+      <v-layout
+        column
+        align-center
+        justify-center
+      >
+        <div class="mt-4 ma-2">
+          Requirements of {{ disabledNodeCount }} properties were not met
         </div>
-      </v-fade-transition>
-      <v-fade-transition mode="out-in">
-        <div
-          v-if="!$subReady.slotFillers"
-          key="character-loading"
-          class="fill-height layout justify-center align-center"
+        <v-btn
+          elevation="0"
+          color="accent"
+          @click="showDisabled = true"
         >
-          <v-progress-circular
-            indeterminate
-            color="primary"
-            size="64"
-          />
-        </div>
-      </v-fade-transition>
-      <v-fade-transition mode="out-in">
-        <div
-          v-if="currentLimit < countAll"
-          class="layout justify-center align-stretch"
-        >
-          <v-btn
-            :loading="!$subReady.slotFillers"
-            class="primary"
-            @click="loadMore"
-          >
-            Load More
-          </v-btn>
-        </div>
-      </v-fade-transition>
-    </div>
+          Show All
+        </v-btn>
+      </v-layout>
+    </template>
     <template slot="actions">
-      <v-spacer />
       <v-btn
         text
         @click="$store.dispatch('popDialogStack')"
       >
         Cancel
       </v-btn>
+      <v-spacer />
       <v-btn
         text
-        :disabled="!selectedNode"
-        @click="insert"
+        color="primary"
+        :disabled="!selectedNodeIds.length"
+        @click="$store.dispatch('popDialogStack', selectedNodeIds)"
       >
+        <template v-if="selectedNodeIds.length >= 15">
+          {{ selectedNodeIds.length }}/20
+        </template>
         Insert
       </v-btn>
     </template>
@@ -153,21 +116,32 @@
 </template>
 
 <script lang="js">
+/**
+ * TODO
+ * Show the tags that are being searched for/against
+ * Show the quantity to fill with this dialog
+ * Show the quantity filled by the selection
+ * Enforce unique in slot/unique in character selection rules
+ * Fix the dialog callback for multiple property inserting
+ * Show the dialog in library view to test slots
+ */
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
 import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
+import Libraries from '/imports/api/library/Libraries.js';
+import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';
 
 export default {
   components: {
 		DialogBase,
     TreeNodeView,
     PropertyDescription,
+    LibraryNodeExpansionContent,
 	},
   props:{
     slotId: {
@@ -180,29 +154,16 @@ export default {
     },
   },
   data(){return {
-    selectedNode: undefined,
+    selectedNodeIds: [],
     searchValue: undefined,
-    numFiltered: 0,
+    showDisabled: false,
+    disabledNodeCount: undefined,
   }},
-  computed: {
-    slotPropertyTypeName(){
-      if (!this.model) return;
-      if (!this.model.slotType) return 'property';
-      let propName = getPropertyName(this.model.slotType);
-      return propName && propName.toLowerCase();
-    },
-  },
   reactiveProvide: {
     name: 'context',
     include: ['creatureId'],
   },
-  methods:{
-    getTitle(model){
-      if (!model) return;
-      if (model.name) return model.name;
-      let prop = PROPERTIES[model.type]
-      return prop && prop.name;
-    },
+  methods: {
     searchChanged(val, ack){
       this._subs['slotFillers'].setData('searchTerm', val);
       this._subs['slotFillers'].setData('limit', undefined);
@@ -217,7 +178,16 @@ export default {
     insert(){
       if (!this.selectedNode) return;
       this.$store.dispatch('popDialogStack', this.selectedNode);
-    }
+    },
+    openPropertyDetails(id){
+      this.$store.commit('pushDialogStack', {
+        component: 'library-node-dialog',
+        elementId: id,
+        data: {
+          _id: id,
+        },
+      });
+    },
   },
   meteor: {
     $subscribe: {
@@ -237,47 +207,51 @@ export default {
     countAll(){
       return this._subs['slotFillers'].data('countAll');
     },
+    totalQuantitySelected(){
+      return 0; //TODO
+    },
+    spaceLeft(){
+      if (this.model.quantityExpectedResult === 0) return undefined;
+      return this.model.spaceLeft - this.totalQuantitySelected;
+    },
+    libraryNames(){
+      let names = {};
+      Libraries.find().forEach(lib => names[lib._id] = lib.name)
+      return names;
+    },
     libraryNodes(){
-      let filter = {
-        removed: {$ne: true},
-      };
-      if (this.model.slotTags && this.model.slotTags.length){
-        filter.tags = {$all: this.model.slotTags};
-      }
-      if (this.model.slotType){
-        filter.$or = [{
-            type: this.model.slotType
-          },{
-            type: 'slotFiller',
-            slotFillerType: this.model.slotType,
-        }];
-      }
+      let filter = getSlotFillFilter({slot: this.model});
       let nodes = LibraryNodes.find(filter, {
         sort: {name: 1, order: 1}
       }).fetch();
-      let totalNodes = nodes.length;
-      // Filter out slotFillers whose condition isn't met or are too big to fit
+      let disabledNodeCount = 0;
+      // Mark slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
-      nodes = nodes.filter(node => {
+      nodes.forEach(node => {
         if (node.slotFillerCondition){
           let {result} = evaluateString({
             string: node.slotFillerCondition,
             scope: this.creature.variables,
             fn: 'reduce',
           });
-          if (!result.value) return false;
+          if (!result.value){
+            node._disabled = true;
+            node._disabledBySlotFillerCondition = true;
+          }
         }
+        let quantityToFill = node.type === 'slotFiller' ? node.slotQuantityFilled : 1;
         if (
-          node.type === 'slotFiller' &&
-          this.model.spaceLeft > 0 &&
-          node.slotQuantityFilled > this.model.spaceLeft
+          quantityToFill > this.spaceLeft
         ){
-          return false;
+          node._disabled = true;
+          node._disabledByQuantityFilled = true;
         }
-        return true;
+        if (node._disabledBySlotFillerCondition){
+          disabledNodeCount += 1;
+        }
       });
-      this.numFiltered = totalNodes - nodes.length;
       if (nodes.length === 1) this.selectedNode = nodes[0];
+      this.disabledNodeCount = disabledNodeCount;
       return nodes;
     },
   }
@@ -285,17 +259,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .slot-card {
-    max-width: 500px;
-    width: 300px;
-    flex-grow: 1;
-    flex-shrink: 1;
-    margin: 4px;
-  }
-  .slot-card-text.line-clamp {
-    -webkit-line-clamp: 5;
-  }
-  .slot-card.selected {
-    background: #8E1B1B;
+  .disabled {
+    opacity: 0.7;
   }
 </style>

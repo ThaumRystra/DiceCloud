@@ -6,6 +6,7 @@
       class="property-viewer"
     />
     <tree-node-list
+      v-if="$subReady.descendantLibraryNodes"
       group="library-node-expansion"
       :children="propertyChildren"
       @selected="clickChild"

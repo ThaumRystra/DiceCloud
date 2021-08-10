@@ -21,6 +21,31 @@ let SlotSchema = new SimpleSchema({
 	'slotTags.$': {
 		type: String,
 	},
+	extraTags: {
+    type: Array,
+		defaultValue: [],
+    maxCount: 5,
+  },
+	'extraTags.$': {
+		type: Object,
+	},
+  'extraTags.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
+	},
+  'extraTags.$.operation': {
+		type: String,
+    allowedValues: ['OR', 'NOT'],
+	},
+  'extraTags.$.tags': {
+		type: Array,
+	},
+  'extraTags.$.tags.$': {
+		type: String,
+	},
   quantityExpected: {
     type: String,
     optional: true,
@@ -37,7 +62,19 @@ let SlotSchema = new SimpleSchema({
   hideWhenFull: {
     type: Boolean,
     optional: true,
-  }
+    defaultValue: true,
+  },
+  unique: {
+    type: String,
+    allowedValues: [
+      // Can't choose the same slot filler twice in this slot
+      'uniqueInSlot',
+      // Can't choose the same slot filler twice accross the whole creature
+      'uniqueInCreature'
+    ],
+    optional: true,
+    defaultValue: 'uniqueInSlot',
+  },
 });
 
 const ComputedOnlySlotSchema = new SimpleSchema({

@@ -107,6 +107,9 @@ function insertPropertyFromNode(nodeId, ancestors, order){
   // It must get the first generated ID to prevent flickering
   nodes = [node, ...nodes];
 
+  // set libraryNodeIds
+  storeLibraryNodeReferences(nodes, nodeId);
+
   // re-map all the ancestors
   setLineageOfDocs({
     docArray: nodes,
@@ -133,6 +136,13 @@ function insertPropertyFromNode(nodeId, ancestors, order){
   // Insert the creature properties
   CreatureProperties.batchInsert(nodes);
   return node;
+}
+
+
+function storeLibraryNodeReferences(nodes){
+  nodes.forEach(node => {
+    node.libraryNodeId = node._id;
+  });
 }
 
 // Covert node references into actual nodes

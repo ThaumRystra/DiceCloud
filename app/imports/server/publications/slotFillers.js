@@ -2,6 +2,7 @@ import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 
 Meteor.publish('slotFillers', function(slotId){
   let self = this;
@@ -21,7 +22,7 @@ Meteor.publish('slotFillers', function(slotId){
       fields: {subscribedLibraries: 1}
     });
     const subs = user && user.subscribedLibraries || [];
-    let libraryIds = Libraries.find({
+    let libraries = Libraries.find({
       $or: [
         {owner: this.userId},
         {writers: this.userId},
@@ -29,25 +30,13 @@ Meteor.publish('slotFillers', function(slotId){
         {_id: {$in: subs}},
       ]
     }, {
-      fields: {_id: 1},
-    }).map(lib => lib._id);
+      fields: {_id: 1, name: 1},
+    });
+    let libraryIds = libraries.map(lib => lib._id);
 
     // Build a filter for nodes in those libraries that match the slot
-    let filter = {
-      'ancestors.id': {$in: libraryIds},
-      removed: {$ne: true},
-    };
-    if (slot.slotTags && slot.slotTags.length){
-      filter.tags = {$all: slot.slotTags};
-    }
-    if (slot.slotType){
-      filter.$or = [{
-          type: slot.slotType
-        },{
-          type: 'slotFiller',
-          slotFillerType: slot.slotType,
-      }];
-    }
+    let filter = getSlotFillFilter({slot, libraryIds});
+
     this.autorun(function(){
       // Get the limit of the documents the user can fetch
       var limit = self.data('limit') || 50;
@@ -85,7 +74,7 @@ Meteor.publish('slotFillers', function(slotId){
         self.setData('countAll', LibraryNodes.find(filter).count());
       });
       self.autorun(function () {
-        return LibraryNodes.find(filter, options);
+        return [LibraryNodes.find(filter, options), libraries];
       });
     });
   });
