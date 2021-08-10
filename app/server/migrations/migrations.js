@@ -54,3 +54,28 @@ Migrations.add({
 		return;
 	},
 });
+
+Migrations.add({
+	version: 3,
+	name: "Removes data images from character pictures",
+	up: function() {
+		//update characters
+		Characters.find({}).forEach(function(char){
+			if (char.tempHP) return;
+			Characters.update(char._id, {$set: {
+				"tempHP.adjustment": 0,
+				"tempHP.reset": "longRest",
+			}});
+		});
+    Characters.update({
+      picture: /^data/
+    }, {
+      $set: {picture: ''}
+    }, {
+      multi: true
+    });
+	},
+	down: function(){
+		return;
+	},
+});
