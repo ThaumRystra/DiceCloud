@@ -128,9 +128,9 @@
         clearable
         hint="Do the properties that fill this slot need to be unique?"
         :items="uniqueOptions"
-        :value="model.slotType"
-        :error-messages="errors.slotType"
-        @change="change('slotType', ...arguments)"
+        :value="model.unique"
+        :error-messages="errors.unique"
+        @change="change('unique', ...arguments)"
       />
       <smart-combobox
         label="Tags"

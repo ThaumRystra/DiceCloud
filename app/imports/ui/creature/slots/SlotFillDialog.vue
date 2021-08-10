@@ -21,6 +21,23 @@
     <property-description
       :string="model.description"
     />
+    <p>
+      {{ slotPropertyTypeName }} with tags:
+      <template v-for="(tags, index) in tagsSearched.or">
+        <property-tags
+          :key="index"
+          :tags="tags"
+          :prefix="index ? 'OR' : undefined"
+        />
+      </template>
+      <template v-for="(tags, index) in tagsSearched.not">
+        <property-tags
+          :key="index"
+          :tags="tags"
+          prefix="NOT"
+        />
+      </template>
+    </p>
     <v-expansion-panels
       multiple
       inset
@@ -31,32 +48,55 @@
           :key="libraryNode._id"
           :model="libraryNode"
           :data-id="libraryNode._id"
-          :class="{disabled: libraryNode._disabled}"
+          :class="{disabled: isDisabled(libraryNode)}"
         >
           <v-expansion-panel-header>
             <template #default="{ open }">
-              <v-checkbox
-                v-model="selectedNodeIds"
-                class="my-0 py-0 mr-2 flex-grow-0"
-                hide-details
-                :value="libraryNode._id"
-                :disabled="libraryNode._disabled"
-                @click.stop
-              />
+              <v-layout
+                align-center
+                class="flex-grow-0 mr-2"
+              >
+                <v-checkbox
+                  v-if="libraryNode._disabledByAlreadyAdded"
+                  class="my-0 py-0"
+                  hide-details
+                  :value="true"
+                  :disabled="true"
+                />
+                <v-checkbox
+                  v-else
+                  v-model="selectedNodeIds"
+                  class="my-0 py-0"
+                  hide-details
+                  :disabled="isDisabled(libraryNode)"
+                  :value="libraryNode._id"
+                  @click.stop
+                />
+              </v-layout>
               <v-layout column>
-                <v-layout>
+                <v-layout align-center>
                   <tree-node-view :model="libraryNode" />
                   <div
                     v-if="libraryNode._disabledBySlotFillerCondition"
-                    class="error--text"
+                    class="error--text text-no-wrap text-truncate"
                   >
                     {{ libraryNode.slotFillerCondition }}
                   </div>
                 </v-layout>
-                <div class="text-caption">
+                <div class="text-caption text-no-wrap text-truncate">
                   {{ libraryNames[libraryNode.ancestors[0].id ] }}
                 </div>
               </v-layout>
+              <div
+                v-if="libraryNode.slotQuantityFilled && libraryNode.slotQuantityFilled !== 1"
+                class="text-overline flex-grow-0 text-no-wrap"
+                :class="{
+                  'error--text': isDisabled(libraryNode) &&
+                    libraryNode._disabledByQuantityFilled
+                }"
+              >
+                {{ libraryNode.slotQuantityFilled }} slots
+              </div>
               <template v-if="open">
                 <v-btn
                   icon
@@ -74,16 +114,33 @@
         </v-expansion-panel>
       </template>
     </v-expansion-panels>
+    <v-layout
+      v-if="!$subReady.slotFillers || currentLimit < countAll"
+      column
+      align-center
+      justify-center
+      class="ma-3"
+    >
+      <v-btn
+        :loading="!$subReady.slotFillers"
+        color="accent"
+        @click="loadMore"
+      >
+        Load More
+      </v-btn>
+    </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
       <v-layout
         column
         align-center
         justify-center
+        class="ma-3"
       >
-        <div class="mt-4 ma-2">
+        <div>
           Requirements of {{ disabledNodeCount }} properties were not met
         </div>
         <v-btn
+          class="mt-2"
           elevation="0"
           color="accent"
           @click="showDisabled = true"
@@ -106,8 +163,8 @@
         :disabled="!selectedNodeIds.length"
         @click="$store.dispatch('popDialogStack', selectedNodeIds)"
       >
-        <template v-if="selectedNodeIds.length >= 15">
-          {{ selectedNodeIds.length }}/20
+        <template v-if="model.spaceLeft">
+          {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
         Insert
       </v-btn>
@@ -118,12 +175,10 @@
 <script lang="js">
 /**
  * TODO
- * Show the tags that are being searched for/against
- * Show the quantity to fill with this dialog
- * Show the quantity filled by the selection
  * Enforce unique in slot/unique in character selection rules
  * Fix the dialog callback for multiple property inserting
  * Show the dialog in library view to test slots
+ * Delete the old slot fill dialog
  */
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
@@ -135,6 +190,8 @@ import evaluateString from '/imports/api/creature/computation/afterComputation/e
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';
+import PropertyTags from '/imports/ui/properties/viewers/shared/PropertyTags.vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default {
   components: {
@@ -142,6 +199,7 @@ export default {
     TreeNodeView,
     PropertyDescription,
     LibraryNodeExpansionContent,
+    PropertyTags,
 	},
   props:{
     slotId: {
@@ -162,6 +220,31 @@ export default {
   reactiveProvide: {
     name: 'context',
     include: ['creatureId'],
+  },
+  computed: {
+    tagsSearched(){
+      let or = [];
+      let not = [];
+      if (this.model.slotTags && this.model.slotTags.length){
+        or.push(this.model.slotTags);
+      }
+      this.model.extraTags?.forEach(extras => {
+        if (extras.tags?.length){
+          if(extras.operation === 'OR'){
+            or.push(extras.tags);
+          } else if (extras.operation === 'NOT'){
+            not.push(extras.tags);
+          }
+        }
+      });
+      return {or, not};
+    },
+    slotPropertyTypeName(){
+      if (!this.model) return;
+      if (!this.model.slotType) return 'Property';
+      let propName = getPropertyName(this.model.slotType);
+      return propName;
+    },
   },
   methods: {
     searchChanged(val, ack){
@@ -188,6 +271,14 @@ export default {
         },
       });
     },
+    isDisabled(node){
+      return node._disabledBySlotFillerCondition ||
+        node._disabledByAlreadyAdded ||
+      (
+        node._disabledByQuantityFilled &&
+        !this.selectedNodeIds.includes(node._id)
+      )
+    }
   },
   meteor: {
     $subscribe: {
@@ -207,8 +298,39 @@ export default {
     countAll(){
       return this._subs['slotFillers'].data('countAll');
     },
+    alreadyAdded(){
+      let added = new Set();
+      if (this.model.unique) return added;
+      let ancestorId;
+      if (this.model.unique === 'uniqueInSlot'){
+        ancestorId = this.model._id;
+      } else if (this.model.unique === 'uniqueInCreature'){
+        ancestorId = this.creatureId;
+      }
+      CreatureProperties.find({
+        'ancestors.id': ancestorId,
+        libraryNodeId: {$exists: true},
+      }, {
+        fields: {libraryNodeId: 1},
+      }).forEach(prop => {
+        added.add(prop.libraryNodeId);
+      });
+      return added;
+    },
     totalQuantitySelected(){
-      return 0; //TODO
+      let quantitySelected = 0;
+      LibraryNodes.find({
+        _id: {$in: this.selectedNodeIds}
+      }, {
+        fields: {slotQuantityFilled: 1},
+      }).forEach(node => {
+        if (Number.isFinite(node.slotQuantityFilled)){
+          quantitySelected += node.slotQuantityFilled;
+        } else {
+          quantitySelected += 1;
+        }
+      });
+      return quantitySelected;
     },
     spaceLeft(){
       if (this.model.quantityExpectedResult === 0) return undefined;
@@ -225,6 +347,8 @@ export default {
         sort: {name: 1, order: 1}
       }).fetch();
       let disabledNodeCount = 0;
+      let activeNodeCount = 0;
+      let lastActiveNodeId = undefined;
       // Mark slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes.forEach(node => {
@@ -235,23 +359,30 @@ export default {
             fn: 'reduce',
           });
           if (!result.value){
-            node._disabled = true;
             node._disabledBySlotFillerCondition = true;
+            disabledNodeCount += 1;
           }
         }
         let quantityToFill = node.type === 'slotFiller' ? node.slotQuantityFilled : 1;
         if (
           quantityToFill > this.spaceLeft
         ){
-          node._disabled = true;
           node._disabledByQuantityFilled = true;
         }
-        if (node._disabledBySlotFillerCondition){
-          disabledNodeCount += 1;
+        if (this.alreadyAdded.has(node._id)){
+          node._disabledByAlreadyAdded = true;
+        }
+        if (
+          !node._disabledBySlotFillerCondition &&
+          !node._disabledByQuantityFilled &&
+          !node._disabledByAlreadyAdded
+        ){
+          activeNodeCount += 1;
+          lastActiveNodeId = node._id;
         }
       });
-      if (nodes.length === 1) this.selectedNode = nodes[0];
       this.disabledNodeCount = disabledNodeCount;
+      if (activeNodeCount === 1) this.selectedNodeIds = [lastActiveNodeId];
       return nodes;
     },
   }
