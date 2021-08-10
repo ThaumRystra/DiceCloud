@@ -22,12 +22,12 @@
 
 <script lang="js">
 import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 export default {
-  components: {
-    TreeNodeView,
-  },
+  name: 'ReferenceTreeNode',
   mixins: [treeNodeViewMixin],
+  beforeCreate () {
+    this.$options.components.TreeNodeView = require('/imports/ui/properties/treeNodeViews/TreeNodeView.vue').default
+  },
 }
 </script>
