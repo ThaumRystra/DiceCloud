@@ -90,7 +90,7 @@
           v-for="spellSlot in spellSlots"
           :key="spellSlot._id"
           :model="spellSlot"
-          :class="{ 'primary--text': selectedSlotId === spellSlot._id }"
+          :highlight="selectedSlotId === spellSlot._id"
           hide-cast-button
           @click="selectedSlotId = spellSlot._id"
         />

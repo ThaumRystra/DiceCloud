@@ -13,10 +13,11 @@
           <div
             style="font-weight: 500; font-size: 24px"
             class="current-value"
+            :class="{ 'primary--text': highlight}"
           >
             {{ model.currentValue }}
           </div>
-          <div class="ml-2 max-value">
+          <div class="ml-2 max-value" :class="{ 'primary--text': highlight}">
             /{{ model.value }}
           </div>
         </div>
@@ -27,6 +28,7 @@
           <v-icon
             v-for="i in model.value"
             :key="i"
+            :class="{ 'primary--text': highlight}"
           >
             {{
               i > model.currentValue ?
@@ -36,7 +38,7 @@
           </v-icon>
         </div>
       </v-list-item-title>
-      <v-list-item-subtitle>
+      <v-list-item-subtitle :class="{ 'primary--text': highlight}">
         {{ model.name }}
       </v-list-item-subtitle>
     </v-list-item-content>
@@ -64,6 +66,10 @@ export default {
     },
     dark: Boolean,
     hideCastButton: Boolean,
+    highlight: {
+      type: Boolean,
+      default: function() { return false; }
+    }
 	},
 	computed: {
 		currentValue(){
