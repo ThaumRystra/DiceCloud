@@ -21,6 +21,7 @@ import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
 import SlotDetailsDialog from '/imports/ui/creature/slots/SlotDetailsDialog.vue';
 import SlotFillDialog from '/imports/ui/creature/slots/SlotFillDialog.vue';
 import TierTooLowDialog from '/imports/ui/user/TierTooLowDialog.vue';
+import TransferOwnershipDialog from '/imports/ui/sharing/TransferOwnershipDialog.vue';
 import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
 
 export default {
@@ -47,5 +48,6 @@ export default {
   SlotDetailsDialog,
   SlotFillDialog,
   TierTooLowDialog,
+  TransferOwnershipDialog,
   UsernameDialog,
 };

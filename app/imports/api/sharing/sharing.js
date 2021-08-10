@@ -5,6 +5,7 @@ import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 const setPublic = new ValidatedMethod({
   name: 'sharing.setPublic',
@@ -47,7 +48,7 @@ const updateUserSharePermissions = new ValidatedMethod({
   run({docRef, userId, role}){
 		let doc = fetchDocByRef(docRef);
     if (role === 'none'){
-      // only asser ownership if you aren't removing yourself
+      // only assert ownership if you aren't removing yourself
       if (this.userId !== userId){
         assertOwnership(doc, this.userId);
       }
@@ -74,4 +75,58 @@ const updateUserSharePermissions = new ValidatedMethod({
 	},
 });
 
-export { setPublic, updateUserSharePermissions };
+const transferOwnership = new ValidatedMethod({
+  name: 'sharing.transferOwnership',
+	validate: new SimpleSchema({
+		docRef: RefSchema,
+    userId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  run({docRef, userId}){
+    let doc = fetchDocByRef(docRef);
+    assertOwnership(doc, this.userId);
+
+    let collection = getCollectionByName(docRef.collection);
+
+    let tier = getUserTier(userId);
+    if (docRef.collection === 'creatures'){
+      let currentCharacterCount = collection.find({
+        owner: userId,
+      }, {
+        fields: {_id: 1},
+      }).count();
+
+      if (
+        tier.characterSlots !== -1 &&
+        currentCharacterCount >= tier.characterSlots
+      ){
+        throw new Meteor.Error('Sharing.methods.transferOwnership.denied',
+        'The new owner is already at their character limit')
+      }
+    } else if (docRef.collection === 'libraries'){
+      if (!tier.paidBenefits){
+        throw new Meteor.Error('Sharing.methods.transferOwnership.denied',
+        'The new owner\'s Patreon tier does not have access to library ownership');
+      }
+    }
+
+    // First remove current permissions for the user
+    collection.update(docRef.id, {
+      $pullAll: { writers: userId, readers: userId },
+    });
+    // Then make the user the owner and the current owner a writer
+    return collection.update(docRef.id, {
+      $set: {owner: userId},
+      $addToSet: { writers: this.userId },
+    });
+	},
+});
+
+export { setPublic, updateUserSharePermissions, transferOwnership };

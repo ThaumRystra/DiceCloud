@@ -17,7 +17,7 @@
         v-if="model.public && docRef.collection === 'libraries'"
         readonly
         label="Link"
-        :value="'https://beta.dicecloud.com' + this.$router.resolve({
+        :value="'https://beta.dicecloud.com' + $router.resolve({
           name: 'singleLibrary',
           params: { id: model._id },
         }).href"
@@ -56,6 +56,7 @@
             <v-menu
               bottom
               left
+              :data-id="'menu-' + user._id"
             >
               <template #activator="{ on }">
                 <v-btn
@@ -83,6 +84,15 @@
                     <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
                   <v-list-item-title>View only</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  v-if="user.permission === 'writer'"
+                  @click="makeOwner(user)"
+                >
+                  <v-list-item-action>
+                    <v-icon>mdi-signature</v-icon>
+                  </v-list-item-action>
+                  <v-list-item-title>Transfer Onwership</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="updateSharing(user._id, 'none')">
                   <v-list-item-action>
@@ -181,6 +191,16 @@ export default {
         userId,
         role,
       });
+    },
+    makeOwner(user){
+      this.$store.commit('pushDialogStack', {
+				component: 'transfer-ownership-dialog',
+				elementId: 'menu-' + user._id,
+				data: {
+					docRef: this.docRef,
+					user,
+				},
+			});
     },
 	},
 	meteor: {
