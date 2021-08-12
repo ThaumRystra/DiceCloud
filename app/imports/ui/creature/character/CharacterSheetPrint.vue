@@ -144,4 +144,27 @@ export default {
   min-height: calc(100vh - 96px);
   overflow: hidden;
 }
+
+@media print {
+  @page {
+    margin: 0mm;
+  }
+  html {
+    margin: 0px;
+    font-size: 70% !important;
+  }
+  * {
+    -webkit-transition: none !important;
+    transition: none !important;
+  }
+  header.v-app-bar {
+    display: none !important;
+  }
+  nav.v-navigation-drawer {
+    display: none !important;
+  }
+  main.v-main {
+    padding: 0 !important;
+  }
+}
 </style>

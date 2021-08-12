@@ -49,4 +49,13 @@ export default {
 		break-inside: avoid;
 		padding: 4px;
 	}
+
+  @media print {
+    .column-layout >>> > div {
+      display: block;
+      page-break-inside: avoid;
+      break-inside: avoid-page;
+      -webkit-backface-visibility: initial;
+    }
+  }
 </style>
