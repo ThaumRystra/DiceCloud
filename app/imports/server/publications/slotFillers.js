@@ -6,7 +6,6 @@ import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/
 
 Meteor.publish('slotFillers', function(slotId, searchTerm){
   if (searchTerm) check(searchTerm, String);
-  console.log({slotId, searchTerm})
 
   let self = this;
   this.autorun(function (){
