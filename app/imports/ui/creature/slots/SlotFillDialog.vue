@@ -8,14 +8,17 @@
         {{ model.name }}
       </v-toolbar-title>
       <v-spacer />
-      <text-field
+      <v-text-field
+        v-model="searchInput"
         prepend-inner-icon="mdi-magnify"
         regular
+        clearable
         hide-details
-        :value="searchValue"
-        :debounce="300"
-        @change="searchChanged"
-        @keyup.enter="insert"
+        class="flex-grow-0"
+        style="flex-basis: 300px;"
+        :loading="searchLoading"
+        @change="searchValue = searchInput || undefined"
+        @click:clear="searchValue = undefined"
       />
     </template>
     <property-description
@@ -88,7 +91,7 @@
                 </div>
               </v-layout>
               <div
-                v-if="libraryNode.slotQuantityFilled && libraryNode.slotQuantityFilled !== 1"
+                v-if="libraryNode.slotQuantityFilled !== undefined && libraryNode.slotQuantityFilled !== 1"
                 class="text-overline flex-grow-0 text-no-wrap"
                 :class="{
                   'error--text': isDisabled(libraryNode) &&
@@ -115,7 +118,7 @@
       </template>
     </v-expansion-panels>
     <v-layout
-      v-if="!$subReady.slotFillers || currentLimit < countAll"
+      v-if="(!$subReady.slotFillers && !searchValue) || currentLimit < countAll"
       column
       align-center
       justify-center
@@ -216,6 +219,7 @@ export default {
   },
   data(){return {
     selectedNodeIds: [],
+    searchInput: undefined,
     searchValue: undefined,
     showDisabled: false,
     disabledNodeCount: undefined,
@@ -250,20 +254,9 @@ export default {
     },
   },
   methods: {
-    searchChanged(val, ack){
-      this._subs['slotFillers'].setData('searchTerm', val);
-      this._subs['slotFillers'].setData('limit', undefined);
-      this.selectedNode = undefined;
-      this.searchValue = val;
-      setTimeout(ack, 200);
-    },
     loadMore(){
       if (this.currentLimit >= this.countAll) return;
       this._subs['slotFillers'].setData('limit', this.currentLimit + 50);
-    },
-    insert(){
-      if (!this.selectedNode) return;
-      this.$store.dispatch('popDialogStack', this.selectedNode);
     },
     openPropertyDetails(id){
       this.$store.commit('pushDialogStack', {
@@ -281,13 +274,16 @@ export default {
         node._disabledByQuantityFilled &&
         !this.selectedNodeIds.includes(node._id)
       )
-    }
+    },
   },
   meteor: {
     $subscribe: {
       'slotFillers'(){
-        return [this.slotId]
+        return [this.slotId, this.searchValue || undefined]
       },
+    },
+    searchLoading(){
+      return !!this.searchValue && !this.$subReady.slotFillers;
     },
     model(){
       if (this.slotId){
@@ -359,8 +355,6 @@ export default {
         sort: {name: 1, order: 1}
       }).fetch();
       let disabledNodeCount = 0;
-      let activeNodeCount = 0;
-      let lastActiveNodeId = undefined;
       // Mark slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes.forEach(node => {
@@ -384,23 +378,8 @@ export default {
         if (this.alreadyAdded.has(node._id)){
           node._disabledByAlreadyAdded = true;
         }
-        if (
-          !node._disabledBySlotFillerCondition &&
-          !node._disabledByQuantityFilled &&
-          !node._disabledByAlreadyAdded
-        ){
-          activeNodeCount += 1;
-          lastActiveNodeId = node._id;
-        }
       });
       this.disabledNodeCount = disabledNodeCount;
-      if (
-        activeNodeCount === 1 &&
-        this.$subReady.slotFillers &&
-        this.currentLimit >= this.countAll
-      ) {
-        this.selectedNodeIds = [lastActiveNodeId]
-      }
       return nodes;
     },
   }
