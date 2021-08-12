@@ -25,7 +25,7 @@
               :model="child"
             />
           </v-list-item-content>
-          <v-list-item-action>
+          <v-list-item-action v-if="context.printMode !== true">
             <v-btn
               icon
               small
@@ -37,7 +37,7 @@
         </v-list-item>
       </v-list>
       <v-btn
-        v-if="!slot.quantityExpectedResult || slot.spaceLeft"
+        v-if="(!slot.quantityExpectedResult || slot.spaceLeft) && context.printMode !== true"
         icon
         :data-id="`slot-add-button-${slot._id}`"
         class="slot-add-button"
@@ -62,6 +62,9 @@ import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 export default {
   components: {
     TreeNodeView,
+  },
+  inject: {
+    context: { default: {} }
   },
   props: {
     creatureId: {

@@ -5,7 +5,10 @@
     <health-bar-card-container :creature-id="creatureId" />
 
     <column-layout>
-      <div class="character-buttons">
+      <div
+        v-if="context.printMode !== true"
+        class="character-buttons"
+      >
         <v-card>
           <v-card-text class="layout column align-center">
             <rest-button
@@ -40,7 +43,7 @@
                   {{ buff.name }}
                 </v-list-item-title>
               </v-list-item-content>
-              <v-list-item-action>
+              <v-list-item-action v-if="context.printMode !== true">
                 <v-btn
                   icon
                   @click.stop="softRemove(buff._id)"
@@ -164,6 +167,7 @@
               :key="spellSlot._id"
               :model="spellSlot"
               :data-id="spellSlot._id"
+              :hide-cast-button="context.printMode === true"
               @click="clickProperty({_id: spellSlot._id})"
               @cast="castSpellWithSlot(spellSlot._id)"
             />
@@ -379,6 +383,9 @@
 			SpellSlotListTile,
       ActionCard,
 		},
+    inject: {
+      context: { default: {} }
+    },
 		props: {
 			creatureId: {
         type: String,

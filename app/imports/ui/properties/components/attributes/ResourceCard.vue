@@ -4,7 +4,10 @@
     :class="hover ? 'elevation-8': ''"
   >
     <v-layout>
-      <div class="buttons layout column justify-center pl-3">
+      <div
+        v-if="context.printMode !== true"
+        class="buttons layout column justify-center pl-3"
+      >
         <v-btn
           icon
           small
@@ -48,6 +51,9 @@
 
 <script lang="js">
 	export default {
+    inject: {
+      context: { default: {} }
+    },
 		props: {
 			_id: String,
 			name: String,
@@ -58,9 +64,6 @@
 		data(){ return{
 			hover: false,
 		}},
-    inject: {
-      context: { default: {} }
-    },
 		computed: {
 			currentValue(){
 				return this.value - (this.damage || 0);

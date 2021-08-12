@@ -6,7 +6,7 @@
     <draggable
       v-model="dataItems"
       style="min-height: 24px;"
-      :disabled="context.editPermission === false"
+      :disabled="context.editPermission === false || context.printMode === true"
       :group="`item-list`"
       ghost-class="ghost"
       draggable=".item"

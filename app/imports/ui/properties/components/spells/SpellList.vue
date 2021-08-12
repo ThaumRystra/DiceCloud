@@ -30,6 +30,7 @@
           :data-id="`spell-list-tile-${spell._id}`"
           :model="spell"
           :preparing-spells="preparingSpells"
+          :hide-handle="context.printMode === true"
           @click="clickProperty(spell._id)"
         />
       </template>

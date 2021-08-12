@@ -9,6 +9,7 @@
         class="float-left"
       >
         <v-layout
+          v-if="context.printMode !== true"
           column
           class="buttons"
           justify-center

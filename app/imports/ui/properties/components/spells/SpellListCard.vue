@@ -10,6 +10,7 @@
       </v-toolbar-title>
       <v-spacer />
       <v-menu
+        v-if="context.printMode !== true"
         bottom
         left
         transition="slide-y-transition"
@@ -36,7 +37,7 @@
     </template>
     <v-expand-transition>
       <v-card-text
-        v-if="preparedError || preparingSpells"
+        v-if="(preparedError || preparingSpells) && context.printMode !== true"
         :class="{'error--text' : preparedError}"
         class="pb-0"
       >
@@ -52,7 +53,7 @@
     <spell-list
       :spells="spells"
       :parent-ref="{id: model._id, collection: 'creatureProperties'}"
-      :preparing-spells="preparingSpells"
+      :preparing-spells="preparingSpells || context.printMode === true"
     />
   </toolbar-card>
 </template>
@@ -67,6 +68,9 @@ export default {
 		ToolbarCard,
     SpellList,
 	},
+  inject: {
+    context: { default: {} }
+  },
 	props: {
 		model: {
       type: Object,
@@ -84,7 +88,7 @@ export default {
         type: 'spell',
         removed: {$ne: true},
       };
-      if (this.preparingSpells){
+      if (this.preparingSpells || this.context.printMode === true) {
         filter.deactivatedByAncestor = {$ne: true};
       } else {
         filter.inactive = {$ne: true};

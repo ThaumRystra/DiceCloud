@@ -33,94 +33,115 @@
       key="character-tabs"
       class="fill-height"
     >
-      <h2 class="text-h2 ma-2">{{creature.name}}'s character sheet</h2>
+      <h2 class="text-h2 ma-2">
+        {{ creature.name }}'s character sheet
+      </h2>
 
-      <h2 class="text-h3 ma-2">Stats</h2>
+      <h2 class="text-h3 ma-2">
+        Stats
+      </h2>
       <stats-tab :creature-id="creatureId" />
-      <v-divider></v-divider>
-      <h2 class="text-h3 ma-2">Features</h2>
+      <v-divider />
+      <h2 class="text-h3 ma-2">
+        Features
+      </h2>
       <features-tab :creature-id="creatureId" />
-      <v-divider></v-divider>
-      <h2 class="text-h3 ma-2">Inventory</h2>
+      <v-divider />
+      <h2 class="text-h3 ma-2">
+        Inventory
+      </h2>
       <inventory-tab :creature-id="creatureId" />
       <div v-show="!creature.settings.hideSpellsTab">
-        <v-divider></v-divider>
-        <h2 class="text-h3 ma-2">Spells</h2>
-        <spells-tab :creature-id="creatureId"/>
+        <v-divider />
+        <h2 class="text-h3 ma-2">
+          Spells
+        </h2>
+        <spells-tab :creature-id="creatureId" />
       </div>
-      <v-divider></v-divider>
-      <h2 class="text-h3 ma-2">Character</h2>
+      <v-divider />
+      <h2 class="text-h3 ma-2">
+        Character
+      </h2>
       <character-tab :creature-id="creatureId" />
     </div>
   </div>
 </template>
 
 <script lang="js">
-  //TODO add a "no character found" screen if shown on a false address
-  // or on a character the user does not have permission to view
-	import Creatures from '/imports/api/creature/creatures/Creatures.js';
-	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
-	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
-	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
-	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
-	import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/CharacterTab.vue';
+//TODO add a "no character found" screen if shown on a false address
+// or on a character the user does not have permission to view
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
+import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
+import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
+import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
+import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/CharacterTab.vue';
+import {assertEditPermission} from '../../../api/creature/creatures/creaturePermissions';
 
-	export default {
-		components: {
-			StatsTab,
-			FeaturesTab,
-			InventoryTab,
-			SpellsTab,
-			CharacterTab
-		},
-		props: {
-			creatureId: {
-        type: String,
-        required: true,
+export default {
+  components: {
+    StatsTab,
+    FeaturesTab,
+    InventoryTab,
+    SpellsTab,
+    CharacterTab
+  },
+  props: {
+    creatureId: {
+      type: String,
+      required: true,
+    },
+  },
+  reactiveProvide: {
+    name: 'context',
+    include: ['creatureId', 'editPermission', 'printMode'],
+  },
+  computed: {},
+  watch: {
+    'creature.name'(value) {
+      this.$store.commit('setPageTitle', value || 'Character Sheet');
+    },
+  },
+  mounted() {
+    this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
+  },
+  updated() {
+    if (this.creature) {
+      // ensure everything is rendered *after* the creature has been loaded
+      this.$nextTick(function () {
+        print();
+      });
+    }
+  },
+  meteor: {
+    $subscribe: {
+      'singleCharacter'() {
+        return [this.creatureId];
       },
-		},
-    reactiveProvide: {
-      name: 'context',
-      include: ['creatureId', 'editPermission'],
     },
-    computed: {},
-    watch: {
-      'creature.name'(value){
-        this.$store.commit('setPageTitle', value || 'Character Sheet');
-      },
+    creature() {
+      return Creatures.findOne(this.creatureId, {
+        fields: {variables: 0}
+      });
     },
-    mounted(){
-      this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
-    },
-    updated(){
-      if(this.creature) {
-        // ensure everything is rendered *after* the creature has been loaded
-        this.$nextTick(function () {
-          print();
-        });
+    editPermission(){
+      try {
+        assertEditPermission(this.creature, Meteor.userId());
+        return true;
+      } catch (e) {
+        return false;
       }
     },
-		meteor: {
-			$subscribe: {
-        'singleCharacter'(){
-					return [this.creatureId];
-				},
-			},
-			creature(){
-				return Creatures.findOne(this.creatureId, {
-          fields: {variables: 0}
-        });
-			},
-      editPermission(){
-        return false;
-      },
-		},
-	}
+    printMode () {
+      return true;
+    }
+  },
+}
 </script>
 
 <style>
-  .character-sheet .v-window-item {
-    min-height: calc(100vh - 96px);
-    overflow: hidden;
-  }
+.character-sheet .v-window-item {
+  min-height: calc(100vh - 96px);
+  overflow: hidden;
+}
 </style>

@@ -67,7 +67,7 @@
                   }} XP
                 </v-list-item-title>
               </v-list-item-content>
-              <v-list-item-action>
+              <v-list-item-action v-if="context.printMode !== true">
                 <v-btn
                   icon
                   data-id="experience-info-button"
@@ -76,7 +76,7 @@
                   <v-icon>mdi-information-outline</v-icon>
                 </v-btn>
               </v-list-item-action>
-              <v-list-item-action>
+              <v-list-item-action v-if="context.printMode !== true">
                 <v-btn
                   icon
                   data-id="experience-add-button"
@@ -128,6 +128,9 @@ export default {
     NoteCard,
     Slots,
     ToolbarCard,
+  },
+  inject: {
+    context: { default: {} }
   },
   props: {
     creatureId: {

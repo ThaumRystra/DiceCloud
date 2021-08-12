@@ -35,7 +35,7 @@
         </v-icon>
       </increment-button>
     </v-list-item-action>
-    <v-list-item-action>
+    <v-list-item-action v-if="context.printMode !== true">
       <v-icon
         :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"
