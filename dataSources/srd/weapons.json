@@ -341,8 +341,8 @@
 		"weight": 3,
 		"attacks": [
 			{
-				"attackBonus": "strengthMod + proficiencyBonus",
-				"damage": "1d6 + {strengthMod}",
+				"attackBonus": "max(strengthMod, dexterityMod) + proficiencyBonus",
+				"damage": "1d6 + {max(strengthMod, dexterityMod)}",
 				"details": "Finesse, light",
 				"damageType": "slashing"
 			}
