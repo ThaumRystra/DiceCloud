@@ -298,6 +298,9 @@
     meteor: {
       '$subscribe':{
         'searchLibraryNodes': [],
+        'selectedLibraryNodes'(){
+          return [this.selectedNodeIds];
+        },
       },
       showPropertyHelp(){
         let user = Meteor.user();

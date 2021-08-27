@@ -144,7 +144,7 @@
     meteor: {
       hideSpellsTab(){
         let creature = Creatures.findOne(this.creatureId);
-        return creature?.settings.hideSpellsTab;
+        return creature?.settings?.hideSpellsTab;
       },
     },
     methods: {
