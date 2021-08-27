@@ -69,6 +69,28 @@ Meteor.publish('libraryNodes', function(libraryId){
   });
 });
 
+Meteor.publish('softRemovedLibraryNodes', function(libraryId){
+  if (!libraryId) return [];
+  libraryIdSchema.validate({libraryId});
+  this.autorun(function (){
+    let userId = this.userId;
+    let library = Libraries.findOne(libraryId);
+    try { assertViewPermission(library, userId) }
+    catch(e){
+      return this.error(e);
+    }
+    return [
+      LibraryNodes.find({
+        'ancestors.0.id': libraryId,
+        removed: true,
+        removedWith: {$exists: false},
+      }, {
+        sort: {order: 1},
+      }),
+    ];
+  });
+});
+
 Meteor.publish('descendantLibraryNodes', function(nodeId){
   let node = LibraryNodes.findOne(nodeId);
   let libraryId = node?.ancestors[0]?.id;
