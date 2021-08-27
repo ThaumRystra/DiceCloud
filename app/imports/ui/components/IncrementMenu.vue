@@ -79,17 +79,18 @@
 		},
 		data() {
 			return {
-				editValue: 0,
+				editValue: this.value,
 				operation: 'set',
 				hover: false,
 			};
 		},
     watch: {
-      open(newValue){
-        if (newValue){
-          this.resetData();
-        }
-      }
+      open: {
+        immediate: true,
+        handler(isOpen) {
+          if (isOpen) this.resetData();
+        },
+      },
     },
 		methods: {
       resetData(){

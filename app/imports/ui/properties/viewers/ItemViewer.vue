@@ -5,7 +5,7 @@
       v-if="model.quantity > 1 || model.showIncrement"
       class="layout justify-center align-center wrap"
     >
-      <div class="text-h4">
+      <div class="text-h4 mr-3">
         {{ model.quantity }}
       </div>
       <increment-button
