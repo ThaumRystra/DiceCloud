@@ -29,10 +29,10 @@
           Special Thanks
         </h3>
         <p>
-          <b>Sam</b> My fiancée, without whom DiceCloud could not hope to exist
+          <b>Sam;</b> without her love, DiceCloud could not hope to exist
         </p><p>
           <b>The "Heroes" of Asaea</b> The D&amp;D party whose joy was the fuel
-          with which DiceCloud was powered
+          with which the early versions of DiceCloud was powered
         </p>
         <h3 class="text-h6">
           Paragon tier Patrons
