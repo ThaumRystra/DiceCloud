@@ -116,7 +116,7 @@ function insertPropertyFromNode(nodeId, ancestors, order){
   nodes = [node, ...nodes];
 
   // set libraryNodeIds
-  storeLibraryNodeReferences(nodes, nodeId);
+  storeLibraryNodeReferences(nodes);
 
   // re-map all the ancestors
   setLineageOfDocs({
@@ -149,6 +149,7 @@ function insertPropertyFromNode(nodeId, ancestors, order){
 
 function storeLibraryNodeReferences(nodes){
   nodes.forEach(node => {
+    if (node.libraryNodeId) return;
     node.libraryNodeId = node._id;
   });
 }
@@ -162,20 +163,11 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0){
 
   // Filter out the reference nodes we replace
   let resultingNodes = nodes.filter(node => {
-
-    // We have already visited this ref and replaced it
-    if (visitedRefs.has(node._id)) return false;
-
-    // Already replaced an ancestor node
-    for (let i; i < node.ancestors.length; i++){
-      if (visitedRefs.has(node.ancestors[i].id)) return false;
-    }
-
     // This isn't a reference node, continue as normal
     if (node.type !== 'reference') return true;
 
     // We have gone too deep, keep the reference node as an error
-    if (depth > 10){
+    if (depth >= 10){
       if (Meteor.isClient) console.warn('Reference depth limit exceeded');
       node.cache = {error: 'Reference depth limit exceeded'};
       return true;
@@ -211,26 +203,31 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0){
 			oldParent: referencedNode.parent,
 		});
 
-    // Remove all the looped references and descendents from the new nodes
-    // We can't rely on the reify recursion to do this, since the IDs are
-    // getting renewed before it is called
-    addedNodes = addedNodes.filter(node => {
-      // Exclude removed referenced
-      if (visitedRefs.has(node._id)) return false;
-
-      // Exclude descendants of removed references
-      for (let i; i < node.ancestors.length; i++){
-        if (visitedRefs.has(node.ancestors[i].id)) return false;
+    // Filter all the looped references
+    addedNodes = addedNodes.filter(addedNode => {
+      // Add all non-reference nodes
+      if (addedNode.type !== 'reference'){
+        return true;
       }
-      return true;
+      // If this exact reference has already been resolved before, filter it out
+      if (visitedRefs.has(addedNode._id)){
+        return false;
+      } else {
+        // Otherwise mark it as visited, and keep it
+        visitedRefs.add(addedNode._id);
+        return true;
+      }
     });
 
-    // TODO: Force the referencedNode to take the old id of the reference
-    // such that the reference's children can be kept
+    // Before renewing Ids make sure the library node reference is stored
+    storeLibraryNodeReferences(addedNodes);
 
     // Give the new referenced sub-tree new ids
+    // The referenced node must get the id of the ref node so that the
+    // descendants of the ref node keep their ancestry intact
     renewDocIds({
       docArray: addedNodes,
+      idMap: { [referencedNode._id]: node._id },
     });
 
     // Reify the subtree as well with recursion

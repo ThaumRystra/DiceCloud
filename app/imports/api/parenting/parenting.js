@@ -101,7 +101,6 @@ export function getAncestry({parentRef, inheritedFields = {}}){
 }
 
 export function setLineageOfDocs({docArray, oldParent, newAncestry}){
-  //const oldParent = oldAncestry[oldAncestry.length - 1];
   const newParent = newAncestry[newAncestry.length - 1];
   docArray.forEach(doc => {
     if(doc.parent.id === oldParent.id){
@@ -109,6 +108,7 @@ export function setLineageOfDocs({docArray, oldParent, newAncestry}){
     }
     let oldAncestors = doc.ancestors;
     let oldParentIndex = oldAncestors.findIndex(a => a.id === oldParent.id);
+    if (oldParentIndex === -1) return;
     doc.ancestors = [...newAncestry, ...oldAncestors.slice(oldParentIndex + 1)];
   });
 }
@@ -117,17 +117,15 @@ export function setLineageOfDocs({docArray, oldParent, newAncestry}){
  * Give documents new random ids and transform their references.
  * Transform collections of re-IDed docs according to the collection map
  */
-export function renewDocIds({docArray, collectionMap}){
-  // map of {oldId: newId}
-  let idMap = {};
-
+export function renewDocIds({docArray, collectionMap, idMap = {}}){
+  // idMap is a map of {oldId: newId}
   // Get a random generator that's consistent on client and server
   let randomSrc = DDP.randomStream('renewDocIds');
 
   // Give new ids and map the changes as {oldId: newId}
   docArray.forEach(doc => {
     let oldId = doc._id;
-    let newId = randomSrc.id();
+    let newId = idMap[oldId] || randomSrc.id();
     doc._id = newId;
     idMap[oldId] = newId;
   });
