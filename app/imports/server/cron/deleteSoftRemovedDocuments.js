@@ -10,17 +10,17 @@ Meteor.startup(() => {
 	];
 
 	/**
-	 * Deletes all soft removed documents that were removed more than 30 minutes ago
+	 * Deletes all soft removed documents that were removed more than 1 day ago
 	 * and were not restored
 	 * @return {Number} Number of documents removed
 	 */
 	const deleteOldSoftRemovedDocs = function(){
 		const now = new Date();
-		const thirtyMinutesAgo = new Date(now.getTime() - 30*60000);
+    const yesterday = new Date(now.getTime() - (24 * 60 * 60 * 1000));
 		collections.forEach(collection => {
 			collection.remove({
 				removed: true,
-				removedAt: {$lt: thirtyMinutesAgo} // dates *before* 30 minutes ago
+				removedAt: {$lt: yesterday} // dates *before* yesterday
 			}, function(error){
 				if (error){
 					console.error(JSON.stringify(error, null, 2));

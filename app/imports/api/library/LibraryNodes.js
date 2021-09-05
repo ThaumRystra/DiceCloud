@@ -14,6 +14,7 @@ import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import '/imports/api/library/methods/index.js';
 import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import { restore } from '/imports/api/parenting/softRemove.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -186,6 +187,25 @@ const softRemoveLibraryNode = new ValidatedMethod({
 	}
 });
 
+const restoreLibraryNode = new ValidatedMethod({
+	name: 'libraryNodes.restore',
+	validate: new SimpleSchema({
+		_id: SimpleSchema.RegEx.Id
+	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+	run({_id}){
+    // Permissions
+    let node = LibraryNodes.findOne(_id);
+    assertNodeEditPermission(node, this.userId);
+    // Do work
+    restore({_id, collection: LibraryNodes});
+	}
+});
+
 export default LibraryNodes;
 export {
 	LibraryNodeSchema,
@@ -194,4 +214,5 @@ export {
 	pullFromLibraryNode,
 	pushToLibraryNode,
 	softRemoveLibraryNode,
+  restoreLibraryNode,
 };

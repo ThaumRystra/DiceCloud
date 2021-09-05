@@ -93,7 +93,15 @@ function insertPropertyFromNode(nodeId, ancestors, order){
     _id: nodeId,
     removed: {$ne: true},
   });
-  if (!node) throw `Node not found for nodeId: ${nodeId}`;
+  if (!node) {
+    if (Meteor.isClient) return;
+    else {
+      throw new Meteor.Error(
+        'Insert property from library failed',
+        `No library document with id '${nodeId}' was found`
+      );
+    }
+  }
   let oldParent = node.parent;
   let nodes = LibraryNodes.find({
     'ancestors.id': nodeId,

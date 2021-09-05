@@ -1,6 +1,42 @@
 import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
+
+Meteor.publish('selectedLibraryNodes', function(selectedNodeIds){
+  console.log('attempting selectedLibraryNodes')
+  check(selectedNodeIds, Array);
+  // Limit to 20 selected nodes
+  if (selectedNodeIds.length > 20){
+    selectedNodeIds = selectedNodeIds.slice(0, 20);
+  }
+  let libraryViewPermissions = {};
+  // Check view permissions of all libraries
+  for (let id of selectedNodeIds){
+    let node = LibraryNodes.findOne(id);
+    if (!node) continue;
+    let libraryId = node.ancestors[0].id;
+    if (libraryViewPermissions[id]){
+      continue;
+    } else {
+      let library = Libraries.findOne(libraryId, {fields: {
+        owner: 1,
+        readers: 1,
+        writers: 1,
+        public: 1,
+      }});
+      assertViewPermission(library, this.userId);
+      libraryViewPermissions[id] = true;
+    }
+  }
+  // Return all nodes and their children
+  return [LibraryNodes.find({
+    $or: [
+      {_id: {$in: selectedNodeIds}},
+      {'ancestors.id': {$in: selectedNodeIds}},
+    ],
+  })];
+});
 
 Meteor.publish('searchLibraryNodes', function(){
   let self = this;

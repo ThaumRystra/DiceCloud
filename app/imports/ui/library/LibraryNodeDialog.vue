@@ -75,6 +75,7 @@
     pushToLibraryNode,
     pullFromLibraryNode,
     softRemoveLibraryNode,
+    restoreLibraryNode,
   } from '/imports/api/library/LibraryNodes.js';
   import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode.js';
   import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
@@ -86,6 +87,8 @@
   import { get } from 'lodash';
   import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
   import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
+  import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+  import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 
   let formIndex = {};
   for (let key in propertyFormIndex){
@@ -212,12 +215,20 @@
         });
       },
       remove(){
-        softRemoveLibraryNode.call({_id: this.currentId});
+        let _id = this.currentId;
+        softRemoveLibraryNode.call({_id});
         if (this.embedded){
           this.$emit('removed');
         } else {
           this.$store.dispatch('popDialogStack');
         }
+        snackbar({
+          text: `Deleted ${getPropertyTitle(this.model)}`,
+          callbackName: 'undo',
+          callback(){
+            restoreLibraryNode.call({_id});
+          },
+        });
       },
     }
   };

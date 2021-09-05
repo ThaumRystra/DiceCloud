@@ -4,19 +4,32 @@
       column
       align-center
     >
-      <div
-        v-if="model.value !== undefined"
-        class="text-h4"
-      >
+      <v-layout v-if="model.value !== undefined">
         <div
-          v-if="model.damage !== undefined"
+          class="text-h4 mr-3"
         >
-          {{ model.value - model.damage }} / {{ model.value }}
+          <div
+            v-if="model.damage !== undefined"
+          >
+            {{ model.value - model.damage }} / {{ model.value }}
+          </div>
+          <div v-else>
+            {{ model.value }}
+          </div>
         </div>
-        <div v-else>
-          {{ model.value }}
-        </div>
-      </div>
+
+        <increment-button
+          v-if="context.creatureId"
+          icon
+          large
+          outlined
+          color="primary"
+          :value="model.value - (model.damage || 0)"
+          @change="damageProperty"
+        >
+          <v-icon>$vuetify.icons.abacus</v-icon>
+        </increment-button>
+      </v-layout>
       <div
         v-if="model.modifier !== undefined"
         class="text-h6"
@@ -68,15 +81,18 @@
 	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 	import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+  import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+  import IncrementButton from '/imports/ui/components/IncrementButton.vue';
 
 	export default {
+		components: {
+			AttributeEffect,
+      IncrementButton,
+		},
+		mixins: [propertyViewerMixin],
     inject: {
       context: { default: {} }
     },
-		components: {
-			AttributeEffect,
-		},
-		mixins: [propertyViewerMixin],
 		computed: {
 			reset(){
 				let reset = this.model.reset
@@ -95,6 +111,13 @@
           component: 'creature-property-dialog',
           elementId: `${id}`,
           data: {_id: id},
+        });
+      },
+      damageProperty({type, value}) {
+        damageProperty.call({
+          _id: this.model._id,
+          operation: type,
+          value: value
         });
       },
 		},

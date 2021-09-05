@@ -4,7 +4,9 @@ import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 
-Meteor.publish('slotFillers', function(slotId){
+Meteor.publish('slotFillers', function(slotId, searchTerm){
+  if (searchTerm) check(searchTerm, String);
+
   let self = this;
   this.autorun(function (){
     let userId = this.userId;
@@ -42,21 +44,17 @@ Meteor.publish('slotFillers', function(slotId){
       var limit = self.data('limit') || 50;
       check(limit, Number);
 
-      // Get the search term
-      let searchTerm = self.data('searchTerm') || '';
-      check(searchTerm, String);
-
       let options = undefined;
       if (searchTerm){
         filter.$text = {$search: searchTerm};
         options = {
           // relevant documents have a higher score.
           fields: {
-            score: { $meta: 'textScore' }
+            _score: { $meta: 'textScore' }
           },
           sort: {
             // `score` property specified in the projection fields above.
-            score: { $meta: 'textScore' },
+            _score: { $meta: 'textScore' },
             name: 1,
             order: 1,
           }
@@ -74,6 +72,7 @@ Meteor.publish('slotFillers', function(slotId){
         self.setData('countAll', LibraryNodes.find(filter).count());
       });
       self.autorun(function () {
+        Meteor._sleepForMs(1000);
         return [LibraryNodes.find(filter, options), libraries];
       });
     });

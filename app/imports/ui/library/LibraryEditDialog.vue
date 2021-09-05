@@ -27,6 +27,35 @@
         @change="updateName"
       />
     </template>
+    <template v-if="removedDocs.length">
+      <h3>Recently Deleted Properties</h3>
+      <v-list>
+        <v-list-item
+          v-for="model in removedDocs"
+          :key="model._id"
+        >
+          <v-list-item-content>
+            <v-list-item-title>
+              <tree-node-view :model="model" />
+            </v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-btn
+              color="accent"
+              text
+              @click="restore(model._id)"
+            >
+              Restore
+            </v-btn>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+    </template>
+    <v-progress-circular
+      v-if="!$subReady.softRemovedLibraryNodes"
+      indeterminate
+      color="primary"
+    />
     <template slot="actions">
       <v-spacer />
       <v-btn
@@ -43,10 +72,13 @@
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Libraries, { updateLibraryName, removeLibrary } from '/imports/api/library/Libraries.js';
+import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNodes.js';
+import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 export default {
 	components: {
 		DialogBase,
+    TreeNodeView,
 	},
 	props: {
 		_id: String,
@@ -90,11 +122,28 @@ export default {
 				},
 			});
 		},
+    restore(_id){
+      restoreLibraryNode.call({_id});
+    },
 	},
 	meteor: {
+    '$subscribe':{
+      softRemovedLibraryNodes(){
+        return [this._id];
+      },
+    },
 		model(){
 			return Libraries.findOne(this._id);
 		},
+    removedDocs(){
+      return LibraryNodes.find({
+        'ancestors.0.id': this._id,
+        removed: true,
+        removedWith: {$exists: false},
+      }, {
+        sort: {order: 1},
+      });
+    }
 	}
 }
 </script>
