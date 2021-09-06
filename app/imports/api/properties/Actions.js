@@ -5,9 +5,8 @@ import {
   InlineCalculationFieldSchema,
 } from '/imports/api/properties/subSchemas/InlineCalculationFieldSchema.js';
 import {
-  FieldToComputeSchema,
-  ComputedOnlyFieldSchema,
-  ComputedFieldSchema,
+  fieldToCompute,
+  computedOnlyField,
 } from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
 import {
   ResourcesSchema,
@@ -60,7 +59,7 @@ let ActionSchema = new SimpleSchema({
   },
   // Calculation of how many times this action can be used
   uses: {
-    type: FieldToComputeSchema,
+    type: Object,
     optional: true,
   },
   // Integer of how many times it has already been used
@@ -74,7 +73,7 @@ let ActionSchema = new SimpleSchema({
     allowedValues: ['longRest', 'shortRest'],
     optional: true,
   },
-});
+}).extend(fieldToCompute('uses'));
 
 const ComputedOnlyActionSchema = new SimpleSchema({
   summary: {
@@ -83,10 +82,6 @@ const ComputedOnlyActionSchema = new SimpleSchema({
   },
   description: {
     type: ComputedOnlyInlineCalculationFieldSchema,
-    optional: true,
-  },
-  uses: {
-    type: ComputedOnlyFieldSchema,
     optional: true,
   },
   resources: {
@@ -99,16 +94,12 @@ const ComputedOnlyActionSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
-});
+}).extend(computedOnlyField('uses'));
 
 const ComputedActionSchema = new SimpleSchema()
   .extend(ActionSchema)
   .extend(ComputedOnlyActionSchema)
   .extend({
-    uses: {
-      type: ComputedFieldSchema,
-      optional: true,
-    },
     summary: {
       type: InlineCalculationFieldSchema,
       optional: true,

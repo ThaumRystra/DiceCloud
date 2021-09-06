@@ -1,15 +1,20 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import {
+  fieldToCompute,
+  computedOnlyField,
+} from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
 
 const AdjustmentSchema = new SimpleSchema({
 	// The roll that determines how much to change the attribute
   // This can be simplified, but should only compute when activated
   amount: {
-    type: String,
+    type: Object,
     optional: true,
-    defaultValue: '1',
-    max: STORAGE_LIMITS.calculation,
+  },
+  'amount.calculation': {
+    type: String,
+    defaultValue: 1,
   },
 	// Who this adjustment applies to
 	target: {
@@ -32,22 +37,9 @@ const AdjustmentSchema = new SimpleSchema({
     allowedValues: ['set', 'increment'],
     defaultValue: 'increment',
   },
-});
+}).extend(fieldToCompute('amount'));
 
-const ComputedOnlyAdjustmentSchema = new SimpleSchema({
-  amountResult: {
-    type: SimpleSchema.oneOf(String, Number),
-    optional: true,
-  },
-  amountErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'amountErrors.$':{
-    type: ErrorSchema,
-  },
-});
+const ComputedOnlyAdjustmentSchema = computedOnlyField('amount');
 
 const ComputedAdjustmentSchema = new SimpleSchema()
   .extend(AdjustmentSchema)

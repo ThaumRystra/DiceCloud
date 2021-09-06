@@ -52,3 +52,4 @@ seba:minifiers-autoprefixer
 akryum:vue-component
 akryum:vue-sass
 percolate:migrations
+meteortesting:mocha

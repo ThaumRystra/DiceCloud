@@ -10,6 +10,10 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
 let CreaturePropertySchema = new SimpleSchema({
+  _id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
   _migrationError: {
     type: String,
     optional: true,
