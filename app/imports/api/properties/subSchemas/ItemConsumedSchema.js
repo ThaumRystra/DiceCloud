@@ -1,13 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { Random } from 'meteor/random';
-import {
-  fieldToCompute,
-  computedOnlyField,
-} from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-const ItemConsumedSchema = new SimpleSchema({
+const ItemConsumedSchema = createPropertySchema({
   _id: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -20,7 +17,7 @@ const ItemConsumedSchema = new SimpleSchema({
     optional: true,
   },
   quantity: {
-    type: Object,
+    type: 'fieldToCompute',
     optional: true,
   },
   itemId: {
@@ -28,11 +25,15 @@ const ItemConsumedSchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
-}).extend(fieldToCompute('quantity'));
+});
 
 const ComputedOnlyItemConsumedSchema = new SimpleSchema({
   available: {
     type: Number,
+    optional: true,
+  },
+  quantity: {
+    type: 'computedOnlyField',
     optional: true,
   },
   // This appears both in the computed and uncomputed schema because it can be
@@ -57,7 +58,7 @@ const ComputedOnlyItemConsumedSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.color,
   },
-}).extend(computedOnlyField('quantity'));
+});
 
 const ComputedItemConsumedSchema = new SimpleSchema()
   .extend(ItemConsumedSchema)

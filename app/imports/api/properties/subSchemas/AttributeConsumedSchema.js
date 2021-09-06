@@ -1,12 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 import { Random } from 'meteor/random';
-import {
-  fieldToCompute,
-  computedOnlyField,
-} from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-const AttributeConsumedSchema = new SimpleSchema({
+const AttributeConsumedSchema = createPropertySchema({
   _id: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -20,12 +17,12 @@ const AttributeConsumedSchema = new SimpleSchema({
     max: STORAGE_LIMITS.variableName,
   },
   quantity: {
-    type: Object,
+    type: 'fieldToCompute',
     optional: true,
   },
-}).extend(fieldToCompute('quantity'));
+});
 
-const ComputedOnlyAttributeConsumedSchema = new SimpleSchema({
+const ComputedOnlyAttributeConsumedSchema = createPropertySchema({
   available: {
     type: Number,
     optional: true,
@@ -40,7 +37,11 @@ const ComputedOnlyAttributeConsumedSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.name,
   },
-}).extend(computedOnlyField('quantity'));
+  quantity: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+});
 
 const ComputedAttributeConsumedSchema = new SimpleSchema()
   .extend(AttributeConsumedSchema)

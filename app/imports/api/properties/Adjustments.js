@@ -1,15 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import {
-  fieldToCompute,
-  computedOnlyField,
-} from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-const AdjustmentSchema = new SimpleSchema({
+const AdjustmentSchema = createPropertySchema({
 	// The roll that determines how much to change the attribute
   // This can be simplified, but should only compute when activated
   amount: {
-    type: Object,
+    type: 'fieldToCompute',
     optional: true,
   },
   'amount.calculation': {
@@ -37,9 +34,14 @@ const AdjustmentSchema = new SimpleSchema({
     allowedValues: ['set', 'increment'],
     defaultValue: 'increment',
   },
-}).extend(fieldToCompute('amount'));
+});
 
-const ComputedOnlyAdjustmentSchema = computedOnlyField('amount');
+const ComputedOnlyAdjustmentSchema = createPropertySchema({
+  amount: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+});
 
 const ComputedAdjustmentSchema = new SimpleSchema()
   .extend(AdjustmentSchema)
