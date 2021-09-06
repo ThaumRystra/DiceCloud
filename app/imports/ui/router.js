@@ -24,6 +24,7 @@ import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
 import Tabletops from '/imports/ui/pages/Tabletops.vue';
 import Tabletop from '/imports/ui/pages/Tabletop.vue';
 import TabletopToolbar from '/imports/ui/tabletop/TabletopToolbar.vue';
+import Admin from '/imports/ui/pages/Admin.vue';
 
 let userSubscription = Meteor.subscribe('user');
 
@@ -241,6 +242,11 @@ RouterFactory.configure(factory => {
       path: '/icon-admin',
       name: 'iconAdmin',
       component: IconAdmin,
+      beforeEnter: ensureAdmin,
+    },{
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
       beforeEnter: ensureAdmin,
     },
   ]);

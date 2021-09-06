@@ -1,5 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import { Random } from 'meteor/random';
+import {
+  FieldToComputeSchema,
+  ComputedOnlyFieldSchema,
+  ComputedFieldSchema,
+} from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
+import { storedIconsSchema } from '/imports/api/icons/Icons.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const ItemConsumedSchema = new SimpleSchema({
   _id: {
@@ -14,13 +21,61 @@ const ItemConsumedSchema = new SimpleSchema({
     optional: true,
   },
   quantity: {
-    type: Number,
-    defaultValue: 1,
+    type: FieldToComputeSchema,
+    optional: true,
   },
   itemId: {
     type: String,
+    regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
 });
 
-export default ItemConsumedSchema;
+const ComputedOnlyItemConsumedSchema = new SimpleSchema({
+  available: {
+    type: Number,
+    optional: true,
+  },
+  quantity: {
+    type: ComputedOnlyFieldSchema,
+    optional: true,
+  },
+  // This appears both in the computed and uncomputed schema because it can be
+  // set by both a computation or a form
+  itemId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
+  itemName: {
+    type: String,
+    max: STORAGE_LIMITS.name,
+    optional: true,
+  },
+  itemIcon: {
+    type: storedIconsSchema,
+    optional: true,
+    max: STORAGE_LIMITS.icon,
+  },
+  itemColor: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.color,
+  },
+})
+
+const ComputedItemConsumedSchema = new SimpleSchema()
+  .extend(ItemConsumedSchema)
+  .extend(ComputedOnlyItemConsumedSchema)
+  .extend({
+    quantity: {
+      type: ComputedFieldSchema,
+      optional: true,
+    },
+  });
+
+export {
+  ItemConsumedSchema,
+  ComputedOnlyItemConsumedSchema,
+  ComputedItemConsumedSchema
+};

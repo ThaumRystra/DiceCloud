@@ -6,3 +6,4 @@ import '/imports/server/publications/index.js';
 import '/imports/server/cron/deleteSoftRemovedDocuments.js';
 import '/imports/api/parenting/organizeMethods.js';
 import '/imports/api/users/patreon/updatePatreonOnLogin.js';
+import '/imports/migrations/index.js';
