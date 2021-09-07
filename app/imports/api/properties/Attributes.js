@@ -1,13 +1,12 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 /*
  * Attributes are numbered stats of a character
  */
-let AttributeSchema = new SimpleSchema({
+let AttributeSchema = createPropertySchema({
   name: {
 		type: String,
     defaultValue: 'New Attribute',
@@ -41,24 +40,22 @@ let AttributeSchema = new SimpleSchema({
   // For type hitDice, the size needs to be stored separately
   hitDiceSize: {
     type: String,
-    allowedValues: ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'],
+    allowedValues: ['d1', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'],
     optional: true,
   },
   // For type spellSlot, the level needs to be stored separately
-  spellSlotLevelCalculation: {
-    type: String,
+  spellSlotLevel: {
+    type: 'fieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.calculation,
   },
 	// The starting value, before effects
-	baseValueCalculation: {
-		type: String,
+	baseValue: {
+    type: 'fieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.calculation,
 	},
   // Description of what the attribute is used for
   description: {
-		type: String,
+    type: 'inlineCalculationFieldToCompute',
 		optional: true,
     max: STORAGE_LIMITS.description,
 	},
@@ -81,47 +78,27 @@ let AttributeSchema = new SimpleSchema({
   },
 });
 
-let ComputedOnlyAttributeSchema = new SimpleSchema({
-  descriptionCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
+let ComputedOnlyAttributeSchema = createPropertySchema({
+  description: {
+    type: 'computedOnlyInlineCalculationField',
+    optional: true,
   },
-  'descriptionCalculations.$': InlineComputationSchema,
-  // The result of baseValueCalculation
   baseValue: {
-    type: SimpleSchema.oneOf(Number, String, Boolean),
+    type: 'computedOnlyField',
     optional: true,
   },
-  baseValueErrors: {
-    type: Array,
-    optional: true,
-  },
-  'baseValueErrors.$': {
-    type: ErrorSchema,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  // The result of spellSlotLevelCalculation
-  spellSlotLevelValue: {
-    type: SimpleSchema.oneOf(Number, String, Boolean),
-    optional: true,
-  },
-  spellSlotLevelErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'spellSlotLevelErrors.$': {
-    type: ErrorSchema,
+  spellSlotLevel: {
+    type: 'computedOnlyField',
+		optional: true,
   },
 	// The computed value of the attribute
-  value: {
+  total: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
 		defaultValue: 0,
     optional: true,
   },
   // The computed value of the attribute minus the damage
-  currentValue: {
+  value: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
 		defaultValue: 0,
     optional: true,

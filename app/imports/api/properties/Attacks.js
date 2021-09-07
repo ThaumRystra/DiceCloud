@@ -1,18 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
-import {
-  fieldToCompute,
-  computedOnlyField,
-} from '/imports/api/properties/subSchemas/ComputedFieldSchema.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 // Attacks are special instances of actions
 let AttackSchema = new SimpleSchema()
   .extend(ActionSchema)
-  .extend({
+  .extend(createPropertySchema({
     // What gets added to the d20 roll
     rollBonus: {
-      type: Object,
+      type: 'fieldToCompute',
       optional: true,
     },
     'rollBonus.calculation': {
@@ -34,11 +31,16 @@ let AttackSchema = new SimpleSchema()
       type: String,
       max: STORAGE_LIMITS.tagLength,
     },
-  }).extend(fieldToCompute('rollBonus'));
+  }));
 
 const ComputedOnlyAttackSchema = new SimpleSchema()
   .extend(ComputedOnlyActionSchema)
-  .extend(computedOnlyField('rollBonus'));
+  .extend(createPropertySchema({
+    rollBonus: {
+      type: 'computedOnlyField',
+      optional: true,
+    },
+  }));
 
 const ComputedAttackSchema = new SimpleSchema()
   .extend(AttackSchema)

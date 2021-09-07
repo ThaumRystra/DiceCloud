@@ -94,7 +94,7 @@
       >
         <v-btn
           color="accent"
-          round
+          rounded
           large
           to="/sign-in"
         >

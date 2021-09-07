@@ -86,6 +86,10 @@ const ComputedOnlyActionSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  uses: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
 });
 
 const ComputedActionSchema = new SimpleSchema()

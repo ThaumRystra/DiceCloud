@@ -11,7 +11,7 @@ const exampleAction = {
       'itemsConsumed':[],
       'attributesConsumed':[{
           '_id':'FaK6jXEj3pSe7mNuu',
-          'quantity':1,
+          'quantity': '1',
           'variableName':'HunterTech',
           'statId':'qccf9j5tfNJjZ3GGn',
           'statName':'Hunter\'s Technique',
