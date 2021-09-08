@@ -1,3 +1,4 @@
+import '/imports/api/simpleSchemaConfig.js';
 import '/imports/server/config/accountsEmailConfig.js';
 import '/imports/server/config/SimpleRestConfig.js';
 import '/imports/server/config/simpleSchemaDebug.js';

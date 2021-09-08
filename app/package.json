@@ -35,6 +35,7 @@
     "meteor-node-stubs": "^1.1.0",
     "moo": "^0.5.1",
     "nearley": "^2.19.1",
+    "ngraph.graph": "^19.1.0",
     "qrcode": "^1.4.4",
     "request": "^2.88.2",
     "simpl-schema": "^1.12.0",

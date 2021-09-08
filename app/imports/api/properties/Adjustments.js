@@ -7,10 +7,8 @@ const AdjustmentSchema = createPropertySchema({
   // This can be simplified, but should only compute when activated
   amount: {
     type: 'fieldToCompute',
+    parseLevel: 'compile',
     optional: true,
-  },
-  'amount.calculation': {
-    type: String,
     defaultValue: 1,
   },
 	// Who this adjustment applies to
@@ -39,6 +37,7 @@ const AdjustmentSchema = createPropertySchema({
 const ComputedOnlyAdjustmentSchema = createPropertySchema({
   amount: {
     type: 'computedOnlyField',
+    parseLevel: 'compile',
     optional: true,
   },
 });

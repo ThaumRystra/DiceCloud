@@ -46,6 +46,9 @@ let CreaturePropertySchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
+});
+
+const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   // Denormalised flag if this property is inactive on the sheet for any reason
   // Including being disabled, or a decendent of a disabled property
   inactive: {
@@ -86,6 +89,8 @@ let CreaturePropertySchema = new SimpleSchema({
   },
 });
 
+CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
+
 for (let key in propertySchemasIndex){
 	let schema = new SimpleSchema({});
 	schema.extend(propertySchemasIndex[key]);
@@ -104,5 +109,6 @@ import '/imports/api/creature/actions/castSpellWithSlot.js';
 
 export default CreatureProperties;
 export {
+  DenormalisedOnlyCreaturePropertySchema,
 	CreaturePropertySchema,
 };

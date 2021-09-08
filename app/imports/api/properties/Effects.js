@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 /*
  * Effects are reason-value attached to skills and abilities
  * that modify their final value or presentation in some way
  */
-let EffectSchema = new SimpleSchema({
+let EffectSchema = createPropertySchema({
 	name: {
 		type: String,
 		optional: true,
@@ -30,10 +30,9 @@ let EffectSchema = new SimpleSchema({
 			'rollBonus',
 		],
 	},
-	calculation: {
-		type: String,
+	amount: {
+		type: 'fieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.calculation,
 	},
 	//which stats the effect is applied to
 	stats: {
@@ -47,20 +46,10 @@ let EffectSchema = new SimpleSchema({
 	},
 });
 
-const ComputedOnlyEffectSchema = new SimpleSchema({
-	// The computed result of the effect
-	result: {
-		type: SimpleSchema.oneOf(Number, String, Boolean),
-		optional: true,
-	},
-  // The errors encountered while computing the result
-  errors: {
-    type: Array,
+const ComputedOnlyEffectSchema = createPropertySchema({
+  amount: {
+    type: 'computedOnlyField',
     optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'errors.$':{
-    type: ErrorSchema,
   },
 });
 

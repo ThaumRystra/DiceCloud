@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-let ContainerSchema = new SimpleSchema({
+let ContainerSchema = createPropertySchema({
 	name: {
 		type: String,
 		optional: true,
@@ -29,20 +29,16 @@ let ContainerSchema = new SimpleSchema({
     optional: true,
 	},
 	description: {
-		type: String,
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-		trim: false,
-    max: STORAGE_LIMITS.description,
 	},
 });
 
-const ComputedOnlyContainerSchema = new SimpleSchema({
-  descriptionCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
-  },
-  'descriptionCalculations.$': InlineComputationSchema,
+const ComputedOnlyContainerSchema = createPropertySchema({
+  description: {
+		type: 'computedOnlyInlineCalculationField',
+		optional: true,
+	},
   // Weight of all the contents, zero if `contentsWeightless` is true
   contentsWeight:{
     type: Number,

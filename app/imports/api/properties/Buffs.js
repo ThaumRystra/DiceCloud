@@ -1,22 +1,21 @@
 import SimpleSchema from 'simpl-schema';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-let BuffSchema = new SimpleSchema({
-	name: {
+let BuffSchema = createPropertySchema({
+  name: {
 		type: String,
 		optional: true,
     max: STORAGE_LIMITS.name,
 	},
 	description: {
-		type: String,
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.description,
 	},
+  // How many rounds this buff lasts
 	duration: {
-		type: String,
+		type: 'fieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.name,
 	},
   applied: {
     type: Boolean,
@@ -34,13 +33,16 @@ let BuffSchema = new SimpleSchema({
 	},
 });
 
-let ComputedOnlyBuffSchema = new SimpleSchema({
-  descriptionCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
-  },
-  'descriptionCalculations.$': InlineComputationSchema,
+let ComputedOnlyBuffSchema = createPropertySchema({
+	description: {
+		type: 'inlineCalculationFieldToCompute',
+		optional: true,
+    max: STORAGE_LIMITS.description,
+	},
+	duration: {
+		type: 'computedOnlyField',
+		optional: true,
+	},
 	durationSpent: {
 		type: Number,
 		optional: true,

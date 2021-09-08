@@ -57,7 +57,6 @@ let AttributeSchema = createPropertySchema({
   description: {
     type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.description,
 	},
 	// The damage done to the attribute, always positive
   damage: {
@@ -108,7 +107,7 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
 		type: SimpleSchema.Integer,
 		optional: true,
 	},
-  // The computed creature constitution modifier
+  // The computed creature constitution modifier for hit dice
   constitutionMod: {
     type: Number,
 		optional: true,

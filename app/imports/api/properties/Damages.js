@@ -1,16 +1,14 @@
 import SimpleSchema from 'simpl-schema';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-const DamageSchema = new SimpleSchema({
+const DamageSchema = createPropertySchema({
 	// The roll that determines how much to damage the attribute
   // This can be simplified, but only computed when applied
   amount: {
-    type: String,
+    type: 'fieldToCompute',
     optional: true,
     defaultValue: '1d8 + strength.modifier',
-    max: STORAGE_LIMITS.calculation,
   },
 	// Who this damage applies to
 	target: {
@@ -29,18 +27,10 @@ const DamageSchema = new SimpleSchema({
 	},
 });
 
-const ComputedOnlyDamageSchema = new SimpleSchema({
-  amountResult: {
-    type: SimpleSchema.oneOf(String, Number),
+const ComputedOnlyDamageSchema = createPropertySchema({
+  amount: {
+    type: 'computedOnlyField',
     optional: true,
-  },
-  amountErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'amountErrors.$':{
-    type: ErrorSchema,
   },
 });
 

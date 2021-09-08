@@ -1,40 +1,31 @@
 import SimpleSchema from 'simpl-schema';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-let FeatureSchema = new SimpleSchema({
+let FeatureSchema = createPropertySchema({
 	name: {
 		type: String,
     max: STORAGE_LIMITS.name,
 	},
 	summary: {
-		type: String,
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.summary,
 	},
   description: {
-		type: String,
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.description,
 	},
 });
 
-let ComputedOnlyFeatureSchema = new SimpleSchema({
-
-  summaryCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
+let ComputedOnlyFeatureSchema = createPropertySchema({
+  summary: {
+    type: 'computedOnlyInlineCalculationField',
+    optional: true,
   },
-  'summaryCalculations.$': InlineComputationSchema,
-
-  descriptionCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
+  description: {
+    type: 'computedOnlyInlineCalculationField',
+    optional: true,
   },
-  'descriptionCalculations.$': InlineComputationSchema,
-
 });
 
 const ComputedFeatureSchema = new SimpleSchema()

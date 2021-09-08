@@ -15,13 +15,17 @@ export default function transformFields(src, transformList, reversed = false){
     } else {
       transform = {...originalTransform};
     }
-    if (transform.from?.includes('$.')){
-      transformArrayField(src, doc, transform, reversed);
-    } else {
-      transformSingleField(src, doc, transform);
-    }
+    transformField(src, doc, transform, reversed);
   }
   return doc;
+}
+
+export function transformField(src, doc, transform, reversed){
+  if (transform.from?.includes('$.')){
+    transformArrayField(src, doc, transform, reversed);
+  } else {
+    transformSingleField(src, doc, transform);
+  }
 }
 
 function transformSingleField(src, doc, {from, to, up}){

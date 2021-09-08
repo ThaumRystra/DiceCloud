@@ -1,13 +1,13 @@
 import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
  * Skills have an ability score modifier that they use as their basis
  */
-let SkillSchema = new SimpleSchema({
+let SkillSchema = createPropertySchema({
   name: {
 		type: String,
 		optional: true,
@@ -42,26 +42,24 @@ let SkillSchema = new SimpleSchema({
     ],
     defaultValue: 'skill',
   },
-  // The starting value, before effects
-	baseValueCalculation: {
-		type: String,
-		optional: true,
-    max: STORAGE_LIMITS.calculation,
-	},
 	// The base proficiency of this skill
 	baseProficiency: {
 		type: Number,
 		optional: true,
 	},
+  // The starting value, before effects
+  baseValue: {
+    type: 'fieldToCompute',
+    optional: true,
+  },
   // Description of what the skill is used for
   description: {
-		type: String,
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.description,
 	},
 });
 
-let ComputedOnlySkillSchema = new SimpleSchema({
+let ComputedOnlySkillSchema = createPropertySchema({
 	// Computed value of skill to be added to skill rolls
   value: {
     type: Number,
@@ -69,17 +67,13 @@ let ComputedOnlySkillSchema = new SimpleSchema({
   },
   // The result of baseValueCalculation
   baseValue: {
-    type: SimpleSchema.oneOf(Number, String, Boolean),
+    type: 'computedOnlyField',
     optional: true,
   },
-  baseValueErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'baseValueErrors.$': {
-    type: ErrorSchema,
-  },
+  description: {
+		type: 'computedOnlyInlineCalculationField',
+		optional: true,
+	},
 	// Computed value added by the ability
 	abilityMod: {
 		type: SimpleSchema.Integer,

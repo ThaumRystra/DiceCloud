@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 /**
  * Rolls are children to actions or other rolls, they are triggered with 0 or
@@ -21,7 +21,7 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
  * If the roll fails to meet or exceed the target number, the adjustments and
  *  child rolls are applied
  */
-let RollSchema = new SimpleSchema({
+let RollSchema = createPropertySchema({
   name: {
 		type: String,
     defaultValue: 'New Roll',
@@ -37,24 +37,17 @@ let RollSchema = new SimpleSchema({
   },
   // The roll, can be simplified, but only computed in context
   roll: {
-    type: String,
+    type: 'fieldToCompute',
+    parseLevel: 'compile',
     optional: true,
-    max: STORAGE_LIMITS.calculation,
   },
 });
 
-let ComputedOnlyRollSchema = new SimpleSchema({
-  rollResult: {
-    type: SimpleSchema.Integer,
+let ComputedOnlyRollSchema = createPropertySchema({
+  roll: {
+    type: 'computedOnlyField',
+    parseLevel: 'compile',
     optional: true,
-  },
-  rollErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'rollErrors.$':{
-    type: ErrorSchema,
   },
 });
 

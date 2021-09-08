@@ -1,10 +1,10 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 // These are the rolls made when saves are called for
 // For the saving throw bonus or proficiency, see ./Skills.js
-let SavingThrowSchema = new SimpleSchema ({
+let SavingThrowSchema = createPropertySchema({
   name: {
     type: String,
     optional: true,
@@ -12,9 +12,8 @@ let SavingThrowSchema = new SimpleSchema ({
   },
   // The computed DC
   dc: {
-    type: String,
+    type: 'fieldToCompute',
     optional: true,
-    max: STORAGE_LIMITS.calculation,
   },
   // Who this saving throw applies to
 	target: {
@@ -34,18 +33,10 @@ let SavingThrowSchema = new SimpleSchema ({
   },
 });
 
-const ComputedOnlySavingThrowSchema = new SimpleSchema({
-  dcResult: {
-    type: Number,
+const ComputedOnlySavingThrowSchema = createPropertySchema({
+  dc: {
+    type: 'computedOnlyField',
     optional: true,
-  },
-  dcErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'dcErrors.$':{
-    type: ErrorSchema,
   },
 });
 

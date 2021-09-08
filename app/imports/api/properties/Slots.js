@@ -1,17 +1,16 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-let SlotSchema = new SimpleSchema({
+let SlotSchema = createPropertySchema({
   name: {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.name,
   },
   description: {
-    type: String,
+    type: 'inlineCalculationFieldToCompute',
     optional: true,
-    max: STORAGE_LIMITS.description,
   },
   slotType: {
     type: String,
@@ -57,19 +56,17 @@ let SlotSchema = new SimpleSchema({
     max: STORAGE_LIMITS.tagLength,
 	},
   quantityExpected: {
-    type: String,
+    type: 'fieldToCompute',
     optional: true,
     defaultValue: '1',
-    max: STORAGE_LIMITS.calculation,
   },
   ignored: {
     type: Boolean,
     optional: true,
   },
   slotCondition: {
-    type: String,
+    type: 'fieldToCompute',
     optional: true,
-    max: STORAGE_LIMITS.calculation,
   },
   hideWhenFull: {
     type: Boolean,
@@ -89,33 +86,15 @@ let SlotSchema = new SimpleSchema({
   },
 });
 
-const ComputedOnlySlotSchema = new SimpleSchema({
-	// Condition calculation results
-	slotConditionResult: {
-		type: SimpleSchema.oneOf(Number, String, Boolean),
-		optional: true,
-	},
-  slotConditionErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'slotConditionErrors.$':{
-    type: ErrorSchema,
-  },
-
-  // Quantity Expected calculation results
-  quantityExpectedResult: {
-    type: SimpleSchema.Integer,
+const ComputedOnlySlotSchema = createPropertySchema({
+  // Computed fields
+  quantityExpected: {
+    type: 'computedOnlyField',
     optional: true,
   },
-  quantityExpectedErrors: {
-    type: Array,
+  slotCondition: {
+    type: 'computedOnlyField',
     optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'quantityExpectedErrors.$':{
-    type: ErrorSchema,
   },
 
   // Denormalised fields
