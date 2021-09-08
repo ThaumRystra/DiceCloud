@@ -79,18 +79,22 @@ export default function computeCreature(creatureId){
     });
   });
 
-  // Dependency graph where edge(a, b) means a depends on b
-  const dependencyGraph = createGraph();
-  // Build graph now that all props are stored
-  properties.forEach(prop => {
-    linkDependencies(dependencyGraph, prop, propsById);
-  });
 
   // Process the properties in tree format
   let creatureTree = nodeArrayToTree(properties);
   walkDown(creatureTree, node => {
     denormaliseInactiveStatus(node);
     inheritToggleDependencies(node);
+    computeInventory(node);
+  });
+
+  // Dependency graph where edge(a, b) means a depends on b
+  const dependencyGraph = createGraph();
+  // Build graph now that all props are stored
+  properties.forEach(prop => {
+    linkTypeDependencies(dependencyGraph, prop, propsById);
+    if (prop.inactive) return;
+    linkCalculationDependencies(dependencyGraph, prop, propsById);
   });
 }
 
@@ -140,6 +144,33 @@ function inheritToggleDependencies(node, dependencyGraph){
   });
 }
 
+function computeInventory(forest){
+  const data = {
+    weightTotal: 0,
+    weightEquipment: 0,
+    weightCarried: 0,
+    valueTotal: 0,
+    valueEquipment: 0,
+    valueCarried: 0,
+    itemsAttuned: 0,
+  }
+  // The stack of properties to still navigate
+  const stack = [...forest];
+  // The current containers we are inside of
+  const containerStack = [];
+  const visitedNodes = new Set();
+
+  while(stack.length){
+    const top = stack[stack.length - 1];
+    // Leaf node
+    if (top.children.length === 0){
+
+    } else {
+
+    }
+  }
+}
+
 function parseCalculation(calcObj){
   let calculation = calcObj.calculation || '';
   try {
@@ -153,7 +184,7 @@ function parseCalculation(calcObj){
   }
 }
 
-function linkDependencies(dependencyGraph, prop, propsById){
+function linkCalculationDependencies(dependencyGraph, prop, propsById){
   let variableNames = [];
   prop._computationDetails.calculations.forEach(calcObj => {
     calcObj._parsedCalculation.travese(node => {
@@ -171,4 +202,38 @@ function linkDependencies(dependencyGraph, prop, propsById){
     });
   });
   return variableNames;
+}
+
+const inventoryVariables = [
+  'weightTotal',
+  'weightEquipment',
+  'weightCarried',
+  'valueTotal',
+  'valueEquipment',
+  'valueCarried',
+  'itemsAttuned',
+];
+
+const linkDependenciesByType = {
+  attribute: linkVariableName,
+  classLevel: linkVariableName,
+  constant: linkVariableName,
+  container: linkInventoryVariables,
+}
+
+function linkVariableName(dependencyGraph, prop){
+  if (prop.inactive) return;
+  if (prop.variableName){
+    dependencyGraph.addLink(prop.variableName, prop._id);
+  }
+}
+
+function linkInventoryVariables(dependencyGraph, prop){
+  inventoryVariables.forEach(variableName => {
+    dependencyGraph.addLink(variableName, prop._id);
+  });
+}
+
+function linkTypeDependencies(dependencyGraph, prop){
+  linkDependenciesByType[prop.type]?.(prop);
 }
