@@ -30,7 +30,6 @@ let SlotFillerSchema = new SimpleSchema({
   slotQuantityFilled: {
     type: SimpleSchema.Integer,
     defaultValue: 1,
-    min: 0,
   },
   // Filters out of UI if condition isn't met, but isn't otherwise enforced
   slotFillerCondition: {

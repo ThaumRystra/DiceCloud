@@ -44,7 +44,17 @@ const ComputedOnlyContainerSchema = createPropertySchema({
     type: Number,
     optional: true,
   },
+  // Weight of all the carried contents (some sub-containers might not be carried)
+  // zero if `contentsWeightless` is true
+  carriedWeight:{
+    type: Number,
+    optional: true,
+  },
   contentsValue:{
+    type: Number,
+    optional: true,
+  },
+  carriedValue:{
     type: Number,
     optional: true,
   },

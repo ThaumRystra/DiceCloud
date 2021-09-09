@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const DamageSchema = createPropertySchema({
 	// The roll that determines how much to damage the attribute
@@ -22,7 +22,7 @@ const DamageSchema = createPropertySchema({
 	},
 	damageType: {
 		type: String,
-		allowedValues: DAMAGE_TYPES,
+    max: STORAGE_LIMITS.calculation,
 		defaultValue: 'slashing',
 	},
 });
