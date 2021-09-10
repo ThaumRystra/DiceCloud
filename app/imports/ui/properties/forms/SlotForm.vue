@@ -187,7 +187,7 @@
           text: 'Each property inside this slot should be unique',
           value: 'uniqueInSlot',
         }, {
-          text: 'Properties in this slot should be unique accross the whole character',
+          text: 'Properties in this slot should be unique across the whole character',
           value: 'uniqueInCreature',
         }],
       };
