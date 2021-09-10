@@ -59,12 +59,12 @@ function handleProp(prop, containerStack, data, dependencyGraph){
 
   // Sum the item-specific data
   if (prop.type === 'item'){
-    dependencyGraph.addLink('itemsAttuned', prop._id);
+    dependencyGraph.addLink('itemsAttuned', prop._id, 'inventory');
     if (prop.attuned) data.itemsAttuned += 1;
     if (prop.equipped){
-      dependencyGraph.addLink('weightEquipment', prop._id);
+      dependencyGraph.addLink('weightEquipment', prop._id, 'inventory');
       data.weightEquipment += weight;
-      dependencyGraph.addLink('valueEquipment', prop._id);
+      dependencyGraph.addLink('valueEquipment', prop._id, 'inventory');
       data.valueEquipment += value;
     }
   }
@@ -74,7 +74,7 @@ function handleProp(prop, containerStack, data, dependencyGraph){
 
   if (container){
     // The container depends on this prop for its contents data
-    dependencyGraph.addLink(container._id, prop._id);
+    dependencyGraph.addLink(container._id, prop._id, 'inventory');
     // Add this property's weights and values to the container
     if (!container.weightless){
       container.contentsWeight += weight;
@@ -84,14 +84,14 @@ function handleProp(prop, containerStack, data, dependencyGraph){
     if (carried) container.carriedValue += carriedValue;
   } else {
     // There is no parent container, add weights/value to the character data
-    dependencyGraph.addLink('weightTotal', prop._id);
+    dependencyGraph.addLink('weightTotal', prop._id, 'inventory');
     data.weightTotal += weight;
-    dependencyGraph.addLink('valueTotal', prop._id);
+    dependencyGraph.addLink('valueTotal', prop._id, 'inventory');
     data.valueTotal += value;
     if (carried){
-      dependencyGraph.addLink('weightCarried', prop._id);
+      dependencyGraph.addLink('weightCarried', prop._id, 'inventory');
       data.weightCarried += carriedWeight;
-      dependencyGraph.addLink('valueCarried', prop._id);
+      dependencyGraph.addLink('valueCarried', prop._id, 'inventory');
       data.valueCarried += carriedValue;
     }
   }

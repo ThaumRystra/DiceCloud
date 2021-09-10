@@ -7,7 +7,7 @@ export default function computeSlotQuantityFilled(node, dependencyGraph){
   slot.totalFilled = 0;
   node.children.forEach(child => {
     let childProp = child.node;
-    dependencyGraph.addLink(slot._id, childProp._id)
+    dependencyGraph.addLink(slot._id, childProp._id, 'slotFill')
     if (childProp.type === 'slotFiller'){
       slot.totalFilled += child.slotQuantityFilled;
     } else {

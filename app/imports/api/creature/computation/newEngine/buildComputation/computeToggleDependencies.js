@@ -11,6 +11,6 @@ export default function computeToggleDependencies(node, dependencyGraph){
   ) return;
   walkDown(node.children, child => {
     child.node._computationDetails.toggleAncestors.push(prop._id);
-    dependencyGraph.addLink(child.node._id, prop._id, prop.condition);
+    dependencyGraph.addLink(child.node._id, prop._id, 'toggle');
   });
 }

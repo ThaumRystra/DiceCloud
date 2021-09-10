@@ -8,6 +8,15 @@ const ToggleSchema = createPropertySchema({
     optional: true,
     max: STORAGE_LIMITS.name,
   },
+  variableName: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.variableName,
+  },
+  showUI: {
+    type: Boolean,
+    optional: true,
+  },
   disabled: {
     type: Boolean,
     optional: true,

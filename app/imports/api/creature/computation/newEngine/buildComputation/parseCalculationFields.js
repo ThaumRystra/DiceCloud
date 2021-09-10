@@ -9,15 +9,20 @@ export default function parseCalculationFields(prop, schemas){
     if (key.slice(-12) !== '.calculation') return;
     const calcKey = key.sclice(0, -12);
 
+    // Determine the level the calculation should compute down to
+    let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel;
+
     // For all fields matching they keys
     // supports `keys.$.with.$.arrays`
     applyFnToKey(prop, calcKey, calcObj => {
       // Store a reference to all the calculations
       prop._computationDetails.calculations.push(calcObj);
+      // Store the level to compute down to later
+      calcObj._parseLevel = parseLevel;
       // Parse the calculation
       parseCalculation(calcObj);
     });
-
+    
   });
 }
 
