@@ -90,6 +90,11 @@ const ComputedOnlyActionSchema = createPropertySchema({
     type: 'computedOnlyField',
     optional: true,
   },
+  // Uses - usesUsed
+  usesLeft: {
+    type: Number,
+    optional: true,
+  },
 });
 
 const ComputedActionSchema = new SimpleSchema()

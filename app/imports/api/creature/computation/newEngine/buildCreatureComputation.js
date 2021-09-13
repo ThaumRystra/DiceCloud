@@ -23,17 +23,16 @@ import computeSlotQuantityFilled from '/imports/api/creature/computation/newEngi
  * id -> id dependencies for docs that rely on other docs directly
  * id -> variable deps for docs that rely on a variable's value
  * variable -> id deps for variables that are impacted by docs
- * TODO:
- * Depth first traversal or dependency graph to:
- *   Find loops in the dependency graph
- *   resolve variables in dependency order
+ */
+
+/**
+ * Forseen issues: Anything that computes during the build step will not obey
+ * computed toggles
  */
 
 /**
  * TODO
- * compute slots spaces left (after computed field of quantityExpected)
- * compute damage multipliers
- * compute dependencyGraph variables and properties
+ * compute class levels
  */
 
 export default function buildCreatureComputation(creatureId){
@@ -48,6 +47,8 @@ export default function buildCreatureComputation(creatureId){
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies
   // can limit the recompute to connected parts of the graph
+  // Each node's data represents a prop or a virtual prop like a variable
+  // Each link's data: {type: String, data: Object, requiresComputation: Boolean}
   const dependencyGraph = createGraph();
 
   const computation = {
@@ -102,8 +103,8 @@ export default function buildCreatureComputation(creatureId){
 
   // Graph functions that rely on the props being stored first
   properties.forEach(prop => {
-    linkTypeDependencies(dependencyGraph, prop, computation.propsById);
-    linkCalculationDependencies(dependencyGraph, prop, computation.propsById);
+    linkTypeDependencies(dependencyGraph, prop, computation);
+    linkCalculationDependencies(dependencyGraph, prop, computation);
   });
 
   return computation;

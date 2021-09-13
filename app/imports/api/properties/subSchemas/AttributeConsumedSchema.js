@@ -23,6 +23,10 @@ const AttributeConsumedSchema = createPropertySchema({
 });
 
 const ComputedOnlyAttributeConsumedSchema = createPropertySchema({
+  quantity: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
   available: {
     type: Number,
     optional: true,
@@ -36,10 +40,6 @@ const ComputedOnlyAttributeConsumedSchema = createPropertySchema({
     type: String,
     optional: true,
     max: STORAGE_LIMITS.name,
-  },
-  quantity: {
-    type: 'computedOnlyField',
-    optional: true,
   },
 });
 

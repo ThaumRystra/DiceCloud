@@ -78,15 +78,6 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     optional: true,
     index: 1,
   },
-  // Denormalised list of all properties or creatures this property depends on
-  dependencies: {
-    type: Array,
-    defaultValue: [],
-    index: 1,
-  },
-  'dependencies.$': {
-    type: String,
-  },
 });
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);

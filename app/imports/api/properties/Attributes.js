@@ -107,6 +107,12 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
 		type: SimpleSchema.Integer,
 		optional: true,
 	},
+  // Attributes with proficiency grant it to all skills based on the attribute
+  proficiency: {
+		type: Number,
+    allowedValues: [0.49, 0.5, 1, 2],
+		optional: true,
+	},
   // The computed creature constitution modifier for hit dice
   constitutionMod: {
     type: Number,

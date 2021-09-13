@@ -36,6 +36,7 @@ let SavingThrowSchema = createPropertySchema({
 const ComputedOnlySavingThrowSchema = createPropertySchema({
   dc: {
     type: 'computedOnlyField',
+    parseLevel: 'compile',
     optional: true,
   },
 });

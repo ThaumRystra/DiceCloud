@@ -34,6 +34,12 @@ let EffectSchema = createPropertySchema({
 		type: 'fieldToCompute',
 		optional: true,
 	},
+  // Conditional benefits store just uncomputed text
+  text: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.name,
+  },
 	//which stats the effect is applied to
 	stats: {
 		type: Array,

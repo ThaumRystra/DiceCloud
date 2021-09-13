@@ -36,13 +36,6 @@ const ComputedOnlyItemConsumedSchema = new SimpleSchema({
     type: 'computedOnlyField',
     optional: true,
   },
-  // This appears both in the computed and uncomputed schema because it can be
-  // set by both a computation or a form
-  itemId: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true,
-  },
   itemName: {
     type: String,
     max: STORAGE_LIMITS.name,

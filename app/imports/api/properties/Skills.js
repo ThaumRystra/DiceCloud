@@ -46,6 +46,7 @@ let SkillSchema = createPropertySchema({
 	baseProficiency: {
 		type: Number,
 		optional: true,
+    allowedValues: [0.49, 0.5, 1, 2],
 	},
   // The starting value, before effects
   baseValue: {
@@ -93,7 +94,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
 	// Computed proficiency multiplier
   proficiency: {
     type: Number,
-    allowedValues: [0, 0.5, 1, 2],
+    allowedValues: [0, 0.49, 0.5, 1, 2],
 		defaultValue: 0,
   },
   // Compiled text of all conditional benefits
@@ -102,15 +103,6 @@ let ComputedOnlySkillSchema = createPropertySchema({
     optional: true,
   },
   'conditionalBenefits.$': {
-    type: String,
-  },
-  // Compiled text of all roll bonuses
-  rollBonuses: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.rollBonusCount,
-  },
-  'rollBonuses.$': {
     type: String,
   },
 	// Computed number of things forcing this skill to fail

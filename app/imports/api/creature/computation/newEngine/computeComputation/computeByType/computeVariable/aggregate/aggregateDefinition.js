@@ -1,7 +1,9 @@
 
-export default function aggregateDefinitions({node, linkedNode, link}){
+export default function aggregateDefinition({node, linkedNode, link}){
   // Look at all definition links
   if (link.data !== 'definition') return;
+
+  // Store which property is THE defining property and which are overriden
   const prop = linkedNode.data;
   // get current defining prop
   const definingProp = node.data.definingProp;
@@ -14,11 +16,18 @@ export default function aggregateDefinitions({node, linkedNode, link}){
   } else {
     overrideProp(prop, node);
   }
+
+  // Aggregate the base value due to the defining properties
+  const propBaseValue = linkedNode.data.baseValue?.value;
+  if (propBaseValue === undefined) return;
+  if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue){
+    node.data.baseValue = propBaseValue;
+  }
 }
 
 function overrideProp(prop, node){
   if (!prop) return;
   prop.overriden = true;
   if (!node.data.overridenProps) node.data.overridenProps = [];
-  node.data.overridenProp.push(prop);
+  node.data.overridenProps.push(prop);
 }

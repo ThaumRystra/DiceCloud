@@ -9,10 +9,14 @@ export default class SymbolNode extends ParseNode {
   toString(){
     return `${this.name}`
   }
-  compile(scope){
+  compile(scope, context){
     let value = scope && scope[this.name];
     let type = typeof value;
-    // For objects, get their value
+    // For parse nodes, compile and return
+    if (value instanceof ParseNode){
+      return value.compile(scope, context);
+    }
+    // For objects, default to their .value
     if (type === 'object'){
       value = value.value;
       type = typeof value;
