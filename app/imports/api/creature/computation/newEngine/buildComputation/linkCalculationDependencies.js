@@ -1,6 +1,6 @@
 import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
-import findAncestorByType from 'imports/api/creature/computation/newEngine/utility/findAncestorByType.js';
+import findAncestorByType from '/imports/api/creature/computation/newEngine/utility/findAncestorByType.js';
 
 export default function linkCalculationDependencies(dependencyGraph, prop, {propsById}){
   prop._computationDetails.calculations.forEach(calcObj => {
