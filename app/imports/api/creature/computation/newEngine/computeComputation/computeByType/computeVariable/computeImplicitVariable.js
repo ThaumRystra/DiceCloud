@@ -11,25 +11,33 @@ import getAggregatorResult from '/imports/api/creature/computation/newEngine/com
    prop.value = result;
    prop.proficiency = node.data.proficiency;
 
-   // denormalise the aggregator fields
-   const aggregator = node.data.effectAggregator;
-   if (aggregator.advantage && !aggregator.disadvantage){
-     prop.advantage = 1;
-   } else if (aggregator.disadvantage && !aggregator.advantage){
-     prop.advantage = -1;
-   } else {
-     prop.advantage = 0;
+   // denormalise class level aggregator
+   let classLevelAgg = node.data.classLevelAggregator;
+   if (classLevelAgg){
+     prop.level = classLevelAgg.level;
    }
-   // Passive bonus
-   prop.passiveBonus = aggregator.passiveAdd;
-   // conditional benefits
-   prop.conditionalBenefits = aggregator.conditional;
-   // Roll bonuses
-   prop.rollBonus = aggregator.rollBonus;
-   // Forced to fail
-   prop.fail = aggregator.fail;
-   // Rollbonus
-   prop.rollBonuses = aggregator.rollBonus;
+
+   // denormalise the effect aggregator fields
+   const aggregator = node.data.effectAggregator;
+   if (aggregator){
+     if (aggregator.advantage && !aggregator.disadvantage){
+       prop.advantage = 1;
+     } else if (aggregator.disadvantage && !aggregator.advantage){
+       prop.advantage = -1;
+     } else {
+       prop.advantage = 0;
+     }
+     // Passive bonus
+     prop.passiveBonus = aggregator.passiveAdd;
+     // conditional benefits
+     prop.conditionalBenefits = aggregator.conditional;
+     // Roll bonuses
+     prop.rollBonus = aggregator.rollBonus;
+     // Forced to fail
+     prop.fail = aggregator.fail;
+     // Rollbonus
+     prop.rollBonuses = aggregator.rollBonus;
+   }
 
    return prop;
  }

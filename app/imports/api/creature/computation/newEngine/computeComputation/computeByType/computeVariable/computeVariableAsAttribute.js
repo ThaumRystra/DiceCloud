@@ -10,7 +10,7 @@ export default function computeVariableAsAttribute(node, prop, scope){
 
   // Ability scores get modifiers
   if (prop.attributeType === 'ability'){
-    prop.modifier = Math.floor((prop.currentValue - 10) / 2);
+    prop.modifier = Math.floor((prop.value - 10) / 2);
   }
 
   // Hit dice denormalise constitution modifier

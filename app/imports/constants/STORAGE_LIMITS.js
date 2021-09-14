@@ -13,6 +13,9 @@ const STORAGE_LIMITS = Object.freeze({
   url: 256,
   variableName: 64,
 
+  // Number limits
+  levelMax: 128,
+
   //Array counts
   ancestorCount: 100,
   damageTypeCount: 32,

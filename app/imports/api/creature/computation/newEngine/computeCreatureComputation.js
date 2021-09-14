@@ -4,7 +4,7 @@ import computeByType from '/imports/api/creature/computation/newEngine/computeCo
 
 export default function computeCreatureComputation(computation){
   const stack = [];
-  // dict of computed nodes by id
+  // Computation scope of {variableName: prop}
   const scope = {};
   const graph = computation.dependencyGraph;
   // Add all nodes to the stack
@@ -44,10 +44,7 @@ function compute(graph, node, scope){
 function pushDependenciesToStack(nodeId, graph, stack){
   graph.forEachLinkedNode(
     nodeId,
-    (linkedNode, link) => {
-      // Ignore inventory links, they are already fully computed when they are
-      // created
-      if (link.data === 'inventory' || link.data === 'classLevel') return;
+    (linkedNode) => {
       stack.push({
         node: linkedNode,
         visited: false,

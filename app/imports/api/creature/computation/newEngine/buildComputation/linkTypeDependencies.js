@@ -2,7 +2,8 @@ const linkDependenciesByType = {
   action: linkResources,
   attack: linkResources,
   attribute: linkAttribute,
-  classLevel: linkVariableName,
+  characterClass: linkVariableName,
+  classLevel: linkClassLevel,
   constant: linkVariableName,
   damageMultiplier: linkDamageMultiplier,
   proficiency: linkStats,
@@ -13,6 +14,18 @@ const linkDependenciesByType = {
 
 export default function linkTypeDependencies(dependencyGraph, prop){
   linkDependenciesByType[prop.type]?.(prop);
+}
+
+function linkClassLevel(dependencyGraph, prop){
+  // The variableName of the prop depends on the prop
+  if (prop.variableName && prop.level){
+    dependencyGraph.addLink(prop.variableName, prop._id, 'classLevel');
+    // The level variable depends on the class variableName variable
+    let existingLevelLink = dependencyGraph.getLink('level', prop.variableName);
+    if (!existingLevelLink){
+      dependencyGraph.addLink('level', prop.variableName, 'level');
+    }
+  }
 }
 
 function linkVariableName(dependencyGraph, prop){

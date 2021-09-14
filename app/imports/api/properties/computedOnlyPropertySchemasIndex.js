@@ -4,6 +4,7 @@ import { ComputedOnlyAdjustmentSchema } from '/imports/api/properties/Adjustment
 import { ComputedOnlyAttackSchema } from '/imports/api/properties/Attacks.js';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedOnlyBuffSchema } from '/imports/api/properties/Buffs.js';
+import { ComputedOnlyClassSchema } from '/imports/api/properties/Classes.js';
 import { ClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
 import { ConstantSchema } from '/imports/api/properties/Constants.js';
 import { ComputedOnlyContainerSchema } from '/imports/api/properties/Containers.js';
@@ -31,6 +32,7 @@ const propertySchemasIndex = {
   attack: ComputedOnlyAttackSchema,
   attribute: ComputedOnlyAttributeSchema,
   buff: ComputedOnlyBuffSchema,
+  characterClass: ComputedOnlyClassSchema,
   classLevel: ClassLevelSchema,
   constant: ConstantSchema,
   container: ComputedOnlyContainerSchema,

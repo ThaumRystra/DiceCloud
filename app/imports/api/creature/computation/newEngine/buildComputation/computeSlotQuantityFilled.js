@@ -4,6 +4,7 @@
  */
 export default function computeSlotQuantityFilled(node, dependencyGraph){
   let slot = node.node;
+  if (slot.type !== 'propertySlot' || slot.type !== 'characterClass') return;
   slot.totalFilled = 0;
   node.children.forEach(child => {
     let childProp = child.node;

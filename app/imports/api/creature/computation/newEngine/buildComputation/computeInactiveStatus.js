@@ -3,8 +3,11 @@ import walkDown from '/imports/api/creature/computation/newEngine/utility/walkdo
 export default function computeInactiveStatus(node){
   const prop = node.node;
   if (isActive(prop)) return;
-  prop.inactive = true;
-  prop.deactivatedBySelf = true;
+  // Unequipped items disable their children, but are not disabled themselves
+  if (prop.type !== 'item'){
+    prop.inactive = true;
+    prop.deactivatedBySelf = true;
+  }
   // Mark children as inactive due to ancestor
   walkDown(node.children, child => {
     child.node.inactive = true;

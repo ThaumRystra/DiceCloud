@@ -16,8 +16,7 @@ function evaluateCalculation(calculation, scope){
   const parseNode = calculation._parsedCalculation;
   const fn = calculation._parseLevel || 'reduce';
   const calculationScope = {...calculation._localScope, ...scope};
-  const result = parseNode[fn](calculationScope, context);
-  calculation.value = result;
+  calculation.value = parseNode[fn](calculationScope, context);
   calculation.errors = context.errors;
 }
 

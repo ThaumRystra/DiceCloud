@@ -2,6 +2,7 @@ import aggregate from '/imports/api/creature/computation/newEngine/computeComput
 import computeVariableAsAttribute from '/imports/api/creature/computation/newEngine/computeComputation/computeVariableAsType/computeVariableAsAttribute.js';
 import computeVariableAsSkill from '/imports/api/creature/computation/newEngine/computeComputation/computeVariableAsType/computeVariableAsSkill.js';
 import computeVariableAsConstant from '/imports/api/creature/computation/newEngine/computeComputation/computeByType/computeVariable/computeVariableAsConstant.js';
+import computeVariableAsClass from '/imports/api/creature/computation/newEngine/computeComputation/computeVariable/computeVariableAsClass.js';
 import computeImplicitVariable from '/imports/api/creature/computation/newEngine/computeComputation/computeVariable/computeImplicitVariable.js';
 
 export default function computeVariable(graph, node, scope){
@@ -26,9 +27,11 @@ function aggregateLinks(graph, node){
       if (linkedNode.data.inactive) return;
       // Apply all the aggregations
       let arg = {node, linkedNode, link};
-      aggregate.definition(arg);
+      aggregate.classLevel(arg);
       aggregate.damageMultiplier(arg);
+      aggregate.definition(arg);
       aggregate.effect(arg);
+      aggregate.inventory(arg);
       aggregate.proficiency(arg);
     },
     true // enumerate only outbound links
@@ -50,6 +53,8 @@ function computeVariableProp(node, prop, scope){
     computeVariableAsSkill(node, prop, scope)
   } else if (prop.type === 'constant'){
     computeVariableAsConstant(node, prop, scope)
+  } else if (prop.type === 'characterClass'){
+    computeVariableAsClass(node, prop, scope)
   }
 }
 

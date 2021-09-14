@@ -7,7 +7,7 @@ import computedSchemas from '/imports/api/properties/computedPropertySchemasInde
 import applyFnToKey from '/imports/api/creature/computation/newEngine/utility/applyFnToKey.js';
 import { cloneDeep, unset } from 'lodash';
 import createGraph from 'ngraph.graph';
-import computeInventory from '/imports/api/creature/computation/newEngine/buildComputation/computeInventory.js';
+import linkInventory from '/imports/api/creature/computation/newEngine/buildComputation/linkInventory.js';
 import walkDown from '/imports/api/creature/computation/newEngine/utility/walkdown.js';
 import parseCalculationFields from '/imports/api/creature/computation/newEngine/buildComputation/parseCalculationFields.js';
 import computeInactiveStatus from '/imports/api/creature/computation/newEngine/buildComputation/computeInactiveStatus.js';
@@ -36,19 +36,26 @@ import computeSlotQuantityFilled from '/imports/api/creature/computation/newEngi
  */
 
 export default function buildCreatureComputation(creatureId){
-  let properties = CreatureProperties.find({
+  const properties = getProperties(creatureId);
+  return buildComputationFromProps(properties);
+}
+
+function getProperties(creatureId){
+  return CreatureProperties.find({
     'ancestors.id': creatureId,
     'removed': {$ne: true},
   }, {
     sort: {order: 1}
   });
+}
 
+export function buildComputationFromProps(properties){
   // Dependency graph where edge(a, b) means a depends on b
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies
   // can limit the recompute to connected parts of the graph
   // Each node's data represents a prop or a virtual prop like a variable
-  // Each link's data: {type: String, data: Object, requiresComputation: Boolean}
+  // Each link's data is a string representing the link type
   const dependencyGraph = createGraph();
 
   const computation = {
@@ -86,7 +93,7 @@ export default function buildCreatureComputation(creatureId){
     };
 
     // Parse all the calculations
-    parseCalculationFields(prop, computedSchemas)
+    parseCalculationFields(prop, computedSchemas);
   });
 
   // Get all the properties as trees based on their ancestors
@@ -98,8 +105,8 @@ export default function buildCreatureComputation(creatureId){
     computeSlotQuantityFilled(node);
   });
 
-  // Compute the inventory
-  computeInventory(forest, dependencyGraph);
+  // Link the inventory dependencies
+  linkInventory(forest, dependencyGraph);
 
   // Graph functions that rely on the props being stored first
   properties.forEach(prop => {

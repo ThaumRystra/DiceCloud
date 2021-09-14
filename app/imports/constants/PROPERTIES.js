@@ -30,11 +30,17 @@ const PROPERTIES = Object.freeze({
     helpText: 'When a buff is activated as a child of an action, it will copy the properties under itself onto a target character.',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
   },
+  characterClass: {
+    icon: 'mdi-card-account-details',
+    name: 'Class',
+    helpText: 'Your character should ideally have one starting class. Classes hold class levels',
+    suggestedParents: ['class'],
+  },
   classLevel: {
     icon: '$vuetify.icons.class_level',
     name: 'Class level',
     helpText: 'Class levels represent a single level gained in a class',
-    suggestedParents: ['class'],
+    suggestedParents: [],
   },
   constant: {
     icon: 'mdi-anchor',

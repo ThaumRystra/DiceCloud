@@ -9,7 +9,6 @@ let ClassLevelSchema = createPropertySchema({
 		optional: true,
     max: STORAGE_LIMITS.name,
 	},
-  // Only used by slot filling dialog, not computed
 	description: {
 		type: 'inlineCalculationFieldToCompute',
 		optional: true,
@@ -24,12 +23,7 @@ let ClassLevelSchema = createPropertySchema({
 	level: {
     type: SimpleSchema.Integer,
 		defaultValue: 1,
-  },
-  // Same as in SlotFillers.js
-  slotFillerCondition: {
-    type: String,
-    optional: true,
-    max: STORAGE_LIMITS.calculation,
+    max: STORAGE_LIMITS.levelMax,
   },
 });
 

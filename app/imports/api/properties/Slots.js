@@ -17,44 +17,44 @@ let SlotSchema = createPropertySchema({
     optional: true,
     max: STORAGE_LIMITS.variableName,
   },
-	slotTags: {
+  slotTags: {
     type: Array,
-		defaultValue: [],
+    defaultValue: [],
     maxCount: STORAGE_LIMITS.tagCount,
   },
-	'slotTags.$': {
-		type: String,
+  'slotTags.$': {
+    type: String,
     max: STORAGE_LIMITS.tagLength,
-	},
-	extraTags: {
+  },
+  extraTags: {
     type: Array,
-		defaultValue: [],
+    defaultValue: [],
     maxCount: STORAGE_LIMITS.extraTagsCount,
   },
-	'extraTags.$': {
-		type: Object,
-	},
+  'extraTags.$': {
+    type: Object,
+  },
   'extraTags.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     autoValue(){
       if (!this.isSet) return Random.id();
     }
-	},
+  },
   'extraTags.$.operation': {
-		type: String,
+    type: String,
     allowedValues: ['OR', 'NOT'],
     defaultValue: 'OR',
-	},
+  },
   'extraTags.$.tags': {
-		type: Array,
+    type: Array,
     defaultValue: [],
     maxCount: STORAGE_LIMITS.tagCount,
-	},
+  },
   'extraTags.$.tags.$': {
-		type: String,
+    type: String,
     max: STORAGE_LIMITS.tagLength,
-	},
+  },
   quantityExpected: {
     type: 'fieldToCompute',
     optional: true,
@@ -88,6 +88,10 @@ let SlotSchema = createPropertySchema({
 
 const ComputedOnlySlotSchema = createPropertySchema({
   // Computed fields
+  description: {
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
   quantityExpected: {
     type: 'computedOnlyField',
     optional: true,
@@ -109,7 +113,7 @@ const ComputedOnlySlotSchema = createPropertySchema({
 });
 
 const ComputedSlotSchema = new SimpleSchema()
-	.extend(ComputedOnlySlotSchema)
-	.extend(SlotSchema);
+  .extend(ComputedOnlySlotSchema)
+  .extend(SlotSchema);
 
 export { SlotSchema, ComputedSlotSchema, ComputedOnlySlotSchema };
