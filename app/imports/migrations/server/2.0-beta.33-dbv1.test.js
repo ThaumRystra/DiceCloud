@@ -38,9 +38,6 @@ const exampleAction = {
    'usesUsed':0,
    'description':'Starting at 1st level, you gain the ability to place a baleful curse on someone. As a bonus action, choose one creature you can see within 30 feet of you. The target is cursed for 1 minute. The curse ends early if the target dies, you die, or you are incapacitated. Until the curse ends, you gain the following benefits:\n\n- You gain a bonus to damage rolls against the cursed target. The bonus equals your proficiency bonus.\n- Any attack roll you make against the cursed target is a critical hit on a roll of 19 or 20 on the d20.\n- If the cursed target dies, you regain hit points equal to your warlock level + your Charisma modifier (minimum of 1 hit point).  \n{warlock.level <10 ? "" :"- If you are hit with an attack by your cursed target, use your reaction to roll a d6. On a 4 or higher, the attack instead misses."}  \nYou can\\\'t use this feature again until you finish a short or long rest.',
    'color':'#8e24aa',
-   'dependencies':[
-      '4eM4YkgAaoCJfCfQ8',
-   ],
    'descriptionCalculations':[
       {
          'calculation':'warlock.level <10 ? "" :"- If you are hit with an attack by your cursed target, use your reaction to roll a d6. On a 4 or higher, the attack instead misses."',

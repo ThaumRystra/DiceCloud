@@ -1,9 +1,9 @@
-import aggregate from '/imports/api/creature/computation/newEngine/computeComputation/computeVariable/aggregate/index.js';
-import computeVariableAsAttribute from '/imports/api/creature/computation/newEngine/computeComputation/computeVariableAsType/computeVariableAsAttribute.js';
-import computeVariableAsSkill from '/imports/api/creature/computation/newEngine/computeComputation/computeVariableAsType/computeVariableAsSkill.js';
-import computeVariableAsConstant from '/imports/api/creature/computation/newEngine/computeComputation/computeByType/computeVariable/computeVariableAsConstant.js';
-import computeVariableAsClass from '/imports/api/creature/computation/newEngine/computeComputation/computeVariable/computeVariableAsClass.js';
-import computeImplicitVariable from '/imports/api/creature/computation/newEngine/computeComputation/computeVariable/computeImplicitVariable.js';
+import aggregate from './computeVariable/aggregate/index.js';
+import computeVariableAsAttribute from './computeVariable/computeVariableAsAttribute.js';
+import computeVariableAsSkill from './computeVariable/computeVariableAsSkill.js';
+import computeVariableAsConstant from './computeVariable/computeVariableAsConstant.js';
+import computeVariableAsClass from './computeVariable/computeVariableAsClass.js';
+import computeImplicitVariable from './computeVariable/computeImplicitVariable.js';
 
 export default function computeVariable(graph, node, scope){
   if (!node.data) node.data = {};
@@ -16,6 +16,7 @@ export default function computeVariable(graph, node, scope){
     // Otherwise add an implicit variable to the scope
     scope[node.id] = computeImplicitVariable(node, scope);
   }
+  console.log('computed variable ', node);
 }
 
 function aggregateLinks(graph, node){
@@ -40,13 +41,14 @@ function aggregateLinks(graph, node){
 
 function combineAggregations(node, scope){
   combineMultiplierAggregator(node);
-  node.overridenProps.forEach(prop => {
+  node.data.overridenProps?.forEach(prop => {
     computeVariableProp(node, prop, scope);
   });
-  computeVariableProp(node, node.definingProp, scope);
+  computeVariableProp(node, node.data.definingProp, scope);
 }
 
 function computeVariableProp(node, prop, scope){
+  if (!prop) return;
   if (prop.type === 'attribute'){
     computeVariableAsAttribute(node, prop, scope)
   } else if (prop.type === 'skill'){
@@ -61,6 +63,7 @@ function computeVariableProp(node, prop, scope){
 function combineMultiplierAggregator(node){
   // get a reference to the  aggregator
   const aggregator = node.data.multiplierAggregator;
+  if (!aggregator) return;
 
   // Combine
   let value;

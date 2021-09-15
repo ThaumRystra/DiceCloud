@@ -1,4 +1,4 @@
-import getAggregatorResult from '/imports/api/creature/computation/newEngine/computeComputation/computeVariable/getAggregatorResult.js';
+import getAggregatorResult from './getAggregatorResult.js';
 
 /*
  * Variables with effects, proficiencies, or damage multipliers but no defining

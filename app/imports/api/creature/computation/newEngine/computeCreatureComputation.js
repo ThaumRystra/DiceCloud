@@ -8,27 +8,23 @@ export default function computeCreatureComputation(computation){
   const scope = {};
   const graph = computation.dependencyGraph;
   // Add all nodes to the stack
-  graph.forEachNode(node => stack.push({
-    node,
-    visited: false,
-    visitedChildren: false,
-  }));
+  graph.forEachNode(node => stack.push(node));
   // Depth first traversal of nodes
   while (stack.length){
     let top = stack[stack.length - 1];
-    if (top.visited){
+    if (top._visited){
       // The object has already been computed, skip
       stack.pop();
-    } else if (top.visitedChildren){
-      // Compute the top object of the stack
-      compute(graph, top.node, scope);
+    } else if (top._visitedChildren){
       // Mark the object as visited and remove from stack
-      top.visited = true;
+      top._visited = true;
       stack.pop();
+      // Compute the top object of the stack
+      compute(graph, top, scope);
     } else {
+      top._visitedChildren = true;
       // Push dependencies to graph to be computed first
-      pushDependenciesToStack(top.node.id, graph, stack);
-      top.visitedChildren = true;
+      pushDependenciesToStack(top.id, graph, stack);
     }
   }
 }
@@ -42,15 +38,5 @@ function compute(graph, node, scope){
 }
 
 function pushDependenciesToStack(nodeId, graph, stack){
-  graph.forEachLinkedNode(
-    nodeId,
-    (linkedNode) => {
-      stack.push({
-        node: linkedNode,
-        visited: false,
-        visitedChildren: false,
-      });
-    },
-    true // enumerate only outbound links
-  );
+  graph.forEachLinkedNode(nodeId, linkedNode => stack.push(linkedNode), true);
 }

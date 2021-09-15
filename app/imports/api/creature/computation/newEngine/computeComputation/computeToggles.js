@@ -1,5 +1,6 @@
 export default function evaluateToggles(node){
   let prop = node.data;
+  if (!prop) return;
   let toggles = prop._computationDetails?.toggleAncestors;
   if (!toggles) return;
   toggles.forEach(toggle => {

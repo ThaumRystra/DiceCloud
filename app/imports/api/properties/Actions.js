@@ -6,6 +6,7 @@ import {
 } from '/imports/api/properties/subSchemas/ResourcesSchema.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+SimpleSchema.extendOptions(['parseLevel']);
 
 /*
  * Actions are things a character can do

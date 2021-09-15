@@ -4,17 +4,16 @@ import CreatureProperties,
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
-import applyFnToKey from '/imports/api/creature/computation/newEngine/utility/applyFnToKey.js';
-import { cloneDeep, unset } from 'lodash';
-import createGraph from 'ngraph.graph';
-import linkInventory from '/imports/api/creature/computation/newEngine/buildComputation/linkInventory.js';
-import walkDown from '/imports/api/creature/computation/newEngine/utility/walkdown.js';
-import parseCalculationFields from '/imports/api/creature/computation/newEngine/buildComputation/parseCalculationFields.js';
-import computeInactiveStatus from '/imports/api/creature/computation/newEngine/buildComputation/computeInactiveStatus.js';
-import computeToggleDependencies from '/imports/api/creature/computation/newEngine/buildComputation/computeToggleDependencies.js';
-import linkCalculationDependencies from '/imports/api/creature/computation/newEngine/buildComputation/linkCalculationDependencies.js';
-import linkTypeDependencies from '/imports/api/creature/computation/newEngine/buildComputation/linkTypeDependencies.js';
-import computeSlotQuantityFilled from '/imports/api/creature/computation/newEngine/buildComputation/computeSlotQuantityFilled.js';
+import linkInventory from './buildComputation/linkInventory.js';
+import walkDown from './utility/walkdown.js';
+import parseCalculationFields from './buildComputation/parseCalculationFields.js';
+import computeInactiveStatus from './buildComputation/computeInactiveStatus.js';
+import computeToggleDependencies from './buildComputation/computeToggleDependencies.js';
+import linkCalculationDependencies from './buildComputation/linkCalculationDependencies.js';
+import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
+import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
+import CreatureComputation from './buildComputation/CreatureComputation.js';
+import removeSchemaFields from './buildComputation/removeSchemaFields.js';
 
 /**
  * Store index of properties
@@ -50,50 +49,32 @@ function getProperties(creatureId){
 }
 
 export function buildComputationFromProps(properties){
+
+  const computation = new CreatureComputation(properties);
   // Dependency graph where edge(a, b) means a depends on b
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies
   // can limit the recompute to connected parts of the graph
   // Each node's data represents a prop or a virtual prop like a variable
   // Each link's data is a string representing the link type
-  const dependencyGraph = createGraph();
-
-  const computation = {
-    originalPropsById: {},
-    propsById: {},
-    propsByType: {},
-    propsByVariableName: {},
-    props: properties,
-    dependencyGraph,
-  };
+  const dependencyGraph = computation.dependencyGraph;
 
   // Process the properties one by one
   properties.forEach(prop => {
 
-    // Store the prop in the memo by type, variableName and id
-    storePropInMemo(prop, computation)
-
-    // Store the prop in the dependency graph
-    dependencyGraph.addNode(prop._id, prop);
-
-    // Remove old computed only fields
-    computedOnlySchemas[prop.type]._schemaKeys.forEach(key =>
-      applyFnToKey(prop, key, unset)
-    );
-
-    // Remove old denormalised fields
-    denormSchema._schemaKeys.forEach(key =>
-      applyFnToKey(prop, key, unset)
-    );
+    let computedSchema = computedOnlySchemas[prop.type];
+    removeSchemaFields([computedSchema, denormSchema], prop);
 
     // Add a place to store all the computation details
     prop._computationDetails = {
       calculations: [],
+      inlineCalculations: [],
       toggleAncestors: [],
     };
 
     // Parse all the calculations
     parseCalculationFields(prop, computedSchemas);
+
   });
 
   // Get all the properties as trees based on their ancestors
@@ -108,27 +89,11 @@ export function buildComputationFromProps(properties){
   // Link the inventory dependencies
   linkInventory(forest, dependencyGraph);
 
-  // Graph functions that rely on the props being stored first
+  // Link functions that require the above to be complete 
   properties.forEach(prop => {
     linkTypeDependencies(dependencyGraph, prop, computation);
     linkCalculationDependencies(dependencyGraph, prop, computation);
   });
 
   return computation;
-}
-
-function storePropInMemo(prop, memo){
-  // Store dicts for easy access later
-  // Store a copy of the unmodified prop
-  memo.originalPropsById[prop._id] = cloneDeep(prop);
-  // Store by id
-  memo.propsById[prop._id] = prop;
-  // Store by type
-  memo.propsByType[prop.type] ?
-    memo.propsByType[prop.type].push(prop) :
-    memo.propsByType[prop.type] = [prop];
-  // Store by variableName
-  memo.propsByVariableName[prop.variableName] ?
-    memo.propsByVariableName[prop.variableName].push(prop) :
-    memo.propsByVariableName[prop.variableName]= [prop];
 }

@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 // Get schemas that apply fields directly so they can be gracefully extended
@@ -26,18 +26,36 @@ function computedOnlyInlineCalculationField(field){
       type: Object,
       optional: true,
     },
+    [`${field}.value`]: {
+      type: String,
+      optional: true,
+      max: STORAGE_LIMITS.inlineCalculationField,
+    },
     [`${field}.inlineCalculations`]: {
       type: Array,
       defaultValue: [],
       maxCount: STORAGE_LIMITS.inlineCalculationCount,
     },
     [`${field}.inlineCalculations.$`]: {
-      type: InlineComputationSchema,
+      type: Object,
     },
-    [`${field}.value`]: {
+    // The part between bracers {}
+    [`${field}.inlineCalculations.$.calculation`]: {
       type: String,
+      max: STORAGE_LIMITS.calculation,
+    },
+    [`${field}.inlineCalculations.$.value`]: {
+      type: SimpleSchema.oneOf(String, Number),
       optional: true,
-      max: STORAGE_LIMITS.inlineCalculationField,
+      max: STORAGE_LIMITS.calculation,
+    },
+    [`${field}.inlineCalculations.$.errors`]: {
+      type: Array,
+      optional: true,
+      maxCount: STORAGE_LIMITS.errorCount,
+    },
+    [`${field}.inlineCalculations.$.errors.$`]: {
+      type: ErrorSchema,
     },
   });
 }

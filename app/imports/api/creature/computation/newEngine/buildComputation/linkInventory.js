@@ -27,6 +27,8 @@ export default function linkInventory(forest, dependencyGraph){
 }
 
 function handleProp(prop, containerStack, dependencyGraph){
+  // Skip props that aren't part of the inventory
+  if (prop.type !== 'inventory' && prop.type !== 'container') return;
   // Determine if this property is carried, items are carried by default
   let carried = prop.type === 'container' ? prop.carried : true;
 

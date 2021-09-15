@@ -1,10 +1,14 @@
+import computeCreatureComputation from './computeCreatureComputation.js';
 import { buildComputationFromProps } from './buildCreatureComputation.js';
 import { assert } from 'chai';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
-describe('buildComputation', function(){
-  it('Builds something at all', function(){
+describe('Compute compuation', function(){
+  it('Computes something at all', function(){
+    console.time('compute');
     let computation = buildComputationFromProps(testProperties);
+    computeCreatureComputation(computation);
+    console.timeEnd('compute');
     assert.exists(computation);
   });
 });

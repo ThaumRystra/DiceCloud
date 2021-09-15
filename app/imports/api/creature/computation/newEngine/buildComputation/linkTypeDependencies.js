@@ -13,7 +13,7 @@ const linkDependenciesByType = {
 }
 
 export default function linkTypeDependencies(dependencyGraph, prop){
-  linkDependenciesByType[prop.type]?.(prop);
+  linkDependenciesByType[prop.type]?.(dependencyGraph, prop);
 }
 
 function linkClassLevel(dependencyGraph, prop){

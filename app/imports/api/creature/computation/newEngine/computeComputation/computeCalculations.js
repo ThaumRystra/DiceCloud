@@ -2,6 +2,7 @@ import { CompilationContext } from '/imports/parser/parser.js';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 
 export default function computeCalculations(node, scope){
+  if (!node.data) return;
   // evaluate all the calculations
   node.data._computationDetails?.calculations?.forEach(calcObj => {
     evaluateCalculation(calcObj, scope)
@@ -14,7 +15,7 @@ export default function computeCalculations(node, scope){
 function evaluateCalculation(calculation, scope){
   const context = new CompilationContext();
   const parseNode = calculation._parsedCalculation;
-  const fn = calculation._parseLevel || 'reduce';
+  const fn = calculation._parseLevel;
   const calculationScope = {...calculation._localScope, ...scope};
   calculation.value = parseNode[fn](calculationScope, context);
   calculation.errors = context.errors;

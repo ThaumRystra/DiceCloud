@@ -9,7 +9,7 @@ export default function linkCalculationDependencies(dependencyGraph, prop, {prop
       // ancestors: {} //this gets added if there are resolved ancestors
     };
     // Traverse the parsed calculation looking for variable names
-    calcObj._parsedCalculation.travese(node => {
+    calcObj._parsedCalculation.traverse(node => {
       // Skip nodes that aren't symbols or accessors
       if (!(node instanceof SymbolNode || node instanceof AccessorNode)) return;
       // Link ancestor references as direct property dependencies

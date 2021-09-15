@@ -1,7 +1,7 @@
 import computeStat from '/imports/api/creature/computation/engine/computeStat.js';
 import computeProficiency from '/imports/api/creature/computation/engine/computeProficiency.js';
 import evaluateCalculation from '/imports/api/creature/computation/engine/evaluateCalculation.js';
-import stripFloatingPointOddities from '/imports/ui/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/creature/computation/newEngine/utility/stripFloatingPointOddities.js';
 import { union } from 'lodash';
 
 export default function combineStat(stat, aggregator, memo){
