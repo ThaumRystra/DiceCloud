@@ -5,10 +5,14 @@ import computeByType from '/imports/api/creature/computation/newEngine/computeCo
 export default function computeCreatureComputation(computation){
   const stack = [];
   // Computation scope of {variableName: prop}
-  const scope = {};
+  const scope = computation.scope;
   const graph = computation.dependencyGraph;
   // Add all nodes to the stack
-  graph.forEachNode(node => stack.push(node));
+  graph.forEachNode(node => {
+    node._visited = false;
+    node._visitedChildren = false;
+    stack.push(node)
+  });
   // Depth first traversal of nodes
   while (stack.length){
     let top = stack[stack.length - 1];

@@ -5,11 +5,11 @@ import applyFnToKey from '/imports/api/creature/computation/newEngine/utility/ap
 import { get } from 'lodash';
 
 export default function parseCalculationFields(prop, schemas){
-  parseInlineCalculationFields(prop, schemas);
-  parseDirectCalculationFields(prop, schemas);
+  discoverInlineCalculationFields(prop, schemas);
+  parseAllCalculationFields(prop, schemas);
 }
 
-function parseInlineCalculationFields(prop, schemas){
+function discoverInlineCalculationFields(prop, schemas){
   // For each key in the schema
   schemas[prop.type]._schemaKeys.forEach( key => {
     // That ends in .inlineCalculations
@@ -35,7 +35,7 @@ function parseInlineCalculationFields(prop, schemas){
   });
 }
 
-function parseDirectCalculationFields(prop, schemas){
+function parseAllCalculationFields(prop, schemas){
   // For each key in the schema
   schemas[prop.type]._schemaKeys.forEach( key => {
     //  that ends in '.calculation'

@@ -6,6 +6,7 @@ export default function computeAction(graph, node, scope){
     prop.usesLeft = prop.uses.value - (prop.usesUsed || 0);
   }
   computeResources(graph, node, scope);
+  if (!prop.resources) return;
   prop.resources.itemsConsumed.forEach(itemConsumed => {
     if (!itemConsumed.itemId) return;
     if (itemConsumed.available < itemConsumed.quantity.value){

@@ -82,14 +82,14 @@ export function buildComputationFromProps(properties){
   // Walk the property trees computing things that need to be inherited
   walkDown(forest, node => {
     computeInactiveStatus(node);
-    computeToggleDependencies(node);
-    computeSlotQuantityFilled(node);
+    computeToggleDependencies(node, dependencyGraph);
+    computeSlotQuantityFilled(node, dependencyGraph);
   });
 
   // Link the inventory dependencies
   linkInventory(forest, dependencyGraph);
 
-  // Link functions that require the above to be complete 
+  // Link functions that require the above to be complete
   properties.forEach(prop => {
     linkTypeDependencies(dependencyGraph, prop, computation);
     linkCalculationDependencies(dependencyGraph, prop, computation);

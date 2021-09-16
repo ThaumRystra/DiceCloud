@@ -8,6 +8,7 @@ export default class CreatureComputation {
     this.propsById =  {};
     this.propsByType =  {};
     this.propsByVariableName =  {};
+    this.scope = {};
     this.props =  properties;
     this.dependencyGraph = createGraph();
 

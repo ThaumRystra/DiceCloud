@@ -85,4 +85,6 @@ function parseString(string, fn = 'compile'){
   return {result, context}
 }
 
-export { ConstantSchema };
+const ComputedOnlyConstantSchema = new SimpleSchema({});
+
+export { ConstantSchema, ComputedOnlyConstantSchema };

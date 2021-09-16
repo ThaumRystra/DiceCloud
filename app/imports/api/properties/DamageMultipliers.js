@@ -49,4 +49,6 @@ let DamageMultiplierSchema = new SimpleSchema({
   },
 });
 
-export { DamageMultiplierSchema };
+const ComputedOnlyDamageMultiplierSchema = new SimpleSchema({});
+
+export { DamageMultiplierSchema, ComputedOnlyDamageMultiplierSchema };

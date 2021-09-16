@@ -9,14 +9,13 @@ export default function computeVariable(graph, node, scope){
   if (!node.data) node.data = {};
   aggregateLinks(graph, node);
   combineAggregations(node, scope);
-  if (node.definingProp){
+  if (node.data.definingProp){
     // Add the defining variable to the scope
-    scope[node.id] = node.definingProp
+    scope[node.id] = node.data.definingProp
   } else {
     // Otherwise add an implicit variable to the scope
     scope[node.id] = computeImplicitVariable(node, scope);
   }
-  console.log('computed variable ', node);
 }
 
 function aggregateLinks(graph, node){

@@ -4,7 +4,8 @@ export default function computeInactiveStatus(node){
   const prop = node.node;
   if (isActive(prop)) return;
   // Unequipped items disable their children, but are not disabled themselves
-  if (prop.type !== 'item'){
+  // All notes do the same
+  if (prop.type !== 'item' && prop.type !== 'note' ){
     prop.inactive = true;
     prop.deactivatedBySelf = true;
   }

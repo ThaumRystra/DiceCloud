@@ -2,7 +2,6 @@ import getAggregatorResult from './getAggregatorResult.js';
 
 export default function computeVariableAsAttribute(node, prop, scope){
   let result = getAggregatorResult(node);
-  console.log('computing variable as attribure ', node);
   prop.total = result;
   prop.value = prop.total - (prop.damage || 0);
 

@@ -2,15 +2,15 @@ import computeCreatureComputation from './computeCreatureComputation.js';
 import { buildComputationFromProps } from './buildCreatureComputation.js';
 import { assert } from 'chai';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import computeAction from './computeComputation/tests/computeAction.testFn.js';
 
 describe('Compute compuation', function(){
   it('Computes something at all', function(){
-    console.time('compute');
     let computation = buildComputationFromProps(testProperties);
     computeCreatureComputation(computation);
-    console.timeEnd('compute');
     assert.exists(computation);
   });
+  it('Computes actions', computeAction);
 });
 
 var testProperties = [

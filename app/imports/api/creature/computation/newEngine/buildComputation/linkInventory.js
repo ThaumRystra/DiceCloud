@@ -12,6 +12,7 @@ export default function linkInventory(forest, dependencyGraph){
     const top = stack[stack.length - 1];
     const prop = top.node;
     if (prop._computationDetails.inventoryChildrenVisited){
+      if (prop.type === 'container') containerStack.pop();
       stack.pop();
       handleProp(prop, containerStack, dependencyGraph);
     } else {
@@ -28,7 +29,7 @@ export default function linkInventory(forest, dependencyGraph){
 
 function handleProp(prop, containerStack, dependencyGraph){
   // Skip props that aren't part of the inventory
-  if (prop.type !== 'inventory' && prop.type !== 'container') return;
+  if (prop.type !== 'item' && prop.type !== 'container') return;
   // Determine if this property is carried, items are carried by default
   let carried = prop.type === 'container' ? prop.carried : true;
 

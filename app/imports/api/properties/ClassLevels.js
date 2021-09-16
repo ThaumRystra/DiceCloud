@@ -3,7 +3,7 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-let ClassLevelSchema = createPropertySchema({
+const ClassLevelSchema = createPropertySchema({
 	name: {
 		type: String,
 		optional: true,
@@ -27,4 +27,6 @@ let ClassLevelSchema = createPropertySchema({
   },
 });
 
-export { ClassLevelSchema };
+const ComputedOnlyClassLevelSchema  = new SimpleSchema({});
+
+export { ClassLevelSchema, ComputedOnlyClassLevelSchema };

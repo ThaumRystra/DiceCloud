@@ -1,10 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import {
-  ResourcesSchema,
-  ResourcesComputedOnlySchema,
-  ResourcesComputedSchema,
-} from '/imports/api/properties/subSchemas/ResourcesSchema.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 SimpleSchema.extendOptions(['parseLevel']);
 
@@ -45,11 +41,6 @@ let ActionSchema = createPropertySchema({
       'multipleTargets',
     ],
   },
-  // Resources schema changes for between standard, computed, and computedOnly
-  resources: {
-    type: ResourcesSchema,
-    defaultValue: {},
-  },
   // Calculation of how many times this action can be used
   uses: {
     type: 'fieldToCompute',
@@ -66,6 +57,61 @@ let ActionSchema = createPropertySchema({
     allowedValues: ['longRest', 'shortRest'],
     optional: true,
   },
+  // Resources
+  resources: {
+    type: Object,
+    defaultValue: {},
+  },
+  'resources.itemsConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.itemsConsumed.$': {
+    type: Object,
+  },
+  'resources.itemsConsumed.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
+  },
+  'resources.itemsConsumed.$.tag': {
+    type: String,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.quantity': {
+    type: 'fieldToCompute',
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemId': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
+  'resources.attributesConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.attributesConsumed.$': {
+    type: Object,
+  },
+  'resources.attributesConsumed.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
+  },
+  'resources.attributesConsumed.$.variableName': {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.variableName,
+  },
+  'resources.attributesConsumed.$.quantity': {
+    type: 'fieldToCompute',
+    optional: true,
+  },
 });
 
 const ComputedOnlyActionSchema = createPropertySchema({
@@ -76,10 +122,6 @@ const ComputedOnlyActionSchema = createPropertySchema({
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,
-  },
-  resources: {
-    type: ResourcesComputedOnlySchema,
-    defaultValue: {},
   },
   // True if the uses left is zero, or any item or attribute consumed is
   // insufficient
@@ -96,16 +138,70 @@ const ComputedOnlyActionSchema = createPropertySchema({
     type: Number,
     optional: true,
   },
+  // Resources
+  resources: {
+    type: Object,
+    defaultValue: {},
+  },
+  'resources.itemsConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.itemsConsumed.$': {
+    type: Object,
+  },
+  'resources.itemsConsumed.$.available': {
+    type: Number,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.quantity': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemName': {
+    type: String,
+    max: STORAGE_LIMITS.name,
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemIcon': {
+    type: storedIconsSchema,
+    optional: true,
+    max: STORAGE_LIMITS.icon,
+  },
+  'resources.itemsConsumed.$.itemColor': {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.color,
+  },
+  'resources.attributesConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.attributesConsumed.$': {
+    type: Object,
+  },
+  'resources.attributesConsumed.$.quantity': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  'resources.attributesConsumed.$.available': {
+    type: Number,
+    optional: true,
+  },
+  'resources.attributesConsumed.$.statId': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
+  'resources.attributesConsumed.$.statName': {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.name,
+  },
 });
 
 const ComputedActionSchema = new SimpleSchema()
   .extend(ActionSchema)
-  .extend(ComputedOnlyActionSchema)
-  .extend({
-    resources: {
-      type: ResourcesComputedSchema,
-      defaultValue: {},
-    },
-  });
+  .extend(ComputedOnlyActionSchema);
 
 export { ActionSchema, ComputedOnlyActionSchema, ComputedActionSchema};

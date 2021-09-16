@@ -58,4 +58,6 @@ let ReferenceSchema = new SimpleSchema({
   },
 });
 
-export { ReferenceSchema };
+const ComputedOnlyReferenceSchema = new SimpleSchema({});
+
+export { ReferenceSchema, ComputedOnlyReferenceSchema };

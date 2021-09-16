@@ -12,8 +12,8 @@ const linkDependenciesByType = {
   spell: linkResources,
 }
 
-export default function linkTypeDependencies(dependencyGraph, prop){
-  linkDependenciesByType[prop.type]?.(dependencyGraph, prop);
+export default function linkTypeDependencies(dependencyGraph, prop, computation){
+  linkDependenciesByType[prop.type]?.(dependencyGraph, prop, computation);
 }
 
 function linkClassLevel(dependencyGraph, prop){
@@ -36,19 +36,20 @@ function linkVariableName(dependencyGraph, prop){
 }
 
 function linkResources(dependencyGraph, prop, {propsById}){
+  if (!prop.resources) return;
   prop.resources.itemsConsumed.forEach(itemConsumed => {
     if (!itemConsumed.itemId) return;
     const item = propsById[itemConsumed.itemId];
-    if (!item.equipped) {
+    if (!item || item.inactive){
+      // Unlink if the item doesn't exist or is inactive
       itemConsumed.itemId = undefined;
       return;
     }
-    if (!item) return;
     // none of these dependencies are computed, we can use them immediately
-    prop.available = item.quantity;
-    prop.itemName = item.name;
-    prop.itemIcon = item.icon;
-    prop.itemColor = item.color;
+    itemConsumed.available = item.quantity;
+    itemConsumed.itemName = item.name;
+    itemConsumed.itemIcon = item.icon;
+    itemConsumed.itemColor = item.color;
     dependencyGraph.addLink(prop._id, item._id, 'inventory');
   });
   prop.resources.attributesConsumed.forEach(attConsumed => {

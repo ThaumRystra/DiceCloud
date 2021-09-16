@@ -39,4 +39,6 @@ let SlotFillerSchema = new SimpleSchema({
   },
 });
 
-export { SlotFillerSchema };
+const ComputedOnlySlotFillerSchema = new SimpleSchema({});
+
+export { SlotFillerSchema, ComputedOnlySlotFillerSchema };

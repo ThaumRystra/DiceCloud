@@ -1,5 +1,6 @@
 import { CompilationContext } from '/imports/parser/parser.js';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
+import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
 export default function computeCalculations(node, scope){
   if (!node.data) return;
@@ -17,7 +18,12 @@ function evaluateCalculation(calculation, scope){
   const parseNode = calculation._parsedCalculation;
   const fn = calculation._parseLevel;
   const calculationScope = {...calculation._localScope, ...scope};
-  calculation.value = parseNode[fn](calculationScope, context);
+  const resultNode = parseNode[fn](calculationScope, context);
+  if (resultNode instanceof ConstantNode){
+    calculation.value = resultNode.value;
+  } else {
+    calculation.value = NaN;
+  }
   calculation.errors = context.errors;
 }
 

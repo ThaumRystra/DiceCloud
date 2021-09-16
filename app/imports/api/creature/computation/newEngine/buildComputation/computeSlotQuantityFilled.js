@@ -4,13 +4,16 @@
  */
 export default function computeSlotQuantityFilled(node, dependencyGraph){
   let slot = node.node;
-  if (slot.type !== 'propertySlot' || slot.type !== 'characterClass') return;
+  if (slot.type !== 'propertySlot') return;
   slot.totalFilled = 0;
   node.children.forEach(child => {
     let childProp = child.node;
-    dependencyGraph.addLink(slot._id, childProp._id, 'slotFill')
-    if (childProp.type === 'slotFiller'){
-      slot.totalFilled += child.slotQuantityFilled;
+    dependencyGraph.addLink(slot._id, childProp._id, 'slotFill');
+    if (
+      childProp.type === 'slotFiller' &&
+      Number.isFinite(childProp.slotQuantityFilled)
+    ){
+      slot.totalFilled += childProp.slotQuantityFilled;
     } else {
       slot.totalFilled++;
     }

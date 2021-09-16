@@ -5,27 +5,20 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 // Get schemas that apply fields directly so they can be gracefully extended
 // because {type: Schema} fields can't be extended
 function fieldToCompute(field){
-  return new SimpleSchema({
-    // The object should already be set, but set again just in case
-    [field]: {
-      type: Object,
-      optional: true,
-    },
+  const schemaObj = {
     // This is required, if we don't have a calculation delete the whole object
     [`${field}.calculation`]: {
       type: String,
       max: STORAGE_LIMITS.calculation,
     },
-  });
+  }
+  // If the field is an array, we need to include those fields as well
+  includeParentFields(field, schemaObj);
+  return new SimpleSchema(schemaObj);
 }
 
 function computedOnlyField(field){
-  return new SimpleSchema({
-    // The object should already be set, but set again just in case
-    [field]: {
-      type: Object,
-      optional: true,
-    },
+  const schemaObj = {
     [`${field}.value`]: {
       type: SimpleSchema.oneOf(String, Number),
       optional: true,
@@ -38,6 +31,30 @@ function computedOnlyField(field){
     [`${field}.errors.$`]:{
       type: ErrorSchema,
     },
+  }
+  includeParentFields(field, schemaObj);
+  return new SimpleSchema(schemaObj);
+}
+
+// We must include parent array and object fields for the schema to be valid
+function includeParentFields(field, schemaObj){
+  const splitField = field.split('.');
+  if (splitField.length === 1){
+    schemaObj[field] = {type: Object};
+    return;
+  }
+  let key = '';
+  splitField.push('');
+  splitField.forEach(value => {
+    if (key){
+      if (value === '$'){
+        schemaObj[key] = {type: Array};
+      } else {
+        schemaObj[key] = {type: Object};
+      }
+      key += '.';
+    }
+    key += value;
   });
 }
 
