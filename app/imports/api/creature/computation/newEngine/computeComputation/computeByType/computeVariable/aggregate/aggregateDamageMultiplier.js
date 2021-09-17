@@ -1,7 +1,3 @@
-
-/**
- *
- */
 export default function aggregateDamageMultipliers({node, linkedNode, link}){
   if (link.data !== 'damageMultiplier') return;
   const multiplierValue = linkedNode.data.value;

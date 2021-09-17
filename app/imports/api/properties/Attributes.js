@@ -9,15 +9,15 @@ import createPropertySchema from '/imports/api/properties/subSchemas/createPrope
 let AttributeSchema = createPropertySchema({
   name: {
 		type: String,
-    defaultValue: 'New Attribute',
+    optional: true,
     max: STORAGE_LIMITS.name,
 	},
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
+    optional: true,
 		regEx: VARIABLE_NAME_REGEX,
     min: 2,
-    defaultValue: 'newAttribute',
     max: STORAGE_LIMITS.variableName,
   },
 	// How it is displayed and computed is determined by type

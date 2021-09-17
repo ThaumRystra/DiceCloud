@@ -3,7 +3,9 @@ import stripFloatingPointOddities from '/imports/api/creature/computation/newEng
 export default function getAggregatorResult(node){
   // Work out the base value as the greater of the deining stat value or
   // the damage multiplier value
+  // This baseValue comes from aggregating definitions
   let statBase = node.data.baseValue;
+
   const damageMultiplyValue = node.data.damageMultiplyValue;
   if (statBase === undefined || damageMultiplyValue > statBase){
     statBase = damageMultiplyValue;

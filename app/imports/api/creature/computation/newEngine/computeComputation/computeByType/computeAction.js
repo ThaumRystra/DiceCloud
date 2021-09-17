@@ -1,5 +1,3 @@
-import computeResources from './computeAction/computeResources.js';
-
 export default function computeAction(graph, node, scope){
   const prop = node.data;
   if (prop.uses){
@@ -18,5 +16,17 @@ export default function computeAction(graph, node, scope){
     if (attConsumed.available < attConsumed.quantity.value){
       prop.insufficientResources = true;
     }
+  });
+}
+
+function computeResources(graph, node, scope){
+  const resources = node.data?.resources;
+  if (!resources) return;
+  resources.attributesConsumed.forEach(attConsumed => {
+    if (!attConsumed.variableName) return;
+    const att = scope[attConsumed.variableName];
+    attConsumed.available = att.value;
+    attConsumed.statId = att._id;
+    attConsumed.statName = att.name;
   });
 }

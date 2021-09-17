@@ -18,7 +18,8 @@ export default function aggregateDefinition({node, linkedNode, link}){
   }
 
   // Aggregate the base value due to the defining properties
-  const propBaseValue = linkedNode.data.baseValue?.value;
+  const propBaseValue = prop.baseValue?.value;
+
   if (propBaseValue === undefined) return;
   if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue){
     node.data.baseValue = propBaseValue;

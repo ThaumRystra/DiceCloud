@@ -2,7 +2,7 @@ import computeCreatureComputation from './computeCreatureComputation.js';
 import { buildComputationFromProps } from './buildCreatureComputation.js';
 import { assert } from 'chai';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import computeAction from './computeComputation/tests/computeAction.testFn.js';
+import computeTests from './computeComputation/tests/index.js';
 
 describe('Compute compuation', function(){
   it('Computes something at all', function(){
@@ -10,7 +10,7 @@ describe('Compute compuation', function(){
     computeCreatureComputation(computation);
     assert.exists(computation);
   });
-  it('Computes actions', computeAction);
+  computeTests.forEach(test => it(test.text, test.fn));
 });
 
 var testProperties = [
