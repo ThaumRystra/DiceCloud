@@ -1,14 +1,24 @@
-export default function computeVariableAsSkill(node, prop, scope){
+import aggregate from './aggregate/index.js';
+
+export default function computeVariableAsSkill(computation, node, prop){
   // Skills are based on some ability Modifier
-  let ability = scope[prop.ability];
+  let ability = computation.scope[prop.ability];
   prop.abilityMod = ability?.modifier || 0;
-  // TODO: Use this ability's skill effects/profs iff this skill is not a save
+
+  // Inherit the ability's skill effects and proficiencies if skill is not a save
+  if (prop.skillType !== 'save' && ability){
+    aggregateAbilityEffects({
+      computation,
+      skillNode: node,
+      abilityNode: computation.dependencyGraph.getNode(prop.ability)
+    });
+  }
 
   // Proficiency
   prop.proficiency = node.data.proficiency;
 
   // Get the character's proficiency bonus to apply
-  let profBonus = scope['proficiencyBonus']?.value || 0;
+  let profBonus = computation.scope['proficiencyBonus']?.value || 0;
 
   // Multiply the proficiency bonus by the actual proficiency
   if(prop.proficiency === 0.49){
@@ -60,4 +70,29 @@ export default function computeVariableAsSkill(node, prop, scope){
   prop.fail = aggregator.fail;
   // Rollbonus
   prop.rollBonuses = aggregator.rollBonus;
+}
+
+function aggregateAbilityEffects({computation, skillNode, abilityNode}){
+  computation.dependencyGraph.forEachLinkedNode(
+    abilityNode.id,
+    (linkedNode, link) => {
+      if (!linkedNode.data) linkedNode.data = {};
+      // Ignore inactive props
+      if (linkedNode.data.inactive) return;
+      // Check that the link is a valid effect/proficiency to pass on
+      // to a skill from its ability
+      if (link.data === 'effect'){
+        if (![
+          'advantage', 'disadvantage', 'passiveAdd', 'fail'
+        ].includes(linkedNode.data.operation)){
+          return;
+        }
+      }
+      // Apply the aggregations
+      let arg = {node: skillNode, linkedNode, link};
+      aggregate.effect(arg);
+      aggregate.proficiency(arg);
+    },
+    true // enumerate only outbound links
+  );
 }
