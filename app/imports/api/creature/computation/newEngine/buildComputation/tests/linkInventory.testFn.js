@@ -5,7 +5,7 @@ import clean from '../../utility/cleanProp.testFn.js';
 export default function(){
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
-  
+
   assert.isTrue(
     !!hasLink('weightEquipment', 'equippedAttunedItemId'),
     'weight of equipment depends on equipped items'
@@ -45,6 +45,14 @@ export default function(){
   assert.isFalse(
     !!hasLink('valueCarried', 'childContainerId'),
     'valueCarried does not depend on nested containers'
+  );
+  assert.isTrue(
+    !!hasLink('containerId', 'childContainerId'),
+    'containers depend on their child containers'
+  );
+  assert.isTrue(
+    !!hasLink('childContainerId', 'grandchildItemId'),
+    'containers depend on their child items'
   );
 }
 

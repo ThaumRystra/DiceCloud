@@ -34,10 +34,10 @@ export default function aggregateInventory({node, linkedNode, link}){
         prop.baseValue = (prop.baseValue || 0) + weight(linkedProp);
       } else if (node.id === 'valueTotal'){
         prop.baseValue = (prop.baseValue || 0) + value(linkedProp);
-      } else if (node.did === 'weightCarried'){
+      } else if (node.id === 'weightCarried'){
         prop.baseValue = (prop.baseValue || 0) + carriedWeight(linkedProp);
-      } else if (node.did === 'valueCarried'){
-        prop.carriedValue = (prop.carriedValue || 0) + carriedValue(linkedProp);
+      } else if (node.id === 'valueCarried'){
+        prop.baseValue = (prop.baseValue || 0) + carriedValue(linkedProp);
       }
       return;
   }
@@ -52,7 +52,7 @@ function carriedWeight(prop){
 }
 
 function value (prop){
-  return (prop.value || 0) + (prop.value || 0);
+  return (prop.value || 0) + (prop.contentsValue || 0);
 }
 
 function carriedValue (prop){
