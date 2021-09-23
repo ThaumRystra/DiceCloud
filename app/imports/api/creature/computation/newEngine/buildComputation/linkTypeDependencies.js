@@ -2,7 +2,7 @@ const linkDependenciesByType = {
   action: linkResources,
   attack: linkResources,
   attribute: linkAttribute,
-  characterClass: linkVariableName,
+  class: linkVariableName,
   classLevel: linkClassLevel,
   constant: linkVariableName,
   damageMultiplier: linkDamageMultiplier,

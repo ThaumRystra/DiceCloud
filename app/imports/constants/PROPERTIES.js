@@ -30,7 +30,7 @@ const PROPERTIES = Object.freeze({
     helpText: 'When a buff is activated as a child of an action, it will copy the properties under itself onto a target character.',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
   },
-  characterClass: {
+  class: {
     icon: 'mdi-card-account-details',
     name: 'Class',
     helpText: 'Your character should ideally have one starting class. Classes hold class levels',

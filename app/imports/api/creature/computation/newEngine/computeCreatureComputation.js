@@ -42,5 +42,7 @@ function compute(graph, node, scope){
 }
 
 function pushDependenciesToStack(nodeId, graph, stack){
-  graph.forEachLinkedNode(nodeId, linkedNode => stack.push(linkedNode), true);
+  graph.forEachLinkedNode(nodeId, linkedNode => {
+    stack.push(linkedNode);
+  }, true);
 }

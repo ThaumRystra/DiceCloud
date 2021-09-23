@@ -32,7 +32,7 @@ const propertySchemasIndex = {
   attack: ComputedOnlyAttackSchema,
   attribute: ComputedOnlyAttributeSchema,
   buff: ComputedOnlyBuffSchema,
-  characterClass: ComputedOnlyClassSchema,
+  class: ComputedOnlyClassSchema,
   classLevel: ComputedOnlyClassLevelSchema,
   constant: ComputedOnlyConstantSchema,
   container: ComputedOnlyContainerSchema,

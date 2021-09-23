@@ -10,6 +10,7 @@ export default function aggregateClassLevel({node, linkedNode, link}){
     if (linkedProp.level > aggregator.level) aggregator.level = linkedProp.level;
     aggregator.levelsFilled[linkedProp.level] = true;
   } else if (link.data === 'level'){
-    node.baseValue = (node.baseValue || 0) + node.data.classLevelAggregator.level;
+    node.data.baseValue = (node.data.baseValue || 0) +
+      linkedNode.data.classLevelAggregator.level;
   }
 }

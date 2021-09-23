@@ -54,7 +54,7 @@ function computeVariableProp(node, prop, scope){
     computeVariableAsSkill(node, prop, scope)
   } else if (prop.type === 'constant'){
     computeVariableAsConstant(node, prop, scope)
-  } else if (prop.type === 'characterClass'){
+  } else if (prop.type === 'class'){
     computeVariableAsClass(node, prop, scope)
   }
 }
