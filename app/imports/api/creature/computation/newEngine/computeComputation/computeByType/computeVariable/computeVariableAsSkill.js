@@ -37,7 +37,7 @@ export default function computeVariableAsSkill(computation, node, prop){
     prop.hide = statBase === undefined &&
       prop.proficiency == 0 ||
       undefined;
-    prop.value = statBase;
+    prop.value = (statBase || 0) + prop.abilityMod + profBonus;
     return;
   }
   // Combine aggregator

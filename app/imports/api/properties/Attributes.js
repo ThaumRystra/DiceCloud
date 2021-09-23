@@ -26,7 +26,7 @@ let AttributeSchema = createPropertySchema({
     allowedValues: [
       'ability', //Strength, Dex, Con, etc.
       'stat', // Speed, Armor Class
-			'modifier', // Proficiency Bonus, Initiative
+			'modifier', // Proficiency Bonus, displayed as +x
       'hitDice', // d12 hit dice
       'healthBar', // Hitpoints, Temporary Hitpoints, can take damage
 			'bar', // Displayed as a health bar, can't take damage
