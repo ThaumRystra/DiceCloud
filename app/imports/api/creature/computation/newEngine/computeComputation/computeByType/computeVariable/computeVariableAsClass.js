@@ -1,4 +1,4 @@
-export default function computeVariableAsAttribute(node, prop){
+export default function computeVariableAsAttribute(computation, node, prop){
   let classLevelAgg = node.data.classLevelAggregator;
   if (!classLevelAgg) return;
   prop.level = classLevelAgg.level;

@@ -1,9 +1,9 @@
-export default function computeAction(graph, node, scope){
+export default function computeAction(computation, node){
   const prop = node.data;
   if (prop.uses){
     prop.usesLeft = prop.uses.value - (prop.usesUsed || 0);
   }
-  computeResources(graph, node, scope);
+  computeResources(computation, node);
   if (!prop.resources) return;
   prop.resources.itemsConsumed.forEach(itemConsumed => {
     if (!itemConsumed.itemId) return;
@@ -19,12 +19,12 @@ export default function computeAction(graph, node, scope){
   });
 }
 
-function computeResources(graph, node, scope){
+function computeResources(computation, node){
   const resources = node.data?.resources;
   if (!resources) return;
   resources.attributesConsumed.forEach(attConsumed => {
     if (!attConsumed.variableName) return;
-    const att = scope[attConsumed.variableName];
+    const att = computation.scope[attConsumed.variableName];
     attConsumed.available = att.value;
     attConsumed.statId = att._id;
     attConsumed.statName = att.name;

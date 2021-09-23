@@ -1,4 +1,4 @@
-export default function evaluateToggles(node){
+export default function evaluateToggles(computation, node){
   let prop = node.data;
   if (!prop) return;
   let toggles = prop._computationDetails?.toggleAncestors;

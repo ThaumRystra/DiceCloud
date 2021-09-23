@@ -5,7 +5,6 @@ import computeByType from '/imports/api/creature/computation/newEngine/computeCo
 export default function computeCreatureComputation(computation){
   const stack = [];
   // Computation scope of {variableName: prop}
-  const scope = computation.scope;
   const graph = computation.dependencyGraph;
   // Add all nodes to the stack
   graph.forEachNode(node => {
@@ -24,7 +23,7 @@ export default function computeCreatureComputation(computation){
       top._visited = true;
       stack.pop();
       // Compute the top object of the stack
-      compute(graph, top, scope);
+      compute(computation, top);
     } else {
       top._visitedChildren = true;
       // Push dependencies to graph to be computed first
@@ -33,12 +32,12 @@ export default function computeCreatureComputation(computation){
   }
 }
 
-function compute(graph, node, scope){
+function compute(computation, node){
   // Determine the prop's active status by its toggles
-  computeToggles(node);
-  computeCalculations(node, scope);
+  computeToggles(computation, node);
+  computeCalculations(computation, node);
   // Compute the property by type
-  computeByType[node.data?.type || '_variable']?.(graph, node, scope);
+  computeByType[node.data?.type || '_variable']?.(computation, node);
 }
 
 function pushDependenciesToStack(nodeId, graph, stack){

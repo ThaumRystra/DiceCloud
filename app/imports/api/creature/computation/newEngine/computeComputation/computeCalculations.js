@@ -2,11 +2,11 @@ import { CompilationContext } from '/imports/parser/parser.js';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
 
-export default function computeCalculations(node, scope){
+export default function computeCalculations(computation, node){
   if (!node.data) return;
   // evaluate all the calculations
   node.data._computationDetails?.calculations?.forEach(calcObj => {
-    evaluateCalculation(calcObj, scope)
+    evaluateCalculation(calcObj, computation.scope)
   });
   node.data._computationDetails?.inlineCalculations?.forEach(inlineCalcObj => {
     embedInlineCalculations(inlineCalcObj);

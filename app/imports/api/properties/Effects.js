@@ -27,7 +27,6 @@ let EffectSchema = createPropertySchema({
 			'passiveAdd',
 			'fail',
 			'conditional',
-			'rollBonus',
 		],
 	},
 	amount: {

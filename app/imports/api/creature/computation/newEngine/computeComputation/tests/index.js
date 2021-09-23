@@ -4,6 +4,7 @@ import computeClasses from './computeClasses.testFn.js';
 import computeConstants from './computeConstants.testFn.js';
 import computeInventory from './computeInventory.testFn.js';
 import computeDamageMultipliers from './computeDamageMultipliers.testFn.js';
+import computeEffects from './computeEffects.testFn.js';
 
 export default [{
   text: 'Computes actions',
@@ -23,4 +24,7 @@ export default [{
 },{
   text: 'Computes damage multipliers',
   fn: computeDamageMultipliers,
+},{
+  text: 'Computes effects',
+  fn: computeEffects,
 }];

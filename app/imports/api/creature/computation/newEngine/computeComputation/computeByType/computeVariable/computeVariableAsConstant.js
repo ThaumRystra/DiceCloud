@@ -1,6 +1,6 @@
 import { parse } from '/imports/parser/parser.js';
 
-export default function computeVariableAsConstant(node, prop){
+export default function computeVariableAsConstant(computation, node, prop){
   let string = prop.calculation;
   if (!string) return;
   let parseNode;

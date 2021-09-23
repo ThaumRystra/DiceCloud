@@ -5,21 +5,22 @@ import computeVariableAsConstant from './computeVariable/computeVariableAsConsta
 import computeVariableAsClass from './computeVariable/computeVariableAsClass.js';
 import computeImplicitVariable from './computeVariable/computeImplicitVariable.js';
 
-export default function computeVariable(graph, node, scope){
+export default function computeVariable(computation, node){
+  const scope = computation.scope;
   if (!node.data) node.data = {};
-  aggregateLinks(graph, node);
-  combineAggregations(node, scope);
+  aggregateLinks(computation, node);
+  combineAggregations(computation, node);
   if (node.data.definingProp){
     // Add the defining variable to the scope
     scope[node.id] = node.data.definingProp
   } else {
     // Otherwise add an implicit variable to the scope
-    scope[node.id] = computeImplicitVariable(node, scope);
+    scope[node.id] = computeImplicitVariable(node);
   }
 }
 
-function aggregateLinks(graph, node){
-  graph.forEachLinkedNode(
+function aggregateLinks(computation, node){
+  computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
       if (!linkedNode.data) linkedNode.data = {};
@@ -38,24 +39,24 @@ function aggregateLinks(graph, node){
   );
 }
 
-function combineAggregations(node, scope){
+function combineAggregations(computation, node){
   combineMultiplierAggregator(node);
   node.data.overridenProps?.forEach(prop => {
-    computeVariableProp(node, prop, scope);
+    computeVariableProp(computation, node, prop);
   });
-  computeVariableProp(node, node.data.definingProp, scope);
+  computeVariableProp(computation, node, node.data.definingProp);
 }
 
-function computeVariableProp(node, prop, scope){
+function computeVariableProp(computation, node, prop){
   if (!prop) return;
   if (prop.type === 'attribute'){
-    computeVariableAsAttribute(node, prop, scope)
+    computeVariableAsAttribute(computation, node, prop)
   } else if (prop.type === 'skill'){
-    computeVariableAsSkill(node, prop, scope)
+    computeVariableAsSkill(computation, node, prop)
   } else if (prop.type === 'constant'){
-    computeVariableAsConstant(node, prop, scope)
+    computeVariableAsConstant(computation, node, prop)
   } else if (prop.type === 'class'){
-    computeVariableAsClass(node, prop, scope)
+    computeVariableAsClass(computation, node, prop)
   }
 }
 

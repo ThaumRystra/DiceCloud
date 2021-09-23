@@ -1,12 +1,12 @@
 import aggregate from './computeVariable/aggregate/index.js';
 
-export default function computeContainer(graph, node){
+export default function computeContainer(computation, node){
   if (!node.data) node.data = {};
-  aggregateLinks(graph, node);
+  aggregateLinks(computation, node);
 }
 
-function aggregateLinks(graph, node){
-  graph.forEachLinkedNode(
+function aggregateLinks(computation, node){
+  computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
       if (!linkedNode.data) linkedNode.data = {};

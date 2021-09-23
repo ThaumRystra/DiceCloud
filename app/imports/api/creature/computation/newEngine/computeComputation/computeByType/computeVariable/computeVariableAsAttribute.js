@@ -1,6 +1,6 @@
 import getAggregatorResult from './getAggregatorResult.js';
 
-export default function computeVariableAsAttribute(node, prop, scope){
+export default function computeVariableAsAttribute(computation, node, prop){
   let result = getAggregatorResult(node, prop) || 0;
 
   prop.total = result;
@@ -16,7 +16,7 @@ export default function computeVariableAsAttribute(node, prop, scope){
 
   // Hit dice denormalise constitution modifier
   if (prop.attributeType === 'hitDice') {
-    prop.constitutionMod = scope['constitution']?.modifier || 0;
+    prop.constitutionMod = computation.scope['constitution']?.modifier || 0;
   }
 
   // Stats that have no effects or base value can be hidden
