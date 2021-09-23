@@ -69,18 +69,17 @@ function combineMultiplierAggregator(node){
   if (aggregator.immunityCount){
     value = 0;
   } else if (
-    aggregator.ressistanceCount &&
+    aggregator.resistanceCount &&
     !aggregator.vulnerabilityCount
   ){
     value = 0.5;
   }  else if (
-    !aggregator.ressistanceCount &&
+    !aggregator.resistanceCount &&
     aggregator.vulnerabilityCount
   ){
     value = 2;
   } else {
     value = 1;
   }
-
   node.data.damageMultiplyValue = value;
 }

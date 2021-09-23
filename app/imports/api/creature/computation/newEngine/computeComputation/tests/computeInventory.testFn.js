@@ -8,7 +8,6 @@ export default function(){
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   const scope = id => computation.scope[id].value;
-  console.log(computation.scope);
 
   assert.equal(scope('weightEquipment'), 2);
   assert.equal(scope('valueEquipment'), 3);

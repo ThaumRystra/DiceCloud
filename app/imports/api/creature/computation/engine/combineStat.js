@@ -186,9 +186,9 @@ function combineSkill(stat, aggregator, memo){
 function combineDamageMultiplier(stat){
   if (stat.immunityCount) return 0;
   let result;
-  if (stat.ressistanceCount && !stat.vulnerabilityCount){
+  if (stat.resistanceCount && !stat.vulnerabilityCount){
     result = 0.5;
-  }  else if (!stat.ressistanceCount && stat.vulnerabilityCount){
+  }  else if (!stat.resistanceCount && stat.vulnerabilityCount){
     result = 2;
   } else {
     result = 1;

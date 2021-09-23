@@ -68,7 +68,9 @@ function linkAttribute(dependencyGraph, prop){
 
 function linkDamageMultiplier(dependencyGraph, prop){
   prop.damageTypes.forEach(damageType => {
-    dependencyGraph.addLink(`${damageType}Multiplier`, prop._id, prop.type);
+    // Remove all non-letter characters from the damage name
+    const damageName = damageType.replace(/[^a-z]/gi, '')
+    dependencyGraph.addLink(`${damageName}Multiplier`, prop._id, prop.type);
   });
 }
 
