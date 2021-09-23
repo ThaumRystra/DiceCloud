@@ -9,17 +9,21 @@ export default class SymbolNode extends ParseNode {
   toString(){
     return `${this.name}`
   }
-  compile(scope, context){
+  compile(scope, context, calledFromReduce = false){
     let value = scope && scope[this.name];
     let type = typeof value;
-    // For parse nodes, compile and return
-    if (value instanceof ParseNode){
-      return value.compile(scope, context);
-    }
     // For objects, default to their .value
     if (type === 'object'){
       value = value.value;
       type = typeof value;
+    }
+    // For parse nodes, compile and return
+    if (value instanceof ParseNode){
+      if (calledFromReduce){
+        return value.reduce(scope, context);
+      } else {
+        return value.compile(scope, context);
+      }
     }
     if (type === 'string' || type === 'number' || type === 'boolean'){
       return new ConstantNode({value, type});
@@ -32,7 +36,7 @@ export default class SymbolNode extends ParseNode {
     }
   }
   reduce(scope, context){
-    let result = this.compile(scope);
+    let result = this.compile(scope, context, true);
     if (result instanceof SymbolNode){
       if (context) context.storeError({
         type: 'info',
