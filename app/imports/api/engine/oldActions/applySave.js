@@ -1,4 +1,4 @@
-import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import CreaturesProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import roll from '/imports/parser/roll.js';
 

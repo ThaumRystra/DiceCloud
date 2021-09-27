@@ -1,4 +1,4 @@
-import { computeCreature } from '/imports/api/engine/computeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 export default function recomputeCreatureMixin(methodOptions){
   let runFunc = methodOptions.run;

@@ -8,7 +8,7 @@ import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import { computeCreature } from '/imports/api/engine/computeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const organizeDoc = new ValidatedMethod({
   name: 'organize.organizeDoc',

@@ -3,7 +3,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { computeCreature } from '/imports/api/engine/computeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
 
 let schema = new SimpleSchema({

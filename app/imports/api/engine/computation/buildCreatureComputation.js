@@ -45,7 +45,7 @@ function getProperties(creatureId){
     'removed': {$ne: true},
   }, {
     sort: {order: 1}
-  });
+  }).fetch();
 }
 
 export function buildComputationFromProps(properties){

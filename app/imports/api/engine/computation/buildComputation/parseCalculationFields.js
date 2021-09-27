@@ -22,6 +22,7 @@ function discoverInlineCalculationFields(prop, schemas){
         prop._computationDetails.inlineCalculations.push(inlineCalcObj);
         // Extract the calculations and store them on the property
         let string = inlineCalcObj.text;
+        if (!string) return;
         inlineCalcObj.inlineCalculations = [];
         let matches = string.matchAll(INLINE_CALCULATION_REGEX);
         for (let match of matches){

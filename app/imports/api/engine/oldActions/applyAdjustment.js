@@ -1,4 +1,4 @@
-import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import damagePropertiesByName from '/imports/api/creature/creatureProperties/methods/damagePropertiesByName.js';
 
 export default function applyAdjustment({

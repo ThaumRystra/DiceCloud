@@ -187,7 +187,7 @@ import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
-import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';

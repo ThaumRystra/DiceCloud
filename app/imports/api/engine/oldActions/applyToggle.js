@@ -1,4 +1,4 @@
-import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 
 export default function applyToggle({
   prop,

@@ -1,4 +1,4 @@
-import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import dealDamage from '/imports/api/creature/creatureProperties/methods/dealDamage.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 import { CompilationContext } from '/imports/parser/parser.js';

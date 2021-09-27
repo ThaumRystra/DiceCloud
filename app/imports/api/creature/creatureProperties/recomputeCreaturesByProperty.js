@@ -1,4 +1,4 @@
-import { computeCreature } from '/imports/api/engine/computeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 /**
  * Recomputes all ancestor creatures of this property
