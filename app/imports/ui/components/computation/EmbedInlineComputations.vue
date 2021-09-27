@@ -6,7 +6,7 @@
 
 <script lang="js">
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
-import embedInlineCalculations from '/imports/api/creature/computation/afterComputation/embedInlineCalculations.js';
+//import embedInlineCalculations from '/imports/api/creature/computation/afterComputation/embedInlineCalculations.js';
 
 export default {
   components: {
@@ -28,7 +28,7 @@ export default {
   computed: {
     computedValue(){
       if (this.inactive) return this.string;
-      return embedInlineCalculations(this.string, this.calculations);
+      //return embedInlineCalculations(this.string, this.calculations);
     }
   }
 }

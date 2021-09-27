@@ -1,8 +1,6 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { get } from 'lodash';
-import embedInlineCalculations from '/imports/api/creature/computation/afterComputation/embedInlineCalculations.js';
 import transformFields from '/imports/migrations/server/transformFields.js';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
@@ -172,9 +170,6 @@ function getInlineComputationTransforms(key){
   return [
     {from: key, to: `${key}.text`},
     {from: `${key}Calculations`, to: `${key}.inlineCalculations`},
-    {to: `${key}.value`, up: (val, doc) =>
-      embedInlineCalculations(get(doc, key), get(doc, `${key}Calculations`))
-    },
     {from: `${key}Calculations.$.result`, to: `${key}.inlineCalculations.$.value`},
   ];
 }

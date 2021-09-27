@@ -5,8 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const softRemoveProperty = new ValidatedMethod({
 	name: 'creatureProperties.softRemove',
@@ -27,10 +26,8 @@ const softRemoveProperty = new ValidatedMethod({
     // Do work
 		softRemove({_id, collection: CreatureProperties});
 
-    // Potentially changes items and containers
-    recomputeInventory(rootCreature._id);
     // Changes dependency tree by removing children
-    recomputeCreatureByDoc(rootCreature);
+    computeCreature(rootCreature._id);
 	}
 });
 

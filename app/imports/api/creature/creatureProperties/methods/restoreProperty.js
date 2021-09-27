@@ -5,9 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { restore } from '/imports/api/parenting/softRemove.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const restoreProperty = new ValidatedMethod({
 	name: 'creatureProperties.restore',
@@ -28,12 +26,8 @@ const restoreProperty = new ValidatedMethod({
     // Do work
     restore({_id, collection: CreatureProperties});
 
-    // Items and containers might be restored
-    recomputeInventory(rootCreature._id);
-    // Parents active status may have changed while it was deleted
-    recomputeInactiveProperties(rootCreature._id);
     // Changes dependency tree by restoring children
-    recomputeCreatureByDoc(rootCreature);
+    computeCreature(rootCreature._id);
 	}
 });
 

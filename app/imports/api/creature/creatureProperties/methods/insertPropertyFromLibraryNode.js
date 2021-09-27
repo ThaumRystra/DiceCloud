@@ -5,8 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import {
 	setLineageOfDocs,
@@ -15,7 +14,6 @@ import {
 } from '/imports/api/parenting/parenting.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
@@ -74,12 +72,8 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
       ancestorId: rootCreature._id,
     });
 
-    // The library properties need to denormalise which of them are inactive
-    recomputeInactiveProperties(rootCreature._id);
-    // Some of the library properties may be items or containers
-    recomputeInventory(rootCreature._id);
 		// Inserting a creature property invalidates dependencies: full recompute
-    recomputeCreatureByDoc(rootCreature);
+    computeCreature(rootCreature._id);
 		// Return the docId of the last property, the inserted root property
 		return rootId;
 	},

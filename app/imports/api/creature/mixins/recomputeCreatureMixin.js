@@ -1,4 +1,4 @@
-import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { computeCreature } from '/imports/api/engine/computeCreature.js';
 
 export default function recomputeCreatureMixin(methodOptions){
   let runFunc = methodOptions.run;
@@ -10,7 +10,7 @@ export default function recomputeCreatureMixin(methodOptions){
     ) {
       return result;
     }
-    recomputeCreatureById(charId);
+    computeCreature(charId);
     return result;
   };
   return methodOptions;

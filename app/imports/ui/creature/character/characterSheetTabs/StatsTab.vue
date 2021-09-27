@@ -335,7 +335,7 @@
   import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-  import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
+  //import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
 
   const getProperties = function(creature, filter,){
     if (!creature) return;

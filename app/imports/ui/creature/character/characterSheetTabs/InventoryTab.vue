@@ -107,7 +107,7 @@ import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
-import stripFloatingPointOddities from '/imports/api/creature/computation/newEngine/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
 
 export default {
 	components: {

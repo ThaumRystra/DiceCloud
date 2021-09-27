@@ -4,9 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 
@@ -49,9 +47,7 @@ const equipItem = new ValidatedMethod({
       skipRecompute: true,
     });
 
-    recomputeInactiveProperties(creature._id);
-    recomputeInventory(creature._id);
-    recomputeCreatureByDoc(creature);
+    computeCreature(creature._id);
   },
 });
 

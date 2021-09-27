@@ -5,9 +5,7 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 import { getAncestry } from '/imports/api/parenting/parenting.js';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
@@ -140,15 +138,8 @@ export function insertPropertyWork({property, creature}){
     collection: CreatureProperties,
     ancestorId: creature._id,
   });
-  // Inserting the active status of the property needs to be denormalised
-  recomputeInactiveProperties(creature._id);
-
-  // Recompute the inventory if it has changed
-  if (property.type === 'item' || property.type === 'container'){
-    recomputeInventory(creature._id);
-  }
   // Inserting a creature property invalidates dependencies: full recompute
-  recomputeCreatureByDoc(creature);
+  computeCreature(creature._id);
   return _id;
 }
 

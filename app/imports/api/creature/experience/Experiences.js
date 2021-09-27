@@ -3,7 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { computeCreature } from '/imports/api/engine/computeCreature.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let Experiences = new Mongo.Collection('experiences');
@@ -175,7 +175,7 @@ const recomputeExperiences = new ValidatedMethod({
       'denormalizedStats.xp': xp,
       'denormalizedStats.milestoneLevels': milestoneLevels
     }});
-    recomputeCreatureById(creatureId);
+    computeCreature(creatureId);
   },
 });
 

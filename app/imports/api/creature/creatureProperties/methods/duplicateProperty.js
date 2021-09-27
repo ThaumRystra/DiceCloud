@@ -8,10 +8,8 @@ import {
 	setLineageOfDocs,
 	renewDocIds
 } from '/imports/api/parenting/parenting.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 var snackbar;
 if (Meteor.isClient){
   snackbar = require(
@@ -89,14 +87,8 @@ const duplicateProperty = new ValidatedMethod({
       ancestorId: property.ancestors[0].id,
     });
 
-    // Inserting the active status of the property needs to be denormalised
-    recomputeInactiveProperties(creature._id);
-
-    // Recompute the inventory
-    recomputeInventory(creature._id);
-
     // Inserting a creature property invalidates dependencies: full recompute
-    recomputeCreatureByDoc(creature);
+    computeCreature(creature._id);
 
     return propertyId;
   },

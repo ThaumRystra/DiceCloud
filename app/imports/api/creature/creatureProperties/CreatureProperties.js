@@ -95,8 +95,8 @@ for (let key in propertySchemasIndex){
 }
 
 import '/imports/api/creature/creatureProperties/methods/index.js';
-import '/imports/api/creature/actions/doAction.js';
-import '/imports/api/creature/actions/castSpellWithSlot.js';
+//import '/imports/api/creature/actions/doAction.js';
+//import '/imports/api/creature/actions/castSpellWithSlot.js';
 
 export default CreatureProperties;
 export {

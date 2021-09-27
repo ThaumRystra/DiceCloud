@@ -1,4 +1,4 @@
-import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { computeCreature } from '/imports/api/engine/computeCreature.js';
 
 /**
  * Recomputes all ancestor creatures of this property
@@ -6,7 +6,7 @@ import { recomputeCreatureById } from '/imports/api/creature/computation/methods
 export default function recomputeCreaturesByProperty(property){
 	for (let ref of property.ancestors){
 		if (ref.collection === 'creatures') {
-			recomputeCreatureById.call(ref.id);
+			computeCreature.call(ref.id);
 		}
 	}
 }
