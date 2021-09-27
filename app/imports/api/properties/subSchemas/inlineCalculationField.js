@@ -38,6 +38,7 @@ function computedOnlyInlineCalculationField(field){
     },
     [`${field}.inlineCalculations.$`]: {
       type: Object,
+      parseLevel: 'compile',
     },
     // The part between bracers {}
     [`${field}.inlineCalculations.$.calculation`]: {

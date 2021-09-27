@@ -9,6 +9,7 @@ const DamageSchema = createPropertySchema({
     type: 'fieldToCompute',
     optional: true,
     defaultValue: '1d8 + strength.modifier',
+    parseLevel: 'compile',
   },
 	// Who this damage applies to
 	target: {
@@ -31,6 +32,7 @@ const ComputedOnlyDamageSchema = createPropertySchema({
   amount: {
     type: 'computedOnlyField',
     optional: true,
+    parseLevel: 'compile',
   },
 });
 

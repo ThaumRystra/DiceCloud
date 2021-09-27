@@ -1,18 +1,17 @@
 <template lang="html">
   <div class="attribute-form">
     <div class="layout column align-center">
-      <text-field
+      <computed-field
         ref="focusFirst"
         label="Base Value"
         class="base-value-field"
         hint="This is the value of the attribute before effects are applied. Can be a number or a calculation"
         style="width: 332px;"
-        :value="model.baseValueCalculation"
-        :error-messages="errors.baseValueCalculation"
-        @change="change('baseValueCalculation', ...arguments)"
+        :model="model.baseValue"
+        :error-messages="errors.baseValue"
+        @change="({path, value, ack}) => $emit('change', {path: ['baseValue', ...path], value, ack})"
       />
     </div>
-    <calculation-error-list :errors="model.baseValueErrors" />
     <div class="layout wrap">
       <text-field
         label="Name"
@@ -54,14 +53,12 @@
       :error-messages="errors.spellSlotLevelCalculation"
       @change="change('spellSlotLevelCalculation', ...arguments)"
     />
-    <calculation-error-list :errors="model.spellSlotLevelErrors" />
     <text-area
       label="Description"
       :value="model.description"
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
     <form-section
       name="Advanced"
       standalone
@@ -122,12 +119,12 @@
 <script lang="js">
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
+  import ComputedField from '/imports/ui/properties/forms/shared/ComputedField.vue';
 
 	export default {
 		components: {
 			FormSection,
-      CalculationErrorList,
+      ComputedField,
 		},
     mixins: [propertyFormMixin],
     inject: {

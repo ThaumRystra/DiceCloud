@@ -29,6 +29,9 @@ function evaluateCalculation(calculation, scope){
   } else {
     calculation.errors = context.errors
   }
+  // remove the working fields
+  delete calculation._parseLevel;
+  delete calculation._parsedCalculation;
 }
 
 function embedInlineCalculations(inlineCalcObj){

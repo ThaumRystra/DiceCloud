@@ -6,12 +6,15 @@ import clean from '../../utility/cleanProp.testFn.js';
 export default function(){
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
-  
+
   const prop = computation.propsById['actionId'];
   assert.equal(prop.summary.value, 'test summary 3 without referencing anything 7');
   assert.equal(prop.description.value, 'test description 12 with reference 0.25 prop');
   assert.equal(prop.uses.value, 7);
   assert.equal(prop.usesLeft, 2);
+
+  const rolled = computation.propsById['rolledDescriptionId'];
+  assert.equal(rolled.summary.value, 'test roll gets compiled {1d4 + 4} properly');
 
   const itemConsumed = prop.resources.itemsConsumed[0];
   assert.equal(itemConsumed.quantity.value, 3);
@@ -59,6 +62,14 @@ var testProperties = [
       calculation: 'nonExistantProperty + 7',
     },
     usesUsed: 5,
+  }),
+  clean({
+    _id: 'rolledDescriptionId',
+    type: 'action',
+    ancestors: [{id: 'charId'}],
+    summary: {
+      text: 'test roll gets compiled {1d4 + (2 + 2)} properly',
+    },
   }),
   clean({
     _id: 'numItemsConumedId',

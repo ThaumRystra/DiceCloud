@@ -15,7 +15,7 @@ let schema = new SimpleSchema({
 
 Meteor.publish('singleCharacter', function(creatureId){
   schema.validate({ creatureId });
-  this.autorun(function (){
+  this.autorun(function (computation){
     let userId = this.userId;
     let creatureCursor
     creatureCursor = Creatures.find({
@@ -24,7 +24,7 @@ Meteor.publish('singleCharacter', function(creatureId){
     let creature = creatureCursor.fetch()[0];
     try { assertViewPermission(creature, userId) }
     catch(e){ return [] }
-    if (creature.computeVersion !== VERSION){
+    if (creature.computeVersion !== VERSION && computation.firstRun){
       try {
         computeCreature(creatureId)
       }
