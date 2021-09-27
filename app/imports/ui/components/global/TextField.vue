@@ -2,6 +2,7 @@
   <v-text-field
     ref="input"
     v-bind="$attrs"
+    class="dc-text-field"
     :loading="loading"
     :error-messages="errors"
     :value="safeValue"
@@ -11,7 +12,11 @@
     @focus="focused = true"
     @blur="focused = false"
     @keyup="e => $emit('keyup', e)"
-  />
+  >
+    <template #append>
+      <slot name="value" />
+    </template>
+  </v-text-field>
 </template>
 
 <script lang="js">
@@ -24,3 +29,10 @@
     },
   };
 </script>
+
+<style lang="css">
+.dc-text-field .v-input__append-inner{
+  font-size: 12px;
+  margin-top: 36px;
+}
+</style>

@@ -2,7 +2,7 @@ import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX
 import { prettifyParseError, parse } from '/imports/parser/parser.js';
 import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
-import { get } from 'lodash';
+import { get, unset } from 'lodash';
 
 export default function parseCalculationFields(prop, schemas){
   discoverInlineCalculationFields(prop, schemas);
@@ -50,6 +50,11 @@ function parseAllCalculationFields(prop, schemas){
       applyFnToKey(prop, calcKey, (prop, key) => {
         const calcObj = get(prop, key);
         if (!calcObj) return;
+        // If the calculation isn't set, delete the whole object
+        if (!calcObj.calculation){
+          unset(prop, key);
+          return;
+        }
         // Store a reference to all the calculations
         prop._computationDetails.calculations.push(calcObj);
         // Store the level to compute down to later
@@ -67,7 +72,10 @@ function parseCalculation(calcObj){
   try {
     calcObj._parsedCalculation = parse(calculation);
   } catch (e) {
-    let error = prettifyParseError(e);
+    let error = {
+      type: 'evaluation',
+      message: prettifyParseError(e),
+    };
     calcObj.errors ?
       calcObj.errors.push(error) :
       calcObj.errors = [error];
