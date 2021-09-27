@@ -1,6 +1,7 @@
 import { CompilationContext } from '/imports/parser/parser.js';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
+import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 
 export default function computeCalculations(computation, node){
   if (!node.data) return;
@@ -21,8 +22,10 @@ function evaluateCalculation(calculation, scope){
   const resultNode = parseNode[fn](calculationScope, context);
   if (resultNode instanceof ConstantNode){
     calculation.value = resultNode.value;
+  } else if (resultNode instanceof ErrorNode){
+    calculation.value = null;
   } else {
-    calculation.value = NaN;
+    calculation.value = resultNode.toString();
   }
   if (calculation.errors){
     calculation.errors = [...calculation.errors, ...context.errors]

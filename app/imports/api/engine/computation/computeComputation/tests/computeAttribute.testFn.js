@@ -17,6 +17,10 @@ export default function(){
     prop('parseErrorId').baseValue.errors.length, 1,
     'Parse errors should be added to calculation errors'
   );
+  assert.equal(
+    prop('parseErrorId').baseValue.value, null,
+    'Parse errors should null the value'
+  );
 }
 
 var testProperties = [
