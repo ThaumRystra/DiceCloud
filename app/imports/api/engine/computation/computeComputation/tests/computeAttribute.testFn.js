@@ -13,6 +13,10 @@ export default function(){
   assert.equal(prop('strengthId').modifier, 1);
   assert.equal(prop('referencesDexId').value, 4);
   assert.equal(prop('hitDiceId').constitutionMod, 5);
+  assert.equal(
+    prop('parseErrorId').baseValue.errors.length, 1,
+    'Parse errors should be added to calculation errors'
+  );
 }
 
 var testProperties = [
@@ -72,6 +76,15 @@ var testProperties = [
     hitDiceSize: 'd8',
     baseValue: {
       calculation: '4'
+    },
+  }),
+  clean({
+    _id: 'parseErrorId',
+    variableName: 'parseError',
+    type: 'attribute',
+    attributeType: 'ability',
+    baseValue: {
+      calculation: '12 +'
     },
   }),
 ];

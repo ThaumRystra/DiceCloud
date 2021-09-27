@@ -24,7 +24,11 @@ function evaluateCalculation(calculation, scope){
   } else {
     calculation.value = NaN;
   }
-  calculation.errors = context.errors;
+  if (calculation.errors){
+    calculation.errors = [...calculation.errors, ...context.errors]
+  } else {
+    calculation.errors = context.errors
+  }
 }
 
 function embedInlineCalculations(inlineCalcObj){

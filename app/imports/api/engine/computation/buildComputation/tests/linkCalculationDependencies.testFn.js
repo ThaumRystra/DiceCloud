@@ -5,6 +5,8 @@ import clean from '../../utility/cleanProp.testFn.js';
 export default function(){
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
+  const prop = (id) => computation.propsById[id];
+
   assert.isTrue(
     !!hasLink('childId', 'spellListId'),
     'Ancestor references of parent in inline calculations should create dependency'
@@ -20,6 +22,10 @@ export default function(){
   assert.isTrue(
     !!hasLink('grandchildId', 'wisdom'),
     'Variable references create dependencies even if the attributes don\'t exist'
+  );
+  assert.equal(
+    prop('strengthId').baseValue.errors.length, 1,
+    'Parse errors should be added to calculation errors'
   );
 }
 
@@ -49,6 +55,9 @@ var testProperties = [
     _id: 'strengthId',
     type: 'attribute',
     variableName: 'strength',
+    baseValue: {
+      calculation: '15 + ',
+    },
     ancestors: [{id: 'charId'}],
   }),
 ];
