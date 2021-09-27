@@ -34,13 +34,13 @@ const PROPERTIES = Object.freeze({
     icon: 'mdi-card-account-details',
     name: 'Class',
     helpText: 'Your character should ideally have one starting class. Classes hold class levels',
-    suggestedParents: ['class'],
+    suggestedParents: [],
   },
   classLevel: {
     icon: '$vuetify.icons.class_level',
     name: 'Class level',
     helpText: 'Class levels represent a single level gained in a class',
-    suggestedParents: [],
+    suggestedParents: ['class'],
   },
   constant: {
     icon: 'mdi-anchor',
