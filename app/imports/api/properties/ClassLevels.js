@@ -27,6 +27,15 @@ const ClassLevelSchema = createPropertySchema({
   },
 });
 
-const ComputedOnlyClassLevelSchema  = new SimpleSchema({});
+const ComputedOnlyClassLevelSchema  = new SimpleSchema({
+  description: {
+    type: 'computedOnlyInlineCalculationField',
+    optional: true,
+  },
+});
 
-export { ClassLevelSchema, ComputedOnlyClassLevelSchema };
+const ComputedClassLevelSchema = new SimpleSchema()
+  .extend(ComputedOnlyClassLevelSchema)
+  .extend(ClassLevelSchema);
+
+export { ClassLevelSchema, ComputedOnlyClassLevelSchema, ComputedClassLevelSchema };
