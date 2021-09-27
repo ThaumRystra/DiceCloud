@@ -66,6 +66,69 @@ const transformsByPropType = {
     ...actionTransforms,
     ...getComputedPropertyTransforms('rollBonus'),
   ],
+  'attribute': [
+    ...getComputedPropertyTransforms('baseValue'),
+    ...getComputedPropertyTransforms('spellSlotLevel'),
+    ...getInlineComputationTransforms('description'),
+    {from: 'value', to: 'total'},
+  ],
+  'buff': [
+    ...getComputedPropertyTransforms('duration'),
+    ...getComputedPropertyTransforms('spellSlotLevel'),
+    ...getInlineComputationTransforms('description'),
+    {from: 'value', to: 'total'},
+  ],
+  'classLevel': [
+    ...getInlineComputationTransforms('description'),
+  ],
+  'container': [
+    ...getInlineComputationTransforms('description'),
+  ],
+  'damage': [
+    ...getComputedPropertyTransforms('amount'),
+  ],
+  'effect': [
+    {from: 'calculation', to: 'amount.calculation'},
+    {from: 'result', to: 'amount.value'},
+    {from: 'errors', to: 'amount.errors'},
+  ],
+  'feature': [
+    ...getInlineComputationTransforms('summary'),
+    ...getInlineComputationTransforms('description'),
+  ],
+  'item': [
+    ...getInlineComputationTransforms('description'),
+  ],
+  'note': [
+    ...getInlineComputationTransforms('summary'),
+    ...getInlineComputationTransforms('description'),
+  ],
+  'roll': [
+    ...getComputedPropertyTransforms('roll'),
+  ],
+  'savingThrow': [
+    ...getComputedPropertyTransforms('dc'),
+  ],
+  'skill': [
+    ...getComputedPropertyTransforms('baseValue'),
+    ...getInlineComputationTransforms('description'),
+  ],
+  'propertySlot': [
+    ...getComputedPropertyTransforms('quantityExpected'),
+    ...getComputedPropertyTransforms('slotCondition'),
+    ...getInlineComputationTransforms('description'),
+  ],
+  'spellList': [
+    ...getComputedPropertyTransforms('maxPrepared'),
+    ...getComputedPropertyTransforms('dc'),
+    ...getComputedPropertyTransforms('attackRollBonus'),
+    ...getInlineComputationTransforms('description'),
+  ],
+  'toggle': [
+    {from: 'condition', to: 'condition.calculation'},
+    {from: 'toggleResult', to: 'condition.value'},
+    {from: 'errors', to: 'condition.errors'},
+  ],
 };
 
 function getComputedPropertyTransforms(key){
