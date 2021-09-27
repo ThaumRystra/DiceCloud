@@ -6,10 +6,10 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 // because {type: Schema} fields can't be extended
 function fieldToCompute(field){
   const schemaObj = {
-    // This is required, if we don't have a calculation delete the whole object
     [`${field}.calculation`]: {
       type: String,
       max: STORAGE_LIMITS.calculation,
+      optional: true,
     },
   }
   // If the field is an array, we need to include those fields as well
@@ -40,7 +40,7 @@ function computedOnlyField(field){
 function includeParentFields(field, schemaObj){
   const splitField = field.split('.');
   if (splitField.length === 1){
-    schemaObj[field] = {type: Object};
+    schemaObj[field] = {type: Object, optional: true};
     return;
   }
   let key = '';
@@ -48,9 +48,9 @@ function includeParentFields(field, schemaObj){
   splitField.forEach(value => {
     if (key){
       if (value === '$'){
-        schemaObj[key] = {type: Array};
+        schemaObj[key] = {type: Array, optional: true};
       } else {
-        schemaObj[key] = {type: Object};
+        schemaObj[key] = {type: Object, optional: true};
       }
       key += '.';
     }

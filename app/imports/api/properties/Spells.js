@@ -44,18 +44,18 @@ let SpellSchema = new SimpleSchema({})
 		type: String,
 		optional: true,
 		defaultValue: 'action',
-    max: STORAGE_LIMITS.name,
+    max: STORAGE_LIMITS.spellDetail,
 	},
 	range: {
 		type: String,
 		optional: true,
-    max: STORAGE_LIMITS.name,
+    max: STORAGE_LIMITS.spellDetail,
 	},
 	duration: {
 		type: String,
 		optional: true,
 		defaultValue: 'Instantaneous',
-    max: STORAGE_LIMITS.name,
+    max: STORAGE_LIMITS.spellDetail,
 	},
 	verbal: {
 		type: Boolean,
@@ -72,7 +72,7 @@ let SpellSchema = new SimpleSchema({})
 	material: {
 		type: String,
 		optional: true,
-    max: STORAGE_LIMITS.name,
+    max: STORAGE_LIMITS.spellDetail,
 	},
 	ritual: {
 		type: Boolean,

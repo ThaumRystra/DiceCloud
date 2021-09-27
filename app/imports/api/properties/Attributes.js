@@ -58,11 +58,10 @@ let AttributeSchema = createPropertySchema({
     type: 'inlineCalculationFieldToCompute',
 		optional: true,
 	},
-	// The damage done to the attribute, always positive
+	// The damage done to the attribute, should always compute as positive
   damage: {
     type: SimpleSchema.Integer,
     optional: true,
-		min: 0,
   },
   // Can the value be decimal?
   decimal: {

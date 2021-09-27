@@ -1,6 +1,6 @@
 const STORAGE_LIMITS = Object.freeze({
   // String lengths
-  calculation: 256,
+  calculation: 1024,
   collectionName: 64,
   color: 10000,
   description: 49473, //the length of the Bee Movie script
@@ -10,8 +10,10 @@ const STORAGE_LIMITS = Object.freeze({
   name: 128,
   summary: 10000,
   tagLength: 128,
-  url: 256,
+  url: 1024,
   variableName: 64,
+  spellDetail: 512,
+  effectText: 512,
 
   // Number limits
   levelMax: 128,
@@ -22,13 +24,12 @@ const STORAGE_LIMITS = Object.freeze({
   diceRollValuesCount: 100,
   errorCount: 32,
   extraTagsCount: 5,
-  inlineCalculationCount: 32,
+  inlineCalculationCount: 64,
   logContentCount: 32,
   readersCount: 50,
   resourcesCount: 32,
   rollCount: 64,
-  rollBonusCount: 32,
-  statsToTarget: 32,
+  statsToTarget: 64,
   tagCount: 64,
   writersCount: 20,
 });

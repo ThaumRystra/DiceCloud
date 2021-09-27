@@ -78,6 +78,7 @@ function applyDefaultCalculationValue(definition, key){
     definition[calcField] = {
       type: String,
       defaultValue,
+      optional: true,
     };
   }
   delete def.defaultValue;

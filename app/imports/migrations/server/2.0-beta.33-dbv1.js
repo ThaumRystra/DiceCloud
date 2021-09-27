@@ -5,6 +5,7 @@ import { get } from 'lodash';
 import embedInlineCalculations from '/imports/api/creature/computation/afterComputation/embedInlineCalculations.js';
 import transformFields from '/imports/migrations/server/transformFields.js';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 // Git version 2.0-beta.33
 // Database version 1
@@ -34,7 +35,10 @@ function migrateCollection({collection, reversed}){
 }
 
 export default function migrateProperty({collection, reversed, prop}){
-  const transforms = transformsByPropType[prop.type];
+  const transforms = [
+    ...(transformsByPropType[prop.type] || []),
+    {from: 'dependencies'}
+  ];
   let migratedProp = transformFields(prop, transforms, reversed);
   const schema = collection.simpleSchema({type: prop.type});
   // Only clean if the schema version matches our destination version
@@ -43,7 +47,15 @@ export default function migrateProperty({collection, reversed, prop}){
       migratedProp = schema.clean(migratedProp);
       schema.validate(migratedProp);
     } catch(e){
-      console.warn(e);
+      if (e.details[0]?.type === 'maxString'){
+
+        console.log({
+          prop: prop,
+          details: e.details,
+        });
+      } else {
+        console.warn({prop, error: e});
+      }
     }
   }
   return migratedProp;
@@ -70,13 +82,13 @@ const transformsByPropType = {
     ...getComputedPropertyTransforms('baseValue'),
     ...getComputedPropertyTransforms('spellSlotLevel'),
     ...getInlineComputationTransforms('description'),
-    {from: 'value', to: 'total'},
+    {from: 'value', to: 'total', up: nanToNull},
+    {from: 'proficiency', to: 'proficiency', up: stripZero},
   ],
   'buff': [
     ...getComputedPropertyTransforms('duration'),
-    ...getComputedPropertyTransforms('spellSlotLevel'),
     ...getInlineComputationTransforms('description'),
-    {from: 'value', to: 'total'},
+    {from: 'value', to: 'total', up: nanToNull},
   ],
   'classLevel': [
     ...getInlineComputationTransforms('description'),
@@ -89,8 +101,16 @@ const transformsByPropType = {
   ],
   'effect': [
     {from: 'calculation', to: 'amount.calculation'},
-    {from: 'result', to: 'amount.value'},
-    {from: 'errors', to: 'amount.errors'},
+    {from: 'result', to: 'amount.value', up: nanToNull},
+    {from: 'errors', to: 'amount.errors', up: trimErrors},
+    {from: 'name', to: 'name', up(val, src, doc){
+      if (src.operation === 'conditional'){
+        doc.text = val;
+        return;
+      } else {
+        return val;
+      }
+    }},
   ],
   'feature': [
     ...getInlineComputationTransforms('summary'),
@@ -112,6 +132,15 @@ const transformsByPropType = {
   'skill': [
     ...getComputedPropertyTransforms('baseValue'),
     ...getInlineComputationTransforms('description'),
+    {from: 'value', to: 'value', up: nanToNull},
+    {from: 'passiveBonus', to: 'passiveBonus', up: nanToNull},
+    {from: 'proficiency', to: 'proficiency', up: stripZero},
+  ],
+  'spell': [
+    ...actionTransforms,
+  ],
+  'proficiency': [
+    {from: 'value', to: 'value', up: stripZero},
   ],
   'propertySlot': [
     ...getComputedPropertyTransforms('quantityExpected'),
@@ -126,16 +155,16 @@ const transformsByPropType = {
   ],
   'toggle': [
     {from: 'condition', to: 'condition.calculation'},
-    {from: 'toggleResult', to: 'condition.value'},
-    {from: 'errors', to: 'condition.errors'},
+    {from: 'toggleResult', to: 'condition.value', up: nanToNull},
+    {from: 'errors', to: 'condition.errors', up: trimErrors},
   ],
 };
 
 function getComputedPropertyTransforms(key){
   return [
     {from: key, to: `${key}.calculation`},
-    {from: `${key}Result`, to: `${key}.value`},
-    {from: `${key}Errors`, to: `${key}.errors`},
+    {from: `${key}Result`, to: `${key}.value`, up: nanToNull},
+    {from: `${key}Errors`, to: `${key}.errors`, up: trimErrors},
   ];
 }
 
@@ -148,4 +177,30 @@ function getInlineComputationTransforms(key){
     },
     {from: `${key}Calculations.$.result`, to: `${key}.inlineCalculations.$.value`},
   ];
+}
+
+function nanToNull(val){
+  if (Number.isNaN(val)){
+    return null;
+  } else {
+    return val;
+  }
+}
+
+function stripZero(val){
+  if (val === 0){
+    return undefined;
+  } else {
+    return val;
+  }
+}
+
+function trimErrors(arr){
+  if(!arr) return arr;
+  arr.forEach(e => {
+    if (e.message.length > STORAGE_LIMITS.errorMessage){
+      e.message = e.message.slice(0, STORAGE_LIMITS.errorMessage);
+    }
+  });
+  return arr;
 }

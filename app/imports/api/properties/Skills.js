@@ -65,6 +65,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
   value: {
     type: Number,
 		defaultValue: 0,
+    optional: true,
   },
   // The result of baseValueCalculation
   baseValue: {

@@ -1,6 +1,7 @@
 import { get, set, unset, forEachRight, cloneDeep } from 'lodash';
 
 export default function transformFields(src, transformList, reversed = false){
+  if (!transformList) return src;
   // don't bash the old document during the transforms
   let doc = cloneDeep(src);
   for(let originalTransform of transformList){
@@ -80,7 +81,7 @@ function transformArrayField(src, doc, {from, to, up}, reversed){
     if (reversed){
       forEachRight(state.array, iterate(stack, state, src, doc, toSplit, up));
     } else {
-      state.array.forEach(iterate(stack, state, src, doc, toSplit, up));
+      state.array?.forEach(iterate(stack, state, src, doc, toSplit, up));
     }
   }
 }

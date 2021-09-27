@@ -37,7 +37,7 @@ let EffectSchema = createPropertySchema({
   text: {
     type: String,
     optional: true,
-    max: STORAGE_LIMITS.name,
+    max: STORAGE_LIMITS.effectCondition,
   },
 	//which stats the effect is applied to
 	stats: {
