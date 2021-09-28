@@ -142,7 +142,7 @@
         class="resource"
       >
         <resource-card
-          v-bind="resource"
+          :model="resource"
           :data-id="resource._id"
           @click="clickProperty({_id: resource._id})"
           @change="e => incrementChange(resource._id, e)"

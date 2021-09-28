@@ -36,9 +36,6 @@ function addChangedKeysToOp(op, keys, original, changed) {
   // and compile an operation that sets all those keys
   for (let key of keys){
     if (!isEqual(original[key], changed[key])){
-      console.log('not equal: ', key);
-      console.log(original[key])
-      console.log(changed[key])
       if (!op) op = newOperation(original._id, changed.type);
       let value = changed[key];
       if (value === undefined){
@@ -86,7 +83,6 @@ function addUnsetOp(op, key){
 // compensation without needing to roll back changes, which causes multiple
 // expensive redraws of the character sheet
 function writePropertiesSequentially(bulkWriteOps){
-  console.log({opsLength: bulkWriteOps.length});
   bulkWriteOps.forEach(op => {
     let updateOneOrMany = op.updateOne || op.updateMany;
     CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
@@ -95,7 +91,7 @@ function writePropertiesSequentially(bulkWriteOps){
       bypassCollection2: true,
     });
   });
-  console.log('finished writing ops');
+  if (bulkWriteOps.length) console.log(`Wrote ${bulkWriteOps.length} props`);
 }
 
 // This is more efficient on the database, but significantly less efficient

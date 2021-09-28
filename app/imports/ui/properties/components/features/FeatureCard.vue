@@ -11,7 +11,7 @@
       <v-spacer />
     </template>
     <v-card-text v-if="model.summary">
-      <PropertyDescription
+      <property-description
         :model="model.summary"
       />
     </v-card-text>

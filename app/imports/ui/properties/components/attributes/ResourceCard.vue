@@ -8,7 +8,7 @@
         <v-btn
           icon
           small
-          :disabled="currentValue >= value || context.editPermission === false"
+          :disabled="model.value >= model.total || context.editPermission === false"
           @click="increment(1)"
         >
           <v-icon>mdi-chevron-up</v-icon>
@@ -16,7 +16,7 @@
         <v-btn
           icon
           small
-          :disabled="currentValue <= 0 || context.editPermission === false"
+          :disabled="model.value <= 0 || context.editPermission === false"
           @click="increment(-1)"
         >
           <v-icon>mdi-chevron-down</v-icon>
@@ -26,10 +26,10 @@
         class="layout align-center value pl-2 pr-3"
       >
         <div class="text-h4">
-          {{ currentValue }}
+          {{ model.value }}
         </div>
         <div class="text-h6 ml-2 max-value">
-          /{{ value }}
+          /{{ model.total }}
         </div>
       </div>
       <div
@@ -39,7 +39,7 @@
         @mouseleave="hover = false"
       >
         <div class="text-truncate ">
-          {{ name }}
+          {{ model.name }}
         </div>
       </div>
     </v-layout>
@@ -48,24 +48,18 @@
 
 <script lang="js">
 	export default {
+    inject: {
+      context: { default: {} }
+    },
 		props: {
-			_id: String,
-			name: String,
-			color: String,
-			value: Number,
-			damage: Number,
+			model: {
+        type: Object,
+        required: true,
+      }
 		},
 		data(){ return{
 			hover: false,
 		}},
-    inject: {
-      context: { default: {} }
-    },
-		computed: {
-			currentValue(){
-				return this.value - (this.damage || 0);
-			},
-		},
 		methods: {
 			click(e){
 				this.$emit('click', e);

@@ -25,33 +25,32 @@
       @change="change('actionType', ...arguments)"
     />
 
-    <text-field
-      v-if="attackForm"
+    <computed-field
       label="Roll bonus"
-      :value="model.rollBonus"
-      :error-messages="errors.rollBonus"
       hint="A number (or calculation which returns a number) that is added to a d20 when making the attack roll"
-      @change="change('rollBonus', ...arguments)"
+      :model="model.rollBonus"
+      :error-messages="errors.rollBonus"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['rollBonus', ...path], value, ack})"
     />
-    <calculation-error-list :errors="model.rollBonusErrors" />
 
-    <text-area
+    <inline-computation-field
       label="Summary"
       hint="This will appear in the action card in the character sheet"
-      :value="model.summary"
+      :model="model.summary"
       :error-messages="errors.summary"
-      @change="change('summary', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['summary', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.summaryCalculations" />
 
-    <text-area
+    <inline-computation-field
       label="Description"
       hint="The rest of the description that doesn't fit in the summary goes here"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <form-sections>
       <form-section name="Resources">
@@ -84,15 +83,14 @@
         />
         -->
         <div class="layout wrap">
-          <text-field
+          <computed-field
             label="Uses"
             hint="How many times this action can be used before needing to be reset"
-            style="flex-basis: 300px;"
-            :value="model.uses"
+            :model="model.uses"
             :error-messages="errors.uses"
-            @change="change('uses', ...arguments)"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['uses', ...path], value, ack})"
           />
-          <calculation-error-list :errors="model.usesErrors" />
           <text-field
             label="Uses used"
             type="number"
@@ -123,14 +121,12 @@
   import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
   export default {
     components: {
       FormSection,
       FormSections,
       ResourcesForm,
-      CalculationErrorList,
     },
     mixins: [propertyFormMixin],
     props: {

@@ -10,7 +10,6 @@ let AttackSchema = new SimpleSchema()
     // What gets added to the d20 roll
     rollBonus: {
       type: 'fieldToCompute',
-      parseLevel: 'compile',
       optional: true,
       defaultValue: 'strength.modifier + proficiencyBonus',
     },
@@ -36,7 +35,6 @@ const ComputedOnlyAttackSchema = new SimpleSchema()
   .extend(createPropertySchema({
     rollBonus: {
       type: 'computedOnlyField',
-      parseLevel: 'compile',
       optional: true,
     },
   }));

@@ -12,9 +12,7 @@
     </v-card-title>
     <v-card-text v-if="model.summary">
       <property-description
-        :string="model.summary"
-        :calculations="model.summaryCalculations"
-        :inactive="model.inactive"
+        :model="model.summary"
       />
     </v-card-text>
   </v-card>
@@ -29,7 +27,10 @@ export default {
 		PropertyDescription,
 	},
 	props: {
-		model: Object,
+		model: {
+      type: Object,
+      required: true,
+    },
 	},
   computed: {
     isDark(){

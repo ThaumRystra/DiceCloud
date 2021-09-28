@@ -1,4 +1,11 @@
+import ComputedField from '/imports/ui/properties/forms/shared/ComputedField.vue';
+import InlineComputationField from '/imports/ui/properties/forms/shared/InlineComputationField.vue';
+
 export default {
+  components: {
+    ComputedField,
+    InlineComputationField,
+  },
   props: {
     model: {
       type: [Object, Array],

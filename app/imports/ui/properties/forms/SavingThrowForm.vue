@@ -7,14 +7,15 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-    <text-field
+
+    <computed-field
       label="DC"
       hint="A calculation of the DC that the target of an action needs to save against in order to succeed. If the saving throw is lower than the DC, the children of this property will be activated."
-      :value="model.dc"
+      :model="model.dc"
       :error-messages="errors.dc"
-      @change="change('dc', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['dc', ...path], value, ack})"
     />
-    <calculation-error-list :errors="model.dcErrors" />
 
     <smart-combobox
       label="Save"

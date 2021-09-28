@@ -1,14 +1,14 @@
 <template lang="html">
   <div>
     <div class="layout">
-      <text-field
+      <computed-field
         ref="focusFirst"
         label="Damage"
-        style="flex-basis: 300px;"
         hint="A caculation including dice rolls of the damge to deal to the target when activated by an action"
-        :value="model.amount"
+        :model="model.amount"
         :error-messages="errors.amount"
-        @change="change('amount', ...arguments)"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['amount', ...path], value, ack})"
       />
       <calculation-error-list :errors="model.amountErrors" />
       <smart-select

@@ -26,21 +26,23 @@
         </v-alert>
       </div>
     </v-expand-transition>
-    <text-area
+
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <!-- Duration not implemented yet
-    <text-field
+    <computed-field
       label="Duration"
-      hint="How long the buff lasts"
-      :value="model.duration"
+      hint="How many rounds the buff lasts"
+      :model="model.duration"
       :error-messages="errors.duration"
-      @change="change('duration', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['duration', ...path], value, ack})"
     />
     -->
     <v-expand-transition>
@@ -69,12 +71,8 @@
 
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin],
 		props: {
 			parentTarget: {

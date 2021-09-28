@@ -71,13 +71,14 @@
       :error-messages="errors.quantity"
       @change="change('quantity', ...arguments)"
     />
-    <text-area
+
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <form-section
       name="Advanced"
@@ -126,12 +127,10 @@
 <script lang="js">
 import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
 	components: {
 		FormSection,
-    CalculationErrorList,
 	},
   mixins: [propertyFormMixin],
 	}

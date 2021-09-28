@@ -225,11 +225,6 @@ export default {
     },
   },
   meteor: {
-    $subscribe: {
-      'singleCharacter'(){
-        return [this.creatureId];
-      },
-    },
     creature(){
       return Creatures.findOne(this.creatureId);
     },

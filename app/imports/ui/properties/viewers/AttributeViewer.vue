@@ -11,7 +11,7 @@
           <div
             v-if="model.damage !== undefined"
           >
-            {{ model.value - model.damage }} / {{ model.value }}
+            {{ model.value }} / {{ model.total }}
           </div>
           <div v-else>
             {{ model.value }}
@@ -24,7 +24,7 @@
           large
           outlined
           color="primary"
-          :value="model.value - (model.damage || 0)"
+          :value="model.value"
           @change="damageProperty"
         >
           <v-icon>$vuetify.icons.abacus</v-icon>
@@ -52,9 +52,7 @@
       :value="reset"
     />
     <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
+      :model="model.description"
     />
     <v-list>
       <attribute-effect
@@ -135,11 +133,10 @@
             _id: prop._id,
             name: 'Attribute base value',
             operation: 'base',
-            calculation: prop.baseValueCalculation,
-            result: prop.baseValue,
+            amount: prop.baseValue,
             stats: [prop.variableName],
             ancestors: prop.ancestors,
-          }) ).filter(effect => effect.result);
+          }) ).filter(effect => effect.amount);
         } else {
           return [];
         }

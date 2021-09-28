@@ -28,14 +28,14 @@
       />
     </div>
 
-    <text-area
+    <inline-computation-field
       label="Description"
       hint="A brief description of what this class level gives a character"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <text-field
       label="Condition"
@@ -60,12 +60,8 @@
 
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin],
 	};
 </script>

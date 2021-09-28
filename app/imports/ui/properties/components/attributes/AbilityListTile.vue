@@ -9,8 +9,8 @@
     >
       <div class="text-h4 mod">
         <template v-if="swapScoresAndMods">
-          <span :class="{'primary--text': model.currentValue !== model.value}">
-            {{ model.currentValue }}
+          <span :class="{'primary--text': model.total !== model.value}">
+            {{ model.value }}
           </span>
         </template>
         <template v-else>
@@ -22,8 +22,8 @@
           {{ numberToSignedString(model.modifier) }}
         </template>
         <template v-else>
-          <span :class="{'primary--text': model.currentValue !== model.value}">
-            {{ model.currentValue }}
+          <span :class="{'primary--text': model.total !== model.value}">
+            {{ model.value }}
           </span>
         </template>
       </div>

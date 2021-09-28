@@ -40,8 +40,8 @@
           <div class="flex">
             {{ model.actionType }}
           </div>
-          <div v-if="model.uses">
-            {{ usesLeft }} uses
+          <div v-if="Number.isFinite(model.usesLeft)">
+            {{ model.usesLeft }} uses
           </div>
         </div>
       </div>
@@ -71,9 +71,7 @@
       </template>
       <template v-if="model.summary">
         <property-description
-          :string="model.summary"
-          :calculations="model.summaryCalculations"
-          :inactive="model.inactive"
+          :model="model.summary"
         />
         <v-divider
           v-if="children.length"
@@ -135,17 +133,11 @@ export default {
   }},
   computed: {
     rollBonus(){
-      if (!this.attack) return;
-      return numberToSignedString(this.model.rollBonusResult);
+      if (!this.attack || !this.model.rollBonus) return;
+      return numberToSignedString(this.model.rollBonus.value);
     },
     rollBonusTooLong(){
       return this.rollBonus && this.rollBonus.length > 3;
-    },
-    totalUses(){
-      return Math.max(this.model.usesResult, 0);
-    },
-    usesLeft(){
-      return Math.max(this.model.usesResult - (this.model.usesUsed || 0), 0);
     },
     propertyName(){
       return getPropertyName(this.model.type);

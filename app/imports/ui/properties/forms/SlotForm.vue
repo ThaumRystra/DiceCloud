@@ -74,23 +74,25 @@
         </v-btn>
       </div>
     </v-slide-x-transition>
-    <text-field
+
+    <computed-field
       label="Quantity"
       hint="How many matching properties must be used to fill this slot, 0 is unlimited"
-      :value="model.quantityExpected"
+      :model="model.quantityExpected"
       :error-messages="errors.quantityExpected"
-      @change="change('quantityExpected', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['quantityExpected', ...path], value, ack})"
     />
-    <calculation-error-list :errors="model.quantityExpectedErrors" />
-    <text-field
+
+    <computed-field
       label="Condition"
       hint="A caclulation to determine if this slot should be active"
       placeholder="Always active"
-      :value="model.slotCondition"
+      :model="model.slotCondition"
       :error-messages="errors.slotCondition"
-      @change="change('slotCondition', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['slotCondition', ...path], value, ack})"
     />
-    <calculation-error-list :errors="model.slotConditionErrors" />
 
     <smart-select
       label="Unique"
@@ -115,13 +117,13 @@
       </v-btn>
     </v-layout>
 
-    <text-area
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <form-section
       name="Advanced"
@@ -161,14 +163,12 @@
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
   import { SlotSchema } from '/imports/api/properties/Slots.js';
 
 	export default {
     components: {
 			FormSection,
-      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
     inject: {

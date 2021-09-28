@@ -47,9 +47,11 @@
         return getEffectIcon(effectOp, -value);
 			},
       value(){
-        return 'amountResult' in this.model ?
-          this.model.amountResult :
-          this.model.amount;
+        if (this.model.amount && 'value' in this.model.amount){
+          return this.model.amount.value;
+        } else {
+          return this.model.amount.calculation;
+        }
       },
       displayedValue(){
         if (

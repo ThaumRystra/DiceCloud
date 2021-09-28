@@ -16,7 +16,7 @@
           <v-btn
             icon
             small
-            :disabled="currentValue >= model.value || context.editPermission === false"
+            :disabled="model.value >= model.total || context.editPermission === false"
             @click="increment(1)"
           >
             <v-icon>mdi-chevron-up</v-icon>
@@ -24,7 +24,7 @@
           <v-btn
             icon
             small
-            :disabled="currentValue <= 0 || context.editPermission === false"
+            :disabled="model.value <= 0 || context.editPermission === false"
             @click="increment(-1)"
           >
             <v-icon>mdi-chevron-down</v-icon>
@@ -35,10 +35,10 @@
           align-end
         >
           <div class="text-h4">
-            {{ currentValue }}
+            {{ model.value }}
           </div>
           <div class="text-h6 max-value ml-2">
-            /{{ model.value }}
+            /{{ model.total }}
           </div>
         </v-layout>
       </v-layout>
@@ -73,9 +73,6 @@ export default {
 		hover: false,
 	}},
   computed: {
-    currentValue(){
-      return this.model.value - (this.model.damage || 0);
-    },
     signedConMod(){
       return numberToSignedString(this.model.constitutionMod);
     },

@@ -10,7 +10,7 @@
     <div
       class="text-no-wrap text-truncate"
     >
-      <span v-if="model.amountResult < 0">+</span>
+      <span v-if="amount < 0">+</span>
       {{ absoluteAmount }} {{ model.stat }}
       <span v-if="typeof absoluteAmount === 'string' || absoluteAmount >= 0">
         damage
@@ -25,11 +25,14 @@ import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeView
 export default {
   mixins: [treeNodeViewMixin],
   computed: {
+    amount(){
+      return this.model.amount && this.model.amount.value;
+    },
     absoluteAmount(){
-      if (typeof this.model.amountResult === 'number'){
-        return Math.abs(this.model.amountResult);
+      if (typeof this.amount === 'number'){
+        return Math.abs(this.amount);
       } else {
-        return this.model.amountResult;
+        return this.amount;
       }
     },
   }

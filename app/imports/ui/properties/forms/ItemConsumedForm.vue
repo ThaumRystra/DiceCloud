@@ -8,13 +8,14 @@
       :error-messages="errors.tag"
       @change="change('tag', ...arguments)"
     />
-    <text-field
+    <computed-field
       label="Quantity"
       hint="How many will be consumed"
       style="flex-basis: 300px;"
-      :value="model.quantity"
+      :model="model.quantity"
       :error-messages="errors.quantity"
-      @change="change('quantity', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['quantity', ...path], value, ack})"
     />
   </div>
 </template>

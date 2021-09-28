@@ -30,16 +30,16 @@
       </v-radio-group>
     </v-layout>
     <v-fade-transition>
-      <text-field
+      <computed-field
         v-show="radioSelection === 'calculated'"
         label="Condition"
         hint="When this calculation returns a value that isn't false or zero the children will be active"
-        :value="model.condition"
+        :model="model.condition"
         :error-messages="errors.condition"
-        @change="change('condition', ...arguments)"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['condition', ...path], value, ack})"
       />
     </v-fade-transition>
-    <calculation-error-list :errors="model.errors" />
     <smart-combobox
       label="Tags"
       multiple
@@ -54,12 +54,8 @@
 
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin],
     computed: {
       radioSelection(){

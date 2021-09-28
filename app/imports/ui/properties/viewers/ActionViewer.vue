@@ -38,7 +38,7 @@
         style="font-size: 18px;"
         class="ma-2"
       >
-        <code>{{ model.rollBonus }}</code>
+        <code>{{ model.rollBonus && model.rollBonus.value }}</code>
         <span
           class="mx-1"
           style="font-size: 14px"
@@ -46,13 +46,13 @@
       </div>
       <div v-if="model.uses">
         <span
-          v-if="context.creatureId"
+          v-if="context.creatureId && model.uses.value"
           class="uses mx-2"
         >
-          {{ usesLeft }}/{{ model.usesResult }} uses
+          {{ usesLeft }}/{{ model.uses.value }} uses
         </span>
         <span v-else>
-          <code>{{ model.uses }}</code>
+          <code>{{ model.uses.calculation }}</code>
           <span class="mx-1">
             uses
           </span>
@@ -97,24 +97,21 @@
       left-pad
     />
     <v-divider
-      v-if="model.summary || model.description"
+      v-if="(model.summary && model.summary.text) ||
+        (model.description && model.description.text)"
       class="my-3"
     />
-    <template v-if="model.summary">
+    <template v-if="(model.summary && model.summary.text)">
       <property-description
-        :string="model.summary"
-        :calculations="model.summaryCalculations"
-        :inactive="model.inactive"
+        :model="model.summary"
       />
       <v-divider
-        v-if="model.description"
+        v-if="model.description && model.description.text"
         class="my-3"
       />
     </template>
     <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
+      :model="model.description"
     />
   </div>
 </template>
@@ -157,17 +154,18 @@ export default {
       return undefined;
     },
     rollBonus(){
-      if (!this.attack) return;
-      return numberToSignedString(this.model.rollBonusResult);
+      if (!this.attack || !this.model.rollBonus) return;
+      return numberToSignedString(this.model.rollBonus.value);
     },
     rollBonusTooLong(){
       return this.rollBonus && this.rollBonus.length > 3;
     },
     totalUses(){
-      return Math.max(this.model.usesResult, 0);
+      if (!this.model.uses) return 0;
+      return Math.max(this.model.uses.value || 0, 0);
     },
     usesLeft(){
-      return Math.max(this.model.usesResult - (this.model.usesUsed || 0), 0);
+      return Math.max(this.totalUses - (this.model.usesUsed || 0), 0);
     },
     actionTypeIcon() {
       return `$vuetify.icons.${this.model.actionType}`;

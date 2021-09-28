@@ -3,8 +3,8 @@
     <health-bar
       v-for="attribute in attributes"
       :key="attribute._id"
-      :value="attribute.currentValue"
-      :max-value="attribute.value"
+      :value="attribute.value"
+      :max-value="attribute.total"
       :name="attribute.name"
       :_id="attribute._id"
       @change="e => $emit('change', {_id: attribute._id, change: e})"

@@ -37,7 +37,8 @@ export default {
   mixins: [treeNodeViewMixin],
   computed: {
     resolvedValue(){
-      return this.model.result !== undefined ? this.model.result : this.model.calculation;
+      return (this.model.amount && this.model.amount.value) !== undefined ?
+        this.model.amount.value : this.model.amount && this.model.amount.calculation;
     },
     effectIcon(){
       let value = this.resolvedValue;

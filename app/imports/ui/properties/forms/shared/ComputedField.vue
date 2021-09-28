@@ -2,7 +2,6 @@
   <div class="computed-field">
     <text-field
       :value="model.calculation"
-      :rows="1"
       v-bind="$attrs"
       @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
     >
@@ -17,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {

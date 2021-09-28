@@ -30,9 +30,9 @@
       computedValue(){
         if (this.model.type === 'attribute'){
           if (this.model.attributeType === 'modifier'){
-            return numberToSignedString(this.model.currentValue);
+            return numberToSignedString(this.model.value);
           } else {
-            return this.model.currentValue
+            return this.model.value
           }
         } else {
           return this.model.value;

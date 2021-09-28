@@ -10,13 +10,14 @@
         :error-messages="errors.stat"
         @change="change('stat', ...arguments)"
       />
-      <text-field
+      <computed-field
         label="Amount"
         hint="The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead."
         style="flex-basis: 300px;"
-        :value="model.amount"
+        :model="model.amount"
         :error-messages="errors.amount"
-        @change="change('amount', ...arguments)"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['amount', ...path], value, ack})"
       />
     </div>
     <smart-select

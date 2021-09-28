@@ -31,8 +31,8 @@
             class="mr-2 text-no-wrap"
             style="min-width: 24px; text-align: center;"
           >
-            <template v-if="model.quantity !== 0 && insufficient">
-              {{ model.available }} / {{ model.quantity }}
+            <template v-if="quantity !== 0 && insufficient">
+              {{ model.available }} / {{ quantity }}
             </template>
             <template v-else>
               {{ model.available }}
@@ -70,7 +70,7 @@
         class="mr-2"
         style="width: 24px; text-align: center;"
       >
-        {{ model.quantity }}
+        {{ quantity }}
       </div>
       <div
         class="text-no-wrap text-truncate"
@@ -110,7 +110,10 @@ export default {
   },
   computed: {
     insufficient(){
-      return this.model.quantity > this.model.available;
+      return this.quantity > this.model.available;
+    },
+    quantity(){
+      return this.model.quantity && this.model.quantity.value || 0;
     },
   },
 }

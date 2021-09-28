@@ -16,13 +16,13 @@
         @change="change('variableName', ...arguments)"
       />
     </div>
-    <text-field
-      ref="focusFirst"
-      label="Roll"
+    <computed-field
+      label="Roll bonus"
       hint="The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
-      :value="model.roll"
+      :model="model.roll"
       :error-messages="errors.roll"
-      @change="change('roll', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['roll', ...path], value, ack})"
     />
     <form-sections>
       <form-section name="Advanced">

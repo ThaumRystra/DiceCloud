@@ -25,7 +25,7 @@
     </div>
     <div class="layout column my-2">
       <div class="text-body-1 mb-1">
-        {{ model.name || operation }}
+        {{ displayedText }}
       </div>
       <div v-if="!hideBreadcrumbs">
         <breadcrumbs
@@ -58,8 +58,17 @@
       hasClickListener(){
         return this.$listeners && this.$listeners.click
       },
+      displayedText(){
+        if (this.model.operation === 'conditional'){
+          return this.model.text || this.model.name || this.operation
+        } else {
+          return this.model.name || this.operation
+        }
+      },
 			resolvedValue(){
-				return this.model.result !== undefined ? this.model.result : this.model.calculation;
+        let amount = this.model.amount;
+        if (!amount) return;
+				return amount.value !== undefined ? amount.value : amount.calculation;
 			},
 			effectIcon(){
 				let value = this.resolvedValue;
@@ -107,7 +116,7 @@
 					case 'disadvantage': return;
 					case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
 					case 'fail': return;
-					case 'conditional': return;
+					case 'conditional': return undefined;
           default: return undefined;
 				}
 			}

@@ -9,7 +9,8 @@
         style="width: 332px;"
         :model="model.baseValue"
         :error-messages="errors.baseValue"
-        @change="({path, value, ack}) => $emit('change', {path: ['baseValue', ...path], value, ack})"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['baseValue', ...path], value, ack})"
       />
     </div>
     <div class="layout wrap">
@@ -46,18 +47,20 @@
       :menu-props="{auto: true, lazy: true}"
       @change="change('hitDiceSize', ...arguments)"
     />
-    <text-field
+    <computed-field
       v-if="model.attributeType === 'spellSlot'"
       label="Spell slot level"
-      :value="model.spellSlotLevelCalculation"
-      :error-messages="errors.spellSlotLevelCalculation"
-      @change="change('spellSlotLevelCalculation', ...arguments)"
+      :model="model.spellSlotLevel"
+      :error-messages="errors.spellSlotLevel"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['spellSlotLevel', ...path], value, ack})"
     />
-    <text-area
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
     <form-section
       name="Advanced"
@@ -119,12 +122,10 @@
 <script lang="js">
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import ComputedField from '/imports/ui/properties/forms/shared/ComputedField.vue';
 
 	export default {
 		components: {
 			FormSection,
-      ComputedField,
 		},
     mixins: [propertyFormMixin],
     inject: {

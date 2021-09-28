@@ -3,9 +3,11 @@ import computeCreatureComputation from './computation/computeCreatureComputation
 import writeAlteredProperties from './computation/writeComputation/writeAlteredProperties.js';
 
 export default function computeCreature(creatureId){
+  console.time('Compute creature');
   const computation = buildCreatureComputation(creatureId);
   computeCreatureComputation(computation);
   writeAlteredProperties(computation);
+  console.timeEnd('Compute creature');
 }
 
 // For now just recompute the whole creature, TODO only recompute a single

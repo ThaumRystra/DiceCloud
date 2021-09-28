@@ -1,14 +1,12 @@
 <template lang="html">
   <div class="buff-viewer">
     <property-name :value="model.name" />
-    <property-field
+    <!--<property-field
       name="Duration"
       :value="model.duration"
-    />
+    />-->
     <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
+      :model="model.description"
     />
   </div>
 </template>

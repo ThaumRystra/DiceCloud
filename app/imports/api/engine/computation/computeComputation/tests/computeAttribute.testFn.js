@@ -7,10 +7,12 @@ export default function(){
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
+  const scope = variableName => computation.scope[variableName];
   assert.equal(prop('emptyId').value, 0);
   assert.equal(prop('noVariableNameId').value, 8);
   assert.equal(prop('strengthId').value, 12);
   assert.equal(prop('strengthId').modifier, 1);
+  assert.equal(scope('strength').modifier, 1);
   assert.equal(prop('referencesDexId').value, 4);
   assert.equal(prop('hitDiceId').constitutionMod, 5);
   assert.equal(

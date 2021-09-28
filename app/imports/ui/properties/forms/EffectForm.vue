@@ -49,15 +49,16 @@
       :error-messages="errors.stats"
       @change="change('stats', ...arguments)"
     />
-    <text-field
+    <computed-field
       label="Value"
       class="mr-2"
       hint="Number or calculation to determine the value of this effect"
       :persistent-hint="needsValue"
-      :value="needsValue ? (model.calculation) : ' '"
       :disabled="!needsValue"
-      :error-messages="errors.calculation"
-      @change="change('calculation', ...arguments)"
+      :model="model.amount"
+      :error-messages="errors.amount"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['amount', ...path], value, ack})"
     />
     <v-expand-transition>
       <text-field

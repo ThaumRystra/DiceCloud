@@ -49,7 +49,7 @@ const castSpellWithSlot = new ValidatedMethod({
         throw new Meteor.Error('No slot',
           'Slot not found to cast spell');
       }
-      if (!slot.currentValue){
+      if (!slot.value){
         throw new Meteor.Error('No slot',
           'Slot depleted');
       }

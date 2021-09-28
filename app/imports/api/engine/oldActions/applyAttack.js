@@ -9,7 +9,7 @@ export default function applyAttack({
   let value = roll(1, 20)[0];
   actionContext.attackRoll = {value};
   let criticalHitTarget = creature.variables.criticalHitTarget &&
-    creature.variables.criticalHitTarget.currentValue || 20;
+    creature.variables.criticalHitTarget.value || 20;
   let criticalHit = value >= criticalHitTarget;
   if (criticalHit) actionContext.criticalHit = {value: true};
   let result = value + prop.rollBonusResult;

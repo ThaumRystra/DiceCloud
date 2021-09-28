@@ -222,7 +222,7 @@ export default {
       let creature = Creatures.findOne(creatureId)
       return creature &&
         creature.variables.proficiencyBonus &&
-        creature.variables.proficiencyBonus.currentValue;
+        creature.variables.proficiencyBonus.value;
     },
   },
 }

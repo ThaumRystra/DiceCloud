@@ -9,9 +9,7 @@
       <code>{{ model.variableName }}</code>
     </p>
     <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
+      :model="model.description"
     />
   </div>
 </template>
