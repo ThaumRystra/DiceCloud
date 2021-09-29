@@ -29,14 +29,10 @@ import removeSchemaFields from './buildComputation/removeSchemaFields.js';
  * computed toggles
  */
 
-/**
- * TODO
- * compute class levels
- */
-
 export default function buildCreatureComputation(creatureId){
   const properties = getProperties(creatureId);
-  return buildComputationFromProps(properties);
+  const computation = buildComputationFromProps(properties);
+  return computation;
 }
 
 function getProperties(creatureId){

@@ -31,6 +31,11 @@ export default function createPropertySchema(definition){
           `computed field: '${key}' of '${def.type}' is expected to be optional`
         );
       }
+      if (def.removeBeforeCompute){
+        console.warn(
+          `computed field: '${key}' of '${def.type}' should not be removed before computation`
+        )
+      }
     }
   }
 

@@ -2,7 +2,6 @@ import SimpleSchema from 'simpl-schema';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-SimpleSchema.extendOptions(['parseLevel']);
 
 /*
  * Actions are things a character can do
@@ -128,6 +127,7 @@ const ComputedOnlyActionSchema = createPropertySchema({
   insufficientResources: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
   uses: {
     type: 'computedOnlyField',
@@ -137,6 +137,7 @@ const ComputedOnlyActionSchema = createPropertySchema({
   usesLeft: {
     type: Number,
     optional: true,
+    removeBeforeCompute: true,
   },
   // Resources
   resources: {
@@ -153,6 +154,7 @@ const ComputedOnlyActionSchema = createPropertySchema({
   'resources.itemsConsumed.$.available': {
     type: Number,
     optional: true,
+    removeBeforeCompute: true,
   },
   'resources.itemsConsumed.$.quantity': {
     type: 'computedOnlyField',
@@ -162,16 +164,19 @@ const ComputedOnlyActionSchema = createPropertySchema({
     type: String,
     max: STORAGE_LIMITS.name,
     optional: true,
+    removeBeforeCompute: true,
   },
   'resources.itemsConsumed.$.itemIcon': {
     type: storedIconsSchema,
     optional: true,
     max: STORAGE_LIMITS.icon,
+    removeBeforeCompute: true,
   },
   'resources.itemsConsumed.$.itemColor': {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.color,
+    removeBeforeCompute: true,
   },
   'resources.attributesConsumed': {
     type: Array,
@@ -187,16 +192,19 @@ const ComputedOnlyActionSchema = createPropertySchema({
   'resources.attributesConsumed.$.available': {
     type: Number,
     optional: true,
+    removeBeforeCompute: true,
   },
   'resources.attributesConsumed.$.statId': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
+    removeBeforeCompute: true,
   },
   'resources.attributesConsumed.$.statName': {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.name,
+    removeBeforeCompute: true,
   },
 });
 

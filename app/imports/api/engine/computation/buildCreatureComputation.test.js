@@ -1,3 +1,4 @@
+import '/imports/api/simpleSchemaConfig.js';
 import { buildComputationFromProps } from './buildCreatureComputation.js';
 import { assert } from 'chai';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

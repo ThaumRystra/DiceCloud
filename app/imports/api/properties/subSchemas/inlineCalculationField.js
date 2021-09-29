@@ -10,6 +10,7 @@ function inlineCalculationFieldToCompute(field){
     [field]: {
       type: Object,
       optional: true,
+      inlineCalculationField: true,
     },
     [`${field}.text`]: {
       type: String,
@@ -25,20 +26,24 @@ function computedOnlyInlineCalculationField(field){
     [field]: {
       type: Object,
       optional: true,
+      inlineCalculationField: true,
     },
     [`${field}.value`]: {
       type: String,
       optional: true,
       max: STORAGE_LIMITS.inlineCalculationField,
+      removeBeforeCompute: true,
     },
     [`${field}.inlineCalculations`]: {
       type: Array,
       defaultValue: [],
       maxCount: STORAGE_LIMITS.inlineCalculationCount,
+      removeBeforeCompute: true,
     },
     [`${field}.inlineCalculations.$`]: {
       type: Object,
       parseLevel: 'compile',
+      computedField: true,
     },
     // The part between bracers {}
     [`${field}.inlineCalculations.$.calculation`]: {

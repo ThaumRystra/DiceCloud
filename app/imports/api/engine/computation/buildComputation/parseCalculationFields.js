@@ -11,66 +11,53 @@ export default function parseCalculationFields(prop, schemas){
 
 function discoverInlineCalculationFields(prop, schemas){
   // For each key in the schema
-  schemas[prop.type]._schemaKeys.forEach( key => {
+  schemas[prop.type].inlineCalculationFields().forEach( calcKey => {
     // That ends in .inlineCalculations
-    if (key.slice(-19) === '.inlineCalculations'){
-      const inlineCalcKey = key.slice(0, -19);
-      applyFnToKey(prop, inlineCalcKey, (prop, key) => {
-        const inlineCalcObj = get(prop, key);
-        if (!inlineCalcObj) return;
-        // Store a reference to all the inline calculations
-        prop._computationDetails.inlineCalculations.push(inlineCalcObj);
-        // Extract the calculations and store them on the property
-        let string = inlineCalcObj.text;
-        if (!string) return;
-        inlineCalcObj.inlineCalculations = [];
-        let matches = string.matchAll(INLINE_CALCULATION_REGEX);
-        for (let match of matches){
-          let calculation = match[1];
-          inlineCalcObj.inlineCalculations.push({
-            calculation,
-          });
-        }
-      });
-    }
+    applyFnToKey(prop, calcKey, (prop, key) => {
+      const inlineCalcObj = get(prop, key);
+      if (!inlineCalcObj) return;
+      // Store a reference to all the inline calculations
+      prop._computationDetails.inlineCalculations.push(inlineCalcObj);
+      // Extract the calculations and store them on the property
+      let string = inlineCalcObj.text;
+      if (!string) return;
+      inlineCalcObj.inlineCalculations = [];
+      let matches = string.matchAll(INLINE_CALCULATION_REGEX);
+      for (let match of matches){
+        let calculation = match[1];
+        inlineCalcObj.inlineCalculations.push({
+          calculation,
+        });
+      }
+    });
   });
 }
 
 function parseAllCalculationFields(prop, schemas){
-  // For each key in the schema
-  schemas[prop.type]._schemaKeys.forEach( key => {
-    //  that ends in '.calculation'
-    if (key.slice(-12) === '.calculation'){
-      const calcKey = key.slice(0, -12);
-      // Determine the level the calculation should compute down to
-      let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel || 'reduce';
+  // For each computed key in the schema
+  schemas[prop.type].computedFields().forEach( calcKey => {
+    // Determine the level the calculation should compute down to
+    let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel || 'reduce';
 
-      // For all fields matching they keys
-      // supports `keys.$.with.$.arrays`
-      applyFnToKey(prop, calcKey, (prop, key) => {
-        const calcObj = get(prop, key);
-        if (!calcObj) return;
-        // If the calculation isn't set, delete the whole object
-        if (!calcObj.calculation){
-          unset(prop, key);
-          return;
-        }
-        // Store a reference to all the calculations
-        prop._computationDetails.calculations.push(calcObj);
-        // Store the level to compute down to later
-        calcObj._parseLevel = parseLevel;
-        // Parse the calculation
-        parseCalculation(calcObj);
-      });
-      // Or that ends in .inlineCalculations
-    }
+    // For all fields matching they keys
+    // supports `keys.$.with.$.arrays`
+    applyFnToKey(prop, calcKey, (prop, key) => {
+      const calcObj = get(prop, key);
+      if (!calcObj) return;
+      // Store a reference to all the calculations
+      prop._computationDetails.calculations.push(calcObj);
+      // Store the level to compute down to later
+      calcObj._parseLevel = parseLevel;
+      // Parse the calculation
+      parseCalculation(calcObj);
+    });
   });
 }
 
 function parseCalculation(calcObj){
-  let calculation = calcObj.calculation || '';
+  if (!calcObj.calculation) return;
   try {
-    calcObj._parsedCalculation = parse(calculation);
+    calcObj._parsedCalculation = parse(calcObj.calculation);
   } catch (e) {
     let error = {
       type: 'evaluation',

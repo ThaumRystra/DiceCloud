@@ -7,9 +7,12 @@ import getAggregatorResult from './getAggregatorResult.js';
  export default function computeImplicitVariable(node){
    const prop = {};
    const result = getAggregatorResult(node);
-   prop.total = result;
-   prop.value = result;
-   prop.proficiency = node.data.proficiency;
+   if (result !== undefined){
+     prop.value = result;
+   }
+   if (node.data.proficiency !== undefined){
+     prop.proficiency = node.data.proficiency;
+   }
 
    // denormalise class level aggregator
    let classLevelAgg = node.data.classLevelAggregator;

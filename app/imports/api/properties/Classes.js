@@ -74,10 +74,12 @@ const ComputedOnlyClassSchema = createPropertySchema({
     level: {
       type: SimpleSchema.Integer,
       optional: true,
+      removeBeforeCompute: true,
     },
     missingLevels: {
       type: Array,
       optional: true,
+      removeBeforeCompute: true,
     },
     'missingLevels.$': {
       type: SimpleSchema.Integer,

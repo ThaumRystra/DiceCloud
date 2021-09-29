@@ -47,6 +47,7 @@ let ComputedOnlyBuffSchema = createPropertySchema({
 		type: Number,
 		optional: true,
 		min: 0,
+    removeBeforeCompute: true,
 	},
 	appliedBy: {
 		type: Object,

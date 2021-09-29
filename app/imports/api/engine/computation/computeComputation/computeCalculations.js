@@ -35,6 +35,7 @@ function evaluateCalculation(calculation, scope){
   // remove the working fields
   delete calculation._parseLevel;
   delete calculation._parsedCalculation;
+  delete calculation._localScope;
 }
 
 function embedInlineCalculations(inlineCalcObj){

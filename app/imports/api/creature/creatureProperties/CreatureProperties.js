@@ -55,6 +55,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive by an inactive
   // ancestor. True if this property has an inactive ancestor even if this
@@ -63,6 +64,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive because of its own
   // state
@@ -70,6 +72,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive because of a toggle
   // calculation. Either an ancestor toggle calculation or its own.
@@ -77,6 +80,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
 });
 

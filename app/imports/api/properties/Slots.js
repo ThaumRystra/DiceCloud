@@ -105,10 +105,12 @@ const ComputedOnlySlotSchema = createPropertySchema({
   totalFilled: {
     type: SimpleSchema.Integer,
     defaultValue: 0,
+    removeBeforeCompute: true,
   },
   spaceLeft: {
     type: SimpleSchema.Integer,
     optional: true,
+    removeBeforeCompute: true,
   },
 });
 

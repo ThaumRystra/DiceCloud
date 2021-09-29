@@ -94,38 +94,45 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
     type: SimpleSchema.oneOf(Number, String, Boolean),
 		defaultValue: 0,
     optional: true,
+    removeBeforeCompute: true,
   },
   // The computed value of the attribute minus the damage
   value: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
 		defaultValue: 0,
     optional: true,
+    removeBeforeCompute: true,
   },
 	// The computed modifier, provided the attribute type is `ability`
 	modifier: {
 		type: SimpleSchema.Integer,
 		optional: true,
+    removeBeforeCompute: true,
 	},
   // Attributes with proficiency grant it to all skills based on the attribute
   proficiency: {
 		type: Number,
     allowedValues: [0.49, 0.5, 1, 2],
 		optional: true,
+    removeBeforeCompute: true,
 	},
   // The computed creature constitution modifier for hit dice
   constitutionMod: {
     type: Number,
 		optional: true,
+    removeBeforeCompute: true,
   },
   // Should this attribute hide
   hide: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
   // Denormalised tag if stat is overridden by one with the same variable name
   overridden: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
 });
 

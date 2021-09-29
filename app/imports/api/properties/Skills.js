@@ -66,6 +66,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
     type: Number,
 		defaultValue: 0,
     optional: true,
+    removeBeforeCompute: true,
   },
   // The result of baseValueCalculation
   baseValue: {
@@ -80,28 +81,33 @@ let ComputedOnlySkillSchema = createPropertySchema({
 	abilityMod: {
 		type: SimpleSchema.Integer,
 		optional: true,
+    removeBeforeCompute: true,
 	},
 	// Computed advantage/disadvantage
   advantage: {
     type: SimpleSchema.Integer,
     optional: true,
     allowedValues: [-1, 0, 1],
+    removeBeforeCompute: true,
   },
 	// Computed bonus to passive checks
   passiveBonus: {
     type: Number,
     optional: true,
+    removeBeforeCompute: true,
   },
 	// Computed proficiency multiplier
   proficiency: {
     type: Number,
     allowedValues: [0, 0.49, 0.5, 1, 2],
 		defaultValue: 0,
+    removeBeforeCompute: true,
   },
   // Compiled text of all conditional benefits
   conditionalBenefits: {
     type: Array,
     optional: true,
+    removeBeforeCompute: true,
   },
   'conditionalBenefits.$': {
     type: String,
@@ -110,16 +116,19 @@ let ComputedOnlySkillSchema = createPropertySchema({
   fail: {
     type: SimpleSchema.Integer,
     optional: true,
+    removeBeforeCompute: true,
   },
   // Should this attribute hide
   hide: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
   // Denormalised tag if stat is overridden by one with the same variable name
   overridden: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
 })
 

@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { isEqual } from 'lodash';
+import { EJSON } from 'meteor/ejson';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import propertySchemasIndex from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 
@@ -35,7 +35,7 @@ function addChangedKeysToOp(op, keys, original, changed) {
   // Loop through all keys that can be changed by computation
   // and compile an operation that sets all those keys
   for (let key of keys){
-    if (!isEqual(original[key], changed[key])){
+    if (!EJSON.equals(original[key], changed[key])){
       if (!op) op = newOperation(original._id, changed.type);
       let value = changed[key];
       if (value === undefined){
@@ -91,7 +91,7 @@ function writePropertiesSequentially(bulkWriteOps){
       bypassCollection2: true,
     });
   });
-  if (bulkWriteOps.length) console.log(`Wrote ${bulkWriteOps.length} props`);
+  //if (bulkWriteOps.length) console.log(`Wrote ${bulkWriteOps.length} props`);
 }
 
 // This is more efficient on the database, but significantly less efficient

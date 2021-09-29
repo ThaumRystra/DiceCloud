@@ -22,11 +22,13 @@ function computedOnlyField(field){
     [`${field}.value`]: {
       type: SimpleSchema.oneOf(String, Number),
       optional: true,
+      removeBeforeCompute: true,
     },
     [`${field}.errors`]: {
       type: Array,
       optional: true,
       maxCount: STORAGE_LIMITS.errorCount,
+      removeBeforeCompute: true,
     },
     [`${field}.errors.$`]:{
       type: ErrorSchema,
@@ -40,17 +42,31 @@ function computedOnlyField(field){
 function includeParentFields(field, schemaObj){
   const splitField = field.split('.');
   if (splitField.length === 1){
-    schemaObj[field] = {type: Object, optional: true};
+    schemaObj[field] = {
+      type: Object,
+      optional: true,
+      computedField: true,
+    };
     return;
   }
   let key = '';
   splitField.push('');
-  splitField.forEach(value => {
+  splitField.forEach((value, index) => {
     if (key){
       if (value === '$'){
-        schemaObj[key] = {type: Array, optional: true};
+        schemaObj[key] = {
+          type: Array,
+          optional: true
+        };
       } else {
-        schemaObj[key] = {type: Object, optional: true};
+        schemaObj[key] = {
+          type: Object,
+          optional: true,
+        };
+        // the last object is the computed field
+        if (index === splitField.length - 1){
+          schemaObj[key].computedField = true;
+        }
       }
       key += '.';
     }
