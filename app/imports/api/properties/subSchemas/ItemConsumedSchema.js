@@ -49,7 +49,7 @@ const ComputedOnlyItemConsumedSchema = new SimpleSchema({
   itemColor: {
     type: String,
     optional: true,
-    max: STORAGE_LIMITS.color,
+    regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
   },
 });
 

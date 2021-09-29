@@ -175,7 +175,7 @@ const ComputedOnlyActionSchema = createPropertySchema({
   'resources.itemsConsumed.$.itemColor': {
     type: String,
     optional: true,
-    max: STORAGE_LIMITS.color,
+    regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
     removeBeforeCompute: true,
   },
   'resources.attributesConsumed': {
