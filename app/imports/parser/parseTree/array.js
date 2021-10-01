@@ -1,0 +1,46 @@
+import constant from './constant.js';
+import resolve, { toString, traverse } from '../resolve.js';
+
+const array = {
+  create({values}) {
+    return {
+      type: 'array',
+      values,
+    };
+  },
+  fromConstantArray(array){
+    let values = array.map( value => {
+      let valueType = typeof value;
+      if (
+        valueType === 'string' ||
+        valueType === 'number' ||
+        valueType === 'boolean' ||
+        valueType === 'undefined'
+      ){
+        return constant.create({value, valueType});
+      } else {
+        throw `Unexpected type in constant array: ${valueType}`
+      }
+    });
+    return array.create({values});
+  },
+  resolve(fn, node, scope){
+    let values = node.values.map(node => {
+      let { result } = resolve(fn, node, scope, context);
+      return result;
+    });
+    return {
+      result: array.create({values}),
+      context,
+    };
+  },
+  toString(node){
+    return `[${node.values.map(value => toString(value)).join(', ')}]`;
+  },
+  traverse(node, fn){
+    fn(node);
+    node.values.forEach(value => traverse(value, fn));
+  },
+}
+
+export default array;
