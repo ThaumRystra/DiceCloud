@@ -1,14 +1,13 @@
 const constant = {
-  create({value, valueType}){
-    if (!valueType) throw `Expected valueType to be set, got ${valueType}`
+  create({value}){
     return {
-      type: 'constant',
-      valueType,
+      parseType: 'constant',
+      valueType: typeof value,
       value,
     }
   },
-  compile(node){
-    return node;
+  compile(node, scope, context){
+    return {result: node, context};
   },
   toString(node){
     return `${node.value}`;

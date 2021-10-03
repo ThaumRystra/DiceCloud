@@ -1,10 +1,10 @@
-import constant from './constant.js';
 import resolve, { toString, traverse } from '../resolve.js';
+import constant from './constant.js';
 
 const array = {
   create({values}) {
     return {
-      type: 'array',
+      parseType: 'array',
       values,
     };
   },
@@ -24,7 +24,7 @@ const array = {
     });
     return array.create({values});
   },
-  resolve(fn, node, scope){
+  resolve(fn, node, scope, context){
     let values = node.values.map(node => {
       let { result } = resolve(fn, node, scope, context);
       return result;

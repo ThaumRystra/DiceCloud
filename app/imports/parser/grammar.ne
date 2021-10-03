@@ -1,17 +1,6 @@
 @preprocessor esmodule
 @{%
-  import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
-  import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
-	import CallNode from '/imports/parser/parseTree/CallNode.js';
-	import ConstantNode from '/imports/parser/parseTree/ConstantNode.js';
-  import IfNode from '/imports/parser/parseTree/IfNode.js';
-	import IndexNode from '/imports/parser/parseTree/IndexNode.js';
-	import OperatorNode from '/imports/parser/parseTree/OperatorNode.js';
-  import ParenthesisNode from '/imports/parser/parseTree/ParenthesisNode.js';
-  import RollNode from '/imports/parser/parseTree/RollNode.js';
-  import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
-  import UnaryOperatorNode from '/imports/parser/parseTree/UnaryOperatorNode.js';
-  import NotOperatorNode from '/imports/parser/parseTree/NotOperatorNode.js';
+  import node from './parseTree/_index.js';
 
 	import moo from 'moo';
 
@@ -51,7 +40,7 @@
 
   function nuller() { return null; }
   function operator([left, _1, operator, _2, right], fn){
-    return new OperatorNode({
+    return node.operator.create({
       left,
       right,
       operator: operator.value,
@@ -71,7 +60,7 @@ expression ->
 
 ifStatement ->
   orExpression _ %ifOperator _ orExpression _ %elseOperator _ ifStatement {%
-     d => new IfNode({condition: d[0], consequent: d[4], alternative: d[8]})
+     d => node.if.create({condition: d[0], consequent: d[4], alternative: d[8]})
   %}
 | orExpression {% id %}
 
@@ -104,11 +93,11 @@ multiplicativeExpression ->
 | rollExpression {% id %}
 
 rollExpression ->
-  rollExpression _ %diceOperator _ exponentExpression {% d => new RollNode({left: d[0], right: d[4]}) %}
+  rollExpression _ %diceOperator _ exponentExpression {% d => node.roll.create({left: d[0], right: d[4]}) %}
 | singleRollExpression {% id %}
 
 singleRollExpression ->
-  "d" _ singleRollExpression {% d => new RollNode({left: new ConstantNode({value: 1, type: 'number'}), right: d[2]}) %}
+  "d" _ singleRollExpression {% d => node.roll.create({left: node.constant.create({value: 1}), right: d[2]}) %}
 | exponentExpression {% id %}
 
 exponentExpression ->
@@ -116,16 +105,16 @@ exponentExpression ->
 | unaryExpression {% id %}
 
 unaryExpression ->
-  %additiveOperator _ unaryExpression {% d => new UnaryOperatorNode({operator: d[0].value, right: d[2]})%}
+  %additiveOperator _ unaryExpression {% d => node.unaryOperator.create({operator: d[0].value, right: d[2]})%}
 | notExpression {% id %}
 
 notExpression ->
-  %notOperator _ notExpression {% d => new NotOperatorNode({right: d[2]})%}
+  %notOperator _ notExpression {% d => node.notOperator.create({right: d[2]})%}
 | callExpression {% id %}
 
 callExpression ->
   name _ arguments {%
-    d => new CallNode ({functionName: d[0].name, args: d[2]})
+    d => node.call.create({functionName: d[0].name, args: d[2]})
   %}
 | indexExpression {% id %}
 
@@ -135,22 +124,22 @@ arguments ->
   %}
 
 indexExpression ->
-  arrayExpression "[" _ expression _ "]" {% d => new IndexNode ({array: d[0], index: d[3]}) %}
+  arrayExpression "[" _ expression _ "]" {% d => node.index.create({array: d[0], index: d[3]}) %}
 | arrayExpression {% id %}
 
 arrayExpression ->
   "[" _ (expression {% d => d[0] %}):? ( _ %separator _ expression {% d => d[3] %} ):* _ "]" {%
-    d => new ArrayNode({values: d[2] ? [d[2], ...d[3]] : []})
+    d => node.array.create({values: d[2] ? [d[2], ...d[3]] : []})
   %}
 | parenthesizedExpression {% id %}
 
 parenthesizedExpression ->
-  "(" _ expression _ ")" {% d => new ParenthesisNode({content: d[2]}) %}
+  "(" _ expression _ ")" {% d => node.parenthesis.create({content: d[2]}) %}
 | accessorExpression {% id %}
 
 accessorExpression ->
   (%name {% d => d[0].value %}) ( "." %name {% d => d[1].value %} ):+ {%
-    d=> new AccessorNode({name: d[0], path: d[1]})
+    d=> node.accessor.create({name: d[0], path: d[1]})
   %}
 | valueExpression {% id %}
 
@@ -162,17 +151,17 @@ valueExpression ->
 
 # A number or a function of a number
 number ->
-  %number {% d => new ConstantNode({value: +d[0].value, type: 'number'}) %}
+  %number {% d => node.constant.create({value: +d[0].value}) %}
 
 name ->
-  %name {% d => new SymbolNode({name: d[0].value}) %}
+  %name {% d => node.symbol.create({name: d[0].value}) %}
 
 string ->
-  %string {% d => new ConstantNode({value: d[0].value, type: 'string'}) %}
+  %string {% d => node.constant.create({value: d[0].value}) %}
 
 boolean ->
-  "true" {% d => new ConstantNode({value: true, type: 'boolean'}) %}
-| "false" {% d => new ConstantNode({value: false, type: 'boolean'}) %}
+  "true" {% d => node.constant.create({value: true}) %}
+| "false" {% d => node.constant.create({value: false}) %}
 
 _ ->
   null

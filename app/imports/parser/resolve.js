@@ -1,13 +1,11 @@
-import nodeTypeIndex from './parseTree/index.js';
-import collate from '/imports/api/engine/computation/utility/collate.js';
-import Context from './ResolveContext.js';
+import nodeTypeIndex from './parseTree/_index.js';
 
 // Takes a parse ndoe and computes it to a set detail level
 // returns {result, context}
 export default function resolve(fn, node, scope, context = new Context()){
-  let type = nodeTypeIndex[node.type];
+  let type = nodeTypeIndex[node.parseType];
   if (!type){
-    throw new Meteor.Error(`Parse node type: ${node.type} not implemented`);
+    throw new Meteor.Error(`Parse node type: ${node.parseType} not implemented`);
   }
   if (type.resolve){
     return type.resolve(fn, node, scope, context);
@@ -18,28 +16,49 @@ export default function resolve(fn, node, scope, context = new Context()){
   } else if (type.compile){
     return type.compile(node, scope, context)
   } else {
-    throw new Meteor.Error('Compile not implemented on ' + node.type);
+    throw new Meteor.Error('Compile not implemented on ' + node.parseType);
   }
 }
 
 export function toString(node){
-  let type = nodeTypeIndex[node.type];
+  let type = nodeTypeIndex[node.parseType];
   if (!type.toString){
-    throw new Meteor.Error('toString not implemented on ' + node.type);
+    throw new Meteor.Error('toString not implemented on ' + node.parseType);
   }
   return type.toString(node);
 }
 
 export function traverse(node, fn){
-  let type = nodeTypeIndex[node.type];
+  if (!node) return;
+  let type = nodeTypeIndex[node.parseType];
+  if (!type){
+    console.error(node);
+    throw new Meteor.Error('Not valid parse node');
+  }
   if (type.traverse){
     return type.traverse(node, fn);
   }
   return fn(node);
 }
 
-export function mergeResolvedNodes(main, other){
-  main.errors = collate(main.errors, other.errors);
-  main.rolls = collate(main.rolls, other.rolls);
-  return main;
+export class Context {
+  constructor({errors = [], rolls = [], doubleRolls} = {}){
+    this.errors = errors;
+    this.rolls = rolls;
+    this.doubleRolls = doubleRolls;
+  }
+  error(e){
+    if (!e) return;
+    if (typeof e === 'string'){
+      this.errors.push({
+        type: 'error',
+        message: e,
+      });
+    } else {
+      this.errors.push(e);
+    }
+  }
+  roll(r){
+    this.rolls.push(r);
+  }
 }

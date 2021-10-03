@@ -3,7 +3,7 @@ import constant from './constant.js';
 const accessor = {
   create({name, path}) {
     return {
-      type: 'accessor',
+      parseType: 'accessor',
       path,
       name,
     };
@@ -45,12 +45,11 @@ const accessor = {
   },
   reduce(node, scope, context){
     let { result } = accessor.compile(node, scope, context);
-    if (result.type === 'accessor'){
+    if (result.parseType === 'accessor'){
       context.error(`${accessor.toString(result)} not found, set to 0`);
       return {
         result: constant.create({
           value: 0,
-          valueType: 'number',
         }),
         context
       };

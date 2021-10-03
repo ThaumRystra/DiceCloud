@@ -1,10 +1,9 @@
-import resolve, {traverse, toString, mergeResolvedNodes} from '../resolve';
-import collate from '/imports/api/engine/computation/utility/collate.js';
+import resolve, { traverse, toString } from '../resolve';
 
 const ifNode = {
   create({condition, consequent, alternative}){
     return {
-      type: 'if',
+      parseType: 'if',
       condition,
       consequent,
       alternative,
@@ -14,28 +13,14 @@ const ifNode = {
     let {condition, consequent, alternative} = node;
     return `${toString(condition)} ? ${toString(consequent)} : ${toString(alternative)}`
   },
-  resolve(fn, node, scope){
-    let rest, condition, consequent, alternative;
-    let resolved = {};
+  resolve(fn, node, scope, context){
+    let {result: condition} = resolve(fn, node.condition, scope, context);
 
-    ({result: condition, ...rest} = resolve(fn, node.condition, scope));
-    mergeResolvedNodes(resolved, rest);
-
-    if (condition.type === 'constant'){
+    if (condition.parseType === 'constant'){
       if (condition.value){
-        ({result: consequent, ...rest} = resolve(fn, node.consequent, scope));
-        mergeResolvedNodes(resolved, rest);
-        return {
-          result: consequent,
-          ...resolved
-        };
+        return resolve(fn, node.consequent, scope, context);
       } else {
-        ({result: alternative, ...rest} = resolve(fn, node.alternative, scope));
-        mergeResolvedNodes(resolved, rest);
-        return {
-          result: alternative,
-          ...resolved
-        };
+        return resolve(fn, node.alternative, scope, context);
       }
     } else {
       return {
@@ -44,7 +29,7 @@ const ifNode = {
           consequent: node.consequent,
           alternative: node.alternative,
         }),
-        ...resolved
+        context,
       };
     }
   },

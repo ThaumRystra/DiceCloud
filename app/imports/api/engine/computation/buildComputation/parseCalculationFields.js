@@ -1,8 +1,8 @@
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import { prettifyParseError, parse } from '/imports/parser/parser.js';
-import ErrorNode from '/imports/parser/parseTree/ErrorNode.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
-import { get, unset } from 'lodash';
+import { get } from 'lodash';
+import errorNode from '/imports/parser/parseTree/error.js'
 
 export default function parseCalculationFields(prop, schemas){
   discoverInlineCalculationFields(prop, schemas);
@@ -66,6 +66,6 @@ function parseCalculation(calcObj){
     calcObj.errors ?
       calcObj.errors.push(error) :
       calcObj.errors = [error];
-    calcObj._parsedCalculation = new ErrorNode({error});
+    calcObj._parsedCalculation = errorNode.create({error});
   }
 }

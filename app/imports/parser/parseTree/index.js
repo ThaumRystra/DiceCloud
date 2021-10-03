@@ -1,76 +1,73 @@
-import resolve, {traverse, toString, mergeResolvedNodes} from '../resolve';
+import resolve, { traverse, toString } from '../resolve';
+import error from './error';
 
 const index = {
   create({array, index}) {
 		return {
-      type: 'index',
+      parseType: 'index',
       array,
       index,
     }
   },
-  resolve(fn, node, scope){
-    let index, array, rest;
-    let resolved = {};
-    ({result: index, ...rest} = resolve(fn, node.index, scope));
-    mergeResolvedNodes(resolved, rest);
-    ({result: array, ...rest} = resolve(fn, node.array, scope));
-    mergeResolvedNodes(resolved, rest);
+  resolve(fn, node, scope, context){
+    let {result: index} = resolve(fn, node.index, scope, context);
+    let {result: array} = resolve(fn, node.array, scope, context);
 
     if (
       index.valueType === 'number' &&
       Number.isInteger(index.value) &&
-      array.type === 'array'
+      array.parseType === 'array'
     ){
       if (index.value < 1 || index.value > array.values.length){
-        mergeResolvedNodes(resolved, {
-          errors: [{
-            type: 'warning',
-            message: `Index of ${index.value} is out of range for an array` +
-              ` of length ${array.values.length}`,
-          }]
+        context.error({
+          type: 'warning',
+          message: `Index of ${index.value} is out of range for an array` +
+            ` of length ${array.values.length}`,
         });
       }
       let selection = array.values[index.value - 1];
       if (selection){
-        let result;
-        ({result, ...rest} = resolve(fn, selection, scope));
-        mergeResolvedNodes(resolved, rest)
-        return result;
+        return resolve(fn, selection, scope, context);
       }
     } else if (fn === 'reduce'){
-      if (!(array instanceof ArrayNode)){
-        return new ErrorNode({
-          node: node,
-          error: 'Can not get the index of a non-array node: ' +
-            node.array.toString() + ' = ' + array.toString(),
+      if (array.parseType !== 'array'){
+        const message = `Can not get the index of a non-array node: ${node.array.toString()} = ${array.toString()}`
+        context.error(message);
+        return {
+          result: error.create({
+            node,
+            error: message,
+          }),
           context,
-        });
+        };
       } else if (!index.isInteger){
-        return new ErrorNode({
-          node: node,
-          error: array.toString() + ' is not an integer index of the array',
+        const message = `${array.toString()} is not an integer index of the array`
+        context.error(message);
+        return {
+          result: error.create({
+            node,
+            error: message,
+          }),
           context,
-        });
+        };
       }
     }
-    return new IndexNode({
-      index,
-      array,
-      previousNodes: [node],
-    });
+    return {
+      result: index.create({
+        index,
+        array,
+      }),
+      context,
+    };
   },
-  toString(){
-    return `${node.array.toString()}[${node.index.toString()}]`;
+  toString(node){
+    return `${toString(node.array)}[${toString(node.index)}]`;
   },
-  traverse(fn){
+  traverse(node, fn){
     fn(node);
-    node.array.traverse(fn);
-    node.index.traverse(fn);
+    traverse(node.array, fn);
+    traverse(node.index, fn);
   },
-  replaceChildren(fn){
-    node.array = node.array.replaceNodes(fn);
-    node.index = node.index.replaceNodes(fn);
-  }
 }
 
 export default index;

@@ -1,12 +1,12 @@
 import error from './error.js';
 import constant from './constant.js';
 import functions from '/imports/parser/functions.js';
-import resolve, { toString, traverse, mergeResolvedNodes } from '../resolve.js';
+import resolve, { toString, traverse } from '../resolve.js';
 
 const call = {
   create({functionName, args}) {
     return {
-      type: 'call',
+      parseType: 'call',
       functionName,
       args,
     }
@@ -62,7 +62,7 @@ const call = {
 
     // Map contant nodes to constants before attempting to run the function
     let mappedArgs = resolvedArgs.map(arg => {
-      if (arg.type === 'constant'){
+      if (arg.parseType === 'constant'){
         return arg.value;
       } else {
         return arg;
@@ -125,16 +125,10 @@ const call = {
       } else {
         type = argumentsExpected[index];
       }
-      if (typeof type === 'string'){
-        // Type being a string means a constant node with matching type
-        if (node.valueType !== type) failed = true;
-      } else {
-        // Otherwise check that the node is an instance of the given type
-        if (!(node instanceof type)) failed = true;
-      }
+      if (node.parseType !== type && node.valueType !== type) failed = true;
       if (failed && fn === 'reduce'){
         let typeName = typeof type === 'string' ? type : type.constructor.name;
-        let nodeName = node.type;
+        let nodeName = node.parseType;
         context.error(`Incorrect arguments to ${node.functionName} function` +
           `expected ${typeName} got ${nodeName}`);
       }
