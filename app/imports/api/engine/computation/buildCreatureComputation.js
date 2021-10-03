@@ -90,6 +90,5 @@ export function buildComputationFromProps(properties){
     linkTypeDependencies(dependencyGraph, prop, computation);
     linkCalculationDependencies(dependencyGraph, prop, computation);
   });
-
   return computation;
 }

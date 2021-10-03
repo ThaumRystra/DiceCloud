@@ -16,10 +16,6 @@ export default function(){
   assert.equal(prop('referencesDexId').value, 4);
   assert.equal(prop('hitDiceId').constitutionMod, 5);
   assert.equal(
-    prop('parseErrorId').baseValue.errors.length, 1,
-    'Parse errors should be added to calculation errors'
-  );
-  assert.equal(
     prop('parseErrorId').baseValue.value, null,
     'Parse errors should null the value'
   );

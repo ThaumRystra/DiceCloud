@@ -13,25 +13,20 @@ export default function computeCalculations(computation, node){
 }
 
 function evaluateCalculation(calculation, scope){
-  const parseNode = calculation._parsedCalculation;
+  const parseNode = calculation.parseNode;
   const fn = calculation._parseLevel;
   const calculationScope = {...calculation._localScope, ...scope};
   const {result: resultNode, context} = resolve(fn, parseNode, calculationScope);
-  if (resultNode.parseType === 'constant'){
+  calculation.errors = context.errors;
+  if (resultNode?.parseType === 'constant'){
     calculation.value = resultNode.value;
-  } else if (resultNode.parseType === 'error'){
+  } else if (resultNode?.parseType === 'error'){
     calculation.value = null;
   } else {
     calculation.value = toString(resultNode);
   }
-  if (calculation.errors){
-    calculation.errors = [...calculation.errors, ...context.errors]
-  } else {
-    calculation.errors = context.errors
-  }
   // remove the working fields
   delete calculation._parseLevel;
-  delete calculation._parsedCalculation;
   delete calculation._localScope;
 }
 

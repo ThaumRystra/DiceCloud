@@ -25,6 +25,7 @@ function computeResources(computation, node){
   resources.attributesConsumed.forEach(attConsumed => {
     if (!attConsumed.variableName) return;
     const att = computation.scope[attConsumed.variableName];
+    if (!att._id) return;
     attConsumed.available = att.value;
     attConsumed.statId = att._id;
     attConsumed.statName = att.name;

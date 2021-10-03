@@ -2,7 +2,8 @@ import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX
 import { prettifyParseError, parse } from '/imports/parser/parser.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 import { get } from 'lodash';
-import errorNode from '/imports/parser/parseTree/error.js'
+import errorNode from '/imports/parser/parseTree/error.js';
+import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 
 export default function parseCalculationFields(prop, schemas){
   discoverInlineCalculationFields(prop, schemas);
@@ -20,7 +21,15 @@ function discoverInlineCalculationFields(prop, schemas){
       prop._computationDetails.inlineCalculations.push(inlineCalcObj);
       // Extract the calculations and store them on the property
       let string = inlineCalcObj.text;
-      if (!string) return;
+      if (!string){
+        delete inlineCalcObj.hash;
+        return;
+      }
+      const inlineCalcHash = cyrb53(inlineCalcObj.text);
+      if (inlineCalcHash === inlineCalcObj.hash){
+        return;
+      }
+      inlineCalcObj.hash = inlineCalcHash;
       inlineCalcObj.inlineCalculations = [];
       let matches = string.matchAll(INLINE_CALCULATION_REGEX);
       for (let match of matches){
@@ -55,17 +64,27 @@ function parseAllCalculationFields(prop, schemas){
 }
 
 function parseCalculation(calcObj){
-  if (!calcObj.calculation) return;
+  // If there is no calculation clear the cached parse node and error
+  if (!calcObj.calculation){
+    delete calcObj.hash;
+    delete calcObj.parseError;
+    return;
+  }
+  const calcHash = cyrb53(calcObj.calculation);
+  // If the cached parse calculation is equal to the calculation, skip
+  if (calcHash === calcObj.hash){
+    return;
+  }
+  calcObj.hash = calcHash;
   try {
-    calcObj._parsedCalculation = parse(calcObj.calculation);
+    calcObj.parseNode = parse(calcObj.calculation);
+    delete calcObj.parseError;
   } catch (e) {
     let error = {
       type: 'evaluation',
       message: prettifyParseError(e),
     };
-    calcObj.errors ?
-      calcObj.errors.push(error) :
-      calcObj.errors = [error];
-    calcObj._parsedCalculation = errorNode.create({error});
+    calcObj.parseError = error;
+    calcObj.parseNode = errorNode.create({error});
   }
 }

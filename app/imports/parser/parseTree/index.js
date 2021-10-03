@@ -1,7 +1,7 @@
 import resolve, { traverse, toString } from '../resolve';
 import error from './error';
 
-const index = {
+const indexNode = {
   create({array, index}) {
 		return {
       parseType: 'index',
@@ -53,7 +53,7 @@ const index = {
       }
     }
     return {
-      result: index.create({
+      result: indexNode.create({
         index,
         array,
       }),
@@ -70,4 +70,4 @@ const index = {
   },
 }
 
-export default index;
+export default indexNode;

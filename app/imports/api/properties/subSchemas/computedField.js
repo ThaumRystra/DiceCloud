@@ -24,6 +24,22 @@ function computedOnlyField(field){
       optional: true,
       removeBeforeCompute: true,
     },
+    // A cache of the parse result of the calculation
+    [`${field}.parseNode`]: {
+      type: Object,
+      optional: true,
+      blackbox: true,
+    },
+    // Set if there was an error parsing the calculation
+    [`${field}.parseError`]: {
+      type: ErrorSchema,
+      optional: true,
+    },
+    // a hash of the calculation to see if the cached values need to be updated
+    [`${field}.hash`]: {
+      type: Number,
+      optional: true,
+    },
     [`${field}.errors`]: {
       type: Array,
       optional: true,

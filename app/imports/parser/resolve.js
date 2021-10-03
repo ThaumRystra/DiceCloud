@@ -3,6 +3,7 @@ import nodeTypeIndex from './parseTree/_index.js';
 // Takes a parse ndoe and computes it to a set detail level
 // returns {result, context}
 export default function resolve(fn, node, scope, context = new Context()){
+  if (!node) return {result: undefined, context};
   let type = nodeTypeIndex[node.parseType];
   if (!type){
     throw new Meteor.Error(`Parse node type: ${node.parseType} not implemented`);
@@ -21,6 +22,7 @@ export default function resolve(fn, node, scope, context = new Context()){
 }
 
 export function toString(node){
+  if (!node) return '';
   let type = nodeTypeIndex[node.parseType];
   if (!type.toString){
     throw new Meteor.Error('toString not implemented on ' + node.parseType);
