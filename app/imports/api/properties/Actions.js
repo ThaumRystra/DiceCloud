@@ -40,6 +40,12 @@ let ActionSchema = createPropertySchema({
       'multipleTargets',
     ],
   },
+  // Some actions have an attack roll
+  attackRoll: {
+    type: 'fieldToCompute',
+    optional: true,
+    defaultValue: 'strength.modifier + proficiencyBonus',
+  },
   // Calculation of how many times this action can be used
   uses: {
     type: 'fieldToCompute',
@@ -128,6 +134,10 @@ const ComputedOnlyActionSchema = createPropertySchema({
     type: Boolean,
     optional: true,
     removeBeforeCompute: true,
+  },
+  attackRoll: {
+    type: 'computedOnlyField',
+    optional: true,
   },
   uses: {
     type: 'computedOnlyField',

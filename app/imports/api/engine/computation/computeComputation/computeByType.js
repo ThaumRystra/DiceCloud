@@ -7,8 +7,8 @@ import container from './computeByType/computeContainer.js';
 export default Object.freeze({
   _variable,
   action,
-  attack: action,
   attribute,
   container,
   slot,
+  spell: action,
 });

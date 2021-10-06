@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ActionSchema } from '/imports/api/properties/Actions.js';
 import { AdjustmentSchema } from '/imports/api/properties/Adjustments.js';
-import { AttackSchema } from '/imports/api/properties/Attacks.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
 import { BuffSchema } from '/imports/api/properties/Buffs.js';
 import { ClassSchema } from '/imports/api/properties/Classes.js';
@@ -29,7 +28,6 @@ import { ItemSchema } from '/imports/api/properties/Items.js';
 const propertySchemasIndex = {
   action: ActionSchema,
   adjustment: AdjustmentSchema,
-  attack: AttackSchema,
   attribute: AttributeSchema,
   buff: BuffSchema,
   class: ClassSchema,

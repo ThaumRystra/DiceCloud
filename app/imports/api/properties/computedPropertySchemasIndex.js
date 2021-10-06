@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ComputedActionSchema } from '/imports/api/properties/Actions.js';
 import { ComputedAdjustmentSchema } from '/imports/api/properties/Adjustments.js';
-import { ComputedAttackSchema } from '/imports/api/properties/Attacks.js';
 import { ComputedAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedBuffSchema } from '/imports/api/properties/Buffs.js';
 import { ComputedClassSchema } from '/imports/api/properties/Classes.js';
@@ -29,7 +28,6 @@ import { ComputedToggleSchema } from '/imports/api/properties/Toggles.js';
 const propertySchemasIndex = {
   action: ComputedActionSchema,
   adjustment: ComputedAdjustmentSchema,
-  attack: ComputedAttackSchema,
   attribute: ComputedAttributeSchema,
   buff: ComputedBuffSchema,
   class: ComputedClassSchema,

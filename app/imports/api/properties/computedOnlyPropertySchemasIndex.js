@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import { ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
 import { ComputedOnlyAdjustmentSchema } from '/imports/api/properties/Adjustments.js';
-import { ComputedOnlyAttackSchema } from '/imports/api/properties/Attacks.js';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedOnlyBuffSchema } from '/imports/api/properties/Buffs.js';
 import { ComputedOnlyClassSchema } from '/imports/api/properties/Classes.js';
@@ -29,7 +28,6 @@ import { ComputedOnlyToggleSchema } from '/imports/api/properties/Toggles.js';
 const propertySchemasIndex = {
   action: ComputedOnlyActionSchema,
   adjustment: ComputedOnlyAdjustmentSchema,
-  attack: ComputedOnlyAttackSchema,
   attribute: ComputedOnlyAttributeSchema,
   buff: ComputedOnlyBuffSchema,
   class: ComputedOnlyClassSchema,

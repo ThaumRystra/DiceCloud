@@ -1,5 +1,5 @@
 <template lang="html">
-  <div :class="attackForm ? 'attack-form' : 'action-form'">
+  <div class="action-form">
     <div class="layout column align-center">
       <icon-picker
         label="Icon"
@@ -26,8 +26,8 @@
     />
 
     <computed-field
-      label="Roll bonus"
-      hint="A number (or calculation which returns a number) that is added to a d20 when making the attack roll"
+      label="Attack Roll Bonus"
+      hint="The bonus to attack if this action has an attack roll"
       :model="model.rollBonus"
       :error-messages="errors.rollBonus"
       @change="({path, value, ack}) =>
@@ -129,11 +129,6 @@
       ResourcesForm,
     },
     mixins: [propertyFormMixin],
-    props: {
-      attackForm: {
-        type: Boolean,
-      },
-    },
     data(){
       let data = {
         actionTypes: [

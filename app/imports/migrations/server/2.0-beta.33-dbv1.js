@@ -74,7 +74,9 @@ const transformsByPropType = {
   ],
   'attack': [
     ...actionTransforms,
-    ...getComputedPropertyTransforms('rollBonus'),
+    ...getComputedPropertyTransforms('rollBonus', 'attackRoll'),
+    //change type to action
+    {from: 'type', to: 'type', up: () => 'action'},
   ],
   'attribute': [
     ...getComputedPropertyTransforms('baseValue'),
@@ -158,11 +160,12 @@ const transformsByPropType = {
   ],
 };
 
-function getComputedPropertyTransforms(key){
+function getComputedPropertyTransforms(key, toKey){
+  if (!toKey) toKey = key;
   return [
     {from: key, to: `${key}.calculation`},
-    {from: `${key}Result`, to: `${key}.value`, up: nanToNull},
-    {from: `${key}Errors`, to: `${key}.errors`, up: trimErrors},
+    {from: `${key}Result`, to: `${toKey}.value`, up: nanToNull},
+    {from: `${key}Errors`, to: `${toKey}.errors`, up: trimErrors},
   ];
 }
 

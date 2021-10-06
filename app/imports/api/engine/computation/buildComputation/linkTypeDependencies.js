@@ -1,6 +1,5 @@
 const linkDependenciesByType = {
   action: linkResources,
-  attack: linkResources,
   attribute: linkAttribute,
   class: linkVariableName,
   classLevel: linkClassLevel,

@@ -15,7 +15,7 @@
           :disabled="model.insufficientResources || !context.editPermission"
           @click.stop="doAction"
         >
-          <template v-if="attack && !rollBonusTooLong">
+          <template v-if="rollBonus && !rollBonusTooLong">
             {{ rollBonus }}
           </template>
           <property-icon
@@ -122,9 +122,6 @@ export default {
       type: Object,
       required: true,
     },
-    attack: {
-      type: Boolean,
-    },
   },
   data(){return {
     activated: undefined,
@@ -133,7 +130,7 @@ export default {
   }},
   computed: {
     rollBonus(){
-      if (!this.attack || !this.model.rollBonus) return;
+      if (!this.model.rollBonus) return;
       return numberToSignedString(this.model.rollBonus.value);
     },
     rollBonusTooLong(){
