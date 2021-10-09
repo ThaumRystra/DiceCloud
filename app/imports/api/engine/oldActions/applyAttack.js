@@ -1,4 +1,4 @@
-import roll from '/imports/parser/roll.js';
+import rollDice from '/imports/parser/rollDice.js';
 
 export default function applyAttack({
   prop,
@@ -6,7 +6,7 @@ export default function applyAttack({
   actionContext,
   creature,
 }){
-  let value = roll(1, 20)[0];
+  let value = rollDice(1, 20)[0];
   actionContext.attackRoll = {value};
   let criticalHitTarget = creature.variables.criticalHitTarget &&
     creature.variables.criticalHitTarget.value || 20;

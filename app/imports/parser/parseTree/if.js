@@ -1,4 +1,4 @@
-import resolve, { traverse, toString } from '../resolve';
+import resolve, { traverse, toString, map } from '../resolve';
 
 const ifNode = {
   create({condition, consequent, alternative}){
@@ -38,6 +38,15 @@ const ifNode = {
     traverse(node.condition, fn);
     traverse(node.consequent, fn);
     traverse(node.alternative, fn);
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.condition = map(node.condition, fn);
+      node.consequent = map(node.consequent, fn);
+      node.alternative = map(node.alternative, fn);
+    }
+    return resultingNode;
   },
 }
 

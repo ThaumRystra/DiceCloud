@@ -25,9 +25,8 @@ let BuffSchema = createPropertySchema({
   target: {
 		type: String,
 		allowedValues: [
-      'self',  // the character who took the buff
-      'each',  // rolled once for `each` target
-      'every', // rolled once and applied to `every` target
+      'self',
+      'target',
     ],
 		defaultValue: 'every',
 	},

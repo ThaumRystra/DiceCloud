@@ -14,11 +14,10 @@ const AdjustmentSchema = createPropertySchema({
 	// Who this adjustment applies to
 	target: {
 		type: String,
-    defaultValue: 'every',
+    defaultValue: 'target',
 		allowedValues: [
-      'self',   // the character who took the Adjustment
-      'each',   // rolled once for `each` target
-      'every',  // rolled once and applied to `every` target
+      'self',
+      'target',
     ],
 	},
 	// The stat this rolls applies to

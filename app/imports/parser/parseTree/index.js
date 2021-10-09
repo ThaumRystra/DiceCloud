@@ -1,4 +1,4 @@
-import resolve, { traverse, toString } from '../resolve';
+import resolve, { traverse, toString, map } from '../resolve';
 import error from './error';
 
 const indexNode = {
@@ -67,6 +67,14 @@ const indexNode = {
     fn(node);
     traverse(node.array, fn);
     traverse(node.index, fn);
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.array = map(node.array, fn);
+      node.index = map(node.index, fn);
+    }
+    return resultingNode;
   },
 }
 

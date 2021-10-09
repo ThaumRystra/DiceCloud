@@ -1,4 +1,4 @@
-import resolve, { toString, traverse } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve.js';
 import constant from './constant.js';
 
 const not = {
@@ -31,7 +31,14 @@ const not = {
   traverse(node, fn){
     fn(node);
     traverse(node.right, fn);
-  }
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.right = map(node.right, fn);
+    }
+    return resultingNode;
+  },
 }
 
 export default not;

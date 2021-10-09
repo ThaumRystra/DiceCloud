@@ -27,7 +27,6 @@ function computeResources(computation, node){
     const att = computation.scope[attConsumed.variableName];
     if (!att._id) return;
     attConsumed.available = att.value;
-    attConsumed.statId = att._id;
     attConsumed.statName = att.name;
   });
 }

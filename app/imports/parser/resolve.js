@@ -43,11 +43,24 @@ export function traverse(node, fn){
   return fn(node);
 }
 
+export function map(node, fn){
+  if (!node) return;
+  let type = nodeTypeIndex[node.parseType];
+  if (!type){
+    console.error(node);
+    throw new Meteor.Error('Not valid parse node');
+  }
+  if (type.map){
+    return type.map(node, fn);
+  }
+  return fn(node);
+}
+
 export class Context {
-  constructor({errors = [], rolls = [], doubleRolls} = {}){
+  constructor({errors = [], rolls = [], options = {}} = {}){
     this.errors = errors;
     this.rolls = rolls;
-    this.doubleRolls = doubleRolls;
+    this.options = options;
   }
   error(e){
     if (!e) return;

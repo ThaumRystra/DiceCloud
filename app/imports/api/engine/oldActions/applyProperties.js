@@ -7,8 +7,8 @@ import applyRoll from '/imports/api/creature/actions/applyRoll.js';
 import applyToggle from '/imports/api/creature/actions/applyToggle.js';
 import applySave from '/imports/api/creature/actions/applySave.js';
 
-function applyProperty(options){
-  let prop = options.prop;
+function applyProperty(args){
+  let prop = args.prop;
   if (prop.type === 'buff'){
     // ignore only applied buffs, don't apply them again
     if (prop.applied === true){
@@ -26,28 +26,27 @@ function applyProperty(options){
   switch (prop.type){
     case 'action':
     case 'spell':
-      applyAction(options);
-      break;
-    case 'attack':
-      applyAction(options);
-      applyAttack(options);
+      if (prop.attackRoll && prop.attackRoll.calculation){
+        applyAttack(args)
+      }
+      applyAction(args);
       break;
     case 'damage':
-      applyDamage(options);
+      applyDamage(args);
       break;
     case 'adjustment':
-      applyAdjustment(options);
+      applyAdjustment(args);
       break;
     case 'buff':
-      applyBuff(options);
+      applyBuff(args);
       return false;
     case 'toggle':
-      return applyToggle(options);
+      return applyToggle(args);
     case 'roll':
-      applyRoll(options);
+      applyRoll(args);
       break;
     case 'savingThrow':
-      return applySave(options);
+      return applySave(args);
   }
   return true;
 }

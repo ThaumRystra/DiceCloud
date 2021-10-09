@@ -71,6 +71,7 @@ const transformsByPropType = {
   'action': actionTransforms,
   'adjustment': [
     ...getComputedPropertyTransforms('amount'),
+    {from: 'target', to: 'target', up: simplifyTarget},
   ],
   'attack': [
     ...actionTransforms,
@@ -89,6 +90,7 @@ const transformsByPropType = {
     ...getComputedPropertyTransforms('duration'),
     ...getInlineComputationTransforms('description'),
     {from: 'value', to: 'total', up: nanToNull},
+    {from: 'target', to: 'target', up: simplifyTarget},
   ],
   'classLevel': [
     ...getInlineComputationTransforms('description'),
@@ -98,6 +100,7 @@ const transformsByPropType = {
   ],
   'damage': [
     ...getComputedPropertyTransforms('amount'),
+    {from: 'target', to: 'target', up: simplifyTarget},
   ],
   'effect': [
     {from: 'calculation', to: 'amount.calculation'},
@@ -128,6 +131,7 @@ const transformsByPropType = {
   ],
   'savingThrow': [
     ...getComputedPropertyTransforms('dc'),
+    {from: 'target', to: 'target', up: simplifyTarget},
   ],
   'skill': [
     ...getComputedPropertyTransforms('baseValue'),
@@ -190,6 +194,14 @@ function stripZero(val){
     return undefined;
   } else {
     return val;
+  }
+}
+
+function simplifyTarget(val){
+  if (val === 'self'){
+    return val;
+  } else {
+    return 'target';
   }
 }
 

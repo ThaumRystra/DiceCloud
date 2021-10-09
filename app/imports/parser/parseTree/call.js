@@ -1,7 +1,7 @@
 import error from './error.js';
 import constant from './constant.js';
 import functions from '/imports/parser/functions.js';
-import resolve, { toString, traverse } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve.js';
 
 const call = {
   create({functionName, args}) {
@@ -103,6 +103,13 @@ const call = {
   traverse(node, fn){
     fn(node);
     node.args.forEach(arg => traverse(arg, fn));
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.args = node.args.map(arg => map(arg, fn));
+    }
+    return resultingNode;
   },
   checkArugments({node, fn, argumentsExpected, resolvedArgs, context}){
     // Check that the number of arguments matches the number expected

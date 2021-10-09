@@ -1,4 +1,4 @@
-import resolve, { toString, traverse } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve.js';
 import constant from './constant.js';
 
 const operator = {
@@ -70,6 +70,14 @@ const operator = {
     fn(node);
     traverse(node.left, fn);
     traverse(node.right, fn);
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.left = map(node.left, fn);
+      node.right = map(node.right, fn);
+    }
+    return resultingNode;
   },
 }
 

@@ -204,12 +204,6 @@ const ComputedOnlyActionSchema = createPropertySchema({
     optional: true,
     removeBeforeCompute: true,
   },
-  'resources.attributesConsumed.$.statId': {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true,
-    removeBeforeCompute: true,
-  },
   'resources.attributesConsumed.$.statName': {
     type: String,
     optional: true,

@@ -28,6 +28,7 @@
     </div>
     <smart-select
       label="Type"
+      clearable
       :items="skillTypes"
       :value="model.skillType"
       :error-messages="errors.skillType"

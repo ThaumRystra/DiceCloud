@@ -125,7 +125,7 @@ export function insertCreatureLogWork({log, creature, method}){
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer){
-    method.unblock();
+    method?.unblock();
     removeOldLogs(creature._id);
     logWebhook({log, creature});
   }

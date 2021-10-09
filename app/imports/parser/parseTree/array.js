@@ -1,4 +1,4 @@
-import resolve, { toString, traverse } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve.js';
 import constant from './constant.js';
 
 const array = {
@@ -40,6 +40,13 @@ const array = {
   traverse(node, fn){
     fn(node);
     node.values.forEach(value => traverse(value, fn));
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.values = node.values.map(value => map(value, fn));
+    }
+    return resultingNode;
   },
 }
 

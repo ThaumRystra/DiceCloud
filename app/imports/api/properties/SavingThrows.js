@@ -20,9 +20,8 @@ let SavingThrowSchema = createPropertySchema({
 		type: String,
     defaultValue: 'every',
 		allowedValues: [
-      'self',   // the character who took the action
-      'each',   // rolled once for `each` target
-      'every',  // rolled once and applied to `every` target
+      'self',
+      'target',
     ],
 	},
   // The variable name of save to roll

@@ -1,7 +1,7 @@
-import resolve, { toString, traverse } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve.js';
 import error from './error.js';
 import rollArray from './rollArray.js';
-import roll from '/imports/parser/roll.js';
+import rollDice from '/imports/parser/rollDice.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 const rollNode = {
@@ -39,7 +39,7 @@ const rollNode = {
       return errorResult('Dice size is not an integer', node, context);
     }
     let number = left.value;
-    if (context.doubleRolls){
+    if (context.options.doubleRolls){
       number *= 2;
     }
     if (number > STORAGE_LIMITS.diceRollValuesCount){
@@ -47,7 +47,7 @@ const rollNode = {
       return errorResult(message, node, context);
     }
     let diceSize = right.value;
-    let values = roll(number, diceSize);
+    let values = rollDice(number, diceSize);
     if (context){
       context.storeRoll({number, diceSize, values});
     }
@@ -68,6 +68,14 @@ const rollNode = {
     fn(node);
     traverse(node.left, fn);
     traverse(node.right, fn);
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.left = map(node.left, fn);
+      node.right = map(node.right, fn);
+    }
+    return resultingNode;
   },
 }
 

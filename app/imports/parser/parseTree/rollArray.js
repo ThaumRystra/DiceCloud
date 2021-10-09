@@ -27,9 +27,6 @@ const rollArray = {
       context,
     };
   },
-  traverse(node, fn){
-    return fn(node);
-  }
 }
 
 export default rollArray;

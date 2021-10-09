@@ -45,21 +45,17 @@ const damageProperty = new ValidatedMethod({
 });
 
 export function damagePropertyWork({property, operation, value}){
+  let damage, newValue;
   if (operation === 'set'){
-    let currentValue = property.value;
+    const currentValue = property.value;
     // Set represents what we want the value to be after damage
     // So we need the actual damage to get to that value
-    let damage = currentValue - value;
+    damage = currentValue - value;
     // Damage can't exceed total value
     if (damage > currentValue) damage = currentValue;
     // Damage must be positive
     if (damage < 0) damage = 0;
-    CreatureProperties.update(property._id, {
-      $set: {damage}
-    }, {
-      selector: property
-    });
-    return currentValue - damage;
+    newValue = property.total - damage;
   } else if (operation === 'increment'){
     let currentValue = property.value - (property.damage || 0);
     let currentDamage = property.damage;
@@ -68,13 +64,16 @@ export function damagePropertyWork({property, operation, value}){
     if (increment > currentValue) increment = currentValue;
     // Can't decrease damage below zero
     if (-increment > currentDamage) increment = -currentDamage;
-    CreatureProperties.update(property._id, {
-      $inc: {damage: increment}
-    }, {
-      selector: property
-    });
-    return increment;
+    damage = currentDamage + increment;
+    newValue = property.total - damage;
   }
+
+  // Write the results
+  CreatureProperties.update(property._id, {
+    $set: {damage, value: newValue}
+  }, {
+    selector: property
+  });
 }
 
 export default damageProperty;

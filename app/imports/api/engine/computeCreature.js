@@ -1,11 +1,13 @@
 import buildCreatureComputation from './computation/buildCreatureComputation.js';
 import computeCreatureComputation from './computation/computeCreatureComputation.js';
 import writeAlteredProperties from './computation/writeComputation/writeAlteredProperties.js';
+import writeScope from './computation/writeComputation/writeScope.js';
 
 export default function computeCreature(creatureId){
   const computation = buildCreatureComputation(creatureId);
   computeCreatureComputation(computation);
   writeAlteredProperties(computation);
+  writeScope(creatureId, computation.scope);
 }
 
 // For now just recompute the whole creature, TODO only recompute a single

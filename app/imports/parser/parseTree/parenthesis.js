@@ -1,4 +1,4 @@
-import resolve, { toString, traverse } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve.js';
 
 const parenthesis = {
   create({content}) {
@@ -28,7 +28,14 @@ const parenthesis = {
   traverse(node, fn){
     fn(node);
     traverse(node.content, fn);
-  }
+  },
+  map(node, fn){
+    const resultingNode = fn(node);
+    if (resultingNode === node){
+      node.content = map(node.content, fn);
+    }
+    return resultingNode;
+  },
 }
 
 export default parenthesis;
