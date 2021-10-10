@@ -146,6 +146,7 @@ Creatures.attachSchema(CreatureSchema);
 
 
 import '/imports/api/creature/creatures/methods/index.js';
+import '/imports/api/engine/actions/doAction.js';
 
 export default Creatures;
 export { CreatureSchema };

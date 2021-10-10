@@ -1,4 +1,4 @@
-import evaluateCalculation from '../utility/evaluateCalculation.js';
+import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
 import logErrors from './logErrors.js';
 
 export default function recalculateCalculation(calc, scope, log, context){
