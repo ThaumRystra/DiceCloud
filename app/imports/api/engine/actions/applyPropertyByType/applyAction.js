@@ -35,6 +35,9 @@ export default function applyAction(node, {creature, targets, scope, log}){
 function applyAttackWithoutTarget({prop, scope, log}){
   delete scope['$attackHit'];
   delete scope['$attackMiss'];
+  delete scope['$criticalHit'];
+  delete scope['$criticalMiss'];
+  delete scope['$attackRoll'];
 
   recalculateCalculation(prop.rollBonus, scope, log);
 
@@ -54,18 +57,22 @@ function applyAttackWithoutTarget({prop, scope, log}){
 function applyAttackToTarget({prop, target, scope, log}){
   delete scope['$attackHit'];
   delete scope['$attackMiss'];
+  delete scope['$criticalHit'];
+  delete scope['$criticalMiss'];
+  delete scope['$attackDiceRoll'];
+  delete scope['$attackRoll'];
 
   recalculateCalculation(prop.rollBonus, scope, log);
 
   const value = rollDice(1, 20)[0];
-  scope['$attackRoll'] = {value};
+  scope['$attackDiceRoll'] = {value};
   const criticalHitTarget = scope.criticalHitTarget?.value || 20;
   const criticalHit = value >= criticalHitTarget;
   const criticalMiss = value === 1;
   if (criticalHit) scope['$criticalHit'] = {value: true};
   if (criticalMiss) scope['$criticalMiss'] = {value: true};
   const result = value + prop.rollBonus.value;
-  scope['$toHit'] = {value: result};
+  scope['$attackRoll'] = {value: result};
   if (target.variables.armor){
     const armor = target.variables.armor.value;
     const name = criticalHit ? 'Critical Hit!' :

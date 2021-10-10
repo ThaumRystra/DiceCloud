@@ -1,51 +1,32 @@
-// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
+import applyProperty from '../applyProperty.js';
 import dealDamage from '/imports/api/creature/creatureProperties/methods/dealDamage.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
-import { CompilationContext } from '/imports/parser/parser.js';
+import recalculateCalculation from './shared/recalculateCalculation.js';
+import { Context } from '/imports/parser/resolve.js';
 
-export default function applyDamage({
-  prop,
-  creature,
-  targets,
-  actionContext,
-  log,
+export default function applyDamage(node, {
+  creature, targets, scope, log
 }){
-  let damageTargets = prop.target === 'self' ? [creature] : targets;
-  let scope = {
-    ...creature.variables,
-    ...actionContext,
+  const applyChildren = function(){
+    node.children.forEach(child => applyProperty(child, {
+      creature, targets, scope, log
+    }));
   };
-  // Add the target's variables to the scope
-  if (targets.length === 1){
-    scope.target = targets[0].variables;
-  }
+
+  const prop = node.node;
+  let damageTargets = prop.target === 'self' ? [creature] : targets;
   // Determine if the hit is critical
-  let criticalHit = !!(
-    actionContext.criticalHit &&
-    actionContext.criticalHit.value &&
+  let criticalHit = scope['$criticalHit']?.value &&
     prop.damageType !== 'healing' // Can't critically heal
-  );
+  ;
   // Double the damage rolls if the hit is critical
-  let context = new CompilationContext({
-    doubleRolls: criticalHit,
+  let context = new Context({
+    options: {doubleRolls: criticalHit},
   });
+  recalculateCalculation(prop.amount, scope, log, context);
 
-  // Compute the roll the first time, logging any errors
-  var {result} = evaluateString({
-    string: prop.amount,
-    scope,
-    fn: 'reduce',
-    context
-  });
-
-  // If the result is an error bail out now
-  if (result.constructor.name === 'ErrorNode'){
-    log.content.push({
-      name: 'Damage error',
-      value: result.toString(),
-    });
-    return;
-  }
+  // If we didn't end up with a finite amount, give up
+  if (!isFinite(prop.amount?.value)) return applyChildren();
 
   // Memoise the damage suffix for the log
   let suffix = (criticalHit ? ' critical ' : ' ') +
@@ -57,28 +38,11 @@ export default function applyDamage({
     damageTargets.forEach(target => {
       let name = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
-      // Reroll the damage if needed
-      if (prop.target === 'each'){
-        ({result, context} = evaluateString({
-          string: prop.amount,
-          scope,
-          fn: 'reduce'
-        }));
-      }
-      // If the result is an error or not a number bail out now
-      if (result.constructor.name === 'ErrorNode' || !result.isNumber){
-        log.content.push({
-          name: 'Damage error',
-          value: result.toString(),
-        });
-        return;
-      }
-
       // Deal the damage to the target
       let damageDealt = dealDamage.call({
         creatureId: target._id,
         damageType: prop.damageType,
-        amount: result.value,
+        amount: prop.amount.value,
       });
 
       // Log the damage done
@@ -109,7 +73,8 @@ export default function applyDamage({
     // There are no targets, just log the result
     log.content.push({
       name: prop.damageType === 'healing' ? 'Healing' : 'Damage',
-      value: result.toString() + suffix,
+      value: prop.amount.value + suffix,
     });
   }
+  return applyChildren();
 }

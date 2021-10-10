@@ -1,15 +1,90 @@
+import SimpleSchema from 'simpl-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import applyProperty from './applyProperty.js';
 import computeCreature from '/imports/api/engine/computeCreature.js';
 
-export default function doAction({actionId, targetIds, method}){
+const doAction = new ValidatedMethod({
+  name: 'creatureProperties.doAction',
+  validate: new SimpleSchema({
+    actionId: SimpleSchema.RegEx.Id,
+    targetIds: {
+      type: Array,
+      defaultValue: [],
+      maxCount: 20,
+      optional: true,
+    },
+    'targetIds.$': {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 10,
+    timeInterval: 5000,
+  },
+  run({actionId, targetIds = []}) {
+    let action = CreatureProperties.findOne(actionId);
+		// Check permissions
+    let creature = getRootCreatureAncestor(action);
+
+    assertEditPermission(creature, this.userId);
+
+    // Get all the targets and make sure we can edit them
+    let targets = [];
+    targetIds.forEach(targetId => {
+      let target = Creatures.findOne(targetId);
+      assertEditPermission(target, this.userId);
+      targets.push(target);
+    });
+
+    // Fetch all the action's ancestor creatureProperties
+    const ancestorIds = [];
+    action.ancestors.forEach(ref => {
+      if (ref.collection === 'creatureProperties') {
+        ancestorIds.push(ref.id);
+      }
+    });
+
+    // Get cursor of ancestors
+    const ancestors = CreatureProperties.find({
+      _id: {$in: ancestorIds},
+    }, {
+      sort: {order: 1},
+    });
+
+    // Get cursor of the properties
+    const properties = CreatureProperties.find({
+      $or: [{_id: action._id}, {'ancestors.id': action._id}],
+      removed: {$ne: true},
+    }, {
+      sort: {order: 1},
+    });
+
+    // Do the action
+    doActionWork({creature, targets, properties, ancestors, method: this});
+
+    // Recompute all involved creatures
+    Meteor.defer(() => computeCreature(creature._id));
+    targets.forEach(target => {
+      Meteor.defer(() => computeCreature(target._id));
+    });
+  },
+});
+
+export default doAction;
+
+export function doActionWork({
+  creature, targets, properties, ancestors, method
+}){
   // get the docs
-  const {
-    creature, targets, properties, ancestors
-  } = fetchActionDocs(actionId, targetIds);
   const ancestorScope = getAncestorScope(ancestors);
   const propertyForest = nodeArrayToTree(properties);
   if (propertyForest.length !== 1){
@@ -37,60 +112,6 @@ export default function doAction({actionId, targetIds, method}){
 
   // Insert the log
   insertCreatureLogWork({log, creature, method});
-
-  // Recompute the creature and targets
-  Meteor.defer(() => computeCreature(creature._id));
-  targetIds.forEach(targetId => {
-    Meteor.defer(() => computeCreature(targetId));
-  });
-}
-
-function fetchActionDocs(actionId, targetIds){
-  // Fetch the action with ancestors only
-  const action = CreatureProperties.findOne({
-    _id: actionId,
-    removed: {$ne: true},
-  }, {
-    fields: {ancestors: 1}
-  });
-  if (!action) throw new Meteor.Error('The specified action was not found');
-
-  // Fetch all the action's ancestor creatureProperties
-  const ancestorIds = [];
-  action.ancestors.forEach(ref => {
-    if (ref.collection === 'creatureProperties') {
-      ancestorIds.push(ref.id);
-    }
-  });
-  // Get cursor of ancestors
-  const ancestors = CreatureProperties.find({
-    _id: {$in: ancestorIds},
-  }, {
-    sort: {order: 1},
-  });
-
-  // Fetch the action's top level ancestor creature
-  const creature = Creatures.findOne(action.ancestors[0].id, {
-    fields: {variables: 1},
-  });
-  if (!creature) throw new Meteor.Error('The creature for this action was not found');
-
-  // Fetch all the target creatures
-  const targets = Creatures.find({
-    _id: targetIds,
-  }, {
-    fields: {variables: 1},
-  }).fetch();
-
-  // Get cursor of the properties
-  const properties = CreatureProperties.find({
-    $or: [{_id: actionId}, {'ancestors.id': actionId}],
-    removed: {$ne: true},
-  }, {
-    sort: {order: 1},
-  });
-
-  return {action, creature, targets, properties, ancestors}
 }
 
 // Assumes ancestors are in tree order already
