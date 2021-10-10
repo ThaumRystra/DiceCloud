@@ -168,12 +168,6 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 	}
 });
 
-Meteor.users.isAdmin = function(userId){
-	userId = this.userId || userId;
-	let user = Meteor.users.findOne(userId);
-	return user && user.roles.includes('admin');
-}
-
 Meteor.users.canPickUsername = new ValidatedMethod({
 	name: 'users.canPickUsername',
 	validate: userSchema.pick('username').validator(),
