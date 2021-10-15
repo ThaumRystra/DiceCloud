@@ -13,22 +13,31 @@
           $emit('change', {path: ['baseValue', ...path], value, ack})"
       />
     </div>
-    <div class="layout wrap">
-      <text-field
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="Use this name in calculations to reference this attribute"
-        :error-messages="errors.variableName"
-        @change="change('variableName', ...arguments)"
-      />
-    </div>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          hint="Use this name in calculations to reference this attribute"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <smart-select
       label="Type"
       :items="attributeTypes"

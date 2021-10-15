@@ -4,14 +4,23 @@
  */
 import { get, toPath } from 'lodash';
 
-function resolvePath(model, path){
+function resolvePath(model, path, set){
   let arrayPath = toPath(path);
   if (arrayPath.length === 1){
     return { object: model, key: arrayPath[0] };
   }
-  let objectPath = arrayPath.slice(0, -1);
   let key = arrayPath.slice(-1);
-  let object = get(model, objectPath);
+  let objectPath = arrayPath.slice(0, -1);
+  let object = model;
+  // Ensure that nested objects exist before navigating them
+  objectPath.forEach(pathKey => {
+    let newObject = object[pathKey];
+    if (!newObject){
+      newObject = {};
+      set(object, pathKey, newObject);
+    }
+    object = newObject;
+  });
   return {object, key};
 }
 
@@ -41,7 +50,8 @@ const schemaFormMixin = {
 	methods: {
     // Sets the value at the given path
 		change({path, value, ack}){
-      let {object, key} = resolvePath(this.model, path);
+      let {object, key} = resolvePath(this.model, path, this.$set);
+
 			this.$set(object, key, value);
 			if (ack) ack();
 		},
@@ -54,7 +64,7 @@ const schemaFormMixin = {
 			if (ack) ack();
     },
     pull({path, ack}){
-      let {object, key} = resolvePath(this.model, path);
+      let {object, key} = resolvePath(this.model, path, this.$set);
       if (!object || !object.splice){
         throw `${path.join('.')} is ${object}, doesnt have "splice"`
       }

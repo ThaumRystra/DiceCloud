@@ -38,7 +38,7 @@ export default function migrateProperty({collection, reversed, prop}){
     {from: 'dependencies'}
   ];
   let migratedProp = transformFields(prop, transforms, reversed);
-  const schema = collection.simpleSchema({type: prop.type});
+  const schema = collection.simpleSchema({type: migratedProp.type});
   // Only clean if the schema version matches our destination version
   if(!reversed  && SCHEMA_VERSION === 1){
     try {
@@ -80,7 +80,9 @@ const transformsByPropType = {
     {from: 'type', to: 'type', up: () => 'action'},
   ],
   'attribute': [
-    ...getComputedPropertyTransforms('baseValue'),
+    {from: 'baseValueCalculation', to: 'baseValue.calculation'},
+    {from: 'baseValue', to: 'baseValue.value', up: nanToNull},
+    {from: 'baseValueErrors', to: 'baseValue.errors', up: trimErrors},
     ...getComputedPropertyTransforms('spellSlotLevel'),
     ...getInlineComputationTransforms('description'),
     {from: 'value', to: 'total', up: nanToNull},

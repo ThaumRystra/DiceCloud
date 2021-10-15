@@ -121,7 +121,7 @@
 		},
     meteor: {
       baseEffects(){
-        if (this.context.creatureId){
+        if (this.context.creatureId && this.model.variableName){
           let creatureId = this.context.creatureId;
           return CreatureProperties.find({
             'ancestors.id': creatureId,
@@ -142,7 +142,7 @@
         }
       },
       effects(){
-        if (this.context.creatureId){
+        if (this.context.creatureId && this.model.variableName){
           let creatureId = this.context.creatureId;
           return CreatureProperties.find({
             'ancestors.id': creatureId,

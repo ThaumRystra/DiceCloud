@@ -3,9 +3,9 @@ import walkDown from '/imports/api/engine/computation/utility/walkdown.js';
 export default function computeInactiveStatus(node){
   const prop = node.node;
   if (isActive(prop)) return;
-  // Unequipped items disable their children, but are not disabled themselves
-  // All notes do the same
-  if (prop.type !== 'item' && prop.type !== 'note' ){
+  // Unequipped items, notes, and actions disable their children,
+  // but are not disabled themselves
+  if (prop.type !== 'item' && prop.type !== 'note' && prop.type !== 'action' ){
     prop.inactive = true;
     prop.deactivatedBySelf = true;
   }
@@ -23,6 +23,7 @@ function isActive(prop){
     case 'item': return !!prop.equipped;
     case 'spell': return !!prop.prepared || !!prop.alwaysPrepared;
     case 'note': return false;
+    case 'action': return false;
     default: return true;
   }
 }

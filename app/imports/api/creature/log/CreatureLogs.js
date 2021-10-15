@@ -121,6 +121,7 @@ export function insertCreatureLogWork({log, creature, method}){
   if (typeof log === 'string'){
     log = {content: [{value: log}]};
   }
+  if (!log.content?.length) return;
   log.date = new Date();
   // Insert it
   let id = CreatureLogs.insert(log);

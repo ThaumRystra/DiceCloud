@@ -1,7 +1,7 @@
 import constant from './constant.js';
 
 const rollArray = {
-  constructor({values, diceSize, diceNum}) {
+  create({values, diceSize, diceNum}) {
 		return {
       parseType: 'rollArray',
       values,

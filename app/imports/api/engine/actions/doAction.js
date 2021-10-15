@@ -72,9 +72,9 @@ const doAction = new ValidatedMethod({
     doActionWork({creature, targets, properties, ancestors, method: this});
 
     // Recompute all involved creatures
-    Meteor.defer(() => computeCreature(creature._id));
+    computeCreature(creature._id);
     targets.forEach(target => {
-      Meteor.defer(() => computeCreature(target._id));
+      computeCreature(target._id);
     });
   },
 });

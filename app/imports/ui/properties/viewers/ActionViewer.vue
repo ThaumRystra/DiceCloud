@@ -119,7 +119,7 @@
 <script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
-//import doAction from '/imports/api/creature/actions/doAction.js';
+import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';

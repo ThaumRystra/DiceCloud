@@ -3,11 +3,11 @@ import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
 
 export default function applySavingThrow(node, {creature, targets, scope, log}){
-  let saveTargets = prop.target === 'self' ? [creature] : targets;
-
   const prop = node.node;
 
-  recalculateCalculation(prop.dc, scope, log, context);
+  let saveTargets = prop.target === 'self' ? [creature] : targets;
+
+  recalculateCalculation(prop.dc, scope, log);
 
   const dc = (prop.dc?.value);
   if (!isFinite(dc)){

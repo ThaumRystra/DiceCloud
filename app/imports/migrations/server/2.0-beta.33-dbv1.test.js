@@ -13,7 +13,6 @@ const exampleAction = {
           '_id':'FaK6jXEj3pSe7mNuu',
           'quantity': '1',
           'variableName':'HunterTech',
-          'statId':'qccf9j5tfNJjZ3GGn',
           'statName':'Hunter\'s Technique',
           'available':5
        }],

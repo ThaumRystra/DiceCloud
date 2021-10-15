@@ -22,7 +22,7 @@ const rollNode = {
   },
   toString(node){
     if (
-      node.left.parseType === 'number' && node.left.value === 1
+      node.left.valueType === 'number' && node.left.value === 1
     ){
       return `d${toString(node.right)}`;
     } else {
@@ -32,10 +32,10 @@ const rollNode = {
   roll(node, scope, context){
     const {result: left} = resolve('reduce', node.left, scope, context);
     const {result: right} = resolve('reduce', node.right, scope, context);
-    if (left.parseType !== 'number' && !Number.isInteger(left.value)){
+    if (left.valueType !== 'number' && !Number.isInteger(left.value)){
       return errorResult('Number of dice is not an integer', node, context);
     }
-    if (!right.isInteger){
+    if (right.valueType !== 'number' && !Number.isInteger(right.value)){
       return errorResult('Dice size is not an integer', node, context);
     }
     let number = left.value;
@@ -49,7 +49,7 @@ const rollNode = {
     let diceSize = right.value;
     let values = rollDice(number, diceSize);
     if (context){
-      context.storeRoll({number, diceSize, values});
+      context.rolls.push({number, diceSize, values});
     }
     return {
       result: rollArray.create({

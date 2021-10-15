@@ -1,42 +1,68 @@
 <template lang="html">
   <div class="action-form">
-    <div class="layout column align-center">
-      <icon-picker
-        label="Icon"
-        :value="model.icon"
-        :error-messages="errors.icon"
-        @change="change('icon', ...arguments)"
-      />
-    </div>
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-    <smart-select
-      label="Action type"
-      :items="actionTypes"
-      :value="model.actionType"
-      :error-messages="errors.actionType"
-      :menu-props="{auto: true, lazy: true}"
-      :hint="actionTypeHints[model.actionType]"
-      @change="change('actionType', ...arguments)"
-    />
+    <v-row
+      justify="center"
+      class="mb-3"
+    >
+      <v-col cols="1">
+        <icon-color-menu
+          :model="model"
+          :errors="errors"
+          @change="e => $emit('change', e)"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          ref="focusFirst"
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Action type"
+          :items="actionTypes"
+          :value="model.actionType"
+          :error-messages="errors.actionType"
+          :menu-props="{auto: true, lazy: true}"
+          :hint="actionTypeHints[model.actionType]"
+          @change="change('actionType', ...arguments)"
+        />
+      </v-col>
+    </v-row>
 
-    <computed-field
-      label="Attack Roll Bonus"
-      hint="The bonus to attack if this action has an attack roll"
-      :model="model.rollBonus"
-      :error-messages="errors.rollBonus"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['rollBonus', ...path], value, ack})"
-    />
+    <v-slide-x-transition mode="out-in">
+      <v-switch
+        v-if="!isAttack"
+        label="Attack roll"
+        :value="attackSwitch"
+        @change="e => attackSwitch = e"
+      />
+      <computed-field
+        v-else
+        label="To Hit"
+        prefix="1d20 + "
+        hint="The bonus to attack if this action has an attack roll"
+        :model="model.attackRoll"
+        :error-messages="errors.attackRoll"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['attackRoll', ...path], value, ack})"
+      />
+    </v-slide-x-transition>
 
     <inline-computation-field
       label="Summary"
-      hint="This will appear in the action card in the character sheet"
+      hint="This will appear in the action card in the character sheet, summarise what the action does"
       :model="model.summary"
       :error-messages="errors.summary"
       @change="({path, value, ack}) =>
@@ -45,7 +71,7 @@
 
     <inline-computation-field
       label="Description"
-      hint="The rest of the description that doesn't fit in the summary goes here"
+      hint="This text will be displayed in the log when the action is taken"
       :model="model.description"
       :error-messages="errors.description"
       @change="({path, value, ack}) =>
@@ -82,25 +108,36 @@
           @change="change('target', ...arguments)"
         />
         -->
-        <div class="layout wrap">
-          <computed-field
-            label="Uses"
-            hint="How many times this action can be used before needing to be reset"
-            :model="model.uses"
-            :error-messages="errors.uses"
-            @change="({path, value, ack}) =>
-              $emit('change', {path: ['uses', ...path], value, ack})"
-          />
-          <text-field
-            label="Uses used"
-            type="number"
-            hint="How many times this action has already been used: should be 0 in most cases"
-            style="flex-basis: 300px;"
-            :value="model.usesUsed"
-            :error-messages="errors.uses"
-            @change="change('usesUsed', ...arguments)"
-          />
-        </div>
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <computed-field
+              label="Uses"
+              hint="How many times this action can be used before needing to be reset"
+              class="mr-2"
+              :model="model.uses"
+              :error-messages="errors.uses"
+              @change="({path, value, ack}) =>
+                $emit('change', {path: ['uses', ...path], value, ack})"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <text-field
+              label="Uses used"
+              type="number"
+              hint="How many times this action has already been used: should be 0 in most cases"
+              style="flex-basis: 300px;"
+              :value="model.usesUsed"
+              :error-messages="errors.uses"
+              @change="change('usesUsed', ...arguments)"
+            />
+          </v-col>
+        </v-row>
         <smart-select
           label="Reset"
           clearable
@@ -121,12 +158,14 @@
   import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
 
   export default {
     components: {
       FormSection,
       FormSections,
       ResourcesForm,
+      IconColorMenu,
     },
     mixins: [propertyFormMixin],
     data(){
@@ -176,6 +215,7 @@
             value: 'longRest',
           }
         ],
+        attackSwitch: false,
       };
       data.actionTypeHints = {};
       data.actionTypes.forEach(type => {
@@ -183,6 +223,11 @@
       });
       return data;
     },
+    computed: {
+      isAttack(){
+        return this.attackSwitch || !!this.model.attackRoll?.calculation
+      }
+    }
   };
 </script>
 

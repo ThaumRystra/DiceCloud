@@ -25,7 +25,6 @@ const dealDamage = new ValidatedMethod({
     // permissions
     let creature = Creatures.findOne(creatureId, {
       fields: {
-        damageMultipliers: 1,
         owner: 1,
         readers: 1,
         writers: 1,
@@ -33,37 +32,42 @@ const dealDamage = new ValidatedMethod({
     });
     assertEditPermission(creature, this.userId);
 
-    // Get all the health bars and do damage to them
-    let healthBars = CreatureProperties.find({
-      'ancestors.id': creatureId,
-      type: 'attribute',
-      attributeType:'healthBar',
-      removed: {$ne: true},
-      inactive: {$ne: true},
-    }, {
-      sort: {order: -1},
-    });
-    let multiplier = creature.damageMultipliers[damageType];
-    if (multiplier === undefined) multiplier = 1;
-    let totalDamage = Math.floor(amount * multiplier);
-    let damageLeft = totalDamage;
-    if (damageType === 'healing') damageLeft = -totalDamage;
-    let propertyIds = [];
-    let propertiesDependedAponIds = [];
-    healthBars.forEach(healthBar => {
-      if (damageLeft === 0) return;
-      let damageAdded = damagePropertyWork({
-        property: healthBar,
-        operation: 'increment',
-        value: damageLeft,
-      });
-      damageLeft -= damageAdded;
-      propertyIds.push(healthBar._id);
-      propertiesDependedAponIds.push(...healthBar.dependencies);
-    });
+    const totalDamage = dealDamageWork({creature, damageType, amount})
     computeCreature(creatureId);
     return totalDamage;
   },
 });
+
+export function dealDamageWork({creature, damageType, amount}){
+  console.log({damageType, amount})
+  // Get all the health bars and do damage to them
+  let healthBars = CreatureProperties.find({
+    'ancestors.id': creature._id,
+    type: 'attribute',
+    attributeType:'healthBar',
+    removed: {$ne: true},
+    inactive: {$ne: true},
+  }, {
+    sort: {order: -1},
+  });
+  //let multiplier = creature.damageMultipliers[damageType];
+  //if (multiplier === undefined) multiplier = 1;
+  //let totalDamage = Math.floor(amount * multiplier);
+  const totalDamage = amount;
+  let damageLeft = totalDamage;
+  if (damageType === 'healing') damageLeft = -totalDamage;
+  let propertyIds = [];
+  healthBars.forEach(healthBar => {
+    if (damageLeft === 0) return;
+    let damageAdded = damagePropertyWork({
+      property: healthBar,
+      operation: 'increment',
+      value: damageLeft,
+    });
+    damageLeft -= damageAdded;
+    propertyIds.push(healthBar._id);
+  });
+  return totalDamage;
+}
 
 export default dealDamage;

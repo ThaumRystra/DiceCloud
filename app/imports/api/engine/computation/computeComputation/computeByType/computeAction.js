@@ -2,6 +2,9 @@ export default function computeAction(computation, node){
   const prop = node.data;
   if (prop.uses){
     prop.usesLeft = prop.uses.value - (prop.usesUsed || 0);
+    if (!prop.usesLeft){
+      prop.insufficientResources = true;
+    }
   }
   computeResources(computation, node);
   if (!prop.resources) return;

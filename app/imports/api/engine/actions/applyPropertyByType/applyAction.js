@@ -9,15 +9,22 @@ import { damagePropertyWork } from '/imports/api/creature/creatureProperties/met
 export default function applyAction(node, {creature, targets, scope, log}){
   const prop = node.node;
   if (prop.target === 'self') targets = [creature];
+
+  // Log the name and description
+  let content = { name: prop.name };
+  if (prop.description?.text){
+    recalculateInlineCalculations(prop.description, scope, log);
+    content.value = prop.description.value;
+  }
+  if (content.name || content.value){
+    log.content.push(content);
+  }
+
+  // Spend the resources
   const failed = spendResources({prop, log, scope});
   if (failed) return;
 
-  let content = { name: prop.name };
-  if (prop.summary?.text){
-    recalculateInlineCalculations(prop.summary, scope, log);
-    content.value = prop.summary.value;
-  }
-  log.content.push(content);
+  // Attack if there is an attack roll
   if (prop.attackRoll && prop.attackRoll.calculation){
     if (targets.length){
       targets.forEach(target => {
@@ -29,6 +36,8 @@ export default function applyAction(node, {creature, targets, scope, log}){
       applyAttackWithoutTarget({prop, scope, log});
       applyChildren(node, {creature, targets, scope, log});
     }
+  } else {
+    applyChildren(node, {creature, targets, scope, log});
   }
 }
 
@@ -39,18 +48,18 @@ function applyAttackWithoutTarget({prop, scope, log}){
   delete scope['$criticalMiss'];
   delete scope['$attackRoll'];
 
-  recalculateCalculation(prop.rollBonus, scope, log);
+  recalculateCalculation(prop.attackRoll, scope, log);
 
   let value = rollDice(1, 20)[0];
   scope['$attackRoll'] = {value};
   let criticalHitTarget = scope.criticalHitTarget?.value || 20;
   let criticalHit = value >= criticalHitTarget;
   if (criticalHit) scope['$criticalHit'] = {value: true};
-  let result = value + prop.rollBonus.value;
+  let result = value + prop.attackRoll.value;
   scope['$toHit'] = {value: result};
   log.content.push({
     name: criticalHit ? 'Critical Hit!' : 'To Hit',
-    value: `1d20 {${value}} + ${prop.rollBonus.value} = ` + result,
+    value: `1d20 [${value}] + ${prop.attackRoll.value} = ` + result,
   });
 }
 
@@ -62,7 +71,7 @@ function applyAttackToTarget({prop, target, scope, log}){
   delete scope['$attackDiceRoll'];
   delete scope['$attackRoll'];
 
-  recalculateCalculation(prop.rollBonus, scope, log);
+  recalculateCalculation(prop.attackRoll, scope, log);
 
   const value = rollDice(1, 20)[0];
   scope['$attackDiceRoll'] = {value};
@@ -71,7 +80,7 @@ function applyAttackToTarget({prop, target, scope, log}){
   const criticalMiss = value === 1;
   if (criticalHit) scope['$criticalHit'] = {value: true};
   if (criticalMiss) scope['$criticalMiss'] = {value: true};
-  const result = value + prop.rollBonus.value;
+  const result = value + prop.attackRoll.value;
   scope['$attackRoll'] = {value: result};
   if (target.variables.armor){
     const armor = target.variables.armor.value;
@@ -81,7 +90,7 @@ function applyAttackToTarget({prop, target, scope, log}){
       'Miss!'
     log.content.push({
       name,
-      value: `1d20 {${value}} + ${prop.rollBonus.value} = ` + result,
+      value: `1d20 {${value}} + ${prop.attackRoll.value} = ` + result,
     });
     if ((result > armor) || (criticalHit)){
       scope['$attackHit'] = true;
@@ -95,7 +104,7 @@ function applyAttackToTarget({prop, target, scope, log}){
     });
     log.content.push({
       name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical miss!' : 'To Hit',
-      value: `1d20 {${value}} + ${prop.rollBonus.value} = ` + result,
+      value: `1d20 {${value}} + ${prop.attackRoll.value} = ` + result,
     });
   }
 }
@@ -106,7 +115,7 @@ function applyChildren(node, args){
 
 function spendResources({prop, log, scope}){
   // Check Uses
-  if (prop.usesUsed >= prop.uses?.value){
+  if (prop.usesLeft < 0){
     log.content.push({
       name: 'Error',
       value: `${prop.name || 'action'} does not have enough uses left`,
@@ -127,6 +136,7 @@ function spendResources({prop, log, scope}){
   let gainLog = [];
   try {
     prop.resources.itemsConsumed.forEach(itemConsumed => {
+      recalculateCalculation(itemConsumed.quantity, scope, log);
       if (!itemConsumed.itemId){
         throw 'No ammo was selected for this prop';
       }
@@ -166,7 +176,7 @@ function spendResources({prop, log, scope}){
   itemQuantityAdjustments.forEach(adjustQuantityWork);
 
   // Use uses
-  if (prop.usesResult){
+  if (prop.usesLeft){
     CreatureProperties.update(prop._id, {
       $inc: {usesUsed: 1}
     }, {
@@ -174,24 +184,29 @@ function spendResources({prop, log, scope}){
     });
     log.content.push({
       name: 'Uses left',
-      value: prop.usesResult - (prop.usesUsed || 0) - 1,
+      value: prop.usesLeft - (prop.usesUsed || 0) - 1,
     });
   }
 
   // Damage stats
   prop.resources.attributesConsumed.forEach(attConsumed => {
-    if (!attConsumed.quantity) return;
+    recalculateCalculation(attConsumed.quantity, scope, log);
+
+    if (!attConsumed.quantity?.value) return;
     let stat = scope[attConsumed.variableName];
-    if (!stat) return;
+    if (!stat){
+      spendLog.push(stat.name + ': ' + ' not found');
+      return;
+    }
     damagePropertyWork({
       property: stat,
       operation: 'increment',
-      value: attConsumed.quantity,
+      value: attConsumed.quantity.value,
     });
-    if (attConsumed.quantity > 0){
-      spendLog.push(stat.name + ': ' + attConsumed.quantity);
-    } else if (attConsumed.quantity < 0){
-      gainLog.push(stat.name + ': ' + -attConsumed.quantity);
+    if (attConsumed.quantity.value > 0){
+      spendLog.push(stat.name + ': ' + attConsumed.quantity.value);
+    } else if (attConsumed.quantity.value < 0){
+      gainLog.push(stat.name + ': ' + -attConsumed.quantity.value);
     }
   });
 

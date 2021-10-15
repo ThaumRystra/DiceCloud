@@ -14,12 +14,8 @@ export default function applyAdjustment(node, {
 
   // Evaluate the amount
   recalculateCalculation(prop.amount, scope, log);
-  prop.amount.errors?.forEach(error => {
-    if (error.type !== 'info'){
-      log.content.push({name: 'Error', value: error.message});
-    }
-  });
-  const value = prop.amount.value;
+  
+  const value = +prop.amount.value;
   if (!isFinite(value)) {
     return applyChildren(node, {creature, targets, scope, log});
   }
@@ -32,12 +28,12 @@ export default function applyAdjustment(node, {
           name: 'Error',
           value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`
         });
-        return;
+        return applyChildren(node, {creature, targets, scope, log});
       }
       damagePropertyWork({
         property: stat,
         operation: prop.operation,
-        value,
+        value: value,
       });
       log.content.push({
         name: 'Attribute damage',

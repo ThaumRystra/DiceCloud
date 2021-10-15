@@ -1,7 +1,7 @@
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import { prettifyParseError, parse } from '/imports/parser/parser.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
-import { get } from 'lodash';
+import { get, unset } from 'lodash';
 import errorNode from '/imports/parser/parseTree/error.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 
@@ -53,6 +53,11 @@ function parseAllCalculationFields(prop, schemas){
     applyFnToKey(prop, calcKey, (prop, key) => {
       const calcObj = get(prop, key);
       if (!calcObj) return;
+      // Delete the whole calculation object if the calculation string isn't set
+      if (!calcObj.calculation){
+        unset(prop, calcKey);
+        return;
+      }
       // Store a reference to all the calculations
       prop._computationDetails.calculations.push(calcObj);
       // Store the level to compute down to later
@@ -64,12 +69,6 @@ function parseAllCalculationFields(prop, schemas){
 }
 
 function parseCalculation(calcObj){
-  // If there is no calculation clear the cached parse node and error
-  if (!calcObj.calculation){
-    delete calcObj.hash;
-    delete calcObj.parseError;
-    return;
-  }
   const calcHash = cyrb53(calcObj.calculation);
   // If the cached parse calculation is equal to the calculation, skip
   if (calcHash === calcObj.hash){
