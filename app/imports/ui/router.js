@@ -24,6 +24,7 @@ import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
 import Tabletops from '/imports/ui/pages/Tabletops.vue';
 import Tabletop from '/imports/ui/pages/Tabletop.vue';
 import TabletopToolbar from '/imports/ui/tabletop/TabletopToolbar.vue';
+import TabletopRightDrawer from '/imports/ui/tabletop/TabletopRightDrawer.vue';
 import Admin from '/imports/ui/pages/Admin.vue';
 
 let userSubscription = Meteor.subscribe('user');
@@ -153,6 +154,7 @@ RouterFactory.configure(factory => {
       components: {
         default: Tabletop,
         toolbar: TabletopToolbar,
+        rightDrawer: TabletopRightDrawer,
       },
       beforeEnter: ensureLoggedIn,
     },{

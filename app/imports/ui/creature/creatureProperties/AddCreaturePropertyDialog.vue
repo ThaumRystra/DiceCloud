@@ -17,7 +17,7 @@
           @change="propertyHelpChanged"
         />
         <text-field
-          v-if="tab === 1"
+          v-if="tab === 2"
           prepend-inner-icon="mdi-magnify"
           regular
           hide-details
@@ -183,8 +183,6 @@
   import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
-  const SKIP_LIBRARY_PROP_TYPES = ['note', 'damage', 'adjustment']
-
   export default {
     components: {
       PropertySelector,
@@ -274,11 +272,7 @@
       changeType(type){
         this._subs.searchLibraryNodes.setData('type', type);
         if (!type) return;
-        if (SKIP_LIBRARY_PROP_TYPES.includes(type)){
-          this.tab = 1;
-        } else {
-          this.tab = 2;
-        }
+        this.tab = 1;
         this.schema = propertySchemasIndex[type];
         this.validationContext = this.schema.newContext();
         let model = this.schema.clean({});

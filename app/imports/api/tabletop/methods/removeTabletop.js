@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Tabletops from '../Tabletops.js';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
-import { assertUserIsTabletopOwner } from './shared/tabletopPermissions/js';
+import { assertUserIsTabletopOwner } from './shared/tabletopPermissions.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 
 const removeTabletop = new ValidatedMethod({

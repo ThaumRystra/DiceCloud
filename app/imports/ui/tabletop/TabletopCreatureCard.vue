@@ -1,11 +1,17 @@
 <template lang="html">
-  <v-card>
+  <v-card
+    style="height: 150px; min-width: 120px;"
+  >
     <v-img
       :src="model.picture"
       aspect-ratio="1"
       position="top center"
     />
-    <v-card-title>{{ model.name }}</v-card-title>
+    <div
+      class="small-title"
+    >
+      {{ model.name }}
+    </div>
   </v-card>
 </template>
 
@@ -21,4 +27,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.small-title {
+  font-size: 14px;
+  padding: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 </style>

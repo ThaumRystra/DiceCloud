@@ -97,7 +97,6 @@
           :value="model.tags"
           @change="change('tags', ...arguments)"
         />
-        <!--
         <smart-select
           label="Target"
           style="flex-basis: 300px;"
@@ -107,7 +106,6 @@
           :menu-props="{auto: true, lazy: true}"
           @change="change('target', ...arguments)"
         />
-        -->
         <v-row dense>
           <v-col
             cols="12"

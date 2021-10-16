@@ -28,7 +28,7 @@ let BuffSchema = createPropertySchema({
       'self',
       'target',
     ],
-		defaultValue: 'every',
+		defaultValue: 'target',
 	},
 });
 

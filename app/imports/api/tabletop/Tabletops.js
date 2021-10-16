@@ -48,4 +48,8 @@ let TabletopSchema = new SimpleSchema({
 
 Tabletops.attachSchema(TabletopSchema);
 
+import '/imports/api/tabletop/methods/removeTabletop.js';
+import '/imports/api/tabletop/methods/insertTabletop.js';
+import '/imports/api/tabletop/methods/addCreaturesToTabletop.js';
+
 export default Tabletops;

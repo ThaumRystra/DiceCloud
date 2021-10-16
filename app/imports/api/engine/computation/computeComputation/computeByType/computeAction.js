@@ -10,13 +10,13 @@ export default function computeAction(computation, node){
   if (!prop.resources) return;
   prop.resources.itemsConsumed.forEach(itemConsumed => {
     if (!itemConsumed.itemId) return;
-    if (itemConsumed.available < itemConsumed.quantity.value){
+    if (itemConsumed.available < itemConsumed.quantity?.value){
       prop.insufficientResources = true;
     }
   });
   prop.resources.attributesConsumed.forEach(attConsumed => {
     if (!attConsumed.variableName) return;
-    if (attConsumed.available < attConsumed.quantity.value){
+    if (attConsumed.available < attConsumed.quantity?.value){
       prop.insufficientResources = true;
     }
   });
