@@ -1,14 +1,42 @@
 <template lang="html">
-  <div v-if="value !== undefined || $slots.default">
-    <div class="text-caption">
-      {{ name }}
-    </div>
-    <p class="ml-2 subheading">
-      <slot>
-        {{ value }}
-      </slot>
-    </p>
-  </div>
+  <v-col
+    v-if="value !== undefined || ($slots.default && $slots.default.length)"
+    v-bind="cols"
+    class="mb-2"
+  >
+    <v-sheet
+      outlined
+      rounded
+      class="pa-2 layout column align-start fill-height"
+    >
+      <v-sheet
+        v-if="name"
+        class="text-caption px-1 name"
+        style="margin-top: -18px;"
+      >
+        {{ name }}
+      </v-sheet>
+      <div
+        class="flex-grow-1 layout align-center"
+        style="width: 100%;"
+      >
+        <div
+          class="layout align-center"
+          :class="{
+            'text-body-1': !large,
+            'text-h4': large,
+            'justify-center': center,
+          }"
+          style="overflow-x: auto;"
+          v-bind="$attrs"
+        >
+          <slot>
+            {{ value }}
+          </slot>
+        </div>
+      </div>
+    </v-sheet>
+  </v-col>
 </template>
 
 <script lang="js">
@@ -16,9 +44,21 @@ export default {
 	props: {
 		name: String,
 		value: [String, Number, Boolean],
-	}
+    center: Boolean,
+    large: Boolean,
+    cols: {
+      type: Object,
+      default: () => ({cols: 12, sm: 6, md: 4}),
+    },
+	},
 }
 </script>
 
 <style lang="css" scoped>
+.name {
+  color: rgba(0,0,0,.6);
+}
+.theme--dark .name {
+  color: rgba(255,255,255,.7);
+}
 </style>

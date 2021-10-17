@@ -1,20 +1,31 @@
 <template lang="html">
-  <markdown-text
+  <property-field
     v-if="model"
-    :markdown="model.value"
-  />
+    :name="label"
+    :cols="{col: 12}"
+  >
+    <markdown-text
+      :markdown="model.value || model.text"
+    />
+  </property-field>
 </template>
 
 <script lang="js">
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+import PropertyField from '/imports/ui/properties/viewers/shared/PropertyField.vue';
 
 export default {
 	components: {
     MarkdownText,
+    PropertyField,
 	},
 	props: {
 		model: {
       type: Object,
+      default: undefined,
+    },
+    label: {
+      type: String,
       default: undefined,
     },
 	},

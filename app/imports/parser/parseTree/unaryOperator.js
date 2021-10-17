@@ -11,7 +11,7 @@ const unaryOperator = {
   },
   resolve(fn, node, scope, context){
     const {result: rightNode} = resolve(fn, node.right, scope, context);
-    if (rightNode.parseType !== 'number'){
+    if (rightNode.valueType !== 'number'){
       return {
         result: unaryOperator.create({
           operator: node.operator,

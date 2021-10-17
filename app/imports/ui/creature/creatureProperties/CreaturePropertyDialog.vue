@@ -41,28 +41,34 @@
           This property can't be viewed yet.
         </p>
       </v-fade-transition>
-      <template v-if="!editing && !embedded">
-        <v-divider class="my-2" />
+      <property-field
+        v-if="!editing && !embedded && childrenLength"
+        name="Child properties"
+        :cols="{cols: 12}"
+      >
         <creature-properties-tree
-          v-if="!editing"
+          style="width: 100%;"
           :root="{collection: 'creatureProperties', id: model._id}"
+          @length="childrenLength = $event"
           @selected="selectSubProperty"
         />
-        <v-btn
-          text
-          data-id="insert-creature-property-btn"
-          @click="addProperty"
-        >
-          <v-icon>mdi-plus</v-icon>
-          Property
-        </v-btn>
-      </template>
+      </property-field>
     </template>
     <div
       v-if="!embedded"
       slot="actions"
-      class="layout justify-end"
+      class="layout"
     >
+      <v-btn
+        v-if="!editing && !embedded"
+        text
+        data-id="insert-creature-property-btn"
+        @click="addProperty"
+      >
+        <v-icon>mdi-plus</v-icon>
+        Property
+      </v-btn>
+      <v-spacer />
       <v-btn
         text
         @click="$store.dispatch('popDialogStack')"
@@ -99,6 +105,7 @@ import { getHighestOrder } from '/imports/api/parenting/order.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import PropertyField from '/imports/ui/properties/viewers/shared/PropertyField.vue';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -119,6 +126,7 @@ export default {
     PropertyToolbar,
     CreaturePropertiesTree,
     Breadcrumbs,
+    PropertyField,
   },
   props: {
     _id: String,
@@ -130,6 +138,7 @@ export default {
     // CurrentId lags behind Id by one tick so that events fired by destroying
     // forms keyed to the old ID are applied before the new ID overwrites it
     currentId: undefined,
+    childrenLength: 0,
   }},
   meteor: {
     model(){

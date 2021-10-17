@@ -70,8 +70,8 @@
         />
       </template>
       <template v-if="model.summary">
-        <property-description
-          :model="model.summary"
+        <markdown-text
+          :markdown="model.summary.value || model.summary.text"
         />
       </template>
     </div>
@@ -84,14 +84,14 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
-import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 export default {
   components: {
     AttributeConsumedView,
     ItemConsumedView,
-    PropertyDescription,
+    MarkdownText,
     PropertyIcon,
   },
   inject: {

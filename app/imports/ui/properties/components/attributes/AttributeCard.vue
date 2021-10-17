@@ -4,10 +4,10 @@
     @click="click"
   >
     <div class="layout align-center">
-      <v-card-title class="value text-h4">
+      <v-card-title class="value text-h4 flex-shrink-0">
         {{ computedValue }}
       </v-card-title>
-      <v-card-title class="name text-subtitle-1 text-truncate pl-0">
+      <v-card-title class="name text-subtitle-1 text-truncate d-block pl-0">
         {{ model.name }}
       </v-card-title>
     </div>
@@ -28,14 +28,10 @@
         return this.$listeners && !!this.$listeners.click
       },
       computedValue(){
-        if (this.model.type === 'attribute'){
-          if (this.model.attributeType === 'modifier'){
-            return numberToSignedString(this.model.value);
-          } else {
-            return this.model.value
-          }
+        if (this.model.attributeType === 'modifier' || this.model.type === 'skill'){
+          return numberToSignedString(this.model.value);
         } else {
-          return this.model.value;
+          return this.model.value
         }
       }
     },

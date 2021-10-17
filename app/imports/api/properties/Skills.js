@@ -20,6 +20,7 @@ let SkillSchema = createPropertySchema({
     regEx: VARIABLE_NAME_REGEX,
     min: 2,
     max: STORAGE_LIMITS.variableName,
+    optional: true,
   },
 	// The variable name of the ability this skill relies on
   ability: {

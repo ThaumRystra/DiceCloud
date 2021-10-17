@@ -15,6 +15,7 @@ export default function(){
   assert.equal(scope('strength').modifier, 1);
   assert.equal(prop('referencesDexId').value, 4);
   assert.equal(prop('hitDiceId').constitutionMod, 5);
+  assert.equal(prop('overriddenDexId').overridden, true, 'override properties with the same variable name');
   assert.equal(
     prop('parseErrorId').baseValue.value, null,
     'Parse errors should null the value'
@@ -45,10 +46,21 @@ var testProperties = [
     },
   }),
   clean({
+    _id: 'overriddenDexId',
+    variableName: 'dexterity',
+    type: 'attribute',
+    attributeType: 'ability',
+    order: 1,
+    baseValue: {
+      calculation: '15'
+    },
+  }),
+  clean({
     _id: 'dexterityId',
     variableName: 'dexterity',
     type: 'attribute',
     attributeType: 'ability',
+    order: 2,
     baseValue: {
       calculation: '15'
     },
