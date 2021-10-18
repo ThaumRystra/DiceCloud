@@ -15,7 +15,6 @@ export default function applyBuff(node, {creature, targets, scope, log}){
   let buffTargets = prop.target === 'self' ? [creature] : targets;
 
   // Then copy the decendants of the buff to the targets
-  prop.applied = true;
   let propList = [prop];
   function addChildrenToPropList(children){
     children.forEach(child => {

@@ -17,11 +17,6 @@ let BuffSchema = createPropertySchema({
 		type: 'fieldToCompute',
 		optional: true,
 	},
-  applied: {
-    type: Boolean,
-    defaultValue: false,
-    index: 1,
-  },
   target: {
 		type: String,
 		allowedValues: [

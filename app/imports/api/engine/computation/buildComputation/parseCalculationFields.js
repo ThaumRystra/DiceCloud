@@ -21,8 +21,9 @@ function discoverInlineCalculationFields(prop, schemas){
       prop._computationDetails.inlineCalculations.push(inlineCalcObj);
       // Extract the calculations and store them on the property
       let string = inlineCalcObj.text;
+      // If there is no text, delete the whole field
       if (!string){
-        delete inlineCalcObj.hash;
+        unset(prop, calcKey);
         return;
       }
       const inlineCalcHash = cyrb53(inlineCalcObj.text);

@@ -19,7 +19,6 @@ export default function computeInactiveStatus(node){
 function isActive(prop){
   if (prop.disabled) return false;
   switch (prop.type){
-    case 'buff': return !!prop.applied;
     case 'item': return !!prop.equipped;
     case 'spell': return !!prop.prepared || !!prop.alwaysPrepared;
     case 'note': return false;

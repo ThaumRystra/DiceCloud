@@ -8,12 +8,6 @@ export default function(){
   const byAncestor = (propId, note) => assertDeactivatedByAncestor(computation, propId, note);
   const active = (propId, note) => assertActive(computation, propId, note);
 
-  // Buffs
-  bySelf('buffNotAppliedId');
-  byAncestor('buffNotAppliedChildId');
-  active('buffAppliedId');
-  active('buffAppliedChildId');
-
   // Items
   active('itemUnequippedId', 'Unequipped items should be active');
   byAncestor('itemUnequippedChildId', 'Children of unequipped items should be inactive');
@@ -53,28 +47,6 @@ function assertActive(computation, propId, note){
 }
 
 var testProperties = [
-  // Buffs
-  clean({
-    _id: 'buffNotAppliedId',
-    type: 'buff',
-    ancestors: [{id: 'charId'}],
-  }),
-  clean({
-    _id: 'buffNotAppliedChildId',
-    type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'buffNotAppliedId'}],
-  }),
-  clean({
-    _id: 'buffAppliedId',
-    type: 'buff',
-    applied: true,
-    ancestors: [{id: 'charId'}],
-  }),
-  clean({
-    _id: 'buffAppliedChildId',
-    type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'buffAppliedId'}],
-  }),
   // Items
   clean({
     _id: 'itemUnequippedId',
