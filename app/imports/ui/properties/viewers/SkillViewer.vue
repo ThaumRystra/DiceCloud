@@ -41,11 +41,12 @@
         :value="model.skillType"
       />
     </v-row>
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
+    <v-row dense>      
+      <property-description
+        name="description"
+        :model="model.description"
+      />
+    </v-row>
     <v-row
       v-if="baseEffects.length || ability || effects.length"
       dense

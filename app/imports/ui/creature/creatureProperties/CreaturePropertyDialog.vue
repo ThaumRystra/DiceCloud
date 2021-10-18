@@ -41,18 +41,23 @@
           This property can't be viewed yet.
         </p>
       </v-fade-transition>
-      <property-field
-        v-if="!editing && !embedded && childrenLength"
-        name="Child properties"
-        :cols="{cols: 12}"
+      <v-row
+        v-show="!editing && !embedded && childrenLength"
+        class="mt-1"
+        dense
       >
-        <creature-properties-tree
-          style="width: 100%;"
-          :root="{collection: 'creatureProperties', id: model._id}"
-          @length="childrenLength = $event"
-          @selected="selectSubProperty"
-        />
-      </property-field>
+        <property-field
+          name="Child properties"
+          :cols="{cols: 12}"
+        >
+          <creature-properties-tree
+            style="width: 100%;"
+            :root="{collection: 'creatureProperties', id: model._id}"
+            @length="childrenLength = $event"
+            @selected="selectSubProperty"
+          />
+        </property-field>
+      </v-row>
     </template>
     <div
       v-if="!embedded"
@@ -65,15 +70,18 @@
         data-id="insert-creature-property-btn"
         @click="addProperty"
       >
-        <v-icon>mdi-plus</v-icon>
-        Property
+        <v-icon left>
+          mdi-plus
+        </v-icon>
+        Child Property
       </v-btn>
       <v-spacer />
       <v-btn
         text
+        color="accent"
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        Close
       </v-btn>
     </div>
   </dialog-base>

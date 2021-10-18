@@ -2,11 +2,10 @@
   <v-col
     v-if="value !== undefined || ($slots.default && $slots.default.length)"
     v-bind="cols"
-    class="mb-2"
+    class="mb-3"
   >
     <v-sheet
       outlined
-      rounded
       class="pa-2 layout column align-start fill-height"
     >
       <v-sheet
@@ -59,6 +58,6 @@ export default {
   color: rgba(0,0,0,.6);
 }
 .theme--dark .name {
-  color: rgba(255,255,255,.7);
+  color: rgba(255,255,255,.6);
 }
 </style>

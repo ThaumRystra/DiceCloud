@@ -1,7 +1,7 @@
 <template lang="html">
   <property-field
     v-if="model"
-    :name="label"
+    :name="name"
     :cols="{col: 12}"
   >
     <markdown-text
@@ -24,7 +24,7 @@ export default {
       type: Object,
       default: undefined,
     },
-    label: {
+    name: {
       type: String,
       default: undefined,
     },

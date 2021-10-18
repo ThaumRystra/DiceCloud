@@ -1,118 +1,113 @@
 <template lang="html">
   <div class="action-viewer">
-    <div class="action-sub-title layout align-center justify-space-between wrap mb-3">
-      <property-tags
-        :tags="model.tags"
-        no-margin
-        class="mx-2"
-      />
-      <div
-        v-if="!attack"
-        class="mx-2"
-      >
-        {{ model.actionType }}
-      </div>
-    </div>
-    <div class="layout align-center justify-space-around">
-      <v-btn
+    <v-row
+      dense
+    >
+      <property-field
         v-if="context.creatureId"
-        outlined
-        style="font-size: 18px;"
-        class="ma-2"
-        :color="model.color || 'primary'"
-        :icon="!rollBonusTooLong"
-        :loading="doActionLoading"
-        :disabled="model.insufficientResources || !context.editPermission"
-        @click.stop="doAction"
+        name="Apply action"
+        center
       >
-        <template v-if="attack">
-          {{ rollBonus }}
-        </template>
-        <property-icon
-          v-else
-          :model="model"
-        />
-      </v-btn>
-      <div
-        v-else-if="attack"
-        style="font-size: 18px;"
-        class="ma-2"
-      >
-        <code>{{ model.rollBonus && model.rollBonus.value }}</code>
-        <span
-          class="mx-1"
-          style="font-size: 14px"
-        >to hit</span>
-      </div>
-      <div v-if="model.uses">
-        <span
-          v-if="context.creatureId && model.uses.value"
-          class="uses mx-2"
+        <v-btn
+          outlined
+          style="font-size: 18px;"
+          class="ma-2"
+          :color="model.color || 'primary'"
+          icon
+          :loading="doActionLoading"
+          :disabled="model.insufficientResources || !context.editPermission"
+          @click.stop="doAction"
         >
-          {{ usesLeft }}/{{ model.uses.value }} uses
-        </span>
+          <property-icon
+            right
+            :model="model"
+          />
+        </v-btn>
+      </property-field>
+      <property-field
+        name="To hit"
+        large
+        center
+        :value="rollBonus"
+      />
+      <property-field
+        name="Action type"
+        :value="actionTypes[model.actionType]"
+      />
+      <property-field
+        v-if="model.uses"
+        name="Uses"
+      >
+        <template
+          v-if="context.creatureId && model.uses.value"
+        >
+          <v-spacer />
+          {{ usesLeft }}/{{ model.uses.value }}
+          <v-spacer />
+          <v-btn
+            v-if="context.creatureId"
+            text
+            color="primary"
+            :disabled="!model.usesUsed || !context.editPermission"
+            @click="resetUses"
+          >
+            Reset
+          </v-btn>
+        </template>
         <span v-else>
           <code>{{ model.uses.calculation }}</code>
-          <span class="mx-1">
-            uses
-          </span>
         </span>
-        <span
-          v-if="reset"
-          class="mx-2"
-        >
-          {{ reset }}
-        </span>
-        <v-btn
-          v-if="context.creatureId"
-          outlined
-          color="primary"
-          :disabled="!model.usesUsed || !context.editPermission"
-          @click="resetUses"
-        >
-          Reset
-        </v-btn>
-      </div>
-    </div>
-    <v-subheader
-      v-if="model.resources.attributesConsumed.length ||
-        model.resources.itemsConsumed.length"
-      style="height: 32px"
+      </property-field>
+      <property-field
+        name="Reset"
+        :value="reset"
+      />
+      <property-field
+        v-if="model.resources.attributesConsumed.length"
+        name="Attributes consumed"
+      >
+        <div style="width: 100%;">
+          <attribute-consumed-view
+            v-for="attributeConsumed in model.resources.attributesConsumed"
+            :key="attributeConsumed._id"
+            class="action-child"
+            :model="attributeConsumed"
+          />
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.resources.itemsConsumed.length"
+        name="Items consumed"
+      >
+        <div style="width: 100%;">
+          <item-consumed-view
+            v-for="itemConsumed in model.resources.itemsConsumed"
+            :key="itemConsumed._id"
+            class="action-child"
+            :model="itemConsumed"
+            :action="model"
+          />
+        </div>
+      </property-field>
+    </v-row>
+    <v-row
+      v-if="model.summary && model.summary.text"
+      dense
     >
-      Resources
-    </v-subheader>
-    <attribute-consumed-view
-      v-for="attributeConsumed in model.resources.attributesConsumed"
-      :key="attributeConsumed._id"
-      class="action-child"
-      :model="attributeConsumed"
-      style="padding-left: 44px;"
-    />
-    <item-consumed-view
-      v-for="itemConsumed in model.resources.itemsConsumed"
-      :key="itemConsumed._id"
-      class="action-child"
-      :model="itemConsumed"
-      :action="model"
-      left-pad
-    />
-    <v-divider
-      v-if="(model.summary && model.summary.text) ||
-        (model.description && model.description.text)"
-      class="my-3"
-    />
-    <template v-if="(model.summary && model.summary.text)">
       <property-description
+        name="Summary"
         :model="model.summary"
       />
-      <v-divider
-        v-if="model.description && model.description.text"
-        class="my-3"
+    </v-row>
+    <v-row
+      v-if="model.description && model.description.text"
+      dense
+    >
+      <property-description
+        name="Description"
+        :model="model.description"
       />
-    </template>
-    <property-description
-      :model="model.description"
-    />
+    </v-row>
   </div>
 </template>
 
@@ -142,6 +137,14 @@ export default {
   },
   data(){return {
     doActionLoading: false,
+    actionTypes: {
+      action: 'Action',
+      bonus: 'Bonus action',
+      attack: 'Attack action',
+      reaction: 'Reaction',
+      free: 'Free action',
+      long: 'Long action',
+    },
   }},
   computed: {
     reset(){
@@ -154,8 +157,11 @@ export default {
       return undefined;
     },
     rollBonus(){
-      if (!this.attack || !this.model.rollBonus) return;
-      return numberToSignedString(this.model.rollBonus.value);
+      if (
+        !this.model.attackRoll ||
+        !isFinite(this.model.attackRoll.value)
+      ) return;
+      return numberToSignedString(this.model.attackRoll.value);
     },
     rollBonusTooLong(){
       return this.rollBonus && this.rollBonus.length > 3;

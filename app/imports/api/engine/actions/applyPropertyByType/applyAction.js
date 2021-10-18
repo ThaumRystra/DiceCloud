@@ -147,20 +147,23 @@ function spendResources({prop, log, scope}){
       if (!item.equipped){
         throw 'The selected ammo is not equipped';
       }
-      if (!itemConsumed.quantity) return;
+      if (
+        !itemConsumed.quantity.value ||
+        !isFinite(itemConsumed.quantity.value)
+      ) return;
       itemQuantityAdjustments.push({
         property: item,
         operation: 'increment',
-        value: itemConsumed.quantity,
+        value: itemConsumed.quantity.value,
       });
       let logName = item.name;
-      if (itemConsumed.quantity > 1 || itemConsumed.quantity < -1){
+      if (itemConsumed.quantity.value > 1 || itemConsumed.quantity.value < -1){
         logName = item.plural || logName;
       }
-      if (itemConsumed.quantity > 0){
-        spendLog.push(logName + ': ' + itemConsumed.quantity);
-      } else if (itemConsumed.quantity < 0){
-        gainLog.push(logName + ': ' + -itemConsumed.quantity);
+      if (itemConsumed.quantity.value > 0){
+        spendLog.push(logName + ': ' + itemConsumed.quantity.value);
+      } else if (itemConsumed.quantity.value < 0){
+        gainLog.push(logName + ': ' + -itemConsumed.quantity.value);
       }
     });
   } catch (e){

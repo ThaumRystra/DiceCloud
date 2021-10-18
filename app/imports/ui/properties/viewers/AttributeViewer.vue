@@ -103,7 +103,7 @@
     </v-row>
     <v-row dense>
       <property-description
-        label="Description"
+        name="Description"
         :model="model.description"
       />
     </v-row>
@@ -113,7 +113,7 @@
         :cols="{col: 12}"
         name="Effects"
       >
-        <v-list>
+        <v-list style="width: 100%;">
           <attribute-effect
             v-for="effect in baseEffects"
             :key="effect._id"

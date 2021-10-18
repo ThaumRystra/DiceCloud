@@ -12,12 +12,11 @@
     >
       <template #activator="{ on }">
         <div
-          class="layout align-center justify-start"
+          class="layout align-center justify-start px-2"
           style="height: 100%;"
           :class="{
             'error--text': insufficient,
             'clickable': context.creatureId && context.editPermission,
-            'left-pad': leftPad,
           }"
           v-on="on"
         >
@@ -31,7 +30,7 @@
             class="mr-2 text-no-wrap"
             style="min-width: 24px; text-align: center;"
           >
-            <template v-if="quantity !== 0 && insufficient">
+            <template v-if="quantity !== 1">
               {{ model.available }} / {{ quantity }}
             </template>
             <template v-else>
@@ -48,10 +47,13 @@
               v-else
               class="error--text"
             >
-              Select ammo
+              Select item
             </span>
           </div>
-          <v-icon v-if="context.editPermission">
+          <v-icon
+            v-if="context.editPermission"
+            style="overflow: hidden;"
+          >
             mdi-menu-down
           </v-icon>
         </div>
@@ -64,7 +66,6 @@
     <div
       v-else
       class="layout align-center justify-start"
-      :class="{'left-pad': leftPad}"
     >
       <div
         class="mr-2"
@@ -106,7 +107,6 @@ export default {
       type: Object,
       required: true,
     },
-    leftPad: Boolean,
   },
   computed: {
     insufficient(){
@@ -128,8 +128,5 @@ export default {
 }
 .theme--dark .clickable:hover {
   background: hsla(0,0%,100%,.08);
-}
-.left-pad {
-  padding-left: 44px;
 }
 </style>
