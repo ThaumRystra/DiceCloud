@@ -3,7 +3,7 @@ export default function aggregateDefinition({node, linkedNode, link}){
   // Look at all definition links
   if (link.data !== 'definition') return;
 
-  // Store which property is THE defining property and which are overriden
+  // Store which property is THE defining property and which are overridden
   const prop = linkedNode.data;
   // get current defining prop
   const definingProp = node.data.definingProp;
@@ -28,7 +28,7 @@ export default function aggregateDefinition({node, linkedNode, link}){
 
 function overrideProp(prop, node){
   if (!prop) return;
-  prop.overriden = true;
-  if (!node.data.overridenProps) node.data.overridenProps = [];
-  node.data.overridenProps.push(prop);
+  prop.overridden = true;
+  if (!node.data.overriddenProps) node.data.overriddenProps = [];
+  node.data.overriddenProps.push(prop);
 }
