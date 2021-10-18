@@ -5,12 +5,6 @@ const PROPERTIES = Object.freeze({
     helpText: 'Actions are things your character can do. When an action is taken, all the properties under it are activated.',
     suggestedParents: ['classLevel', 'feature', 'item'],
   },
-  attack: {
-    icon: '$vuetify.icons.attack',
-    name: 'Attack',
-    helpText: 'Attacks are a special form of action that includes an attack roll. Attacks can critical hit, which doubles the number of damage dice in properties under the attack.',
-    suggestedParents: ['classLevel', 'feature', 'item'],
-  },
   attribute: {
     icon: '$vuetify.icons.attribute',
     name: 'Attribute',

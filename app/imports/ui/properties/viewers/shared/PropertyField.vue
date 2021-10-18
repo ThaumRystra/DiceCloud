@@ -25,6 +25,7 @@
             'text-body-1': !large,
             'text-h4': large,
             'justify-center': center,
+            'mono': mono,
           }"
           style="overflow-x: auto;"
           v-bind="$attrs"
@@ -41,10 +42,17 @@
 <script lang="js">
 export default {
 	props: {
-		name: String,
-		value: [String, Number, Boolean],
+		name: {
+      type: String,
+      default: undefined,
+    },
+		value: {
+      type: [String, Number, Boolean],
+      default: undefined,
+    },
     center: Boolean,
     large: Boolean,
+    mono: Boolean,
     cols: {
       type: Object,
       default: () => ({cols: 12, sm: 6, md: 4}),
@@ -59,5 +67,8 @@ export default {
 }
 .theme--dark .name {
   color: rgba(255,255,255,.6);
+}
+.mono {
+  font-family: monospace !important;
 }
 </style>

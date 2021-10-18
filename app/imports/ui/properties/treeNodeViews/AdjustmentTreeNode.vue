@@ -10,11 +10,19 @@
     <div
       class="text-no-wrap text-truncate"
     >
-      <span v-if="amount < 0">+</span>
-      {{ absoluteAmount }} {{ model.stat }}
-      <span v-if="typeof absoluteAmount === 'string' || absoluteAmount >= 0">
-        damage
-      </span>
+      <template v-if="model.amount && model.amount.calculation">
+        <span v-if="amount < 0">+</span>
+        {{ absoluteAmount }} {{ model.stat }}
+        <span v-if="typeof absoluteAmount === 'string' || amount >= 0">
+          damage
+        </span>
+        <span v-if="model.target === 'self'">
+          to self
+        </span>
+      </template>
+      <template v-else>
+        {{ model.stat || 'Attribute' }} damage
+      </template>
     </div>
   </div>
 </template>

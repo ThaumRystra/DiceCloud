@@ -52,10 +52,11 @@
       </property-field>
       <property-field
         name="Variable Name"
+        mono
         :value="model.variableName"
       />
       <property-field
-        name="Type"
+        name="Attribute type"
         :value="attributeTypes[model.attributeType]"
       />
       <property-field

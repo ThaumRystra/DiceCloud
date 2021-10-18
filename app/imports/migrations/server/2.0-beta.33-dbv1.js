@@ -93,6 +93,7 @@ const transformsByPropType = {
     ...getInlineComputationTransforms('description'),
     {from: 'value', to: 'total', up: nanToNull},
     {from: 'target', to: 'target', up: simplifyTarget},
+    {from: 'applied'},
   ],
   'classLevel': [
     ...getInlineComputationTransforms('description'),

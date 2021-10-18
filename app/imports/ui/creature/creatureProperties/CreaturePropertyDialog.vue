@@ -14,9 +14,18 @@
       />
     </template>
     <template v-if="model">
-      <template v-if="!editing && !embedded">
-        <breadcrumbs :model="model" />
-      </template>
+      <div
+        v-if="!editing"
+        class="layout mb-4"
+      >
+        <template v-if="!embedded">
+          <breadcrumbs :model="model" />
+        </template>
+        <v-spacer />
+        <v-chip disabled>
+          {{ typeName }}
+        </v-chip>
+      </div>
       <v-fade-transition
         mode="out-in"
       >
@@ -174,6 +183,10 @@ export default {
     creatureId(){
       return this.creature && this.creature._id;
     },
+    typeName(){
+      if (!this.model) return;
+      return getPropertyName(this.model.type)
+    }
   },
   watch: {
     _id: {

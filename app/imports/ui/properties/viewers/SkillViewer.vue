@@ -30,18 +30,20 @@
       </property-field>
       <property-field
         name="Variable Name"
+        mono
         :value="model.variableName"
       />
       <property-field
         name="Ability"
+        mono
         :value="model.ability"
       />
       <property-field
         name="Skill type"
-        :value="model.skillType"
+        :value="skillTypes[model.skillType]"
       />
     </v-row>
-    <v-row dense>      
+    <v-row dense>
       <property-description
         name="description"
         :model="model.description"
@@ -138,6 +140,16 @@ export default {
       0.49: 'Half proficiency bonus rounded down',
       0.5: 'Half proficiency bonus rounded up',
       2: 'Double proficiency bonus',
+    },
+    skillTypes: {
+      skill: 'Skill',
+      save: 'Save',
+      check: 'Check',
+      tool: 'Tool',
+      weapon: 'Weapon',
+      armor: 'Armor',
+      language: 'Language',
+      utility: 'Utility',
     },
   }},
   computed: {

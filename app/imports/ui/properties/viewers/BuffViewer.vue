@@ -1,13 +1,22 @@
 <template lang="html">
   <div class="buff-viewer">
-    <property-name :value="model.name" />
     <!--<property-field
       name="Duration"
       :value="model.duration"
     />-->
-    <property-description
-      :model="model.description"
-    />
+    <v-row dense>
+      <property-field
+        v-if="model.target === 'self'"
+        name="Target"
+        value="Self"
+      />
+    </v-row>
+    <v-row dense>
+      <property-description
+        name="Description"
+        :model="model.description"
+      />
+    </v-row>
   </div>
 </template>
 

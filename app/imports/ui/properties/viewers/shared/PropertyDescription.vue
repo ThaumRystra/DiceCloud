@@ -1,6 +1,6 @@
 <template lang="html">
   <property-field
-    v-if="model"
+    v-if="model && (model.value || model.text)"
     :name="name"
     :cols="{col: 12}"
   >

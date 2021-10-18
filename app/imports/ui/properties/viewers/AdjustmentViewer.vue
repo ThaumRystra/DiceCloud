@@ -1,34 +1,30 @@
 <template lang="html">
-  <v-list-item class="effect-viewer">
-    <v-list-item-avatar>
-      <v-tooltip bottom>
-        <template
-          v-if="effectIcon !== 'remove'"
-          #activator="{ on }"
+  <div class="adjustment-viewer">
+    <v-row dense>
+      <property-field
+        name="Amount"
+        center
+        large
+      >
+        <v-icon
+          class="mx-1"
         >
-          <v-icon
-            class="mx-2"
-            style="cursor: default;"
-            v-on="on"
-          >
-            {{ effectIcon }}
-          </v-icon>
-        </template>
-        <span>{{ tooltip }}</span>
-      </v-tooltip>
-    </v-list-item-avatar>
-    <v-list-item-action class="text-h5">
-      {{ displayedValue }}
-    </v-list-item-action>
-    <v-list-item-content>
-      <v-list-item-title>
-        <code>{{ model.stat }}</code>
-        <template v-if="effectIcon === 'remove'">
-          damage
-        </template>
-      </v-list-item-title>
-    </v-list-item-content>
-  </v-list-item>
+          {{ effectIcon }}
+        </v-icon>
+        {{ displayedValue }}
+      </property-field>
+      <property-field
+        name="Attribute"
+        mono
+        :value="model.stat"
+      />
+      <property-field
+        v-if="model.target === 'self'"
+        name="Target"
+        value="Self"
+      />
+    </v-row>
+  </div>
 </template>
 
 <script lang="js">

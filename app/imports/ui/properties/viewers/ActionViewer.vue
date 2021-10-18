@@ -35,6 +35,10 @@
         :value="actionTypes[model.actionType]"
       />
       <property-field
+        name="Targeting"
+        :value="targetTypes[model.target]"
+      />
+      <property-field
         v-if="model.uses"
         name="Uses"
       >
@@ -144,6 +148,11 @@ export default {
       reaction: 'Reaction',
       free: 'Free action',
       long: 'Long action',
+    },
+    targetTypes: {
+      self: 'Self',
+      singleTarget: 'Single target',
+      multipleTargets: 'Multiple targets',
     },
   }},
   computed: {
