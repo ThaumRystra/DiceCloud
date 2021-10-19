@@ -33,6 +33,7 @@ export default {
   constant: ConstantForm,
   container: ContainerForm,
   classLevel: ClassLevelForm,
+  class: SlotForm,
   damage: DamageForm,
   damageMultiplier: DamageMultiplierForm,
   effect: EffectForm,

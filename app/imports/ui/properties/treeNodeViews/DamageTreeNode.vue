@@ -15,6 +15,7 @@
       {{ model.damageType }}<span
         v-if="model.damageType !== 'healing'"
       >&nbsp;damage</span>
+      <span v-if="model.target === 'self'">to self</span>
     </div>
   </div>
 </template>

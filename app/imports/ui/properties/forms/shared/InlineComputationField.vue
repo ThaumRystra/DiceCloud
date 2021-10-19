@@ -7,16 +7,26 @@
     />
     <template v-for="calc in model.inlineCalculations">
       <div
-        v-if="calc && calc.calculation && calc.errors.length"
+        v-if="calc && calc.calculation && (
+          (calc.errors && calc.errors.length) || calc.parseError
+        )"
         :key="calc.calculation"
+        class="mb-4"
       >
-        <v-subheader
-          class="warning--text"
+        <div
+          class="warning--text mb-2 ml-4"
           style="font-family: monospace;"
         >
           { {{ calc.calculation }} }
-        </v-subheader>
-        <calculation-error-list :errors="calc.errors" />
+        </div>
+        <calculation-error-list
+          v-if="calc.parseError"
+          :errors="[calc.parseError]"
+        />
+        <calculation-error-list
+          v-if="calc.errors && calc.errors.length"
+          :errors="calc.errors"
+        />
       </div>
     </template>
   </div>

@@ -1,130 +1,147 @@
 <template lang="html">
   <div class="item-viewer">
-    <property-tags :tags="model.tags" />
-    <div
-      v-if="model.quantity > 1 || model.showIncrement"
-      class="layout justify-center align-center wrap"
-    >
-      <div class="text-h4 mr-3">
-        {{ model.quantity }}
-      </div>
-      <increment-button
-        v-if="context.creatureId && model.showIncrement"
-        icon
+    <v-row dense>
+      <property-field
+        v-if="model.quantity > 1 || model.showIncrement"
+        name="Quantity"
         large
-        outlined
-        color="primary"
-        :value="model.quantity"
-        @change="changeQuantity"
       >
-        <v-icon>$vuetify.icons.abacus</v-icon>
-      </increment-button>
-    </div>
-    <div class="layout wrap justify-space-around">
-      <div
+        <v-spacer />
+        <div>{{ model.quantity }}</div>
+        <v-spacer />
+        <increment-button
+          v-if="context.creatureId && model.showIncrement"
+          icon
+          large
+          outlined
+          color="primary"
+          :value="model.quantity"
+          @change="changeQuantity"
+        >
+          <v-icon>$vuetify.icons.abacus</v-icon>
+        </increment-button>
+      </property-field>
+      <property-field
         v-if="model.value !== undefined"
-        class="mr-3 my-3"
+        name="value"
       >
-        <v-layout
-          v-if="model.quantity > 1"
-          align-center
-          class="mb-2"
+        <div
+          style="overflow: hidden;"
         >
-          <v-icon
-            class="mr-2"
-            x-large
-          >
-            $vuetify.icons.cash
-          </v-icon>
-          <coin-value
-            class="text-h6"
-            :value="totalValue"
-          />
-        </v-layout>
-        <v-layout
-          align-center
-        >
-          <v-icon
-            class="mr-2"
-            x-large
-          >
-            $vuetify.icons.two_coins
-          </v-icon>
-          <coin-value
-            class="text-h6 mr-2"
-            :value="model.value"
-          />
-          <span
+          <v-layout
             v-if="model.quantity > 1"
-            class="text-h6"
+            align-center
+            class="mb-2"
           >
-            each
-          </span>
-        </v-layout>
-      </div>
-      <div
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.cash
+            </v-icon>
+            <coin-value
+              class="text-subtitle-1"
+              :value="totalValue"
+            />
+          </v-layout>
+          <v-layout
+            align-center
+          >
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.two_coins
+            </v-icon>
+            <coin-value
+              class="text-subtitle-1 mr-2"
+              :value="model.value"
+            />
+            <span
+              v-if="model.quantity > 1"
+              class="text-subtitle-1"
+            >
+              each
+            </span>
+          </v-layout>
+        </div>
+      </property-field>
+      <property-field
         v-if="model.weight !== undefined"
-        class="my-3"
+        name="Weight"
       >
-        <v-layout
-          v-if="model.quantity > 1"
-          align-center
-          justify-end
-          class="mb-2"
+        <div
+          style="overflow: hidden;"
         >
-          <span class="text-h6">
-            {{ totalWeight }} lb
-          </span>
-          <v-icon
-            class="ml-2"
-            x-large
-          >
-            $vuetify.icons.injustice
-          </v-icon>
-        </v-layout>
-        <v-layout
-          align-center
-          justify-end
-          :class="{'mb-2': model.attuned}"
-        >
-          <span class="text-h6 mr-2">
-            {{ model.weight }} lb
-          </span>
-          <span
+          <v-layout
             v-if="model.quantity > 1"
-            class="text-h6"
+            align-center
+            class="mb-2"
           >
-            each
-          </span>
-          <v-icon
-            class="ml-2"
-            x-large
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.injustice
+            </v-icon>
+            <span class="text-subtitle-1">
+              {{ totalWeight }} lb
+            </span>
+          </v-layout>
+          <v-layout
+            align-center
+            :class="{'mb-2': model.attuned}"
           >
-            $vuetify.icons.weight
-          </v-icon>
-        </v-layout>
-        <v-layout
-          v-if="model.attuned"
-          align-center
-          justify-end
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.weight
+            </v-icon>
+            <span class="text-subtitle-1 mr-2">
+              {{ model.weight }} lb
+            </span>
+            <span
+              v-if="model.quantity > 1"
+              class="text-subtitle-1"
+            >
+              each
+            </span>
+          </v-layout>
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.equipped"
+      >
+        <v-icon
+          style="overflow: hidden;"
+          class="ma-1"
         >
-          <span class="text-h6">
-            Attuned
-          </span>
+          mdi-account-arrow-left
+        </v-icon>
+        <span class="ml-1">Equipped</span>
+      </property-field>
+      <property-field
+        v-if="model.requiresAttunement"
+      >
+        <template v-if="model.attuned">
           <v-icon
-            class="ml-2"
-            x-large
+            style="overflow: hidden;"
+            class="ma-1"
           >
             $vuetify.icons.spell
           </v-icon>
-        </v-layout>
-      </div>
-    </div>
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
+          <span class="ml-1">Attuned</span>
+        </template>
+        <template v-else>
+          Requires attunement
+        </template>
+      </property-field>
+      <property-description
+        name="Description"
+        :model="model.description"
+      />
+    </v-row>
   </div>
 </template>
 
@@ -152,6 +169,13 @@ export default {
     totalWeight(){
       return stripFloatingPointOddities(this.model.weight * this.model.quantity);
     },
+    attunementText(){
+      if (this.model.requiresAttunement){
+        if (this.model.attuned) return 'Attuned';
+        return 'Requires attunement';
+      }
+      return undefined;
+    }
   },
   methods: {
     getIcon(name){

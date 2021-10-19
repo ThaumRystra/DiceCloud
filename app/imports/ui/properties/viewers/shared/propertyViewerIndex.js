@@ -1,6 +1,5 @@
 import ActionViewer from '/imports/ui/properties/viewers/ActionViewer.vue';
 import AdjustmentViewer from '/imports/ui/properties/viewers/AdjustmentViewer.vue';
-import AttackViewer from '/imports/ui/properties/viewers/AttackViewer.vue';
 import AttributeViewer from '/imports/ui/properties/viewers/AttributeViewer.vue';
 import BuffViewer from '/imports/ui/properties/viewers/BuffViewer.vue';
 import ContainerViewer from '/imports/ui/properties/viewers/ContainerViewer.vue';
@@ -27,10 +26,10 @@ import ToggleViewer from '/imports/ui/properties/viewers/ToggleViewer.vue';
 export default {
   action: ActionViewer,
   adjustment: AdjustmentViewer,
-  attack: AttackViewer,
   attribute: AttributeViewer,
   buff: BuffViewer,
   container: ContainerViewer,
+  class: SlotViewer,
   classLevel: ClassLevelViewer,
   constant: ConstantViewer,
   damage: DamageViewer,

@@ -1,107 +1,107 @@
 <template lang="html">
   <div class="container-viewer">
-    <property-tags :tags="model.tags" />
-    <div class="layout wrap justify-space-around">
-      <div
-        class="mr-3 my-3"
+    <v-row dense>
+      <property-field
+        name="Value"
+        :cols="{cols: 12, md: 6}"
       >
-        <v-layout
-          v-if="model.value !== undefined"
-          align-center
-          class="mb-2"
-        >
-          <v-icon
-            class="mr-2"
-            x-large
+        <div style="overflow: hidden;">
+          <v-layout
+            v-if="model.value !== undefined"
+            align-center
+            class="mb-2"
           >
-            $vuetify.icons.two_coins
-          </v-icon>
-          <coin-value
-            class="text-h6 mr-2"
-            :value="model.value"
-          />
-        </v-layout>
-        <v-layout
-          align-center
-        >
-          <v-icon
-            class="mr-2"
-            x-large
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.two_coins
+            </v-icon>
+            <coin-value
+              class="text-subtitle-1 mr-2"
+              :value="model.value"
+            />
+          </v-layout>
+          <v-layout
+            align-center
           >
-            $vuetify.icons.cash
-          </v-icon>
-          <coin-value
-            class="text-h6 mr-2"
-            :value="model.contentsValue"
-          />
-          <span class="text-h6">
-            contents
-          </span>
-        </v-layout>
-      </div>
-      <div
-        class="my-3"
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.cash
+            </v-icon>
+            <coin-value
+              class="text-subtitle-1 mr-2"
+              :value="model.contentsValue"
+            />
+            <span class="text-subtitle-1">
+              contents
+            </span>
+          </v-layout>
+        </div>
+      </property-field>
+      <property-field
+        name="Weight"
+        :cols="{cols: 12, md: 6}"
       >
-        <v-layout
-          v-if="model.weight !== undefined"
-          align-center
-          justify-end
-          class="mb-2"
+        <div style="overflow: hidden;">
+          <v-layout
+            v-if="model.weight !== undefined"
+            align-center
+            class="mb-2"
+          >
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.weight
+            </v-icon>
+            <span class="text-subtitle-1 mr-2">
+              {{ model.weight }} lb
+            </span>
+          </v-layout>
+          <v-layout
+            align-center
+            :class="{'mb-2': model.contentsWeightless}"
+          >
+            <v-icon
+              class="mr-2"
+              large
+            >
+              $vuetify.icons.injustice
+            </v-icon>
+            <span class="text-subtitle-1 mr-2">
+              {{ model.contentsWeight }} lb
+            </span>
+            <span
+              class="text-subtitle-1"
+            >
+              contents
+            </span>
+          </v-layout>
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.carried"
+        value="Carried"
+      />
+      <property-field
+        v-if="model.contentsWeightless"
+      >
+        <v-icon
+          style="overflow: hidden;"
+          class="ma-1"
         >
-          <span class="text-h6 mr-2">
-            {{ model.weight }} lb
-          </span>
-          <v-icon
-            class="ml-2"
-            x-large
-          >
-            $vuetify.icons.weight
-          </v-icon>
-        </v-layout>
-        <v-layout
-          align-center
-          justify-end
-          :class="{'mb-2': model.contentsWeightless}"
-        >
-          <span class="text-h6 mr-2">
-            {{ model.contentsWeight }} lb
-          </span>
-          <span
-            class="text-h6"
-          >
-            contents
-          </span>
-          <v-icon
-            class="ml-2"
-            x-large
-          >
-            $vuetify.icons.injustice
-          </v-icon>
-        </v-layout>
-        <v-layout
-          v-if="model.contentsWeightless"
-          align-center
-          justify-end
-        >
-          <span
-            class="text-h6"
-          >
-            Contents weightless
-          </span>
-          <v-icon
-            class="ml-2"
-            x-large
-          >
-            $vuetify.icons.weightless
-          </v-icon>
-        </v-layout>
-      </div>
-    </div>
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
+          $vuetify.icons.weightless
+        </v-icon>
+        <span class="ml-1">Contents weightless</span>
+      </property-field>
+      <property-description
+        name="Description"
+        :model="model.description"
+      />
+    </v-row>
   </div>
 </template>
 

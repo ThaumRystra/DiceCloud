@@ -1,27 +1,36 @@
 <template lang="html">
   <div>
-    <div class="layout">
-      <computed-field
-        ref="focusFirst"
-        label="Damage"
-        hint="A caculation including dice rolls of the damge to deal to the target when activated by an action"
-        :model="model.amount"
-        :error-messages="errors.amount"
-        @change="({path, value, ack}) =>
-          $emit('change', {path: ['amount', ...path], value, ack})"
-      />
-      <calculation-error-list :errors="model.amountErrors" />
-      <smart-select
-        label="Damage Type"
-        style="flex-basis: 200px;"
-        hint="Use the Healing type to restore hit points"
-        :items="DAMAGE_TYPES"
-        :value="model.damageType"
-        :error-messages="errors.damageType"
-        :menu-props="{auto: true}"
-        @change="change('damageType', ...arguments)"
-      />
-    </div>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          ref="focusFirst"
+          label="Damage"
+          hint="A caculation including dice rolls of the damge to deal to the target when activated by an action"
+          :model="model.amount"
+          :error-messages="errors.amount"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['amount', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Damage Type"
+          style="flex-basis: 200px;"
+          hint="Use the Healing type to restore hit points"
+          :items="DAMAGE_TYPES"
+          :value="model.damageType"
+          :error-messages="errors.damageType"
+          :menu-props="{auto: true}"
+          @change="change('damageType', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <smart-select
       label="Target"
       :hint="targetOptionHint"
@@ -71,20 +80,15 @@ export default {
 					text: 'Self',
 					value: 'self',
 				}, {
-					text: 'Roll once for each target',
-					value: 'each',
-				}, {
-					text: 'Roll once and apply to every target',
-					value: 'every',
+					text: 'Target',
+					value: 'target',
 				},
 			];
 		},
 		targetOptionHint(){
 			let hints = {
-				self: 'The damage will be applied to the character\'s own attribute when taking the action',
+				self: 'The damage will be applied to the character taking the action',
 				target: 'The damage will be applied to the target of the action',
-				each: 'The damage will be rolled separately for each of the targets of the action',
-				every: 'The damage will be rolled once and applied to each of the targets of the action',
 			};
 			if (this.parentTarget === 'singleTarget'){
 				hints.each = hints.target;

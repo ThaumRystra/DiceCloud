@@ -19,6 +19,7 @@ const ClassLevelSchema = createPropertySchema({
     min: 2,
 		regEx: VARIABLE_NAME_REGEX,
     max: STORAGE_LIMITS.variableName,
+    optional: true,
   },
 	level: {
     type: SimpleSchema.Integer,

@@ -93,20 +93,10 @@
           />
         </div>
       </property-field>
-    </v-row>
-    <v-row
-      v-if="model.summary && model.summary.text"
-      dense
-    >
       <property-description
         name="Summary"
         :model="model.summary"
       />
-    </v-row>
-    <v-row
-      v-if="model.description && model.description.text"
-      dense
-    >
       <property-description
         name="Description"
         :model="model.description"

@@ -89,7 +89,7 @@ let SlotSchema = createPropertySchema({
 const ComputedOnlySlotSchema = createPropertySchema({
   // Computed fields
   description: {
-    type: 'inlineCalculationFieldToCompute',
+    type: 'computedOnlyInlineCalculationField',
     optional: true,
   },
   quantityExpected: {

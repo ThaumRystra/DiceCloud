@@ -102,6 +102,7 @@
       />
     </v-slide-y-transition>
     <v-btn
+      tile
       outlined
       @click="$emit('toggle-editing')"
     >

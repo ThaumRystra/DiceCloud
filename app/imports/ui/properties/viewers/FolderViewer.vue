@@ -1,7 +1,5 @@
 <template lang="html">
-  <div class="folder-viewer">
-    <property-name :value="model.name" />
-  </div>
+  <div class="folder-viewer" />
 </template>
 
 <script lang="js">

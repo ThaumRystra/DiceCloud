@@ -14,18 +14,6 @@
       />
     </template>
     <template v-if="model">
-      <div
-        v-if="!editing"
-        class="layout mb-4"
-      >
-        <template v-if="!embedded">
-          <breadcrumbs :model="model" />
-        </template>
-        <v-spacer />
-        <v-chip disabled>
-          {{ typeName }}
-        </v-chip>
-      </div>
       <v-fade-transition
         mode="out-in"
       >
@@ -39,13 +27,27 @@
           @push="push"
           @pull="pull"
         />
-        <component
-          :is="model.type + 'Viewer'"
+        <div
           v-else-if="!editing && $options.components[model.type + 'Viewer']"
-          :key="_id"
-          class="creature-property-viewer"
-          :model="model"
-        />
+        >
+          <div
+            class="layout mb-4"
+          >
+            <template v-if="!embedded">
+              <breadcrumbs :model="model" />
+            </template>
+            <v-spacer />
+            <v-chip disabled>
+              {{ typeName }}
+            </v-chip>
+          </div>
+          <component
+            :is="model.type + 'Viewer'"
+            :key="_id"
+            class="creature-property-viewer"
+            :model="model"
+          />
+        </div>
         <p v-else>
           This property can't be viewed yet.
         </p>

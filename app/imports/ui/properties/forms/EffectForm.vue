@@ -49,7 +49,16 @@
       :error-messages="errors.stats"
       @change="change('stats', ...arguments)"
     />
+    <text-field
+      v-if="model.operation === 'conditional'"
+      label="Text"
+      hint="The text to display on the affected stats"
+      :value="model.text"
+      :error-messages="errors.text"
+      @change="change('text', ...arguments)"
+    />
     <computed-field
+      v-else
       label="Value"
       class="mr-2"
       hint="Number or calculation to determine the value of this effect"
@@ -60,15 +69,6 @@
       @change="({path, value, ack}) =>
         $emit('change', {path: ['amount', ...path], value, ack})"
     />
-    <v-expand-transition>
-      <text-field
-        v-if="!isFinite(+model.calculation) && model.result !== undefined"
-        disabled
-        label="Result"
-        :value="model.result"
-      />
-    </v-expand-transition>
-    <calculation-error-list :errors="model.errors" />
     <smart-combobox
       label="Tags"
       multiple
@@ -85,13 +85,9 @@
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	const ICON_SPIN_DURATION = 300;
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin, attributeListMixin],
 		data(){ return {
 			displayedIcon: 'add',
@@ -124,7 +120,6 @@
 					case 'passiveAdd': return true;
 					case 'fail': return false;
           case 'conditional': return false;
-					case 'rollBonus': return true;
           default: return true;
 				}
 			},
@@ -139,9 +134,8 @@
 					case 'advantage': return 'If this stat is the basis for a check, that check will be at advantage';
 					case 'disadvantage': return 'If this stat is the basis for a check, that check will be at advantage';
 					case 'passiveAdd': return 'This value will be added to the passive check';
-					case 'fail': return 'Stat based on this attribute will always fail';
+					case 'fail': return 'Targeted skills and checks will always fail';
           case 'conditional': return 'Add a text note to this stat';
-					case 'rollBonus': return 'Add this value to rolls based on this stat';
           default: return '';
 				}
 			},

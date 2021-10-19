@@ -2,7 +2,7 @@
   <property-field
     v-if="model && (model.value || model.text)"
     :name="name"
-    :cols="{col: 12}"
+    :cols="{cols: 12}"
   >
     <markdown-text
       :markdown="model.value || model.text"

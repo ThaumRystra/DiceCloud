@@ -6,6 +6,7 @@ let FeatureSchema = createPropertySchema({
 	name: {
 		type: String,
     max: STORAGE_LIMITS.name,
+    optional: true,
 	},
 	summary: {
 		type: 'inlineCalculationFieldToCompute',

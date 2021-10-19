@@ -1,6 +1,8 @@
 <template lang="html">
   <v-col
-    v-if="value !== undefined || ($slots.default && $slots.default.length)"
+    v-if="value !== undefined ||
+      calculation !== undefined ||
+      ($slots.default && $slots.default.length)"
     v-bind="cols"
     class="mb-3"
   >
@@ -22,16 +24,26 @@
         <div
           class="layout align-center"
           :class="{
-            'text-body-1': !large,
-            'text-h4': large,
-            'justify-center': center,
-            'mono': mono,
+            'text-body-1': !isLarge,
+            'text-h4': isLarge,
+            'justify-center': isCenter,
+            'justify-end': end,
+            'mono': isMono,
           }"
           style="overflow-x: auto;"
           v-bind="$attrs"
         >
           <slot>
-            {{ value }}
+            <template v-if="value !== undefined">
+              {{ value }}
+            </template>
+            <template v-else-if="calculation !== undefined">
+              {{
+                calculation.value !== undefined ?
+                  calculation.value :
+                  calculation.calculation
+              }}
+            </template>
           </slot>
         </div>
       </div>
@@ -50,7 +62,12 @@ export default {
       type: [String, Number, Boolean],
       default: undefined,
     },
+    calculation: {
+      type: Object,
+      default: undefined,
+    },
     center: Boolean,
+    end: Boolean,
     large: Boolean,
     mono: Boolean,
     cols: {
@@ -58,6 +75,27 @@ export default {
       default: () => ({cols: 12, sm: 6, md: 4}),
     },
 	},
+  computed: {
+    showCalculationInsteadOfValue(){
+      if (!this.calculation) return;
+      return this.calculation && this.calculation.value === undefined;
+    },
+    // large and center are only applied to calculations if we are showing their
+    // value, if we are showing the calculation itself, large and center are
+    // turned off
+    isLarge(){
+      if (this.showCalculationInsteadOfValue) return false;
+      return this.large;
+    },
+    isCenter(){
+      if (this.showCalculationInsteadOfValue) return false;
+      return this.center;
+    },
+    isMono(){
+      if (this.showCalculationInsteadOfValue) return true;
+      return this.mono;
+    }
+  },
 }
 </script>
 

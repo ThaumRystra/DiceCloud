@@ -1,6 +1,36 @@
 <template lang="html">
   <div class="slot-form">
+    <v-row
+      v-if="model.type === 'class'"
+      dense
+    >
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          ref="focusFirst"
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          hint="Use this name in calculations to reference this attribute"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <text-field
+      v-else
       ref="focusFirst"
       label="Name"
       :value="model.name"
@@ -8,6 +38,7 @@
       @change="change('name', ...arguments)"
     />
     <smart-select
+      v-if="model.type !== 'class'"
       label="Type"
       style="flex-basis: 300px;"
       clearable
@@ -95,6 +126,7 @@
     />
 
     <smart-select
+      v-if="model.type !== 'class'"
       label="Unique"
       style="flex-basis: 300px;"
       clearable
@@ -173,6 +205,9 @@
     mixins: [propertyFormMixin],
     inject: {
       context: { default: {} }
+    },
+    props: {
+      classForm: Boolean,
     },
     data(){
       let slotTypes = [];

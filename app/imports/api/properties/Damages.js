@@ -14,7 +14,7 @@ const DamageSchema = createPropertySchema({
 	// Who this damage applies to
 	target: {
 		type: String,
-    defaultValue: 'every',
+    defaultValue: 'target',
 		allowedValues: [
       'self',
       'target',
