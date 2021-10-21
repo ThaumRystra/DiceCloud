@@ -1,17 +1,15 @@
 <template lang="html">
   <div class="note-viewer">
-    <property-name :value="model.name" />
-    <property-description
-      :string="model.summary"
-      :calculations="model.summaryCalculations"
-      :inactive="model.inactive"
-    />
-    <v-divider class="mt-3 mb-3" />
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
+    <v-row dense>
+      <property-description
+        name="Summary"
+        :model="model.summary"
+      />
+      <property-description
+        name="Description"
+        :model="model.description"
+      />
+    </v-row>
   </div>
 </template>
 

@@ -50,7 +50,7 @@
 
 <script lang="js">
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
-  import {getPropertyName} from '/imports/constants/PROPERTIES.js';
+  import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
   const uniqueText = {
     uniqueInSlot: 'Each property inside this slot should be unique',

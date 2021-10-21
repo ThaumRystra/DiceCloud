@@ -1,21 +1,25 @@
 <template lang="html">
   <div class="reference-viewer">
-    <property-field
-      v-if="model.cache.error"
-      name="Error"
-      :value="model.cache.error"
-    />
-    <template v-else-if="model.ref && model.ref.id">
-      <div class="text-caption">
-        Linked Property
-      </div>
-      <tree-node-view :model="model.cache.node" />
-    </template>
-    <property-field
-      v-if="model.cache.library && model.cache.library.name"
-      name="Library"
-      :value="model.cache.library.name"
-    />
+    <v-row>
+      <property-field
+        v-if="model.cache.error"
+        name="Error"
+        :value="model.cache.error"
+      />
+      <property-field
+        v-else-if="model.ref && model.ref.id"
+        name="Linked Property"
+      >
+        <div style="overflow: hidden;">
+          <tree-node-view :model="model.cache.node" />
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.cache.library && model.cache.library.name"
+        name="Library"
+        :value="model.cache.library.name"
+      />
+    </v-row>
   </div>
 </template>
 

@@ -12,3 +12,4 @@ import '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
 import '/imports/api/creature/creatureProperties/methods/selectAmmoItem.js';
 import '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
 import '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import '/imports/api/creature/creatureProperties/methods/flipToggle.js';

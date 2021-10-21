@@ -28,6 +28,7 @@
         name="To hit"
         large
         center
+        signed
         :value="rollBonus"
       />
       <property-field
@@ -93,6 +94,7 @@
           />
         </div>
       </property-field>
+      <slot />
       <property-description
         name="Summary"
         :model="model.summary"

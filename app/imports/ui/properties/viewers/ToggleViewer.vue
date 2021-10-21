@@ -1,24 +1,25 @@
 <template lang="html">
   <div class="toggle-viewer">
-    <property-name :value="model.name" />
-    <property-field
-      v-if="model.disabled || model.enabled"
-      name="Status"
-      :value="model.enabled ? 'Enabled' : 'Disabled'"
-    />
-    <template
-      v-else-if="model.condition"
-    >
+    <v-row dense>
       <property-field
-        name="Condition"
-        :value="model.condition"
+        name="Variable Name"
+        mono
+        :value="model.variableName"
       />
       <property-field
-        v-if="'toggleResult' in model"
-        name="Result"
-        :value="model.toggleResult"
+        v-if="model.disabled || model.enabled"
+        name="Status"
+        :value="model.enabled ? 'Enabled' : 'Disabled'"
       />
-    </template>
+      <template
+        v-else-if="model.condition"
+      >
+        <property-field
+          name="Condition"
+          :calculation="model.condition"
+        />
+      </template>
+    </v-row>
   </div>
 </template>
 

@@ -36,6 +36,7 @@ function compute(computation, node){
   // Determine the prop's active status by its toggles
   computeToggles(computation, node);
   computeCalculations(computation, node);
+  if (node.data) delete node.data._computationDetails;
   // Compute the property by type
   computeByType[node.data?.type || '_variable']?.(computation, node);
 }

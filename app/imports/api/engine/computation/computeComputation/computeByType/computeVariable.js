@@ -3,6 +3,7 @@ import computeVariableAsAttribute from './computeVariable/computeVariableAsAttri
 import computeVariableAsSkill from './computeVariable/computeVariableAsSkill.js';
 import computeVariableAsConstant from './computeVariable/computeVariableAsConstant.js';
 import computeVariableAsClass from './computeVariable/computeVariableAsClass.js';
+import computeVariableAsToggle from './computeVariable/computeVariableAsToggle.js';
 import computeImplicitVariable from './computeVariable/computeImplicitVariable.js';
 
 export default function computeVariable(computation, node){
@@ -50,13 +51,15 @@ function combineAggregations(computation, node){
 function computeVariableProp(computation, node, prop){
   if (!prop) return;
   if (prop.type === 'attribute'){
-    computeVariableAsAttribute(computation, node, prop)
+    computeVariableAsAttribute(computation, node, prop);
   } else if (prop.type === 'skill'){
-    computeVariableAsSkill(computation, node, prop)
+    computeVariableAsSkill(computation, node, prop);
   } else if (prop.type === 'constant'){
-    computeVariableAsConstant(computation, node, prop)
+    computeVariableAsConstant(computation, node, prop);
   } else if (prop.type === 'class'){
-    computeVariableAsClass(computation, node, prop)
+    computeVariableAsClass(computation, node, prop);
+  } else if (prop.type === 'toggle'){
+    computeVariableAsToggle(computation, node, prop);
   }
 }
 

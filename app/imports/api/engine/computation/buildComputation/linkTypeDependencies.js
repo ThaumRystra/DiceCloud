@@ -9,6 +9,7 @@ const linkDependenciesByType = {
   effect: linkStats,
   skill: linkSkill,
   spell: linkResources,
+  toggle: linkVariableName,
 }
 
 export default function linkTypeDependencies(dependencyGraph, prop, computation){

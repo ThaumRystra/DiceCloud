@@ -1,34 +1,69 @@
 <template lang="html">
   <div class="feature-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-    <v-layout
-      column
-      align-center
-    >
-      <v-radio-group
-        :value="radioSelection"
-        @change="radioChange"
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
       >
-        <v-radio
-          value="enabled"
-          label="Enabled"
+        <text-field
+          ref="focusFirst"
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
         />
-        <v-radio
-          value="disabled"
-          label="Disabled"
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          hint="Use this name in calculations to reference this attribute"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
         />
-        <v-radio
-          value="calculated"
-          label="Calculated"
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-checkbox
+          label="Show on character sheet"
+          :value="model.showUI"
+          :error-messages="errors.showUI"
+          @change="change('showUI', ...arguments)"
         />
-      </v-radio-group>
-    </v-layout>
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-layout
+          column
+        >
+          <v-radio-group
+            :value="radioSelection"
+            @change="radioChange"
+          >
+            <v-radio
+              value="enabled"
+              label="Enabled"
+            />
+            <v-radio
+              value="disabled"
+              label="Disabled"
+            />
+            <v-radio
+              value="calculated"
+              label="Calculated"
+            />
+          </v-radio-group>
+        </v-layout>
+      </v-col>
+    </v-row>
     <v-fade-transition>
       <computed-field
         v-show="radioSelection === 'calculated'"

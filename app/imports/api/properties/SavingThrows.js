@@ -18,7 +18,7 @@ let SavingThrowSchema = createPropertySchema({
   // Who this saving throw applies to
 	target: {
 		type: String,
-    defaultValue: 'every',
+    defaultValue: 'target',
 		allowedValues: [
       'self',
       'target',

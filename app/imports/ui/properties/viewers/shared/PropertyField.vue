@@ -9,6 +9,7 @@
     <v-sheet
       outlined
       class="pa-2 layout column align-start fill-height"
+      @click="$emit('click', $event)"
     >
       <v-sheet
         v-if="name"
@@ -38,11 +39,7 @@
               {{ value }}
             </template>
             <template v-else-if="calculation !== undefined">
-              {{
-                calculation.value !== undefined ?
-                  calculation.value :
-                  calculation.calculation
-              }}
+              {{ calculationText }}
             </template>
           </slot>
         </div>
@@ -52,6 +49,8 @@
 </template>
 
 <script lang="js">
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+
 export default {
 	props: {
 		name: {
@@ -70,6 +69,7 @@ export default {
     end: Boolean,
     large: Boolean,
     mono: Boolean,
+    signed: Boolean,
     cols: {
       type: Object,
       default: () => ({cols: 12, sm: 6, md: 4}),
@@ -80,22 +80,45 @@ export default {
       if (!this.calculation) return;
       return this.calculation && this.calculation.value === undefined;
     },
+    valueNotReduced(){
+      if (!this.calculation) return;
+      return typeof this.calculation.value === 'string'
+    },
+    calculationText(){
+      const calculation = this.calculation;
+      if (!calculation) {
+        return undefined;
+      }
+      if (calculation.value === undefined){
+        return calculation.calculation;
+      }
+      if (this.signed) {
+        return numberToSignedString(calculation.value);
+      }
+      return calculation.value;
+    },
     // large and center are only applied to calculations if we are showing their
     // value, if we are showing the calculation itself, large and center are
     // turned off
     isLarge(){
       if (this.showCalculationInsteadOfValue) return false;
+      if (this.valueNotReduced) return false;
       return this.large;
     },
     isCenter(){
       if (this.showCalculationInsteadOfValue) return false;
+      if (this.valueNotReduced) return false;
       return this.center;
     },
     isMono(){
       if (this.showCalculationInsteadOfValue) return true;
+      if (this.valueNotReduced) return true;
       return this.mono;
-    }
+    },
   },
+  methods: {
+    numberToSignedString,
+  }
 }
 </script>
 

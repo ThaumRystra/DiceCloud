@@ -1,23 +1,33 @@
 <template lang="html">
   <div class="roll-form">
-    <div class="layout wrap">
-      <text-field
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="Use this name in action formulae to refer to the result of this roll"
-        :error-messages="errors.variableName"
-        @change="change('variableName', ...arguments)"
-      />
-    </div>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          style="flex-basis: 300px;"
+          hint="Use this name in action formulae to refer to the result of this roll"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <computed-field
-      label="Roll bonus"
+      label="Roll"
       hint="The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
       :model="model.roll"
       :error-messages="errors.roll"

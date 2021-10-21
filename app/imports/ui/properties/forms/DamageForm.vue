@@ -19,7 +19,7 @@
         cols="12"
         md="6"
       >
-        <smart-select
+        <smart-combobox
           label="Damage Type"
           style="flex-basis: 200px;"
           hint="Use the Healing type to restore hit points"
@@ -57,12 +57,8 @@
 <script lang="js">
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
-  components: {
-    CalculationErrorList,
-  },
   mixins: [propertyFormMixin],
 	props: {
 		parentTarget: {
@@ -90,10 +86,6 @@ export default {
 				self: 'The damage will be applied to the character taking the action',
 				target: 'The damage will be applied to the target of the action',
 			};
-			if (this.parentTarget === 'singleTarget'){
-				hints.each = hints.target;
-				hints.every = hints.target;
-			}
 			return hints[this.model.target];
 		}
 	},

@@ -22,7 +22,6 @@
       :error-messages="errors.description"
       @change="change('description', ...arguments)"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <text-field
       label="Picture URL"
@@ -51,6 +50,7 @@
       @change="change('slotQuantityFilled', ...arguments)"
     />
     <text-field
+      v-if="context.isLibraryForm"
       label="Condition"
       hint="A caclulation to determine if this can be added to the character"
       placeholder="Always active"
@@ -81,6 +81,9 @@
       CalculationErrorList,
     },
     mixins: [propertyFormMixin],
+    inject: {
+      context: { default: {} }
+    },
     data(){
       let slotTypes = [];
       for (let key in PROPERTIES){

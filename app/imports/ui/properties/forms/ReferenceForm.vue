@@ -1,9 +1,14 @@
 <template lang="html">
   <div class="folder-form layout justify-start wrap">
-    <div data-id="change-ref">
+    <property-field
+      name="Linked Property"
+      data-id="change-ref"
+      style="cursor: pointer;"
+      @click="changeReference"
+    >
       <v-input
         :label="model.cache && model.cache.node ? '' : 'Linked Property'"
-        style="flex-basis: 300px; cursor: pointer;"
+        style="overflow: hidden;"
         readonly
         outlined
         persistent-hint
@@ -16,16 +21,14 @@
         :error-messages="model.cache.error || errors.ref"
         prepend-icon="mdi-vector-link"
         append-icon="mdi-refresh"
-        @click="changeReference"
-        @click:prepend="changeReference"
-        @click:append="updateReferenceNode"
+        @click:append.stop="updateReferenceNode"
       >
         <tree-node-view
           v-if="model && model.cache && model.cache.node"
           :model="model.cache.node"
         />
       </v-input>
-    </div>
+    </property-field>
   </div>
 </template>
 
@@ -33,10 +36,12 @@
   import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import updateReferenceNode from '/imports/api/library/methods/updateReferenceNode.js';
+  import PropertyField from '/imports/ui/properties/viewers/shared/PropertyField.vue';
 
   export default {
     components: {
       TreeNodeView,
+      PropertyField,
     },
     mixins: [propertyFormMixin],
     data(){return {
