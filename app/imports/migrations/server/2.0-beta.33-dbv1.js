@@ -170,7 +170,7 @@ const transformsByPropType = {
 function getComputedPropertyTransforms(key, toKey){
   if (!toKey) toKey = key;
   return [
-    {from: key, to: `${key}.calculation`},
+    {from: key, to: `${key}.calculation`, up: calculationUp, down: calculationDown},
     {from: `${key}Result`, to: `${toKey}.value`, up: nanToNull},
     {from: `${key}Errors`, to: `${toKey}.errors`, up: trimErrors},
   ];
@@ -179,9 +179,18 @@ function getComputedPropertyTransforms(key, toKey){
 function getInlineComputationTransforms(key){
   return [
     {from: key, to: `${key}.text`},
-    {from: `${key}Calculations`, to: `${key}.inlineCalculations`},
+    {from: `${key}Calculations`, to: `${key}.inlineCalculations`, up: calculationUp, down: calculationDown},
     {from: `${key}Calculations.$.result`, to: `${key}.inlineCalculations.$.value`},
   ];
+}
+
+function calculationUp(val){
+  if (!val) return val;
+  return val.replace('.value', '.total').replace('.currentValue', '.value');
+}
+
+function calculationDown(val){
+  return val.replace('.value', '.currentValue').replace('.total', '.value');
 }
 
 function nanToNull(val){
