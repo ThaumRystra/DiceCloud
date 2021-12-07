@@ -11,16 +11,16 @@ export default function(){
   // Items
   active('itemUnequippedId', 'Unequipped items should be active');
   byAncestor('itemUnequippedChildId', 'Children of unequipped items should be inactive');
-  active('itemEquippedId');
-  active('itemEquippedChildId');
+  active('itemEquippedId', 'Equipped items should be active');
+  active('itemEquippedChildId', 'Children of equipped items should be active');
 
   // Spells
-  active('spellPreparedId');
-  active('spellPreparedChildId');
-  active('spellAlwaysPreparedId');
-  active('spellAlwaysPreparedChildId');
-  bySelf('spellUnpreparedId');
-  byAncestor('spellUnpreparedChildId');
+  active('spellPreparedId', 'Prepared spells should be active');
+  byAncestor('spellPreparedChildId', 'Children of prepared spells should be deactivatedByAncestor');
+  active('spellAlwaysPreparedId', 'Always prepared spells should be active');
+  byAncestor('spellAlwaysPreparedChildId', 'Children of always prepared spells should be deactivatedByAncestor');
+  bySelf('spellUnpreparedId', 'Unprepared spells should be deactivatedBySelf');
+  byAncestor('spellUnpreparedChildId', 'Children of unprepared spells should be deactivatedByAncestor');
 
   // Notes
   active('NoteId', 'Notes should be active');
@@ -30,7 +30,7 @@ export default function(){
 function assertDeactivatedBySelf(computation, propId, note){
   const prop = computation.propsById[propId];
   assert.isTrue(prop.deactivatedBySelf, note);
-  assert.isTrue(prop.inactive, 'The property should be inactive');
+  assert.isTrue(prop.inactive, note + '. The property should be inactive');
 }
 
 function assertDeactivatedByAncestor(computation, propId, note){
@@ -42,8 +42,8 @@ function assertDeactivatedByAncestor(computation, propId, note){
 function assertActive(computation, propId, note){
   const prop = computation.propsById[propId];
   assert.isNotTrue(prop.inactive, note);
-  assert.isNotTrue(prop.deactivatedBySelf);
-  assert.isNotTrue(prop.deactivatedBySelf);
+  assert.isNotTrue(prop.deactivatedBySelf, note);
+  assert.isNotTrue(prop.deactivatedBySelf, note);
 }
 
 var testProperties = [

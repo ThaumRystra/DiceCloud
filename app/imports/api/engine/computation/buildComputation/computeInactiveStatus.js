@@ -2,32 +2,41 @@ import walkDown from '/imports/api/engine/computation/utility/walkdown.js';
 
 export default function computeInactiveStatus(node){
   const prop = node.node;
-  if (isActive(prop)) return;
-  // Unequipped items, notes, spells, and actions disable their children,
-  // but are not disabled themselves
-  if (
-    prop.type !== 'item' &&
-    prop.type !== 'note' &&
-    prop.type !== 'action' &&
-    prop.type !== 'spell'
-  ){
+  if (!isActive(prop)){
+    // Mark prop inactive due to self
     prop.inactive = true;
     prop.deactivatedBySelf = true;
   }
-  // Mark children as inactive due to ancestor
-  walkDown(node.children, child => {
-    child.node.inactive = true;
-    child.node.deactivatedByAncestor = true;
-  });
+  if(!childrenActive(prop)){
+    // Mark children as inactive due to ancestor
+    walkDown(node.children, child => {
+      child.node.inactive = true;
+      child.node.deactivatedByAncestor = true;
+    });
+  }
 }
 
 function isActive(prop){
   if (prop.disabled) return false;
   switch (prop.type){
+    // Unprepared spells are inactive
+    case 'spell': return !!prop.prepared || !!prop.alwaysPrepared;
+    default: return true;
+  }
+}
+
+function childrenActive(prop){
+  // Children of disabled properties are always inactive
+  if (prop.disabled) return false;
+  switch (prop.type){
+    // Only equipped items have active children
     case 'item': return !!prop.equipped;
-    case 'spell': return false;
-    case 'note': return false;
+    // The children of actions are always inactive
     case 'action': return false;
+    case 'spell': return false;
+    // The children of notes are always inactive
+    case 'note': return false;
+    // Other children are active
     default: return true;
   }
 }

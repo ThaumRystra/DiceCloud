@@ -35,15 +35,15 @@ const ComputedOnlySpellListSchema = new SimpleSchema({
     optional: true,
   },
   maxPrepared: {
-    type: 'fieldToCompute',
+    type: 'computedOnlyField',
     optional: true,
   },
   attackRollBonus: {
-    type: 'fieldToCompute',
+    type: 'computedOnlyField',
     optional: true,
   },
   dc: {
-    type: 'fieldToCompute',
+    type: 'computedOnlyField',
     optional: true,
   },
 });

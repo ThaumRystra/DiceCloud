@@ -6,21 +6,20 @@ export default function(){
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
   const prop = (id) => computation.propsById[id];
-
   assert.isTrue(
-    !!hasLink('childId', 'spellListId'),
+    !!hasLink('childId.description.inlineCalculations[0]', 'spellListId'),
     'Ancestor references of parent in inline calculations should create dependency'
   );
   assert.isTrue(
-    !!hasLink('grandchildId', 'spellListId'),
+    !!hasLink('grandchildId.dc', 'spellListId'),
     'References to higher ancestor should create dependency'
   );
   assert.isTrue(
-    !!hasLink('grandchildId', 'strength'),
+    !!hasLink('grandchildId.dc', 'strength'),
     'Variable references create dependencies'
   );
   assert.isTrue(
-    !!hasLink('grandchildId', 'wisdom'),
+    !!hasLink('grandchildId.dc', 'wisdom'),
     'Variable references create dependencies even if the attributes don\'t exist'
   );
   assert.equal(

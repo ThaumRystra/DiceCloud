@@ -1,6 +1,6 @@
-import computeCalculations from '/imports/api/engine/computation/computeComputation/computeCalculations.js';
 import computeToggles from '/imports/api/engine/computation/computeComputation/computeToggles.js';
 import computeByType from '/imports/api/engine/computation/computeComputation/computeByType.js';
+import embedInlineCalculations from './utility/embedInlineCalculations.js';
 
 export default function computeCreatureComputation(computation){
   const stack = [];
@@ -22,7 +22,7 @@ export default function computeCreatureComputation(computation){
       // Mark the object as visited and remove from stack
       top._visited = true;
       stack.pop();
-      // Compute the top object of the stack
+    // Compute the top object of the stack
       compute(computation, top);
     } else {
       top._visitedChildren = true;
@@ -30,13 +30,14 @@ export default function computeCreatureComputation(computation){
       pushDependenciesToStack(top.id, graph, stack);
     }
   }
+
+  // Finish the props after the dependency graph has been traversed
+  computation.props.forEach(finalizeProp);
 }
 
 function compute(computation, node){
   // Determine the prop's active status by its toggles
   computeToggles(computation, node);
-  computeCalculations(computation, node);
-  if (node.data) delete node.data._computationDetails;
   // Compute the property by type
   computeByType[node.data?.type || '_variable']?.(computation, node);
 }
@@ -45,4 +46,13 @@ function pushDependenciesToStack(nodeId, graph, stack){
   graph.forEachLinkedNode(nodeId, linkedNode => {
     stack.push(linkedNode);
   }, true);
+}
+
+function finalizeProp(prop){
+  // Embed the inline calculations
+  prop._computationDetails?.inlineCalculations?.forEach(inlineCalcObj => {
+    embedInlineCalculations(inlineCalcObj);
+  });
+  // Clean up the computation details
+  delete prop._computationDetails;
 }

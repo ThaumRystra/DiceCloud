@@ -41,7 +41,6 @@ let ComputedOnlyBuffSchema = createPropertySchema({
 		type: Number,
 		optional: true,
 		min: 0,
-    removeBeforeCompute: true,
 	},
 	appliedBy: {
 		type: Object,
@@ -59,7 +58,7 @@ let ComputedOnlyBuffSchema = createPropertySchema({
 		type: String,
     max: STORAGE_LIMITS.collectionName,
 	},
-})
+});
 
 const ComputedBuffSchema = new SimpleSchema()
   .extend(BuffSchema)

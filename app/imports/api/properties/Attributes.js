@@ -92,7 +92,6 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
 	// The computed value of the attribute
   total: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
-		defaultValue: 0,
     optional: true,
     removeBeforeCompute: true,
   },
@@ -112,7 +111,7 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
   // Attributes with proficiency grant it to all skills based on the attribute
   proficiency: {
 		type: Number,
-    allowedValues: [0.49, 0.5, 1, 2],
+    allowedValues: [0, 0.49, 0.5, 1, 2],
 		optional: true,
     removeBeforeCompute: true,
 	},

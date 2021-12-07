@@ -185,11 +185,12 @@ function getInlineComputationTransforms(key){
 }
 
 function calculationUp(val){
-  if (!val) return val;
+  if (!val || !val.replace) return val;
   return val.replace('.value', '.total').replace('.currentValue', '.value');
 }
 
 function calculationDown(val){
+  if (!val || !val.replace) return val;
   return val.replace('.value', '.currentValue').replace('.total', '.value');
 }
 

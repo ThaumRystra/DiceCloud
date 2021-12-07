@@ -8,13 +8,13 @@ export default function(){
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   const scope = variableName => computation.scope[variableName];
-  assert.equal(prop('emptyId').value, 0);
-  assert.equal(prop('noVariableNameId').value, 8);
-  assert.equal(prop('strengthId').value, 12);
-  assert.equal(prop('strengthId').modifier, 1);
-  assert.equal(scope('strength').modifier, 1);
-  assert.equal(prop('referencesDexId').value, 4);
-  assert.equal(prop('hitDiceId').constitutionMod, 5);
+  assert.equal(prop('emptyId').value, 0, 'calculates empty props to zero');
+  assert.equal(prop('noVariableNameId').value, 8, 'Calculates props without a variable name');
+  assert.equal(prop('strengthId').value, 12, 'applies base values');
+  assert.equal(prop('strengthId').modifier, 1, 'calculates modifiers for basic properties');
+  assert.equal(scope('strength').modifier, 1, 'Access properties via variables');
+  assert.equal(prop('referencesDexId').value, 4, 'Access variable properties in calculations');
+  assert.equal(prop('hitDiceId').constitutionMod, 5, 'Hit dice get constitution modifier');
   assert.equal(prop('overriddenDexId').overridden, true, 'override properties with the same variable name');
   assert.equal(
     prop('parseErrorId').baseValue.value, null,
