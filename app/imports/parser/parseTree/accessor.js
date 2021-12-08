@@ -16,6 +16,12 @@ const accessor = {
       value = value[name];
     });
     let valueType = typeof value;
+    // If the accessor returns an objet, get the object's value instead
+    while (valueType === 'object'){
+      value = value.value;
+      valueType = typeof value;
+    }
+    // Return a parse node based on the type returned
     if (valueType === 'string' || valueType === 'number' || valueType === 'boolean'){
       return {
         result: constant.create({
@@ -34,6 +40,7 @@ const accessor = {
       };
     } else {
       context.error(`${node.name} returned an unexpected type`);
+      context.error(JSON.stringify(value, null, 2));
       return {
         result: accessor.create({
           name: node.name,

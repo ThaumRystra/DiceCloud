@@ -26,6 +26,10 @@ function discoverInlineCalculationFields(prop, schemas){
         unset(prop, calcKey);
         return;
       }
+
+      // Set the value to the uncomputed string for use in calculations
+      inlineCalcObj.value = string;
+      
       // Has the text, if it matches the existing hash, stop
       const inlineCalcHash = cyrb53(inlineCalcObj.text);
       if (inlineCalcHash === inlineCalcObj.hash){
@@ -33,10 +37,9 @@ function discoverInlineCalculationFields(prop, schemas){
       }
       inlineCalcObj.hash = inlineCalcHash;
       inlineCalcObj.inlineCalculations = [];
-      // Set the value to the uncomputed string for use in calculations
+
       // It will be re set including the embedded calculation at the end of
       // the computation
-      inlineCalcObj.value = string;
       let matches = string.matchAll(INLINE_CALCULATION_REGEX);
       for (let match of matches){
         let calculation = match[1];
