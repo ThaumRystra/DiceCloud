@@ -1,6 +1,10 @@
 <template lang="html">
+  <markdown-text
+    v-if="text"
+    :markdown="model.value || model.text"
+  />
   <property-field
-    v-if="model && (model.value || model.text)"
+    v-else-if="model && (model.value || model.text)"
     :name="name"
     :cols="{cols: 12}"
   >
@@ -28,6 +32,7 @@ export default {
       type: String,
       default: undefined,
     },
+    text: Boolean,
 	},
 }
 </script>

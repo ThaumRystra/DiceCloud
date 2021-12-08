@@ -12,6 +12,7 @@
     </v-card-title>
     <v-card-text v-if="model.summary">
       <property-description
+        text
         :model="model.summary"
       />
     </v-card-text>

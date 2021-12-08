@@ -22,6 +22,7 @@
       />
     </template>
     <property-description
+      text
       :string="model.description"
     />
     <p>
