@@ -37,6 +37,7 @@ import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { parse, prettifyParseError } from '/imports/parser/parser.js';
+import resolve, { toString } from '/imports/parser/resolve.js';
 import LogEntry from '/imports/ui/log/LogEntry.vue';
 
 export default {
@@ -72,8 +73,8 @@ export default {
         return;
       }
       try {
-        let compiled = result.compile(this.creature.variables);
-        this.inputHint = compiled.toString();
+        let {result: compiled} = resolve('compile', result, this.creature.variables);
+        this.inputHint = toString(compiled);
         return;
       } catch (e){
         console.warn(e);
