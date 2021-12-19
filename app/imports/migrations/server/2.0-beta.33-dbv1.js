@@ -19,8 +19,14 @@ Migrations.add({
 });
 
 function migrate({reversed} = {}){
+  console.log('unarchiving all characters from database archive');
+  // TODO
+  console.log('migrating creature properties');
   migrateCollection({collection: CreatureProperties, reversed});
+  console.log('migrating library nodes')
   migrateCollection({collection: LibraryNodes, reversed});
+  console.log('archiving characters to file system archive');
+  // TODO
 }
 
 function migrateCollection({collection, reversed}){

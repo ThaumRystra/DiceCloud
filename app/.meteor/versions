@@ -85,6 +85,8 @@ oauth@1.3.2
 oauth2@1.3.0
 ongoworks:speakingurl@9.0.0
 ordered-dict@1.1.0
+ostrio:cookies@2.7.0
+ostrio:files@2.0.1
 patreon-oauth@0.1.0
 peerlibrary:assert@0.3.0
 peerlibrary:check-extension@0.7.0
