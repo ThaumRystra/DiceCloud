@@ -30,9 +30,10 @@ export function getArchiveObj(creatureId){
   return archiveCreature;
 }
 
-export function writeArchiveCreatureFile(archive){
+export function archiveCreature(creatureId){
+  const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
-  return ArchiveCreatureFiles.write(buffer, {
+  const result = ArchiveCreatureFiles.write(buffer, {
     fileName: `${archive.creature.name || archive.creature._id}.json`,
     type: 'application/json',
     userId: archive.creature.owner,
@@ -42,6 +43,8 @@ export function writeArchiveCreatureFile(archive){
       creatureName: archive.creature.name,
     },
   });
+  removeCreatureWork(creatureId);
+  return result;
 }
 
 const archiveCreatureToFile = new ValidatedMethod({
@@ -60,10 +63,10 @@ const archiveCreatureToFile = new ValidatedMethod({
   async run({creatureId}) {
     assertOwnership(creatureId, this.userId);
     if (Meteor.isServer){
-      const archive = getArchiveObj(creatureId);
-      writeArchiveCreatureFile(archive);
+      archiveCreature(creatureId);
+    } else {
+      removeCreatureWork(creatureId);
     }
-    removeCreatureWork(creatureId);
   },
 });
 

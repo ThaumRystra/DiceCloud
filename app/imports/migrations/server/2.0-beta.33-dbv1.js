@@ -1,6 +1,9 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import ArchivedCreatures from '/imports/api/creature/archive/ArchivedCreatures.js';
+import { restoreCreature } from '/imports/api/creature/archive/methods/restoreCreatures.js';
+import { archiveCreature } from '/imports/api/creature/archive/methods/archiveCreatureToFile.js';
 import transformFields from '/imports/migrations/server/transformFields.js';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
@@ -19,14 +22,34 @@ Migrations.add({
 });
 
 function migrate({reversed} = {}){
-  console.log('unarchiving all characters from database archive');
-  // TODO
+  console.log('restoring all characters from database archive');
+  const restoredIds = restoreAllCreatures();
+
   console.log('migrating creature properties');
   migrateCollection({collection: CreatureProperties, reversed});
+
   console.log('migrating library nodes')
   migrateCollection({collection: LibraryNodes, reversed});
+
   console.log('archiving characters to file system archive');
-  // TODO
+  rearchiveAllCreatures(restoredIds);
+}
+
+function restoreAllCreatures(){
+  const ids = [];
+  ArchivedCreatures.find({}, {
+    fields: {_id: 1}
+  }).forEach(archive => {
+    const id = restoreCreature(archive._id);
+    ids.push(id);
+  });
+  return ids;
+}
+
+function rearchiveAllCreatures(ids){
+  ids.forEach(id => {
+    archiveCreature(id);
+  });
 }
 
 function migrateCollection({collection, reversed}){
