@@ -18,8 +18,8 @@ export function getArchiveObj(creatureId){
   const logs = CreatureLogs.find({creatureId}).fetch();
   let archiveCreature = {
     meta: {
-      archiveDate: new Date(),
       schemaVersion: SCHEMA_VERSION,
+      archiveDate: new Date(),
     },
     creature,
     properties,

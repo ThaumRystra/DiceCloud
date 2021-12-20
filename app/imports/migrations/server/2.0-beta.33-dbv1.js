@@ -61,7 +61,7 @@ function migrateCollection({collection, reversed}){
   bulk.execute();
 }
 
-export default function migrateProperty({collection, reversed, prop}){
+export function migrateProperty({collection, reversed, prop}){
   const transforms = [
     ...(transformsByPropType[prop.type] || []),
     {from: 'dependencies'}

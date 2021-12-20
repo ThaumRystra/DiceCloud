@@ -9,15 +9,16 @@ import Experiences from '/imports/api/creature/experience/Experiences.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
 import readFile from '/imports/api/creature/archive/methods/readFile.js';
+import migrateArchive from '/imports/migrations/server/migrateArchive.js';
 
 function restoreCreature(file, archive){
-  if (SCHEMA_VERSION < file.meta.schemaVersion){
+  if (SCHEMA_VERSION < archive.meta.schemaVersion){
     throw new Meteor.Error('Incompatible',
       'The archive file is from a newer version. Update required to read.')
   }
 
   // Migrate and verify the archive meets the current schema
-  // migrateArchive(archive, file.meta.schemaVersion);
+  migrateArchive(archive);
 
   // Insert the creature sub documents
   // They still have their original _id's
