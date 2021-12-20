@@ -1,5 +1,5 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import migrateProperty from './2.0-beta.33-dbv1.js';
+import { migrateProperty } from './2.0-beta.33-dbv1.js';
 import { assert } from 'chai';
 
 const exampleAction = {
