@@ -47,28 +47,28 @@
             class="creature-property-viewer"
             :model="model"
           />
+          <v-row
+            v-show="!embedded && childrenLength"
+            class="mt-1"
+            dense
+          >
+            <property-field
+              name="Child properties"
+              :cols="{cols: 12}"
+            >
+              <creature-properties-tree
+                style="width: 100%;"
+                :root="{collection: 'creatureProperties', id: model._id}"
+                @length="childrenLength = $event"
+                @selected="selectSubProperty"
+              />
+            </property-field>
+          </v-row>
         </div>
         <p v-else>
           This property can't be viewed yet.
         </p>
       </v-fade-transition>
-      <v-row
-        v-show="!editing && !embedded && childrenLength"
-        class="mt-1"
-        dense
-      >
-        <property-field
-          name="Child properties"
-          :cols="{cols: 12}"
-        >
-          <creature-properties-tree
-            style="width: 100%;"
-            :root="{collection: 'creatureProperties', id: model._id}"
-            @length="childrenLength = $event"
-            @selected="selectSubProperty"
-          />
-        </property-field>
-      </v-row>
     </template>
     <div
       v-if="!embedded"

@@ -9,7 +9,10 @@ import Experiences from '/imports/api/creature/experience/Experiences.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
 import readFile from '/imports/api/creature/archive/methods/readFile.js';
-import migrateArchive from '/imports/migrations/server/migrateArchive.js';
+let migrateArchive;
+if (Meteor.isServerr){
+  migrateArchive = require('/imports/migrations/server/migrateArchive.js').default;
+}
 
 function restoreCreature(file, archive){
   if (SCHEMA_VERSION < archive.meta.schemaVersion){

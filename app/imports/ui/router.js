@@ -2,35 +2,34 @@ import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
 import { acceptInviteToken } from '/imports/api/users/Invites.js';
 
 // Components
-import Home from '/imports/ui/pages/Home.vue';
-import About from '/imports/ui/pages/About.vue';
-import CharacterList from '/imports/ui/pages/CharacterList.vue';
-import CharacterListToolbarItems from '/imports/ui/creature/creatureList/CharacterListToolbarItems.vue';
-import Library from '/imports/ui/pages/Library.vue';
-import SingleLibraryToolbar from '/imports/ui/library/SingleLibraryToolbar.vue';
-import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
-import CharacterSheetToolbar from '/imports/ui/creature/character/CharacterSheetToolbar.vue';
-import CharacterSheetRightDrawer from '/imports/ui/creature/character/CharacterSheetRightDrawer.vue';
-import SignIn from '/imports/ui/pages/SignIn.vue' ;
-import Register from '/imports/ui/pages/Register.vue';
-import IconAdmin from '/imports/ui/icons/IconAdmin.vue';
-//import Friends from '/imports/ui/pages/Friends.vue' ;
-import Feedback from '/imports/ui/pages/Feedback.vue' ;
-import Account from '/imports/ui/pages/Account.vue' ;
-import InviteSuccess from '/imports/ui/pages/InviteSuccess.vue' ;
-import InviteError from '/imports/ui/pages/InviteError.vue' ;
-import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
-import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
-import Tabletops from '/imports/ui/pages/Tabletops.vue';
-import Tabletop from '/imports/ui/pages/Tabletop.vue';
-import TabletopToolbar from '/imports/ui/tabletop/TabletopToolbar.vue';
-import TabletopRightDrawer from '/imports/ui/tabletop/TabletopRightDrawer.vue';
-import Admin from '/imports/ui/pages/Admin.vue';
+const Home = () => import('/imports/ui/pages/Home.vue');
+const About = () => import('/imports/ui/pages/About.vue');
+const CharacterList = () => import('/imports/ui/pages/CharacterList.vue');
+const CharacterListToolbarItems = () => import('/imports/ui/creature/creatureList/CharacterListToolbarItems.vue');
+const Library = () => import('/imports/ui/pages/Library.vue');
+const SingleLibraryToolbar = () => import('/imports/ui/library/SingleLibraryToolbar.vue');
+const CharacterSheetPage = () => import('/imports/ui/pages/CharacterSheetPage.vue');
+const CharacterSheetToolbar = () => import('/imports/ui/creature/character/CharacterSheetToolbar.vue');
+const CharacterSheetRightDrawer = () => import('/imports/ui/creature/character/CharacterSheetRightDrawer.vue');
+const SignIn = () => import('/imports/ui/pages/SignIn.vue' );
+const Register = () => import('/imports/ui/pages/Register.vue');
+const IconAdmin = () => import('/imports/ui/icons/IconAdmin.vue');
+//const Friends = () => import('/imports/ui/pages/Friends.vue' );
+const Feedback = () => import('/imports/ui/pages/Feedback.vue' );
+const Account = () => import('/imports/ui/pages/Account.vue' );
+const InviteSuccess = () => import('/imports/ui/pages/InviteSuccess.vue' );
+const InviteError = () => import('/imports/ui/pages/InviteError.vue' );
+const NotImplemented = () => import('/imports/ui/pages/NotImplemented.vue');
+const PatreonLevelTooLow = () => import('/imports/ui/pages/PatreonLevelTooLow.vue');
+const Tabletops = () => import('/imports/ui/pages/Tabletops.vue');
+const Tabletop = () => import('/imports/ui/pages/Tabletop.vue');
+const TabletopToolbar = () => import('/imports/ui/tabletop/TabletopToolbar.vue');
+const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDrawer.vue');
+const Admin = () => import('/imports/ui/pages/Admin.vue');
+// Not found
+const NotFound = () => import('/imports/ui/pages/NotFound.vue');
 
 let userSubscription = Meteor.subscribe('user');
-
-// Not found
-import NotFound from '/imports/ui/pages/NotFound.vue';
 
 // Create router instance
 const routerFactory = new RouterFactory({

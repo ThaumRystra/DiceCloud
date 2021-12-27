@@ -3,7 +3,7 @@ import { FilesCollection } from 'meteor/ostrio:files';
 const ArchiveCreatureFiles = new FilesCollection({
   collectionName: 'archiveCreatureFiles',
   allowClientCode: false, // Disallow remove files from Client
-  storagePath: '/DiceCloud/uploads/',
+  storagePath: '/DiceCloud/archiveCreatures/',
   onBeforeUpload(file) {
     // Allow upload files under 10MB, and only in json format
     if (file.size > 10485760) {
