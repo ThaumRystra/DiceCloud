@@ -10,7 +10,7 @@ import { removeCreatureWork } from '/imports/api/creature/creatures/methods/remo
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
 import readFile from '/imports/api/creature/archive/methods/readFile.js';
 let migrateArchive;
-if (Meteor.isServerr){
+if (Meteor.isServer){
   migrateArchive = require('/imports/migrations/server/migrateArchive.js').default;
 }
 
