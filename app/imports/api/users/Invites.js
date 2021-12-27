@@ -16,7 +16,6 @@ let InviteSchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
     index: 1,
-    unique: 1,
   },
   inviteToken: {
     type: String,
