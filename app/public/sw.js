@@ -56,7 +56,9 @@ self.addEventListener('fetch', (event) => {
             })));
           }
 
-          caches.open(version).then(cache => cache.put(event.request, clonedResponse));
+          if (event.request.method !== 'POST') {
+            caches.open(version).then(cache => cache.put(event.request, clonedResponse));
+          }
         }
         return response;
       }).catch(() => {

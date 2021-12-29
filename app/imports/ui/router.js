@@ -1,6 +1,6 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
 import { acceptInviteToken } from '/imports/api/users/Invites.js';
-
+import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE.js';
 // Components
 const Home = () => import('/imports/ui/pages/Home.vue');
 const About = () => import('/imports/ui/pages/About.vue');
@@ -26,6 +26,8 @@ const Tabletop = () => import('/imports/ui/pages/Tabletop.vue');
 const TabletopToolbar = () => import('/imports/ui/tabletop/TabletopToolbar.vue');
 const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDrawer.vue');
 const Admin = () => import('/imports/ui/pages/Admin.vue');
+const Maintenance = () => import('/imports/ui/pages/Maintenance.vue');
+
 // Not found
 const NotFound = () => import('/imports/ui/pages/NotFound.vue');
 
@@ -92,8 +94,8 @@ function claimInvite(to, from, next){
   });
 }
 
-RouterFactory.configure(factory => {
-  factory.addRoutes([{
+RouterFactory.configure(router => {
+  router.addRoutes([{
       path: '/',
       name: 'home',
       components: {
@@ -249,29 +251,40 @@ RouterFactory.configure(factory => {
       name: 'admin',
       component: Admin,
       beforeEnter: ensureAdmin,
+    },{
+      path: '/maintenance',
+      name: 'maintenance',
+      component: Maintenance,
     },
   ]);
 });
 
 // Not found route has lowest priority
-RouterFactory.configure(factory => {
-  factory.addRoute({
+RouterFactory.configure(router => {
+  router.addRoute({
     path: '*',
     component: NotFound,
   });
 }, -1);
 
+function redirectIfMaintenance(to, from, next){
+  if (!MAINTENANCE_MODE) return next();
+  console.log(to);
+  if (to?.path === '/admin' || to?.path === '/maintenance') return next();
+  Tracker.autorun((computation) => {
+    if (userSubscription.ready()){
+      computation.stop();
+      const user = Meteor.user();
+      if (user && user.roles && user.roles.includes('admin')){
+        next({name: 'admin'})
+      } else {
+        next({name: 'maintenance'});
+      }
+    }
+  });
+}
+
 // Create the router instance
 const router = routerFactory.create();
-router.beforeEach((to, from, next) => {
-  let user = Meteor.user();
-  if (
-    to.path === '/sign-in' ||
-    (user && user.roles && user.roles.includes('admin'))
-  ){
-    next();
-  } else {
-    next();
-  }
-});
+router.beforeEach(redirectIfMaintenance);
 export default router;
