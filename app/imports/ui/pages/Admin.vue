@@ -25,7 +25,13 @@
             >
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <br>
+            <v-alert
+              type="warning"
+              outlined
+            >
+              Back up the database before attempting any migration. A failed
+              migration can result in profound data loss.
+            </v-alert>
             <v-btn
               :disabled="!(schemaVersion > (versions && versions.dbVersion))"
               :loading="loadingMigration"
