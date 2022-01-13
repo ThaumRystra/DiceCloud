@@ -5,6 +5,19 @@
 		</app-drawer>
 		{{> yield}}
 	</app-drawer-layout>
+  {{#if disconnected}}
+    <div style="
+      position: absolute;
+      bottom: 0;
+      left: 00;
+      right: 0;
+      padding: 4px;
+      background: rgb(209 59 46);;
+      color: white;
+      text-align: center;">
+      Disconnected, changes won't be saved. {{#if connectionStatus}}({{connectionStatus}}){{/if}}
+    </div>
+  {{/if}}
 	<paper-toast id="global-toast" duration="5000">
 		{{> Template.dynamic template=globalToastTemplate data=globalToastData }}
 	</paper-toast>
@@ -20,9 +33,6 @@
 				{{#if currentUser}}
 					<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
 						{{profileLink}}
-					</a>
-					<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px; margin-left: 8px;">
-						{{patreonTier}} tier
 					</a>
 				{{else}}
 					<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
@@ -47,7 +57,7 @@
 			<a href="/library" tabindex="-1">
 				<paper-icon-item id="libary">
 					<iron-icon icon="book" item-icon></iron-icon>
-					Libraries (beta)
+					Item Libraries
 				</paper-icon-item>
 			</a>
 			<a href="/guide" tabindex="-1">
@@ -73,7 +83,7 @@
 					Patreon
 				</paper-icon-item>
 			</a>
-			<a class="github" href="https://github.com/ThaumRystra/DiceCloud1" target="_blank" tabindex="-1">
+			<a class="github" href="https://github.com/ThaumRystra/DiceCloud" target="_blank" tabindex="-1">
 				<paper-icon-item>
 					<iron-icon icon="dicecloud:github" item-icon></iron-icon>
 					Github

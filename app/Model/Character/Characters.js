@@ -3,18 +3,18 @@ Characters = new Mongo.Collection("characters");
 
 Schemas.Character = new SimpleSchema({
 	//strings
-	name:         {type: String, defaultValue: "", trim: false, optional: true},
-	urlName:      {type: String, defaultValue: "-", trim: false, optional: true},
-	alignment:    {type: String, defaultValue: "", trim: false, optional: true},
-	gender:       {type: String, defaultValue: "", trim: false, optional: true},
-	race:         {type: String, defaultValue: "", trim: false, optional: true},
-	picture:      {type: String, defaultValue: "", trim: true,  optional: true},
-	description:  {type: String, defaultValue: "", trim: false, optional: true},
-	personality:  {type: String, defaultValue: "", trim: false, optional: true},
-	ideals:       {type: String, defaultValue: "", trim: false, optional: true},
-	bonds:        {type: String, defaultValue: "", trim: false, optional: true},
-	flaws:        {type: String, defaultValue: "", trim: false, optional: true},
-	backstory:    {type: String, defaultValue: "", trim: false, optional: true},
+	name:         {type: String, defaultValue: "", trim: false, optional: true, max: 128},
+	urlName:      {type: String, defaultValue: "-", trim: false, optional: true, max: 128},
+	alignment:    {type: String, defaultValue: "", trim: false, optional: true, max: 64},
+	gender:       {type: String, defaultValue: "", trim: false, optional: true, max: 64},
+	race:         {type: String, defaultValue: "", trim: false, optional: true, max: 64},
+	picture:      {type: String, defaultValue: "", trim: true,  optional: true, max: 256},
+	description:  {type: String, defaultValue: "", trim: false, optional: true, max: 5000},
+	personality:  {type: String, defaultValue: "", trim: false, optional: true, max: 5000},
+	ideals:       {type: String, defaultValue: "", trim: false, optional: true, max: 5000},
+	bonds:        {type: String, defaultValue: "", trim: false, optional: true, max: 5000},
+	flaws:        {type: String, defaultValue: "", trim: false, optional: true, max: 5000},
+	backstory:    {type: String, defaultValue: "", trim: false, optional: true, max: 5000},
 
 	//attributes
 	//ability scores

@@ -2,6 +2,16 @@ Template.layout.onCreated(function() {
 	this.subscribe("user");
 });
 
+Template.layout.helpers({
+  connectionStatus: function(){
+    let status = Meteor.status()
+    return status.reason || status.status;
+  },
+  disconnected: function(){
+    return !Meteor.status().connected;
+  },
+});
+
 Template.appDrawer.helpers({
 	profileLink: function() {
 		var user = Meteor.user();
@@ -16,20 +26,6 @@ Template.appDrawer.helpers({
 	patreonLink: function(){
 		let post = PatreonPosts.findOne({}, {sort: {date: -1}});
 		return (post && post.link) || 'https://www.patreon.com/dicecloud';
-	},
-	patreonTier: function(){
-		let user = Meteor.user();
-		if (!user) return;
-		patreon = user.patreon;
-		if (!patreon) return "free";
-		let entitledCents = patreon.entitledCents || 0;
-		if (patreon.entitledCentsOverride > entitledCents){
-			return "$" + (patreon.entitledCentsOverride / 100).toFixed(0);
-		} else if (!patreon.entitledCents){
-			return "free";
-		} else {
-			return "$" + (patreon.entitledCents / 100).toFixed(0);
-		}
 	},
 });
 

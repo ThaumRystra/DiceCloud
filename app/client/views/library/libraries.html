@@ -10,26 +10,22 @@
 				</div>
 			</app-toolbar>
 		</app-header>
-		{{#if isTier5}}
-			<div class="flex layout vertical center" style="position: relative; padding: 0 16px;">
-				<paper-material class="card" style="padding: 32px; max-width: 800px; width: 100%;">
-					{{#each library in libraries}}
-						<a href="/library/{{library._id}}" tabindex="-1">
-							<paper-item class="library" data-id="{{library._id}}">
-								<paper-item-body>
-									<div>{{library.name}}</div>
-								</paper-item-body>
-							</paper-item>
-						</a>
-					{{/each}}
-				</paper-material>
-			</div>
-			<div class="floatyButton">
-				<paper-fab id="addLibrary" icon="add"></paper-fab>
-				{{#simpleTooltip}}Add Library{{/simpleTooltip}}
-			</div>
-		{{else}}
-			{{> patronsOnly }}
-		{{/if}}
+		<div class="flex layout vertical center" style="position: relative; padding: 0 16px;">
+			<paper-material class="card" style="padding: 32px; max-width: 800px; width: 100%;">
+				{{#each library in libraries}}
+					<a href="/library/{{library._id}}" tabindex="-1">
+						<paper-item class="library" data-id="{{library._id}}">
+							<paper-item-body>
+								<div>{{library.name}}</div>
+							</paper-item-body>
+						</paper-item>
+					</a>
+				{{/each}}
+			</paper-material>
+		</div>
+		<div class="floatyButton">
+			<paper-fab id="addLibrary" icon="add"></paper-fab>
+			{{#simpleTooltip}}Add Library{{/simpleTooltip}}
+		</div>
 	</div>
 </template>

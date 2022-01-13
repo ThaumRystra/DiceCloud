@@ -13,6 +13,17 @@ Router.plugin("ensureSignedIn", {
 	]
 });
 
+if (Meteor.isClient){
+  document.addEventListener(`click`, e => {
+  const origin = e.target.closest("a");
+
+  if (origin && Router.findFirstRoute(origin.href)) {
+    Router.go(origin.href);
+    e.preventDefault();
+  }
+});
+}
+
 Router.plugin("dataNotFound", {notFoundTemplate: "notFound"});
 
 var handleSubError = function(e){

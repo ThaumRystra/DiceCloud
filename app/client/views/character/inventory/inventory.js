@@ -258,7 +258,7 @@ Template.inventoryItem.helpers({
 	},
 });
 
-Template.layout.events({
+Template.inventory.events({
 	"dragstart .inventoryItem": function(event, instance){
 		event.originalEvent.dataTransfer.setData("dicecloud-id/items", this._id);
 		Session.set("inventory.dragItemId", this._id);
@@ -276,12 +276,6 @@ Template.layout.events({
 		}
 	},
 	"dragover .carriedContainer, dragenter .carriedContainer":
-	function(event, instance){
-		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
-			event.preventDefault();
-		}
-	},
-	"dragover .characterRepresentative, dragenter .characterRepresentative":
 	function(event, instance){
 		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
 			event.preventDefault();
@@ -329,25 +323,5 @@ Template.layout.events({
 			Meteor.call("moveItemToCharacter", itemId, this._id);
 		}
 		Session.set("inventory.dragItemId", null);
-	},
-	"drop .characterRepresentative": function(event, instance) {
-		if (_.contains(event.originalEvent.dataTransfer.types, "dicecloud-id/items")){
-			var itemId = event.originalEvent.dataTransfer.getData("dicecloud-id/items");
-			if (event.ctrlKey){
-				//split the stack to the container
-				pushDialogStack({
-					template: "splitStackDialog",
-					data: {
-						id: itemId,
-						parentCollection: "Characters",
-						parentId: this._id,
-					},
-				});
-			} else {
-				//move item to the character
-				Meteor.call("moveItemToCharacter", itemId, this._id);
-			}
-			Session.set("inventory.dragItemId", null);
-		}
 	},
 });
