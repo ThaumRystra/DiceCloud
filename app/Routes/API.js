@@ -29,6 +29,11 @@ Router.map(function () {
         where: "server",
         action: function () {
             this.response.setHeader("Content-Type", "application/json");
+            if (this.request.headers.origin !== undefined) {
+                this.response.setHeader("Access-Control-Allow-Origin", this.request.headers.origin);
+            }
+            this.response.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+            this.response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
             var query = this.params.query;
             var key = query && query.key;
             ifKeyValid(key, this.response, "jsonCharacterSheet", () => {
