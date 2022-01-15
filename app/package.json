@@ -31,7 +31,7 @@
     "ignore": "^5.1.8",
     "ignore-styles": "^5.0.1",
     "lodash": "^4.17.20",
-    "marked": "^0.8.2",
+    "marked": "^4.0.10",
     "meteor-node-stubs": "^1.1.0",
     "moo": "^0.5.1",
     "nearley": "^2.19.1",
