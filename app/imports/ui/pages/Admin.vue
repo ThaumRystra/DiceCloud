@@ -6,7 +6,7 @@
           <v-card-text>
             <h4>Current database version: {{ versions && versions.dbVersion }}</h4>
             <h4 v-if="schemaVersion == versions.dbVersion ">
-              Database is up to date with latest version
+              Database is up to date with latest version. Restart to enable navigation.
             </h4>
             <h4 v-else>
               Expected database version: {{ schemaVersion }}

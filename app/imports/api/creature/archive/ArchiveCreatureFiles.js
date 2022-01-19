@@ -1,8 +1,7 @@
-import { FilesCollection } from 'meteor/ostrio:files';
+import { createS3FilesCollection } from '/imports/api/files/s3FileStorage.js';
 
-const ArchiveCreatureFiles = new FilesCollection({
+const ArchiveCreatureFiles = createS3FilesCollection({
   collectionName: 'archiveCreatureFiles',
-  allowClientCode: false, // Disallow remove files from Client
   storagePath: '/DiceCloud/archiveCreatures/',
   onBeforeUpload(file) {
     // Allow upload files under 10MB, and only in json format
