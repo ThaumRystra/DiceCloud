@@ -18,6 +18,7 @@ export function getArchiveObj(creatureId){
   const logs = CreatureLogs.find({creatureId}).fetch();
   let archiveCreature = {
     meta: {
+      type: 'DiceCloud V2 Creature Archive',
       schemaVersion: SCHEMA_VERSION,
       archiveDate: new Date(),
     },
@@ -33,7 +34,7 @@ export function getArchiveObj(creatureId){
 export function archiveCreature(creatureId){
   const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
-  const result = ArchiveCreatureFiles.write(buffer, {
+  ArchiveCreatureFiles.write(buffer, {
     fileName: `${archive.creature.name || archive.creature._id}.json`,
     type: 'application/json',
     userId: archive.creature.owner,
@@ -42,9 +43,13 @@ export function archiveCreature(creatureId){
       creatureId: archive.creature._id,
       creatureName: archive.creature.name,
     },
-  });
-  removeCreatureWork(creatureId);
-  return result;
+  }, (error) => {
+    if (error){
+      throw error;
+    } else {
+      removeCreatureWork(creatureId);
+    }
+  }, true);
 }
 
 const archiveCreatureToFile = new ValidatedMethod({

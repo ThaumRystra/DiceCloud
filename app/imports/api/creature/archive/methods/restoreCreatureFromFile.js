@@ -8,13 +8,12 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import readFile from '/imports/api/creature/archive/methods/readFile.js';
 let migrateArchive;
 if (Meteor.isServer){
   migrateArchive = require('/imports/migrations/server/migrateArchive.js').default;
 }
 
-function restoreCreature(file, archive){
+function restoreCreature(archive){
   if (SCHEMA_VERSION < archive.meta.schemaVersion){
     throw new Meteor.Error('Incompatible',
       'The archive file is from a newer version. Update required to read.')
@@ -72,12 +71,11 @@ const restoreCreaturefromFile = new ValidatedMethod({
     }
     if (Meteor.isServer){
       // Read the file data
-      const string = await readFile(file);
-      const archive = JSON.parse(string);
-      restoreCreature(file, archive);
-      //Remove the archive once the restore succeeded
-      ArchiveCreatureFiles.remove({_id: fileId})
+      const archive = await ArchiveCreatureFiles.readJSONFile(file);
+      restoreCreature(archive);
     }
+    //Remove the archive once the restore succeeded
+    ArchiveCreatureFiles.remove({_id: fileId});
   },
 });
 

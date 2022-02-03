@@ -5,11 +5,12 @@ import { each, clone } from 'lodash';
 import { Random } from 'meteor/random';
 import { FilesCollection } from 'meteor/ostrio:files';
 import stream from 'stream';
+import S3 from 'aws-sdk/clients/s3';
 
-import S3 from 'aws-sdk/clients/s3'; /* http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html */
 /* See fs-extra and graceful-fs NPM packages */
 /* For better i/o performance */
 import fs from 'fs';
+import { promises as fsp } from 'fs';
 
 /* Example: S3='{"s3":{"key": "xxx", "secret": "xxx", "bucket": "xxx", "endpoint": "xxx""}}' meteor */
 if (process.env.S3) {
@@ -17,6 +18,10 @@ if (process.env.S3) {
 }
 
 const s3Conf = Meteor.settings.s3 || {};
+Meteor.settings.useS3 = !!(
+  s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.endpoint
+);
+
 const bound  = Meteor.bindEnvironment((callback) => {
   return callback();
 });
@@ -25,7 +30,7 @@ let createS3FilesCollection;
 
 /* Check settings existence in `Meteor.settings` */
 /* This is the best practice for app security */
-if (Meteor.isServer && s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.endpoint) {
+if (Meteor.isServer && Meteor.settings.useS3) {
   // Create a new S3 object
   const s3 = new S3({
     accessKeyId: s3Conf.key,
@@ -98,7 +103,6 @@ if (Meteor.isServer && s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket &&
       interceptDownload(http, fileRef, version) {
         // Intercept access to the file
         // And redirect request to AWS:S3
-
         let path;
 
         if (fileRef && fileRef.versions && fileRef.versions[version] && fileRef.versions[version].meta && fileRef.versions[version].meta.pipePath) {
@@ -189,6 +193,23 @@ if (Meteor.isServer && s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket &&
       //remove original file from database
       _origRemove.call(this, search);
     };
+
+    collection.readJSONFile = async function(file){
+      // If there is the pipepath, use s3 to get the file
+      if (file?.versions?.original?.meta?.pipePath){
+        const path = file.versions.original.meta.pipePath;
+        const data = await s3.getObject({
+          Bucket: s3Conf.bucket,
+          Key: path
+        }).promise();
+        return JSON.parse(data.Body.toString('utf-8'));
+      } else {
+        // Otherwise use the normal filesystem
+        const fileString = await fsp.readFile(file.path, 'utf8');
+        return JSON.parse(fileString);
+      }
+    };
+
     return collection;
   }
 } else {
@@ -202,13 +223,23 @@ if (Meteor.isServer && s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket &&
     debug = Meteor.isProduction,
     allowClientCode = false,
   }){
-    return new FilesCollection({
+    const collection = new FilesCollection({
       collectionName,
       storagePath,
       onBeforeUpload,
       debug,
       allowClientCode,
     });
+
+    if (Meteor.isServer){
+      // Use the normal file system to read files
+      collection.readJSONFile = async function(file){
+        const fileString = await fsp.readFile(file.path, 'utf8');
+        return JSON.parse(fileString);
+      };
+    }
+
+    return collection;
   }
 }
 
