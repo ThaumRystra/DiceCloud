@@ -1,5 +1,5 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { migrateProperty } from './2.0-beta.33-dbv1.js';
+import { migrateProperty } from './dbv1.js';
 import { assert } from 'chai';
 
 const exampleAction = {
@@ -63,6 +63,53 @@ const exampleAction = {
    ]
 };
 
+const exampleAttribute = {
+  _id:'idRWyoj5oxCv73feM',
+  name:'Hit Dice',
+  variableName:'clericHitDice',
+  attributeType:'hitDice',
+  type:'attribute',
+  hitDiceSize:'d8',
+  baseValueCalculation:'cleric.level',
+  parent:{'id':'8jSWKxvgQyKbunFtD','collection':'creatureProperties'},
+  ancestors:[
+    {'collection':'creatures','id':'m9sdCvs6iDf7qRaGv'},
+    {'id':'8jSWKxvgQyKbunFtD','collection':'creatureProperties'}
+  ],
+  order: 84,
+  value: 20,
+  tags:[],
+  baseValue: 20,
+  damage: 3,
+  currentValue: 17,
+  constitutionMod: 2,
+  dependencies: ['8jSWKxvgQyKbunFtD','qPP5yQXPxS7uhuXo3']
+};
+
+const expectedMigratedAttribute = {
+  _id:'idRWyoj5oxCv73feM',
+  name:'Hit Dice',
+  variableName:'clericHitDice',
+  attributeType:'hitDice',
+  type:'attribute',
+  hitDiceSize:'d8',
+  baseValue: {
+    calculation: 'cleric.level',
+    value: 20
+  },
+  parent:{'id':'8jSWKxvgQyKbunFtD','collection':'creatureProperties'},
+  ancestors:[
+    {'collection':'creatures','id':'m9sdCvs6iDf7qRaGv'},
+    {'id':'8jSWKxvgQyKbunFtD','collection':'creatureProperties'}
+  ],
+  order: 84,
+  total: 20,
+  tags:[],
+  damage: 3,
+  value: 17,
+  constitutionMod: 2,
+}
+
 describe('migrateProperty', function () {
   it('Migrates actions reversibly', function () {
     const action = {...exampleAction};
@@ -77,5 +124,14 @@ describe('migrateProperty', function () {
     });
     assert.deepEqual(action, exampleAction, 'action should not be bashed');
     assert.deepEqual(exampleAction, reversedAction, 'operation should be reversible');
+  });
+  it ('Migrates attributes as expected', function(){
+    const attribute = {...exampleAttribute};
+    const newAttribute = migrateProperty({
+      collection: CreatureProperties,
+      prop: attribute
+    });
+    assert.deepEqual(newAttribute, expectedMigratedAttribute,
+      'Attribute should match the expected result');
   });
 });

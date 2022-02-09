@@ -44,6 +44,15 @@ describe('transformFields', function () {
     assert.equal(doc.name, 'DOC NAME', 'name in uppercase');
   });
 
+  it('Creates objects on the fly', function () {
+    let doc = {...originalDoc};
+    const transformList = [
+      {from: 'name', to:'newObj.name'},
+    ];
+    doc = transformFields(doc, transformList);
+    assert.deepEqual(doc.newObj, {name: 'doc name'});
+  });
+
   it('Handles empty to and from fields', function () {
     let doc = {...originalDoc};
     const transformList = [

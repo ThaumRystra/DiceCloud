@@ -109,12 +109,14 @@ const transformsByPropType = {
     {from: 'type', to: 'type', up: () => 'action'},
   ],
   'attribute': [
-    {from: 'baseValueCalculation', to: 'baseValue.calculation'},
+    // from: baseValue must be first or else it will delete the field we need
     {from: 'baseValue', to: 'baseValue.value', up: nanToNull},
+    {from: 'baseValueCalculation', to: 'baseValue.calculation', up: calculationUp, down: calculationDown},
     {from: 'baseValueErrors', to: 'baseValue.errors', up: trimErrors},
     ...getComputedPropertyTransforms('spellSlotLevel'),
     ...getInlineComputationTransforms('description'),
     {from: 'value', to: 'total', up: nanToNull},
+    {from: 'currentValue', to: 'value', up: nanToNull},
     {from: 'proficiency', to: 'proficiency', up: stripZero},
   ],
   'buff': [
@@ -214,12 +216,12 @@ function getInlineComputationTransforms(key){
 }
 
 function calculationUp(val){
-  if (!val || !val.replace) return val;
+  if (typeof val !== 'string') return val;
   return val.replace('.value', '.total').replace('.currentValue', '.value');
 }
 
 function calculationDown(val){
-  if (!val || !val.replace) return val;
+  if (typeof val !== 'string') return val;
   return val.replace('.value', '.currentValue').replace('.total', '.value');
 }
 

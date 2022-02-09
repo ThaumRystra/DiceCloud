@@ -1,1 +1,1 @@
-import './2.0-beta.33-dbv1.js';
+import './v1/dbv1.js';
