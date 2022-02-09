@@ -3,6 +3,7 @@ const AdjustmentForm = () => import('/imports/ui/properties/forms/AdjustmentForm
 const AttackForm = () => import('/imports/ui/properties/forms/AttackForm.vue');
 const AttributeForm = () => import('/imports/ui/properties/forms/AttributeForm.vue');
 const BuffForm = () => import('/imports/ui/properties/forms/BuffForm.vue');
+const BranchForm = () => import('/imports/ui/properties/forms/BranchForm.vue');
 const ClassLevelForm = () => import('/imports/ui/properties/forms/ClassLevelForm.vue');
 const ConstantForm = () => import('/imports/ui/properties/forms/ConstantForm.vue');
 const ContainerForm = () => import('/imports/ui/properties/forms/ContainerForm.vue');
@@ -30,6 +31,7 @@ export default {
   attack: AttackForm,
   attribute: AttributeForm,
   buff: BuffForm,
+  branch: BranchForm,
   constant: ConstantForm,
   container: ContainerForm,
   classLevel: ClassLevelForm,

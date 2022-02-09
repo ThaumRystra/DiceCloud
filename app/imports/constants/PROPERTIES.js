@@ -16,12 +16,18 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.attribute_damage',
     name: 'Attribute damage',
     helpText: 'Attribute damage reduces the current value of an attribute when it is applied by an action. A negative value causes the attribute to increase instead, up to its normal maximum.',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
+    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
   },
   buff: {
     icon: '$vuetify.icons.buff',
     name: 'Buff',
     helpText: 'When a buff is activated as a child of an action, it will copy the properties under itself onto a target character.',
+    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+  },
+  branch: {
+    icon: 'mdi-file-tree',
+    name: 'Branch',
+    helpText: 'When a branch is activated as a child of an action, it can control which of its children get activated.',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
   },
   class: {
@@ -53,7 +59,7 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.damage',
     name: 'Damage',
     helpText: 'When damage is activated by an action it reduces the hit points of the target creature by the calculated amount.',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
+    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
   },
   damageMultiplier: {
     icon: '$vuetify.icons.damage_multiplier',
@@ -102,7 +108,7 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.roll',
     name: 'Roll',
     helpText: 'When activated by an action, rolls perform a calculation and temporarily store the result for other properties under the same action to use',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
+    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
   },
   reference: {
     icon: 'mdi-vector-link',

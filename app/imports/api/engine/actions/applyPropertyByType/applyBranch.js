@@ -1,5 +1,6 @@
 import applyProperty from '../applyProperty.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
+import rollDice from '/imports/parser/rollDice.js';
 
 export default function applyBranch(node, {
   creature, targets, scope, log
@@ -26,6 +27,14 @@ export default function applyBranch(node, {
       break;
     case 'successfulSave':
       if (scope['$saveSucceeded']?.value) applyChildren();
+      break;
+    case 'random':
+      if (node.children.length){
+        let index = rollDice(1, node.children.length)[0] - 1;
+        applyProperty(node.children[index], {
+          creature, targets, scope, log
+        });
+      }
       break;
     case 'eachTarget':
       if (targets.length){

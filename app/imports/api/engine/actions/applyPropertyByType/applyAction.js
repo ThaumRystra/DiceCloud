@@ -54,9 +54,24 @@ function applyAttackWithoutTarget({prop, scope, log}){
   scope['$attackRoll'] = {value};
   let criticalHitTarget = scope.criticalHitTarget?.value || 20;
   let criticalHit = value >= criticalHitTarget;
-  if (criticalHit) scope['$criticalHit'] = {value: true};
+  if (criticalHit){
+    scope['$criticalHit'] = {value: true};
+    scope['$attackHit'] = {value: true};
+  } else {
+    let criticalMiss = value === 1;
+    if (criticalMiss){
+      scope['$criticalMiss'] = 1;
+      log.content.push({
+        name: 'Critical Miss!',
+      });
+      scope['$attackMiss'] = {value: true};
+    } else {
+      // Untargeted attacks hit by default
+      scope['$attackHit'] = {value: true}
+    }
+  }
   let result = value + prop.attackRoll.value;
-  scope['$toHit'] = {value: result};
+  scope['$attackRoll'] = {value: result};
   log.content.push({
     name: criticalHit ? 'Critical Hit!' : 'To Hit',
     value: `1d20 [${value}] + ${prop.attackRoll.value} = ` + result,

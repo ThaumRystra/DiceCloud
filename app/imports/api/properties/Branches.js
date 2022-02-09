@@ -16,11 +16,14 @@ let BranchSchema = createPropertySchema({
       'successfulSave',
       // Iterate through targets
       'eachTarget',
+      // Pick one child at random
+      'random',
       // if it has option children, asks to select one
       // Otherwise presents its own text with yes/no
       //'choice',
       //'option',
     ],
+    defaultValue: 'if',
 	},
   text: {
     type: String,

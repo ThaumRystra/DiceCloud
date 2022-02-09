@@ -2,6 +2,7 @@ const ActionViewer = () => import ('/imports/ui/properties/viewers/ActionViewer.
 const AdjustmentViewer = () => import ('/imports/ui/properties/viewers/AdjustmentViewer.vue');
 const AttributeViewer = () => import ('/imports/ui/properties/viewers/AttributeViewer.vue');
 const BuffViewer = () => import ('/imports/ui/properties/viewers/BuffViewer.vue');
+const BranchViewer = () => import ('/imports/ui/properties/viewers/BranchViewer.vue');
 const ContainerViewer = () => import ('/imports/ui/properties/viewers/ContainerViewer.vue');
 const ClassLevelViewer = () => import ('/imports/ui/properties/viewers/ClassLevelViewer.vue');
 const ConstantViewer = () => import ('/imports/ui/properties/viewers/ConstantViewer.vue');
@@ -28,6 +29,7 @@ export default {
   adjustment: AdjustmentViewer,
   attribute: AttributeViewer,
   buff: BuffViewer,
+  branch: BranchViewer,
   container: ContainerViewer,
   class: SlotViewer,
   classLevel: ClassLevelViewer,

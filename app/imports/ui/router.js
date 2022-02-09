@@ -269,8 +269,7 @@ RouterFactory.configure(router => {
 
 function redirectIfMaintenance(to, from, next){
   if (!MAINTENANCE_MODE) return next();
-  console.log(to);
-  if (to?.path === '/admin' || to?.path === '/maintenance') return next();
+  if (to?.path === '/admin' || to?.path === '/maintenance' || to?.path === '/sign-in') return next();
   Tracker.autorun((computation) => {
     if (userSubscription.ready()){
       computation.stop();

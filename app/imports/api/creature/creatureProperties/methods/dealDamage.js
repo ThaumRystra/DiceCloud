@@ -39,7 +39,6 @@ const dealDamage = new ValidatedMethod({
 });
 
 export function dealDamageWork({creature, damageType, amount}){
-  console.log({damageType, amount})
   // Get all the health bars and do damage to them
   let healthBars = CreatureProperties.find({
     'ancestors.id': creature._id,
