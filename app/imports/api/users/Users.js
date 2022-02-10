@@ -1,7 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import '/imports/api/users/deleteMyAccount.js';
+import '/imports/api/users/methods/deleteMyAccount.js';
+import '/imports/api/users/methods/addEmail.js';
+import '/imports/api/users/methods/removeEmail.js';
+
 import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 

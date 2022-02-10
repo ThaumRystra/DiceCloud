@@ -45,3 +45,5 @@ akryum:vue-router2
 percolate:migrations
 meteortesting:mocha
 ostrio:files
+simple:rest-bearer-token-parser
+simple:rest-json-error-handler

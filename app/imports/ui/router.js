@@ -19,6 +19,9 @@ const Feedback = () => import('/imports/ui/pages/Feedback.vue' );
 const Account = () => import('/imports/ui/pages/Account.vue' );
 const InviteSuccess = () => import('/imports/ui/pages/InviteSuccess.vue' );
 const InviteError = () => import('/imports/ui/pages/InviteError.vue' );
+const EmailVerificationSuccess = () => import('/imports/ui/pages/EmailVerificationSuccess.vue' );
+const EmailVerificationError = () => import('/imports/ui/pages/EmailVerificationError.vue' );
+const ResetPassword = () => import('/imports/ui/pages/ResetPassword.vue' );
 const NotImplemented = () => import('/imports/ui/pages/NotImplemented.vue');
 const PatreonLevelTooLow = () => import('/imports/ui/pages/PatreonLevelTooLow.vue');
 const Tabletops = () => import('/imports/ui/pages/Tabletops.vue');
@@ -90,6 +93,17 @@ function claimInvite(to, from, next){
       } else {
         next({ name: 'signIn', query: { redirect: to.path} });
       }
+    }
+  });
+}
+
+function verifyEmail(to, from, next){
+  const token = to.params.token;
+  Accounts.verifyEmail(token, error => {
+    if (error){
+      next({name: 'emailVerificationError', params: {error}});
+    } else {
+      next('/email-verification-success')
     }
   });
 }
@@ -214,6 +228,9 @@ RouterFactory.configure(router => {
       path: '/invite/:inviteToken',
       beforeEnter: claimInvite,
     },{
+      path: '/verify-email/:token',
+      beforeEnter: verifyEmail,
+    },{
       name: 'inviteError',
       path: '/invite-error',
       components: {
@@ -232,6 +249,34 @@ RouterFactory.configure(router => {
       },
       meta: {
         title: 'Invite Success',
+      },
+    },{
+      name: 'emailVerificationError',
+      path: '/email-verification-error',
+      components: {
+        default: EmailVerificationError,
+      },
+      props: {
+        default: true,
+      },
+      meta: {
+        title: 'Email Verification Error',
+      },
+    },{
+      path: '/email-verification-success',
+      components: {
+        default: EmailVerificationSuccess,
+      },
+      meta: {
+        title: 'Email Verification Success',
+      },
+    },{
+      path: '/reset-password/:token?',
+      components: {
+        default: ResetPassword,
+      },
+      meta: {
+        title: 'Reset Password',
       },
     },{
       path: '/patreon-level-too-low',

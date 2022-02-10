@@ -62,10 +62,60 @@
           v-for="email in emails"
           :key="email.address"
         >
+          <v-list-item-action v-if="emails.length > 1">
+            <v-btn
+              icon
+              small
+              @click="removeEmail(email.address)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </v-list-item-action>
           <v-list-item-title>
             {{ email.address }}
           </v-list-item-title>
         </v-list-item>
+        <v-expand-transition>
+          <v-alert
+            v-if="removeEmailError"
+            type="error"
+          >
+            {{ removeEmailError }}
+          </v-alert>
+        </v-expand-transition>
+        <v-slide-x-transition
+          hide-on-leave
+        >
+          <v-text-field
+            v-if="showEmailInput"
+            v-model="inputEmail"
+            label="Add Email Address"
+            :error-messages="addEmailError"
+            outlined
+          >
+            <v-btn
+              slot="prepend"
+              icon
+              @click="clearEmailInput"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-btn
+              slot="append"
+              icon
+              @click="addEmail"
+            >
+              <v-icon>mdi-send</v-icon>
+            </v-btn>
+          </v-text-field>
+          <v-btn
+            v-else-if="!emails || emails.length < 2"
+            icon
+            @click="showEmailInput = true"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-slide-x-transition>
         <v-subheader>
           Patreon
         </v-subheader>
@@ -167,8 +217,10 @@
   import router from '/imports/ui/router.js';
   import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
   import Invites from '/imports/api/users/Invites.js';
-  import linkWithPatreon from '/imports/api/users/linkWithPatreon.js'
+  import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon.js'
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+  import addEmail from '/imports/api/users/methods/addEmail.js';
+  import removeEmail from '/imports/api/users/methods/removeEmail.js';
 
   export default {
     meteor: {
@@ -216,6 +268,14 @@
       linkPatreonError: '',
       updatePatreonError: '',
       updatePatreonLoading: false,
+      // Add email
+      showEmailInput: false,
+      addEmailLoading: false,
+      inputEmail: '',
+      addEmailError: undefined,
+      // Remove email
+      removeEmailLoading: undefined,
+      removeEmailError: undefined,
     }},
     computed: {
       entitledCents(){
@@ -231,6 +291,33 @@
         this.$store.commit('pushDialogStack', {
           component: 'username-dialog',
           elementId: 'username',
+        });
+      },
+      clearEmailInput(){
+        this.showEmailInput = false;
+        this.addEmailError = undefined;
+        this.inputEmail = '';
+      },
+      addEmail(){
+        this.addEmailLoading = true;
+        addEmail.call({email: this.inputEmail}, error => {
+          this.addEmailError = error && error.message;
+          this.addEmailLoading = false;
+          if (!error){
+            this.showEmailInput = false;
+            this.inputEmail = '';
+          }
+        });
+      },
+      removeEmail(address){
+        this.removeEmailLoading = address;
+        removeEmail.call({email: address}, error => {
+          this.removeEmailError = error && error.message;
+          this.removeEmailLoading = undefined;
+          if (!error){
+            this.showEmailInput = false;
+            this.inputEmail = '';
+          }
         });
       },
       signOut(){

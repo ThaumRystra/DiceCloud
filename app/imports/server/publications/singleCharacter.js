@@ -14,7 +14,11 @@ let schema = new SimpleSchema({
 });
 
 Meteor.publish('singleCharacter', function(creatureId){
-  schema.validate({ creatureId });
+  try {
+    schema.validate({ creatureId });
+  } catch (e){
+    this.error(e);
+  }
   this.autorun(function (computation){
     let userId = this.userId;
     let creatureCursor

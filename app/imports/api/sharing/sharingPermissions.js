@@ -4,7 +4,7 @@ import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 function assertIdValid(userId){
   if (!userId || typeof userId !== 'string'){
     throw new Meteor.Error('Permission denied',
-      'No user ID given for edit permission check');
+      'No user ID. Are you logged in?');
   }
 }
 
