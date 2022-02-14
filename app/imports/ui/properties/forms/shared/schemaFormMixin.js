@@ -57,10 +57,14 @@ const schemaFormMixin = {
 		},
     push({path, value, ack}){
       let array = get(this.model, path);
-      if (!array || !array.join){
-        throw `${path.join('.')} is ${array}, doesn't have "join"`
+      if (array === undefined){
+        let {object, key} = resolvePath(this.model, path, this.$set);
+        this.$set(object, key, [value]);
+      } else if (!array.push){
+        throw `${path.join('.')} is ${array}, doesn't have "push"`
+      } else {
+        array.push(value);
       }
-      array.push(value);
 			if (ack) ack();
     },
     pull({path, ack}){

@@ -44,6 +44,7 @@
     <v-tabs-items
       slot="unwrapped-content"
       v-model="tab"
+      class="fill-height overflow-y-auto"
     >
       <v-tab-item :disabled="!!forcedType">
         <property-selector

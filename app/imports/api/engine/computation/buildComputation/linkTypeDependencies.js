@@ -122,14 +122,25 @@ function linkDamage(dependencyGraph, prop){
   dependOnCalc({dependencyGraph, prop, key: 'amount'});
 }
 
-function linkEffects(dependencyGraph, prop){
+function linkEffects(dependencyGraph, prop, computation){
   // The effect depends on its amount calculation
   dependOnCalc({dependencyGraph, prop, key: 'amount'});
   // The stats depend on the effect
-  prop.stats.forEach(statName => {
-    if (!statName) return;
-    dependencyGraph.addLink(statName, prop._id, 'effect');
-  });
+  if (prop.targetByTags){
+    // TODO: 
+    getEffectTagTargets(prop, computation).forEach(targetProp => {
+      const key = prop.targetField || getDefaultCalculationField(targetProp);
+      const calcObj = get(targetProp, key);
+      if (calcObj){
+        dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id , 'effect');
+      }
+    });
+  } else {
+    prop.stats.forEach(statName => {
+      if (!statName) return;
+      dependencyGraph.addLink(statName, prop._id, 'effect');
+    });
+  }
 }
 
 function linkRoll(dependencyGraph, prop){

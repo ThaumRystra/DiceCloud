@@ -17,18 +17,54 @@
       <property-field
         v-if="model.operation !== 'conditional'"
         name="Amount"
-        :value="displayedValue"
+        :value="displayedValue || ' '"
       />
       <property-field
+        v-if="model.targetByTags"
+        name="Targeted tags"
+      >
+        <div>
+          <v-chip
+            v-for="(tag, index) in model.targetTags"
+            :key="index"
+            class="ma-1"
+          >
+            {{ tag }}
+          </v-chip>
+          <div
+            v-for="ex in model.extraTags"
+            :key="ex._id"
+          >
+            <span class="ma-2">
+              {{ ex.operation }}
+            </span>
+            <v-chip
+              v-for="(extraTag, index) in ex.tags"
+              :key="index"
+              class="ma-1"
+            >
+              {{ extraTag }}
+            </v-chip>
+          </div>
+        </div>
+      </property-field>
+      <property-field
+        v-else
         name="Stats"
-        :value="model.stats && model.stats.join(', ')"
-        mono
-      />
+      >
+        <v-chip
+          v-for="(stat, index) in model.stats"
+          :key="index"
+          class="ma-1"
+        >
+          {{ stat }}
+        </v-chip>
+      </property-field>
       <property-field
         v-if="model.operation === 'conditional'"
         name="Text"
         :cols="{cols: 12}"
-        :value="model.text"
+        :value="model.text || ' '"
       />
     </v-row>
   </div>

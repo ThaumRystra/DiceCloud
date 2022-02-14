@@ -10,7 +10,6 @@
     <smart-select
       label="Operation"
       append-icon="mdi-menu-down"
-      class="mx-2"
       :hint="operationHint"
       :error-messages="errors.operation"
       :menu-props="{transition: 'slide-y-transition', lazy: true}"
@@ -19,8 +18,8 @@
       @change="change('operation', ...arguments)"
     >
       <v-icon
-        slot="prepend"
-        class="icon"
+        slot="prepend-inner"
+        class="icon ml-0"
         :class="iconClass"
       >
         {{ displayedIcon }}
@@ -37,18 +36,6 @@
         {{ item.item.text }}
       </template>
     </smart-select>
-    <smart-combobox
-      label="Stats"
-      class="mr-2"
-      multiple
-      chips
-      deletable-chips
-      hint="Which stats will this effect apply to"
-      :value="model.stats"
-      :items="attributeList"
-      :error-messages="errors.stats"
-      @change="change('stats', ...arguments)"
-    />
     <text-field
       v-if="model.operation === 'conditional'"
       label="Text"
@@ -60,7 +47,6 @@
     <computed-field
       v-else
       label="Value"
-      class="mr-2"
       hint="Number or calculation to determine the value of this effect"
       :persistent-hint="needsValue"
       :disabled="!needsValue"
@@ -69,15 +55,123 @@
       @change="({path, value, ack}) =>
         $emit('change', {path: ['amount', ...path], value, ack})"
     />
+    <v-btn-toggle
+      mandatory
+      :value="radioGroup"
+      class="ma-2 mb-8"
+      @change="changeTargetByTags"
+    >
+      <v-btn value="stats">
+        Target stats by variable name
+      </v-btn>
+      <v-btn value="tags">
+        Target properties by tag
+      </v-btn>
+    </v-btn-toggle>
+
     <smart-combobox
-      label="Tags"
+      v-if="!model.targetByTags"
+      label="Stats"
+      class="mr-2"
       multiple
       chips
       deletable-chips
-      :value="model.tags"
-      :error-messages="errors.tags"
-      @change="change('tags', ...arguments)"
+      hint="Which stats will this effect apply to"
+      persistent-hint
+      :value="model.stats"
+      :items="attributeList"
+      :error-messages="errors.stats"
+      @change="change('stats', ...arguments)"
     />
+    <v-layout
+      v-if="model.targetByTags"
+      align-center
+    >
+      <v-btn
+        icon
+        style="margin-top: -30px;"
+        class="mr-2"
+        :loading="addExtraTagsLoading"
+        :disabled="extraTagsFull"
+        @click="addExtraTags"
+      >
+        <v-icon>
+          mdi-plus
+        </v-icon>
+      </v-btn>
+      <smart-combobox
+        label="Tags Required"
+        hint="The effect will apply to properties that have all the listed tags"
+        multiple
+        chips
+        deletable-chips
+        persistent-hint
+        :value="model.targetTags"
+        :error-messages="errors.targetTags"
+        @change="change('targetTags', ...arguments)"
+      />
+    </v-layout>
+    <v-slide-x-transition
+      v-if="model.targetByTags"
+      group
+    >
+      <div
+        v-for="(extras, i) in model.extraTags"
+        :key="extras._id"
+        class="target-tags layout align-center justify-space-between"
+      >
+        <smart-select
+          label="Operation"
+          style="width: 90px; flex-grow: 0;"
+          :items="['OR', 'NOT']"
+          :value="extras.operation"
+          :error-messages="errors.extraTags && errors.extraTags[i]"
+          @change="change(['extraTags', i, 'operation'], ...arguments)"
+        />
+        <smart-combobox
+          label="Tags"
+          :hint="extras.operation === 'OR' ? 'The effect will also target properties that have all of these tags instead' : 'The effect will ignore properties that have any of these tags'"
+          class="mx-2"
+          multiple
+          chips
+          deletable-chips
+          persistent-hint
+          :value="extras.tags"
+          @change="change(['extraTags', i, 'tags'], ...arguments)"
+        />
+        <v-btn
+          icon
+          style="margin-top: -30px;"
+          @click="$emit('pull', {path: ['extraTags', i]})"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </div>
+    </v-slide-x-transition>
+    <form-section
+      name="Advanced"
+      standalone
+    >
+      <smart-combobox
+        label="Tags"
+        multiple
+        chips
+        deletable-chips
+        :value="model.tags"
+        :error-messages="errors.tags"
+        @change="change('tags', ...arguments)"
+      />
+      <v-expand-transition>
+        <text-field
+          v-if="model.targetByTags"
+          label="Target field"
+          :value="model.variableName"
+          hint="Target a specific calculation field on the affected properties"
+          :error-messages="errors.targetField"
+          @change="change('targetField', ...arguments)"
+        />
+      </v-expand-transition>
+    </form-section>
   </div>
 </template>
 
@@ -85,13 +179,19 @@
 	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
+  import { EffectSchema } from '/imports/api/properties/Effects.js';
+  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 
 	const ICON_SPIN_DURATION = 300;
 	export default {
+    components: {
+			FormSection,
+		},
     mixins: [propertyFormMixin, attributeListMixin],
 		data(){ return {
 			displayedIcon: 'add',
 			iconClass: '',
+      addExtraTagsLoading: false,
 			operations: [
 				{value: 'base', text: 'Base Value'},
 				{value: 'add', text: 'Add'},
@@ -107,6 +207,14 @@
 			],
 		}},
 		computed: {
+      radioGroup(){
+        return this.model.targetByTags ? 'tags' : 'stats';
+      },
+      extraTagsFull(){
+        if (!this.model.extraTags) return false;
+        let maxCount = EffectSchema.get('extraTags', 'maxCount');
+        return this.model.extraTags.length >= maxCount;
+      },
       needsValue(){
 				switch(this.model.operation) {
 					case 'base': return true;
@@ -163,6 +271,25 @@
 		},
 		methods: {
 			getEffectIcon,
+      changeTargetByTags(value){
+        if(value === 'stats'){
+          this.$emit('change', {path: ['targetByTags'], value: undefined});
+        } else if (value === 'tags'){
+          this.$emit('change', {path: ['targetByTags'], value: true});
+        }
+      },
+      addExtraTags(){
+				this.addExtraTagsLoading = true;
+				this.$emit('push', {
+					path: ['extraTags'],
+          value: {
+            _id: Random.id(),
+            operation: 'OR',
+            tags: [],
+          },
+					ack: () => this.addExtraTagsLoading = false,
+				});
+			},
 		}
 	};
 </script>
