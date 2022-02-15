@@ -153,6 +153,16 @@
       name="Advanced"
       standalone
     >
+      <v-expand-transition>
+        <text-field
+          v-if="model.targetByTags"
+          label="Target field"
+          :value="model.targetField"
+          hint="Target a specific calculation field on the affected properties"
+          :error-messages="errors.targetField"
+          @change="change('targetField', ...arguments)"
+        />
+      </v-expand-transition>
       <smart-combobox
         label="Tags"
         multiple
@@ -162,16 +172,6 @@
         :error-messages="errors.tags"
         @change="change('tags', ...arguments)"
       />
-      <v-expand-transition>
-        <text-field
-          v-if="model.targetByTags"
-          label="Target field"
-          :value="model.variableName"
-          hint="Target a specific calculation field on the affected properties"
-          :error-messages="errors.targetField"
-          @change="change('targetField', ...arguments)"
-        />
-      </v-expand-transition>
     </form-section>
   </div>
 </template>
