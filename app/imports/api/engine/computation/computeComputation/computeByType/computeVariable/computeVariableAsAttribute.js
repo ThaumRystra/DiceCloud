@@ -23,4 +23,7 @@ export default function computeVariableAsAttribute(computation, node, prop){
   prop.hide = !node.data.effectAggregator &&
     prop.baseValue === undefined ||
     undefined
+
+  // Store effects
+  prop.effects = node.data.effects;
 }

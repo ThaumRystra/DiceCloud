@@ -6,6 +6,7 @@ export default class CreatureComputation {
     // Set up fields
     this.originalPropsById =  {};
     this.propsById =  {};
+    this.propsWithTag = {};
     this.scope = {};
     this.props =  properties;
     this.dependencyGraph = createGraph();
@@ -17,6 +18,17 @@ export default class CreatureComputation {
       this.originalPropsById[prop._id] = EJSON.clone(prop);
       // Store by id
       this.propsById[prop._id] = prop;
+
+      // Store sets of ids in each tag
+      if (prop.tags){
+        prop.tags.forEach(tag => {
+          if (this.propsWithTag[tag]){
+            this.propsWithTag[tag].push(prop._id);
+          } else {
+            this.propsWithTag[tag] = [prop._id];
+          }
+        });
+      }
 
       // Store the prop in the dependency graph
       this.dependencyGraph.addNode(prop._id, prop);

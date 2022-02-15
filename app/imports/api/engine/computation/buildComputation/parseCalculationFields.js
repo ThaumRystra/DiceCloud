@@ -29,7 +29,7 @@ function discoverInlineCalculationFields(prop, schemas){
 
       // Set the value to the uncomputed string for use in calculations
       inlineCalcObj.value = string;
-      
+
       // Has the text, if it matches the existing hash, stop
       const inlineCalcHash = cyrb53(inlineCalcObj.text);
       if (inlineCalcHash === inlineCalcObj.hash){
@@ -56,6 +56,9 @@ function parseAllCalculationFields(prop, schemas){
   schemas[prop.type].computedFields().forEach( calcKey => {
     // Determine the level the calculation should compute down to
     let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel || 'reduce';
+
+    // Special case of effects, when targeting by tags compile
+    if (prop.type === 'effect' && prop.targetByTags) parseLevel = 'compile';
 
     // For all fields matching they keys
     // supports `keys.$.with.$.arrays`

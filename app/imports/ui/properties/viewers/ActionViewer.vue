@@ -29,7 +29,7 @@
         large
         center
         signed
-        :value="rollBonus"
+        :calculation="model.attackRoll"
       />
       <property-field
         name="Action type"
@@ -156,13 +156,6 @@ export default {
         return 'Reset on a long rest';
       }
       return undefined;
-    },
-    rollBonus(){
-      if (
-        !this.model.attackRoll ||
-        !isFinite(this.model.attackRoll.value)
-      ) return;
-      return numberToSignedString(this.model.attackRoll.value);
     },
     rollBonusTooLong(){
       return this.rollBonus && this.rollBonus.length > 3;

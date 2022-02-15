@@ -16,10 +16,23 @@ export default function aggregateEffect({node, linkedNode, link}){
     conditional: [],
     rollBonus: [],
   };
+
+  // Store a summary of the effect itself
+  node.data.effects = node.data.effects || [];
+  node.data.effects.push({
+    _id: linkedNode.data._id,
+    name: linkedNode.data.name,
+    operation: linkedNode.data.operation,
+    amount: linkedNode.data.amount && {value: linkedNode.data.amount.value},
+    // ancestors: linkedNode.data.ancestors,
+  });
+
   // get a shorter reference to the aggregator document
   const aggregator = node.data.effectAggregator;
   // Get the result of the effect
   const result = linkedNode.data.amount?.value;
+  // Skip aggregating if the result is not resolved completely
+  if (typeof result === 'string') return;
   // Aggregate the effect based on its operation
   switch(linkedNode.data.operation){
     case 'base':

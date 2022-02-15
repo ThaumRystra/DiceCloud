@@ -3,6 +3,7 @@ import { dealDamageWork } from '/imports/api/creature/creatureProperties/methods
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
 import logErrors from './shared/logErrors.js';
+import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
 
 export default function applyDamage(node, {
   creature, targets, scope, log
@@ -35,11 +36,12 @@ export default function applyDamage(node, {
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // Compile the dice roll and store that string first
-  const {result: compiled} = resolve('compiled', prop.amount.parseNode, scope, context);
-  logValue.push(toString(compiled));
-  logErrors(context.errors, log);
+  // const {result: compiled} = resolve('compiled', prop.amount.parseNode, scope, context);
+  // logValue.push(toString(compiled));
+  // logErrors(context.errors, log);
 
   // roll the dice only and store that string
+  applyEffectsToCalculationParseNode(prop.amount, log);
   const {result: rolled} = resolve('roll', prop.amount.parseNode, scope, context);
   logValue.push(toString(rolled));
   logErrors(context.errors, log);

@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, intersection, difference } from 'lodash';
 
 const linkDependenciesByType = {
   action: linkAction,
@@ -127,11 +127,11 @@ function linkEffects(dependencyGraph, prop, computation){
   dependOnCalc({dependencyGraph, prop, key: 'amount'});
   // The stats depend on the effect
   if (prop.targetByTags){
-    // TODO: 
-    getEffectTagTargets(prop, computation).forEach(targetProp => {
+    getEffectTagTargets(prop, computation).forEach(targetId => {
+      const targetProp = computation.propsById[targetId];
       const key = prop.targetField || getDefaultCalculationField(targetProp);
       const calcObj = get(targetProp, key);
-      if (calcObj){
+      if (calcObj && calcObj.calculation){
         dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id , 'effect');
       }
     });
@@ -140,6 +140,67 @@ function linkEffects(dependencyGraph, prop, computation){
       if (!statName) return;
       dependencyGraph.addLink(statName, prop._id, 'effect');
     });
+  }
+}
+
+// Returns an array of IDs of the properties the effect targets
+function getEffectTagTargets(effect, computation){
+  const targets = getTargetListFromTags(effect.targetTags, computation);
+  const notIds = [];
+  if (effect.extraTags){
+    effect.extraTags.forEach(ex => {
+      if (ex.operation === 'OR'){
+        targets.push(...getTargetListFromTags(ex.tags, computation));
+      } else if (ex.operation === 'NOT'){
+        ex.tags.forEach(tag => {
+          const idList = computation.propsWithTag[tag];
+          if (idList) notIds.push(...computation.propsWithTag[tag])
+        });
+      }
+    });
+  }
+  return difference(targets, notIds);
+}
+
+function getTargetListFromTags(tags, computation){
+  const targetTagIdLists = [];
+  if (!tags) return [];
+  tags.forEach(tag => {
+    const idList = computation.propsWithTag[tag];
+    if (idList) targetTagIdLists.push(idList);
+  });
+  const targets = intersection(...targetTagIdLists);
+  return targets;
+}
+
+function getDefaultCalculationField(prop){
+  switch (prop.type){
+    case 'action': return 'attackRoll';
+    case 'adjustment': return 'amount';
+    case 'attribute': return 'baseValue';
+    case 'branch': return 'condition';
+    case 'buff': return 'duration';
+    case 'class': return null;
+    case 'classLevel': return null;
+    case 'constant': return null;
+    case 'container': return null;
+    case 'damageMultiplier': return null;
+    case 'damage': return 'amount';
+    case 'effect': return 'amount';
+    case 'feature': return null;
+    case 'folder': return null;
+    case 'item': return null;
+    case 'note': return null;
+    case 'proficiency': return null;
+    case 'reference': return null;
+    case 'roll': return 'roll';
+    case 'savingThrow': return 'dc';
+    case 'skill': return 'baseValue';
+    case 'slotFiller': return null;
+    case 'slot': return 'quantityExpected';
+    case 'spellList': return 'attackRollBonus';
+    case 'spell': return null;
+    case 'toggle': return 'condition';
   }
 }
 

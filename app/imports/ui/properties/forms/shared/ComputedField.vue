@@ -12,7 +12,7 @@
         {{ model.value }}
       </template>
     </text-field>
-    <calculation-error-list :errors="model.errors" />
+    <calculation-error-list :errors="errorList" />
   </div>
 </template>
 
@@ -29,6 +29,15 @@ export default {
       default: () => ({}),
     },
   },
+  computed: {
+    errorList(){
+      if (this.model.parseError){
+        return [this.model.parseError, ...this.model.errors];
+      } else {
+        return this.model.errors;
+      }
+    }
+  }
 }
 </script>
 

@@ -28,7 +28,7 @@ function aggregateLinks(computation, node){
       // Ignore inactive props
       if (linkedNode.data.inactive) return;
       // Apply all the aggregations
-      let arg = {node, linkedNode, link};
+      let arg = {node, linkedNode, link, computation};
       aggregate.classLevel(arg);
       aggregate.damageMultiplier(arg);
       aggregate.definition(arg);

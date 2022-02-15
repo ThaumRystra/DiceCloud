@@ -19,7 +19,7 @@
         {{ name }}
       </v-sheet>
       <div
-        class="flex-grow-1 layout align-center"
+        class="flex-grow-1 layout align-center justify-center flex-wrap"
         style="width: 100%;"
       >
         <div
@@ -30,6 +30,8 @@
             'justify-center': isCenter,
             'justify-end': end,
             'mono': isMono,
+            'flex-grow-0': calculation && calculation.effects,
+            'ma-3': calculation && calculation.effects,
           }"
           style="overflow-x: auto;"
           v-bind="$attrs"
@@ -43,6 +45,28 @@
             </template>
           </slot>
         </div>
+        <div
+          v-if="calculation && calculation.effects"
+          class="flex-grow-1"
+        >
+          <inline-effect
+            v-if="typeof calculation.value === 'number'"
+            hide-breadcrumbs
+            :model="{
+              name: 'Base value',
+              operation: 'base',
+              amount: {value: calculation.baseValue},
+            }"
+            @click="clickEffect(effect._id)"
+          />
+          <inline-effect
+            v-for="effect in calculation.effects"
+            :key="effect._id"
+            :data-id="effect._id"
+            :model="effect"
+            @click="clickEffect(effect._id)"
+          />
+        </div>
       </div>
     </v-sheet>
   </v-col>
@@ -50,14 +74,18 @@
 
 <script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import InlineEffect from '/imports/ui/properties/components/effects/InlineEffect.vue';
 
 export default {
-	props: {
-		name: {
+  components: {
+    InlineEffect,
+  },
+  props: {
+    name: {
       type: String,
       default: undefined,
     },
-		value: {
+    value: {
       type: [String, Number, Boolean],
       default: undefined,
     },
@@ -74,7 +102,7 @@ export default {
       type: Object,
       default: () => ({cols: 12, sm: 6, md: 4}),
     },
-	},
+  },
   computed: {
     showCalculationInsteadOfValue(){
       if (!this.calculation) return;
@@ -118,6 +146,13 @@ export default {
   },
   methods: {
     numberToSignedString,
+    clickEffect(id){
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `${id}`,
+        data: {_id: id},
+      });
+    },
   }
 }
 </script>

@@ -21,6 +21,7 @@ const applyPropertyByType = {
   toggle,
 };
 
-export default function applyProperty(node, ...args){
-  return applyPropertyByType[node.node.type]?.(node, ...args);
+export default function applyProperty(node, opts, ...rest){
+  opts.scope[`#${node.node.type}`] = node.node;
+  return applyPropertyByType[node.node.type]?.(node, opts, ...rest);
 }

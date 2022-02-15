@@ -1,6 +1,7 @@
 <template lang="html">
   <v-list-item
     class="effect-viewer layout align-center"
+    dense
     v-on="!hideBreadcrumbs ? {click} : {}"
   >
     <div class="effect-icon">
@@ -9,7 +10,6 @@
           <v-icon
             class="mx-2"
             style="cursor: default;"
-            large
             v-on="on"
           >
             {{ effectIcon }}
@@ -18,37 +18,24 @@
         <span>{{ operation }}</span>
       </v-tooltip>
     </div>
-    <div
-      class="text-h4 effect-value mr-2"
-    >
-      {{ displayedValue }}
-    </div>
-    <div class="layout column my-2">
-      <div class="text-body-1 mb-1">
+    <v-list-item-content>
+      <v-list-item-title>
+        <span
+          class="effect-value mr-2"
+        >
+          {{ displayedValue }}
+        </span>
         {{ displayedText }}
-      </div>
-      <div v-if="!hideBreadcrumbs && model.ancestors">
-        <breadcrumbs
-          :model="model"
-          class="text-caption"
-          no-links
-          no-icons
-          style="margin-bottom: 0"
-        />
-      </div>
-    </div>
+      </v-list-item-title>
+    </v-list-item-content>
   </v-list-item>
 </template>
 
 <script lang="js">
   import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
-  import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
   import { isFinite } from 'lodash';
 
   export default {
-    components: {
-      Breadcrumbs,
-    },
     props: {
       hideBreadcrumbs: Boolean,
       model: {
@@ -133,7 +120,7 @@
 
 <style lang="css" scoped>
   .icon, .effect-icon {
-    min-width: 30px;
+    min-width: 20px;
   }
   .icon {
     color: inherit !important;
@@ -143,7 +130,7 @@
     flex-shrink: 0;
   }
   .effect-value {
-    min-width: 60px;
+    min-width: 30px;
     text-align: center;
   }
 </style>

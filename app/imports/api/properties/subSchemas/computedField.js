@@ -24,6 +24,15 @@ function computedOnlyField(field){
       optional: true,
       removeBeforeCompute: true,
     },
+    // A list of effects targeting this calculation
+    [`${field}.effects`]: {
+      type: Array,
+      optional: true,
+    },
+    [`${field}.effects.$`]: {
+      type: Object,
+      blackbox: true,
+    },
     // A cache of the parse result of the calculation
     [`${field}.parseNode`]: {
       type: Object,
