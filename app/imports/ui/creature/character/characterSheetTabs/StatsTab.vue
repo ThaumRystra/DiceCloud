@@ -457,7 +457,7 @@
         return getProperties(this.creature, {type: 'action'});
 			},
       appliedBuffs(){
-        return getProperties(this.creature, {type: 'buff', applied: true});
+        return getProperties(this.creature, {type: 'buff'});
 			},
       attacks(){
         let props = getProperties(this.creature, {type: 'attack'})
