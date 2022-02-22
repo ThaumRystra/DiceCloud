@@ -14,7 +14,7 @@ const linkDependenciesByType = {
   effect: linkEffects,
   proficiency: linkProficiencies,
   roll: linkRoll,
-  slot: linkSlot,
+  propertySlot: linkSlot,
   skill: linkSkill,
   spell: linkAction,
   spellList: linkSpellList,

@@ -8,8 +8,8 @@
       <h3 class="layout align-center">
         {{ slot.name }}
         <v-spacer />
-        <span v-if="slot.quantityExpectedResult > 1">
-          {{ slot.totalFilled }} / {{ slot.quantityExpectedResult }}
+        <span v-if="slot.quantityExpected && slot.quantityExpected.value > 1">
+          {{ slot.totalFilled }} / {{ slot.quantityExpected.value }}
         </span>
       </h3>
       <v-list v-if="slot.children.length">
@@ -37,7 +37,7 @@
         </v-list-item>
       </v-list>
       <v-btn
-        v-if="!slot.quantityExpectedResult || slot.spaceLeft"
+        v-if="!slot.quantityExpected || !slot.quantityExpected.value || slot.spaceLeft"
         icon
         :data-id="`slot-add-button-${slot._id}`"
         class="slot-add-button"
@@ -120,8 +120,8 @@ export default {
         'ancestors.id': this.creatureId,
         type: 'propertySlot',
         $or: [
-          {slotConditionResult: {$nin: [false, 0, '']}},
-          {slotConditionResult: {$exists: false}},
+          {'slotCondition.value': {$nin: [false, 0, '']}},
+          {'slotCondition.value': {$exists: false}},
         ],
         removed: {$ne: true},
         inactive: {$ne: true},
@@ -130,7 +130,7 @@ export default {
       }).map(slot => {
         if (
           !this.showHiddenSlots &&
-          slot.quantityExpectedResult === 0 &&
+          (slot.quantityExpected && slot.quantityExpected.value) === 0 &&
           slot.hideWhenFull
         ){
           slot.children = []
@@ -146,7 +146,7 @@ export default {
       }).filter(slot => !( // Hide full and ignored slots
         !this.showHiddenSlots && (
           slot.hideWhenFull &&
-          slot.quantityExpectedResult > 0 &&
+          (slot.quantityExpected && slot.quantityExpected.value) > 0 &&
           slot.spaceLeft <= 0 ||
           slot.ignored
         )

@@ -188,6 +188,8 @@ import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
+import resolve, { toString } from '/imports/parser/resolve.js';
+import { prettifyParseError, parse } from '/imports/parser/parser.js';
 // import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 import Libraries from '/imports/api/library/Libraries.js';
@@ -291,8 +293,9 @@ export default {
         return CreatureProperties.findOne(this.slotId);
       } else if (this.dummySlot) {
         let model = clone(this.dummySlot)
-        model.quantityExpectedResult = +model.quantityExpected;
-        model.spaceLeft = model.quantityExpectedResult;
+        if (!model.quantityExpected) model.quantityExpected = {};
+        model.quantityExpected.value = +model.quantityExpected.calculation;
+        model.spaceLeft = model.quantityExpected.value;
         return model;
       }
     },
@@ -342,7 +345,7 @@ export default {
       return quantitySelected;
     },
     spaceLeft(){
-      if (this.model.quantityExpectedResult === 0) return undefined;
+      if (!this.model.quantityExpected || this.model.quantityExpected.value === 0) return undefined;
       return this.model.spaceLeft - this.totalQuantitySelected;
     },
     libraryNames(){
@@ -360,13 +363,23 @@ export default {
       // the quantity to fill
       nodes.forEach(node => {
         if (node.slotFillerCondition){
-          let {result} = evaluateString({
-            string: node.slotFillerCondition,
-            scope: this.creature.variables,
-            fn: 'reduce',
-          });
-          if (!result.value){
+          try {
+            let parseNode = parse(node.slotFillerCondition);
+            const {result: resultNode} = resolve('reduce', parseNode, this.creature.variables);
+            if (resultNode?.parseType === 'constant'){
+              if (!resultNode.value){
+                node._disabledBySlotFillerCondition = true;
+                disabledNodeCount += 1;
+              }
+            } else {
+              node._disabledBySlotFillerCondition = true;
+              node._conditionError = toString(resultNode);
+              disabledNodeCount += 1;
+            }
+          } catch (e){
+            let error = prettifyParseError(e);
             node._disabledBySlotFillerCondition = true;
+            node._conditionError = error;
             disabledNodeCount += 1;
           }
         }

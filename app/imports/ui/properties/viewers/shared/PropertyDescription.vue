@@ -1,6 +1,6 @@
 <template lang="html">
   <markdown-text
-    v-if="text"
+    v-if="text && model"
     :markdown="model.value || model.text"
   />
   <property-field
