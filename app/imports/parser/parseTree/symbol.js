@@ -1,4 +1,4 @@
-import resolve from '../resolve.js';
+import resolve, { toString } from '../resolve.js';
 import constant from './constant.js';
 
 const symbol = {
@@ -46,7 +46,7 @@ const symbol = {
     if (result.parseType === 'symbol'){
       context.error({
         type: 'info',
-        message: `${result.toString()} not found, set to 0`
+        message: `${toString(result)} not found, set to 0`
       });
       return {
         result: constant.create({value: 0}),

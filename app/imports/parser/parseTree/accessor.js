@@ -1,4 +1,5 @@
 import constant from './constant.js';
+import { toString } from '../resolve.js';
 
 const accessor = {
   create({name, path}) {
@@ -53,7 +54,7 @@ const accessor = {
   reduce(node, scope, context){
     let { result } = accessor.compile(node, scope, context);
     if (result.parseType === 'accessor'){
-      context.error(`${accessor.toString(result)} not found, set to 0`);
+      context.error(`${toString(result)} not found, set to 0`);
       return {
         result: constant.create({
           value: 0,
