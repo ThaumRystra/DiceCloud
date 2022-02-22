@@ -109,7 +109,7 @@ unaryExpression ->
 | notExpression {% id %}
 
 notExpression ->
-  %notOperator _ notExpression {% d => node.notOperator.create({right: d[2]})%}
+  %notOperator _ notExpression {% d => node.not.create({right: d[2]})%}
 | callExpression {% id %}
 
 callExpression ->

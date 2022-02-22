@@ -377,6 +377,7 @@ export default {
               disabledNodeCount += 1;
             }
           } catch (e){
+            console.warn(e);
             let error = prettifyParseError(e);
             node._disabledBySlotFillerCondition = true;
             node._conditionError = error;

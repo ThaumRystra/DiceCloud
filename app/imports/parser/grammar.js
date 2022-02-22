@@ -79,7 +79,7 @@ let ParserRules = [
     {"name": "exponentExpression", "symbols": ["unaryExpression"], "postprocess": id},
     {"name": "unaryExpression", "symbols": [(lexer.has("additiveOperator") ? {type: "additiveOperator"} : additiveOperator), "_", "unaryExpression"], "postprocess": d => node.unaryOperator.create({operator: d[0].value, right: d[2]})},
     {"name": "unaryExpression", "symbols": ["notExpression"], "postprocess": id},
-    {"name": "notExpression", "symbols": [(lexer.has("notOperator") ? {type: "notOperator"} : notOperator), "_", "notExpression"], "postprocess": d => node.notOperator.create({right: d[2]})},
+    {"name": "notExpression", "symbols": [(lexer.has("notOperator") ? {type: "notOperator"} : notOperator), "_", "notExpression"], "postprocess": d => node.not.create({right: d[2]})},
     {"name": "notExpression", "symbols": ["callExpression"], "postprocess": id},
     {"name": "callExpression", "symbols": ["name", "_", "arguments"], "postprocess": 
         d => node.call.create({functionName: d[0].name, args: d[2]})
