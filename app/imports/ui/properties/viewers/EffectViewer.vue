@@ -24,13 +24,15 @@
         name="Targeted tags"
       >
         <div>
-          <v-chip
-            v-for="(tag, index) in model.targetTags"
-            :key="index"
-            class="ma-1"
-          >
-            {{ tag }}
-          </v-chip>
+          <div class="d-flex flex-wrap">
+            <v-chip
+              v-for="(tag, index) in model.targetTags"
+              :key="index"
+              class="ma-1"
+            >
+              {{ tag }}
+            </v-chip>
+          </div>
           <div
             v-for="ex in model.extraTags"
             :key="ex._id"
@@ -38,13 +40,15 @@
             <span class="ma-2">
               {{ ex.operation }}
             </span>
-            <v-chip
-              v-for="(extraTag, index) in ex.tags"
-              :key="index"
-              class="ma-1"
-            >
-              {{ extraTag }}
-            </v-chip>
+            <div class="d-flex flex-wrap">
+              <v-chip
+                v-for="(extraTag, index) in ex.tags"
+                :key="index"
+                class="ma-1"
+              >
+                {{ extraTag }}
+              </v-chip>
+            </div>
           </div>
         </div>
       </property-field>
@@ -52,13 +56,15 @@
         v-else
         name="Stats"
       >
-        <v-chip
-          v-for="(stat, index) in model.stats"
-          :key="index"
-          class="ma-1"
-        >
-          {{ stat }}
-        </v-chip>
+        <div class="d-flex flex-wrap">
+          <v-chip
+            v-for="(stat, index) in model.stats"
+            :key="index"
+            class="ma-1"
+          >
+            {{ stat }}
+          </v-chip>
+        </div>
       </property-field>
       <property-field
         v-if="model.operation === 'conditional'"
