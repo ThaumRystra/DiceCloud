@@ -86,6 +86,7 @@ export default {
       };
       if (this.preparingSpells){
         filter.deactivatedByAncestor = {$ne: true};
+        filter.deactivatedByToggle = {$ne: true};
       } else {
         filter.inactive = {$ne: true};
       }
@@ -104,6 +105,7 @@ export default {
         prepared: true,
         alwaysPrepared: {$ne: true},
         deactivatedByAncestor: {$ne: true},
+        deactivatedByToggle: {$ne: true},
       }).count();
     },
     preparedError(){

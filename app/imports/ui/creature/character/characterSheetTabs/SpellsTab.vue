@@ -63,6 +63,7 @@ export default {
         type: 'spell',
         removed: {$ne: true},
         deactivatedByAncestor: {$ne: true},
+        deactivatedByToggle: {$ne: true},
       }, {
         sort: {
           level: 1,
