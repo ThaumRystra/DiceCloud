@@ -93,7 +93,7 @@ function parseCalculation(calcObj){
   calcObj.hash = calcHash;
   try {
     calcObj.parseNode = parse(calcObj.calculation);
-    delete calcObj.parseError;
+    calcObj.parseError = null;
   } catch (e) {
     let error = {
       type: 'evaluation',
