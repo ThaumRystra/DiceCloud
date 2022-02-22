@@ -40,8 +40,8 @@
         :class="{'error--text' : preparedError}"
         class="pb-0"
       >
-        <div v-if="model.maxPrepared">
-          {{ numPrepared }}/{{ model.maxPreparedResult }} spells prepared
+        <div v-if="model.maxPrepared && model.maxPrepared.value">
+          {{ numPrepared }}/{{ model.maxPrepared.value }} spells prepared
         </div>
         <v-switch
           v-model="preparingSpells"
@@ -109,7 +109,7 @@ export default {
     preparedError(){
       if (!this.model.maxPrepared) return;
       let numPrepared = this.numPrepared;
-      let maxPrepared = this.model.maxPreparedResult;
+      let maxPrepared = this.model.maxPrepared.value || 0;
       return numPrepared !== maxPrepared
     },
   },
