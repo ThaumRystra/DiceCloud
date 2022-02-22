@@ -1,8 +1,14 @@
-import '/imports/server/config/accountsEmailConfig.js';
+import '/imports/api/simpleSchemaConfig.js';
 import '/imports/server/config/SimpleRestConfig.js';
+import '/imports/server/config/limitLoginTokens.js';
+import '/imports/server/rest/index.js';
+import '/imports/server/config/accountsEmailConfig.js';
 import '/imports/server/config/simpleSchemaDebug.js';
 import '/imports/server/config/SyncedCronConfig.js';
 import '/imports/server/publications/index.js';
 import '/imports/server/cron/deleteSoftRemovedDocuments.js';
 import '/imports/api/parenting/organizeMethods.js';
 import '/imports/api/users/patreon/updatePatreonOnLogin.js';
+import '/imports/migrations/server/index.js';
+import '/imports/migrations/methods/index.js'
+import '/imports/constants/MAINTENANCE_MODE.js';

@@ -28,6 +28,7 @@
     </div>
     <smart-select
       label="Type"
+      clearable
       :items="skillTypes"
       :value="model.skillType"
       :error-messages="errors.skillType"
@@ -36,13 +37,13 @@
       @change="change('skillType', ...arguments)"
     />
 
-    <text-area
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <form-section
       name="Advanced"
@@ -57,13 +58,13 @@
         @change="change('tags', ...arguments)"
       />
       <div class="layout justify-center">
-        <text-field
+        <computed-field
           label="Base Value"
-          class="base-value-field no-flex"
-          :value="model.baseValueCalculation"
           hint="This is the value of the skill before effects are applied"
-          :error-messages="errors.baseValueCalculation"
-          @change="change('baseValueCalculation', ...arguments)"
+          :model="model.baseValue"
+          :error-messages="errors.baseValue"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['baseValue', ...path], value, ack})"
         />
         <proficiency-select
           style="flex-basis: 300px;"
@@ -73,7 +74,6 @@
           @change="change('baseProficiency', ...arguments)"
         />
       </div>
-      <calculation-error-list :errors="model.baseValueErrors" />
     </form-section>
   </div>
 </template>
@@ -83,13 +83,11 @@
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
 		components: {
 			ProficiencySelect,
 			FormSection,
-      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
 		data(){return{

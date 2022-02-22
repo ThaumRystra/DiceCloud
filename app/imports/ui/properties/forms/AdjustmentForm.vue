@@ -1,24 +1,35 @@
 <template lang="html">
   <div class="adjustment-form">
-    <div class="layout">
-      <smart-combobox
-        label="Attribute"
-        hint="The attribute this adjustment will apply to"
-        style="flex-basis: 300px;"
-        :items="attributeList"
-        :value="model.stat"
-        :error-messages="errors.stat"
-        @change="change('stat', ...arguments)"
-      />
-      <text-field
-        label="Amount"
-        hint="The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead."
-        style="flex-basis: 300px;"
-        :value="model.amount"
-        :error-messages="errors.amount"
-        @change="change('amount', ...arguments)"
-      />
-    </div>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-combobox
+          label="Attribute"
+          hint="The attribute this adjustment will apply to"
+          style="flex-basis: 300px;"
+          :items="attributeList"
+          :value="model.stat"
+          :error-messages="errors.stat"
+          @change="change('stat', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Amount"
+          :hint="model.operation === 'set' ? setHint : damageHint"
+          style="flex-basis: 300px;"
+          :model="model.amount"
+          :error-messages="errors.amount"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['amount', ...path], value, ack})"
+        />
+      </v-col>
+    </v-row>
     <smart-select
       label="Operation"
       class="mx-1"
@@ -68,6 +79,8 @@ export default {
       {text: 'Damage', value: 'increment'},
       {text: 'Set', value: 'set'},
     ],
+    damageHint: 'The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead.',
+    setHint: 'The value of the stat after applying this adjustment. The stat\'s value can\'t exceed its total',
   }},
 	computed: {
 		targetOptions(){
@@ -87,11 +100,8 @@ export default {
 						text: 'Self',
 						value: 'self',
 					}, {
-						text: 'Roll once for each target',
-						value: 'each',
-					}, {
-						text: 'Roll once and apply to every target',
-						value: 'every',
+						text: 'Target',
+						value: 'target',
 					},
 				];
 			}

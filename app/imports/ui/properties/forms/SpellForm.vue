@@ -98,13 +98,13 @@
       @change="change('duration', ...arguments)"
     />
 
-    <text-area
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <smart-combobox
       label="Tags"
@@ -133,14 +133,12 @@
 	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ActionForm from '/imports/ui/properties/forms/ActionForm.vue'
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
 		components: {
       FormSections,
 			FormSection,
       ActionForm,
-      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
 		data(){return {

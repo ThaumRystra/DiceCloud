@@ -8,17 +8,10 @@ import router from '/imports/ui/router.js';
 import '/imports/ui/components/global/globalIndex.js';
 import '/imports/ui/markdownCofig.js';
 import vuetify from '/imports/ui/vuetify.js';
-import Vuetify from 'vuetify/lib';
-import { Scroll } from 'vuetify/lib/directives'
 
 Vue.use(VueMeteorTracker);
 Vue.config.meteor.freeze = true;
 Vue.config.devtools = true;
-Vue.use(Vuetify, {
-  directives: {
-    Scroll,
-  },
-});
 Vue.use(ReactiveProvide, {
   name: 'reactiveProvide', // default value
 });

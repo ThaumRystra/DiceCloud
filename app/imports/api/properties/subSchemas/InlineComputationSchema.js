@@ -8,8 +8,8 @@ const InlineComputationSchema = new SimpleSchema({
     type: String,
     max: STORAGE_LIMITS.calculation,
   },
-  result: {
-    type: String,
+  value: {
+    type: SimpleSchema.oneOf(String, Number),
     optional: true,
     max: STORAGE_LIMITS.calculation,
   },

@@ -15,6 +15,10 @@
       slot="prepend"
       name="prepend"
     />
+    <slot
+      slot="prepend-inner"
+      name="prepend-inner"
+    />
   </v-select>
 </template>
 

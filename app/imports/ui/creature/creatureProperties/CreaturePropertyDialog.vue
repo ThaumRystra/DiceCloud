@@ -14,9 +14,6 @@
       />
     </template>
     <template v-if="model">
-      <template v-if="!editing && !embedded">
-        <breadcrumbs :model="model" />
-      </template>
       <v-fade-transition
         mode="out-in"
       >
@@ -30,44 +27,72 @@
           @push="push"
           @pull="pull"
         />
-        <component
-          :is="model.type + 'Viewer'"
+        <div
           v-else-if="!editing && $options.components[model.type + 'Viewer']"
-          :key="_id"
-          class="creature-property-viewer"
-          :model="model"
-        />
+        >
+          <div
+            class="layout mb-4"
+          >
+            <template v-if="!embedded">
+              <breadcrumbs :model="model" />
+            </template>
+            <v-spacer />
+            <v-chip disabled>
+              {{ typeName }}
+            </v-chip>
+          </div>
+          <component
+            :is="model.type + 'Viewer'"
+            :key="_id"
+            class="creature-property-viewer"
+            :model="model"
+          />
+          <v-row
+            v-show="!embedded && childrenLength"
+            class="mt-1"
+            dense
+          >
+            <property-field
+              name="Child properties"
+              :cols="{cols: 12}"
+            >
+              <creature-properties-tree
+                style="width: 100%;"
+                :root="{collection: 'creatureProperties', id: model._id}"
+                @length="childrenLength = $event"
+                @selected="selectSubProperty"
+              />
+            </property-field>
+          </v-row>
+        </div>
         <p v-else>
           This property can't be viewed yet.
         </p>
       </v-fade-transition>
-      <template v-if="!editing && !embedded">
-        <v-divider class="my-2" />
-        <creature-properties-tree
-          v-if="!editing"
-          :root="{collection: 'creatureProperties', id: model._id}"
-          @selected="selectSubProperty"
-        />
-        <v-btn
-          text
-          data-id="insert-creature-property-btn"
-          @click="addProperty"
-        >
-          <v-icon>mdi-plus</v-icon>
-          Property
-        </v-btn>
-      </template>
     </template>
     <div
       v-if="!embedded"
       slot="actions"
-      class="layout justify-end"
+      class="layout"
     >
       <v-btn
+        v-if="!editing && !embedded"
         text
+        data-id="insert-creature-property-btn"
+        @click="addProperty"
+      >
+        <v-icon left>
+          mdi-plus
+        </v-icon>
+        Child Property
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        text
+        color="accent"
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        Close
       </v-btn>
     </div>
   </dialog-base>
@@ -99,6 +124,7 @@ import { getHighestOrder } from '/imports/api/parenting/order.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import PropertyField from '/imports/ui/properties/viewers/shared/PropertyField.vue';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -119,6 +145,7 @@ export default {
     PropertyToolbar,
     CreaturePropertiesTree,
     Breadcrumbs,
+    PropertyField,
   },
   props: {
     _id: String,
@@ -130,6 +157,7 @@ export default {
     // CurrentId lags behind Id by one tick so that events fired by destroying
     // forms keyed to the old ID are applied before the new ID overwrites it
     currentId: undefined,
+    childrenLength: 0,
   }},
   meteor: {
     model(){
@@ -157,6 +185,10 @@ export default {
     creatureId(){
       return this.creature && this.creature._id;
     },
+    typeName(){
+      if (!this.model) return;
+      return getPropertyName(this.model.type)
+    }
   },
   watch: {
     _id: {

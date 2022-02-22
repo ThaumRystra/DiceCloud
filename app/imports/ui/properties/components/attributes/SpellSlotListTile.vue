@@ -6,7 +6,7 @@
     <v-list-item-content>
       <v-list-item-title>
         <div
-          v-if="model.value > 4"
+          v-if="model.total > 4"
           class="layout value"
           style="align-items: baseline;"
         >
@@ -14,10 +14,10 @@
             style="font-weight: 500; font-size: 24px"
             class="current-value"
           >
-            {{ model.currentValue }}
+            {{ model.value }}
           </div>
           <div class="ml-2 max-value">
-            /{{ model.value }}
+            /{{ model.total }}
           </div>
         </div>
         <div
@@ -25,11 +25,11 @@
           class="layout align-center slot-bubbles"
         >
           <v-icon
-            v-for="i in model.value"
+            v-for="i in model.total"
             :key="i"
           >
             {{
-              i > model.currentValue ?
+              i > model.value ?
                 'mdi-radiobox-blank' :
                 'mdi-radiobox-marked'
             }}
@@ -66,9 +66,6 @@ export default {
     hideCastButton: Boolean,
 	},
 	computed: {
-		currentValue(){
-			return this.value - this.damage;
-		},
     hasClickListener(){
       return this.$listeners && !!this.$listeners.click;
     },

@@ -76,6 +76,18 @@
       </div>
 
       <div
+        v-for="toggle in toggles"
+        :key="toggle._id"
+        class="toggle"
+      >
+        <toggle-card
+          :model="toggle"
+          :data-id="toggle._id"
+          @click="clickProperty({_id: toggle._id})"
+        />
+      </div>
+
+      <div
         v-for="stat in stats"
         :key="stat._id"
         class="stat"
@@ -142,7 +154,7 @@
         class="resource"
       >
         <resource-card
-          v-bind="resource"
+          :model="resource"
           :data-id="resource._id"
           @click="clickProperty({_id: resource._id})"
           @change="e => incrementChange(resource._id, e)"
@@ -335,9 +347,10 @@
   import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-  import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
+  import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
+  //import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
 
-  const getProperties = function(creature, filter,){
+  const getProperties = function(creature, filter){
     if (!creature) return;
     if (creature.settings.hideUnusedStats){
       filter.hide = {$ne: true};
@@ -378,6 +391,7 @@
 			ResourceCard,
 			SpellSlotListTile,
       ActionCard,
+      ToggleCard,
 		},
 		props: {
 			creatureId: {
@@ -395,6 +409,17 @@
 			stats(){
 				return getAttributeOfType(this.creature, 'stat');
 			},
+      toggles(){
+        return CreatureProperties.find({
+          'ancestors.id': this.creatureId,
+          type: 'toggle',
+          removed: {$ne: true},
+          deactivatedByAncestor: {$ne: true},
+          showUI: true,
+        }, {
+          sort: {order: 1}
+        });
+      },
 			modifiers(){
 				return getAttributeOfType(this.creature, 'modifier');
 			},

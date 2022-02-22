@@ -4,7 +4,6 @@ import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
 
 Meteor.publish('selectedLibraryNodes', function(selectedNodeIds){
-  console.log('attempting selectedLibraryNodes')
   check(selectedNodeIds, Array);
   // Limit to 20 selected nodes
   if (selectedNodeIds.length > 20){

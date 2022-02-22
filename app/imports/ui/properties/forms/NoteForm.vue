@@ -8,23 +8,23 @@
       @change="change('name', ...arguments)"
     />
 
-    <text-area
+    <inline-computation-field
       label="Summary"
       hint="This will appear in the card in the character sheet"
-      :value="model.summary"
+      :model="model.summary"
       :error-messages="errors.summary"
-      @change="change('summary', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['summary', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.summaryCalculations" />
 
-    <text-area
+    <inline-computation-field
       label="Description"
       hint="Text that does not fit in the summary"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <smart-combobox
       label="Tags"
@@ -40,12 +40,8 @@
 
 <script lang="js">
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
-  components: {
-    CalculationErrorList,
-  },
   mixins: [propertyFormMixin],
 }
 </script>

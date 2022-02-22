@@ -7,20 +7,6 @@ export default function parser(){
   return new nearley.Parser(nearleyGrammar);
 }
 
-export class CompilationContext {
-  constructor({doubleRolls} = {}){
-    this.errors = [];
-    this.rolls = [];
-    this.doubleRolls = doubleRolls;
-  }
-  storeError(e){
-    this.errors.push(e);
-  }
-  storeRoll(r){
-    this.rolls.push(r);
-  }
-}
-
 export function parse(string){
   let parser = new nearley.Parser(nearleyGrammar);
   parser.feed(string);

@@ -7,7 +7,7 @@
       class="mr-2"
       style="width: 24px; text-align: center;"
     >
-      {{ model.quantity }}
+      {{ model.quantity && model.quantity.value }}
     </div>
     <div
       class="text-no-wrap text-truncate"

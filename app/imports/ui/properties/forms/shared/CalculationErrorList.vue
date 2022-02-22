@@ -13,7 +13,9 @@
         :value="true"
         :icon="errorIcon(error.type)"
         :color="errorColor(error.type)"
-        outlined
+        class="mb-2"
+        dense
+        text
       >
         <pre>{{ error.message }}</pre>
       </v-alert>

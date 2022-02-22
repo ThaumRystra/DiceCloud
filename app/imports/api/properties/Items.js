@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-const ItemSchema = new SimpleSchema({
+const ItemSchema = createPropertySchema({
 	name: {
 		type: String,
 		optional: true,
@@ -14,10 +14,9 @@ const ItemSchema = new SimpleSchema({
 		optional: true,
     max: STORAGE_LIMITS.name,
 	},
-	description: {
-		type: String,
+  description: {
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.description,
 	},
 	// Number currently held
 	quantity: {
@@ -58,13 +57,11 @@ const ItemSchema = new SimpleSchema({
 	},
 });
 
-let ComputedOnlyItemSchema = new SimpleSchema({
-  descriptionCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
+let ComputedOnlyItemSchema = createPropertySchema({
+  description: {
+    type: 'computedOnlyInlineCalculationField',
+    optional: true,
   },
-  'descriptionCalculations.$': InlineComputationSchema,
 });
 
 const ComputedItemSchema = new SimpleSchema()

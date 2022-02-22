@@ -102,21 +102,27 @@
       />
     </v-slide-y-transition>
     <v-btn
-      icon
+      tile
+      outlined
       @click="$emit('toggle-editing')"
     >
+      <span style="width: 44px;">
+        {{ editing ? 'Done' : 'Edit' }}
+      </span>
       <v-slide-y-transition
         hide-on-leave
       >
         <v-icon
           v-if="editing"
           key="doneIcon"
+          right
         >
           mdi-check
         </v-icon>
         <v-icon
           v-else
           key="createIcon"
+          right
         >
           mdi-pencil
         </v-icon>

@@ -25,9 +25,9 @@
     </div>
     <div class="layout column my-2">
       <div class="text-body-1 mb-1">
-        {{ model.name || operation }}
+        {{ displayedText }}
       </div>
-      <div v-if="!hideBreadcrumbs">
+      <div v-if="!hideBreadcrumbs && model.ancestors">
         <breadcrumbs
           :model="model"
           class="text-caption"
@@ -41,98 +41,109 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
-	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
+  import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
   import Breadcrumbs from '/imports/ui/creature/creatureProperties/Breadcrumbs.vue';
   import { isFinite } from 'lodash';
 
-	export default {
+  export default {
     components: {
       Breadcrumbs,
     },
-		mixins: [propertyViewerMixin],
     props: {
-      hideBreadcrumbs: Boolean
+      hideBreadcrumbs: Boolean,
+      model: {
+        type: Object,
+        required: true,
+      },
     },
-		computed: {
+    computed: {
       hasClickListener(){
         return this.$listeners && this.$listeners.click
       },
-			resolvedValue(){
-				return this.model.result !== undefined ? this.model.result : this.model.calculation;
-			},
-			effectIcon(){
-				let value = this.resolvedValue;
-				return getEffectIcon(this.model.operation, value);
-			},
-			operation(){
-				switch(this.model.operation) {
-					case 'base': return 'Base value';
-					case 'add': return 'Add';
-					case 'mul': return 'Multiply';
-					case 'min': return 'Minimum';
-					case 'max': return 'Maximum';
-					case 'advantage': return 'Advantage';
-					case 'disadvantage': return 'Disadvantage';
-					case 'passiveAdd': return 'Passive bonus';
-					case 'fail': return 'Always fail';
-					case 'conditional': return 'Conditional benefit' ;
+      displayedText(){
+        if (this.model.operation === 'conditional'){
+          return this.model.text || this.model.name || this.operation
+        } else {
+          return this.model.name || this.operation
+        }
+      },
+      resolvedValue(){
+        let amount = this.model.amount;
+        if (!amount) return;
+        return amount.value !== undefined ? amount.value : amount.calculation;
+      },
+      effectIcon(){
+        let value = this.resolvedValue;
+        return getEffectIcon(this.model.operation, value);
+      },
+      operation(){
+        switch(this.model.operation) {
+          case 'base': return 'Base value';
+          case 'add': return 'Add';
+          case 'mul': return 'Multiply';
+          case 'min': return 'Minimum';
+          case 'max': return 'Maximum';
+          case 'advantage': return 'Advantage';
+          case 'disadvantage': return 'Disadvantage';
+          case 'passiveAdd': return 'Passive bonus';
+          case 'fail': return 'Always fail';
+          case 'conditional': return 'Conditional benefit' ;
           default: return '';
-				}
-			},
-			showValue(){
-				switch(this.model.operation) {
-					case 'base': return true;
-					case 'add': return true;
-					case 'mul': return true;
-					case 'min': return true;
-					case 'max': return true;
-					case 'advantage': return false;
-					case 'disadvantage': return false;
-					case 'passiveAdd': return true;
-					case 'fail': return false;
-					case 'conditional': return false;
+        }
+      },
+      showValue(){
+        switch(this.model.operation) {
+          case 'base': return true;
+          case 'add': return true;
+          case 'mul': return true;
+          case 'min': return true;
+          case 'max': return true;
+          case 'advantage': return false;
+          case 'disadvantage': return false;
+          case 'passiveAdd': return true;
+          case 'fail': return false;
+          case 'conditional': return false;
           default: return false;
-				}
-			},
-			displayedValue(){
-				let value = this.resolvedValue;
-				switch(this.model.operation) {
-					case 'base': return value;
-					case 'add': return isFinite(value) ? Math.abs(value) : value;
-					case 'mul': return value;
-					case 'min': return value;
-					case 'max': return value;
-					case 'advantage': return;
-					case 'disadvantage': return;
-					case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
-					case 'fail': return;
-					case 'conditional': return;
+        }
+      },
+      displayedValue(){
+        let value = this.resolvedValue;
+        switch(this.model.operation) {
+          case 'base': return value;
+          case 'add': return isFinite(value) ? Math.abs(value) : value;
+          case 'mul': return value;
+          case 'min': return value;
+          case 'max': return value;
+          case 'advantage': return;
+          case 'disadvantage': return;
+          case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
+          case 'fail': return;
+          case 'conditional': return undefined;
           default: return undefined;
-				}
-			}
-		},
+        }
+      }
+    },
     methods: {
       click(e){
         this.$emit('click', e);
       },
     },
-	};
+  };
 </script>
 
 <style lang="css" scoped>
-	.icon, .effect-icon {
-		min-width: 30px;
-	}
-	.icon {
-		color: inherit !important;
-	}
-	.net-effect {
-		flex-grow: 0;
-		flex-shrink: 0;
-	}
-	.effect-value {
-		min-width: 60px;
+  .icon, .effect-icon {
+    min-width: 30px;
+  }
+  .icon {
+    color: inherit !important;
+  }
+  .net-effect {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  .effect-value {
+    min-width: 60px;
     text-align: center;
-	}
+  }
 </style>

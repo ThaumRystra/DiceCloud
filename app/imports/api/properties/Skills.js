@@ -1,13 +1,13 @@
 import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
  * Skills have an ability score modifier that they use as their basis
  */
-let SkillSchema = new SimpleSchema({
+let SkillSchema = createPropertySchema({
   name: {
 		type: String,
 		optional: true,
@@ -20,6 +20,7 @@ let SkillSchema = new SimpleSchema({
     regEx: VARIABLE_NAME_REGEX,
     min: 2,
     max: STORAGE_LIMITS.variableName,
+    optional: true,
   },
 	// The variable name of the ability this skill relies on
   ability: {
@@ -42,97 +43,93 @@ let SkillSchema = new SimpleSchema({
     ],
     defaultValue: 'skill',
   },
-  // The starting value, before effects
-	baseValueCalculation: {
-		type: String,
-		optional: true,
-    max: STORAGE_LIMITS.calculation,
-	},
 	// The base proficiency of this skill
 	baseProficiency: {
 		type: Number,
 		optional: true,
+    allowedValues: [0.49, 0.5, 1, 2],
 	},
+  // The starting value, before effects
+  baseValue: {
+    type: 'fieldToCompute',
+    optional: true,
+  },
   // Description of what the skill is used for
   description: {
-		type: String,
+		type: 'inlineCalculationFieldToCompute',
 		optional: true,
-    max: STORAGE_LIMITS.description,
 	},
 });
 
-let ComputedOnlySkillSchema = new SimpleSchema({
+let ComputedOnlySkillSchema = createPropertySchema({
 	// Computed value of skill to be added to skill rolls
   value: {
     type: Number,
 		defaultValue: 0,
+    optional: true,
+    removeBeforeCompute: true,
   },
   // The result of baseValueCalculation
   baseValue: {
-    type: SimpleSchema.oneOf(Number, String, Boolean),
+    type: 'computedOnlyField',
     optional: true,
   },
-  baseValueErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'baseValueErrors.$': {
-    type: ErrorSchema,
-  },
+  description: {
+		type: 'computedOnlyInlineCalculationField',
+		optional: true,
+	},
 	// Computed value added by the ability
 	abilityMod: {
 		type: SimpleSchema.Integer,
 		optional: true,
+    removeBeforeCompute: true,
 	},
 	// Computed advantage/disadvantage
   advantage: {
     type: SimpleSchema.Integer,
     optional: true,
     allowedValues: [-1, 0, 1],
+    removeBeforeCompute: true,
   },
 	// Computed bonus to passive checks
   passiveBonus: {
     type: Number,
     optional: true,
+    removeBeforeCompute: true,
   },
 	// Computed proficiency multiplier
   proficiency: {
     type: Number,
-    allowedValues: [0, 0.5, 1, 2],
+    allowedValues: [0, 0.49, 0.5, 1, 2],
 		defaultValue: 0,
+    removeBeforeCompute: true,
   },
   // Compiled text of all conditional benefits
   conditionalBenefits: {
     type: Array,
     optional: true,
+    removeBeforeCompute: true,
   },
   'conditionalBenefits.$': {
-    type: String,
-  },
-  // Compiled text of all roll bonuses
-  rollBonuses: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.rollBonusCount,
-  },
-  'rollBonuses.$': {
     type: String,
   },
 	// Computed number of things forcing this skill to fail
   fail: {
     type: SimpleSchema.Integer,
     optional: true,
+    removeBeforeCompute: true,
   },
   // Should this attribute hide
   hide: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
   // Denormalised tag if stat is overridden by one with the same variable name
   overridden: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
   },
 })
 

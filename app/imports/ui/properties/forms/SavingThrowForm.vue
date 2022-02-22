@@ -1,38 +1,59 @@
 <template lang="html">
   <div class="saving-throw-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-    <text-field
-      label="DC"
-      hint="A calculation of the DC that the target of an action needs to save against in order to succeed. If the saving throw is lower than the DC, the children of this property will be activated."
-      :value="model.dc"
-      :error-messages="errors.dc"
-      @change="change('dc', ...arguments)"
-    />
-    <calculation-error-list :errors="model.dcErrors" />
-
-    <smart-combobox
-      label="Save"
-      hint="Which stat the saving throw targets"
-      :value="model.stat"
-      :items="saveList"
-      :error-messages="errors.stat"
-      @change="change('stat', ...arguments)"
-    />
-    <smart-select
-      label="Target"
-      :hint="targetOptionHint"
-      :items="targetOptions"
-      :value="model.target"
-      :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('target', ...arguments)"
-    />
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          ref="focusFirst"
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="DC"
+          hint="A calculation of the DC that the target of an action needs to save against in order to succeed. If the saving throw is lower than the DC, the children of this property will be activated."
+          :model="model.dc"
+          :error-messages="errors.dc"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['dc', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-combobox
+          label="Save"
+          hint="Which stat the saving throw targets"
+          :value="model.stat"
+          :items="saveList"
+          :error-messages="errors.stat"
+          @change="change('stat', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Target"
+          :hint="targetOptionHint"
+          :items="targetOptions"
+          :value="model.target"
+          :error-messages="errors.target"
+          :menu-props="{auto: true, lazy: true}"
+          @change="change('target', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <smart-combobox
       label="Tags"
       class="mr-2"
@@ -60,25 +81,16 @@ export default {
 					text: 'Self',
 					value: 'self',
 				}, {
-					text: 'Roll once for each target',
-					value: 'each',
-				}, {
-					text: 'Roll once and apply to every target',
-					value: 'every',
+					text: 'Target',
+					value: 'target',
 				},
 			];
 		},
 		targetOptionHint(){
 			let hints = {
-				self: 'The damage will be applied to the character\'s own attribute when taking the action',
-				target: 'The damage will be applied to the target of the action',
-				each: 'The damage will be rolled separately for each of the targets of the action',
-				every: 'The damage will be rolled once and applied to each of the targets of the action',
+				self: 'The save will be applied to the character taking the action',
+				target: 'The save will be applied to the targets of the action',
 			};
-			if (this.parentTarget === 'singleTarget'){
-				hints.each = hints.target;
-				hints.every = hints.target;
-			}
 			return hints[this.model.target];
 		}
 	},

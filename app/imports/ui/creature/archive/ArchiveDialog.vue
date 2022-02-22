@@ -60,18 +60,28 @@
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import ArchivedCreatures from '/imports/api/creature/archive/ArchivedCreatures.js';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
 import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
-import archiveCreatures from '/imports/api/creature/archive/methods/archiveCreatures.js';
-import restoreCreatures from '/imports/api/creature/archive/methods/restoreCreatures.js';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import archiveCreatureToFile from '/imports/api/creature/archive/methods/archiveCreatureToFile.js';
+import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile.js';
 import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { uniq, flatten } from 'lodash';
 
 const characterTransform = function(char){
   char.url = `/character/${char._id}/${char.urlName || '-'}`;
   char.initial = char.name && char.name[0] || '?';
   return char;
 };
+
+const fileTransform = function(file){
+  return {
+    _id: file._id,
+    name: file.meta.creatureName,
+    owner: file.userId,
+    creatureId: file.meta.creatureId,
+  };
+}
 
 const creatureFields = {
   'color': 1,
@@ -111,8 +121,8 @@ export default {
       if (!this.selectedCreature) return;
       this.archiveActionLoading = true;
       if (this.mode === 'archive'){
-        archiveCreatures.call({
-          creatureIds: [this.selectedCreature],
+        archiveCreatureToFile.call({
+          creatureId: this.selectedCreature,
         }, error => {
           this.archiveActionLoading = false;
           if (!error) return;
@@ -120,11 +130,8 @@ export default {
           snackbar({text: error.reason});
         });
       } else if (this.mode === 'restore'){
-        let archiveId = ArchivedCreatures.findOne({
-          'creature._id': this.selectedCreature
-        })._id;
-        restoreCreatures.call({
-          archiveIds: [archiveId],
+        restoreCreatureFromFile.call({
+          fileId: this.selectedCreature,
         }, error => {
           this.archiveActionLoading = false;
           if (!error) return;
@@ -138,6 +145,7 @@ export default {
   meteor: {
     $subscribe: {
       'archivedCreatures': [],
+      'archiveCreatureFiles': [],
     },
     folders(){
       const userId = Meteor.userId();
@@ -162,7 +170,7 @@ export default {
     CreaturesWithNoParty() {
       var userId = Meteor.userId();
       var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
-      var folderChars = _.uniq(_.flatten(charArrays));
+      var folderChars = uniq(flatten(charArrays));
       return Creatures.find(
         {
           _id: {$nin: folderChars},
@@ -179,15 +187,14 @@ export default {
         {owner: userId},
         {sort: {order: 1}},
       ).map(folder => {
-        folder.creatures = ArchivedCreatures.find(
+        folder.creatures = ArchiveCreatureFiles.find(
           {
-            'creature._id': {$in: folder.creatures || []},
-            owner: userId,
+            'meta.creatureId': {$in: folder.creatures || []},
+            userId,
           }, {
-            sort: {'creature.name': 1},
-            fields: {creature: 1},
+            sort: {'meta.creatureName': 1},
           }
-        ).map(arc => characterTransform(arc.creature));
+        ).map(fileTransform);
         return folder;
       });
       folders = folders.filter(folder => !!folder.creatures.length);
@@ -196,16 +203,15 @@ export default {
     archiveCreaturesWithNoParty() {
       var userId = Meteor.userId();
       var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
-      var folderChars = _.uniq(_.flatten(charArrays));
-      return ArchivedCreatures.find(
+      var folderChars = uniq(flatten(charArrays));
+      return ArchiveCreatureFiles.find(
         {
-          'creature._id': {$nin: folderChars},
-          owner: userId,
+          'meta.creatureId': {$nin: folderChars},
+          userId,
         }, {
-          sort: {'creature.name': 1},
-          fields: {creature: 1},
+          sort: {'meta.creatureName': 1},
         }
-      ).map(arc => characterTransform(arc.creature));
+      ).map(fileTransform);
     },
   }
 }

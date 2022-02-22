@@ -11,9 +11,9 @@
         v-for="creature in creatures"
         :key="creature._id"
         :model="creature"
-        :selected="selected"
+        :is-selected="selected.includes(creature._id)"
         selection
-        @select="toggleSelect(creature._id)"
+        @click="toggleSelect(creature._id)"
       />
     </v-list>
     <template slot="actions">
@@ -46,7 +46,7 @@ export default {
     },
   },
   data(){return {
-    selected: new Set(),
+    selected: [],
   }},
   meteor: {
     creatures(){
@@ -55,8 +55,12 @@ export default {
   },
   methods: {
     toggleSelect(id){
-      let hadId = this.selected.delete(id);
-      if (!hadId) this.selected.add(id);
+      const index = this.selected.indexOf(id);
+      if (index === -1){
+        this.selected.push(id);
+      } else {
+        this.selected.splice(index, 1);
+      }
     },
   }
 }

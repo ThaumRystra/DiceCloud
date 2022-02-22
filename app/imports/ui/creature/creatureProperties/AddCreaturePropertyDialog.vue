@@ -17,7 +17,7 @@
           @change="propertyHelpChanged"
         />
         <text-field
-          v-if="tab === 1"
+          v-if="tab === 2"
           prepend-inner-icon="mdi-magnify"
           regular
           hide-details
@@ -35,15 +35,16 @@
         {{ typeName || 'Type' }}
       </v-tab>
       <v-tab :disabled="!type">
-        Library
+        Create
       </v-tab>
       <v-tab :disabled="!type">
-        Create
+        Library
       </v-tab>
     </v-tabs>
     <v-tabs-items
       slot="unwrapped-content"
       v-model="tab"
+      class="fill-height overflow-y-auto"
     >
       <v-tab-item :disabled="!!forcedType">
         <property-selector
@@ -51,6 +52,22 @@
           :parent-type="parentDoc && parentDoc.type"
           @select="e => type = e"
         />
+      </v-tab-item>
+      <v-tab-item :disabled="!type">
+        <v-card-text
+          v-if="!$slots['unwrapped-content']"
+        >
+          <component
+            :is="type"
+            v-if="type"
+            class="creature-property-form"
+            :model="model"
+            :errors="errors"
+            @change="change"
+            @push="push"
+            @pull="pull"
+          />
+        </v-card-text>
       </v-tab-item>
       <v-tab-item :disabled="!type">
         <v-expansion-panels
@@ -119,22 +136,6 @@
           </v-fade-transition>
         </v-layout>
       </v-tab-item>
-      <v-tab-item :disabled="!type">
-        <v-card-text
-          v-if="!$slots['unwrapped-content']"
-        >
-          <component
-            :is="type"
-            v-if="type"
-            class="creature-property-form"
-            :model="model"
-            :errors="errors"
-            @change="change"
-            @push="push"
-            @pull="pull"
-          />
-        </v-card-text>
-      </v-tab-item>
     </v-tabs-items>
     <template slot="actions">
       <v-btn
@@ -145,7 +146,7 @@
       </v-btn>
       <v-spacer />
       <v-btn
-        v-if="tab === 2"
+        v-if="tab === 1"
         text
         color="primary"
         :disabled="!valid"
@@ -154,7 +155,7 @@
         create
       </v-btn>
       <v-btn
-        v-else-if="tab === 1"
+        v-else-if="tab === 2"
         text
         color="primary"
         :disabled="!selectedNodeIds.length"
@@ -182,8 +183,6 @@
   import getThemeColor from '/imports/ui/utility/getThemeColor.js';
   import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
-
-  const SKIP_LIBRARY_PROP_TYPES = ['note', 'damage', 'adjustment']
 
   export default {
     components: {
@@ -274,11 +273,7 @@
       changeType(type){
         this._subs.searchLibraryNodes.setData('type', type);
         if (!type) return;
-        if (SKIP_LIBRARY_PROP_TYPES.includes(type)){
-          this.tab = 2;
-        } else {
-          this.tab = 1;
-        }
+        this.tab = 1;
         this.schema = propertySchemasIndex[type];
         this.validationContext = this.schema.newContext();
         let model = this.schema.clean({});

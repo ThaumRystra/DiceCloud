@@ -1,34 +1,40 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
 import { acceptInviteToken } from '/imports/api/users/Invites.js';
-
+import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE.js';
 // Components
-import Home from '/imports/ui/pages/Home.vue';
-import About from '/imports/ui/pages/About.vue';
-import CharacterList from '/imports/ui/pages/CharacterList.vue';
-import CharacterListToolbarItems from '/imports/ui/creature/creatureList/CharacterListToolbarItems.vue';
-import Library from '/imports/ui/pages/Library.vue';
-import SingleLibraryToolbar from '/imports/ui/library/SingleLibraryToolbar.vue';
-import CharacterSheetPage from '/imports/ui/pages/CharacterSheetPage.vue';
-import CharacterSheetToolbar from '/imports/ui/creature/character/CharacterSheetToolbar.vue';
-import CharacterSheetRightDrawer from '/imports/ui/creature/character/CharacterSheetRightDrawer.vue';
-import SignIn from '/imports/ui/pages/SignIn.vue' ;
-import Register from '/imports/ui/pages/Register.vue';
-import IconAdmin from '/imports/ui/icons/IconAdmin.vue';
-//import Friends from '/imports/ui/pages/Friends.vue' ;
-import Feedback from '/imports/ui/pages/Feedback.vue' ;
-import Account from '/imports/ui/pages/Account.vue' ;
-import InviteSuccess from '/imports/ui/pages/InviteSuccess.vue' ;
-import InviteError from '/imports/ui/pages/InviteError.vue' ;
-import NotImplemented from '/imports/ui/pages/NotImplemented.vue';
-import PatreonLevelTooLow from '/imports/ui/pages/PatreonLevelTooLow.vue';
-import Tabletops from '/imports/ui/pages/Tabletops.vue';
-import Tabletop from '/imports/ui/pages/Tabletop.vue';
-import TabletopToolbar from '/imports/ui/tabletop/TabletopToolbar.vue';
-
-let userSubscription = Meteor.subscribe('user');
+const Home = () => import('/imports/ui/pages/Home.vue');
+const About = () => import('/imports/ui/pages/About.vue');
+const CharacterList = () => import('/imports/ui/pages/CharacterList.vue');
+const CharacterListToolbarItems = () => import('/imports/ui/creature/creatureList/CharacterListToolbarItems.vue');
+const Library = () => import('/imports/ui/pages/Library.vue');
+const SingleLibraryToolbar = () => import('/imports/ui/library/SingleLibraryToolbar.vue');
+const CharacterSheetPage = () => import('/imports/ui/pages/CharacterSheetPage.vue');
+const CharacterSheetToolbar = () => import('/imports/ui/creature/character/CharacterSheetToolbar.vue');
+const CharacterSheetRightDrawer = () => import('/imports/ui/creature/character/CharacterSheetRightDrawer.vue');
+const SignIn = () => import('/imports/ui/pages/SignIn.vue' );
+const Register = () => import('/imports/ui/pages/Register.vue');
+const IconAdmin = () => import('/imports/ui/icons/IconAdmin.vue');
+//const Friends = () => import('/imports/ui/pages/Friends.vue' );
+const Feedback = () => import('/imports/ui/pages/Feedback.vue' );
+const Account = () => import('/imports/ui/pages/Account.vue' );
+const InviteSuccess = () => import('/imports/ui/pages/InviteSuccess.vue' );
+const InviteError = () => import('/imports/ui/pages/InviteError.vue' );
+const EmailVerificationSuccess = () => import('/imports/ui/pages/EmailVerificationSuccess.vue' );
+const EmailVerificationError = () => import('/imports/ui/pages/EmailVerificationError.vue' );
+const ResetPassword = () => import('/imports/ui/pages/ResetPassword.vue' );
+const NotImplemented = () => import('/imports/ui/pages/NotImplemented.vue');
+const PatreonLevelTooLow = () => import('/imports/ui/pages/PatreonLevelTooLow.vue');
+const Tabletops = () => import('/imports/ui/pages/Tabletops.vue');
+const Tabletop = () => import('/imports/ui/pages/Tabletop.vue');
+const TabletopToolbar = () => import('/imports/ui/tabletop/TabletopToolbar.vue');
+const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDrawer.vue');
+const Admin = () => import('/imports/ui/pages/Admin.vue');
+const Maintenance = () => import('/imports/ui/pages/Maintenance.vue');
 
 // Not found
-import NotFound from '/imports/ui/pages/NotFound.vue';
+const NotFound = () => import('/imports/ui/pages/NotFound.vue');
+
+let userSubscription = Meteor.subscribe('user');
 
 // Create router instance
 const routerFactory = new RouterFactory({
@@ -91,8 +97,19 @@ function claimInvite(to, from, next){
   });
 }
 
-RouterFactory.configure(factory => {
-  factory.addRoutes([{
+function verifyEmail(to, from, next){
+  const token = to.params.token;
+  Accounts.verifyEmail(token, error => {
+    if (error){
+      next({name: 'emailVerificationError', params: {error}});
+    } else {
+      next('/email-verification-success')
+    }
+  });
+}
+
+RouterFactory.configure(router => {
+  router.addRoutes([{
       path: '/',
       name: 'home',
       components: {
@@ -152,6 +169,7 @@ RouterFactory.configure(factory => {
       components: {
         default: Tabletop,
         toolbar: TabletopToolbar,
+        rightDrawer: TabletopRightDrawer,
       },
       beforeEnter: ensureLoggedIn,
     },{
@@ -210,6 +228,9 @@ RouterFactory.configure(factory => {
       path: '/invite/:inviteToken',
       beforeEnter: claimInvite,
     },{
+      path: '/verify-email/:token',
+      beforeEnter: verifyEmail,
+    },{
       name: 'inviteError',
       path: '/invite-error',
       components: {
@@ -230,6 +251,34 @@ RouterFactory.configure(factory => {
         title: 'Invite Success',
       },
     },{
+      name: 'emailVerificationError',
+      path: '/email-verification-error',
+      components: {
+        default: EmailVerificationError,
+      },
+      props: {
+        default: true,
+      },
+      meta: {
+        title: 'Email Verification Error',
+      },
+    },{
+      path: '/email-verification-success',
+      components: {
+        default: EmailVerificationSuccess,
+      },
+      meta: {
+        title: 'Email Verification Success',
+      },
+    },{
+      path: '/reset-password/:token?',
+      components: {
+        default: ResetPassword,
+      },
+      meta: {
+        title: 'Reset Password',
+      },
+    },{
       path: '/patreon-level-too-low',
       components: {
         default: PatreonLevelTooLow,
@@ -242,29 +291,44 @@ RouterFactory.configure(factory => {
       name: 'iconAdmin',
       component: IconAdmin,
       beforeEnter: ensureAdmin,
+    },{
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      beforeEnter: ensureAdmin,
+    },{
+      path: '/maintenance',
+      name: 'maintenance',
+      component: Maintenance,
     },
   ]);
 });
 
 // Not found route has lowest priority
-RouterFactory.configure(factory => {
-  factory.addRoute({
+RouterFactory.configure(router => {
+  router.addRoute({
     path: '*',
     component: NotFound,
   });
 }, -1);
 
+function redirectIfMaintenance(to, from, next){
+  if (!MAINTENANCE_MODE) return next();
+  if (to?.path === '/admin' || to?.path === '/maintenance' || to?.path === '/sign-in') return next();
+  Tracker.autorun((computation) => {
+    if (userSubscription.ready()){
+      computation.stop();
+      const user = Meteor.user();
+      if (user && user.roles && user.roles.includes('admin')){
+        next({name: 'admin'})
+      } else {
+        next({name: 'maintenance'});
+      }
+    }
+  });
+}
+
 // Create the router instance
 const router = routerFactory.create();
-router.beforeEach((to, from, next) => {
-  let user = Meteor.user();
-  if (
-    to.path === '/sign-in' ||
-    (user && user.roles && user.roles.includes('admin'))
-  ){
-    next();
-  } else {
-    next();
-  }
-});
+router.beforeEach(redirectIfMaintenance);
 export default router;

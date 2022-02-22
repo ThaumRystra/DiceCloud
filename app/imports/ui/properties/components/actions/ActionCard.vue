@@ -8,14 +8,14 @@
         <v-btn
           icon
           outlined
-          style="font-size: 18px;"
+          style="font-size: 16px; letter-spacing: normal;"
           class="mr-2"
           :color="model.color || 'primary'"
           :loading="doActionLoading"
           :disabled="model.insufficientResources || !context.editPermission"
           @click.stop="doAction"
         >
-          <template v-if="attack && !rollBonusTooLong">
+          <template v-if="rollBonus && !rollBonusTooLong">
             {{ rollBonus }}
           </template>
           <property-icon
@@ -40,8 +40,8 @@
           <div class="flex">
             {{ model.actionType }}
           </div>
-          <div v-if="model.uses">
-            {{ usesLeft }} uses
+          <div v-if="Number.isFinite(model.usesLeft)">
+            {{ model.usesLeft }} uses
           </div>
         </div>
       </div>
@@ -65,27 +65,15 @@
           :action="model"
         />
         <v-divider
-          v-if="model.summary || children.length"
+          v-if="model.summary"
           class="my-2"
         />
       </template>
       <template v-if="model.summary">
-        <property-description
-          :string="model.summary"
-          :calculations="model.summaryCalculations"
-          :inactive="model.inactive"
-        />
-        <v-divider
-          v-if="children.length"
-          class="my-2"
+        <markdown-text
+          :markdown="model.summary.value || model.summary.text"
         />
       </template>
-      <tree-node-view
-        v-for="child in children"
-        :key="child._id"
-        class="action-child"
-        :model="child"
-      />
     </div>
   </v-card>
 </template>
@@ -93,20 +81,17 @@
 <script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import doAction from '/imports/api/creature/actions/doAction.js';
-import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
-import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 export default {
   components: {
-    TreeNodeView,
     AttributeConsumedView,
     ItemConsumedView,
-    PropertyDescription,
+    MarkdownText,
     PropertyIcon,
   },
   inject: {
@@ -124,9 +109,6 @@ export default {
       type: Object,
       required: true,
     },
-    attack: {
-      type: Boolean,
-    },
   },
   data(){return {
     activated: undefined,
@@ -135,17 +117,11 @@ export default {
   }},
   computed: {
     rollBonus(){
-      if (!this.attack) return;
-      return numberToSignedString(this.model.rollBonusResult);
+      if (!this.model.attackRoll) return;
+      return numberToSignedString(this.model.attackRoll.value);
     },
     rollBonusTooLong(){
       return this.rollBonus && this.rollBonus.length > 3;
-    },
-    totalUses(){
-      return Math.max(this.model.usesResult, 0);
-    },
-    usesLeft(){
-      return Math.max(this.model.usesResult - (this.model.usesUsed || 0), 0);
     },
     propertyName(){
       return getPropertyName(this.model.type);
@@ -163,17 +139,6 @@ export default {
       return `$vuetify.icons.${this.model.actionType}`;
     },
 	},
-  meteor: {
-    children(){
-      return CreatureProperties.find({
-        'parent.id': this.model._id,
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
-        sort: {order: 1}
-      });
-    },
-  },
   methods: {
     click(e){
 			this.$emit('click', e);

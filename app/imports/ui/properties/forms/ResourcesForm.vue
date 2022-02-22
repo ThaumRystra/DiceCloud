@@ -12,6 +12,12 @@
       @push="({path, value, ack}) => $emit('push', {path: ['attributesConsumed', ...path], value, ack})"
       @pull="({path, ack}) => $emit('pull', {path: ['attributesConsumed', ...path], ack})"
     />
+    <div
+      v-if="model.itemsConsumed && model.itemsConsumed.length"
+      class="subheading"
+    >
+      Ammo
+    </div>
     <items-consumed-list-form
       :model="model.itemsConsumed"
       @change="({path, value, ack}) => $emit('change', {path: ['itemsConsumed', ...path], value, ack})"
@@ -53,8 +59,6 @@
 <script lang="js">
   import AttributesConsumedListForm from '/imports/ui/properties/forms/AttributesConsumedListForm.vue';
   import ItemsConsumedListForm from '/imports/ui/properties/forms/ItemsConsumedListForm.vue';
-  import ItemConsumedSchema from '/imports/api/properties/subSchemas/ItemConsumedSchema.js';
-  import AttributeConsumedSchema from '/imports/api/properties/subSchemas/AttributeConsumedSchema.js';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
   export default {
@@ -86,7 +90,7 @@
 				this.addResourceLoading = true;
 				this.$emit('push', {
 					path: ['attributesConsumed'],
-          value: AttributeConsumedSchema.clean({}),
+          value: {_id: Random.id()},
 					ack: this.acknowledgeAddResult,
 				});
 			},
@@ -94,7 +98,7 @@
 				this.addResourceLoading = true;
 				this.$emit('push', {
 					path: ['itemsConsumed'],
-          value: ItemConsumedSchema.clean({}),
+          value: {_id: Random.id()},
 					ack: this.acknowledgeAddResult,
 				});
 			},

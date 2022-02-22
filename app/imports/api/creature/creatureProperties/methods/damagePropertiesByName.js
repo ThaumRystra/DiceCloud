@@ -5,7 +5,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import { recomputePropertyDependencies } from '/imports/api/creature/computation/methods/recomputeCreature.js';
 
 const damagePropertiesByName = new ValidatedMethod({
   name: 'CreatureProperties.damagePropertiesByName',
@@ -29,14 +28,13 @@ const damagePropertiesByName = new ValidatedMethod({
 		// Check permissions
     let creature = Creatures.findOne(creatureId, {
       fields: {
-        damageMultipliers: 1,
+        variables: 1,
         owner: 1,
         readers: 1,
         writers: 1,
       },
     });
     assertEditPermission(creature, this.userId);
-    let lastProperty;
     CreatureProperties.find({
       'ancestors.id': creatureId,
       variableName,
@@ -48,9 +46,7 @@ const damagePropertiesByName = new ValidatedMethod({
       if (!schema.allowsKey('damage')) return;
       // Damage the property
       damagePropertyWork({property, operation, value});
-      lastProperty = property;
     });
-    if (lastProperty) recomputePropertyDependencies(lastProperty);
   }
 });
 

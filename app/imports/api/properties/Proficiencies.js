@@ -26,4 +26,6 @@ let ProficiencySchema = new SimpleSchema({
 	},
 });
 
-export { ProficiencySchema };
+const ComputedOnlyProficiencySchema = new SimpleSchema({});
+
+export { ProficiencySchema, ComputedOnlyProficiencySchema };

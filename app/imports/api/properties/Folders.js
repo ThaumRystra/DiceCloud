@@ -10,4 +10,6 @@ let FolderSchema = new SimpleSchema({
   },
 });
 
-export { FolderSchema };
+const ComputedOnlyFolderSchema = new SimpleSchema({});
+
+export { FolderSchema, ComputedOnlyFolderSchema };

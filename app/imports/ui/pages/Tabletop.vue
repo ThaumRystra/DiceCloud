@@ -1,27 +1,40 @@
 <template lang="html">
-  <div
-    class="tabletop-page"
-    style="height: 100%;"
+  <v-container
+    v-if="!$subReady.tabletop"
+    fluid
+    class="fill-height"
+    align="center"
+    justify="center"
   >
-    <div
-      v-if="!this.$subReady.tabletop"
-      class="layout column align-center justify-center"
-      style="height: 100%;"
-    >
-      <v-progress-circular indeterminate />
-    </div>
-    <tabletop-component
-      v-else-if="tabletop"
-      :model="tabletop"
-    />
-    <div
-      v-else
+    <v-row>
+      <v-col cols="1">
+        <v-progress-circular indeterminate />
+      </v-col>
+    </v-row>
+  </v-container>
+  <tabletop-component
+    v-else-if="tabletop"
+    :model="tabletop"
+  />
+  <v-container
+    v-else
+    fluid
+    class="fill-height"
+    align="center"
+    justify="center"
+  >
+    <v-row
       class="pa-4"
     >
-      <p>This tabletop was not found</p>
-      <p>Either it does not exist, or you do not have permission to view it</p>
-    </div>
-  </div>
+      <v-col
+        cols="12"
+        md="8"
+      >
+        <p>This tabletop was not found</p>
+        <p>Either it does not exist, or you do not have permission to view it</p>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="js">

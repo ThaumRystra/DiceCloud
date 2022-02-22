@@ -28,22 +28,13 @@
       />
     </div>
 
-    <text-area
+    <inline-computation-field
       label="Description"
       hint="A brief description of what this class level gives a character"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
-    />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
-
-    <text-field
-      label="Condition"
-      hint="A caclulation to determine if this can be added to the character"
-      placeholder="Always active"
-      :value="model.slotFillerCondition"
-      :error-messages="errors.slotFillerCondition"
-      @change="change('slotFillerCondition', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
     <smart-combobox
       label="Tags"
@@ -60,12 +51,8 @@
 
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin],
 	};
 </script>

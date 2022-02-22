@@ -1,84 +1,117 @@
 <template lang="html">
   <div class="skill-viewer">
-    <v-layout
-      column
-      align-center
+    <v-row
+      dense
+      justify="center"
+      justify-sm="start"
     >
-      <div
+      <property-field
         v-if="model.value !== undefined"
-        class="text-h4 layout align-center"
+        center
+        large
+        name="Roll bonus"
+        :value="isFinite(model.value) ?
+          numberToSignedString(model.value) :
+          model.value"
+      />
+      <property-field
+        v-if="model.proficiency !== undefined"
+        name="Proficiency"
       >
-        <v-icon class="mr-4">
+        <v-icon
+          style="height: 12px"
+          class="ml-1 mr-2"
+        >
           {{ icon }}
         </v-icon>
-        <div v-if="isFinite(model.value)">
-          {{ numberToSignedString(model.value) }}
+        <div>
+          {{ proficiencyText[model.proficiency] }}
         </div>
-      </div>
-    </v-layout>
-    <property-name :value="model.name" />
-    <property-variable-name :value="model.variableName" />
-    <property-field
-      name="Ability"
-      :value="model.ability"
-    />
-    <property-field
-      name="Type"
-      :value="model.skillType"
-    />
-    <property-field
-      name="Base value"
-      :value="model.baseValue"
-    />
-    <property-field
-      name="Base proficiency"
-      :value="model.baseProficiency"
-    />
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
-
-    <attribute-effect
-      v-for="effect in baseEffects"
-      :key="effect._id"
-      :model="effect"
-      :hide-breadcrumbs="effect._id === model._id"
-      :data-id="effect._id"
-      @click="effect._id !== model._id && clickEffect(effect._id)"
-    />
-    <attribute-effect
-      v-if="ability"
-      :key="ability._id"
-      :model="ability"
-      :data-id="ability._id"
-      @click="clickEffect(ability._id)"
-    />
-    <attribute-effect
-      v-for="effect in effects"
-      :key="effect._id"
-      :model="effect"
-      :data-id="effect._id"
-      @click="clickEffect(effect._id)"
-    />
-    <skill-proficiency
-      v-for="proficiency in baseProficiencies"
-      :key="proficiency._id"
-      :model="proficiency"
-      :proficiency-bonus="proficiencyBonus"
-      :hide-breadcrumbs="proficiency._id === model._id"
-      :data-id="proficiency._id"
-      @click="clickEffect(proficiency._id)"
-    />
-    <skill-proficiency
-      v-for="proficiency in proficiencies"
-      :key="proficiency._id"
-      :model="proficiency"
-      :proficiency-bonus="proficiencyBonus"
-      :data-id="proficiency._id"
-      @click="clickEffect(proficiency._id)"
-    />
+      </property-field>
+      <property-field
+        name="Variable Name"
+        mono
+        :value="model.variableName"
+      />
+      <property-field
+        name="Ability"
+        mono
+        :value="model.ability"
+      />
+      <property-field
+        name="Skill type"
+        :value="skillTypes[model.skillType]"
+      />
+    </v-row>
+    <v-row dense>
+      <property-description
+        name="description"
+        :model="model.description"
+      />
+    </v-row>
+    <v-row
+      v-if="baseEffects.length || ability || effects.length"
+      dense
+    >
+      <property-field
+        :cols="{col: 12}"
+        name="Effects"
+      >
+        <v-list style="width: 100%">
+          <attribute-effect
+            v-for="effect in baseEffects"
+            :key="effect._id === model._id ? 'this_base' : effect._id"
+            :model="effect"
+            :hide-breadcrumbs="effect._id === model._id"
+            :data-id="effect._id"
+            @click="effect._id !== model._id && clickEffect(effect._id)"
+          />
+          <attribute-effect
+            v-if="ability"
+            :key="ability._id"
+            :model="ability"
+            :data-id="ability._id"
+            @click="clickEffect(ability._id)"
+          />
+          <attribute-effect
+            v-for="effect in effects"
+            :key="effect._id"
+            :model="effect"
+            :data-id="effect._id"
+            @click="clickEffect(effect._id)"
+          />
+        </v-list>
+      </property-field>
+    </v-row>
+    <v-row
+      v-if="baseProficiencies.length || proficiencies.length"
+      dense
+    >
+      <property-field
+        :cols="{col: 12}"
+        name="Proficiencies"
+      >
+        <v-list style="width: 100%">
+          <skill-proficiency
+            v-for="proficiency in baseProficiencies"
+            :key="proficiency._id"
+            :model="proficiency"
+            :proficiency-bonus="proficiencyBonus"
+            :hide-breadcrumbs="proficiency._id === model._id"
+            :data-id="proficiency._id"
+            @click="clickEffect(proficiency._id)"
+          />
+          <skill-proficiency
+            v-for="proficiency in proficiencies"
+            :key="proficiency._id"
+            :model="proficiency"
+            :proficiency-bonus="proficiencyBonus"
+            :data-id="proficiency._id"
+            @click="clickEffect(proficiency._id)"
+          />
+        </v-list>
+      </property-field>
+    </v-row>
   </div>
 </template>
 
@@ -100,6 +133,25 @@ export default {
   inject: {
     context: { default: {} }
   },
+  data(){return {
+    proficiencyText: {
+      0: 'Not proficient',
+      1: 'Proficient',
+      0.49: 'Half proficiency bonus rounded down',
+      0.5: 'Half proficiency bonus rounded up',
+      2: 'Double proficiency bonus',
+    },
+    skillTypes: {
+      skill: 'Skill',
+      save: 'Save',
+      check: 'Check',
+      tool: 'Tool',
+      weapon: 'Weapon',
+      armor: 'Armor',
+      language: 'Language',
+      utility: 'Utility',
+    },
+  }},
   computed: {
     displayedModifier(){
 			let mod = this.model.value;
@@ -139,23 +191,23 @@ export default {
           name: 'Skill base value',
           operation: 'base',
           calculation: prop.baseValueCalculation,
-          result: prop.baseValue,
+          amount: {value: prop.baseValue?.value},
           stats: [prop.variableName],
           ancestors: prop.ancestors,
-        }) ).filter(effect => effect.result);
+        }) ).filter(effect => effect.amount?.value);
       } else {
         return [];
       }
     },
     effects(){
-      if (this.context.creatureId){
+      if (this.context.creatureId && this.model.variableName){
         let creatureId = this.context.creatureId;
         return CreatureProperties.find({
           'ancestors.id': creatureId,
           stats: this.model.variableName,
           type: 'effect',
           removed: {$ne: true},
-        });
+        }).fetch();
       } else {
         return [];
       }
@@ -189,7 +241,7 @@ export default {
           type: 'proficiency',
           removed: {$ne: true},
           inactive: {$ne: true},
-        });
+        }).fetch();
       } else {
         return [];
       }
@@ -211,7 +263,7 @@ export default {
         _id: abilityProp._id,
         name: abilityProp.name,
         operation: 'base',
-        result: abilityProp.modifier,
+        amount: {value: abilityProp.modifier},
         stats: [this.model.variableName],
         ancestors: abilityProp.ancestors,
       }
@@ -222,7 +274,7 @@ export default {
       let creature = Creatures.findOne(creatureId)
       return creature &&
         creature.variables.proficiencyBonus &&
-        creature.variables.proficiencyBonus.currentValue;
+        creature.variables.proficiencyBonus.value;
     },
   },
 }

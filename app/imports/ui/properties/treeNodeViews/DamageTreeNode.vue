@@ -11,10 +11,11 @@
     <div
       class="text-no-wrap text-truncate"
     >
-      {{ model.amountResult }}
+      {{ model.amount && model.amount.value }}
       {{ model.damageType }}<span
         v-if="model.damageType !== 'healing'"
       >&nbsp;damage</span>
+      <span v-if="model.target === 'self'">to self</span>
     </div>
   </div>
 </template>

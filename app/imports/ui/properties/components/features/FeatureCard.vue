@@ -11,10 +11,9 @@
       <v-spacer />
     </template>
     <v-card-text v-if="model.summary">
-      <computed
-        :string="model.summary"
-        :calculations="model.summaryCalculations"
-        :inactive="model.inactive"
+      <property-description
+        text
+        :model="model.summary"
       />
     </v-card-text>
   </toolbar-card>
@@ -22,12 +21,12 @@
 
 <script lang="js">
 	import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-  import EmbedInlineComputations from '/imports/ui/components/computation/EmbedInlineComputations.vue';
+  import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue'
 
 	export default {
 		components: {
 			ToolbarCard,
-      Computed: EmbedInlineComputations,
+      PropertyDescription,
 		},
 		props: {
 			model: {

@@ -8,9 +8,8 @@ import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
+
 const organizeDoc = new ValidatedMethod({
   name: 'organize.organizeDoc',
   validate: new SimpleSchema({
@@ -60,14 +59,8 @@ const organizeDoc = new ValidatedMethod({
       let creaturesToRecompute = union(docCreatures, parentCreatures);
       // Recompute the creatures
       creaturesToRecompute.forEach(id => {
-        // The active status of some properties might change due to a change in
-        // ancestry
-        recomputeInactiveProperties(id);
-        if (doc.type === 'container' || doc.type === 'item'){
-          recomputeInventory(id);
-        }
         // Some Dependencies depend on ancestry, so a full recompute is needed
-        recomputeCreatureById(id);
+        computeCreature(id);
       });
     }
   },
@@ -93,7 +86,7 @@ const reorderDoc = new ValidatedMethod({
     safeUpdateDocOrder({docRef, order});
     // Recompute the affected creatures
     getCreatureAncestors(doc).forEach(id => {
-      recomputeCreatureById(id);
+      computeCreature(id);
     });
   },
 });

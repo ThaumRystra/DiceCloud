@@ -1,28 +1,28 @@
-import AddCreaturePropertyDialog from '/imports/ui/creature/creatureProperties/AddCreaturePropertyDialog.vue';
-import ArchiveDialog from '/imports/ui/creature/archive/ArchiveDialog.vue';
-import CastSpellWithSlotDialog from '/imports/ui/properties/components/spells/CastSpellWithSlotDialog.vue';
-import CreatureFormDialog from '/imports/ui/creature/CreatureFormDialog.vue';
-import CreaturePropertyCreationDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue';
-import CreaturePropertyDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue'
-import CreaturePropertyFromLibraryDialog from '/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue'
-import DeleteConfirmationDialog from '/imports/ui/dialogStack/DeleteConfirmationDialog.vue';
-import DeleteUserAccountDialog from '/imports/ui/user/DeleteUserAccountDialog.vue';
-import ExperienceInsertDialog from  '/imports/ui/creature/experiences/ExperienceInsertDialog.vue';
-import ExperienceListDialog from  '/imports/ui/creature/experiences/ExperienceListDialog.vue';
-import InviteDialog from '/imports/ui/user/InviteDialog.vue';
-import LibraryCreationDialog from '/imports/ui/library/LibraryCreationDialog.vue';
-import LibraryEditDialog from '/imports/ui/library/LibraryEditDialog.vue';
-import LibraryNodeCreationDialog from '/imports/ui/library/LibraryNodeCreationDialog.vue';
-import LibraryNodeDialog from '/imports/ui/library/LibraryNodeDialog.vue';
-import MoveLibraryNodeDialog from '/imports/ui/library/MoveLibraryNodeDialog.vue'
-import SelectCreaturesDialog from '/imports/ui/tabletop/SelectCreaturesDialog.vue';
-import SelectLibraryNodeDialog from '/imports/ui/library/SelectLibraryNodeDialog.vue';
-import ShareDialog from '/imports/ui/sharing/ShareDialog.vue';
-import SlotDetailsDialog from '/imports/ui/creature/slots/SlotDetailsDialog.vue';
-import SlotFillDialog from '/imports/ui/creature/slots/SlotFillDialog.vue';
-import TierTooLowDialog from '/imports/ui/user/TierTooLowDialog.vue';
-import TransferOwnershipDialog from '/imports/ui/sharing/TransferOwnershipDialog.vue';
-import UsernameDialog from '/imports/ui/user/UsernameDialog.vue';
+const AddCreaturePropertyDialog = () => import('/imports/ui/creature/creatureProperties/AddCreaturePropertyDialog.vue');
+const ArchiveDialog = () => import('/imports/ui/creature/archive/ArchiveDialog.vue');
+const CastSpellWithSlotDialog = () => import('/imports/ui/properties/components/spells/CastSpellWithSlotDialog.vue');
+const CreatureFormDialog = () => import('/imports/ui/creature/CreatureFormDialog.vue');
+const CreaturePropertyCreationDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue');
+const CreaturePropertyDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue');
+const CreaturePropertyFromLibraryDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue');
+const DeleteConfirmationDialog = () => import('/imports/ui/dialogStack/DeleteConfirmationDialog.vue');
+const DeleteUserAccountDialog = () => import('/imports/ui/user/DeleteUserAccountDialog.vue');
+const ExperienceInsertDialog = () => import( '/imports/ui/creature/experiences/ExperienceInsertDialog.vue');
+const ExperienceListDialog = () => import( '/imports/ui/creature/experiences/ExperienceListDialog.vue');
+const InviteDialog = () => import('/imports/ui/user/InviteDialog.vue');
+const LibraryCreationDialog = () => import('/imports/ui/library/LibraryCreationDialog.vue');
+const LibraryEditDialog = () => import('/imports/ui/library/LibraryEditDialog.vue');
+const LibraryNodeCreationDialog = () => import('/imports/ui/library/LibraryNodeCreationDialog.vue');
+const LibraryNodeDialog = () => import('/imports/ui/library/LibraryNodeDialog.vue');
+const MoveLibraryNodeDialog = () => import('/imports/ui/library/MoveLibraryNodeDialog.vue');
+const SelectCreaturesDialog = () => import('/imports/ui/tabletop/SelectCreaturesDialog.vue');
+const SelectLibraryNodeDialog = () => import('/imports/ui/library/SelectLibraryNodeDialog.vue');
+const ShareDialog = () => import('/imports/ui/sharing/ShareDialog.vue');
+const SlotDetailsDialog = () => import('/imports/ui/creature/slots/SlotDetailsDialog.vue');
+const SlotFillDialog = () => import('/imports/ui/creature/slots/SlotFillDialog.vue');
+const TierTooLowDialog = () => import('/imports/ui/user/TierTooLowDialog.vue');
+const TransferOwnershipDialog = () => import('/imports/ui/sharing/TransferOwnershipDialog.vue');
+const UsernameDialog = () => import('/imports/ui/user/UsernameDialog.vue');
 
 export default {
   AddCreaturePropertyDialog,

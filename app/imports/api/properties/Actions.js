@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
-import InlineComputationSchema from '/imports/api/properties/subSchemas/InlineComputationSchema.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
@@ -10,40 +9,60 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
  * Any actions that are children of this action will be considered alternatives
  * to this action
  */
-let ActionSchema = new SimpleSchema({
-	name: {
-		type: String,
-		optional: true,
+let ActionSchema = createPropertySchema({
+  name: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
-	summary: {
-		type: String,
-		optional: true,
-    max: STORAGE_LIMITS.summary,
-	},
-	description: {
-		type: String,
-		optional: true,
-    max: STORAGE_LIMITS.description,
-	},
-	// What time-resource is used to take the action in combat
-	// long actions take longer than 1 round to cast
-	actionType: {
-		type: String,
-		allowedValues: ['action', 'bonus', 'attack', 'reaction', 'free', 'long'],
-		defaultValue: 'action',
-	},
-	// Who is the action directed at
-	target: {
-		type: String,
-		defaultValue: 'singleTarget',
-		allowedValues: [
+  },
+  summary: {
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
+  description: {
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
+  // What time-resource is used to take the action in combat
+  // long actions take longer than 1 round to cast
+  actionType: {
+    type: String,
+    allowedValues: ['action', 'bonus', 'attack', 'reaction', 'free', 'long'],
+    defaultValue: 'action',
+  },
+  // Who is the action directed at
+  target: {
+    type: String,
+    defaultValue: 'singleTarget',
+    allowedValues: [
       'self',
       'singleTarget',
-			'multipleTargets',
+      'multipleTargets',
     ],
-	},
-  // Duplicate the ResourceSchema here so we can extend it elegantly.
+  },
+  // Some actions have an attack roll
+  attackRoll: {
+    type: 'fieldToCompute',
+    optional: true,
+    defaultValue: 'strength.modifier + proficiencyBonus',
+  },
+  // Calculation of how many times this action can be used
+  uses: {
+    type: 'fieldToCompute',
+    optional: true,
+  },
+  // Integer of how many times it has already been used
+  usesUsed: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  // How this action's uses are reset automatically
+  reset: {
+    type: String,
+    allowedValues: ['longRest', 'shortRest'],
+    optional: true,
+  },
+  // Resources
   resources: {
     type: Object,
     defaultValue: {},
@@ -51,7 +70,6 @@ let ActionSchema = new SimpleSchema({
   'resources.itemsConsumed': {
     type: Array,
     defaultValue: [],
-    maxCount: STORAGE_LIMITS.resourcesCount,
   },
   'resources.itemsConsumed.$': {
     type: Object,
@@ -66,21 +84,19 @@ let ActionSchema = new SimpleSchema({
   'resources.itemsConsumed.$.tag': {
     type: String,
     optional: true,
-    max: STORAGE_LIMITS.tagLength,
   },
   'resources.itemsConsumed.$.quantity': {
-    type: Number,
-    defaultValue: 1,
+    type: 'fieldToCompute',
+    optional: true,
   },
   'resources.itemsConsumed.$.itemId': {
     type: String,
+    regEx: SimpleSchema.RegEx.Id,
     optional: true,
-    max: STORAGE_LIMITS.name,
   },
   'resources.attributesConsumed': {
     type: Array,
     defaultValue: [],
-    maxCount: STORAGE_LIMITS.resourcesCount,
   },
   'resources.attributesConsumed.$': {
     type: Object,
@@ -98,105 +114,101 @@ let ActionSchema = new SimpleSchema({
     max: STORAGE_LIMITS.variableName,
   },
   'resources.attributesConsumed.$.quantity': {
-    type: Number,
-    defaultValue: 1,
+    type: 'fieldToCompute',
+    optional: true,
   },
-	// Calculation of how many times this action can be used
-	uses: {
-		type: String,
-		optional: true,
-    max: STORAGE_LIMITS.calculation,
-	},
-	// Integer of how many times it has already been used
-	usesUsed: {
-		type: SimpleSchema.Integer,
-		optional: true,
-	},
-	// How this action's uses are reset automatically
-	reset: {
-		type: String,
-		allowedValues: ['longRest', 'shortRest'],
-		optional: true,
-	},
 });
 
-const ComputedOnlyActionSchema = new SimpleSchema({
-  summaryCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
-  },
-  'summaryCalculations.$': InlineComputationSchema,
-
-  descriptionCalculations: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.inlineCalculationCount,
-  },
-  'descriptionCalculations.$': InlineComputationSchema,
-
-  usesResult: {
-    type: SimpleSchema.Integer,
+const ComputedOnlyActionSchema = createPropertySchema({
+  summary: {
+    type: 'computedOnlyInlineCalculationField',
     optional: true,
   },
-  usesErrors: {
-    type: Array,
+  description: {
+    type: 'computedOnlyInlineCalculationField',
     optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'usesErrors.$':{
-    type: ErrorSchema,
-  },
-  resources: Object,
-  'resources.itemsConsumed': Array,
-  'resources.itemsConsumed.$': Object,
-  'resources.itemsConsumed.$.available': {
-    type: Number,
-    optional: true,
-  },
-  // This appears both in the computed and uncomputed schema because it can be
-  // set by both a computation or a form
-  'resources.itemsConsumed.$.itemId': {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true,
-  },
-  'resources.itemsConsumed.$.itemName': {
-    type: String,
-    max: STORAGE_LIMITS.name,
-    optional: true,
-  },
-  'resources.itemsConsumed.$.itemIcon': {
-    type: storedIconsSchema,
-    optional: true,
-    max: STORAGE_LIMITS.icon,
-  },
-  'resources.itemsConsumed.$.itemColor': {
-    type: String,
-    optional: true,
-    max: STORAGE_LIMITS.color,
-  },
-  'resources.attributesConsumed': Array,
-  'resources.attributesConsumed.$': Object,
-  'resources.attributesConsumed.$.available': {
-    type: Number,
-    optional: true,
-  },
-  'resources.attributesConsumed.$.statId': {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    optional: true,
-  },
-  'resources.attributesConsumed.$.statName': {
-    type: String,
-    optional: true,
-    max: STORAGE_LIMITS.name,
   },
   // True if the uses left is zero, or any item or attribute consumed is
   // insufficient
   insufficientResources: {
     type: Boolean,
     optional: true,
+    removeBeforeCompute: true,
+  },
+  attackRoll: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  uses: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  // Uses - usesUsed
+  usesLeft: {
+    type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  // Resources
+  resources: {
+    type: Object,
+    defaultValue: {},
+  },
+  'resources.itemsConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.itemsConsumed.$': {
+    type: Object,
+  },
+  'resources.itemsConsumed.$.available': {
+    type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'resources.itemsConsumed.$.quantity': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  'resources.itemsConsumed.$.itemName': {
+    type: String,
+    max: STORAGE_LIMITS.name,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'resources.itemsConsumed.$.itemIcon': {
+    type: storedIconsSchema,
+    optional: true,
+    max: STORAGE_LIMITS.icon,
+    removeBeforeCompute: true,
+  },
+  'resources.itemsConsumed.$.itemColor': {
+    type: String,
+    optional: true,
+    regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
+    removeBeforeCompute: true,
+  },
+  'resources.attributesConsumed': {
+    type: Array,
+    defaultValue: [],
+  },
+  'resources.attributesConsumed.$': {
+    type: Object,
+  },
+  'resources.attributesConsumed.$.quantity': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  'resources.attributesConsumed.$.available': {
+    type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'resources.attributesConsumed.$.statName': {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.name,
+    removeBeforeCompute: true,
   },
 });
 

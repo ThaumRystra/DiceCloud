@@ -1,34 +1,43 @@
 <template lang="html">
   <div class="attribute-form">
     <div class="layout column align-center">
-      <text-field
+      <computed-field
         ref="focusFirst"
         label="Base Value"
         class="base-value-field"
         hint="This is the value of the attribute before effects are applied. Can be a number or a calculation"
         style="width: 332px;"
-        :value="model.baseValueCalculation"
-        :error-messages="errors.baseValueCalculation"
-        @change="change('baseValueCalculation', ...arguments)"
+        :model="model.baseValue"
+        :error-messages="errors.baseValue"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['baseValue', ...path], value, ack})"
       />
     </div>
-    <calculation-error-list :errors="model.baseValueErrors" />
-    <div class="layout wrap">
-      <text-field
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="Use this name in calculations to reference this attribute"
-        :error-messages="errors.variableName"
-        @change="change('variableName', ...arguments)"
-      />
-    </div>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          hint="Use this name in calculations to reference this attribute"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <smart-select
       label="Type"
       :items="attributeTypes"
@@ -47,21 +56,21 @@
       :menu-props="{auto: true, lazy: true}"
       @change="change('hitDiceSize', ...arguments)"
     />
-    <text-field
+    <computed-field
       v-if="model.attributeType === 'spellSlot'"
       label="Spell slot level"
-      :value="model.spellSlotLevelCalculation"
-      :error-messages="errors.spellSlotLevelCalculation"
-      @change="change('spellSlotLevelCalculation', ...arguments)"
+      :model="model.spellSlotLevel"
+      :error-messages="errors.spellSlotLevel"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['spellSlotLevel', ...path], value, ack})"
     />
-    <calculation-error-list :errors="model.spellSlotLevelErrors" />
-    <text-area
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
     <form-section
       name="Advanced"
       standalone
@@ -122,12 +131,10 @@
 <script lang="js">
 	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
 		components: {
 			FormSection,
-      CalculationErrorList,
 		},
     mixins: [propertyFormMixin],
     inject: {

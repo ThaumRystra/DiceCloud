@@ -1,38 +1,73 @@
 <template lang="html">
-  <v-list-item class="effect-viewer">
-    <v-list-item-avatar>
-      <v-tooltip bottom>
-        <template #activator="{ on }">
+  <div class="effect-viewer">
+    <v-row dense>
+      <property-field name="Operation">
+        <div
+          class="layout"
+          style="overflow: hidden;"
+        >
           <v-icon
-            class="mx-2"
-            style="cursor: default;"
-            v-on="on"
+            class="mr-2"
           >
             {{ effectIcon }}
           </v-icon>
-        </template>
-        <span>{{ operation }}</span>
-      </v-tooltip>
-    </v-list-item-avatar>
-    <v-list-item-action
-      v-if="showValue"
-      class="text-h5"
-    >
-      {{ displayedValue }}
-    </v-list-item-action>
-    <v-list-item-content>
-      <v-list-item-title>
-        {{ model.name }}
-      </v-list-item-title>
-      <v-list-item-subtitle>
-        <code
-          v-for="stat in model.stats"
-          :key="stat"
-          class="mr-1"
-        >{{ stat }}</code>
-      </v-list-item-subtitle>
-    </v-list-item-content>
-  </v-list-item>
+          {{ operation }}
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.operation !== 'conditional'"
+        name="Amount"
+        :value="displayedValue || ' '"
+      />
+      <property-field
+        v-if="model.targetByTags"
+        name="Targeted tags"
+      >
+        <div>
+          <v-chip
+            v-for="(tag, index) in model.targetTags"
+            :key="index"
+            class="ma-1"
+          >
+            {{ tag }}
+          </v-chip>
+          <div
+            v-for="ex in model.extraTags"
+            :key="ex._id"
+          >
+            <span class="ma-2">
+              {{ ex.operation }}
+            </span>
+            <v-chip
+              v-for="(extraTag, index) in ex.tags"
+              :key="index"
+              class="ma-1"
+            >
+              {{ extraTag }}
+            </v-chip>
+          </div>
+        </div>
+      </property-field>
+      <property-field
+        v-else
+        name="Stats"
+      >
+        <v-chip
+          v-for="(stat, index) in model.stats"
+          :key="index"
+          class="ma-1"
+        >
+          {{ stat }}
+        </v-chip>
+      </property-field>
+      <property-field
+        v-if="model.operation === 'conditional'"
+        name="Text"
+        :cols="{cols: 12}"
+        :value="model.text || ' '"
+      />
+    </v-row>
+  </div>
 </template>
 
 <script lang="js">
@@ -44,7 +79,10 @@
 		mixins: [propertyViewerMixin],
 		computed: {
 			resolvedValue(){
-				return this.model.result !== undefined ? this.model.result : this.model.calculation;
+        if (!this.model.amount) return;
+				return this.model.amount.value !== undefined ?
+          this.model.amount.value :
+          this.model.amount.calculation;
 			},
 			effectIcon(){
 				let value = this.resolvedValue;
@@ -63,21 +101,6 @@
 					case 'fail': return 'Always fail';
 					case 'conditional': return 'Conditional benefit' ;
           default: return '';
-				}
-			},
-			showValue(){
-				switch(this.model.operation) {
-					case 'base': return true;
-					case 'add': return true;
-					case 'mul': return true;
-					case 'min': return true;
-					case 'max': return true;
-					case 'advantage': return false;
-					case 'disadvantage': return false;
-					case 'passiveAdd': return true;
-					case 'fail': return false;
-					case 'conditional': return false;
-          default: return false;
 				}
 			},
 			displayedValue(){

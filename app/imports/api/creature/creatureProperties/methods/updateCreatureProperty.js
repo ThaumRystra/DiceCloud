@@ -3,9 +3,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { recomputeCreatureById } from '/imports/api/creature/computation/methods/recomputeCreature.js';
-import recomputeInactiveProperties from '/imports/api/creature/denormalise/recomputeInactiveProperties.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const updateCreatureProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
@@ -47,20 +45,9 @@ const updateCreatureProperty = new ValidatedMethod({
 			selector: {type: property.type},
 		});
 
-    // Some updates might cause other properties to become inactive
-    if ([
-      'applied', 'equipped', 'prepared', 'alwaysPrepared', 'disabled'
-    ].includes(path[0])){
-      recomputeInactiveProperties(rootCreature._id);
-    }
-
-    if (property.type === 'item' || property.type === 'container'){
-      // Potentially changes items and containers
-      recomputeInventory(rootCreature._id);
-    }
     // Updating a property is likely to change dependencies, do a full recompute
     // denormalised stats might change, so fetch the creature again
-    recomputeCreatureById(rootCreature._id);
+    computeCreature(rootCreature._id);
   },
 });
 

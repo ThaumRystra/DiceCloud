@@ -1,6 +1,13 @@
 <template lang="html">
-  <div class="tabletop">
-    <section class="initiative-row layout center">
+  <v-container
+    class="tabletop"
+    fluid
+  >
+    <v-row
+      dense
+      class="initiative-row"
+      style="flex-wrap: nowrap; overflow-x: auto;"
+    >
       <tabletop-creature-card
         v-for="creature in creatures"
         :key="creature._id"
@@ -8,7 +15,7 @@
       />
       <v-card
         class="layout column justify-center align-center"
-        style="height: 162px; width: 100px;"
+        style="height: 150px; min-width: 120px;"
         data-id="select-creatures"
         hover
         @click="addCreature"
@@ -17,36 +24,31 @@
           <v-icon>mdi-plus</v-icon>
         </div>
         <v-card-title>
-          Add creature
+          Add<br>creature
         </v-card-title>
       </v-card>
-    </section>
-    <section class="play-area">
-      <tabletop-map />
-      <tabletop-log :tabletop-id="model._id" />
-    </section>
+    </v-row>
+    <tabletop-map class="play-area" />
     <section class="action-row">
       <mini-character-sheet />
       <tabletop-action-cards />
     </section>
-  </div>
+  </v-container>
 </template>
 
 <script lang="js">
-import { addCreaturesToTabletop } from '/imports/api/tabletop/Tabletops.js';
-
+import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop.js';
 import TabletopCreatureCard from '/imports/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/ui/tabletop/TabletopMap.vue';
-import TabletopLog from '/imports/ui/tabletop/TabletopLog.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import TabletopActionCards from '/imports/ui/tabletop/TabletopActionCards.vue';
 import MiniCharacterSheet from '/imports/ui/creature/character/MiniCharacterSheet.vue';
+import snackbar from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
     TabletopCreatureCard,
     TabletopMap,
-    TabletopLog,
     TabletopActionCards,
     MiniCharacterSheet,
   },
@@ -77,11 +79,13 @@ export default {
         data: {
           startingSelection: this.creatures.map(c => c._id),
         },
-        callback: (characterSet) => {
-          if (!characterSet) return;
+        callback: (charIds) => {
+          if (!charIds) return;
           addCreaturesToTabletop.call({
             tabletopId: this.model._id,
-            creatureIds: Array.from(characterSet),
+            creatureIds: charIds,
+          }, error => {
+            if (error) snackbar(error.message);
           });
         },
 			});

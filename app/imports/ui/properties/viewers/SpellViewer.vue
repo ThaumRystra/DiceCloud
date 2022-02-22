@@ -1,9 +1,16 @@
 <template lang="html">
-  <div class="spell-viewer">
-    <property-name :value="model.name" />
-    <p class="text-caption">
-      {{ levelAndSchool }}
-    </p>
+  <action-viewer
+    :model="model"
+    class="spell-viewer"
+  >
+    <property-field
+      name="School"
+      :value="model.school"
+    />
+    <property-field
+      name="Level"
+      :value="levelText"
+    />
     <property-field
       name="Casting time"
       :value="model.castingTime"
@@ -20,16 +27,12 @@
       name="Duration"
       :value="model.duration"
     />
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
-  </div>
+  </action-viewer>
 </template>
 
 <script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
+import ActionViewer from './ActionViewer.vue';
 
 const levelText = [
   'cantrip', '1st-level', '2nd-level', '3rd-level', '4th-level', '5th-level',
@@ -37,14 +40,13 @@ const levelText = [
 ];
 
 export default {
+  components: {
+    ActionViewer,
+  },
 	mixins: [propertyViewerMixin],
   computed:{
-    levelAndSchool(){
-      if (this.model.level == 0){
-        return `${this.model.school} ${levelText[0]}`
-      } else {
-        return `${levelText[this.model.level]} ${this.model.school}`
-      }
+    levelText(){
+      return levelText[this.model.level]
     },
     spellComponents(){
       let components = [];

@@ -4,8 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import recomputeInventory from '/imports/api/creature/denormalise/recomputeInventory.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const adjustQuantity = new ValidatedMethod({
   name: 'creatureProperties.adjustQuantity',
@@ -33,8 +32,7 @@ const adjustQuantity = new ValidatedMethod({
 
     // Changing quantity does not change dependencies, but recomputing the
     // inventory changes many deps at once, so recompute fully
-    recomputeCreatureByDoc(rootCreature);
-    recomputeInventory(rootCreature._id);
+    computeCreature(rootCreature._id);
   },
 });
 

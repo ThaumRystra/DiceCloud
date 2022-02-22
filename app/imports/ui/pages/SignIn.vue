@@ -33,7 +33,10 @@
           required
           @keyup.enter="submit"
         />
-        <v-btn text>
+        <v-btn
+          text
+          to="/reset-password"
+        >
           Reset Password
         </v-btn>
         <div class="error--text">
@@ -50,7 +53,7 @@
           </v-btn>
           <v-btn
             color="accent"
-            :to="{ name: 'register', query: { redirect: this.$route.query.redirect} }"
+            :to="{ name: 'register', query: { redirect: $route.query.redirect} }"
             class="ma-2"
           >
             Register

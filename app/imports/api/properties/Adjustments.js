@@ -1,24 +1,23 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-const AdjustmentSchema = new SimpleSchema({
+const AdjustmentSchema = createPropertySchema({
 	// The roll that determines how much to change the attribute
   // This can be simplified, but should only compute when activated
   amount: {
-    type: String,
+    type: 'fieldToCompute',
+    parseLevel: 'compile',
     optional: true,
-    defaultValue: '1',
-    max: STORAGE_LIMITS.calculation,
+    defaultValue: 1,
   },
 	// Who this adjustment applies to
 	target: {
 		type: String,
-    defaultValue: 'every',
+    defaultValue: 'target',
 		allowedValues: [
-      'self',   // the character who took the Adjustment
-      'each',   // rolled once for `each` target
-      'every',  // rolled once and applied to `every` target
+      'self',
+      'target',
     ],
 	},
 	// The stat this rolls applies to
@@ -34,18 +33,11 @@ const AdjustmentSchema = new SimpleSchema({
   },
 });
 
-const ComputedOnlyAdjustmentSchema = new SimpleSchema({
-  amountResult: {
-    type: SimpleSchema.oneOf(String, Number),
+const ComputedOnlyAdjustmentSchema = createPropertySchema({
+  amount: {
+    type: 'computedOnlyField',
+    parseLevel: 'compile',
     optional: true,
-  },
-  amountErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'amountErrors.$':{
-    type: ErrorSchema,
   },
 });
 

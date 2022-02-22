@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { recomputeCreatureByDoc } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const selectAmmoItem = new ValidatedMethod({
   name: 'creatureProperties.selectAmmoItem',
@@ -45,7 +45,7 @@ const selectAmmoItem = new ValidatedMethod({
     // Changing the linked item does change the dependency tree
     // TODO: We can predict exactly which deps will be affected instead of
     //       recomputing the entire creature
-    recomputeCreatureByDoc(rootCreature);
+    computeCreature(rootCreature._id);
   },
 });
 

@@ -1,7 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import '/imports/api/users/deleteMyAccount.js';
+import '/imports/api/users/methods/deleteMyAccount.js';
+import '/imports/api/users/methods/addEmail.js';
+import '/imports/api/users/methods/removeEmail.js';
+
 import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 
@@ -167,12 +170,6 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 		Accounts.sendVerificationEmail(userId, address);
 	}
 });
-
-Meteor.users.isAdmin = function(userId){
-	userId = this.userId || userId;
-	let user = Meteor.users.findOne(userId);
-	return user && user.roles.includes('admin');
-}
 
 Meteor.users.canPickUsername = new ValidatedMethod({
 	name: 'users.canPickUsername',

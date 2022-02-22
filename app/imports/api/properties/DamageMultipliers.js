@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema';
-import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 /*
@@ -20,7 +19,7 @@ let DamageMultiplierSchema = new SimpleSchema({
   // The technical, lowercase, single-word name used in formulae
   'damageTypes.$': {
     type: String,
-		allowedValues: DAMAGE_TYPES,
+    max: STORAGE_LIMITS.calculation,
   },
 	// The value of the damage multiplier
 	value: {
@@ -50,4 +49,6 @@ let DamageMultiplierSchema = new SimpleSchema({
   },
 });
 
-export { DamageMultiplierSchema };
+const ComputedOnlyDamageMultiplierSchema = new SimpleSchema({});
+
+export { DamageMultiplierSchema, ComputedOnlyDamageMultiplierSchema };

@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { recomputePropertyDependencies } from '/imports/api/creature/computation/methods/recomputeCreature.js';
+import { computeCreatureDependencyGroup } from '/imports/api/engine/computeCreature.js';
 
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',
@@ -39,42 +39,42 @@ const damageProperty = new ValidatedMethod({
 		}
 		let result = damagePropertyWork({property, operation, value});
     // Dependencies can't be changed through damage, only recompute deps
-    recomputePropertyDependencies(property);
+    computeCreatureDependencyGroup(property);
     return result;
   },
 });
 
 export function damagePropertyWork({property, operation, value}){
+  let damage, newValue;
   if (operation === 'set'){
-    let currentValue = property.value;
+    const total = property.total;
     // Set represents what we want the value to be after damage
     // So we need the actual damage to get to that value
-    let damage = currentValue - value;
+    damage = total - value;
     // Damage can't exceed total value
-    if (damage > currentValue) damage = currentValue;
+    if (damage > total) damage = total;
     // Damage must be positive
     if (damage < 0) damage = 0;
-    CreatureProperties.update(property._id, {
-      $set: {damage}
-    }, {
-      selector: property
-    });
-    return currentValue - damage;
+    newValue = property.total - damage;
   } else if (operation === 'increment'){
-    let currentValue = property.value - (property.damage || 0);
+    let currentValue = property.value;
     let currentDamage = property.damage;
     let increment = value;
     // Can't increase damage above the remaining value
     if (increment > currentValue) increment = currentValue;
     // Can't decrease damage below zero
     if (-increment > currentDamage) increment = -currentDamage;
-    CreatureProperties.update(property._id, {
-      $inc: {damage: increment}
-    }, {
-      selector: property
-    });
-    return increment;
+    damage = currentDamage + increment;
+    newValue = property.total - damage;
   }
+
+  // Write the results
+  CreatureProperties.update(property._id, {
+    $set: {damage, value: newValue}
+  }, {
+    selector: property
+  });
+  return damage;
 }
 
 export default damageProperty;

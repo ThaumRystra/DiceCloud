@@ -10,6 +10,14 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 let CreatureProperties = new Mongo.Collection('creatureProperties');
 
 let CreaturePropertySchema = new SimpleSchema({
+  _id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  _migrationError: {
+    type: String,
+    optional: true,
+  },
 	type: {
     type: String,
     allowedValues: Object.keys(propertySchemasIndex),
@@ -38,12 +46,16 @@ let CreaturePropertySchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
+});
+
+const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   // Denormalised flag if this property is inactive on the sheet for any reason
   // Including being disabled, or a decendent of a disabled property
   inactive: {
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive by an inactive
   // ancestor. True if this property has an inactive ancestor even if this
@@ -52,6 +64,7 @@ let CreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive because of its own
   // state
@@ -59,6 +72,7 @@ let CreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
+    removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive because of a toggle
   // calculation. Either an ancestor toggle calculation or its own.
@@ -66,17 +80,11 @@ let CreaturePropertySchema = new SimpleSchema({
     type: Boolean,
     optional: true,
     index: 1,
-  },
-  // Denormalised list of all properties or creatures this property depends on
-  dependencies: {
-    type: Array,
-    defaultValue: [],
-    index: 1,
-  },
-  'dependencies.$': {
-    type: String,
+    removeBeforeCompute: true,
   },
 });
+
+CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
 
 for (let key in propertySchemasIndex){
 	let schema = new SimpleSchema({});
@@ -91,10 +99,11 @@ for (let key in propertySchemasIndex){
 }
 
 import '/imports/api/creature/creatureProperties/methods/index.js';
-import '/imports/api/creature/actions/doAction.js';
-import '/imports/api/creature/actions/castSpellWithSlot.js';
+//import '/imports/api/creature/actions/doAction.js';
+//import '/imports/api/creature/actions/castSpellWithSlot.js';
 
 export default CreatureProperties;
 export {
+  DenormalisedOnlyCreaturePropertySchema,
 	CreaturePropertySchema,
 };

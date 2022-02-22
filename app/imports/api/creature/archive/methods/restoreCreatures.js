@@ -9,7 +9,7 @@ import Experiences from '/imports/api/creature/experience/Experiences.js';
 import ArchivedCreatures from '/imports/api/creature/archive/ArchivedCreatures.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 
-function restoreCreature(archiveId){
+export function restoreCreature(archiveId){
   // Get the archive
   const archivedCreature = ArchivedCreatures.findOne(archiveId);
 

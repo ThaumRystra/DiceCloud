@@ -1,14 +1,23 @@
 <template lang="html">
-  <div class="buff-viewer">
-    <property-name :value="model.name" />
-    <property-field
-      name="Save"
-      :value="model.stat"
-    />
-    <property-field
-      name="DC"
-      :value="'dcResult' in model ? model.dcResult : model.dc"
-    />
+  <div class="saving-throw-viewer">
+    <v-row dense>
+      <property-field
+        name="DC"
+        large
+        center
+        :calculation="model.dc"
+      />
+      <property-field
+        name="Save"
+        mono
+        :value="model.stat"
+      />
+      <property-field
+        v-if="model.target === 'self'"
+        name="Target"
+        value="Self"
+      />
+    </v-row>
   </div>
 </template>
 

@@ -7,47 +7,28 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-    <smart-switch
-      label="Applied"
-      class="mt-0"
-      :value="model.applied"
-      :error-messages="errors.applied"
-      @change="change('applied', ...arguments)"
-    />
-    <v-expand-transition>
-      <div v-if="model.applied">
-        <v-alert
-          type="info"
-          outlined
-        >
-          When buffs are applied they become active on a creature.
-          Turn this off if the buff needs to be applied to a target by an action
-          or spell.
-        </v-alert>
-      </div>
-    </v-expand-transition>
-    <text-area
+    <inline-computation-field
       label="Description"
-      :value="model.description"
+      :model="model.description"
       :error-messages="errors.description"
-      @change="change('description', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <calculation-error-list :calculations="model.descriptionCalculations" />
 
     <!-- Duration not implemented yet
-    <text-field
+    <computed-field
       label="Duration"
-      hint="How long the buff lasts"
-      :value="model.duration"
+      hint="How many rounds the buff lasts"
+      :model="model.duration"
       :error-messages="errors.duration"
-      @change="change('duration', ...arguments)"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['duration', ...path], value, ack})"
     />
     -->
     <v-expand-transition>
       <smart-select
         v-if="!model.applied"
         label="Target"
-        :hint="targetOptionHint"
         :items="targetOptions"
         :value="model.target"
         :error-messages="errors.target"
@@ -69,12 +50,8 @@
 
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin],
 		props: {
 			parentTarget: {
@@ -82,47 +59,17 @@
         default: undefined,
 			},
 		},
-		computed: {
-			targetOptions(){
-				if (this.parentTarget === 'singleTarget') {
-					return [
-						{
-							text: 'Self',
-							value: 'self',
-						}, {
-							text: 'Target',
-							value: 'every',
-						},
-					];
-				} else {
-					return [
-						{
-							text: 'Self',
-							value: 'self',
-						}, {
-							text: 'Roll once for each target',
-							value: 'each',
-						}, {
-							text: 'Roll once and apply to every target',
-							value: 'every',
-						},
-					];
-				}
-			},
-			targetOptionHint(){
-				let hints = {
-					self: 'The buff will be applied to the character taking the action',
-					target: 'The buff will be applied to the target of the action',
-					each: 'The buff will be rolled separately for each of the targets of the action',
-					every: 'The buff will be rolled once and applied to each of the targets of the action',
-				};
-				if (this.parentTarget === 'singleTarget'){
-					hints.each = hints.target;
-					hints.every = hints.target;
-				}
-				return hints[this.model.target];
-			}
-		}
+    data(){return {
+      targetOptions: [
+        {
+          text: 'Self',
+          value: 'self',
+        }, {
+          text: 'Target',
+          value: 'target',
+        },
+      ],
+    }},
 	}
 </script>
 

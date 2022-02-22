@@ -100,35 +100,6 @@ let CreatureSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
     defaultValue: 0,
   },
-  // Inventory
-	'denormalizedStats.weightTotal': {
-		type: Number,
-		defaultValue: 0,
-	},
-  'denormalizedStats.weightEquipment': {
-		type: Number,
-		defaultValue: 0,
-	},
-  'denormalizedStats.weightCarried': {
-		type: Number,
-		defaultValue: 0,
-	},
-  'denormalizedStats.valueTotal': {
-		type: Number,
-		defaultValue: 0,
-	},
-  'denormalizedStats.valueEquipment': {
-		type: Number,
-		defaultValue: 0,
-	},
-  'denormalizedStats.valueCarried': {
-		type: Number,
-		defaultValue: 0,
-	},
-  'denormalizedStats.itemsAttuned': {
-		type: Number,
-		defaultValue: 0,
-	},
   // Version of computation engine that was last used to compute this creature
   computeVersion: {
 		type: String,
@@ -175,6 +146,7 @@ Creatures.attachSchema(CreatureSchema);
 
 
 import '/imports/api/creature/creatures/methods/index.js';
+import '/imports/api/engine/actions/doAction.js';
 
 export default Creatures;
 export { CreatureSchema };

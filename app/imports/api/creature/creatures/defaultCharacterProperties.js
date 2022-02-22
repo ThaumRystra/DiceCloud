@@ -10,10 +10,10 @@ export default function defaultCharacterProperties(creatureId){
     {
       type: 'propertySlot',
       name: 'Ruleset',
-      description: 'Choose a starting point for your character, this will define the basic setup of your character sheet. Without a base, your sheet will be empty.',
+      description: {text: 'Choose a starting point for your character, this will define the basic setup of your character sheet. Without a base, your sheet will be empty.'},
       slotTags: ['base'],
       tags: [],
-      quantityExpected: 1,
+      quantityExpected: {calculation: '1'},
       hideWhenFull: true,
       spaceLeft: 1,
       totalFilled: 0,

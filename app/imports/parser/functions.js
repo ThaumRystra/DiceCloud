@@ -1,5 +1,3 @@
-import ArrayNode from '/imports/parser/parseTree/ArrayNode.js';
-
 export default {
   'abs': {
     comment: 'Returns the absolute value of a number',
@@ -101,12 +99,12 @@ export default {
       {input: 'tableLookup([100, 300, 900, 1200], 900)', result: '3'},
       {input: 'tableLookup([100, 300], 594)', result: '2'},
     ],
-    arguments: [ArrayNode, 'number'],
+    arguments: ['array', 'number'],
     resultType: 'number',
     fn: function tableLookup(arrayNode, number){
       for(let i in arrayNode.values){
         let node = arrayNode.values[i];
-        if (node.value > number) return i;
+        if (node.value > number) return +i;
       }
       return arrayNode.values.length;
     }

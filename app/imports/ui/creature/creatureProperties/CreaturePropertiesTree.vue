@@ -39,13 +39,15 @@
 		},
 		meteor: {
 			children(){
-				return nodesToTree({
+				const children = nodesToTree({
 					collection: CreatureProperties,
 					ancestorId: this.root.id,
 					filter: this.filter,
           includeFilteredDocAncestors: true,
           includeFilteredDocDescendants: true,
 				});
+        this.$emit('length', children.length);
+        return children;
 			},
 		},
 		methods: {

@@ -4,11 +4,8 @@ import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import {assertEditPermission} from '/imports/api/creature/creatures/creaturePermissions.js';
-import {
-  parse,
-  CompilationContext,
-  prettifyParseError
-} from '/imports/parser/parser.js';
+import {parse, prettifyParseError} from '/imports/parser/parser.js';
+import resolve, { toString } from '/imports/parser/resolve.js';
 const PER_CREATURE_LOG_LIMIT = 100;
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
@@ -121,11 +118,12 @@ export function insertCreatureLogWork({log, creature, method}){
   if (typeof log === 'string'){
     log = {content: [{value: log}]};
   }
+  if (!log.content?.length) return;
   log.date = new Date();
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer){
-    method.unblock();
+    method?.unblock();
     removeOldLogs(creature._id);
     logWebhook({log, creature});
   }
@@ -174,26 +172,29 @@ const logRoll = new ValidatedMethod({
       logContent.push({name: 'Parse Error', value: error});
     }
     if (parsedResult) try {
-      let rollContext = new CompilationContext();
-      let compiled = parsedResult.compile(creature.variables, rollContext);
-      let compiledString = compiled.toString();
+      let {
+        result: compiled,
+        context
+      } = resolve('compile', parsedResult, creature.variables);
+      const compiledString = toString(compiled);
       if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
         value: roll
       });
       logContent.push({
         value: compiledString
       });
-      let rolled = compiled.roll(creature.variables, rollContext);
-      let rolledString = rolled.toString();
+      let {result: rolled} = resolve('roll', compiled, creature.variables, context);
+      let rolledString = toString(rolled);
       if (rolledString !== compiledString) logContent.push({
         value: rolled.toString()
       });
-      let result = rolled.reduce(creature.variables, rollContext);
-      let resultString = result.toString();
+      let {result} = resolve('reduce', rolled, creature.variables, context);
+      let resultString = toString(result);
       if (resultString !== rolledString) logContent.push({
         value: resultString
       });
     } catch (e){
+      console.error(e);
       logContent = [{name: 'Calculation error'}];
     }
     const log = {

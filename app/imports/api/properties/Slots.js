@@ -1,75 +1,72 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
-let SlotSchema = new SimpleSchema({
+let SlotSchema = createPropertySchema({
   name: {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.name,
   },
   description: {
-    type: String,
+    type: 'inlineCalculationFieldToCompute',
     optional: true,
-    max: STORAGE_LIMITS.description,
   },
   slotType: {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.variableName,
   },
-	slotTags: {
+  slotTags: {
     type: Array,
-		defaultValue: [],
+    defaultValue: [],
     maxCount: STORAGE_LIMITS.tagCount,
   },
-	'slotTags.$': {
-		type: String,
+  'slotTags.$': {
+    type: String,
     max: STORAGE_LIMITS.tagLength,
-	},
-	extraTags: {
+  },
+  extraTags: {
     type: Array,
-		defaultValue: [],
+    defaultValue: [],
     maxCount: STORAGE_LIMITS.extraTagsCount,
   },
-	'extraTags.$': {
-		type: Object,
-	},
+  'extraTags.$': {
+    type: Object,
+  },
   'extraTags.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     autoValue(){
       if (!this.isSet) return Random.id();
     }
-	},
+  },
   'extraTags.$.operation': {
-		type: String,
+    type: String,
     allowedValues: ['OR', 'NOT'],
     defaultValue: 'OR',
-	},
+  },
   'extraTags.$.tags': {
-		type: Array,
+    type: Array,
     defaultValue: [],
     maxCount: STORAGE_LIMITS.tagCount,
-	},
+  },
   'extraTags.$.tags.$': {
-		type: String,
-    max: STORAGE_LIMITS.tagLength,
-	},
-  quantityExpected: {
     type: String,
+    max: STORAGE_LIMITS.tagLength,
+  },
+  quantityExpected: {
+    type: 'fieldToCompute',
     optional: true,
     defaultValue: '1',
-    max: STORAGE_LIMITS.calculation,
   },
   ignored: {
     type: Boolean,
     optional: true,
   },
   slotCondition: {
-    type: String,
+    type: 'fieldToCompute',
     optional: true,
-    max: STORAGE_LIMITS.calculation,
   },
   hideWhenFull: {
     type: Boolean,
@@ -89,48 +86,36 @@ let SlotSchema = new SimpleSchema({
   },
 });
 
-const ComputedOnlySlotSchema = new SimpleSchema({
-	// Condition calculation results
-	slotConditionResult: {
-		type: SimpleSchema.oneOf(Number, String, Boolean),
-		optional: true,
-	},
-  slotConditionErrors: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
-  },
-  'slotConditionErrors.$':{
-    type: ErrorSchema,
-  },
-
-  // Quantity Expected calculation results
-  quantityExpectedResult: {
-    type: SimpleSchema.Integer,
+const ComputedOnlySlotSchema = createPropertySchema({
+  // Computed fields
+  description: {
+    type: 'computedOnlyInlineCalculationField',
     optional: true,
   },
-  quantityExpectedErrors: {
-    type: Array,
+  quantityExpected: {
+    type: 'computedOnlyField',
     optional: true,
-    maxCount: STORAGE_LIMITS.errorCount,
   },
-  'quantityExpectedErrors.$':{
-    type: ErrorSchema,
+  slotCondition: {
+    type: 'computedOnlyField',
+    optional: true,
   },
 
   // Denormalised fields
   totalFilled: {
     type: SimpleSchema.Integer,
     defaultValue: 0,
+    removeBeforeCompute: true,
   },
   spaceLeft: {
     type: SimpleSchema.Integer,
     optional: true,
+    removeBeforeCompute: true,
   },
 });
 
 const ComputedSlotSchema = new SimpleSchema()
-	.extend(ComputedOnlySlotSchema)
-	.extend(SlotSchema);
+  .extend(ComputedOnlySlotSchema)
+  .extend(SlotSchema);
 
 export { SlotSchema, ComputedSlotSchema, ComputedOnlySlotSchema };

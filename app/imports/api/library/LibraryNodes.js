@@ -32,6 +32,15 @@ let LibraryNodeSchema = new SimpleSchema({
 		type: String,
     max: STORAGE_LIMITS.tagLength,
 	},
+  libraryTags: {
+		type: Array,
+		defaultValue: [],
+    maxCount: STORAGE_LIMITS.tagCount,
+	},
+	'libraryTags.$': {
+		type: String,
+    max: STORAGE_LIMITS.tagLength,
+	},
   icon: {
     type: storedIconsSchema,
     optional: true,

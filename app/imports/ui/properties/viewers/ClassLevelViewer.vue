@@ -1,18 +1,25 @@
 <template lang="html">
   <div class="class-level-viewer">
-    <div>
-      <span class="name text-h5">
-        {{ model.name }} {{ model.level }}
-      </span>
-    </div>
-    <p class="my-2">
-      <code>{{ model.variableName }}</code>
-    </p>
-    <property-description
-      :string="model.description"
-      :calculations="model.descriptionCalculations"
-      :inactive="model.inactive"
-    />
+    <v-row
+      dense
+      justify="center"
+    >
+      <property-field
+        name="Level"
+        large
+        center
+        :value="model.level"
+      />
+      <property-field
+        name="Variable Name"
+        mono
+        :value="model.variableName"
+      />
+      <property-description
+        name="Description"
+        :model="model.description"
+      />
+    </v-row>
   </div>
 </template>
 
@@ -21,6 +28,11 @@ import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyV
 
 export default {
 	mixins: [propertyViewerMixin],
+  inject: {
+    context: {
+      default: {},
+    },
+  },
 }
 </script>
 

@@ -1,9 +1,22 @@
 <template lang="html">
-  <div class="damage-viewer layout align-center">
-    {{ model.amountResult }}
-    {{ model.damageType }}<span
-      v-if="model.damageType !== 'healing'"
-    >&nbsp;damage</span>
+  <div class="damage-viewer">
+    <v-row dense>
+      <property-field
+        name="Amount"
+        large
+        center
+        :calculation="model.amount"
+      />
+      <property-field
+        name="Type"
+        :value="type"
+      />
+      <property-field
+        v-if="model.target === 'self'"
+        name="Target"
+        value="Self"
+      />
+    </v-row>
   </div>
 </template>
 
@@ -12,6 +25,12 @@
 
 	export default {
 		mixins: [propertyViewerMixin],
+    computed: {
+      type(){
+        if (this.model.damageType === 'healing') return this.model.damageType;
+        return `${this.model.damageType} damage`
+      },
+    }
 	}
 </script>
 

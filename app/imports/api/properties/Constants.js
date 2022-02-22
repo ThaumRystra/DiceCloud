@@ -3,12 +3,10 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import {
   parse,
-  CompilationContext,
   prettifyParseError,
 } from '/imports/parser/parser.js';
-import AccessorNode from '/imports/parser/parseTree/AccessorNode.js';
-import SymbolNode from '/imports/parser/parseTree/SymbolNode.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import resolve, { Context, traverse } from '/imports/parser/resolve.js';
 
 /*
  * Constants are primitive values that can be used elsewhere in computations
@@ -50,12 +48,9 @@ let ConstantSchema = new SimpleSchema({
       // Any existing errors will result in an early failure
       if (context && context.errors.length) return context.errors;
       // Ban variables in constants if necessary
-      result && result.traverse(node => {
-        if (node instanceof SymbolNode || node instanceof AccessorNode){
-          context.storeError({
-            type: 'error',
-            message: 'Variables can\'t be used to define a constant'
-          });
+      result && traverse(result, node => {
+        if (node.parseType === 'symbol' || node.parseType === 'accessor'){
+          context.error('Variables can\'t be used to define a constant');
         }
       });
       return context && context.errors || [];
@@ -67,7 +62,7 @@ let ConstantSchema = new SimpleSchema({
 });
 
 function parseString(string, fn = 'compile'){
-  let context = new CompilationContext();
+  let context = new Context();
   if (!string){
     return {result: string, context};
   }
@@ -78,11 +73,14 @@ function parseString(string, fn = 'compile'){
     node = parse(string);
   } catch (e) {
     let message = prettifyParseError(e);
-    context.storeError({type: 'error', message});
+    context.error(message);
     return {context};
   }
-  let result = node[fn]({/*empty scope*/}, context);
+  if (!node) return {context};
+  let {result} = resolve(fn, node, {/*empty scope*/}, context);
   return {result, context}
 }
 
-export { ConstantSchema };
+const ComputedOnlyConstantSchema = new SimpleSchema({});
+
+export { ConstantSchema, ComputedOnlyConstantSchema };

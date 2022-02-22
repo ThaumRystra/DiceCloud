@@ -1,9 +1,15 @@
 <template lang="html">
   <div>
-    <property-name :value="model.name" />
-    <div v-if="model.damageTypes.length">
-      {{ operation }} to {{ model.damageTypes.join(', ') }} damage
-    </div>
+    <v-row dense>
+      <property-field
+        name="Operation"
+        :value="operation"
+      />
+      <property-field
+        name="Damage types"
+        :value="model.damageTypes.join(', ')"
+      />
+    </v-row>
   </div>
 </template>
 

@@ -1,17 +1,25 @@
 <template lang="html">
   <div class="proficiency-viewer">
-    <div class="text-h5">
-      {{ model.stats && model.stats.join(' ') }}
-    </div>
-    <div class="text-h5 layout">
-      <proficiency-icon
-        :value="model.value"
-        class="mr-1"
+    <v-row dense>
+      <property-field
+        v-if="model.value !== undefined"
+        name="Proficiency"
+      >
+        <proficiency-icon
+          :value="model.value"
+          style="height: 12px"
+          class="ml-1 mr-2"
+        />
+        <div>
+          {{ proficiencyText }}
+        </div>
+      </property-field>
+      <property-field
+        name="Stats"
+        :value="model.stats && model.stats.join(', ')"
+        mono
       />
-      <div>
-        {{ proficiencyText }}
-      </div>
-    </div>
+    </v-row>
   </div>
 </template>
 
@@ -27,6 +35,7 @@ export default {
   computed: {
     proficiencyText(){
       switch (this.model.value){
+        case 0.49: return 'Half proficiency bonus rounded down';
         case 0.5: return 'Half proficiency bonus';
         case 1: return 'Proficient';
         case 2: return 'Double proficiency bonus';
