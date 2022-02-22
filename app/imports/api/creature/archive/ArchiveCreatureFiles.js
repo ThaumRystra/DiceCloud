@@ -2,7 +2,7 @@ import { createS3FilesCollection } from '/imports/api/files/s3FileStorage.js';
 
 const ArchiveCreatureFiles = createS3FilesCollection({
   collectionName: 'archiveCreatureFiles',
-  storagePath: '/DiceCloud/archiveCreatures/',
+  storagePath: Meteor.isDevelopment ? '/DiceCloud/archiveCreatures/' : 'assets/app/archiveCreatures',
   onBeforeUpload(file) {
     // Allow upload files under 10MB, and only in json format
     if (file.size > 10485760) {
