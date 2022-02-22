@@ -5,12 +5,16 @@ import computeVariableAsConstant from './computeVariable/computeVariableAsConsta
 import computeVariableAsClass from './computeVariable/computeVariableAsClass.js';
 import computeVariableAsToggle from './computeVariable/computeVariableAsToggle.js';
 import computeImplicitVariable from './computeVariable/computeImplicitVariable.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 export default function computeVariable(computation, node){
   const scope = computation.scope;
   if (!node.data) node.data = {};
   aggregateLinks(computation, node);
   combineAggregations(computation, node);
+  // Don't add to the scope if the node id is not a legitimate variable name
+  // Without this `some.thing` could break the entire sheet as a database key
+  if (!VARIABLE_NAME_REGEX.test(node.id)) return;
   if (node.data.definingProp){
     // Add the defining variable to the scope
     scope[node.id] = node.data.definingProp
