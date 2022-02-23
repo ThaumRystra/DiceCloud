@@ -31,7 +31,7 @@ const indexNode = {
       }
     } else if (fn === 'reduce'){
       if (array.parseType !== 'array'){
-        const message = `Can not get the index of a non-array node: ${node.array.toString()} = ${array.toString()}`
+        const message = `Can not get the index of a non-array node: ${toString(node.array)} = ${toString(array)}`
         context.error(message);
         return {
           result: error.create({
@@ -41,7 +41,7 @@ const indexNode = {
           context,
         };
       } else if (!index.isInteger){
-        const message = `${array.toString()} is not an integer index of the array`
+        const message = `${toString(array)} is not an integer index of the array`
         context.error(message);
         return {
           result: error.create({

@@ -186,7 +186,7 @@ const logRoll = new ValidatedMethod({
       let {result: rolled} = resolve('roll', compiled, creature.variables, context);
       let rolledString = toString(rolled);
       if (rolledString !== compiledString) logContent.push({
-        value: rolled.toString()
+        value: rolledString
       });
       let {result} = resolve('reduce', rolled, creature.variables, context);
       let resultString = toString(result);
