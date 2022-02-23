@@ -47,7 +47,7 @@ const damageProperty = new ValidatedMethod({
 export function damagePropertyWork({property, operation, value}){
   let damage, newValue;
   if (operation === 'set'){
-    const total = property.total;
+    const total = property.total || 0;
     // Set represents what we want the value to be after damage
     // So we need the actual damage to get to that value
     damage = total - value;
@@ -57,8 +57,8 @@ export function damagePropertyWork({property, operation, value}){
     if (damage < 0) damage = 0;
     newValue = property.total - damage;
   } else if (operation === 'increment'){
-    let currentValue = property.value;
-    let currentDamage = property.damage;
+    let currentValue = property.value || 0;
+    let currentDamage = property.damage || 0;
     let increment = value;
     // Can't increase damage above the remaining value
     if (increment > currentValue) increment = currentValue;
