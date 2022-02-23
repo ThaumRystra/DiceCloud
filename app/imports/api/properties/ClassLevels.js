@@ -28,7 +28,7 @@ const ClassLevelSchema = createPropertySchema({
   },
 });
 
-const ComputedOnlyClassLevelSchema  = new SimpleSchema({
+const ComputedOnlyClassLevelSchema  = createPropertySchema({
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,

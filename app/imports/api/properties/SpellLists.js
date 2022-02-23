@@ -29,7 +29,7 @@ let SpellListSchema = createPropertySchema({
   },
 });
 
-const ComputedOnlySpellListSchema = new SimpleSchema({
+const ComputedOnlySpellListSchema = createPropertySchema({
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,
