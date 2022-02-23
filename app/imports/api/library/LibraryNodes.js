@@ -19,6 +19,10 @@ import { restore } from '/imports/api/parenting/softRemove.js';
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
 let LibraryNodeSchema = new SimpleSchema({
+  _id: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
 	type: {
     type: String,
     allowedValues: Object.keys(propertySchemasIndex),

@@ -2,6 +2,7 @@ import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import CreatureProperties,
   { DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import linkInventory from './buildComputation/linkInventory.js';
@@ -30,8 +31,9 @@ import removeSchemaFields from './buildComputation/removeSchemaFields.js';
  */
 
 export default function buildCreatureComputation(creatureId){
+  const creature = getCreature(creatureId);
   const properties = getProperties(creatureId);
-  const computation = buildComputationFromProps(properties);
+  const computation = buildComputationFromProps(properties, creature);
   return computation;
 }
 
@@ -44,7 +46,13 @@ function getProperties(creatureId){
   }).fetch();
 }
 
-export function buildComputationFromProps(properties){
+function getCreature(creatureId){
+  return Creatures.findOne(creatureId, {
+    denormalizedStats: 1,
+  });
+}
+
+export function buildComputationFromProps(properties, creature){
 
   const computation = new CreatureComputation(properties);
   // Dependency graph where edge(a, b) means a depends on b
@@ -54,6 +62,22 @@ export function buildComputationFromProps(properties){
   // Each node's data represents a prop or a virtual prop like a variable
   // Each link's data is a string representing the link type
   const dependencyGraph = computation.dependencyGraph;
+
+  // Link the denormalizedStats from the creature
+  if (creature && creature.denormalizedStats){
+    if (creature.denormalizedStats.xp){
+      dependencyGraph.addNode('xp', {
+        baseValue: creature.denormalizedStats.xp,
+        type: '_variable'
+      });
+    }
+    if (creature.denormalizedStats.milestoneLevels){
+      dependencyGraph.addNode('milestoneLevels', {
+        baseValue: creature.denormalizedStats.milestoneLevels,
+        type: '_variable'
+      });
+    }
+  }
 
   // Process the properties one by one
   properties.forEach(prop => {

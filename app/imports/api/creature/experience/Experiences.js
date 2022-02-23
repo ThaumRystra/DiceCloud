@@ -61,7 +61,7 @@ const insertExperienceForCreature = function({experience, creatureId, userId}){
   }
   experience.creatureId = creatureId;
   let id = Experiences.insert(experience);
-  recomputeCreatureById(creatureId);
+  computeCreature(creatureId);
   return id;
 };
 
@@ -135,7 +135,7 @@ const removeExperience = new ValidatedMethod({
     }
     experience.creatureId = creatureId;
     let numRemoved = Experiences.remove(experienceId);
-    recomputeCreatureById(creatureId);
+    computeCreature(creatureId);
     return numRemoved;
   },
 });
