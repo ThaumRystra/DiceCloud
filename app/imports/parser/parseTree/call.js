@@ -61,8 +61,11 @@ const call = {
     }
 
     // Map contant nodes to constants before attempting to run the function
-    let mappedArgs = resolvedArgs.map(arg => {
-      if (arg.parseType === 'constant'){
+    let mappedArgs = resolvedArgs.map((arg, index) => {
+      if (
+        arg.parseType === 'constant' &&
+        func.arguments[index] !== 'parseNode'
+      ){
         return arg.value;
       } else {
         return arg;
@@ -71,7 +74,7 @@ const call = {
 
     try {
       // Run the function
-      let value = func.fn.apply(null, mappedArgs);
+      let value = func.fn.apply({scope, context}, mappedArgs);
 
       let valueType = typeof value;
       if (valueType === 'number' || valueType === 'string' || valueType === 'boolean'){
@@ -132,6 +135,7 @@ const call = {
       } else {
         type = argumentsExpected[index];
       }
+      if (type === 'parseNode') return;
       if (node.parseType !== type && node.valueType !== type) failed = true;
       if (failed && fn === 'reduce'){
         let typeName = typeof type === 'string' ? type : type.constructor.name;

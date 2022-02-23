@@ -1,3 +1,5 @@
+import resolve from '/imports/parser/resolve.js'
+
 export default {
   'abs': {
     comment: 'Returns the absolute value of a number',
@@ -107,6 +109,18 @@ export default {
         if (node.value > number) return +i;
       }
       return arrayNode.values.length;
+    }
+  },
+  'resolve': {
+    comment: 'Forces the given calcultion to resolve into a number',
+    examples: [
+      {input: 'resolve(someUndefinedVariable + 3 + 4)', result: '7'},
+      {input: 'resolve(3d6)', result: '2'},
+    ],
+    arguments: ['parseNode'],
+    fn: function resolveFn(node){
+      let {result} = resolve('reduce', node, this.scope, this.context);
+      return result;
     }
   }
 }
