@@ -28,10 +28,14 @@
         />
       </property-field>
       <property-field
+        v-if="model.description"
         name="Description"
         :cols="{cols: 12}"
-        :value="model.description"
-      />
+      >
+        <markdown-text
+          :markdown="model.description"
+        />
+      </property-field>
     </v-row>
   </div>
 </template>
