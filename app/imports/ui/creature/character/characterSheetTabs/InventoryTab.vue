@@ -31,12 +31,12 @@
               <v-list-item-action>
                 <v-list-item-title>
                   <coin-value
-                    :value="creature.denormalizedStats.valueTotal || 0"
+                    :value="creature.variables && creature.variables.valueTotal && creature.variables.valueTotal.value|| 0"
                   />
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
-            <v-list-item v-if="creature.denormalizedStats.itemsAttuned">
+            <v-list-item v-if="creature.variables && creature.variables.itemsAttuned && creature.variables.itemsAttuned.value">
               <v-list-item-avatar>
                 <v-icon>$vuetify.icons.spell</v-icon>
               </v-list-item-avatar>
@@ -47,7 +47,7 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-title>
-                  {{ creature.denormalizedStats.itemsAttuned }}
+                  {{ creature.variables.itemsAttuned.value }}
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
@@ -140,7 +140,7 @@ export default {
     creature(){
       return Creatures.findOne(this.creatureId, {fields: {
         color: 1,
-        denormalizedStats: 1,
+        variables: 1,
       }});
     },
 		containersWithoutAncestorContainers(){
@@ -210,7 +210,9 @@ export default {
 		},
     weightCarried(){
       return stripFloatingPointOddities(
-        this.creature.denormalizedStats.weightCarried || 0
+        this.creature.variables &&
+        this.creature.variables.weightCarried &&
+        this.creature.variables.weightCarried.value || 0
       );
     },
 	},
