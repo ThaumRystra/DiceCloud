@@ -217,7 +217,9 @@ function getInlineComputationTransforms(key){
 
 function calculationUp(val){
   if (typeof val !== 'string') return val;
-  return val.replace('.value', '.total').replace('.currentValue', '.value');
+  return val.replace(/#(\w+).(\w+)Result/g, '#$1.$2')
+    .replace('.value', '.total')
+    .replace('.currentValue', '.value');
 }
 
 function calculationDown(val){
