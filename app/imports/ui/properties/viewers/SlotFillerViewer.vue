@@ -43,8 +43,12 @@
 <script lang="js">
 	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
   import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+  import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 
 	export default {
+    components: {
+      MarkdownText,
+    },
 		mixins: [propertyViewerMixin],
     inject: {
       context: { default: {} }

@@ -2,6 +2,7 @@
 .meteor/meteorite
 .demeteorized
 .cache
+.vscode
 settings.json
 public/components
 public/_imports.html
