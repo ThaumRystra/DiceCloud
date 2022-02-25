@@ -48,17 +48,27 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
 
     let value, values, resultPrefix;
     if (save.advantage === 1){
-      values = rollDice(2, 20).sort().reverse();
-      value = values[0];
-      resultPrefix = `Advantage: 1d20 [${values[0]},~~${values[1]}~~] + ${save.value} = `
+      const [a, b] = rollDice(2, 20);
+      if (a >= b) {
+        value = a;
+        resultPrefix = `Advantage: 1d20 [ ${a}, ~~${b}~~ ] + ${save.value} = `;
+      } else {
+        value = b;
+        resultPrefix = `Advantage: 1d20 [ ~~${a}~~, ${b} ] + ${save.value} = `;
+      }
     } else if (save.advantage === -1){
-      values = rollDice(2, 20).sort();
-      value = values[0];
-      resultPrefix = `Disadvantage: 1d20 [${values[0]},~~${values[1]}~~] + ${save.value} = `
+      const [a, b] = rollDice(2, 20);
+      if (a <= b) {
+        value = a;
+        resultPrefix = `Advantage: 1d20 [ ${a}, ~~${b}~~ ] + ${save.value} = `;
+      } else {
+        value = b;
+        resultPrefix = `Advantage: 1d20 [ ~~${a}~~, ${b} ] + ${save.value} = `;
+      }
     } else {
       values = rollDice(1, 20);
       value = values[0];
-      resultPrefix = `1d20 [${value}] + ${save.value} = `
+      resultPrefix = `1d20 [ ${value} ] + ${save.value} = `
     }
     scope['$saveDiceRoll'] = {value};
     const result = value + save.value || 0;

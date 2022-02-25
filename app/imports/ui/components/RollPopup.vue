@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     roll(){
-      this.$emit('roll', {advantage: this.advantage});
+      this.$emit('roll', {advantage: this.dataAdvantage});
       this.open = false;
     },
     close(){

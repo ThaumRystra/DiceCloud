@@ -24,16 +24,18 @@ export default function applyAction(node, {creature, targets, scope, log}){
   const failed = spendResources({prop, log, scope});
   if (failed) return;
 
+  const attack = prop.attackRoll || prop.attackRollBonus;
+
   // Attack if there is an attack roll
-  if (prop.attackRoll && prop.attackRoll.calculation){
+  if (attack && attack.calculation){
     if (targets.length){
       targets.forEach(target => {
-        applyAttackToTarget({prop, target, scope, log});
+        applyAttackToTarget({attack, target, scope, log});
         // Apply the children, but only to the current target
         applyChildren(node, {targets: [target], scope, log});
       });
     } else {
-      applyAttackWithoutTarget({prop, scope, log});
+      applyAttackWithoutTarget({attack, scope, log});
       applyChildren(node, {creature, targets, scope, log});
     }
   } else {
@@ -41,44 +43,34 @@ export default function applyAction(node, {creature, targets, scope, log}){
   }
 }
 
-function applyAttackWithoutTarget({prop, scope, log}){
+function applyAttackWithoutTarget({attack, scope, log}){
   delete scope['$attackHit'];
   delete scope['$attackMiss'];
   delete scope['$criticalHit'];
   delete scope['$criticalMiss'];
   delete scope['$attackRoll'];
 
-  recalculateCalculation(prop.attackRoll, scope, log);
+  recalculateCalculation(attack, scope, log);
 
-  let value = rollDice(1, 20)[0];
-  scope['$attackRoll'] = {value};
-  let criticalHitTarget = scope.criticalHitTarget?.value || 20;
-  let criticalHit = value >= criticalHitTarget;
-  if (criticalHit){
-    scope['$criticalHit'] = {value: true};
-    scope['$attackHit'] = {value: true};
-  } else {
-    let criticalMiss = value === 1;
-    if (criticalMiss){
-      scope['$criticalMiss'] = 1;
-      log.content.push({
-        name: 'Critical Miss!',
-      });
-      scope['$attackMiss'] = {value: true};
-    } else {
-      // Untargeted attacks hit by default
-      scope['$attackHit'] = {value: true}
-    }
+  let {
+    resultPrefix,
+    result,
+    criticalHit,
+    criticalMiss,
+  } = rollAttack(attack, scope);
+  let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
+  if (attack.advantage === 1 || scope['$attackAdvantage']){
+    name += ' (Advantage)';
+  } else if(attack.advantage === -1 || scope['$attackDisadvantage']){
+    name += ' (Disadvantage)';
   }
-  let result = value + prop.attackRoll.value;
-  scope['$attackRoll'] = {value: result};
   log.content.push({
-    name: criticalHit ? 'Critical Hit!' : 'To Hit',
-    value: `1d20 [${value}] + ${prop.attackRoll.value} = ` + result,
+    name,
+    value: `${resultPrefix} **${result}**`,
   });
 }
 
-function applyAttackToTarget({prop, target, scope, log}){
+function applyAttackToTarget({attack, target, scope, log}){
   delete scope['$attackHit'];
   delete scope['$attackMiss'];
   delete scope['$criticalHit'];
@@ -86,26 +78,30 @@ function applyAttackToTarget({prop, target, scope, log}){
   delete scope['$attackDiceRoll'];
   delete scope['$attackRoll'];
 
-  recalculateCalculation(prop.attackRoll, scope, log);
+  recalculateCalculation(attack, scope, log);
 
-  const value = rollDice(1, 20)[0];
-  scope['$attackDiceRoll'] = {value};
-  const criticalHitTarget = scope.criticalHitTarget?.value || 20;
-  const criticalHit = value >= criticalHitTarget;
-  const criticalMiss = value === 1;
-  if (criticalHit) scope['$criticalHit'] = {value: true};
-  if (criticalMiss) scope['$criticalMiss'] = {value: true};
-  const result = value + prop.attackRoll.value;
-  scope['$attackRoll'] = {value: result};
+  let {
+    resultPrefix,
+    result,
+    criticalHit,
+    criticalMiss,
+  } = rollAttack(attack, scope);
+
   if (target.variables.armor){
     const armor = target.variables.armor.value;
-    const name = criticalHit ? 'Critical Hit!' :
-      criticalMiss ? 'Critical miss!' :
-      result > armor ? 'Hit!' :
-      'Miss!'
+
+    let name = criticalHit ? 'Critical Hit!' :
+      criticalMiss ? 'Critical Miss!' :
+      result > armor ? 'Hit!' : 'Miss!';
+    if (attack.advantage === 1 || scope['$attackAdvantage']){
+      name += ' (Advantage)';
+    } else if(attack.advantage === -1 || scope['$attackDisadvantage']){
+      name += ' (Disadvantage)';
+    }
+
     log.content.push({
       name,
-      value: `1d20 {${value}} + ${prop.attackRoll.value} = ` + result,
+      value: `${resultPrefix} **${result}**`,
     });
     if ((result > armor) || (criticalHit)){
       scope['$attackHit'] = true;
@@ -118,10 +114,60 @@ function applyAttackToTarget({prop, target, scope, log}){
       value:'Target has no `armor`',
     });
     log.content.push({
-      name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical miss!' : 'To Hit',
-      value: `1d20 {${value}} + ${prop.attackRoll.value} = ` + result,
+      name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit',
+      value: `${resultPrefix} **${result}**`,
     });
   }
+}
+
+function rollAttack(attack, scope){
+  let value, resultPrefix;
+  if (attack.advantage === 1 || scope['$attackAdvantage']){
+    const [a, b] = rollDice(2, 20);
+    if (a >= b) {
+      value = a;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] + ${attack.value} = `;
+    } else {
+      value = b;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] + ${attack.value} = `;
+    }
+  } else if (attack.advantage === -1 || scope['$attackDisadvantage']){
+    const [a, b] = rollDice(2, 20);
+    if (a <= b) {
+      value = a;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] + ${attack.value} = `;
+    } else {
+      value = b;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] + ${attack.value} = `;
+    }
+  } else {
+    value = rollDice(1, 20)[0];
+    resultPrefix = `1d20 [${value}] + ${attack.value} = `
+  }
+  scope['$attackRoll'] = {value};
+  const result = value + attack.value;
+  const {criticalHit, criticalMiss} = applyCrits(value, scope);
+  return {resultPrefix, result, value, criticalHit, criticalMiss};
+}
+
+function applyCrits(value, scope){
+  let criticalHitTarget = scope.criticalHitTarget?.value || 20;
+  let criticalHit = value >= criticalHitTarget;
+  let criticalMiss;
+  if (criticalHit){
+    scope['$criticalHit'] = {value: true};
+    scope['$attackHit'] = {value: true};
+  } else {
+    criticalMiss = value === 1;
+    if (criticalMiss){
+      scope['$criticalMiss'] = 1;
+      scope['$attackMiss'] = {value: true};
+    } else {
+      // Untargeted attacks hit by default
+      scope['$attackHit'] = {value: true}
+    }
+  }
+  return {criticalHit, criticalMiss};
 }
 
 function applyChildren(node, args){
