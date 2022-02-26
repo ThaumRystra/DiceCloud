@@ -88,16 +88,16 @@ export default function applyDamage(node, {
       // Log the damage done
       if (target._id === creature._id){
         // Target is same as self, log damage as such
-        logValue.push(damageDealt + suffix + ' to self');
+        logValue.push(`**${damageDealt}** ${suffix}  to self`);
       } else {
-        logValue.push('Dealt ' + damageDealt + suffix + ` ${target.name && ' to '}${target.name}`);
+        logValue.push(`Dealt **${damageDealt}** ${suffix} ${target.name && ' to '}${target.name}`);
         // Log the damage received on that creature's log as well
         insertCreatureLog.call({
           log: {
             creatureId: target._id,
             content: [{
               name,
-              value: 'Recieved ' + damageDealt + suffix,
+              value: `Recieved **${damageDealt}** ${suffix}`,
             }],
           }
         });
@@ -105,7 +105,7 @@ export default function applyDamage(node, {
     });
   } else {
     // There are no targets, just log the result
-    logValue.push(damage + suffix);
+    logValue.push(`**${damage}** ${suffix}`);
   }
   log.content.push({
     name: logName,

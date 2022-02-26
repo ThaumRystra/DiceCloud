@@ -1,6 +1,6 @@
 <template lang="html">
   <v-list-item
-    class="skill-list-tile"
+    class="skill-list-tile pl-0"
     style="min-height: 36px;"
     v-on="hasClickListener ? {click} : {}"
   >
@@ -9,15 +9,18 @@
         <roll-popup
           v-if="!hideModifier"
           class="prof-mod mr-1"
-          button-class="px-2"
+          button-class="pl-3 pr-2"
           text
           :roll-text="displayedModifier"
           :name="model.name"
           :advantage="model.advantage"
+          :loading="checkLoading"
+          :disabled="!context.editPermission"
+          @roll="check"
         >
           <proficiency-icon
             :value="model.proficiency"
-            class="prof-icon mr-2"
+            class="prof-icon"
           />
           <div class="prof-mod">
             {{ displayedModifier }}
@@ -35,6 +38,11 @@
             mdi-chevron-double-down
           </v-icon>
         </roll-popup>
+        <proficiency-icon
+          v-else
+          :value="model.proficiency"
+          class="prof-icon ml-3 mr-2"
+        />
         <div>
           {{ model.name }}
           <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
@@ -53,11 +61,18 @@
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import ProficiencyIcon from '/imports/ui/properties/shared/ProficiencyIcon.vue';
 import RollPopup from '/imports/ui/components/RollPopup.vue';
+import doCheck from '/imports/api/engine/actions/doCheck.js';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
     ProficiencyIcon,
     RollPopup,
+  },
+  inject: {
+    context: {
+      default: {},
+    },
   },
 	props: {
     model: {
@@ -66,6 +81,9 @@ export default {
     },
     hideModifier: Boolean,
 	},
+  data(){return {
+    checkLoading: false,
+  }},
 	computed: {
 		displayedModifier(){
 			let mod = this.model.value;
@@ -86,6 +104,21 @@ export default {
 		click(e){
 			this.$emit('click', e);
 		},
+    check({advantage}){
+      this.checkLoading = true;
+      doCheck.call({
+        propId: this.model._id,
+        scope: {
+          $checkAdvantage: advantage,
+        },
+      }, error => {
+        this.checkLoading = false;
+        if (error){
+          console.error(error);
+          snackbar({text: error.reason});
+        }
+      });
+    },
 	}
 }
 </script>
@@ -97,4 +130,7 @@ export default {
 	.prof-mod {
     min-width: 32px;
 	}
+  .v-icon.theme--light {
+    color: rgba(0, 0, 0, 0.54) !important;
+  }
 </style>

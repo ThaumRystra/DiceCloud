@@ -1,32 +1,46 @@
 <template lang="html">
   <v-list-item
-    class="ability-list-tile"
+    class="ability-list-tile pl-0"
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-action
-      class="mr-4"
+      class="ma-0"
       style="min-width: 40px;"
     >
-      <div class="text-h4 mod">
-        <template v-if="swapScoresAndMods">
-          <span :class="{'primary--text': model.total !== model.value}">
-            {{ model.value }}
-          </span>
-        </template>
-        <template v-else>
-          {{ numberToSignedString(model.modifier) }}
-        </template>
-      </div>
-      <div class="text-h6 value">
-        <template v-if="swapScoresAndMods">
-          {{ numberToSignedString(model.modifier) }}
-        </template>
-        <template v-else>
-          <span :class="{'primary--text': model.total !== model.value}">
-            {{ model.value }}
-          </span>
-        </template>
-      </div>
+      <roll-popup
+        button-class="mr-4 py-2"
+        text
+        height="82"
+        :roll-text="numberToSignedString(model.modifier)"
+        :name="model.name"
+        :advantage="model.advantage"
+        :loading="checkLoading"
+        :disabled="!context.editPermission"
+        @roll="check"
+      >
+        <div>
+          <div class="text-h4 mod">
+            <template v-if="swapScoresAndMods">
+              <span :class="{'primary--text': model.total !== model.value}">
+                {{ model.value }}
+              </span>
+            </template>
+            <template v-else>
+              {{ numberToSignedString(model.modifier) }}
+            </template>
+          </div>
+          <div class="text-h6 value">
+            <template v-if="swapScoresAndMods">
+              {{ numberToSignedString(model.modifier) }}
+            </template>
+            <template v-else>
+              <span :class="{'primary--text': model.total !== model.value}">
+                {{ model.value }}
+              </span>
+            </template>
+          </div>
+        </div>
+      </roll-popup>
     </v-list-item-action>
 
     <v-list-item-content>
@@ -39,10 +53,25 @@
 
 <script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import RollPopup from '/imports/ui/components/RollPopup.vue';
+import doCheck from '/imports/api/engine/actions/doCheck.js';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+
 export default {
+  components: {
+    RollPopup,
+  },
+  inject: {
+    context: {
+      default: {},
+    },
+  },
 	props: {
 		model: {type: Object, required: true},
 	},
+  data(){return {
+    checkLoading: false,
+  }},
 	computed: {
 		hasClickListener(){
       return this.$listeners && this.$listeners.click
@@ -53,6 +82,21 @@ export default {
 		click(e){
 			this.$emit('click', e);
 		},
+    check({advantage}){
+      this.checkLoading = true;
+      doCheck.call({
+        propId: this.model._id,
+        scope: {
+          $checkAdvantage: advantage,
+        },
+      }, error => {
+        this.checkLoading = false;
+        if (error){
+          console.error(error);
+          snackbar({text: error.reason});
+        }
+      });
+    },
 	},
   meteor: {
     swapScoresAndMods(){
@@ -86,5 +130,6 @@ export default {
 	.mod, .value {
 		text-align: center;
 		width: 100%;
+    min-width: 42px;
 	}
 </style>

@@ -27,6 +27,7 @@ const doAction = new ValidatedMethod({
     scope: {
       type: Object,
       blackbox: true,
+      optional: true,
     },
   }).validator(),
   mixins: [RateLimiterMixin],

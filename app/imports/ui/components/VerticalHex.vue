@@ -16,7 +16,10 @@
       <path
         d="M 249.801 51.001 L 71.808 153.637 L 71.477 359.513 L 250.131 462.148 L 428.125 359.513 L 428.455 153.637 L 249.801 51.001 Z"
         fill-opacity="1"
-        :fill="hover ? 'rgb(80, 80, 80)' : 'rgb(40, 40, 40)'"
+        :fill="theme.isDark ?
+          hover ? 'rgb(80, 80, 80)' : 'rgb(40, 40, 40)':
+          hover ? 'rgb(180, 180, 180)' : 'rgb(220, 220, 220)'
+        "
       />
     </svg>
     <div
@@ -34,6 +37,13 @@
 
 <script lang="js">
   export default {
+    inject: {
+      theme: {
+        default: {
+          isDark: false,
+        },
+      },
+    },
     props: {
       height: {
         type: Number,

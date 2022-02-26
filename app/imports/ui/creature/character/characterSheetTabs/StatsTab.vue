@@ -399,6 +399,9 @@
         required: true,
       },
 		},
+    data(){return {
+      doCheckLoading: false,
+    }},
 		meteor: {
       creature(){
         return Creatures.findOne(this.creatureId);

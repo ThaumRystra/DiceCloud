@@ -35,7 +35,7 @@
             origin="center center"
           >
             <vertical-hex
-              v-if="dataAdvantage !== undefined"
+              v-if="dataAdvantage"
               style="position:absolute; transition: margin-left 0.3s ease;"
               :style="{marginLeft: dataAdvantage == 1 ? '24px' : '-24px'}"
               disable-hover

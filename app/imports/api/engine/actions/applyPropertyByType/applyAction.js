@@ -5,6 +5,7 @@ import applyProperty from '../applyProperty.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 export default function applyAction(node, {creature, targets, scope, log}){
   const prop = node.node;
@@ -59,9 +60,9 @@ function applyAttackWithoutTarget({attack, scope, log}){
     criticalMiss,
   } = rollAttack(attack, scope);
   let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
-  if (attack.advantage === 1 || scope['$attackAdvantage']){
+  if (scope['$attackAdvantage'] === 1){
     name += ' (Advantage)';
-  } else if(attack.advantage === -1 || scope['$attackDisadvantage']){
+  } else if(scope['$attackAdvantage'] === -1){
     name += ' (Disadvantage)';
   }
   log.content.push({
@@ -93,9 +94,9 @@ function applyAttackToTarget({attack, target, scope, log}){
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
       result > armor ? 'Hit!' : 'Miss!';
-    if (attack.advantage === 1 || scope['$attackAdvantage']){
+    if (scope['$attackAdvantage'] === 1){
       name += ' (Advantage)';
-    } else if(attack.advantage === -1 || scope['$attackDisadvantage']){
+    } else if(scope['$attackAdvantage'] === -1){
       name += ' (Disadvantage)';
     }
 
@@ -121,28 +122,29 @@ function applyAttackToTarget({attack, target, scope, log}){
 }
 
 function rollAttack(attack, scope){
+  const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
   if (attack.advantage === 1 || scope['$attackAdvantage']){
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
       value = a;
-      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] + ${attack.value} = `;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
     } else {
       value = b;
-      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] + ${attack.value} = `;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
     }
   } else if (attack.advantage === -1 || scope['$attackDisadvantage']){
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
-      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] + ${attack.value} = `;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
     } else {
       value = b;
-      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] + ${attack.value} = `;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
     }
   } else {
     value = rollDice(1, 20)[0];
-    resultPrefix = `1d20 [${value}] + ${attack.value} = `
+    resultPrefix = `1d20 [${value}] ${rollModifierText} = `
   }
   scope['$attackRoll'] = {value};
   const result = value + attack.value;

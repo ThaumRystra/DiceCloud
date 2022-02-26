@@ -1,10 +1,10 @@
-export default function numberToSignedString(number){
+export default function numberToSignedString(number, spaced){
   if (typeof number !== 'number') return number;
   if (number === 0){
-    return '+0';
+    return spaced ? '+ 0' : '+0';
   } else if (number > 0){
-    return `+${number}`;
+    return spaced ? `+ ${number}` : `+${number}`;
   } else {
-    return `${number}`;
+    return spaced ? `- ${Math.abs(number) || number}` : `${number}`;
   }
 }

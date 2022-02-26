@@ -106,6 +106,7 @@ import ItemConsumedView from '/imports/ui/properties/components/actions/ItemCons
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import RollPopup from '/imports/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -170,13 +171,13 @@ export default {
       doAction.call({
         actionId: this.model._id,
         scope: {
-          $attackAdvantage: advantage === 1 || undefined,
-          $attackDisadvantage: advantage === -1 || undefined,
+          $attackAdvantage: advantage,
         }
       }, error => {
         this.doActionLoading = false;
         if (error){
           console.error(error);
+          snackbar({text: error.reason});
         }
       });
     },
