@@ -5,7 +5,30 @@
   >
     <div class="layout align-center px-3">
       <div class="avatar">
+        <roll-popup
+          v-if="rollBonus"
+          icon
+          outlined
+          style="font-size: 16px; letter-spacing: normal;"
+          class="mr-2"
+          :color="model.color || 'primary'"
+          :loading="doActionLoading"
+          :disabled="model.insufficientResources || !context.editPermission"
+          :roll-text="rollBonus"
+          :name="model.name"
+          :advantage="model.attackRoll && model.attackRoll.advantage"
+          @roll="doAction"
+        >
+          <template v-if="rollBonus && !rollBonusTooLong">
+            {{ rollBonus }}
+          </template>
+          <property-icon
+            v-else
+            :model="model"
+          />
+        </roll-popup>
         <v-btn
+          v-else
           icon
           outlined
           style="font-size: 16px; letter-spacing: normal;"
@@ -15,11 +38,7 @@
           :disabled="model.insufficientResources || !context.editPermission"
           @click.stop="doAction"
         >
-          <template v-if="rollBonus && !rollBonusTooLong">
-            {{ rollBonus }}
-          </template>
           <property-icon
-            v-else
             :model="model"
           />
         </v-btn>
@@ -85,7 +104,9 @@ import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
+import RollPopup from '/imports/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -93,6 +114,7 @@ export default {
     ItemConsumedView,
     MarkdownText,
     PropertyIcon,
+    RollPopup,
   },
   inject: {
     context: {
@@ -131,7 +153,7 @@ export default {
         'theme--dark': this.theme.isDark,
         'theme--light': !this.theme.isDark,
         'muted-text': this.model.insufficientResources,
-        'shrink': this.activated,
+        'active': this.activated,
         'elevation-8': this.hovering,
       }
     },
@@ -143,13 +165,19 @@ export default {
     click(e){
 			this.$emit('click', e);
 		},
-    doAction(){
+    doAction({advantage}){
       this.doActionLoading = true;
       this.shwing();
-      doAction.call({actionId: this.model._id}, error => {
+      doAction.call({
+        actionId: this.model._id,
+        scope: {
+          $attackAdvantage: advantage,
+        }
+      }, error => {
         this.doActionLoading = false;
         if (error){
           console.error(error);
+          snackbar({text: error.reason});
         }
       });
     },
@@ -157,7 +185,7 @@ export default {
       this.activated = true;
       setTimeout(() => {
         this.activated = undefined;
-      }, 300);
+      }, 150);
     }
   }
 }
@@ -165,7 +193,11 @@ export default {
 
 <style lang="css" scoped>
 .action-card {
-  transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.075s ease;
+}
+.action-card.active {
+  transform: scale(0.92);
 }
 .action-title {
   font-size: 16px;

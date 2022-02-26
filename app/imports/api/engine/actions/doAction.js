@@ -24,13 +24,18 @@ const doAction = new ValidatedMethod({
       type: String,
       regEx: SimpleSchema.RegEx.Id,
     },
+    scope: {
+      type: Object,
+      blackbox: true,
+      optional: true,
+    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({actionId, targetIds = []}) {
+  run({actionId, targetIds = [], scope}) {
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
     let creature = getRootCreatureAncestor(action);
@@ -69,7 +74,7 @@ const doAction = new ValidatedMethod({
     });
 
     // Do the action
-    doActionWork({creature, targets, properties, ancestors, method: this});
+    doActionWork({creature, targets, properties, ancestors, method: this, methodScope: scope});
 
     // Recompute all involved creatures
     computeCreature(creature._id);
@@ -82,7 +87,7 @@ const doAction = new ValidatedMethod({
 export default doAction;
 
 export function doActionWork({
-  creature, targets, properties, ancestors, method
+  creature, targets, properties, ancestors, method, methodScope = {}
 }){
   // get the docs
   const ancestorScope = getAncestorScope(ancestors);
@@ -102,6 +107,7 @@ export function doActionWork({
   const scope = {
     ...creature.variables,
     ...ancestorScope,
+    ...methodScope
   }
   applyProperty(propertyForest[0], {
     creature,

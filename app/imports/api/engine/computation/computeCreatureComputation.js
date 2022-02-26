@@ -1,6 +1,7 @@
 import computeToggles from '/imports/api/engine/computation/computeComputation/computeToggles.js';
 import computeByType from '/imports/api/engine/computation/computeComputation/computeByType.js';
 import embedInlineCalculations from './utility/embedInlineCalculations.js';
+import path from 'ngraph.path';
 
 export default function computeCreatureComputation(computation){
   const stack = [];
@@ -12,6 +13,12 @@ export default function computeCreatureComputation(computation){
     node._visitedChildren = false;
     stack.push(node)
   });
+
+  // The graph nodes in the stack are ordered, by reversing the order we
+  // compute higher nodes in the tree first, which for dep loops is more likely
+  // to be a good guess of where to start thant the inverse
+  stack.reverse();
+
   // Depth first traversal of nodes
   while (stack.length){
     let top = stack[stack.length - 1];
@@ -27,7 +34,7 @@ export default function computeCreatureComputation(computation){
     } else {
       top._visitedChildren = true;
       // Push dependencies to graph to be computed first
-      pushDependenciesToStack(top.id, graph, stack);
+      pushDependenciesToStack(top.id, graph, stack, computation);
     }
   }
 
@@ -42,8 +49,20 @@ function compute(computation, node){
   computeByType[node.data?.type || '_variable']?.(computation, node);
 }
 
-function pushDependenciesToStack(nodeId, graph, stack){
+function pushDependenciesToStack(nodeId, graph, stack, computation){
   graph.forEachLinkedNode(nodeId, linkedNode => {
+    if (linkedNode._visitedChildren && !linkedNode._visited){
+      const pather = path.nba(graph, {
+        oriented: true
+      });
+      const loop = pather.find(nodeId, nodeId);
+      computation.errors.push({
+        type: 'dependencyLoop',
+        details: {
+          nodes: loop.map(node => node.id)
+        },
+      });
+    }
     stack.push(linkedNode);
   }, true);
 }

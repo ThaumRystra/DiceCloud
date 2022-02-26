@@ -9,6 +9,7 @@ import '/imports/server/publications/index.js';
 import '/imports/server/cron/deleteSoftRemovedDocuments.js';
 import '/imports/api/parenting/organizeMethods.js';
 import '/imports/api/users/patreon/updatePatreonOnLogin.js';
+import '/imports/api/engine/actions/doCheck.js';
 import '/imports/migrations/server/index.js';
 import '/imports/migrations/methods/index.js'
 import '/imports/constants/MAINTENANCE_MODE.js';

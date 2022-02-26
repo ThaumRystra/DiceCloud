@@ -16,7 +16,7 @@ const rollArray = {
     };
   },
   toString(node){
-    return `${node.diceNum || ''}d${node.diceSize} [${node.values.join(', ')}]`;
+    return `${node.diceNum || ''}d${node.diceSize} [ ${node.values.join(', ')} ]`;
   },
   reduce(node, scope, context){
     const total = node.values.reduce((a, b) => a + b, 0);

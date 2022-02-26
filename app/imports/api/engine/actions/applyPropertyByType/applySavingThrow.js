@@ -1,6 +1,7 @@
 import rollDice from '/imports/parser/rollDice.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
 export default function applySavingThrow(node, {creature, targets, scope, log}){
   const prop = node.node;
@@ -46,19 +47,31 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
       return applyChildren();
     }
 
+    const rollModifierText = numberToSignedString(save.value, true);
+
     let value, values, resultPrefix;
     if (save.advantage === 1){
-      values = rollDice(2, 20).sort().reverse();
-      value = values[0];
-      resultPrefix = `Advantage: 1d20 [${values[0]},~~${values[1]}~~] + ${save.value} = `
+      const [a, b] = rollDice(2, 20);
+      if (a >= b) {
+        value = a;
+        resultPrefix = `Advantage: 1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+      } else {
+        value = b;
+        resultPrefix = `Advantage: 1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+      }
     } else if (save.advantage === -1){
-      values = rollDice(2, 20).sort();
-      value = values[0];
-      resultPrefix = `Disadvantage: 1d20 [${values[0]},~~${values[1]}~~] + ${save.value} = `
+      const [a, b] = rollDice(2, 20);
+      if (a <= b) {
+        value = a;
+        resultPrefix = `Disadvantage: 1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+      } else {
+        value = b;
+        resultPrefix = `Disadvantage: 1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+      }
     } else {
       values = rollDice(1, 20);
       value = values[0];
-      resultPrefix = `1d20 [${value}] + ${save.value} = `
+      resultPrefix = `1d20 [ ${value} ] ${rollModifierText} = `
     }
     scope['$saveDiceRoll'] = {value};
     const result = value + save.value || 0;

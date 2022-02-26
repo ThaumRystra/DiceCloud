@@ -42,6 +42,11 @@
         name="Skill type"
         :value="skillTypes[model.skillType]"
       />
+      <property-field
+        v-if="'passiveBonus' in model"
+        name="Passive score"
+        :value="passiveScore"
+      />
     </v-row>
     <v-row dense>
       <property-description
@@ -164,6 +169,9 @@ export default {
     icon(){
       return getProficiencyIcon(this.model.proficiency);
 		},
+    passiveScore(){
+      return 10 + this.model.value + this.model.passiveBonus;
+    }
   },
   methods: {
     numberToSignedString,
@@ -207,6 +215,7 @@ export default {
           stats: this.model.variableName,
           type: 'effect',
           removed: {$ne: true},
+          inactive: {$ne: true},
         }).fetch();
       } else {
         return [];
