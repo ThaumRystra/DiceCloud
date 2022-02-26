@@ -13,6 +13,12 @@ export default function computeCreatureComputation(computation){
     node._visitedChildren = false;
     stack.push(node)
   });
+
+  // The graph nodes in the stack are ordered, by reversing the order we
+  // compute higher nodes in the tree first, which for dep loops is more likely
+  // to be a good guess of where to start thant the inverse
+  stack.reverse();
+
   // Depth first traversal of nodes
   while (stack.length){
     let top = stack[stack.length - 1];
