@@ -120,6 +120,20 @@ let CreatureSchema = new SimpleSchema({
 		blackbox: true,
 		defaultValue: {}
 	},
+  computeErrors: {
+    type: Array,
+    optional: true,
+  },
+  'computeErrors.$': {
+    type: Object,
+  },
+  'computeErrors.$.type': {
+    type: String,
+  },
+  'computeErrors.$.details' : {
+    type: Object,
+    blackbox: true,
+  },
 
   // Tabletop
   tabletop: {

@@ -4,7 +4,7 @@
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-content>
-      <v-list-item-title>
+      <v-list-item-title v-if="Number.isFinite(model.total)">
         <div
           v-if="model.total > 4"
           class="layout value"
@@ -35,6 +35,11 @@
             }}
           </v-icon>
         </div>
+      </v-list-item-title>
+      <v-list-item-title v-else>
+        <code>
+          {{model.total}}
+        </code>
       </v-list-item-title>
       <v-list-item-subtitle>
         {{ model.name }}

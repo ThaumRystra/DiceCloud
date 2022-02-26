@@ -10,6 +10,7 @@ export default class CreatureComputation {
     this.scope = {};
     this.props =  properties;
     this.dependencyGraph = createGraph();
+    this.errors = [];
 
     // Store properties for easy access later
     properties.forEach(prop => {
