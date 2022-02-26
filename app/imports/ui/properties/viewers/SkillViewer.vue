@@ -215,6 +215,7 @@ export default {
           stats: this.model.variableName,
           type: 'effect',
           removed: {$ne: true},
+          inactive: {$ne: true},
         }).fetch();
       } else {
         return [];
