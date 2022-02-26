@@ -3,7 +3,7 @@ import recalculateCalculation from './recalculateCalculation.js'
 
 export default function recalculateInlineCalculations(inlineCalcObj, scope, log){
   // Skip if there are no calculations
-  if (!inlineCalcObj?.calculations?.length) return;
+  if (!inlineCalcObj?.inlineCalculations?.length) return;
   // Recalculate each calculation with the current scope
   inlineCalcObj.inlineCalculations.forEach(calc => {
     recalculateCalculation(calc, scope, log);

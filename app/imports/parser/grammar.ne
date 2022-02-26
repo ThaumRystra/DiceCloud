@@ -11,7 +11,7 @@
       value: s => s.slice(1, -1),
     },
     name: {
-      match: /[a-zA-Z_#]*[a-ce-zA-Z_#][a-zA-Z0-9_#]*/,
+      match: /[a-zA-Z_#$]*[a-ce-zA-Z_#$][a-zA-Z0-9_#$]*/,
       type: moo.keywords({
         'keywords': ['true', 'false'],
       }),
@@ -138,10 +138,13 @@ parenthesizedExpression ->
 | accessorExpression {% id %}
 
 accessorExpression ->
-  (%name {% d => d[0].value %}) ( "." %name {% d => d[1].value %} ):+ {%
+  (%name {% d => d[0].value %}) ( "." keyExpression {% d => d[1] %} ):+ {%
     d=> node.accessor.create({name: d[0], path: d[1]})
   %}
 | valueExpression {% id %}
+
+keyExpression -> name {% d => d[0].name %}
+| number {% d => d[0].value %}
 
 valueExpression ->
   name {% id %}
