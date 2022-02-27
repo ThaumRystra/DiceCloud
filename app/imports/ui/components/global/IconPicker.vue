@@ -8,21 +8,22 @@
   >
     <template #activator="{ on }">
       <div class="layout align-center">
-        <v-label>{{ label }}</v-label>
         <v-btn
           :loading="loading"
-          large
-          icon
+          outlined
+          :min-width="108"
           v-on="on"
         >
+          {{ label }}
           <svg-icon
             v-if="safeValue && safeValue.shape"
-            large
+            right
+            class="ml-2"
             :shape="safeValue.shape"
           />
           <v-icon
             v-else
-            large
+            right
           >
             mdi-select-search
           </v-icon>

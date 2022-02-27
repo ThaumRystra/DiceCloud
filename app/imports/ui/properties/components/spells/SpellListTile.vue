@@ -1,6 +1,8 @@
 <template lang="html">
   <v-list-item
     class="spell"
+    v-bind="$attrs"
+    :disabled="disabled"
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-avatar class="spell-avatar">
@@ -8,6 +10,7 @@
         class="mr-2"
         :model="model"
         :color="model.color"
+        :disabled="disabled"
       />
     </v-list-item-avatar>
     <v-list-item-content>
@@ -38,6 +41,7 @@
         v-else-if="showInfoButton"
         icon
         class="info-icon"
+        :disabled="disabled"
         :data-id="`spell-info-btn-${model._id}`"
         @click.stop="$emit('show-info')"
       >
@@ -53,13 +57,14 @@ import updateCreatureProperty from '/imports/api/creature/creatureProperties/met
 
 export default {
   mixins: [treeNodeViewMixin],
+  inject: {
+    context: { default: {} }
+  },
   props: {
     preparingSpells: Boolean,
     hideHandle: Boolean,
     showInfoButton: Boolean,
-  },
-  inject: {
-    context: { default: {} }
+    disabled: Boolean,
   },
   computed: {
     hasClickListener(){

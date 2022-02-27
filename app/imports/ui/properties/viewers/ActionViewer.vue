@@ -5,13 +5,14 @@
     >
       <property-field
         v-if="context.creatureId"
-        name="Apply action"
+        :name="model.type === 'spell'? 'Cast spell' : 'Apply action'"
         center
       >
         <v-btn
           outlined
           style="font-size: 18px;"
           class="ma-2"
+          data-id="do-action-button"
           :color="model.color || 'primary'"
           icon
           :loading="doActionLoading"
@@ -109,12 +110,13 @@
 
 <script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
-import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -173,13 +175,33 @@ export default {
   },
   methods: {
     doAction(){
-      this.doActionLoading = true;
-      doAction.call({actionId: this.model._id}, error => {
-        this.doActionLoading = false;
-        if (error){
-          console.error(error);
-        }
-      });
+      if (this.model.type === 'action'){
+        this.doActionLoading = true;
+        doAction.call({actionId: this.model._id}, error => {
+          this.doActionLoading = false;
+          if (error){
+            snackbar({text: error.reason});
+            console.error(error);
+          }
+        });
+      } else if (this.model.type === 'spell') {
+        this.$store.commit('pushDialogStack', {
+					component: 'cast-spell-with-slot-dialog',
+					elementId: 'do-action-button',
+					data: {
+            creatureId: this.context.creatureId,
+            spellId: this.model._id,
+          },
+          callback({spellId, slotId} = {}){
+            if (!spellId) return;
+            doCastSpell.call({spellId, slotId}, error => {
+              if (!error) return;
+              snackbar({text: error.reason});
+              console.error(error);
+            });
+          },
+				});
+      }
     },
     resetUses(){
       updateCreatureProperty.call({

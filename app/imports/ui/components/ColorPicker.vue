@@ -7,10 +7,15 @@
   >
     <template #activator="{ on }">
       <v-btn
-        icon
+        :outlined="!!label"
+        :icon="!label"
+        :min-width="label && 108"
         v-on="on"
       >
-        <v-icon>mdi-format-paint</v-icon>
+        {{ label }}
+        <v-icon :right="!!label">
+          mdi-format-paint
+        </v-icon>
       </v-btn>
     </template>
     <v-card class="overflow-hidden">
@@ -122,6 +127,10 @@
         type: String,
         default: undefined,
       },
+      label: {
+        type: String,
+        default: undefined,
+      }
     },
     data(){ return {
       colors: [

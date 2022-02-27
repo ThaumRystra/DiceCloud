@@ -4,7 +4,7 @@
       justify="center"
       class="mb-3"
     >
-      <v-col cols="1">
+      <v-col cols="12">
         <icon-color-menu
           :model="model"
           :errors="errors"

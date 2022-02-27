@@ -73,27 +73,35 @@
         >
           Slot
         </div>
-        <v-list-item
-          v-if="!(selectedSpell && selectedSpell.level > 0)"
-          key="cantrip-dummy-slot"
-          class="spell-slot-list-tile"
-          :class="{ 'primary--text': selectedSlotId === undefined}"
-          @click="selectedSlotId = undefined"
+        <v-list-item-group
+          key="slot-list"
+          v-model="selectedSlotId"
         >
-          <v-list-item-content>
-            <v-list-item-title class="text-h6">
-              Cantrip
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <spell-slot-list-tile
-          v-for="spellSlot in spellSlots"
-          :key="spellSlot._id"
-          :model="spellSlot"
-          :class="{ 'primary--text': selectedSlotId === spellSlot._id }"
-          hide-cast-button
-          @click="selectedSlotId = spellSlot._id"
-        />
+          <v-list-item
+            key="cantrip-dummy-slot"
+            class="spell-slot-list-tile"
+            :class="{ 'primary--text': selectedSlotId === 'no-slot' }"
+            value="no-slot"
+            :disabled="!canCastSpellWithSlot(selectedSpell, 'no-slot')"
+            @click="selectedSlotId = 'no-slot'"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                Cast without spell slot
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <spell-slot-list-tile
+            v-for="spellSlot in spellSlots"
+            :key="spellSlot._id"
+            :model="spellSlot"
+            :class="{ 'primary--text': selectedSlotId === spellSlot._id }"
+            :value="spellSlot._id"
+            :disabled="!canCastSpellWithSlot(selectedSpell, spellSlot._id, spellSlot)"
+            hide-cast-button
+            @click="selectedSlotId = spellSlot._id"
+          />
+        </v-list-item-group>
       </template>
       <template slot="right">
         <div
@@ -102,25 +110,31 @@
         >
           Spell
         </div>
-        <template v-for="spell in computedSpells">
-          <v-subheader
-            v-if="spell.isSubheader"
-            :key="`${spell.level}-header`"
-            class="item"
-          >
-            {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
-          </v-subheader>
-          <spell-list-tile
-            v-else
-            :key="spell._id"
-            hide-handle
-            show-info-button
-            :class="{ 'primary--text': selectedSpellId === spell._id}"
-            :model="spell"
-            @click="selectedSpellId = spell._id"
-            @show-info="spellDialog(spell._id)"
-          />
-        </template>
+        <v-list-item-group
+          key="slot-list"
+          v-model="selectedSpellId"
+        >
+          <template v-for="spell in computedSpells">
+            <v-subheader
+              v-if="spell.isSubheader"
+              :key="`${spell.level}-header`"
+              class="item"
+            >
+              {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+            </v-subheader>
+            <spell-list-tile
+              v-else
+              :key="spell._id"
+              hide-handle
+              show-info-button
+              :model="spell"
+              :value="spell._id"
+              :class="{ 'primary--text': selectedSpellId === spell._id }"
+              :disabled="!canCastSpellWithSlot(spell, selectedSlotId, selectedSlot)"
+              @show-info="spellDialog(spell._id)"
+            />
+          </template>
+        </v-list-item-group>
       </template>
     </split-list-layout>
     <template slot="actions">
@@ -135,10 +149,7 @@
         text
         :disabled="!canCast"
         class="primary--text"
-        @click="$store.dispatch('popDialogStack', {
-          spellId: selectedSpellId,
-          slotId: selectedSlotId,
-        })"
+        @click="cast"
       >
         Cast
       </v-btn>
@@ -153,6 +164,16 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import spellsWithSubheaders from '/imports/ui/properties/components/spells/spellsWithSubheaders.js';
 import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import { find } from 'lodash';
+
+const slotFilter = {
+  type: 'attribute',
+  attributeType: 'spellSlot',
+  removed: {$ne: true},
+  inactive: {$ne: true},
+  overridden: {$ne: true},
+  'spellSlotLevel.value': {$gte: 1},
+};
 
 export default {
   components: {
@@ -179,6 +200,8 @@ export default {
     searchString: undefined,
     selectedSlotId: this.slotId,
     selectedSpellId: this.spellId,
+    selectedSlot: undefined,
+    selectedSpell: undefined,
     searchValue: undefined,
     searchError: undefined,
     filterMenuOpen: false,
@@ -195,16 +218,10 @@ export default {
       return spellsWithSubheaders(this.spells);
     },
     canCast(){
-      let spell = this.selectedSpell;
-      let slot = this.selectedSlot;
-      if (!spell) return false;
-      if (spell.level === 0){
-        return this.selectedSlotId === undefined;
-      } else if (!slot) {
-        return false
-      } else {
-        return slot.spellSlotLevelValue >= spell.level;
-      }
+      if (!this.selectedSpell || !this.selectedSlotId) return false;
+      return this.canCastSpellWithSlot(
+        this.selectedSpell, this.selectedSlotId, this.selectedSlot
+      );
     },
     filtersApplied(){
       for (let key in this.booleanFilters){
@@ -216,19 +233,61 @@ export default {
     },
   },
   watch: {
-    selectedSpell(spell){
-      if (!spell) return;
-      if(spell.level === 0){
-        this.selectedSlotId = undefined;
-      }
+    selectedSpellId: {
+      handler(spellId){
+        this.selectedSpell = CreatureProperties.findOne(spellId)
+      },
+      immediate: true
     },
-    selectedSlot(slot){
-      if (!slot) return;
-      if (!this.selectedSpell) return;
-      if(slot.spellSlotLevelValue > 0 && this.selectedSpell.level === 0){
-        this.selectedSpellId = undefined;
-      }
+    selectedSpell: {
+      handler(spell){
+        if (!spell) return;
+        if(spell.level === 0 || spell.castWithoutSpellSlots){
+          this.selectedSlotId = 'no-slot';
+        } else if (
+          !this.selectedSlotId ||
+          this.selectedSlotId == 'no-slot' ||
+          this.selectedSlot.spellSlotLevel.value < spell.level
+        ) {
+          const newSlot = find(
+            CreatureProperties.find({
+              'ancestors.id': this.creatureId,
+              ...slotFilter
+            }, {
+              sort: {'spellSlotLevel.value': 1, order: 1},
+            }).fetch(),
+            slot => {
+              return this.canCastSpellWithSlot(spell, slot._id, slot)
+            }
+          );
+          if (newSlot){
+            this.selectedSlotId = newSlot._id;
+          }
+        }
+      },
+      immediate: true,
     },
+    selectedSlotId: {
+      handler(slotId){
+        this.selectedSlot = CreatureProperties.findOne(slotId);
+      },
+      immediate: true
+    },
+    selectedSlot:{
+      handler(slot){
+        if (!slot) return;
+        if (!this.selectedSpell) return;
+        if(this.selectedSpell.level > slot.spellSlotLevel.value){
+          this.selectedSpellId = undefined;
+        }
+      },
+      immediate: true,
+    },
+  },
+  mounted(){
+    if (this.selectedSpellId){
+      this.$vuetify.goTo('.spell.v-list-item--active', {container: '.right'});
+    }
   },
   methods: {
     clearBooleanFilters(){
@@ -247,10 +306,36 @@ export default {
       this.searchValue = val;
       setTimeout(ack, 200);
     },
+    canCastSpellWithSlot(spell, slotId, slot){
+      if (slot && !slot.value) return false;
+      if (!spell) return true;
+      if (!slotId) return true;
+      if (
+        spell.castWithoutSpellSlots &&
+        spell.insufficientResources
+      ) return false;
+      return (!spell.level || spell.castWithoutSpellSlots) ? (
+        // Cantrips and no-slot spells
+        slotId && slotId === 'no-slot'
+      ) : (
+        // Leveled spells
+        slotId !== 'no-slot' &&
+        slot && spell && (
+          spell.level <= slot.spellSlotLevel.value
+        )
+      )
+    },
+    cast(){
+      let selectedSlotId = this.selectedSlotId;
+      if (selectedSlotId === 'no-slot') selectedSlotId = undefined;
+      this.$store.dispatch('popDialogStack', {
+        spellId: this.selectedSpellId,
+        slotId: selectedSlotId,
+      })
+    }
   },
   meteor: {
     spells(){
-      let slotLevel = this.selectedSlot && this.selectedSlot.spellSlotLevelValue || 0;
       let filter = {
         'ancestors.id': this.creatureId,
         removed: {$ne: true},
@@ -259,8 +344,8 @@ export default {
           {prepared: true},
           {alwaysPrepared: true},
         ],
-        level: {$lte: slotLevel},
       };
+
       // Apply the filters from the filter menu
       for (let key in this.booleanFilters){
         if (this.booleanFilters[key].enabled){
@@ -284,26 +369,12 @@ export default {
       });
     },
     spellSlots(){
-      let filter = {
+      return CreatureProperties.find({
         'ancestors.id': this.creatureId,
-        type: 'attribute',
-        attributeType: 'spellSlot',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-        currentValue: {$gte: 1},
-      };
-      if (this.selectedSpell){
-        filter.spellSlotLevelValue = {$gte: this.selectedSpell.level};
-      }
-      return CreatureProperties.find(filter, {
-        sort: {order: 1},
+        ...slotFilter
+      }, {
+        sort: {'spellSlotLevel.value': 1, order: 1},
       });
-    },
-    selectedSlot(){
-      return CreatureProperties.findOne(this.selectedSlotId);
-    },
-    selectedSpell(){
-      return CreatureProperties.findOne(this.selectedSpellId);
     },
   },
 }

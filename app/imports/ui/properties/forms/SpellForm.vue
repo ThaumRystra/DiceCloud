@@ -1,5 +1,17 @@
 <template lang="html">
   <div class="spell-form">
+    <v-row
+      justify="center"
+      class="mb-3"
+    >
+      <v-col cols="12">
+        <icon-color-menu
+          :model="model"
+          :errors="errors"
+          @change="e => $emit('change', e)"
+        />
+      </v-col>
+    </v-row>
     <div class="layout wrap justify-space-between">
       <smart-switch
         label="Always prepared"
@@ -17,6 +29,15 @@
         :value="model.prepared"
         :error-messages="errors.prepared"
         @change="change('prepared', ...arguments)"
+      />
+      <smart-switch
+        v-show="model.level"
+        label="Cast without spell slots"
+        style="width: 400px; flex-grow: 0;"
+        class="mx-2"
+        :value="model.castWithoutSpellSlots"
+        :error-messages="errors.castWithoutSpellSlots"
+        @change="change('castWithoutSpellSlots', ...arguments)"
       />
     </div>
     <text-field
@@ -58,6 +79,15 @@
       :value="model.range"
       :error-messages="errors.range"
       @change="change('range', ...arguments)"
+    />
+    <smart-select
+      label="Target"
+      style="flex-basis: 300px;"
+      :items="targetOptions"
+      :value="model.target"
+      :error-messages="errors.target"
+      :menu-props="{auto: true, lazy: true}"
+      @change="change('target', ...arguments)"
     />
     <div class="layout wrap justify-space-between">
       <smart-checkbox
@@ -105,24 +135,70 @@
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
-
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      :error-messages="errors.tags"
-      @change="change('tags', ...arguments)"
-    />
     <form-sections>
+      <form-section name="Resources">
+        <resources-form
+          :model="model.resources"
+          @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
+          @push="({path, value, ack}) => $emit('push', {path: ['resources', ...path], value, ack})"
+          @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
+        />
+      </form-section>
       <form-section
-        name="Casting"
+        v-if="model.level && model.castWithoutSpellSlots"
+        name="Limit Uses"
       >
-        <action-form
-          v-bind="$props"
-          v-on="$listeners"
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <computed-field
+              label="Uses"
+              hint="How many times this action can be used before needing to be reset"
+              class="mr-2"
+              :model="model.uses"
+              :error-messages="errors.uses"
+              @change="({path, value, ack}) =>
+                $emit('change', {path: ['uses', ...path], value, ack})"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <text-field
+              label="Uses used"
+              type="number"
+              hint="How many times this action has already been used: should be 0 in most cases"
+              style="flex-basis: 300px;"
+              :value="model.usesUsed"
+              :error-messages="errors.uses"
+              @change="change('usesUsed', ...arguments)"
+            />
+          </v-col>
+        </v-row>
+        <smart-select
+          label="Reset"
+          clearable
+          hint="When number of uses used should be reset to zero"
+          style="flex-basis: 300px;"
+          :items="resetOptions"
+          :value="model.reset"
+          :error-messages="errors.reset"
+          :menu-props="{auto: true, lazy: true}"
+          @change="change('reset', ...arguments)"
+        />
+      </form-section>
+      <form-section name="Advanced">
+        <smart-combobox
+          label="Tags"
+          multiple
+          chips
+          deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
+          :value="model.tags"
+          @change="change('tags', ...arguments)"
         />
       </form-section>
     </form-sections>
@@ -131,14 +207,16 @@
 
 <script lang="js">
 	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import ActionForm from '/imports/ui/properties/forms/ActionForm.vue'
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
+  import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
 
 	export default {
 		components: {
       FormSections,
 			FormSection,
-      ActionForm,
+      IconColorMenu,
+      ResourcesForm,
 		},
     mixins: [propertyFormMixin],
 		data(){return {
@@ -202,6 +280,27 @@
 					value: 9,
 				},
 			],
+      targetOptions: [
+        {
+          text: 'Self',
+          value: 'self',
+        }, {
+          text: 'Single target',
+          value: 'singleTarget',
+        }, {
+          text: 'Multiple targets',
+          value: 'multipleTargets',
+        },
+      ],
+      resetOptions: [
+        {
+          text: 'Short rest',
+          value: 'shortRest',
+        }, {
+          text: 'Long rest',
+          value: 'longRest',
+        }
+      ],
 		};},
 	};
 </script>

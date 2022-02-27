@@ -1,10 +1,15 @@
 <template lang="html">
   <v-list-item
+    :key="model._id"
     class="spell-slot-list-tile"
+    v-bind="$attrs"
+    :disabled="disabled"
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-content>
-      <v-list-item-title v-if="Number.isFinite(model.total)">
+      <v-list-item-title
+        v-if="Number.isFinite(model.total)"
+      >
         <div
           v-if="model.total > 4"
           class="layout value"
@@ -27,6 +32,7 @@
           <v-icon
             v-for="i in model.total"
             :key="i"
+            :disabled="disabled"
           >
             {{
               i > model.value ?
@@ -38,24 +44,13 @@
       </v-list-item-title>
       <v-list-item-title v-else>
         <code>
-          {{model.total}}
+          {{ model.total }}
         </code>
       </v-list-item-title>
       <v-list-item-subtitle>
         {{ model.name }}
       </v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-avatar v-if="!hideCastButton">
-      <v-btn
-        icon
-        text
-        class="primary--text"
-        :data-id="`spell-slot-cast-btn-${model._id}`"
-        @click.stop="$emit('cast')"
-      >
-        <v-icon>$vuetify.icons.spell</v-icon>
-      </v-btn>
-    </v-list-item-avatar>
   </v-list-item>
 </template>
 
@@ -69,6 +64,7 @@ export default {
     },
     dark: Boolean,
     hideCastButton: Boolean,
+    disabled: Boolean,
 	},
 	computed: {
     hasClickListener(){

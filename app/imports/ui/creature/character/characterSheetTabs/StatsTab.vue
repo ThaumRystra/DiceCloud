@@ -162,11 +162,14 @@
       </div>
 
       <div
-        v-if="spellSlots && spellSlots.length"
+        v-if="spellSlots && spellSlots.length || hasSpells"
         class="spell-slots"
       >
-        <v-card>
+        <v-card
+          data-id="spell-slot-card"
+        >
           <v-list
+            v-if="spellSlots && spellSlots.length"
             two-line
             subheader
           >
@@ -180,6 +183,19 @@
               @cast="castSpellWithSlot(spellSlot._id)"
             />
           </v-list>
+          <div
+            v-if="hasSpells"
+            class="d-flex justify-end"
+          >
+            <v-btn
+              color="accent"
+              style="width: 100%;"
+              outlined
+              @click="castSpell"
+            >
+              Cast a spell
+            </v-btn>
+          </div>
         </v-card>
       </div>
 
@@ -348,7 +364,8 @@
   import RestButton from '/imports/ui/creature/RestButton.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
-  //import castSpellWithSlot from '/imports/api/creature/actions/castSpellWithSlot.js';
+  import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
+  import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
   const getProperties = function(creature, filter){
     if (!creature) return;
@@ -432,6 +449,11 @@
 			spellSlots(){
 				return getAttributeOfType(this.creature, 'spellSlot');
 			},
+      hasSpells(){
+        return getProperties(this.creature, {
+          type: 'spell',
+        }).count();
+      },
 			hitDice(){
         return getAttributeOfType(this.creature, 'hitDice');
 			},
@@ -498,18 +520,19 @@
           if (error) console.error(error);
         });
       },
-      castSpellWithSlot(slotId){
+      castSpell(){
         this.$store.commit('pushDialogStack', {
 					component: 'cast-spell-with-slot-dialog',
-					elementId: `spell-slot-cast-btn-${slotId}`,
+					elementId: 'spell-slot-card',
 					data: {
             creatureId: this.creatureId,
-            slotId,
           },
           callback({spellId, slotId} = {}){
             if (!spellId) return;
-            castSpellWithSlot.call({spellId, slotId}, error => {
-              if (error) console.error(error);
+            doCastSpell.call({spellId, slotId}, error => {
+              if (!error) return;
+              snackbar({text: error.reason});
+              console.error(error);
             });
           },
 				});

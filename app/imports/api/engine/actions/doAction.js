@@ -87,7 +87,7 @@ const doAction = new ValidatedMethod({
 export default doAction;
 
 export function doActionWork({
-  creature, targets, properties, ancestors, method, methodScope = {}
+  creature, targets, properties, ancestors, method, methodScope = {}, log
 }){
   // get the docs
   const ancestorScope = getAncestorScope(ancestors);
@@ -97,7 +97,7 @@ export function doActionWork({
   }
 
   // Create the log
-  let log = CreatureLogSchema.clean({
+  if (!log) log = CreatureLogSchema.clean({
     creatureId: creature._id,
     creatureName: creature.name,
   });

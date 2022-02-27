@@ -3,10 +3,12 @@
     v-if="model.icon"
     :shape="model.icon.shape"
     :color="color"
+    :class="{disabled}"
   />
   <v-icon
     v-else
     :color="color"
+    :class="{disabled}"
   >
     {{ icon }}
   </v-icon>
@@ -25,6 +27,7 @@ export default {
       type: String,
       default: undefined,
     },
+    disabled: Boolean,
 	},
 	computed: {
 		icon(){
@@ -33,3 +36,9 @@ export default {
 	},
 }
 </script>
+
+<style lang="css" scoped>
+  .svg-icon.disabled, .v-icon.disabled {
+    opacity: 0.2;
+  }
+</style>

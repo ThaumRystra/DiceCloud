@@ -1,45 +1,23 @@
 <template lang="html">
-  <v-menu offset-y>
-    <template #activator="{ on, attrs }">
-      <v-badge
-        icon="mdi-pencil"
-        overlap
-      >
-        <v-btn
-          icon
-          :color="model.color"
-          outlined
-          v-bind="attrs"
-          v-on="on"
-        >
-          <property-icon
-            :model="model"
-            :color="model.color"
-          />
-        </v-btn>
-      </v-badge>
-    </template>
-    <v-list>
-      <v-list-item>
-        <v-list-item-title>
-          <icon-picker
-            label="Icon"
-            :value="model.icon"
-            :error-messages="errors.icon"
-            @change="(value, ack) =>$emit('change', {path: ['icon'], value, ack})"
-          />
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-title>
-          <color-picker
-            :value="model.color"
-            @input="value =>$emit('change', {path: ['color'], value})"
-          />
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <div
+    class="d-flex justify-center flex-wrap"
+  >
+    <div class="mx-1">
+      <color-picker
+        label="Color"
+        :value="model.color"
+        @input="value =>$emit('change', {path: ['color'], value})"
+      />
+    </div>
+    <div class="mx-1">
+      <icon-picker
+        label="Icon"
+        :value="model.icon"
+        :error-messages="errors.icon"
+        @change="(value, ack) =>$emit('change', {path: ['icon'], value, ack})"
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="js">
