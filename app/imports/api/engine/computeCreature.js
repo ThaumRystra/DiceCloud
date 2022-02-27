@@ -11,14 +11,13 @@ export default function computeCreature(creatureId){
     computeCreatureComputation(computation);
     writeAlteredProperties(computation);
     writeScope(creatureId, computation.scope);
-    writeErrors(creatureId, computation.errors);
   } catch (e){
     computation.errors.push({
       type: 'crash',
       details: e.reason,
     });
   } finally {
-    writeErrors(creatureId, [...computation.errors]);
+    writeErrors(creatureId, computation.errors);
   }
 }
 

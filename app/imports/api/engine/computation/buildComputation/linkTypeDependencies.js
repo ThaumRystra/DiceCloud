@@ -30,7 +30,6 @@ function dependOnCalc({dependencyGraph, prop, key}){
   let calc = get(prop, key);
   if (!calc) return;
   if (calc.type !== '_calculation'){
-    console.log(calc);
     throw `Expected calculation got ${calc.type}`
   }
   dependencyGraph.addLink(prop._id, `${prop._id}.${key}`, 'calculation');
@@ -63,7 +62,7 @@ function linkAction(dependencyGraph, prop, {propsById}){
     dependOnCalc({
       dependencyGraph,
       prop,
-      key: `${prop._id}.resources.itemsConsumed.${index}.quantity`,
+      key: `resources.itemsConsumed[${index}].quantity`,
     });
   });
   // Link attributes consumed
@@ -74,7 +73,7 @@ function linkAction(dependencyGraph, prop, {propsById}){
     dependOnCalc({
       dependencyGraph,
       prop,
-      key: `${prop._id}.resources.attributesConsumed.${index}.quantity`,
+      key: `resources.attributesConsumed[${index}].quantity`,
     });
   });
 }
