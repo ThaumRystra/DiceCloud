@@ -178,7 +178,7 @@ function applyChildren(node, args){
 
 function spendResources({prop, log, scope}){
   // Check Uses
-  if (prop.usesLeft < 0){
+  if (prop.usesLeft <= 0){
     log.content.push({
       name: 'Error',
       value: `${prop.name || 'action'} does not have enough uses left`,
@@ -250,7 +250,7 @@ function spendResources({prop, log, scope}){
     });
     log.content.push({
       name: 'Uses left',
-      value: prop.usesLeft - (prop.usesUsed || 0) - 1,
+      value: prop.usesLeft - 1,
     });
   }
 
