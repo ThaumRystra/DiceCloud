@@ -23,6 +23,7 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
   log.content.push({
     name: prop.name,
     value: ' DC ' + dc,
+    inline: true,
   });
 
   saveTargets.forEach(target => {
@@ -84,7 +85,8 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
     }
     log.content.push({
       name: 'Save',
-      value: resultPrefix + result + (saveSuccess ? 'Passed' : 'Failed')
+      value: resultPrefix + result + (saveSuccess ? 'Passed' : 'Failed'),
+      inline: true,
     });
     return applyChildren();
   });

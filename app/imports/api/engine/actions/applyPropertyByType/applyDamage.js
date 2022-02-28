@@ -110,6 +110,7 @@ export default function applyDamage(node, {
   log.content.push({
     name: logName,
     value: logValue.join('\n'),
+    inline: true,
   });
   return applyChildren();
 }

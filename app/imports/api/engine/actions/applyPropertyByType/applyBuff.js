@@ -77,7 +77,7 @@ function crystalizeVariables({propList, scope, log}){
               // Can't strip symbols
               log.content.push({
                 name: 'Error',
-                value: 'Variable `$target` should not be used without a property: $target.property'
+                value: 'Variable `$target` should not be used without a property: $target.property',
               });
             }
             return node;

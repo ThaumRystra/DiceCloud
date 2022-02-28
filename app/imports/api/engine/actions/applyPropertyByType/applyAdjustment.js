@@ -14,7 +14,7 @@ export default function applyAdjustment(node, {
 
   // Evaluate the amount
   recalculateCalculation(prop.amount, scope, log);
-  
+
   const value = +prop.amount.value;
   if (!isFinite(value)) {
     return applyChildren(node, {creature, targets, scope, log});
@@ -39,6 +39,7 @@ export default function applyAdjustment(node, {
         name: 'Attribute damage',
         value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
         ` ${value}`,
+        inline: true,
       });
     });
   } else {
@@ -46,6 +47,7 @@ export default function applyAdjustment(node, {
       name: 'Attribute damage',
       value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
       ` ${value}`,
+      inline: true,
     });
   }
 

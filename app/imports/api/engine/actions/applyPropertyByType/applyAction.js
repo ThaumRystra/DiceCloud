@@ -67,7 +67,8 @@ function applyAttackWithoutTarget({attack, scope, log}){
   }
   log.content.push({
     name,
-    value: `${resultPrefix} **${result}**`,
+    value: `${resultPrefix}\n**${result}**`,
+    inline: true,
   });
 }
 
@@ -102,7 +103,8 @@ function applyAttackToTarget({attack, target, scope, log}){
 
     log.content.push({
       name,
-      value: `${resultPrefix} **${result}**`,
+      value: `${resultPrefix}\n**${result}**`,
+      inline: true,
     });
     if ((result > armor) || (criticalHit)){
       scope['$attackHit'] = true;
@@ -116,7 +118,8 @@ function applyAttackToTarget({attack, target, scope, log}){
     });
     log.content.push({
       name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit',
-      value: `${resultPrefix} **${result}**`,
+      value: `${resultPrefix}\n**${result}**`,
+      inline: true,
     });
   }
 }
@@ -128,23 +131,23 @@ function rollAttack(attack, scope){
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
       value = a;
-      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
     } else {
       value = b;
-      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
   } else if (attack.advantage === -1 || scope['$attackDisadvantage']){
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
-      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
     } else {
       value = b;
-      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
   } else {
     value = rollDice(1, 20)[0];
-    resultPrefix = `1d20 [${value}] ${rollModifierText} = `
+    resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
   scope['$attackRoll'] = {value};
   const result = value + attack.value;
@@ -251,6 +254,7 @@ function spendResources({prop, log, scope}){
     log.content.push({
       name: 'Uses left',
       value: prop.usesLeft - 1,
+      inline: true,
     });
   }
 
@@ -280,9 +284,11 @@ function spendResources({prop, log, scope}){
   if (gainLog.length) log.content.push({
     name: 'Gained',
     value: gainLog.join('\n'),
+    inline: true,
   });
   if (spendLog.length) log.content.push({
     name: 'Spent',
     value: spendLog.join('\n'),
+    inline: true,
   });
 }

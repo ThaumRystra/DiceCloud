@@ -13,6 +13,7 @@ export default function applyRoll(node, {creature, targets, scope, log}){
     log.content.push({
       name: prop.name,
       value: prop.variableName + ' = ' + prop.roll.calculation + ' = ' + prop.roll.value,
+      inline: true,
     });
   }
   return node.children.forEach(child => applyProperty(child, {

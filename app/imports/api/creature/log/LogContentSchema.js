@@ -17,6 +17,11 @@ let LogContentSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.summary,
   },
+  // Inline with other content fields
+  inline: {
+    type: Boolean,
+    optional: true,
+  },
   context: {
     type: Object,
     optional: true,
