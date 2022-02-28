@@ -12,122 +12,216 @@
         />
       </v-col>
     </v-row>
-    <div class="layout wrap justify-space-between">
-      <smart-switch
-        label="Always prepared"
-        style="width: 200px; flex-grow: 0;"
-        class="mx-2"
-        :value="model.alwaysPrepared"
-        :error-messages="errors.alwaysPrepared"
-        @change="change('alwaysPrepared', ...arguments)"
-      />
-      <smart-switch
+    <v-row dense>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <smart-switch
+          label="Always prepared"
+          :value="model.alwaysPrepared"
+          :error-messages="errors.alwaysPrepared"
+          @change="change('alwaysPrepared', ...arguments)"
+        />
+      </v-col>
+      <v-col
         v-show="!model.alwaysPrepared"
-        label="Prepared"
-        style="width: 200px; flex-grow: 0;"
-        class="mx-2"
-        :value="model.prepared"
-        :error-messages="errors.prepared"
-        @change="change('prepared', ...arguments)"
-      />
-      <smart-switch
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <smart-switch
+          label="Prepared"
+          :value="model.prepared"
+          :error-messages="errors.prepared"
+          @change="change('prepared', ...arguments)"
+        />
+      </v-col>
+      <v-col
         v-show="model.level"
-        label="Cast without spell slots"
-        style="width: 400px; flex-grow: 0;"
-        class="mx-2"
-        :value="model.castWithoutSpellSlots"
-        :error-messages="errors.castWithoutSpellSlots"
-        @change="change('castWithoutSpellSlots', ...arguments)"
-      />
-    </div>
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-    <div class="layout wrap">
-      <smart-select
-        label="Level"
-        class="mx-1"
-        style="flex-basis: 300px;"
-        hint="The spell level"
-        :items="spellLevels"
-        :value="model.level"
-        :error-messages="errors.level"
-        @change="change('level', ...arguments)"
-      />
-      <smart-select
-        label="School"
-        class="mx-1"
-        style="flex-basis: 300px;"
-        :items="magicSchools"
-        :value="model.school"
-        :error-messages="errors.school"
-        @change="change('school', ...arguments)"
-      />
-    </div>
-    <text-field
-      label="Casting Time"
-      :value="model.castingTime"
-      :error-messages="errors.castingTime"
-      @change="change('castingTime', ...arguments)"
-    />
-    <text-field
-      label="Range"
-      :value="model.range"
-      :error-messages="errors.range"
-      @change="change('range', ...arguments)"
-    />
-    <smart-select
-      label="Target"
-      style="flex-basis: 300px;"
-      :items="targetOptions"
-      :value="model.target"
-      :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('target', ...arguments)"
-    />
-    <div class="layout wrap justify-space-between">
-      <smart-checkbox
-        label="Verbal"
-        :value="model.verbal"
-        :error-messages="errors.verbal"
-        @change="change('verbal', ...arguments)"
-      />
-      <smart-checkbox
-        label="Somatic"
-        :value="model.somatic"
-        :error-messages="errors.somatic"
-        @change="change('somatic', ...arguments)"
-      />
-      <smart-checkbox
-        label="Concentration"
-        :value="model.concentration"
-        :error-messages="errors.concentration"
-        @change="change('concentration', ...arguments)"
-      />
-      <smart-checkbox
-        label="Ritual"
-        :value="model.ritual"
-        :error-messages="errors.ritual"
-        @change="change('ritual', ...arguments)"
-      />
-    </div>
-    <text-field
-      label="Material"
-      :value="model.material"
-      :error-messages="errors.material"
-      @change="change('material', ...arguments)"
-    />
-    <text-field
-      label="Duration"
-      :value="model.duration"
-      :error-messages="errors.duration"
-      @change="change('duration', ...arguments)"
-    />
-
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <smart-switch
+          label="Cast without spell slots"
+          :value="model.castWithoutSpellSlots"
+          :error-messages="errors.castWithoutSpellSlots"
+          @change="change('castWithoutSpellSlots', ...arguments)"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          ref="focusFirst"
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Level"
+          hint="The spell level"
+          :items="spellLevels"
+          :value="model.level"
+          :error-messages="errors.level"
+          @change="change('level', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="School"
+          :items="magicSchools"
+          :value="model.school"
+          :error-messages="errors.school"
+          @change="change('school', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Casting Time"
+          :value="model.castingTime"
+          :error-messages="errors.castingTime"
+          @change="change('castingTime', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Range"
+          :value="model.range"
+          :error-messages="errors.range"
+          @change="change('range', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Duration"
+          :value="model.duration"
+          :error-messages="errors.duration"
+          @change="change('duration', ...arguments)"
+        />
+      </v-col>
+    </v-row>
+    <v-row class="mt-0">
+      <v-col
+        cols="6"
+        md="3"
+        class="pt-1"
+      >
+        <smart-checkbox
+          label="Verbal"
+          :value="model.verbal"
+          :error-messages="errors.verbal"
+          @change="change('verbal', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="6"
+        md="3"
+        class="pt-1"
+      >
+        <smart-checkbox
+          label="Somatic"
+          :value="model.somatic"
+          :error-messages="errors.somatic"
+          @change="change('somatic', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="6"
+        md="3"
+        class="pt-1"
+      >
+        <smart-checkbox
+          label="Concentration"
+          :value="model.concentration"
+          :error-messages="errors.concentration"
+          @change="change('concentration', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="6"
+        md="3"
+        class="pt-1"
+      >
+        <smart-checkbox
+          label="Ritual"
+          :value="model.ritual"
+          :error-messages="errors.ritual"
+          @change="change('ritual', ...arguments)"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col cols="12">
+        <text-field
+          label="Material"
+          :value="model.material"
+          :error-messages="errors.material"
+          @change="change('material', ...arguments)"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Target"
+          :items="targetOptions"
+          :value="model.target"
+          :error-messages="errors.target"
+          :menu-props="{auto: true, lazy: true}"
+          @change="change('target', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-slide-x-transition mode="out-in">
+          <v-switch
+            v-if="!isAttack"
+            label="Attack roll"
+            :value="attackSwitch"
+            @change="e => attackSwitch = e"
+          />
+          <computed-field
+            v-else
+            label="To Hit"
+            prefix="1d20 + "
+            hint="The bonus to attack if this action has an attack roll"
+            :model="model.attackRoll"
+            :error-messages="errors.attackRoll"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['attackRoll', ...path], value, ack})"
+          />
+        </v-slide-x-transition>
+      </v-col>
+    </v-row>
     <inline-computation-field
       label="Description"
       :model="model.description"
@@ -145,7 +239,6 @@
         />
       </form-section>
       <form-section
-        v-if="model.level && model.castWithoutSpellSlots"
         name="Limit Uses"
       >
         <v-row dense>
@@ -301,13 +394,18 @@
           value: 'longRest',
         }
       ],
+      attackSwitch: false,
 		};},
+    computed: {
+      isAttack(){
+        return this.attackSwitch || !!this.model.attackRoll?.calculation
+      }
+    }
 	};
 </script>
 
 <style lang="css" scoped>
 	.v-input--checkbox {
-		flex-grow: 0;
-		width: 200px;
+		margin-top: 0;
 	}
 </style>
