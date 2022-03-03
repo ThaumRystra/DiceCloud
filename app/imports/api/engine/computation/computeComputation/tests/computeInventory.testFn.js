@@ -14,16 +14,14 @@ export default function(){
 
   assert.equal(scope('itemsAttuned'), 1);
 
-  assert.equal(prop('childContainerId').carriedWeight, 23);
-  assert.equal(prop('childContainerId').contentsWeight, 23);
+  assert.equal(prop('childContainerId').carriedWeight, 69);
+  assert.equal(prop('childContainerId').contentsWeight, 69);
 
-  assert.equal(scope('weightCarried'), 58);
+  assert.equal(scope('weightCarried'), 104);
+  assert.equal(scope('valueCarried'), 129);
 
-  assert.equal(scope('weightCarried'), 58);
-  assert.equal(scope('valueCarried'), 71);
-
-  assert.equal(scope('weightTotal'), 58);
-  assert.equal(scope('valueTotal'), 71);
+  assert.equal(scope('weightTotal'), 104);
+  assert.equal(scope('valueTotal'), 129);
 }
 
 var testProperties = [
@@ -62,8 +60,9 @@ var testProperties = [
   clean({
     _id: 'grandchildItemId',
     type: 'item',
-    weight: 23,
-    value: 29,
+    weight: 23, // 69 total
+    value: 29, // 87 total
+    quantity: 3,
     ancestors: [{id: 'charId'}, {id: 'containerId'}, {id: 'childContainerId'}],
   }),
 ];

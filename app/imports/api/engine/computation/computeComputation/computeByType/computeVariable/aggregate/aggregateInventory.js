@@ -43,18 +43,26 @@ export default function aggregateInventory({node, linkedNode, link}){
   }
 }
 
+function quantity(prop){
+  if (typeof prop.quantity === 'number'){
+    return prop.quantity;
+  } else {
+    return 1;
+  }
+}
+
 function weight(prop){
-  return (prop.weight || 0) + (prop.contentsWeight || 0);
+  return (prop.weight || 0) * quantity(prop) + (prop.contentsWeight || 0);
 }
 
 function carriedWeight(prop){
-  return (prop.weight || 0) + (prop.carriedWeight || 0);
+  return (prop.weight || 0) * quantity(prop) + (prop.carriedWeight || 0);
 }
 
 function value (prop){
-  return (prop.value || 0) + (prop.contentsValue || 0);
+  return (prop.value || 0) * quantity(prop) + (prop.contentsValue || 0);
 }
 
 function carriedValue (prop){
-  return (prop.value || 0) + (prop.carriedValue || 0);
+  return (prop.value || 0) * quantity(prop) + (prop.carriedValue || 0);
 }
