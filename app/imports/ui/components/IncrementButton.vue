@@ -10,11 +10,12 @@
     <template #activator="{ on }">
       <v-btn
         v-bind="$attrs"
+        :loading="loading"
         v-on="on"
         @click.stop
       >
         <slot>
-          <v-icon>mdi-plus</v-icon>
+          <v-icon>$vuetify.icons.abacus</v-icon>
         </slot>
       </v-btn>
     </template>
@@ -42,6 +43,7 @@ export default {
       type: Number,
       required: true,
     },
+    loading: Boolean,
   },
   data(){return {
     open: false

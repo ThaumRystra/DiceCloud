@@ -31,12 +31,9 @@
           tile
           color="primary"
           :value="model.value"
+          :loading="damagePropertyLoading"
           @change="damageProperty"
-        >
-          <v-icon>
-            $vuetify.icons.abacus
-          </v-icon>
-        </increment-button>
+        />
       </property-field>
       <property-field
         v-if="model.modifier !== undefined"
@@ -144,6 +141,7 @@
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
   import IncrementButton from '/imports/ui/components/IncrementButton.vue';
   import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
+  import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
   export default {
     components: {
@@ -172,6 +170,7 @@
         0.5: 'Half proficiency bonus rounded up',
         2: 'Double proficiency bonus',
       },
+      damagePropertyLoading: false,
     }},
     computed: {
       reset(){
@@ -197,10 +196,17 @@
         });
       },
       damageProperty({type, value}) {
+        this.damagePropertyLoading = true;
         damageProperty.call({
           _id: this.model._id,
           operation: type,
           value: value
+        }, error => {
+          this.damagePropertyLoading = false;
+          if (error){
+            snackbar({text: error.reason});
+            console.error(error);
+          }
         });
       },
     },

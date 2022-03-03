@@ -15,11 +15,10 @@
           large
           outlined
           color="primary"
+          :loading="incrementLoading"
           :value="model.quantity"
           @change="changeQuantity"
-        >
-          <v-icon>$vuetify.icons.abacus</v-icon>
-        </increment-button>
+        />
       </property-field>
       <property-field
         v-if="model.value !== undefined"
@@ -152,6 +151,7 @@ import CoinValue from '/imports/ui/components/CoinValue.vue';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components:{
@@ -162,6 +162,9 @@ export default {
   inject: {
     context: { default: {} }
   },
+  data(){return {
+    incrementLoading: false,
+  }},
   computed:{
     totalValue(){
       return stripFloatingPointOddities(this.model.value * this.model.quantity);
@@ -182,12 +185,19 @@ export default {
       return SVG_ICONS[name];
     },
     changeQuantity({type, value}) {
+      this.incrementLoading = true;
       adjustQuantity.call({
         _id: this.model._id,
         operation: type,
         value: value
+      }, error => {
+        this.incrementLoading = false;
+        if (error){
+          snackbar({text: error.reason});
+          console.error(error);
+        }
       });
-    }
+    },
   }
 }
 </script>

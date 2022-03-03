@@ -28,12 +28,9 @@
         color="primary"
         :disabled="context.editPermission === false"
         :value="model.quantity"
+        :loading="incrementLoading"
         @change="changeQuantity"
-      >
-        <v-icon>
-          $vuetify.icons.abacus
-        </v-icon>
-      </increment-button>
+      />
     </v-list-item-action>
     <v-list-item-action>
       <v-icon
@@ -52,6 +49,7 @@ import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeView
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components:{
@@ -64,6 +62,9 @@ export default {
   props: {
     preparingSpells: Boolean,
   },
+  data(){return {
+    incrementLoading: false,
+  }},
   computed: {
     hasClickListener(){
       return this.$listeners && !!this.$listeners.click;
@@ -89,10 +90,17 @@ export default {
 			this.$emit('click', e);
 		},
     changeQuantity({type, value}) {
+      this.incrementLoading = true;
       adjustQuantity.call({
         _id: this.model._id,
         operation: type,
         value: value
+      }, error => {
+        this.incrementLoading = false;
+        if (error){
+          snackbar({text: error.reason});
+          console.error(error);
+        }
       });
     }
   },
