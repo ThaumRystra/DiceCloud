@@ -94,6 +94,7 @@
         />
       </template>
     </div>
+    <card-highlight :active="hovering" />
   </v-card>
 </template>
 
@@ -107,6 +108,7 @@ import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import RollPopup from '/imports/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
 export default {
   components: {
@@ -115,6 +117,7 @@ export default {
     MarkdownText,
     PropertyIcon,
     RollPopup,
+    CardHighlight
   },
   inject: {
     context: {

@@ -5,6 +5,8 @@
         <v-card
           hover
           data-id="creature-summary"
+          @mouseover="summaryHover = true"
+          @mouseleave="summaryHover = false"
           @click="showCharacterForm"
         >
           <v-img
@@ -18,6 +20,7 @@
             {{ creature.alignment }}<br>
             {{ creature.gender }}
           </v-card-text>
+          <card-highlight :active="summaryHover" />
         </v-card>
       </div>
       <div>
@@ -25,9 +28,21 @@
           data-id="slot-card"
           @toolbarclick="showSlotDialog"
         >
-          <v-toolbar-title slot="toolbar">
-            Build
-          </v-toolbar-title>
+          <template slot="toolbar">
+            <v-toolbar-title>
+              Build
+            </v-toolbar-title>
+            <v-spacer />
+            <v-toolbar-title>
+              <v-icon
+                small
+                style="width: 16px;"
+                class="mr-1"
+              >
+                mdi-pencil
+              </v-icon>
+            </v-toolbar-title>
+          </template>
           <v-card-text style="background-color: inherit;">
             <slots :creature-id="creatureId" />
           </v-card-text>
@@ -121,6 +136,7 @@ import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
 import Slots from '/imports/ui/creature/slots/Slots.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
+import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
 export default {
   components: {
@@ -128,6 +144,7 @@ export default {
     NoteCard,
     Slots,
     ToolbarCard,
+    CardHighlight,
   },
   props: {
     creatureId: {
@@ -135,6 +152,9 @@ export default {
       required: true,
     },
   },
+  data(){return {
+    summaryHover: false,
+  }},
   computed: {
     highestClassLevels(){
       let highestLevels = {};

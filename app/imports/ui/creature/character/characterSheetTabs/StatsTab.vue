@@ -242,7 +242,7 @@
       <div
         v-for="action in actions"
         :key="action._id"
-        class="actions"
+        class="action"
       >
         <action-card
           :model="action"
@@ -253,7 +253,7 @@
       <div
         v-for="attack in attacks"
         :key="attack._id"
-        class="attacks"
+        class="attack"
       >
         <action-card
           attack

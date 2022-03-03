@@ -2,6 +2,8 @@
   <v-card
     :hover="hasClickListener"
     @click="click"
+    @mouseover="hasClickListener ? hovering = true : undefined"
+    @mouseleave="hasClickListener ? hovering = false : undefined"
   >
     <div class="layout align-center">
       <roll-popup
@@ -31,6 +33,7 @@
         {{ model.name }}
       </v-card-title>
     </div>
+    <card-highlight :active="hasClickListener && hovering" />
   </v-card>
 </template>
 
@@ -39,10 +42,12 @@
   import RollPopup from '/imports/ui/components/RollPopup.vue';
   import doCheck from '/imports/api/engine/actions/doCheck.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+  import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
   export default {
     components: {
       RollPopup,
+      CardHighlight,
     },
     inject: {
       context: {
@@ -57,6 +62,7 @@
     },
     data(){return {
       checkLoading: false,
+      hovering: false,
     }},
     computed: {
       hasClickListener(){

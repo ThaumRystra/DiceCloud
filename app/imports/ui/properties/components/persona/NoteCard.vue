@@ -6,6 +6,8 @@
     :dark="model.color && isDark"
     :light="model.color && !isDark"
     @click="clickProperty(model._id)"
+    @mouseover="hover = true"
+    @mouseleave="hover = false"
   >
     <v-card-title class="text-h6">
       {{ model.name }}
@@ -16,23 +18,39 @@
         :model="model.summary"
       />
     </v-card-text>
+    <card-highlight
+      :active="hover"
+      :dark="theme.isDark"
+    />
   </v-card>
 </template>
 
 <script lang="js">
 import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
 export default {
 	components: {
 		PropertyDescription,
+    CardHighlight,
 	},
+  inject: {
+    theme: {
+      default: {
+        isDark: false,
+      },
+    },
+  },
 	props: {
 		model: {
       type: Object,
       required: true,
     },
 	},
+  data(){ return{
+    hover: false,
+  }},
   computed: {
     isDark(){
       return isDarkColor(this.model.color);

@@ -55,9 +55,7 @@
         </v-card>
       </div>
       <div>
-        <toolbar-card
-          :color="creature.color"
-        >
+        <toolbar-card transparent-toolbar>
           <v-toolbar-title slot="toolbar">
             Equipped
           </v-toolbar-title>
@@ -71,9 +69,7 @@
         </toolbar-card>
       </div>
       <div>
-        <toolbar-card
-          :color="creature.color"
-        >
+        <toolbar-card transparent-toolbar>
           <v-toolbar-title slot="toolbar">
             Carried
           </v-toolbar-title>

@@ -2,15 +2,17 @@
   <v-card
     :hover="hasClickListener"
     class="toolbar-card"
-    :class="hovering ? 'elevation-8': ''"
+    :class="{'transparent-toolbar': transparentToolbar, hovering}"
+    :elevation="hovering ? 8 : undefined"
     @click.native="$emit('click')"
   >
     <v-toolbar
       flat
       :style="`transform: none; ${hasToolbarClickListener ? 'cursor: pointer;' : ''}`"
-      :color="color"
-      :dark="isDark"
-      :light="!isDark"
+      :class="{}"
+      :color="transparentToolbar ? undefined : color"
+      :dark="transparentToolbar ? undefined : isDark"
+      :light="transparentToolbar ? undefined : !isDark"
       @click="$emit('toolbarclick')"
       @mouseover="hoverToolbar(true)"
       @mouseleave="hoverToolbar(false)"
@@ -20,14 +22,19 @@
     <div>
       <slot />
     </div>
+    <card-highlight :active="hovering" />
   </v-card>
 </template>
 
 <script lang="js">
 	import isDarkColor from '/imports/ui/utility/isDarkColor.js';
   import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+  import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
 	export default {
+    components: {
+      CardHighlight,
+    },
 		props: {
 			color: {
 				type: String,
@@ -35,6 +42,7 @@
           return getThemeColor('secondary');
 				},
 			},
+      transparentToolbar: Boolean,
 		},
     data(){ return {
       hovering: false,
@@ -62,9 +70,12 @@
 
 <style lang="css">
 .toolbar-card .v-toolbar__title {
-  font-size: 14px;
+  font-size: 15px;
 }
 .toolbar-card {
   transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.toolbar-card.transparent-toolbar .theme--dark.v-toolbar.v-sheet {
+  background-color: #303030;
 }
 </style>

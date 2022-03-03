@@ -43,11 +43,17 @@
         </div>
       </div>
     </v-layout>
+    <card-highlight :active="hover" />
   </v-card>
 </template>
 
 <script lang="js">
+import CardHighlight from '/imports/ui/components/CardHighlight.vue';
+
 	export default {
+    components: {
+      CardHighlight,
+    },
     inject: {
       context: { default: {} }
     },
