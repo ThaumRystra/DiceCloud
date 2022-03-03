@@ -242,6 +242,9 @@ function linkSkill(dependencyGraph, prop){
   }
   // Skills depend on the creature's proficiencyBonus
   dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
+  
+  // Depends on base value
+  dependOnCalc({dependencyGraph, prop, key: 'baseValue'});
 }
 
 function linkSlot(dependencyGraph, prop){

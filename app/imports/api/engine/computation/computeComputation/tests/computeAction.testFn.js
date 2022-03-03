@@ -14,7 +14,7 @@ export default function(){
   assert.equal(prop.usesLeft, 2);
 
   const rolled = computation.propsById['rolledDescriptionId'];
-  assert.equal(rolled.summary.value, 'test roll gets compiled d4 + 4 properly');
+  assert.equal(rolled.summary.value, 'test roll gets compiled 8 properly');
 
   const itemConsumed = prop.resources.itemsConsumed[0];
   assert.equal(itemConsumed.quantity.value, 3);
@@ -67,7 +67,7 @@ var testProperties = [
     type: 'action',
     ancestors: [{id: 'charId'}],
     summary: {
-      text: 'test roll gets compiled {1d4 + (2 + 2)} properly',
+      text: 'test roll gets compiled {4 + (2 + 2)} properly',
     },
   }),
   clean({
