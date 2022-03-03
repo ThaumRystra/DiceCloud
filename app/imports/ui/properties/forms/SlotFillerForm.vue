@@ -15,7 +15,6 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-
     <text-area
       label="Description"
       :value="model.description"
@@ -74,12 +73,8 @@
 <script lang="js">
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
-  import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 	export default {
-    components: {
-      CalculationErrorList,
-    },
     mixins: [propertyFormMixin],
     inject: {
       context: { default: {} }

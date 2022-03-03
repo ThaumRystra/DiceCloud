@@ -10,7 +10,7 @@
         :value="model.slotQuantityFilled"
       />
       <property-field
-        v-if="context.creatureId"
+        v-if="!context.creatureId"
         name="Condition"
         mono
         :value="model.slotFillerCondition"

@@ -15,6 +15,12 @@
         mono
         :value="model.variableName"
       />
+      <property-field
+        v-if="!context.creatureId"
+        name="Condition"
+        mono
+        :value="model.slotFillerCondition"
+      />
       <property-description
         name="Description"
         :model="model.description"

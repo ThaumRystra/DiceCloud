@@ -27,6 +27,15 @@
         @change="change('variableName', ...arguments)"
       />
     </div>
+    <text-field
+      v-if="context.isLibraryForm"
+      label="Condition"
+      hint="A caclulation to determine if this can be added to the character"
+      placeholder="Always active"
+      :value="model.slotFillerCondition"
+      :error-messages="errors.slotFillerCondition"
+      @change="change('slotFillerCondition', ...arguments)"
+    />
 
     <inline-computation-field
       label="Description"
@@ -54,6 +63,9 @@
 
 	export default {
     mixins: [propertyFormMixin],
+    inject: {
+      context: { default: {} }
+    },
 	};
 </script>
 
