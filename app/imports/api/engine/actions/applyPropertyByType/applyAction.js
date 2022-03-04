@@ -127,7 +127,7 @@ function applyAttackToTarget({attack, target, scope, log}){
 function rollAttack(attack, scope){
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
-  if (attack.advantage === 1 || scope['$attackAdvantage']){
+  if (scope['$attackAdvantage'] === 1){
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
       value = a;
@@ -136,7 +136,7 @@ function rollAttack(attack, scope){
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
-  } else if (attack.advantage === -1 || scope['$attackDisadvantage']){
+  } else if (scope['$attackAdvantage'] === -1){
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
