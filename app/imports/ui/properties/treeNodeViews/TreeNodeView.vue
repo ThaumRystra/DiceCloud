@@ -3,6 +3,12 @@
     :is="treeNodeView"
     :model="model"
     :selected="selected"
+    :class="{
+      'inactive': model.inactive,
+      'by-ancestor': model.deactivatedByAncestor,
+      'by-self': model.deactivatedBySelf,
+      'by-toggle': model.deactivatedByToggle,
+    }"
   />
 </template>
 
@@ -29,3 +35,9 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+  .inactive: {
+    background: red;
+  }
+</style>

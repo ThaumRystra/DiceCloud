@@ -7,8 +7,10 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 import { get } from 'lodash';
-import resolve, { map } from '/imports/parser/resolve.js';
+import resolve, { map, toString } from '/imports/parser/resolve.js';
+import symbol from '/imports/parser/parseTree/symbol.js';
 import logErrors from './shared/logErrors.js';
+import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 
 export default function applyBuff(node, {creature, targets, scope, log}){
   const prop = node.node;
@@ -63,7 +65,7 @@ function crystalizeVariables({propList, scope, log}){
       applyFnToKey(prop, calcKey, (prop, key) => {
         const calcObj = get(prop, key);
         if (!calcObj?.parseNode) return;
-        map(calcObj.parseNode, node => {
+        calcObj.parseNode = map(calcObj.parseNode, node => {
           // Skip nodes that aren't symbols or accessors
           if (
             node.parseType !== 'accessor' && node.parseType !== 'symbol'
@@ -73,6 +75,9 @@ function crystalizeVariables({propList, scope, log}){
             // strip $target
             if (node.parseType === 'accessor'){
               node.name = node.path.shift();
+              if (!node.path.length){
+                return symbol.create({name: node.name})
+              }
             } else {
               // Can't strip symbols
               log.content.push({
@@ -88,6 +93,8 @@ function crystalizeVariables({propList, scope, log}){
             return result;
           }
         });
+        calcObj.calculation = toString(calcObj.parseNode);
+        calcObj.hash = cyrb53(calcObj.calculation);
       });
     });
   });
