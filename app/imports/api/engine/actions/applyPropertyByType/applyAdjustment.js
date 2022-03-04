@@ -23,8 +23,8 @@ export default function applyAdjustment(node, {
   if (damageTargets?.length) {
     damageTargets.forEach(target => {
       let stat = target.variables[prop.stat];
-      if (!stat) {
-        log({
+      if (!stat?.type) {
+        log.content.push({
           name: 'Error',
           value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`
         });
