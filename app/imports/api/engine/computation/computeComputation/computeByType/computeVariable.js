@@ -54,6 +54,21 @@ function combineAggregations(computation, node){
 
 function computeVariableProp(computation, node, prop){
   if (!prop) return;
+
+  // Combine damage multipliers in all props so that they can't be overridden
+  if (node.data.immunity){
+    prop.immunity = node.data.immunity;
+    prop.immunities = node.data.immunities;
+  }
+  if (node.data.resistance){
+    prop.resistance = node.data.resistance;
+    prop.resistances = node.data.resistances;
+  }
+  if (node.data.vulnerability){
+    prop.vulnerability = node.data.vulnerability;
+    prop.vulnerabilities = node.data.vulnerabilities;
+  }
+
   if (prop.type === 'attribute'){
     computeVariableAsAttribute(computation, node, prop);
   } else if (prop.type === 'skill'){
@@ -73,21 +88,16 @@ function combineMultiplierAggregator(node){
   if (!aggregator) return;
 
   // Combine
-  let value;
-  if (aggregator.immunityCount){
-    value = 0;
-  } else if (
-    aggregator.resistanceCount &&
-    !aggregator.vulnerabilityCount
-  ){
-    value = 0.5;
-  }  else if (
-    !aggregator.resistanceCount &&
-    aggregator.vulnerabilityCount
-  ){
-    value = 2;
-  } else {
-    value = 1;
+  if (aggregator.immunities?.length){
+    node.data.immunity = true;
+    node.data.immunities = aggregator.immunities;
   }
-  node.data.damageMultiplyValue = value;
+  if (aggregator.resistances?.length){
+    node.data.resistance = true;
+    node.data.resistances = aggregator.resistances;
+  }
+  if (aggregator.vulnerabilities?.length){
+    node.data.vulnerability = true;
+    node.data.vulnerabilities = aggregator.vulnerabilities;
+  }
 }

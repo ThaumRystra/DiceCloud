@@ -14,8 +14,9 @@ export default function computeCreature(creatureId){
   } catch (e){
     computation.errors.push({
       type: 'crash',
-      details: e.reason,
+      details: e.reason || e.message || e.toString(),
     });
+    console.error(e);
   } finally {
     writeErrors(creatureId, computation.errors);
   }

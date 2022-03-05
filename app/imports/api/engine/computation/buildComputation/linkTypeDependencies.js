@@ -218,7 +218,7 @@ function linkDamageMultiplier(dependencyGraph, prop){
   prop.damageTypes.forEach(damageType => {
     // Remove all non-letter characters from the damage name
     const damageName = damageType.replace(/[^a-z]/gi, '')
-    dependencyGraph.addLink(`${damageName}Multiplier`, prop._id, prop.type);
+    dependencyGraph.addLink(damageName, prop._id, prop.type);
   });
 }
 
@@ -242,7 +242,7 @@ function linkSkill(dependencyGraph, prop){
   }
   // Skills depend on the creature's proficiencyBonus
   dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
-  
+
   // Depends on base value
   dependOnCalc({dependencyGraph, prop, key: 'baseValue'});
 }

@@ -2,13 +2,57 @@
   <div>
     <v-row dense>
       <property-field
-        name="Operation"
+        name="Value"
         :value="operation"
       />
       <property-field
         name="Damage types"
-        :value="model.damageTypes.join(', ')"
-      />
+      >
+        <v-chip
+          v-for="(damageType, index) in model.damageTypes"
+          :key="index"
+          class="my-1 mr-1"
+          style="cursor: pointer"
+          :input-value="true"
+          outlined
+          small
+          label
+        >
+          {{ damageType }}
+        </v-chip>
+      </property-field>
+      <property-field
+        v-if="model.includeTags && model.includeTags.length"
+        name="Damage tags required"
+      >
+        <v-chip
+          v-for="(damageType, index) in model.includeTags"
+          :key="index"
+          class="ma-1"
+          style="cursor: pointer"
+          :input-value="true"
+          small
+          outlined
+        >
+          {{ damageType }}
+        </v-chip>
+      </property-field>
+      <property-field
+        v-if="model.excludeTags && model.excludeTags.length"
+        name="Damage tags excluded"
+      >
+        <v-chip
+          v-for="(damageType, index) in model.excludeTags"
+          :key="index"
+          class="ma-1"
+          style="cursor: pointer"
+          :input-value="true"
+          small
+          outlined
+        >
+          {{ damageType }}
+        </v-chip>
+      </property-field>
     </v-row>
   </div>
 </template>

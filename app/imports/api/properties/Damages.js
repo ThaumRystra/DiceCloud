@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 const DamageSchema = createPropertySchema({
 	// The roll that determines how much to damage the attribute
@@ -24,6 +25,7 @@ const DamageSchema = createPropertySchema({
 		type: String,
     max: STORAGE_LIMITS.calculation,
 		defaultValue: 'slashing',
+    regEx: VARIABLE_NAME_REGEX,
 	},
 });
 
