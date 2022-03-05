@@ -23,6 +23,7 @@
       </div>
 
       <damage-multiplier-card
+        v-if="multipliers && multipliers.length"
         :multipliers="multipliers"
         @click-multiplier="clickProperty"
       />
