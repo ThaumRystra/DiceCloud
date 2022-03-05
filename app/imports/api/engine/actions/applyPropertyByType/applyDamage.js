@@ -1,3 +1,4 @@
+import { some, intersection, difference } from 'lodash';
 import applyProperty from '../applyProperty.js';
 import { dealDamageWork } from '/imports/api/creature/creatureProperties/methods/dealDamage.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
@@ -62,12 +63,15 @@ export default function applyDamage(node, {
     prop.amount.value = toString(reduced);
   }
 
-  const damage = +reduced.value;
+  let damage = +reduced.value;
 
   // If we didn't end up with a constant of finite amount, give up
   if (reduced?.parseType !== 'constant' && !isFinite(reduced.value)){
     return applyChildren();
   }
+
+  // Round the damage to a whole number
+  damage = Math.floor(damage);
 
   // Memoise the damage suffix for the log
   let suffix = (criticalHit ? ' critical ' : ' ') +
@@ -77,6 +81,14 @@ export default function applyDamage(node, {
   if (damageTargets && damageTargets.length) {
     // Iterate through all the targets
     damageTargets.forEach(target => {
+
+      // Apply weaknesses/resistances/immunities
+      damage = applyDamageMultipliers({
+        target,
+        damage,
+        damageProp: prop,
+        logValue
+      });
 
       // Deal the damage to the target
       let damageDealt = dealDamageWork({
@@ -113,4 +125,52 @@ export default function applyDamage(node, {
     inline: true,
   });
   return applyChildren();
+}
+
+function applyDamageMultipliers({target, damage, damageProp, logValue}){
+  const damageType = damageProp?.damageType;
+  if (!damageType) return;
+
+  const multiplier = target?.variables?.[damageType];
+  if (!multiplier) return;
+
+  const damageTypeText = damageType == 'healing' ? 'healing': `${damageType} damage`;
+
+  if (
+    multiplier.immunity &&
+    some(multiplier.immunities, multiplierAppliesTo(damageProp))
+  ){
+    logValue.push(`Immune to ${damageTypeText}`);
+    return 0;
+  } else {
+    if (
+      multiplier.resistance &&
+      some(multiplier.resistances, multiplierAppliesTo(damageProp))
+    ){
+      logValue.push(`Resistant to ${damageTypeText}`);
+      damage = Math.floor(damage / 2);
+    }
+    if (
+      multiplier.vulnerability &&
+      some(multiplier.vulnerabilities, multiplierAppliesTo(damageProp))
+    ){
+      logValue.push(`Vulnerable to ${damageTypeText}`);
+      damage = Math.floor(damage * 2);
+    }
+    return damage;
+  }
+}
+
+function multiplierAppliesTo(damageProp){
+  return multiplier => {
+    const hasRequiredTags = difference(
+      multiplier.includeTags, damageProp.tags
+    ).length === 0;
+
+    const hasNoExcludedTags = intersection(
+      multiplier.excludeTags, damageProp.tags
+    ).length === 0;
+
+    return hasRequiredTags && hasNoExcludedTags;
+  }
 }

@@ -19,7 +19,7 @@
         {{ name }}
       </v-sheet>
       <div
-        class="flex-grow-1 layout align-center justify-center flex-wrap"
+        class="flex-grow-1 d-flex align-center flex-wrap"
         style="width: 100%;"
       >
         <div
@@ -32,6 +32,7 @@
             'flex-wrap': wrap,
             'mono': isMono,
             'flex-grow-0': calculation && calculation.effects,
+            'flex-grow-1': !calculation || !calculation.effects,
             'ma-3': calculation && calculation.effects,
             ...$attrs.class,
           }"
