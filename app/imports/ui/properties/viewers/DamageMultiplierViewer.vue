@@ -7,12 +7,12 @@
       />
       <property-field
         name="Damage types"
+        wrap
       >
         <v-chip
           v-for="(damageType, index) in model.damageTypes"
           :key="index"
-          class="my-1 mr-1"
-          style="cursor: pointer"
+          class="mt-1 mr-1"
           :input-value="true"
           outlined
           small
@@ -24,12 +24,12 @@
       <property-field
         v-if="model.includeTags && model.includeTags.length"
         name="Damage tags required"
+        wrap
       >
         <v-chip
           v-for="(damageType, index) in model.includeTags"
           :key="index"
-          class="ma-1"
-          style="cursor: pointer"
+          class="mt-1 mr-1"
           :input-value="true"
           small
           outlined
@@ -40,12 +40,12 @@
       <property-field
         v-if="model.excludeTags && model.excludeTags.length"
         name="Damage tags excluded"
+        wrap
       >
         <v-chip
           v-for="(damageType, index) in model.excludeTags"
           :key="index"
-          class="ma-1"
-          style="cursor: pointer"
+          class="mt-1 mr-1"
           :input-value="true"
           small
           outlined

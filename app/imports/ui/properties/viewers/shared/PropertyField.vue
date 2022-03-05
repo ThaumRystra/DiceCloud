@@ -23,15 +23,17 @@
         style="width: 100%;"
       >
         <div
-          class="layout align-center"
+          class="d-flex align-center"
           :class="{
             'text-body-1': !isLarge,
             'text-h4': isLarge,
             'justify-center': isCenter,
             'justify-end': end,
+            'flex-wrap': wrap,
             'mono': isMono,
             'flex-grow-0': calculation && calculation.effects,
             'ma-3': calculation && calculation.effects,
+            ...$attrs.class,
           }"
           style="overflow-x: auto;"
           v-bind="$attrs"
@@ -98,6 +100,7 @@ export default {
     large: Boolean,
     mono: Boolean,
     signed: Boolean,
+    wrap: Boolean,
     cols: {
       type: Object,
       default: () => ({cols: 12, sm: 6, md: 4}),
