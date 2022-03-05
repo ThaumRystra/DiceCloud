@@ -22,7 +22,12 @@ function cleanAt1(archive){
   archive.properties.map(prop => {
     const schema = CreatureProperties.simpleSchema(prop);
     const cleanProp = schema.clean(prop);
-    schema.validate(cleanProp);
+    try {
+      schema.validate(cleanProp);
+    } catch (e){
+      console.warn('Prop did not pass schema validation');
+      console.warn(e);
+    }
     return cleanProp;
   });
 }
