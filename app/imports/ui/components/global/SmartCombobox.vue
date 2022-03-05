@@ -32,25 +32,21 @@
       searchInput: '',
     }},
     computed: {
-      // This component gets a longer default debounce time because it's all
-      // clicking no typing
+      // Multiple combobox gets a long default debounce time while single
+      // value gets a shorter one
       debounceTime() {
         if (Number.isFinite(this.debounce)){
           return this.debounce;
         } else if (Number.isFinite(this.context.debounceTime)){
           return this.context.debounceTime;
         } else {
-          return 1000;
+          return this.multiple ? 1000 : 100;
         }
       },
     },
     methods: {
       customChange(val){
-        if (this.multiple){
-          this.input(val);
-        } else {
-          this.change(val);
-        }
+        this.input(val);
         this.searchInput = '';
       },
     }
