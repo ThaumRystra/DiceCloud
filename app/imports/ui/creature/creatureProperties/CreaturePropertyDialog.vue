@@ -220,36 +220,21 @@ export default {
     },
     change({path, value, ack}){
       if (path && path[0] === 'equipped'){
-        equipItem.call({_id: this.currentId, equipped: value}, (error) =>{
-          if (error) console.warn(error);
-          ack && ack(error && error.reason || error);
-        });
+        equipItem.call({_id: this.currentId, equipped: value}, ack);
         return;
       }
-      updateCreatureProperty.call({_id: this.currentId, path, value}, (error) =>{
-        if (error) console.warn(error);
-        ack && ack(error && error.reason || error);
-      });
+      updateCreatureProperty.call({_id: this.currentId, path, value}, ack);
     },
     damage({operation, value, ack}){
-      damageProperty.call({_id: this.currentId, operation, value}, (error) =>{
-        if (error) console.warn(error);
-        ack && ack(error && error.reason || error);
-      });
+      damageProperty.call({_id: this.currentId, operation, value}, ack);
     },
     push({path, value, ack}){
-      pushToProperty.call({_id: this.currentId, path, value}, (error) =>{
-        if (error) console.warn(error);
-        ack && ack(error && error.reason || error);
-      });
+      pushToProperty.call({_id: this.currentId, path, value}, ack);
     },
     pull({path, ack}){
       let itemId = get(this.model, path)._id;
       path.pop();
-      pullFromProperty.call({_id: this.currentId, path, itemId}, (error) =>{
-        if (error) console.warn(error);
-        ack && ack(error && error.reason || error);
-      });
+      pullFromProperty.call({_id: this.currentId, path, itemId}, ack);
     },
     remove(){
       const _id = this.currentId;

@@ -1,4 +1,9 @@
 import SimpleSchema from 'simpl-schema';
+import { set } from 'lodash';
+
+set(Meteor.settings,
+  'packages.collection2.disableCollectionNamesInValidation',
+  true);
 
 SimpleSchema.extendOptions([
   'parseLevel',

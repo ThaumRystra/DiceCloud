@@ -106,6 +106,8 @@ export default {
 				this.ackErrors = error;
 			} else if (error.reason){
         this.ackErrors = error.reason;
+      } else if (error.message){
+        this.ackErrors = error.message;
       } else {
 				this.ackErrors = 'Something went wrong'
 				console.error(error);
