@@ -537,7 +537,7 @@
             if (!spellId) return;
             doCastSpell.call({spellId, slotId}, error => {
               if (!error) return;
-              snackbar({text: error.reason});
+              snackbar({text: error.reason || error.message || error.toString()});
               console.error(error);
             });
           },

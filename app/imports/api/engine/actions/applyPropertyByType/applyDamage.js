@@ -36,15 +36,12 @@ export default function applyDamage(node, {
   const logValue = [];
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
-  // Compile the dice roll and store that string first
-  // const {result: compiled} = resolve('compiled', prop.amount.parseNode, scope, context);
-  // logValue.push(toString(compiled));
-  // logErrors(context.errors, log);
-
   // roll the dice only and store that string
   applyEffectsToCalculationParseNode(prop.amount, log);
   const {result: rolled} = resolve('roll', prop.amount.parseNode, scope, context);
-  logValue.push(toString(rolled));
+  if (rolled.parseType !== 'constant'){
+    logValue.push(toString(rolled));
+  }
   logErrors(context.errors, log);
 
   // Reset the errors so we don't log the same errors twice
@@ -62,11 +59,10 @@ export default function applyDamage(node, {
   } else {
     prop.amount.value = toString(reduced);
   }
-
   let damage = +reduced.value;
 
   // If we didn't end up with a constant of finite amount, give up
-  if (reduced?.parseType !== 'constant' && !isFinite(reduced.value)){
+  if (reduced?.parseType !== 'constant' || !isFinite(reduced.value)){
     return applyChildren();
   }
 
@@ -129,10 +125,10 @@ export default function applyDamage(node, {
 
 function applyDamageMultipliers({target, damage, damageProp, logValue}){
   const damageType = damageProp?.damageType;
-  if (!damageType) return;
+  if (!damageType) return damage;
 
   const multiplier = target?.variables?.[damageType];
-  if (!multiplier) return;
+  if (!multiplier) return damage;
 
   const damageTypeText = damageType == 'healing' ? 'healing': `${damageType} damage`;
 
@@ -157,8 +153,8 @@ function applyDamageMultipliers({target, damage, damageProp, logValue}){
       logValue.push(`Vulnerable to ${damageTypeText}`);
       damage = Math.floor(damage * 2);
     }
-    return damage;
   }
+  return damage;
 }
 
 function multiplierAppliesTo(damageProp){

@@ -10,6 +10,7 @@ import { get } from 'lodash';
 import resolve, { map, toString } from '/imports/parser/resolve.js';
 import symbol from '/imports/parser/parseTree/symbol.js';
 import logErrors from './shared/logErrors.js';
+import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 
 export default function applyBuff(node, {creature, targets, scope, log}){
@@ -32,7 +33,30 @@ export default function applyBuff(node, {creature, targets, scope, log}){
     collection: prop.parent.collection,
   };
   buffTargets.forEach(target => {
+    // Apply the buff
     copyNodeListToTarget(propList, target, oldParent);
+
+    //Log the buff
+    if (prop.name || prop.description?.value){
+      if (target._id === creature._id){
+        // Targeting self
+        log.content.push({
+          name: prop.name,
+          value: prop.description?.value,
+        });
+      } else {
+        // Targeting other
+        insertCreatureLog.call({
+          log: {
+            creatureId: target._id,
+            content: [{
+              name: prop.name,
+              value: prop.description?.value,
+            }],
+          }
+        });
+      }
+    }
   });
 
   // Don't apply the children of the buff, they get copied to the target instead

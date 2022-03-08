@@ -5,13 +5,20 @@
       :key="index"
       class="content-line"
     >
-      <h4 class="content-name">
+      <h4
+        class="content-name"
+        style="min-height: 12px;"
+      >
         {{ content.name }}
       </h4>
       <markdown-text
         v-if="content.value"
         class="content-value"
         :markdown="content.value"
+      />
+      <div
+        v-else
+        style="min-height: 12px;"
       />
     </div>
   </div>
@@ -36,7 +43,7 @@ export default {
 <style lang="css" scoped>
 .content-line {
   min-height: 24px;
-  margin-top: 2px;
+  margin-top: 8px;
   margin-bottom: 2px;
 }
 .content-line .details {

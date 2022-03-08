@@ -19,6 +19,15 @@
         @change="({path, value, ack}) =>
           $emit('change', {path: ['condition', ...path], value, ack})"
       />
+      <computed-field
+        v-else-if="model.branchType === 'index'"
+        label="Index"
+        hint="Which child to apply. An index of 2 will choose the 2nd child."
+        :model="model.condition"
+        :error-messages="errors.condition"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['condition', ...path], value, ack})"
+      />
     </v-expand-transition>
     <smart-combobox
       label="Tags"
@@ -51,7 +60,8 @@
 				{value: 'failedSave', text: 'Save failed'},
         {value: 'successfulSave', text: 'Save succeeded'},
 				{value: 'eachTarget', text: 'Apply to each target'},
-				{value: 'random', text: 'Random'},
+        {value: 'random', text: 'Random'},
+				{value: 'index', text: 'Calculated index'},
 			],
     }},
     computed: {
@@ -64,6 +74,7 @@
           case 'successfulSave': return 'If the parent save is made, the child properties are applied';
           case 'eachTarget': return 'Applies each child property once per target';
           case 'random': return 'Chooses one child property at random and applies it';
+          case 'index': return 'Chooses one child property to apply based on the given index';
           default: return '';
         }
       }

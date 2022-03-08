@@ -28,6 +28,7 @@ export default {
         case 'successfulSave': return 'On save';
         case 'eachTarget': return 'Each target';
         case 'random': return 'Pick one at random';
+        case 'index': return 'Pick one by index';
         default: return '';
       }
     }
