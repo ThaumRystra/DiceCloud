@@ -31,7 +31,7 @@ export default function computeVariableAsSkill(computation, node, prop){
   // Combine everything to get the final result
   const statBase = node.data.baseValue || 0;
   const aggregator = node.data.effectAggregator;
-  const aggregatorBase = aggregator.base || 0;
+  const aggregatorBase = aggregator?.base || 0;
 
   // If there is no aggregator, determine if the prop can hide, then exit
   if (!aggregator){
