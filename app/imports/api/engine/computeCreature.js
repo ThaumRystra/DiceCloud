@@ -12,11 +12,19 @@ export default function computeCreature(creatureId){
     writeAlteredProperties(computation);
     writeScope(creatureId, computation.scope);
   } catch (e){
+    const errorText = e.reason || e.message || e.toString();
     computation.errors.push({
       type: 'crash',
-      details: e.reason || e.message || e.toString(),
+      details: {error: errorText},
     });
-    console.error(e);
+    const logError = {
+      creatureId,
+      computeError: errorText,
+    };
+    if (e.stack){
+      logError.location = e.stack.split('\n')[1];
+    }
+    console.error(logError);
   } finally {
     writeErrors(creatureId, computation.errors);
   }
