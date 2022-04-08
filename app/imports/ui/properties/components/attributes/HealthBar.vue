@@ -96,13 +96,22 @@ import chroma from 'chroma-js';
     components: {
       IncrementMenu
     },
+    inject: {
+      theme: {
+        default: {
+          isDark: false,
+        },
+      },
+    },
 		props: {
 			value: Number,
 			maxValue: Number,
 			name: String,
       color: {
         type: String,
-        default: '#66BB6A',
+        default() {
+          return this.$vuetify.theme.currentTheme.primary
+        },
       },
       midColor: {
         type: String,

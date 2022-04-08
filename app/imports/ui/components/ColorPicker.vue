@@ -15,7 +15,7 @@
         {{ label }}
         <v-icon
           :right="!!label"
-          :color="!!label && value"
+          :color="label && value"
         >
           mdi-format-paint
         </v-icon>
