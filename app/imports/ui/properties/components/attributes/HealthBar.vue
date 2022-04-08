@@ -3,9 +3,9 @@
     wrap
     align-center
     justify-center
-    style="min-height: 48px;"
+    style="min-height: 42px;"
     :class="{ hover }"
-    class="my-3 health-bar"
+    class="my-1 health-bar"
     :data-id="_id"
   >
     <div
@@ -18,37 +18,55 @@
     </div>
     <v-flex
       style="
-        height: 20px;
+        height: 24px;
         flex-basis: 300px;
         flex-grow: 100;
       "
     >
-      <v-layout
+      <div
         column
         align-center
         style="cursor: pointer;"
         class="bar"
         @click="edit"
       >
-        <v-progress-linear
-          :value="(value / maxValue) * 100"
-          height="20"
-          color="green lighten-1"
-          class="ma-0"
-        />
-        <span
-          class="value"
-          style="
-            margin-top: -20px;
-            z-index: 1;
-            font-size: 15px;
-            font-weight: 600;
-            height: 20px;
-          "
+        <div
+          style="height: 24px; width: 100%; position: relative; transition: background-color 0.5s ease;"
+          :style="{
+            backgroundColor: barBackgroundColor
+          }"
         >
-          {{ value }} / {{ maxValue }}
-        </span>
-      </v-layout>
+          <div
+            class="filler"
+            style="height: 100%; transform-origin: left; transition: all 0.5s ease;"
+            :style="{
+              backgroundColor: barColor,
+              transform: `scaleX(${value / maxValue})`,
+            }"
+          />
+          <div
+            class="value"
+            :class="{
+              'white--text': isTextLight,
+              'black--text': !isTextLight,
+            }"
+            style="
+              font-size: 15px;
+              line-height: 24px;
+              font-weight: 600;
+              position: absolute;
+              left: 0;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              text-align: center;
+
+            "
+          >
+            {{ value }} / {{ maxValue }}
+          </div>
+        </div>
+      </div>
       <transition name="transition">
         <increment-menu
           v-show="editing"
@@ -71,6 +89,9 @@
 
 <script lang="js">
 import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
+import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+import chroma from 'chroma-js';
+
 	export default {
     components: {
       IncrementMenu
@@ -79,6 +100,18 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 			value: Number,
 			maxValue: Number,
 			name: String,
+      color: {
+        type: String,
+        default: '#66BB6A',
+      },
+      midColor: {
+        type: String,
+        default: undefined,
+      },
+      lowColor: {
+        type: String,
+        default: undefined,
+      },
 			_id: String,
 		},
 		data() {
@@ -87,6 +120,37 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 				hover: false,
 			};
 		},
+    computed: {
+      barColor() {
+        const fraction = this.value / this.maxValue;
+        if (!Number.isFinite(fraction)) return this.color;
+        if (fraction > 0.5){
+          return this.color;
+        } else if (this.midColor && this.lowColor) {
+          return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
+        } else if (this.midColor){
+          return this.midColor;
+        }
+        return this.color;
+      },
+      barBackgroundColor(){
+        return chroma(this.barColor)
+        .darken(1.5)
+        .desaturate(1.5)
+        .hex();
+      },
+      isTextLight(){
+        return isDarkColor(this.barBackgroundColor);
+        /* Change color at the halfway mark
+        const fraction = this.value / this.maxValue;
+        if (fraction >= 0.5){
+          return isDarkColor(this.barColor);
+        } else {
+          return isDarkColor(this.barBackgroundColor);
+        }
+        */
+      }
+    },
 		methods: {
 			edit() {
 				this.editing = true;
