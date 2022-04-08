@@ -22,6 +22,12 @@
         </v-card>
       </div>
 
+      <damage-multiplier-card
+        v-if="multipliers && multipliers.length"
+        :multipliers="multipliers"
+        @click-multiplier="clickProperty"
+      />
+
       <div
         v-if="appliedBuffs.length"
         class="buffs"
@@ -199,10 +205,6 @@
         </v-card>
       </div>
 
-      <div v-if="numKeys(creature.damageMultipliers)">
-        <damage-multiplier-card :model="creature.damageMultipliers" />
-      </div>
-
       <div
         v-if="savingThrows.length"
         class="saving-throws"
@@ -367,7 +369,9 @@
   import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
-  const getProperties = function(creature, filter){
+  const getProperties = function(creature, filter, options = {
+    sort: {order: 1}
+  }){
     if (!creature) return;
     if (creature.settings.hideUnusedStats){
       filter.hide = {$ne: true};
@@ -376,9 +380,8 @@
     filter.removed = {$ne: true};
     filter.inactive = {$ne: true};
     filter.overridden = {$ne: true};
-    return CreatureProperties.find(filter, {
-      sort: {order: 1}
-    });
+
+    return CreatureProperties.find(filter, options);
   };
 
 	const getAttributeOfType = function(creature, type){
@@ -421,7 +424,7 @@
     }},
 		meteor: {
       creature(){
-        return Creatures.findOne(this.creatureId);
+        return Creatures.findOne(this.creatureId, {fields: {settings: 1}});
       },
 			abilities(){
 				return getAttributeOfType(this.creature, 'ability');
@@ -484,6 +487,13 @@
       appliedBuffs(){
         return getProperties(this.creature, {type: 'buff'});
 			},
+      multipliers(){
+        return getProperties(this.creature, {
+          type: 'damageMultiplier'
+        }, {
+          sort: {value: 1, order: 1}
+        });
+      },
       attacks(){
         let props = getProperties(this.creature, {type: 'attack'})
         return props && props.map(attack => {
@@ -511,10 +521,6 @@
 					damageProperty.call({_id, operation: 'increment' ,value: -value});
 				}
 			},
-      numKeys(obj){
-        if (!obj) return 0;
-        return Object.keys(obj).length;
-      },
       softRemove(_id){
         softRemoveProperty.call({_id}, error => {
           if (error) console.error(error);
@@ -531,7 +537,7 @@
             if (!spellId) return;
             doCastSpell.call({spellId, slotId}, error => {
               if (!error) return;
-              snackbar({text: error.reason});
+              snackbar({text: error.reason || error.message || error.toString()});
               console.error(error);
             });
           },

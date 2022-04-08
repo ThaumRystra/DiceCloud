@@ -16,6 +16,7 @@ export default {
   data(){ return {
     error: false,
     ackErrors: null,
+    rulesErrors: null,
     focused: false,
     loading: false,
     dirty: false,
@@ -30,6 +31,7 @@ export default {
       type: Number,
       default: undefined,
     },
+    rules: Array,
   },
   watch: {
     focused(newFocus){
@@ -42,7 +44,11 @@ export default {
       // Start the loading bar on defocus if the input is dirty
       // It might be a lie, we aren't doing the work yet, but it feels laggy
       // to defocus an element and then it starts working after a delay
-      if (!newFocus && this.dirty){
+      if (
+        !newFocus &&
+        this.dirty &&
+        !(this.rulesErrors && this.rulesErrors.length)
+      ){
         if (this.hasChangeListener) this.loading = true;
       }
     },
@@ -54,7 +60,10 @@ export default {
       }
     },
     value(newValue){
-      if (!this.focused){
+      if (
+        !this.focused &&
+        !(this.rulesErrors && this.rulesErrors.length)
+      ){
         this.safeValue = newValue;
       }
     },
@@ -69,6 +78,22 @@ export default {
       this.$emit('input', val);
       this.inputValue = val;
       this.dirty = true;
+
+      // Apply the rules if there are any
+      this.rulesErrors = null;
+      if (this.rules && this.rules.length){
+        this.rules.forEach(rule => {
+          const result = rule(val);
+          if (typeof result === 'string'){
+            if (!this.rulesErrors) this.rulesErrors = [];
+            this.rulesErrors.push(result);
+          }
+        });
+      }
+      if (this.rulesErrors){
+        return;
+      }
+
       this.debouncedChange(val);
     },
     acknowledgeChange(error){
@@ -81,6 +106,8 @@ export default {
 				this.ackErrors = error;
 			} else if (error.reason){
         this.ackErrors = error.reason;
+      } else if (error.message){
+        this.ackErrors = error.message;
       } else {
 				this.ackErrors = 'Something went wrong'
 				console.error(error);
@@ -106,6 +133,9 @@ export default {
   computed: {
     errors(){
       let errors = this.ackErrors ? [this.ackErrors] : [];
+      if (Array.isArray(this.rulesErrors)){
+        errors.push(...this.rulesErrors)
+      }
       if (Array.isArray(this.errorMessages)){
         errors.push(...this.errorMessages);
       } else if (typeof this.errorMessages === 'string' && this.errorMessages){

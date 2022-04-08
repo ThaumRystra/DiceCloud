@@ -18,6 +18,8 @@ let BranchSchema = createPropertySchema({
       'eachTarget',
       // Pick one child at random
       'random',
+      // Pick one child based on a given index
+      'index',
       // if it has option children, asks to select one
       // Otherwise presents its own text with yes/no
       //'choice',

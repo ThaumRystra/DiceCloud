@@ -16,8 +16,8 @@ const migrateTo = new ValidatedMethod({
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
+    numRequests: 1,
+    timeInterval: 10000,
   },
   run({version}) {
     if (Meteor.isClient) return;

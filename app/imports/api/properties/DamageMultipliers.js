@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 /*
  * DamageMultipliers are multipliers that affect how much damage is taken from
@@ -20,6 +21,7 @@ let DamageMultiplierSchema = new SimpleSchema({
   'damageTypes.$': {
     type: String,
     max: STORAGE_LIMITS.calculation,
+    regEx: VARIABLE_NAME_REGEX,
   },
 	// The value of the damage multiplier
 	value: {

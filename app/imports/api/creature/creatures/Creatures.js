@@ -133,6 +133,7 @@ let CreatureSchema = new SimpleSchema({
   'computeErrors.$.details' : {
     type: Object,
     blackbox: true,
+    optional: true,
   },
 
   // Tabletop

@@ -1,72 +1,96 @@
 <template lang="html">
-  <v-card>
-    <v-list
-      three-line
-    >
-      <v-list-item v-if="weaknesses.length">
-        <v-list-item-content>
-          <v-list-item-title>
-            Vulnerabilities
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ weaknesses }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item v-if="resistances.length">
-        <v-list-item-content>
-          <v-list-item-title>
-            Resistances
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ resistances }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item v-if="immunities.length">
-        <v-list-item-content>
-          <v-list-item-title>
-            Immunities
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ immunities }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-  </v-card>
+  <div>
+    <v-card>
+      <v-list>
+        <v-list-item
+          v-for="multiplier in multipliers"
+          :key="multiplier._id"
+          :data-id="multiplier._id"
+          @click="$emit('click-multiplier', {_id: multiplier._id})"
+        >
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ title(multiplier) }}
+            </v-list-item-title>
+            <v-list-item-subtitle v-if="multiplier.name">
+              {{ multiplier.name }}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle class="d-flex flex-wrap align-center">
+              <v-chip
+                v-for="(damageType, index) in multiplier.damageTypes"
+                :key="index"
+                class="my-1 mr-1"
+                style="cursor: pointer"
+                :input-value="true"
+                outlined
+                small
+                label
+              >
+                {{ damageType }}
+              </v-chip>
+            </v-list-item-subtitle>
+            <v-list-item-subtitle
+              v-if="multiplier.includeTags && multiplier.includeTags.length"
+              class="d-flex flex-wrap align-center"
+            >
+              <div>
+                For:
+              </div>
+              <v-chip
+                v-for="(damageType, index) in multiplier.includeTags"
+                :key="index"
+                class="ma-1"
+                style="cursor: pointer"
+                :input-value="true"
+                small
+                outlined
+              >
+                {{ damageType }}
+              </v-chip>
+            </v-list-item-subtitle>
+            <v-list-item-subtitle
+              v-if="multiplier.excludeTags && multiplier.excludeTags.length"
+              class="d-flex flex-wrap align-center"
+            >
+              <div>
+                Except:
+              </div>
+              <v-chip
+                v-for="(damageType, index) in multiplier.excludeTags"
+                :key="index"
+                class="ma-1"
+                style="cursor: pointer"
+                :input-value="true"
+                small
+                outlined
+              >
+                {{ damageType }}
+              </v-chip>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-card>
+  </div>
 </template>
 
 <script lang="js">
-
 export default {
   props: {
-    model:{
-      type: Object,
+    multipliers:{
+      type: Array,
       required: true,
     }
   },
-  computed: {
-    weaknesses(){
-      return getKeysOfValue(this.model, 2).join(', ');
-    },
-    resistances(){
-      return getKeysOfValue(this.model, 0.5).join(', ');
-    },
-    immunities(){
-      return getKeysOfValue(this.model, 0).join(', ');
-    },
-  }
-}
-
-function getKeysOfValue(object, value){
-  let keys = [];
-  for (let key in object){
-    if (object[key] === value){
-      keys.push(key);
+  methods: {
+    title(prop){
+      switch (prop.value){
+        case 0: return 'Immunity';
+        case 0.5: return 'Resistance';
+        case 2: return 'Vulnerability';
+      }
     }
   }
-  return keys;
 }
 </script>
 

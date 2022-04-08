@@ -6,6 +6,21 @@ import getAggregatorResult from './getAggregatorResult.js';
  */
  export default function computeImplicitVariable(node){
    const prop = {};
+
+   // Combine damage multipliers
+   if (node.data.immunity){
+     prop.immunity = node.data.immunity;
+     prop.immunities = node.data.immunities;
+   }
+   if (node.data.resistance){
+     prop.resistance = node.data.resistance;
+     prop.resistances = node.data.resistances;
+   }
+   if (node.data.vulnerability){
+     prop.vulnerability = node.data.vulnerability;
+     prop.vulnerabilities = node.data.vulnerabilities;
+   }
+
    const result = getAggregatorResult(node);
    if (result !== undefined){
      prop.value = result;

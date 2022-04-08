@@ -11,11 +11,11 @@ export default function applyAction(node, {creature, targets, scope, log}){
   const prop = node.node;
   if (prop.target === 'self') targets = [creature];
 
-  // Log the name and description
+  // Log the name and summary
   let content = { name: prop.name };
-  if (prop.description?.text){
-    recalculateInlineCalculations(prop.description, scope, log);
-    content.value = prop.description.value;
+  if (prop.summary?.text){
+    recalculateInlineCalculations(prop.summary, scope, log);
+    content.value = prop.summary.value;
   }
   if (content.name || content.value){
     log.content.push(content);
@@ -33,7 +33,7 @@ export default function applyAction(node, {creature, targets, scope, log}){
       targets.forEach(target => {
         applyAttackToTarget({attack, target, scope, log});
         // Apply the children, but only to the current target
-        applyChildren(node, {targets: [target], scope, log});
+        applyChildren(node, {creature, targets: [target], scope, log});
       });
     } else {
       applyAttackWithoutTarget({attack, scope, log});
@@ -65,6 +65,13 @@ function applyAttackWithoutTarget({attack, scope, log}){
   } else if(scope['$attackAdvantage'] === -1){
     name += ' (Disadvantage)';
   }
+  if (!criticalMiss){
+    scope['$attackHit'] = {value: true}
+  }
+  if (!criticalHit){
+    scope['$attackMiss'] = {value: true};
+  }
+
   log.content.push({
     name,
     value: `${resultPrefix}\n**${result}**`,
@@ -106,10 +113,10 @@ function applyAttackToTarget({attack, target, scope, log}){
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
     });
-    if ((result > armor) || (criticalHit)){
-      scope['$attackHit'] = true;
+    if (criticalMiss || result < armor){
+      scope['$attackMiss'] = {value: true};
     } else {
-      scope['$attackMiss'] = true;
+      scope['$attackHit'] = {value: true};
     }
   } else {
     log.content.push({
@@ -127,7 +134,7 @@ function applyAttackToTarget({attack, target, scope, log}){
 function rollAttack(attack, scope){
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
-  if (attack.advantage === 1 || scope['$attackAdvantage']){
+  if (scope['$attackAdvantage'] === 1){
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
       value = a;
@@ -136,7 +143,7 @@ function rollAttack(attack, scope){
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
-  } else if (attack.advantage === -1 || scope['$attackDisadvantage']){
+  } else if (scope['$attackAdvantage'] === -1){
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
@@ -161,15 +168,10 @@ function applyCrits(value, scope){
   let criticalMiss;
   if (criticalHit){
     scope['$criticalHit'] = {value: true};
-    scope['$attackHit'] = {value: true};
   } else {
     criticalMiss = value === 1;
     if (criticalMiss){
-      scope['$criticalMiss'] = 1;
-      scope['$attackMiss'] = {value: true};
-    } else {
-      // Untargeted attacks hit by default
-      scope['$attackHit'] = {value: true}
+      scope['$criticalMiss'] = {value: true};
     }
   }
   return {criticalHit, criticalMiss};

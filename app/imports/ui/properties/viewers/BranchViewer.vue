@@ -10,6 +10,11 @@
         name="Condition"
         :calculation="model.condition"
       />
+      <property-field
+        v-else-if="model.branchType === 'index'"
+        name="Index"
+        :calculation="model.condition"
+      />
     </v-row>
   </div>
 </template>
@@ -30,6 +35,7 @@
           case 'successfulSave': return 'On save';
           case 'eachTarget': return 'Each target';
           case 'random': return 'Pick one at random';
+          case 'index': return 'Pick one by index';
           default: return '';
         }
       }

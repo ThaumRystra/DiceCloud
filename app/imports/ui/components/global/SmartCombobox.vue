@@ -7,6 +7,7 @@
     :menu-props="{auto: true, lazy: true}"
     :search-input.sync="searchInput"
     :disabled="isDisabled"
+    :multiple="multiple"
     outlined
     @change="customChange"
     @focus="focused = true"
@@ -24,12 +25,28 @@
 
 	export default {
 		mixins: [SmartInput],
+    props: {
+      multiple: Boolean,
+    },
     data(){ return {
       searchInput: '',
     }},
+    computed: {
+      // Multiple combobox gets a long default debounce time while single
+      // value gets a shorter one
+      debounceTime() {
+        if (Number.isFinite(this.debounce)){
+          return this.debounce;
+        } else if (Number.isFinite(this.context.debounceTime)){
+          return this.context.debounceTime;
+        } else {
+          return this.multiple ? 1000 : 100;
+        }
+      },
+    },
     methods: {
       customChange(val){
-        this.change(val);
+        this.input(val);
         this.searchInput = '';
       },
     }

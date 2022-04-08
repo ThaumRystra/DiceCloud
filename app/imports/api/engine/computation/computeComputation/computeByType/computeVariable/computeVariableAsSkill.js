@@ -29,8 +29,9 @@ export default function computeVariableAsSkill(computation, node, prop){
   }
 
   // Combine everything to get the final result
-  const statBase = node.data.baseValue;
+  const statBase = node.data.baseValue || 0;
   const aggregator = node.data.effectAggregator;
+  const aggregatorBase = aggregator?.base || 0;
 
   // If there is no aggregator, determine if the prop can hide, then exit
   if (!aggregator){
@@ -41,7 +42,7 @@ export default function computeVariableAsSkill(computation, node, prop){
     return;
   }
   // Combine aggregator
-  const base = (statBase > aggregator.base ? statBase : aggregator.base) || 0;
+  const base = statBase > aggregatorBase ? statBase : aggregatorBase;
   let result = (base + prop.abilityMod + profBonus + aggregator.add) * aggregator.mul;
   if (result < aggregator.min) result = aggregator.min;
   if (result > aggregator.max) result = aggregator.max;

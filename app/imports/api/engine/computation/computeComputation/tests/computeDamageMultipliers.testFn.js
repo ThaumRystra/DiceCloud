@@ -7,9 +7,11 @@ export default function(){
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
   const scope = id => computation.scope[id];
-  assert.equal(scope('blugeoningMultiplier').value, 1);
-  assert.equal(scope('customDamageMultiplier').value, 0.5);
-  assert.equal(scope('slashingMultiplier').value, 0);
+  assert.isTrue(scope('blugeoning').vulnerability);
+  assert.isTrue(scope('customDamage').resistance);
+  assert.isNotTrue(scope('customDamage').immunity);
+  assert.isNotTrue(scope('customDamage').vulnerability);
+  assert.isTrue(scope('slashing').immunity);
 }
 
 var testProperties = [

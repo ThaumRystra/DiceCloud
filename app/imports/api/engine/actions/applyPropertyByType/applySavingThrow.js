@@ -22,10 +22,21 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
   }
   log.content.push({
     name: prop.name,
-    value: ' DC ' + dc,
+    value: `DC **${dc}**`,
     inline: true,
   });
 
+  // If there are no save targets, apply all children as if the save both
+  // succeeeded and failed
+  if (!saveTargets?.length){
+    scope['$saveFailed'] = {value: true};
+    scope['$saveSucceeded'] = {value: true};
+    return node.children.forEach(child => applyProperty(child, {
+      creature, targets, scope, log
+    }));
+  }
+
+  // Each target makes the saving throw
   saveTargets.forEach(target => {
     delete scope['$saveFailed'];
     delete scope['$saveSucceeded'];
@@ -55,24 +66,24 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
       const [a, b] = rollDice(2, 20);
       if (a >= b) {
         value = a;
-        resultPrefix = `Advantage: 1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+        resultPrefix = `Advantage\n1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
       } else {
         value = b;
-        resultPrefix = `Advantage: 1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+        resultPrefix = `Advantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
       }
     } else if (save.advantage === -1){
       const [a, b] = rollDice(2, 20);
       if (a <= b) {
         value = a;
-        resultPrefix = `Disadvantage: 1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+        resultPrefix = `Disadvantage\n1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
       } else {
         value = b;
-        resultPrefix = `Disadvantage: 1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+        resultPrefix = `Disadvantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
       }
     } else {
       values = rollDice(1, 20);
       value = values[0];
-      resultPrefix = `1d20 [ ${value} ] ${rollModifierText} = `
+      resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
     }
     scope['$saveDiceRoll'] = {value};
     const result = value + save.value || 0;
@@ -84,8 +95,8 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
       scope['$saveFailed'] = {value: true};
     }
     log.content.push({
-      name: 'Save',
-      value: resultPrefix + result + (saveSuccess ? 'Passed' : 'Failed'),
+      name: saveSuccess ? 'Successful save' : 'Failed save',
+      value: resultPrefix + '\n**' + result + '**',
       inline: true,
     });
     return applyChildren();

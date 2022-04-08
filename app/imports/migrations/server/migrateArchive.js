@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import cleanAt1 from '/imports/migrations/server/dbv1/cleanAt1.js';
 
 /* eslint no-fallthrough: "off" -- Using switch fallthrough to run all
 migration steps after the current version of the file. */
@@ -16,13 +16,4 @@ export default function migrateArchive(archive){
 function migrateLegacyArchive(archive){
   // TODO:
   throw 'Not implemented';
-}
-
-function cleanAt1(archive){
-  archive.properties.map(prop => {
-    const schema = CreatureProperties.simpleSchema(prop);
-    const cleanProp = schema.clean(prop);
-    schema.validate(cleanProp);
-    return cleanProp;
-  });
 }

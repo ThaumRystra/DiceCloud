@@ -41,6 +41,11 @@ let RollSchema = createPropertySchema({
     parseLevel: 'compile',
     optional: true,
   },
+  // Prevent the roll from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 let ComputedOnlyRollSchema = createPropertySchema({

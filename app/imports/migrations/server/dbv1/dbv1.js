@@ -215,16 +215,17 @@ function getInlineComputationTransforms(key){
   ];
 }
 
-function calculationUp(val){
+export function calculationUp(val){
   if (typeof val !== 'string') return val;
+  if (!val.replace) console.log({val, replace: val.replace});
   return val.replace(/#(\w+).(\w+)Result/g, '#$1.$2')
-    .replace('.value', '.total')
-    .replace('.currentValue', '.value');
+    .replace(/\.value/g, '.total')
+    .replace(/\.currentValue/g, '.value');
 }
 
 function calculationDown(val){
   if (typeof val !== 'string') return val;
-  return val.replace('.value', '.currentValue').replace('.total', '.value');
+  return val.replace(/\.value/g, '.currentValue').replace(/\.total/g, '.value');
 }
 
 function nanToNull(val){

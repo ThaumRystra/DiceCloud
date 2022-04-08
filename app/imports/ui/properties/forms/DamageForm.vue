@@ -23,6 +23,7 @@
           label="Damage Type"
           style="flex-basis: 200px;"
           hint="Use the Healing type to restore hit points"
+          :rules="damageTypeRules"
           :items="DAMAGE_TYPES"
           :value="model.damageType"
           :error-messages="errors.damageType"
@@ -46,7 +47,8 @@
       multiple
       chips
       deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
+      hint=""
+      :items="['magical', 'silvered']"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
@@ -57,6 +59,7 @@
 <script lang="js">
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 export default {
   mixins: [propertyFormMixin],
@@ -68,6 +71,14 @@ export default {
 	},
 	data(){return{
 		DAMAGE_TYPES,
+    damageTypeRules: [
+      value => {
+        if (!value) return 'Damage type is required';
+        if (!VARIABLE_NAME_REGEX.test(value)){
+          return `${value} is not a valid damage name`
+        }
+      }
+    ],
 	}},
 	computed: {
 		targetOptions(){
