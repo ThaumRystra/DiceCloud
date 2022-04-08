@@ -23,6 +23,7 @@
     "animejs": "^2.2.0",
     "aws-sdk": "^2.1059.0",
     "bcrypt": "^5.0.0",
+    "chroma-js": "^2.4.2",
     "core-js": "^2.6.11",
     "css-box-shadow": "^1.0.0-3",
     "date-fns": "^1.30.1",

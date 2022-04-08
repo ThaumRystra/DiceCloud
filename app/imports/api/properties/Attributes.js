@@ -48,6 +48,18 @@ let AttributeSchema = createPropertySchema({
     type: 'fieldToCompute',
 		optional: true,
   },
+  // For type healthBar midColor, and lowColor can be set separately from the
+  // property's color, which is used as the undamaged color
+  'healthBarColorMid': {
+		type: String,
+		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
+		optional: true,
+  },
+  'healthBarColorLow': {
+		type: String,
+		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
+		optional: true,
+  },
 	// The starting value, before effects
 	baseValue: {
     type: 'fieldToCompute',

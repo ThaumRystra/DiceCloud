@@ -47,23 +47,25 @@
       :hint="attributeTypeHints[model.attributeType]"
       @change="change('attributeType', ...arguments)"
     />
-    <smart-select
-      v-if="model.attributeType === 'hitDice'"
-      label="Hit Dice Size"
-      :items="['d4', 'd6', 'd8', 'd10', 'd12', 'd20']"
-      :value="model.hitDiceSize"
-      :error-messages="errors.hitDiceSize"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('hitDiceSize', ...arguments)"
-    />
-    <computed-field
-      v-if="model.attributeType === 'spellSlot'"
-      label="Spell slot level"
-      :model="model.spellSlotLevel"
-      :error-messages="errors.spellSlotLevel"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['spellSlotLevel', ...path], value, ack})"
-    />
+    <v-expand-transition>
+      <smart-select
+        v-if="model.attributeType === 'hitDice'"
+        label="Hit Dice Size"
+        :items="['d4', 'd6', 'd8', 'd10', 'd12', 'd20']"
+        :value="model.hitDiceSize"
+        :error-messages="errors.hitDiceSize"
+        :menu-props="{auto: true, lazy: true}"
+        @change="change('hitDiceSize', ...arguments)"
+      />
+      <computed-field
+        v-if="model.attributeType === 'spellSlot'"
+        label="Spell slot level"
+        :model="model.spellSlotLevel"
+        :error-messages="errors.spellSlotLevel"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['spellSlotLevel', ...path], value, ack})"
+      />
+    </v-expand-transition>
     <inline-computation-field
       label="Description"
       :model="model.description"
@@ -71,70 +73,94 @@
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <smart-combobox
-        label="Tags"
-        multiple
-        chips
-        deletable-chips
-        hint="Used to let slots find this property in a library, should otherwise be left blank"
-        :value="model.tags"
-        @change="change('tags', ...arguments)"
-      />
-      <div class="layout column align-center">
-        <smart-switch
-          v-if="model.attributeType !== 'hitDice'"
-          label="Allow decimal values"
-          class="no-flex"
-          :value="model.decimal"
-          :error-messages="errors.decimal"
-          @change="change('decimal', ...arguments)"
-        />
-        <div
-          class="layout justify-center"
-          style="align-self: stretch;"
+    <form-sections>
+      <v-expand-transition>
+        <form-section
+          v-if="model.attributeType === 'healthBar'"
+          name="Health Bar Settings"
+          standalone
         >
-          <text-field
-            label="Damage"
-            type="number"
-            class="damage-field text-center"
-            style="max-width: 300px;"
-            hint="The attribute's final value is reduced by this amount. Attribute damage can increase this value until it matches the attribute's computed value. Should mostly be left blank."
-            :disabled="!context.isLibraryForm"
-            :value="model.damage"
-            :error-messages="errors.damage"
-            @change="change('damage', ...arguments)"
+          <color-picker
+            :value="model.healthBarColorMid"
+            label="Half-filled color"
+            @input="value => $emit('change', {path: ['healthBarColorMid'], value})"
+          />
+          <color-picker
+            :value="model.healthBarColorLow"
+            label="Empty color"
+            @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
+          />
+        </form-section>
+      </v-expand-transition>
+
+      <form-section
+        name="Advanced"
+      >
+        <smart-combobox
+          label="Tags"
+          multiple
+          chips
+          deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
+          :value="model.tags"
+          @change="change('tags', ...arguments)"
+        />
+        <div class="layout column align-center">
+          <smart-switch
+            v-if="model.attributeType !== 'hitDice'"
+            label="Allow decimal values"
+            class="no-flex"
+            :value="model.decimal"
+            :error-messages="errors.decimal"
+            @change="change('decimal', ...arguments)"
+          />
+          <div
+            class="layout justify-center"
+            style="align-self: stretch;"
+          >
+            <text-field
+              label="Damage"
+              type="number"
+              class="damage-field text-center"
+              style="max-width: 300px;"
+              hint="The attribute's final value is reduced by this amount. Attribute damage can increase this value until it matches the attribute's computed value. Should mostly be left blank."
+              :disabled="!context.isLibraryForm"
+              :value="model.damage"
+              :error-messages="errors.damage"
+              @change="change('damage', ...arguments)"
+            />
+          </div>
+        </div>
+        <div class="layout wrap">
+          <smart-select
+            v-if="model.attributeType !== 'hitDice'"
+            label="Reset"
+            clearable
+            style="flex-basis: 300px;"
+            hint="When damage should be reset to zero"
+            :items="resetOptions"
+            :value="model.reset"
+            :error-messages="errors.reset"
+            :menu-props="{auto: true, lazy: true}"
+            @change="change('reset', ...arguments)"
           />
         </div>
-      </div>
-      <div class="layout wrap">
-        <smart-select
-          v-if="model.attributeType !== 'hitDice'"
-          label="Reset"
-          clearable
-          style="flex-basis: 300px;"
-          hint="When damage should be reset to zero"
-          :items="resetOptions"
-          :value="model.reset"
-          :error-messages="errors.reset"
-          :menu-props="{auto: true, lazy: true}"
-          @change="change('reset', ...arguments)"
-        />
-      </div>
-    </form-section>
+      </form-section>
+    </form-sections>
   </div>
 </template>
 
 <script lang="js">
-	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+	import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+  import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 
 	export default {
 		components: {
 			FormSection,
+      FormSections,
+      ColorPicker,
 		},
     mixins: [propertyFormMixin],
     inject: {

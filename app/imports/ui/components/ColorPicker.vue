@@ -13,7 +13,10 @@
         v-on="on"
       >
         {{ label }}
-        <v-icon :right="!!label">
+        <v-icon
+          :right="!!label"
+          :color="label && value"
+        >
           mdi-format-paint
         </v-icon>
       </v-btn>
