@@ -6,9 +6,11 @@ import resolve, { toString } from '/imports/parser/resolve.js';
 export default function applyRoll(node, {creature, targets, scope, log}){
   const prop = node.node;
 
-  const applyChildren = node.children.forEach(child => applyProperty(child, {
-    creature, targets, scope, log
-  }));
+  const applyChildren = function(){
+    node.children.forEach(child => applyProperty(child, {
+      creature, targets, scope, log
+    }));
+  };
 
   if (prop.roll?.calculation){
     const logValue = [];
@@ -54,7 +56,5 @@ export default function applyRoll(node, {creature, targets, scope, log}){
       });
     }
   }
-  return node.children.forEach(child => applyProperty(child, {
-    creature, targets, scope, log
-  }));
+  return applyChildren();
 }
