@@ -214,7 +214,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
   }
 } else {
   if (Meteor.isServer){
-    console.log('No S3 details specified, files will be stored in the local filesystem');
+    // console.log('No S3 details specified, files will be stored in the local filesystem');
   }
   createS3FilesCollection = function({
     collectionName,

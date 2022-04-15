@@ -41,12 +41,6 @@ export default {
     actions(){
       return getProperties(this.creatureId, 'action');
     },
-    attacks(){
-      return getProperties(this.creatureId, 'attack');
-    },
-    spells(){
-      return getProperties(this.creatureId, 'spell');
-    },
   }
 }
 </script>

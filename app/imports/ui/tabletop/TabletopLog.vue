@@ -1,51 +1,50 @@
 <template lang="html">
-  <div class="tabletop-log">
-    <div class="messages layout column justify-end align-end">
-      <div
-        v-for="message in messages"
-        :key="message._id"
-        class="message"
-      >
-        {{ message.content }}
-      </div>
-    </div>
-    <v-textarea
-      v-model="messageContent"
-      @keyup.enter.prevent="sendMessage"
-    />
-  </div>
+  <log-component
+    :logs="logs"
+    :edit-permission="context.editPermission"
+    show-name
+    @submit="submit"
+  />
 </template>
 
 <script lang="js">
-import Messages, { sendMessage } from '/imports/api/tabletop/Messages.js';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
+import insertTabletopLog from '/imports/api/creature/log/CreatureLogs.js';
+import LogComponent from '/imports/ui/log/LogComponent.vue';
+
 export default {
+  components: {
+    LogComponent,
+  },
+  inject: {
+    context: {
+      default: {},
+    },
+  },
   props: {
     tabletopId: {
       type: String,
       required: true,
     },
   },
-  data(){ return {
-    messageContent: '',
-  }},
   meteor: {
-    messages() {
-      return Messages.find({
+    logs() {
+      return CreatureLogs.find({
         tabletopId: this.tabletopId,
       }, {
-        sort: {
-          timeStamp: 1,
-        },
+        sort: {date: -1},
+        limit: 50
       });
-    }
+    },
   },
   methods: {
-    sendMessage(){
-      sendMessage.call({
-        content: this.messageContent,
+    submit(){
+      insertTabletopLog.call({
+        content: this.logContent,
         tabletopId: this.tabletopId,
+      }, (error) => {
+        if (error) console.error(error);
       });
-      this.messageContent = '';
     },
   },
 }

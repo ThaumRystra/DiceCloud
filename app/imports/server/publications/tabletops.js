@@ -1,6 +1,7 @@
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import Messages from '/imports/api/tabletop/Messages.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 
 Meteor.publish('tabletops', function(){
   var userId = this.userId;
@@ -47,14 +48,17 @@ Meteor.publish('tabletop', function(tabletopId){
         initiativeRoll: 1,
       },
     });
-    let recentMessages = Messages.find({
+    const creatureIds = creatureSummaries.map(c => c._id);
+    let properties = CreatureProperties.find({
+      'ancestors.0.id': {$in: creatureIds},
+      removed: {$ne: true},
+    });
+    const logs = CreatureLogs.find({
       tabletopId,
     }, {
-      sort: {
-        timeStamp: -1,
-      },
-      limit: 100,
+      limit: 50,
+      sort: {date: -1},
     });
-    return [ tabletopCursor, creatureSummaries, recentMessages]
+    return [ tabletopCursor, creatureSummaries, properties, logs]
   })
 });

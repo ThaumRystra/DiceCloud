@@ -4,6 +4,8 @@ import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import {assertEditPermission} from '/imports/api/creature/creatures/creaturePermissions.js';
+import {assertUserInTabletop} from '/imports/api/tabletop/methods/shared/tabletopPermissions.js';
+
 import {parse, prettifyParseError} from '/imports/parser/parser.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
 const PER_CREATURE_LOG_LIMIT = 100;
@@ -39,6 +41,12 @@ let CreatureLogSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     index: 1,
+  },
+  tabletopId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    index: 1,
+    optional: true,
   },
   creatureName: {
     type: String,
@@ -105,10 +113,30 @@ const insertCreatureLog = new ValidatedMethod({
       'settings.discordWebhook': 1,
       name: 1,
       avatarPicture: 1,
+      tabletop: 1,
     }});
     assertEditPermission(creature, this.userId);
     // Build the new log
     let id = insertCreatureLogWork({log, creature, method: this})
+    return id;
+  },
+});
+
+const insertTabletopLog = new ValidatedMethod({
+  name: 'creatureLogs.methods.insertTabletopLog',
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+	validate: new SimpleSchema({
+		log: CreatureLogSchema.omit('date'),
+	}).validator(),
+  run({log}){
+    const tabletopId = log.tabletopId;
+    assertUserInTabletop(tabletopId, this.userId);
+    // Build the new log
+    let id = insertCreatureLogWork({log, method: this})
     return id;
   },
 });
@@ -120,12 +148,19 @@ export function insertCreatureLogWork({log, creature, method}){
   }
   if (!log.content?.length) return;
   log.date = new Date();
+  if (creature) log.tabletopId = creature.tabletop;
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer){
     method?.unblock();
-    removeOldLogs(creature._id);
-    logWebhook({log, creature});
+    if (creature){
+      removeOldLogs(creature._id);
+      logWebhook({log, creature});
+    }
+    if (log.tabletopId){
+      // Todo remove old tabletop logs
+      // Log webhook if it's different to creature webhook
+    }
   }
   return id;
 }
@@ -210,4 +245,4 @@ const logRoll = new ValidatedMethod({
 });
 
 export default CreatureLogs;
-export { CreatureLogSchema, insertCreatureLog, logRoll};
+export { CreatureLogSchema, insertCreatureLog, logRoll, insertTabletopLog};

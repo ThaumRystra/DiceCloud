@@ -1,4 +1,4 @@
-if<template>
+<template>
   <div class="character-sheet fill-height">
     <v-fade-transition mode="out-in">
       <div
