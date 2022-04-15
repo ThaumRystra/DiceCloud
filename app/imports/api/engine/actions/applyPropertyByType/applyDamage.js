@@ -104,7 +104,6 @@ export default function applyDamage(node, {
           log: {
             creatureId: target._id,
             content: [{
-              name,
               value: `Recieved **${damageDealt}** ${suffix}`,
             }],
           }

@@ -14,7 +14,10 @@
         :key="creature._id"
         :model="creature"
         :active="activeCreature === creature._id"
-        @click="activeCreature = creature._id"
+        :targeted="targets.includes(creature._id)"
+        @click="activeCreature = creature._id; targets = []"
+        @target="targets.push(creature._id)"
+        @untarget="untarget(creature._id)"
       />
       <div
         class="layout column ma-1"
@@ -64,6 +67,7 @@
             :key="action._id"
             :model="action"
             :data-id="action._id"
+            :targets="targets"
             @click="clickProperty({_id: action._id})"
           />
         </v-row>
@@ -114,6 +118,7 @@ export default {
   },
   data(){ return {
     activeCreature: undefined,
+    targets: [],
   }},
   meteor: {
     $subscribe:{
@@ -180,6 +185,12 @@ export default {
       }
       event.currentTarget.scrollLeft += event.deltaY + event.deltaX;
       event.preventDefault();
+    },
+    untarget(id){
+      const index = this.targets.indexOf(id);
+      if (index > -1) {
+        this.targets.splice(index, 1);
+      }
     }
   }
 }

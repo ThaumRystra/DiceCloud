@@ -1,7 +1,7 @@
 <template lang="html">
   <v-card
     style="height: 150px; min-width: 120px;"
-    :color="active ? 'primary' : ''"
+    :color="active ? 'accent' : ''"
     hover
     @mouseover="hover = true"
     @mouseleave="hover = false"
@@ -18,6 +18,15 @@
       {{ model.name }}
     </div>
     <card-highlight :active="hover" />
+    <v-btn
+      :color="targeted ? 'accent' : ''"
+      fab
+      small
+      style="position: fixed;"
+      @click.stop="targeted ? $emit('untarget') : $emit('target')"
+    >
+      <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
+    </v-btn>
   </v-card>
 </template>
 
@@ -33,6 +42,7 @@ export default {
       required: true,
     },
     active: Boolean,
+    targeted: Boolean,
   },
   data(){return {
     hover: false,

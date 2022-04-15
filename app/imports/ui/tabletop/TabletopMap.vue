@@ -3,6 +3,7 @@
 </template>
 
 <script lang="js">
+// TODO use Pixi.js to render a map
 export default {
 }
 </script>
