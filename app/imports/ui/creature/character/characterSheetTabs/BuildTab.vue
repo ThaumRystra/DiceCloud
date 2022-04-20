@@ -1,53 +1,6 @@
 <template lang="html">
-  <div class="inventory">
+  <div class="build">
     <column-layout wide-columns>
-      <div>
-        <v-card
-          hover
-          data-id="creature-summary"
-          @mouseover="summaryHover = true"
-          @mouseleave="summaryHover = false"
-          @click="showCharacterForm"
-        >
-          <v-img
-            v-if="creature.picture"
-            :src="creature.picture"
-          />
-          <v-card-title class="text-h6">
-            {{ creature.name }}
-          </v-card-title>
-          <v-card-text>
-            {{ creature.alignment }}<br>
-            {{ creature.gender }}
-          </v-card-text>
-          <card-highlight :active="summaryHover" />
-        </v-card>
-      </div>
-      <div>
-        <toolbar-card
-          data-id="slot-card"
-          @toolbarclick="showSlotDialog"
-        >
-          <template slot="toolbar">
-            <v-toolbar-title>
-              Build
-            </v-toolbar-title>
-            <v-spacer />
-            <v-toolbar-title>
-              <v-icon
-                small
-                style="width: 16px;"
-                class="mr-1"
-              >
-                mdi-pencil
-              </v-icon>
-            </v-toolbar-title>
-          </template>
-          <v-card-text style="background-color: inherit;">
-            <slots :creature-id="creatureId" />
-          </v-card-text>
-        </toolbar-card>
-      </div>
       <div>
         <v-card class="class-details">
           <v-card-title
@@ -117,13 +70,30 @@
           </v-list>
         </v-card>
       </div>
-      <div
-        v-for="note in notes"
-        :key="note._id"
-      >
-        <note-card
-          :model="note"
-        />
+      <div>
+        <toolbar-card
+          data-id="slot-card"
+          @toolbarclick="showSlotDialog"
+        >
+          <template slot="toolbar">
+            <v-toolbar-title>
+              Build
+            </v-toolbar-title>
+            <v-spacer />
+            <v-toolbar-title>
+              <v-icon
+                small
+                style="width: 16px;"
+                class="mr-1"
+              >
+                mdi-pencil
+              </v-icon>
+            </v-toolbar-title>
+          </template>
+          <v-card-text style="background-color: inherit;">
+            <slots :creature-id="creatureId" />
+          </v-card-text>
+        </toolbar-card>
       </div>
     </column-layout>
   </div>
@@ -133,18 +103,16 @@
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
 import Slots from '/imports/ui/creature/slots/Slots.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import CardHighlight from '/imports/ui/components/CardHighlight.vue';
+import CreatureSummary from '/imports/ui/creature/character/CreatureSummary.vue';
 
 export default {
   components: {
     ColumnLayout,
-    NoteCard,
     Slots,
     ToolbarCard,
-    CardHighlight,
+    CreatureSummary,
   },
   props: {
     creatureId: {
@@ -152,9 +120,6 @@ export default {
       required: true,
     },
   },
-  data(){return {
-    summaryHover: false,
-  }},
   computed: {
     highestClassLevels(){
       let highestLevels = {};
@@ -182,16 +147,6 @@ export default {
     }
   },
   meteor: {
-    notes(){
-      return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
-        type: 'note',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
-        sort: {order: 1},
-      });
-    },
     creature(){
       return Creatures.findOne(this.creatureId);
     },
@@ -207,15 +162,6 @@ export default {
     },
   },
   methods: {
-    showCharacterForm(){
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-form-dialog',
-        elementId: 'creature-summary',
-        data: {
-          _id: this.creatureId,
-        },
-      });
-    },
     addExperience(){
       this.$store.commit('pushDialogStack', {
         component: 'experience-insert-dialog',

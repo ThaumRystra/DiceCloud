@@ -110,7 +110,10 @@
             Spells
           </v-tab>
           <v-tab>
-            Character
+            Journal
+          </v-tab>
+          <v-tab>
+            Build
           </v-tab>
           <v-tab v-if="creature.settings.showTreeTab">
             Tree
