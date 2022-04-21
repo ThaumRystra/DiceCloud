@@ -30,6 +30,7 @@ const TabletopToolbar = () => import('/imports/ui/tabletop/TabletopToolbar.vue')
 const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDrawer.vue');
 const Admin = () => import('/imports/ui/pages/Admin.vue');
 const Maintenance = () => import('/imports/ui/pages/Maintenance.vue');
+const Files = () => import('/imports/ui/pages/Files.vue');
 
 // Not found
 const NotFound = () => import('/imports/ui/pages/NotFound.vue');
@@ -199,8 +200,8 @@ RouterFactory.configure(router => {
       meta: {
         title: 'Register',
       },
-		},{
-			path: '/account',
+    }, {
+      path: '/account',
       components: {
         default: Account,
       },
@@ -208,7 +209,16 @@ RouterFactory.configure(router => {
         title: 'Account',
       },
       beforeEnter: ensureLoggedIn,
-		},{
+    }, {
+      path: '/my-files',
+      components: {
+        default: Files,
+      },
+      meta: {
+        title: 'Files',
+      },
+      beforeEnter: ensureLoggedIn,
+    }, {
       path: '/feedback',
       components: {
         default: Feedback,
