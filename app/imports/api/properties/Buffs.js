@@ -29,7 +29,7 @@ let BuffSchema = createPropertySchema({
 
 let ComputedOnlyBuffSchema = createPropertySchema({
 	description: {
-		type: 'inlineCalculationFieldToCompute',
+		type: 'computedOnlyInlineCalculationField',
 		optional: true,
     max: STORAGE_LIMITS.description,
 	},
