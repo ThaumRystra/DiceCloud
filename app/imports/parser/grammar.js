@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.20.1
+// Generated automatically by nearley, version 2.16.0
 // http://github.com/Hardmath123/nearley
 function id(x) { return x[0]; }
 
@@ -85,26 +85,24 @@ let ParserRules = [
         d => node.call.create({functionName: d[0].name, args: d[2]})
           },
     {"name": "callExpression", "symbols": ["indexExpression"], "postprocess": id},
-    {"name": "arguments$ebnf$1$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
-    {"name": "arguments$ebnf$1", "symbols": ["arguments$ebnf$1$subexpression$1"], "postprocess": id},
-    {"name": "arguments$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "arguments$ebnf$2", "symbols": []},
-    {"name": "arguments$ebnf$2$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
-    {"name": "arguments$ebnf$2", "symbols": ["arguments$ebnf$2", "arguments$ebnf$2$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "arguments", "symbols": [{"literal":"("}, "_", "arguments$ebnf$1", "arguments$ebnf$2", "_", {"literal":")"}], "postprocess": 
+    {"name": "arguments$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
+    {"name": "arguments$ebnf$1", "symbols": []},
+    {"name": "arguments$ebnf$1$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
+    {"name": "arguments$ebnf$1", "symbols": ["arguments$ebnf$1", "arguments$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "arguments", "symbols": [{"literal":"("}, "_", "arguments$subexpression$1", "arguments$ebnf$1", "_", {"literal":")"}], "postprocess": 
         d => [d[2], ...d[3]]
         },
+    {"name": "arguments", "symbols": [{"literal":"("}, "_", {"literal":")"}], "postprocess": d => []},
     {"name": "indexExpression", "symbols": ["arrayExpression", {"literal":"["}, "_", "expression", "_", {"literal":"]"}], "postprocess": d => node.index.create({array: d[0], index: d[3]})},
     {"name": "indexExpression", "symbols": ["arrayExpression"], "postprocess": id},
-    {"name": "arrayExpression$ebnf$1$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
-    {"name": "arrayExpression$ebnf$1", "symbols": ["arrayExpression$ebnf$1$subexpression$1"], "postprocess": id},
-    {"name": "arrayExpression$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "arrayExpression$ebnf$2", "symbols": []},
-    {"name": "arrayExpression$ebnf$2$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
-    {"name": "arrayExpression$ebnf$2", "symbols": ["arrayExpression$ebnf$2", "arrayExpression$ebnf$2$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "arrayExpression", "symbols": [{"literal":"["}, "_", "arrayExpression$ebnf$1", "arrayExpression$ebnf$2", "_", {"literal":"]"}], "postprocess": 
-        d => node.array.create({values: d[2] ? [d[2], ...d[3]] : []})
+    {"name": "arrayExpression$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
+    {"name": "arrayExpression$ebnf$1", "symbols": []},
+    {"name": "arrayExpression$ebnf$1$subexpression$1", "symbols": ["_", (lexer.has("separator") ? {type: "separator"} : separator), "_", "expression"], "postprocess": d => d[3]},
+    {"name": "arrayExpression$ebnf$1", "symbols": ["arrayExpression$ebnf$1", "arrayExpression$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "arrayExpression", "symbols": [{"literal":"["}, "_", "arrayExpression$subexpression$1", "arrayExpression$ebnf$1", "_", {"literal":"]"}], "postprocess": 
+        d => node.array.create({ values: [d[2], ...d[3]] })
           },
+    {"name": "arrayExpression", "symbols": [{"literal":"["}, "_", {"literal":"]"}], "postprocess": d => node.array.create({ values: [] })},
     {"name": "arrayExpression", "symbols": ["parenthesizedExpression"], "postprocess": id},
     {"name": "parenthesizedExpression", "symbols": [{"literal":"("}, "_", "expression", "_", {"literal":")"}], "postprocess": d => node.parenthesis.create({content: d[2]})},
     {"name": "parenthesizedExpression", "symbols": ["accessorExpression"], "postprocess": id},
