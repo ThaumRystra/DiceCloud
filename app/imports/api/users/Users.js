@@ -4,6 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import '/imports/api/users/methods/deleteMyAccount.js';
 import '/imports/api/users/methods/addEmail.js';
 import '/imports/api/users/methods/removeEmail.js';
+import '/imports/api/users/methods/updateFileStorageUsed.js';
 
 import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
@@ -83,6 +84,10 @@ const userSchema = new SimpleSchema({
 	'subscribedCharacters.$': {
 		type: String,
     regEx: SimpleSchema.RegEx.Id,
+	},
+	fileStorageUsed: {
+		type: Number,
+		optional: true,
 	},
   profile: {
     type: Object,
