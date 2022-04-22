@@ -4,7 +4,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 export default function assertHasCharactersSlots(userId) {
   if (characterSlotsRemaining(userId) <= 0) {
     throw new Meteor.Error('characterSlotLimit',
-      `You are already at your limit of ${tier.characterSlots} characters`)
+      'No character slots left')
   }
 }
 
