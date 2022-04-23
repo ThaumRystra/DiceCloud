@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-row justify="center">
+    <v-row
+      justify="center"
+      class="mt-2"
+    >
       <file-storage-stats />
     </v-row>
     <v-row dense>
@@ -16,6 +19,37 @@
           lg="3"
         >
           <archive-file-card :model="file" />
+        </v-col>
+        <v-col
+          key="upload"
+          cols="12"
+          md="4"
+          lg="3"
+          class="layout column justify-center"
+        >
+          <input
+            ref="archiveFileInput"
+            type="file"
+            accept=".json"
+            style="display: none;"
+            @input="inputArchiveFile"
+          >
+          <v-btn
+            outlined
+            style="height: 100%; width: 100%;"
+            :color="archiveFileError ? 'error' : undefined"
+            @click="$refs.archiveFileInput.click()"
+          >
+            <v-icon left>
+              mdi-file-upload-outline
+            </v-icon>
+            <template v-if="archiveFileError">
+              {{ archiveFileError }}
+            </template>
+            <template v-else>
+              Upload archive
+            </template>
+          </v-btn>
         </v-col>
       </template>
     </v-row>
@@ -35,6 +69,8 @@ export default {
   },
   data(){ return {
     updateStorageUsedLoading: false,
+    archiveFileError: undefined,
+    archiveFile: undefined,
   }},
   meteor: {
     $subscribe: {
@@ -55,6 +91,24 @@ export default {
         return f;
       });
     },
+  },
+  methods: {
+    inputArchiveFile(){
+      this.archiveFile = undefined;
+      this.archiveFileError = undefined;
+      const file = this.$refs.archiveFileInput.files[0];
+      if (!file) return;
+      if (file.type !== 'application/json'){
+        this.archiveFileError = 'File must be .json';
+        return;
+      }
+      if (file.size > 10000000){
+        this.archiveFileError = 'File too large';
+        return;
+      }
+      this.archiveFile = file;
+      console.log(this.archiveFile);
+    }
   },
 }
 </script>
