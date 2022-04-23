@@ -5,7 +5,7 @@
     </v-toolbar-title>
     <div>
       <v-alert type="warning" outlined>
-        This cannot be undone
+        This can't be undone
       </v-alert>
       <p v-if="name">
         Type "{{ name }}" to permanenetly delete.

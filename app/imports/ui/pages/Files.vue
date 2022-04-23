@@ -1,32 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col
-        cols="12"
-        md="4"
-        lg="3"
-        class="layout column justify-center align-center"
-      >
-        <v-progress-circular
-          :rotate="-90"
-          :size="100"
-          :width="15"
-          :value="percentFileStorageUsed"
-          :buffer-value="50"
-          color="accent"
-        >
-          {{ percentFileStorageUsed }}%
-        </v-progress-circular>
-        <div class="ma-2 mt-4">
-          {{ prettyBytes(storageUsed) }} / {{ prettyBytes(storageAllowed) }}
-          <v-btn
-            icon
-            @click="updateStorageUsed"
-          >
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
-        </div>
-      </v-col>
+      <file-storage-stats />
     </v-row>
     <v-row dense>
       <template v-if="archiveFiles && archiveFiles.length">
@@ -51,13 +26,12 @@
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
 import prettyBytes from 'pretty-bytes';
 import ArchiveFileCard from '/imports/ui/files/ArchiveFileCard.vue';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
-import updateFileStorageUsed from '/imports/api/users/methods/updateFileStorageUsed.js';
+import FileStorageStats from '/imports/ui/files/FileStorageStats.vue';
 
 export default {
   components: {
     ArchiveFileCard,
+    FileStorageStats,
   },
   data(){ return {
     updateStorageUsedLoading: false,
@@ -66,15 +40,6 @@ export default {
     $subscribe: {
       'archiveCreatureFiles': [],
       'characterList': [],
-    },
-    storageUsed(){
-      return Meteor.user().fileStorageUsed || 0;
-    },
-    storageAllowed(){
-      return getUserTier(Meteor.userId()).fileStorage * 1000000;
-    },
-    percentFileStorageUsed(){
-      return Math.round((this.storageUsed / this.storageAllowed) * 100);
     },
     archiveFiles() {
       var userId = Meteor.userId();
@@ -88,19 +53,6 @@ export default {
         f.size = prettyBytes(f.size);
         f.link = ArchiveCreatureFiles.link(f);
         return f;
-      });
-    },
-  },
-  methods: {
-    prettyBytes(input){
-      return prettyBytes(input)
-    },
-    updateStorageUsed(){
-      this.updateStorageUsedLoading = true;
-      updateFileStorageUsed.call(error => {
-        this.updateStorageUsedLoading = false;
-        if (!error) return;
-        snackbar({text: error.reason});
       });
     },
   },

@@ -9,6 +9,18 @@
     >
       <v-list>
         <v-subheader>
+          File storage used
+        </v-subheader>
+        <file-storage-stats />
+        <v-subheader>
+          Character storage used
+        </v-subheader>
+        <v-list-item>
+          <v-list-item-title>
+            <creature-storage-stats />
+          </v-list-item-title>
+        </v-list-item>
+        <v-subheader>
           Preferences
         </v-subheader>
         <v-list-item>
@@ -221,8 +233,14 @@
   import { getUserTier } from '/imports/api/users/patreon/tiers.js';
   import addEmail from '/imports/api/users/methods/addEmail.js';
   import removeEmail from '/imports/api/users/methods/removeEmail.js';
+  import CreatureStorageStats from '/imports/ui/creature/creatureList/CreatureStorageStats.vue';
+  import FileStorageStats from '/imports/ui/files/FileStorageStats.vue';
 
   export default {
+    components: {
+      CreatureStorageStats,
+      FileStorageStats,
+    },
     meteor: {
       $subscribe: {
         'userPublicProfiles'(){
