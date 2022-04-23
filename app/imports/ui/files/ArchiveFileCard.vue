@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :data-id="`${model._id}-archive-card`">
     <v-card-title>
       {{ model.meta.creatureName }}
     </v-card-title>
@@ -17,6 +17,7 @@
       <v-flex />
       <v-btn
         icon
+        @click="removeArchiveCharacter"
       >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
@@ -34,6 +35,7 @@
 import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
+import removeArchiveCreature from '/imports/api/creature/archive/methods/removeArchiveCreature.js';
 
 export default {
   props: {
@@ -62,7 +64,24 @@ export default {
         console.error(error);
         snackbar({text: error.reason});
       });
-    }
+    },
+    removeArchiveCharacter(){
+			let that = this;
+			this.$store.commit('pushDialogStack', {
+				component: 'delete-confirmation-dialog',
+				elementId: `${that.model._id}-archive-card`,
+				data: {
+					name: this.model.meta.creatureName,
+					typeName: 'Character Archive'
+				},
+				callback(confirmation){
+					if(!confirmation) return;
+					removeArchiveCreature.call({fileId: that.model._id}, (error) => {
+						if (error) console.error(error);
+					});
+				}
+			});
+		},
   },
 }
 </script>

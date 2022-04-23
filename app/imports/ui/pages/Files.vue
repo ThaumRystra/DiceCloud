@@ -28,7 +28,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row dense>
       <template v-if="archiveFiles && archiveFiles.length">
         <v-col cols="12">
           <v-subheader> Archived Characters </v-subheader>
@@ -102,10 +102,7 @@ export default {
         if (!error) return;
         snackbar({text: error.reason});
       });
-    }
+    },
   },
 }
 </script>
-
-<style>
-</style>
