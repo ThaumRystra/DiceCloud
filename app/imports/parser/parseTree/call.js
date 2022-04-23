@@ -33,6 +33,7 @@ const call = {
 
     // Check that the arguments match what is expected
     let checkFailed = call.checkArugments({
+      node,
       fn,
       resolvedArgs,
       argumentsExpected: func.arguments,

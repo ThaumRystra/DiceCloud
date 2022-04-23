@@ -9,6 +9,7 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
 
 export function getArchiveObj(creatureId){
   // Build the archive document
@@ -31,7 +32,7 @@ export function getArchiveObj(creatureId){
   return archiveCreature;
 }
 
-export function archiveCreature(creatureId){
+export function archiveCreature(creatureId, userId){
   const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
   ArchiveCreatureFiles.write(buffer, {
@@ -43,11 +44,12 @@ export function archiveCreature(creatureId){
       creatureId: archive.creature._id,
       creatureName: archive.creature.name,
     },
-  }, (error) => {
+  }, (error, file) => {
     if (error){
       throw error;
     } else {
       removeCreatureWork(creatureId);
+      incrementFileStorageUsed(userId, file.size);
     }
   }, true);
 }
@@ -68,7 +70,7 @@ const archiveCreatureToFile = new ValidatedMethod({
   async run({creatureId}) {
     assertOwnership(creatureId, this.userId);
     if (Meteor.isServer){
-      archiveCreature(creatureId);
+      archiveCreature(creatureId, this.userId);
     } else {
       removeCreatureWork(creatureId);
     }

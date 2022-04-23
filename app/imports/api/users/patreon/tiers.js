@@ -9,18 +9,21 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 0,
     invites: 0,
     characterSlots: 5,
+    fileStorage: 50,
     paidBenefits: false,
   }, {
     name: 'Dreamer',
     minimumEntitledCents: 100,
     invites: 0,
     characterSlots: 5,
+    fileStorage: 50,
     paidBenefits: false,
   }, {
     name: 'Wanderer',
     minimumEntitledCents: 300,
     invites: 0,
     characterSlots: 5,
+    fileStorage: 50,
     paidBenefits: false,
   }, {
     //cost per user $5
@@ -28,6 +31,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 500,
     invites: 0,
     characterSlots: 20,
+    fileStorage: 200,
     paidBenefits: true,
   }, {
     //cost per user $3.33
@@ -35,6 +39,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 1000,
     invites: 2,
     characterSlots: 50,
+    fileStorage: 500,
     paidBenefits: true,
   }, {
     //cost per user $3.333
@@ -42,6 +47,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 2000,
     invites: 5,
     characterSlots: 120,
+    fileStorage: 1000,
     paidBenefits: true,
   }, {
     //cost per user $3.125
@@ -49,6 +55,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 5000,
     invites: 15,
     characterSlots: -1, // Unlimited characters
+    fileStorage: 2000,
     paidBenefits: true,
   },
 ]);
@@ -59,6 +66,7 @@ const GUEST_TIER = Object.freeze({
   guest: true,
   invites: 0,
   characterSlots: 20,
+  fileStorage: 200,
   paidBenefits: true,
 });
 
@@ -68,6 +76,7 @@ const PATREON_DISABLED_TIER = Object.freeze({
   name: 'Outlander',
   invites: 0,
   characterSlots: -1, // Can have infinitely many characters
+  fileStorage: 1000000, // 1TB file storage
   paidBenefits: true,
 });
 

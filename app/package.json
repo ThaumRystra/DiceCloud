@@ -9,7 +9,7 @@
   },
   "author": "Stefan Zermatten",
   "scripts": {
-    "run": "meteor --once",
+    "run": "meteor",
     "test": "meteor test --driver-package meteortesting:mocha --port 3001"
   },
   "engines": {
@@ -40,6 +40,7 @@
     "nearley": "^2.19.1",
     "ngraph.graph": "^19.1.0",
     "ngraph.path": "^1.4.0",
+    "pretty-bytes": "^6.0.0",
     "qrcode": "^1.5.0",
     "request": "^2.88.2",
     "simpl-schema": "^1.12.0",

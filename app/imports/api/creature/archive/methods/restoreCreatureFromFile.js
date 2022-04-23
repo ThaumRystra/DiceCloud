@@ -8,6 +8,9 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
+
 let migrateArchive;
 if (Meteor.isServer){
   migrateArchive = require('/imports/migrations/server/migrateArchive.js').default;
@@ -69,13 +72,18 @@ const restoreCreaturefromFile = new ValidatedMethod({
       throw new Meteor.Error('Permission denied',
       'You can only restore creatures you own');
     }
+
+    assertHasCharactersSlots(this.userId);
+
     if (Meteor.isServer){
       // Read the file data
       const archive = await ArchiveCreatureFiles.readJSONFile(file);
       restoreCreature(archive);
     }
     //Remove the archive once the restore succeeded
-    ArchiveCreatureFiles.remove({_id: fileId});
+    ArchiveCreatureFiles.remove({ _id: fileId });
+    // Update the user's file storage limits
+    incrementFileStorageUsed(userId, -file.size);
   },
 });
 

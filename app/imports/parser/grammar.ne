@@ -119,18 +119,20 @@ callExpression ->
 | indexExpression {% id %}
 
 arguments ->
-"(" _ (expression {% d => d[0] %}):? ( _ %separator _ expression {% d => d[3] %} ):* _ ")" {%
+"(" _ (expression {% d => d[0] %}) ( _ %separator _ expression {% d => d[3] %} ):* _ ")" {%
   d => [d[2], ...d[3]]
   %}
+| "(" _ ")" {% d => [] %}
 
 indexExpression ->
   arrayExpression "[" _ expression _ "]" {% d => node.index.create({array: d[0], index: d[3]}) %}
 | arrayExpression {% id %}
 
 arrayExpression ->
-  "[" _ (expression {% d => d[0] %}):? ( _ %separator _ expression {% d => d[3] %} ):* _ "]" {%
-    d => node.array.create({values: d[2] ? [d[2], ...d[3]] : []})
+  "[" _ (expression {% d => d[0] %}) ( _ %separator _ expression {% d => d[3] %} ):* _ "]" {%
+    d => node.array.create({ values: [d[2], ...d[3]] })
   %}
+| "[" _ "]" {% d => node.array.create({ values: [] }) %}
 | parenthesizedExpression {% id %}
 
 parenthesizedExpression ->
