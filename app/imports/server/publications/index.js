@@ -11,3 +11,4 @@ import '/imports/server/publications/ownedDocuments.js';
 import '/imports/server/publications/archivedCreatures.js';
 import '/imports/server/publications/searchLibraryNodes.js';
 import '/imports/server/publications/archiveFiles.js';
+import '/imports/server/publications/userImages.js';

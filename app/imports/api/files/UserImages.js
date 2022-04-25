@@ -9,9 +9,10 @@ const UserImages = createS3FilesCollection({
       return 'Please upload with size equal or less than 10MB';
     }
     // Allow common image extensions
-    if (/gif|png|jpe?g|webp/i.test(file.extension || '')) {
+    if (!/gif|png|jpe?g|webp/i.test(file.extension || '')) {
       return 'Please upload an image file only';
     }
+    return true
   }
 });
 

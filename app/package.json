@@ -43,6 +43,7 @@
     "pretty-bytes": "^6.0.0",
     "qrcode": "^1.5.0",
     "request": "^2.88.2",
+    "sharp": "^0.30.4",
     "simpl-schema": "^1.12.0",
     "source-map-support": "^0.5.21",
     "speakingurl": "^14.0.1",

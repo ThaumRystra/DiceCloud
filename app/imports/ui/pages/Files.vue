@@ -7,65 +7,103 @@
       <file-storage-stats />
     </v-row>
     <v-row dense>
+      <v-col cols="12">
+        <v-subheader> Archived Characters </v-subheader>
+      </v-col>
       <template v-if="archiveFiles && archiveFiles.length">
-        <v-col cols="12">
-          <v-subheader> Archived Characters </v-subheader>
-        </v-col>
         <v-col
           v-for="file in archiveFiles"
           :key="file._id"
           cols="12"
+          sm="6"
           md="4"
           lg="3"
+          xl="2"
         >
           <archive-file-card :model="file" />
         </v-col>
+      </template>
+      <v-col
+        key="upload"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+        class="layout column justify-center"
+      >
+        <input
+          ref="archiveFileInput"
+          type="file"
+          accept=".json"
+          style="display: none;"
+          @input="inputArchiveFile"
+        >
+        <v-btn
+          outlined
+          style="height: 100%; width: 100%;"
+          :color="archiveFileError ? 'error' : undefined"
+          @click="$refs.archiveFileInput.click()"
+        >
+          <v-icon left>
+            mdi-file-upload-outline
+          </v-icon>
+          <template v-if="archiveFileError">
+            {{ archiveFileError }}
+          </template>
+          <template v-else>
+            Upload archive
+          </template>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col cols="12">
+        <v-subheader> Images </v-subheader>
+      </v-col>
+      <template v-if="userImages && userImages.length">
         <v-col
-          key="upload"
+          v-for="file in userImages"
+          :key="file._id"
           cols="12"
+          sm="6"
           md="4"
           lg="3"
-          class="layout column justify-center"
+          xl="2"
         >
-          <input
-            ref="archiveFileInput"
-            type="file"
-            accept=".json"
-            style="display: none;"
-            @input="inputArchiveFile"
-          >
-          <v-btn
-            outlined
-            style="height: 100%; width: 100%;"
-            :color="archiveFileError ? 'error' : undefined"
-            @click="$refs.archiveFileInput.click()"
-          >
-            <v-icon left>
-              mdi-file-upload-outline
-            </v-icon>
-            <template v-if="archiveFileError">
-              {{ archiveFileError }}
-            </template>
-            <template v-else>
-              Upload archive
-            </template>
-          </v-btn>
+          <user-image-card :model="file" />
         </v-col>
       </template>
+      <v-col
+        key="image-upload"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+        class="layout column justify-center"
+      >
+        <image-upload-input />
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="js">
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import UserImages from '/imports/api/files/UserImages.js';
 import prettyBytes from 'pretty-bytes';
 import ArchiveFileCard from '/imports/ui/files/ArchiveFileCard.vue';
 import FileStorageStats from '/imports/ui/files/FileStorageStats.vue';
+import ImageUploadInput from '/imports/ui/components/ImageUploadInput.vue';
+import UserImageCard from '/imports/ui/files/UserImageCard.vue';
 
 export default {
   components: {
     ArchiveFileCard,
     FileStorageStats,
+    ImageUploadInput,
+    UserImageCard,
   },
   data(){ return {
     updateStorageUsedLoading: false,
@@ -76,9 +114,10 @@ export default {
     $subscribe: {
       'archiveCreatureFiles': [],
       'characterList': [],
+      'userImages': [],
     },
     archiveFiles() {
-      var userId = Meteor.userId();
+      const userId = Meteor.userId();
       return ArchiveCreatureFiles.find(
         {
           userId,
@@ -91,6 +130,20 @@ export default {
         return f;
       });
     },
+    userImages() {
+      const userId = Meteor.userId();
+      return UserImages.find({
+        userId
+      }, {
+        sort: {
+          size: -1
+        },
+      }).map(f => {
+        f.size = prettyBytes(f.size);
+        f.link = UserImages.link(f);
+        return f;
+      });
+    }
   },
   methods: {
     inputArchiveFile(){
