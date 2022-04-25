@@ -97,6 +97,7 @@
           //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
           //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
           {title: 'Files', icon: 'mdi-file-multiple', to: '/my-files'},
+          {title: 'Tabletops', icon: 'mdi-table', to: '/tabletops'},
           {title: 'Feedback', icon: 'mdi-bug', to: '/feedback'},
           {title: 'About', icon: 'mdi-sign-text', to: '/about'},
           {title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud'},

@@ -1,12 +1,16 @@
 <template lang="html">
   <v-card
-    style="height: 150px; min-width: 120px;"
+    style="height: 100px; width: 70px;"
     :color="active ? 'accent' : ''"
     hover
     @mouseover="hover = true"
     @mouseleave="hover = false"
     @click="$emit('click')"
   >
+    <v-progress-linear
+      v-if="model.variables.hitPoints"
+      :value="model.variables.hitPoints.value * 100 / model.variables.hitPoints.total"
+    />
     <v-img
       :src="model.picture"
       aspect-ratio="1"
@@ -52,7 +56,7 @@ export default {
 
 <style lang="css" scoped>
 .small-title {
-  font-size: 14px;
+  font-size: 12px;
   padding: 4px;
   overflow: hidden;
   white-space: nowrap;

@@ -47,6 +47,7 @@
     "source-map-support": "^0.5.21",
     "speakingurl": "^14.0.1",
     "styles": "^0.2.1",
+    "three": "^0.139.2",
     "underscore": "^1.13.2",
     "vue": "2.6.10",
     "vue-meteor-tracker": "^2.0.0-beta.5",

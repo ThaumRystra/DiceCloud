@@ -1,54 +1,68 @@
 <template lang="html">
-  <v-container
-    class="tabletop"
-    fluid
+  <div
+    class="tabletop layout column"
+    style="height: 100%;"
   >
-    <v-row
-      dense
-      class="initiative-row"
-      style="flex-wrap: nowrap; overflow-x: auto;"
-      @wheel="transformScroll($event)"
+    <tabletop-map
+      class="play-area"
+      style="
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    "
+    />
+    <v-container
+      fluid
     >
-      <tabletop-creature-card
-        v-for="creature in creatures"
-        :key="creature._id"
-        :model="creature"
-        :active="activeCreature === creature._id"
-        :targeted="targets.includes(creature._id)"
-        @click="activeCreature = creature._id; targets = []"
-        @target="targets.push(creature._id)"
-        @untarget="untarget(creature._id)"
-      />
-      <div
-        class="layout column ma-1"
-        style="flex-grow: 0;"
+      <v-row
+        dense
+        class="initiative-row flex-grow-0"
+        style="flex-wrap: nowrap; overflow-x: auto;"
+        @wheel="transformScroll($event)"
       >
-        <v-btn
-          data-id="select-creatures"
-          class="mb-2"
-          @click="addCreature"
+        <tabletop-creature-card
+          v-for="creature in creatures"
+          :key="creature._id"
+          :model="creature"
+          :active="activeCreature === creature._id"
+          :targeted="targets.includes(creature._id)"
+          @click="activeCreature = creature._id; targets = []"
+          @target="targets.push(creature._id)"
+          @untarget="untarget(creature._id)"
+        />
+        <div
+          class="layout column ma-1 flex-grow-0"
         >
-          <v-icon left>
-            mdi-plus
-          </v-icon>
-          Add Character
-        </v-btn>
-        <v-btn disabled>
-          <v-icon left>
-            mdi-plus
-          </v-icon>
-          Add Creature
-        </v-btn>
-      </div>
-    </v-row>
-    <v-row>
-      <tabletop-map class="play-area" />
-    </v-row>
+          <v-btn
+            data-id="select-creatures"
+            class="mb-2"
+            @click="addCreature"
+          >
+            <v-icon left>
+              mdi-plus
+            </v-icon>
+            Add Character
+          </v-btn>
+          <v-btn disabled>
+            <v-icon left>
+              mdi-plus
+            </v-icon>
+            Add Creature
+          </v-btn>
+        </div>
+      </v-row>
+    </v-container>
     <v-footer
-      app
       inset
       class="pa-0"
-      style="background: none; box-shadow: none;"
+      style="background: none; 
+      box-shadow: none;
+      position: absolute;
+      left: 0; 
+      bottom:0;
+      right: 0;"
     >
       <v-container fluid>
         <v-row
@@ -73,13 +87,13 @@
         </v-row>
       </v-container>
     </v-footer>
-  </v-container>
+  </div>
 </template>
 
 <script lang="js">
 import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop.js';
 import TabletopCreatureCard from '/imports/ui/tabletop/TabletopCreatureCard.vue';
-import TabletopMap from '/imports/ui/tabletop/TabletopMap.vue';
+import TabletopMap from '/imports/ui/tabletop/map/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import MiniCharacterSheet from '/imports/ui/creature/character/MiniCharacterSheet.vue';
 import snackbar from '/imports/ui/components/snackbars/SnackbarQueue.js';
