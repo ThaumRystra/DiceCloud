@@ -10,7 +10,7 @@ export default function computeCreature(creatureId){
   try {
     computeCreatureComputation(computation);
     writeAlteredProperties(computation);
-    writeScope(creatureId, computation.scope);
+    writeScope(creatureId, computation);
   } catch (e){
     const errorText = e.reason || e.message || e.toString();
     computation.errors.push({
