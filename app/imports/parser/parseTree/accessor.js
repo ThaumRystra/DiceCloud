@@ -1,4 +1,5 @@
 import constant from './constant.js';
+// import array from './array.js';
 import { toString } from '../resolve.js';
 
 const accessor = {
@@ -9,18 +10,18 @@ const accessor = {
       name,
     };
   },
-  compile(node, scope, context){
+  compile(node, scope, context) {
     let value = scope && scope[node.name];
     // For objects, get their value
     node.path.forEach(name => {
       if (value === undefined) return;
       value = value[name];
     });
-    let valueType = typeof value;
+    let valueType = Array.isArray(value) ? 'array' : typeof value;
     // If the accessor returns an objet, get the object's value instead
     while (valueType === 'object'){
       value = value.value;
-      valueType = typeof value;
+      valueType = Array.isArray(value) ? 'array' : typeof value;
     }
     // Return a parse node based on the type returned
     if (valueType === 'string' || valueType === 'number' || valueType === 'boolean'){
@@ -31,7 +32,21 @@ const accessor = {
         }),
         context,
       };
-    } else if (valueType === 'undefined'){
+    }
+    /* Can't access #object.tags until this is fixed
+     * If we activate this, the array node expects values to be an array of
+     * parse nodes, so it will break unless the values are coerced here or at 
+     * in the array node's code to be parse nodes, not raw js
+    else if (valueType === 'array') {
+      return {
+        result: array.create({
+          values: value,
+        }),
+        context,
+      };
+    }
+    */
+    else if (valueType === 'undefined') {
       return {
         result: accessor.create({
           name: node.name,
@@ -40,8 +55,7 @@ const accessor = {
         context,
       };
     } else {
-      context.error(`${node.name} returned an unexpected type`);
-      context.error(JSON.stringify(value, null, 2));
+      context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
       return {
         result: accessor.create({
           name: node.name,
