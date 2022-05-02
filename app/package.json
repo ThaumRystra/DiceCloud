@@ -10,6 +10,7 @@
   "author": "Stefan Zermatten",
   "scripts": {
     "run": "meteor",
+    "debug": "meteor debug",
     "test": "meteor test --driver-package meteortesting:mocha --port 3001"
   },
   "engines": {

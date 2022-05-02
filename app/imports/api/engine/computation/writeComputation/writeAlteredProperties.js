@@ -20,6 +20,7 @@ export default function writeAlteredProperties(computation){
       'deactivatedBySelf',
       'deactivatedByAncestor',
       'deactivatedByToggle',
+      'depGroupId',
       'damage',
       ...schema.objectKeys(),
     ];
@@ -28,7 +29,8 @@ export default function writeAlteredProperties(computation){
       bulkWriteOperations.push(op);
     }
   });
-  writePropertiesSequentially(bulkWriteOperations);
+  bulkWriteProperties(bulkWriteOperations);
+  if (bulkWriteOperations.length) console.log(`Wrote ${bulkWriteOperations.length} props`);
 }
 
 function addChangedKeysToOp(op, keys, original, changed) {
@@ -79,10 +81,10 @@ function addUnsetOp(op, key){
   }
 }
 
-// We use this instead of bulkWriteProperties because it functions with latency
-// compensation without needing to roll back changes, which causes multiple
-// expensive redraws of the character sheet
-function writePropertiesSequentially(bulkWriteOps){
+// If we re-enable client-side sheet recalculation, this needs to be run on
+// both client and server to preserve latency compensation. Bulkwrite breaks
+// latency compensation and causes flickering
+function writePropertiesSequentially(bulkWriteOps) {
   bulkWriteOps.forEach(op => {
     let updateOneOrMany = op.updateOne || op.updateMany;
     CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
@@ -101,7 +103,7 @@ function writePropertiesSequentially(bulkWriteOps){
 function bulkWriteProperties(bulkWriteOps){
   if (!bulkWriteOps.length) return;
   // bulkWrite is only available on the server
-  if (Meteor.isServer){
+  if (Meteor.isServer) {
     CreatureProperties.rawCollection().bulkWrite(
       bulkWriteOps,
       {ordered : false},

@@ -15,6 +15,7 @@ import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
 import CreatureComputation from './CreatureComputation.js';
 import removeSchemaFields from './buildComputation/removeSchemaFields.js';
+// import assignDependencyGroups from '/imports/api/engine/computation/utility/assignDependencyGroups.js';
 
 /**
  * Store index of properties
@@ -37,12 +38,30 @@ export default function buildCreatureComputation(creatureId){
   return computation;
 }
 
-function getProperties(creatureId){
+export function buildDependencyGroupComputation(depGroupIds, creatureId) {
+  const creature = getCreature(creatureId);
+  const properties = getGroupProperties(depGroupIds);
+  const computation = buildComputationFromProps(properties, creature);
+  return computation;
+}
+
+function getProperties(creatureId) {
   return CreatureProperties.find({
     'ancestors.id': creatureId,
     'removed': {$ne: true},
   }, {
-    sort: {order: 1}
+    sort: { order: 1 },
+    fields: { icon: 0 },
+  }).fetch();
+}
+
+function getGroupProperties(depGroupIds) {
+  return CreatureProperties.find({
+    depGroupId: { $in: depGroupIds },
+    'removed': { $ne: true },
+  }, {
+    sort: { order: 1 },
+    fields: { icon: 0 },
   }).fetch();
 }
 
@@ -82,7 +101,7 @@ export function buildComputationFromProps(properties, creature){
   // Process the properties one by one
   properties.forEach(prop => {
 
-    let computedSchema = computedOnlySchemas[prop.type];
+    const computedSchema = computedOnlySchemas[prop.type];
     removeSchemaFields([computedSchema, denormSchema], prop);
 
     // Add a place to store all the computation details
@@ -114,5 +133,9 @@ export function buildComputationFromProps(properties, creature){
     linkTypeDependencies(dependencyGraph, prop, computation);
     linkCalculationDependencies(dependencyGraph, prop, computation);
   });
+
+  // Store the connected groups of the dependency graph
+  // assignDependencyGroups(dependencyGraph);
+
   return computation;
 }

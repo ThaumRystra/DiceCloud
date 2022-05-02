@@ -82,6 +82,14 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     index: 1,
     removeBeforeCompute: true,
   },
+  // Dependency tree, the ID of the lowest ordered doc connected to this doc
+  // via dependencies
+  /*depGroupId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    index: 1,
+    removeBeforeCompute: true,
+  }*/
 });
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
@@ -97,10 +105,6 @@ for (let key in propertySchemasIndex){
 		selector: {type: key}
 	});
 }
-
-import '/imports/api/creature/creatureProperties/methods/index.js';
-//import '/imports/api/creature/actions/doAction.js';
-//import '/imports/api/creature/actions/castSpellWithSlot.js';
 
 export default CreatureProperties;
 export {
