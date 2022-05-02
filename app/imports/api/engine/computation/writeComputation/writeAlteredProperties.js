@@ -30,7 +30,7 @@ export default function writeAlteredProperties(computation){
     }
   });
   bulkWriteProperties(bulkWriteOperations);
-  if (bulkWriteOperations.length) console.log(`Wrote ${bulkWriteOperations.length} props`);
+  //if (bulkWriteOperations.length) console.log(`Wrote ${bulkWriteOperations.length} props`);
 }
 
 function addChangedKeysToOp(op, keys, original, changed) {
