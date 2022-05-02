@@ -1,8 +1,14 @@
 <template lang="html">
-  <div class="build">
-    <column-layout wide-columns>
-      <div>
-        <v-card class="class-details">
+  <v-container>
+    <v-row dense>
+      <v-col cols="12" md="8" lg="6" style="height: 100%;">
+        <v-card style="height: calc(100vh - 120px); overflow: auto;">
+          <v-card-title>Slots</v-card-title>
+          <build-tree-node-list :children="slotBuildTree" />
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4" lg="6">
+        <v-card class="class-details mb-2">
           <v-card-title
             v-if="creature.variables.level"
             class="text-h6"
@@ -69,8 +75,6 @@
             </v-list-item>
           </v-list>
         </v-card>
-      </div>
-      <div>
         <toolbar-card
           data-id="slot-card"
           @toolbarclick="showSlotDialog"
@@ -94,9 +98,9 @@
             <slots :creature-id="creatureId" />
           </v-card-text>
         </toolbar-card>
-      </div>
-    </column-layout>
-  </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="js">
@@ -105,14 +109,22 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import Slots from '/imports/ui/creature/slots/Slots.vue';
 import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import CreatureSummary from '/imports/ui/creature/character/CreatureSummary.vue';
+import  { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import BuildTreeNodeList from '/imports/ui/creature/buildTree/BuildTreeNodeList.vue';
+
+function traverse(tree, callback, parents = []){
+  tree.forEach(node => {
+    callback(node, parents);
+    traverse(node.children, callback, [...parents, node]);
+  });
+}
 
 export default {
   components: {
     ColumnLayout,
     Slots,
     ToolbarCard,
-    CreatureSummary,
+    BuildTreeNodeList,
   },
   props: {
     creatureId: {
@@ -159,6 +171,46 @@ export default {
       }, {
         sort: {order: 1}
       });
+    },
+    slotBuildTree(){
+      const slots = CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'propertySlot',
+        $or: [
+          {'slotCondition.value': {$nin: [false, 0, '']}},
+          {'slotCondition.value': {$exists: false}},
+        ],
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
+      });
+      const slotIds = slots.map(s => s._id);
+      const slotChildren = CreatureProperties.find({
+        'parent.id': {$in: slotIds},
+        removed: {$ne: true},
+      }, {
+        sort: { order: 1 },
+      });
+      const tree = nodeArrayToTree([
+        ...slots.fetch(),
+        ...slotChildren.fetch()
+      ]);
+      traverse(tree, (child, parents) => {
+        const model = child.node;
+        const isSlotWithSpace = model.type === 'propertySlot' &&
+          model.spaceLeft > 0 || 
+          (model.quantityExpected && model.quantityExpected.value == 0);
+        if(isSlotWithSpace) {
+          model._canFill = true;
+          parents.forEach(node => {
+            if (node.node.type === 'propertySlot'){
+              node.node._descendantCanFill = true;
+            }
+          });
+        }
+      });
+      return tree;
     },
   },
   methods: {

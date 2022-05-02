@@ -22,7 +22,10 @@
 			TreeNodeList,
 		},
 		props: {
-			root: Object,
+			root: {
+				type: Object,
+				default: undefined,
+			},
 			organize: Boolean,
 			selectedNode: {
         type: Object,
