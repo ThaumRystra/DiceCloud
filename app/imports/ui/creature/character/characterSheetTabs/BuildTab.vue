@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-container>
+  <v-container fluid>
     <v-row dense>
       <v-col cols="12" md="8" lg="6" style="height: 100%;">
         <v-card style="height: calc(100vh - 120px); overflow: auto;">

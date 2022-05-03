@@ -1,7 +1,7 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
-import { SyncedCron } from 'meteor/percolate:synced-cron';
+import { SyncedCron } from 'meteor/littledata:synced-cron';
 
 Meteor.startup(() => {
 	const collections = [
