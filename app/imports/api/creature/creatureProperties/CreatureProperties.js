@@ -84,12 +84,12 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   },
   // Dependency tree, the ID of the lowest ordered doc connected to this doc
   // via dependencies
-  /*depGroupId: {
+  depGroupId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     index: 1,
     removeBeforeCompute: true,
-  }*/
+  },
 });
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);

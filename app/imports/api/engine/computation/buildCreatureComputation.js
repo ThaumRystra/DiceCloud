@@ -15,7 +15,7 @@ import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
 import CreatureComputation from './CreatureComputation.js';
 import removeSchemaFields from './buildComputation/removeSchemaFields.js';
-// import assignDependencyGroups from '/imports/api/engine/computation/utility/assignDependencyGroups.js';
+import assignDependencyGroups from '/imports/api/engine/computation/utility/assignDependencyGroups.js';
 
 /**
  * Store index of properties
@@ -56,6 +56,10 @@ function getProperties(creatureId) {
 }
 
 function getGroupProperties(depGroupIds) {
+  console.log({ depGroupIds });
+  if (!depGroupIds || depGroupIds.includes(undefined)) {
+    throw `Expected array full of ids, got ${depGroupIds}`
+  }
   return CreatureProperties.find({
     depGroupId: { $in: depGroupIds },
     'removed': { $ne: true },
@@ -135,7 +139,7 @@ export function buildComputationFromProps(properties, creature){
   });
 
   // Store the connected groups of the dependency graph
-  // assignDependencyGroups(dependencyGraph);
+  assignDependencyGroups(dependencyGraph);
 
   return computation;
 }

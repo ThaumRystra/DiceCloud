@@ -36,7 +36,7 @@ export default function writeAlteredProperties(computation){
 function addChangedKeysToOp(op, keys, original, changed) {
   // Loop through all keys that can be changed by computation
   // and compile an operation that sets all those keys
-  for (let key of keys){
+  for (let key of keys) {
     if (!EJSON.equals(original[key], changed[key])){
       if (!op) op = newOperation(original._id, changed.type);
       let value = changed[key];
