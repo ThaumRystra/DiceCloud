@@ -20,8 +20,8 @@ function computeComputation(computation, creatureId) {
   try {
     computeCreatureComputation(computation);
     writeAlteredProperties(computation);
-    writeScope(creatureId, computation.scope);
-  } catch (e) {
+    writeScope(creatureId, computation);
+  } catch (e){
     const errorText = e.reason || e.message || e.toString();
     computation.errors.push({
       type: 'crash',

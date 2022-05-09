@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { assertViewPermission, assertDocViewPermission } from '/imports/api/sharing/sharingPermissions.js';
 
 Meteor.publish('libraries', function(){
   this.autorun(function (){
@@ -63,9 +63,61 @@ Meteor.publish('libraryNodes', function(libraryId){
       LibraryNodes.find({
         'ancestors.id': libraryId,
       }, {
-        sort: {order: 1},
+        sort: { order: 1 },
+        fields: {
+          _id: 1,
+          name: 1,
+          type: 1,
+          icon: 1,
+          color: 1,
+          order: 1,
+          parent: 1,
+          ancestors: 1,
+          // Effect
+          operation: 1,
+          targetTags: 1,
+          stats: 1,
+          // Item
+          quantity: 1,
+          plural: 1,
+          equipped: 1,
+          // Branch
+          branchType: 1,
+          // Damage:
+          damageType: 1,
+          stat: 1,
+          amount: 1,
+          // Class level
+          level: 1,
+          // Proficiency
+          value: 1,
+          // Reference
+          cache: 1,
+        }
       }),
     ];
+  });
+});
+
+const nodeIdSchema = new SimpleSchema({
+  libraryNodeId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+});
+
+Meteor.publish('libraryNode', function (libraryNodeId) {
+  if (!libraryNodeId) return [];
+  nodeIdSchema.validate({ libraryNodeId });
+  this.autorun(function () {
+    const userId = this.userId;
+    const nodeCursor = LibraryNodes.find({_id: libraryNodeId});
+    let node = nodeCursor.fetch()[0];
+    try { assertDocViewPermission(node, userId) }
+    catch (e) {
+      return this.error(e);
+    }
+    return [ nodeCursor ];
   });
 });
 

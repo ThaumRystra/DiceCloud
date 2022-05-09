@@ -47,3 +47,4 @@ ostrio:files
 simple:rest-bearer-token-parser
 simple:rest-json-error-handler
 littledata:synced-cron
+mdg:meteor-apm-agent

@@ -5,6 +5,7 @@
         :model="model"
         :editing="editing"
         :flat="flat"
+        :embedded="embedded"
         @duplicate="duplicate"
         @move="move"
         @remove="remove"
@@ -12,32 +13,41 @@
         @color-changed="value => change({path: ['color'], value})"
       />
     </template>
-    <template v-if="model">
-      <v-fade-transition
-        mode="out-in"
+    <v-fade-transition
+      mode="out-in"
+    >
+      <div v-if="!_id" />
+      <div
+        v-else-if="!$subReady.libraryNode"
+        class="fill-height layout justify-center align-center"
       >
-        <component
-          :is="model.type + 'Form'"
-          v-if="editing"
-          :key="_id"
-          class="library-node-form"
-          :model="model"
-          @change="change"
-          @push="push"
-          @pull="pull"
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="64"
         />
-        <component
-          :is="model.type + 'Viewer'"
-          v-else-if="!editing && $options.components[model.type + 'Viewer']"
-          :key="_id"
-          class="creature-property-viewer"
-          :model="model"
-        />
-        <p v-else>
-          This property can't be viewed yet.
-        </p>
-      </v-fade-transition>
-    </template>
+      </div>
+      <component
+        :is="model.type + 'Form'"
+        v-else-if="model && editing"
+        :key="_id"
+        class="library-node-form"
+        :model="model"
+        @change="change"
+        @push="push"
+        @pull="pull"
+      />
+      <component
+        :is="model.type + 'Viewer'"
+        v-else-if="model && !editing && $options.components[model.type + 'Viewer']"
+        :key="_id"
+        class="creature-property-viewer"
+        :model="model"
+      />
+      <p v-else>
+        This property can't be viewed yet.
+      </p>
+    </v-fade-transition>
     <div
       v-if="!embedded"
       slot="actions"
@@ -136,6 +146,11 @@
       },
     },
     meteor: {
+      $subscribe: {
+        'libraryNode'(){
+          return [this._id];
+        }
+      },
       model(){
         return LibraryNodes.findOne(this.currentId);
       },

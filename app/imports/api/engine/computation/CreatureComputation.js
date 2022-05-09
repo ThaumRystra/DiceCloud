@@ -2,7 +2,7 @@ import { EJSON } from 'meteor/ejson';
 import createGraph from 'ngraph.graph';
 
 export default class CreatureComputation {
-  constructor(properties){
+  constructor(properties, creature){
     // Set up fields
     this.originalPropsById =  {};
     this.propsById =  {};
@@ -11,6 +11,7 @@ export default class CreatureComputation {
     this.props =  properties;
     this.dependencyGraph = createGraph();
     this.errors = [];
+    this.creature = creature;
 
     // Store properties for easy access later
     properties.forEach(prop => {

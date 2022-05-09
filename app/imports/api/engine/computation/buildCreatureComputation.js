@@ -73,7 +73,7 @@ function getCreature(creatureId){
 
 export function buildComputationFromProps(properties, creature){
 
-  const computation = new CreatureComputation(properties);
+  const computation = new CreatureComputation(properties, creature);
   // Dependency graph where edge(a, b) means a depends on b
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies
