@@ -21,7 +21,7 @@
         </span>
       </template>
       <template v-else>
-        {{ model.stat || 'Attribute' }} damage
+        <span>{{ model.stat || 'Attribute' }} damage</span>
       </template>
     </div>
   </div>
