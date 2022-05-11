@@ -4,7 +4,6 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 
@@ -29,7 +28,7 @@ const equipItem = new ValidatedMethod({
     let creature = getRootCreatureAncestor(item);
     assertEditPermission(creature, this.userId);
     CreatureProperties.update(_id, {
-      $set: {equipped},
+      $set: { equipped, dirty: true },
     }, {
 			selector: {type: 'item'},
 		});
@@ -46,8 +45,6 @@ const equipItem = new ValidatedMethod({
       order: Number.MAX_SAFE_INTEGER,
       skipRecompute: true,
     });
-
-    computeCreature(creature._id);
   },
 });
 

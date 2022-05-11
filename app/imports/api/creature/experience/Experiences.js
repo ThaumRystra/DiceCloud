@@ -3,7 +3,6 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let Experiences = new Mongo.Collection('experiences');
@@ -50,18 +49,19 @@ Experiences.attachSchema(ExperienceSchema);
 const insertExperienceForCreature = function({experience, creatureId, userId}){
   assertEditPermission(creatureId, userId);
   if (experience.xp){
-    Creatures.update(creatureId, {$inc: {
-      'denormalizedStats.xp': experience.xp
-    }});
+    Creatures.update(creatureId, {
+      $inc: { 'denormalizedStats.xp': experience.xp },
+      $set: { dirty: true },
+    });
   }
   if (experience.levels) {
-    Creatures.update(creatureId, {$inc: {
-      'denormalizedStats.milestoneLevels': experience.levels
-    }});
+    Creatures.update(creatureId, {
+      $inc: { 'denormalizedStats.milestoneLevels': experience.levels },
+      $set: { dirty: true },
+    });
   }
   experience.creatureId = creatureId;
   let id = Experiences.insert(experience);
-  computeCreature(creatureId);
   return id;
 };
 
@@ -124,18 +124,19 @@ const removeExperience = new ValidatedMethod({
     let creatureId = experience.creatureId
     assertEditPermission(creatureId, userId);
     if (experience.xp){
-      Creatures.update(creatureId, {$inc: {
-        'denormalizedStats.xp': -experience.xp
-      }});
+      Creatures.update(creatureId, {
+        $inc: { 'denormalizedStats.xp': -experience.xp },
+        $set: { dirty: true },
+      });
     }
     if (experience.levels) {
-      Creatures.update(creatureId, {$inc: {
-        'denormalizedStats.milestoneLevels': -experience.levels
-      }});
+      Creatures.update(creatureId, {
+        $inc: { 'denormalizedStats.milestoneLevels': -experience.levels },
+        $set: { dirty: true },
+      });
     }
     experience.creatureId = creatureId;
     let numRemoved = Experiences.remove(experienceId);
-    computeCreature(creatureId);
     return numRemoved;
   },
 });
@@ -173,9 +174,9 @@ const recomputeExperiences = new ValidatedMethod({
     });
     Creatures.update(creatureId, {$set: {
       'denormalizedStats.xp': xp,
-      'denormalizedStats.milestoneLevels': milestoneLevels
+      'denormalizedStats.milestoneLevels': milestoneLevels,
+      dirty: true,
     }});
-    computeCreature(creatureId);
   },
 });
 

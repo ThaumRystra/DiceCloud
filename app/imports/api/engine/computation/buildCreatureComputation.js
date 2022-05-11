@@ -42,7 +42,8 @@ function getProperties(creatureId) {
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
     const props = Array.from(creature.properties.values());
-    return props;
+    const cloneProps = EJSON.clone(props);
+    return cloneProps
   }
   console.time(`Cache miss fetching from db: ${creatureId}`)
   const props = CreatureProperties.find({
@@ -56,10 +57,19 @@ function getProperties(creatureId) {
   return props;
 }
 
-function getCreature(creatureId){
-  return Creatures.findOne(creatureId, {
+function getCreature(creatureId) {
+  if (loadedCreatures.has(creatureId)) {
+    const loadedCreature = loadedCreatures.get(creatureId);
+    const creature = loadedCreature.creatures.get(creatureId);
+    if (creature) return creature;
+  }
+  console.time(`Cache miss on Creature: ${creatureId}`);
+  const creature = Creatures.findOne(creatureId, {
     denormalizedStats: 1,
+    variables: 1,
   });
+  console.timeEnd(`Cache miss on Creature: ${creatureId}`);
+  return creature;
 }
 
 export function buildComputationFromProps(properties, creature){
@@ -91,6 +101,8 @@ export function buildComputationFromProps(properties, creature){
 
   // Process the properties one by one
   properties.forEach(prop => {
+    // The prop has been processed, it's no longer dirty
+    delete prop.dirty;
 
     const computedSchema = computedOnlySchemas[prop.type];
     removeSchemaFields([computedSchema, denormSchema], prop);

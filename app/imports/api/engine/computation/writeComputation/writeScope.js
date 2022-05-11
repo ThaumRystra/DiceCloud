@@ -20,7 +20,6 @@ export default function writeScope(creatureId, computation) {
     // Only update changed fields
     if (!EJSON.equals(variables[key], scope[key])) {
       if (!$set) $set = {};
-
       // Set the changed key in the creature variables
       $set[`variables.${key}`] = scope[key];
     }

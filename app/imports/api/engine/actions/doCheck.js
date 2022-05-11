@@ -5,7 +5,6 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import rollDice from '/imports/parser/rollDice.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
@@ -32,9 +31,6 @@ const doCheck = new ValidatedMethod({
 
     // Do the check
     doCheckWork({creature, prop, method: this, methodScope: scope});
-
-    // Recompute all involved creatures
-    computeCreature(creature._id);
   },
 });
 

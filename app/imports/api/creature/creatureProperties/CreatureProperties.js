@@ -82,6 +82,13 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     index: 1,
     removeBeforeCompute: true,
   },
+  // When this is true on any property, the creature needs to be recomputed
+  dirty: {
+    type: Boolean,
+    // Default to true because new properties cause a recomputation
+    defaultValue: true,
+    optional: true,
+  },
 });
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);

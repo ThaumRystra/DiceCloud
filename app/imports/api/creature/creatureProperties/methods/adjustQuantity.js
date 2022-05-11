@@ -4,7 +4,6 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const adjustQuantity = new ValidatedMethod({
   name: 'creatureProperties.adjustQuantity',
@@ -29,10 +28,6 @@ const adjustQuantity = new ValidatedMethod({
 
     // Do work
     adjustQuantityWork({property, operation, value});
-
-    // Changing quantity does not change dependencies, but recomputing the
-    // inventory changes many deps at once, so recompute fully
-    computeCreature(rootCreature._id);
   },
 });
 
@@ -47,7 +42,7 @@ export function adjustQuantityWork({property, operation, value}){
   }
   if (operation === 'set'){
     CreatureProperties.update(property._id, {
-      $set: {quantity: value}
+      $set: {quantity: value, dirty: true}
     }, {
       selector: property
     });
@@ -57,7 +52,8 @@ export function adjustQuantityWork({property, operation, value}){
     let currentQuantity = property.quantity;
     if (currentQuantity + value < 0) value = -currentQuantity;
     CreatureProperties.update(property._id, {
-      $inc: {quantity: value}
+      $inc: { quantity: value },
+      $set: { dirty: true }
     }, {
       selector: property
     });

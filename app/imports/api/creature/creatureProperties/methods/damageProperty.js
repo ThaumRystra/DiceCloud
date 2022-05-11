@@ -4,7 +4,6 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',
@@ -38,7 +37,6 @@ const damageProperty = new ValidatedMethod({
 			);
 		}
     let result = damagePropertyWork({ property, operation, value });
-    computeCreature(rootCreature._id);
     return result;
   },
 });
@@ -69,7 +67,7 @@ export function damagePropertyWork({property, operation, value}){
 
   // Write the results
   CreatureProperties.update(property._id, {
-    $set: {damage, value: newValue}
+    $set: {damage, value: newValue, dirty: true}
   }, {
     selector: property
   });

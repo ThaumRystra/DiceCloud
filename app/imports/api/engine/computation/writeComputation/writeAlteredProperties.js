@@ -21,6 +21,7 @@ export default function writeAlteredProperties(computation){
       'deactivatedByAncestor',
       'deactivatedByToggle',
       'damage',
+      'dirty',
       ...schema.objectKeys(),
     ];
     op = addChangedKeysToOp(op, keys, original, changed);

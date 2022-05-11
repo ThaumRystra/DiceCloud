@@ -4,10 +4,9 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const restCreature = new ValidatedMethod({
-  name: 'creature.methods.longRest',
+  name: 'creature.methods.rest',
   validate: new SimpleSchema({
     creatureId: {
       type: String,
@@ -51,7 +50,10 @@ const restCreature = new ValidatedMethod({
     // update all attribute's damage
     filter.type = 'attribute';
     CreatureProperties.update(filter, {
-      $set: {damage: 0}
+      $set: {
+        damage: 0,
+        dirty: true,
+      }
     }, {
       selector: {type: 'attribute'},
       multi: true,
@@ -63,7 +65,10 @@ const restCreature = new ValidatedMethod({
       'spell'
     ]};
     CreatureProperties.update(filter, {
-      $set: {usesUsed: 0}
+      $set: {
+        usesUsed: 0,
+        dirty: true,
+      }
     }, {
       selector: {type: 'action'},
       multi: true,
@@ -103,13 +108,15 @@ const restCreature = new ValidatedMethod({
         recoverableHd -= amountToRecover;
         resultingDamage = hd.damage - amountToRecover;
         CreatureProperties.update(hd._id, {
-          $set: {damage: resultingDamage}
+          $set: {
+            damage: resultingDamage,
+            dirty: true,
+          }
         }, {
           selector: {type: 'attribute'},
         });
       });
     }
-    computeCreature(creatureId);
   },
 });
 

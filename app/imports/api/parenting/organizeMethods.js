@@ -8,7 +8,7 @@ import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
 
 const organizeDoc = new ValidatedMethod({
   name: 'organize.organizeDoc',
@@ -57,10 +57,11 @@ const organizeDoc = new ValidatedMethod({
     let parentCreatures = getCreatureAncestors(parent);
     if (!skipRecompute){
       let creaturesToRecompute = union(docCreatures, parentCreatures);
-      // Recompute the creatures
-      creaturesToRecompute.forEach(id => {
-        // Some Dependencies depend on ancestry, so a full recompute is needed
-        computeCreature(id);
+      // Mark the creatures for recompute
+      Creatures.update({
+        _id: { $in: creaturesToRecompute }
+      }, {
+        dirty: true
       });
     }
   },
@@ -85,9 +86,14 @@ const reorderDoc = new ValidatedMethod({
     assertDocEditPermission(doc, this.userId);
     safeUpdateDocOrder({docRef, order});
     // Recompute the affected creatures
-    getCreatureAncestors(doc).forEach(id => {
-      computeCreature(id);
-    });
+    const ancestors = getCreatureAncestors(doc);
+    if (ancestors.length) {
+      Creatures.update({
+        _id: { $in: ancestors }
+      }, {
+        dirty: true
+      });
+    }
   },
 });
 

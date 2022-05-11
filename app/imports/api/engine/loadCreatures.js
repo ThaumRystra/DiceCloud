@@ -1,6 +1,7 @@
+import { debounce } from 'lodash';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-
+import computeCreature from './computeCreature';
 export const loadedCreatures = new Map(); // creatureId => {creature, properties, etc.}
 
 export function loadCreature(creatureId, subscription) {
@@ -35,8 +36,11 @@ class LoadedCreature {
     // the required documents
     const self = this;
     Tracker.nonreactive(() => {
-
       self.subs = new Set([sub]);
+
+      const compute = debounce(Meteor.bindEnvironment(() => {
+        computeCreature(creatureId);
+      }), 100);
 
       self.properties = new Map();
       // Observe all creature properties which are needed for computation
@@ -44,18 +48,21 @@ class LoadedCreature {
         'ancestors.id': creatureId,
         removed: { $ne: true },
       }, {
-        // sort: { order: 1 },
+        sort: { order: 1 },
         fields: { icon: 0 },
       }).observeChanges({
         added(id, fields) {
           fields._id = id;
-          return self.addProperty(fields)
+          self.addProperty(fields);
+          if (fields.dirty) compute();
         },
         changed(id, fields) {
-          return self.changeProperty(id, fields);
+          self.changeProperty(id, fields);
+          if (fields.dirty) compute();
         },
         removed(id) {
-          return self.removeProperty(id);
+          self.removeProperty(id);
+          compute();
         },
       });
       
@@ -67,12 +74,14 @@ class LoadedCreature {
         added(id, fields) {
           fields._id = id;
           self.addCreature(fields)
+          if (fields.dirty) compute();
         },
         changed(id, fields) {
-          return self.changeCreature(id, fields);
+          self.changeCreature(id, fields);
+          if (fields.dirty) compute();
         },
         removed(id) {
-          return self.removeCreature(id);
+          self.removeCreature(id);
         },
       });
 

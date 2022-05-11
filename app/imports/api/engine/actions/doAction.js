@@ -8,7 +8,6 @@ import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import applyProperty from './applyProperty.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -77,9 +76,10 @@ const doAction = new ValidatedMethod({
     doActionWork({creature, targets, properties, ancestors, method: this, methodScope: scope});
 
     // Recompute all involved creatures
-    computeCreature(creature._id);
-    targets.forEach(target => {
-      computeCreature(target._id);
+    Creatures.update({
+      _id: { $in: [creature._id, ...targetIds] }
+    }, {
+      dirty: true
     });
   },
 });

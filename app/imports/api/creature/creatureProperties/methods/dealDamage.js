@@ -5,7 +5,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const dealDamage = new ValidatedMethod({
   name: 'creatureProperties.dealDamage',
@@ -33,7 +32,6 @@ const dealDamage = new ValidatedMethod({
     assertEditPermission(creature, this.userId);
 
     const totalDamage = dealDamageWork({creature, damageType, amount})
-    computeCreature(creatureId);
     return totalDamage;
   },
 });

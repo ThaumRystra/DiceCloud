@@ -5,7 +5,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import {
 	setLineageOfDocs,
@@ -71,9 +70,6 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
       collection: CreatureProperties,
       ancestorId: rootCreature._id,
     });
-
-		// Inserting a creature property invalidates dependencies: full recompute
-    computeCreature(rootCreature._id);
 		// Return the docId of the last property, the inserted root property
 		return rootId;
 	},
@@ -134,6 +130,9 @@ function insertPropertyFromNode(nodeId, ancestors, order){
   } else {
     node.order = order;
   }
+
+  // Mark root as dirty
+  node.dirty = true;
 
   // Insert the creature properties
   CreatureProperties.batchInsert(nodes);

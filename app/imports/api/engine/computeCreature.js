@@ -6,6 +6,7 @@ import writeErrors from './computation/writeComputation/writeErrors.js';
 
 export default function computeCreature(creatureId){
   if (Meteor.isClient) return;
+  console.log('compute')
   const computation = buildCreatureComputation(creatureId);
   computeComputation(computation, creatureId);
 }

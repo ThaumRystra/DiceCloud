@@ -40,17 +40,22 @@ const restoreError = function(){
   );
 };
 
-export function restore({_id, collection}){
+export function restore({ _id, collection, extraUpdates}){
   if (typeof collection === 'string') {
     collection = getCollectionByName(collection);
   }
+  const update = {
+    $unset: {
+      removed: 1,
+      removedAt: 1,
+    },
+    ...extraUpdates
+  }
+
   let numUpdated = collection.update({
     _id,
     removedWith: {$exists: false}
-  }, { $unset: {
-    removed: 1,
-    removedAt: 1,
-  }}, {
+  }, update , {
     selector: {type: 'any'},
   },);
   if (numUpdated === 0) restoreError();

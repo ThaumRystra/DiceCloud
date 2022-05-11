@@ -5,7 +5,6 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import { getAncestry } from '/imports/api/parenting/parenting.js';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
@@ -132,14 +131,13 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
 
 export function insertPropertyWork({property, creature}){
   delete property._id;
+  property.dirty = true;
   let _id = CreatureProperties.insert(property);
   // Tree structure changed by insert, reorder the tree
   reorderDocs({
     collection: CreatureProperties,
     ancestorId: creature._id,
   });
-  // Inserting a creature property invalidates dependencies: full recompute
-  computeCreature(creature._id);
   return _id;
 }
 

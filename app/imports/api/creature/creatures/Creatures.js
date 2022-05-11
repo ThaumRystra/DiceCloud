@@ -100,6 +100,11 @@ let CreatureSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
     defaultValue: 0,
   },
+  // Does the character need a recompute?
+  dirty: {
+    type: Boolean,
+    optional: true,
+  },
   // Version of computation engine that was last used to compute this creature
   computeVersion: {
 		type: String,
