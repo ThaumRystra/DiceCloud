@@ -9,11 +9,8 @@ export function loadCreature(creatureId, subscription) {
   if (loadedCreatures.has(creatureId)) {
     creature.subs.add(subscription);
   } else {
-    console.time(`loading to memory ${creatureId}`);
     creature = new LoadedCreature(subscription, creatureId);
     loadedCreatures.set(creatureId, creature);
-    console.timeEnd(`loading to memory ${creatureId}`);
-    console.log('Creatures in memory: ', loadedCreatures.size);
   }
   subscription.onStop(() => {
     unloadCreature(creatureId, subscription);
@@ -29,7 +26,6 @@ function unloadCreature(creatureId, subscription) {
     creature.stop();
     loadedCreatures.delete(creatureId);
   }
-  console.log('Creatures in memory: ', loadedCreatures.size);
 }
 
 class LoadedCreature {

@@ -44,7 +44,7 @@ function getProperties(creatureId) {
     const props = Array.from(creature.properties.values());
     return props;
   }
-  console.time(`fetching from db: ${creatureId}`)
+  console.time(`Cache miss fetching from db: ${creatureId}`)
   const props = CreatureProperties.find({
     'ancestors.id': creatureId,
     'removed': {$ne: true},
@@ -52,7 +52,7 @@ function getProperties(creatureId) {
     sort: { order: 1 },
     fields: { icon: 0 },
   }).fetch();
-  console.timeEnd(`fetching from db: ${creatureId}`);
+  console.timeEnd(`Cache miss fetching from db: ${creatureId}`);
   return props;
 }
 
