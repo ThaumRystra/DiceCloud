@@ -20,12 +20,18 @@ Meteor.publish('singleCharacter', function(creatureId){
     this.error(e);
   }
   this.autorun(function (computation){
-    let userId = this.userId;
-    let creatureCursor
-    creatureCursor = Creatures.find({
+    const userId = this.userId;
+    const creature = Creatures.findOne({
       _id: creatureId,
+    }, {
+      fields: {
+        owner: 1,
+        readers: 1,
+        writers: 1,
+        public: 1,
+        computeVersion: 1,
+      }
     });
-    let creature = creatureCursor.fetch()[0];
     try { assertViewPermission(creature, userId) }
     catch(e){ return [] }
     if (creature.computeVersion !== VERSION && computation.firstRun){
@@ -35,7 +41,9 @@ Meteor.publish('singleCharacter', function(creatureId){
       catch(e){ console.error(e) }
     }
     return [
-      creatureCursor,
+      Creatures.find({
+        _id: creatureId,
+      }),
       CreatureProperties.find({
         'ancestors.id': creatureId,
       }),
