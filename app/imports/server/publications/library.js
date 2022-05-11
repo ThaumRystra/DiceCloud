@@ -73,6 +73,7 @@ Meteor.publish('libraryNodes', function(libraryId){
           order: 1,
           parent: 1,
           ancestors: 1,
+          removed: 1,
           // Effect
           operation: 1,
           targetTags: 1,
