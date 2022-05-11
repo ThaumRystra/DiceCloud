@@ -20,7 +20,6 @@ export default function writeAlteredProperties(computation){
       'deactivatedBySelf',
       'deactivatedByAncestor',
       'deactivatedByToggle',
-      'depGroupId',
       'damage',
       ...schema.objectKeys(),
     ];

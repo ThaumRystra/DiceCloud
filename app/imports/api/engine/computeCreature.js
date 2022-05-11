@@ -1,4 +1,4 @@
-import buildCreatureComputation, { buildDependencyGroupComputation } from './computation/buildCreatureComputation.js';
+import buildCreatureComputation from './computation/buildCreatureComputation.js';
 import computeCreatureComputation from './computation/computeCreatureComputation.js';
 import writeAlteredProperties from './computation/writeComputation/writeAlteredProperties.js';
 import writeScope from './computation/writeComputation/writeScope.js';
@@ -6,14 +6,10 @@ import writeErrors from './computation/writeComputation/writeErrors.js';
 
 export default function computeCreature(creatureId){
   if (Meteor.isClient) return;
+  console.time('Compute');
   const computation = buildCreatureComputation(creatureId);
   computeComputation(computation, creatureId);
-}
-
-// Recompute only some groups of the dependency tree
-export function computeCreatureDependencyGroup(depGroupIds, creatureId) {
-  const computation = buildDependencyGroupComputation(depGroupIds, creatureId);
-  computeComputation(computation, creatureId);
+  console.timeEnd('Compute');
 }
 
 function computeComputation(computation, creatureId) {

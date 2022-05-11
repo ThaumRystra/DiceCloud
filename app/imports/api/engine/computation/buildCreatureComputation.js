@@ -2,6 +2,7 @@ import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import CreatureProperties,
   { DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { loadedCreatures } from '../loadCreatures.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
@@ -15,7 +16,6 @@ import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
 import CreatureComputation from './CreatureComputation.js';
 import removeSchemaFields from './buildComputation/removeSchemaFields.js';
-import assignDependencyGroups from '/imports/api/engine/computation/utility/assignDependencyGroups.js';
 
 /**
  * Store index of properties
@@ -38,35 +38,22 @@ export default function buildCreatureComputation(creatureId){
   return computation;
 }
 
-export function buildDependencyGroupComputation(depGroupIds, creatureId) {
-  const creature = getCreature(creatureId);
-  const properties = getGroupProperties(depGroupIds);
-  const computation = buildComputationFromProps(properties, creature);
-  return computation;
-}
-
 function getProperties(creatureId) {
-  return CreatureProperties.find({
+  if (loadedCreatures.has(creatureId)) {
+    const creature = loadedCreatures.get(creatureId);
+    const props = Array.from(creature.properties.values());
+    return props;
+  }
+  console.time(`fetching from db: ${creatureId}`)
+  const props = CreatureProperties.find({
     'ancestors.id': creatureId,
     'removed': {$ne: true},
   }, {
     sort: { order: 1 },
     fields: { icon: 0 },
   }).fetch();
-}
-
-function getGroupProperties(depGroupIds) {
-  console.log({ depGroupIds });
-  if (!depGroupIds || depGroupIds.includes(undefined)) {
-    throw `Expected array full of ids, got ${depGroupIds}`
-  }
-  return CreatureProperties.find({
-    depGroupId: { $in: depGroupIds },
-    'removed': { $ne: true },
-  }, {
-    sort: { order: 1 },
-    fields: { icon: 0 },
-  }).fetch();
+  console.timeEnd(`fetching from db: ${creatureId}`);
+  return props;
 }
 
 function getCreature(creatureId){
@@ -137,9 +124,6 @@ export function buildComputationFromProps(properties, creature){
     linkTypeDependencies(dependencyGraph, prop, computation);
     linkCalculationDependencies(dependencyGraph, prop, computation);
   });
-
-  // Store the connected groups of the dependency graph
-  assignDependencyGroups(dependencyGraph);
 
   return computation;
 }
