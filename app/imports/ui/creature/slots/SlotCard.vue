@@ -24,11 +24,11 @@
     <v-card-actions>
       <v-spacer />
       <v-btn
-        text
-        color="primary"
+        icon
+        color="accent"
         @click.stop="$emit('ignore')"
       >
-        Skip
+        <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>

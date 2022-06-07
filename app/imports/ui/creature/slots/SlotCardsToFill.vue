@@ -40,7 +40,7 @@ export default {
       }, error => {
         if (error){
           console.error(error);
-          snackbar(error);
+          snackbar({text: error.reason || error.message || error.toString()});
         }
       });
     },
@@ -63,7 +63,7 @@ export default {
           }, error => {
             if (error){
               console.error(error);
-              snackbar(error);
+              snackbar({text: error.reason || error.message || error.toString()});
             }
           });
           return `slot-child-${newPropertyId}`;
