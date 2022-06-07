@@ -42,6 +42,7 @@
         <v-btn
           outlined
           style="height: 100%; width: 100%; min-height: 120px;"
+          class="archive-button"
           :color="archiveFileError ? 'error' : undefined"
           @click="$refs.archiveFileInput.click()"
         >
@@ -183,12 +184,16 @@ export default {
           data = JSON.parse(fr.result);
         } catch (e){
           self.archiveFileError = 'File could not be parsed';
+          console.error(e);
+          return;
         }
-        console.log(data);
+
         try {
-          archiveSchema.validate(data);
+          archiveSchema.validate(archiveSchema.clean(data));
         } catch (e){
-          self.archiveFileError = e.reason || e.message || e.toString();
+          self.archiveFileError = 'File failed validation: ' + (e.reason || e.message || e.toString());
+          console.error(e);
+          return;
         }
 
         let uploadInstance = ArchiveCreatureFiles.insert({
@@ -245,3 +250,10 @@ export default {
   },
 }
 </script>
+
+<style>
+  .v-btn.archive-button > .v-btn__content {
+    white-space: normal;
+    max-width: 100%;
+  }
+</style>

@@ -1,6 +1,8 @@
 import { createS3FilesCollection } from '/imports/api/files/s3FileStorage.js';
 import SimpleSchema from 'simpl-schema';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
+import { CreaturePropertySchema } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { CreatureSchema } from '/imports/api/creature/creatures/Creatures.js';
 
 const ArchiveCreatureFiles = createS3FilesCollection({
   collectionName: 'archiveCreatureFiles',
@@ -16,7 +18,7 @@ const ArchiveCreatureFiles = createS3FilesCollection({
     return true;
   },
   onAfterUpload(file) {
-    incrementFileStorageUsed(file.userId, file.size);
+    if (Meteor.isServer) incrementFileStorageUsed(file.userId, file.size);
   }
 });
 
@@ -25,17 +27,11 @@ let archiveSchema = new SimpleSchema({
     type: Object,
     blackbox: true,
   },
-  creature: {
-    type: Object,
-    blackbox: true,
-  },
+  creature: CreatureSchema,
   properties: {
     type: Array,
   },
-  'properties.$': {
-    type: Object,
-    blackbox: true,
-  },
+  'properties.$': CreaturePropertySchema,
   experiences: {
     type: Array,
   },
