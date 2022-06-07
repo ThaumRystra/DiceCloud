@@ -14,4 +14,5 @@ import '/imports/migrations/server/index.js';
 import '/imports/migrations/methods/index.js'
 import '/imports/constants/MAINTENANCE_MODE.js';
 import '/imports/api/creature/creatureProperties/methods/index.js';
+import '/imports/api/creature/archive/methods/index.js';
 

@@ -3,7 +3,7 @@ import { EJSON } from 'meteor/ejson';
 
 export default function writeScope(creatureId, computation) {
   const scope = computation.scope;
-  const variables = computation.creature.variables || {};
+  const variables = computation.creature?.variables || {};
   let $set;
   for (const key in scope){
     // Remove large properties that aren't likely to be accessed

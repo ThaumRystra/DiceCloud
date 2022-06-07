@@ -1,4 +1,6 @@
 import { createS3FilesCollection } from '/imports/api/files/s3FileStorage.js';
+import SimpleSchema from 'simpl-schema';
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
 
 const ArchiveCreatureFiles = createS3FilesCollection({
   collectionName: 'archiveCreatureFiles',
@@ -11,7 +13,44 @@ const ArchiveCreatureFiles = createS3FilesCollection({
     if (!/json/i.test(file.extension)){
       return 'Please upload only a JSON file';
     }
+    return true;
+  },
+  onAfterUpload(file) {
+    incrementFileStorageUsed(file.userId, file.size);
   }
 });
 
+let archiveSchema = new SimpleSchema({
+  meta: {
+    type: Object,
+    blackbox: true,
+  },
+  creature: {
+    type: Object,
+    blackbox: true,
+  },
+  properties: {
+    type: Array,
+  },
+  'properties.$': {
+    type: Object,
+    blackbox: true,
+  },
+  experiences: {
+    type: Array,
+  },
+  'experiences.$': {
+    type: Object,
+    blackbox: true,
+  },
+  logs: {
+    type: Array,
+  },
+  'logs.$': {
+    type: Object,
+    blackbox: true,
+  },
+});
+
 export default ArchiveCreatureFiles;
+export { archiveSchema };
