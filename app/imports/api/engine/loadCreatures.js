@@ -2,6 +2,8 @@ import { debounce } from 'lodash';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import computeCreature from './computeCreature';
+
+const COMPUTE_DEBOUNCE_TIME = 100; // ms
 export const loadedCreatures = new Map(); // creatureId => {creature, properties, etc.}
 
 export function loadCreature(creatureId, subscription) {
@@ -40,7 +42,7 @@ class LoadedCreature {
 
       const compute = debounce(Meteor.bindEnvironment(() => {
         computeCreature(creatureId);
-      }), 100);
+      }), COMPUTE_DEBOUNCE_TIME);
 
       self.properties = new Map();
       // Observe all creature properties which are needed for computation

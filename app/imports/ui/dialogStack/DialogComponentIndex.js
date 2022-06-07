@@ -18,7 +18,6 @@ const MoveLibraryNodeDialog = () => import('/imports/ui/library/MoveLibraryNodeD
 const SelectCreaturesDialog = () => import('/imports/ui/tabletop/SelectCreaturesDialog.vue');
 const SelectLibraryNodeDialog = () => import('/imports/ui/library/SelectLibraryNodeDialog.vue');
 const ShareDialog = () => import('/imports/ui/sharing/ShareDialog.vue');
-const SlotDetailsDialog = () => import('/imports/ui/creature/slots/SlotDetailsDialog.vue');
 const SlotFillDialog = () => import('/imports/ui/creature/slots/SlotFillDialog.vue');
 const TierTooLowDialog = () => import('/imports/ui/user/TierTooLowDialog.vue');
 const TransferOwnershipDialog = () => import('/imports/ui/sharing/TransferOwnershipDialog.vue');
@@ -45,7 +44,6 @@ export default {
   SelectCreaturesDialog,
   SelectLibraryNodeDialog,
   ShareDialog,
-  SlotDetailsDialog,
   SlotFillDialog,
   TierTooLowDialog,
   TransferOwnershipDialog,

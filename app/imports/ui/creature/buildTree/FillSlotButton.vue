@@ -4,7 +4,7 @@
     icon
     :data-id="`slot-add-button-${model._id}`"
     class="slot-add-button accent--text"
-    @click="fillSlot()"
+    @click.stop="fillSlot()"
   >
     <v-icon>mdi-plus</v-icon>
   </v-btn>

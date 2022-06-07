@@ -1,13 +1,30 @@
 <template lang="html">
   <v-container fluid>
     <v-row dense>
-      <v-col cols="12" md="8" lg="6" style="height: 100%;">
-        <v-card style="height: calc(100vh - 120px); overflow: auto;">
+      <v-col cols="12">
+        <slot-cards-to-fill :creature-id="creatureId" />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="8"
+        lg="6"
+      >
+        <v-card class="pb-4">
           <v-card-title>Slots</v-card-title>
-          <build-tree-node-list :children="slotBuildTree" />
+          <build-tree-node-list
+            :children="slotBuildTree"
+            class="mx-2"
+            @selected="_id => propertyClicked({_id, prefix: 'build-tree-node-'})"
+          />
         </v-card>
       </v-col>
-      <v-col cols="12" md="4" lg="6">
+      <v-col
+        cols="12"
+        md="4"
+        lg="6"
+      >
         <v-card class="class-details mb-2">
           <v-card-title
             v-if="creature.variables.level"
@@ -75,29 +92,6 @@
             </v-list-item>
           </v-list>
         </v-card>
-        <toolbar-card
-          data-id="slot-card"
-          @toolbarclick="showSlotDialog"
-        >
-          <template slot="toolbar">
-            <v-toolbar-title>
-              Build
-            </v-toolbar-title>
-            <v-spacer />
-            <v-toolbar-title>
-              <v-icon
-                small
-                style="width: 16px;"
-                class="mr-1"
-              >
-                mdi-pencil
-              </v-icon>
-            </v-toolbar-title>
-          </template>
-          <v-card-text style="background-color: inherit;">
-            <slots :creature-id="creatureId" />
-          </v-card-text>
-        </toolbar-card>
       </v-col>
     </v-row>
   </v-container>
@@ -106,11 +100,9 @@
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import Slots from '/imports/ui/creature/slots/Slots.vue';
-import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import  { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import BuildTreeNodeList from '/imports/ui/creature/buildTree/BuildTreeNodeList.vue';
+import SlotCardsToFill from '/imports/ui/creature/slots/SlotCardsToFill.vue';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -121,10 +113,8 @@ function traverse(tree, callback, parents = []){
 
 export default {
   components: {
-    ColumnLayout,
-    Slots,
-    ToolbarCard,
     BuildTreeNodeList,
+    SlotCardsToFill,
   },
   props: {
     creatureId: {
@@ -214,6 +204,13 @@ export default {
     },
   },
   methods: {
+    propertyClicked({_id, prefix}){
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `${prefix}${_id}`,
+        data: {_id},
+      });
+    },
     addExperience(){
       this.$store.commit('pushDialogStack', {
         component: 'experience-insert-dialog',

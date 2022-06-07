@@ -44,8 +44,8 @@ const restCreature = new ValidatedMethod({
     let filter = {
       'ancestors.id': creatureId,
       reset: resetFilter,
-      removed: {$ne: true},
-      inactive: {$ne: true},
+      removed: { $ne: true },
+      inactive: { $ne: true },
     };
     // update all attribute's damage
     filter.type = 'attribute';

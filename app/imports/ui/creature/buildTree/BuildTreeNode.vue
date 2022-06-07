@@ -4,7 +4,7 @@
     :class="{
       'empty': !hasChildren,
     }"
-    :data-id="`tree-node-${node._id}`"
+    :data-id="`build-tree-node-${node._id}`"
   >
     <div
       class="layout align-center justify-start tree-node-title"
@@ -50,7 +50,6 @@
         <tree-node-view
           v-else
           :model="node"
-          :hide-icon="node.type === 'propertySlot'"
         />
         <template v-if="condenseChild">
           <span class="mr-4">:</span>
@@ -69,6 +68,7 @@
           <build-tree-node-list
             v-if="showExpanded"
             :children="computedChildren"
+            @selected="e => $emit('selected', e)"
           />
           <div v-else>
             <div
@@ -119,15 +119,22 @@
       },
 		},
 		data(){return {
-			expanded: this.node._descendantCanFill || (
-        this.node.type === 'propertySlot' &&
-        this. node.quantityExpected?.value === 0 ||
-        (this.node.quantityExpected?.value > 1 && this.node.spaceLeft > 0)
-      ),
+			expanded: false,
+      /* expand if there's a slot needing attention:
+        this.node._descendantCanFill || (
+          this.node.type === 'propertySlot' &&
+          this. node.quantityExpected?.value === 0 ||
+          (this.node.quantityExpected?.value > 1 && this.node.spaceLeft > 0)
+        )
+      */
 		}},
 		computed: {
       condenseChild(){
-        return this.node.type === 'propertySlot' && this.children.length === 1;
+        return this.node.type === 'propertySlot' &&
+        this.children.length === 1 &&
+        this.children[0].node.type !== 'propertySlot' &&
+        this.node.quantityExpected &&
+        this.node.quantityExpected.value === 1;
       },
       isSlot(){
         return this.node.type === 'propertySlot';
