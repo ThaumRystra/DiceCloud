@@ -149,30 +149,38 @@
         </v-btn>
       </div>
     </v-slide-x-transition>
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <v-expand-transition>
-        <text-field
-          v-if="model.targetByTags"
-          label="Target field"
-          :value="model.targetField"
-          hint="Target a specific calculation field on the affected properties"
-          :error-messages="errors.targetField"
-          @change="change('targetField', ...arguments)"
+    <form-sections>
+      <form-section
+        name="Children"
+        standalone
+      >
+        <slot name="children" />
+      </form-section>
+
+      <form-section
+        name="Advanced"
+      >
+        <v-expand-transition>
+          <text-field
+            v-if="model.targetByTags"
+            label="Target field"
+            :value="model.targetField"
+            hint="Target a specific calculation field on the affected properties"
+            :error-messages="errors.targetField"
+            @change="change('targetField', ...arguments)"
+          />
+        </v-expand-transition>
+        <smart-combobox
+          label="Tags"
+          multiple
+          chips
+          deletable-chips
+          :value="model.tags"
+          :error-messages="errors.tags"
+          @change="change('tags', ...arguments)"
         />
-      </v-expand-transition>
-      <smart-combobox
-        label="Tags"
-        multiple
-        chips
-        deletable-chips
-        :value="model.tags"
-        :error-messages="errors.tags"
-        @change="change('tags', ...arguments)"
-      />
-    </form-section>
+      </form-section>
+    </form-sections>
   </div>
 </template>
 

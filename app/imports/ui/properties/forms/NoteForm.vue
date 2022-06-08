@@ -35,6 +35,12 @@
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />
+    <form-section
+      name="Children"
+      standalone
+    >
+      <slot name="children" />
+    </form-section>
   </div>
 </template>
 

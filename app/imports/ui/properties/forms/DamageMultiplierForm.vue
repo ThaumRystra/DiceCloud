@@ -46,6 +46,9 @@
       </v-col>
     </v-row>
     <form-sections>
+      <form-section name="Children">
+        <slot name="children" />
+      </form-section>
       <form-section
         name="Advanced"
       >

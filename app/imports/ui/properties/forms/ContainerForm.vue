@@ -55,30 +55,35 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <smart-combobox
-        label="Tags"
-        multiple
-        chips
-        deletable-chips
-        hint="Used to let slots find this property in a library, should otherwise be left blank"
-        :value="model.tags"
-        @change="change('tags', ...arguments)"
-      />
-      <div class="layout justify-center">
-        <div>
-          <smart-switch
-            label="Contents are weightless"
-            :value="model.contentsWeightless"
-            :error-messages="errors.contentsWeightless"
-            @change="change('contentsWeightless', ...arguments)"
-          />
+    <form-sections>
+      <form-section name="Children">
+        <slot name="children" />
+      </form-section>
+
+      <form-section
+        name="Advanced"
+      >
+        <smart-combobox
+          label="Tags"
+          multiple
+          chips
+          deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
+          :value="model.tags"
+          @change="change('tags', ...arguments)"
+        />
+        <div class="layout justify-center">
+          <div>
+            <smart-switch
+              label="Contents are weightless"
+              :value="model.contentsWeightless"
+              :error-messages="errors.contentsWeightless"
+              @change="change('contentsWeightless', ...arguments)"
+            />
+          </div>
         </div>
-      </div>
-    </form-section>
+      </form-section>
+    </form-sections>
   </div>
 </template>
 

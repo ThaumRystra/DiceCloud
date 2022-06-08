@@ -1,6 +1,5 @@
 const ActionForm = () => import('/imports/ui/properties/forms/ActionForm.vue');
 const AdjustmentForm = () => import('/imports/ui/properties/forms/AdjustmentForm.vue');
-const AttackForm = () => import('/imports/ui/properties/forms/AttackForm.vue');
 const AttributeForm = () => import('/imports/ui/properties/forms/AttributeForm.vue');
 const BuffForm = () => import('/imports/ui/properties/forms/BuffForm.vue');
 const BranchForm = () => import('/imports/ui/properties/forms/BranchForm.vue');
@@ -28,7 +27,6 @@ const ToggleForm = () => import('/imports/ui/properties/forms/ToggleForm.vue');
 export default {
   action: ActionForm,
   adjustment: AdjustmentForm,
-  attack: AttackForm,
   attribute: AttributeForm,
   buff: BuffForm,
   branch: BranchForm,

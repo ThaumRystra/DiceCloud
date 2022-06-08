@@ -157,38 +157,43 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <div class="layout wrap justify-space-between">
-        <smart-switch
-          label="Hide when full"
-          style="width: 200px; flex-grow: 0;"
-          class="mx-2"
-          :value="model.hideWhenFull"
-          :error-messages="errors.hideWhenFull"
-          @change="change('hideWhenFull', ...arguments)"
+    <form-sections>
+      <form-section name="Children">
+        <slot name="children" />
+      </form-section>
+
+      <form-section
+        name="Advanced"
+      >
+        <div class="layout wrap justify-space-between">
+          <smart-switch
+            label="Hide when full"
+            style="width: 200px; flex-grow: 0;"
+            class="mx-2"
+            :value="model.hideWhenFull"
+            :error-messages="errors.hideWhenFull"
+            @change="change('hideWhenFull', ...arguments)"
+          />
+          <smart-switch
+            label="Ignored"
+            style="width: 200px; flex-grow: 0;"
+            class="mx-2"
+            :value="model.ignored"
+            :error-messages="errors.ignored"
+            @change="change('ignored', ...arguments)"
+          />
+        </div>
+        <smart-combobox
+          label="Tags"
+          hint="This slot's own tags which will be used to fill other slots"
+          multiple
+          chips
+          deletable-chips
+          :value="model.tags"
+          @change="change('tags', ...arguments)"
         />
-        <smart-switch
-          label="Ignored"
-          style="width: 200px; flex-grow: 0;"
-          class="mx-2"
-          :value="model.ignored"
-          :error-messages="errors.ignored"
-          @change="change('ignored', ...arguments)"
-        />
-      </div>
-      <smart-combobox
-        label="Tags"
-        hint="This slot's own tags which will be used to fill other slots"
-        multiple
-        chips
-        deletable-chips
-        :value="model.tags"
-        @change="change('tags', ...arguments)"
-      />
-    </form-section>
+      </form-section>
+    </form-sections>
   </div>
 </template>
 

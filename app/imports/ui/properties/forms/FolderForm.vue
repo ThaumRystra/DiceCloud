@@ -9,19 +9,27 @@
         :error-messages="errors.name"
         @change="change('name', ...arguments)"
       />
-      <form-section
-        name="Advanced"
-        standalone
-      >
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
-        />
-      </form-section>
+      <form-sections>
+        <form-section
+          name="Children"
+          standalone
+        >
+          <slot name="children" />
+        </form-section>
+
+        <form-section
+          name="Advanced"
+        >
+          <smart-combobox
+            label="Tags"
+            multiple
+            chips
+            deletable-chips
+            :value="model.tags"
+            @change="change('tags', ...arguments)"
+          />
+        </form-section>
+      </form-sections>
     </div>
   </div>
 </template>

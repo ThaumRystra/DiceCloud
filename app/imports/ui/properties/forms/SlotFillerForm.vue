@@ -1,20 +1,37 @@
 <template lang="html">
   <div class="slot-filler-form">
-    <div class="layout column align-center">
-      <icon-picker
-        label="Icon"
-        :value="model.icon"
-        :error-messages="errors.icon"
-        @change="change('icon', ...arguments)"
-      />
-    </div>
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
+    <v-row
+      dense
+      align="start"
+    >
+      <v-col
+        cols="12"
+        sm="9"
+        md="10"
+      >
+        <text-field
+          ref="focusFirst"
+          label="Name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        sm="3"
+        md="2"
+      >
+        <icon-picker
+          :value="model.icon"
+          :error-messages="errors.icon"
+          height="56"
+          width="100%"
+          button-style="margin-bottom: 30px;"
+          @change="change('icon', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <text-area
       label="Description"
       :value="model.description"
@@ -67,6 +84,12 @@
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
     />
+    <form-section
+      name="Children"
+      standalone
+    >
+      <slot name="children" />
+    </form-section>
   </div>
 </template>
 

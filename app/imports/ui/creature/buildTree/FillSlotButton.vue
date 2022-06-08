@@ -1,12 +1,15 @@
 <template functional>
   <v-btn
     v-if="!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft"
-    icon
+    :icon="!$slots.default"
+    v-bind="$attrs"
     :data-id="`slot-add-button-${model._id}`"
     class="slot-add-button accent--text"
     @click.stop="fillSlot()"
   >
-    <v-icon>mdi-plus</v-icon>
+    <slot>
+      <v-icon>mdi-plus</v-icon>
+    </slot>
   </v-btn>
 </template>
 

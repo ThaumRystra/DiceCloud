@@ -93,6 +93,10 @@
         </form-section>
       </v-expand-transition>
 
+      <form-section name="Children">
+        <slot name="children" />
+      </form-section>
+
       <form-section
         name="Advanced"
       >

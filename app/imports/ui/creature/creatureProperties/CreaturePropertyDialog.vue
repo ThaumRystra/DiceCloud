@@ -17,19 +17,40 @@
       <v-fade-transition
         mode="out-in"
       >
-        <component
-          :is="model.type + 'Form'"
-          v-if="editing"
-          :key="_id"
-          class="creature-property-form"
-          :model="model"
-          @change="change"
-          @push="push"
-          @pull="pull"
-        />
-        <div
-          v-else-if="!editing && $options.components[model.type + 'Viewer']"
-        >
+        <div v-if="editing">
+          <component
+            :is="model.type + 'Form'"
+            :key="_id"
+            class="creature-property-form"
+            :model="model"
+            @change="change"
+            @push="push"
+            @pull="pull"
+          >
+            <template #children>
+              <creature-properties-tree
+                style="width: 100%;"
+                class="mb-2"
+                organize
+                :root="{collection: 'creatureProperties', id: model._id}"
+                @length="childrenLength = $event"
+                @selected="selectSubProperty"
+              />
+              <v-btn
+                icon
+                outlined
+                color="accent"
+                data-id="insert-creature-property-btn"
+                @click="addProperty"
+              >
+                <v-icon>
+                  mdi-plus
+                </v-icon>
+              </v-btn>
+            </template>
+          </component>
+        </div>
+        <div v-else>
           <div
             class="layout mb-4"
           >
@@ -65,9 +86,6 @@
             </property-field>
           </v-row>
         </div>
-        <p v-else>
-          This property can't be viewed yet.
-        </p>
       </v-fade-transition>
     </template>
     <div
@@ -75,17 +93,6 @@
       slot="actions"
       class="layout"
     >
-      <v-btn
-        v-if="!editing && !embedded"
-        text
-        data-id="insert-creature-property-btn"
-        @click="addProperty"
-      >
-        <v-icon left>
-          mdi-plus
-        </v-icon>
-        Child Property
-      </v-btn>
       <v-spacer />
       <v-btn
         text
@@ -256,7 +263,10 @@ export default {
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
         elementId: `tree-node-${_id}`,
-        data: {_id},
+        data: {
+          _id,
+          startInEditTab: this.editing,
+        },
       });
     },
     addProperty(){

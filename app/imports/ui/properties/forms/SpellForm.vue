@@ -238,7 +238,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
     <form-sections>
-      <form-section name="Resources">
+      <form-section name="Resources Consumed">
         <resources-form
           :model="model.resources"
           @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
@@ -246,6 +246,7 @@
           @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
         />
       </form-section>
+
       <form-section
         name="Limit Uses"
       >
@@ -291,6 +292,11 @@
           @change="change('reset', ...arguments)"
         />
       </form-section>
+
+      <form-section name="Children">
+        <slot name="children" />
+      </form-section>
+
       <form-section name="Advanced">
         <smart-combobox
           label="Tags"
