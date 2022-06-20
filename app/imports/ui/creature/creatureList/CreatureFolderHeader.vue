@@ -1,28 +1,29 @@
 <template lang="html">
-  <v-list-item style="min-height: 60px;">
-    <v-list-item-content>
-      <v-list-item-title>
-        <template v-if="!renaming">
-          {{ model.name }}
-        </template>
-        <text-field
-          v-if="renaming"
-          ref="name-input"
-          regular
-          hide-details
-          dense
-          :value="model.name"
-          @change="renameFolder"
-          @click.native.stop=""
-          @input.native.stop=""
-          @keydown.native.stop=""
-          @keyup.native.stop=""
-        />
-      </v-list-item-title>
-    </v-list-item-content>
-    <template v-if="!selection && !dense">
-      <v-list-item-action v-if="renaming || open">
+  <v-list-item-content style="min-height: 60px;">
+    <v-list-item-title class="d-flex align-center">
+      <div
+        v-if="!renaming"
+        class="text-truncate text-no-wrap"
+      >
+        {{ model.name }}
+      </div>
+      <text-field
+        v-if="renaming"
+        ref="name-input"
+        regular
+        hide-details
+        dense
+        :value="model.name"
+        @change="renameFolder"
+        @click.native.stop=""
+        @input.native.stop=""
+        @keydown.native.stop=""
+        @keyup.native.stop=""
+      />
+      <template v-if="!selection && !dense">
+        <v-spacer />
         <v-btn
+          v-if="renaming || open"
           icon
           style="flex-grow: 0"
           @click.stop="renaming = !renaming"
@@ -34,18 +35,17 @@
             mdi-pencil
           </v-icon>
         </v-btn>
-      </v-list-item-action>
-      <v-list-item-action v-if="open">
         <v-btn
+          v-if="open"
           icon
           style="flex-grow: 0"
           @click.stop="removeFolder"
         >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
-      </v-list-item-action>
-    </template>
-  </v-list-item>
+      </template>
+    </v-list-item-title>
+  </v-list-item-content>
 </template>
 
 <script lang="js">
