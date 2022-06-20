@@ -25,6 +25,7 @@
     />
     <calculation-error-list :errors="clientErrors" />
     <form-section
+      v-if="$slots.children"
       name="Children"
       standalone
     >

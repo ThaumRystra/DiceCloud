@@ -93,7 +93,10 @@
         </form-section>
       </v-expand-transition>
 
-      <form-section name="Children">
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
         <slot name="children" />
       </form-section>
 

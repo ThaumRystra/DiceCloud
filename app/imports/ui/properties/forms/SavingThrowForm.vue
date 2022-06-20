@@ -66,6 +66,7 @@
       @change="change('tags', ...arguments)"
     />
     <form-section
+      v-if="$slots.children"
       name="Children"
       standalone
     >

@@ -45,36 +45,44 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <smart-combobox
-        label="Tags"
-        multiple
-        chips
-        deletable-chips
-        :value="model.tags"
-        @change="change('tags', ...arguments)"
-      />
-      <div class="layout justify-center">
-        <computed-field
-          label="Base Value"
-          hint="This is the value of the skill before effects are applied"
-          :model="model.baseValue"
-          :error-messages="errors.baseValue"
-          @change="({path, value, ack}) =>
-            $emit('change', {path: ['baseValue', ...path], value, ack})"
+    <form-sections>
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+
+      <form-section
+        name="Advanced"
+      >
+        <smart-combobox
+          label="Tags"
+          multiple
+          chips
+          deletable-chips
+          :value="model.tags"
+          @change="change('tags', ...arguments)"
         />
-        <proficiency-select
-          style="flex-basis: 300px;"
-          label="Base Proficiency"
-          :value="model.baseProficiency"
-          :error-messages="errors.baseProficiency"
-          @change="change('baseProficiency', ...arguments)"
-        />
-      </div>
-    </form-section>
+        <div class="layout justify-center">
+          <computed-field
+            label="Base Value"
+            hint="This is the value of the skill before effects are applied"
+            :model="model.baseValue"
+            :error-messages="errors.baseValue"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['baseValue', ...path], value, ack})"
+          />
+          <proficiency-select
+            style="flex-basis: 300px;"
+            label="Base Proficiency"
+            :value="model.baseProficiency"
+            :error-messages="errors.baseProficiency"
+            @change="change('baseProficiency', ...arguments)"
+          />
+        </div>
+      </form-section>
+    </form-sections>
   </div>
 </template>
 

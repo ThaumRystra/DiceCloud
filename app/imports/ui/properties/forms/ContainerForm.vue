@@ -56,7 +56,10 @@
     />
 
     <form-sections>
-      <form-section name="Children">
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
         <slot name="children" />
       </form-section>
 
