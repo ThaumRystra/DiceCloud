@@ -138,7 +138,7 @@ const PROPERTIES = Object.freeze({
   slotFiller: {
     icon: 'mdi-power-plug-outline',
     name: 'Slot filler',
-    helpText: 'A slot filler allows for more advanced logic when it attemptst to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
+    helpText: 'A slot filler allows for more advanced logic when it attempts to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
     suggestedParents: ['propertySlot'],
   },
   spellList: {
