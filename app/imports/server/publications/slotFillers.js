@@ -3,6 +3,13 @@ import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
+import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';
+
+const FIELDS = {
+  ...LIBRARY_NODE_TREE_FIELDS,
+  slotFillerCondition: 1,
+  tags: 1,
+}
 
 Meteor.publish('slotFillers', function(slotId, searchTerm){
   if (searchTerm) check(searchTerm, String);
@@ -50,7 +57,8 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
         options = {
           // relevant documents have a higher score.
           fields: {
-            _score: { $meta: 'textScore' }
+            _score: { $meta: 'textScore' },
+            ...FIELDS,
           },
           sort: {
             // `score` property specified in the projection fields above.
@@ -61,10 +69,13 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
         }
       } else {
         delete filter.$text
-        options = {sort: {
-          name: 1,
-          order: 1,
-        }};
+        options = {
+          sort: {
+            name: 1,
+            order: 1,
+          },
+          fields: FIELDS,
+        };
       }
       options.limit = limit;
 
@@ -72,7 +83,6 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
         self.setData('countAll', LibraryNodes.find(filter).count());
       });
       self.autorun(function () {
-        Meteor._sleepForMs(1000);
         return [LibraryNodes.find(filter, options), libraries];
       });
     });

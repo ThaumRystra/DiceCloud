@@ -27,20 +27,18 @@
     />
     <p>
       {{ slotPropertyTypeName }} with tags:
-      <template v-for="(tags, index) in tagsSearched.or">
-        <property-tags
-          :key="index"
-          :tags="tags"
-          :prefix="index ? 'OR' : undefined"
-        />
-      </template>
-      <template v-for="(tags, index) in tagsSearched.not">
-        <property-tags
-          :key="index"
-          :tags="tags"
-          prefix="NOT"
-        />
-      </template>
+      <property-tags
+        v-for="(tags, index) in tagsSearched.or"
+        :key="index"
+        :tags="tags"
+        :prefix="index ? 'OR' : undefined"
+      />
+      <property-tags
+        v-for="(tags, index) in tagsSearched.not"
+        :key="index"
+        :tags="tags"
+        prefix="NOT"
+      />
     </p>
     <v-expansion-panels
       multiple

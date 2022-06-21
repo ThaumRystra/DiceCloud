@@ -3,6 +3,39 @@ import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { assertViewPermission, assertDocViewPermission } from '/imports/api/sharing/sharingPermissions.js';
 
+const LIBRARY_NODE_TREE_FIELDS = {
+  _id: 1,
+  name: 1,
+  type: 1,
+  icon: 1,
+  color: 1,
+  order: 1,
+  parent: 1,
+  ancestors: 1,
+  // Effect
+  operation: 1,
+  targetTags: 1,
+  stats: 1,
+  // Item
+  quantity: 1,
+  plural: 1,
+  equipped: 1,
+  // Branch
+  branchType: 1,
+  // Damage:
+  damageType: 1,
+  stat: 1,
+  amount: 1,
+  // Class level
+  level: 1,
+  // Proficiency
+  value: 1,
+  // Reference
+  cache: 1,
+}
+
+export { LIBRARY_NODE_TREE_FIELDS };
+
 Meteor.publish('libraries', function(){
   this.autorun(function (){
     let userId = this.userId;
@@ -64,36 +97,7 @@ Meteor.publish('libraryNodes', function(libraryId){
         'ancestors.id': libraryId,
       }, {
         sort: { order: 1 },
-        fields: {
-          _id: 1,
-          name: 1,
-          type: 1,
-          icon: 1,
-          color: 1,
-          order: 1,
-          parent: 1,
-          ancestors: 1,
-          // Effect
-          operation: 1,
-          targetTags: 1,
-          stats: 1,
-          // Item
-          quantity: 1,
-          plural: 1,
-          equipped: 1,
-          // Branch
-          branchType: 1,
-          // Damage:
-          damageType: 1,
-          stat: 1,
-          amount: 1,
-          // Class level
-          level: 1,
-          // Proficiency
-          value: 1,
-          // Reference
-          cache: 1,
-        }
+        fields: LIBRARY_NODE_TREE_FIELDS,
       }),
     ];
   });

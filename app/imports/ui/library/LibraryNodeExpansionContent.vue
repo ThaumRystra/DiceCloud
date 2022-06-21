@@ -44,6 +44,9 @@ export default {
   },
   meteor: {
     $subscribe: {
+      libraryNode(){
+        return [this.model._id];
+      },
       descendantLibraryNodes(){
         return [this.model._id];
       },
