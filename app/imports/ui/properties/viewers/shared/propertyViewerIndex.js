@@ -4,6 +4,7 @@ const AttributeViewer = () => import ('/imports/ui/properties/viewers/AttributeV
 const BuffViewer = () => import ('/imports/ui/properties/viewers/BuffViewer.vue');
 const BranchViewer = () => import ('/imports/ui/properties/viewers/BranchViewer.vue');
 const ContainerViewer = () => import ('/imports/ui/properties/viewers/ContainerViewer.vue');
+const ClassViewer = () => import ('/imports/ui/properties/viewers/ClassViewer.vue');
 const ClassLevelViewer = () => import ('/imports/ui/properties/viewers/ClassLevelViewer.vue');
 const ConstantViewer = () => import ('/imports/ui/properties/viewers/ConstantViewer.vue');
 const DamageViewer = () => import ('/imports/ui/properties/viewers/DamageViewer.vue');
@@ -31,7 +32,7 @@ export default {
   buff: BuffViewer,
   branch: BranchViewer,
   container: ContainerViewer,
-  class: SlotViewer,
+  class: ClassViewer,
   classLevel: ClassLevelViewer,
   constant: ConstantViewer,
   damage: DamageViewer,

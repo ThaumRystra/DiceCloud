@@ -16,7 +16,7 @@
       />
       <property-field
         name="Quantity"
-        :value="model.quantityExpected && model.quantityExpected.value"
+        :calculation="model.quantityExpected"
       />
       <property-field
         name="Unique"
@@ -44,12 +44,14 @@
         :model="model.description"
       />
       <property-field
-        v-if="!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft"
+        v-if="context.creatureId && (!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft)"
         name="Fill"
         :cols="{cols: 12}"
       >
         <fill-slot-button :model="model">
-          <v-icon left>mdi-plus</v-icon>
+          <v-icon left>
+            mdi-plus
+          </v-icon>
           Fill Slot
         </fill-slot-button>
       </property-field>
@@ -68,9 +70,14 @@
   }
 
 	export default {
-		mixins: [propertyViewerMixin],
     components: {
       FillSlotButton,
+    },
+		mixins: [propertyViewerMixin],
+    inject: {
+      context: {
+        default: {},
+      },
     },
     computed: {
       slotTypeName(){
