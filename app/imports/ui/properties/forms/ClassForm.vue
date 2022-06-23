@@ -22,7 +22,7 @@
         <text-field
           label="Variable name"
           :value="model.variableName"
-          hint="Use this name in calculations to reference this attribute"
+          hint="Use this name in calculations to reference this class"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -43,7 +43,7 @@
       </v-btn>
       <smart-combobox
         label="Tags Required"
-        hint="The slot must be filled with a property which has all the listed tags"
+        hint="Class levels added to this class must have these tags"
         multiple
         chips
         deletable-chips
@@ -68,7 +68,7 @@
         />
         <smart-combobox
           label="Tags"
-          :hint="extras.operation === 'OR' ? 'The slot can be filled with a property that has all of these tags instead' : 'The slot cannot be filled with a property that has any of these tags'"
+          :hint="extras.operation === 'OR' ? 'The class levels can have these tags instead' : 'The class levels can not have any of these tags'"
           class="mx-2"
           multiple
           chips
@@ -87,35 +87,14 @@
     </v-slide-x-transition>
 
     <computed-field
-      label="Quantity"
-      hint="How many matching properties must be used to fill this slot, 0 is unlimited"
-      :model="model.quantityExpected"
-      :error-messages="errors.quantityExpected"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['quantityExpected', ...path], value, ack})"
-    />
-
-    <computed-field
       label="Condition"
-      hint="A caclulation to determine if this slot should be active"
-      placeholder="Always active"
+      hint="A caclulation to determine if this class can have levels added to it"
+      placeholder="Always allow"
       :model="model.slotCondition"
       :error-messages="errors.slotCondition"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['slotCondition', ...path], value, ack})"
     />
-
-    <v-layout justify-center>
-      <v-btn
-        v-if="context.isLibraryForm"
-        color="accent"
-        class="ma-2 mb-4"
-        data-id="test-slot-button"
-        @click="testSlot"
-      >
-        Test Slot
-      </v-btn>
-    </v-layout>
 
     <inline-computation-field
       label="Description"
@@ -126,31 +105,16 @@
     />
 
     <form-sections>
-      <form-section name="Children">
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
         <slot name="children" />
       </form-section>
 
       <form-section
         name="Advanced"
       >
-        <div class="layout wrap justify-space-between">
-          <smart-switch
-            label="Hide when full"
-            style="width: 200px; flex-grow: 0;"
-            class="mx-2"
-            :value="model.hideWhenFull"
-            :error-messages="errors.hideWhenFull"
-            @change="change('hideWhenFull', ...arguments)"
-          />
-          <smart-switch
-            label="Ignored"
-            style="width: 200px; flex-grow: 0;"
-            class="mx-2"
-            :value="model.ignored"
-            :error-messages="errors.ignored"
-            @change="change('ignored', ...arguments)"
-          />
-        </div>
         <smart-combobox
           label="Tags"
           hint="This slot's own tags which will be used to fill other slots"
@@ -166,7 +130,6 @@
 </template>
 
 <script lang="js">
-  // TODO: Make this form match the class schema
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
