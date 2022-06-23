@@ -61,7 +61,7 @@ const organizeDoc = new ValidatedMethod({
       Creatures.update({
         _id: { $in: creaturesToRecompute }
       }, {
-        dirty: true
+        $set: { dirty: true },
       });
     }
   },
@@ -91,7 +91,7 @@ const reorderDoc = new ValidatedMethod({
       Creatures.update({
         _id: { $in: ancestors }
       }, {
-        dirty: true
+        $set: { dirty: true },
       });
     }
   },

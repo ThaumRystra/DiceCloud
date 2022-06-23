@@ -1,10 +1,15 @@
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { EJSON } from 'meteor/ejson';
+import { omitBy } from 'lodash';
 
 export default function writeScope(creatureId, computation) {
   const scope = computation.scope;
   const variables = computation.creature?.variables || {};
   let $set, $unset;
+
+  if (computation.creature.dirty) {
+    $unset = { dirty: 1 };
+  }
 
   for (const key in scope){
     // Remove large properties that aren't likely to be accessed
@@ -22,6 +27,10 @@ export default function writeScope(creatureId, computation) {
     if (!EJSON.equals(variables[key], scope[key])) {
       if (!$set) $set = {};
       // Set the changed key in the creature variables
+      const diff = omitBy(variables[key], (v, k) => EJSON.equals(scope[key][k], v));
+      for (let subkey in diff) {
+        console.log(`${key}.${subkey}: ${variables[key][subkey]} => ${scope[key][subkey]}`)
+      }
       $set[`variables.${key}`] = scope[key];
     }
   }
@@ -35,6 +44,7 @@ export default function writeScope(creatureId, computation) {
   }
 
   if ($set || $unset) {
-    Creatures.update(creatureId, {$set, $unset});
+    const updates = Creatures.update(creatureId, { $set, $unset });
+    console.log('wrote scope: ', updates);
   }
 }

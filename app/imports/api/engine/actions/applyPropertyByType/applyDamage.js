@@ -18,10 +18,9 @@ export default function applyDamage(node, {
   const prop = node.node;
 
   // Skip if there is no parse node to work with
-  if (!prop.amount.parseNode) return;
+  if (!prop.amount?.parseNode) return;
 
   // Choose target
-
   let damageTargets = prop.target === 'self' ? [creature] : targets;
   // Determine if the hit is critical
   let criticalHit = scope['$criticalHit']?.value &&

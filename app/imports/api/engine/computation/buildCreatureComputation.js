@@ -67,6 +67,7 @@ function getCreature(creatureId) {
   const creature = Creatures.findOne(creatureId, {
     denormalizedStats: 1,
     variables: 1,
+    dirty: 1,
   });
   console.timeEnd(`Cache miss on Creature: ${creatureId}`);
   return creature;

@@ -79,7 +79,7 @@ const doAction = new ValidatedMethod({
     Creatures.update({
       _id: { $in: [creature._id, ...targetIds] }
     }, {
-      dirty: true
+      $set: {dirty: true},
     });
   },
 });
