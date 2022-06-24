@@ -107,6 +107,7 @@ class LoadedCreature {
   }
   changeMap(id, fields, map) {
     const doc = map.get(id);
+    if (!doc) return;
     for (let key in fields) {
       if (key === undefined) {
         delete doc[key];
