@@ -180,7 +180,7 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
@@ -297,9 +297,9 @@ export default {
         return model;
       }
     },
-    creature(){
-      if (!this.creatureId) return {variables: {}};
-      return Creatures.findOne(this.creatureId);
+    variables() {
+      if (!this.creatureId) return {};
+      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
     },
     currentLimit(){
       return this._subs['slotFillers'].data('limit') || 50;
@@ -363,7 +363,7 @@ export default {
         if (node.slotFillerCondition){
           try {
             let parseNode = parse(node.slotFillerCondition);
-            const {result: resultNode} = resolve('reduce', parseNode, this.creature.variables);
+            const {result: resultNode} = resolve('reduce', parseNode, this.variables);
             if (resultNode?.parseType === 'constant'){
               if (!resultNode.value){
                 node._disabledBySlotFillerCondition = true;

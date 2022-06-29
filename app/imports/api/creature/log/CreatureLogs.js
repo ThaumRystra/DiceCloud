@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
@@ -154,7 +155,6 @@ const logRoll = new ValidatedMethod({
 	}).validator(),
   run({roll, creatureId}){
     const creature = Creatures.findOne(creatureId, {fields: {
-      variables: 1,
       readers: 1,
       writers: 1,
       owner: 1,
@@ -163,6 +163,7 @@ const logRoll = new ValidatedMethod({
       avatarPicture: 1,
     }});
     assertEditPermission(creature, this.userId);
+    const variables = CreatureVariables.findOne({ _creatureId: creatureId });
     let logContent = []
     let parsedResult = undefined;
     try {
@@ -175,7 +176,7 @@ const logRoll = new ValidatedMethod({
       let {
         result: compiled,
         context
-      } = resolve('compile', parsedResult, creature.variables);
+      } = resolve('compile', parsedResult, variables);
       const compiledString = toString(compiled);
       if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
         value: roll
@@ -183,12 +184,12 @@ const logRoll = new ValidatedMethod({
       logContent.push({
         value: compiledString
       });
-      let {result: rolled} = resolve('roll', compiled, creature.variables, context);
+      let {result: rolled} = resolve('roll', compiled, variables, context);
       let rolledString = toString(rolled);
       if (rolledString !== compiledString) logContent.push({
         value: rolledString
       });
-      let {result} = resolve('reduce', rolled, creature.variables, context);
+      let {result} = resolve('reduce', rolled, variables, context);
       let resultString = toString(result);
       if (resultString !== rolledString) logContent.push({
         value: resultString

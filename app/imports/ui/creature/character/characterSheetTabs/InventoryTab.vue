@@ -31,12 +31,12 @@
               <v-list-item-action>
                 <v-list-item-title>
                   <coin-value
-                    :value="creature.variables && creature.variables.valueTotal && creature.variables.valueTotal.value|| 0"
+                    :value="variables && variables.valueTotal && variables.valueTotal.value|| 0"
                   />
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
-            <v-list-item v-if="creature.variables && creature.variables.itemsAttuned && creature.variables.itemsAttuned.value">
+            <v-list-item v-if="variables && variables.itemsAttuned && variables.itemsAttuned.value">
               <v-list-item-avatar>
                 <v-icon>$vuetify.icons.spell</v-icon>
               </v-list-item-avatar>
@@ -47,7 +47,7 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-title>
-                  {{ creature.variables.itemsAttuned.value }}
+                  {{ variables.itemsAttuned.value }}
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
@@ -104,6 +104,7 @@ import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
 
 export default {
 	components: {
@@ -138,6 +139,9 @@ export default {
         color: 1,
         variables: 1,
       }});
+    },
+    variables() {
+      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
     },
 		containersWithoutAncestorContainers(){
 			return CreatureProperties.find({
@@ -206,9 +210,9 @@ export default {
 		},
     weightCarried(){
       return stripFloatingPointOddities(
-        this.creature.variables &&
-        this.creature.variables.weightCarried &&
-        this.creature.variables.weightCarried.value || 0
+        this.variables &&
+        this.variables.weightCarried &&
+        this.variables.weightCarried.value || 0
       );
     },
 	},

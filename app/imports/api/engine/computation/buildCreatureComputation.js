@@ -4,6 +4,7 @@ import CreatureProperties,
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { loadedCreatures } from '../loadCreatures.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import linkInventory from './buildComputation/linkInventory.js';
@@ -33,8 +34,9 @@ import removeSchemaFields from './buildComputation/removeSchemaFields.js';
 
 export default function buildCreatureComputation(creatureId){
   const creature = getCreature(creatureId);
+  const variables = getVariables(creatureId);
   const properties = getProperties(creatureId);
-  const computation = buildComputationFromProps(properties, creature);
+  const computation = buildComputationFromProps(properties, creature, variables);
   return computation;
 }
 
@@ -45,7 +47,7 @@ function getProperties(creatureId) {
     const cloneProps = EJSON.clone(props);
     return cloneProps
   }
-  console.time(`Cache miss fetching from db: ${creatureId}`)
+  // console.time(`Cache miss on creature properties: ${creatureId}`)
   const props = CreatureProperties.find({
     'ancestors.id': creatureId,
     'removed': {$ne: true},
@@ -53,29 +55,41 @@ function getProperties(creatureId) {
     sort: { order: 1 },
     fields: { icon: 0 },
   }).fetch();
-  console.timeEnd(`Cache miss fetching from db: ${creatureId}`);
+  // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
   return props;
 }
 
 function getCreature(creatureId) {
   if (loadedCreatures.has(creatureId)) {
     const loadedCreature = loadedCreatures.get(creatureId);
-    const creature = loadedCreature.creatures.get(creatureId);
+    const creature = loadedCreature.creature;
     if (creature) return creature;
   }
-  console.time(`Cache miss on Creature: ${creatureId}`);
+  // console.time(`Cache miss on Creature: ${creatureId}`);
   const creature = Creatures.findOne(creatureId, {
     denormalizedStats: 1,
     variables: 1,
     dirty: 1,
   });
-  console.timeEnd(`Cache miss on Creature: ${creatureId}`);
+  // console.timeEnd(`Cache miss on Creature: ${creatureId}`);
   return creature;
 }
 
-export function buildComputationFromProps(properties, creature){
+function getVariables(creatureId) {
+  if (loadedCreatures.has(creatureId)) {
+    const loadedCreature = loadedCreatures.get(creatureId);
+    const variables = loadedCreature.variables;
+    if (variables) return variables;
+  }
+  // console.time(`Cache miss on variables: ${creatureId}`);
+  const variables = CreatureVariables.findOne({_creatureId: creatureId});
+  // console.timeEnd(`Cache miss on variables: ${creatureId}`);
+  return variables;
+}
 
-  const computation = new CreatureComputation(properties, creature);
+export function buildComputationFromProps(properties, creature, variables){
+
+  const computation = new CreatureComputation(properties, creature, variables);
   // Dependency graph where edge(a, b) means a depends on b
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies

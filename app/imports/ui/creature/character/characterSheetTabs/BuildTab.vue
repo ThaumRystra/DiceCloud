@@ -27,33 +27,33 @@
       >
         <v-card class="class-details mb-2">
           <v-card-title
-            v-if="creature.variables.level"
+            v-if="variables.level"
             class="text-h6"
           >
-            Level {{ creature.variables.level.value }}
+            Level {{ variables.level.value }}
           </v-card-title>
           <v-list two-line>
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title
                   v-if="
-                    creature.variables.milestoneLevels &&
-                      creature.variables.milestoneLevels.value
+                    variables.milestoneLevels &&
+                      variables.milestoneLevels.value
                   "
                 >
-                  {{ creature.variables.milestoneLevels.value }} Milestone levels
+                  {{ variables.milestoneLevels.value }} Milestone levels
                 </v-list-item-title>
                 <v-list-item-title
                   v-if="
-                    !(creature.variables.milestoneLevels &&
-                      creature.variables.milestoneLevels.value) ||
-                      (creature.variables.xp &&
-                        creature.variables.xp.value)
+                    !(variables.milestoneLevels &&
+                      variables.milestoneLevels.value) ||
+                      (variables.xp &&
+                        variables.xp.value)
                   "
                 >
                   {{
-                    creature.variables.xp &&
-                      creature.variables.xp.value ||
+                    variables.xp &&
+                      variables.xp.value ||
                       0
                   }} XP
                 </v-list-item-title>
@@ -103,6 +103,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import BuildTreeNodeList from '/imports/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/ui/creature/slots/SlotCardsToFill.vue';
+import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -151,6 +152,9 @@ export default {
   meteor: {
     creature(){
       return Creatures.findOne(this.creatureId);
+    },
+    variables() {
+      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
     },
     classLevels(){
       return CreatureProperties.find({
@@ -217,8 +221,8 @@ export default {
         elementId: 'experience-add-button',
         data: {
           creatureIds: [this.creatureId],
-          startAsMilestone: this.creature.variables.milestoneLevels &&
-            !!this.creature.variables.milestoneLevels.value,
+          startAsMilestone: this.variables.milestoneLevels &&
+            !!this.variables.milestoneLevels.value,
         },
       });
     },
@@ -228,8 +232,8 @@ export default {
         elementId: 'experience-info-button',
         data: {
           creatureId: this.creatureId,
-          startAsMilestone: this.creature.variables.milestoneLevels &&
-            !!this.creature.variables.milestoneLevels.value,
+          startAsMilestone: this.variables.milestoneLevels &&
+            !!this.variables.milestoneLevels.value,
         },
       });
     },

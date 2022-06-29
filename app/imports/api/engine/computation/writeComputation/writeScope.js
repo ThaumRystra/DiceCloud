@@ -1,15 +1,14 @@
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { EJSON } from 'meteor/ejson';
 import { omitBy } from 'lodash';
 
 export default function writeScope(creatureId, computation) {
   const scope = computation.scope;
-  const variables = computation.creature?.variables || {};
-  let $set, $unset;
+  const variables = computation.variables || {};
+  delete variables._id;
 
-  if (computation.creature.dirty) {
-    $unset = { dirty: 1 };
-  }
+  let $set, $unset;
 
   for (const key in scope){
     // Remove large properties that aren't likely to be accessed
@@ -26,12 +25,14 @@ export default function writeScope(creatureId, computation) {
     // Only update changed fields
     if (!EJSON.equals(variables[key], scope[key])) {
       if (!$set) $set = {};
-      // Set the changed key in the creature variables
+      /* Log detailed diffs
       const diff = omitBy(variables[key], (v, k) => EJSON.equals(scope[key][k], v));
       for (let subkey in diff) {
         console.log(`${key}.${subkey}: ${variables[key][subkey]} => ${scope[key][subkey]}`)
       }
-      $set[`variables.${key}`] = scope[key];
+      */
+      // Set the changed key in the creature variables
+      $set[key] = scope[key];
     }
   }
 
@@ -39,12 +40,17 @@ export default function writeScope(creatureId, computation) {
   for (const key in variables) {
     if (!scope[key]) {
       if (!$unset) $unset = {};
-      $unset[`variables.${key}`] = 1;
+      $unset[key] = 1;
     }
   }
 
   if ($set || $unset) {
-    const updates = Creatures.update(creatureId, { $set, $unset });
-    console.log('wrote scope: ', updates);
+    const update = {};
+    if ($set) update.$set = $set;
+    if ($unset) update.$unset = $unset;
+    CreatureVariables.upsert({_creatureId: creatureId}, update);
+  }
+  if (computation.creature.dirty) {
+    Creatures.update({_creatureId: creatureId}, {$unset: { dirty: 1 }});
   }
 }

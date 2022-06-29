@@ -30,6 +30,7 @@ function computeComputation(computation, creatureId) {
       logError.location = e.stack.split('\n')[1];
     }
     console.error(logError);
+    throw e;
   } finally {
     writeErrors(creatureId, computation.errors);
   }

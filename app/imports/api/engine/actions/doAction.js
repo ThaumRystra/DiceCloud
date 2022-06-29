@@ -3,6 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
@@ -38,6 +39,12 @@ const doAction = new ValidatedMethod({
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
     let creature = getRootCreatureAncestor(action);
+    const variables = CreatureVariables.findOne({
+      _creatureId: creature._id
+    }, {
+      fields: {_id: 0, _creatureId: 0},
+    });
+    creature.variables = variables;
 
     assertEditPermission(creature, this.userId);
 
@@ -46,6 +53,12 @@ const doAction = new ValidatedMethod({
     targetIds.forEach(targetId => {
       let target = Creatures.findOne(targetId);
       assertEditPermission(target, this.userId);
+      const variables = CreatureVariables.findOne({
+        _creatureId: targetId
+      }, {
+        fields: {_id: 0, _creatureId: 0},
+      });
+      target.variables = variables;
       targets.push(target);
     });
 

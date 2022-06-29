@@ -126,7 +126,7 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/ui/properties/components/skills/SkillProficiency.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
 
 export default {
@@ -185,6 +185,9 @@ export default {
     },
   },
   meteor: {
+    variables(){
+      return CreatureVariables.findOne({_creatureId: this.context.creatureId}) || {};
+    },
     baseEffects(){
       if (this.context.creatureId){
         let creatureId = this.context.creatureId;
@@ -280,10 +283,8 @@ export default {
     proficiencyBonus(){
       let creatureId = this.context.creatureId;
       if (!creatureId) return;
-      let creature = Creatures.findOne(creatureId)
-      return creature &&
-        creature.variables.proficiencyBonus &&
-        creature.variables.proficiencyBonus.value;
+      return this.variables.proficiencyBonus &&
+        this.variables.proficiencyBonus.value;
     },
   },
 }

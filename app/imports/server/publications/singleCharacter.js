@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
@@ -40,6 +41,9 @@ Meteor.publish('singleCharacter', function (creatureId) {
     return [
       Creatures.find({
         _id: creatureId,
+      }),
+      CreatureVariables.find({
+        _creatureId: creatureId,
       }),
       CreatureProperties.find({
         'ancestors.id': creatureId,

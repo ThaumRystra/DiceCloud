@@ -1,6 +1,7 @@
 import { debounce } from 'lodash';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import computeCreature from './computeCreature';
 
 const COMPUTE_DEBOUNCE_TIME = 100; // ms
@@ -68,7 +69,6 @@ class LoadedCreature {
         },
       });
       
-      self.creatures = new Map();
       // Observe the creature itself
       self.creatureObserver = Creatures.find({
         _id: creatureId,
@@ -87,26 +87,62 @@ class LoadedCreature {
         },
       });
 
+      // Observe the creature's variables
+      self.variablesObserver = CreatureVariables.find({
+        _creatureId: creatureId,
+      }, {
+        fields: { _creatureId: 0},
+      }).observeChanges({
+        added(id, fields) {
+          fields._id = id;
+          self.addVariables(fields)
+        },
+        changed(id, fields) {
+          self.changeVariables(id, fields);
+        },
+        removed(id) {
+          self.removeVariables(id);
+        },
+      });
     });
   }
   stop() {
-    this.creatureObserver.stop();
     this.propertyObserver.stop();
+    this.creatureObserver.stop();
+    this.variablesObserver.stop();
   }
   addProperty(prop) {
     this.properties.set(prop._id, prop);
   }
-  addCreature(creature) {
-    this.creatures.set(creature._id, creature);
-  }
   changeProperty(id, fields) {
-    this.changeMap(id, fields, this.properties);
+    LoadedCreature.changeMap(id, fields, this.properties);
+  }
+  removeProperty(id) {
+    this.properties.delete(id)
+  }
+  addCreature(creature) {
+    this.creature = creature;
   }
   changeCreature(id, fields) {
-    this.changeMap(id, fields, this.creatures);
+    LoadedCreature.changeDoc(this.creature, fields);
   }
-  changeMap(id, fields, map) {
+  removeCreature() {
+    delete this.creature;
+  }
+  addVariables(variables) {
+    this.variables = variables;
+  }
+  changeVariables(id, fields) {
+    LoadedCreature.changeDoc(this.variables, fields);
+  }
+  removeVariables() {
+    delete this.variables;
+  }
+  static changeMap(id, fields, map) {
     const doc = map.get(id);
+    LoadedCreature.changeDoc(doc, fields);
+  }
+  static changeDoc(doc, fields) {
     if (!doc) return;
     for (let key in fields) {
       if (key === undefined) {
@@ -115,11 +151,5 @@ class LoadedCreature {
         doc[key] = fields[key];
       }
     }
-  }
-  removeProperty(id) {
-    this.properties.delete(id)
-  }
-  removeCreature(id) {
-    this.creatures.delete(id)
   }
 }
