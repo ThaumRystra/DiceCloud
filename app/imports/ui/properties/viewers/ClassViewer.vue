@@ -11,6 +11,7 @@
         :value="model.slotCondition && (model.slotCondition.value || model.slotCondition.calculation)"
       />
       <property-field
+        v-if="(model.slotTags && model.slotTags.length) || (model.extraTags && model.extraTags.length)"
         name="Tags Required"
         :cols="{cols: 12}"
       >

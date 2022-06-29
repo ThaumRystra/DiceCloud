@@ -28,73 +28,6 @@
         />
       </v-col>
     </v-row>
-    <v-layout align-center>
-      <v-btn
-        icon
-        style="margin-top: -30px;"
-        class="mr-2"
-        :loading="addExtraTagsLoading"
-        :disabled="extraTagsFull"
-        @click="addExtraTags"
-      >
-        <v-icon>
-          mdi-plus
-        </v-icon>
-      </v-btn>
-      <smart-combobox
-        label="Tags Required"
-        hint="Class levels added to this class must have these tags"
-        multiple
-        chips
-        deletable-chips
-        :value="model.slotTags"
-        :error-messages="errors.slotTags"
-        @change="change('slotTags', ...arguments)"
-      />
-    </v-layout>
-    <v-slide-x-transition group>
-      <div
-        v-for="(extras, i) in model.extraTags"
-        :key="extras._id"
-        class="extra-tags layout align-center justify-space-between"
-      >
-        <smart-select
-          label="Operation"
-          style="width: 90px; flex-grow: 0;"
-          :items="extraTagOperations"
-          :value="extras.operation"
-          :error-messages="errors.extraTags && errors.extraTags[i]"
-          @change="change(['extraTags', i, 'operation'], ...arguments)"
-        />
-        <smart-combobox
-          label="Tags"
-          :hint="extras.operation === 'OR' ? 'The class levels can have these tags instead' : 'The class levels can not have any of these tags'"
-          class="mx-2"
-          multiple
-          chips
-          deletable-chips
-          :value="extras.tags"
-          @change="change(['extraTags', i, 'tags'], ...arguments)"
-        />
-        <v-btn
-          icon
-          style="margin-top: -30px;"
-          @click="$emit('pull', {path: ['extraTags', i]})"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </div>
-    </v-slide-x-transition>
-
-    <computed-field
-      label="Condition"
-      hint="A caclulation to determine if this class can have levels added to it"
-      placeholder="Always allow"
-      :model="model.slotCondition"
-      :error-messages="errors.slotCondition"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['slotCondition', ...path], value, ack})"
-    />
 
     <inline-computation-field
       label="Description"
@@ -117,12 +50,79 @@
       >
         <smart-combobox
           label="Tags"
-          hint="This slot's own tags which will be used to fill other slots"
+          hint="This class's own tags"
           multiple
           chips
           deletable-chips
           :value="model.tags"
           @change="change('tags', ...arguments)"
+        />
+        <v-layout align-center>
+          <v-btn
+            icon
+            style="margin-top: -30px;"
+            class="mr-2"
+            :loading="addExtraTagsLoading"
+            :disabled="extraTagsFull"
+            @click="addExtraTags"
+          >
+            <v-icon>
+              mdi-plus
+            </v-icon>
+          </v-btn>
+          <smart-combobox
+            label="Tags Required"
+            hint="Class levels added to this class must have these tags"
+            multiple
+            chips
+            deletable-chips
+            :value="model.slotTags"
+            :error-messages="errors.slotTags"
+            @change="change('slotTags', ...arguments)"
+          />
+        </v-layout>
+        <v-slide-x-transition group>
+          <div
+            v-for="(extras, i) in model.extraTags"
+            :key="extras._id"
+            class="extra-tags layout align-center justify-space-between"
+          >
+            <smart-select
+              label="Operation"
+              style="width: 90px; flex-grow: 0;"
+              :items="extraTagOperations"
+              :value="extras.operation"
+              :error-messages="errors.extraTags && errors.extraTags[i]"
+              @change="change(['extraTags', i, 'operation'], ...arguments)"
+            />
+            <smart-combobox
+              label="Tags"
+              :hint="extras.operation === 'OR' ? 'The class levels can have these tags instead' : 'The class levels can not have any of these tags'"
+              class="mx-2"
+              multiple
+              chips
+              deletable-chips
+              :value="extras.tags"
+              @change="change(['extraTags', i, 'tags'], ...arguments)"
+            />
+            <v-btn
+              icon
+              style="margin-top: -30px;"
+              @click="$emit('pull', {path: ['extraTags', i]})"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </div>
+        </v-slide-x-transition>
+
+        <computed-field
+          label="Condition"
+          hint="A caclulation to determine if this class can have levels added to it"
+          placeholder="Always allow"
+          :model="model.slotCondition"
+          :error-messages="errors.slotCondition"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['slotCondition', ...path], value, ack})"
         />
       </form-section>
     </form-sections>
