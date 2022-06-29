@@ -32,6 +32,8 @@ const LIBRARY_NODE_TREE_FIELDS = {
   value: 1,
   // Reference
   cache: 1,
+  // Saving throw
+  dc: 1,
 }
 
 export { LIBRARY_NODE_TREE_FIELDS };

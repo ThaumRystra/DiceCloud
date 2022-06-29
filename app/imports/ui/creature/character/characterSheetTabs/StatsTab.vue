@@ -250,6 +250,7 @@
           :model="action"
           :data-id="action._id"
           @click="clickProperty({_id: action._id})"
+          @sub-click="_id => clickTreeProperty({_id})"
         />
       </div>
       <div
@@ -513,6 +514,13 @@
 				this.$store.commit('pushDialogStack', {
 					component: 'creature-property-dialog',
 					elementId: `${_id}`,
+					data: {_id},
+				});
+      },
+      clickTreeProperty({_id}){
+				this.$store.commit('pushDialogStack', {
+					component: 'creature-property-dialog',
+					elementId: `tree-node-${_id}`,
 					data: {_id},
 				});
 			},

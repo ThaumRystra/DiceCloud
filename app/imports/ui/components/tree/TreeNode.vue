@@ -14,6 +14,7 @@
       @click.stop="$emit('selected', node._id)"
     >
       <v-btn
+        v-if="!startExpanded"
         small
         icon
         :class="showExpanded ? 'rotate-90' : null"
@@ -26,6 +27,7 @@
       </v-btn>
       <div
         class="layout align-center justify-start pr-1"
+        :class="{'ml-4': startExpanded}"
         style="flex-grow: 0;"
       >
         <v-icon
@@ -56,6 +58,7 @@
             :group="group"
             :organize="organize"
             :selected-node="selectedNode"
+            :start-expanded="startExpanded"
             @reordered="e => $emit('reordered', e)"
             @reorganized="e => $emit('reorganized', e)"
             @selected="e => $emit('selected', e)"
@@ -112,10 +115,11 @@
         type: Object,
         default: undefined,
       },
-			selected: Boolean,
+      selected: Boolean,
+      startExpanded: Boolean,
 		},
 		data(){return {
-			expanded: this.node._ancestorOfMatchedDocument ||
+			expanded: this.startExpanded || this.node._ancestorOfMatchedDocument ||
         some(this.selectedNode?.ancestors, ref => ref.id === this.node._id) ||
         false,
 		}},

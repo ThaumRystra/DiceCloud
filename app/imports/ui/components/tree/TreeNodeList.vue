@@ -23,6 +23,7 @@
       :ancestors-of-selected-node="ancestorsOfSelectedNode"
       :organize="organize"
       :lazy="lazy"
+      :start-expanded="startExpanded"
       @selected="e => $emit('selected', e)"
       @reordered="e => $emit('reordered', e)"
       @reorganized="e => $emit('reorganized', e)"
@@ -58,9 +59,10 @@
         type: Array,
         default: () => [],
       },
+      startExpanded: Boolean,
 		},
 		data(){ return {
-			expanded: false,
+			expanded: this.startExpanded || false,
       displayedChildren: [],
 		}},
 		computed: {

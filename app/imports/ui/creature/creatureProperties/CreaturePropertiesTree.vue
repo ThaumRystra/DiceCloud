@@ -5,6 +5,7 @@
     :group="group"
     :organize="organize"
     :selected-node="selectedNode"
+    :start-expanded="expanded"
     @selected="e => $emit('selected', e)"
     @reordered="reordered"
     @reorganized="reorganized"
@@ -38,7 +39,8 @@
 			group: {
 				type: String,
 				default: 'creatureProperties'
-			}
+			},
+			expanded: Boolean,
 		},
 		meteor: {
 			children(){
