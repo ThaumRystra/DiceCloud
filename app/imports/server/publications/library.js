@@ -28,6 +28,7 @@ const LIBRARY_NODE_TREE_FIELDS = {
   amount: 1,
   // Class level
   level: 1,
+  variableName: 1,
   // Proficiency
   value: 1,
   // Reference

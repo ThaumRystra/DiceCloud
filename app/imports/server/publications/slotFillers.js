@@ -88,3 +88,62 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
     });
   });
 });
+
+Meteor.publish('classFillers', function(classId){
+  let self = this;
+  if (!classId) return [];
+
+  this.autorun(function (){
+    let userId = this.userId;
+    if (!userId) {
+      return [];
+    }
+    // Get the class
+    let classProp = CreatureProperties.findOne(classId);
+    if (!classProp){
+      return [];
+    }
+
+    // Get all the ids of libraries the user can access
+    const user = Meteor.users.findOne(userId, {
+      fields: {subscribedLibraries: 1}
+    });
+    const subs = user && user.subscribedLibraries || [];
+    let libraries = Libraries.find({
+      $or: [
+        {owner: userId},
+        {writers: userId},
+        {readers: userId},
+        {_id: {$in: subs}},
+      ]
+    }, {
+      fields: {_id: 1, name: 1},
+    });
+    let libraryIds = libraries.map(lib => lib._id);
+
+    // Build a filter for nodes in those libraries that match the slot
+    let filter = getSlotFillFilter({slot: classProp, libraryIds});
+
+    this.autorun(function(){
+      // Get the limit of the documents the user can fetch
+      var limit = self.data('limit') || 50;
+      check(limit, Number);
+
+      let options = {
+        sort: {
+          name: 1,
+          order: 1,
+        },
+        fields: FIELDS,
+        limit,
+      };
+
+      self.autorun(function () {
+        self.setData('countAll', LibraryNodes.find(filter).count());
+      });
+      self.autorun(function () {
+        return [LibraryNodes.find(filter, options), libraries];
+      });
+    });
+  });
+});

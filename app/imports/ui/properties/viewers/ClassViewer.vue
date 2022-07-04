@@ -47,24 +47,20 @@
         :cols="{cols: 12}"
       >
         <v-btn
-          v-if="model.missingLevels && model.missingLevels.length"
           outlined
           color="accent"
+          data-id="level-up-btn"
+          @click="levelUpDialog"
         >
           <v-icon left>
             mdi-plus
           </v-icon>
-          Get Missing Levels
-        </v-btn>
-        <v-btn
-          v-else
-          outlined
-          color="accent"
-        >
-          <v-icon left>
-            mdi-plus
-          </v-icon>
-          Level Up
+          <template v-if="model.missingLevels && model.missingLevels.length">
+            Get Missing Levels 
+          </template>
+          <template v-else>
+            Level Up
+          </template> 
         </v-btn>
       </property-field>
       <property-description
@@ -85,6 +81,18 @@ export default {
       default: {},
     },
   },
+  methods: {
+    levelUpDialog(){
+      this.$store.commit('pushDialogStack', {
+        component: 'level-up-dialog',
+        elementId: 'level-up-btn',
+        data: {
+          creatureId: this.creatureId,
+          classId: this.model._id,
+        },
+      });
+    },
+  }
 }
 </script>
 
