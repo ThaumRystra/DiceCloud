@@ -12,6 +12,8 @@ const LIBRARY_NODE_TREE_FIELDS = {
   order: 1,
   parent: 1,
   ancestors: 1,
+  // SlotFillers
+  slotQuantityFilled: 1,
   // Effect
   operation: 1,
   targetTags: 1,

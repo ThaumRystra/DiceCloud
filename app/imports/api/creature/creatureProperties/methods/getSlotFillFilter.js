@@ -27,14 +27,10 @@ export default function getSlotFillFilter({slot, libraryIds}){
     filter.variableName = slot.variableName;
 
     // Only search for levels the class needs
-    const levels = [];
     if (slot.missingLevels && slot.missingLevels.length) {
-      levels.push(...slot.missingLevels);
-    } else if (slot.level) {
-      levels.push(slot.level);
-    }
-    if (levels.length) {
-      filter.level = {$or: levels};
+      filter.level = {$in: slot.missingLevels};
+    } else {
+      filter.level = (slot.level || 0) + 1;
     }
   }
   let tagsOr = [];

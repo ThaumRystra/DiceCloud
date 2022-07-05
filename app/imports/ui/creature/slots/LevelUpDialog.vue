@@ -26,7 +26,6 @@
       :string="model.description"
     />
     <p>
-      {{ slotPropertyTypeName }} with tags:
       <property-tags
         v-for="(tags, index) in tagsSearched.or"
         :key="index"
@@ -247,12 +246,6 @@ export default {
       });
       return {or, not};
     },
-    slotPropertyTypeName(){
-      if (!this.model) return;
-      if (!this.model.slotType) return 'Property';
-      let propName = getPropertyName(this.model.slotType);
-      return propName;
-    },
   },
   methods: {
     loadMore(){
@@ -352,7 +345,7 @@ export default {
       return names;
     },
     libraryNodes(){
-      let filter = getSlotFillFilter({slot: this.model});
+      let filter = getSlotFillFilter({ slot: this.model });
       let nodes = LibraryNodes.find(filter, {
         sort: {name: 1, order: 1}
       }).fetch();

@@ -28,10 +28,10 @@
           </div>
         </div>
       </property-field>
-      <property-description
+      <property-field
         name="Missing Levels"
         mono
-        :model="model.missingLevels &&
+        :value="model.missingLevels &&
           (model.missingLevels.length || undefined) &&
           model.missingLevels.join(', ')
         "
@@ -73,6 +73,7 @@
 
 <script lang="js">
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
 export default {
   mixins: [propertyViewerMixin],
@@ -83,13 +84,25 @@ export default {
   },
   methods: {
     levelUpDialog(){
+      let classId = this.model._id;
       this.$store.commit('pushDialogStack', {
         component: 'level-up-dialog',
         elementId: 'level-up-btn',
         data: {
-          creatureId: this.creatureId,
+          creatureId: this.context.creatureId,
           classId: this.model._id,
         },
+        callback(nodeIds){
+          if (!nodeIds || !nodeIds.length) return;
+          let newPropertyId = insertPropertyFromLibraryNode.call({
+            nodeIds,
+            parentRef: {
+              'id': classId,
+              'collection': 'creatureProperties',
+            },
+          });
+          return `tree-node-${newPropertyId}`;
+        }
       });
     },
   }
