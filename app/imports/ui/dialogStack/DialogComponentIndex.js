@@ -1,5 +1,6 @@
 const AddCreaturePropertyDialog = () => import('/imports/ui/creature/creatureProperties/AddCreaturePropertyDialog.vue');
 const ArchiveDialog = () => import('/imports/ui/creature/archive/ArchiveDialog.vue');
+const CharacterCreationDialog = () => import('/imports/ui/creature/character/CharacterCreationDialog.vue');
 const CastSpellWithSlotDialog = () => import('/imports/ui/properties/components/spells/CastSpellWithSlotDialog.vue');
 const CreatureFormDialog = () => import('/imports/ui/creature/CreatureFormDialog.vue');
 const CreaturePropertyCreationDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue');
@@ -28,6 +29,7 @@ export default {
   AddCreaturePropertyDialog,
   ArchiveDialog,
   CastSpellWithSlotDialog,
+  CharacterCreationDialog,
   CreatureFormDialog,
   CreaturePropertyCreationDialog,
   CreaturePropertyDialog,

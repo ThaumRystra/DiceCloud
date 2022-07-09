@@ -1,9 +1,9 @@
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { EJSON } from 'meteor/ejson';
-import { omitBy } from 'lodash';
 
 export default function writeScope(creatureId, computation) {
+  if (!creatureId) throw 'creatureId is required';
   const scope = computation.scope;
   const variables = computation.variables || {};
   delete variables._id;
@@ -50,7 +50,7 @@ export default function writeScope(creatureId, computation) {
     if ($unset) update.$unset = $unset;
     CreatureVariables.upsert({_creatureId: creatureId}, update);
   }
-  if (computation.creature.dirty) {
+  if (computation.creature?.dirty) {
     Creatures.update({_creatureId: creatureId}, {$unset: { dirty: 1 }});
   }
 }

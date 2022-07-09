@@ -129,6 +129,16 @@ if<template>
     },
     mounted(){
       this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
+      this.nameObserver = Creatures.find({
+        creatureId: this.creatureId,
+      }, {
+        fields: {name: 1},
+      }).observe({
+        added: ({name}) => 
+          this.$store.commit('setPageTitle', name || 'Character Sheet'),
+        changed: ({ name }) =>
+          this.$store.commit('setPageTitle', name || 'Character Sheet'),
+      });
       let that = this;
       this.logObserver = CreatureLogs.find({
         creatureId: this.creatureId,
@@ -141,6 +151,7 @@ if<template>
       });
     },
     beforeDestroy(){
+      this.nameObserver.stop();
       this.logObserver.stop();
     },
 		meteor: {

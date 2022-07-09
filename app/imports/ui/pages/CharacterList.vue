@@ -74,6 +74,7 @@
 </template>
 
 <script lang="js">
+  import { defer } from 'lodash';
   import Creatures from '/imports/api/creature/creatures/Creatures.js';
   import insertCreature from '/imports/api/creature/creatures/methods/insertCreature.js';
   import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
@@ -159,7 +160,7 @@
     },
     methods: {
       insertCharacter(){
-        insertCreature.call((error, result) => {
+        insertCreature.call((error, creatureId) => {
           if (error){
             console.error(error);
             snackbar({
@@ -168,10 +169,18 @@
           } else {
             this.$store.commit(
               'setTabForCharacterSheet',
-              {id: result, tab: 4}
+              {id: creatureId, tab: 4}
             );
-            this.$store.commit('setShowDetailsDialog', true);
-            this.$router.push({ path: `/character/${result}`});
+            defer(() => {
+              this.$store.commit('pushDialogStack', {
+                component: 'character-creation-dialog',
+                elementId: 'new-character-button',
+                data: {
+                  creatureId,
+                },
+              });
+            })
+            this.$router.push({ path: `/character/${creatureId}` });
           }
         });
       },

@@ -143,12 +143,6 @@ export default {
       return highestLevelsList;
     },
   },
-  mounted(){
-    if (this.$store.state.showDetailsDialog){
-      this.$store.commit('setShowDetailsDialog', false);
-      this.showCharacterForm();
-    }
-  },
   meteor: {
     creature(){
       return Creatures.findOne(this.creatureId);

@@ -454,9 +454,10 @@
 				return getAttributeOfType(this.creature, 'spellSlot');
 			},
       hasSpells(){
-        return getProperties(this.creature, {
+        const cursor = getProperties(this.creature, {
           type: 'spell',
-        }).count();
+        })
+        return cursor && cursor.count();
       },
 			hitDice(){
         return getAttributeOfType(this.creature, 'hitDice');
