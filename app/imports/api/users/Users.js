@@ -8,6 +8,7 @@ import '/imports/api/users/methods/updateFileStorageUsed.js';
 
 import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
+const defaultLibraryCollections = process.env.DEFAULT_LIBRARY_COLLECTIONS && process.env.DEFAULT_LIBRARY_COLLECTIONS.split(',') || [];
 
 const userSchema = new SimpleSchema({
 	username: {
@@ -73,6 +74,15 @@ const userSchema = new SimpleSchema({
 		max: 100,
 	},
 	'subscribedLibraries.$': {
+		type: String,
+    regEx: SimpleSchema.RegEx.Id,
+	},
+	subscribedLibraryCollections: {
+		type: Array,
+		defaultValue: defaultLibraryCollections,
+		max: 100,
+	},
+	'subscribedLibraryCollections.$': {
 		type: String,
     regEx: SimpleSchema.RegEx.Id,
 	},
@@ -265,6 +275,36 @@ Meteor.users.subscribeToLibrary = new ValidatedMethod({
     } else {
       return Meteor.users.update(this.userId, {
         $pullAll: {subscribedLibraries: libraryId},
+      });
+    }
+	}
+});
+
+Meteor.users.subscribeToLibraryCollection = new ValidatedMethod({
+  name: 'users.subscribeToLibraryCollection',
+	validate: new SimpleSchema({
+		libraryCollectionId:{
+			type: String,
+      regEx: SimpleSchema.RegEx.Id,
+		},
+    subscribe: {
+      type: Boolean,
+    },
+	}).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+	run({libraryCollectionId, subscribe}){
+		if (!this.userId) throw 'Can only subscribe if logged in';
+    if (subscribe){
+      return Meteor.users.update(this.userId, {
+        $addToSet: {subscribedLibraryCollections: libraryCollectionId},
+      });
+    } else {
+      return Meteor.users.update(this.userId, {
+        $pullAll: {subscribedLibraryCollections: libraryCollectionId},
       });
     }
 	}
