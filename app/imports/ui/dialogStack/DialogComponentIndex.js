@@ -12,6 +12,8 @@ const ExperienceInsertDialog = () => import( '/imports/ui/creature/experiences/E
 const ExperienceListDialog = () => import( '/imports/ui/creature/experiences/ExperienceListDialog.vue');
 const InviteDialog = () => import('/imports/ui/user/InviteDialog.vue');
 const LevelUpDialog = () => import('/imports/ui/creature/slots/LevelUpDialog.vue');
+const LibraryCollectionCreationDialog = () => import('/imports/ui/library/LibraryCollectionCreationDialog.vue');
+const LibraryCollectionEditDialog = () => import('/imports/ui/library/LibraryCollectionEditDialog.vue');
 const LibraryCreationDialog = () => import('/imports/ui/library/LibraryCreationDialog.vue');
 const LibraryEditDialog = () => import('/imports/ui/library/LibraryEditDialog.vue');
 const LibraryNodeCreationDialog = () => import('/imports/ui/library/LibraryNodeCreationDialog.vue');
@@ -40,6 +42,8 @@ export default {
   ExperienceListDialog,
   InviteDialog,
   LevelUpDialog,
+  LibraryCollectionCreationDialog,
+  LibraryCollectionEditDialog,
   LibraryCreationDialog,
   LibraryEditDialog,
   LibraryNodeCreationDialog,

@@ -24,43 +24,25 @@
       <text-field
         label="name"
         :value="model.name"
-        @change="updateName"
+        @change="(name, ack) => updateLibraryCollection({name}, ack)"
       />
       <text-area
         label="Description"
         :value="model.description"
-        @change="updateDescription"
+        @change="(description, ack) => updateLibraryCollection({description}, ack)"
+      />
+      <smart-select
+        label="Libraries"
+        :items="libraryOptions"
+        :value="model.libraries"
+        :debounce-time="0"
+        multiple
+        chips
+        deletable-chips
+        no-data-text="No libraries found"
+        @change="(libraries, ack) => updateLibraryCollection({libraries}, ack)"
       />
     </template>
-    <template v-if="removedDocs.length">
-      <h3>Recently Deleted Properties</h3>
-      <v-list>
-        <v-list-item
-          v-for="model in removedDocs"
-          :key="model._id"
-        >
-          <v-list-item-content>
-            <v-list-item-title>
-              <tree-node-view :model="model" />
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-btn
-              color="accent"
-              text
-              @click="restore(model._id)"
-            >
-              Restore
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
-    </template>
-    <v-progress-circular
-      v-if="!$subReady.softRemovedLibraryNodes"
-      indeterminate
-      color="primary"
-    />
     <template slot="actions">
       <v-spacer />
       <v-btn
@@ -76,27 +58,20 @@
 
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import Libraries, { updateLibraryName, updateLibraryDescription, removeLibrary } from '/imports/api/library/Libraries.js';
-import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNodes.js';
-import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import LibraryCollections, { updateLibraryCollection, removeLibraryCollection } from '/imports/api/library/LibraryCollections.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import Libraries from '/imports/api/library/Libraries.js';
 
 export default {
 	components: {
 		DialogBase,
-    TreeNodeView,
 	},
 	props: {
 		_id: String,
 	},
 	methods: {
-		updateName(value, ack){
-			updateLibraryName.call({_id: this._id, name: value}, (error) =>{
-				ack(error && error.reason || error);
-			});
-    },
-    updateDescription(value, ack){
-			updateLibraryDescription.call({_id: this._id, description: value}, (error) =>{
+    updateLibraryCollection(update, ack){
+			updateLibraryCollection.call({_id: this._id, update}, (error) =>{
 				ack(error && error.reason || error);
 			});
     },
@@ -107,11 +82,11 @@ export default {
 				elementId: 'delete-library-button',
 				data: {
 					name: this.model.name,
-					typeName: 'Library'
+					typeName: 'Collection'
 				},
 				callback(confirmation){
 					if(!confirmation) return;
-					removeLibrary.call({_id: that._id}, (error) => {
+					removeLibraryCollection.call({_id: that._id}, (error) => {
             if (error) {
               console.error(error);
               snackbar({
@@ -132,33 +107,38 @@ export default {
 				data: {
 					docRef: {
             id: this._id,
-            collection: 'libraries',
+            collection: 'libraryCollections',
           }
 				},
 			});
 		},
-    restore(_id){
-      restoreLibraryNode.call({_id});
-    },
 	},
 	meteor: {
     '$subscribe':{
-      softRemovedLibraryNodes(){
-        return [this._id];
-      },
+      libraries: [],
     },
 		model(){
-			return Libraries.findOne(this._id);
-		},
-    removedDocs(){
-      return LibraryNodes.find({
-        'ancestors.0.id': this._id,
-        removed: true,
-        removedWith: {$exists: false},
-      }, {
-        sort: {order: 1},
+			return LibraryCollections.findOne(this._id);
+    },
+    libraryOptions() {
+      const userId = Meteor.userId();
+      return Libraries.find(
+        {
+          $or: [
+            { owner: userId },
+            { writers: userId },
+            { readers: userId },
+            { public: true },
+          ]
+        },
+        {sort: {name: 1}}
+      ).map(library => {
+        return {
+          text: library.name,
+          value: library._id,
+        };
       });
-    }
+    },
 	}
 }
 </script>

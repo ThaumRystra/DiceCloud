@@ -10,9 +10,9 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 /**
  * LibraryCollections are groups of libraries that are subscribed together at once
  */
-let LibraryCollections = new Mongo.Collection('librarycollections');
+const LibraryCollections = new Mongo.Collection('libraryCollections');
 
-let LibraryCollectionSchema = new SimpleSchema({
+const LibraryCollectionSchema = new SimpleSchema({
   name: {
     type: String,
     optional: true,
@@ -71,7 +71,14 @@ const updateLibraryCollection = new ValidatedMethod({
       regEx: SimpleSchema.RegEx.Id,
     },
     update: {
-      type: LibraryCollectionSchema.pick('name', 'description', 'libraries')
+      type: LibraryCollectionSchema
+        .pick('name', 'description', 'libraries')
+        .extend({ //make libraries optional
+          libraries: {
+            optional: true,
+            defaultValue: undefined,
+          },
+        }),
     }
   },
   rateLimit: {
