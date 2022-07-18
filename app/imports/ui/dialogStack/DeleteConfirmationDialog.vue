@@ -12,6 +12,8 @@
       </p>
       <v-text-field
         v-if="name"
+        label="Confirmation"
+        outlined
         v-model="inputName"
       />
       <div class="layout justify-center">

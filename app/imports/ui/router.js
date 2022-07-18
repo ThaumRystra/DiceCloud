@@ -163,7 +163,8 @@ RouterFactory.configure(router => {
       meta: {
         title: 'Library Collection',
       },
-    },{
+    }, {
+      name: 'characterSheet',
       path: '/character/:id',
       alias: '/character/:id/:urlName',
       components: {

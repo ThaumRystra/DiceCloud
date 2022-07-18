@@ -1,71 +1,94 @@
 <template>
-  <div
-    class="card-background"
-    style="height: 100%"
+  <v-list
+    expand
+    class="library-list"
   >
-    <v-container>
-      <v-row justify="center">
-        <v-col
-          cols="12"
-          xl="8"
-        >
-          <v-card :class="{'mb-4': libraryCollections && libraryCollections.length}">
-            <library-list />
-            <v-expand-transition>
-              <v-row
-                v-if="!$subReady.libraries"
-                align="center"
-                justify="center"
-                class="pa-4"
-              >
-                <v-progress-circular
-                  indeterminate
-                  color="primary"
-                  size="32"
-                />
-              </v-row>
-            </v-expand-transition>
-          </v-card>
-          <div class="layout justify-end mt-2">
-            <v-btn
-              v-if="paidBenefits"
-              text
-              data-id="insert-library-collection-button"
-              :loading="loadingInsertLibraryCollection"
-              @click="insertLibraryCollection"
-            >
-              Add Collection
-            </v-btn>
-          </div>
-          <v-btn
-            color="accent"
-            fab
-            fixed
-            bottom
-            right
-            data-id="insert-library-button"
-            :disabled="!paidBenefits"
-            @click="insertLibrary"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
+    <library-list-tile
+      v-for="library in librariesWithoutCollection"
+      :key="library._id"
+      :model="library"
+      :to="{ name: 'singleLibrary', params: { id: library._id }}"
+      :selection="selection"
+      :is-selected="librariesSelected && librariesSelected.includes(library._id)"
+      :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
+      :disabled="disabled"
+      @select="val => $emit('select-library', library._id, val)"
+    />
+    <v-list-group
+      v-for="libraryCollection in libraryCollections"
+      :key="libraryCollection._id"
+      v-model="openCollections[libraryCollection._id]"
+      group="library-collection"
+      :data-id="`library-collection-${libraryCollection._id}`"
+    >
+      <template #activator>
+        <library-collection-header
+          :open="openCollections[libraryCollection._id]"
+          :model="libraryCollection"
+          :selection="selection"
+          :is-selected="libraryCollectionsSelected && libraryCollectionsSelected.includes(libraryCollection._id)"
+          :disabled="disabled"
+          @select="val => $emit('select-library-collection', libraryCollection._id, val)"
+        />
+      </template>
+      <library-list-tile
+        v-for="library in libraryCollection.libraryDocuments"
+        :key="library._id"
+        :model="library"
+        :to="{ name: 'singleLibrary', params: { id: library._id }}"
+        :selection="selection"
+        :is-selected="librariesSelected && librariesSelected.includes(library._id)"
+        :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
+        :disabled="disabled"
+        class="ml-4"
+        @select="val => $emit('select-library', library._id, val)"
+      />
+    </v-list-group>
+    <v-expand-transition>
+      <v-row
+        v-if="!$subReady.libraries"
+        align="center"
+        justify="center"
+        class="pa-4"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="32"
+        />
       </v-row>
-    </v-container>
-  </div>
+    </v-expand-transition>
+  </v-list>
 </template>
 
 <script lang="js">
 import { union } from 'lodash';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections.js';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
-import LibraryList from '/imports/ui/library/LibraryList.vue';
+import LibraryListTile from '/imports/ui/library/LibraryListTile.vue'
+import LibraryCollectionHeader from '/imports/ui/library/LibraryCollectionHeader.vue';
 
 export default {
   components: {
-    LibraryList
+    LibraryListTile,
+    LibraryCollectionHeader,
+  },
+  props: {
+    selection: Boolean,
+    disabled: Boolean,
+    librariesSelected: {
+      type: Array,
+      default: undefined,
+    },
+    libraryCollectionsSelected: {
+      type: Array,
+      default: undefined,
+    },
+    librariesSelectedByCollections: {
+      type: Array,
+      default: undefined,
+    },
   },
   data(){ return{
     loadingInsertLibraryCollection: false,
@@ -74,10 +97,6 @@ export default {
   meteor: {
     $subscribe: {
       'libraries': [],
-    },
-    paidBenefits(){
-      let tier = getUserTier(Meteor.userId());
-      return tier && tier.paidBenefits;
     },
     libraryCollections(){
       const userId = Meteor.userId();

@@ -131,19 +131,24 @@ function insertPropertyFromNode(nodeId, ancestors, order){
     node.order = order;
   }
 
-  // Mark root as dirty
-  node.dirty = true;
+  // Mark all nodes as dirty
+  dirtyNodes(nodes);
 
   // Insert the creature properties
   CreatureProperties.batchInsert(nodes);
   return node;
 }
 
-
 function storeLibraryNodeReferences(nodes){
   nodes.forEach(node => {
     if (node.libraryNodeId) return;
     node.libraryNodeId = node._id;
+  });
+}
+
+function dirtyNodes(nodes) {
+  nodes.forEach(node => {
+    node.dirty = true;
   });
 }
 

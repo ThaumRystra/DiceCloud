@@ -2,7 +2,7 @@
   <div class="slots-to-fill">
     <v-slide-y-transition
       group
-      class="d-flex flex-row flex-wrap"
+      leave-absolute
     >
       <slot-card
         v-for="slot in slots"
@@ -10,6 +10,7 @@
         :model="slot"
         class="ma-1"
         hover
+        style="display: inline-block !important; transition: all 0.3s !important;"
         @ignore="ignoreSlot(slot._id)"
         @click="fillSlot(slot._id)"
       />
@@ -54,7 +55,7 @@ export default {
         },
         callback(nodeIds){
           if (!nodeIds || !nodeIds.length) return;
-          let newPropertyId = insertPropertyFromLibraryNode.call({
+          insertPropertyFromLibraryNode.call({
             nodeIds,
             parentRef: {
               'id': slotId,
@@ -66,7 +67,6 @@ export default {
               snackbar({text: error.reason || error.message || error.toString()});
             }
           });
-          return `slot-child-${newPropertyId}`;
         }
       });
     },
@@ -100,5 +100,4 @@ export default {
 </script>
 
 <style>
-
 </style>

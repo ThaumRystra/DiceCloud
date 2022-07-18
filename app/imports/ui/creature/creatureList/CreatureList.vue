@@ -19,6 +19,7 @@
       :is-selected="selectedCreature === creature._id"
       v-bind="selection ? {} : {to: creature.url}"
       :dense="dense"
+      :data-id="dense ? undefined : creature._id"
       @click="$emit('creature-selected', creature._id)"
     />
   </draggable>

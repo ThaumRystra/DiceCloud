@@ -3,6 +3,7 @@ import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
+import getUserLibraryIds from '/imports/api/library/getUserLibraryIds.js';
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';
 
 const FIELDS = {
@@ -27,21 +28,17 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
     }
 
     // Get all the ids of libraries the user can access
-    const user = Meteor.users.findOne(userId, {
-      fields: {subscribedLibraries: 1}
-    });
-    const subs = user && user.subscribedLibraries || [];
-    let libraries = Libraries.find({
+    const libraryIds = getUserLibraryIds(userId);
+    const libraries = Libraries.find({
       $or: [
-        {owner: this.userId},
-        {writers: this.userId},
-        {readers: this.userId},
-        {_id: {$in: subs}},
+        { owner: userId },
+        { writers: userId },
+        { readers: userId },
+        { _id: { $in: libraryIds }, public: true },
       ]
     }, {
-      fields: {_id: 1, name: 1},
+      sort: { name: 1 }
     });
-    let libraryIds = libraries.map(lib => lib._id);
 
     // Build a filter for nodes in those libraries that match the slot
     let filter = getSlotFillFilter({slot, libraryIds});
@@ -83,7 +80,10 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
         self.setData('countAll', LibraryNodes.find(filter).count());
       });
       self.autorun(function () {
-        return [LibraryNodes.find(filter, options), libraries];
+        return [
+          LibraryNodes.find(filter, options),
+          libraries
+        ];
       });
     });
   });

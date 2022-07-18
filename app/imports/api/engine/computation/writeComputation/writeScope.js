@@ -5,8 +5,13 @@ import { EJSON } from 'meteor/ejson';
 export default function writeScope(creatureId, computation) {
   if (!creatureId) throw 'creatureId is required';
   const scope = computation.scope;
-  const variables = computation.variables || {};
+  let variables = computation.variables;
+  if (!variables) {
+    CreatureVariables.insert({ _creatureId: creatureId });
+    variables = {};
+  }
   delete variables._id;
+  delete variables._creatureId;
 
   let $set, $unset;
 
@@ -48,9 +53,9 @@ export default function writeScope(creatureId, computation) {
     const update = {};
     if ($set) update.$set = $set;
     if ($unset) update.$unset = $unset;
-    CreatureVariables.upsert({_creatureId: creatureId}, update);
+    CreatureVariables.update({_creatureId: creatureId}, update);
   }
   if (computation.creature?.dirty) {
-    Creatures.update({_creatureId: creatureId}, {$unset: { dirty: 1 }});
+    Creatures.update({_id: creatureId}, {$unset: { dirty: 1 }});
   }
 }

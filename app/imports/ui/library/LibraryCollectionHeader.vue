@@ -2,8 +2,19 @@
   <v-list-item
     style="min-height: 60px; min-width: 0;"
     class="px-0 font-weight-bold"
+    :class="isSelected && !disabled && 'primary--text v-list-item--active'"
   >
-    <v-list-item-avatar>
+    <v-list-item-action
+      v-if="selection"
+    >
+      <v-checkbox
+        :disabled="disabled"
+        :input-value="disabled || isSelected"
+        @change="e => $emit('select', e)"
+        @click.stop
+      />
+    </v-list-item-action>
+    <v-list-item-avatar v-else>
       <shared-icon :model="model" />
     </v-list-item-avatar>
     <v-list-item-title class="d-flex align-center">
@@ -56,6 +67,8 @@ export default {
     open: Boolean,
     selection: Boolean,
     dense: Boolean,
+    isSelected: Boolean,
+    disabled: Boolean,
   },
   data(){return {
     renaming: false,

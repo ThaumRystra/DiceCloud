@@ -47,7 +47,6 @@ let ExperienceSchema = new SimpleSchema({
 Experiences.attachSchema(ExperienceSchema);
 
 const insertExperienceForCreature = function({experience, creatureId, userId}){
-  assertEditPermission(creatureId, userId);
   if (experience.xp){
     Creatures.update(creatureId, {
       $inc: { 'denormalizedStats.xp': experience.xp },
@@ -93,6 +92,7 @@ const insertExperience = new ValidatedMethod({
     }
     let insertedIds = [];
     creatureIds.forEach(creatureId => {
+      assertEditPermission(creatureId, userId);
       let id = insertExperienceForCreature({experience, creatureId, userId});
       insertedIds.push(id);
     });
@@ -181,4 +181,4 @@ const recomputeExperiences = new ValidatedMethod({
 });
 
 export default Experiences;
-export { ExperienceSchema, insertExperience, removeExperience, recomputeExperiences };
+export { ExperienceSchema, insertExperience, insertExperienceForCreature, removeExperience, recomputeExperiences };

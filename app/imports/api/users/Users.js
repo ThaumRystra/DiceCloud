@@ -71,7 +71,7 @@ const userSchema = new SimpleSchema({
 	subscribedLibraries: {
 		type: Array,
 		defaultValue: defaultLibraries,
-		max: 100,
+		maxCount: 100,
 	},
 	'subscribedLibraries.$': {
 		type: String,
@@ -80,7 +80,7 @@ const userSchema = new SimpleSchema({
 	subscribedLibraryCollections: {
 		type: Array,
 		defaultValue: defaultLibraryCollections,
-		max: 100,
+		maxCount: 100,
 	},
 	'subscribedLibraryCollections.$': {
 		type: String,

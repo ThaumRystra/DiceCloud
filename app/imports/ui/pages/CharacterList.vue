@@ -74,127 +74,108 @@
 </template>
 
 <script lang="js">
-  import { defer } from 'lodash';
-  import Creatures from '/imports/api/creature/creatures/Creatures.js';
-  import insertCreature from '/imports/api/creature/creatures/methods/insertCreature.js';
-  import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
-  import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-  import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder.js';
-  import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
-  import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
-  import ArchiveButton from '/imports/ui/creature/creatureList/ArchiveButton.vue';
-  import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder.js';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import CreatureFolderList from '/imports/ui/creature/creatureList/CreatureFolderList.vue';
+import ArchiveButton from '/imports/ui/creature/creatureList/ArchiveButton.vue';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
 
-  const characterTransform = function(char){
-    char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
-    char.initial = char.name && char.name[0] || '?';
-    return char;
-  };
-  export default {
-    components: {
-      CreatureFolderList,
-      ArchiveButton,
+const characterTransform = function(char){
+  char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
+  char.initial = char.name && char.name[0] || '?';
+  return char;
+};
+export default {
+  components: {
+    CreatureFolderList,
+    ArchiveButton,
+  },
+  data(){ return{
+    fab: false,
+    loadingInsertFolder: false,
+    renamingFolder: undefined,
+  }},
+  meteor: {
+    $subscribe: {
+      'characterList': [],
     },
-    data(){ return{
-      fab: false,
-      loadingInsertFolder: false,
-      renamingFolder: undefined,
-    }},
-    meteor: {
-      $subscribe: {
-        'characterList': [],
-      },
-      folders(){
-        const userId = Meteor.userId();
-        let folders =  CreatureFolders.find(
-          {owner: userId, archived: {$ne: true}},
-          {sort: {order: 1}},
-        ).map(folder => {
-          folder.creatures = Creatures.find(
-            {
-              _id: {$in: folder.creatures || []},
-              $or: [{readers: userId}, {writers: userId}, {owner: userId}],
-            }, {
-              sort: {name: 1},
-            }
-          ).map(characterTransform);
-          return folder;
-        });
-        return folders;
-      },
-      CreaturesWithNoParty() {
-        var userId = Meteor.userId();
-        var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
-        var folderChars = _.uniq(_.flatten(charArrays));
-        return Creatures.find(
+    folders(){
+      const userId = Meteor.userId();
+      let folders =  CreatureFolders.find(
+        {owner: userId, archived: {$ne: true}},
+        {sort: {order: 1}},
+      ).map(folder => {
+        folder.creatures = Creatures.find(
           {
-            _id: {$nin: folderChars},
+            _id: {$in: folder.creatures || []},
             $or: [{readers: userId}, {writers: userId}, {owner: userId}],
-          },
-          {sort: {name: 1}}
-        ).map(characterTransform);
-      },
-      creatureCount(){
-        let userId = Meteor.userId();
-        return Creatures.find({
-          owner: userId,
-        }, {
-          fields: {_id: 1},
-        }).count();
-      },
-      tier(){
-        let userId = Meteor.userId();
-        return getUserTier(userId);
-      },
-      characterSpaceLeft(){
-        let tier = this.tier;
-        let currentCharacterCount = this.creatureCount;
-        if (tier.characterSlots === -1) return Number.POSITIVE_INFINITY;
-        return tier.characterSlots - currentCharacterCount
-      },
-      exceededCharacterSpace(){
-        let tier = this.tier;
-        let currentCharacterCount = this.creatureCount;
-        return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
-      },
-    },
-    methods: {
-      insertCharacter(){
-        insertCreature.call((error, creatureId) => {
-          if (error){
-            console.error(error);
-            snackbar({
-              text: error.reason,
-            });
-          } else {
-            this.$store.commit(
-              'setTabForCharacterSheet',
-              {id: creatureId, tab: 4}
-            );
-            defer(() => {
-              this.$store.commit('pushDialogStack', {
-                component: 'character-creation-dialog',
-                elementId: 'new-character-button',
-                data: {
-                  creatureId,
-                },
-              });
-            })
-            this.$router.push({ path: `/character/${creatureId}` });
+          }, {
+            sort: {name: 1},
           }
-        });
-      },
-      insertFolder(){
-        this.loadingInsertFolder = true;
-        insertCreatureFolder.call(error => {
-          this.loadingInsertFolder = false;
-          if (!error) return;
-          console.error(error);
-          snackbar({
-            text: error.reason,
-          });
-        });
-      },
+        ).map(characterTransform);
+        return folder;
+      });
+      return folders;
     },
-  };
+    CreaturesWithNoParty() {
+      var userId = Meteor.userId();
+      var charArrays = CreatureFolders.find({owner: userId}).map(p => p.creatures);
+      var folderChars = _.uniq(_.flatten(charArrays));
+      return Creatures.find(
+        {
+          _id: {$nin: folderChars},
+          $or: [{readers: userId}, {writers: userId}, {owner: userId}],
+        },
+        {sort: {name: 1}}
+      ).map(characterTransform);
+    },
+    creatureCount(){
+      let userId = Meteor.userId();
+      return Creatures.find({
+        owner: userId,
+      }, {
+        fields: {_id: 1},
+      }).count();
+    },
+    tier(){
+      let userId = Meteor.userId();
+      return getUserTier(userId);
+    },
+    characterSpaceLeft(){
+      let tier = this.tier;
+      let currentCharacterCount = this.creatureCount;
+      if (tier.characterSlots === -1) return Number.POSITIVE_INFINITY;
+      return tier.characterSlots - currentCharacterCount
+    },
+    exceededCharacterSpace(){
+      let tier = this.tier;
+      let currentCharacterCount = this.creatureCount;
+      return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
+    },
+  },
+  methods: {
+    insertCharacter() {
+      const self = this;
+      self.$store.commit('pushDialogStack', {
+        component: 'character-creation-dialog',
+        elementId: 'new-character-button',
+        callback: creatureId => creatureId,
+      });
+    },
+    insertFolder(){
+      this.loadingInsertFolder = true;
+      insertCreatureFolder.call(error => {
+        this.loadingInsertFolder = false;
+        if (!error) return;
+        console.error(error);
+        snackbar({
+          text: error.reason,
+        });
+      });
+    },
+  },
+};
 </script>

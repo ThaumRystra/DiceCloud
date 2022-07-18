@@ -4,9 +4,21 @@
 >
   <v-list-item
     v-bind="$attrs"
-    :class="isSelected && 'primary--text v-list-item--active'"
+    :class="(isSelected || selectedByCollection) && !disabled && 'primary--text v-list-item--active'"
+    :to="selection ? undefined : to"
   >
-    <v-list-item-avatar>
+    <v-list-item-action
+      v-if="selection"
+    >
+      <v-checkbox
+        :disabled="disabled"
+        :input-value="disabled || isSelected"
+        :off-icon="selectedByCollection ? 'mdi-checkbox-intermediate' : undefined"
+        @change="e => $emit('select', e)"
+        @click.stop
+      />
+    </v-list-item-action>
+    <v-list-item-avatar v-else>
       <shared-icon :model="model" />
     </v-list-item-avatar>
     <v-list-item-content>
@@ -31,7 +43,12 @@ export default {
     },
     selection: Boolean,
     isSelected: Boolean,
-    dense: Boolean,
+    selectedByCollection: Boolean,
+    disabled: Boolean,
+    to: {
+      type: Object,
+      required: true,
+    }
   }
 }
 </script>
