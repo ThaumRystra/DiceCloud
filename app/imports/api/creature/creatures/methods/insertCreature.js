@@ -7,7 +7,7 @@ import defaultCharacterProperties from '/imports/api/creature/creatures/defaultC
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js';
-import getUserLibraryIds from '/imports/api/library/getUserLibraryIds.js';
+import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { insertExperienceForCreature } from '/imports/api/creature/experience/Experiences.js';
 import SimpleSchema from 'simpl-schema';
@@ -78,7 +78,7 @@ const insertCreature = new ValidatedMethod({
 
     // If the user only has a single ruleset subscribed, use it by default
     if (Meteor.isServer) {
-      insertDefaultRuleset(baseId, userId, rulesetSlot);
+      insertDefaultRuleset(creatureId, baseId, userId, rulesetSlot);
     }
 
 		return creatureId;
@@ -86,8 +86,8 @@ const insertCreature = new ValidatedMethod({
 });
 
 // If the user only has a single ruleset subscribed, insert it by default
-function insertDefaultRuleset(baseId, userId, slot) {
-  const libraryIds = getUserLibraryIds(userId);
+function insertDefaultRuleset(creatureId, baseId, userId, slot) {
+  const libraryIds = getCreatureLibraryIds(creatureId, userId);
   const filter = getSlotFillFilter({ slot, libraryIds });
   const fillCursor = LibraryNodes.find(filter, { fields: { _id: 1 } });
   const numRulesets = fillCursor.count();

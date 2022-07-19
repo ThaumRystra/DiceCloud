@@ -171,160 +171,166 @@
 </template>
 
 <script lang="js">
-  import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-  import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-  import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-  import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
-  import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';
-  import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin.js';
-  import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
-  import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
-  import Libraries from '/imports/api/library/Libraries.js';
-  import getThemeColor from '/imports/ui/utility/getThemeColor.js';
-  import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
-  import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';
+import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin.js';
+import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
+import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
+import Libraries from '/imports/api/library/Libraries.js';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
+import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
-  export default {
-    components: {
-      PropertySelector,
-      DialogBase,
-      TreeNodeView,
-      LibraryNodeExpansionContent,
-      ...propertyFormIndex,
+export default {
+  components: {
+    PropertySelector,
+    DialogBase,
+    TreeNodeView,
+    LibraryNodeExpansionContent,
+    ...propertyFormIndex,
+  },
+  mixins: [schemaFormMixin],
+  props: {
+    creatureId: {
+      type: String,
+      default: undefined,
     },
-    mixins: [schemaFormMixin],
-    props: {
-      forcedType: {
-        type: String,
-        default: undefined,
-      },
-      suggestedTypes: {
-        type: Array,
-        default: undefined,
-      },
-      suggestedType: {
-        type: String,
-        default: undefined,
-      },
-      parentDoc: {
-        type: Object,
-        default: undefined,
-      },
+    forcedType: {
+      type: String,
+      default: undefined,
     },
-    reactiveProvide: {
-      name: 'context',
-      include: ['debounceTime'],
+    suggestedTypes: {
+      type: Array,
+      default: undefined,
     },
-    data(){return {
-      selectedNodeIds: [],
-      type: this.forcedType || this.suggestedType,
-      model: {
-        type: this.type,
-      },
-      searchValue: undefined,
-      debounceTime: 0,
-      tab: 0,
-    };},
-    computed: {
-      typeName(){
-        return getPropertyName(this.type) || 'Property';
-      },
-      toolbarColor(){
-        return getThemeColor('secondary');
-      }
+    suggestedType: {
+      type: String,
+      default: undefined,
     },
-    watch: {
-      type(newType){
-        this.changeType(newType);
-      },
+    parentDoc: {
+      type: Object,
+      default: undefined,
     },
-    mounted(){
-      this.changeType(this.type);
+  },
+  reactiveProvide: {
+    name: 'context',
+    include: ['debounceTime'],
+  },
+  data(){return {
+    selectedNodeIds: [],
+    type: this.forcedType || this.suggestedType,
+    model: {
+      type: this.type,
     },
-    methods: {
-
-      propertyHelpChanged(value){
-        Meteor.users.setPreference.call({
-          preference: 'hidePropertySelectDialogHelp',
-          value: !value
-        }, error => {
-          if (!error) return;
-          console.error(error);
-          snackbar({
-            text: error.reason,
-          });
-        });
-      },
-      searchChanged(val, ack){
-        this._subs.searchLibraryNodes.setData('searchTerm', val);
-        this._subs.searchLibraryNodes.setData('limit', undefined);
-        this.selectedNode = undefined;
-        this.searchValue = val;
-        setTimeout(ack, 200);
-      },
-      loadMore(){
-        if (this.currentLimit >= this.countAll) return;
-        this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
-      },
-      insert(){
-        if (!this.selectedNodeIds.length) return;
-        this.$store.dispatch('popDialogStack', this.selectedNodeIds);
-      },
-      changeType(type){
-        this._subs.searchLibraryNodes.setData('type', type);
-        if (!type) return;
-        this.tab = 1;
-        this.schema = propertySchemasIndex[type];
-        this.validationContext = this.schema.newContext();
-        let model = this.schema.clean({});
-        model.type = type;
-        this.model = model;
-      },
-      openPropertyDetails(id){
-        this.$store.commit('pushDialogStack', {
-          component: 'library-node-dialog',
-          elementId: id,
-          data: {
-            _id: id,
-          },
-        });
-      },
+    searchValue: undefined,
+    debounceTime: 0,
+    tab: 0,
+  };},
+  computed: {
+    typeName(){
+      return getPropertyName(this.type) || 'Property';
     },
-    meteor: {
-      '$subscribe':{
-        'searchLibraryNodes': [],
-        'selectedLibraryNodes'(){
-          return [this.selectedNodeIds];
-        },
-      },
-      showPropertyHelp(){
-        let user = Meteor.user();
-        return !(user?.preferences?.hidePropertySelectDialogHelp)
-      },
-      currentLimit(){
-        return this._subs.searchLibraryNodes.data('limit') || 32;
-      },
-      countAll(){
-        return this._subs.searchLibraryNodes.data('countAll');
-      },
-      libraryNodes(){
-        return LibraryNodes.find({
-          _searchResult: true
-        },{
-          sort: {
-            'ancestors.0.id': 1,
-            name: 1,
-            order: 1,
-          },
-        });
-      },
-      libraryNames(){
-        let names = {};
-        Libraries.find().forEach(lib => names[lib._id] = lib.name)
-        return names;
-      }
+    toolbarColor(){
+      return getThemeColor('secondary');
     }
-  };
+  },
+  watch: {
+    type(newType){
+      this.changeType(newType);
+    },
+  },
+  mounted(){
+    this.changeType(this.type);
+  },
+  methods: {
+
+    propertyHelpChanged(value){
+      Meteor.users.setPreference.call({
+        preference: 'hidePropertySelectDialogHelp',
+        value: !value
+      }, error => {
+        if (!error) return;
+        console.error(error);
+        snackbar({
+          text: error.reason,
+        });
+      });
+    },
+    searchChanged(val, ack){
+      this._subs.searchLibraryNodes.setData('searchTerm', val);
+      this._subs.searchLibraryNodes.setData('limit', undefined);
+      this.selectedNode = undefined;
+      this.searchValue = val;
+      setTimeout(ack, 200);
+    },
+    loadMore(){
+      if (this.currentLimit >= this.countAll) return;
+      this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
+    },
+    insert(){
+      if (!this.selectedNodeIds.length) return;
+      this.$store.dispatch('popDialogStack', this.selectedNodeIds);
+    },
+    changeType(type){
+      this._subs.searchLibraryNodes.setData('type', type);
+      if (!type) return;
+      this.tab = 1;
+      this.schema = propertySchemasIndex[type];
+      this.validationContext = this.schema.newContext();
+      let model = this.schema.clean({});
+      model.type = type;
+      this.model = model;
+    },
+    openPropertyDetails(id){
+      this.$store.commit('pushDialogStack', {
+        component: 'library-node-dialog',
+        elementId: id,
+        data: {
+          _id: id,
+        },
+      });
+    },
+  },
+  meteor: {
+    '$subscribe':{
+      'searchLibraryNodes'() {
+        return [this.creatureId]
+      },
+      'selectedLibraryNodes'(){
+        return [this.selectedNodeIds];
+      },
+    },
+    showPropertyHelp(){
+      let user = Meteor.user();
+      return !(user?.preferences?.hidePropertySelectDialogHelp)
+    },
+    currentLimit(){
+      return this._subs.searchLibraryNodes.data('limit') || 32;
+    },
+    countAll(){
+      return this._subs.searchLibraryNodes.data('countAll');
+    },
+    libraryNodes(){
+      return LibraryNodes.find({
+        _searchResult: true
+      },{
+        sort: {
+          'ancestors.0.id': 1,
+          name: 1,
+          order: 1,
+        },
+      });
+    },
+    libraryNames(){
+      let names = {};
+      Libraries.find().forEach(lib => names[lib._id] = lib.name)
+      return names;
+    }
+  }
+};
 </script>
 
 <style lang="css" scoped>

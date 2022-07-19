@@ -170,6 +170,7 @@
           data: {
             parentDoc: forcedType ? undefined : parent,
             forcedType,
+            creatureId: this.creatureId,
           },
           callback(result){
             if (!result){

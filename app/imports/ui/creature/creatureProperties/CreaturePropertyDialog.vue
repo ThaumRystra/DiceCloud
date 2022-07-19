@@ -276,6 +276,7 @@ export default {
         elementId: 'insert-creature-property-btn',
         data: {
           parentDoc: this.model,
+          creatureId: this.creatureId,
         },
         callback(result){
           if (!result) return;

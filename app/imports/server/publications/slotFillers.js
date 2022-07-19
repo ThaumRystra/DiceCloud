@@ -3,7 +3,7 @@ import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
-import getUserLibraryIds from '/imports/api/library/getUserLibraryIds.js';
+import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';
 
 const FIELDS = {
@@ -28,7 +28,8 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
     }
 
     // Get all the ids of libraries the user can access
-    const libraryIds = getUserLibraryIds(userId);
+    const creatureId = slot.ancestors[0].id;
+    const libraryIds = getCreatureLibraryIds(creatureId, userId);
     const libraries = Libraries.find({
       $or: [
         { owner: userId },
