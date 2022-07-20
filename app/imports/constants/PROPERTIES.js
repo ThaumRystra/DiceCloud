@@ -159,6 +159,12 @@ const PROPERTIES = Object.freeze({
     helpText: 'Togggles allow parts of the character sheet to be turned on and off, either manually or as the result of a calculation.',
     suggestedParents: [],
   },
+  trigger: {
+    icon: 'mdi-electric-switch',
+    name: 'Trigger',
+    helpText: 'Triggers apply their children in response to events on the character sheet, such as taking an action or receiving damage',
+    suggestedParents: [],
+  },
 });
 
 export default PROPERTIES;

@@ -24,6 +24,7 @@ const SlotFillerForm = () => import('/imports/ui/properties/forms/SlotFillerForm
 const SpellListForm = () => import('/imports/ui/properties/forms/SpellListForm.vue');
 const SpellForm = () => import('/imports/ui/properties/forms/SpellForm.vue');
 const ToggleForm = () => import('/imports/ui/properties/forms/ToggleForm.vue');
+const TriggerForm = () => import('/imports/ui/properties/forms/TriggerForm.vue');
 
 export default {
   action: ActionForm,
@@ -52,4 +53,5 @@ export default {
   spellList: SpellListForm,
   spell: SpellForm,
   toggle: ToggleForm,
+  trigger: TriggerForm,
 };

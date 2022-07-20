@@ -32,6 +32,153 @@ function unloadCreature(creatureId, subscription) {
   }
 }
 
+export function getSingleProperty(creatureId, propertyId) {
+  if (loadedCreatures.has(creatureId)) {
+    const creature = loadedCreatures.get(creatureId);
+    const property = creature.properties.get(propertyId);
+    const cloneProp = EJSON.clone(property);
+    return cloneProp;
+  }
+  // console.time(`Cache miss on creature properties: ${creatureId}`)
+  const prop = CreatureProperties.findOne({
+    _id: propertyId,
+    'ancestors.id': creatureId,
+    'removed': {$ne: true},
+  }, {
+    sort: { order: 1 },
+    fields: { icon: 0 },
+  });
+  // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
+  return prop;
+}
+
+export function getProperties(creatureId) {
+  if (loadedCreatures.has(creatureId)) {
+    const creature = loadedCreatures.get(creatureId);
+    const props = Array.from(creature.properties.values());
+    const cloneProps = EJSON.clone(props);
+    return cloneProps
+  }
+  // console.time(`Cache miss on creature properties: ${creatureId}`)
+  const props = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    'removed': {$ne: true},
+  }, {
+    sort: { order: 1 },
+    fields: { icon: 0 },
+  }).fetch();
+  // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
+  return props;
+}
+
+export function getPropertiesOfType(creatureId, propType) {
+  if (loadedCreatures.has(creatureId)) {
+    const creature = loadedCreatures.get(creatureId);
+    const props = []
+    for (const prop of creature.properties.values()){
+      if (prop.type === propType) {
+        props.push(prop);
+      }
+    }
+    const cloneProps = EJSON.clone(props);
+    return cloneProps
+  }
+  // console.time(`Cache miss on creature properties: ${creatureId}`)
+  const props = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    'removed': { $ne: true },
+    'type': propType,
+  }, {
+    sort: { order: 1 },
+    fields: { icon: 0 },
+  }).fetch();
+  // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
+  return props;
+}
+
+export function getCreature(creatureId) {
+  if (loadedCreatures.has(creatureId)) {
+    const loadedCreature = loadedCreatures.get(creatureId);
+    const creature = loadedCreature.creature;
+    if (creature) return creature;
+  }
+  // console.time(`Cache miss on Creature: ${creatureId}`);
+  const creature = Creatures.findOne(creatureId, {
+    denormalizedStats: 1,
+    variables: 1,
+    dirty: 1,
+  });
+  // console.timeEnd(`Cache miss on Creature: ${creatureId}`);
+  return creature;
+}
+
+export function getVariables(creatureId) {
+  if (loadedCreatures.has(creatureId)) {
+    const loadedCreature = loadedCreatures.get(creatureId);
+    const variables = loadedCreature.variables;
+    if (variables) return variables;
+  }
+  // console.time(`Cache miss on variables: ${creatureId}`);
+  const variables = CreatureVariables.findOne({_creatureId: creatureId});
+  // console.timeEnd(`Cache miss on variables: ${creatureId}`);
+  return variables;
+}
+
+export function getProperyAncestors(creatureId, propertyId) {
+  const prop = getSingleProperty(creatureId, propertyId);
+  if (!prop) return [];
+  const ancestorIds = [];
+  prop.ancestors.forEach(ref => {
+    if (ref.collection === 'creatureProperties') {
+      ancestorIds.push(ref.id);
+    }
+  });
+  if (loadedCreatures.has(creatureId)) {
+    // Get the ancestor properties from the cache
+    const creature = loadedCreatures.get(creatureId);
+    const props = [];
+    ancestorIds.forEach(id => {
+      const prop = creature.properties.get(id);
+      if (prop) {
+        props.push(prop);
+      }
+    });
+    const cloneProps = EJSON.clone(props);
+    return cloneProps
+  } else {
+    // Fetch from database
+    return CreatureProperties.find({
+      _id: { $in: ancestorIds },
+    }, {
+      sort: { order: 1 },
+    }).fetch();
+  }
+}
+
+export function getPropertyDecendants(creatureId, propertyId) {
+  const property = getSingleProperty(creatureId, propertyId);
+  if (!property) return [];
+  // This prop will always appear at the same position in the ancestor array
+  // of its decendants, so only check there
+  const expectedAncestorPostition = property.ancestors.length;
+  if (loadedCreatures.has(creatureId)) {
+    const creature = loadedCreatures.get(creatureId);
+    const props = [];
+    for(const prop of creature.properties.values()){
+      if (prop.ancestors[expectedAncestorPostition]?.id === propertyId) {
+        props.push(prop);
+      }
+    }
+    const cloneProps = EJSON.clone(props);
+    return cloneProps
+  } else {
+    return CreatureProperties.find({
+      'ancestors.id': propertyId,
+      removed: { $ne: true },
+    }).fetch();
+  }
+}
+
 class LoadedCreature {
   constructor(sub, creatureId) {
     // This may be called from a subscription, but we don't want the observers

@@ -25,6 +25,7 @@ import { ComputedOnlySlotFillerSchema } from '/imports/api/properties/SlotFiller
 import { ComputedOnlySpellSchema } from '/imports/api/properties/Spells.js';
 import { ComputedOnlySpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ComputedOnlyToggleSchema } from '/imports/api/properties/Toggles.js';
+import { ComputedOnlyTriggerSchema } from '/imports/api/properties/Triggers.js';
 
 const propertySchemasIndex = {
   action: ComputedOnlyActionSchema,
@@ -53,6 +54,7 @@ const propertySchemasIndex = {
   spellList: ComputedOnlySpellListSchema,
   spell: ComputedOnlySpellSchema,
   toggle: ComputedOnlyToggleSchema,
+  trigger: ComputedOnlyTriggerSchema,
   any: new SimpleSchema({}),
 };
 

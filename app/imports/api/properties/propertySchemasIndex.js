@@ -23,6 +23,7 @@ import { SlotFillerSchema } from '/imports/api/properties/SlotFillers.js';
 import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { SpellSchema } from '/imports/api/properties/Spells.js';
 import { ToggleSchema } from '/imports/api/properties/Toggles.js';
+import { TriggerSchema } from '/imports/api/properties/Triggers.js';
 import { ContainerSchema } from '/imports/api/properties/Containers.js';
 import { ItemSchema } from '/imports/api/properties/Items.js';
 
@@ -51,6 +52,7 @@ const propertySchemasIndex = {
   spellList: SpellListSchema,
   spell: SpellSchema,
   toggle: ToggleSchema,
+  trigger: TriggerSchema,
   container: ContainerSchema,
   item: ItemSchema,
   any: new SimpleSchema({}),

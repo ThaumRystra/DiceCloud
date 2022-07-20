@@ -1,14 +1,16 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import {
+  getCreature, getVariables, getProperyAncestors, getPropertyDecendants, getPropertiesOfType
+} from '/imports/api/engine/loadCreatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import applyProperty from './applyProperty.js';
+import { groupBy, remove } from 'lodash';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -38,52 +40,37 @@ const doAction = new ValidatedMethod({
   run({actionId, targetIds = [], scope}) {
     let action = CreatureProperties.findOne(actionId);
 		// Check permissions
-    let creature = getRootCreatureAncestor(action);
-    const variables = CreatureVariables.findOne({
-      _creatureId: creature._id
-    }, {
-      fields: {_id: 0, _creatureId: 0},
-    });
-    creature.variables = variables;
-
+    const creatureId = action.ancestors[0].id;
+    let creature = getCreature(action.ancestors[0].id);
     assertEditPermission(creature, this.userId);
+
+    // Add the variables to the creature document
+    const variables = getVariables(creatureId);
+    delete variables._id;
+    delete variables._creatureId;
+    creature.variables = variables;
 
     // Get all the targets and make sure we can edit them
     let targets = [];
     targetIds.forEach(targetId => {
-      let target = Creatures.findOne(targetId);
+      let target = getCreature(targetId);
       assertEditPermission(target, this.userId);
-      const variables = CreatureVariables.findOne({
-        _creatureId: targetId
-      }, {
-        fields: {_id: 0, _creatureId: 0},
-      });
+
+      // add the variables to the target documents
+      const variables = getVariables(creatureId);
+      delete variables._id;
+      delete variables._creatureId;
       target.variables = variables;
+
       targets.push(target);
     });
 
-    // Fetch all the action's ancestor creatureProperties
-    const ancestorIds = [];
-    action.ancestors.forEach(ref => {
-      if (ref.collection === 'creatureProperties') {
-        ancestorIds.push(ref.id);
-      }
-    });
+    const ancestors = getProperyAncestors(creatureId, action._id);
+    ancestors.sort((a, b) => a.order - b.order);
 
-    // Get cursor of ancestors
-    const ancestors = CreatureProperties.find({
-      _id: {$in: ancestorIds},
-    }, {
-      sort: {order: 1},
-    });
-
-    // Get cursor of the properties
-    const properties = CreatureProperties.find({
-      $or: [{_id: action._id}, {'ancestors.id': action._id}],
-      removed: {$ne: true},
-    }, {
-      sort: {order: 1},
-    });
+    const properties = getPropertyDecendants(creatureId, action._id);
+    properties.push(action);
+    properties.sort((a, b) => a.order - b.order);
 
     // Do the action
     doActionWork({creature, targets, properties, ancestors, method: this, methodScope: scope});
@@ -107,6 +94,14 @@ export function doActionWork({
   const propertyForest = nodeArrayToTree(properties);
   if (propertyForest.length !== 1){
     throw new Meteor.Error(`The action has ${propertyForest.length} top level properties, expected 1`);
+  }
+
+  // Get the triggers
+  const triggers = getPropertiesOfType(creature._id, 'trigger');
+  remove(triggers, trigger => trigger.event !== 'doActionProperty');
+  creature.triggers = groupBy(triggers, 'actionPropertyType');
+  for (let type in creature.triggers) {
+    creature.triggers[type] = groupBy(creature.triggers[type], 'timing')
   }
 
   // Create the log

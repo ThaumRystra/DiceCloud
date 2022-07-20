@@ -24,6 +24,7 @@ const SlotFillerViewer = () => import ('/imports/ui/properties/viewers/SlotFille
 const SpellListViewer = () => import ('/imports/ui/properties/viewers/SpellListViewer.vue');
 const SpellViewer = () => import ('/imports/ui/properties/viewers/SpellViewer.vue');
 const ToggleViewer = () => import ('/imports/ui/properties/viewers/ToggleViewer.vue');
+const TriggerViewer = () => import ('/imports/ui/properties/viewers/TriggerViewer.vue');
 
 export default {
   action: ActionViewer,
@@ -52,4 +53,5 @@ export default {
   spellList: SpellListViewer,
   spell: SpellViewer,
   toggle: ToggleViewer,
+  trigger: TriggerViewer,
 };

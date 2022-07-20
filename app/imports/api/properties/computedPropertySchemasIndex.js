@@ -25,6 +25,7 @@ import { SlotFillerSchema } from '/imports/api/properties/SlotFillers.js';
 import { ComputedSpellSchema } from '/imports/api/properties/Spells.js';
 import { ComputedSpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ComputedToggleSchema } from '/imports/api/properties/Toggles.js';
+import { ComputedTriggerSchema } from '/imports/api/properties/Triggers.js';
 
 const propertySchemasIndex = {
   action: ComputedActionSchema,
@@ -51,6 +52,7 @@ const propertySchemasIndex = {
   spellList: ComputedSpellListSchema,
   spell: ComputedSpellSchema,
   toggle: ComputedToggleSchema,
+  trigger: ComputedTriggerSchema,
   container: ComputedContainerSchema,
   item: ComputedItemSchema,
   any: new SimpleSchema({}),

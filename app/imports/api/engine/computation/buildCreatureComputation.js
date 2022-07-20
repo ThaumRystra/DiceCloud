@@ -1,10 +1,7 @@
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import CreatureProperties,
-  { DenormalisedOnlyCreaturePropertySchema as denormSchema }
+import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { loadedCreatures } from '../loadCreatures.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import linkInventory from './buildComputation/linkInventory.js';
@@ -38,53 +35,6 @@ export default function buildCreatureComputation(creatureId){
   const properties = getProperties(creatureId);
   const computation = buildComputationFromProps(properties, creature, variables);
   return computation;
-}
-
-function getProperties(creatureId) {
-  if (loadedCreatures.has(creatureId)) {
-    const creature = loadedCreatures.get(creatureId);
-    const props = Array.from(creature.properties.values());
-    const cloneProps = EJSON.clone(props);
-    return cloneProps
-  }
-  // console.time(`Cache miss on creature properties: ${creatureId}`)
-  const props = CreatureProperties.find({
-    'ancestors.id': creatureId,
-    'removed': {$ne: true},
-  }, {
-    sort: { order: 1 },
-    fields: { icon: 0 },
-  }).fetch();
-  // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
-  return props;
-}
-
-function getCreature(creatureId) {
-  if (loadedCreatures.has(creatureId)) {
-    const loadedCreature = loadedCreatures.get(creatureId);
-    const creature = loadedCreature.creature;
-    if (creature) return creature;
-  }
-  // console.time(`Cache miss on Creature: ${creatureId}`);
-  const creature = Creatures.findOne(creatureId, {
-    denormalizedStats: 1,
-    variables: 1,
-    dirty: 1,
-  });
-  // console.timeEnd(`Cache miss on Creature: ${creatureId}`);
-  return creature;
-}
-
-function getVariables(creatureId) {
-  if (loadedCreatures.has(creatureId)) {
-    const loadedCreature = loadedCreatures.get(creatureId);
-    const variables = loadedCreature.variables;
-    if (variables) return variables;
-  }
-  // console.time(`Cache miss on variables: ${creatureId}`);
-  const variables = CreatureVariables.findOne({_creatureId: creatureId});
-  // console.timeEnd(`Cache miss on variables: ${creatureId}`);
-  return variables;
 }
 
 export function buildComputationFromProps(properties, creature, variables){
