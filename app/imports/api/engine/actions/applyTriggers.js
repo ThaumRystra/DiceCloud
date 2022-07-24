@@ -4,6 +4,7 @@ import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import applyProperty from '/imports/api/engine/actions/applyProperty.js';
 import { difference, intersection } from 'lodash';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
 export default function applyTriggers(node, { creature, targets, scope, log }, timing) {
   const prop = node.node;
@@ -25,10 +26,11 @@ export default function applyTriggers(node, { creature, targets, scope, log }, t
 
 function triggerMatchTags(trigger, prop) {
   let matched = false;
+  const propTags = getEffectivePropTags(prop);
   // Check the target tags
   if (
     !trigger.targetTags?.length ||
-    difference(trigger.targetTags, prop.tags).length === 0
+    difference(trigger.targetTags, propTags).length === 0
   ) {
     matched = true;
   }
@@ -38,14 +40,14 @@ function triggerMatchTags(trigger, prop) {
       if (matched) return;
       if (
         !extra.tags.length ||
-        difference(extra.tags, prop.tags).length === 0
+        difference(extra.tags, propTags).length === 0
       ) {
         matched = true;
       }
     } else if (extra.operation === 'NOT') {
       if (
         extra.tags.length &&
-        intersection(extra.tags, prop.tags)
+        intersection(extra.tags, propTags)
       ) {
         return false;
       }

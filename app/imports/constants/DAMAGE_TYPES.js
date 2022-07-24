@@ -13,6 +13,7 @@ const DAMAGE_TYPES = Object.freeze([
   'psychic',
   'radiant',
   'thunder',
+  'extra',
 ]);
 
 export default DAMAGE_TYPES;

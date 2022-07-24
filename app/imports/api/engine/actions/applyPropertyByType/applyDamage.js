@@ -68,6 +68,15 @@ export default function applyDamage(node, {
   // Round the damage to a whole number
   damage = Math.floor(damage);
 
+  // Convert extra damage into the stored type
+  if (prop.damageType === 'extra' && scope['$lastDamageType']) {
+    prop.damageType = scope['$lastDamageType'];
+  }
+  // Store current damage type
+  if (prop.damageType !== 'healing') {
+    scope['$lastDamageType'] = prop.damageType;
+  }
+
   // Memoise the damage suffix for the log
   let suffix = (criticalHit ? ' critical ' : ' ') +
     prop.damageType +
