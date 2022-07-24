@@ -91,6 +91,7 @@
       <form-section name="Libraries">
         <smart-switch
           label="All user libraries"
+          :value="allUserLibraries"
           @change="allUserLibrariesChange"
         />
         <library-list
@@ -156,6 +157,11 @@ export default {
     dirty: false, // If there are pending changes
   }
   },
+  computed: {
+    allUserLibraries() {
+      return !this.model.allowedLibraries && !this.model.allowedLibraryCollections
+    },
+  },
   watch: {
     'model.allowedLibraryCollections': function (newVal) {
       if (!this.dirty) this.libraryCollections = newVal;
@@ -165,7 +171,6 @@ export default {
     },
   },
   mounted() {
-
     this.updateAllowedLibraryCollections = debounce(() => {
       this.libraryWriteLoading = true;
       this.dirty = false;
@@ -189,7 +194,6 @@ export default {
         this.libraryWriteError = error;
       });
     }, 500);
-
   },
   meteor: {
     $subscribe: {
@@ -232,10 +236,10 @@ export default {
         );
       }
     },
-    allUserLibrariesChange(val, ack) {
+    allUserLibrariesChange(value, ack) {
       toggleAllUserLibraries.call({
         _id: this.model._id,
-        val
+        value,
       }, error => ack(error));
     },
     selectLibrary(id, val) {

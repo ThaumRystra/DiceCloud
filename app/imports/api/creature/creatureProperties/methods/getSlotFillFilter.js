@@ -49,10 +49,10 @@ export default function getSlotFillFilter({slot, libraryIds}){
     });
   }
   if (tagsOr.length){
-    filter.$and.push({$or: tagsOr});
+    filter.$or = tagsOr;
   }
   if (tagsNin.length){
-    filter.$and.push({$nin: tagsNin});
+    filter.$and.push({tags: {$nin: tagsNin}});
   }
   if (!filter.$and.length){
     delete filter.$and;

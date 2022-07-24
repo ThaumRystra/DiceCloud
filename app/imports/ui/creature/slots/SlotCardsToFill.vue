@@ -85,8 +85,8 @@ export default {
             ]
           },{
             $or: [
-              { quantityExpected: {exists: false} },
-              { 'quantityExpected.value': 0 },
+              { 'quantityExpected.value': {$in: [false, 0, '', undefined]} },
+              { 'quantityExpected.value': {exists: false} },
               {spaceLeft: {$gt: 0}},
             ]
           },

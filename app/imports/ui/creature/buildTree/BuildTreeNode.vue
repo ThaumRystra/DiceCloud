@@ -150,7 +150,8 @@
       },
       canFillWithMany(){
         return this.isSlot && (
-          this. node.quantityExpected?.value === 0 ||
+          !this.node.quantityExpected ||
+          this.node.quantityExpected.value === 0 ||
           (this.node.quantityExpected.value > 1 && this.node.spaceLeft > 0)
         );
       },

@@ -207,6 +207,7 @@ export default {
         $or: [
           {'slotCondition.value': {$nin: [false, 0, '']}},
           {'slotCondition.value': {$exists: false}},
+          {'slotCondition': {$exists: false}},
         ],
         removed: {$ne: true},
         inactive: {$ne: true},
@@ -228,7 +229,8 @@ export default {
         const model = child.node;
         const isSlotWithSpace = model.type === 'propertySlot' &&
           model.spaceLeft > 0 || 
-          (model.quantityExpected && model.quantityExpected.value == 0);
+          !model.quantityExpected ||
+          model.quantityExpected.value === 0;
         if(isSlotWithSpace) {
           model._canFill = true;
           parents.forEach(node => {

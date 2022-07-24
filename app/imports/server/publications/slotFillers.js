@@ -6,12 +6,6 @@ import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/
 import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';
 
-const FIELDS = {
-  ...LIBRARY_NODE_TREE_FIELDS,
-  slotFillerCondition: 1,
-  tags: 1,
-}
-
 Meteor.publish('slotFillers', function(slotId, searchTerm){
   if (searchTerm) check(searchTerm, String);
 
@@ -56,7 +50,7 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
           // relevant documents have a higher score.
           fields: {
             _score: { $meta: 'textScore' },
-            ...FIELDS,
+            ...LIBRARY_NODE_TREE_FIELDS,
           },
           sort: {
             // `score` property specified in the projection fields above.
@@ -72,7 +66,7 @@ Meteor.publish('slotFillers', function(slotId, searchTerm){
             name: 1,
             order: 1,
           },
-          fields: FIELDS,
+          fields: LIBRARY_NODE_TREE_FIELDS,
         };
       }
       options.limit = limit;
@@ -135,7 +129,7 @@ Meteor.publish('classFillers', function(classId){
           name: 1,
           order: 1,
         },
-        fields: FIELDS,
+        fields: LIBRARY_NODE_TREE_FIELDS,
         limit,
       };
 

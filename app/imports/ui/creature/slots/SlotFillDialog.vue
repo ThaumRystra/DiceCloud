@@ -29,13 +29,13 @@
       {{ slotPropertyTypeName }} with tags:
       <property-tags
         v-for="(tags, index) in tagsSearched.or"
-        :key="index"
+        :key="index + 'tags'"
         :tags="tags"
         :prefix="index ? 'OR' : undefined"
       />
       <property-tags
         v-for="(tags, index) in tagsSearched.not"
-        :key="index"
+        :key="index + 'not'"
         :tags="tags"
         prefix="NOT"
       />

@@ -72,11 +72,14 @@
         @change="change('slotTags', ...arguments)"
       />
     </v-layout>
-    <v-slide-x-transition group>
+    <v-slide-x-transition
+      group
+    >
       <div
         v-for="(extras, i) in model.extraTags"
         :key="extras._id"
-        class="extra-tags layout align-center justify-space-between"
+        class="extra-tags layout align-center justify-space-between" 
+        style="transition: all 0.3s !important;"
       >
         <smart-select
           label="Operation"
