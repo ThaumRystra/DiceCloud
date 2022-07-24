@@ -78,17 +78,38 @@
               </v-list-item-action>
             </v-list-item>
             <v-list-item
-              v-for="classLevel in highestClassLevels"
-              :key="classLevel._id"
+              v-for="cls in classes"
+              :key="cls._id"
+              :data-id="`class-${cls._id}`"
+              v-on="cls.type === 'class' ? {click: () => propertyClicked({_id: cls._id, prefix: 'class-'})} : {}"
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ classLevel.name }}
+                  {{ cls.name }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-avatar>
-                {{ classLevel.level }}
+                {{ cls.level }}
               </v-list-item-avatar>
+              <v-list-item-action v-if="cls.type === 'class'">
+                <v-btn
+                  outlined
+                  color="accent"
+                  data-id="level-up-btn"
+                  :disabled="cls.slotCondition && cls.slotCondition.hasOwnProperty('value') && !cls.slotCondition.value"
+                  @click.stop="levelUpDialog(cls._id)"
+                >
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  <template v-if="cls.missingLevels && cls.missingLevels.length">
+                    Get Missing Levels 
+                  </template>
+                  <template v-else>
+                    Level Up
+                  </template> 
+                </v-btn>
+              </v-list-item-action>
             </v-list-item>
           </v-list>
         </v-card>
@@ -104,6 +125,7 @@ import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import BuildTreeNodeList from '/imports/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/ui/creature/slots/SlotCardsToFill.vue';
 import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -124,7 +146,7 @@ export default {
     },
   },
   computed: {
-    highestClassLevels(){
+    highestLevels(){
       let highestLevels = {};
       let highestLevelsList = [];
       this.classLevels.forEach(classLevel => {
@@ -142,6 +164,12 @@ export default {
       highestLevelsList.sort((a, b) => a.level - b.level);
       return highestLevelsList;
     },
+    classes() {
+      return [
+        ...this.highestLevels,
+        ...this.classProperties
+      ].sort((a, b) => a.order - b.order);
+    }
   },
   meteor: {
     creature(){
@@ -150,10 +178,22 @@ export default {
     variables() {
       return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
     },
-    classLevels(){
+    classProperties(){
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'class',
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }, {
+        sort: {order: 1}
+      }).fetch();
+    },
+    classLevels() {
+      const classVariableNames = this.classProperties.map(c => c.variableName)
       return CreatureProperties.find({
         'ancestors.id': this.creatureId,
         type: 'classLevel',
+        variableName: {$nin: classVariableNames},
         removed: {$ne: true},
         inactive: {$ne: true},
       }, {
@@ -238,6 +278,27 @@ export default {
         data: {
           creatureId: this.creatureId,
         },
+      });
+    },
+    levelUpDialog(classId){
+      this.$store.commit('pushDialogStack', {
+        component: 'level-up-dialog',
+        elementId: 'level-up-btn',
+        data: {
+          creatureId: this.creatureId,
+          classId,
+        },
+        callback(nodeIds){
+          if (!nodeIds || !nodeIds.length) return;
+          let newPropertyId = insertPropertyFromLibraryNode.call({
+            nodeIds,
+            parentRef: {
+              'id': classId,
+              'collection': 'creatureProperties',
+            },
+          });
+          return `tree-node-${newPropertyId}`;
+        }
       });
     },
   },

@@ -50,6 +50,7 @@
           outlined
           color="accent"
           data-id="level-up-btn"
+          :disabled="model.slotCondition && model.slotCondition.hasOwnProperty('value') && !model.slotCondition.value"
           @click="levelUpDialog"
         >
           <v-icon left>
