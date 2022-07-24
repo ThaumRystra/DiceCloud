@@ -145,6 +145,15 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
     optional: true,
     removeBeforeCompute: true,
   },
+  // A list of effect ids targeting this attribute
+  effects: {
+    type: Array,
+    optional: true,
+  },
+  'effects.$': {
+    type: Object,
+    blackbox: true,
+  },
 });
 
 const ComputedAttributeSchema = new SimpleSchema()

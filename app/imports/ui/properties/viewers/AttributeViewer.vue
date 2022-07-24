@@ -232,18 +232,10 @@
           return [];
         }
       },
-      effects(){
-        if (this.context.creatureId && this.model.variableName){
-          let creatureId = this.context.creatureId;
-          return CreatureProperties.find({
-            'ancestors.id': creatureId,
-            'stats': this.model.variableName,
-            removed: {$ne: true},
-            inactive: {$ne: true},
-          });
-        } else {
-          return [];
-        }
+      effects() {
+        return CreatureProperties.find({
+          _id: { $in: this.model.effects?.map(e => e._id) || [] }
+        });
       },
     },
   }

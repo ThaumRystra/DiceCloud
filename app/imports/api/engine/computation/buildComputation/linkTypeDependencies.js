@@ -128,10 +128,21 @@ function linkEffects(dependencyGraph, prop, computation){
   if (prop.targetByTags){
     getEffectTagTargets(prop, computation).forEach(targetId => {
       const targetProp = computation.propsById[targetId];
-      const key = prop.targetField || getDefaultCalculationField(targetProp);
-      const calcObj = get(targetProp, key);
-      if (calcObj && calcObj.calculation){
-        dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id , 'effect');
+      if (
+        (targetProp.type === 'attribute' || targetProp.type === 'skill')
+        && targetProp.variableName
+        && !prop.targetField
+      ) {
+        // If the field wasn't specified and we're targeting an attribute or
+        // skill, just treat it like a normal effect on its variable name
+        dependencyGraph.addLink(targetProp.variableName, prop._id, 'effect');
+      } else {
+        // Otherwise target a field on that property
+        const key = prop.targetField || getDefaultCalculationField(targetProp);
+        const calcObj = get(targetProp, key);
+        if (calcObj && calcObj.calculation){
+          dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id , 'effect');
+        }
       }
     });
   } else {
