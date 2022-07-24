@@ -1,4 +1,4 @@
-import { get, intersection, difference } from 'lodash';
+import { get, intersection, difference, union } from 'lodash';
 
 const linkDependenciesByType = {
   action: linkAction,
@@ -144,16 +144,18 @@ function linkEffects(dependencyGraph, prop, computation){
 
 // Returns an array of IDs of the properties the effect targets
 function getEffectTagTargets(effect, computation){
-  const targets = getTargetListFromTags(effect.targetTags, computation);
-  const notIds = [];
+  let targets = getTargetListFromTags(effect.targetTags, computation);
+  let notIds = [];
   if (effect.extraTags){
     effect.extraTags.forEach(ex => {
-      if (ex.operation === 'OR'){
-        targets.push(...getTargetListFromTags(ex.tags, computation));
+      if (ex.operation === 'OR') {
+        targets = union(targets, getTargetListFromTags(ex.tags, computation));
       } else if (ex.operation === 'NOT'){
         ex.tags.forEach(tag => {
           const idList = computation.propsWithTag[tag];
-          if (idList) notIds.push(...computation.propsWithTag[tag])
+          if (idList) {
+            notIds = union(notIds, computation.propsWithTag[tag]);
+          }
         });
       }
     });
