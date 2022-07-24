@@ -3,7 +3,15 @@
     class="breadcrumbs layout align-center wrap"
     :class="{'no-icons': noIcons}"
   >
+    <span
+      v-if="noLinks"
+    >
+      <v-icon>
+        mdi-account
+      </v-icon>
+    </span>
     <a
+      v-else
       data-id="breadcrumb-root"
       @click="clickRootCreature"
     >
