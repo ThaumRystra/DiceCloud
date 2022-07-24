@@ -211,4 +211,4 @@ const logRoll = new ValidatedMethod({
 });
 
 export default CreatureLogs;
-export { CreatureLogSchema, insertCreatureLog, logRoll};
+export { CreatureLogSchema, insertCreatureLog, logRoll, PER_CREATURE_LOG_LIMIT};

@@ -10,6 +10,7 @@ import { removeCreatureWork } from '/imports/api/creature/creatures/methods/remo
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
 import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
+import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety.js';
 
 let migrateArchive;
 if (Meteor.isServer){
@@ -24,6 +25,9 @@ function restoreCreature(archive, userId){
 
   // Migrate and verify the archive meets the current schema
   migrateArchive(archive);
+
+  // Asset that the archive is safe
+  verifyArchiveSafety(archive);
 
   // Don't upload creatures twice
   const existingCreature = Creatures.findOne(archive.creature._id, {
