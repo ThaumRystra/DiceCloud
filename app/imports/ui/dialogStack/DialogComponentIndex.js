@@ -6,6 +6,7 @@ const CreatureFormDialog = () => import('/imports/ui/creature/CreatureFormDialog
 const CreaturePropertyCreationDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue');
 const CreaturePropertyDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyDialog.vue');
 const CreaturePropertyFromLibraryDialog = () => import('/imports/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue');
+const CreatureRootDialog = () => import('/imports/ui/creature/character/CreatureRootDialog.vue');
 const DeleteConfirmationDialog = () => import('/imports/ui/dialogStack/DeleteConfirmationDialog.vue');
 const DeleteUserAccountDialog = () => import('/imports/ui/user/DeleteUserAccountDialog.vue');
 const ExperienceInsertDialog = () => import( '/imports/ui/creature/experiences/ExperienceInsertDialog.vue');
@@ -36,6 +37,7 @@ export default {
   CreaturePropertyCreationDialog,
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,
+  CreatureRootDialog,
   DeleteConfirmationDialog,
   DeleteUserAccountDialog,
   ExperienceInsertDialog,
