@@ -11,15 +11,9 @@ export default function applyTriggers(node, { creature, targets, scope, log }, t
   const type = prop.type;
   if (creature.triggers?.[type]?.[timing]) {
     creature.triggers[type][timing].forEach(trigger => {
-      // Tags
-      if (!triggerMatchTags(trigger, prop)) return;
-      // Condition
-      if (trigger.condition?.parseNode) {
-        recalculateCalculation(trigger.condition, scope, log);
-        if (!trigger.condition.value) return;
+      if (triggerMatchTags(trigger, prop)) {
+        applyTrigger(trigger, { creature, targets, scope, log });
       }
-      // Apply
-      applyTrigger(trigger, { creature, targets, scope, log });
     });
   }
 }
@@ -57,6 +51,13 @@ function triggerMatchTags(trigger, prop) {
 }
 
 export function applyTrigger(trigger, { creature, targets, scope, log }) {
+  // Prevent triggers from firing if their condition is false
+  if (trigger.condition?.parseNode) {
+    recalculateCalculation(trigger.condition, scope, log);
+    if (!trigger.condition.value) return;
+  }
+
+  // Prevent triggers from firing themselves in a loop
   if (trigger.firing) {
     /*
     log.content.push({
