@@ -3,7 +3,6 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import { get } from 'lodash';
 
 const pushToProperty = new ValidatedMethod({
@@ -39,13 +38,11 @@ const pushToProperty = new ValidatedMethod({
 
     // Do work
 		CreatureProperties.update(_id, {
-			$push: {[joinedPath]: value},
+      $push: { [joinedPath]: value },
+      $set: { dirty: true },
 		}, {
 			selector: {type: property.type},
 		});
-
-    // TODO figure out if this method can change deps or not
-    computeCreature(rootCreature._id);
 	}
 });
 

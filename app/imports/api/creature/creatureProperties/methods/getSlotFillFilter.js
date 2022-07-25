@@ -15,9 +15,26 @@ export default function getSlotFillFilter({slot, libraryIds}){
         slotFillerType: slot.slotType,
       }]
     });
+  } else if (slot.type === 'class') {
+    filter.$and.push({
+      $or: [{
+        type: 'classLevel',
+      },{
+        type: 'slotFiller',
+        slotFillerType: 'classLevel',
+      }]
+    });
+    filter.variableName = slot.variableName;
+
+    // Only search for levels the class needs
+    if (slot.missingLevels && slot.missingLevels.length) {
+      filter.level = {$in: slot.missingLevels};
+    } else {
+      filter.level = (slot.level || 0) + 1;
+    }
   }
   let tagsOr = [];
-  let tagsNor = [];
+  let tagsNin = [];
   if (slot.slotTags && slot.slotTags.length){
     tagsOr.push({tags: {$all: slot.slotTags}});
   }
@@ -27,15 +44,15 @@ export default function getSlotFillFilter({slot, libraryIds}){
       if (extra.operation === 'OR'){
         tagsOr.push({tags: {$all: extra.tags}});
       } else if (extra.operation === 'NOT'){
-        tagsNor.push({tags: {$all: extra.tags}});
+        tagsNin.push(...extra.tags);
       }
     });
   }
   if (tagsOr.length){
-    filter.$and.push({$or: tagsOr});
+    filter.$or = tagsOr;
   }
-  if (tagsNor.length){
-    filter.$and.push({$nor: tagsNor});
+  if (tagsNin.length){
+    filter.$and.push({tags: {$nin: tagsNin}});
   }
   if (!filter.$and.length){
     delete filter.$and;

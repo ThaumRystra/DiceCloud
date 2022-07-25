@@ -1,8 +1,8 @@
 <template lang="html">
   <v-speed-dial
-    v-if="speedDials"
     v-model="fab"
     direction="bottom"
+    :style="!speedDials ? 'visibility: hidden;' : ''"
   >
     <template #activator>
       <v-btn
@@ -25,7 +25,6 @@
         </transition>
       </v-btn>
     </template>
-
     <labeled-fab
       v-for="type in speedDials"
       :key="type"
@@ -101,7 +100,8 @@
     'features',
     'inventory',
     'spells',
-    'character',
+    'journal',
+    'build',
     'tree',
   ];
 
@@ -134,7 +134,7 @@
         'features': ['feature'],
         'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
-        'character': ['note'],
+        'journal': ['note'],
         'tree': [null],
       };},
       properties(){
@@ -170,6 +170,7 @@
           data: {
             parentDoc: forcedType ? undefined : parent,
             forcedType,
+            creatureId: this.creatureId,
           },
           callback(result){
             if (!result){

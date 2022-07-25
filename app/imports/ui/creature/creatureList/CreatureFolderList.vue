@@ -1,6 +1,7 @@
 <template lang="html">
   <v-list
     expand
+    class="creature-folder-list"
   >
     <creature-list
       :creatures="creatures"
@@ -66,5 +67,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.creature-folder-list .v-list-item__icon.v-list-group__header__append-icon {
+  margin-left: 0 !important;
+}
 </style>

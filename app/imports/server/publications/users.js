@@ -10,6 +10,8 @@ Meteor.publish('user', function(){
       apiKey: 1,
       darkMode: 1,
       subscribedLibraries: 1,
+      subscribedLibraryCollections: 1,
+      fileStorageUsed: 1,
       profile: 1,
       preferences: 1,
       'services.patreon.id': 1,

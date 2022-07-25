@@ -7,10 +7,16 @@
     </template>
     <template>
       <text-field
-        label="name"
+        label="Name"
         :value="library.name"
         :debounce-time="0"
         @change="nameChanged"
+      />
+      <text-area
+        label="Description"
+        :value="library.description"
+        :debounce-time="0"
+        @change="descriptionChanged"
       />
     </template>
     <template slot="actions">
@@ -35,7 +41,8 @@
 		},
 		data(){ return {
 			library: {
-				name: 'New Library',
+        name: 'New Library',
+        description: undefined,
 			},
 			valid: true,
 		}},
@@ -49,6 +56,10 @@
 					this.valid = false;
 					ack('Name is required')
 				}
+      },
+      descriptionChanged(val, ack){
+        this.library.description = val;
+        ack();
 			},
 		},
 	};

@@ -92,7 +92,7 @@
                   <v-list-item-action>
                     <v-icon>mdi-signature</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Transfer Onwership</v-list-item-title>
+                  <v-list-item-title>Transfer Ownership</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="updateSharing(user._id, 'none')">
                   <v-list-item-action>

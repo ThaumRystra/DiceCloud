@@ -1,4 +1,4 @@
-if<template>
+<template>
   <div class="character-sheet fill-height">
     <v-fade-transition mode="out-in">
       <div
@@ -63,6 +63,9 @@ if<template>
           <v-tab-item>
             <character-tab :creature-id="creatureId" />
           </v-tab-item>
+          <v-tab-item>
+            <build-tab :creature-id="creatureId" />
+          </v-tab-item>
           <v-tab-item
             v-if="creature.settings.showTreeTab"
           >
@@ -82,7 +85,8 @@ if<template>
 	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
 	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
-	import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/CharacterTab.vue';
+	import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/JournalTab.vue';
+  import BuildTab from '/imports/ui/creature/character/characterSheetTabs/BuildTab.vue';
   import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
   import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
   import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
@@ -95,6 +99,7 @@ if<template>
 			InventoryTab,
 			SpellsTab,
 			CharacterTab,
+      BuildTab,
 			TreeTab,
 		},
 		props: {
@@ -124,6 +129,16 @@ if<template>
     },
     mounted(){
       this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
+      this.nameObserver = Creatures.find({
+        creatureId: this.creatureId,
+      }, {
+        fields: {name: 1},
+      }).observe({
+        added: ({name}) => 
+          this.$store.commit('setPageTitle', name || 'Character Sheet'),
+        changed: ({ name }) =>
+          this.$store.commit('setPageTitle', name || 'Character Sheet'),
+      });
       let that = this;
       this.logObserver = CreatureLogs.find({
         creatureId: this.creatureId,
@@ -136,6 +151,7 @@ if<template>
       });
     },
     beforeDestroy(){
+      this.nameObserver.stop();
       this.logObserver.stop();
     },
 		meteor: {

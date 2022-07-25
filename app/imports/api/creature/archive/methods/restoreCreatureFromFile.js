@@ -8,12 +8,16 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import Experiences from '/imports/api/creature/experience/Experiences.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
+import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety.js';
+
 let migrateArchive;
 if (Meteor.isServer){
   migrateArchive = require('/imports/migrations/server/migrateArchive.js').default;
 }
 
-function restoreCreature(archive){
+function restoreCreature(archive, userId){
   if (SCHEMA_VERSION < archive.meta.schemaVersion){
     throw new Meteor.Error('Incompatible',
       'The archive file is from a newer version. Update required to read.')
@@ -21,6 +25,19 @@ function restoreCreature(archive){
 
   // Migrate and verify the archive meets the current schema
   migrateArchive(archive);
+
+  // Asset that the archive is safe
+  verifyArchiveSafety(archive);
+
+  // Don't upload creatures twice
+  const existingCreature = Creatures.findOne(archive.creature._id, {
+    fields: { _id: 1 }
+  });
+  if (existingCreature) throw new Meteor.Error('Already exists',
+    'The creature you are trying to restore already exists.')
+  
+  // Ensure the user owns the restored creature
+  archive.creature.owner = userId;
 
   // Insert the creature sub documents
   // They still have their original _id's
@@ -69,13 +86,18 @@ const restoreCreaturefromFile = new ValidatedMethod({
       throw new Meteor.Error('Permission denied',
       'You can only restore creatures you own');
     }
+
+    assertHasCharactersSlots(this.userId);
+
     if (Meteor.isServer){
       // Read the file data
       const archive = await ArchiveCreatureFiles.readJSONFile(file);
-      restoreCreature(archive);
+      restoreCreature(archive, this.userId);
     }
     //Remove the archive once the restore succeeded
-    ArchiveCreatureFiles.remove({_id: fileId});
+    ArchiveCreatureFiles.remove({ _id: fileId });
+    // Update the user's file storage limits
+    incrementFileStorageUsed(userId, -file.size);
   },
 });
 

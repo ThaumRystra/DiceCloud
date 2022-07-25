@@ -35,6 +35,13 @@
         $emit('change', {path: ['roll', ...path], value, ack})"
     />
     <form-sections>
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+      
       <form-section name="Advanced">
         <v-row dense>
           <v-col

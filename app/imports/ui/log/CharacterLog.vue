@@ -35,6 +35,7 @@
 <script lang="js">
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
@@ -73,7 +74,7 @@ export default {
         return;
       }
       try {
-        let {result: compiled} = resolve('compile', result, this.creature.variables);
+        let {result: compiled} = resolve('compile', result, this.variables);
         this.inputHint = toString(compiled);
         return;
       } catch (e){
@@ -106,6 +107,9 @@ export default {
     },
     creature(){
       return Creatures.findOne(this.creatureId) || {};
+    },
+    variables(){
+      return CreatureVariables.findOne({_creatureId: this.creatureId}) || {};
     },
     editPermission(){
       try {

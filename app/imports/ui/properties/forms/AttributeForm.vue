@@ -94,6 +94,13 @@
       </v-expand-transition>
 
       <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+
+      <form-section
         name="Advanced"
       >
         <smart-combobox

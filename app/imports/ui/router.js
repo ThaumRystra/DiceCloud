@@ -7,7 +7,8 @@ const About = () => import('/imports/ui/pages/About.vue');
 const CharacterList = () => import('/imports/ui/pages/CharacterList.vue');
 const CharacterListToolbarItems = () => import('/imports/ui/creature/creatureList/CharacterListToolbarItems.vue');
 const Library = () => import('/imports/ui/pages/Library.vue');
-const SingleLibraryToolbar = () => import('/imports/ui/library/SingleLibraryToolbar.vue');
+const LibraryCollection = () => import('/imports/ui/pages/LibraryCollection.vue');
+const LibraryCollectionToolbar = () => import('/imports/ui/library/LibraryCollectionToolbar.vue');
 const CharacterSheetPage = () => import('/imports/ui/pages/CharacterSheetPage.vue');
 const CharacterSheetToolbar = () => import('/imports/ui/creature/character/CharacterSheetToolbar.vue');
 const CharacterSheetRightDrawer = () => import('/imports/ui/creature/character/CharacterSheetRightDrawer.vue');
@@ -24,12 +25,15 @@ const EmailVerificationError = () => import('/imports/ui/pages/EmailVerification
 const ResetPassword = () => import('/imports/ui/pages/ResetPassword.vue' );
 const NotImplemented = () => import('/imports/ui/pages/NotImplemented.vue');
 const PatreonLevelTooLow = () => import('/imports/ui/pages/PatreonLevelTooLow.vue');
+const SingleLibrary = () => import('/imports/ui/pages/SingleLibrary.vue');
+const SingleLibraryToolbar = () => import('/imports/ui/library/SingleLibraryToolbar.vue');
 const Tabletops = () => import('/imports/ui/pages/Tabletops.vue');
 const Tabletop = () => import('/imports/ui/pages/Tabletop.vue');
 const TabletopToolbar = () => import('/imports/ui/tabletop/TabletopToolbar.vue');
 const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDrawer.vue');
 const Admin = () => import('/imports/ui/pages/Admin.vue');
 const Maintenance = () => import('/imports/ui/pages/Maintenance.vue');
+const Files = () => import('/imports/ui/pages/Files.vue');
 
 // Not found
 const NotFound = () => import('/imports/ui/pages/NotFound.vue');
@@ -119,7 +123,8 @@ RouterFactory.configure(router => {
         title: 'Home',
       },
     },{
-      path: '/characterList',
+      path: '/character-list',
+      alias: '/characterList',
       components: {
         default: CharacterList,
         toolbarItems: CharacterListToolbarItems,
@@ -128,7 +133,8 @@ RouterFactory.configure(router => {
         title: 'Character List',
       },
       beforeEnter: ensureLoggedIn,
-    },{
+    }, {
+      name: 'library',
       path: '/library',
       components: {
         default: Library,
@@ -141,13 +147,24 @@ RouterFactory.configure(router => {
       name: 'singleLibrary',
       path: '/library/:id',
       components: {
-        default: Library,
+        default: SingleLibrary,
         toolbar: SingleLibraryToolbar,
       },
       meta: {
         title: 'Library',
       },
     },{
+      name: 'libraryCollection',
+      path: '/library-collection/:id',
+      components: {
+        default: LibraryCollection,
+        toolbar: LibraryCollectionToolbar,
+      },
+      meta: {
+        title: 'Library Collection',
+      },
+    }, {
+      name: 'characterSheet',
       path: '/character/:id',
       alias: '/character/:id/:urlName',
       components: {
@@ -199,8 +216,8 @@ RouterFactory.configure(router => {
       meta: {
         title: 'Register',
       },
-		},{
-			path: '/account',
+    }, {
+      path: '/account',
       components: {
         default: Account,
       },
@@ -208,7 +225,16 @@ RouterFactory.configure(router => {
         title: 'Account',
       },
       beforeEnter: ensureLoggedIn,
-		},{
+    }, {
+      path: '/my-files',
+      components: {
+        default: Files,
+      },
+      meta: {
+        title: 'Files',
+      },
+      beforeEnter: ensureLoggedIn,
+    }, {
       path: '/feedback',
       components: {
         default: Feedback,

@@ -6,6 +6,7 @@
     :class="{
       'inactive': model.inactive,
     }"
+    v-bind="$attrs"
   />
 </template>
 

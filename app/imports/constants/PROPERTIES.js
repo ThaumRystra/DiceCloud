@@ -138,7 +138,7 @@ const PROPERTIES = Object.freeze({
   slotFiller: {
     icon: 'mdi-power-plug-outline',
     name: 'Slot filler',
-    helpText: 'A slot filler allows for more advanced logic when it attemptst to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
+    helpText: 'A slot filler allows for more advanced logic when it attempts to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
     suggestedParents: ['propertySlot'],
   },
   spellList: {
@@ -157,6 +157,12 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.toggle',
     name: 'Toggle',
     helpText: 'Togggles allow parts of the character sheet to be turned on and off, either manually or as the result of a calculation.',
+    suggestedParents: [],
+  },
+  trigger: {
+    icon: 'mdi-electric-switch',
+    name: 'Trigger',
+    helpText: 'Triggers apply their children in response to events on the character sheet, such as taking an action or receiving damage',
     suggestedParents: [],
   },
 });

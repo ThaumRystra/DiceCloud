@@ -5,7 +5,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { restore } from '/imports/api/parenting/softRemove.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const restoreProperty = new ValidatedMethod({
 	name: 'creatureProperties.restore',
@@ -24,10 +23,13 @@ const restoreProperty = new ValidatedMethod({
     assertEditPermission(rootCreature, this.userId);
 
     // Do work
-    restore({_id, collection: CreatureProperties});
-
-    // Changes dependency tree by restoring children
-    computeCreature(rootCreature._id);
+    restore({
+      _id,
+      collection: CreatureProperties,
+      extraUpdates: {
+        $set: { dirty: true }
+      },
+    });
 	}
 });
 

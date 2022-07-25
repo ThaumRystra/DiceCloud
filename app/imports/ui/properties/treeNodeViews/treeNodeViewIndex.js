@@ -7,6 +7,7 @@ import EffectTreeNode from '/imports/ui/properties/treeNodeViews/EffectTreeNode.
 import ClassLevelTreeNode from '/imports/ui/properties/treeNodeViews/ClassLevelTreeNode.vue';
 import ProficiencyTreeNode from '/imports/ui/properties/treeNodeViews/ProficiencyTreeNode.vue';
 import ReferenceTreeNode from '/imports/ui/properties/treeNodeViews/ReferenceTreeNode.vue';
+import SavingThrowTreeNode from '/imports/ui/properties/treeNodeViews/SavingThrowTreeNode.vue';
 
 export default {
   default: DefaultTreeNode,
@@ -18,4 +19,5 @@ export default {
   item: ItemTreeNode,
   proficiency: ProficiencyTreeNode,
   reference: ReferenceTreeNode,
+  savingThrow: SavingThrowTreeNode,
 }

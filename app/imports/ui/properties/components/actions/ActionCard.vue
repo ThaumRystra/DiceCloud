@@ -93,6 +93,14 @@
           :markdown="model.summary.value || model.summary.text"
         />
       </template>
+      <v-divder v-if="model.children && model.children.length" />
+      <creature-properties-tree
+        style="width: 100%;"
+        expanded
+        :root="{collection: 'creatureProperties', id: model._id}"
+        @length="childrenLength = $event"
+        @selected="e => $emit('sub-click', e)"
+      />
     </div>
     <card-highlight :active="hovering" />
   </v-card>
@@ -109,6 +117,7 @@ import RollPopup from '/imports/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import CardHighlight from '/imports/ui/components/CardHighlight.vue';
+import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 
 export default {
   components: {
@@ -117,7 +126,8 @@ export default {
     MarkdownText,
     PropertyIcon,
     RollPopup,
-    CardHighlight
+    CardHighlight,
+    CreaturePropertiesTree,
   },
   inject: {
     context: {

@@ -3,7 +3,6 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const updateCreatureProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
@@ -37,17 +36,13 @@ const updateCreatureProperty = new ValidatedMethod({
     let modifier;
     // unset empty values
     if (value === null || value === undefined){
-      modifier = {$unset: {[pathString]: 1}};
+      modifier = { $unset: {[pathString]: 1}, $set: { dirty: true } };
     } else {
-      modifier = {$set: {[pathString]: value}};
+      modifier = { $set: {[pathString]: value, dirty: true } };
     }
 		CreatureProperties.update(_id, modifier, {
 			selector: {type: property.type},
 		});
-
-    // Updating a property is likely to change dependencies, do a full recompute
-    // denormalised stats might change, so fetch the creature again
-    computeCreature(rootCreature._id);
   },
 });
 

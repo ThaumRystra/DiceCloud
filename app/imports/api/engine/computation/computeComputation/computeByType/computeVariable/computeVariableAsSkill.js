@@ -71,6 +71,8 @@ export default function computeVariableAsSkill(computation, node, prop){
   prop.fail = aggregator.fail;
   // Rollbonus
   prop.rollBonuses = aggregator.rollBonus;
+  // Store effects
+  prop.effects = node.data.effects;
 }
 
 function aggregateAbilityEffects({computation, skillNode, abilityNode}){

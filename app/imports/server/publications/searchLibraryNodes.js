@@ -1,6 +1,8 @@
 import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
+import getUserLibraryIds from '/imports/api/library/getUserLibraryIds.js';
 import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
 
 Meteor.publish('selectedLibraryNodes', function(selectedNodeIds){
@@ -37,7 +39,7 @@ Meteor.publish('selectedLibraryNodes', function(selectedNodeIds){
   })];
 });
 
-Meteor.publish('searchLibraryNodes', function(){
+Meteor.publish('searchLibraryNodes', function(creatureId){
   let self = this;
   this.autorun(function (){
     let type = self.data('type');
@@ -49,23 +51,12 @@ Meteor.publish('searchLibraryNodes', function(){
     }
 
     // Get all the ids of libraries the user can access
-    const user = Meteor.users.findOne(userId, {
-      fields: {subscribedLibraries: 1}
-    });
-    if (!user) return [];
-
-    const subs = user.subscribedLibraries || [];
-    let libraries = Libraries.find({
-      $or: [
-        {owner: this.userId},
-        {writers: this.userId},
-        {readers: this.userId},
-        {_id: {$in: subs}},
-      ]
-    }, {
-      fields: {_id: 1, name: 1},
-    });
-    let libraryIds = libraries.map(lib => lib._id);
+    let libraryIds;
+    if (creatureId) {
+      libraryIds = getCreatureLibraryIds(creatureId, userId)
+    } else {
+      libraryIds = getUserLibraryIds(userId)
+    }
 
     // Build a filter for nodes in those libraries that match the type
     let filter = {
@@ -122,6 +113,7 @@ Meteor.publish('searchLibraryNodes', function(){
       });
 
       let cursor = LibraryNodes.find(filter, options);
+      const libraries = Libraries.find({ _id: { $in: libraryIds } });
 
       Mongo.Collection._publishCursor(libraries, self, 'libraries');
 

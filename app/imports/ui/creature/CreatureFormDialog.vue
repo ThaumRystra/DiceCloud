@@ -1,5 +1,5 @@
 <template lang="html">
-  <dialog-base :color="model.color">
+  <dialog-base v-if="model" :color="model.color">
     <template slot="toolbar">
       <v-toolbar-title>
         Character Details
@@ -43,7 +43,10 @@ export default {
     ColorPicker,
 	},
 	props: {
-		_id: String,
+		_id: {
+      type: String,
+      required: true,
+    },
 		startInEditTab: Boolean,
 	},
 	meteor: {

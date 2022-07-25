@@ -7,28 +7,28 @@
     style="overflow-y: auto;"
   >
     <template #activator="{ on }">
-      <div class="layout align-center">
-        <v-btn
-          :loading="loading"
-          outlined
-          :min-width="108"
-          v-on="on"
+      <v-btn
+        :loading="loading"
+        outlined
+        :min-width="108"
+        v-bind="$attrs"
+        :style="buttonStyle"
+        v-on="on"
+      >
+        {{ label }}
+        <svg-icon
+          v-if="safeValue && safeValue.shape"
+          right
+          class="ml-2"
+          :shape="safeValue.shape"
+        />
+        <v-icon
+          v-else
+          right
         >
-          {{ label }}
-          <svg-icon
-            v-if="safeValue && safeValue.shape"
-            right
-            class="ml-2"
-            :shape="safeValue.shape"
-          />
-          <v-icon
-            v-else
-            right
-          >
-            mdi-select-search
-          </v-icon>
-        </v-btn>
-      </div>
+          mdi-select-search
+        </v-icon>
+      </v-btn>
     </template>
     <v-card>
       <v-card-text>
@@ -91,6 +91,10 @@ export default {
     label: {
       type: String,
       default: 'Icon',
+    },
+    buttonStyle: {
+      type: String,
+      default: undefined,
     },
 	},
 	data(){return {

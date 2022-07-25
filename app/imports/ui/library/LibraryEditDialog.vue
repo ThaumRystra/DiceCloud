@@ -26,6 +26,11 @@
         :value="model.name"
         @change="updateName"
       />
+      <text-area
+        label="Description"
+        :value="model.description"
+        @change="updateDescription"
+      />
     </template>
     <template v-if="removedDocs.length">
       <h3>Recently Deleted Properties</h3>
@@ -71,9 +76,10 @@
 
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import Libraries, { updateLibraryName, removeLibrary } from '/imports/api/library/Libraries.js';
+import Libraries, { updateLibraryName, updateLibraryDescription, removeLibrary } from '/imports/api/library/Libraries.js';
 import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNodes.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
 	components: {
@@ -88,7 +94,12 @@ export default {
 			updateLibraryName.call({_id: this._id, name: value}, (error) =>{
 				ack(error && error.reason || error);
 			});
-		},
+    },
+    updateDescription(value, ack){
+			updateLibraryDescription.call({_id: this._id, description: value}, (error) =>{
+				ack(error && error.reason || error);
+			});
+    },
 		remove(){
 			let that = this;
 			this.$store.commit('pushDialogStack', {
@@ -101,10 +112,14 @@ export default {
 				callback(confirmation){
 					if(!confirmation) return;
 					removeLibrary.call({_id: that._id}, (error) => {
-						if (error) {
-							console.error(error);
+            if (error) {
+              console.error(error);
+              snackbar({
+                text: error.reason,
+              });
 						} else {
-							that.$store.dispatch('popDialogStack')
+              that.$router.push({ name: 'library', replace: true });
+              that.$store.dispatch('popDialogStack');
 						}
 					});
 				}

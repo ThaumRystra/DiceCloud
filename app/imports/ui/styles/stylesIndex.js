@@ -1,4 +1,5 @@
 import './cardColors.css';
+import './cardTitles.css';
 import './centeredInputs.css';
 import './denseLists.css';
 import './fitAvatars.css';

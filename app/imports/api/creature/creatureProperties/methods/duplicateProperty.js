@@ -9,7 +9,6 @@ import {
 	renewDocIds
 } from '/imports/api/parenting/parenting.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 var snackbar;
 if (Meteor.isClient){
   snackbar = require(
@@ -77,6 +76,9 @@ const duplicateProperty = new ValidatedMethod({
 
     // Order the root node
     property.order += 0.5;
+    
+    // Mark the sheet as needing recompute
+    property.dirty = true;
 
     // Insert the properties
 		CreatureProperties.batchInsert([property, ...nodes]);
@@ -86,9 +88,6 @@ const duplicateProperty = new ValidatedMethod({
       collection: CreatureProperties,
       ancestorId: property.ancestors[0].id,
     });
-
-    // Inserting a creature property invalidates dependencies: full recompute
-    computeCreature(creature._id);
 
     return propertyId;
   },

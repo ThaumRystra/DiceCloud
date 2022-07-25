@@ -3,7 +3,6 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 
 const flipToggle = new ValidatedMethod({
   name: 'creatureProperties.flipToggle',
@@ -36,12 +35,10 @@ const flipToggle = new ValidatedMethod({
 		CreatureProperties.update(_id, {$set: {
       enabled: !currentValue,
       disabled: currentValue,
+      dirty: true,
     }}, {
 			selector: {type: 'toggle'},
 		});
-
-    // Updating a toggle is likely to change the whole tree, do a full recompute
-    computeCreature(rootCreature._id);
   },
 });
 

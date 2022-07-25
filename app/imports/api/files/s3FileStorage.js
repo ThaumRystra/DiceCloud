@@ -47,6 +47,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     collectionName,
     storagePath,
     onBeforeUpload,
+    onAfterUpload,
     debug = Meteor.isProduction,
     allowClientCode = false,
   }){
@@ -54,7 +55,10 @@ if (Meteor.isServer && Meteor.settings.useS3) {
       collectionName,
       storagePath,
       onBeforeUpload,
-      onAfterUpload(fileRef){
+      onAfterUpload(fileRef) {
+        // Call the provided afterUpload hook first
+        onAfterUpload?.(fileRef);
+        
         // Start moving files to AWS:S3
         // after fully received by the Meteor server
 
@@ -217,6 +221,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     collectionName,
     storagePath,
     onBeforeUpload,
+    onAfterUpload,
     debug = Meteor.isProduction,
     allowClientCode = false,
   }){
@@ -224,11 +229,12 @@ if (Meteor.isServer && Meteor.settings.useS3) {
       collectionName,
       storagePath,
       onBeforeUpload,
+      onAfterUpload,
       debug,
       allowClientCode,
     });
 
-    if (Meteor.isServer){
+    if (Meteor.isServer) {
       // Use the normal file system to read files
       collection.readJSONFile = async function(file){
         const fileString = await fsp.readFile(file.path, 'utf8');

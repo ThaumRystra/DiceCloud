@@ -1,6 +1,6 @@
 <template lang="html">
   <v-tooltip
-    v-if="accessRights === 'reader' || accessRights === 'writer'"
+    v-if="accessRights === 'reader' || accessRights === 'writer' || accessRights === 'public'"
     bottom
   >
     <template #activator="{ on }">
@@ -8,7 +8,7 @@
         style="opacity: 0.4"
         v-on="on"
       >
-        {{ accessRights === 'reader' ? 'mdi-file-eye' : 'mdi-file-edit' }}
+        {{ accessIcon }}
       </v-icon>
     </template>
     <span>{{ accessText }}</span>
@@ -32,13 +32,24 @@ export default {
       else if (this.model.public) return 'public';
       else return 'denied'
     },
+  },
+  computed: {
+    accessIcon() {
+      switch (this.accessRights){
+        case 'writer': return 'mdi-file-edit';
+        case 'reader': return 'mdi-file-eye';
+        case 'public': return 'mdi-cloud';
+        default: return '';
+      }
+    },
     accessText(){
       switch (this.accessRights){
         case 'writer': return 'Shared with edit permission';
         case 'reader': return 'Shared as view-only';
-        case 'public': return 'Shared as publicly viewable';
+        case 'public': return 'Shared publically';
+        default: return '';
       }
-    }
+    },
   }
 }
 </script>

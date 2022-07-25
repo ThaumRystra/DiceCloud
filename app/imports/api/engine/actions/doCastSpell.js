@@ -7,7 +7,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { doActionWork } from '/imports/api/engine/actions/doAction.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import { CreatureLogSchema } from '/imports/api/creature/log/CreatureLogs.js';
 
 const doAction = new ValidatedMethod({
@@ -129,12 +128,12 @@ const doAction = new ValidatedMethod({
     }
 
     // Do the action
-    doActionWork({creature, targets, properties, ancestors, method: this, methodScope: scope, log});
-
-    // Recompute all involved creatures
-    computeCreature(creature._id);
-    targets.forEach(target => {
-      computeCreature(target._id);
+    doActionWork({ creature, targets, properties, ancestors, method: this, methodScope: scope, log });
+    
+    Creatures.update({
+      _id: { $in: [creature._id, ...targetIds] }
+    }, {
+      $set: { dirty: true },
     });
   },
 });

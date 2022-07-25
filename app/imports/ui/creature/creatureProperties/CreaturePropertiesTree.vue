@@ -5,6 +5,7 @@
     :group="group"
     :organize="organize"
     :selected-node="selectedNode"
+    :start-expanded="expanded"
     @selected="e => $emit('selected', e)"
     @reordered="reordered"
     @reorganized="reorganized"
@@ -22,7 +23,10 @@
 			TreeNodeList,
 		},
 		props: {
-			root: Object,
+			root: {
+				type: Object,
+				default: undefined,
+			},
 			organize: Boolean,
 			selectedNode: {
         type: Object,
@@ -35,7 +39,8 @@
 			group: {
 				type: String,
 				default: 'creatureProperties'
-			}
+			},
+			expanded: Boolean,
 		},
 		meteor: {
 			children(){

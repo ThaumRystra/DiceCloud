@@ -68,7 +68,7 @@ const archiveCreatureToFile = new ValidatedMethod({
   async run({creatureId}) {
     assertOwnership(creatureId, this.userId);
     if (Meteor.isServer){
-      archiveCreature(creatureId);
+      archiveCreature(creatureId, this.userId);
     } else {
       removeCreatureWork(creatureId);
     }

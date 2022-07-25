@@ -33,7 +33,7 @@
       @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
     />
     <form-sections>
-      <form-section name="settings">
+      <form-section name="Settings">
         <v-switch
           label="Hide redundant stats"
           :input-value="model.settings.hideUnusedStats"
@@ -88,17 +88,49 @@
 				/>
         -->
       </form-section>
+      <form-section name="Libraries">
+        <smart-switch
+          label="All user libraries"
+          :value="allUserLibraries"
+          @change="allUserLibrariesChange"
+        />
+        <library-list
+          selection
+          :disabled="!model.allowedLibraries && !model.allowedLibraryCollections"
+          :libraries-selected="model.allowedLibraries"
+          :library-collections-selected="model.allowedLibraryCollections"
+          :libraries-selected-by-collections="librariesSelectedByCollections"
+          @select-library="selectLibrary"
+          @select-library-collection="selectLibraryCollection"
+        />
+        <v-progress-linear
+          v-if="libraryWriteLoading"
+          style="margin: 12px -24px -16px -24px; width: calc(100% + 48px);"
+          indeterminate
+        />
+        <p
+          v-if="libraryWriteError"
+          class="text--error"
+        >
+          {{ libraryWriteError }}
+        </p>
+      </form-section>
     </form-sections>
   </div>
 </template>
 
 <script lang="js">
+import { union, without, debounce } from 'lodash';
 import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
+import LibraryList from '/imports/ui/library/LibraryList.vue';
+import LibraryCollections from '/imports/api/library/LibraryCollections.js';
+import {changeAllowedLibraries, toggleAllUserLibraries} from '/imports/api/creature/creatures/methods/changeAllowedLibraries.js';
 
 export default {
 	components: {
 		FormSection,
-		FormSections,
+    FormSections,
+    LibraryList,
 	},
 	props: {
 		stored: {
@@ -116,7 +148,67 @@ export default {
 			type: Boolean,
 		},
     disabled: Boolean,
-	},
+  },
+  data() { return {
+    libraryCollections: this.model.allowedLibraryCollections,
+    libraries: this.model.allowedLibraries,
+    libraryWriteLoading: false,
+    libraryWriteError: undefined,
+    dirty: false, // If there are pending changes
+  }
+  },
+  computed: {
+    allUserLibraries() {
+      return !this.model.allowedLibraries && !this.model.allowedLibraryCollections
+    },
+  },
+  watch: {
+    'model.allowedLibraryCollections': function (newVal) {
+      if (!this.dirty) this.libraryCollections = newVal;
+    },
+    'model.allowedLibraries': function (newVal) {
+      if (!this.dirty) this.libraries = newVal;
+    },
+  },
+  mounted() {
+    this.updateAllowedLibraryCollections = debounce(() => {
+      this.libraryWriteLoading = true;
+      this.dirty = false;
+      changeAllowedLibraries.call({
+        _id: this.model._id,
+        allowedLibraryCollections: this.libraryCollections,
+      }, error => {
+        this.libraryWriteLoading = false;
+        this.libraryWriteError = error;
+      });
+    }, 500);
+
+    this.updateAllowedLibraries = debounce(() => {
+      this.libraryWriteLoading = true;
+      this.dirty = false;
+      changeAllowedLibraries.call({
+        _id: this.model._id,
+        allowedLibraries: this.libraries,
+      }, error => {
+        this.libraryWriteLoading = false;
+        this.libraryWriteError = error;
+      });
+    }, 500);
+  },
+  meteor: {
+    $subscribe: {
+      'libraries': [],
+    },
+    librariesSelectedByCollections() {
+      let ids = [];
+      LibraryCollections.find({
+        _id: { $in: this.model.allowedLibraryCollections }
+      }).forEach(collection => {
+        ids = union(ids, collection.libraries);
+      });
+      return ids;
+    },
+  },
   methods: {
     changeShowTreeTab(value){
       this.$emit('change', {
@@ -143,6 +235,30 @@ export default {
           {id: this.model._id, tab: 4}
         );
       }
+    },
+    allUserLibrariesChange(value, ack) {
+      toggleAllUserLibraries.call({
+        _id: this.model._id,
+        value,
+      }, error => ack(error));
+    },
+    selectLibrary(id, val) {
+      if (val) {
+        this.libraries = union(this.libraries, [id]);
+      } else {
+        this.libraries = without(this.libraries, id);
+      }
+      this.dirty = true;
+      this.updateAllowedLibraries();
+    },
+    selectLibraryCollection(id, val) {
+      if (val) {
+        this.libraryCollections = union(this.libraryCollections, [id]);
+      } else {
+        this.libraryCollections = without(this.libraryCollections, id);
+      }
+      this.dirty = true;
+      this.updateAllowedLibraryCollections();
     },
   },
 };

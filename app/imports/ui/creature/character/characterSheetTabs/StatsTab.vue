@@ -2,6 +2,11 @@
   <div
     class="stats-tab ma-2"
   >
+    <character-errors
+      class="mx-2 mt-4"
+      :creature-id="creatureId"
+    />
+
     <health-bar-card-container :creature-id="creatureId" />
 
     <column-layout>
@@ -250,6 +255,7 @@
           :model="action"
           :data-id="action._id"
           @click="clickProperty({_id: action._id})"
+          @sub-click="_id => clickTreeProperty({_id})"
         />
       </div>
       <div
@@ -368,7 +374,8 @@
   import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
   import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
-
+  import CharacterErrors from '/imports/ui/creature/character/errors/CharacterErrors.vue';
+  
   const getProperties = function(creature, filter, options = {
     sort: {order: 1}
   }){
@@ -412,6 +419,7 @@
 			SpellSlotListTile,
       ActionCard,
       ToggleCard,
+      CharacterErrors,
 		},
 		props: {
 			creatureId: {
@@ -453,9 +461,10 @@
 				return getAttributeOfType(this.creature, 'spellSlot');
 			},
       hasSpells(){
-        return getProperties(this.creature, {
+        const cursor = getProperties(this.creature, {
           type: 'spell',
-        }).count();
+        })
+        return cursor && cursor.count();
       },
 			hitDice(){
         return getAttributeOfType(this.creature, 'hitDice');
@@ -513,6 +522,13 @@
 				this.$store.commit('pushDialogStack', {
 					component: 'creature-property-dialog',
 					elementId: `${_id}`,
+					data: {_id},
+				});
+      },
+      clickTreeProperty({_id}){
+				this.$store.commit('pushDialogStack', {
+					component: 'creature-property-dialog',
+					elementId: `tree-node-${_id}`,
 					data: {_id},
 				});
 			},

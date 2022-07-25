@@ -4,7 +4,6 @@ import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { computeCreatureDependencyGroup } from '/imports/api/engine/computeCreature.js';
 
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',
@@ -37,9 +36,7 @@ const damageProperty = new ValidatedMethod({
 				`Property of type "${property.type}" can't be damaged`
 			);
 		}
-		let result = damagePropertyWork({property, operation, value});
-    // Dependencies can't be changed through damage, only recompute deps
-    computeCreatureDependencyGroup(property);
+    let result = damagePropertyWork({ property, operation, value });
     return result;
   },
 });
@@ -70,7 +67,7 @@ export function damagePropertyWork({property, operation, value}){
 
   // Write the results
   CreatureProperties.update(property._id, {
-    $set: {damage, value: newValue}
+    $set: {damage, value: newValue, dirty: true}
   }, {
     selector: property
   });

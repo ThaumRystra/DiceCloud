@@ -6,6 +6,7 @@ if (Meteor.isServer){
     const dbVersion = Migrations.getVersion();
     if (
       !Meteor.settings.public.maintenanceMode &&
+      dbVersion !== undefined &&
       SCHEMA_VERSION !== dbVersion
     ){
       Meteor.settings.public.maintenanceMode =  {

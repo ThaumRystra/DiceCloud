@@ -80,6 +80,27 @@ let CreatureSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.url,
   },
+
+  // Libraries
+  allowedLibraries: {
+    type: Array,
+    optional: true,
+		maxCount: 100,
+	},
+	'allowedLibraries.$': {
+		type: String,
+    regEx: SimpleSchema.RegEx.Id,
+	},
+	allowedLibraryCollections: {
+		type: Array,
+    optional: true,
+		maxCount: 100,
+	},
+	'allowedLibraryCollections.$': {
+		type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+
 	// Mechanics
 	deathSave: {
 		type: deathSaveSchema,
@@ -99,6 +120,11 @@ let CreatureSchema = new SimpleSchema({
   'denormalizedStats.milestoneLevels': {
     type: SimpleSchema.Integer,
     defaultValue: 0,
+  },
+  // Does the character need a recompute?
+  dirty: {
+    type: Boolean,
+    optional: true,
   },
   // Version of computation engine that was last used to compute this creature
   computeVersion: {
@@ -160,8 +186,8 @@ CreatureSchema.extend(SharingSchema);
 Creatures.attachSchema(CreatureSchema);
 
 
-import '/imports/api/creature/creatures/methods/index.js';
-import '/imports/api/engine/actions/doAction.js';
 
 export default Creatures;
 export { CreatureSchema };
+
+import '/imports/api/engine/actions/doAction.js';

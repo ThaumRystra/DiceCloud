@@ -4,11 +4,16 @@
       Delete {{ typeName }}
     </v-toolbar-title>
     <div>
+      <v-alert type="warning" outlined>
+        This can't be undone
+      </v-alert>
       <p v-if="name">
-        Type "{{ name }}" to permanenetly delete
+        Type "{{ name }}" to permanenetly delete.
       </p>
       <v-text-field
         v-if="name"
+        label="Confirmation"
+        outlined
         v-model="inputName"
       />
       <div class="layout justify-center">

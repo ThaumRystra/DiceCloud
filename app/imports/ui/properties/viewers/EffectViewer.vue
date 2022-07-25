@@ -101,12 +101,13 @@
 					case 'mul': return 'Multiply';
 					case 'min': return 'Minimum';
 					case 'max': return 'Maximum';
+					case 'set': return 'Set';
 					case 'advantage': return 'Advantage';
 					case 'disadvantage': return 'Disadvantage';
 					case 'passiveAdd': return 'Passive bonus';
 					case 'fail': return 'Always fail';
 					case 'conditional': return 'Conditional benefit' ;
-          default: return '';
+          default: return this.model.operation;
 				}
 			},
 			displayedValue(){

@@ -18,10 +18,9 @@ export default function applyDamage(node, {
   const prop = node.node;
 
   // Skip if there is no parse node to work with
-  if (!prop.amount.parseNode) return;
+  if (!prop.amount?.parseNode) return;
 
   // Choose target
-
   let damageTargets = prop.target === 'self' ? [creature] : targets;
   // Determine if the hit is critical
   let criticalHit = scope['$criticalHit']?.value &&
@@ -68,6 +67,15 @@ export default function applyDamage(node, {
 
   // Round the damage to a whole number
   damage = Math.floor(damage);
+
+  // Convert extra damage into the stored type
+  if (prop.damageType === 'extra' && scope['$lastDamageType']) {
+    prop.damageType = scope['$lastDamageType'];
+  }
+  // Store current damage type
+  if (prop.damageType !== 'healing') {
+    scope['$lastDamageType'] = prop.damageType;
+  }
 
   // Memoise the damage suffix for the log
   let suffix = (criticalHit ? ' critical ' : ' ') +

@@ -24,35 +24,33 @@
       @push="({path, value, ack}) => $emit('push', {path: ['itemsConsumed', ...path], value, ack})"
       @pull="({path, ack}) => $emit('pull', {path: ['itemsConsumed', ...path], ack})"
     />
-    <div class="layout justify-center">
-      <v-menu
-        origin="center center"
-        transition="scale-transition"
-        nudge-top="50%"
-        nudge-left="50%"
-      >
-        <template #activator="{ on }">
-          <v-btn
-            :loading="addResourceLoading"
-            :disabled="addResourceLoading || context.editPermission === false"
-            icon
-            large
-            outlined
-            v-on="on"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="addAttributesConsumed">
-            <v-list-item-title>Add Resource</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="addItemsConsumed">
-            <v-list-item-title>Add Ammo</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
+    <v-menu
+      origin="center center"
+      transition="scale-transition"
+      nudge-top="50%"
+      nudge-left="50%"
+    >
+      <template #activator="{ on }">
+        <v-btn
+          :loading="addResourceLoading"
+          :disabled="addResourceLoading || context.editPermission === false"
+          icon
+          outlined
+          color="accent"
+          v-on="on"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click="addAttributesConsumed">
+          <v-list-item-title>Add Resource</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="addItemsConsumed">
+          <v-list-item-title>Add Ammo</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 

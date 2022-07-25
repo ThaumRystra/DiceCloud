@@ -3,9 +3,24 @@
     class="breadcrumbs layout align-center wrap"
     :class="{'no-icons': noIcons}"
   >
+    <span
+      v-if="noLinks"
+    >
+      <v-icon>
+        mdi-account
+      </v-icon>
+    </span>
+    <a
+      v-else
+      data-id="breadcrumb-root"
+      @click="clickRootCreature"
+    >
+      <v-icon color="accent">
+        mdi-account
+      </v-icon>
+    </a> 
     <template v-for="(prop, index) in props">
       <v-icon
-        v-if="index !== 0"
         :key="index"
       >
         mdi-chevron-right
@@ -60,7 +75,7 @@
     },
     methods: {
       click(id){
-        let store = this.$store;
+        const store = this.$store;
         // Check if there is a dialog open for this doc already
         let dialogFound;
         let dialogsToPop = 0;
@@ -84,6 +99,31 @@
           });
         }
       },
+      clickRootCreature() {
+        const store = this.$store;
+        // Check if there is a dialog open for this doc already
+        let dialogFound;
+        let dialogsToPop = 0;
+        store.state.dialogStack.dialogs.forEach(dialog => {
+          if (dialog.component === 'creature-root-dialog'){
+            dialogFound = true;
+            dialogsToPop = 0;
+          } else {
+            dialogsToPop += 1;
+          }
+        });
+        if (dialogFound){
+          // Pop dialogs until we get to it
+          store.dispatch('popDialogStacks', dialogsToPop);
+        } else {
+          // Otherwise open it as a new dialog
+          store.commit('pushDialogStack', {
+            component: 'creature-root-dialog',
+            elementId: 'breadcrumb-root',
+            data: {_id: this.model.ancestors[0].id},
+          });
+        }
+      }
     }
   }
 </script>

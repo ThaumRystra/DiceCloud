@@ -21,6 +21,7 @@ export default function writeAlteredProperties(computation){
       'deactivatedByAncestor',
       'deactivatedByToggle',
       'damage',
+      'dirty',
       ...schema.objectKeys(),
     ];
     op = addChangedKeysToOp(op, keys, original, changed);
@@ -28,13 +29,14 @@ export default function writeAlteredProperties(computation){
       bulkWriteOperations.push(op);
     }
   });
-  writePropertiesSequentially(bulkWriteOperations);
+  bulkWriteProperties(bulkWriteOperations);
+  //if (bulkWriteOperations.length) console.log(`Wrote ${bulkWriteOperations.length} props`);
 }
 
 function addChangedKeysToOp(op, keys, original, changed) {
   // Loop through all keys that can be changed by computation
   // and compile an operation that sets all those keys
-  for (let key of keys){
+  for (let key of keys) {
     if (!EJSON.equals(original[key], changed[key])){
       if (!op) op = newOperation(original._id, changed.type);
       let value = changed[key];
@@ -79,10 +81,10 @@ function addUnsetOp(op, key){
   }
 }
 
-// We use this instead of bulkWriteProperties because it functions with latency
-// compensation without needing to roll back changes, which causes multiple
-// expensive redraws of the character sheet
-function writePropertiesSequentially(bulkWriteOps){
+// If we re-enable client-side sheet recalculation, this needs to be run on
+// both client and server to preserve latency compensation. Bulkwrite breaks
+// latency compensation and causes flickering
+function writePropertiesSequentially(bulkWriteOps) {
   bulkWriteOps.forEach(op => {
     let updateOneOrMany = op.updateOne || op.updateMany;
     CreatureProperties.update(updateOneOrMany.filter, updateOneOrMany.update, {
@@ -101,7 +103,7 @@ function writePropertiesSequentially(bulkWriteOps){
 function bulkWriteProperties(bulkWriteOps){
   if (!bulkWriteOps.length) return;
   // bulkWrite is only available on the server
-  if (Meteor.isServer){
+  if (Meteor.isServer) {
     CreatureProperties.rawCollection().bulkWrite(
       bulkWriteOps,
       {ordered : false},
