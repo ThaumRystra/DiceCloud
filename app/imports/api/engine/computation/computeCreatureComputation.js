@@ -56,12 +56,14 @@ function pushDependenciesToStack(nodeId, graph, stack, computation){
         oriented: true
       });
       const loop = pather.find(nodeId, nodeId);
-      computation.errors.push({
-        type: 'dependencyLoop',
-        details: {
-          nodes: loop.map(node => node.id)
-        },
-      });
+      if (loop.length) {
+        computation.errors.push({
+          type: 'dependencyLoop',
+          details: {
+            nodes: loop.map(node => node.id)
+          },
+        });
+      }
     }
     stack.push(linkedNode);
   }, true);

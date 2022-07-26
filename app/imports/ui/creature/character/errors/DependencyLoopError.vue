@@ -1,6 +1,5 @@
 <template>
   <v-alert
-    v-if="model && model.details && model.details.nodes && model.details.nodes.length"
     border="bottom"
     colored-border
     elevation="2"

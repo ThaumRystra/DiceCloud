@@ -1,5 +1,5 @@
 <template>
-  <div v-if="creature && creature.computeErrors">
+  <div v-if="creature && errors && errors.length">
     <v-btn
       fab
       small
@@ -28,7 +28,7 @@
         v-if="expanded"
         class="character-sheet-errors"
       >
-        <template v-for="(error, index) in creature.computeErrors">
+        <template v-for="(error, index) in errors">
           <dependency-loop-error
             v-if="error.type === 'dependencyLoop'"
             :key="index + 'dependencyLoopError'"
@@ -84,13 +84,8 @@ export default {
   },
   computed: {
     errors() {
-      if (!this.creature || !this.creature.computeErrors) return;
-      return this.creature.computeErrors.map(error => {
-        error.text = error.type;
-        if (error.type === 'dependencyLoop') {
-          error.text = 'Dependency Loop Detected';
-        }
-      });
+      if (!this.creature || !this.creature.computeErrors) return [];
+      return this.creature.computeErrors;
     },
   },
   watch: {
