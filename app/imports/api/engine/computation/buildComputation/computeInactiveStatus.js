@@ -31,9 +31,10 @@ function childrenActive(prop){
   switch (prop.type){
     // Only equipped items have active children
     case 'item': return !!prop.equipped;
-    // The children of actions are always inactive
+    // The children of actions, spells, and triggers are always inactive
     case 'action': return false;
     case 'spell': return false;
+    case 'trigger': return false;
     // The children of notes are always inactive
     case 'note': return false;
     // Other children are active
