@@ -2,11 +2,6 @@
   <div
     class="stats-tab ma-2"
   >
-    <character-errors
-      class="mx-2 mt-4"
-      :creature-id="creatureId"
-    />
-
     <health-bar-card-container :creature-id="creatureId" />
 
     <column-layout>
@@ -374,7 +369,6 @@
   import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
   import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
-  import CharacterErrors from '/imports/ui/creature/character/errors/CharacterErrors.vue';
   
   const getProperties = function(creature, filter, options = {
     sort: {order: 1}
@@ -419,7 +413,6 @@
 			SpellSlotListTile,
       ActionCard,
       ToggleCard,
-      CharacterErrors,
 		},
 		props: {
 			creatureId: {

@@ -1,34 +1,71 @@
 <template>
-  <div
-    v-if="creature && creature.computeErrors"
-    class="character-sheet-errors"
-  >
-    <template v-for="(error, index) in creature.computeErrors">
-      <dependency-loop-error
-        v-if="error.type === 'dependencyLoop'"
-        :key="index + 'dependencyLoopError'"
-        :model="error"
-      />
-      <v-alert
-        v-else
-        :key="index + 'otherError'"
-        outlined
-        dense
-        type="error"
+  <div v-if="creature && creature.computeErrors">
+    <v-btn
+      fab
+      small
+      absolute
+      right
+      color="warning"
+      class="mr-4"
+      style="margin-top: -20px;"
+      @click="expanded = !expanded"
+    >
+      <v-icon
+        v-if="expanded"
+        style="color: rgba(0,0,0,0.8);"
       >
-        {{ error.type }}
-      </v-alert>
-    </template>
+        mdi-close
+      </v-icon>
+      <v-icon
+        v-else
+        style="color: rgba(0,0,0,0.8);"
+      >
+        mdi-alert-circle-outline
+      </v-icon>
+    </v-btn>
+    <v-slide-y-transition>
+      <div
+        v-if="expanded"
+        class="character-sheet-errors"
+      >
+        <template v-for="(error, index) in creature.computeErrors">
+          <dependency-loop-error
+            v-if="error.type === 'dependencyLoop'"
+            :key="index + 'dependencyLoopError'"
+            :model="error"
+          />
+          <v-alert
+            v-else
+            :key="index + 'otherError'"
+            border="bottom"
+            colored-border
+            elevation="2"
+            type="error"
+          >
+            {{ error.type }}
+          </v-alert>
+        </template>
+      </div>
+    </v-slide-y-transition>
   </div>
 </template>
 
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import DependencyLoopError from '/imports/ui/creature/character/errors/DependencyLoopError.vue';
+import updateCreature from '/imports/api/creature/creatures/methods/updateCreature.js';
 
 export default {
   components: {
     DependencyLoopError,
+  },
+  inject: {
+    context: { default: {} },
+    theme: {
+      default: {
+        isDark: false,
+      },
+    },
   },
   props: {
     creatureId: {
@@ -36,10 +73,13 @@ export default {
       default: undefined,
     }
   },
+  data() { return {
+    expanded: false,
+  }},
   meteor: {
     creature() {
       if (!this.creatureId) return;
-      return Creatures.findOne(this.creatureId, {fields: {computeErrors: 1}});
+      return Creatures.findOne(this.creatureId, {fields: {computeErrors: 1, settings: 1}});
     }
   },
   computed: {
@@ -51,7 +91,24 @@ export default {
           error.text = 'Dependency Loop Detected';
         }
       });
-    }
+    },
+  },
+  watch: {
+    expanded(value) {
+      if (this.context.editPermission === false) return;
+      updateCreature.call({
+        _id: this.creatureId,
+        path: ['settings', 'hideCalculationErrors'],
+        value: !value || null,
+      }, (error) => {
+        if (error){
+          console.error(error);
+        }
+      });
+    },
+  },
+  mounted() {
+    this.expanded = !this.creature.settings.hideCalculationErrors;
   },
 }
 </script>
