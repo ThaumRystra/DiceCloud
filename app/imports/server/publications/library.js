@@ -20,6 +20,7 @@ const LIBRARY_NODE_TREE_FIELDS = {
   removedAt: 1,
   // SlotFillers
   slotQuantityFilled: 1,
+  slotFillerType: 1,
   // Effect
   operation: 1,
   targetTags: 1,
