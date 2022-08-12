@@ -14,6 +14,20 @@
       />
     </template>
     <template v-if="model">
+      <div
+        class="layout mb-4"
+      >
+        <template v-if="!embedded">
+          <breadcrumbs
+            :model="model"
+            :editing="editing"
+          />
+        </template>
+        <v-spacer />
+        <v-chip disabled>
+          {{ typeName }}
+        </v-chip>
+      </div>
       <v-fade-transition
         mode="out-in"
       >
@@ -51,17 +65,6 @@
           </component>
         </div>
         <div v-else>
-          <div
-            class="layout mb-4"
-          >
-            <template v-if="!embedded">
-              <breadcrumbs :model="model" />
-            </template>
-            <v-spacer />
-            <v-chip disabled>
-              {{ typeName }}
-            </v-chip>
-          </div>
           <component
             :is="model.type + 'Viewer'"
             :key="_id"
@@ -200,7 +203,7 @@ export default {
   watch: {
     _id: {
       immediate: true,
-      handler(newId){
+      handler(newId) {
         this.$nextTick(() => {
           this.currentId = newId;
         });

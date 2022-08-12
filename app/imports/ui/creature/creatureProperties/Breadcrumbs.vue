@@ -64,6 +64,7 @@
       },
       noLinks: Boolean,
       noIcons: Boolean,
+      editing: Boolean,
     },
     computed:{
       props(){
@@ -95,7 +96,10 @@
           store.commit('pushDialogStack', {
             component: 'creature-property-dialog',
             elementId: `breadcrumb-${id}`,
-            data: {_id: id},
+            data: {
+              _id: id,
+              startInEditTab: this.editing,
+            },
           });
         }
       },
@@ -120,7 +124,10 @@
           store.commit('pushDialogStack', {
             component: 'creature-root-dialog',
             elementId: 'breadcrumb-root',
-            data: {_id: this.model.ancestors[0].id},
+            data: {
+              _id: this.model.ancestors[0].id,
+              startInEditTab: this.editing,
+            },
           });
         }
       }
