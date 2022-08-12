@@ -6,20 +6,28 @@ import applyProperty from '/imports/api/engine/actions/applyProperty.js';
 import { difference, intersection } from 'lodash';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
-export default function applyTriggers(node, { creature, targets, scope, log }, timing) {
+export function applyNodeTriggers(node, timing, actionContext) {
   const prop = node.node;
   const type = prop.type;
-  if (creature.triggers?.[type]?.[timing]) {
-    creature.triggers[type][timing].forEach(trigger => {
-      applyTrigger(trigger, { creature, prop, targets, scope, log });
+  const triggers = actionContext.triggers?.doActionProperty?.[type]?.[timing];
+  if (triggers) {
+    triggers.forEach(trigger => {
+      applyTrigger(trigger, prop, actionContext);
     });
   }
 }
 
-export function applyTrigger(trigger, { creature, prop, targets, scope, log }) {
+export function applyTriggers(triggers = [], prop, actionContext) {
+  // Apply the triggers
+  triggers.forEach(trigger => {
+    applyTrigger(trigger, prop, actionContext)
+  });
+}
+
+export function applyTrigger(trigger, prop, actionContext) {
   // If there is a prop we are applying the trigger from,
   // don't fire if the tags don't match
-  if (!triggerMatchTags(trigger, prop)) {
+  if (prop && !triggerMatchTags(trigger, prop)) {
     return;
   }
 
@@ -30,7 +38,7 @@ export function applyTrigger(trigger, { creature, prop, targets, scope, log }) {
   
   // Prevent triggers from firing if their condition is false
   if (trigger.condition?.parseNode) {
-    recalculateCalculation(trigger.condition, scope, log);
+    recalculateCalculation(trigger.condition, actionContext);
     if (!trigger.condition.value) return;
   }
 
@@ -54,22 +62,17 @@ export function applyTrigger(trigger, { creature, prop, targets, scope, log }) {
     inline: false,
   }
   if (trigger.summary?.text){
-    recalculateInlineCalculations(trigger.summary, scope, log);
+    recalculateInlineCalculations(trigger.summary, actionContext);
     content.value = trigger.summary.value;
   }
-  log.content.push(content);
+  actionContext.addLog(content);
 
   // Get all the trigger's properties and apply them
-  const properties = getPropertyDecendants(creature._id, trigger._id);
+  const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
   properties.sort((a, b) => a.order - b.order);
   const propertyForest = nodeArrayToTree(properties);
   propertyForest.forEach(node => {
-    applyProperty(node, {
-      creature,
-      targets,
-      scope,
-      log,
-    });
+    applyProperty(node, actionContext);
   });
 
   trigger.firing = false;

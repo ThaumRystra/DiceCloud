@@ -1,17 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import {
-  getPropertiesOfType, getVariables
-} from '/imports/api/engine/loadCreatures.js';
-import { groupBy, remove } from 'lodash';
-import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import rollDice from '/imports/parser/rollDice.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
-import { applyTrigger } from '/imports/api/engine/actions/applyTriggers.js';
+import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',
@@ -29,62 +24,32 @@ const doCheck = new ValidatedMethod({
   },
   run({propId, scope}) {
     const prop = CreatureProperties.findOne(propId);
-    const creature = getRootCreatureAncestor(prop);
+    const creatureId = prop.ancestors[0].id;
+    const actionContext = new ActionContext(creatureId, [creatureId], this);
+    Object.assign(actionContext.scope, scope);
 
     // Check permissions
-    assertEditPermission(creature, this.userId);
+    assertEditPermission(actionContext.creature, this.userId);
 
     // Do the check
-    doCheckWork({creature, prop, method: this, methodScope: scope});
+    doCheckWork({prop, actionContext});
   },
 });
 
 export default doCheck;
 
-export function doCheckWork({
-  creature, prop, method, methodScope = {}
-}){
-  // Create the log
-  let log = CreatureLogSchema.clean({
-    creatureId: creature._id,
-    creatureName: creature.name,
-  });
+export function doCheckWork({prop, actionContext}){
 
-  // Add the variables to the creature document
-  const variables = getVariables(creature._id);
-  delete variables._id;
-  delete variables._creatureId;
-  creature.variables = variables;
-  const scope = creature.variables;
-
-  // Get the triggers
-  let triggers = getPropertiesOfType(creature._id, 'trigger');
-  remove(triggers, trigger => trigger.event !== 'check');
-  triggers = groupBy(triggers, 'timing');
-
-  // Set the creature as the target
-  const targets = [creature];
-
-  applyTriggers(triggers, 'before', { creature, prop, targets, scope, log });
-  rollCheck({prop, log, methodScope});
-  applyTriggers(triggers, 'after', { creature, prop, targets, scope, log });
+  applyTriggers(actionContext.triggers.check?.before, prop, actionContext);
+  rollCheck(prop, actionContext);
+  applyTriggers(actionContext.triggers.check?.after, prop, actionContext);
 
   // Insert the log
-  insertCreatureLogWork({log, creature, method});
+  actionContext.writeLog();
 }
 
-function applyTriggers(triggers, timing, opts) {
-  // Get matching triggers
-  let selectedTriggers = triggers[timing] || [];
-  // Sort the triggers
-  selectedTriggers.sort((a, b) => a.order - b.order);
-  // Apply the triggers
-  selectedTriggers.forEach(trigger => {
-    applyTrigger(trigger, opts)
-  });
-}
-
-function rollCheck({prop, log, methodScope}){
+function rollCheck(prop, actionContext) {
+  const scope = actionContext.scope;
   // get the modifier for the roll
   let rollModifier;
   let logName = `${prop.name} check`;
@@ -110,7 +75,7 @@ function rollCheck({prop, log, methodScope}){
   const rollModifierText = numberToSignedString(rollModifier, true);
 
   let value, values, resultPrefix;
-  if (methodScope['$checkAdvantage'] === 1){
+  if (scope['$checkAdvantage'] === 1){
     logName += ' (Advantage)';
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
@@ -120,7 +85,7 @@ function rollCheck({prop, log, methodScope}){
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
     }
-  } else if (methodScope['$checkAdvantage'] === -1){
+  } else if (scope['$checkAdvantage'] === -1){
     logName += ' (Disadvantage)';
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
@@ -136,7 +101,7 @@ function rollCheck({prop, log, methodScope}){
     resultPrefix = `1d20 [ ${value} ] ${rollModifierText} = `
   }
   const result = (value + rollModifier) || 0;
-  log.content.push({
+  actionContext.addLog({
     name: logName,
     value: `${resultPrefix} **${result}**`,
   });

@@ -7,22 +7,21 @@ import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/met
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
-export default function applyAction(node, {creature, targets, scope, log}){
+export default function applyAction(node, actionContext){
   const prop = node.node;
-  if (prop.target === 'self') targets = [creature];
+  let targets = actionContext.targets;
+  if (prop.target === 'self') targets = [actionContext.creature];
 
   // Log the name and summary
   let content = { name: prop.name };
   if (prop.summary?.text){
-    recalculateInlineCalculations(prop.summary, scope, log);
+    recalculateInlineCalculations(prop.summary, actionContext);
     content.value = prop.summary.value;
   }
-  if (content.name || content.value){
-    log.content.push(content);
-  }
+  actionContext.addLog(content);
 
   // Spend the resources
-  const failed = spendResources({prop, log, scope});
+  const failed = spendResources(prop, actionContext);
   if (failed) return;
 
   const attack = prop.attackRoll || prop.attackRollBonus;
@@ -31,28 +30,29 @@ export default function applyAction(node, {creature, targets, scope, log}){
   if (attack && attack.calculation){
     if (targets.length){
       targets.forEach(target => {
-        applyAttackToTarget({attack, target, scope, log});
+        applyAttackToTarget({attack, target, actionContext});
         // Apply the children, but only to the current target
-        applyChildren(node, {creature, targets: [target], scope, log});
+        actionContext.targets = [target];
+        applyChildren(node, actionContext);
       });
     } else {
-      applyAttackWithoutTarget({attack, scope, log});
-      applyChildren(node, {creature, targets, scope, log});
+      applyAttackWithoutTarget({attack, actionContext});
+      applyChildren(node, actionContext);
     }
   } else {
-    applyChildren(node, {creature, targets, scope, log});
+    applyChildren(node, actionContext);
   }
 }
 
-function applyAttackWithoutTarget({attack, scope, log}){
-  delete scope['$attackHit'];
-  delete scope['$attackMiss'];
-  delete scope['$criticalHit'];
-  delete scope['$criticalMiss'];
-  delete scope['$attackRoll'];
+function applyAttackWithoutTarget({attack, actionContext}){
+  delete actionContext.scope['$attackHit'];
+  delete actionContext.scope['$attackMiss'];
+  delete actionContext.scope['$criticalHit'];
+  delete actionContext.scope['$criticalMiss'];
+  delete actionContext.scope['$attackRoll'];
 
-  recalculateCalculation(attack, scope, log);
-
+  recalculateCalculation(attack, actionContext);
+  const scope = actionContext.scope;
   let {
     resultPrefix,
     result,
@@ -72,14 +72,15 @@ function applyAttackWithoutTarget({attack, scope, log}){
     scope['$attackMiss'] = {value: true};
   }
 
-  log.content.push({
+  actionContext.addLog({
     name,
     value: `${resultPrefix}\n**${result}**`,
     inline: true,
   });
 }
 
-function applyAttackToTarget({attack, target, scope, log}){
+function applyAttackToTarget({attack, target, actionContext}){
+  const scope = actionContext.scope;
   delete scope['$attackHit'];
   delete scope['$attackMiss'];
   delete scope['$criticalHit'];
@@ -87,7 +88,7 @@ function applyAttackToTarget({attack, target, scope, log}){
   delete scope['$attackDiceRoll'];
   delete scope['$attackRoll'];
 
-  recalculateCalculation(attack, scope, log);
+  recalculateCalculation(attack, actionContext);
 
   let {
     resultPrefix,
@@ -108,7 +109,7 @@ function applyAttackToTarget({attack, target, scope, log}){
       name += ' (Disadvantage)';
     }
 
-    log.content.push({
+    actionContext.addLog({
       name,
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
@@ -119,11 +120,11 @@ function applyAttackToTarget({attack, target, scope, log}){
       scope['$attackHit'] = {value: true};
     }
   } else {
-    log.content.push({
+    actionContext.addLog({
       name: 'Error',
       value:'Target has no `armor`',
     });
-    log.content.push({
+    actionContext.addLog({
       name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit',
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
@@ -177,14 +178,14 @@ function applyCrits(value, scope){
   return {criticalHit, criticalMiss};
 }
 
-function applyChildren(node, args){
-  node.children.forEach(child => applyProperty(child, args));
+function applyChildren(node, actionContext){
+  node.children.forEach(child => applyProperty(child, actionContext));
 }
 
-function spendResources({prop, log, scope}){
+function spendResources(prop, actionContext){
   // Check Uses
   if (prop.usesLeft <= 0){
-    log.content.push({
+    actionContext.addLog({
       name: 'Error',
       value: `${prop.name || 'action'} does not have enough uses left`,
     });
@@ -192,7 +193,7 @@ function spendResources({prop, log, scope}){
   }
   // Resources
   if (prop.insufficientResources){
-    log.content.push({
+    actionContext.addLog({
       name: 'Error',
       value: 'This creature doesn\'t have sufficient resources to perform this action',
     });
@@ -204,7 +205,7 @@ function spendResources({prop, log, scope}){
   let gainLog = [];
   try {
     prop.resources.itemsConsumed.forEach(itemConsumed => {
-      recalculateCalculation(itemConsumed.quantity, scope, log);
+      recalculateCalculation(itemConsumed.quantity, actionContext);
       if (!itemConsumed.itemId){
         throw 'No ammo was selected for this prop';
       }
@@ -235,7 +236,7 @@ function spendResources({prop, log, scope}){
       }
     });
   } catch (e){
-    log.content.push({
+    actionContext.addLog({
       name: 'Error',
       value: e,
     });
@@ -253,7 +254,7 @@ function spendResources({prop, log, scope}){
     }, {
       selector: prop
     });
-    log.content.push({
+    actionContext.addLog({
       name: 'Uses left',
       value: prop.usesLeft - 1,
       inline: true,
@@ -262,18 +263,19 @@ function spendResources({prop, log, scope}){
 
   // Damage stats
   prop.resources.attributesConsumed.forEach(attConsumed => {
-    recalculateCalculation(attConsumed.quantity, scope, log);
+    recalculateCalculation(attConsumed.quantity, actionContext);
 
     if (!attConsumed.quantity?.value) return;
-    let stat = scope[attConsumed.variableName];
+    let stat = actionContext.scope[attConsumed.variableName];
     if (!stat){
       spendLog.push(stat.name + ': ' + ' not found');
       return;
     }
     damagePropertyWork({
-      property: stat,
+      prop: stat,
       operation: 'increment',
       value: attConsumed.quantity.value,
+      actionContext,
     });
     if (attConsumed.quantity.value > 0){
       spendLog.push(stat.name + ': ' + attConsumed.quantity.value);
@@ -283,12 +285,12 @@ function spendResources({prop, log, scope}){
   });
 
   // Log all the spending
-  if (gainLog.length) log.content.push({
+  if (gainLog.length) actionContext.addLog({
     name: 'Gained',
     value: gainLog.join('\n'),
     inline: true,
   });
-  if (spendLog.length) log.content.push({
+  if (spendLog.length) actionContext.addLog({
     name: 'Spent',
     value: spendLog.join('\n'),
     inline: true,

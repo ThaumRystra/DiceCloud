@@ -7,7 +7,9 @@ const eventOptions = {
   // receiveActionProperty: 'Receiving action property',
   check: 'Roll check',
   // flipToggle: 'Toggle changed',
-  // adjustProperty: 'Attribute adjusted',
+  // itemEquipped: 'Item equipped'
+  // itemUnequipped: 'Item unequipped'
+  damageProperty: 'Attribute damaged or healed',
   anyRest: 'Short or long rest',
   longRest: 'Long rest',
   shortRest: 'Short rest',

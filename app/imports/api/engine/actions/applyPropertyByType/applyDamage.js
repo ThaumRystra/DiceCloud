@@ -1,27 +1,27 @@
-import { some, intersection, difference } from 'lodash';
+import { some, intersection, difference, remove } from 'lodash';
 import applyProperty from '../applyProperty.js';
-import { dealDamageWork } from '/imports/api/creature/creatureProperties/methods/dealDamage.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
 import logErrors from './shared/logErrors.js';
 import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import {
+  getPropertiesOfType
+} from '/imports/api/engine/loadCreatures.js';
 
-export default function applyDamage(node, {
-  creature, targets, scope, log
-}){
+export default function applyDamage(node, actionContext){
   const applyChildren = function(){
-    node.children.forEach(child => applyProperty(child, {
-      creature, targets, scope, log
-    }));
+    node.children.forEach(child => applyProperty(child, actionContext));
   };
 
   const prop = node.node;
+  const scope = actionContext.scope;
 
   // Skip if there is no parse node to work with
   if (!prop.amount?.parseNode) return;
 
   // Choose target
-  let damageTargets = prop.target === 'self' ? [creature] : targets;
+  let damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
   // Determine if the hit is critical
   let criticalHit = scope['$criticalHit']?.value &&
     prop.damageType !== 'healing' // Can't critically heal
@@ -36,19 +36,19 @@ export default function applyDamage(node, {
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // roll the dice only and store that string
-  applyEffectsToCalculationParseNode(prop.amount, log);
+  applyEffectsToCalculationParseNode(prop.amount, actionContext.log);
   const {result: rolled} = resolve('roll', prop.amount.parseNode, scope, context);
   if (rolled.parseType !== 'constant'){
     logValue.push(toString(rolled));
   }
-  logErrors(context.errors, log);
+  logErrors(context.errors, actionContext);
 
   // Reset the errors so we don't log the same errors twice
   context.errors = [];
 
   // Resolve the roll to a final value
   const {result: reduced} = resolve('reduce', rolled, scope, context);
-  logErrors(context.errors, log);
+  logErrors(context.errors, actionContext);
 
   // Store the result
   if (reduced.parseType === 'constant'){
@@ -94,15 +94,17 @@ export default function applyDamage(node, {
         logValue
       });
 
+      actionContext.target = [target];
       // Deal the damage to the target
-      let damageDealt = dealDamageWork({
-        creature: target,
+      let damageDealt = dealDamage({
+        target,
         damageType: prop.damageType,
         amount: damage,
+        actionContext
       });
 
       // Log the damage done
-      if (target._id === creature._id){
+      if (target._id === actionContext.creature._id){
         // Target is same as self, log damage as such
         logValue.push(`**${damageDealt}** ${suffix}  to self`);
       } else {
@@ -123,7 +125,7 @@ export default function applyDamage(node, {
     // There are no targets, just log the result
     logValue.push(`**${damage}** ${suffix}`);
   }
-  log.content.push({
+  actionContext.addLog({
     name: logName,
     value: logValue.join('\n'),
     inline: true,
@@ -177,4 +179,50 @@ function multiplierAppliesTo(damageProp){
 
     return hasRequiredTags && hasNoExcludedTags;
   }
+}
+
+function dealDamage({target, damageType, amount, actionContext}){
+  // Get all the health bars and do damage to them
+  let healthBars = getPropertiesOfType(target._id, 'attribute');
+
+  // Keep only the healthbars that can take damage/healing
+  remove(healthBars, (bar) =>
+    bar.attributeType !== 'healthBar' ||
+    bar.inactive ||
+    bar.removed ||
+    bar.overridden ||
+    (amount >= 0 && bar.healthBarNoDamage) ||
+    (amount < 0 && bar.healthBarNoHealing)
+  );
+
+  // Sort healthbars by damage/healing order or tree order as a fallback
+  healthBars.sort((a, b) => {
+    let diff;
+    if (amount >= 0) {
+      diff = a.healthBarDamageOrder - b.healthBarDamageOrder;
+    } else {
+      diff = a.healthBarHealingOrder - b.healthBarHealingOrder;
+    }
+    if (Number.isFinite(diff)) {
+      return diff;
+    } else {
+      return a.order - b.order;
+    }
+  });
+
+  // Deal the damage to each healthbar in order until all damage is done
+  const totalDamage = amount;
+  let damageLeft = totalDamage;
+  if (damageType === 'healing') damageLeft = -totalDamage;
+  healthBars.forEach(healthBar => {
+    if (damageLeft === 0) return;
+    let damageAdded = damagePropertyWork({
+      prop: healthBar,
+      operation: 'increment',
+      value: damageLeft,
+      actionContext
+    });
+    damageLeft -= damageAdded;
+  });
+  return totalDamage;
 }
