@@ -3,10 +3,15 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import {
+  getPropertiesOfType, getVariables
+} from '/imports/api/engine/loadCreatures.js';
+import { groupBy, remove } from 'lodash';
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import rollDice from '/imports/parser/rollDice.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import { applyTrigger } from '/imports/api/engine/actions/applyTriggers.js';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',
@@ -45,10 +50,38 @@ export function doCheckWork({
     creatureName: creature.name,
   });
 
+  // Add the variables to the creature document
+  const variables = getVariables(creature._id);
+  delete variables._id;
+  delete variables._creatureId;
+  creature.variables = variables;
+  const scope = creature.variables;
+
+  // Get the triggers
+  let triggers = getPropertiesOfType(creature._id, 'trigger');
+  remove(triggers, trigger => trigger.event !== 'check');
+  triggers = groupBy(triggers, 'timing');
+
+  // Set the creature as the target
+  const targets = [creature];
+
+  applyTriggers(triggers, 'before', { creature, prop, targets, scope, log });
   rollCheck({prop, log, methodScope});
+  applyTriggers(triggers, 'after', { creature, prop, targets, scope, log });
 
   // Insert the log
   insertCreatureLogWork({log, creature, method});
+}
+
+function applyTriggers(triggers, timing, opts) {
+  // Get matching triggers
+  let selectedTriggers = triggers[timing] || [];
+  // Sort the triggers
+  selectedTriggers.sort((a, b) => a.order - b.order);
+  // Apply the triggers
+  selectedTriggers.forEach(trigger => {
+    applyTrigger(trigger, opts)
+  });
 }
 
 function rollCheck({prop, log, methodScope}){

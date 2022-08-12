@@ -5,6 +5,7 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 const eventOptions = {
   doActionProperty: 'Do action',
   // receiveActionProperty: 'Receiving action property',
+  check: 'Roll check',
   // flipToggle: 'Toggle changed',
   // adjustProperty: 'Attribute adjusted',
   anyRest: 'Short or long rest',
@@ -26,6 +27,7 @@ const actionPropertyTypeOptions = {
   note: 'Note',
   roll: 'Roll',
   savingThrow: 'Saving throw',
+  spell: 'Spell',
   toggle: 'Toggle',
 }
 

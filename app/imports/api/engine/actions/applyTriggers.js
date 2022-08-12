@@ -11,46 +11,18 @@ export default function applyTriggers(node, { creature, targets, scope, log }, t
   const type = prop.type;
   if (creature.triggers?.[type]?.[timing]) {
     creature.triggers[type][timing].forEach(trigger => {
-      if (triggerMatchTags(trigger, prop)) {
-        applyTrigger(trigger, { creature, targets, scope, log });
-      }
+      applyTrigger(trigger, { creature, prop, targets, scope, log });
     });
   }
 }
 
-function triggerMatchTags(trigger, prop) {
-  let matched = false;
-  const propTags = getEffectivePropTags(prop);
-  // Check the target tags
-  if (
-    !trigger.targetTags?.length ||
-    difference(trigger.targetTags, propTags).length === 0
-  ) {
-    matched = true;
+export function applyTrigger(trigger, { creature, prop, targets, scope, log }) {
+  // If there is a prop we are applying the trigger from,
+  // don't fire if the tags don't match
+  if (!triggerMatchTags(trigger, prop)) {
+    return;
   }
-  // Check the extra tags
-  trigger.extraTags?.forEach(extra => {
-    if (extra.operation === 'OR') {
-      if (matched) return;
-      if (
-        !extra.tags.length ||
-        difference(extra.tags, propTags).length === 0
-      ) {
-        matched = true;
-      }
-    } else if (extra.operation === 'NOT') {
-      if (
-        extra.tags.length &&
-        intersection(extra.tags, propTags)
-      ) {
-        return false;
-      }
-    }
-  });
-  return matched;
-}
 
-export function applyTrigger(trigger, { creature, targets, scope, log }) {
   // Prevent trigger from firing if it's inactive
   if (trigger.inactive) {
     return;
@@ -101,4 +73,36 @@ export function applyTrigger(trigger, { creature, targets, scope, log }) {
   });
 
   trigger.firing = false;
+}
+
+function triggerMatchTags(trigger, prop) {
+  let matched = false;
+  const propTags = getEffectivePropTags(prop);
+  // Check the target tags
+  if (
+    !trigger.targetTags?.length ||
+    difference(trigger.targetTags, propTags).length === 0
+  ) {
+    matched = true;
+  }
+  // Check the extra tags
+  trigger.extraTags?.forEach(extra => {
+    if (extra.operation === 'OR') {
+      if (matched) return;
+      if (
+        !extra.tags.length ||
+        difference(extra.tags, propTags).length === 0
+      ) {
+        matched = true;
+      }
+    } else if (extra.operation === 'NOT') {
+      if (
+        extra.tags.length &&
+        intersection(extra.tags, propTags)
+      ) {
+        return false;
+      }
+    }
+  });
+  return matched;
 }
