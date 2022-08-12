@@ -98,7 +98,9 @@ export function doActionWork({
 
   // Get the triggers
   const triggers = getPropertiesOfType(creature._id, 'trigger');
-  remove(triggers, trigger => trigger.event !== 'doActionProperty');
+  // Skip triggers that aren't triggered by action props or are inactive
+  remove(triggers, trigger => trigger.event !== 'doActionProperty' || trigger.inactive);
+  // Group the triggers into creature.triggers.<propertyType>.<timing>
   creature.triggers = groupBy(triggers, 'actionPropertyType');
   for (let type in creature.triggers) {
     creature.triggers[type] = groupBy(creature.triggers[type], 'timing')

@@ -51,6 +51,11 @@ function triggerMatchTags(trigger, prop) {
 }
 
 export function applyTrigger(trigger, { creature, targets, scope, log }) {
+  // Prevent trigger from firing if it's inactive
+  if (trigger.inactive) {
+    return;
+  }
+  
   // Prevent triggers from firing if their condition is false
   if (trigger.condition?.parseNode) {
     recalculateCalculation(trigger.condition, scope, log);
