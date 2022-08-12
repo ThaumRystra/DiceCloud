@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="slot-form">
+  <div class="trigger-form">
     <text-field
       ref="focusFirst"
       label="Name"
@@ -23,7 +23,7 @@
       </v-btn>
       <smart-combobox
         label="Tags Required"
-        hint="The slot must be filled with a property which has all the listed tags"
+        hint="The trigger will be fired by a property which has all the listed tags"
         multiple
         chips
         deletable-chips
@@ -48,7 +48,7 @@
         />
         <smart-combobox
           label="Tags"
-          :hint="extras.operation === 'OR' ? 'The slot can be filled with a property that has all of these tags instead' : 'The slot cannot be filled with a property that has any of these tags'"
+          :hint="extras.operation === 'OR' ? 'The trigger can be fired by a property that has all of these tags instead' : 'The trigger won\'t be fired by a property that has any of these tags'"
           class="mx-2"
           multiple
           chips
