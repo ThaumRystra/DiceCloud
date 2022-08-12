@@ -3,7 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { groupBy, remove, rest, union } from 'lodash';
+import { groupBy, remove, union } from 'lodash';
 import {
   getCreature, getVariables, getPropertiesOfType
 } from '/imports/api/engine/loadCreatures.js';

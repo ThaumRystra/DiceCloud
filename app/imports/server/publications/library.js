@@ -16,8 +16,11 @@ const LIBRARY_NODE_TREE_FIELDS = {
   ancestors: 1,
   tags: 1,
   slotFillerCondition: 1,
+  removed: 1,
+  removedAt: 1,
   // SlotFillers
   slotQuantityFilled: 1,
+  slotFillerType: 1,
   // Effect
   operation: 1,
   targetTags: 1,

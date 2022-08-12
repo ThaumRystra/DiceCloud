@@ -1,5 +1,4 @@
 // https://github.com/VeliovGroup/Meteor-Files/blob/master/docs/aws-s3-integration.md
-
 import { Meteor } from 'meteor/meteor';
 import { each, clone } from 'lodash';
 import { Random } from 'meteor/random';
@@ -37,8 +36,9 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     secretAccessKey: s3Conf.secret,
     endpoint: s3Conf.endpoint,
     sslEnabled: true, // optional
+    maxRetries: 10,
     httpOptions: {
-      timeout: 6000,
+      timeout: 12000,
       agent: false
     }
   });
@@ -48,7 +48,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     storagePath,
     onBeforeUpload,
     onAfterUpload,
-    debug = Meteor.isProduction,
+    debug = !Meteor.isProduction,
     allowClientCode = false,
   }){
     const collection = new FilesCollection({
@@ -222,7 +222,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     storagePath,
     onBeforeUpload,
     onAfterUpload,
-    debug = Meteor.isProduction,
+    debug = !Meteor.isProduction,
     allowClientCode = false,
   }){
     const collection = new FilesCollection({

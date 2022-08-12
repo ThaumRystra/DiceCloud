@@ -24,7 +24,9 @@ export default function getSlotFillFilter({slot, libraryIds}){
         slotFillerType: 'classLevel',
       }]
     });
-    filter.variableName = slot.variableName;
+    if (slot.variableName) { 
+      filter.variableName = slot.variableName;
+    }
 
     // Only search for levels the class needs
     if (slot.missingLevels && slot.missingLevels.length) {

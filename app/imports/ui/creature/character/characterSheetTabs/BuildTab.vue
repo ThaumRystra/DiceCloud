@@ -2,6 +2,14 @@
   <v-container fluid>
     <v-row dense>
       <v-col cols="12">
+        <character-errors
+          class="mt-4"
+          :creature-id="creatureId"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col cols="12">
         <slot-cards-to-fill :creature-id="creatureId" />
       </v-col>
     </v-row>
@@ -126,6 +134,7 @@ import BuildTreeNodeList from '/imports/ui/creature/buildTree/BuildTreeNodeList.
 import SlotCardsToFill from '/imports/ui/creature/slots/SlotCardsToFill.vue';
 import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import CharacterErrors from '/imports/ui/creature/character/errors/CharacterErrors.vue';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -136,6 +145,7 @@ function traverse(tree, callback, parents = []){
 
 export default {
   components: {
+    CharacterErrors,
     BuildTreeNodeList,
     SlotCardsToFill,
   },

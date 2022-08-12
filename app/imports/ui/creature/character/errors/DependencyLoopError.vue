@@ -1,8 +1,8 @@
 <template>
   <v-alert
-    v-if="model"
-    outlined
-    dense
+    border="bottom"
+    colored-border
+    elevation="2"
     type="warning"
     class="dependency-loop-error"
   >
@@ -54,6 +54,13 @@ export default {
   components: {
     TreeNodeView,
   },
+  inject: {
+    theme: {
+      default: {
+        isDark: false,
+      },
+    },
+  },
   props: {
     model: {
       type: Object,
@@ -86,7 +93,7 @@ export default {
         elementId: `breadcrumb-${id}`,
         data: {_id: id},
       });
-      },
+    },
   }
 }
 </script>
