@@ -2,8 +2,16 @@
   <div class="trigger-viewer">
     <v-row dense>
       <property-field
+        name="Timing"
+        :value="timingText"
+      />
+      <property-field
         name="Event"
         :value="eventText"
+      />
+      <property-field
+        name="Event Type"
+        :value="actionPropertyText"
       />
       <property-field
         v-if="(model.targetTags && model.targetTags.length) || (model.extraTags && model.extraTags.length)"
@@ -24,10 +32,6 @@
         </div>
       </property-field>
       <property-description
-        name="Summary"
-        :model="model.summary"
-      />
-      <property-description
         name="Description"
         :model="model.description"
       />
@@ -36,39 +40,34 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
-  import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-  import FillSlotButton from '/imports/ui/creature/buildTree/FillSlotButton.vue';
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import { timingOptions, eventOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers.js';
 
-  const eventText = {
-    doActionProperty: 'Do action property',
-    receiveActionProperty: 'Receiving action property',
-    flipToggle: 'Toggle changed',
-    adjustProperty: 'Attribute adjusted',
-    anyRest: 'Short or long rest',
-    longRest: 'Long rest',
-    shortRest: 'Short rest',
+export default {
+  mixins: [propertyViewerMixin],
+  inject: {
+    context: {
+      default: {},
+    },
+  },
+  computed: {
+    slotTypeName(){
+      if (!this.model.slotType) return;
+      return getPropertyName(this.model.slotType);
+    },
+    timingText(){
+      if (!this.model.timing) return;
+      return timingOptions[this.model.timing];
+    },
+    actionPropertyText(){
+      if (!this.model.actionPropertyType) return;
+      return actionPropertyTypeOptions[this.model.actionPropertyType];
+    },
+    eventText(){
+      if (!this.model.event) return;
+      return eventOptions[this.model.event];
+    },
   }
-
-	export default {
-    components: {
-      FillSlotButton,
-    },
-		mixins: [propertyViewerMixin],
-    inject: {
-      context: {
-        default: {},
-      },
-    },
-    computed: {
-      slotTypeName(){
-        if (!this.model.slotType) return;
-        return getPropertyName(this.model.slotType);
-      },
-      eventText(){
-        if (!this.model.event) return;
-        return eventText[this.model.event]
-      },
-    }
-	}
+}
 </script>

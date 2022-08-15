@@ -58,12 +58,12 @@ export function applyTrigger(trigger, prop, actionContext) {
   // Fire the trigger
   const content = {
     name: trigger.name || 'Trigger',
-    value: trigger.summary,
+    value: trigger.description,
     inline: false,
   }
-  if (trigger.summary?.text){
-    recalculateInlineCalculations(trigger.summary, actionContext);
-    content.value = trigger.summary.value;
+  if (trigger.description?.text){
+    recalculateInlineCalculations(trigger.description, actionContext);
+    content.value = trigger.description.value;
   }
   actionContext.addLog(content);
 

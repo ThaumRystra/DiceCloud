@@ -44,10 +44,6 @@ let TriggerSchema = createPropertySchema({
     optional: true,
     max: STORAGE_LIMITS.name,
   },
-  summary: {
-    type: 'inlineCalculationFieldToCompute',
-    optional: true,
-  },
   description: {
     type: 'inlineCalculationFieldToCompute',
     optional: true,
