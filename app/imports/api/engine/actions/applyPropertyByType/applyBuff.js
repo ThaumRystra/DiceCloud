@@ -12,8 +12,10 @@ import symbol from '/imports/parser/parseTree/symbol.js';
 import logErrors from './shared/logErrors.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 export default function applyBuff(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
   let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
@@ -58,6 +60,7 @@ export default function applyBuff(node, actionContext){
       }
     }
   });
+  applyNodeTriggers(node, 'after', actionContext);
 
   // Don't apply the children of the buff, they get copied to the target instead
 }

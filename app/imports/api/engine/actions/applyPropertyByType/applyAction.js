@@ -6,8 +6,10 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applyAction(node, actionContext){
+export default function applyAction(node, actionContext) {
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
   let targets = actionContext.targets;
   if (prop.target === 'self') targets = [actionContext.creature];
@@ -178,7 +180,8 @@ function applyCrits(value, scope){
   return {criticalHit, criticalMiss};
 }
 
-function applyChildren(node, actionContext){
+function applyChildren(node, actionContext) {
+  applyNodeTriggers(node, 'after', actionContext);
   node.children.forEach(child => applyProperty(child, actionContext));
 }
 

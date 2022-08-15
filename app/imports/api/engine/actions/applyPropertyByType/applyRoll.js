@@ -2,11 +2,14 @@ import applyProperty from '../applyProperty.js';
 import logErrors from './shared/logErrors.js';
 import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 export default function applyRoll(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
 
   const applyChildren = function(){
+    applyNodeTriggers(node, 'after', actionContext);
     node.children.forEach(child => applyProperty(child, actionContext));
   };
 

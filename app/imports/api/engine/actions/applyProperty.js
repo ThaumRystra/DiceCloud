@@ -7,7 +7,6 @@ import note from './applyPropertyByType/applyNote.js';
 import roll from './applyPropertyByType/applyRoll.js';
 import savingThrow from './applyPropertyByType/applySavingThrow.js';
 import toggle from './applyPropertyByType/applyToggle.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 const applyPropertyByType = {
   action,
@@ -23,8 +22,6 @@ const applyPropertyByType = {
 };
 
 export default function applyProperty(node, actionContext, ...rest) {
-  applyNodeTriggers(node, actionContext, 'before');
   actionContext.scope[`#${node.node.type}`] = node.node;
   applyPropertyByType[node.node.type]?.(node, actionContext, ...rest);
-  applyNodeTriggers(node, actionContext, 'after');
 }

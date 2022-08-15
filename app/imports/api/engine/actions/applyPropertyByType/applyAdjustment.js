@@ -1,8 +1,10 @@
 import applyProperty from '../applyProperty.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 export default function applyAdjustment(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
   const damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
@@ -54,5 +56,6 @@ export default function applyAdjustment(node, actionContext){
 }
 
 function applyChildren(node, actionContext){
+  applyNodeTriggers(node, 'after', actionContext);
   node.children.forEach(child => applyProperty(child, actionContext));
 }

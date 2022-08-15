@@ -2,8 +2,10 @@ import rollDice from '/imports/parser/rollDice.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 export default function applySavingThrow(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
 
   let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
@@ -41,6 +43,7 @@ export default function applySavingThrow(node, actionContext){
     delete scope['$saveRoll'];
 
     const applyChildren = function () {
+      applyNodeTriggers(node, 'after', actionContext);
       actionContext.targets = [target]
       node.children.forEach(child => applyProperty(child, actionContext));
     };

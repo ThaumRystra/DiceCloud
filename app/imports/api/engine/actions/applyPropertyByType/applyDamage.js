@@ -8,9 +8,12 @@ import { damagePropertyWork } from '/imports/api/creature/creatureProperties/met
 import {
   getPropertiesOfType
 } from '/imports/api/engine/loadCreatures.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 export default function applyDamage(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const applyChildren = function(){
+    applyNodeTriggers(node, 'after', actionContext);
     node.children.forEach(child => applyProperty(child, actionContext));
   };
 

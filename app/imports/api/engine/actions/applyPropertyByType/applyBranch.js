@@ -1,9 +1,12 @@
 import applyProperty from '../applyProperty.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import rollDice from '/imports/parser/rollDice.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
 export default function applyBranch(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const applyChildren = function(){
+    applyNodeTriggers(node, 'after', actionContext);
     node.children.forEach(child => applyProperty(child, actionContext));
   };
   const scope = actionContext.scope;
@@ -27,6 +30,7 @@ export default function applyBranch(node, actionContext){
         let index = Math.floor(prop.condition?.value);
         if (index < 1) index = 1;
         if (index > node.children.length) index = node.children.length;
+        applyNodeTriggers(node, 'after', actionContext);
         applyProperty(node.children[index - 1], actionContext);
       }
       break;
@@ -57,12 +61,14 @@ export default function applyBranch(node, actionContext){
     case 'random':
       if (node.children.length){
         let index = rollDice(1, node.children.length)[0] - 1;
+        applyNodeTriggers(node, 'after', actionContext);
         applyProperty(node.children[index], actionContext);
       }
       break;
     case 'eachTarget':
-      if (targets.length){
+      if (targets.length) {
         targets.forEach(target => {
+          applyNodeTriggers(node, 'after', actionContext);
           actionContext.targets = [target]
           node.children.forEach(child => applyProperty(child, actionContext));
         });
