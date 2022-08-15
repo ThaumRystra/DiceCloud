@@ -8,7 +8,7 @@
         <v-btn
           icon
           small
-          :disabled="model.value >= model.total || context.editPermission === false"
+          :disabled="(model.value >= model.total && !model.ignoreUpperLimit) || context.editPermission === false"
           @click="increment(1)"
         >
           <v-icon>mdi-chevron-up</v-icon>
@@ -16,7 +16,7 @@
         <v-btn
           icon
           small
-          :disabled="model.value <= 0 || context.editPermission === false"
+          :disabled="(model.value <= 0 && !model.ignoreLowerLimit) || context.editPermission === false"
           @click="increment(-1)"
         >
           <v-icon>mdi-chevron-down</v-icon>
@@ -28,7 +28,10 @@
         <div class="text-h4">
           {{ model.value }}
         </div>
-        <div class="text-h6 ml-2 max-value">
+        <div
+          v-if="model.total !== 0"
+          class="text-h6 ml-2 max-value"
+        >
           /{{ model.total }}
         </div>
       </div>

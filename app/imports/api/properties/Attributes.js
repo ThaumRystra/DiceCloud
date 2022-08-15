@@ -60,6 +60,23 @@ let AttributeSchema = createPropertySchema({
 		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
 		optional: true,
   },
+  // Control how the health bar takes damage or healing
+  healthBarNoDamage: {
+    type: Boolean,
+    optional: true,
+  },
+  healthBarNoHealing: {
+    type: Boolean,
+    optional: true,
+  },  
+  healthBarDamageOrder: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  healthBarHealingOrder: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
 	// The starting value, before effects
 	baseValue: {
     type: 'fieldToCompute',
@@ -77,6 +94,16 @@ let AttributeSchema = createPropertySchema({
   },
   // Can the value be decimal?
   decimal: {
+    type: Boolean,
+    optional: true,
+  },
+  // Can the total after damage be negative
+  ignoreLowerLimit: {
+    type: Boolean,
+    optional: true,
+  },
+  // Can the damage value be negative
+  ignoreUpperLimit: {
     type: Boolean,
     optional: true,
   },

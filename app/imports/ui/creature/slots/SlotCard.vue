@@ -17,8 +17,11 @@
     <v-card-title>
       {{ model.name }}
     </v-card-title>
-    <v-card-text v-if="model.description">
-      {{ model.description.value }}
+    <v-card-text>
+      <property-description
+        text
+        :model="model.description"
+      />
     </v-card-text>
     <v-spacer />
     <v-card-actions>
@@ -36,10 +39,12 @@
 
 <script lang="js">
 import CardHighlight from '/imports/ui/components/CardHighlight.vue';
+import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 
 export default {
   components: {
     CardHighlight,
+    PropertyDescription,
   },
   inject: {
     theme: {

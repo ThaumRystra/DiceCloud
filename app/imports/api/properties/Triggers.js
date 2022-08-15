@@ -5,8 +5,11 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 const eventOptions = {
   doActionProperty: 'Do action',
   // receiveActionProperty: 'Receiving action property',
+  check: 'Roll check',
   // flipToggle: 'Toggle changed',
-  // adjustProperty: 'Attribute adjusted',
+  // itemEquipped: 'Item equipped'
+  // itemUnequipped: 'Item unequipped'
+  damageProperty: 'Attribute damaged or healed',
   anyRest: 'Short or long rest',
   longRest: 'Long rest',
   shortRest: 'Short rest',
@@ -26,6 +29,7 @@ const actionPropertyTypeOptions = {
   note: 'Note',
   roll: 'Roll',
   savingThrow: 'Saving throw',
+  spell: 'Spell',
   toggle: 'Toggle',
 }
 
@@ -39,10 +43,6 @@ let TriggerSchema = createPropertySchema({
     type: String,
     optional: true,
     max: STORAGE_LIMITS.name,
-  },
-  summary: {
-    type: 'inlineCalculationFieldToCompute',
-    optional: true,
   },
   description: {
     type: 'inlineCalculationFieldToCompute',

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="slot-form">
+  <div class="trigger-form">
     <text-field
       ref="focusFirst"
       label="Name"
@@ -7,64 +7,6 @@
       :error-messages="errors.name"
       @change="change('name', ...arguments)"
     />
-
-    <v-layout align-center>
-      <v-btn
-        icon
-        style="margin-top: -30px;"
-        class="mr-2"
-        :loading="addExtraTagsLoading"
-        :disabled="extraTagsFull"
-        @click="addExtraTags"
-      >
-        <v-icon>
-          mdi-plus
-        </v-icon>
-      </v-btn>
-      <smart-combobox
-        label="Tags Required"
-        hint="The slot must be filled with a property which has all the listed tags"
-        multiple
-        chips
-        deletable-chips
-        :value="model.targetTags"
-        :error-messages="errors.targetTags"
-        @change="change('targetTags', ...arguments)"
-      />
-    </v-layout>
-    <v-slide-x-transition group>
-      <div
-        v-for="(extras, i) in model.extraTags"
-        :key="extras._id"
-        class="extra-tags layout align-center justify-space-between"
-      >
-        <smart-select
-          label="Operation"
-          style="width: 90px; flex-grow: 0;"
-          :items="extraTagOperations"
-          :value="extras.operation"
-          :error-messages="errors.extraTags && errors.extraTags[i]"
-          @change="change(['extraTags', i, 'operation'], ...arguments)"
-        />
-        <smart-combobox
-          label="Tags"
-          :hint="extras.operation === 'OR' ? 'The slot can be filled with a property that has all of these tags instead' : 'The slot cannot be filled with a property that has any of these tags'"
-          class="mx-2"
-          multiple
-          chips
-          deletable-chips
-          :value="extras.tags"
-          @change="change(['extraTags', i, 'tags'], ...arguments)"
-        />
-        <v-btn
-          icon
-          style="margin-top: -30px;"
-          @click="$emit('pull', {path: ['extraTags', i]})"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </div>
-    </v-slide-x-transition>
 
     <smart-select
       label="Timing"
@@ -95,6 +37,70 @@
       @change="change('actionPropertyType', ...arguments)"
     />
 
+    <v-layout
+      v-show="showTags"
+      align-center
+    >
+      <v-btn
+        icon
+        style="margin-top: -30px;"
+        class="mr-2"
+        :loading="addExtraTagsLoading"
+        :disabled="extraTagsFull"
+        @click="addExtraTags"
+      >
+        <v-icon>
+          mdi-plus
+        </v-icon>
+      </v-btn>
+      <smart-combobox
+        label="Tags Required"
+        hint="The trigger will be fired by a property which has all the listed tags"
+        multiple
+        chips
+        deletable-chips
+        :value="model.targetTags"
+        :error-messages="errors.targetTags"
+        @change="change('targetTags', ...arguments)"
+      />
+    </v-layout>
+    <v-slide-x-transition
+      v-show="showTags"
+      group
+    >
+      <div
+        v-for="(extras, i) in model.extraTags"
+        :key="extras._id"
+        class="extra-tags layout align-center justify-space-between"
+      >
+        <smart-select
+          label="Operation"
+          style="width: 90px; flex-grow: 0;"
+          :items="extraTagOperations"
+          :value="extras.operation"
+          :error-messages="errors.extraTags && errors.extraTags[i]"
+          @change="change(['extraTags', i, 'operation'], ...arguments)"
+        />
+        <smart-combobox
+          label="Tags"
+          :hint="extras.operation === 'OR' ? 'The trigger can be fired by a property that has all of these tags instead' : 'The trigger won\'t be fired by a property that has any of these tags'"
+          class="mx-2"
+          multiple
+          chips
+          deletable-chips
+          :value="extras.tags"
+          @change="change(['extraTags', i, 'tags'], ...arguments)"
+        />
+        <v-btn
+          icon
+          style="margin-top: -30px;"
+          @click="$emit('pull', {path: ['extraTags', i]})"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </div>
+    </v-slide-x-transition>
+
     <computed-field
       label="Condition"
       hint="A caclulation to determine if this trigger should fire"
@@ -103,15 +109,6 @@
       :error-messages="errors.condition"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['condition', ...path], value, ack})"
-    />
-
-    <inline-computation-field
-      label="Summary"
-      hint="This will appear in the feature card in the character sheet"
-      :model="model.summary"
-      :error-messages="errors.summary"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['summary', ...path], value, ack})"
     />
 
     <inline-computation-field
@@ -183,6 +180,11 @@ export default {
       if (!this.model.extraTags) return false;
       let maxCount = TriggerSchema.get('extraTags', 'maxCount');
       return this.model.extraTags.length >= maxCount;
+    },
+    showTags() {
+      return this.model.event !== 'shortRest' &&
+        this.model.event !== 'longRest' &&
+        this.model.event !== 'anyRest';
     }
   },
   methods: {

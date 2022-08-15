@@ -41,7 +41,7 @@
             style="height: 100%; transform-origin: left; transition: all 0.5s ease;"
             :style="{
               backgroundColor: barColor,
-              transform: `scaleX(${value / maxValue})`,
+              transform: `scaleX(${fillFraction})`,
             }"
           />
           <div
@@ -92,87 +92,93 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import chroma from 'chroma-js';
 
-	export default {
-    components: {
-      IncrementMenu
-    },
-    inject: {
-      theme: {
-        default: {
-          isDark: false,
-        },
+export default {
+  components: {
+    IncrementMenu
+  },
+  inject: {
+    theme: {
+      default: {
+        isDark: false,
       },
     },
-		props: {
-			value: Number,
-			maxValue: Number,
-			name: String,
-      color: {
-        type: String,
-        default() {
-          return this.$vuetify.theme.currentTheme.primary
-        },
+  },
+  props: {
+    value: Number,
+    maxValue: Number,
+    name: String,
+    color: {
+      type: String,
+      default() {
+        return this.$vuetify.theme.currentTheme.primary
       },
-      midColor: {
-        type: String,
-        default: undefined,
-      },
-      lowColor: {
-        type: String,
-        default: undefined,
-      },
-			_id: String,
-		},
-		data() {
-			return {
-				editing: false,
-				hover: false,
-			};
-		},
-    computed: {
-      barColor() {
-        const fraction = this.value / this.maxValue;
-        if (!Number.isFinite(fraction)) return this.color;
-        if (fraction > 0.5){
-          return this.color;
-        } else if (this.midColor && this.lowColor) {
-          return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
-        } else if (this.midColor){
-          return this.midColor;
-        }
+    },
+    midColor: {
+      type: String,
+      default: undefined,
+    },
+    lowColor: {
+      type: String,
+      default: undefined,
+    },
+    _id: String,
+  },
+  data() {
+    return {
+      editing: false,
+      hover: false,
+    };
+  },
+  computed: {
+    fillFraction() {
+      let fraction = this.value / this.maxValue;
+      if (fraction < 0) fraction = 0;
+      if (fraction > 1) fraction = 1;
+      return fraction;
+    },
+    barColor() {
+      const fraction = this.value / this.maxValue;
+      if (!Number.isFinite(fraction)) return this.color;
+      if (fraction > 0.5){
         return this.color;
-      },
-      barBackgroundColor(){
-        return chroma(this.barColor)
-        .darken(1.5)
-        .desaturate(1.5)
-        .hex();
-      },
-      isTextLight(){
-        return isDarkColor(this.barBackgroundColor);
-        /* Change color at the halfway mark
-        const fraction = this.value / this.maxValue;
-        if (fraction >= 0.5){
-          return isDarkColor(this.barColor);
-        } else {
-          return isDarkColor(this.barBackgroundColor);
-        }
-        */
+      } else if (this.midColor && this.lowColor) {
+        return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
+      } else if (this.midColor){
+        return this.midColor;
       }
+      return this.color;
     },
-		methods: {
-			edit() {
-				this.editing = true;
-			},
-			cancelEdit() {
-				this.editing = false;
-			},
-      changeIncrementMenu(e){
-        this.$emit('change', e);
-        this.editing = false;
+    barBackgroundColor(){
+      return chroma(this.barColor)
+      .darken(1.5)
+      .desaturate(1.5)
+      .hex();
+    },
+    isTextLight(){
+      return isDarkColor(this.barBackgroundColor);
+      /* Change color at the halfway mark
+      const fraction = this.value / this.maxValue;
+      if (fraction >= 0.5){
+        return isDarkColor(this.barColor);
+      } else {
+        return isDarkColor(this.barBackgroundColor);
       }
-		},
-	};
+      */
+    }
+  },
+  methods: {
+    edit() {
+      this.editing = true;
+    },
+    cancelEdit() {
+      this.editing = false;
+    },
+    changeIncrementMenu(e){
+      this.$emit('change', e);
+      this.editing = false;
+    }
+  },
+};
 </script>
 
 <style>

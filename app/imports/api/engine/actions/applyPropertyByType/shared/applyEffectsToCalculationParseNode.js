@@ -2,7 +2,7 @@ import operator from '/imports/parser/parseTree/operator.js';
 import { parse } from '/imports/parser/parser.js';
 import logErrors from './logErrors.js';
 
-export default function applyEffectsToCalculationParseNode(calcObj, log){
+export default function applyEffectsToCalculationParseNode(calcObj, actionContext){
   if (!calcObj.effects) return;
   calcObj.effects.forEach(effect => {
     if (effect.operation !== 'add') return;
@@ -18,7 +18,7 @@ export default function applyEffectsToCalculationParseNode(calcObj, log){
         fn: 'add'
       });
     } catch (e){
-      logErrors([e], log)
+      logErrors([e], actionContext)
     }
   });
 }

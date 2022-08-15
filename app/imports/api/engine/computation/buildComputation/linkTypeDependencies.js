@@ -178,8 +178,8 @@ function getTargetListFromTags(tags, computation){
   const targetTagIdLists = [];
   if (!tags) return [];
   tags.forEach(tag => {
-    const idList = computation.propsWithTag[tag];
-    if (idList) targetTagIdLists.push(idList);
+    const idList = computation.propsWithTag[tag] || [];
+    targetTagIdLists.push(idList);
   });
   const targets = intersection(...targetTagIdLists);
   return targets;

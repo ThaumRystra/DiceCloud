@@ -6,5 +6,6 @@ import './fitAvatars.css';
 import './inheritBackgrounds.css';
 import './largeFormatInputs.css';
 import './lineClamp.css';
+import './markdown.css';
 import './speedDial.css';
 import './toolbarFlex.css';

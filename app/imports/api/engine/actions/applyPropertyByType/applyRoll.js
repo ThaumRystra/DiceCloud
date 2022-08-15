@@ -2,33 +2,34 @@ import applyProperty from '../applyProperty.js';
 import logErrors from './shared/logErrors.js';
 import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applyRoll(node, {creature, targets, scope, log}){
+export default function applyRoll(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
 
   const applyChildren = function(){
-    node.children.forEach(child => applyProperty(child, {
-      creature, targets, scope, log
-    }));
+    applyNodeTriggers(node, 'after', actionContext);
+    node.children.forEach(child => applyProperty(child, actionContext));
   };
 
   if (prop.roll?.calculation){
     const logValue = [];
 
     // roll the dice only and store that string
-    applyEffectsToCalculationParseNode(prop.roll, log);
-    const {result: rolled, context} = resolve('roll', prop.roll.parseNode, scope);
+    applyEffectsToCalculationParseNode(prop.roll, actionContext);
+    const {result: rolled, context} = resolve('roll', prop.roll.parseNode, actionContext.scope);
     if (rolled.parseType !== 'constant'){
       logValue.push(toString(rolled));
     }
-    logErrors(context.errors, log);
+    logErrors(context.errors, actionContext);
 
     // Reset the errors so we don't log the same errors twice
     context.errors = [];
 
     // Resolve the roll to a final value
-    const {result: reduced} = resolve('reduce', rolled, scope, context);
-    logErrors(context.errors, log);
+    const {result: reduced} = resolve('reduce', rolled, actionContext.scope, context);
+    logErrors(context.errors, actionContext);
 
     // Store the result
     if (reduced.parseType === 'constant'){
@@ -45,11 +46,11 @@ export default function applyRoll(node, {creature, targets, scope, log}){
     }
     const value = reduced.value;
 
-    scope[prop.variableName] = value;
+    actionContext.scope[prop.variableName] = value;
     logValue.push(`**${value}**`);
 
     if (!prop.silent){
-      log.content.push({
+      actionContext.addLog({
         name: prop.name,
         value: logValue.join('\n'),
         inline: true,

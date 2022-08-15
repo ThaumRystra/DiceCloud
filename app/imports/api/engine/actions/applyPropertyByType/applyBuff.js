@@ -12,10 +12,12 @@ import symbol from '/imports/parser/parseTree/symbol.js';
 import logErrors from './shared/logErrors.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applyBuff(node, {creature, targets, scope, log}){
+export default function applyBuff(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
-  let buffTargets = prop.target === 'self' ? [creature] : targets;
+  let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
   // Then copy the decendants of the buff to the targets
   let propList = [prop];
@@ -26,7 +28,7 @@ export default function applyBuff(node, {creature, targets, scope, log}){
     });
   }
   addChildrenToPropList(node.children);
-  crystalizeVariables({propList, scope, log});
+  crystalizeVariables({propList, actionContext});
 
   let oldParent = {
     id: prop.parent.id,
@@ -38,9 +40,9 @@ export default function applyBuff(node, {creature, targets, scope, log}){
 
     //Log the buff
     if (prop.name || prop.description?.value){
-      if (target._id === creature._id){
+      if (target._id === actionContext.creature._id){
         // Targeting self
-        log.content.push({
+        actionContext.addLog({
           name: prop.name,
           value: prop.description?.value,
         });
@@ -58,6 +60,7 @@ export default function applyBuff(node, {creature, targets, scope, log}){
       }
     }
   });
+  applyNodeTriggers(node, 'after', actionContext);
 
   // Don't apply the children of the buff, they get copied to the target instead
 }
@@ -83,7 +86,7 @@ function copyNodeListToTarget(propList, target, oldParent){
  * Replaces all variables with their resolved values
  * except variables of the form `$target.thing.total` become `thing.total`
  */
-function crystalizeVariables({propList, scope, log}){
+function crystalizeVariables({propList, actionContext}){
   propList.forEach(prop => {
     computedSchemas[prop.type].computedFields().forEach( calcKey => {
       applyFnToKey(prop, calcKey, (prop, key) => {
@@ -104,7 +107,7 @@ function crystalizeVariables({propList, scope, log}){
               }
             } else {
               // Can't strip symbols
-              log.content.push({
+              actionContext.addLog({
                 name: 'Error',
                 value: 'Variable `$target` should not be used without a property: $target.property',
               });
@@ -112,8 +115,8 @@ function crystalizeVariables({propList, scope, log}){
             return node;
           } else {
             // Resolve all other variables
-            const {result, context} = resolve('reduce', node, scope);
-            logErrors(context.errors, log);
+            const {result, context} = resolve('reduce', node, actionContext.scope);
+            logErrors(context.errors, actionContext);
             return result;
           }
         });

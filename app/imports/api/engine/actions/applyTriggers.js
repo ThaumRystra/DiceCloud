@@ -6,16 +6,76 @@ import applyProperty from '/imports/api/engine/actions/applyProperty.js';
 import { difference, intersection } from 'lodash';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
-export default function applyTriggers(node, { creature, targets, scope, log }, timing) {
+export function applyNodeTriggers(node, timing, actionContext) {
   const prop = node.node;
   const type = prop.type;
-  if (creature.triggers?.[type]?.[timing]) {
-    creature.triggers[type][timing].forEach(trigger => {
-      if (triggerMatchTags(trigger, prop)) {
-        applyTrigger(trigger, { creature, targets, scope, log });
-      }
+  const triggers = actionContext.triggers?.doActionProperty?.[type]?.[timing];
+  if (triggers) {
+    triggers.forEach(trigger => {
+      applyTrigger(trigger, prop, actionContext);
     });
   }
+}
+
+export function applyTriggers(triggers = [], prop, actionContext) {
+  // Apply the triggers
+  triggers.forEach(trigger => {
+    applyTrigger(trigger, prop, actionContext)
+  });
+}
+
+export function applyTrigger(trigger, prop, actionContext) {
+  // If there is a prop we are applying the trigger from,
+  // don't fire if the tags don't match
+  if (prop && !triggerMatchTags(trigger, prop)) {
+    return;
+  }
+
+  // Prevent trigger from firing if it's inactive
+  if (trigger.inactive) {
+    return;
+  }
+  
+  // Prevent triggers from firing if their condition is false
+  if (trigger.condition?.parseNode) {
+    recalculateCalculation(trigger.condition, actionContext);
+    if (!trigger.condition.value) return;
+  }
+
+  // Prevent triggers from firing themselves in a loop
+  if (trigger.firing) {
+    /*
+    log.content.push({
+      name: trigger.name || 'Trigger',
+      value: 'Trigger can\'t fire itself',
+      inline: true,
+    });
+    */
+    return;
+  }
+  trigger.firing = true;
+
+  // Fire the trigger
+  const content = {
+    name: trigger.name || 'Trigger',
+    value: trigger.description,
+    inline: false,
+  }
+  if (trigger.description?.text){
+    recalculateInlineCalculations(trigger.description, actionContext);
+    content.value = trigger.description.value;
+  }
+  actionContext.addLog(content);
+
+  // Get all the trigger's properties and apply them
+  const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
+  properties.sort((a, b) => a.order - b.order);
+  const propertyForest = nodeArrayToTree(properties);
+  propertyForest.forEach(node => {
+    applyProperty(node, actionContext);
+  });
+
+  trigger.firing = false;
 }
 
 function triggerMatchTags(trigger, prop) {
@@ -48,52 +108,4 @@ function triggerMatchTags(trigger, prop) {
     }
   });
   return matched;
-}
-
-export function applyTrigger(trigger, { creature, targets, scope, log }) {
-  // Prevent triggers from firing if their condition is false
-  if (trigger.condition?.parseNode) {
-    recalculateCalculation(trigger.condition, scope, log);
-    if (!trigger.condition.value) return;
-  }
-
-  // Prevent triggers from firing themselves in a loop
-  if (trigger.firing) {
-    /*
-    log.content.push({
-      name: trigger.name || 'Trigger',
-      value: 'Trigger can\'t fire itself',
-      inline: true,
-    });
-    */
-    return;
-  }
-  trigger.firing = true;
-
-  // Fire the trigger
-  const content = {
-    name: trigger.name || 'Trigger',
-    value: trigger.summary,
-    inline: false,
-  }
-  if (trigger.summary?.text){
-    recalculateInlineCalculations(trigger.summary, scope, log);
-    content.value = trigger.summary.value;
-  }
-  log.content.push(content);
-
-  // Get all the trigger's properties and apply them
-  const properties = getPropertyDecendants(creature._id, trigger._id);
-  properties.sort((a, b) => a.order - b.order);
-  const propertyForest = nodeArrayToTree(properties);
-  propertyForest.forEach(node => {
-    applyProperty(node, {
-      creature,
-      targets,
-      scope,
-      log,
-    });
-  });
-
-  trigger.firing = false;
 }

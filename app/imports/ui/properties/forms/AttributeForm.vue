@@ -78,7 +78,6 @@
         <form-section
           v-if="model.attributeType === 'healthBar'"
           name="Health Bar Settings"
-          standalone
         >
           <color-picker
             :value="model.healthBarColorMid"
@@ -90,6 +89,47 @@
             label="Empty color"
             @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
           />
+          <v-layout
+            wrap
+            class="mt-4"
+          >
+            <text-field
+              label="Damage order"
+              type="number"
+              style="max-width: 300px;"
+              hint="Lower ordered health bars will take damage before higher ordered ones"
+              class="mr-4"
+              :disabled="model.healthBarNoDamage"
+              :value="model.healthBarDamageOrder"
+              :error-messages="errors.healthBarDamageOrder"
+              @change="change('healthBarDamageOrder', ...arguments)"
+            />
+            <smart-switch
+              label="Ignore damage"
+              :value="model.healthBarNoDamage"
+              :error-messages="errors.healthBarNoDamage"
+              @change="change('healthBarNoDamage', ...arguments)"
+            />
+          </v-layout>
+          <v-layout wrap>
+            <text-field
+              label="Healing order"
+              type="number"
+              style="max-width: 300px;"
+              hint="Lower ordered health bars will take healing before higher ordered ones"
+              class="mr-4"
+              :disabled="model.healthBarNoHealing"
+              :value="model.healthBarHealingOrder"
+              :error-messages="errors.healthBarHealingOrder"
+              @change="change('healthBarHealingOrder', ...arguments)"
+            />
+            <smart-switch
+              label="Ignore healing"
+              :value="model.healthBarNoHealing"
+              :error-messages="errors.healthBarNoHealing"
+              @change="change('healthBarNoHealing', ...arguments)"
+            />
+          </v-layout>
         </form-section>
       </v-expand-transition>
 
@@ -120,6 +160,18 @@
             :value="model.decimal"
             :error-messages="errors.decimal"
             @change="change('decimal', ...arguments)"
+          />
+          <smart-switch
+            label="Can be damaged into negative values"
+            :value="model.ignoreLowerLimit"
+            :error-messages="errors.ignoreLowerLimit"
+            @change="change('ignoreLowerLimit', ...arguments)"
+          />
+          <smart-switch
+            label="Can be incremented above total"
+            :value="model.ignoreUpperLimit"
+            :error-messages="errors.ignoreUpperLimit"
+            @change="change('ignoreUpperLimit', ...arguments)"
           />
           <div
             class="layout justify-center"

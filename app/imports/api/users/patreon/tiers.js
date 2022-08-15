@@ -110,8 +110,8 @@ export function getUserTier(user){
 export function assertUserHasPaidBenefits(user){
   let tier = getUserTier(user);
   if (!tier.paidBenefits){
-    throw new Meteor.Error('Creatures.methods.insert.denied',
-    `The ${tier.name} tier does not allow you to insert a creature`);
+    throw new Meteor.Error('no paid benefits',
+    `The ${tier.name} tier does not have the required benefits`);
   }
 }
 
