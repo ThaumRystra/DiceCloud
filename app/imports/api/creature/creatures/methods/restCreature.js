@@ -107,7 +107,7 @@ function doRestWork(restType, actionContext) {
       fields: {
         hitDiceSize: 1,
         damage: 1,
-        value: 1,
+        total: 1,
       }
     }).fetch();
     // Use a collator to do sorting in natural order
@@ -118,7 +118,7 @@ function doRestWork(restType, actionContext) {
     let compare = (a, b) => collator.compare(b.hitDiceSize, a.hitDiceSize)
     hitDice.sort(compare);
     // Get the total number of hit dice that can be recovered this rest
-    let totalHd = hitDice.reduce((sum, hd) => sum + (hd.value || 0), 0);
+    let totalHd = hitDice.reduce((sum, hd) => sum + (hd.total || 0), 0);
     let resetMultiplier = actionContext.creature.settings.hitDiceResetMultiplier || 0.5;
     let recoverableHd = Math.max(Math.floor(totalHd*resetMultiplier), 1);
     // recover each hit dice in turn until the recoverable amount is used up
