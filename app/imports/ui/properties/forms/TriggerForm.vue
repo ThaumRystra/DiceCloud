@@ -8,7 +8,39 @@
       @change="change('name', ...arguments)"
     />
 
-    <v-layout align-center>
+    <smart-select
+      label="Timing"
+      style="flex-basis: 300px;"
+      hint="When this trigger will fire"
+      :items="timingOptions"
+      :value="model.timing"
+      :error-messages="errors.timing"
+      @change="change('timing', ...arguments)"
+    />
+    <smart-select
+      label="Event"
+      style="flex-basis: 300px;"
+      hint="What causes this trigger to fire"
+      :items="eventOptions"
+      :value="model.event"
+      :error-messages="errors.event"
+      @change="change('event', ...arguments)"
+    />
+    <smart-select
+      v-if="model.event === 'doActionProperty' || model.event === 'receiveActionProperty'"
+      label="Event Type"
+      style="flex-basis: 300px;"
+      hint="Which action event causes this trigger to fire"
+      :items="actionPropertyTypeOptions"
+      :value="model.actionPropertyType"
+      :error-messages="errors.actionPropertyType"
+      @change="change('actionPropertyType', ...arguments)"
+    />
+
+    <v-layout
+      v-show="showTags"
+      align-center
+    >
       <v-btn
         icon
         style="margin-top: -30px;"
@@ -32,7 +64,10 @@
         @change="change('targetTags', ...arguments)"
       />
     </v-layout>
-    <v-slide-x-transition group>
+    <v-slide-x-transition
+      v-show="showTags"
+      group
+    >
       <div
         v-for="(extras, i) in model.extraTags"
         :key="extras._id"
@@ -65,35 +100,6 @@
         </v-btn>
       </div>
     </v-slide-x-transition>
-
-    <smart-select
-      label="Timing"
-      style="flex-basis: 300px;"
-      hint="When this trigger will fire"
-      :items="timingOptions"
-      :value="model.timing"
-      :error-messages="errors.timing"
-      @change="change('timing', ...arguments)"
-    />
-    <smart-select
-      label="Event"
-      style="flex-basis: 300px;"
-      hint="What causes this trigger to fire"
-      :items="eventOptions"
-      :value="model.event"
-      :error-messages="errors.event"
-      @change="change('event', ...arguments)"
-    />
-    <smart-select
-      v-if="model.event === 'doActionProperty' || model.event === 'receiveActionProperty'"
-      label="Event Type"
-      style="flex-basis: 300px;"
-      hint="Which action event causes this trigger to fire"
-      :items="actionPropertyTypeOptions"
-      :value="model.actionPropertyType"
-      :error-messages="errors.actionPropertyType"
-      @change="change('actionPropertyType', ...arguments)"
-    />
 
     <computed-field
       label="Condition"
@@ -183,6 +189,11 @@ export default {
       if (!this.model.extraTags) return false;
       let maxCount = TriggerSchema.get('extraTags', 'maxCount');
       return this.model.extraTags.length >= maxCount;
+    },
+    showTags() {
+      return this.model.event !== 'shortRest' &&
+        this.model.event !== 'longRest' &&
+        this.model.event !== 'anyRest';
     }
   },
   methods: {
