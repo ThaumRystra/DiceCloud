@@ -31,7 +31,8 @@ export default function applySavingThrow(node, actionContext){
   // succeeeded and failed
   if (!saveTargets?.length){
     scope['$saveFailed'] = {value: true};
-    scope['$saveSucceeded'] = {value: true};
+    scope['$saveSucceeded'] = { value: true };
+    applyNodeTriggers(node, 'after', actionContext);
     return node.children.forEach(child => applyProperty(child, actionContext));
   }
 
