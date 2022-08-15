@@ -86,7 +86,7 @@ function aggregateAbilityEffects({computation, skillNode, abilityNode}){
       // to a skill from its ability
       if (link.data === 'effect'){
         if (![
-          'advantage', 'disadvantage', 'passiveAdd', 'fail'
+          'advantage', 'disadvantage', 'passiveAdd', 'fail', 'conditional'
         ].includes(linkedNode.data.operation)){
           return;
         }
