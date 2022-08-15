@@ -201,6 +201,7 @@ export default {
     },
     librariesSelectedByCollections() {
       let ids = [];
+      if (!this.model.allowedLibraryCollections) return ids;
       LibraryCollections.find({
         _id: { $in: this.model.allowedLibraryCollections }
       }).forEach(collection => {
