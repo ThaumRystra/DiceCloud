@@ -46,7 +46,6 @@ export function getSingleProperty(creatureId, propertyId) {
     'removed': {$ne: true},
   }, {
     sort: { order: 1 },
-    fields: { icon: 0 },
   });
   // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
   return prop;
@@ -65,7 +64,6 @@ export function getProperties(creatureId) {
     'removed': {$ne: true},
   }, {
     sort: { order: 1 },
-    fields: { icon: 0 },
   }).fetch();
   // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
   return props;
@@ -90,7 +88,6 @@ export function getPropertiesOfType(creatureId, propType) {
     'type': propType,
   }, {
     sort: { order: 1 },
-    fields: { icon: 0 },
   }).fetch();
   // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
   return props;
@@ -103,11 +100,7 @@ export function getCreature(creatureId) {
     if (creature) return creature;
   }
   // console.time(`Cache miss on Creature: ${creatureId}`);
-  const creature = Creatures.findOne(creatureId, {
-    denormalizedStats: 1,
-    variables: 1,
-    dirty: 1,
-  });
+  const creature = Creatures.findOne(creatureId);
   // console.timeEnd(`Cache miss on Creature: ${creatureId}`);
   return creature;
 }
@@ -149,6 +142,7 @@ export function getProperyAncestors(creatureId, propertyId) {
     // Fetch from database
     return CreatureProperties.find({
       _id: { $in: ancestorIds },
+      removed: {$ne: true},
     }, {
       sort: { order: 1 },
     }).fetch();
@@ -175,6 +169,8 @@ export function getPropertyDecendants(creatureId, propertyId) {
     return CreatureProperties.find({
       'ancestors.id': propertyId,
       removed: { $ne: true },
+    }, {
+      sort: { order: 1 },
     }).fetch();
   }
 }
@@ -199,7 +195,6 @@ class LoadedCreature {
         removed: { $ne: true },
       }, {
         sort: { order: 1 },
-        fields: { icon: 0 },
       }).observeChanges({
         added(id, fields) {
           fields._id = id;
