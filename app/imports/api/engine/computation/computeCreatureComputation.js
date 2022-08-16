@@ -51,11 +51,22 @@ function compute(computation, node){
 
 function pushDependenciesToStack(nodeId, graph, stack, computation){
   graph.forEachLinkedNode(nodeId, linkedNode => {
-    if (linkedNode._visitedChildren && !linkedNode._visited){
-      const pather = path.nba(graph, {
-        oriented: true
-      });
-      const loop = pather.find(nodeId, nodeId);
+    if (linkedNode._visitedChildren && !linkedNode._visited) {
+      // This is a dependency loop, find a path from the node to itself
+      // and store that path as a dependency loop error
+      const pather = path.nba(graph, { oriented: true });
+      let loop = [];
+      // Pather doesn't like going from a node to iteself, so find all the
+      // paths going from the next node back to the original node
+      // and return the shortest one
+      graph.forEachLinkedNode(nodeId, nextNode => {
+        const newLoop = pather.find(nextNode.id, nodeId);
+        if (!newLoop.length) return;
+        if (!loop.length || newLoop.length < loop.length - 1) {
+          loop = [linkedNode, ...newLoop];
+        }
+      }, true);
+      
       if (loop.length) {
         computation.errors.push({
           type: 'dependencyLoop',
