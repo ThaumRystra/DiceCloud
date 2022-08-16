@@ -9,9 +9,7 @@
       </v-col>
     </v-row>
     <v-row dense>
-      <v-col cols="12">
-        <slot-cards-to-fill :creature-id="creatureId" />
-      </v-col>
+      <slot-cards-to-fill :creature-id="creatureId" />
     </v-row>
     <v-row dense>
       <v-col
