@@ -9,9 +9,9 @@
         v-model="fab"
         color="primary"
         fab
+        small
         data-id="insert-creature-property-fab"
         class="insert-creature-property-fab"
-        small
       >
         <transition
           name="fab-rotate"
@@ -48,12 +48,13 @@
   import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
   import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
-  function getParentAndOrderFromSelectedTreeNode(creatureId){
+  function getParentAndOrderFromSelectedTreeNode(creatureId, $store){
     // find the parent based on the currently selected property
     let el = document.querySelector('.tree-tab .tree-node-title.primary--text');
     let selectedComponent = el && el.parentElement.__vue__.$parent;
     let parentRef, order;
-    if (selectedComponent){
+    const onTreeTab = $store.getters.tabNameById(creatureId) === 'tree';
+    if (onTreeTab && selectedComponent){
       if (selectedComponent.showExpanded){
         parentRef = {
           id: selectedComponent.node._id,
@@ -156,7 +157,7 @@
         let creatureId = this.creatureId;
         let fab = hideFab();
 
-        let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
+        let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId, this.$store);
         let parent;
         try {
           parent = fetchDocByRef(parentRef);
