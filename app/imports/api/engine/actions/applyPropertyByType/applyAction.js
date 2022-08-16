@@ -11,8 +11,8 @@ import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js'
 export default function applyAction(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
-  let targets = actionContext.targets;
-  if (prop.target === 'self') targets = [actionContext.creature];
+  if (prop.target === 'self') actionContext.targets = [actionContext.creature];
+  const targets = actionContext.targets;
 
   // Log the name and summary
   let content = { name: prop.name };
