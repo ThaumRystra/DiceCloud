@@ -14,17 +14,19 @@
     <v-fade-transition
       mode="out-in"
     >
-      <v-app-bar-title :key="$store.state.pageTitle">
-        <div>
-          {{ $store.state.pageTitle }}
-        </div>
-      </v-app-bar-title>
+      <v-toolbar-title :key="$store.state.pageTitle">
+        {{ $store.state.pageTitle }}
+      </v-toolbar-title>
     </v-fade-transition>
     <v-spacer />
     <v-fade-transition
       mode="out-in"
     >
-      <div :key="$route.meta.title">
+      <v-layout
+        :key="$route.meta.title"
+        class="flex-shrink-0 flex-grow-0"
+        justify-end
+      >
         <template v-if="creature">
           <shared-icon :model="creature" />
           <v-menu
@@ -68,7 +70,7 @@
           </v-menu>
           <v-app-bar-nav-icon @click="toggleRightDrawer" />
         </template>
-      </div>
+      </v-layout>
     </v-fade-transition>
     <v-fade-transition
       slot="extension"
