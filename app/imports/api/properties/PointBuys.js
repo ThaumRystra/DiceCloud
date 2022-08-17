@@ -27,9 +27,17 @@ let PointBuySchema = createPropertySchema({
   'values': {
     type: Array,
     defaultValue: [],
+    maxCount: STORAGE_LIMITS.pointBuyRowsCount,
   },
   'values.$': {
     type: Object,
+  },
+  'values.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue(){
+      if (!this.isSet) return Random.id();
+    }
   },
   'values.$.name': {
     type: String,
@@ -45,6 +53,18 @@ let PointBuySchema = createPropertySchema({
   },
   'values.$.value': {
     type: Number,
+    optional: true,
+  },
+  'values.$.min': {
+    type: 'fieldToCompute',
+    optional: true,
+  },
+  'values.$.max': {
+    type: 'fieldToCompute',
+    optional: true,
+  },
+  'values.$.cost': {
+    type: 'fieldToCompute',
     optional: true,
   },
   min: {
@@ -74,16 +94,41 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
     type: 'computedOnlyField',
     optional: true,
   },
-  total: {
+  cost: {
     type: 'computedOnlyField',
     optional: true,
   },
-  cost: {
+  'values': {
+    type: Array,
+    defaultValue: [],
+    maxCount: STORAGE_LIMITS.pointBuyRowsCount,
+  },
+  'values.$': {
+    type: Object,
+  },
+  'values.$.min': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  'values.$.max': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  'values.$.cost': {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+  total: {
     type: 'computedOnlyField',
     optional: true,
   },
   spent: {
     type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  error: {
+    type: String,
     optional: true,
     removeBeforeCompute: true,
   },
