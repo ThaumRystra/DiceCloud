@@ -12,6 +12,10 @@ let BuffSchema = createPropertySchema({
 		type: 'inlineCalculationFieldToCompute',
 		optional: true,
 	},
+	hideRemoveButton: {
+		type: Boolean,
+		optional: true,
+	},
   // How many rounds this buff lasts
 	duration: {
 		type: 'fieldToCompute',

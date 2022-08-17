@@ -2,6 +2,7 @@ const ActionViewer = () => import ('/imports/ui/properties/viewers/ActionViewer.
 const AdjustmentViewer = () => import ('/imports/ui/properties/viewers/AdjustmentViewer.vue');
 const AttributeViewer = () => import ('/imports/ui/properties/viewers/AttributeViewer.vue');
 const BuffViewer = () => import ('/imports/ui/properties/viewers/BuffViewer.vue');
+const BuffRemoverViewer = () => import ('/imports/ui/properties/viewers/BuffRemoverViewer.vue');
 const BranchViewer = () => import ('/imports/ui/properties/viewers/BranchViewer.vue');
 const ContainerViewer = () => import ('/imports/ui/properties/viewers/ContainerViewer.vue');
 const ClassViewer = () => import ('/imports/ui/properties/viewers/ClassViewer.vue');
@@ -31,6 +32,7 @@ export default {
   adjustment: AdjustmentViewer,
   attribute: AttributeViewer,
   buff: BuffViewer,
+  buffRemover: BuffRemoverViewer,
   branch: BranchViewer,
   container: ContainerViewer,
   class: ClassViewer,

@@ -2,6 +2,7 @@ import action from './applyPropertyByType/applyAction.js';
 import adjustment from './applyPropertyByType/applyAdjustment.js';
 import branch from './applyPropertyByType/applyBranch.js';
 import buff from './applyPropertyByType/applyBuff.js';
+import buffRemover from './applyPropertyByType/applyBuffRemover.js';
 import damage from './applyPropertyByType/applyDamage.js';
 import note from './applyPropertyByType/applyNote.js';
 import roll from './applyPropertyByType/applyRoll.js';
@@ -13,6 +14,7 @@ const applyPropertyByType = {
   adjustment,
   branch,
   buff,
+  buffRemover,
   damage,
   note,
   roll,
