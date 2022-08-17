@@ -97,7 +97,10 @@ export function getCreature(creatureId) {
   if (loadedCreatures.has(creatureId)) {
     const loadedCreature = loadedCreatures.get(creatureId);
     const creature = loadedCreature.creature;
-    if (creature) return creature;
+    if (creature) {  
+      const cloneCreature = EJSON.clone(creature);
+      return cloneCreature;
+    }
   }
   // console.time(`Cache miss on Creature: ${creatureId}`);
   const creature = Creatures.findOne(creatureId);
@@ -109,7 +112,10 @@ export function getVariables(creatureId) {
   if (loadedCreatures.has(creatureId)) {
     const loadedCreature = loadedCreatures.get(creatureId);
     const variables = loadedCreature.variables;
-    if (variables) return variables;
+    if (variables) {
+      const cloneVarables = EJSON.clone(variables);
+      return cloneVarables;
+    }
   }
   // console.time(`Cache miss on variables: ${creatureId}`);
   const variables = CreatureVariables.findOne({_creatureId: creatureId});
