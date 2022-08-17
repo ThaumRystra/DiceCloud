@@ -25,6 +25,7 @@ const actionPropertyTypeOptions = {
   adjustment: 'Attribute damage',
   branch: 'Branch',
   buff: 'Buff',
+  buffRemover: 'Buff Removed',
   damage: 'Damage',
   note: 'Note',
   roll: 'Roll',
