@@ -13,13 +13,6 @@ let PointBuySchema = createPropertySchema({
     optional: true,
     max: STORAGE_LIMITS.name,
   },
-  variableName: {
-    type: String,
-    optional: true,
-    regEx: VARIABLE_NAME_REGEX,
-    min: 2,
-    max: STORAGE_LIMITS.variableName,
-  },
   ignored: {
     type: Boolean,
     optional: true,
@@ -82,6 +75,7 @@ let PointBuySchema = createPropertySchema({
   cost: {
     type: 'fieldToCompute',
     optional: true,
+    parseLevel: 'compile',
   },
 });
 
@@ -97,6 +91,7 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
   cost: {
     type: 'computedOnlyField',
     optional: true,
+    parseLevel: 'compile',
   },
   'values': {
     type: Array,
@@ -117,6 +112,20 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
   'values.$.cost': {
     type: 'computedOnlyField',
     optional: true,
+    parseLevel: 'compile',
+  },
+  'values.$.spent': {
+    type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'values.$.errors': {
+    type: Array,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'values.$.errors.$': {
+    type: String,
   },
   total: {
     type: 'computedOnlyField',
@@ -127,10 +136,13 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
     optional: true,
     removeBeforeCompute: true,
   },
-  error: {
-    type: String,
+  errors: {
+    type: Array,
     optional: true,
     removeBeforeCompute: true,
+  },
+  'errors.$': {
+    type: String,
   },
 });
 

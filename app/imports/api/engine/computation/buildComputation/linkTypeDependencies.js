@@ -14,6 +14,7 @@ const linkDependenciesByType = {
   effect: linkEffects,
   proficiency: linkProficiencies,
   roll: linkRoll,
+  pointBuy: linkPointBuy,
   propertySlot: linkSlot,
   skill: linkSkill,
   spell: linkAction,
@@ -240,6 +241,23 @@ function linkDamageMultiplier(dependencyGraph, prop) {
     const damageName = damageType.replace(/[^a-z]/gi, '')
     dependencyGraph.addLink(damageName, prop._id, prop.type);
   });
+}
+
+function linkPointBuy(dependencyGraph, prop){
+  dependOnCalc({ dependencyGraph, prop, key: 'min' });
+  dependOnCalc({ dependencyGraph, prop, key: 'max' });
+  dependOnCalc({ dependencyGraph, prop, key: 'cost' });
+  prop.values?.forEach(row => {
+    row.type = 'pointBuyRow';
+    row.tableName = prop.name;
+    row.tableId = prop._id;
+    dependencyGraph.addNode(row._id, row);
+    linkVariableName(dependencyGraph, row);
+    dependOnCalc({ dependencyGraph, row, key: 'min' });
+    dependOnCalc({ dependencyGraph, row, key: 'max' });
+    dependOnCalc({ dependencyGraph, row, key: 'cost' });
+  });
+  if (prop.inactive) return;
 }
 
 function linkProficiencies(dependencyGraph, prop){

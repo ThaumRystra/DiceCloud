@@ -176,6 +176,7 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
   effects: {
     type: Array,
     optional: true,
+    removeBeforeCompute: true,
   },
   'effects.$': {
     type: Object,

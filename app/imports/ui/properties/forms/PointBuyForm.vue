@@ -1,86 +1,172 @@
 <template lang="html">
   <div class="point-buy-form">
     <v-row dense>
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        hint="Use this name in calculations to reference this point buy table"
-        :error-messages="errors.variableName"
-        @change="change('variableName', ...arguments)"
-      />
-      <computed-field
-        label="Min"
-        hint="The minimum value for each row"
-        :model="model.min"
-        :error-messages="errors.min"
-        @change="change('min', ...arguments)"
-      />
-      <computed-field
-        label="Max"
-        hint="The maximum value for each row"
-        :model="model.max"
-        :error-messages="errors.max"
-        @change="change('max', ...arguments)"
-      />
-      <computed-field
-        label="Cost"
-        hint="A function of `value` that determines the cost of each row"
-        :model="model.cost"
-        :error-messages="errors.cost"
-        @change="change('cost', ...arguments)"
-      />
-      <computed-field
-        label="Total"
-        hint="The total allowed cost of all rows"
-        :model="model.total"
-        :error-messages="errors.total"
-        @change="change('total', ...arguments)"
-      />
-    </v-row>
-    <v-row
-      v-for="(row, i) in model.values"
-      :key="row._id"
-      dense
-    >
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change(['values', i, 'name'], ...arguments)"
-      />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        hint="Use this name to reference this row of the table: tableVariableName.thisVariableName"
-        :error-messages="errors.variableName"
-        @change="change(['values', i, 'variableName'], ...arguments)"
-      />
-      <v-btn
-        icon
-        @click="$emit('pull', {path: ['values', i]})"
+      <v-col
+        cols="12"
+        md="6"
       >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+        <text-field
+          ref="focusFirst"
+          label="Table name"
+          :value="model.name"
+          :error-messages="errors.name"
+          @change="change('name', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Min"
+          hint="The minimum value for each row"
+          :model="model.min"
+          :error-messages="errors.min"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['min', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Max"
+          hint="The maximum value for each row"
+          :model="model.max"
+          :error-messages="errors.max"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['max', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Cost"
+          hint="A function of `value` that determines the cost of each row"
+          hide-value
+          :model="model.cost"
+          :error-messages="errors.cost"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['cost', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Total available points"
+          hint="The total allowed cost of all rows"
+          :model="model.total"
+          :error-messages="errors.total"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['total', ...path], value, ack})"
+        />
+      </v-col>
     </v-row>
-    <v-btn
-      icon
-      outlined
-      :loading="addRowLoading"
-      :disabled="rowsFull"
-      @click="addRow"
+    <v-subheader>
+      Rows
+    </v-subheader>
+    <v-slide-x-transition
+      group
+      leave-absolute
     >
-      <v-icon>
-        mdi-plus
-      </v-icon>
-    </v-btn>
+      <v-row
+        v-for="(row, i) in model.values"
+        :key="row._id"
+        dense
+      >
+        <v-divider
+          v-if="i"
+          style="flex-basis: 100%;"
+          class="mb-6"
+        />
+        <v-col cols="11">
+          <v-row dense>
+            <v-col
+              cols="12"
+              md="6"
+            >
+              <text-field
+                ref="focusFirst"
+                label="Row Name"
+                :value="row.name"
+                :error-messages="errors.values && errors.values[i] && errors.values[i].name"
+                @change="change(['values', i, 'name'], ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="6"
+            >
+              <text-field
+                label="Variable name"
+                :value="row.variableName"
+                hint="Use this name in calculations to reference this row of the table"
+                :error-messages="errors.values && errors.values[i] && errors.values[i].variableName"
+                @change="change(['values', i, 'variableName'], ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="6"
+            >
+              <text-field
+                label="Value"
+                type="number"
+                :min="row.hasOwnProperty('min') ? row.min && row.min.value : model.min && model.min.value"
+                :max="row.hasOwnProperty('max') ? row.max && row.max.value : model.max && model.max.value"
+                :value="row.value"
+                :error-messages="errors.values && errors.values[i] && errors.values[i].value"
+                @change="(value, ack) => $emit('change', {path: ['values', i, 'value'], value, ack})"
+              >
+                <template v-if="row.spent">
+                  Cost: {{ row.spent }}
+                </template>
+              </text-field>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col
+          cols="1"
+          class="d-flex align-center justify-center"
+        >
+          <v-btn
+            icon
+            large
+            @click="$emit('pull', {path: ['values', i]})"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row
+        key="addButton"
+        dense
+        justify="end"
+        class="mb-4"
+      >
+        <v-col
+          cols="1"
+          class="d-flex justify-center"
+        >  
+          <v-btn
+            icon
+            outlined
+            :loading="addRowLoading"
+            :disabled="rowsFull"
+            @click="addRow"
+          >
+            <v-icon>
+              mdi-plus
+            </v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-slide-x-transition>
     <form-section
       v-if="$slots.children"
       name="Children"

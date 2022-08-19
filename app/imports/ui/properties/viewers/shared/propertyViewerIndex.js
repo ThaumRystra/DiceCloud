@@ -15,6 +15,7 @@ const FeatureViewer = () => import ('/imports/ui/properties/viewers/FeatureViewe
 const FolderViewer = () => import ('/imports/ui/properties/viewers/FolderViewer.vue');
 const ItemViewer = () => import ('/imports/ui/properties/viewers/ItemViewer.vue');
 const NoteViewer = () => import ('/imports/ui/properties/viewers/NoteViewer.vue');
+const PointBuyViewer = () => import ('/imports/ui/properties/viewers/PointBuyViewer.vue');
 const ProficiencyViewer = () => import ('/imports/ui/properties/viewers/ProficiencyViewer.vue');
 const ReferenceViewer = () => import ('/imports/ui/properties/viewers/ReferenceViewer.vue');
 const RollViewer = () => import ('/imports/ui/properties/viewers/RollViewer.vue');
@@ -45,6 +46,7 @@ export default {
   folder: FolderViewer,
   item: ItemViewer,
   note: NoteViewer,
+  pointBuy: PointBuyViewer,
   proficiency: ProficiencyViewer,
   propertySlot: SlotViewer,
   roll: RollViewer,

@@ -98,7 +98,7 @@
         Next
       </v-btn>
       <v-btn
-        :disabled="biographyAlert"
+        :disabled="!!biographyAlert"
         :text="step < 2"
         :color="step < 2? '' : 'accent'"
         @click="submit"
