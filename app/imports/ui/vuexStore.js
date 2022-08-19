@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import dialogStackStore from '/imports/ui/dialogStack/dialogStackStore.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+const tabs = ['stats', 'features', 'inventory', 'spells', 'journal', 'build', 'tree'];
+const tabsWithoutSpells = ['stats', 'features', 'inventory', 'journal', 'build', 'tree'];
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -16,12 +19,20 @@ const store = new Vuex.Store({
     showDetailsDialog: false,
   },
   getters: {
-    // ...
     tabById: (state) => (id) => {
       if (id in state.characterSheetTabs){
         return state.characterSheetTabs[id];
       } else {
         return 0;
+      }
+    },
+    tabNameById: (state) => (id) => {
+      const tabNumber = state.characterSheetTabs[id];
+      const creature = Creatures.findOne(id);
+      if (creature?.settings?.hideSpellsTab) {
+        return tabsWithoutSpells[tabNumber];
+      } else {
+        return tabs[tabNumber]
       }
     }
   },

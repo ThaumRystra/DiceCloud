@@ -9,9 +9,7 @@
       </v-col>
     </v-row>
     <v-row dense>
-      <v-col cols="12">
-        <slot-cards-to-fill :creature-id="creatureId" />
-      </v-col>
+      <slot-cards-to-fill :creature-id="creatureId" />
     </v-row>
     <v-row dense>
       <v-col
@@ -20,7 +18,51 @@
         lg="6"
       >
         <v-card class="pb-4">
-          <v-card-title>Slots</v-card-title>
+          <v-card-title style="height: 68px;">
+            Slots
+            <v-spacer />
+            <v-scale-transition>
+              <v-menu
+                bottom
+                left
+              >
+                <template #activator="{ on }">
+                  <v-badge
+                    v-show="hiddenCount"
+                    slot="activator"
+                    color="primary"
+                    overlap
+                    :value="hiddenCount"
+                    :content="hiddenCount"
+                  >
+                    <v-btn
+                      icon
+                      v-on="on"
+                    >
+                      <v-icon>mdi-file-hidden</v-icon>
+                    </v-btn>
+                  </v-badge>
+                </template>
+                <v-list>
+                  <v-subheader>
+                    <v-icon class="mr-2">
+                      mdi-file-hidden
+                    </v-icon>
+                    {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'slots' : 'slot' }}
+                  </v-subheader>
+                  <v-list-item
+                    v-for="slot in hiddenSlots"
+                    :key="slot._id"
+                    @click="unhideSlot(slot._id)"
+                  >
+                    <v-list-item-title>
+                      {{ getPropertyTitle(slot) }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-scale-transition>
+          </v-card-title>
           <build-tree-node-list
             :children="slotBuildTree"
             class="mx-2"
@@ -135,6 +177,9 @@ import SlotCardsToFill from '/imports/ui/creature/slots/SlotCardsToFill.vue';
 import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import CharacterErrors from '/imports/ui/creature/character/errors/CharacterErrors.vue';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -179,7 +224,10 @@ export default {
         ...this.highestLevels,
         ...this.classProperties
       ].sort((a, b) => a.order - b.order);
-    }
+    },
+    hiddenCount() {
+      return this.hiddenSlots.length;
+    },
   },
   meteor: {
     creature(){
@@ -187,6 +235,29 @@ export default {
     },
     variables() {
       return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
+    },
+    hiddenSlots(){
+      return CreatureProperties.find({
+        type: 'propertySlot',
+        'ancestors.id': this.creatureId,
+        ignored: true,
+        $and: [
+          { 
+            $or: [
+              {'slotCondition.value': {$nin: [false, 0, '']}},
+              {'slotCondition.value': {$exists: false}},
+            ]
+          },{
+            $or: [
+              { 'quantityExpected.value': {$in: [false, 0, '', undefined]} },
+              { 'quantityExpected.value': {exists: false} },
+              {spaceLeft: {$gt: 0}},
+            ]
+          },
+        ],        
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }).fetch();
     },
     classProperties(){
       return CreatureProperties.find({
@@ -310,6 +381,19 @@ export default {
             },
           });
           return `tree-node-${newPropertyId}`;
+        }
+      });
+    },
+    getPropertyTitle,
+    unhideSlot(_id) {
+      updateCreatureProperty.call({
+        _id,
+        path: ['ignored'],
+        value: false,
+      }, error => {
+        if (error){
+          console.error(error);
+          snackbar({text: error.reason || error.message || error.toString()});
         }
       });
     },

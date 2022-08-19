@@ -6,7 +6,6 @@
     :style="`border: solid 1px ${accentColor};`"
     hover
     class="slot-card d-flex flex-column"
-    style="max-width: 400px;"
     @mouseover="hover = true"
     @mouseleave="hover = false"
     @click="$emit('click')"
@@ -17,7 +16,7 @@
     <v-card-title>
       {{ model.name }}
     </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="model.description">
       <property-description
         text
         :model="model.description"

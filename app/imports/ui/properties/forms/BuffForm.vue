@@ -36,22 +36,34 @@
         @change="change('target', ...arguments)"
       />
     </v-expand-transition>
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
-    >
-      <slot name="children" />
-    </form-section>
+    <form-sections>
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+        standalone
+      >
+        <slot name="children" />
+      </form-section>
+      <form-section
+        name="Advanced"
+      >
+        <smart-switch
+          label="Hide remove button"
+          :value="model.hideRemoveButton"
+          :error-messages="errors.hideRemoveButton"
+          @change="change('hideRemoveButton', ...arguments)"
+        />
+        <smart-combobox
+          label="Tags"
+          multiple
+          chips
+          deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
+          :value="model.tags"
+          @change="change('tags', ...arguments)"
+        />
+      </form-section>
+    </form-sections>
   </div>
 </template>
 
@@ -60,12 +72,6 @@
 
 	export default {
     mixins: [propertyFormMixin],
-		props: {
-			parentTarget: {
-				type: String,
-        default: undefined,
-			},
-		},
     data(){return {
       targetOptions: [
         {

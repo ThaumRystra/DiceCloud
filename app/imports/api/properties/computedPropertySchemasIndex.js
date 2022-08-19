@@ -3,6 +3,7 @@ import { ComputedActionSchema } from '/imports/api/properties/Actions.js';
 import { ComputedAdjustmentSchema } from '/imports/api/properties/Adjustments.js';
 import { ComputedAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedBuffSchema } from '/imports/api/properties/Buffs.js';
+import { ComputedBuffRemoverSchema } from '/imports/api/properties/BuffRemovers.js';
 import { ComputedBranchSchema } from '/imports/api/properties/Branches.js';
 import { ComputedClassSchema } from '/imports/api/properties/Classes.js';
 import { ComputedClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
@@ -33,6 +34,7 @@ const propertySchemasIndex = {
   adjustment: ComputedAdjustmentSchema,
   attribute: ComputedAttributeSchema,
   buff: ComputedBuffSchema,
+  buffRemover: ComputedBuffRemoverSchema,
   branch: ComputedBranchSchema,
   class: ComputedClassSchema,
   classLevel: ComputedClassLevelSchema,

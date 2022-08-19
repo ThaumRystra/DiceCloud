@@ -18,7 +18,7 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 	.column-layout {
 		column-count: 12;
 		column-fill: balance;
@@ -35,7 +35,7 @@ export default {
 		transform: translateZ(0);
 		padding: 4px;
 	}
-	.column-layout >>> > div {
+	.column-layout > div, .column-layout > span > div {
     /*
       Table and width set because firefox does not support break-inside: avoid
     */

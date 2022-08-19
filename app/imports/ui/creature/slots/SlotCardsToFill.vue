@@ -1,26 +1,30 @@
 <template>
-  <div class="slots-to-fill">
-    <v-slide-y-transition
+  <column-layout wide-columns class="slots-to-fill">
+    <v-fade-transition
       group
       leave-absolute
+      hide-on-leave
     >
-      <slot-card
+      <div
         v-for="slot in slots"
         :key="slot._id"
-        :model="slot"
-        class="ma-1"
-        hover
-        style="display: inline-block !important; transition: all 0.3s !important;"
-        @ignore="ignoreSlot(slot._id)"
-        @click="fillSlot(slot._id)"
-      />
-    </v-slide-y-transition>
-  </div>
+        style="transition: all 0.3s !important"
+      >
+        <slot-card
+          :model="slot"
+          hover
+          @ignore="ignoreSlot(slot._id)"
+          @click="fillSlot(slot._id)"
+        />
+      </div>
+    </v-fade-transition>
+  </column-layout>
 </template>
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SlotCard from '/imports/ui/creature/slots/SlotCard.vue';
+import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
@@ -28,6 +32,7 @@ import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 export default {
   components: {
     SlotCard,
+    ColumnLayout,
   },
   inject: {
     context: { default: {} }

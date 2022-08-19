@@ -89,6 +89,10 @@ export function buildComputationFromProps(properties, creature, variables){
   // Walk the property trees computing things that need to be inherited
   walkDown(forest, node => {
     computeInactiveStatus(node);
+  });
+  // Inactive status must be complete for the whole tree before toggle deps
+  // are calculated
+  walkDown(forest, node => {
     computeToggleDependencies(node, dependencyGraph);
     computeSlotQuantityFilled(node, dependencyGraph);
   });

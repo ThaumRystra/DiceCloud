@@ -1,6 +1,6 @@
 {
   "name": "dicecloud",
-  "version": "2.0.33",
+  "version": "2.0.38",
   "description": "Unofficial Online Realtime D&D 5e App",
   "license": "GPL-3.0",
   "repository": {
@@ -11,7 +11,8 @@
   "scripts": {
     "run": "meteor",
     "debug": "meteor --inspect",
-    "test": "meteor test --driver-package meteortesting:mocha --port 3001"
+    "test": "meteor test --driver-package meteortesting:mocha --port 3001",
+    "build": "meteor build ../build --architecture os.linux.x86_64"
   },
   "engines": {
     "node": "14.0.x",

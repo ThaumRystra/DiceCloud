@@ -46,7 +46,7 @@
                   {{ buff.name }}
                 </v-list-item-title>
               </v-list-item-content>
-              <v-list-item-action>
+              <v-list-item-action v-if="!buff.hideRemoveButton">
                 <v-btn
                   icon
                   @click.stop="softRemove(buff._id)"

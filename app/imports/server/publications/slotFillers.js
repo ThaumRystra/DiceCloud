@@ -100,21 +100,18 @@ Meteor.publish('classFillers', function(classId){
     }
 
     // Get all the ids of libraries the user can access
-    const user = Meteor.users.findOne(userId, {
-      fields: {subscribedLibraries: 1}
-    });
-    const subs = user && user.subscribedLibraries || [];
-    let libraries = Libraries.find({
+    const creatureId = classProp.ancestors[0].id;
+    const libraryIds = getCreatureLibraryIds(creatureId, userId);
+    const libraries = Libraries.find({
       $or: [
-        {owner: userId},
-        {writers: userId},
-        {readers: userId},
-        {_id: {$in: subs}},
+        { owner: userId },
+        { writers: userId },
+        { readers: userId },
+        { _id: { $in: libraryIds }, public: true },
       ]
     }, {
-      fields: {_id: 1, name: 1},
+      sort: { name: 1 }
     });
-    let libraryIds = libraries.map(lib => lib._id);
 
     // Build a filter for nodes in those libraries that match the slot
     let filter = getSlotFillFilter({slot: classProp, libraryIds});

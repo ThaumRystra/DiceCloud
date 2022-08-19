@@ -24,6 +24,12 @@ const PROPERTIES = Object.freeze({
     helpText: 'When a buff is activated as a child of an action, it will copy the properties under itself onto a target character.',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
   },
+  buffRemover: {
+    icon: '$vuetify.icons.buffRemover',
+    name: 'Remove Buff',
+    helpText: 'Removes a buff from the target character',
+    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+  },
   branch: {
     icon: 'mdi-file-tree',
     name: 'Branch',
