@@ -33,6 +33,9 @@ export default function computeVariableAsSkill(computation, node, prop){
   const aggregator = node.data.effectAggregator;
   const aggregatorBase = aggregator?.base || 0;
 
+  // Store effects
+  prop.effects = node.data.effects;
+
   // If there is no aggregator, determine if the prop can hide, then exit
   if (!aggregator){
     prop.hide = statBase === undefined &&
@@ -71,8 +74,6 @@ export default function computeVariableAsSkill(computation, node, prop){
   prop.fail = aggregator.fail;
   // Rollbonus
   prop.rollBonuses = aggregator.rollBonus;
-  // Store effects
-  prop.effects = node.data.effects;
 }
 
 function aggregateAbilityEffects({computation, skillNode, abilityNode}){

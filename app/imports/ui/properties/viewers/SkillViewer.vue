@@ -47,6 +47,12 @@
         name="Passive score"
         :value="passiveScore"
       />
+      <property-field
+        v-if="model.overridden"
+        :cols="{cols: 6, md: 12}"
+        name="Overridden"
+        value="Overriden by another property with the same variable name"
+      />
     </v-row>
     <v-row dense>
       <property-description
@@ -55,7 +61,7 @@
       />
     </v-row>
     <v-row
-      v-if="baseEffects.length || ability || effects.length"
+      v-if="ability || (effects && effects.length)"
       dense
     >
       <property-field
@@ -63,14 +69,6 @@
         name="Effects"
       >
         <v-list style="width: 100%">
-          <attribute-effect
-            v-for="effect in baseEffects"
-            :key="effect._id === model._id ? 'this_base' : effect._id"
-            :model="effect"
-            :hide-breadcrumbs="effect._id === model._id"
-            :data-id="effect._id"
-            @click="effect._id !== model._id && clickEffect(effect._id)"
-          />
           <attribute-effect
             v-if="ability"
             :key="ability._id"
@@ -188,32 +186,8 @@ export default {
     variables(){
       return CreatureVariables.findOne({_creatureId: this.context.creatureId}) || {};
     },
-    baseEffects(){
-      if (this.context.creatureId){
-        let creatureId = this.context.creatureId;
-        return CreatureProperties.find({
-          'ancestors.id': creatureId,
-          type: 'skill',
-          variableName: this.model.variableName,
-          removed: {$ne: true},
-          inactive: {$ne: true},
-        }).map( prop => ({
-          _id: prop._id,
-          name: 'Skill base value',
-          operation: 'base',
-          calculation: prop.baseValueCalculation,
-          amount: {value: prop.baseValue?.value},
-          stats: [prop.variableName],
-          ancestors: prop.ancestors,
-        }) ).filter(effect => effect.amount?.value);
-      } else {
-        return [];
-      }
-    },
     effects() {
-      return CreatureProperties.find({
-        _id: { $in: this.model.effects?.map(e => e._id) || [] }
-      });
+      return this.model.effects;
     },
     baseProficiencies(){
       if (this.context.creatureId){
@@ -265,7 +239,7 @@ export default {
       return {
         _id: abilityProp._id,
         name: abilityProp.name,
-        operation: 'base',
+        operation: 'add',
         amount: {value: abilityProp.modifier},
         stats: [this.model.variableName],
         ancestors: abilityProp.ancestors,

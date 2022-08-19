@@ -135,6 +135,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
   effects: {
     type: Array,
     optional: true,
+    removeBeforeCompute: true,
   },
   'effects.$': {
     type: Object,
