@@ -128,6 +128,14 @@
                 </template>
               </text-field>
             </v-col>
+            <v-col
+              v-if="row.errors && row.errors.length"
+              cols="12"
+            >
+              <calculation-error-list
+                :errors="row.errors"
+              />
+            </v-col>
           </v-row>
         </v-col>
         <v-col
@@ -181,8 +189,12 @@
 import attributeListMixin from '/imports/ui/properties/forms/shared/lists/attributeListMixin.js';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 import { PointBuySchema } from '/imports/api/properties/PointBuys.js';
+import CalculationErrorList from '/imports/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {
+  components: {
+    CalculationErrorList,
+  },
   mixins: [propertyFormMixin, attributeListMixin],
   data() {
     return {

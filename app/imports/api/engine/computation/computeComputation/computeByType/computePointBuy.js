@@ -22,11 +22,17 @@ export default function computePointBuy(computation, node) {
     // Check min and max
     if (min !== null && row.value < min) {
       row.errors = row.errors || [];
-      row.errors.push('Value smaller than min value');
+      row.errors.push({
+        type: 'pointBuyError',
+        message: 'Value smaller than min value'
+      });
     }
     if (max !== null && row.value > max) {
       row.errors = row.errors || [];
-      row.errors.push('Value larger than max value');
+      row.errors.push({
+        type: 'pointBuyError',
+        message: 'Value larger than max value'
+      });
     }
     // Evaluate the cost function
     if (!costFunction) return;
@@ -35,7 +41,8 @@ export default function computePointBuy(computation, node) {
     costFunction.errors?.forEach(error => {
       if (error?.message) {
         row.errors = row.errors || [];
-        row.errors.push(error.message);
+        error.message = 'Cost calculation error.\n' + error.message;
+        row.errors.push(error);
       }
     });
     if (Number.isFinite(costFunction.value)) {
@@ -45,6 +52,9 @@ export default function computePointBuy(computation, node) {
   });
   if (prop.spent > prop.total?.value) {
     prop.errors = prop.errors || [];
-    prop.errors.push('Spent more than total points available')
+    prop.errors.push({
+      type: 'pointBuyError',
+      message: 'Spent more than total points available',
+    });
   }
 }

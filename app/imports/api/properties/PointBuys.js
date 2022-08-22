@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 
 /*
  * PointBuys are reason-value attached to skills and abilities
@@ -125,7 +126,7 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
     removeBeforeCompute: true,
   },
   'values.$.errors.$': {
-    type: String,
+    type: ErrorSchema,
   },
   total: {
     type: 'computedOnlyField',
@@ -142,7 +143,7 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
     removeBeforeCompute: true,
   },
   'errors.$': {
-    type: String,
+    type: ErrorSchema,
   },
 });
 
