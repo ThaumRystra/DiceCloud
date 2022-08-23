@@ -248,14 +248,18 @@ function linkPointBuy(dependencyGraph, prop){
   dependOnCalc({ dependencyGraph, prop, key: 'max' });
   dependOnCalc({ dependencyGraph, prop, key: 'cost' });
   prop.values?.forEach(row => {
-    row.type = 'pointBuyRow';
-    row.tableName = prop.name;
-    row.tableId = prop._id;
-    dependencyGraph.addNode(row._id, row);
-    linkVariableName(dependencyGraph, row);
-    dependOnCalc({ dependencyGraph, row, key: 'min' });
-    dependOnCalc({ dependencyGraph, row, key: 'max' });
-    dependOnCalc({ dependencyGraph, row, key: 'cost' });
+    // Wrap the document in a new object so we don't bash it unintentionally
+    const pointBuyRow = {
+      ...row,
+      type: 'pointBuyRow',
+      tableName: prop.name,
+      tableId: prop._id,
+    }
+    dependencyGraph.addNode(row._id, pointBuyRow);
+    linkVariableName(dependencyGraph, pointBuyRow);
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.min' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.max' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.cost' });
   });
   if (prop.inactive) return;
 }

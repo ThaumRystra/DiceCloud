@@ -115,7 +115,7 @@ export default {
     },
     change(val){
       this.dirty = true;
-      if (this.hasChangeListener) this.loading = true;
+      if (this.hasChangeListener()) this.loading = true;
       this.$emit('change', val, this.acknowledgeChange);
     },
     hasChangeListener(){

@@ -8,9 +8,9 @@ export default function computePointBuy(computation, node) {
   prop.spent = 0;
   prop.values?.forEach(row => {
     // Clean up added properties
-    delete row.tableId;
-    delete row.tableName;
-    delete row.type;
+    // delete row.tableId;
+    // delete row.tableName;
+    // delete row.type;
 
     row.spent = 0;
     if (row.value === undefined) return;
@@ -21,18 +21,10 @@ export default function computePointBuy(computation, node) {
 
     // Check min and max
     if (min !== null && row.value < min) {
-      row.errors = row.errors || [];
-      row.errors.push({
-        type: 'pointBuyError',
-        message: 'Value smaller than min value'
-      });
+      row.value = min;
     }
     if (max !== null && row.value > max) {
-      row.errors = row.errors || [];
-      row.errors.push({
-        type: 'pointBuyError',
-        message: 'Value larger than max value'
-      });
+      row.value = max;
     }
     // Evaluate the cost function
     if (!costFunction) return;
