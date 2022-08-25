@@ -9,7 +9,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { doActionWork } from '/imports/api/engine/actions/doAction.js';
-import { CreatureLogSchema } from '/imports/api/creature/log/CreatureLogs.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 
 const doAction = new ValidatedMethod({
@@ -65,8 +64,6 @@ const doAction = new ValidatedMethod({
     let slotLevel = spell.level || 0;
     let slot;
 
-    actionContext.scope['slotLevel'] = slotLevel;
-
     if (slotId && !spell.castWithoutSpellSlots){
       slot = CreatureProperties.findOne(slotId);
       if (!slot){
@@ -108,6 +105,8 @@ const doAction = new ValidatedMethod({
         name: `Casting at level ${slotLevel}`
       });
     }
+
+    actionContext.scope['slotLevel'] = slotLevel;
 
     // Do the action
     doActionWork({
