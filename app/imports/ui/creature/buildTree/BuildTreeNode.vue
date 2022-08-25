@@ -55,6 +55,7 @@
           />
           <v-spacer />
           <v-btn
+            v-if="node.parent.id === parentSlotId"
             icon
             :disabled="context.editPermission === false"
             @click.stop="remove(node)"
@@ -91,6 +92,7 @@
           <build-tree-node-list
             v-if="showExpanded"
             :children="computedChildren"
+            :parent-slot-id="computedSlotId"
             @selected="e => $emit('selected', e)"
           />
           <div v-else>
@@ -147,6 +149,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    parentSlotId: {
+      type: String,
+      default: undefined,
+    },
   },
   data(){return {
     expanded: false,
@@ -197,6 +203,21 @@ export default {
       }
       return this.children;
     },
+    computedSlotId() {
+      if (this.condenseChild) {
+        if (this.children[0].node.type === 'propertySlot') {
+          return this.children[0].node._id;
+        } else {
+          return undefined;
+        }
+      } else {
+        if (this.node.type === 'propertySlot') {
+          return this.node._id;
+        } else {
+          return undefined;
+        }
+      }
+    },
     canExpand(){
       return !!this.computedChildren.length || this.canFillWithMany;
     },
@@ -230,41 +251,41 @@ export default {
 </script>
 
 <style lang="css" scoped>
-	.rotate-90 {
-		transform: rotate(90deg) translateZ(0);
-	}
-	.expand-area {
-		box-shadow: -2px 0px 0px 0px #808080;
-		margin-left: 0;
-	}
-	.handle {
-		cursor: move;
-	}
-	.empty .drag-area {
-		box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4);
-	}
-	.empty .expand-button {
-		opacity: 0.4;
-	}
+  .rotate-90 {
+    transform: rotate(90deg) translateZ(0);
+  }
+  .expand-area {
+    box-shadow: -2px 0px 0px 0px #808080;
+    margin-left: 0;
+  }
+  .handle {
+    cursor: move;
+  }
+  .empty .drag-area {
+    box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4);
+  }
+  .empty .expand-button {
+    opacity: 0.4;
+  }
   .found {
     background: rgba(200, 0, 0, 0.1) !important;
   }
-	.ghost {
+  .ghost {
     opacity: 0.5;
     background: rgba(251, 0, 0, 0.3);
-	}
-	.v-icon.v-icon--disabled {
-		opacity: 0;
-	}
+  }
+  .v-icon.v-icon--disabled {
+    opacity: 0;
+  }
   .v-icon {
     transition: none !important;
   }
-	.theme--light .tree-node-title:hover {
-		background-color: rgba(0,0,0,.04);
-	}
+  .theme--light .tree-node-title:hover {
+    background-color: rgba(0,0,0,.04);
+  }
   .theme--dark .tree-node-title:hover {
-		background-color: rgba(255,255,255,.04);
-	}
+    background-color: rgba(255,255,255,.04);
+  }
   .tree-node-title{
     transition: background ease 0.3s, color ease 0.15s;
   }

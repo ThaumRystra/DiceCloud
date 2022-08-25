@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="point-buy-spend-form">
-    <v-row dense>
+    <v-row
+      v-if="model.values && model.values.length"
+      dense
+    >
       <v-col
         cols="10"
         md="11"
@@ -67,6 +70,7 @@
       dense
     >
       <v-col
+        v-if="typeof model.spent === 'number'"
         cols="12"
         class="text-h4 mb-4 pr-8 d-flex justify-end"
         :class="{
@@ -74,7 +78,10 @@
           'warning--text': model.spent < (model.total && model.total.value),
         }"
       >
-        {{ model.spent }} / {{ model.total && model.total.value }}
+        {{ model.spent }}
+        <template v-if="model.total && (typeof model.total.value === 'number')">
+          / {{ model.total && model.total.value }}
+        </template>
       </v-col>
     </v-row>
   </div>
@@ -88,6 +95,7 @@ export default {
   components: {
     CalculationErrorList,
   },
+  mixins: [propertyFormMixin],
   methods: {
     max(row) {
       return row.max ? row.max && row.max.value : this.model.max && this.model.max.value;
@@ -96,6 +104,5 @@ export default {
       return row.min ? row.min && row.min.value : this.model.min && this.model.min.value;
     },
   },
-  mixins: [propertyFormMixin],
 };
 </script>

@@ -137,6 +137,11 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
     optional: true,
     removeBeforeCompute: true,
   },
+  pointsLeft: {
+    type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
   errors: {
     type: Array,
     optional: true,

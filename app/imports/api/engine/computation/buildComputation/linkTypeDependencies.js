@@ -247,6 +247,7 @@ function linkPointBuy(dependencyGraph, prop){
   dependOnCalc({ dependencyGraph, prop, key: 'min' });
   dependOnCalc({ dependencyGraph, prop, key: 'max' });
   dependOnCalc({ dependencyGraph, prop, key: 'cost' });
+  dependOnCalc({ dependencyGraph, prop, key: 'total' });
   prop.values?.forEach(row => {
     // Wrap the document in a new object so we don't bash it unintentionally
     const pointBuyRow = {

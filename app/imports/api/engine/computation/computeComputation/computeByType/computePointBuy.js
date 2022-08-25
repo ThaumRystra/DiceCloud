@@ -42,6 +42,7 @@ export default function computePointBuy(computation, node) {
       prop.spent += costFunction.value;
     }
   });
+  prop.pointsLeft = (prop.total?.value || 0) - (prop.spent || 0);
   if (prop.spent > prop.total?.value) {
     prop.errors = prop.errors || [];
     prop.errors.push({
