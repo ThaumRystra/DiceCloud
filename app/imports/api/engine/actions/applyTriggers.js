@@ -65,7 +65,7 @@ export function applyTrigger(trigger, prop, actionContext) {
     recalculateInlineCalculations(trigger.description, actionContext);
     content.value = trigger.description.value;
   }
-  actionContext.addLog(content);
+  if(!trigger.silent) actionContext.addLog(content);
 
   // Get all the trigger's properties and apply them
   const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
