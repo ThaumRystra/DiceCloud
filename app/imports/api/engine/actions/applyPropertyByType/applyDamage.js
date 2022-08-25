@@ -219,6 +219,16 @@ function dealDamage({target, damageType, amount, actionContext}){
   if (damageType === 'healing') damageLeft = -totalDamage;
   healthBars.forEach(healthBar => {
     if (damageLeft === 0) return;
+    // Replace the healthbar by the one in the action context if we can
+    // The damagePropertyWork function bashes the prop with the damage
+    // So we can use the new value in later action properties
+    if (healthBar.variableName) {
+      const targetHealthBar = target.variables[healthBar.variableName];
+      if (targetHealthBar?._id === healthBar._id) {
+        healthBar = targetHealthBar;
+      }
+    }
+    // Do the damage
     let damageAdded = damagePropertyWork({
       prop: healthBar,
       operation: 'increment',

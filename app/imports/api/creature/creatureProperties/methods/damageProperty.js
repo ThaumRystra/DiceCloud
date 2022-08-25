@@ -24,7 +24,7 @@ const damageProperty = new ValidatedMethod({
   run({ _id, operation, value }) {
     
     // Get action context
-    const prop = CreatureProperties.findOne(_id);
+    let prop = CreatureProperties.findOne(_id);
     if (!prop) throw new Meteor.Error(
       'Damage property failed', 'Property doesn\'t exist'
     );
@@ -41,6 +41,14 @@ const damageProperty = new ValidatedMethod({
 				'Damage property failed',
 				`Property of type "${prop.type}" can't be damaged`
 			);
+    }
+
+    // Replace the prop by its actionContext counterpart if possible
+    if (prop.variableName) {
+      const actionContextProp = actionContext.scope[prop.variableName];
+      if (actionContextProp?._id === prop._id) {
+        prop = actionContextProp;
+      }
     }
     
     const result = damagePropertyWork({ prop, operation, value, actionContext });
@@ -94,6 +102,9 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
     }, {
       selector: prop
     });
+    // Also write it straight to the prop so that it is updated in the actionContext
+    prop.damage = damage;
+    prop.value = newValue;
   } else if (operation === 'increment'){
     let currentValue = prop.value || 0;
     let currentDamage = prop.damage || 0;
@@ -111,6 +122,9 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
     }, {
       selector: prop
     });
+    // Also write it straight to the prop so that it is updated in the actionContext
+    prop.damage += increment;
+    prop.value -= increment;
   }
 
   applyTriggers(actionContext.triggers?.damageProperty?.after, prop, actionContext);
