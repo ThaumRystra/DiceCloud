@@ -24,6 +24,7 @@ export default function aggregateEffect({node, linkedNode, link}){
     name: linkedNode.data.name,
     operation: linkedNode.data.operation,
     amount: linkedNode.data.amount && {value: linkedNode.data.amount.value},
+    type: linkedNode.data.type,
     // ancestors: linkedNode.data.ancestors,
   });
 

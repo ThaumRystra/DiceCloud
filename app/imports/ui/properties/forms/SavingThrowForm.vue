@@ -65,6 +65,12 @@
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
     />
+    <smart-switch
+      label="Don't show in log"
+      :value="model.silent"
+      :error-messages="errors.silent"
+      @change="change('silent', ...arguments)"
+    />
     <form-section
       v-if="$slots.children"
       name="Children"

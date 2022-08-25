@@ -8,7 +8,7 @@
       <v-list-item-title class="d-flex align-center">
         <roll-popup
           v-if="!hideModifier"
-          class="prof-mod mr-1"
+          class="prof-mod mr-1 flex-shrink-0"
           button-class="pl-3 pr-2"
           text
           :roll-text="displayedModifier"
@@ -43,7 +43,7 @@
           :value="model.proficiency"
           class="prof-icon ml-3 mr-2"
         />
-        <div>
+        <div class="text-truncate">
           {{ model.name }}
           <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
             *

@@ -102,7 +102,13 @@ const PROPERTIES = Object.freeze({
     icon: 'mdi-note-outline',
     name: 'Note',
     helpText: 'Notes about your character and their adventures',
-    suggestedParents: ['folder'],
+    suggestedParents: ['note', 'folder'],
+  },
+  pointBuy: {
+    icon: 'mdi-table',
+    name: 'Point Buy',
+    helpText: 'A point buy table that allows the user to select an array of values that match a given cost',
+    suggestedParents: [],
   },
   proficiency: {
     icon: 'mdi-brightness-1',

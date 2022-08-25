@@ -140,6 +140,12 @@
           :value="model.tags"
           @change="change('tags', ...arguments)"
         />
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
+        />
       </form-section>
     </form-sections>
   </div>

@@ -73,5 +73,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.error-list .v-alert__content{
+  overflow-x: auto;
+}
 </style>

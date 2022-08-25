@@ -43,7 +43,7 @@ import TabletopMap from '/imports/ui/tabletop/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import TabletopActionCards from '/imports/ui/tabletop/TabletopActionCards.vue';
 import MiniCharacterSheet from '/imports/ui/creature/character/MiniCharacterSheet.vue';
-import snackbar from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {

@@ -26,7 +26,12 @@ const DamageSchema = createPropertySchema({
     max: STORAGE_LIMITS.calculation,
 		defaultValue: 'slashing',
     regEx: VARIABLE_NAME_REGEX,
-	},
+  },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedOnlyDamageSchema = createPropertySchema({

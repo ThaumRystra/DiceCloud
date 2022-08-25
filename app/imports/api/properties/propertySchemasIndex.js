@@ -14,6 +14,7 @@ import { EffectSchema } from '/imports/api/properties/Effects.js';
 import { FeatureSchema } from '/imports/api/properties/Features.js';
 import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { NoteSchema } from '/imports/api/properties/Notes.js';
+import { PointBuySchema } from '/imports/api/properties/PointBuys.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { ReferenceSchema } from '/imports/api/properties/References.js';
 import { RollSchema } from '/imports/api/properties/Rolls.js';
@@ -44,6 +45,7 @@ const propertySchemasIndex = {
   feature: FeatureSchema,
   folder: FolderSchema,
   note: NoteSchema,
+  pointBuy: PointBuySchema,
   proficiency: ProficiencySchema,
   propertySlot: SlotSchema,
   reference: ReferenceSchema,

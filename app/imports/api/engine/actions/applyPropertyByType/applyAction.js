@@ -20,7 +20,7 @@ export default function applyAction(node, actionContext) {
     recalculateInlineCalculations(prop.summary, actionContext);
     content.value = prop.summary.value;
   }
-  actionContext.addLog(content);
+  if (!prop.silent) actionContext.addLog(content);
 
   // Spend the resources
   const failed = spendResources(prop, actionContext);
@@ -188,7 +188,7 @@ function applyChildren(node, actionContext) {
 function spendResources(prop, actionContext){
   // Check Uses
   if (prop.usesLeft <= 0){
-    actionContext.addLog({
+    if (!prop.silent) actionContext.addLog({
       name: 'Error',
       value: `${prop.name || 'action'} does not have enough uses left`,
     });
@@ -196,7 +196,7 @@ function spendResources(prop, actionContext){
   }
   // Resources
   if (prop.insufficientResources){
-    actionContext.addLog({
+    if (!prop.silent) actionContext.addLog({
       name: 'Error',
       value: 'This creature doesn\'t have sufficient resources to perform this action',
     });
@@ -257,7 +257,7 @@ function spendResources(prop, actionContext){
     }, {
       selector: prop
     });
-    actionContext.addLog({
+    if (!prop.silent) actionContext.addLog({
       name: 'Uses left',
       value: prop.usesLeft - 1,
       inline: true,
@@ -288,12 +288,12 @@ function spendResources(prop, actionContext){
   });
 
   // Log all the spending
-  if (gainLog.length) actionContext.addLog({
+  if (gainLog.length && !prop.silent) actionContext.addLog({
     name: 'Gained',
     value: gainLog.join('\n'),
     inline: true,
   });
-  if (spendLog.length) actionContext.addLog({
+  if (spendLog.length && !prop.silent) actionContext.addLog({
     name: 'Spent',
     value: spendLog.join('\n'),
     inline: true,

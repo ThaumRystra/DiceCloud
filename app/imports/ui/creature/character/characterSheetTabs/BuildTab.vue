@@ -25,6 +25,7 @@
               <v-menu
                 bottom
                 left
+                transition="slide-y-transition"
               >
                 <template #activator="{ on }">
                   <v-badge
@@ -48,12 +49,21 @@
                     <v-icon class="mr-2">
                       mdi-file-hidden
                     </v-icon>
-                    {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'slots' : 'slot' }}
+                    {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'properties' : 'property' }}
                   </v-subheader>
+                  <v-list-item
+                    v-for="pointBuy in hiddenPointBuys"
+                    :key="pointBuy._id"
+                    @click="unhideProp(pointBuy._id)"
+                  >
+                    <v-list-item-title>
+                      {{ getPropertyTitle(pointBuy) }}
+                    </v-list-item-title>
+                  </v-list-item>
                   <v-list-item
                     v-for="slot in hiddenSlots"
                     :key="slot._id"
-                    @click="unhideSlot(slot._id)"
+                    @click="unhideProp(slot._id)"
                   >
                     <v-list-item-title>
                       {{ getPropertyTitle(slot) }}
@@ -226,7 +236,7 @@ export default {
       ].sort((a, b) => a.order - b.order);
     },
     hiddenCount() {
-      return this.hiddenSlots.length;
+      return this.hiddenSlots.length + this.hiddenPointBuys.length;
     },
   },
   meteor: {
@@ -235,6 +245,16 @@ export default {
     },
     variables() {
       return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
+    },
+    hiddenPointBuys() {
+      return CreatureProperties.find({
+        type: 'pointBuy',
+        'ancestors.id': this.creatureId,
+        ignored: true,
+        pointsLeft: {$ne: 0},
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      }).fetch();
     },
     hiddenSlots(){
       return CreatureProperties.find({
@@ -284,7 +304,7 @@ export default {
     slotBuildTree(){
       const slots = CreatureProperties.find({
         'ancestors.id': this.creatureId,
-        type: 'propertySlot',
+        type: {$in: ['propertySlot', 'pointBuy']},
         $or: [
           {'slotCondition.value': {$nin: [false, 0, '']}},
           {'slotCondition.value': {$exists: false}},
@@ -308,16 +328,15 @@ export default {
       ]);
       traverse(tree, (child, parents) => {
         const model = child.node;
-        const isSlotWithSpace = model.type === 'propertySlot' &&
+        const isSlotWithSpace = model.type === 'propertySlot' && (
           model.spaceLeft > 0 || 
           !model.quantityExpected ||
-          model.quantityExpected.value === 0;
+          model.quantityExpected.value === 0
+        );
         if(isSlotWithSpace) {
           model._canFill = true;
           parents.forEach(node => {
-            if (node.node.type === 'propertySlot'){
-              node.node._descendantCanFill = true;
-            }
+            node.node._descendantCanFill = true;
           });
         }
       });
@@ -385,7 +404,7 @@ export default {
       });
     },
     getPropertyTitle,
-    unhideSlot(_id) {
+    unhideProp(_id) {
       updateCreatureProperty.call({
         _id,
         path: ['ignored'],

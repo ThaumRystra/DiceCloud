@@ -4,7 +4,7 @@
 // by computeVariableAsSkill
 export default function computeSkill(computation, node){
   const prop = node.data;
-  prop.proficiency = prop.baseProficiency;
+  prop.proficiency = prop.baseProficiency || 0;
   let profBonus = computation.scope['proficiencyBonus']?.value || 0;
   // Multiply the proficiency bonus by the actual proficiency
   if(prop.proficiency === 0.49){
