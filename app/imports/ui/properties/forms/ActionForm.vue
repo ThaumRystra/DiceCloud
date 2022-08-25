@@ -141,6 +141,18 @@
               @change="change('usesUsed', ...arguments)"
             />
           </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Don't show in log"
+              :value="model.silent"
+              :error-messages="errors.silent"
+              @change="change('silent', ...arguments)"
+            />
+          </v-col>
         </v-row>
         <smart-select
           label="Reset"

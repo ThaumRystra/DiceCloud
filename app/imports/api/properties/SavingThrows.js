@@ -30,6 +30,11 @@ let SavingThrowSchema = createPropertySchema({
     optional: true,
     max: STORAGE_LIMITS.variableName,
   },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedOnlySavingThrowSchema = createPropertySchema({

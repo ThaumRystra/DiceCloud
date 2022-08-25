@@ -115,6 +115,20 @@
           :value="model.tags"
           @change="change('tags', ...arguments)"
         />
+        <v-row dense>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Don't show in log"
+              :value="model.silent"
+              :error-messages="errors.silent"
+              @change="change('silent', ...arguments)"
+            />
+          </v-col>
+        </v-row>
       </form-section>
     </form-sections>
   </div>

@@ -36,25 +36,25 @@ export default function applyBranch(node, actionContext){
       break;
     case 'hit':
       if (scope['$attackHit']?.value){
-        if (!targets.length) actionContext.addLog({value: '**On hit**'});
+        if (!targets.length && !prop.silent) actionContext.addLog({value: '**On hit**'});
         applyChildren();
       }
       break;
     case 'miss':
       if (scope['$attackMiss']?.value){
-        if (!targets.length) actionContext.addLog({value: '**On miss**'});
+        if (!targets.length && !prop.silent) actionContext.addLog({value: '**On miss**'});
         applyChildren();
       }
       break;
     case 'failedSave':
       if (scope['$saveFailed']?.value){
-        if (!targets.length) actionContext.addLog({value: '**On failed save**'});
+        if (!targets.length && !prop.silent) actionContext.addLog({value: '**On failed save**'});
         applyChildren();
       }
       break;
     case 'successfulSave':
       if (scope['$saveSucceeded']?.value){
-        if (!targets.length) actionContext.addLog({value: '**On save**',});
+        if (!targets.length && !prop.silent) actionContext.addLog({value: '**On save**',});
         applyChildren();
       }
       break;

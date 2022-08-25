@@ -43,7 +43,7 @@ export default function applyBuff(node, actionContext){
     copyNodeListToTarget(propList, target, oldParent);
 
     //Log the buff
-    if (prop.name || prop.description?.value){
+    if ((prop.name || prop.description?.value) && !prop.silent){
       if (target._id === actionContext.creature._id){
         // Targeting self
         actionContext.addLog({

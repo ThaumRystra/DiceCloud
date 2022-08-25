@@ -31,6 +31,11 @@ const AdjustmentSchema = createPropertySchema({
     allowedValues: ['set', 'increment'],
     defaultValue: 'increment',
   },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedOnlyAdjustmentSchema = createPropertySchema({

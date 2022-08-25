@@ -29,6 +29,11 @@ let BuffSchema = createPropertySchema({
     ],
 		defaultValue: 'target',
 	},
+	// Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 let ComputedOnlyBuffSchema = createPropertySchema({

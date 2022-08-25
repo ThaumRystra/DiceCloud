@@ -128,7 +128,7 @@ export default function applyDamage(node, actionContext){
     // There are no targets, just log the result
     logValue.push(`**${damage}** ${suffix}`);
   }
-  actionContext.addLog({
+  if (!prop.silent) actionContext.addLog({
     name: logName,
     value: logValue.join('\n'),
     inline: true,
