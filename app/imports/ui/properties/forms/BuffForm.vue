@@ -72,6 +72,18 @@
               @change="change('silent', ...arguments)"
             />
           </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Don't freeze variables"
+              :value="model.skipCrystalization"
+              :error-messages="errors.skipCrystalization"
+              @change="change('skipCrystalization', ...arguments)"
+            />
+          </v-col>
         </v-row>
         <smart-combobox
           label="Tags"

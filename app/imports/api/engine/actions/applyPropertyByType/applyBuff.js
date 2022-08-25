@@ -13,6 +13,7 @@ import logErrors from './shared/logErrors.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 
 export default function applyBuff(node, actionContext){
   applyNodeTriggers(node, 'before', actionContext);
@@ -32,7 +33,9 @@ export default function applyBuff(node, actionContext){
     });
   }
   addChildrenToPropList(node.children);
-  crystalizeVariables({propList, actionContext});
+  if (!prop.skipCrystalization) {
+    crystalizeVariables({propList, actionContext});
+  }
 
   let oldParent = {
     id: prop.parent.id,
@@ -96,6 +99,7 @@ function crystalizeVariables({propList, actionContext}){
       delete prop._skipCrystalize;
       return;
     }
+    // Iterate through all the calculations and crystalize them
     computedSchemas[prop.type].computedFields().forEach( calcKey => {
       applyFnToKey(prop, calcKey, (prop, key) => {
         const calcObj = get(prop, key);
@@ -130,6 +134,37 @@ function crystalizeVariables({propList, actionContext}){
         });
         calcObj.calculation = toString(calcObj.parseNode);
         calcObj.hash = cyrb53(calcObj.calculation);
+      });
+    });
+    // For each key in the schema
+    computedSchemas[prop.type].inlineCalculationFields().forEach( calcKey => {
+      // That ends in .inlineCalculations
+      applyFnToKey(prop, calcKey, (prop, key) => {
+        const inlineCalcObj = get(prop, key);
+        if (!inlineCalcObj) return;
+
+        // If there is no text, skip
+        if (!inlineCalcObj.text){
+          return;
+        }
+
+        // Replace all the existing calculations
+        let index = -1;
+        inlineCalcObj.text = inlineCalcObj.text.replace(INLINE_CALCULATION_REGEX, () => {
+          index += 1;
+          return `{${inlineCalcObj.inlineCalculations[index].calculation}}`;
+        });
+
+        // Set the value to the uncomputed string
+        inlineCalcObj.value = inlineCalcObj.text;
+
+        // Write a new hash
+        const inlineCalcHash = cyrb53(inlineCalcObj.text);
+        if (inlineCalcHash === inlineCalcObj.hash) {
+          // Skip if nothing changed
+          return;
+        }
+        inlineCalcObj.hash = inlineCalcHash;
       });
     });
   });
