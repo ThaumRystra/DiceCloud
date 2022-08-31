@@ -55,6 +55,19 @@
           </template>
           <v-list>
             <v-list-item
+              v-if="docsPath"
+              @click="helpDialog"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  Help
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>mdi-help</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item
               v-if="$listeners && $listeners.duplicate"
               @click="$emit('duplicate')"
             >
@@ -137,6 +150,7 @@ import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
 
 export default {
   components: {
@@ -171,7 +185,11 @@ export default {
         }
       }
       return model.name || getPropertyName(model.type);
-    }
+    },
+    docsPath() {
+      const propDef = PROPERTIES[this.model.type];
+      return propDef && propDef.docsPath;
+    },
   },
   methods: {
     colorChanged(value){
@@ -179,6 +197,15 @@ export default {
     },
     back(){
       this.$store.dispatch('popDialogStack');
+    },
+    helpDialog() {
+      this.$store.commit('pushDialogStack', {
+        component: 'help-dialog',
+        elementId: 'property-toolbar-menu-button',
+        data: {
+          path: this.docsPath,
+        },
+      });
     },
   }
 }

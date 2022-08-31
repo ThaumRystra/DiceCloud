@@ -34,6 +34,7 @@ const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDraw
 const Admin = () => import('/imports/ui/pages/Admin.vue');
 const Maintenance = () => import('/imports/ui/pages/Maintenance.vue');
 const Files = () => import('/imports/ui/pages/Files.vue');
+const Documentation = () => import('/imports/ui/pages/Documentation.vue');
 
 // Not found
 const NotFound = () => import('/imports/ui/pages/NotFound.vue');
@@ -241,6 +242,14 @@ RouterFactory.configure(router => {
       },
       meta: {
         title: 'Feedback',
+      },
+    }, {
+      path: '/docs/:docPath([^/]+.*)',
+      components: {
+        default: Documentation,
+      },
+      meta: {
+        title: 'Documentation',
       },
     },{
       path: '/about',

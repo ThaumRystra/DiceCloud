@@ -1,7 +1,8 @@
 <template lang="html">
-  <!-- eslint-disable-next-line vue/no-v-html -->
+  <!-- eslint-disable vue/no-v-html -->
   <div
     class="markdown"
+    @click="e => $emit('click', e)"
     v-html="compiledMarkdown"
   />
 </template>

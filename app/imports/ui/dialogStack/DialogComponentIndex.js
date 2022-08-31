@@ -11,6 +11,7 @@ const DeleteConfirmationDialog = () => import('/imports/ui/dialogStack/DeleteCon
 const DeleteUserAccountDialog = () => import('/imports/ui/user/DeleteUserAccountDialog.vue');
 const ExperienceInsertDialog = () => import( '/imports/ui/creature/experiences/ExperienceInsertDialog.vue');
 const ExperienceListDialog = () => import( '/imports/ui/creature/experiences/ExperienceListDialog.vue');
+const HelpDialog = () => import( '/imports/ui/dialogStack/HelpDialog.vue');
 const InviteDialog = () => import('/imports/ui/user/InviteDialog.vue');
 const LevelUpDialog = () => import('/imports/ui/creature/slots/LevelUpDialog.vue');
 const LibraryCollectionCreationDialog = () => import('/imports/ui/library/LibraryCollectionCreationDialog.vue');
@@ -42,6 +43,7 @@ export default {
   DeleteUserAccountDialog,
   ExperienceInsertDialog,
   ExperienceListDialog,
+  HelpDialog,
   InviteDialog,
   LevelUpDialog,
   LibraryCollectionCreationDialog,

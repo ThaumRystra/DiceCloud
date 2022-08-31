@@ -3,13 +3,11 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.action',
     name: 'Action',
     helpText: 'Actions are things your character can do. When an action is taken, all the properties under it are activated.',
-    docsPath: 'property/action',
     suggestedParents: ['classLevel', 'feature', 'item'],
   },
   attribute: {
     icon: '$vuetify.icons.attribute',
     name: 'Attribute',
-    docsPath: 'property/attribute',
     helpText: 'Attributes are the numbered statistics of your character, excluding rolls you might add proficiency bonus to, those are skills.',
     examples: 'Ability scores, speed, hit points, ki',
     suggestedParents: ['classLevel', 'buff'],
@@ -17,7 +15,6 @@ const PROPERTIES = Object.freeze({
   adjustment: {
     icon: '$vuetify.icons.attribute_damage',
     name: 'Attribute damage',
-    docsPath: 'property/attribute-damage',
     helpText: 'Attribute damage reduces the current value of an attribute when it is applied by an action. A negative value causes the attribute to increase instead, up to its normal maximum.',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
   },
@@ -30,14 +27,12 @@ const PROPERTIES = Object.freeze({
   buffRemover: {
     icon: '$vuetify.icons.buffRemover',
     name: 'Remove Buff',
-    docsPath: 'property/remove-buff',
     helpText: 'Removes a buff from the target character',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
   },
   branch: {
     icon: 'mdi-file-tree',
     name: 'Branch',
-    docsPath: 'property/branch',
     helpText: 'When a branch is activated as a child of an action, it can control which of its children get activated.',
     suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
   },
@@ -193,17 +188,3 @@ export function getPropertyName(type){
 export function getPropertyIcon(type){
   return type && PROPERTIES[type] && PROPERTIES[type].icon;
 }
-
-const propsByDocsPath = new Map();
-
-for (const key in PROPERTIES) {
-  const prop = PROPERTIES[key];
-  if (prop.docsPath) {
-    propsByDocsPath.set(prop.docsPath, {
-      ...prop,
-      type: key,
-    });
-  }
-}
-
-export { propsByDocsPath };
