@@ -2,7 +2,12 @@ import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
 
 
 // Manual doc paths
-const docPaths = [];
+const docPaths = [
+  'computed-fields',
+  'dependency-loops',
+  'docs',
+  'tags',
+];
 const docs = new Map();
 docPaths.forEach(path => {
   docs.set(path, Assets.getText(`docs/${path}.md`))

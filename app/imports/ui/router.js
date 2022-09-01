@@ -252,6 +252,14 @@ RouterFactory.configure(router => {
         title: 'Documentation',
       },
     },{
+      path: '/docs',
+      components: {
+        default: Documentation,
+      },
+      meta: {
+        title: 'Documentation',
+      },
+    },{
       path: '/about',
       components: {
         default: About,

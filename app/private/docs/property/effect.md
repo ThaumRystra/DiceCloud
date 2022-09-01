@@ -1,6 +1,6 @@
 # Effects
 
-Effects are the core of the DiceCloud engine. Effect change the values of attributes, skills, and calculations in a way that is transparent and auditable, keeping character sheets organized and understandable, even when using intricate homebrew rules on high level characters. To understand how effects work is to understand DiceCloud characters.
+Effects are the core of the DiceCloud engine. Effect change the values of attributes, skills, and calculations in a way that is transparent and auditable, keeping character sheets organized and understandable, even when using intricate homebrew rules on high level characters.
 
 ---
 
