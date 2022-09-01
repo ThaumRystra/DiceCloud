@@ -20,17 +20,17 @@ The following properties can all be applied by an action:
 
 ---
 
-### Name `#action.name`
+### Name
 
 The name of the action.
 
-### Action type `#action.actionType`
+### Action type
 
 How long the action takes to perform.
 
 Allows [inline calculations](/docs/inline-calculations).
 
-### Attack roll `#action.attackRoll`
+### Attack roll
 
 A [computed field](/docs/computed-fields) which calculates the attack roll modifier. If this field is empty, no attack roll will be made. Use 0 to make an attack roll without a modifier.
 
@@ -43,13 +43,13 @@ The following variables may be added to the action scope when attack rolls are m
   - `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.
   - `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.
 
-### Summary `#action.summary`
+### Summary
 
 A brief overview of what the action does. This will appear in the action card, and shows in the log when the action is applied.
 
-Calculations inside of `{` curly bracers `}` will be computed.
+Allows [inline calculations](/docs/inline-calculations).
 
-### Description `#action.description`
+### Description
 
 A more detailed description of the action. The description does not show in the action card or the log when the action is applied.
 
@@ -87,7 +87,7 @@ See [Tags](/docs/tags)
 
 ### Target
 
-Who this action should apply to. The properties under the action will be applied to the target.
+Who this action should apply to. The properties under the action will be applied to the Targets.
 
 - **Self** The action will apply its properties to the creature taking the action
 - **Single Target** The action will apply its properties without a target (for now)

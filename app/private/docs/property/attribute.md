@@ -1,6 +1,6 @@
 # Attribute
 
-Attributes are the core properties of a DiceCloud creature. Each attribute represents some numerical value of the creature.
+Attributes represent the numerical values of the creature.
 
 Attributes can be targeted by [effects](/docs/property/effect) which can change their total value in a non-destructive way. For example, if a class level gives you an ability score increase of +2 strength when it is taken, instead of directly editing the strength attribute, you add an effect to the class level that adds 2 to strength. The total value of strength will increase by 2 and it will show a record of that ability score increase and where it came from.
 
@@ -17,7 +17,7 @@ Attributes have the following fields that can be accessed in calculations with `
 
 ### Base value
 
-This is the starting value of the attribute before it is modified by effects and other properties. Multiple properties can set the base value for a given variable name, when this happens the highest base value is chosen, and then all other effects are applied.
+A [computed field](/docs/computed-fields) that determines the starting value of the attribute before it is modified by effects and other properties. Multiple properties can set the base value for a given variable name, when this happens the highest base value is chosen, and then all other effects are applied.
 
 ### Name
 
@@ -27,7 +27,7 @@ The name of the attribute
 
 The name used to refer to the attribute in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.
 
-If multiple attributes share a variable name, only the last attribute on the [character tree](/docs/tree) will count as the defining attribute and appear on the sheet.
+If multiple attributes share a variable name, only the last attribute on the [character tree](/docs/tree) will count as the defining attribute and appear on the sheet, while other attributes with that variable name will be used as base value [effects](/docs/property/effect).
 
 ### Attribute type
 
