@@ -16,7 +16,8 @@ const SignIn = () => import('/imports/ui/pages/SignIn.vue' );
 const Register = () => import('/imports/ui/pages/Register.vue');
 const IconAdmin = () => import('/imports/ui/icons/IconAdmin.vue');
 //const Friends = () => import('/imports/ui/pages/Friends.vue' );
-const Feedback = () => import('/imports/ui/pages/Feedback.vue' );
+const Feedback = () => import('/imports/ui/pages/Feedback.vue');
+const FunctionReference = () => import('/imports/ui/pages/FunctionReference.vue');
 const Account = () => import('/imports/ui/pages/Account.vue' );
 const InviteSuccess = () => import('/imports/ui/pages/InviteSuccess.vue' );
 const InviteError = () => import('/imports/ui/pages/InviteError.vue' );
@@ -242,6 +243,14 @@ RouterFactory.configure(router => {
       },
       meta: {
         title: 'Feedback',
+      },
+    }, {
+      path: '/docs/functions',
+      components: {
+        default: FunctionReference,
+      },
+      meta: {
+        title: 'Functions',
       },
     }, {
       path: '/docs/:docPath([^/]+.*)',

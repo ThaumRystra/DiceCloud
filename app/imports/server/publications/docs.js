@@ -4,6 +4,7 @@ import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
 // Manual doc paths
 const docPaths = [
   'computed-fields',
+  'inline-calculations',
   'dependency-loops',
   'docs',
   'tags',

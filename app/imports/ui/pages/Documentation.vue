@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="documentation">
     <v-row>
       <v-col cols="12">
         <v-fade-transition mode="out-in">

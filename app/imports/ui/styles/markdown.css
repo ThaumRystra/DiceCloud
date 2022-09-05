@@ -86,7 +86,7 @@
 }
 
 .markdown tbody>tr:nth-child(odd) {
-  background-color: rgba(0, 0, 0, 0.1)
+  background-color: rgba(0, 0, 0, 0.03)
 }
 
 .markdown ul {
@@ -94,5 +94,26 @@
 }
 
 .theme--dark.v-application .markdown tbody>tr:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.1)
+  background-color: rgba(255, 255, 255, 0.03)
+}
+
+.documentation .markdown {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.documentation .markdown p {
+  line-height: 24px;
+}
+
+.documentation .markdown ul {
+  line-height: 32px;
+}
+
+.documentation .markdown td {
+  padding: 8px;
+}
+
+.documentation .markdown th {
+  padding: 8px;
 }

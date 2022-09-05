@@ -35,4 +35,5 @@
 - ### [Computed fields](/docs/computed-fields)
 - ### [Inline Calculations](/docs/inline-calculations)
 - ### [Dependency Loops](/docs/dependency-loops)
+- ### [Functions](/docs/functions)
 - ### [Tags](/docs/tags)
