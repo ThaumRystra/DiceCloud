@@ -192,9 +192,15 @@ export default {
             creatureId: this.context.creatureId,
             spellId: this.model._id,
           },
-          callback({spellId, slotId} = {}){
+          callback({spellId, slotId, advantage} = {}){
             if (!spellId) return;
-            doCastSpell.call({spellId, slotId}, error => {
+            doCastSpell.call({
+              spellId,
+              slotId,
+              scope: {
+                $attackAdvantage: advantage,
+              },
+            }, error => {
               if (!error) return;
               snackbar({text: error.reason});
               console.error(error);

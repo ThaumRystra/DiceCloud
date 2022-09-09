@@ -105,13 +105,13 @@
       </template>
       <template slot="right">
         <div
-          key="spell-title"
+          key="spell-title-right"
           class="text-h6 my-3"
         >
           Spell
         </div>
         <v-list-item-group
-          key="slot-list"
+          key="slot-list-right"
           v-model="selectedSpellId"
         >
           <template v-for="spell in computedSpells">
@@ -145,10 +145,24 @@
       >
         Cancel
       </v-btn>
+      <roll-popup
+        v-if="selectedSpell && selectedSpell.attackRoll"
+        text
+        color="primary"
+        class="mx-2"
+        :disabled="!canCast"
+        :name="selectedSpell.name"
+        :advantage="selectedSpell.attackRoll && selectedSpell.attackRoll.advantage"
+        @roll="cast"
+      >
+        Cast
+      </roll-popup>
       <v-btn
+        v-else
         text
         :disabled="!canCast"
-        class="primary--text"
+        class="mx-2 px-4"
+        color="primary"
         @click="cast"
       >
         Cast
@@ -164,6 +178,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import spellsWithSubheaders from '/imports/ui/properties/components/spells/spellsWithSubheaders.js';
 import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import RollPopup from '/imports/ui/components/RollPopup.vue';
 import { find } from 'lodash';
 
 const slotFilter = {
@@ -178,6 +193,7 @@ const slotFilter = {
 export default {
   components: {
     DialogBase,
+    RollPopup,
     SplitListLayout,
     SpellSlotListTile,
     SpellListTile,
@@ -325,13 +341,14 @@ export default {
         )
       )
     },
-    cast(){
+    cast({advantage}){
       let selectedSlotId = this.selectedSlotId;
       if (selectedSlotId === 'no-slot') selectedSlotId = undefined;
       this.$store.dispatch('popDialogStack', {
         spellId: this.selectedSpellId,
         slotId: selectedSlotId,
-      })
+        advantage,
+      });
     }
   },
   meteor: {
