@@ -1,4 +1,4 @@
-import { some, intersection, difference, remove } from 'lodash';
+import { some, intersection, difference, remove, includes } from 'lodash';
 import applyProperty from '../applyProperty.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
@@ -147,21 +147,21 @@ function applyDamageMultipliers({target, damage, damageProp, logValue}){
 
   if (
     multiplier.immunity &&
-    some(multiplier.immunities, multiplierAppliesTo(damageProp))
+    some(multiplier.immunities, multiplierAppliesTo(damageProp, 'immunity'))
   ){
     logValue.push(`Immune to ${damageTypeText}`);
     return 0;
   } else {
     if (
       multiplier.resistance &&
-      some(multiplier.resistances, multiplierAppliesTo(damageProp))
+      some(multiplier.resistances, multiplierAppliesTo(damageProp, 'resistance'))
     ){
       logValue.push(`Resistant to ${damageTypeText}`);
       damage = Math.floor(damage / 2);
     }
     if (
       multiplier.vulnerability &&
-      some(multiplier.vulnerabilities, multiplierAppliesTo(damageProp))
+      some(multiplier.vulnerabilities, multiplierAppliesTo(damageProp, 'vulnerability'))
     ){
       logValue.push(`Vulnerable to ${damageTypeText}`);
       damage = Math.floor(damage * 2);
@@ -170,8 +170,11 @@ function applyDamageMultipliers({target, damage, damageProp, logValue}){
   return damage;
 }
 
-function multiplierAppliesTo(damageProp){
+function multiplierAppliesTo(damageProp, multiplierType){
   return multiplier => {
+    // Apply the default 'ignore x' tags
+    if (includes(damageProp.tags, `ignore ${multiplierType}`)) return false;
+
     const hasRequiredTags = difference(
       multiplier.includeTags, damageProp.tags
     ).length === 0;

@@ -48,7 +48,7 @@
       chips
       deletable-chips
       hint=""
-      :items="['magical', 'silvered']"
+      :items="['magical', 'silvered', 'ignore resistance', 'ignore vulnerability', 'ignore immunity']"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
