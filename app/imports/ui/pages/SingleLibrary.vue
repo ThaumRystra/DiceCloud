@@ -7,12 +7,29 @@
 </template>
 
 <script lang="js">
-  import SingleCardLayout from '/imports/ui/layouts/SingleCardLayout.vue';
-	import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
-	export default {
-		components: {
-      SingleCardLayout,
-			LibraryAndNode,
-		},
-	};
+import SingleCardLayout from '/imports/ui/layouts/SingleCardLayout.vue';
+import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
+import Libraries from '/imports/api/library/Libraries.js';
+
+export default {
+  components: {
+    SingleCardLayout,
+    LibraryAndNode,
+  },
+  watch: {
+    'library.name'(newName) {
+      this.$store.commit('setPageTitle', newName || 'Library');
+    },
+  },
+  mounted() {
+    this.$store.commit('setPageTitle', this.library && this.library.name || 'Library');
+  },
+  meteor: {
+    library(){
+      let libraryId = this.$route.params.id;
+      if (!libraryId) return;
+      return Libraries.findOne(libraryId, {fields: {name: 1}});
+    },
+  }
+};
 </script>
