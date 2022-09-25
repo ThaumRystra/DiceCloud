@@ -1,15 +1,15 @@
 <template lang="html">
   <markdown-text
     v-if="text && model"
-    :markdown="model.value || model.text"
+    :markdown="textValue"
   />
   <property-field
-    v-else-if="model && (model.value || model.text)"
+    v-else-if="model && textValue"
     :name="name"
     :cols="{cols: 12}"
   >
     <markdown-text
-      :markdown="model.value || model.text"
+      :markdown="textValue"
     />
   </property-field>
 </template>
@@ -33,7 +33,17 @@ export default {
       default: undefined,
     },
     text: Boolean,
-	},
+  },
+  computed: {
+    textValue() {
+      if (!this.model) return;
+      if (typeof this.model.value === 'string') {
+        return this.model.value;
+      } else {
+        return this.model.text
+      }
+    },
+  },
 }
 </script>
 
