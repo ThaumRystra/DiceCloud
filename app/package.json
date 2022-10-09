@@ -61,6 +61,8 @@
     "vuex": "^3.1.3"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
     "chai": "^4.3.6",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^7.20.0",
@@ -72,11 +74,14 @@
     "extends": [
       "eslint:recommended",
       "plugin:vue/recommended",
-      "plugin:vue/base"
+      "plugin:vue/base",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
     ],
     "plugins": [
       "vue",
-      "vuetify"
+      "vuetify",
+      "@typescript-eslint"
     ],
     "overrides": [
       {

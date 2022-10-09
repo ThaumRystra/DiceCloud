@@ -1,15 +1,30 @@
 import { EJSON } from 'meteor/ejson';
-import createGraph from 'ngraph.graph';
+import createGraph, { Graph } from 'ngraph.graph';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
+interface CreatureProperty {
+  _id: string;
+  type: string;
+}
+
 export default class CreatureComputation {
-  constructor(properties, creature, variables){
+  originalPropsById: object;
+  propsById: object;
+  propsWithTag: object;
+  scope: object;
+  props: Array<CreatureProperty>;
+  dependencyGraph: Graph;
+  errors: Array<object>;
+  creature: object;
+  variables: object;
+
+  constructor(properties: Array<CreatureProperty>, creature: object, variables: object) {
     // Set up fields
-    this.originalPropsById =  {};
-    this.propsById =  {};
+    this.originalPropsById = {};
+    this.propsById = {};
     this.propsWithTag = {};
     this.scope = {};
-    this.props =  properties;
+    this.props = properties;
     this.dependencyGraph = createGraph();
     this.errors = [];
     this.creature = creature;
