@@ -91,6 +91,20 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item
+            key="ritual-dummy-slot"
+            class="spell-slot-list-tile"
+            :class="{ 'primary--text': selectedSlotId === 'ritual' }"
+            value="ritual"
+            :disabled="!canCastSpellWithSlot(selectedSpell, 'ritual')"
+            @click="selectedSlotId = 'ritual'"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                Cast as ritual
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <spell-slot-list-tile
             v-for="spellSlot in spellSlots"
             :key="spellSlot._id"
@@ -223,11 +237,11 @@ export default {
       searchError: undefined,
       filterMenuOpen: false,
       booleanFilters: {
-        verbal: { name: 'Verbal', enabled: false, value: false },
-        somatic: { name: 'Somatic', enabled: false, value: false },
-        material: { name: 'Material', enabled: false, value: false },
-        concentration: { name: 'Concentration', enabled: false, value: false },
-        ritual: { name: 'Ritual', enabled: false, value: false },
+        verbal: { name: 'Verbal', enabled: false, value: true },
+        somatic: { name: 'Somatic', enabled: false, value: true },
+        material: { name: 'Material', enabled: false, value: true },
+        concentration: { name: 'Concentration', enabled: false, value: true },
+        ritual: { name: 'Ritual', enabled: false, value: true },
       },
     }
   },
@@ -260,13 +274,14 @@ export default {
     selectedSpell: {
       handler(spell) {
         if (!spell) return;
-        if (spell.level === 0 || spell.castWithoutSpellSlots) {
-          this.selectedSlotId = 'no-slot';
-        } else if (
-          !this.selectedSlotId ||
-          this.selectedSlotId == 'no-slot' ||
-          this.selectedSlot.spellSlotLevel.value < spell.level
+        if (this.selectedSlotId && this.canCastSpellWithSlot(
+          spell, this.selectedSlotId, this.selectedSlot
+        )) return;
+        if (
+          (spell.level === 0 || spell.castWithoutSpellSlots)
         ) {
+          this.selectedSlotId = 'no-slot';
+        } else {
           const newSlot = find(
             CreatureProperties.find({
               'ancestors.id': this.creatureId,
@@ -280,6 +295,8 @@ export default {
           );
           if (newSlot) {
             this.selectedSlotId = newSlot._id;
+          } else if (spell.ritual) {
+            this.selectedSlotId = 'ritual';
           }
         }
       },
@@ -332,24 +349,26 @@ export default {
         spell.castWithoutSpellSlots &&
         spell.insufficientResources
       ) return false;
-      return (!spell.level || spell.castWithoutSpellSlots) ? (
+      if (spell.ritual && slotId === 'ritual') return true;
+      if (!spell.level || spell.castWithoutSpellSlots) {
         // Cantrips and no-slot spells
-        slotId && slotId === 'no-slot'
-      ) : (
+        return slotId && slotId === 'no-slot'
+      } else {
         // Leveled spells
-        slotId !== 'no-slot' &&
-        slot && spell && (
-          spell.level <= slot.spellSlotLevel.value
-        )
-      )
+        return slotId !== 'no-slot' && slot && spell && (
+            spell.level <= slot.spellSlotLevel.value
+          );
+      }
     },
     cast({ advantage }) {
       let selectedSlotId = this.selectedSlotId;
-      if (selectedSlotId === 'no-slot') selectedSlotId = undefined;
+      const ritual = selectedSlotId === 'ritual';
+      if (selectedSlotId === 'no-slot' || selectedSlotId === 'ritual') selectedSlotId = undefined;
       this.$store.dispatch('popDialogStack', {
         spellId: this.selectedSpellId,
         slotId: selectedSlotId,
         advantage,
+        ritual,
       });
     }
   },

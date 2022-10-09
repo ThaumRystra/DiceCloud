@@ -515,11 +515,12 @@ export default {
         data: {
           creatureId: this.creatureId,
         },
-        callback({ spellId, slotId, advantage } = {}) {
+        callback({ spellId, slotId, advantage, ritual } = {}) {
           if (!spellId) return;
           doCastSpell.call({
             spellId,
             slotId,
+            ritual,
             scope: {
               $attackAdvantage: advantage,
             },
