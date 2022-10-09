@@ -94,15 +94,6 @@
         :children="children"
         @selected="e => $emit('sub-click', e)"
       />
-      <!--
-      <creature-properties-tree
-        style="width: 100%;"
-        expanded
-        :root="{collection: 'creatureProperties', id: model._id}"
-        @length="childrenLength = $event"
-        @selected="e => $emit('sub-click', e)"
-      />
-      -->
     </div>
     <card-highlight :active="hovering" />
   </v-card>
@@ -119,7 +110,6 @@ import RollPopup from '/imports/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import CardHighlight from '/imports/ui/components/CardHighlight.vue';
-import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
@@ -133,7 +123,6 @@ export default {
     PropertyIcon,
     RollPopup,
     CardHighlight,
-    CreaturePropertiesTree,
     TreeNodeList,
   },
   inject: {
