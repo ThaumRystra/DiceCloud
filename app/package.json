@@ -63,12 +63,14 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "@typescript-eslint/parser": "^5.39.0",
+    "@vue/compiler-dom": "^3.2.40",
     "chai": "^4.3.6",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^7.20.0",
     "eslint-plugin-vuetify": "^1.1.0",
     "mem": "^6.1.1",
-    "sass": "^1.52.2"
+    "sass": "^1.52.2",
+    "typescript": "^4.8.4"
   },
   "eslintConfig": {
     "extends": [

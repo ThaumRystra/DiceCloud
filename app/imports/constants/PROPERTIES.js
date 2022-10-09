@@ -105,7 +105,7 @@ const PROPERTIES = Object.freeze({
     name: 'Folder',
     docsPath: 'property/feature',
     helpText: 'A way to organise other properties on the character',
-    suggestedParents: ['folder'],
+    suggestedParents: ['action', 'folder'],
   },
   item: {
     icon: 'mdi-cube-outline',

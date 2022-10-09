@@ -249,18 +249,6 @@
           @sub-click="_id => clickTreeProperty({_id})"
         />
       </div>
-      <div
-        v-for="attack in attacks"
-        :key="attack._id"
-        class="attack"
-      >
-        <action-card
-          attack
-          :model="attack"
-          :data-id="attack._id"
-          @click="clickProperty({_id: attack._id})"
-        />
-      </div>
 
       <div
         v-if="weapons && weapons.length"
@@ -492,19 +480,6 @@ export default {
         type: 'damageMultiplier'
       }, {
         sort: { value: 1, order: 1 }
-      });
-    },
-    attacks() {
-      let props = getProperties(this.creature, { type: 'attack' })
-      return props && props.map(attack => {
-        attack.children = CreatureProperties.find({
-          'ancestors.id': attack._id,
-          removed: { $ne: true },
-          inactive: { $ne: true },
-        }, {
-          sort: { order: 1 }
-        });
-        return attack;
       });
     },
   },

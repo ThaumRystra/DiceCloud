@@ -87,7 +87,14 @@
       <template v-if="model.summary">
         <markdown-text :markdown="model.summary.value || model.summary.text" />
       </template>
-      <v-divder v-if="model.children && model.children.length" />
+      <v-divider v-if="children && children.length" />
+      <tree-node-list
+        v-if="children && children.length"
+        start-expanded
+        :children="children"
+        @selected="e => $emit('sub-click', e)"
+      />
+      <!--
       <creature-properties-tree
         style="width: 100%;"
         expanded
@@ -95,6 +102,7 @@
         @length="childrenLength = $event"
         @selected="e => $emit('sub-click', e)"
       />
+      -->
     </div>
     <card-highlight :active="hovering" />
   </v-card>
@@ -112,6 +120,10 @@ import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
+import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { some } from 'lodash';
 
 export default {
   components: {
@@ -122,6 +134,7 @@ export default {
     RollPopup,
     CardHighlight,
     CreaturePropertiesTree,
+    TreeNodeList,
   },
   inject: {
     context: {
@@ -168,6 +181,35 @@ export default {
     },
     actionTypeIcon() {
       return `$vuetify.icons.${this.model.actionType}`;
+    },
+  },
+  meteor: {
+    children() {
+      const indicesOfTerminatingProps = [];
+      const decendants = CreatureProperties.find({
+        'ancestors.id': this.model._id,
+        'removed': { $ne: true },
+      }, {
+        sort: {order: 1}
+      }).map(prop => {
+        // Get all the props we don't want to show the decendants of and
+        // where they might appear in the ancestor list
+        if (prop.type === 'buff' || prop.type === 'folder') {
+          indicesOfTerminatingProps.push({
+            id: prop._id,
+            ancestorIndex: prop.ancestors.length,
+          });
+        }
+        return prop;
+      }).filter(prop => {
+        // Filter out folders entirely
+        if (prop.type === 'folder') return false;
+        // Filter out decendants of terminating props
+        return !some(indicesOfTerminatingProps, buffIndex => {
+          return prop.ancestors[buffIndex.ancestorIndex]?.id === buffIndex.id;
+        });
+      });
+      return nodeArrayToTree(decendants);
     },
   },
   methods: {
