@@ -12,46 +12,46 @@
 
 <script lang="js">
 export default {
-	props: {
-		wideColumns: Boolean,
-	},
+  props: {
+    wideColumns: Boolean,
+  },
 };
 </script>
 
 <style lang="css">
 .column-layout {
-	column-count: 12;
-	column-fill: balance;
-	column-gap: 0;
-	column-width: 240px;
-	transform: translateZ(0);
-	padding: 4px;
+  column-count: 12;
+  column-fill: balance;
+  column-gap: 0;
+  column-width: 240px;
+  transform: translateZ(0);
+  padding: 4px;
 }
 
 .column-layout.wide-columns {
-	column-count: 12;
-	column-fill: balance;
-	column-gap: 0;
-	column-width: 320px;
-	transform: translateZ(0);
-	padding: 4px;
+  column-count: 12;
+  column-fill: balance;
+  column-gap: 0;
+  column-width: 320px;
+  transform: translateZ(0);
+  padding: 4px;
 }
 
 .column-layout>div,
 .column-layout>span>div {
-	/*
+  /*
       Table and width set because firefox does not support break-inside: avoid
     */
-	display: table;
-	table-layout: fixed;
-	width: 100%;
-	backface-visibility: hidden;
-	-webkit-backface-visibility: hidden;
-	transform: translateX(0);
-	-webkit-transform: translateX(0);
-	-webkit-column-break-inside: avoid;
-	page-break-inside: avoid;
-	break-inside: avoid;
-	padding: 4px;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateX(0);
+  -webkit-transform: translateX(0);
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  padding: 4px;
 }
 </style>

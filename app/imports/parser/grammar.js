@@ -4,7 +4,7 @@ function id(x) { return x[0]; }
 
   import node from './parseTree/_index.js';
 
-	import moo from 'moo';
+  import moo from 'moo';
 
   const lexer = moo.compile({
     number: /[0-9]+(?:\.[0-9]+)?/,
