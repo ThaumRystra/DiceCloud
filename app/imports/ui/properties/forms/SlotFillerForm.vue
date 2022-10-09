@@ -95,20 +95,20 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
 
-	export default {
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
-    },
-    data(){
-      let slotTypes = [];
-      for (let key in PROPERTIES){
-         slotTypes.push({text: PROPERTIES[key].name, value: key});
-      }
-      return {slotTypes};
-    },
-	};
+export default {
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+  data() {
+    let slotTypes = [];
+    for (let key in PROPERTIES) {
+      slotTypes.push({ text: PROPERTIES[key].name, value: key });
+    }
+    return { slotTypes };
+  },
+};
 </script>

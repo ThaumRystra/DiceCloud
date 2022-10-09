@@ -20,33 +20,33 @@ const adjustQuantity = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({_id, operation, value}) {
+  run({ _id, operation, value }) {
     // Permissions
-		let property = CreatureProperties.findOne(_id);
+    let property = CreatureProperties.findOne(_id);
     let rootCreature = getRootCreatureAncestor(property);
-		assertEditPermission(rootCreature, this.userId);
+    assertEditPermission(rootCreature, this.userId);
 
     // Do work
-    adjustQuantityWork({property, operation, value});
+    adjustQuantityWork({ property, operation, value });
   },
 });
 
-export function adjustQuantityWork({property, operation, value}){
+export function adjustQuantityWork({ property, operation, value }) {
   // Check if property has quantity
   let schema = CreatureProperties.simpleSchema(property);
-  if (!schema.allowsKey('quantity')){
+  if (!schema.allowsKey('quantity')) {
     throw new Meteor.Error(
       'Adjust quantity failed',
       `Property of type "${property.type}" doesn't have a quantity`
     );
   }
-  if (operation === 'set'){
+  if (operation === 'set') {
     CreatureProperties.update(property._id, {
-      $set: {quantity: value, dirty: true}
+      $set: { quantity: value, dirty: true }
     }, {
       selector: property
     });
-  } else if (operation === 'increment'){
+  } else if (operation === 'increment') {
     // value here is 'damage'
     value = -value;
     let currentQuantity = property.quantity;

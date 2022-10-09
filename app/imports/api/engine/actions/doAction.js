@@ -41,8 +41,8 @@ const doAction = new ValidatedMethod({
     let action = CreatureProperties.findOne(actionId);
     const creatureId = action.ancestors[0].id;
     const actionContext = new ActionContext(creatureId, targetIds, this);
-    
-		// Check permissions
+
+    // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
     actionContext.targets.forEach(target => {
       assertEditPermission(target, this.userId);
@@ -56,13 +56,13 @@ const doAction = new ValidatedMethod({
     properties.sort((a, b) => a.order - b.order);
 
     // Do the action
-    doActionWork({properties, ancestors, actionContext, methodScope: scope});
+    doActionWork({ properties, ancestors, actionContext, methodScope: scope });
 
     // Recompute all involved creatures
     Creatures.update({
       _id: { $in: [creatureId, ...targetIds] }
     }, {
-      $set: {dirty: true},
+      $set: { dirty: true },
     });
   },
 });
@@ -71,11 +71,11 @@ export default doAction;
 
 export function doActionWork({
   properties, ancestors, actionContext, methodScope = {},
-}){
+}) {
   // get the docs
   const ancestorScope = getAncestorScope(ancestors);
   const propertyForest = nodeArrayToTree(properties);
-  if (propertyForest.length !== 1){
+  if (propertyForest.length !== 1) {
     throw new Meteor.Error(`The action has ${propertyForest.length} top level properties, expected 1`);
   }
 
@@ -91,7 +91,7 @@ export function doActionWork({
 }
 
 // Assumes ancestors are in tree order already
-function getAncestorScope(ancestors){
+function getAncestorScope(ancestors) {
   let scope = {};
   ancestors.forEach(prop => {
     scope[`#${prop.type}`] = prop;

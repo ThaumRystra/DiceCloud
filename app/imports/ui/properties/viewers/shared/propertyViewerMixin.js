@@ -13,11 +13,11 @@ const propertyViewerMixin = {
     PropertyTags,
   },
   props: {
-		model: {
-			type: Object,
-			required: true,
-		},
-	},
+    model: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 
 export default propertyViewerMixin;

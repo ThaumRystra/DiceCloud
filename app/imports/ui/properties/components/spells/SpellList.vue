@@ -62,48 +62,50 @@ export default {
     },
     preparingSpells: Boolean,
   },
-  data(){ return {
-    dataSpells: [],
-  }},
+  data() {
+    return {
+      dataSpells: [],
+    }
+  },
   computed: {
-    levels(){
+    levels() {
       let levels = new Set();
       this.spells.forEach(spell => levels.add(spell.level));
       return levels;
     },
     computedSpells: {
-      get(){
+      get() {
         return spellsWithSubheaders(this.dataSpells);
       },
-      set(value){
+      set(value) {
         this.dataSpells = value;
       },
     }
   },
   watch: {
-    spells(value){
+    spells(value) {
       this.dataSpells = spellsWithSubheaders(value);
     }
   },
-  mounted(){
+  mounted() {
     this.dataSpells = spellsWithSubheaders(this.spells);
   },
   methods: {
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `spell-list-tile-${_id}`,
-				data: {_id},
-			});
-		},
-    change({added, moved}){
+    clickProperty(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `spell-list-tile-${_id}`,
+        data: { _id },
+      });
+    },
+    change({ added, moved }) {
       let event = added || moved;
-      if (event){
+      if (event) {
         // If this spell is now adjacent to another, set the order accordingly
         let order;
         let before = this.dataSpells[event.newIndex - 1];
         let after = this.dataSpells[event.newIndex + 1];
-        if (before && before._id){
+        if (before && before._id) {
           order = before.order + 0.5;
         } else if (after && after._id) {
           order = after.order - 0.5;
@@ -121,9 +123,10 @@ export default {
         });
       }
     },
-	}
+  }
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

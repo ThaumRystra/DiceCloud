@@ -63,62 +63,62 @@ import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import Libraries from '/imports/api/library/Libraries.js';
 
 export default {
-	components: {
-		DialogBase,
-	},
-	props: {
-		_id: String,
-	},
-	methods: {
-    updateLibraryCollection(update, ack){
-			updateLibraryCollection.call({_id: this._id, update}, (error) =>{
-				ack(error && error.reason || error);
-			});
+  components: {
+    DialogBase,
+  },
+  props: {
+    _id: String,
+  },
+  methods: {
+    updateLibraryCollection(update, ack) {
+      updateLibraryCollection.call({ _id: this._id, update }, (error) => {
+        ack(error && error.reason || error);
+      });
     },
-		remove(){
-			let that = this;
-			this.$store.commit('pushDialogStack', {
-				component: 'delete-confirmation-dialog',
-				elementId: 'delete-library-button',
-				data: {
-					name: this.model.name,
-					typeName: 'Collection'
-				},
-				callback(confirmation){
-					if(!confirmation) return;
-					removeLibraryCollection.call({_id: that._id}, (error) => {
+    remove() {
+      let that = this;
+      this.$store.commit('pushDialogStack', {
+        component: 'delete-confirmation-dialog',
+        elementId: 'delete-library-button',
+        data: {
+          name: this.model.name,
+          typeName: 'Collection'
+        },
+        callback(confirmation) {
+          if (!confirmation) return;
+          removeLibraryCollection.call({ _id: that._id }, (error) => {
             if (error) {
               console.error(error);
               snackbar({
                 text: error.reason,
               });
-						} else {
+            } else {
               that.$router.push({ name: 'library', replace: true });
               that.$store.dispatch('popDialogStack');
-						}
-					});
-				}
-			});
-		},
-    share(){
-			this.$store.commit('pushDialogStack', {
-				component: 'share-dialog',
-				elementId: 'share-library-button',
-				data: {
-					docRef: {
+            }
+          });
+        }
+      });
+    },
+    share() {
+      this.$store.commit('pushDialogStack', {
+        component: 'share-dialog',
+        elementId: 'share-library-button',
+        data: {
+          docRef: {
             id: this._id,
             collection: 'libraryCollections',
           }
-				},
-			});
-		},
-	},
-	meteor: {
-    '$subscribe':{
+        },
+      });
+    },
+  },
+  meteor: {
+    '$subscribe': {
       libraries: [],
     },
-		model(){
-			return LibraryCollections.findOne(this._id);
+    model() {
+      return LibraryCollections.findOne(this._id);
     },
     libraryOptions() {
       const userId = Meteor.userId();
@@ -131,7 +131,7 @@ export default {
             { public: true },
           ]
         },
-        {sort: {name: 1}}
+        { sort: { name: 1 } }
       ).map(library => {
         return {
           text: library.name,
@@ -139,9 +139,10 @@ export default {
         };
       });
     },
-	}
+  }
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -37,43 +37,46 @@ import removeCreature from '/imports/api/creature/creatures/methods/removeCreatu
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
-	components: {
-		DialogBase,
-	},
-	props: {
-		id: String,
-	},
-	data(){return {
-		inputName: undefined,
-	}},
-	computed: {
-		nameMatch(){
-			if (!this.name) return true;
-			let uppername = this.name.toUpperCase();
-			let upperInputName = this.inputName && this.inputName.toUpperCase();
-			return uppername === upperInputName;
-		},
-	},
-	meteor: {
-		name(){
-			let creature = Creatures.findOne(this.id, {fields: {name: 1}});
-			return creature && creature.name;
-		},
-	},
-	methods: {
-		remove(){
+  components: {
+    DialogBase,
+  },
+  props: {
+    id: String,
+  },
+  data() {
+    return {
+      inputName: undefined,
+    }
+  },
+  computed: {
+    nameMatch() {
+      if (!this.name) return true;
+      let uppername = this.name.toUpperCase();
+      let upperInputName = this.inputName && this.inputName.toUpperCase();
+      return uppername === upperInputName;
+    },
+  },
+  meteor: {
+    name() {
+      let creature = Creatures.findOne(this.id, { fields: { name: 1 } });
+      return creature && creature.name;
+    },
+  },
+  methods: {
+    remove() {
       this.$router.push('/characterList');
       this.$store.dispatch('popDialogStack');
-			removeCreature.call({charId: this.id}, (error) => {
-				if (error) {
-					console.error(error);
-          snackbar({text: error.message || error.toString()});
-				}
-			});
-		}
-	}
+      removeCreature.call({ charId: this.id }, (error) => {
+        if (error) {
+          console.error(error);
+          snackbar({ text: error.message || error.toString() });
+        }
+      });
+    }
+  }
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

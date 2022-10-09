@@ -55,7 +55,7 @@
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import RollPopup from '/imports/ui/components/RollPopup.vue';
 import doCheck from '/imports/api/engine/actions/doCheck.js';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -66,23 +66,25 @@ export default {
       default: {},
     },
   },
-	props: {
-		model: {type: Object, required: true},
-	},
-  data(){return {
-    checkLoading: false,
-  }},
-	computed: {
-		hasClickListener(){
+  props: {
+    model: { type: Object, required: true },
+  },
+  data() {
+    return {
+      checkLoading: false,
+    }
+  },
+  computed: {
+    hasClickListener() {
       return this.$listeners && this.$listeners.click
-		},
-	},
-	methods: {
-		numberToSignedString,
-		click(e){
-			this.$emit('click', e);
-		},
-    check({advantage}){
+    },
+  },
+  methods: {
+    numberToSignedString,
+    click(e) {
+      this.$emit('click', e);
+    },
+    check({ advantage }) {
       this.checkLoading = true;
       doCheck.call({
         propId: this.model._id,
@@ -91,15 +93,15 @@ export default {
         },
       }, error => {
         this.checkLoading = false;
-        if (error){
+        if (error) {
           console.error(error);
-          snackbar({text: error.reason});
+          snackbar({ text: error.reason });
         }
       });
     },
-	},
+  },
   meteor: {
-    swapScoresAndMods(){
+    swapScoresAndMods() {
       let user = Meteor.user();
       return user &&
         user.preferences &&
@@ -110,26 +112,32 @@ export default {
 </script>
 
 <style lang="css" scoped>
-	.ability-list-tile {
-		background: inherit;
-	}
-	.ability-list-tile >>> .v-list__tile {
-		height: 88px;
-	}
-	.ability-list-tile >>> .v-list__tile__action--stack {
-		justify-content: center;
-	}
-	.value {
-		font-weight: 600;
-		font-size: 24px !important;
-		color: rgba(0, 0, 0, 0.54);
-	}
-	.theme--dark .value {
-		color: rgba(255, 255, 255, 0.54);
-	}
-	.mod, .value {
-		text-align: center;
-		width: 100%;
-    min-width: 42px;
-	}
+.ability-list-tile {
+  background: inherit;
+}
+
+.ability-list-tile>>>.v-list__tile {
+  height: 88px;
+}
+
+.ability-list-tile>>>.v-list__tile__action--stack {
+  justify-content: center;
+}
+
+.value {
+  font-weight: 600;
+  font-size: 24px !important;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.theme--dark .value {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.mod,
+.value {
+  text-align: center;
+  width: 100%;
+  min-width: 42px;
+}
 </style>

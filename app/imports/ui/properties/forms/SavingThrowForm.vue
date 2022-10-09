@@ -88,24 +88,24 @@ import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormM
 export default {
   mixins: [saveListMixin, propertyFormMixin],
   computed: {
-		targetOptions(){
-			return [
-				{
-					text: 'Self',
-					value: 'self',
-				}, {
-					text: 'Target',
-					value: 'target',
-				},
-			];
-		},
-		targetOptionHint(){
-			let hints = {
-				self: 'The save will be applied to the character taking the action',
-				target: 'The save will be applied to the targets of the action',
-			};
-			return hints[this.model.target];
-		}
-	},
+    targetOptions() {
+      return [
+        {
+          text: 'Self',
+          value: 'self',
+        }, {
+          text: 'Target',
+          value: 'target',
+        },
+      ];
+    },
+    targetOptionHint() {
+      let hints = {
+        self: 'The save will be applied to the character taking the action',
+        target: 'The save will be applied to the targets of the action',
+      };
+      return hints[this.model.target];
+    }
+  },
 };
 </script>

@@ -24,9 +24,7 @@
         v-if="model.value !== undefined"
         name="value"
       >
-        <div
-          style="overflow: hidden;"
-        >
+        <div style="overflow: hidden;">
           <v-layout
             v-if="model.quantity > 1"
             align-center
@@ -43,9 +41,7 @@
               :value="totalValue"
             />
           </v-layout>
-          <v-layout
-            align-center
-          >
+          <v-layout align-center>
             <v-icon
               class="mr-2"
               large
@@ -69,9 +65,7 @@
         v-if="model.weight !== undefined"
         name="Weight"
       >
-        <div
-          style="overflow: hidden;"
-        >
+        <div style="overflow: hidden;">
           <v-layout
             v-if="model.quantity > 1"
             align-center
@@ -109,9 +103,7 @@
           </v-layout>
         </div>
       </property-field>
-      <property-field
-        v-if="model.equipped"
-      >
+      <property-field v-if="model.equipped">
         <v-icon
           style="overflow: hidden;"
           class="ma-1"
@@ -120,9 +112,7 @@
         </v-icon>
         <span class="ml-1">Equipped</span>
       </property-field>
-      <property-field
-        v-if="model.requiresAttunement"
-      >
+      <property-field v-if="model.requiresAttunement">
         <template v-if="model.attuned">
           <v-icon
             style="overflow: hidden;"
@@ -151,29 +141,31 @@ import CoinValue from '/imports/ui/components/CoinValue.vue';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
-  components:{
+  components: {
     IncrementButton,
     CoinValue,
   },
-	mixins: [propertyViewerMixin],
+  mixins: [propertyViewerMixin],
   inject: {
     context: { default: {} }
   },
-  data(){return {
-    incrementLoading: false,
-  }},
-  computed:{
-    totalValue(){
+  data() {
+    return {
+      incrementLoading: false,
+    }
+  },
+  computed: {
+    totalValue() {
       return stripFloatingPointOddities(this.model.value * this.model.quantity);
     },
-    totalWeight(){
+    totalWeight() {
       return stripFloatingPointOddities(this.model.weight * this.model.quantity);
     },
-    attunementText(){
-      if (this.model.requiresAttunement){
+    attunementText() {
+      if (this.model.requiresAttunement) {
         if (this.model.attuned) return 'Attuned';
         return 'Requires attunement';
       }
@@ -181,10 +173,10 @@ export default {
     }
   },
   methods: {
-    getIcon(name){
+    getIcon(name) {
       return SVG_ICONS[name];
     },
-    changeQuantity({type, value}) {
+    changeQuantity({ type, value }) {
       this.incrementLoading = true;
       adjustQuantity.call({
         _id: this.model._id,
@@ -192,8 +184,8 @@ export default {
         value: value
       }, error => {
         this.incrementLoading = false;
-        if (error){
-          snackbar({text: error.reason});
+        if (error) {
+          snackbar({ text: error.reason });
           console.error(error);
         }
       });
@@ -203,4 +195,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -6,10 +6,10 @@ const ErrorSchema = new SimpleSchema({
     type: String,
     max: STORAGE_LIMITS.errorMessage,
   },
-	type: {
+  type: {
     type: String,
     max: STORAGE_LIMITS.name,
-	},
+  },
 });
 
 export default ErrorSchema;

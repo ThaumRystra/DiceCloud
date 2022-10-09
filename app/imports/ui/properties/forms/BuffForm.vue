@@ -44,9 +44,7 @@
       >
         <slot name="children" />
       </form-section>
-      <form-section
-        name="Advanced"
-      >
+      <form-section name="Advanced">
         <v-row dense>
           <v-col
             cols="12"
@@ -100,11 +98,12 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-    mixins: [propertyFormMixin],
-    data(){return {
+export default {
+  mixins: [propertyFormMixin],
+  data() {
+    return {
       targetOptions: [
         {
           text: 'Self',
@@ -114,9 +113,11 @@
           value: 'target',
         },
       ],
-    }},
-	}
+    }
+  },
+}
 </script>
 
 <style lang="css" scoped>
+
 </style>

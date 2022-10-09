@@ -9,11 +9,12 @@
 
 <script lang="js">
 export default {
-	props: {
-		value: String,
-	}
+  props: {
+    value: {
+      type: String,
+      default: undefined,
+    },
+  }
 }
 </script>
 
-<style lang="css" scoped>
-</style>

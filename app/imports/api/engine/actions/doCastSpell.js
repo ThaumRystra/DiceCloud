@@ -42,12 +42,12 @@ const doAction = new ValidatedMethod({
     timeInterval: 5000,
   },
   run({ spellId, slotId, targetIds = [], scope = {} }) {
-		// Get action context
+    // Get action context
     let spell = CreatureProperties.findOne(spellId);
     const creatureId = spell.ancestors[0].id;
     const actionContext = new ActionContext(creatureId, targetIds, this);
 
-		// Check permissions
+    // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
     actionContext.targets.forEach(target => {
       assertEditPermission(target, this.userId);
@@ -64,25 +64,25 @@ const doAction = new ValidatedMethod({
     let slotLevel = spell.level || 0;
     let slot;
 
-    if (slotId && !spell.castWithoutSpellSlots){
+    if (slotId && !spell.castWithoutSpellSlots) {
       slot = CreatureProperties.findOne(slotId);
-      if (!slot){
+      if (!slot) {
         throw new Meteor.Error('No slot',
           'Slot not found to cast spell');
       }
-      if (!slot.value){
+      if (!slot.value) {
         throw new Meteor.Error('No slot',
           'Slot depleted');
       }
-      if (slot.attributeType !== 'spellSlot'){
+      if (slot.attributeType !== 'spellSlot') {
         throw new Meteor.Error('Not a slot',
           'The given property is not a valid spell slot');
       }
-      if (!slot.spellSlotLevel?.value){
+      if (!slot.spellSlotLevel?.value) {
         throw new Meteor.Error('No slot level',
           'Slot does not have a spell slot level');
       }
-      if (slot.spellSlotLevel.value < spell.level){
+      if (slot.spellSlotLevel.value < spell.level) {
         throw new Meteor.Error('Slot too small',
           'Slot is not large enough to cast spell');
       }
@@ -96,7 +96,7 @@ const doAction = new ValidatedMethod({
     }
 
     // Post the slot level spent to the log
-    if (slot?.spellSlotLevel?.value){
+    if (slot?.spellSlotLevel?.value) {
       actionContext.addLog({
         name: `Casting using a level ${slotLevel} spell slot`
       });

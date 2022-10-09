@@ -43,16 +43,16 @@ import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import Docs from '/imports/api/docs/Docs.js';
 
 export default {
-	components: {
+  components: {
     DialogBase,
     MarkdownText,
-	},
-	props: {
+  },
+  props: {
     path: {
       type: String,
       required: true,
     }
-	},
+  },
   computed: {
     prop() {
       return propsByDocsPath.get(this.path);
@@ -63,7 +63,7 @@ export default {
       } else {
         const titleCase = this.path.replace(
           /(\w*)(\W+)/g,
-          function(txt, word) {
+          function (txt, word) {
             return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase() + ' ';
           }
         );
@@ -73,7 +73,7 @@ export default {
   },
   meteor: {
     $subscribe: {
-      'docs'(){
+      'docs'() {
         return [this.path];
       },
     },
@@ -104,4 +104,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

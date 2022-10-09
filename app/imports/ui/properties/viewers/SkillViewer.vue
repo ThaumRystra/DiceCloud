@@ -133,42 +133,44 @@ export default {
     AttributeEffect,
     SkillProficiency,
   },
-	mixins: [propertyViewerMixin],
+  mixins: [propertyViewerMixin],
   inject: {
     context: { default: {} }
   },
-  data(){return {
-    proficiencyText: {
-      0: 'Not proficient',
-      1: 'Proficient',
-      0.49: 'Half proficiency bonus rounded down',
-      0.5: 'Half proficiency bonus rounded up',
-      2: 'Double proficiency bonus',
-    },
-    skillTypes: {
-      skill: 'Skill',
-      save: 'Save',
-      check: 'Check',
-      tool: 'Tool',
-      weapon: 'Weapon',
-      armor: 'Armor',
-      language: 'Language',
-      utility: 'Utility',
-    },
-  }},
+  data() {
+    return {
+      proficiencyText: {
+        0: 'Not proficient',
+        1: 'Proficient',
+        0.49: 'Half proficiency bonus rounded down',
+        0.5: 'Half proficiency bonus rounded up',
+        2: 'Double proficiency bonus',
+      },
+      skillTypes: {
+        skill: 'Skill',
+        save: 'Save',
+        check: 'Check',
+        tool: 'Tool',
+        weapon: 'Weapon',
+        armor: 'Armor',
+        language: 'Language',
+        utility: 'Utility',
+      },
+    }
+  },
   computed: {
-    displayedModifier(){
-			let mod = this.model.value;
-			if (this.model.fail){
-				return 'fail';
-			} else {
-				return numberToSignedString(mod);
-			}
-		},
-    icon(){
+    displayedModifier() {
+      let mod = this.model.value;
+      if (this.model.fail) {
+        return 'fail';
+      } else {
+        return numberToSignedString(mod);
+      }
+    },
+    icon() {
       return getProficiencyIcon(this.model.proficiency);
-		},
-    passiveScore(){
+    },
+    passiveScore() {
       return 10 + this.model.value + this.model.passiveBonus;
     },
     effects() {
@@ -178,53 +180,53 @@ export default {
   methods: {
     numberToSignedString,
     isFinite: Number.isFinite,
-    clickEffect(id){
+    clickEffect(id) {
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
         elementId: `${id}`,
-        data: {_id: id},
+        data: { _id: id },
       });
     },
   },
   meteor: {
-    variables(){
-      return CreatureVariables.findOne({_creatureId: this.context.creatureId}) || {};
+    variables() {
+      return CreatureVariables.findOne({ _creatureId: this.context.creatureId }) || {};
     },
-    baseProficiencies(){
-      if (this.context.creatureId){
+    baseProficiencies() {
+      if (this.context.creatureId) {
         let creatureId = this.context.creatureId;
         return CreatureProperties.find({
           'ancestors.id': creatureId,
           type: 'skill',
           variableName: this.model.variableName,
-          removed: {$ne: true},
-          inactive: {$ne: true},
-        }).map( prop => ({
+          removed: { $ne: true },
+          inactive: { $ne: true },
+        }).map(prop => ({
           _id: prop._id,
           name: 'Skill base proficiency',
           value: prop.baseProficiency,
           stats: [prop.variableName],
           ancestors: prop.ancestors,
-        }) ).filter(prof => prof.value);
+        })).filter(prof => prof.value);
       } else {
         return [];
       }
     },
-    proficiencies(){
+    proficiencies() {
       let creatureId = this.context.creatureId;
-      if (creatureId){
+      if (creatureId) {
         return CreatureProperties.find({
           'ancestors.id': creatureId,
           stats: this.model.variableName,
           type: 'proficiency',
-          removed: {$ne: true},
-          inactive: {$ne: true},
+          removed: { $ne: true },
+          inactive: { $ne: true },
         }).fetch();
       } else {
         return [];
       }
     },
-    ability(){
+    ability() {
       let creatureId = this.context.creatureId;
       let ability = this.model.ability;
       if (!creatureId || !ability) return;
@@ -232,21 +234,21 @@ export default {
         'ancestors.id': creatureId,
         variableName: ability,
         type: 'attribute',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-        overridden: {$ne: true},
+        removed: { $ne: true },
+        inactive: { $ne: true },
+        overridden: { $ne: true },
       });
       if (!abilityProp) return;
       return {
         _id: abilityProp._id,
         name: abilityProp.name,
         operation: 'add',
-        amount: {value: abilityProp.modifier},
+        amount: { value: abilityProp.modifier },
         stats: [this.model.variableName],
         ancestors: abilityProp.ancestors,
       }
     },
-    proficiencyBonus(){
+    proficiencyBonus() {
       let creatureId = this.context.creatureId;
       if (!creatureId) return;
       return this.variables.proficiencyBonus &&
@@ -257,4 +259,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

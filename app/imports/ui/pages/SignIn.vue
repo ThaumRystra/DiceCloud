@@ -91,53 +91,53 @@
 </template>
 
 <script lang="js">
-	export default {
-		data: () => ({
-      valid: true,
-      name: '',
-      nameRules: [
-        v => !!v || 'Name is required',
-      ],
-      password: '',
-      passwordRules: [
-        v => !!v || 'Password is required',
-      ],
-			error: '',
-      googleError: '',
-			patreonError: '',
-    }),
-		methods: {
-      submit () {
-        if (this.$refs.form.validate()) {
-					Meteor.loginWithPassword(this.name, this.password, error => {
-						if (error){
-							this.error = error.reason;
-						} else {
-              this.$router.push(this.$route.query.redirect || 'characterList');
-						}
-					});
-        }
-      },
-			googleLogin() {
-				Meteor.loginWithGoogle(error => {
-          if (error){
-            console.error(error);
-            this.googleError = error.message;
+export default {
+  data: () => ({
+    valid: true,
+    name: '',
+    nameRules: [
+      v => !!v || 'Name is required',
+    ],
+    password: '',
+    passwordRules: [
+      v => !!v || 'Password is required',
+    ],
+    error: '',
+    googleError: '',
+    patreonError: '',
+  }),
+  methods: {
+    submit() {
+      if (this.$refs.form.validate()) {
+        Meteor.loginWithPassword(this.name, this.password, error => {
+          if (error) {
+            this.error = error.reason;
           } else {
             this.$router.push(this.$route.query.redirect || 'characterList');
           }
-				});
-			},
-      patreonLogin() {
-				Meteor.loginWithPatreon(error => {
-					if (error){
-            console.error(error);
-            this.patreonError = error.message;
-          } else {
-            this.$router.push(this.$route.query.redirect || 'characterList');
-          }
-				});
-			}
+        });
+      }
     },
-	}
+    googleLogin() {
+      Meteor.loginWithGoogle(error => {
+        if (error) {
+          console.error(error);
+          this.googleError = error.message;
+        } else {
+          this.$router.push(this.$route.query.redirect || 'characterList');
+        }
+      });
+    },
+    patreonLogin() {
+      Meteor.loginWithPatreon(error => {
+        if (error) {
+          console.error(error);
+          this.patreonError = error.message;
+        } else {
+          this.$router.push(this.$route.query.redirect || 'characterList');
+        }
+      });
+    }
+  },
+}
 </script>

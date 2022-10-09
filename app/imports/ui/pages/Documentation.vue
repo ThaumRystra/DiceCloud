@@ -37,9 +37,9 @@ import Docs from '/imports/api/docs/Docs.js';
 import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
 
 export default {
-	components: {
+  components: {
     MarkdownText,
-	},
+  },
   data() {
     return {
       action: undefined,
@@ -54,21 +54,21 @@ export default {
     },
     title() {
       if (this.prop) {
-          return this.prop.name + ' Docs';
-        } else {
-          const titleCase = this.path.replace(
-            /(\w*)(\W+)/g,
-            function(txt, word) {
-              return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase() + ' ';
-            }
-          );
-          return titleCase || 'DiceCloud Docs';
-        }
+        return this.prop.name + ' Docs';
+      } else {
+        const titleCase = this.path.replace(
+          /(\w*)(\W+)/g,
+          function (txt, word) {
+            return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase() + ' ';
+          }
+        );
+        return titleCase || 'DiceCloud Docs';
+      }
     }
   },
   meteor: {
     $subscribe: {
-      'docs'(){
+      'docs'() {
         return [this.path];
       },
     },

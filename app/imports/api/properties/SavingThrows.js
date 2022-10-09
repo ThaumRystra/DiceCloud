@@ -16,14 +16,14 @@ let SavingThrowSchema = createPropertySchema({
     optional: true,
   },
   // Who this saving throw applies to
-	target: {
-		type: String,
+  target: {
+    type: String,
     defaultValue: 'target',
-		allowedValues: [
+    allowedValues: [
       'self',
       'target',
     ],
-	},
+  },
   // The variable name of save to roll
   stat: {
     type: String,

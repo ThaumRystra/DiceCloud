@@ -6,15 +6,15 @@ const ItemSchema = createPropertySchema({
 	name: {
 		type: String,
 		optional: true,
-    max: STORAGE_LIMITS.name,
+		max: STORAGE_LIMITS.name,
 	},
 	// Plural name of the item, if there is more than one
 	plural: {
 		type: String,
 		optional: true,
-    max: STORAGE_LIMITS.name,
+		max: STORAGE_LIMITS.name,
 	},
-  description: {
+	description: {
 		type: 'inlineCalculationFieldToCompute',
 		optional: true,
 	},
@@ -28,20 +28,20 @@ const ItemSchema = createPropertySchema({
 	weight: {
 		type: Number,
 		min: 0,
-    optional: true,
+		optional: true,
 	},
 	// Value per item in the stack, in gold pieces
 	value: {
 		type: Number,
 		min: 0,
-    optional: true,
+		optional: true,
 	},
 	// If this item is equipped, it requires attunement
 	requiresAttunement: {
 		type: Boolean,
 		optional: true,
 	},
-  attuned: {
+	attuned: {
 		type: Boolean,
 		optional: true,
 	},
@@ -58,14 +58,14 @@ const ItemSchema = createPropertySchema({
 });
 
 let ComputedOnlyItemSchema = createPropertySchema({
-  description: {
-    type: 'computedOnlyInlineCalculationField',
-    optional: true,
-  },
+	description: {
+		type: 'computedOnlyInlineCalculationField',
+		optional: true,
+	},
 });
 
 const ComputedItemSchema = new SimpleSchema()
-  .extend(ItemSchema)
-  .extend(ComputedOnlyItemSchema);
+	.extend(ItemSchema)
+	.extend(ComputedOnlyItemSchema);
 
 export { ItemSchema, ComputedItemSchema, ComputedOnlyItemSchema };

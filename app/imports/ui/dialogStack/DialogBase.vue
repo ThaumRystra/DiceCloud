@@ -50,63 +50,69 @@
 </template>
 
 <script lang="js">
-  import getThemeColor from '/imports/ui/utility/getThemeColor.js';
-  import isDarkColor from '/imports/ui/utility/isDarkColor.js';
+import getThemeColor from '/imports/ui/utility/getThemeColor.js';
+import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 
-	export default {
-		props: {
-			color: {
-        type: String,
-        default: undefined,
-      },
-			overrideBackButton: {
-        type: Function,
-        default: undefined,
-      },
-      darkBody: Boolean,
-		},
-		data(){ return {
-			offsetTop: 0,
-		}},
-    computed: {
-      isDark(){
-        return isDarkColor(this.computedColor);
-      },
-      computedColor(){
-        return this.color || getThemeColor('secondary');
+export default {
+  props: {
+    color: {
+      type: String,
+      default: undefined,
+    },
+    overrideBackButton: {
+      type: Function,
+      default: undefined,
+    },
+    darkBody: Boolean,
+  },
+  data() {
+    return {
+      offsetTop: 0,
+    }
+  },
+  computed: {
+    isDark() {
+      return isDarkColor(this.computedColor);
+    },
+    computedColor() {
+      return this.color || getThemeColor('secondary');
+    }
+  },
+  methods: {
+    onScroll(e) {
+      this.offsetTop = e.target.scrollTop
+    },
+    back() {
+      if (this.overrideBackButton) {
+        this.overrideBackButton();
+      } else {
+        this.close();
       }
     },
-		methods: {
-			onScroll(e){
-				this.offsetTop = e.target.scrollTop
-			},
-			back(){
-				if (this.overrideBackButton){
-					this.overrideBackButton();
-				} else {
-					this.close();
-				}
-			},
-			close(){
-        this.$store.dispatch('popDialogStack');
-      },
-		},
-	}
+    close() {
+      this.$store.dispatch('popDialogStack');
+    },
+  },
+}
 </script>
 
 <style scoped>
-	.base-dialog-toolbar {
-		z-index: 2;
-		border-radius: 2px 2px 0 0;
-	}
-	#base-dialog-body, .unwrapped-content {
-		flex-grow: 1;
-		overflow: auto;
-	}
-  #base-dialog-body.dark-body {
-    background-color: #fafafa;
-  }
-  .theme--dark #base-dialog-body.dark-body {
-    background-color: #303030;
-  }
+.base-dialog-toolbar {
+  z-index: 2;
+  border-radius: 2px 2px 0 0;
+}
+
+#base-dialog-body,
+.unwrapped-content {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+#base-dialog-body.dark-body {
+  background-color: #fafafa;
+}
+
+.theme--dark #base-dialog-body.dark-body {
+  background-color: #303030;
+}
 </style>

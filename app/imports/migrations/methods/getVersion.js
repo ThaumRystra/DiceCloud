@@ -10,7 +10,7 @@ const dbVersionToGitVersion = {
 
 const getVersion = new ValidatedMethod({
   name: 'admin.getVersion',
-	validate: null,
+  validate: null,
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,

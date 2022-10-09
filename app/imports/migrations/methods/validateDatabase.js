@@ -4,7 +4,7 @@ import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
 
 const validateDatabase = new ValidatedMethod({
   name: 'validateDatabase',
-	validate: null,
+  validate: null,
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 1,
@@ -23,8 +23,8 @@ const validateDatabase = new ValidatedMethod({
         const schema = collection.instance.simpleSchema(doc);
         let cleanDoc = schema.clean(doc);
         try {
-          schema.validate(cleanDoc, {modifier: false});
-        } catch (e){
+          schema.validate(cleanDoc, { modifier: false });
+        } catch (e) {
           console.log(collection.name, doc._id, e.message || e.reason || e.toString());
         }
       });

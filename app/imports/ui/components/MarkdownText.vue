@@ -8,20 +8,20 @@
 </template>
 
 <script lang="js">
-	import { marked } from 'marked';
+import { marked } from 'marked';
 
-	export default {
-		props: {
-			markdown: {
-        type: String,
-        default: undefined,
-      },
-		},
-		computed: {
-      compiledMarkdown() {
-				if (!this.markdown) return;
-				return marked(this.markdown);
-      },
+export default {
+  props: {
+    markdown: {
+      type: String,
+      default: undefined,
     },
-	}
+  },
+  computed: {
+    compiledMarkdown() {
+      if (!this.markdown) return;
+      return marked(this.markdown);
+    },
+  },
+}
 </script>

@@ -62,7 +62,7 @@ import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import ProficiencyIcon from '/imports/ui/properties/shared/ProficiencyIcon.vue';
 import RollPopup from '/imports/ui/components/RollPopup.vue';
 import doCheck from '/imports/api/engine/actions/doCheck.js';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -74,37 +74,39 @@ export default {
       default: {},
     },
   },
-	props: {
+  props: {
     model: {
       type: Object,
       required: true,
     },
     hideModifier: Boolean,
-	},
-  data(){return {
-    checkLoading: false,
-  }},
-	computed: {
-		displayedModifier(){
-			let mod = this.model.value;
-			if (this.model.fail){
-				return 'fail';
-			} else {
-				return numberToSignedString(mod);
-			}
-		},
-		hasClickListener(){
+  },
+  data() {
+    return {
+      checkLoading: false,
+    }
+  },
+  computed: {
+    displayedModifier() {
+      let mod = this.model.value;
+      if (this.model.fail) {
+        return 'fail';
+      } else {
+        return numberToSignedString(mod);
+      }
+    },
+    hasClickListener() {
       return this.$listeners && this.$listeners.click
-		},
-    passiveScore(){
+    },
+    passiveScore() {
       return 10 + this.model.value + this.model.passiveBonus;
     }
-	},
-	methods: {
-		click(e){
-			this.$emit('click', e);
-		},
-    check({advantage}){
+  },
+  methods: {
+    click(e) {
+      this.$emit('click', e);
+    },
+    check({ advantage }) {
       this.checkLoading = true;
       doCheck.call({
         propId: this.model._id,
@@ -113,24 +115,26 @@ export default {
         },
       }, error => {
         this.checkLoading = false;
-        if (error){
+        if (error) {
           console.error(error);
-          snackbar({text: error.reason});
+          snackbar({ text: error.reason });
         }
       });
     },
-	}
+  }
 }
 </script>
 
 <style lang="css" scoped>
-	.prof-icon {
-		min-width: 30px;
-	}
-	.prof-mod {
-    min-width: 32px;
-	}
-  .v-icon.theme--light {
-    color: rgba(0, 0, 0, 0.54) !important;
-  }
+.prof-icon {
+  min-width: 30px;
+}
+
+.prof-mod {
+  min-width: 32px;
+}
+
+.v-icon.theme--light {
+  color: rgba(0, 0, 0, 0.54) !important;
+}
 </style>

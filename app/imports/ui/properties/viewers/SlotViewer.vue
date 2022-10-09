@@ -60,34 +60,34 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
-  import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-  import FillSlotButton from '/imports/ui/creature/buildTree/FillSlotButton.vue';
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import FillSlotButton from '/imports/ui/creature/buildTree/FillSlotButton.vue';
 
-  const uniqueText = {
-    uniqueInSlot: 'Each property inside this slot should be unique',
-    uniqueInCreature: 'Properties in this slot should be unique across the whole character',
+const uniqueText = {
+  uniqueInSlot: 'Each property inside this slot should be unique',
+  uniqueInCreature: 'Properties in this slot should be unique across the whole character',
+}
+
+export default {
+  components: {
+    FillSlotButton,
+  },
+  mixins: [propertyViewerMixin],
+  inject: {
+    context: {
+      default: {},
+    },
+  },
+  computed: {
+    slotTypeName() {
+      if (!this.model.slotType) return;
+      return getPropertyName(this.model.slotType);
+    },
+    uniqueText() {
+      if (!this.model.unique) return;
+      return uniqueText[this.model.unique]
+    },
   }
-
-	export default {
-    components: {
-      FillSlotButton,
-    },
-		mixins: [propertyViewerMixin],
-    inject: {
-      context: {
-        default: {},
-      },
-    },
-    computed: {
-      slotTypeName(){
-        if (!this.model.slotType) return;
-        return getPropertyName(this.model.slotType);
-      },
-      uniqueText(){
-        if (!this.model.unique) return;
-        return uniqueText[this.model.unique]
-      },
-    }
-	}
+}
 </script>

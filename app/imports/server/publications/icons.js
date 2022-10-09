@@ -1,16 +1,16 @@
 import Icons from '/imports/api/icons/Icons.js';
 
-Meteor.publish('sampleIcons', function(){
-	return Icons.find({}, {limit: 50});
+Meteor.publish('sampleIcons', function () {
+  return Icons.find({}, { limit: 50 });
 });
 
-Meteor.publish('searchIcons', function(searchValue) {
+Meteor.publish('searchIcons', function (searchValue) {
   // Don't publish anything if there's no search value
   if (!searchValue) {
     return [];
   }
   return Icons.find(
-    { $text: {$search: searchValue} },
+    { $text: { $search: searchValue } },
     {
       // relevant documents have a higher score.
       fields: {

@@ -6,7 +6,7 @@ import { SyncedCron } from 'meteor/littledata:synced-cron';
 Meteor.startup(() => {
 	const collections = [
 		CreatureProperties,
-    LibraryNodes,
+		LibraryNodes,
 	];
 
 	/**
@@ -14,15 +14,15 @@ Meteor.startup(() => {
 	 * and were not restored
 	 * @return {Number} Number of documents removed
 	 */
-	const deleteOldSoftRemovedDocs = function(){
+	const deleteOldSoftRemovedDocs = function () {
 		const now = new Date();
-    const yesterday = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+		const yesterday = new Date(now.getTime() - (24 * 60 * 60 * 1000));
 		collections.forEach(collection => {
 			collection.remove({
 				removed: true,
-				removedAt: {$lt: yesterday} // dates *before* yesterday
-			}, function(error){
-				if (error){
+				removedAt: { $lt: yesterday } // dates *before* yesterday
+			}, function (error) {
+				if (error) {
 					console.error(JSON.stringify(error, null, 2));
 				}
 			});
@@ -31,7 +31,7 @@ Meteor.startup(() => {
 
 	SyncedCron.add({
 		name: 'deleteSoftRemovedDocs',
-		schedule: function(parser) {
+		schedule: function (parser) {
 			return parser.text('every 10 minutes');
 		},
 		job: deleteOldSoftRemovedDocs,
@@ -42,7 +42,7 @@ Meteor.startup(() => {
 	// Add a method to manually trigger removal
 	Meteor.methods({
 		deleteOldSoftRemovedDocs() {
-      assertAdmin(this.userId);
+			assertAdmin(this.userId);
 			this.unblock();
 			deleteOldSoftRemovedDocs();
 		},

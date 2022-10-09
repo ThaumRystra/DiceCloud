@@ -7,7 +7,7 @@ let ContainerSchema = createPropertySchema({
 		type: String,
 		optional: true,
 		trim: false,
-    max: STORAGE_LIMITS.name,
+		max: STORAGE_LIMITS.name,
 	},
 	carried: {
 		type: Boolean,
@@ -21,12 +21,12 @@ let ContainerSchema = createPropertySchema({
 	weight: {
 		type: Number,
 		min: 0,
-    optional: true,
+		optional: true,
 	},
 	value: {
 		type: Number,
 		min: 0,
-    optional: true,
+		optional: true,
 	},
 	description: {
 		type: 'inlineCalculationFieldToCompute',
@@ -35,33 +35,33 @@ let ContainerSchema = createPropertySchema({
 });
 
 const ComputedOnlyContainerSchema = createPropertySchema({
-  description: {
+	description: {
 		type: 'computedOnlyInlineCalculationField',
 		optional: true,
 	},
-  // Weight of all the contents, zero if `contentsWeightless` is true
-  contentsWeight:{
-    type: Number,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  // Weight of all the carried contents (some sub-containers might not be carried)
-  // zero if `contentsWeightless` is true
-  carriedWeight:{
-    type: Number,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  contentsValue:{
-    type: Number,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  carriedValue:{
-    type: Number,
-    optional: true,
-    removeBeforeCompute: true,
-  },
+	// Weight of all the contents, zero if `contentsWeightless` is true
+	contentsWeight: {
+		type: Number,
+		optional: true,
+		removeBeforeCompute: true,
+	},
+	// Weight of all the carried contents (some sub-containers might not be carried)
+	// zero if `contentsWeightless` is true
+	carriedWeight: {
+		type: Number,
+		optional: true,
+		removeBeforeCompute: true,
+	},
+	contentsValue: {
+		type: Number,
+		optional: true,
+		removeBeforeCompute: true,
+	},
+	carriedValue: {
+		type: Number,
+		optional: true,
+		removeBeforeCompute: true,
+	},
 });
 
 const ComputedContainerSchema = new SimpleSchema()

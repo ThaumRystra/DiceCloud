@@ -1,11 +1,11 @@
 import SimpleSchema from 'simpl-schema';
 import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
 
-let RollResultsSchema = new SimpleSchema ({
+let RollResultsSchema = new SimpleSchema({
   _id: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
+    autoValue() {
       if (!this.isSet) return Random.id();
     }
   },
@@ -17,9 +17,9 @@ let RollResultsSchema = new SimpleSchema ({
     optional: true,
   },
   results: {
-		type: ResultsSchema,
-		defaultValue: {},
-	},
+    type: ResultsSchema,
+    defaultValue: {},
+  },
 });
 
-export default RollResultsSchema ;
+export default RollResultsSchema;

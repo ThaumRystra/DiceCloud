@@ -20,43 +20,46 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
-	import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 
-	export default {
-		mixins: [propertyViewerMixin],
-		computed: {
-      name(){
-        switch(this.model.branchType){
-          case 'if': return 'On condition';
-          case 'hit': return 'On hit';
-          case 'miss': return 'On miss';
-          case 'failedSave': return 'On failed save';
-          case 'successfulSave': return 'On save';
-          case 'eachTarget': return 'Each target';
-          case 'random': return 'Pick one at random';
-          case 'index': return 'Pick one by index';
-          default: return '';
-        }
+export default {
+  mixins: [propertyViewerMixin],
+  computed: {
+    name() {
+      switch (this.model.branchType) {
+        case 'if': return 'On condition';
+        case 'hit': return 'On hit';
+        case 'miss': return 'On miss';
+        case 'failedSave': return 'On failed save';
+        case 'successfulSave': return 'On save';
+        case 'eachTarget': return 'Each target';
+        case 'random': return 'Pick one at random';
+        case 'index': return 'Pick one by index';
+        default: return '';
       }
-		},
-		methods: {
-			numberToSignedString,
-		}
-	}
+    }
+  },
+  methods: {
+    numberToSignedString,
+  }
+}
 </script>
 
 <style lang="css" scoped>
-	.ability-value {
-		font-weight: 600;
-		font-size: 24px !important;
-		color: rgba(0, 0, 0, 0.54);
-	}
-	.mod, .ability-value {
-		text-align: center;
-		width: 100%;
-	}
-	.attribute-value {
-		text-align: center;
-	}
+.ability-value {
+  font-weight: 600;
+  font-size: 24px !important;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.mod,
+.ability-value {
+  text-align: center;
+  width: 100%;
+}
+
+.attribute-value {
+  text-align: center;
+}
 </style>

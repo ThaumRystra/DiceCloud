@@ -8,9 +8,7 @@
     :name="name"
     :cols="{cols: 12}"
   >
-    <markdown-text
-      :markdown="textValue"
-    />
+    <markdown-text :markdown="textValue" />
   </property-field>
 </template>
 
@@ -19,12 +17,12 @@ import MarkdownText from '/imports/ui/components/MarkdownText.vue';
 import PropertyField from '/imports/ui/properties/viewers/shared/PropertyField.vue';
 
 export default {
-	components: {
+  components: {
     MarkdownText,
     PropertyField,
-	},
-	props: {
-		model: {
+  },
+  props: {
+    model: {
       type: Object,
       default: undefined,
     },
@@ -48,16 +46,19 @@ export default {
 </script>
 
 <style lang="css">
-  .computed {
-    display: inline-block;
-  }
-  .computed.symbols-are-errors .math-symbol {
-    color: red;
-  }
-  .computed.code {
-    font-family: monospace,monospace;
-  }
-  .computed .math-binary-operator {
-    margin: 0 6px;
-  }
+.computed {
+  display: inline-block;
+}
+
+.computed.symbols-are-errors .math-symbol {
+  color: red;
+}
+
+.computed.code {
+  font-family: monospace, monospace;
+}
+
+.computed .math-binary-operator {
+  margin: 0 6px;
+}
 </style>

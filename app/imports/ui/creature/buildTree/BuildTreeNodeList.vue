@@ -12,24 +12,26 @@
 </template>
 
 <script lang="js">
-  import BuildTreeNode from '/imports/ui/creature/buildTree/BuildTreeNode.vue';
+import BuildTreeNode from '/imports/ui/creature/buildTree/BuildTreeNode.vue';
 
-  export default {
-    components: {
-      BuildTreeNode,
+export default {
+  components: {
+    BuildTreeNode,
+  },
+  props: {
+    children: {
+      type: Array,
+      default: () => [],
     },
-    props: {
-      children: {
-        type: Array,
-        default: () => [],
-      },
-      parentSlotId: {
-				type: String,
-				default: undefined,
-      },
+    parentSlotId: {
+      type: String,
+      default: undefined,
     },
-    data(){ return {
+  },
+  data() {
+    return {
       expanded: false,
-    }},
-  };
+    }
+  },
+};
 </script>

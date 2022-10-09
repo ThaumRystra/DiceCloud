@@ -43,24 +43,26 @@ import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions
 import { mapMutations } from 'vuex';
 
 export default {
-  data(){ return {
-    loading: false,
-  }},
+  data() {
+    return {
+      loading: false,
+    }
+  },
   meteor: {
-    libraryCollection(){
+    libraryCollection() {
       return LibraryCollections.findOne(this.$route.params.id);
     },
-    subscribed(){
+    subscribed() {
       const libraryCollectionId = this.$route.params.id;
       const user = Meteor.user();
       return user?.subscribedLibraryCollections?.includes(libraryCollectionId);
     },
-    showSubscribeButton(){
+    showSubscribeButton() {
       let user = Meteor.user();
       let libraryCollection = this.libraryCollection;
       if (!user || !libraryCollection) return;
       let userId = user._id;
-      if (user.subscribedLibraryCollections?.includes(libraryCollection._id)){
+      if (user.subscribedLibraryCollections?.includes(libraryCollection._id)) {
         return true
       } else if (
         libraryCollection.readers.includes(userId) ||
@@ -72,7 +74,7 @@ export default {
         return true;
       }
     },
-    canEdit(){
+    canEdit() {
       try {
         assertDocEditPermission(this.libraryCollection, Meteor.userId());
         return true
@@ -85,7 +87,7 @@ export default {
     ...mapMutations([
       'toggleDrawer',
     ]),
-    subscribe(value){
+    subscribe(value) {
       this.loading = true;
       Meteor.users.subscribeToLibraryCollection.call({
         libraryCollectionId: this.$route.params.id,
@@ -94,16 +96,17 @@ export default {
         this.loading = false;
       });
     },
-    editLibraryCollection(){
-			this.$store.commit('pushDialogStack', {
-				component: 'library-collection-edit-dialog',
-				elementId: 'library-collection-edit-button',
-				data: {_id: this.$route.params.id},
-			});
-		},
+    editLibraryCollection() {
+      this.$store.commit('pushDialogStack', {
+        component: 'library-collection-edit-dialog',
+        elementId: 'library-collection-edit-button',
+        data: { _id: this.$route.params.id },
+      });
+    },
   },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

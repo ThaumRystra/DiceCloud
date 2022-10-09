@@ -8,7 +8,7 @@ let creatureFolderSchema = new SimpleSchema({
 		type: String,
 		trim: false,
 		optional: true,
-    max: STORAGE_LIMITS.name,
+		max: STORAGE_LIMITS.name,
 	},
 	creatures: {
 		type: Array,
@@ -21,16 +21,16 @@ let creatureFolderSchema = new SimpleSchema({
 	owner: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
-    index: 1,
+		index: 1,
 	},
-  archived: {
-    type: Boolean,
-    optional: true,
-  },
-  order: {
-    type: Number,
-    defaultValue: 0,
-  },
+	archived: {
+		type: Boolean,
+		optional: true,
+	},
+	order: {
+		type: Number,
+		defaultValue: 0,
+	},
 });
 
 CreatureFolders.attachSchema(creatureFolderSchema);

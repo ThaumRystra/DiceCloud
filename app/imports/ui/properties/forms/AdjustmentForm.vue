@@ -81,60 +81,63 @@ import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormM
 
 export default {
   mixins: [propertyFormMixin, attributeListMixin],
-	props: {
-		parentTarget: {
-			type: String,
+  props: {
+    parentTarget: {
+      type: String,
       default: undefined,
-		},
-	},
-  data(){return {
-    adjustmentOps: [
-      {text: 'Damage', value: 'increment'},
-      {text: 'Set', value: 'set'},
-    ],
-    damageHint: 'The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead.',
-    setHint: 'The value of the stat after applying this adjustment. The stat\'s value can\'t exceed its total',
-  }},
-	computed: {
-		targetOptions(){
-			if (this.parentTarget === 'singleTarget') {
-				return [
-					{
-						text: 'Self',
-						value: 'self',
-					}, {
-						text: 'Target',
-						value: 'every',
-					},
-				];
-			} else {
-				return [
-					{
-						text: 'Self',
-						value: 'self',
-					}, {
-						text: 'Target',
-						value: 'target',
-					},
-				];
-			}
-		},
-		targetOptionHint(){
-			let hints = {
-				self: 'The damage will be applied to the character\'s own attribute when taking the action',
-				target: 'The damage will be applied to the target of the action',
-				each: 'The damage will be rolled separately for each of the targets of the action',
-				every: 'The damage will be rolled once and applied to each of the targets of the action',
-			};
-			if (this.parentTarget === 'singleTarget'){
-				hints.each = hints.target;
-				hints.every = hints.target;
-			}
-			return hints[this.model.target];
-		}
-	},
+    },
+  },
+  data() {
+    return {
+      adjustmentOps: [
+        { text: 'Damage', value: 'increment' },
+        { text: 'Set', value: 'set' },
+      ],
+      damageHint: 'The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead.',
+      setHint: 'The value of the stat after applying this adjustment. The stat\'s value can\'t exceed its total',
+    }
+  },
+  computed: {
+    targetOptions() {
+      if (this.parentTarget === 'singleTarget') {
+        return [
+          {
+            text: 'Self',
+            value: 'self',
+          }, {
+            text: 'Target',
+            value: 'every',
+          },
+        ];
+      } else {
+        return [
+          {
+            text: 'Self',
+            value: 'self',
+          }, {
+            text: 'Target',
+            value: 'target',
+          },
+        ];
+      }
+    },
+    targetOptionHint() {
+      let hints = {
+        self: 'The damage will be applied to the character\'s own attribute when taking the action',
+        target: 'The damage will be applied to the target of the action',
+        each: 'The damage will be rolled separately for each of the targets of the action',
+        every: 'The damage will be rolled once and applied to each of the targets of the action',
+      };
+      if (this.parentTarget === 'singleTarget') {
+        hints.each = hints.target;
+        hints.every = hints.target;
+      }
+      return hints[this.model.target];
+    }
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

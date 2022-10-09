@@ -4,26 +4,26 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 const ClassLevelSchema = createPropertySchema({
-	name: {
-		type: String,
-		optional: true,
+  name: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
-	description: {
-		type: 'inlineCalculationFieldToCompute',
-		optional: true,
-	},
-	// The name of this class level's variable
-	variableName: {
+  },
+  description: {
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
+  // The name of this class level's variable
+  variableName: {
     type: String,
     min: 2,
-		regEx: VARIABLE_NAME_REGEX,
+    regEx: VARIABLE_NAME_REGEX,
     max: STORAGE_LIMITS.variableName,
     optional: true,
   },
-	level: {
+  level: {
     type: SimpleSchema.Integer,
-		defaultValue: 1,
+    defaultValue: 1,
     max: STORAGE_LIMITS.levelMax,
   },
   // Filters out of UI if condition isn't met, but isn't otherwise enforced
@@ -34,7 +34,7 @@ const ClassLevelSchema = createPropertySchema({
   },
 });
 
-const ComputedOnlyClassLevelSchema  = createPropertySchema({
+const ComputedOnlyClassLevelSchema = createPropertySchema({
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,

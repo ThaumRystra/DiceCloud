@@ -18,23 +18,23 @@ let CreaturePropertySchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-	type: {
+  type: {
     type: String,
     allowedValues: Object.keys(propertySchemasIndex),
   },
-	tags: {
-		type: Array,
-		defaultValue: [],
+  tags: {
+    type: Array,
+    defaultValue: [],
     maxCount: STORAGE_LIMITS.tagCount,
-	},
-	'tags.$': {
-		type: String,
+  },
+  'tags.$': {
+    type: String,
     max: STORAGE_LIMITS.tagLength,
-	},
-	disabled: {
-		type: Boolean,
-		optional: true,
-	},
+  },
+  disabled: {
+    type: Boolean,
+    optional: true,
+  },
   icon: {
     type: storedIconsSchema,
     optional: true,
@@ -93,20 +93,20 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
 
-for (let key in propertySchemasIndex){
-	let schema = new SimpleSchema({});
-	schema.extend(propertySchemasIndex[key]);
-	schema.extend(CreaturePropertySchema);
+for (let key in propertySchemasIndex) {
+  let schema = new SimpleSchema({});
+  schema.extend(propertySchemasIndex[key]);
+  schema.extend(CreaturePropertySchema);
   schema.extend(ColorSchema);
-	schema.extend(ChildSchema);
-	schema.extend(SoftRemovableSchema);
-	CreatureProperties.attachSchema(schema, {
-		selector: {type: key}
-	});
+  schema.extend(ChildSchema);
+  schema.extend(SoftRemovableSchema);
+  CreatureProperties.attachSchema(schema, {
+    selector: { type: key }
+  });
 }
 
 export default CreatureProperties;
 export {
   DenormalisedOnlyCreaturePropertySchema,
-	CreaturePropertySchema,
+  CreaturePropertySchema,
 };

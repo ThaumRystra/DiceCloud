@@ -33,7 +33,7 @@
 import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 
 export default {
-	mixins: [propertyViewerMixin],
+  mixins: [propertyViewerMixin],
   inject: {
     context: {
       default: {},
@@ -43,4 +43,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

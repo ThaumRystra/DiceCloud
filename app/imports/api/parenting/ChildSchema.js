@@ -22,7 +22,7 @@ let ChildSchema = new SimpleSchema({
   order: {
     type: Number,
   },
-	parent: {
+  parent: {
     type: RefSchema,
     optional: true,
   },

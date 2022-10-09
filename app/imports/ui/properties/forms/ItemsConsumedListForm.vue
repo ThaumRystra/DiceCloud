@@ -29,13 +29,13 @@
 </template>
 
 <script lang="js">
-	import ItemConsumedForm from '/imports/ui/properties/forms/ItemConsumedForm.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import ItemConsumedForm from '/imports/ui/properties/forms/ItemConsumedForm.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-		components: {
-			ItemConsumedForm,
-		},
-    mixins: [propertyFormMixin],
-	}
+export default {
+  components: {
+    ItemConsumedForm,
+  },
+  mixins: [propertyFormMixin],
+}
 </script>

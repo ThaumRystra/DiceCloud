@@ -16,16 +16,19 @@ import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 export default {
   components: {
     SelectablePropertyDialog,
-		LibraryNodeInsertForm,
+    LibraryNodeInsertForm,
   },
-  data() { return {
-    type: undefined,
-  };},
-	methods: {
-		getPropertyName,
-	},
+  data() {
+    return {
+      type: undefined,
+    };
+  },
+  methods: {
+    getPropertyName,
+  },
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

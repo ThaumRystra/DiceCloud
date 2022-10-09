@@ -3,7 +3,7 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 const AdjustmentSchema = createPropertySchema({
-	// The roll that determines how much to change the attribute
+  // The roll that determines how much to change the attribute
   // This can be simplified, but should only compute when activated
   amount: {
     type: 'fieldToCompute',
@@ -11,21 +11,21 @@ const AdjustmentSchema = createPropertySchema({
     optional: true,
     defaultValue: 1,
   },
-	// Who this adjustment applies to
-	target: {
-		type: String,
+  // Who this adjustment applies to
+  target: {
+    type: String,
     defaultValue: 'target',
-		allowedValues: [
+    allowedValues: [
       'self',
       'target',
     ],
-	},
-	// The stat this rolls applies to
-	stat: {
-		type: String,
+  },
+  // The stat this rolls applies to
+  stat: {
+    type: String,
     optional: true,
     max: STORAGE_LIMITS.variableName,
-	},
+  },
   operation: {
     type: String,
     allowedValues: ['set', 'increment'],

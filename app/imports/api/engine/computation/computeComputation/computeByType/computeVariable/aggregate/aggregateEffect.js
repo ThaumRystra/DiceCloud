@@ -1,4 +1,4 @@
-import { pick } from "lodash";
+import { pick } from 'lodash';
 
 export default function aggregateEffect({node, linkedNode, link}){
   if (link.data !== 'effect') return;

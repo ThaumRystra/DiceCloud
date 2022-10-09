@@ -3,10 +3,10 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 let BuffSchema = createPropertySchema({
-  name: {
+	name: {
 		type: String,
 		optional: true,
-    max: STORAGE_LIMITS.name,
+		max: STORAGE_LIMITS.name,
 	},
 	description: {
 		type: 'inlineCalculationFieldToCompute',
@@ -16,36 +16,36 @@ let BuffSchema = createPropertySchema({
 		type: Boolean,
 		optional: true,
 	},
-  // How many rounds this buff lasts
+	// How many rounds this buff lasts
 	duration: {
 		type: 'fieldToCompute',
 		optional: true,
 	},
-  target: {
+	target: {
 		type: String,
 		allowedValues: [
-      'self',
-      'target',
-    ],
+			'self',
+			'target',
+		],
 		defaultValue: 'target',
 	},
 	// Prevent the property from showing up in the log
-  silent: {
-    type: Boolean,
-    optional: true,
+	silent: {
+		type: Boolean,
+		optional: true,
 	},
 	// Prevent the children from being crystalized
-  skipCrystalization: {
-    type: Boolean,
-    optional: true,
-  },
+	skipCrystalization: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 let ComputedOnlyBuffSchema = createPropertySchema({
 	description: {
 		type: 'computedOnlyInlineCalculationField',
 		optional: true,
-    max: STORAGE_LIMITS.description,
+		max: STORAGE_LIMITS.description,
 	},
 	duration: {
 		type: 'computedOnlyField',
@@ -58,11 +58,11 @@ let ComputedOnlyBuffSchema = createPropertySchema({
 	},
 	appliedBy: {
 		type: Object,
-    optional: true,
+		optional: true,
 	},
 	'appliedBy.name': {
 		type: String,
-    max: STORAGE_LIMITS.name,
+		max: STORAGE_LIMITS.name,
 	},
 	'appliedBy.id': {
 		type: String,
@@ -70,12 +70,12 @@ let ComputedOnlyBuffSchema = createPropertySchema({
 	},
 	'appliedBy.collection': {
 		type: String,
-    max: STORAGE_LIMITS.collectionName,
+		max: STORAGE_LIMITS.collectionName,
 	},
 });
 
 const ComputedBuffSchema = new SimpleSchema()
-  .extend(BuffSchema)
-  .extend(ComputedOnlyBuffSchema);
+	.extend(BuffSchema)
+	.extend(ComputedOnlyBuffSchema);
 
 export { BuffSchema, ComputedOnlyBuffSchema, ComputedBuffSchema };

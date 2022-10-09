@@ -47,55 +47,58 @@ import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import Invites, { getInviteToken, revokeInvite } from '/imports/api/users/Invites.js';
 
 export default {
-	components: {
-		DialogBase,
-	},
+  components: {
+    DialogBase,
+  },
   props: {
     inviteId: {
       type: String,
       required: true,
     },
   },
-  data(){return  {
-    inviteToken: '',
-    error: '',
-    loading: false,
-  }},
+  data() {
+    return {
+      inviteToken: '',
+      error: '',
+      loading: false,
+    }
+  },
   meteor: {
-    invite(){
+    invite() {
       return Invites.findOne(this.inviteId);
     },
-    username(){
+    username() {
       if (!this.invite) return;
       let user = Meteor.users.findOne(this.invite.invitee);
       return user && user.username;
     }
   },
   computed: {
-    inviteLink(){
+    inviteLink() {
       let token = this.inviteToken;
       return token && `https://beta.dicecloud.com/invite/${token}`;
     },
   },
   methods: {
-    getInviteLink(){
+    getInviteLink() {
       this.loading = true;
-      getInviteToken.call({inviteId: this.inviteId}, (error, result) => {
+      getInviteToken.call({ inviteId: this.inviteId }, (error, result) => {
         this.loading = false;
-        if (error){
+        if (error) {
           this.error = error.message || error;
         } else {
           this.error = '',
-          this.inviteToken = result;
+            this.inviteToken = result;
         }
       });
     },
-    revokeInvite(){
-      revokeInvite.call({inviteId: this.inviteId});
+    revokeInvite() {
+      revokeInvite.call({ inviteId: this.inviteId });
     },
   },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -43,12 +43,12 @@ export default {
   components: {
     ActionViewer,
   },
-	mixins: [propertyViewerMixin],
-  computed:{
-    levelText(){
+  mixins: [propertyViewerMixin],
+  computed: {
+    levelText() {
       return levelText[this.model.level]
     },
-    spellComponents(){
+    spellComponents() {
       let components = [];
       if (this.model.ritual) components.push('Ritual');
       if (this.model.concentration) components.push('Concentration');
@@ -62,4 +62,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

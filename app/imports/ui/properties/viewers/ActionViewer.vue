@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="action-viewer">
-    <v-row
-      dense
-    >
+    <v-row dense>
       <property-field
         v-if="context.creatureId"
         :name="model.type === 'spell'? 'Cast spell' : 'Apply action'"
@@ -44,9 +42,7 @@
         v-if="model.uses"
         name="Uses"
       >
-        <template
-          v-if="context.creatureId && model.uses.value"
-        >
+        <template v-if="context.creatureId && model.uses.value">
           <v-spacer />
           {{ usesLeft }}/{{ model.uses.value }}
           <v-spacer />
@@ -116,7 +112,7 @@ import ItemConsumedView from '/imports/ui/properties/components/actions/ItemCons
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -133,40 +129,42 @@ export default {
   props: {
     attack: Boolean,
   },
-  data(){return {
-    doActionLoading: false,
-    actionTypes: {
-      action: 'Action',
-      bonus: 'Bonus action',
-      attack: 'Attack action',
-      reaction: 'Reaction',
-      free: 'Free action',
-      long: 'Long action',
-    },
-    targetTypes: {
-      self: 'Self',
-      singleTarget: 'Single target',
-      multipleTargets: 'Multiple targets',
-    },
-  }},
+  data() {
+    return {
+      doActionLoading: false,
+      actionTypes: {
+        action: 'Action',
+        bonus: 'Bonus action',
+        attack: 'Attack action',
+        reaction: 'Reaction',
+        free: 'Free action',
+        long: 'Long action',
+      },
+      targetTypes: {
+        self: 'Self',
+        singleTarget: 'Single target',
+        multipleTargets: 'Multiple targets',
+      },
+    }
+  },
   computed: {
-    reset(){
+    reset() {
       let reset = this.model.reset
-      if (reset === 'shortRest'){
+      if (reset === 'shortRest') {
         return 'Reset on a short rest';
-      } else if (reset === 'longRest'){
+      } else if (reset === 'longRest') {
         return 'Reset on a long rest';
       }
       return undefined;
     },
-    rollBonusTooLong(){
+    rollBonusTooLong() {
       return this.rollBonus && this.rollBonus.length > 3;
     },
-    totalUses(){
+    totalUses() {
       if (!this.model.uses) return 0;
       return Math.max(this.model.uses.value || 0, 0);
     },
-    usesLeft(){
+    usesLeft() {
       return Math.max(this.totalUses - (this.model.usesUsed || 0), 0);
     },
     actionTypeIcon() {
@@ -174,25 +172,25 @@ export default {
     },
   },
   methods: {
-    doAction(){
-      if (this.model.type === 'action'){
+    doAction() {
+      if (this.model.type === 'action') {
         this.doActionLoading = true;
-        doAction.call({actionId: this.model._id}, error => {
+        doAction.call({ actionId: this.model._id }, error => {
           this.doActionLoading = false;
-          if (error){
-            snackbar({text: error.reason});
+          if (error) {
+            snackbar({ text: error.reason });
             console.error(error);
           }
         });
       } else if (this.model.type === 'spell') {
         this.$store.commit('pushDialogStack', {
-					component: 'cast-spell-with-slot-dialog',
-					elementId: 'do-action-button',
-					data: {
+          component: 'cast-spell-with-slot-dialog',
+          elementId: 'do-action-button',
+          data: {
             creatureId: this.context.creatureId,
             spellId: this.model._id,
           },
-          callback({spellId, slotId, advantage} = {}){
+          callback({ spellId, slotId, advantage } = {}) {
             if (!spellId) return;
             doCastSpell.call({
               spellId,
@@ -202,14 +200,14 @@ export default {
               },
             }, error => {
               if (!error) return;
-              snackbar({text: error.reason});
+              snackbar({ text: error.reason });
               console.error(error);
             });
           },
-				});
+        });
       }
     },
-    resetUses(){
+    resetUses() {
       updateCreatureProperty.call({
         _id: this.model._id,
         path: ['usesUsed'],
@@ -226,6 +224,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .action-child {
   height: 40px;
 }

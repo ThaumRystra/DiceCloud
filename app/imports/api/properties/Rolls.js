@@ -23,14 +23,14 @@ import createPropertySchema from '/imports/api/properties/subSchemas/createPrope
  */
 let RollSchema = createPropertySchema({
   name: {
-		type: String,
+    type: String,
     defaultValue: 'New Roll',
     max: STORAGE_LIMITS.name,
-	},
+  },
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
-		regEx: VARIABLE_NAME_REGEX,
+    regEx: VARIABLE_NAME_REGEX,
     min: 2,
     defaultValue: 'newRoll',
     max: STORAGE_LIMITS.variableName,

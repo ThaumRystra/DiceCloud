@@ -3,7 +3,7 @@ import '/imports/api/sharing/sharing.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let SharingSchema = new SimpleSchema({
-  owner: {
+	owner: {
 		type: String,
 		regEx: SimpleSchema.RegEx.Id,
 		index: 1
@@ -12,7 +12,7 @@ let SharingSchema = new SimpleSchema({
 		type: Array,
 		defaultValue: [],
 		index: 1,
-    maxCount: STORAGE_LIMITS.readersCount,
+		maxCount: STORAGE_LIMITS.readersCount,
 	},
 	'readers.$': {
 		type: String,
@@ -22,7 +22,7 @@ let SharingSchema = new SimpleSchema({
 		type: Array,
 		defaultValue: [],
 		index: 1,
-    maxCount: STORAGE_LIMITS.writersCount,
+		maxCount: STORAGE_LIMITS.writersCount,
 	},
 	'writers.$': {
 		type: String,

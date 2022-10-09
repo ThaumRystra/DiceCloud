@@ -51,7 +51,7 @@ const insertCreature = new ValidatedMethod({
       allowedLibraries,
       allowedLibraryCollections,
     });
-    
+
     // Insert experience to get character to starting level
     if (startingLevel) {
       insertExperienceForCreature({
@@ -70,7 +70,7 @@ const insertCreature = new ValidatedMethod({
     let baseId, rulesetSlot;
     defaultCharacterProperties(creatureId).forEach(prop => {
       let id = CreatureProperties.insert(prop);
-      if (prop.name === 'Ruleset'){
+      if (prop.name === 'Ruleset') {
         baseId = id;
         rulesetSlot = prop;
       }
@@ -81,7 +81,7 @@ const insertCreature = new ValidatedMethod({
       insertDefaultRuleset(creatureId, baseId, userId, rulesetSlot);
     }
 
-		return creatureId;
+    return creatureId;
   },
 });
 
@@ -95,7 +95,7 @@ function insertDefaultRuleset(creatureId, baseId, userId, slot) {
     const ruleset = fillCursor.fetch()[0]
     insertPropertyFromLibraryNode.call({
       nodeIds: [ruleset._id],
-      parentRef: {id: baseId, collection: 'creatureProperties'},
+      parentRef: { id: baseId, collection: 'creatureProperties' },
       order: 0.5,
     });
   }

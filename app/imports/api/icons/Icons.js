@@ -7,17 +7,17 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 let Icons = new Mongo.Collection('icons');
 
 let iconsSchema = new SimpleSchema({
-	name: {
-		type: String,
+  name: {
+    type: String,
     unique: true,
     max: STORAGE_LIMITS.name,
     index: 1,
-	},
-	description: {
-		type: String,
-		optional: true,
+  },
+  description: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.description,
-	},
+  },
   tags: {
     type: Array,
     optional: true,
@@ -38,7 +38,7 @@ if (Meteor.isServer) {
   Icons._ensureIndex({
     'name': 'text',
     'description': 'text',
-		'tags': 'text',
+    'tags': 'text',
   });
 }
 
@@ -55,15 +55,15 @@ Icons.attachSchema(iconsSchema);
 
 // This method does not validate icons against the schema, use wisely;
 const writeIcons = new ValidatedMethod({
-	name: 'icons.write',
-	validate: null,
-	run(icons){
+  name: 'icons.write',
+  validate: null,
+  run(icons) {
     assertAdmin(this.userId);
-    if (Meteor.isServer){
+    if (Meteor.isServer) {
       this.unblock();
-      Icons.rawCollection().insert(icons, {ordered: false});
+      Icons.rawCollection().insert(icons, { ordered: false });
     }
-	}
+  }
 });
 
 const findIcons = new ValidatedMethod({
@@ -80,11 +80,11 @@ const findIcons = new ValidatedMethod({
     numRequests: 20,
     timeInterval: 10000,
   },
-  run({search}){
+  run({ search }) {
     if (!search) return [];
     if (!Meteor.isServer) return;
     return Icons.find(
-      { $text: {$search: search} },
+      { $text: { $search: search } },
       {
         // relevant documents have a higher score.
         fields: {

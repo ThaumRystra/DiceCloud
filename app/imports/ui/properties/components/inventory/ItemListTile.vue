@@ -49,10 +49,10 @@ import treeNodeViewMixin from '/imports/ui/properties/treeNodeViews/treeNodeView
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import IncrementButton from '/imports/ui/components/IncrementButton.vue';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
-  components:{
+  components: {
     IncrementButton,
   },
   mixins: [treeNodeViewMixin],
@@ -62,20 +62,22 @@ export default {
   props: {
     preparingSpells: Boolean,
   },
-  data(){return {
-    incrementLoading: false,
-  }},
+  data() {
+    return {
+      incrementLoading: false,
+    }
+  },
   computed: {
-    hasClickListener(){
+    hasClickListener() {
       return this.$listeners && !!this.$listeners.click;
     },
-    title(){
+    title() {
       let model = this.model;
       if (!model) return;
-      if (model.quantity !== 1){
-        if (model.plural){
+      if (model.quantity !== 1) {
+        if (model.plural) {
           return `${model.quantity} ${model.plural}`;
-        } else if (model.name){
+        } else if (model.name) {
           return `${model.quantity} ${model.name}`;
         }
       } else if (model.name) {
@@ -86,10 +88,10 @@ export default {
     }
   },
   methods: {
-    click(e){
-			this.$emit('click', e);
-		},
-    changeQuantity({type, value}) {
+    click(e) {
+      this.$emit('click', e);
+    },
+    changeQuantity({ type, value }) {
       this.incrementLoading = true;
       adjustQuantity.call({
         _id: this.model._id,
@@ -97,8 +99,8 @@ export default {
         value: value
       }, error => {
         this.incrementLoading = false;
-        if (error){
-          snackbar({text: error.reason});
+        if (error) {
+          snackbar({ text: error.reason });
           console.error(error);
         }
       });
@@ -111,6 +113,7 @@ export default {
 .item-avatar {
   min-width: 32px;
 }
+
 .item {
   background-color: inherit;
 }

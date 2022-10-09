@@ -29,41 +29,43 @@ import SpellListCard from '/imports/ui/properties/components/spells/SpellListCar
 import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 
 export default {
-	components: {
-		ColumnLayout,
+  components: {
+    ColumnLayout,
     SpellList,
-		SpellListCard,
-	},
-	props: {
-		creatureId: {
+    SpellListCard,
+  },
+  props: {
+    creatureId: {
       type: String,
       required: true,
     }
-	},
-	data(){ return {
-		organize: false,
-	}},
-	meteor: {
-		spellLists(){
+  },
+  data() {
+    return {
+      organize: false,
+    }
+  },
+  meteor: {
+    spellLists() {
       return CreatureProperties.find({
         'ancestors.id': this.creatureId,
         type: 'spellList',
-        removed: {$ne: true},
-        inactive: {$ne: true},
+        removed: { $ne: true },
+        inactive: { $ne: true },
       }, {
-        sort: {order: 1}
+        sort: { order: 1 }
       });
-		},
-    spellsWithoutList(){
+    },
+    spellsWithoutList() {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
           $nin: this.spellListIds,
         },
         type: 'spell',
-        removed: {$ne: true},
-        deactivatedByAncestor: {$ne: true},
-        deactivatedByToggle: {$ne: true},
+        removed: { $ne: true },
+        deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
       }, {
         sort: {
           level: 1,
@@ -71,36 +73,37 @@ export default {
         }
       });
     },
-		spellListsWithoutAncestorSpellLists(){
+    spellListsWithoutAncestorSpellLists() {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
           $nin: this.spellListIds,
         },
         type: 'spellList',
-        removed: {$ne: true},
-        inactive: {$ne: true},
+        removed: { $ne: true },
+        inactive: { $ne: true },
       }, {
-        sort: {order: 1}
+        sort: { order: 1 }
       });
-		},
-	},
-	computed: {
-		spellListIds(){
-			return this.spellLists.map(spellList => spellList._id);
-		},
-	},
-	methods: {
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `spell-list-tile-${_id}`,
-				data: {_id},
-			});
-		},
-	},
+    },
+  },
+  computed: {
+    spellListIds() {
+      return this.spellLists.map(spellList => spellList._id);
+    },
+  },
+  methods: {
+    clickProperty(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `spell-list-tile-${_id}`,
+        data: { _id },
+      });
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

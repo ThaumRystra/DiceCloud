@@ -4,31 +4,31 @@ import createPropertySchema from '/imports/api/properties/subSchemas/createPrope
 
 let BuffRemoverSchema = createPropertySchema({
   name: {
-		type: String,
-		optional: true,
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
-	// This will remove just the nearest ancestor buff 
-	targetParentBuff: {
-		type: Boolean,
-		optional: true,
-	},
-	// The following only applies when not targeting the parent buff
-	// Which character to remove buffs from
-	target: {
-		type: String,
-		allowedValues: [
+  },
+  // This will remove just the nearest ancestor buff 
+  targetParentBuff: {
+    type: Boolean,
+    optional: true,
+  },
+  // The following only applies when not targeting the parent buff
+  // Which character to remove buffs from
+  target: {
+    type: String,
+    allowedValues: [
       'self',
       'target',
     ],
-		defaultValue: 'target',
-	},
-	// remove 1 or remove all
-	removeAll: {
-		type: Boolean,
+    defaultValue: 'target',
+  },
+  // remove 1 or remove all
+  removeAll: {
+    type: Boolean,
     optional: true,
     defaultValue: true,
-	},
+  },
   // Buffs to remove based on tags:
   targetTags: {
     type: Array,
@@ -50,7 +50,7 @@ let BuffRemoverSchema = createPropertySchema({
   'extraTags.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
+    autoValue() {
       if (!this.isSet) return Random.id();
     }
   },

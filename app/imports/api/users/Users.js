@@ -75,7 +75,7 @@ const userSchema = new SimpleSchema({
 	},
 	'subscribedLibraries.$': {
 		type: String,
-    regEx: SimpleSchema.RegEx.Id,
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	subscribedLibraryCollections: {
 		type: Array,
@@ -84,81 +84,81 @@ const userSchema = new SimpleSchema({
 	},
 	'subscribedLibraryCollections.$': {
 		type: String,
-    regEx: SimpleSchema.RegEx.Id,
+		regEx: SimpleSchema.RegEx.Id,
 	},
-  subscribedCharacters: {
+	subscribedCharacters: {
 		type: Array,
 		defaultValue: [],
 		max: 100,
 	},
 	'subscribedCharacters.$': {
 		type: String,
-    regEx: SimpleSchema.RegEx.Id,
+		regEx: SimpleSchema.RegEx.Id,
 	},
 	fileStorageUsed: {
 		type: Number,
 		optional: true,
 	},
-  profile: {
-    type: Object,
-    blackbox: true,
-    optional: true,
-  },
-  preferences: {
-    type: Object,
-    optional: true,
-    defaultValue: {},
-  },
-  'preferences.swapAbilityScoresAndModifiers': {
-    type: Boolean,
-    optional: true,
-  },
-  'preferences.hidePropertySelectDialogHelp': {
-    type: Boolean,
-    optional: true,
-  },
+	profile: {
+		type: Object,
+		blackbox: true,
+		optional: true,
+	},
+	preferences: {
+		type: Object,
+		optional: true,
+		defaultValue: {},
+	},
+	'preferences.swapAbilityScoresAndModifiers': {
+		type: Boolean,
+		optional: true,
+	},
+	'preferences.hidePropertySelectDialogHelp': {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 Meteor.users.attachSchema(userSchema);
 
 Meteor.users.generateApiKey = new ValidatedMethod({
-  name: 'users.generateApiKey',
+	name: 'users.generateApiKey',
 	validate: null,
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  run(){
-		if(Meteor.isClient) return;
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run() {
+		if (Meteor.isClient) return;
 		var user = Meteor.users.findOne(this.userId);
 		if (!user) return;
 		if (user && user.apiKey) return;
 		var apiKey = Random.id(30);
-		Meteor.users.update(this.userId, {$set: {apiKey}});
+		Meteor.users.update(this.userId, { $set: { apiKey } });
 	},
 });
 
 Meteor.users.setDarkMode = new ValidatedMethod({
-  name: 'users.setDarkMode',
+	name: 'users.setDarkMode',
 	validate: new SimpleSchema({
-    darkMode: { type: Boolean },
-  }).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  run({darkMode}){
+		darkMode: { type: Boolean },
+	}).validator(),
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ darkMode }) {
 		if (!this.userId) return;
-		Meteor.users.update(this.userId, {$set: {darkMode}});
+		Meteor.users.update(this.userId, { $set: { darkMode } });
 	},
 });
 
 Meteor.users.sendVerificationEmail = new ValidatedMethod({
 	name: 'users.sendVerificationEmail',
 	validate: new SimpleSchema({
-		userId:{
+		userId: {
 			type: String,
 			optional: true,
 		},
@@ -166,12 +166,12 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 			type: String,
 		},
 	}).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({userId, address}){
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ userId, address }) {
 		userId = this.userId || userId;
 		let user = Meteor.users.findOne(userId);
 		if (!user) {
@@ -189,140 +189,140 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
 Meteor.users.canPickUsername = new ValidatedMethod({
 	name: 'users.canPickUsername',
 	validate: userSchema.pick('username').validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({username}){
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ username }) {
 		if (Meteor.isClient) return;
 		let user = Accounts.findUserByUsername(username);
-    // You can pick your own username
-    if (user && user._id === this.userId){
-      return false;
-    }
+		// You can pick your own username
+		if (user && user._id === this.userId) {
+			return false;
+		}
 		return !!user;
 	}
 });
 
 Meteor.users.setUsername = new ValidatedMethod({
-  name: 'users.setUsername',
+	name: 'users.setUsername',
 	validate: userSchema.pick('username').validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({username}){
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ username }) {
 		if (!this.userId) throw 'Can only set your username if logged in';
-    if (Meteor.isClient) return;
-    return Accounts.setUsername(this.userId, username)
+		if (Meteor.isClient) return;
+		return Accounts.setUsername(this.userId, username)
 	}
 });
 
 Meteor.users.setPreference = new ValidatedMethod({
-  name: 'users.setPreference',
+	name: 'users.setPreference',
 	validate: new SimpleSchema({
-    preference:{
-      type: String,
-    },
-    value: {
-      type: SimpleSchema.oneOf(Boolean),
-    },
-  }).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({preference, value}){
+		preference: {
+			type: String,
+		},
+		value: {
+			type: SimpleSchema.oneOf(Boolean),
+		},
+	}).validator(),
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ preference, value }) {
 		if (!this.userId) throw 'You can only set preferences once logged in';
-    let prefPath = `preferences.${preference}`
-    if (value == true){
-      return Meteor.users.update(this.userId, {
-        $set: {[prefPath]: true},
-      });
-    } else {
-      return Meteor.users.update(this.userId, {
-        $unset: {[prefPath]: 1},
-      });
-    }
+		let prefPath = `preferences.${preference}`
+		if (value == true) {
+			return Meteor.users.update(this.userId, {
+				$set: { [prefPath]: true },
+			});
+		} else {
+			return Meteor.users.update(this.userId, {
+				$unset: { [prefPath]: 1 },
+			});
+		}
 	},
 });
 
 Meteor.users.subscribeToLibrary = new ValidatedMethod({
-  name: 'users.subscribeToLibrary',
+	name: 'users.subscribeToLibrary',
 	validate: new SimpleSchema({
-		libraryId:{
+		libraryId: {
 			type: String,
-      regEx: SimpleSchema.RegEx.Id,
+			regEx: SimpleSchema.RegEx.Id,
 		},
-    subscribe: {
-      type: Boolean,
-    },
+		subscribe: {
+			type: Boolean,
+		},
 	}).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({libraryId, subscribe}){
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ libraryId, subscribe }) {
 		if (!this.userId) throw 'Can only subscribe if logged in';
-    if (subscribe){
-      return Meteor.users.update(this.userId, {
-        $addToSet: {subscribedLibraries: libraryId},
-      });
-    } else {
-      return Meteor.users.update(this.userId, {
-        $pullAll: {subscribedLibraries: libraryId},
-      });
-    }
+		if (subscribe) {
+			return Meteor.users.update(this.userId, {
+				$addToSet: { subscribedLibraries: libraryId },
+			});
+		} else {
+			return Meteor.users.update(this.userId, {
+				$pullAll: { subscribedLibraries: libraryId },
+			});
+		}
 	}
 });
 
 Meteor.users.subscribeToLibraryCollection = new ValidatedMethod({
-  name: 'users.subscribeToLibraryCollection',
+	name: 'users.subscribeToLibraryCollection',
 	validate: new SimpleSchema({
-		libraryCollectionId:{
+		libraryCollectionId: {
 			type: String,
-      regEx: SimpleSchema.RegEx.Id,
+			regEx: SimpleSchema.RegEx.Id,
 		},
-    subscribe: {
-      type: Boolean,
-    },
+		subscribe: {
+			type: Boolean,
+		},
 	}).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({libraryCollectionId, subscribe}){
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ libraryCollectionId, subscribe }) {
 		if (!this.userId) throw 'Can only subscribe if logged in';
-    if (subscribe){
-      return Meteor.users.update(this.userId, {
-        $addToSet: {subscribedLibraryCollections: libraryCollectionId},
-      });
-    } else {
-      return Meteor.users.update(this.userId, {
-        $pullAll: {subscribedLibraryCollections: libraryCollectionId},
-      });
-    }
+		if (subscribe) {
+			return Meteor.users.update(this.userId, {
+				$addToSet: { subscribedLibraryCollections: libraryCollectionId },
+			});
+		} else {
+			return Meteor.users.update(this.userId, {
+				$pullAll: { subscribedLibraryCollections: libraryCollectionId },
+			});
+		}
 	}
 });
 
 Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
 	name: 'users.findUserByUsernameOrEmail',
 	validate: new SimpleSchema({
-		usernameOrEmail:{
+		usernameOrEmail: {
 			type: String,
 		},
 	}).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-	run({usernameOrEmail}){
+	mixins: [RateLimiterMixin],
+	rateLimit: {
+		numRequests: 5,
+		timeInterval: 5000,
+	},
+	run({ usernameOrEmail }) {
 		if (Meteor.isClient) return;
 		let user = Accounts.findUserByUsername(usernameOrEmail) ||
 			Accounts.findUserByEmail(usernameOrEmail);

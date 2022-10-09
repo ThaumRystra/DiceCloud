@@ -24,22 +24,22 @@ const removeTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({tabletopId}) {
+  run({ tabletopId }) {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.remove.denied',
-      'You need to be logged in to remove a tabletop');
+        'You need to be logged in to remove a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
     assertUserIsTabletopOwner(tabletopId, this.userId);
     assertAdmin(this.userId);
 
     let removed = Tabletops.remove({
-			_id: tabletopId,
-		});
+      _id: tabletopId,
+    });
     Creatures.update({
       tabletop: tabletopId,
     }, {
-      $unset: {tabletop: 1},
+      $unset: { tabletop: 1 },
     });
     return removed;
   },

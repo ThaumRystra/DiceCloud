@@ -8,34 +8,34 @@ import createPropertySchema from '/imports/api/properties/subSchemas/createPrope
  */
 let AttributeSchema = createPropertySchema({
   name: {
-		type: String,
+    type: String,
     optional: true,
     max: STORAGE_LIMITS.name,
-	},
+  },
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
     optional: true,
-		regEx: VARIABLE_NAME_REGEX,
+    regEx: VARIABLE_NAME_REGEX,
     min: 2,
     max: STORAGE_LIMITS.variableName,
   },
-	// How it is displayed and computed is determined by type
+  // How it is displayed and computed is determined by type
   attributeType: {
     type: String,
     allowedValues: [
       'ability', //Strength, Dex, Con, etc.
       'stat', // Speed, Armor Class
-			'modifier', // Proficiency Bonus, displayed as +x
+      'modifier', // Proficiency Bonus, displayed as +x
       'hitDice', // d12 hit dice
       'healthBar', // Hitpoints, Temporary Hitpoints, can take damage
-			'bar', // Displayed as a health bar, can't take damage
+      'bar', // Displayed as a health bar, can't take damage
       'resource', // Rages, sorcery points
       'spellSlot', // Level 1, 2, 3... spell slots
       'utility', // Aren't displayed, Jump height, Carry capacity
     ],
     defaultValue: 'stat',
-		index: 1,
+    index: 1,
   },
   // For type hitDice, the size needs to be stored separately
   hitDiceSize: {
@@ -46,19 +46,19 @@ let AttributeSchema = createPropertySchema({
   // For type spellSlot, the level needs to be stored separately
   spellSlotLevel: {
     type: 'fieldToCompute',
-		optional: true,
+    optional: true,
   },
   // For type healthBar midColor, and lowColor can be set separately from the
   // property's color, which is used as the undamaged color
   'healthBarColorMid': {
-		type: String,
-		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
-		optional: true,
+    type: String,
+    regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
+    optional: true,
   },
   'healthBarColorLow': {
-		type: String,
-		regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
-		optional: true,
+    type: String,
+    regEx: /^#([a-f0-9]{3}){1,2}\b$/i,
+    optional: true,
   },
   // Control how the health bar takes damage or healing
   healthBarNoDamage: {
@@ -68,7 +68,7 @@ let AttributeSchema = createPropertySchema({
   healthBarNoHealing: {
     type: Boolean,
     optional: true,
-  },  
+  },
   healthBarDamageOrder: {
     type: SimpleSchema.Integer,
     optional: true,
@@ -77,17 +77,17 @@ let AttributeSchema = createPropertySchema({
     type: SimpleSchema.Integer,
     optional: true,
   },
-	// The starting value, before effects
-	baseValue: {
+  // The starting value, before effects
+  baseValue: {
     type: 'fieldToCompute',
-		optional: true,
-	},
+    optional: true,
+  },
   // Description of what the attribute is used for
   description: {
     type: 'inlineCalculationFieldToCompute',
-		optional: true,
-	},
-	// The damage done to the attribute, should always compute as positive
+    optional: true,
+  },
+  // The damage done to the attribute, should always compute as positive
   damage: {
     type: SimpleSchema.Integer,
     optional: true,
@@ -107,7 +107,7 @@ let AttributeSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
-	// Automatically zero the adjustment on these conditions
+  // Automatically zero the adjustment on these conditions
   reset: {
     type: String,
     optional: true,
@@ -126,9 +126,9 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
   },
   spellSlotLevel: {
     type: 'computedOnlyField',
-		optional: true,
+    optional: true,
   },
-	// The computed value of the attribute
+  // The computed value of the attribute
   total: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
     optional: true,
@@ -137,27 +137,27 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
   // The computed value of the attribute minus the damage
   value: {
     type: SimpleSchema.oneOf(Number, String, Boolean),
-		defaultValue: 0,
+    defaultValue: 0,
     optional: true,
     removeBeforeCompute: true,
   },
-	// The computed modifier, provided the attribute type is `ability`
-	modifier: {
-		type: SimpleSchema.Integer,
-		optional: true,
+  // The computed modifier, provided the attribute type is `ability`
+  modifier: {
+    type: SimpleSchema.Integer,
+    optional: true,
     removeBeforeCompute: true,
-	},
+  },
   // Attributes with proficiency grant it to all skills based on the attribute
   proficiency: {
-		type: Number,
+    type: Number,
     allowedValues: [0, 0.49, 0.5, 1, 2],
-		optional: true,
+    optional: true,
     removeBeforeCompute: true,
-	},
+  },
   // The computed creature constitution modifier for hit dice
   constitutionMod: {
     type: Number,
-		optional: true,
+    optional: true,
     removeBeforeCompute: true,
   },
   // Should this attribute hide
