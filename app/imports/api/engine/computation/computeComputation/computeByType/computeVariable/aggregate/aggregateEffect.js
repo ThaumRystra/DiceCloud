@@ -1,3 +1,5 @@
+import { pick } from "lodash";
+
 export default function aggregateEffect({node, linkedNode, link}){
   if (link.data !== 'effect') return;
   // store the effect aggregator, its presence indicates that the variable is
@@ -19,11 +21,22 @@ export default function aggregateEffect({node, linkedNode, link}){
 
   // Store a summary of the effect itself
   node.data.effects = node.data.effects || [];
+  // Store either just 
+  let effectAmount;
+  if (!linkedNode.data.amount) {
+    effectAmount = undefined;
+  } else if (typeof linkedNode.data.amount.value === 'string') {
+    effectAmount = pick(linkedNode.data.amount, [
+      'calculation', 'parseNode', 'parseError', 'value'
+    ]);
+  } else {
+    effectAmount = pick(linkedNode.data.amount, ['value']);
+  }
   node.data.effects.push({
     _id: linkedNode.data._id,
     name: linkedNode.data.name,
     operation: linkedNode.data.operation,
-    amount: linkedNode.data.amount && {value: linkedNode.data.amount.value},
+    amount: effectAmount,
     type: linkedNode.data.type,
     // ancestors: linkedNode.data.ancestors,
   });
@@ -33,7 +46,7 @@ export default function aggregateEffect({node, linkedNode, link}){
   // Get the result of the effect
   const result = linkedNode.data.amount?.value;
   // Skip aggregating if the result is not resolved completely
-  if (typeof result === 'string') return;
+  if (typeof result === 'string' || result === undefined) return;
   // Aggregate the effect based on its operation
   switch(linkedNode.data.operation){
     case 'base':

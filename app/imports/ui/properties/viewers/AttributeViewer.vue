@@ -134,6 +134,7 @@
   import IncrementButton from '/imports/ui/components/IncrementButton.vue';
   import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+  import sortEffects from '/imports/ui/utility/sortEffects.js';
 
   export default {
     components: {
@@ -177,6 +178,9 @@
       proficiencyIcon(){
         return getProficiencyIcon(this.model.proficiency);
       },
+      effects() {
+        return sortEffects(this.model.effects);
+      },
     },
     methods: {
       numberToSignedString,
@@ -200,11 +204,6 @@
             console.error(error);
           }
         });
-      },
-    },
-    meteor: {
-      effects() {
-        return this.model.effects;
       },
     },
   }

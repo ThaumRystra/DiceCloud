@@ -7,6 +7,7 @@ import rollDice from '/imports/parser/rollDice.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',
@@ -72,7 +73,11 @@ function rollCheck(prop, actionContext) {
     throw (`${prop.type} not supported for checks`);
   }
 
-  const rollModifierText = numberToSignedString(rollModifier, true);
+  let rollModifierText = numberToSignedString(rollModifier, true);
+
+  const { effectBonus, effectString } = applyUnresolvedEffects(prop, scope)
+  rollModifierText += effectString;
+  rollModifier += effectBonus;
 
   let value, values, resultPrefix;
   if (scope['$checkAdvantage'] === 1){
@@ -105,4 +110,22 @@ function rollCheck(prop, actionContext) {
     name: logName,
     value: `${resultPrefix} **${result}**`,
   });
+}
+
+function applyUnresolvedEffects(prop, scope) {
+  let effectBonus = 0;
+  let effectString = '';
+  if (!prop.effects) {
+    return { effectBonus, effectString};
+  }
+  prop.effects.forEach(effect => {
+    if (!effect.amount?.parseNode) return;
+    if (effect.operation !== 'add') return;
+    effect.amount._parseLevel = 'reduce';
+    evaluateCalculation(effect.amount, scope);
+    if (typeof effect.amount?.value !== 'number') return;
+    effectBonus += effect.amount.value;
+    effectString += ` ${effect.amount.value < 0 ? '-' : '+'} [${effect.amount.calculation}] ${Math.abs(effect.amount.value)}`
+  });
+  return { effectBonus, effectString};
 }

@@ -126,6 +126,7 @@ import AttributeEffect from '/imports/ui/properties/components/attributes/Attrib
 import SkillProficiency from '/imports/ui/properties/components/skills/SkillProficiency.vue';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
+import sortEffects from '/imports/ui/utility/sortEffects.js';
 
 export default {
   components: {
@@ -169,7 +170,10 @@ export default {
 		},
     passiveScore(){
       return 10 + this.model.value + this.model.passiveBonus;
-    }
+    },
+    effects() {
+      return sortEffects(this.model.effects);
+    },
   },
   methods: {
     numberToSignedString,
@@ -185,9 +189,6 @@ export default {
   meteor: {
     variables(){
       return CreatureVariables.findOne({_creatureId: this.context.creatureId}) || {};
-    },
-    effects() {
-      return this.model.effects;
     },
     baseProficiencies(){
       if (this.context.creatureId){
