@@ -100,7 +100,7 @@ export default {
     },
     group: {
       type: String,
-      required: true,
+      default: undefined,
     },
     organize: Boolean,
     children: {
