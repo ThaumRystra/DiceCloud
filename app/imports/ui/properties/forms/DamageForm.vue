@@ -48,10 +48,16 @@
       chips
       deletable-chips
       hint=""
-      :items="['magical', 'silvered']"
+      :items="['magical', 'silvered', 'ignore resistance', 'ignore vulnerability', 'ignore immunity']"
       :value="model.tags"
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
+    />
+    <smart-switch
+      label="Don't show in log"
+      :value="model.silent"
+      :error-messages="errors.silent"
+      @change="change('silent', ...arguments)"
     />
     <form-section
       v-if="$slots.children"
@@ -70,45 +76,48 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 export default {
   mixins: [propertyFormMixin],
-	props: {
-		parentTarget: {
-			type: String,
+  props: {
+    parentTarget: {
+      type: String,
       default: undefined,
-		},
-	},
-	data(){return{
-		DAMAGE_TYPES,
-    damageTypeRules: [
-      value => {
-        if (!value) return 'Damage type is required';
-        if (!VARIABLE_NAME_REGEX.test(value)){
-          return `${value} is not a valid damage name`
+    },
+  },
+  data() {
+    return {
+      DAMAGE_TYPES,
+      damageTypeRules: [
+        value => {
+          if (!value) return 'Damage type is required';
+          if (!VARIABLE_NAME_REGEX.test(value)) {
+            return `${value} is not a valid damage name`
+          }
         }
-      }
-    ],
-	}},
-	computed: {
-		targetOptions(){
-			return [
-				{
-					text: 'Self',
-					value: 'self',
-				}, {
-					text: 'Target',
-					value: 'target',
-				},
-			];
-		},
-		targetOptionHint(){
-			let hints = {
-				self: 'The damage will be applied to the character taking the action',
-				target: 'The damage will be applied to the target of the action',
-			};
-			return hints[this.model.target];
-		}
-	},
+      ],
+    }
+  },
+  computed: {
+    targetOptions() {
+      return [
+        {
+          text: 'Self',
+          value: 'self',
+        }, {
+          text: 'Target',
+          value: 'target',
+        },
+      ];
+    },
+    targetOptionHint() {
+      let hints = {
+        self: 'The damage will be applied to the character taking the action',
+        target: 'The damage will be applied to the target of the action',
+      };
+      return hints[this.model.target];
+    }
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

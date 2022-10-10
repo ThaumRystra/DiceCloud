@@ -34,9 +34,9 @@ import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin
 
 export default {
   components: {
-		DialogBase,
+    DialogBase,
     ExperienceForm,
-	},
+  },
   mixins: [schemaFormMixin],
   provide: {
     context: {
@@ -52,10 +52,10 @@ export default {
       type: Boolean,
     },
   },
-  data(){
+  data() {
     let schema = ExperienceSchema.omit('creatureId');
     let startingModel = {};
-    if (this.startAsMilestone){
+    if (this.startAsMilestone) {
       startingModel.levels = 1;
     }
     return {
@@ -65,14 +65,14 @@ export default {
       debounceTime: 0,
     };
   },
-  methods:{
-    insertExperience(){
+  methods: {
+    insertExperience() {
       let experience = this.schema.clean(this.model);
       let id = insertExperience.call({
         experience,
         creatureIds: this.creatureIds,
-      }, (error) =>  {
-        if (error){
+      }, (error) => {
+        if (error) {
           console.error(error);
         }
       });
@@ -83,4 +83,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

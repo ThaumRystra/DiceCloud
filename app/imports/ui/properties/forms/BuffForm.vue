@@ -44,15 +44,45 @@
       >
         <slot name="children" />
       </form-section>
-      <form-section
-        name="Advanced"
-      >
-        <smart-switch
-          label="Hide remove button"
-          :value="model.hideRemoveButton"
-          :error-messages="errors.hideRemoveButton"
-          @change="change('hideRemoveButton', ...arguments)"
-        />
+      <form-section name="Advanced">
+        <v-row dense>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Hide remove button"
+              :value="model.hideRemoveButton"
+              :error-messages="errors.hideRemoveButton"
+              @change="change('hideRemoveButton', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Don't show in log"
+              :value="model.silent"
+              :error-messages="errors.silent"
+              @change="change('silent', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Don't freeze variables"
+              :value="model.skipCrystalization"
+              :error-messages="errors.skipCrystalization"
+              @change="change('skipCrystalization', ...arguments)"
+            />
+          </v-col>
+        </v-row>
         <smart-combobox
           label="Tags"
           multiple
@@ -68,11 +98,12 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-    mixins: [propertyFormMixin],
-    data(){return {
+export default {
+  mixins: [propertyFormMixin],
+  data() {
+    return {
       targetOptions: [
         {
           text: 'Self',
@@ -82,9 +113,11 @@
           value: 'target',
         },
       ],
-    }},
-	}
+    }
+  },
+}
 </script>
 
 <style lang="css" scoped>
+
 </style>

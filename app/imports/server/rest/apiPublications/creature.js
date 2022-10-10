@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import computeCreature from '/imports/api/engine/computeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
@@ -39,6 +40,9 @@ Meteor.publish('api-creature', function(creatureId){
     creatureCursor,
     CreatureProperties.find({
       'ancestors.id': creatureId,
+    }),
+    CreatureVariables.find({
+      _creatureId: creatureId,
     }),
   ];
 }, {

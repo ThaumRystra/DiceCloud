@@ -21,18 +21,19 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
 
-	export default {
-		mixins: [propertyViewerMixin],
-    computed: {
-      type(){
-        if (this.model.damageType === 'healing') return this.model.damageType;
-        return `${this.model.damageType} damage`
-      },
-    }
-	}
+export default {
+  mixins: [propertyViewerMixin],
+  computed: {
+    type() {
+      if (this.model.damageType === 'healing') return this.model.damageType;
+      return `${this.model.damageType} damage`
+    },
+  }
+}
 </script>
 
 <style lang="css" scoped>
+
 </style>

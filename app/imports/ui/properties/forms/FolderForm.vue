@@ -17,9 +17,7 @@
           <slot name="children" />
         </form-section>
 
-        <form-section
-          name="Advanced"
-        >
+        <form-section name="Advanced">
           <smart-combobox
             label="Tags"
             multiple
@@ -35,16 +33,17 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 
-	export default {
-    components: {
-			FormSection,
-		},
-    mixins: [propertyFormMixin],
-	};
+export default {
+  components: {
+    FormSection,
+  },
+  mixins: [propertyFormMixin],
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

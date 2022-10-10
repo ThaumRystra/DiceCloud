@@ -14,15 +14,15 @@
 </template>
 
 <script lang="js">
-	import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
+import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 
-	export default {
-		mixins: [SmartInput],
-		props: {
-			autoGrow: {
-				type: Boolean,
-				default: false,
-			},
-		},
-	};
+export default {
+  mixins: [SmartInput],
+  props: {
+    autoGrow: {
+      type: Boolean,
+      default: false,
+    },
+  },
+};
 </script>

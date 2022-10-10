@@ -3,17 +3,17 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 let SpellListSchema = createPropertySchema({
-	name: {
-		type: String,
-		optional: true,
+  name: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
+  },
   description: {
-		type: 'inlineCalculationFieldToCompute',
-		optional: true,
-	},
-	// Calculation of how many spells in this list can be prepared
-	maxPrepared: {
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
+  // Calculation of how many spells in this list can be prepared
+  maxPrepared: {
     type: 'fieldToCompute',
     optional: true,
   },

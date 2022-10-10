@@ -66,15 +66,16 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
-    },
-	};
+export default {
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

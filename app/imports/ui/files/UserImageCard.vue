@@ -34,7 +34,6 @@
 </template>
 
 <script lang="js">
-import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   props: {
@@ -43,14 +42,16 @@ export default {
       required: true,
     },
   },
-  data(){return {
-    restoreLoading: false,
-    removeLoading: false,
-  }},
+  data() {
+    return {
+      restoreLoading: false,
+      removeLoading: false,
+    }
+  },
   methods: {
-    remove(){
-			
-		},
+    remove() {
+
+    },
   },
 }
 </script>

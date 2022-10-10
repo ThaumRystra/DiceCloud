@@ -19,14 +19,14 @@ const insertTabletop = new ValidatedMethod({
   run() {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.insert.denied',
-      'You need to be logged in to insert a tabletop');
+        'You need to be logged in to insert a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
     assertAdmin(this.userId);
 
     return Tabletops.insert({
-			gameMaster: this.userId,
-		});
+      gameMaster: this.userId,
+    });
   },
 
 });

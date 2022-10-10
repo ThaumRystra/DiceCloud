@@ -20,7 +20,7 @@ import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 export default {
   components: {
     SelectablePropertyDialog,
-		CreaturePropertyInsertForm,
+    CreaturePropertyInsertForm,
   },
   props: {
     forcedType: {
@@ -28,21 +28,24 @@ export default {
       default: undefined,
     },
   },
-  data() { return {
-    type: undefined,
-  };},
-	methods: {
-		getPropertyName,
-    back(){
-      if (this.forcedType){
+  data() {
+    return {
+      type: undefined,
+    };
+  },
+  methods: {
+    getPropertyName,
+    back() {
+      if (this.forcedType) {
         this.$store.dispatch('popDialogStack');
       } else {
         this.type = undefined;
       }
     },
-	},
+  },
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

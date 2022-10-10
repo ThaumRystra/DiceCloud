@@ -1,4 +1,4 @@
-import { some, intersection, difference, remove } from 'lodash';
+import { some, intersection, difference, remove, includes } from 'lodash';
 import applyProperty from '../applyProperty.js';
 import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
@@ -128,7 +128,7 @@ export default function applyDamage(node, actionContext){
     // There are no targets, just log the result
     logValue.push(`**${damage}** ${suffix}`);
   }
-  actionContext.addLog({
+  if (!prop.silent) actionContext.addLog({
     name: logName,
     value: logValue.join('\n'),
     inline: true,
@@ -147,21 +147,21 @@ function applyDamageMultipliers({target, damage, damageProp, logValue}){
 
   if (
     multiplier.immunity &&
-    some(multiplier.immunities, multiplierAppliesTo(damageProp))
+    some(multiplier.immunities, multiplierAppliesTo(damageProp, 'immunity'))
   ){
     logValue.push(`Immune to ${damageTypeText}`);
     return 0;
   } else {
     if (
       multiplier.resistance &&
-      some(multiplier.resistances, multiplierAppliesTo(damageProp))
+      some(multiplier.resistances, multiplierAppliesTo(damageProp, 'resistance'))
     ){
       logValue.push(`Resistant to ${damageTypeText}`);
       damage = Math.floor(damage / 2);
     }
     if (
       multiplier.vulnerability &&
-      some(multiplier.vulnerabilities, multiplierAppliesTo(damageProp))
+      some(multiplier.vulnerabilities, multiplierAppliesTo(damageProp, 'vulnerability'))
     ){
       logValue.push(`Vulnerable to ${damageTypeText}`);
       damage = Math.floor(damage * 2);
@@ -170,8 +170,11 @@ function applyDamageMultipliers({target, damage, damageProp, logValue}){
   return damage;
 }
 
-function multiplierAppliesTo(damageProp){
+function multiplierAppliesTo(damageProp, multiplierType){
   return multiplier => {
+    // Apply the default 'ignore x' tags
+    if (includes(damageProp.tags, `ignore ${multiplierType}`)) return false;
+
     const hasRequiredTags = difference(
       multiplier.includeTags, damageProp.tags
     ).length === 0;
@@ -219,6 +222,16 @@ function dealDamage({target, damageType, amount, actionContext}){
   if (damageType === 'healing') damageLeft = -totalDamage;
   healthBars.forEach(healthBar => {
     if (damageLeft === 0) return;
+    // Replace the healthbar by the one in the action context if we can
+    // The damagePropertyWork function bashes the prop with the damage
+    // So we can use the new value in later action properties
+    if (healthBar.variableName) {
+      const targetHealthBar = target.variables[healthBar.variableName];
+      if (targetHealthBar?._id === healthBar._id) {
+        healthBar = targetHealthBar;
+      }
+    }
+    // Do the damage
     let damageAdded = damagePropertyWork({
       prop: healthBar,
       operation: 'increment',

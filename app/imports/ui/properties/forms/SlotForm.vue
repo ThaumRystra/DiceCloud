@@ -72,13 +72,11 @@
         @change="change('slotTags', ...arguments)"
       />
     </v-layout>
-    <v-slide-x-transition
-      group
-    >
+    <v-slide-x-transition group>
       <div
         v-for="(extras, i) in model.extraTags"
         :key="extras._id"
-        class="extra-tags layout align-center justify-space-between" 
+        class="extra-tags layout align-center justify-space-between"
         style="transition: all 0.3s !important;"
       >
         <smart-select
@@ -168,9 +166,7 @@
         <slot name="children" />
       </form-section>
 
-      <form-section
-        name="Advanced"
-      >
+      <form-section name="Advanced">
         <div class="layout wrap justify-space-between">
           <smart-switch
             label="Hide when full"
@@ -204,73 +200,73 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import PROPERTIES from '/imports/constants/PROPERTIES.js';
-  import { SlotSchema } from '/imports/api/properties/Slots.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import { SlotSchema } from '/imports/api/properties/Slots.js';
 
-	export default {
-    components: {
-			FormSection,
-		},
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
+export default {
+  components: {
+    FormSection,
+  },
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+  props: {
+    classForm: Boolean,
+  },
+  data() {
+    let slotTypes = [];
+    for (let key in PROPERTIES) {
+      slotTypes.push({ text: PROPERTIES[key].name, value: key });
+    }
+    return {
+      slotTypes,
+      addExtraTagsLoading: false,
+      extraTagOperations: ['OR', 'NOT'],
+      uniqueOptions: [{
+        text: 'Each property inside this slot should be unique',
+        value: 'uniqueInSlot',
+      }, {
+        text: 'Properties in this slot should be unique across the whole character',
+        value: 'uniqueInCreature',
+      }],
+    };
+  },
+  computed: {
+    extraTagsFull() {
+      if (!this.model.extraTags) return false;
+      let maxCount = SlotSchema.get('extraTags', 'maxCount');
+      return this.model.extraTags.length >= maxCount;
+    }
+  },
+  methods: {
+    acknowledgeAddResult() {
+      this.addExtraTagsLoading = false;
     },
-    props: {
-      classForm: Boolean,
+    addExtraTags() {
+      this.addExtraTagsLoading = true;
+      this.$emit('push', {
+        path: ['extraTags'],
+        value: {
+          _id: Random.id(),
+          operation: 'OR',
+          tags: [],
+        },
+        ack: this.acknowledgeAddResult,
+      });
     },
-    data(){
-      let slotTypes = [];
-      for (let key in PROPERTIES){
-         slotTypes.push({text: PROPERTIES[key].name, value: key});
-      }
-      return {
-        slotTypes,
-        addExtraTagsLoading: false,
-        extraTagOperations: ['OR', 'NOT'],
-        uniqueOptions: [{
-          text: 'Each property inside this slot should be unique',
-          value: 'uniqueInSlot',
-        }, {
-          text: 'Properties in this slot should be unique across the whole character',
-          value: 'uniqueInCreature',
-        }],
-      };
-    },
-    computed: {
-      extraTagsFull(){
-        if (!this.model.extraTags) return false;
-        let maxCount = SlotSchema.get('extraTags', 'maxCount');
-        return this.model.extraTags.length >= maxCount;
-      }
-    },
-    methods: {
-			acknowledgeAddResult(){
-				this.addExtraTagsLoading = false;
-			},
-      addExtraTags(){
-				this.addExtraTagsLoading = true;
-				this.$emit('push', {
-					path: ['extraTags'],
-          value: {
-            _id: Random.id(),
-            operation: 'OR',
-            tags: [],
-          },
-					ack: this.acknowledgeAddResult,
-				});
-			},
-      testSlot(){
-        if (!this.context.isLibraryForm) return;
-        this.$store.commit('pushDialogStack', {
-          component: 'slot-fill-dialog',
-          elementId: 'test-slot-button',
-          data: {
-            dummySlot: this.model,
-          },
-        });
-      }
-		},
-	};
+    testSlot() {
+      if (!this.context.isLibraryForm) return;
+      this.$store.commit('pushDialogStack', {
+        component: 'slot-fill-dialog',
+        elementId: 'test-slot-button',
+        data: {
+          dummySlot: this.model,
+        },
+      });
+    }
+  },
+};
 </script>

@@ -11,17 +11,13 @@
     dense
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />
-    <v-fade-transition
-      mode="out-in"
-    >
+    <v-fade-transition mode="out-in">
       <v-toolbar-title :key="$store.state.pageTitle">
         {{ $store.state.pageTitle }}
       </v-toolbar-title>
     </v-fade-transition>
     <v-spacer />
-    <v-fade-transition
-      mode="out-in"
-    >
+    <v-fade-transition mode="out-in">
       <v-layout
         :key="$route.meta.title"
         class="flex-shrink-0 flex-grow-0"
@@ -151,17 +147,17 @@ export default {
     context: { default: {} }
   },
   computed: {
-    creatureId(){
+    creatureId() {
       return this.$route.params.id;
     },
-    toolbarColor(){
-      if (this.creature && this.creature.color){
+    toolbarColor() {
+      if (this.creature && this.creature.color) {
         return this.creature.color;
       } else {
         return getThemeColor('secondary');
       }
     },
-    isDark(){
+    isDark() {
       return isDarkColor(this.toolbarColor);
     },
   },
@@ -170,49 +166,49 @@ export default {
       'toggleDrawer',
       'toggleRightDrawer',
     ]),
-		showCharacterForm(){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-form-dialog',
-				elementId: 'creature-menu',
-				data: {
-					_id: this.creatureId,
-				},
-			});
-		},
-		showShareDialog(){
-			this.$store.commit('pushDialogStack', {
-				component: 'share-dialog',
-				elementId: 'creature-menu',
-				data: {
-					docRef: {
-						id: this.creatureId,
-						collection: 'creatures',
-					}
-				},
-			});
-		},
-		deleteCharacter(){
-			let that = this;
-			this.$store.commit('pushDialogStack', {
-				component: 'delete-confirmation-dialog',
-				elementId: 'creature-menu',
-				data: {
-					name: this.creature.name,
-					typeName: 'Character'
-				},
-				callback(confirmation){
-					if(!confirmation) return;
-					removeCreature.call({charId: that.creatureId}, (error) => {
-						if (error) {
-							console.error(error);
-						} else {
-							that.$router.push('/characterList');
-						}
-					});
-				}
-			});
-		},
-    unshareWithMe(){
+    showCharacterForm() {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-form-dialog',
+        elementId: 'creature-menu',
+        data: {
+          _id: this.creatureId,
+        },
+      });
+    },
+    showShareDialog() {
+      this.$store.commit('pushDialogStack', {
+        component: 'share-dialog',
+        elementId: 'creature-menu',
+        data: {
+          docRef: {
+            id: this.creatureId,
+            collection: 'creatures',
+          }
+        },
+      });
+    },
+    deleteCharacter() {
+      let that = this;
+      this.$store.commit('pushDialogStack', {
+        component: 'delete-confirmation-dialog',
+        elementId: 'creature-menu',
+        data: {
+          name: this.creature.name,
+          typeName: 'Character'
+        },
+        callback(confirmation) {
+          if (!confirmation) return;
+          removeCreature.call({ charId: that.creatureId }, (error) => {
+            if (error) {
+              console.error(error);
+            } else {
+              that.$router.push('/characterList');
+            }
+          });
+        }
+      });
+    },
+    unshareWithMe() {
       updateUserSharePermissions.call({
         docRef: {
           collection: 'creatures',
@@ -230,10 +226,10 @@ export default {
     },
   },
   meteor: {
-    creature(){
+    creature() {
       return Creatures.findOne(this.creatureId);
     },
-    editPermission(){
+    editPermission() {
       try {
         assertEditPermission(this.creature, Meteor.userId());
         return true;
@@ -249,9 +245,11 @@ export default {
 .character-sheet-toolbar .v-tabs__container--grow .v-tabs__div {
   max-width: 120px !important;
 }
+
 .character-sheet-toolbar .v-tabs__bar {
   background: none !important;
 }
+
 .character-sheet-fab {
   bottom: -24px;
   right: 8px;

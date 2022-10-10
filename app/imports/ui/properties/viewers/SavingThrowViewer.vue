@@ -22,9 +22,9 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 
-	export default {
-		mixins: [propertyViewerMixin],
-	}
+export default {
+  mixins: [propertyViewerMixin],
+}
 </script>

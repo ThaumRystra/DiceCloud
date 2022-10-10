@@ -9,8 +9,10 @@ export default function getEffectivePropTags(prop) {
   }
 
   // Tags for some string properties
+  if (prop.variableName) tags.push(prop.variableName);
   if (prop.damageType) tags.push(prop.damageType);
   if (prop.skillType) tags.push(prop.skillType);
+  if (prop.actionType) tags.push(prop.actionType);
   if (prop.attributeType) tags.push(prop.attributeType);
   if (prop.reset) tags.push(prop.reset);
   return tags;

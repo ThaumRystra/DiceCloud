@@ -18,8 +18,8 @@
 import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 
 export default {
-	props: {
-		model: {
+  props: {
+    model: {
       type: Object,
       default: () => ({}),
     },
@@ -28,17 +28,18 @@ export default {
       default: undefined,
     },
     disabled: Boolean,
-	},
-	computed: {
-		icon(){
-			return getPropertyIcon(this.model && this.model.type);
-		},
-	},
+  },
+  computed: {
+    icon() {
+      return getPropertyIcon(this.model && this.model.type);
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
-  .svg-icon.disabled, .v-icon.disabled {
-    opacity: 0.2;
-  }
+.svg-icon.disabled,
+.v-icon.disabled {
+  opacity: 0.2;
+}
 </style>

@@ -4,7 +4,7 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 const DamageSchema = createPropertySchema({
-	// The roll that determines how much to damage the attribute
+  // The roll that determines how much to damage the attribute
   // This can be simplified, but only computed when applied
   amount: {
     type: 'fieldToCompute',
@@ -12,21 +12,26 @@ const DamageSchema = createPropertySchema({
     defaultValue: '1d8 + strength.modifier',
     parseLevel: 'compile',
   },
-	// Who this damage applies to
-	target: {
-		type: String,
+  // Who this damage applies to
+  target: {
+    type: String,
     defaultValue: 'target',
-		allowedValues: [
+    allowedValues: [
       'self',
       'target',
     ],
-	},
-	damageType: {
-		type: String,
+  },
+  damageType: {
+    type: String,
     max: STORAGE_LIMITS.calculation,
-		defaultValue: 'slashing',
+    defaultValue: 'slashing',
     regEx: VARIABLE_NAME_REGEX,
-	},
+  },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedOnlyDamageSchema = createPropertySchema({

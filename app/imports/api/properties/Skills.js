@@ -9,10 +9,10 @@ import createPropertySchema from '/imports/api/properties/subSchemas/createPrope
  */
 let SkillSchema = createPropertySchema({
   name: {
-		type: String,
-		optional: true,
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
+  },
   // The technical, lowercase, single-word name used in formulae
   // Ignored for skilltype = save
   variableName: {
@@ -22,33 +22,33 @@ let SkillSchema = createPropertySchema({
     max: STORAGE_LIMITS.variableName,
     optional: true,
   },
-	// The variable name of the ability this skill relies on
+  // The variable name of the ability this skill relies on
   ability: {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.variableName,
   },
-	// What type of skill is this
+  // What type of skill is this
   skillType: {
     type: String,
     allowedValues: [
       'skill',
       'save',
-			'check',
+      'check',
       'tool',
       'weapon',
       'armor',
       'language',
-			'utility', //not displayed anywhere
+      'utility', //not displayed anywhere
     ],
     defaultValue: 'skill',
   },
-	// The base proficiency of this skill
-	baseProficiency: {
-		type: Number,
-		optional: true,
+  // The base proficiency of this skill
+  baseProficiency: {
+    type: Number,
+    optional: true,
     allowedValues: [0.49, 0.5, 1, 2],
-	},
+  },
   // The starting value, before effects
   baseValue: {
     type: 'fieldToCompute',
@@ -56,16 +56,16 @@ let SkillSchema = createPropertySchema({
   },
   // Description of what the skill is used for
   description: {
-		type: 'inlineCalculationFieldToCompute',
-		optional: true,
-	},
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
 });
 
 let ComputedOnlySkillSchema = createPropertySchema({
-	// Computed value of skill to be added to skill rolls
+  // Computed value of skill to be added to skill rolls
   value: {
     type: Number,
-		defaultValue: 0,
+    defaultValue: 0,
     optional: true,
     removeBeforeCompute: true,
   },
@@ -75,33 +75,33 @@ let ComputedOnlySkillSchema = createPropertySchema({
     optional: true,
   },
   description: {
-		type: 'computedOnlyInlineCalculationField',
-		optional: true,
-	},
-	// Computed value added by the ability
-	abilityMod: {
-		type: SimpleSchema.Integer,
-		optional: true,
+    type: 'computedOnlyInlineCalculationField',
+    optional: true,
+  },
+  // Computed value added by the ability
+  abilityMod: {
+    type: SimpleSchema.Integer,
+    optional: true,
     removeBeforeCompute: true,
-	},
-	// Computed advantage/disadvantage
+  },
+  // Computed advantage/disadvantage
   advantage: {
     type: SimpleSchema.Integer,
     optional: true,
     allowedValues: [-1, 0, 1],
     removeBeforeCompute: true,
   },
-	// Computed bonus to passive checks
+  // Computed bonus to passive checks
   passiveBonus: {
     type: Number,
     optional: true,
     removeBeforeCompute: true,
   },
-	// Computed proficiency multiplier
+  // Computed proficiency multiplier
   proficiency: {
     type: Number,
     allowedValues: [0, 0.49, 0.5, 1, 2],
-		defaultValue: 0,
+    defaultValue: 0,
     removeBeforeCompute: true,
   },
   // Compiled text of all conditional benefits
@@ -113,7 +113,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
   'conditionalBenefits.$': {
     type: String,
   },
-	// Computed number of things forcing this skill to fail
+  // Computed number of things forcing this skill to fail
   fail: {
     type: SimpleSchema.Integer,
     optional: true,
@@ -135,6 +135,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
   effects: {
     type: Array,
     optional: true,
+    removeBeforeCompute: true,
   },
   'effects.$': {
     type: Object,

@@ -99,6 +99,7 @@
           {title: 'Files', icon: 'mdi-file-multiple', to: '/my-files'},
           {title: 'Feedback', icon: 'mdi-bug', to: '/feedback'},
           {title: 'About', icon: 'mdi-sign-text', to: '/about'},
+          {title: 'Documentation', icon: 'mdi-book-open-variant', to: '/docs'},
           {title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud'},
           {title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2'},
         ];

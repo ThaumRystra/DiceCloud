@@ -132,17 +132,17 @@
 </template>
 
 <script lang="js">
-  export default {
-    meteor: {
-      signedIn(){
-				return Meteor.userId();
-			},
-    }
-  };
+export default {
+  meteor: {
+    signedIn() {
+      return Meteor.userId();
+    },
+  }
+};
 </script>
 
 <style scoped>
-  .selling-points > * {
-    max-width: 400px;
-  }
+.selling-points>* {
+  max-width: 400px;
+}
 </style>

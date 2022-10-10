@@ -12,17 +12,18 @@ const LibraryCollectionToolbar = () => import('/imports/ui/library/LibraryCollec
 const CharacterSheetPage = () => import('/imports/ui/pages/CharacterSheetPage.vue');
 const CharacterSheetToolbar = () => import('/imports/ui/creature/character/CharacterSheetToolbar.vue');
 const CharacterSheetRightDrawer = () => import('/imports/ui/creature/character/CharacterSheetRightDrawer.vue');
-const SignIn = () => import('/imports/ui/pages/SignIn.vue' );
+const SignIn = () => import('/imports/ui/pages/SignIn.vue');
 const Register = () => import('/imports/ui/pages/Register.vue');
 const IconAdmin = () => import('/imports/ui/icons/IconAdmin.vue');
 //const Friends = () => import('/imports/ui/pages/Friends.vue' );
-const Feedback = () => import('/imports/ui/pages/Feedback.vue' );
-const Account = () => import('/imports/ui/pages/Account.vue' );
-const InviteSuccess = () => import('/imports/ui/pages/InviteSuccess.vue' );
-const InviteError = () => import('/imports/ui/pages/InviteError.vue' );
-const EmailVerificationSuccess = () => import('/imports/ui/pages/EmailVerificationSuccess.vue' );
-const EmailVerificationError = () => import('/imports/ui/pages/EmailVerificationError.vue' );
-const ResetPassword = () => import('/imports/ui/pages/ResetPassword.vue' );
+const Feedback = () => import('/imports/ui/pages/Feedback.vue');
+const FunctionReference = () => import('/imports/ui/pages/FunctionReference.vue');
+const Account = () => import('/imports/ui/pages/Account.vue');
+const InviteSuccess = () => import('/imports/ui/pages/InviteSuccess.vue');
+const InviteError = () => import('/imports/ui/pages/InviteError.vue');
+const EmailVerificationSuccess = () => import('/imports/ui/pages/EmailVerificationSuccess.vue');
+const EmailVerificationError = () => import('/imports/ui/pages/EmailVerificationError.vue');
+const ResetPassword = () => import('/imports/ui/pages/ResetPassword.vue');
 const NotImplemented = () => import('/imports/ui/pages/NotImplemented.vue');
 const PatreonLevelTooLow = () => import('/imports/ui/pages/PatreonLevelTooLow.vue');
 const SingleLibrary = () => import('/imports/ui/pages/SingleLibrary.vue');
@@ -34,6 +35,7 @@ const TabletopRightDrawer = () => import('/imports/ui/tabletop/TabletopRightDraw
 const Admin = () => import('/imports/ui/pages/Admin.vue');
 const Maintenance = () => import('/imports/ui/pages/Maintenance.vue');
 const Files = () => import('/imports/ui/pages/Files.vue');
+const Documentation = () => import('/imports/ui/pages/Documentation.vue');
 
 // Not found
 const NotFound = () => import('/imports/ui/pages/NotFound.vue');
@@ -46,66 +48,66 @@ const routerFactory = new RouterFactory({
   scrollBehavior: nativeScrollBehavior,
 });
 
-function ensureLoggedIn(to, from, next){
+function ensureLoggedIn(to, from, next) {
   Tracker.autorun((computation) => {
-    if (userSubscription.ready()){
+    if (userSubscription.ready()) {
       computation.stop();
       const user = Meteor.user();
-      if (user){
+      if (user) {
         next()
       } else {
-        next({ name: 'signIn', query: { redirect: to.path} });
+        next({ name: 'signIn', query: { redirect: to.path } });
       }
     }
   });
 }
 
-function ensureAdmin(to, from, next){
+function ensureAdmin(to, from, next) {
   Tracker.autorun((computation) => {
-    if (userSubscription.ready()){
+    if (userSubscription.ready()) {
       computation.stop();
       const user = Meteor.user();
-      if (user){
-        if (user.roles && user.roles.includes('admin')){
+      if (user) {
+        if (user.roles && user.roles.includes('admin')) {
           next()
         } else {
-          next({name: 'home'});
+          next({ name: 'home' });
         }
       } else {
-        next({ name: 'signIn', query: { redirect: to.path} });
+        next({ name: 'signIn', query: { redirect: to.path } });
       }
     }
   });
 }
 
-function claimInvite(to, from, next){
+function claimInvite(to, from, next) {
   Tracker.autorun((computation) => {
-    if (userSubscription.ready()){
+    if (userSubscription.ready()) {
       computation.stop();
       const user = Meteor.user();
-      if (user){
+      if (user) {
         let inviteToken = to.params.inviteToken;
         acceptInviteToken.call({
           inviteToken
         }, (error) => {
-          if (error){
-            next({name: 'inviteError', params: {error}});
+          if (error) {
+            next({ name: 'inviteError', params: { error } });
           } else {
             next('/invite-success')
           }
         });
       } else {
-        next({ name: 'signIn', query: { redirect: to.path} });
+        next({ name: 'signIn', query: { redirect: to.path } });
       }
     }
   });
 }
 
-function verifyEmail(to, from, next){
+function verifyEmail(to, from, next) {
   const token = to.params.token;
   Accounts.verifyEmail(token, error => {
-    if (error){
-      next({name: 'emailVerificationError', params: {error}});
+    if (error) {
+      next({ name: 'emailVerificationError', params: { error } });
     } else {
       next('/email-verification-success')
     }
@@ -114,219 +116,243 @@ function verifyEmail(to, from, next){
 
 RouterFactory.configure(router => {
   router.addRoutes([{
-      path: '/',
-      name: 'home',
-      components: {
-        default: Home,
-      },
-      meta: {
-        title: 'Home',
-      },
-    },{
-      path: '/character-list',
-      alias: '/characterList',
-      components: {
-        default: CharacterList,
-        toolbarItems: CharacterListToolbarItems,
-      },
-      meta: {
-        title: 'Character List',
-      },
-      beforeEnter: ensureLoggedIn,
-    }, {
-      name: 'library',
-      path: '/library',
-      components: {
-        default: Library,
-      },
-      meta: {
-        title: 'Library',
-      },
-      beforeEnter: ensureLoggedIn,
-    },{
-      name: 'singleLibrary',
-      path: '/library/:id',
-      components: {
-        default: SingleLibrary,
-        toolbar: SingleLibraryToolbar,
-      },
-      meta: {
-        title: 'Library',
-      },
-    },{
-      name: 'libraryCollection',
-      path: '/library-collection/:id',
-      components: {
-        default: LibraryCollection,
-        toolbar: LibraryCollectionToolbar,
-      },
-      meta: {
-        title: 'Library Collection',
-      },
-    }, {
-      name: 'characterSheet',
-      path: '/character/:id',
-      alias: '/character/:id/:urlName',
-      components: {
-        default: CharacterSheetPage,
-        toolbar: CharacterSheetToolbar,
-        rightDrawer: CharacterSheetRightDrawer,
-      },
-      meta: {
-        title: 'Character Sheet',
-      },
-    },{
-      path: '/tabletops',
-      name: 'tabletops',
-      component: Tabletops,
-      beforeEnter: ensureLoggedIn,
-    },{
-      path: '/tabletop/:id',
-      name: 'tabletop',
-      components: {
-        default: Tabletop,
-        toolbar: TabletopToolbar,
-        rightDrawer: TabletopRightDrawer,
-      },
-      beforeEnter: ensureLoggedIn,
-    },{
-      path: '/friends',
-      components: {
-        default: NotImplemented,
-      },
-      meta: {
-        title: 'Friends',
-      },
-      beforeEnter: ensureLoggedIn,
-    },{
-      name: 'signIn',
-			path: '/sign-in',
-      components: {
-        default: SignIn,
-      },
-      meta: {
-        title: 'Sign In',
-      },
-		},{
-      name: 'register',
-			path: '/register',
-      components: {
-        default: Register,
-      },
-      meta: {
-        title: 'Register',
-      },
-    }, {
-      path: '/account',
-      components: {
-        default: Account,
-      },
-      meta: {
-        title: 'Account',
-      },
-      beforeEnter: ensureLoggedIn,
-    }, {
-      path: '/my-files',
-      components: {
-        default: Files,
-      },
-      meta: {
-        title: 'Files',
-      },
-      beforeEnter: ensureLoggedIn,
-    }, {
-      path: '/feedback',
-      components: {
-        default: Feedback,
-      },
-      meta: {
-        title: 'Feedback',
-      },
-    },{
-      path: '/about',
-      components: {
-        default: About,
-      },
-      meta: {
-        title: 'About DiceCloud',
-      },
-    },{
-      path: '/invite/:inviteToken',
-      beforeEnter: claimInvite,
-    },{
-      path: '/verify-email/:token',
-      beforeEnter: verifyEmail,
-    },{
-      name: 'inviteError',
-      path: '/invite-error',
-      components: {
-        default: InviteError,
-      },
-      props: {
-        default: true,
-      },
-      meta: {
-        title: 'Invite Error',
-      },
-    },{
-      path: '/invite-success',
-      components: {
-        default: InviteSuccess,
-      },
-      meta: {
-        title: 'Invite Success',
-      },
-    },{
-      name: 'emailVerificationError',
-      path: '/email-verification-error',
-      components: {
-        default: EmailVerificationError,
-      },
-      props: {
-        default: true,
-      },
-      meta: {
-        title: 'Email Verification Error',
-      },
-    },{
-      path: '/email-verification-success',
-      components: {
-        default: EmailVerificationSuccess,
-      },
-      meta: {
-        title: 'Email Verification Success',
-      },
-    },{
-      path: '/reset-password/:token?',
-      components: {
-        default: ResetPassword,
-      },
-      meta: {
-        title: 'Reset Password',
-      },
-    },{
-      path: '/patreon-level-too-low',
-      components: {
-        default: PatreonLevelTooLow,
-      },
-      meta: {
-        title: 'Patreon Tier Too Low',
-      },
-    },{
-      path: '/icon-admin',
-      name: 'iconAdmin',
-      component: IconAdmin,
-      beforeEnter: ensureAdmin,
-    },{
-      path: '/admin',
-      name: 'admin',
-      component: Admin,
-      beforeEnter: ensureAdmin,
-    },{
-      path: '/maintenance',
-      name: 'maintenance',
-      component: Maintenance,
+    path: '/',
+    name: 'home',
+    components: {
+      default: Home,
     },
+    meta: {
+      title: 'Home',
+    },
+  }, {
+    path: '/character-list',
+    alias: '/characterList',
+    components: {
+      default: CharacterList,
+      toolbarItems: CharacterListToolbarItems,
+    },
+    meta: {
+      title: 'Character List',
+    },
+    beforeEnter: ensureLoggedIn,
+  }, {
+    name: 'library',
+    path: '/library',
+    components: {
+      default: Library,
+    },
+    meta: {
+      title: 'Library',
+    },
+    beforeEnter: ensureLoggedIn,
+  }, {
+    name: 'singleLibrary',
+    path: '/library/:id',
+    components: {
+      default: SingleLibrary,
+      toolbar: SingleLibraryToolbar,
+    },
+    meta: {
+      title: 'Library',
+    },
+  }, {
+    name: 'libraryCollection',
+    path: '/library-collection/:id',
+    components: {
+      default: LibraryCollection,
+      toolbar: LibraryCollectionToolbar,
+    },
+    meta: {
+      title: 'Library Collection',
+    },
+  }, {
+    name: 'characterSheet',
+    path: '/character/:id',
+    alias: '/character/:id/:urlName',
+    components: {
+      default: CharacterSheetPage,
+      toolbar: CharacterSheetToolbar,
+      rightDrawer: CharacterSheetRightDrawer,
+    },
+    meta: {
+      title: 'Character Sheet',
+    },
+  }, {
+    path: '/tabletops',
+    name: 'tabletops',
+    component: Tabletops,
+    beforeEnter: ensureLoggedIn,
+  }, {
+    path: '/tabletop/:id',
+    name: 'tabletop',
+    components: {
+      default: Tabletop,
+      toolbar: TabletopToolbar,
+      rightDrawer: TabletopRightDrawer,
+    },
+    beforeEnter: ensureLoggedIn,
+  }, {
+    path: '/friends',
+    components: {
+      default: NotImplemented,
+    },
+    meta: {
+      title: 'Friends',
+    },
+    beforeEnter: ensureLoggedIn,
+  }, {
+    name: 'signIn',
+    path: '/sign-in',
+    components: {
+      default: SignIn,
+    },
+    meta: {
+      title: 'Sign In',
+    },
+  }, {
+    name: 'register',
+    path: '/register',
+    components: {
+      default: Register,
+    },
+    meta: {
+      title: 'Register',
+    },
+  }, {
+    path: '/account',
+    components: {
+      default: Account,
+    },
+    meta: {
+      title: 'Account',
+    },
+    beforeEnter: ensureLoggedIn,
+  }, {
+    path: '/my-files',
+    components: {
+      default: Files,
+    },
+    meta: {
+      title: 'Files',
+    },
+    beforeEnter: ensureLoggedIn,
+  }, {
+    path: '/feedback',
+    components: {
+      default: Feedback,
+    },
+    meta: {
+      title: 'Feedback',
+    },
+  }, {
+    path: '/docs/functions',
+    components: {
+      default: FunctionReference,
+    },
+    meta: {
+      title: 'Functions',
+    },
+  }, {
+    path: '/docs/:docPath([^/]+.*)',
+    components: {
+      default: Documentation,
+    },
+    meta: {
+      title: 'Documentation',
+    },
+  }, {
+    path: '/docs',
+    components: {
+      default: Documentation,
+    },
+    meta: {
+      title: 'Documentation',
+    },
+  }, {
+    path: '/about',
+    components: {
+      default: About,
+    },
+    meta: {
+      title: 'About DiceCloud',
+    },
+  }, {
+    path: '/invite/:inviteToken',
+    beforeEnter: claimInvite,
+  }, {
+    path: '/verify-email/:token',
+    beforeEnter: verifyEmail,
+  }, {
+    name: 'inviteError',
+    path: '/invite-error',
+    components: {
+      default: InviteError,
+    },
+    props: {
+      default: true,
+    },
+    meta: {
+      title: 'Invite Error',
+    },
+  }, {
+    path: '/invite-success',
+    components: {
+      default: InviteSuccess,
+    },
+    meta: {
+      title: 'Invite Success',
+    },
+  }, {
+    name: 'emailVerificationError',
+    path: '/email-verification-error',
+    components: {
+      default: EmailVerificationError,
+    },
+    props: {
+      default: true,
+    },
+    meta: {
+      title: 'Email Verification Error',
+    },
+  }, {
+    path: '/email-verification-success',
+    components: {
+      default: EmailVerificationSuccess,
+    },
+    meta: {
+      title: 'Email Verification Success',
+    },
+  }, {
+    path: '/reset-password/:token?',
+    components: {
+      default: ResetPassword,
+    },
+    meta: {
+      title: 'Reset Password',
+    },
+  }, {
+    path: '/patreon-level-too-low',
+    components: {
+      default: PatreonLevelTooLow,
+    },
+    meta: {
+      title: 'Patreon Tier Too Low',
+    },
+  }, {
+    path: '/icon-admin',
+    name: 'iconAdmin',
+    component: IconAdmin,
+    beforeEnter: ensureAdmin,
+  }, {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
+    beforeEnter: ensureAdmin,
+  }, {
+    path: '/maintenance',
+    name: 'maintenance',
+    component: Maintenance,
+  },
   ]);
 });
 
@@ -338,17 +364,17 @@ RouterFactory.configure(router => {
   });
 }, -1);
 
-function redirectIfMaintenance(to, from, next){
+function redirectIfMaintenance(to, from, next) {
   if (!MAINTENANCE_MODE) return next();
   if (to?.path === '/admin' || to?.path === '/maintenance' || to?.path === '/sign-in') return next();
   Tracker.autorun((computation) => {
-    if (userSubscription.ready()){
+    if (userSubscription.ready()) {
       computation.stop();
       const user = Meteor.user();
-      if (user && user.roles && user.roles.includes('admin')){
-        next({name: 'admin'})
+      if (user && user.roles && user.roles.includes('admin')) {
+        next({ name: 'admin' })
       } else {
-        next({name: 'maintenance'});
+        next({ name: 'maintenance' });
       }
     }
   });

@@ -77,134 +77,149 @@
 </template>
 
 <script lang="js">
-	/**
-	* TreeNode's are list item views of character properties. Every property which
-	* can belong to the character is shown in the tree view of the character
-	* the tree view shows off the full character structure, and where each part of
-	* character comes from.
-	**/
-	import { canBeParent } from '/imports/api/parenting/parenting.js';
-	import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
-  import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
-  import { some } from 'lodash';
+/**
+* TreeNode's are list item views of character properties. Every property which
+* can belong to the character is shown in the tree view of the character
+* the tree view shows off the full character structure, and where each part of
+* character comes from.
+**/
+import { canBeParent } from '/imports/api/parenting/parenting.js';
+import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
+import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import { some } from 'lodash';
 
-	export default {
-		name: 'TreeNode',
-    components: {
-      TreeNodeView,
+export default {
+  name: 'TreeNode',
+  components: {
+    TreeNodeView,
+  },
+  props: {
+    node: {
+      type: Object,
+      required: true,
     },
-		props: {
-			node: {
-        type: Object,
-        required: true,
-      },
-			group: {
-        type: String,
-        required: true,
-      },
-			organize: Boolean,
-			children: {
-        type: Array,
-        default: () => [],
-      },
-			getChildren: {
-        type: Function,
-        default: undefined,
-      },
-      selectedNode: {
-        type: Object,
-        default: undefined,
-      },
-      selected: Boolean,
-      startExpanded: Boolean,
-		},
-		data(){return {
-			expanded: this.startExpanded || this.node._ancestorOfMatchedDocument ||
+    group: {
+      type: String,
+      default: undefined,
+    },
+    organize: Boolean,
+    children: {
+      type: Array,
+      default: () => [],
+    },
+    getChildren: {
+      type: Function,
+      default: undefined,
+    },
+    selectedNode: {
+      type: Object,
+      default: undefined,
+    },
+    selected: Boolean,
+    startExpanded: Boolean,
+  },
+  data() {
+    return {
+      expanded: this.startExpanded || this.node._ancestorOfMatchedDocument ||
         some(this.selectedNode?.ancestors, ref => ref.id === this.node._id) ||
         false,
-		}},
-		computed: {
-			hasChildren(){
-				return this.children && !!this.children.length || this.lazy && !this.expanded;
-			},
-			showExpanded(){
-				return this.expanded && (this.organize || this.hasChildren)
-			},
-			computedChildren(){
-				let children = [];
-				if (this.children){
-					children.push(...this.children)
-				}
-				if (this.getChildren){
-					children.push(...this.getChildren())
-				}
-				return children;
-			},
-			canExpand(){
-				return canBeParent(this.node.type);
-			},
-		},
-    watch: {
-      'node._ancestorOfMatchedDocument'(value){
-        this.expanded = !!value ||
-          some(this.selectedNode?.ancestors, ref => ref.id === this.node._id);
-      },
-      'selectedNode.ancestors'(value){
-        this.expanded = !!some(value, ref => ref.id === this.node._id) || this.expanded;
-      },
+    }
+  },
+  computed: {
+    hasChildren() {
+      return this.children && !!this.children.length || this.lazy && !this.expanded;
     },
-		beforeCreate() {
-      this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
-		},
-		methods: {
-			icon(type){
-				return getPropertyIcon(type);
-			},
-		}
-	};
+    showExpanded() {
+      return this.expanded && (this.organize || this.hasChildren)
+    },
+    computedChildren() {
+      let children = [];
+      if (this.children) {
+        children.push(...this.children)
+      }
+      if (this.getChildren) {
+        children.push(...this.getChildren())
+      }
+      return children;
+    },
+    canExpand() {
+      return canBeParent(this.node.type);
+    },
+  },
+  watch: {
+    'node._ancestorOfMatchedDocument'(value) {
+      this.expanded = !!value ||
+        some(this.selectedNode?.ancestors, ref => ref.id === this.node._id);
+    },
+    'selectedNode.ancestors'(value) {
+      this.expanded = !!some(value, ref => ref.id === this.node._id) || this.expanded;
+    },
+  },
+  beforeCreate() {
+    this.$options.components.TreeNodeList = require('./TreeNodeList.vue').default
+  },
+  methods: {
+    icon(type) {
+      return getPropertyIcon(type);
+    },
+  }
+};
 </script>
 
 <style lang="css" scoped>
-	.rotate-90 {
-		transform: rotate(90deg) translateZ(0);
-	}
-	.drag-area {
-		box-shadow: -2px 0px 0px 0px #808080;
-		margin-left: 0;
-		min-height: 32px;
-	}
-	.handle {
-		cursor: move;
-	}
-	.empty .drag-area {
-		box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4);
-	}
-	.empty .v-btn {
-		opacity: 0.4;
-	}
-  .found {
-    background: rgba(200, 0, 0, 0.1) !important;
-  }
-	.ghost {
-    opacity: 0.5;
-    background: rgba(251, 0, 0, 0.3);
-	}
-	.v-icon.v-icon--disabled {
-		opacity: 0;
-	}
-  .v-icon {
-    transition: none !important;
-  }
-	.theme--light .tree-node-title:hover {
-		background-color: rgba(0,0,0,.04);
-	}
-  .theme--dark .tree-node-title:hover {
-		background-color: rgba(255,255,255,.04);
-	}
-  .tree-node-title{
-    transition: background ease 0.3s, color ease 0.15s;
-  }
-  .tree-node-title, .dummy-node {
-    height: 40px;
-  }
+.rotate-90 {
+  transform: rotate(90deg) translateZ(0);
+}
+
+.drag-area {
+  box-shadow: -2px 0px 0px 0px #808080;
+  margin-left: 0;
+  min-height: 32px;
+}
+
+.handle {
+  cursor: move;
+}
+
+.empty .drag-area {
+  box-shadow: -2px 0px 0px 0px rgb(128, 128, 128, 0.4);
+}
+
+.empty .v-btn {
+  opacity: 0.4;
+}
+
+.found {
+  background: rgba(200, 0, 0, 0.1) !important;
+}
+
+.ghost {
+  opacity: 0.5;
+  background: rgba(251, 0, 0, 0.3);
+}
+
+.v-icon.v-icon--disabled {
+  opacity: 0;
+}
+
+.v-icon {
+  transition: none !important;
+}
+
+.theme--light .tree-node-title:hover {
+  background-color: rgba(0, 0, 0, .04);
+}
+
+.theme--dark .tree-node-title:hover {
+  background-color: rgba(255, 255, 255, .04);
+}
+
+.tree-node-title {
+  transition: background ease 0.3s, color ease 0.15s;
+}
+
+.tree-node-title,
+.dummy-node {
+  height: 40px;
+}
 </style>

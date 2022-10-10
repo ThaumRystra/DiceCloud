@@ -6,9 +6,7 @@
           class="layout"
           style="overflow: hidden;"
         >
-          <v-icon
-            class="mr-2"
-          >
+          <v-icon class="mr-2">
             {{ effectIcon }}
           </v-icon>
           {{ operation }}
@@ -77,71 +75,75 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
-	import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
-  import { isFinite } from 'lodash';
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js';
+import getEffectIcon from '/imports/ui/utility/getEffectIcon.js';
+import { isFinite } from 'lodash';
 
-	export default {
-		mixins: [propertyViewerMixin],
-		computed: {
-			resolvedValue(){
-        if (!this.model.amount) return;
-				return this.model.amount.value !== undefined ?
-          this.model.amount.value :
-          this.model.amount.calculation;
-			},
-			effectIcon(){
-				let value = this.resolvedValue;
-				return getEffectIcon(this.model.operation, value);
-			},
-			operation(){
-				switch(this.model.operation) {
-					case 'base': return 'Base value';
-					case 'add': return 'Add';
-					case 'mul': return 'Multiply';
-					case 'min': return 'Minimum';
-					case 'max': return 'Maximum';
-					case 'set': return 'Set';
-					case 'advantage': return 'Advantage';
-					case 'disadvantage': return 'Disadvantage';
-					case 'passiveAdd': return 'Passive bonus';
-					case 'fail': return 'Always fail';
-					case 'conditional': return 'Conditional benefit' ;
-          default: return this.model.operation;
-				}
-			},
-			displayedValue(){
-				let value = this.resolvedValue;
-				switch(this.model.operation) {
-					case 'base': return value;
-					case 'add': return isFinite(value) ? Math.abs(value) : value;
-					case 'mul': return value;
-					case 'min': return value;
-					case 'max': return value;
-					case 'advantage': return;
-					case 'disadvantage': return;
-					case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
-					case 'fail': return;
-					case 'conditional': return;
-          default: return undefined;
-				}
-			}
-		},
-	};
+export default {
+  mixins: [propertyViewerMixin],
+  computed: {
+    resolvedValue() {
+      if (!this.model.amount) return;
+      return this.model.amount.value !== undefined ?
+        this.model.amount.value :
+        this.model.amount.calculation;
+    },
+    effectIcon() {
+      let value = this.resolvedValue;
+      return getEffectIcon(this.model.operation, value);
+    },
+    operation() {
+      switch (this.model.operation) {
+        case 'base': return 'Base value';
+        case 'add': return 'Add';
+        case 'mul': return 'Multiply';
+        case 'min': return 'Minimum';
+        case 'max': return 'Maximum';
+        case 'set': return 'Set';
+        case 'advantage': return 'Advantage';
+        case 'disadvantage': return 'Disadvantage';
+        case 'passiveAdd': return 'Passive bonus';
+        case 'fail': return 'Always fail';
+        case 'conditional': return 'Conditional benefit';
+        default: return this.model.operation;
+      }
+    },
+    displayedValue() {
+      let value = this.resolvedValue;
+      switch (this.model.operation) {
+        case 'base': return value;
+        case 'add': return isFinite(value) ? Math.abs(value) : value;
+        case 'mul': return value;
+        case 'min': return value;
+        case 'max': return value;
+        case 'advantage': return;
+        case 'disadvantage': return;
+        case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
+        case 'fail': return;
+        case 'conditional': return;
+        default: return undefined;
+      }
+    }
+  },
+};
 </script>
 
 <style lang="css" scoped>
-	.icon {
-		min-width: 30px;
-	}
-	.icon {
-		color: inherit !important;
-	}
-	.net-effect {
-		flex-grow: 0;
-		flex-shrink: 0;
-	}
-	.value, .calculation {
-		min-width: 80px;
-	}
+.icon {
+  min-width: 30px;
+}
+
+.icon {
+  color: inherit !important;
+}
+
+.net-effect {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.value,
+.calculation {
+  min-width: 80px;
+}
 </style>

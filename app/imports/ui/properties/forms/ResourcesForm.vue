@@ -55,54 +55,57 @@
 </template>
 
 <script lang="js">
-  import AttributesConsumedListForm from '/imports/ui/properties/forms/AttributesConsumedListForm.vue';
-  import ItemsConsumedListForm from '/imports/ui/properties/forms/ItemsConsumedListForm.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import AttributesConsumedListForm from '/imports/ui/properties/forms/AttributesConsumedListForm.vue';
+import ItemsConsumedListForm from '/imports/ui/properties/forms/ItemsConsumedListForm.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-  export default {
-    components: {
-      AttributesConsumedListForm,
-      ItemsConsumedListForm,
+export default {
+  components: {
+    AttributesConsumedListForm,
+    ItemsConsumedListForm,
+  },
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+  props: {
+    parentTarget: {
+      type: String,
+      default: undefined,
     },
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
+    buffsStored: {
+      type: Boolean,
     },
-    props: {
-      parentTarget: {
-        type: String,
-        default: undefined,
-      },
-      buffsStored: {
-        type: Boolean,
-      },
+  },
+  data() {
+    return {
+      addResourceLoading: false,
+    }
+  },
+  methods: {
+    acknowledgeAddResult() {
+      this.addResourceLoading = false;
     },
-    data(){return {
-			addResourceLoading: false,
-		}},
-    methods: {
-			acknowledgeAddResult(){
-				this.addResourceLoading = false;
-			},
-      addAttributesConsumed(){
-				this.addResourceLoading = true;
-				this.$emit('push', {
-					path: ['attributesConsumed'],
-          value: {_id: Random.id()},
-					ack: this.acknowledgeAddResult,
-				});
-			},
-			addItemsConsumed(){
-				this.addResourceLoading = true;
-				this.$emit('push', {
-					path: ['itemsConsumed'],
-          value: {_id: Random.id()},
-					ack: this.acknowledgeAddResult,
-				});
-			},
-		},
-  }
+    addAttributesConsumed() {
+      this.addResourceLoading = true;
+      this.$emit('push', {
+        path: ['attributesConsumed'],
+        value: { _id: Random.id() },
+        ack: this.acknowledgeAddResult,
+      });
+    },
+    addItemsConsumed() {
+      this.addResourceLoading = true;
+      this.$emit('push', {
+        path: ['itemsConsumed'],
+        value: { _id: Random.id() },
+        ack: this.acknowledgeAddResult,
+      });
+    },
+  },
+}
 </script>
 
 <style lang="css" scoped>
+
 </style>

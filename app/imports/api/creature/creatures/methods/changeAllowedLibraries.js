@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import {assertEditPermission} from '/imports/api/sharing/sharingPermissions.js';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import SimpleSchema from 'simpl-schema';
 import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
 
@@ -36,8 +36,8 @@ const changeAllowedLibraries = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({_id, allowedLibraries, allowedLibraryCollections}) {
-		let creature = Creatures.findOne(_id);
+  run({ _id, allowedLibraries, allowedLibraryCollections }) {
+    let creature = Creatures.findOne(_id);
     assertEditPermission(creature, this.userId);
     let $set;
     if (allowedLibraries) {
@@ -48,7 +48,7 @@ const changeAllowedLibraries = new ValidatedMethod({
       $set.allowedLibraryCollections = allowedLibraryCollections;
     }
     if (!$set) return;
-    Creatures.update(_id, {$set});
+    Creatures.update(_id, { $set });
   },
 });
 
@@ -68,7 +68,7 @@ const toggleAllUserLibraries = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({_id, value}) {
+  run({ _id, value }) {
     if (value) {
       Creatures.update(_id, {
         $unset: {
@@ -87,4 +87,4 @@ const toggleAllUserLibraries = new ValidatedMethod({
   },
 });
 
-export {changeAllowedLibraries, toggleAllUserLibraries};
+export { changeAllowedLibraries, toggleAllUserLibraries };

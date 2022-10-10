@@ -34,23 +34,26 @@ import SmartInput from '/imports/ui/components/global/SmartInputMixin.js';
 import { format } from 'date-fns';
 
 export default {
-	mixins: [SmartInput],
-	data(){return {
-		menu: false,
-	};},
-	computed: {
-		formattedSafeValue(){
-			return format(this.safeValue, 'YYYY-MM-DD')
-		},
-	},
-	methods: {
-		dateInput(e){
-			this.menu = false;
-			this.input(e);
-		},
-	},
+  mixins: [SmartInput],
+  data() {
+    return {
+      menu: false,
+    };
+  },
+  computed: {
+    formattedSafeValue() {
+      return format(this.safeValue, 'YYYY-MM-DD')
+    },
+  },
+  methods: {
+    dateInput(e) {
+      this.menu = false;
+      this.input(e);
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

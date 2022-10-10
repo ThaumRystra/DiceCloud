@@ -22,29 +22,37 @@ const damageProperty = new ValidatedMethod({
     timeInterval: 5000,
   },
   run({ _id, operation, value }) {
-    
+
     // Get action context
-    const prop = CreatureProperties.findOne(_id);
+    let prop = CreatureProperties.findOne(_id);
     if (!prop) throw new Meteor.Error(
       'Damage property failed', 'Property doesn\'t exist'
     );
     const creatureId = prop.ancestors[0].id;
     const actionContext = new ActionContext(creatureId, [creatureId], this);
-    
-		// Check permissions
+
+    // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
 
-		// Check if property can take damage
-		let schema = CreatureProperties.simpleSchema(prop);
-		if (!schema.allowsKey('damage')){
-			throw new Meteor.Error(
-				'Damage property failed',
-				`Property of type "${prop.type}" can't be damaged`
-			);
+    // Check if property can take damage
+    let schema = CreatureProperties.simpleSchema(prop);
+    if (!schema.allowsKey('damage')) {
+      throw new Meteor.Error(
+        'Damage property failed',
+        `Property of type "${prop.type}" can't be damaged`
+      );
     }
-    
+
+    // Replace the prop by its actionContext counterpart if possible
+    if (prop.variableName) {
+      const actionContextProp = actionContext.scope[prop.variableName];
+      if (actionContextProp?._id === prop._id) {
+        prop = actionContextProp;
+      }
+    }
+
     const result = damagePropertyWork({ prop, operation, value, actionContext });
-  
+
     // Insert the log
     actionContext.writeLog();
     return result;
@@ -78,7 +86,7 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
   }
 
   let damage, newValue, increment;
-  if (operation === 'set'){
+  if (operation === 'set') {
     const total = prop.total || 0;
     // Set represents what we want the value to be after damage
     // So we need the actual damage to get to that value
@@ -94,7 +102,10 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
     }, {
       selector: prop
     });
-  } else if (operation === 'increment'){
+    // Also write it straight to the prop so that it is updated in the actionContext
+    prop.damage = damage;
+    prop.value = newValue;
+  } else if (operation === 'increment') {
     let currentValue = prop.value || 0;
     let currentDamage = prop.damage || 0;
     increment = value;
@@ -111,6 +122,9 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
     }, {
       selector: prop
     });
+    // Also write it straight to the prop so that it is updated in the actionContext
+    prop.damage += increment;
+    prop.value -= increment;
   }
 
   applyTriggers(actionContext.triggers?.damageProperty?.after, prop, actionContext);

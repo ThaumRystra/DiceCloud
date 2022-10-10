@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="card-raised-background">
-    <v-container
-      fluid
-    >
+    <v-container fluid>
       <v-row
         wrap
         dense
@@ -10,9 +8,7 @@
         justify-sm="start"
       >
         <template v-if="properties.suggested">
-          <v-col
-            cols="12"
-          >
+          <v-col cols="12">
             <v-subheader>
               Suggested
             </v-subheader>
@@ -77,37 +73,39 @@ export default {
       default: undefined,
     },
   },
-	data(){ return {
-		PROPERTIES,
-	};},
-  computed:{
-    properties(){
+  data() {
+    return {
+      PROPERTIES,
+    };
+  },
+  computed: {
+    properties() {
       let suggested;
       let more = {};
-      if (this.suggestedTypes){
-        for (const key in PROPERTIES){
+      if (this.suggestedTypes) {
+        for (const key in PROPERTIES) {
           let prop = PROPERTIES[key];
-          if (this.suggestedTypes.includes(prop.type)){
+          if (this.suggestedTypes.includes(prop.type)) {
             if (!suggested) suggested = {};
             suggested[key] = prop;
           } else {
             more[key] = prop;
           }
         }
-        return {suggested, more};
+        return { suggested, more };
       } else if (this.parentType) {
-          for (const key in PROPERTIES){
-            let prop = PROPERTIES[key];
-            if (prop.suggestedParents.includes(this.parentType)){
-              if (!suggested) suggested = {};
-              suggested[key] = prop;
-            } else {
-              more[key] = prop;
-            }
+        for (const key in PROPERTIES) {
+          let prop = PROPERTIES[key];
+          if (prop.suggestedParents.includes(this.parentType)) {
+            if (!suggested) suggested = {};
+            suggested[key] = prop;
+          } else {
+            more[key] = prop;
           }
-          return {suggested, more};
+        }
+        return { suggested, more };
       } else {
-        return {more: PROPERTIES};
+        return { more: PROPERTIES };
       }
     },
   },
@@ -115,4 +113,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -1,24 +1,24 @@
 import constant from './constant.js';
 
 const rollArray = {
-  create({values, diceSize, diceNum}) {
-		return {
+  create({ values, diceSize, diceNum }) {
+    return {
       parseType: 'rollArray',
       values,
       diceSize,
       diceNum,
     };
   },
-  compile(node, scope, context){
+  compile(node, scope, context) {
     return {
       result: node,
       context
     };
   },
-  toString(node){
+  toString(node) {
     return `${node.diceNum || ''}d${node.diceSize} [ ${node.values.join(', ')} ]`;
   },
-  reduce(node, scope, context){
+  reduce(node, scope, context) {
     const total = node.values.reduce((a, b) => a + b, 0);
     return {
       result: constant.create({

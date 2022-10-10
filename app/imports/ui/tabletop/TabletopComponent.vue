@@ -43,7 +43,7 @@ import TabletopMap from '/imports/ui/tabletop/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import TabletopActionCards from '/imports/ui/tabletop/TabletopActionCards.vue';
 import MiniCharacterSheet from '/imports/ui/creature/character/MiniCharacterSheet.vue';
-import snackbar from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
@@ -58,24 +58,26 @@ export default {
       required: true,
     },
   },
-  data(){ return {
-    activeCreature: undefined,
-  }},
+  data() {
+    return {
+      activeCreature: undefined,
+    }
+  },
   meteor: {
-    $subscribe:{
-      'tabletop'(){
+    $subscribe: {
+      'tabletop'() {
         return [this.model._id];
       },
     },
-    creatures(){
-      return Creatures.find({tabletop: this.model._id});
+    creatures() {
+      return Creatures.find({ tabletop: this.model._id });
     },
   },
   methods: {
-    addCreature(){
+    addCreature() {
       this.$store.commit('pushDialogStack', {
-				component: 'select-creatures-dialog',
-				elementId: 'select-creatures',
+        component: 'select-creatures-dialog',
+        elementId: 'select-creatures',
         data: {
           startingSelection: this.creatures.map(c => c._id),
         },
@@ -88,14 +90,14 @@ export default {
             if (error) snackbar(error.message);
           });
         },
-			});
+      });
     }
   }
 }
 </script>
 
 <style lang="css" scoped>
-.initiative-row > .v-card {
+.initiative-row>.v-card {
   flex-grow: 0;
   height: 162px;
   width: 100px;

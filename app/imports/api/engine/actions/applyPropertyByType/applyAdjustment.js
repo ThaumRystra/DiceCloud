@@ -24,7 +24,7 @@ export default function applyAdjustment(node, actionContext){
     damageTargets.forEach(target => {
       let stat = target.variables[prop.stat];
       if (!stat?.type) {
-        actionContext.addLog({
+        if (!prop.silent) actionContext.addLog({
           name: 'Error',
           value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`
         });
@@ -36,7 +36,7 @@ export default function applyAdjustment(node, actionContext){
         value,
         actionContext,
       });
-      actionContext.addLog({
+      if (!prop.silent) actionContext.addLog({
         name: 'Attribute damage',
         value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
         ` ${value}`,
@@ -44,7 +44,7 @@ export default function applyAdjustment(node, actionContext){
       });
     });
   } else {
-    actionContext.addLog({
+    if (!prop.silent) actionContext.addLog({
       name: 'Attribute damage',
       value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
       ` ${value}`,

@@ -43,24 +43,26 @@ import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions
 import { mapMutations } from 'vuex';
 
 export default {
-  data(){ return {
-    loading: false,
-  }},
+  data() {
+    return {
+      loading: false,
+    }
+  },
   meteor: {
-    library(){
+    library() {
       return Libraries.findOne(this.$route.params.id);
     },
-    subscribed(){
+    subscribed() {
       let libraryId = this.$route.params.id;
       let user = Meteor.user();
       return user?.subscribedLibraries?.includes(libraryId);
     },
-    showSubscribeButton(){
+    showSubscribeButton() {
       let user = Meteor.user();
       let library = this.library;
       if (!user || !library) return;
       let userId = user._id;
-      if (user.subscribedLibraries.includes(library._id)){
+      if (user.subscribedLibraries.includes(library._id)) {
         return true
       } else if (
         library.readers.includes(userId) ||
@@ -72,7 +74,7 @@ export default {
         return true;
       }
     },
-    canEdit(){
+    canEdit() {
       try {
         assertDocEditPermission(this.library, Meteor.userId());
         return true
@@ -85,7 +87,7 @@ export default {
     ...mapMutations([
       'toggleDrawer',
     ]),
-    subscribe(value){
+    subscribe(value) {
       this.loading = true;
       Meteor.users.subscribeToLibrary.call({
         libraryId: this.$route.params.id,
@@ -94,16 +96,17 @@ export default {
         this.loading = false;
       });
     },
-    editLibrary(){
-			this.$store.commit('pushDialogStack', {
-				component: 'library-edit-dialog',
-				elementId: 'library-edit-button',
-				data: {_id: this.$route.params.id},
-			});
-		},
+    editLibrary() {
+      this.$store.commit('pushDialogStack', {
+        component: 'library-edit-dialog',
+        elementId: 'library-edit-button',
+        data: { _id: this.$route.params.id },
+      });
+    },
   },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

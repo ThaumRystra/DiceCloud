@@ -41,7 +41,7 @@ const ComputedOnlyToggleSchema = createPropertySchema({
 });
 
 const ComputedToggleSchema = new SimpleSchema()
-	.extend(ComputedOnlyToggleSchema)
-	.extend(ToggleSchema);
+  .extend(ComputedOnlyToggleSchema)
+  .extend(ToggleSchema);
 
 export { ToggleSchema, ComputedOnlyToggleSchema, ComputedToggleSchema };

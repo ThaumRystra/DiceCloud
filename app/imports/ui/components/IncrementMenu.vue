@@ -65,102 +65,103 @@
 </template>
 
 <script lang="js">
-	export default {
-    inject: {
-      context: { default: {} }
+export default {
+  inject: {
+    context: { default: {} }
+  },
+  props: {
+    value: {
+      type: Number,
+      default: 0,
     },
-		props: {
-			value: {
-        type: Number,
-        default: 0,
-      },
-      open: Boolean,
-      flat: Boolean,
-		},
-		data() {
-			return {
-				editValue: this.value,
-				operation: 'set',
-				hover: false,
-			};
-		},
-    watch: {
-      open: {
-        immediate: true,
-        handler(isOpen) {
-          if (isOpen) this.resetData();
-        },
+    open: Boolean,
+    flat: Boolean,
+  },
+  data() {
+    return {
+      editValue: this.value,
+      operation: 'set',
+      hover: false,
+    };
+  },
+  watch: {
+    open: {
+      immediate: true,
+      handler(isOpen) {
+        if (isOpen) this.resetData();
       },
     },
-		methods: {
-      resetData(){
-        this.editValue = this.value;
-        this.operation = 'set';
-        // this.$nextTick didn't work, using timeout instead did
-        setTimeout(() => {
-          if (this.$refs.editInput){
-            this.$refs.editInput.focus();
-          }
-        }, 100);
-      },
-			cancelEdit() {
-				this.$emit('close');
-			},
-			commitEdit() {
-				this.editing = false;
-				let value = +this.$refs.editInput.lazyValue;
-				if (this.operation === 'add') {
-					value = -value;
-				}
-				let type = this.operation === 'set' ? 'set' : 'increment';
-				this.$emit('change', { type, value });
-			},
-			operationIcon(operation) {
-				switch (operation) {
-					case 'set':
-						return 'mdi-forward';
-					case 'add':
-            return 'mdi-plus';
-					case 'subtract':
-						return 'mdi-minus';
-				}
-			},
-			toggleAdd(){
-				this.operation = (this.operation === 'add') ? 'set': 'add';
-			},
-			toggleSubtract(){
-				this.operation = (this.operation === 'subtract') ? 'set': 'subtract';
-			},
-			keypress(event) {
-				let digitsOnly = /[0-9]/;
-				let key = event.key;
-				if (key === '+') {
-					this.toggleAdd();
-					event.preventDefault();
-				} else if (key === '-') {
-					this.toggleSubtract();
-					event.preventDefault();
-				} else if (key === 'Enter') {
-					this.commitEdit();
-				} else if (!digitsOnly.test(key)){
-					event.preventDefault();
-				}
-			},
-      input(value){
-        if (+value < 0){
-          this.editValue = -value;
-          this.operation = 'subtract';
+  },
+  methods: {
+    resetData() {
+      this.editValue = this.value;
+      this.operation = 'set';
+      // this.$nextTick didn't work, using timeout instead did
+      setTimeout(() => {
+        if (this.$refs.editInput) {
+          this.$refs.editInput.focus();
         }
+      }, 100);
+    },
+    cancelEdit() {
+      this.$emit('close');
+    },
+    commitEdit() {
+      this.editing = false;
+      let value = +this.$refs.editInput.lazyValue;
+      if (this.operation === 'add') {
+        value = -value;
       }
-		}
-	};
+      let type = this.operation === 'set' ? 'set' : 'increment';
+      this.$emit('change', { type, value });
+    },
+    operationIcon(operation) {
+      switch (operation) {
+        case 'set':
+          return 'mdi-forward';
+        case 'add':
+          return 'mdi-plus';
+        case 'subtract':
+          return 'mdi-minus';
+      }
+    },
+    toggleAdd() {
+      this.operation = (this.operation === 'add') ? 'set' : 'add';
+    },
+    toggleSubtract() {
+      this.operation = (this.operation === 'subtract') ? 'set' : 'subtract';
+    },
+    keypress(event) {
+      let digitsOnly = /[0-9]/;
+      let key = event.key;
+      if (key === '+') {
+        this.toggleAdd();
+        event.preventDefault();
+      } else if (key === '-') {
+        this.toggleSubtract();
+        event.preventDefault();
+      } else if (key === 'Enter') {
+        this.commitEdit();
+      } else if (!digitsOnly.test(key)) {
+        event.preventDefault();
+      }
+    },
+    input(value) {
+      if (+value < 0) {
+        this.editValue = -value;
+        this.operation = 'subtract';
+      }
+    }
+  }
+};
 </script>
 
 <style scoped>
-	.filled.theme--light {
-		background: #fff !important;
-	}
-	.filled.theme--dark {
-		background: #424242 !important;
-	}
+.filled.theme--light {
+  background: #fff !important;
+}
+
+.filled.theme--dark {
+  background: #424242 !important;
+}
 </style>

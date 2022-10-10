@@ -11,9 +11,7 @@
         name="Status"
         :value="model.enabled ? 'Enabled' : 'Disabled'"
       />
-      <template
-        v-else-if="model.condition"
-      >
+      <template v-else-if="model.condition">
         <property-field
           name="Condition"
           :calculation="model.condition"
@@ -24,9 +22,9 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
 
-	export default {
-		mixins: [propertyViewerMixin],
-	}
+export default {
+  mixins: [propertyViewerMixin],
+}
 </script>

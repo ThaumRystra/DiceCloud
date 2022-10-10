@@ -24,16 +24,17 @@
 </template>
 
 <script lang="js">
-	import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
-  import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
+import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 
-	export default {
-    components: {
-      TreeNodeView,
-    },
-		mixins: [propertyViewerMixin],
-	}
+export default {
+  components: {
+    TreeNodeView,
+  },
+  mixins: [propertyViewerMixin],
+}
 </script>
 
 <style lang="css" scoped>
+
 </style>

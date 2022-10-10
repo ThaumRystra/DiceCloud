@@ -37,7 +37,7 @@
 import SingleCardLayout from '/imports/ui/layouts/SingleCardLayout.vue'
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
 import insertTabletop from '/imports/api/tabletop/methods/insertTabletop.js';
-import snackbar from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {

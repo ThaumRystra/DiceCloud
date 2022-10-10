@@ -87,7 +87,7 @@ export default {
     SvgIcon,
   },
   mixins: [SmartInput],
-	props: {
+  props: {
     label: {
       type: String,
       default: 'Icon',
@@ -96,39 +96,42 @@ export default {
       type: String,
       default: undefined,
     },
-	},
-	data(){return {
-		menu: false,
-    searchString: '',
-    icons: [],
-	};},
+  },
+  data() {
+    return {
+      menu: false,
+      searchString: '',
+      icons: [],
+    };
+  },
   watch: {
-    menu(value){
-      if (value){
+    menu(value) {
+      if (value) {
         setTimeout(() => {
-          if (this.$refs.iconSearchField){
+          if (this.$refs.iconSearchField) {
             this.$refs.iconSearchField.$children[0].focus();
           }
         }, 100);
       }
     },
   },
-	methods: {
-    search(value, ack){
+  methods: {
+    search(value, ack) {
       this.searchString = value;
       this.icons = [];
-      findIcons.call({search: value}, (error, result) => {
+      findIcons.call({ search: value }, (error, result) => {
         ack(error);
         this.icons = result;
       });
     },
-    select(icon){
+    select(icon) {
       this.menu = false;
       this.change(icon);
     },
-	},
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -41,9 +41,7 @@
         cols="12"
         md="6"
       >
-        <v-layout
-          column
-        >
+        <v-layout column>
           <v-radio-group
             :value="radioSelection"
             @change="radioChange"
@@ -84,7 +82,7 @@
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />
-    
+
     <form-section
       v-if="$slots.children"
       name="Children"
@@ -96,37 +94,38 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-    mixins: [propertyFormMixin],
-    computed: {
-      radioSelection(){
-        if (this.model.disabled){
-          return 'disabled';
-        } else if (this.model.enabled){
-          return 'enabled'
-        } else {
-          return 'calculated';
-        }
-      }
-    },
-    methods: {
-      radioChange(value){
-        if (value === 'enabled'){
-          this.$emit('change', {path: ['enabled'], value: true});
-          this.$emit('change', {path: ['disabled'], value: false});
-        } else if (value === 'disabled'){
-          this.$emit('change', {path: ['disabled'], value: true});
-          this.$emit('change', {path: ['enabled'], value: false});
-        } else if (value === 'calculated'){
-          this.$emit('change', {path: ['disabled'], value: false});
-          this.$emit('change', {path: ['enabled'], value: false});
-        }
+export default {
+  mixins: [propertyFormMixin],
+  computed: {
+    radioSelection() {
+      if (this.model.disabled) {
+        return 'disabled';
+      } else if (this.model.enabled) {
+        return 'enabled'
+      } else {
+        return 'calculated';
       }
     }
-	};
+  },
+  methods: {
+    radioChange(value) {
+      if (value === 'enabled') {
+        this.$emit('change', { path: ['enabled'], value: true });
+        this.$emit('change', { path: ['disabled'], value: false });
+      } else if (value === 'disabled') {
+        this.$emit('change', { path: ['disabled'], value: true });
+        this.$emit('change', { path: ['enabled'], value: false });
+      } else if (value === 'calculated') {
+        this.$emit('change', { path: ['disabled'], value: false });
+        this.$emit('change', { path: ['enabled'], value: false });
+      }
+    }
+  }
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

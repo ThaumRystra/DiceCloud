@@ -31,10 +31,10 @@ import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
 export default {
-	components: {
-		PropertyDescription,
+  components: {
+    PropertyDescription,
     CardHighlight,
-	},
+  },
   inject: {
     theme: {
       default: {
@@ -42,31 +42,34 @@ export default {
       },
     },
   },
-	props: {
-		model: {
+  props: {
+    model: {
       type: Object,
       required: true,
     },
-	},
-  data(){ return{
-    hover: false,
-  }},
+  },
+  data() {
+    return {
+      hover: false,
+    }
+  },
   computed: {
-    isDark(){
+    isDark() {
       return isDarkColor(this.model.color);
     },
   },
-	methods: {
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `${_id}`,
-				data: {_id},
-			});
-		},
-	},
+  methods: {
+    clickProperty(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `${_id}`,
+        data: { _id },
+      });
+    },
+  },
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -9,8 +9,8 @@ import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 const setPublic = new ValidatedMethod({
   name: 'sharing.setPublic',
-	validate: new SimpleSchema({
-		docRef: RefSchema,
+  validate: new SimpleSchema({
+    docRef: RefSchema,
     isPublic: { type: Boolean },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -18,19 +18,19 @@ const setPublic = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({docRef, isPublic}){
-		let doc = fetchDocByRef(docRef);
-		assertOwnership(doc, this.userId);
-		return getCollectionByName(docRef.collection).update(docRef.id, {
-      $set: {public: isPublic},
+  run({ docRef, isPublic }) {
+    let doc = fetchDocByRef(docRef);
+    assertOwnership(doc, this.userId);
+    return getCollectionByName(docRef.collection).update(docRef.id, {
+      $set: { public: isPublic },
     });
-	},
+  },
 });
 
 const updateUserSharePermissions = new ValidatedMethod({
   name: 'sharing.updateUserSharePermissions',
-	validate: new SimpleSchema({
-		docRef: RefSchema,
+  validate: new SimpleSchema({
+    docRef: RefSchema,
     userId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
@@ -45,40 +45,40 @@ const updateUserSharePermissions = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({docRef, userId, role}){
-		let doc = fetchDocByRef(docRef);
-    if (role === 'none'){
+  run({ docRef, userId, role }) {
+    let doc = fetchDocByRef(docRef);
+    if (role === 'none') {
       // only assert ownership if you aren't removing yourself
-      if (this.userId !== userId){
+      if (this.userId !== userId) {
         assertOwnership(doc, this.userId);
       }
       return getCollectionByName(docRef.collection).update(docRef.id, {
         $pullAll: { readers: userId, writers: userId },
       });
     }
-    if (doc.owner === userId){
+    if (doc.owner === userId) {
       throw new Meteor.Error('Sharing update failed',
-      'User is already the owner of this document');
+        'User is already the owner of this document');
     }
     assertOwnership(doc, this.userId);
-    if (role === 'reader'){
+    if (role === 'reader') {
       return getCollectionByName(docRef.collection).update(docRef.id, {
         $addToSet: { readers: userId },
         $pullAll: { writers: userId },
       });
-    } else if (role === 'writer'){
+    } else if (role === 'writer') {
       return getCollectionByName(docRef.collection).update(docRef.id, {
         $addToSet: { writers: userId },
         $pullAll: { readers: userId },
       });
     }
-	},
+  },
 });
 
 const transferOwnership = new ValidatedMethod({
   name: 'sharing.transferOwnership',
-	validate: new SimpleSchema({
-		docRef: RefSchema,
+  validate: new SimpleSchema({
+    docRef: RefSchema,
     userId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
@@ -89,31 +89,31 @@ const transferOwnership = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({docRef, userId}){
+  run({ docRef, userId }) {
     let doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
 
     let collection = getCollectionByName(docRef.collection);
 
     let tier = getUserTier(userId);
-    if (docRef.collection === 'creatures'){
+    if (docRef.collection === 'creatures') {
       let currentCharacterCount = collection.find({
         owner: userId,
       }, {
-        fields: {_id: 1},
+        fields: { _id: 1 },
       }).count();
 
       if (
         tier.characterSlots !== -1 &&
         currentCharacterCount >= tier.characterSlots
-      ){
+      ) {
         throw new Meteor.Error('Sharing.methods.transferOwnership.denied',
-        'The new owner is already at their character limit')
+          'The new owner is already at their character limit')
       }
-    } else if (docRef.collection === 'libraries'){
-      if (!tier.paidBenefits){
+    } else if (docRef.collection === 'libraries') {
+      if (!tier.paidBenefits) {
         throw new Meteor.Error('Sharing.methods.transferOwnership.denied',
-        'The new owner\'s Patreon tier does not have access to library ownership');
+          'The new owner\'s Patreon tier does not have access to library ownership');
       }
     }
 
@@ -123,10 +123,10 @@ const transferOwnership = new ValidatedMethod({
     });
     // Then make the user the owner and the current owner a writer
     return collection.update(docRef.id, {
-      $set: {owner: userId},
+      $set: { owner: userId },
       $addToSet: { writers: this.userId },
     });
-	},
+  },
 });
 
 export { setPublic, updateUserSharePermissions, transferOwnership };

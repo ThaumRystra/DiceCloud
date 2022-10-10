@@ -67,10 +67,10 @@ export default {
     disabled: Boolean,
   },
   computed: {
-    hasClickListener(){
+    hasClickListener() {
       return this.$listeners && !!this.$listeners.click;
     },
-    spellComponents(){
+    spellComponents() {
       let components = [];
       if (this.model.ritual) components.push('R');
       if (this.model.concentration) components.push('C');
@@ -81,10 +81,10 @@ export default {
     },
   },
   methods: {
-    click(e){
-			this.$emit('click', e);
-		},
-    setPrepared(val, ack){
+    click(e) {
+      this.$emit('click', e);
+    },
+    setPrepared(val, ack) {
       updateCreatureProperty.call({
         _id: this.model._id,
         path: ['prepared'],
@@ -99,13 +99,17 @@ export default {
 .spell-avatar {
   min-width: 32px;
 }
+
 .spell {
   background-color: inherit;
 }
-.primary--text .v-icon, .primary--text .v-list__tile__sub-title {
+
+.primary--text .v-icon,
+.primary--text .v-list__tile__sub-title {
   color: #b71c1c
 }
-.theme--light.info-icon{
-  color: rgba(0,0,0,.54) !important;
+
+.theme--light.info-icon {
+  color: rgba(0, 0, 0, .54) !important;
 }
 </style>

@@ -20,7 +20,7 @@ export default function applySavingThrow(node, actionContext){
     });
     return node.children.forEach(child => applyProperty(child, actionContext));
   }
-  actionContext.addLog({
+  if (!prop.silent) actionContext.addLog({
     name: prop.name,
     value: `DC **${dc}**`,
     inline: true,
@@ -94,7 +94,7 @@ export default function applySavingThrow(node, actionContext){
     } else {
       scope['$saveFailed'] = {value: true};
     }
-    actionContext.addLog({
+    if (!prop.silent) actionContext.addLog({
       name: saveSuccess ? 'Successful save' : 'Failed save',
       value: resultPrefix + '\n**' + result + '**',
       inline: true,

@@ -62,8 +62,10 @@ export default {
     hover: false,
   }},
   computed: {
-    accentColor(){
-      if (this.theme.isDark){
+    accentColor() {
+      if (this.model.color) {
+        return this.model.color
+      } else if (this.theme.isDark){
         return this.$vuetify.theme.themes.dark.primary;
       } else {
         return this.$vuetify.theme.themes.light.primary;

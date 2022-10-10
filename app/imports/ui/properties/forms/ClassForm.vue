@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="class-form">
-    <v-row
-      dense
-    >
+    <v-row dense>
       <v-col
         cols="12"
         md="6"
@@ -45,9 +43,7 @@
         <slot name="children" />
       </form-section>
 
-      <form-section
-        name="Advanced"
-      >
+      <form-section name="Advanced">
         <smart-combobox
           label="Tags"
           hint="This class's own tags"
@@ -130,56 +126,56 @@
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import PROPERTIES from '/imports/constants/PROPERTIES.js';
-  import { SlotSchema } from '/imports/api/properties/Slots.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import { SlotSchema } from '/imports/api/properties/Slots.js';
 
-	export default {
-    components: {
-			FormSection,
-		},
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
+export default {
+  components: {
+    FormSection,
+  },
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+  props: {
+    classForm: Boolean,
+  },
+  data() {
+    let slotTypes = [];
+    for (let key in PROPERTIES) {
+      slotTypes.push({ text: PROPERTIES[key].name, value: key });
+    }
+    return {
+      slotTypes,
+      addExtraTagsLoading: false,
+      extraTagOperations: ['OR', 'NOT'],
+    };
+  },
+  computed: {
+    extraTagsFull() {
+      if (!this.model.extraTags) return false;
+      let maxCount = SlotSchema.get('extraTags', 'maxCount');
+      return this.model.extraTags.length >= maxCount;
+    }
+  },
+  methods: {
+    acknowledgeAddResult() {
+      this.addExtraTagsLoading = false;
     },
-    props: {
-      classForm: Boolean,
+    addExtraTags() {
+      this.addExtraTagsLoading = true;
+      this.$emit('push', {
+        path: ['extraTags'],
+        value: {
+          _id: Random.id(),
+          operation: 'OR',
+          tags: [],
+        },
+        ack: this.acknowledgeAddResult,
+      });
     },
-    data(){
-      let slotTypes = [];
-      for (let key in PROPERTIES){
-         slotTypes.push({text: PROPERTIES[key].name, value: key});
-      }
-      return {
-        slotTypes,
-        addExtraTagsLoading: false,
-        extraTagOperations: ['OR', 'NOT'],
-      };
-    },
-    computed: {
-      extraTagsFull(){
-        if (!this.model.extraTags) return false;
-        let maxCount = SlotSchema.get('extraTags', 'maxCount');
-        return this.model.extraTags.length >= maxCount;
-      }
-    },
-    methods: {
-			acknowledgeAddResult(){
-				this.addExtraTagsLoading = false;
-			},
-      addExtraTags(){
-				this.addExtraTagsLoading = true;
-				this.$emit('push', {
-					path: ['extraTags'],
-          value: {
-            _id: Random.id(),
-            operation: 'OR',
-            tags: [],
-          },
-					ack: this.acknowledgeAddResult,
-				});
-			},
-		},
-	};
+  },
+};
 </script>

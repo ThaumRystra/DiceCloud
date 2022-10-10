@@ -22,9 +22,7 @@
               :value="model.value"
             />
           </v-layout>
-          <v-layout
-            align-center
-          >
+          <v-layout align-center>
             <v-icon
               class="mr-2"
               large
@@ -74,9 +72,7 @@
             <span class="text-subtitle-1 mr-2">
               {{ model.contentsWeight }} lb
             </span>
-            <span
-              class="text-subtitle-1"
-            >
+            <span class="text-subtitle-1">
               contents
             </span>
           </v-layout>
@@ -86,9 +82,7 @@
         v-if="model.carried"
         value="Carried"
       />
-      <property-field
-        v-if="model.contentsWeightless"
-      >
+      <property-field v-if="model.contentsWeightless">
         <v-icon
           style="overflow: hidden;"
           class="ma-1"
@@ -112,9 +106,10 @@ export default {
   components: {
     CoinValue,
   },
-	mixins: [propertyViewerMixin],
+  mixins: [propertyViewerMixin],
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

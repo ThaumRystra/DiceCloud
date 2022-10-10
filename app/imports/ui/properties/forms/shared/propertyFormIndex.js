@@ -15,6 +15,7 @@ const FeatureForm = () => import('/imports/ui/properties/forms/FeatureForm.vue')
 const FolderForm = () => import('/imports/ui/properties/forms/FolderForm.vue');
 const ItemForm = () => import('/imports/ui/properties/forms/ItemForm.vue');
 const NoteForm = () => import('/imports/ui/properties/forms/NoteForm.vue');
+const PointBuyForm = () => import('/imports/ui/properties/forms/PointBuyForm.vue');
 const ProficiencyForm = () => import('/imports/ui/properties/forms/ProficiencyForm.vue');
 const ReferenceForm = () => import('/imports/ui/properties/forms/ReferenceForm.vue');
 const RollForm = () => import('/imports/ui/properties/forms/RollForm.vue');
@@ -45,6 +46,7 @@ export default {
   folder: FolderForm,
   item: ItemForm,
   note: NoteForm,
+  pointBuy: PointBuyForm,
   proficiency: ProficiencyForm,
   propertySlot: SlotForm,
   reference: ReferenceForm,

@@ -67,25 +67,25 @@
           :value="model.settings.discordWebhook"
           @change="(value, ack) => $emit('change', {path: ['settings','discordWebhook'], value, ack})"
         />
-      <!--
-				<v-switch
-					label="Use variant encumbrance"
-					:input-value="model.settings.useVariantEncumbrance"
-					:error-messages="errors.useVariantEncumbrance"
-					@change="value => $emit('change', {path: ['settings','useVariantEncumbrance'], value})"
-				/>
-				<v-switch
-					label="Hide spells tab"
-					:input-value="model.settings.hideSpellcasting"
-					:error-messages="errors.hideSpellcasting"
-					@change="value => $emit('change', {path: ['settings','hideSpellcasting'], value})"
-				/>
-				<v-switch
-					label="Swap ability scores and modifiers"
-					:input-value="model.settings.swapStatAndModifier"
-					:error-messages="errors.swapStatAndModifier"
-					@change="value => $emit('change', {path: ['settings','swapStatAndModifier'], value})"
-				/>
+        <!--
+        <v-switch
+          label="Use variant encumbrance"
+          :input-value="model.settings.useVariantEncumbrance"
+          :error-messages="errors.useVariantEncumbrance"
+          @change="value => $emit('change', {path: ['settings','useVariantEncumbrance'], value})"
+        />
+        <v-switch
+          label="Hide spells tab"
+          :input-value="model.settings.hideSpellcasting"
+          :error-messages="errors.hideSpellcasting"
+          @change="value => $emit('change', {path: ['settings','hideSpellcasting'], value})"
+        />
+        <v-switch
+          label="Swap ability scores and modifiers"
+          :input-value="model.settings.swapStatAndModifier"
+          :error-messages="errors.swapStatAndModifier"
+          @change="value => $emit('change', {path: ['settings','swapStatAndModifier'], value})"
+        />
         -->
       </form-section>
       <form-section name="Libraries">
@@ -121,41 +121,42 @@
 
 <script lang="js">
 import { union, without, debounce } from 'lodash';
-import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
+import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
 import LibraryList from '/imports/ui/library/LibraryList.vue';
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import {changeAllowedLibraries, toggleAllUserLibraries} from '/imports/api/creature/creatures/methods/changeAllowedLibraries.js';
+import { changeAllowedLibraries, toggleAllUserLibraries } from '/imports/api/creature/creatures/methods/changeAllowedLibraries.js';
 
 export default {
-	components: {
-		FormSection,
+  components: {
+    FormSection,
     FormSections,
     LibraryList,
-	},
-	props: {
-		stored: {
-			type: Boolean,
-		},
-		model: {
-			type: Object,
-			default: () => ({}),
-		},
-		errors: {
-			type: Object,
-			default: () => ({}),
-		},
-		attackForm: {
-			type: Boolean,
-		},
+  },
+  props: {
+    stored: {
+      type: Boolean,
+    },
+    model: {
+      type: Object,
+      default: () => ({}),
+    },
+    errors: {
+      type: Object,
+      default: () => ({}),
+    },
+    attackForm: {
+      type: Boolean,
+    },
     disabled: Boolean,
   },
-  data() { return {
-    libraryCollections: this.model.allowedLibraryCollections,
-    libraries: this.model.allowedLibraries,
-    libraryWriteLoading: false,
-    libraryWriteError: undefined,
-    dirty: false, // If there are pending changes
-  }
+  data() {
+    return {
+      libraryCollections: this.model.allowedLibraryCollections,
+      libraries: this.model.allowedLibraries,
+      libraryWriteLoading: false,
+      libraryWriteError: undefined,
+      dirty: false, // If there are pending changes
+    }
   },
   computed: {
     allUserLibraries() {
@@ -211,29 +212,29 @@ export default {
     },
   },
   methods: {
-    changeShowTreeTab(value){
+    changeShowTreeTab(value) {
       this.$emit('change', {
-        path: ['settings','showTreeTab'],
+        path: ['settings', 'showTreeTab'],
         value: !!value
       });
       let currentTab = this.$store.getters.tabById(this.model._id);
-      if (!value && currentTab === 5){
+      if (!value && currentTab === 5) {
         this.$store.commit(
           'setTabForCharacterSheet',
-          {id: this.model._id, tab: 4}
+          { id: this.model._id, tab: 4 }
         );
       }
     },
-    changeHideSpellsTab(value){
+    changeHideSpellsTab(value) {
       this.$emit('change', {
-        path: ['settings','hideSpellsTab'],
+        path: ['settings', 'hideSpellsTab'],
         value: !value
       });
       let currentTab = this.$store.getters.tabById(this.model._id);
-      if (!value && currentTab === 3){
+      if (!value && currentTab === 3) {
         this.$store.commit(
           'setTabForCharacterSheet',
-          {id: this.model._id, tab: 4}
+          { id: this.model._id, tab: 4 }
         );
       }
     },
@@ -266,4 +267,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

@@ -158,9 +158,9 @@ import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {
-	components: {
-		FormSection,
-	},
+  components: {
+    FormSection,
+  },
   mixins: [propertyFormMixin],
-	}
+}
 </script>

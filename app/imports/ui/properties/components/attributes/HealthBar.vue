@@ -104,9 +104,18 @@ export default {
     },
   },
   props: {
-    value: Number,
-    maxValue: Number,
-    name: String,
+    value: {
+      type: Number,
+      default: undefined,
+    },
+    maxValue: {
+      type: Number,
+      default: undefined,
+    },
+    name: {
+      type: String,
+      default: undefined,
+    },
     color: {
       type: String,
       default() {
@@ -139,22 +148,22 @@ export default {
     barColor() {
       const fraction = this.value / this.maxValue;
       if (!Number.isFinite(fraction)) return this.color;
-      if (fraction > 0.5){
+      if (fraction > 0.5) {
         return this.color;
       } else if (this.midColor && this.lowColor) {
         return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
-      } else if (this.midColor){
+      } else if (this.midColor) {
         return this.midColor;
       }
       return this.color;
     },
-    barBackgroundColor(){
+    barBackgroundColor() {
       return chroma(this.barColor)
-      .darken(1.5)
-      .desaturate(1.5)
-      .hex();
+        .darken(1.5)
+        .desaturate(1.5)
+        .hex();
     },
-    isTextLight(){
+    isTextLight() {
       return isDarkColor(this.barBackgroundColor);
       /* Change color at the halfway mark
       const fraction = this.value / this.maxValue;
@@ -173,7 +182,7 @@ export default {
     cancelEdit() {
       this.editing = false;
     },
-    changeIncrementMenu(e){
+    changeIncrementMenu(e) {
       this.$emit('change', e);
       this.editing = false;
     }
@@ -193,70 +202,85 @@ export default {
 </style>
 
 <style scoped>
-	.health-bar {
-		background: inherit;
-	}
-	.name {
-		text-align: center;
-		cursor: pointer;
-		min-width: 150px;
-		flex-basis: 150px;
-		flex-grow: 1;
-		flex-shrink: 1;
-	}
-	.name:hover {
-		font-weight: 500;
-	}
-	.bar {
-		transition: box-shadow 0.2s;
-	}
-	.bar:hover {
-		box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-			0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
-	}
-	.hover {
-		background: #f5f5f5 !important;
-	}
-	.theme--dark .hover {
-		background: #515151 !important;
-	}
-	.filled.theme--light {
-		background: #fff !important;
-	}
-	.filled.theme--dark {
-		background: #424242 !important;
-	}
-	.background-transition-enter-active,
-	.background-transition-leave-active {
-		transition: all 0.2s;
-	}
-	.background-transition-enter,
-	.background-transition-leave-to {
-		opacity: 0;
-	}
-	.transition-enter-active {
-		transition: all 0.2s;
-	}
-	.transition-leave-active {
-		transition: all 0.3s;
-	}
-	.transition-enter-to,
-	.transition-leave {
-		opacity: 1;
-		transform: scaleY(1) !important;
-	}
-	.transition-enter,
-	.transition-leave-to {
-		opacity: 0;
-		transform: scaleY(0) !important;
-	}
-	.page-tint {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background-color: rgba(0, 0, 0, 0.15);
-		z-index: 6;
-	}
+.health-bar {
+  background: inherit;
+}
+
+.name {
+  text-align: center;
+  cursor: pointer;
+  min-width: 150px;
+  flex-basis: 150px;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.name:hover {
+  font-weight: 500;
+}
+
+.bar {
+  transition: box-shadow 0.2s;
+}
+
+.bar:hover {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.hover {
+  background: #f5f5f5 !important;
+}
+
+.theme--dark .hover {
+  background: #515151 !important;
+}
+
+.filled.theme--light {
+  background: #fff !important;
+}
+
+.filled.theme--dark {
+  background: #424242 !important;
+}
+
+.background-transition-enter-active,
+.background-transition-leave-active {
+  transition: all 0.2s;
+}
+
+.background-transition-enter,
+.background-transition-leave-to {
+  opacity: 0;
+}
+
+.transition-enter-active {
+  transition: all 0.2s;
+}
+
+.transition-leave-active {
+  transition: all 0.3s;
+}
+
+.transition-enter-to,
+.transition-leave {
+  opacity: 1;
+  transform: scaleY(1) !important;
+}
+
+.transition-enter,
+.transition-leave-to {
+  opacity: 0;
+  transform: scaleY(0) !important;
+}
+
+.page-tint {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 6;
+}
 </style>

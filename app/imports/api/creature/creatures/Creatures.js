@@ -8,21 +8,21 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 let Creatures = new Mongo.Collection('creatures');
 
 let CreatureSettingsSchema = new SimpleSchema({
-	//slowed down by carrying too much?
-	useVariantEncumbrance: {
-		type: Boolean,
-		optional: true,
-	},
-	//hide spellcasting tab
-	hideSpellcasting: {
-		type: Boolean,
-		optional: true,
-	},
-	// Swap around the modifier and stat
-	swapStatAndModifier: {
-		type: Boolean,
-		optional: true,
-	},
+  //slowed down by carrying too much?
+  useVariantEncumbrance: {
+    type: Boolean,
+    optional: true,
+  },
+  //hide spellcasting tab
+  hideSpellcasting: {
+    type: Boolean,
+    optional: true,
+  },
+  // Swap around the modifier and stat
+  swapStatAndModifier: {
+    type: Boolean,
+    optional: true,
+  },
   // Hide all the unused stats
   hideUnusedStats: {
     type: Boolean,
@@ -58,28 +58,28 @@ let CreatureSettingsSchema = new SimpleSchema({
 });
 
 let CreatureSchema = new SimpleSchema({
-	// Strings
-	name: {
-		type: String,
-		defaultValue: '',
-		optional: true,
+  // Strings
+  name: {
+    type: String,
+    defaultValue: '',
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
-	alignment: {
-		type: String,
-		optional: true,
+  },
+  alignment: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
-	gender: {
-		type: String,
-		optional: true,
+  },
+  gender: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
-	picture: {
-		type: String,
-		optional: true,
+  },
+  picture: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.url,
-	},
+  },
   avatarPicture: {
     type: String,
     optional: true,
@@ -90,37 +90,37 @@ let CreatureSchema = new SimpleSchema({
   allowedLibraries: {
     type: Array,
     optional: true,
-		maxCount: 100,
-	},
-	'allowedLibraries.$': {
-		type: String,
+    maxCount: 100,
+  },
+  'allowedLibraries.$': {
+    type: String,
     regEx: SimpleSchema.RegEx.Id,
-	},
-	allowedLibraryCollections: {
-		type: Array,
+  },
+  allowedLibraryCollections: {
+    type: Array,
     optional: true,
-		maxCount: 100,
-	},
-	'allowedLibraryCollections.$': {
-		type: String,
+    maxCount: 100,
+  },
+  'allowedLibraryCollections.$': {
+    type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
 
-	// Mechanics
-	deathSave: {
-		type: deathSaveSchema,
-		defaultValue: {},
-	},
+  // Mechanics
+  deathSave: {
+    type: deathSaveSchema,
+    defaultValue: {},
+  },
   // Stats that are computed and denormalised outside of recomputation
   denormalizedStats: {
     type: Object,
     defaultValue: {},
   },
   // Sum of all XP gained by this character
-	'denormalizedStats.xp': {
-		type: SimpleSchema.Integer,
-		defaultValue: 0,
-	},
+  'denormalizedStats.xp': {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+  },
   // Sum of all levels granted by milestone XP
   'denormalizedStats.milestoneLevels': {
     type: SimpleSchema.Integer,
@@ -133,24 +133,24 @@ let CreatureSchema = new SimpleSchema({
   },
   // Version of computation engine that was last used to compute this creature
   computeVersion: {
-		type: String,
+    type: String,
     optional: true,
-	},
-	type: {
-		type: String,
-		defaultValue: 'pc',
-		allowedValues: ['pc', 'npc', 'monster'],
-	},
+  },
+  type: {
+    type: String,
+    defaultValue: 'pc',
+    allowedValues: ['pc', 'npc', 'monster'],
+  },
   damageMultipliers: {
     type: Object,
-		blackbox: true,
-		defaultValue: {}
+    blackbox: true,
+    defaultValue: {}
   },
-	variables: {
-		type: Object,
-		blackbox: true,
-		defaultValue: {}
-	},
+  variables: {
+    type: Object,
+    blackbox: true,
+    defaultValue: {}
+  },
   computeErrors: {
     type: Array,
     optional: true,
@@ -161,7 +161,7 @@ let CreatureSchema = new SimpleSchema({
   'computeErrors.$.type': {
     type: String,
   },
-  'computeErrors.$.details' : {
+  'computeErrors.$.details': {
     type: Object,
     blackbox: true,
     optional: true,
@@ -178,11 +178,11 @@ let CreatureSchema = new SimpleSchema({
     optional: true,
   },
 
-	// Settings
-	settings: {
-		type: CreatureSettingsSchema,
-		defaultValue: {},
-	},
+  // Settings
+  settings: {
+    type: CreatureSettingsSchema,
+    defaultValue: {},
+  },
 });
 
 CreatureSchema.extend(ColorSchema);

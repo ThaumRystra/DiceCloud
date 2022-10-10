@@ -4,7 +4,10 @@
       Delete {{ typeName }}
     </v-toolbar-title>
     <div>
-      <v-alert type="warning" outlined>
+      <v-alert
+        type="warning"
+        outlined
+      >
         This can't be undone
       </v-alert>
       <p v-if="name">
@@ -12,9 +15,9 @@
       </p>
       <v-text-field
         v-if="name"
+        v-model="inputName"
         label="Confirmation"
         outlined
-        v-model="inputName"
       />
       <div class="layout justify-center">
         <v-btn
@@ -41,26 +44,35 @@
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 export default {
-	components: {
-		DialogBase,
-	},
-	props: {
-		typeName: String,
-		name: String,
-	},
-	data(){return {
-		inputName: undefined,
-	}},
-	computed: {
-		nameMatch(){
-			if (!this.name) return true;
-			let uppername = this.name.toUpperCase();
-			let upperInputName = this.inputName && this.inputName.toUpperCase();
-			return uppername === upperInputName;
-		},
-	},
+  components: {
+    DialogBase,
+  },
+  props: {
+    typeName: {
+      type: String,
+      default: undefined,
+    },
+    name: {
+      type: String,
+      default: undefined,
+    },
+  },
+  data() {
+    return {
+      inputName: undefined,
+    }
+  },
+  computed: {
+    nameMatch() {
+      if (!this.name) return true;
+      let uppername = this.name.toUpperCase();
+      let upperInputName = this.inputName && this.inputName.toUpperCase();
+      return uppername === upperInputName;
+    },
+  },
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

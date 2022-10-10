@@ -6,28 +6,28 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 
 const updateCreatureProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
-  validate({_id, path}){
-		if (!_id) throw new Meteor.Error('No _id', '_id is required');
-		// We cannot change these fields with a simple update
-		switch (path[0]){
-			case 'type':
+  validate({ _id, path }) {
+    if (!_id) throw new Meteor.Error('No _id', '_id is required');
+    // We cannot change these fields with a simple update
+    switch (path[0]) {
+      case 'type':
       case 'order':
       case 'parent':
       case 'ancestors':
-			case 'damage':
-				throw new Meteor.Error('Permission denied',
-				'This property can\'t be updated directly');
-		}
+      case 'damage':
+        throw new Meteor.Error('Permission denied',
+          'This property can\'t be updated directly');
+    }
   },
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({_id, path, value}) {
+  run({ _id, path, value }) {
     // Permission
     let property = CreatureProperties.findOne(_id, {
-      fields: {type: 1, ancestors: 1}
+      fields: { type: 1, ancestors: 1 }
     });
     let rootCreature = getRootCreatureAncestor(property);
     assertEditPermission(rootCreature, this.userId);
@@ -35,14 +35,14 @@ const updateCreatureProperty = new ValidatedMethod({
     let pathString = path.join('.');
     let modifier;
     // unset empty values
-    if (value === null || value === undefined){
-      modifier = { $unset: {[pathString]: 1}, $set: { dirty: true } };
+    if (value === null || value === undefined) {
+      modifier = { $unset: { [pathString]: 1 }, $set: { dirty: true } };
     } else {
-      modifier = { $set: {[pathString]: value, dirty: true } };
+      modifier = { $set: { [pathString]: value, dirty: true } };
     }
-		CreatureProperties.update(_id, modifier, {
-			selector: {type: property.type},
-		});
+    CreatureProperties.update(_id, modifier, {
+      selector: { type: property.type },
+    });
   },
 });
 

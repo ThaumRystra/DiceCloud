@@ -6,6 +6,18 @@
       hide-on-leave
     >
       <div
+        v-for="pointBuy in pointBuys"
+        :key="pointBuy._id"
+        style="transition: all 0.3s !important"
+      >
+        <point-buy-card
+          :model="pointBuy"
+          hover
+          @ignore="ignoreProp(pointBuy._id)"
+          @click="editPointBuy(pointBuy._id)"
+        />
+      </div>
+      <div
         v-for="slot in slots"
         :key="slot._id"
         style="transition: all 0.3s !important"
@@ -13,7 +25,7 @@
         <slot-card
           :model="slot"
           hover
-          @ignore="ignoreSlot(slot._id)"
+          @ignore="ignoreProp(slot._id)"
           @click="fillSlot(slot._id)"
         />
       </div>
@@ -24,6 +36,7 @@
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SlotCard from '/imports/ui/creature/slots/SlotCard.vue';
+import PointBuyCard from '/imports/ui/properties/components/pointBuy/PointBuyCard.vue';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
@@ -32,13 +45,14 @@ import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 export default {
   components: {
     SlotCard,
+    PointBuyCard,
     ColumnLayout,
   },
   inject: {
     context: { default: {} }
   },
   methods: {
-    ignoreSlot(_id){
+    ignoreProp(_id){
       updateCreatureProperty.call({
         _id,
         path: ['ignored'],
@@ -75,6 +89,16 @@ export default {
         }
       });
     },
+    editPointBuy(_id){
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `point-buy-card-${_id}`,
+        data: {
+          _id,
+          startInEditTab: true,
+        },
+      });
+    },
   },
   meteor: {
     slots(){
@@ -99,7 +123,16 @@ export default {
         removed: {$ne: true},
         inactive: {$ne: true},
       });
-    }
+    },
+    pointBuys(){
+      return CreatureProperties.find({
+        type: 'pointBuy',
+        'ancestors.id': this.context.creatureId,
+        ignored: { $ne: true },       
+        removed: {$ne: true},
+        inactive: {$ne: true},
+      });
+    },
   }
 }
 </script>

@@ -53,9 +53,7 @@
         <slot name="children" />
       </form-section>
 
-      <form-section
-        name="Advanced"
-      >
+      <form-section name="Advanced">
         <smart-combobox
           label="Tags"
           multiple
@@ -87,45 +85,46 @@
 </template>
 
 <script lang="js">
-	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
-	import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
+import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-		components: {
-			ProficiencySelect,
-			FormSection,
-		},
-    mixins: [propertyFormMixin],
-		data(){return{
-			skillTypes: [
-				{
-					text: 'Skill',
-					value: 'skill',
-				}, {
-					text: 'Save',
-					value: 'save',
-				}, {
-					text: 'Check',
-					value: 'check',
-				}, {
-					text: 'Tool',
-					value: 'tool',
-				}, {
-					text: 'Weapon',
-					value: 'weapon',
-				}, {
-					text: 'Armor',
-					value: 'armor',
-				}, {
-					text: 'Language',
-					value: 'language',
-				}, {
-					text: 'Utility',
-					value: 'utility',
-				},
-			],
+export default {
+  components: {
+    ProficiencySelect,
+    FormSection,
+  },
+  mixins: [propertyFormMixin],
+  data() {
+    return {
+      skillTypes: [
+        {
+          text: 'Skill',
+          value: 'skill',
+        }, {
+          text: 'Save',
+          value: 'save',
+        }, {
+          text: 'Check',
+          value: 'check',
+        }, {
+          text: 'Tool',
+          value: 'tool',
+        }, {
+          text: 'Weapon',
+          value: 'weapon',
+        }, {
+          text: 'Armor',
+          value: 'armor',
+        }, {
+          text: 'Language',
+          value: 'language',
+        }, {
+          text: 'Utility',
+          value: 'utility',
+        },
+      ],
       skillTypeHints: {
         skill: 'A normal character sheet skill like Athletics, Deception, or Investigation',
         'save': 'A saving throw the character can make: Strength Save, etc.',
@@ -136,17 +135,19 @@
         'language': 'A language proficiency. Be sure to add a base proficiency in the advanced section.',
         'utility': 'A skill that does not show up in the sheet, but can be used by other caclulations',
       }
-		};},
-    meteor: {
-      abilityScoreList(){
-        return createListOfProperties({
-          type: 'attribute',
-          attributeType: 'ability',
-        });
-      },
+    };
+  },
+  meteor: {
+    abilityScoreList() {
+      return createListOfProperties({
+        type: 'attribute',
+        attributeType: 'ability',
+      });
     },
-	};
+  },
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

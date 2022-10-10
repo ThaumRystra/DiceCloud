@@ -1,5 +1,8 @@
 <template lang="html">
-  <dialog-base v-if="model" :color="model.color">
+  <dialog-base
+    v-if="model"
+    :color="model.color"
+  >
     <template slot="toolbar">
       <v-toolbar-title>
         Character Details
@@ -37,23 +40,23 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 
 export default {
-	components: {
-		DialogBase,
-		CreatureForm,
+  components: {
+    DialogBase,
+    CreatureForm,
     ColorPicker,
-	},
-	props: {
-		_id: {
+  },
+  props: {
+    _id: {
       type: String,
       required: true,
     },
-		startInEditTab: Boolean,
-	},
-	meteor: {
-		model(){
-			return Creatures.findOne(this._id);
-		},
-    editPermission(){
+    startInEditTab: Boolean,
+  },
+  meteor: {
+    model() {
+      return Creatures.findOne(this._id);
+    },
+    editPermission() {
       try {
         assertEditPermission(this.model, Meteor.userId());
         return true;
@@ -61,12 +64,12 @@ export default {
         return false;
       }
     },
-	},
-	methods: {
-		change({path, value, ack}){
-			updateCreature.call({_id: this._id, path, value}, (error) =>{
-        if (error){
-          if(ack){
+  },
+  methods: {
+    change({ path, value, ack }) {
+      updateCreature.call({ _id: this._id, path, value }, (error) => {
+        if (error) {
+          if (ack) {
             ack(error && error.reason || error)
           } else {
             console.error(error)
@@ -74,11 +77,12 @@ export default {
         } else if (ack) {
           ack();
         }
-			});
-		},
-	}
+      });
+    },
+  }
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

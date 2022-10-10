@@ -38,9 +38,7 @@
           :disabled="model.insufficientResources || !context.editPermission"
           @click.stop="doAction"
         >
-          <property-icon
-            :model="model"
-          />
+          <property-icon :model="model" />
         </v-btn>
       </div>
       <div
@@ -50,9 +48,7 @@
         @mouseleave="hovering = false"
         @click="$emit('click')"
       >
-        <div
-          class="action-title my-1"
-        >
+        <div class="action-title my-1">
           {{ model.name || propertyName }}
         </div>
         <div class="action-sub-title layout align-center">
@@ -89,16 +85,13 @@
         />
       </template>
       <template v-if="model.summary">
-        <markdown-text
-          :markdown="model.summary.value || model.summary.text"
-        />
+        <markdown-text :markdown="model.summary.value || model.summary.text" />
       </template>
-      <v-divder v-if="model.children && model.children.length" />
-      <creature-properties-tree
-        style="width: 100%;"
-        expanded
-        :root="{collection: 'creatureProperties', id: model._id}"
-        @length="childrenLength = $event"
+      <v-divider v-if="children && children.length" />
+      <tree-node-list
+        v-if="children && children.length"
+        start-expanded
+        :children="children"
         @selected="e => $emit('sub-click', e)"
       />
     </div>
@@ -115,9 +108,12 @@ import ItemConsumedView from '/imports/ui/properties/components/actions/ItemCons
 import PropertyIcon from '/imports/ui/properties/shared/PropertyIcon.vue';
 import RollPopup from '/imports/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/ui/components/MarkdownText.vue';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import CardHighlight from '/imports/ui/components/CardHighlight.vue';
-import CreaturePropertiesTree from '/imports/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import TreeNodeList from '/imports/ui/components/tree/TreeNodeList.vue';
+import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { some } from 'lodash';
 
 export default {
   components: {
@@ -127,7 +123,7 @@ export default {
     PropertyIcon,
     RollPopup,
     CardHighlight,
-    CreaturePropertiesTree,
+    TreeNodeList,
   },
   inject: {
     context: {
@@ -145,20 +141,22 @@ export default {
       required: true,
     },
   },
-  data(){return {
-    activated: undefined,
-    doActionLoading: false,
-    hovering: false,
-  }},
+  data() {
+    return {
+      activated: undefined,
+      doActionLoading: false,
+      hovering: false,
+    }
+  },
   computed: {
-    rollBonus(){
+    rollBonus() {
       if (!this.model.attackRoll) return;
       return numberToSignedString(this.model.attackRoll.value);
     },
-    rollBonusTooLong(){
+    rollBonusTooLong() {
       return this.rollBonus && this.rollBonus.length > 3;
     },
-    propertyName(){
+    propertyName() {
       return getPropertyName(this.model.type);
     },
     cardClasses() {
@@ -173,12 +171,41 @@ export default {
     actionTypeIcon() {
       return `$vuetify.icons.${this.model.actionType}`;
     },
-	},
+  },
+  meteor: {
+    children() {
+      const indicesOfTerminatingProps = [];
+      const decendants = CreatureProperties.find({
+        'ancestors.id': this.model._id,
+        'removed': { $ne: true },
+      }, {
+        sort: {order: 1}
+      }).map(prop => {
+        // Get all the props we don't want to show the decendants of and
+        // where they might appear in the ancestor list
+        if (prop.type === 'buff' || prop.type === 'folder') {
+          indicesOfTerminatingProps.push({
+            id: prop._id,
+            ancestorIndex: prop.ancestors.length,
+          });
+        }
+        return prop;
+      }).filter(prop => {
+        // Filter out folders entirely
+        if (prop.type === 'folder') return false;
+        // Filter out decendants of terminating props
+        return !some(indicesOfTerminatingProps, buffIndex => {
+          return prop.ancestors[buffIndex.ancestorIndex]?.id === buffIndex.id;
+        });
+      });
+      return nodeArrayToTree(decendants);
+    },
+  },
   methods: {
-    click(e){
-			this.$emit('click', e);
-		},
-    doAction({advantage}){
+    click(e) {
+      this.$emit('click', e);
+    },
+    doAction({ advantage }) {
       this.doActionLoading = true;
       this.shwing();
       doAction.call({
@@ -188,13 +215,13 @@ export default {
         }
       }, error => {
         this.doActionLoading = false;
-        if (error){
+        if (error) {
           console.error(error);
-          snackbar({text: error.reason});
+          snackbar({ text: error.reason });
         }
       });
     },
-    shwing(){
+    shwing() {
       this.activated = true;
       setTimeout(() => {
         this.activated = undefined;
@@ -209,9 +236,11 @@ export default {
   transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1),
     transform 0.075s ease;
 }
+
 .action-card.active {
   transform: scale(0.92);
 }
+
 .action-title {
   font-size: 16px;
   font-weight: 400;
@@ -222,9 +251,10 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: .3s cubic-bezier(.25,.8,.5,1);
+  transition: .3s cubic-bezier(.25, .8, .5, 1);
   width: 100%;
 }
+
 .action-sub-title {
   color: #9e9e9e;
   flex-grow: 0;
@@ -236,15 +266,19 @@ export default {
   text-overflow: ellipsis;
   width: 100%;
 }
+
 .action-child {
   height: 32px;
 }
+
 .theme--light.muted-text {
-  color: rgba(0,0,0,.3) !important;
+  color: rgba(0, 0, 0, .3) !important;
 }
+
 .theme--dark.muted-text {
-  color: hsla(0,0%,100%,.3) !important;
+  color: hsla(0, 0%, 100%, .3) !important;
 }
+
 .action-card {
   transition: transform 0.15s cubic;
 }
@@ -252,12 +286,14 @@ export default {
 
 <style lang="css">
 .action-card.theme--light.muted-text .v-icon {
-  color: rgba(0,0,0,.3) !important;
+  color: rgba(0, 0, 0, .3) !important;
 }
+
 .action-card.theme--dark.muted-text .v-icon {
-  color: hsla(0,0%,100%,.3) !important;
+  color: hsla(0, 0%, 100%, .3) !important;
 }
-.action-card .property-description > p:last-of-type {
+
+.action-card .property-description>p:last-of-type {
   margin-bottom: 0;
 }
 </style>

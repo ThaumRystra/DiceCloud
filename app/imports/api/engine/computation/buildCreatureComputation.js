@@ -12,7 +12,7 @@ import computeToggleDependencies from './buildComputation/computeToggleDependenc
 import linkCalculationDependencies from './buildComputation/linkCalculationDependencies.js';
 import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
-import CreatureComputation from './CreatureComputation.js';
+import CreatureComputation from './CreatureComputation.ts';
 import removeSchemaFields from './buildComputation/removeSchemaFields.js';
 
 /**

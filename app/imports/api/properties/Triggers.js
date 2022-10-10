@@ -109,6 +109,11 @@ let TriggerSchema = createPropertySchema({
     type: String,
     max: STORAGE_LIMITS.tagLength,
   },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 const ComputedOnlyTriggerSchema = createPropertySchema({

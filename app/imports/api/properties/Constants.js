@@ -13,29 +13,29 @@ import resolve, { Context, traverse } from '/imports/parser/resolve.js';
  */
 let ConstantSchema = new SimpleSchema({
   name: {
-		type: String,
-		optional: true,
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
+  },
   // The technical, lowercase, single-word name used in formulae
   variableName: {
     type: String,
-		regEx: VARIABLE_NAME_REGEX,
+    regEx: VARIABLE_NAME_REGEX,
     min: 2,
     defaultValue: 'newConstant',
     max: STORAGE_LIMITS.variableName,
   },
-	// The input value to be parsed, must return a constant node or an array
+  // The input value to be parsed, must return a constant node or an array
   // of constant nodes to be valid
-	calculation: {
-		type: String,
-		optional: true,
+  calculation: {
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.calculation,
-	},
+  },
   errors: {
     type: Array,
     maxCount: STORAGE_LIMITS.errorCount,
-    autoValue(){
+    autoValue() {
       let calc = this.field('calculation');
       if (!calc.isSet && this.isModifier) {
         this.unset()
@@ -44,27 +44,27 @@ let ConstantSchema = new SimpleSchema({
       let string = calc.value;
       if (!string) return [];
       // Evaluate the calculation with no scope
-      let {result, context} = parseString(string);
+      let { result, context } = parseString(string);
       // Any existing errors will result in an early failure
       if (context && context.errors.length) return context.errors;
       // Ban variables in constants if necessary
       result && traverse(result, node => {
-        if (node.parseType === 'symbol' || node.parseType === 'accessor'){
+        if (node.parseType === 'symbol' || node.parseType === 'accessor') {
           context.error('Variables can\'t be used to define a constant');
         }
       });
       return context && context.errors || [];
     }
   },
-  'errors.$':{
+  'errors.$': {
     type: ErrorSchema,
   },
 });
 
-function parseString(string, fn = 'compile'){
+function parseString(string, fn = 'compile') {
   let context = new Context();
-  if (!string){
-    return {result: string, context};
+  if (!string) {
+    return { result: string, context };
   }
 
   // Parse the string using mathjs
@@ -74,11 +74,11 @@ function parseString(string, fn = 'compile'){
   } catch (e) {
     let message = prettifyParseError(e);
     context.error(message);
-    return {context};
+    return { context };
   }
-  if (!node) return {context};
-  let {result} = resolve(fn, node, {/*empty scope*/}, context);
-  return {result, context}
+  if (!node) return { context };
+  let { result } = resolve(fn, node, {/*empty scope*/ }, context);
+  return { result, context }
 }
 
 const ComputedOnlyConstantSchema = new SimpleSchema({});

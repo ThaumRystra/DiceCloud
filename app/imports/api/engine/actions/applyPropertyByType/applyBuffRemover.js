@@ -13,7 +13,7 @@ export default function applyBuffRemover(node, actionContext) {
   const prop = node.node;
 
   // Log Name
-  if (prop.name){
+  if (prop.name && !prop.silent){
     actionContext.addLog({ name: prop.name });
   }
 
@@ -29,7 +29,7 @@ export default function applyBuffRemover(node, actionContext) {
       });
       return;
     }
-    removeBuff(nearestBuff, actionContext);
+    removeBuff(nearestBuff, actionContext, prop);
   } else {
     // Get all the buffs targeted by tags
     const allBuffs = getPropertiesOfType(actionContext.creature._id, 'buff');
@@ -41,7 +41,7 @@ export default function applyBuffRemover(node, actionContext) {
     if (prop.removeAll) {
       // Remove all matching buffs
       targetedBuffs.forEach(buff => {
-        removeBuff(buff, actionContext);
+        removeBuff(buff, actionContext, prop);
       });
     } else {
       // Sort in reverse order
@@ -49,7 +49,7 @@ export default function applyBuffRemover(node, actionContext) {
       // Remove the one with the highest order
       const buff = targetedBuffs[0];
       if (buff) {
-        removeBuff(buff, actionContext);
+        removeBuff(buff, actionContext, prop);
       }
     }
   }
@@ -60,8 +60,8 @@ export default function applyBuffRemover(node, actionContext) {
   node.children.forEach(child => applyProperty(child, actionContext));
 }
 
-function removeBuff(buff, actionContext) {
-  actionContext.addLog({
+function removeBuff(buff, actionContext, prop) {
+  if (!prop.silent) actionContext.addLog({
     name: 'Removed',
     value: `${buff.name || 'Buff'}`
   });
