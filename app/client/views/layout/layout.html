@@ -5,8 +5,8 @@
 		</app-drawer>
 		{{> yield}}
 	</app-drawer-layout>
-  {{#if disconnected}}
-    <div style="
+	{{#if disconnected}}
+	<div style="
       position: absolute;
       bottom: 0;
       left: 00;
@@ -15,9 +15,9 @@
       background: rgb(209 59 46);;
       color: white;
       text-align: center;">
-      Disconnected, changes won't be saved. {{#if connectionStatus}}({{connectionStatus}}){{/if}}
-    </div>
-  {{/if}}
+		Disconnected, changes won't be saved. {{#if connectionStatus}}({{connectionStatus}}){{/if}}
+	</div>
+	{{/if}}
 	<paper-toast id="global-toast" duration="5000">
 		{{> Template.dynamic template=globalToastTemplate data=globalToastData }}
 	</paper-toast>
@@ -31,17 +31,23 @@
 		<app-header id="accountSummary" effects="waterfall parallax-background" condenses fixed>
 			<app-toolbar>
 				{{#if currentUser}}
-					<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
-						{{profileLink}}
-					</a>
+				<a href="/account" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+					{{profileLink}}
+				</a>
 				{{else}}
-					<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
-						Sign in
-					</a>
+				<a href="/sign-in" style="text-decoration: underline; cursor: pointer; font-size: 16px;">
+					Sign in
+				</a>
 				{{/if}}
 			</app-toolbar>
 		</app-header>
 		<div id="navPanel">
+			<a class="version-2" href="https://beta.dicecloud.com" tabindex="-1" style="color: rgb(182, 39, 26);">
+				<paper-icon-item>
+					<iron-icon id="v2-icon" icon="arrow-upward" item-icon></iron-icon>
+					<b>Try Version 2</b>
+				</paper-icon-item>
+			</a>
 			<a href="/" tabindex="-1">
 				<paper-icon-item id="homeNav">
 					<iron-icon icon="home" item-icon></iron-icon>
@@ -74,11 +80,8 @@
 				<paper-icon-item>
 					<iron-icon id="patreon-link-icon" icon="dicecloud:patreon" item-icon></iron-icon>
 					{{#if showPatreonBadge}}
-						<paper-badge
-		            icon="av:new-releases"
-		            for="patreon-link-icon"
-		            label="New post">
-		        </paper-badge>
+					<paper-badge icon="av:new-releases" for="patreon-link-icon" label="New post">
+					</paper-badge>
 					{{/if}}
 					Patreon
 				</paper-icon-item>
