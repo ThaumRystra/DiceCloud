@@ -69,7 +69,7 @@ const doAction = new ValidatedMethod({
     let slot;
 
     // If a spell requires a slot, make sure a slot is spent
-    if (!spell.castWithoutSpellSlots && !(ritual && spell.ritual)) {
+    if (spell.level && !spell.castWithoutSpellSlots && !(ritual && spell.ritual)) {
       slot = CreatureProperties.findOne(slotId);
       if (!slot) {
         throw new Meteor.Error('No slot',
