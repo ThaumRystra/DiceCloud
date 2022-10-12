@@ -23,7 +23,7 @@ const doCheck = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({propId, scope}) {
+  run({ propId, scope }) {
     const prop = CreatureProperties.findOne(propId);
     const creatureId = prop.ancestors[0].id;
     const actionContext = new ActionContext(creatureId, [creatureId], this);
@@ -33,13 +33,13 @@ const doCheck = new ValidatedMethod({
     assertEditPermission(actionContext.creature, this.userId);
 
     // Do the check
-    doCheckWork({prop, actionContext});
+    doCheckWork({ prop, actionContext });
   },
 });
 
 export default doCheck;
 
-export function doCheckWork({prop, actionContext}){
+export function doCheckWork({ prop, actionContext }) {
 
   applyTriggers(actionContext.triggers.check?.before, prop, actionContext);
   rollCheck(prop, actionContext);
@@ -54,17 +54,17 @@ function rollCheck(prop, actionContext) {
   // get the modifier for the roll
   let rollModifier;
   let logName = `${prop.name} check`;
-  if (prop.type === 'skill'){
+  if (prop.type === 'skill') {
     rollModifier = prop.value;
-    if (prop.skillType === 'save'){
-      if (prop.name.match(/save/i)){
+    if (prop.skillType === 'save') {
+      if (prop.name.match(/save/i)) {
         logName = prop.name;
       } else {
         logName = prop.name ? `${prop.name} save` : 'Saving Throw';
       }
     }
-  } else if (prop.type === 'attribute'){
-    if (prop.attributeType === 'ability'){
+  } else if (prop.type === 'attribute') {
+    if (prop.attributeType === 'ability') {
       rollModifier = prop.modifier;
     } else {
       rollModifier = prop.value;
@@ -80,7 +80,7 @@ function rollCheck(prop, actionContext) {
   rollModifier += effectBonus;
 
   let value, values, resultPrefix;
-  if (scope['$checkAdvantage'] === 1){
+  if (scope['$checkAdvantage'] === 1) {
     logName += ' (Advantage)';
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
@@ -90,7 +90,7 @@ function rollCheck(prop, actionContext) {
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
     }
-  } else if (scope['$checkAdvantage'] === -1){
+  } else if (scope['$checkAdvantage'] === -1) {
     logName += ' (Disadvantage)';
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
@@ -106,6 +106,9 @@ function rollCheck(prop, actionContext) {
     resultPrefix = `1d20 [ ${value} ] ${rollModifierText} = `
   }
   const result = (value + rollModifier) || 0;
+  scope['$checkDiceRoll'] = value;
+  scope['$checkRoll'] = result;
+  scope['$checkModifier'] = rollModifier;
   actionContext.addLog({
     name: logName,
     value: `${resultPrefix} **${result}**`,
@@ -116,7 +119,7 @@ function applyUnresolvedEffects(prop, scope) {
   let effectBonus = 0;
   let effectString = '';
   if (!prop.effects) {
-    return { effectBonus, effectString};
+    return { effectBonus, effectString };
   }
   prop.effects.forEach(effect => {
     if (!effect.amount?.parseNode) return;
@@ -127,5 +130,5 @@ function applyUnresolvedEffects(prop, scope) {
     effectBonus += effect.amount.value;
     effectString += ` ${effect.amount.value < 0 ? '-' : '+'} [${effect.amount.calculation}] ${Math.abs(effect.amount.value)}`
   });
-  return { effectBonus, effectString};
+  return { effectBonus, effectString };
 }
