@@ -1,7 +1,10 @@
 <template>
   <v-container class="documentation">
-    <v-row>
-      <v-col cols="12">
+    <v-row justify="center">
+      <v-col
+        cols="12"
+        lg="8"
+      >
         <v-fade-transition mode="out-in">
           <v-card
             v-if="doc"

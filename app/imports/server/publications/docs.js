@@ -8,6 +8,7 @@ const docPaths = [
   'dependency-loops',
   'docs',
   'tags',
+  'walkthroughs/create-a-class',
 ];
 const docs = new Map();
 docPaths.forEach(path => {

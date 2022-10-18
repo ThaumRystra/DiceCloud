@@ -6,6 +6,10 @@ Leveling up a class means choosing, or manually adding, class level properties t
 
 The total level of the class can be accessed in calculations using `classVariableName.level`.
 
+## Making your own class
+
+See [Create a Class](/docs/walkthroughs/create-a-class)
+
 ---
 
 ### Name
