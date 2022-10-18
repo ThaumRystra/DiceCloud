@@ -11,7 +11,7 @@ accounts-google@1.4.0
 email@2.2.1
 meteor-base@1.5.1
 mobile-experience@1.1.0
-mongo@1.16.0-beta280.7
+mongo@1.16.0
 session@1.2.0
 tracker@1.2.0
 logging@1.3.1
@@ -48,4 +48,4 @@ simple:rest-bearer-token-parser
 simple:rest-json-error-handler
 littledata:synced-cron
 mdg:meteor-apm-agent
-typescript
+typescript@4.5.4
