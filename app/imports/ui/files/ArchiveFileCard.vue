@@ -44,17 +44,19 @@ export default {
       required: true,
     },
   },
-  data(){return {
-    restoreLoading: false,
-    removeLoading: false,
-  }},
-   meteor: {
-    characterSlots(){
+  data() {
+    return {
+      restoreLoading: false,
+      removeLoading: false,
+    }
+  },
+  meteor: {
+    characterSlots() {
       return characterSlotsRemaining(Meteor.userId());
     },
-   },
+  },
   methods: {
-    restore(){
+    restore() {
       this.restoreLoading = true;
       restoreCreatureFromFile.call({
         fileId: this.model._id,
@@ -62,26 +64,26 @@ export default {
         this.restoreLoading = false;
         if (!error) return;
         console.error(error);
-        snackbar({text: error.reason});
+        snackbar({ text: error.reason });
       });
     },
-    removeArchiveCharacter(){
-			let that = this;
-			this.$store.commit('pushDialogStack', {
-				component: 'delete-confirmation-dialog',
-				elementId: `${that.model._id}-archive-card`,
-				data: {
-					name: this.model.meta.creatureName,
-					typeName: 'Character Archive'
-				},
-				callback(confirmation){
-					if(!confirmation) return;
-					removeArchiveCreature.call({fileId: that.model._id}, (error) => {
-						if (error) console.error(error);
-					});
-				}
-			});
-		},
+    removeArchiveCharacter() {
+      let that = this;
+      this.$store.commit('pushDialogStack', {
+        component: 'delete-confirmation-dialog',
+        elementId: `${that.model._id}-archive-card`,
+        data: {
+          name: this.model.meta.creatureName,
+          typeName: 'Character Archive'
+        },
+        callback(confirmation) {
+          if (!confirmation) return;
+          removeArchiveCreature.call({ fileId: that.model._id }, (error) => {
+            if (error) console.error(error);
+          });
+        }
+      });
+    },
   },
 }
 </script>

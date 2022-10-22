@@ -9,34 +9,41 @@
         :error-messages="errors.name"
         @change="change('name', ...arguments)"
       />
-      <form-section
-        name="Advanced"
-        standalone
-      >
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
-        />
-      </form-section>
+      <form-sections>
+        <form-section
+          v-if="$slots.children"
+          name="Children"
+        >
+          <slot name="children" />
+        </form-section>
+
+        <form-section name="Advanced">
+          <smart-combobox
+            label="Tags"
+            multiple
+            chips
+            deletable-chips
+            :value="model.tags"
+            @change="change('tags', ...arguments)"
+          />
+        </form-section>
+      </form-sections>
     </div>
   </div>
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 
-	export default {
-    components: {
-			FormSection,
-		},
-    mixins: [propertyFormMixin],
-	};
+export default {
+  components: {
+    FormSection,
+  },
+  mixins: [propertyFormMixin],
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

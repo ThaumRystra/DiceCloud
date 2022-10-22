@@ -13,6 +13,16 @@
 </template>
 
 <script lang="js">
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
+const filterOptions = [];
+for (let key in PROPERTIES) {
+  if (key === 'reference') continue;
+  filterOptions.push({
+    text: PROPERTIES[key].name,
+    value: key,
+  });
+}
+
 export default {
   props: {
     value: {
@@ -22,27 +32,7 @@ export default {
   },
   data(){return {
     filterTerms: [],
-    filterOptions: [
-      {text: 'Actions', value: 'action'},
-      {text: 'Attacks', value: 'attack'},
-      {text: 'Attributes', value: 'attribute'},
-      {text: 'Buffs', value: 'buff'},
-      {text: 'Class Levels', value: 'classLevel'},
-      {text: 'Damage Multipliers', value: 'damageMultiplier'},
-      {text: 'Effects', value: 'effect'},
-      {text: 'Experiences', value: 'experience'},
-      {text: 'Features', value: 'feature'},
-      {text: 'Folders', value: 'folder'},
-      {text: 'Notes', value: 'note'},
-      {text: 'Proficiencies', value: 'proficiency'},
-      {text: 'Rolls', value: 'roll'},
-      {text: 'Saving Throws', value: 'savingThrow'},
-      {text: 'Skills', value: 'skill'},
-      {text: 'Spell Lists', value: 'spellList'},
-      {text: 'Spells', value: 'spell'},
-      {text: 'Containers', value: 'container'},
-      {text: 'Items', value: 'item'},
-    ],
+    filterOptions,
   }},
   computed: {
     filter(){

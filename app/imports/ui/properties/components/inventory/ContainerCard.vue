@@ -30,9 +30,7 @@
         >
           $vuetify.icons.two_coins
         </v-icon>
-        <coin-value
-          :value="value"
-        />
+        <coin-value :value="value" />
       </v-toolbar-title>
     </template>
     <v-card-text class="px-0">
@@ -52,57 +50,57 @@ import CoinValue from '/imports/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
 
 export default {
-	components: {
-		ToolbarCard,
+  components: {
+    ToolbarCard,
     ItemList,
     CoinValue,
-	},
-	props: {
-		model: {
+  },
+  props: {
+    model: {
       type: Object,
       required: true,
     },
-	},
+  },
   computed: {
-    weight(){
+    weight() {
       const contentWeight = this.model.contentsWeightless ?
         0 :
         this.model.contentsWeight || 0;
       const ownWeight = this.model.weight || 0;
       return stripFloatingPointOddities(contentWeight + ownWeight);
     },
-    value(){
+    value() {
       const contentValue = this.model.contentsValue || 0;
       const ownValue = this.model.value || 0;
       return contentValue + ownValue;
     }
   },
-	methods: {
-		clickContainer(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `${_id}`,
-				data: {_id},
-			});
-		},
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `tree-node-${_id}`,
-				data: {_id},
-			});
-		},
-	},
+  methods: {
+    clickContainer(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `${_id}`,
+        data: { _id },
+      });
+    },
+    clickProperty(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `tree-node-${_id}`,
+        data: { _id },
+      });
+    },
+  },
   meteor: {
-    items(){
+    items() {
       return CreatureProperties.find({
         'parent.id': this.model._id,
-        type: {$in: ['item', 'container']},
-        removed: {$ne: true},
-        equipped: {$ne: true},
-        deactivatedByAncestor: {$ne: true},
+        type: { $in: ['item', 'container'] },
+        removed: { $ne: true },
+        equipped: { $ne: true },
+        deactivatedByAncestor: { $ne: true },
       }, {
-        sort: {order: 1},
+        sort: { order: 1 },
       });
     },
   }
@@ -110,4 +108,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

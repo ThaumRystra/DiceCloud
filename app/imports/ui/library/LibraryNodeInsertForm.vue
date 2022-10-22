@@ -46,41 +46,50 @@ import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 
 export default {
-	components: {
-		...propertyFormIndex,
-		DialogBase,
+  components: {
+    ...propertyFormIndex,
+    DialogBase,
     ColorPicker,
-	},
-	mixins: [schemaFormMixin],
-	props: {
-		propertyName: String,
-		type: String,
-	},
+  },
+  mixins: [schemaFormMixin],
+  props: {
+    propertyName: {
+      type: String,
+      default: undefined,
+    },
+    type: {
+      type: String,
+      default: undefined,
+    },
+  },
   reactiveProvide: {
     name: 'context',
     include: ['debounceTime', 'isLibraryForm'],
   },
-	data(){return {
-		model: {
-			type: this.type,
-		},
-		schema: undefined,
-		validationContext: undefined,
-    debounceTime: 0,
-    isLibraryForm: true,
-	};},
-	watch: {
-		type(newType){
-			if (!newType) return;
-			this.schema = propertySchemasIndex[newType];
-			this.validationContext = this.schema.newContext();
-			let model = this.schema.clean({});
-			model.type = newType;
-			this.model = model;
-		},
-	},
+  data() {
+    return {
+      model: {
+        type: this.type,
+      },
+      schema: undefined,
+      validationContext: undefined,
+      debounceTime: 0,
+      isLibraryForm: true,
+    };
+  },
+  watch: {
+    type(newType) {
+      if (!newType) return;
+      this.schema = propertySchemasIndex[newType];
+      this.validationContext = this.schema.newContext();
+      let model = this.schema.clean({});
+      model.type = newType;
+      this.model = model;
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

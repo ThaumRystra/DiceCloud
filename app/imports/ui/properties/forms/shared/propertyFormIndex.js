@@ -1,9 +1,10 @@
 const ActionForm = () => import('/imports/ui/properties/forms/ActionForm.vue');
 const AdjustmentForm = () => import('/imports/ui/properties/forms/AdjustmentForm.vue');
-const AttackForm = () => import('/imports/ui/properties/forms/AttackForm.vue');
 const AttributeForm = () => import('/imports/ui/properties/forms/AttributeForm.vue');
 const BuffForm = () => import('/imports/ui/properties/forms/BuffForm.vue');
+const BuffRemoverForm = () => import('/imports/ui/properties/forms/BuffRemoverForm.vue');
 const BranchForm = () => import('/imports/ui/properties/forms/BranchForm.vue');
+const ClassForm = () => import('/imports/ui/properties/forms/ClassForm.vue');
 const ClassLevelForm = () => import('/imports/ui/properties/forms/ClassLevelForm.vue');
 const ConstantForm = () => import('/imports/ui/properties/forms/ConstantForm.vue');
 const ContainerForm = () => import('/imports/ui/properties/forms/ContainerForm.vue');
@@ -14,6 +15,7 @@ const FeatureForm = () => import('/imports/ui/properties/forms/FeatureForm.vue')
 const FolderForm = () => import('/imports/ui/properties/forms/FolderForm.vue');
 const ItemForm = () => import('/imports/ui/properties/forms/ItemForm.vue');
 const NoteForm = () => import('/imports/ui/properties/forms/NoteForm.vue');
+const PointBuyForm = () => import('/imports/ui/properties/forms/PointBuyForm.vue');
 const ProficiencyForm = () => import('/imports/ui/properties/forms/ProficiencyForm.vue');
 const ReferenceForm = () => import('/imports/ui/properties/forms/ReferenceForm.vue');
 const RollForm = () => import('/imports/ui/properties/forms/RollForm.vue');
@@ -24,18 +26,19 @@ const SlotFillerForm = () => import('/imports/ui/properties/forms/SlotFillerForm
 const SpellListForm = () => import('/imports/ui/properties/forms/SpellListForm.vue');
 const SpellForm = () => import('/imports/ui/properties/forms/SpellForm.vue');
 const ToggleForm = () => import('/imports/ui/properties/forms/ToggleForm.vue');
+const TriggerForm = () => import('/imports/ui/properties/forms/TriggerForm.vue');
 
 export default {
   action: ActionForm,
   adjustment: AdjustmentForm,
-  attack: AttackForm,
   attribute: AttributeForm,
   buff: BuffForm,
+  buffRemover: BuffRemoverForm,
   branch: BranchForm,
   constant: ConstantForm,
   container: ContainerForm,
+  class: ClassForm,
   classLevel: ClassLevelForm,
-  class: SlotForm,
   damage: DamageForm,
   damageMultiplier: DamageMultiplierForm,
   effect: EffectForm,
@@ -43,6 +46,7 @@ export default {
   folder: FolderForm,
   item: ItemForm,
   note: NoteForm,
+  pointBuy: PointBuyForm,
   proficiency: ProficiencyForm,
   propertySlot: SlotForm,
   reference: ReferenceForm,
@@ -53,4 +57,5 @@ export default {
   spellList: SpellListForm,
   spell: SpellForm,
   toggle: ToggleForm,
+  trigger: TriggerForm,
 };

@@ -124,6 +124,7 @@ const expectedMigratedAttribute = {
   damage: 3,
   value: 17,
   constitutionMod: 2,
+  dirty: true,
 }
 
 const exampleAttack = {
@@ -221,6 +222,7 @@ describe('migrateProperty', function() {
       prop: newAction,
       reversed: true,
     });
+    delete reversedAction.dirty;
     assert.deepEqual(action, exampleAction, 'action should not be bashed');
     assert.deepEqual(exampleAction, reversedAction, 'operation should be reversible');
   });

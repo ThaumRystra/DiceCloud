@@ -7,28 +7,28 @@
     style="overflow-y: auto;"
   >
     <template #activator="{ on }">
-      <div class="layout align-center">
-        <v-btn
-          :loading="loading"
-          outlined
-          :min-width="108"
-          v-on="on"
+      <v-btn
+        :loading="loading"
+        outlined
+        :min-width="108"
+        v-bind="$attrs"
+        :style="buttonStyle"
+        v-on="on"
+      >
+        {{ label }}
+        <svg-icon
+          v-if="safeValue && safeValue.shape"
+          right
+          class="ml-2"
+          :shape="safeValue.shape"
+        />
+        <v-icon
+          v-else
+          right
         >
-          {{ label }}
-          <svg-icon
-            v-if="safeValue && safeValue.shape"
-            right
-            class="ml-2"
-            :shape="safeValue.shape"
-          />
-          <v-icon
-            v-else
-            right
-          >
-            mdi-select-search
-          </v-icon>
-        </v-btn>
-      </div>
+          mdi-select-search
+        </v-icon>
+      </v-btn>
     </template>
     <v-card>
       <v-card-text>
@@ -87,44 +87,51 @@ export default {
     SvgIcon,
   },
   mixins: [SmartInput],
-	props: {
+  props: {
     label: {
       type: String,
       default: 'Icon',
     },
-	},
-	data(){return {
-		menu: false,
-    searchString: '',
-    icons: [],
-	};},
+    buttonStyle: {
+      type: String,
+      default: undefined,
+    },
+  },
+  data() {
+    return {
+      menu: false,
+      searchString: '',
+      icons: [],
+    };
+  },
   watch: {
-    menu(value){
-      if (value){
+    menu(value) {
+      if (value) {
         setTimeout(() => {
-          if (this.$refs.iconSearchField){
+          if (this.$refs.iconSearchField) {
             this.$refs.iconSearchField.$children[0].focus();
           }
         }, 100);
       }
     },
   },
-	methods: {
-    search(value, ack){
+  methods: {
+    search(value, ack) {
       this.searchString = value;
       this.icons = [];
-      findIcons.call({search: value}, (error, result) => {
+      findIcons.call({ search: value }, (error, result) => {
         ack(error);
         this.icons = result;
       });
     },
-    select(icon){
+    select(icon) {
       this.menu = false;
       this.change(icon);
     },
-	},
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

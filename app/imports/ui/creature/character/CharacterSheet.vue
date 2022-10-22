@@ -12,9 +12,7 @@
           size="64"
         />
       </div>
-      <div
-        v-else-if="!creature"
-      >
+      <div v-else-if="!creature">
         <v-layout
           column
           align-center
@@ -55,9 +53,7 @@
           <v-tab-item>
             <inventory-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item
-            v-if="!creature.settings.hideSpellsTab"
-          >
+          <v-tab-item v-if="!creature.settings.hideSpellsTab">
             <spells-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
@@ -66,9 +62,7 @@
           <v-tab-item>
             <build-tab :creature-id="creatureId" />
           </v-tab-item>
-          <v-tab-item
-            v-if="creature.settings.showTreeTab"
-          >
+          <v-tab-item v-if="creature.settings.showTreeTab">
             <tree-tab :creature-id="creatureId" />
           </v-tab-item>
         </v-tabs-items>
@@ -78,97 +72,108 @@
 </template>
 
 <script lang="js">
-  //TODO add a "no character found" screen if shown on a false address
-  // or on a character the user does not have permission to view
-	import Creatures from '/imports/api/creature/creatures/Creatures.js';
-	import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
-	import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
-	import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
-	import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
-	import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/JournalTab.vue';
-  import BuildTab from '/imports/ui/creature/character/characterSheetTabs/BuildTab.vue';
-  import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
-  import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-  import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-  import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+//TODO add a "no character found" screen if shown on a false address
+// or on a character the user does not have permission to view
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import StatsTab from '/imports/ui/creature/character/characterSheetTabs/StatsTab.vue';
+import FeaturesTab from '/imports/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
+import InventoryTab from '/imports/ui/creature/character/characterSheetTabs/InventoryTab.vue';
+import SpellsTab from '/imports/ui/creature/character/characterSheetTabs/SpellsTab.vue';
+import CharacterTab from '/imports/ui/creature/character/characterSheetTabs/JournalTab.vue';
+import BuildTab from '/imports/ui/creature/character/characterSheetTabs/BuildTab.vue';
+import TreeTab from '/imports/ui/creature/character/characterSheetTabs/TreeTab.vue';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
-	export default {
-		components: {
-			StatsTab,
-			FeaturesTab,
-			InventoryTab,
-			SpellsTab,
-			CharacterTab,
-      BuildTab,
-			TreeTab,
-		},
-		props: {
-			creatureId: {
-        type: String,
-        required: true,
-      },
-		},
-    reactiveProvide: {
-      name: 'context',
-      include: ['creatureId', 'editPermission'],
+export default {
+  components: {
+    StatsTab,
+    FeaturesTab,
+    InventoryTab,
+    SpellsTab,
+    CharacterTab,
+    BuildTab,
+    TreeTab,
+  },
+  props: {
+    creatureId: {
+      type: String,
+      required: true,
     },
-    computed: {
-      activeTab: {
-        get(){
-          return this.tabs;
-        },
-        set(newTab){
-          this.$emit('update:tabs', newTab);
-        },
+  },
+  reactiveProvide: {
+    name: 'context',
+    include: ['creatureId', 'editPermission'],
+  },
+  computed: {
+    activeTab: {
+      get() {
+        return this.tabs;
       },
-    },
-    watch: {
-      'creature.name'(value){
-        this.$store.commit('setPageTitle', value || 'Character Sheet');
+      set(newTab) {
+        this.$emit('update:tabs', newTab);
       },
     },
-    mounted(){
-      this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
-      let that = this;
-      this.logObserver = CreatureLogs.find({
-        creatureId: this.creatureId,
-      }).observe({
-        added({content}){
-          if (!that.$subReady.singleCharacter) return;
-          if (that.$store.state.rightDrawer) return;
-          snackbar({content});
-        },
+  },
+  watch: {
+    'creature.name'(value) {
+      this.$store.commit('setPageTitle', value || 'Character Sheet');
+    },
+  },
+  mounted() {
+    this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
+    this.nameObserver = Creatures.find({
+      creatureId: this.creatureId,
+    }, {
+      fields: { name: 1 },
+    }).observe({
+      added: ({ name }) =>
+        this.$store.commit('setPageTitle', name || 'Character Sheet'),
+      changed: ({ name }) =>
+        this.$store.commit('setPageTitle', name || 'Character Sheet'),
+    });
+    let that = this;
+    this.logObserver = CreatureLogs.find({
+      creatureId: this.creatureId,
+    }).observe({
+      added({ content }) {
+        if (!that.$subReady.singleCharacter) return;
+        if (that.$store.state.rightDrawer) return;
+        snackbar({ content });
+      },
+    });
+  },
+  beforeDestroy() {
+    this.nameObserver.stop();
+    this.logObserver.stop();
+  },
+  meteor: {
+    $subscribe: {
+      'singleCharacter'() {
+        return [this.creatureId];
+      },
+    },
+    creature() {
+      return Creatures.findOne(this.creatureId, {
+        fields: { variables: 0 }
       });
     },
-    beforeDestroy(){
-      this.logObserver.stop();
+    editPermission() {
+      try {
+        assertEditPermission(this.creature, Meteor.userId());
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
-		meteor: {
-			$subscribe: {
-        'singleCharacter'(){
-					return [this.creatureId];
-				},
-			},
-			creature(){
-				return Creatures.findOne(this.creatureId, {
-          fields: {variables: 0}
-        });
-			},
-      editPermission(){
-        try {
-          assertEditPermission(this.creature, Meteor.userId());
-          return true;
-        } catch (e) {
-          return false;
-        }
-      },
-		},
-	}
+  },
+}
 </script>
 
 <style>
-  .character-sheet .v-window-item {
-    min-height: calc(100vh - 96px);
-    overflow: hidden;
-  }
+.character-sheet .v-window-item {
+  min-height: calc(100vh - 96px);
+  overflow: hidden;
+}
 </style>

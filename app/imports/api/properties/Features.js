@@ -3,19 +3,19 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 let FeatureSchema = createPropertySchema({
-	name: {
-		type: String,
+  name: {
+    type: String,
     max: STORAGE_LIMITS.name,
     optional: true,
-	},
-	summary: {
-		type: 'inlineCalculationFieldToCompute',
-		optional: true,
-	},
+  },
+  summary: {
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
   description: {
-		type: 'inlineCalculationFieldToCompute',
-		optional: true,
-	},
+    type: 'inlineCalculationFieldToCompute',
+    optional: true,
+  },
 });
 
 let ComputedOnlyFeatureSchema = createPropertySchema({

@@ -7,9 +7,7 @@
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-content>
-      <v-list-item-title
-        v-if="Number.isFinite(model.total)"
-      >
+      <v-list-item-title v-if="Number.isFinite(model.total)">
         <div
           v-if="model.total > 4"
           class="layout value"
@@ -57,50 +55,56 @@
 <script lang="js">
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 export default {
-	props: {
-		model: {
+  props: {
+    model: {
       type: Object,
       required: true,
     },
     dark: Boolean,
     hideCastButton: Boolean,
     disabled: Boolean,
-	},
-	computed: {
-    hasClickListener(){
+  },
+  computed: {
+    hasClickListener() {
       return this.$listeners && !!this.$listeners.click;
     },
-	},
-	methods: {
-		signed: numberToSignedString,
-		click(e){
-			this.$emit('click', e);
-		},
-	},
+  },
+  methods: {
+    signed: numberToSignedString,
+    click(e) {
+      this.$emit('click', e);
+    },
+  },
 };
 </script>
 
 <style lang="css" scoped>
-	.spell-slot-list-tile {
-		background: inherit;
-	}
-	.v-list__tile__action {
-		width: 112px;
-    flex-shrink: 0;
-	}
-	.spell-slot-list-tile.hover {
-		background: #f5f5f5 !important;
-	}
-	.theme--dark .spell-slot-list-tile.hover {
-		background: #515151 !important;
-	}
-	.content {
-		cursor: pointer;
-	}
-	.max-value {
-		color: rgba(0,0,0,.54);
-	}
-	.theme--dark .max-value {
-		color: rgba(255, 255, 255, 0.54);
-	}
+.spell-slot-list-tile {
+  background: inherit;
+}
+
+.v-list__tile__action {
+  width: 112px;
+  flex-shrink: 0;
+}
+
+.spell-slot-list-tile.hover {
+  background: #f5f5f5 !important;
+}
+
+.theme--dark .spell-slot-list-tile.hover {
+  background: #515151 !important;
+}
+
+.content {
+  cursor: pointer;
+}
+
+.max-value {
+  color: rgba(0, 0, 0, .54);
+}
+
+.theme--dark .max-value {
+  color: rgba(255, 255, 255, 0.54);
+}
 </style>

@@ -30,13 +30,11 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-title>
-                  <coin-value
-                    :value="creature.variables && creature.variables.valueTotal && creature.variables.valueTotal.value|| 0"
-                  />
+                  <coin-value :value="variables && variables.valueTotal && variables.valueTotal.value|| 0" />
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
-            <v-list-item v-if="creature.variables && creature.variables.itemsAttuned && creature.variables.itemsAttuned.value">
+            <v-list-item v-if="variables && variables.itemsAttuned && variables.itemsAttuned.value">
               <v-list-item-avatar>
                 <v-icon>$vuetify.icons.spell</v-icon>
               </v-list-item-avatar>
@@ -47,7 +45,7 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-title>
-                  {{ creature.variables.itemsAttuned.value }}
+                  {{ variables.itemsAttuned.value }}
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
@@ -85,9 +83,7 @@
         v-for="container in containersWithoutAncestorContainers"
         :key="container._id"
       >
-        <container-card
-          :model="container"
-        />
+        <container-card :model="container" />
       </div>
     </column-layout>
   </div>
@@ -104,82 +100,90 @@ import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
 
 export default {
-	components: {
-		ColumnLayout,
-		ContainerCard,
+  components: {
+    ColumnLayout,
+    ContainerCard,
     ToolbarCard,
     ItemList,
     CoinValue,
-	},
-	props: {
-		creatureId: {
+  },
+  props: {
+    creatureId: {
       type: String,
       required: true,
     },
-	},
-	data(){ return {
-		organize: false,
-	}},
-	meteor: {
-		containers(){
-			return CreatureProperties.find({
-				'ancestors.id': this.creatureId,
-				type: 'container',
-				removed: {$ne: true},
-        inactive: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
-		},
-    creature(){
-      return Creatures.findOne(this.creatureId, {fields: {
-        color: 1,
-        variables: 1,
-      }});
+  },
+  data() {
+    return {
+      organize: false,
+    }
+  },
+  meteor: {
+    containers() {
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'container',
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, {
+        sort: { order: 1 },
+      });
     },
-		containersWithoutAncestorContainers(){
-			return CreatureProperties.find({
-				'ancestors.id': {
-					$eq: this.creatureId,
-					$nin: this.containerIds
-				},
-				type: 'container',
-				removed: {$ne: true},
-        inactive: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
-		},
-    carriedItems(){
+    creature() {
+      return Creatures.findOne(this.creatureId, {
+        fields: {
+          color: 1,
+          variables: 1,
+        }
+      });
+    },
+    variables() {
+      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
+    },
+    containersWithoutAncestorContainers() {
       return CreatureProperties.find({
         'ancestors.id': {
-					$eq: this.creatureId,
-					$nin: this.containerIds
-				},
-				type: 'item',
-        equipped: {$ne: true},
-				removed: {$ne: true},
-        deactivatedByAncestor: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
+          $eq: this.creatureId,
+          $nin: this.containerIds
+        },
+        type: 'container',
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, {
+        sort: { order: 1 },
+      });
     },
-    equippedItems(){
+    carriedItems() {
       return CreatureProperties.find({
         'ancestors.id': {
-					$eq: this.creatureId,
-				},
-				type: 'item',
+          $eq: this.creatureId,
+          $nin: this.containerIds
+        },
+        type: 'item',
+        equipped: { $ne: true },
+        removed: { $ne: true },
+        deactivatedByAncestor: { $ne: true },
+      }, {
+        sort: { order: 1 },
+      });
+    },
+    equippedItems() {
+      return CreatureProperties.find({
+        'ancestors.id': {
+          $eq: this.creatureId,
+        },
+        type: 'item',
         equipped: true,
-				removed: {$ne: true},
-        inactive: {$ne: true},
-			}, {
-				sort: {order: 1},
-			});
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, {
+        sort: { order: 1 },
+      });
     },
-    equipmentParentRef(){
+    equipmentParentRef() {
       return getParentRefByTag(
         this.creatureId, BUILT_IN_TAGS.equipment
       ) || getParentRefByTag(
@@ -189,7 +193,7 @@ export default {
         collection: 'creatures'
       };
     },
-    carriedParentRef(){
+    carriedParentRef() {
       return getParentRefByTag(
         this.creatureId, BUILT_IN_TAGS.carried
       ) || getParentRefByTag(
@@ -199,30 +203,31 @@ export default {
         collection: 'creatures'
       };
     },
-	},
-	computed: {
-		containerIds(){
-			return this.containers.map(container => container._id);
-		},
-    weightCarried(){
+  },
+  computed: {
+    containerIds() {
+      return this.containers.map(container => container._id);
+    },
+    weightCarried() {
       return stripFloatingPointOddities(
-        this.creature.variables &&
-        this.creature.variables.weightCarried &&
-        this.creature.variables.weightCarried.value || 0
+        this.variables &&
+        this.variables.weightCarried &&
+        this.variables.weightCarried.value || 0
       );
     },
-	},
-	methods: {
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `tree-node-${_id}`,
-				data: {_id},
-			});
-		},
-	},
+  },
+  methods: {
+    clickProperty(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `tree-node-${_id}`,
+        data: { _id },
+      });
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

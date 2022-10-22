@@ -100,47 +100,56 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-section
-      name="Advanced"
-      standalone
-    >
-      <smart-combobox
-        label="Tags"
-        class="mr-2"
-        multiple
-        chips
-        deletable-chips
-        hint="Used to let slots find this property in a library, should otherwise be left blank"
-        :value="model.tags"
-        :error-messages="errors.tags"
-        @change="change('tags', ...arguments)"
-      />
-      <smart-switch
-        label="Show increment button"
-        :value="model.showIncrement"
-        :error-messages="errors.showIncrement"
-        @change="change('showIncrement', ...arguments)"
-      />
-      <smart-switch
-        label="Requires attunement"
-        :value="model.requiresAttunement"
-        :error-messages="errors.requiresAttunement"
-        @change="change('requiresAttunement', ...arguments)"
-      />
-      <v-expand-transition>
-        <div
-          v-show="model.requiresAttunement"
-          style="padding-top: 0.1px;"
-        >
-          <smart-switch
-            label="Attuned"
-            :value="model.attuned"
-            :error-messages="errors.attuned"
-            @change="change('attuned', ...arguments)"
-          />
-        </div>
-      </v-expand-transition>
-    </form-section>
+    <form-sections>
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+
+      <form-section
+        name="Advanced"
+        standalone
+      >
+        <smart-combobox
+          label="Tags"
+          class="mr-2"
+          multiple
+          chips
+          deletable-chips
+          hint="Used to let slots find this property in a library, should otherwise be left blank"
+          :value="model.tags"
+          :error-messages="errors.tags"
+          @change="change('tags', ...arguments)"
+        />
+        <smart-switch
+          label="Show increment button"
+          :value="model.showIncrement"
+          :error-messages="errors.showIncrement"
+          @change="change('showIncrement', ...arguments)"
+        />
+        <smart-switch
+          label="Requires attunement"
+          :value="model.requiresAttunement"
+          :error-messages="errors.requiresAttunement"
+          @change="change('requiresAttunement', ...arguments)"
+        />
+        <v-expand-transition>
+          <div
+            v-show="model.requiresAttunement"
+            style="padding-top: 0.1px;"
+          >
+            <smart-switch
+              label="Attuned"
+              :value="model.attuned"
+              :error-messages="errors.attuned"
+              @change="change('attuned', ...arguments)"
+            />
+          </div>
+        </v-expand-transition>
+      </form-section>
+    </form-sections>
   </div>
 </template>
 
@@ -149,9 +158,9 @@ import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {
-	components: {
-		FormSection,
-	},
+  components: {
+    FormSection,
+  },
   mixins: [propertyFormMixin],
-	}
+}
 </script>

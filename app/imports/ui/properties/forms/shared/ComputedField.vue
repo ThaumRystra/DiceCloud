@@ -6,7 +6,7 @@
       @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
     >
       <template
-        v-if="model.value !== undefined || model.value !== null"
+        v-if="showValue"
         #value
       >
         {{ model.value }}
@@ -28,8 +28,20 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    hideValue: {
+      type: Boolean,
+    },
   },
   computed: {
+    showValue() {
+      const value = this.model.value;
+      if (
+        this.hideValue || 
+        (value === undefined || value === null) ||
+        value == this.model.calculation
+      ) return false;
+      return true;
+    },
     errorList(){
       if (this.model.parseError){
         return [this.model.parseError, ...this.model.errors];

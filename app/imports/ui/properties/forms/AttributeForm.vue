@@ -78,7 +78,6 @@
         <form-section
           v-if="model.attributeType === 'healthBar'"
           name="Health Bar Settings"
-          standalone
         >
           <color-picker
             :value="model.healthBarColorMid"
@@ -90,12 +89,58 @@
             label="Empty color"
             @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
           />
+          <v-layout
+            wrap
+            class="mt-4"
+          >
+            <text-field
+              label="Damage order"
+              type="number"
+              style="max-width: 300px;"
+              hint="Lower ordered health bars will take damage before higher ordered ones"
+              class="mr-4"
+              :disabled="model.healthBarNoDamage"
+              :value="model.healthBarDamageOrder"
+              :error-messages="errors.healthBarDamageOrder"
+              @change="change('healthBarDamageOrder', ...arguments)"
+            />
+            <smart-switch
+              label="Ignore damage"
+              :value="model.healthBarNoDamage"
+              :error-messages="errors.healthBarNoDamage"
+              @change="change('healthBarNoDamage', ...arguments)"
+            />
+          </v-layout>
+          <v-layout wrap>
+            <text-field
+              label="Healing order"
+              type="number"
+              style="max-width: 300px;"
+              hint="Lower ordered health bars will take healing before higher ordered ones"
+              class="mr-4"
+              :disabled="model.healthBarNoHealing"
+              :value="model.healthBarHealingOrder"
+              :error-messages="errors.healthBarHealingOrder"
+              @change="change('healthBarHealingOrder', ...arguments)"
+            />
+            <smart-switch
+              label="Ignore healing"
+              :value="model.healthBarNoHealing"
+              :error-messages="errors.healthBarNoHealing"
+              @change="change('healthBarNoHealing', ...arguments)"
+            />
+          </v-layout>
         </form-section>
       </v-expand-transition>
 
       <form-section
-        name="Advanced"
+        v-if="$slots.children"
+        name="Children"
       >
+        <slot name="children" />
+      </form-section>
+
+      <form-section name="Advanced">
         <smart-combobox
           label="Tags"
           multiple
@@ -113,6 +158,18 @@
             :value="model.decimal"
             :error-messages="errors.decimal"
             @change="change('decimal', ...arguments)"
+          />
+          <smart-switch
+            label="Can be damaged into negative values"
+            :value="model.ignoreLowerLimit"
+            :error-messages="errors.ignoreLowerLimit"
+            @change="change('ignoreLowerLimit', ...arguments)"
+          />
+          <smart-switch
+            label="Can be incremented above total"
+            :value="model.ignoreUpperLimit"
+            :error-messages="errors.ignoreUpperLimit"
+            @change="change('ignoreUpperLimit', ...arguments)"
           />
           <div
             class="layout justify-center"
@@ -151,91 +208,93 @@
 </template>
 
 <script lang="js">
-  import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
-	import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import ColorPicker from '/imports/ui/components/ColorPicker.vue';
+import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
+import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 
-	export default {
-		components: {
-			FormSection,
-      FormSections,
-      ColorPicker,
-		},
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
-    },
-		data(){
-			let data = {
-				attributeTypes: [
-					{
-						text: 'Ability score',
-						value: 'ability',
-						help: 'Ability scores are your primary attributes, like Strength and Intelligence',
-					}, {
-						text: 'Stat',
-						value: 'stat',
-						help: 'Stats are attributes with a numerical value like speed or carrying capacity',
-					}, {
-						text: 'Modifier',
-						value: 'modifier',
-						help: 'Modifiers are attributes that are added to rolls, like proficiency bonus',
-					}, {
-						text: 'Hit dice',
-						value: 'hitDice',
-					}, {
-						text: 'Health bar',
-						value: 'healthBar',
-					}, {
-						text: 'Resource',
-						value: 'resource',
-						help: 'Resources are attributes that are spent to fuel actions, like sorcery points or ki'
-					}, {
-						text: 'Spell slot',
-						value: 'spellSlot',
-					}, {
-						text: 'Utility',
-						value: 'utility',
-						help: 'Utility attributes aren\'t displayed on your character sheet, but can be referenced or used in calculations',
-					},
-				],
-				resetOptions: [
-					{
-						text: 'Short rest',
-						value: 'shortRest',
-					}, {
-						text: 'Long rest',
-						value: 'longRest',
-					}
-				],
-			};
-			data.attributeTypeHints = {};
-			data.attributeTypes.forEach(type => {
-				data.attributeTypeHints[type.value] = type.help;
-			});
-			return data;
-		},
-    watch: {
-      'model.attributeType': function(newVal, oldVal){
-        if (newVal === 'hitDice' && !this.model.hitDiceSize){
-          this.$emit('change', {path: ['hitDiceSize'], value: 'd8'});
-        } else if (oldVal === 'hitDice'){
-          this.$emit('change', {path: ['hitDiceSize'], value: undefined});
+export default {
+  components: {
+    FormSection,
+    FormSections,
+    ColorPicker,
+  },
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+  data() {
+    let data = {
+      attributeTypes: [
+        {
+          text: 'Ability score',
+          value: 'ability',
+          help: 'Ability scores are your primary attributes, like Strength and Intelligence',
+        }, {
+          text: 'Stat',
+          value: 'stat',
+          help: 'Stats are attributes with a numerical value like speed or carrying capacity',
+        }, {
+          text: 'Modifier',
+          value: 'modifier',
+          help: 'Modifiers are attributes that are added to rolls, like proficiency bonus',
+        }, {
+          text: 'Hit dice',
+          value: 'hitDice',
+        }, {
+          text: 'Health bar',
+          value: 'healthBar',
+        }, {
+          text: 'Resource',
+          value: 'resource',
+          help: 'Resources are attributes that are spent to fuel actions, like sorcery points or ki'
+        }, {
+          text: 'Spell slot',
+          value: 'spellSlot',
+        }, {
+          text: 'Utility',
+          value: 'utility',
+          help: 'Utility attributes aren\'t displayed on your character sheet, but can be referenced or used in calculations',
+        },
+      ],
+      resetOptions: [
+        {
+          text: 'Short rest',
+          value: 'shortRest',
+        }, {
+          text: 'Long rest',
+          value: 'longRest',
         }
-      },
-    }
-	};
+      ],
+    };
+    data.attributeTypeHints = {};
+    data.attributeTypes.forEach(type => {
+      data.attributeTypeHints[type.value] = type.help;
+    });
+    return data;
+  },
+  watch: {
+    'model.attributeType': function (newVal, oldVal) {
+      if (newVal === 'hitDice' && !this.model.hitDiceSize) {
+        this.$emit('change', { path: ['hitDiceSize'], value: 'd8' });
+      } else if (oldVal === 'hitDice') {
+        this.$emit('change', { path: ['hitDiceSize'], value: undefined });
+      }
+    },
+  }
+};
 </script>
 
 <style lang="css" scoped>
-	.no-flex {
-		flex: initial;
-	}
-	.layout.row.wrap {
-		margin-right: -8px;
-	}
-	.layout.row.wrap > *{
-		margin-right: 8px;
-	}
+.no-flex {
+  flex: initial;
+}
+
+.layout.row.wrap {
+  margin-right: -8px;
+}
+
+.layout.row.wrap>* {
+  margin-right: 8px;
+}
 </style>

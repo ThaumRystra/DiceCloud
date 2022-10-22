@@ -5,9 +5,6 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 /*
  * Actions are things a character can do
- * Any rolls that are children of actions will be rolled when taking the action
- * Any actions that are children of this action will be considered alternatives
- * to this action
  */
 let ActionSchema = createPropertySchema({
   name: {
@@ -115,6 +112,11 @@ let ActionSchema = createPropertySchema({
   },
   'resources.attributesConsumed.$.quantity': {
     type: 'fieldToCompute',
+    optional: true,
+  },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
     optional: true,
   },
 });

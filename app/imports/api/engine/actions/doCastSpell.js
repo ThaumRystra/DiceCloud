@@ -1,14 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import {
+  getProperyAncestors, getPropertyDecendants
+} from '/imports/api/engine/loadCreatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { doActionWork } from '/imports/api/engine/actions/doAction.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
-import { CreatureLogSchema } from '/imports/api/creature/log/CreatureLogs.js';
+import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doCastSpell',
@@ -17,6 +18,10 @@ const doAction = new ValidatedMethod({
     slotId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
+      optional: true,
+    },
+    ritual: {
+      type: Boolean,
       optional: true,
     },
     targetIds: {
@@ -40,101 +45,90 @@ const doAction = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({spellId, slotId, targetIds = [], scope = {}}) {
+  run({ spellId, slotId, ritual, targetIds = [], scope = {} }) {
+    // Get action context
     let spell = CreatureProperties.findOne(spellId);
-		// Check permissions
-    let creature = getRootCreatureAncestor(spell);
+    const creatureId = spell.ancestors[0].id;
+    const actionContext = new ActionContext(creatureId, targetIds, this);
 
-    assertEditPermission(creature, this.userId);
-
-    // Get all the targets and make sure we can edit them
-    let targets = [];
-    targetIds.forEach(targetId => {
-      let target = Creatures.findOne(targetId);
+    // Check permissions
+    assertEditPermission(actionContext.creature, this.userId);
+    actionContext.targets.forEach(target => {
       assertEditPermission(target, this.userId);
-      targets.push(target);
     });
 
-    // Fetch all the action's ancestor creatureProperties
-    const ancestorIds = [];
-    spell.ancestors.forEach(ref => {
-      if (ref.collection === 'creatureProperties') {
-        ancestorIds.push(ref.id);
-      }
-    });
+    const ancestors = getProperyAncestors(creatureId, spell._id);
+    ancestors.sort((a, b) => a.order - b.order);
 
-    // Get cursor of ancestors
-    const ancestors = CreatureProperties.find({
-      _id: {$in: ancestorIds},
-    }, {
-      sort: {order: 1},
-    });
-
-    // Get cursor of the properties
-    const properties = CreatureProperties.find({
-      $or: [{_id: spell._id}, {'ancestors.id': spell._id}],
-      removed: {$ne: true},
-    }, {
-      sort: {order: 1},
-    });
+    const properties = getPropertyDecendants(creatureId, spell._id);
+    properties.push(spell);
+    properties.sort((a, b) => a.order - b.order);
 
     // Spend the appropriate slot
     let slotLevel = spell.level || 0;
     let slot;
-    if (slotId && !spell.castWithoutSpellSlots){
+
+    // If a spell requires a slot, make sure a slot is spent
+    if (spell.level && !spell.castWithoutSpellSlots && !(ritual && spell.ritual)) {
       slot = CreatureProperties.findOne(slotId);
-      if (!slot){
+      if (!slot) {
         throw new Meteor.Error('No slot',
           'Slot not found to cast spell');
       }
-      if (!slot.value){
+      if (!slot.value) {
         throw new Meteor.Error('No slot',
           'Slot depleted');
       }
-      if (slot.attributeType !== 'spellSlot'){
+      if (slot.attributeType !== 'spellSlot') {
         throw new Meteor.Error('Not a slot',
           'The given property is not a valid spell slot');
       }
-      if (!slot.spellSlotLevel?.value){
+      if (!slot.spellSlotLevel?.value) {
         throw new Meteor.Error('No slot level',
           'Slot does not have a spell slot level');
       }
-      if (slot.spellSlotLevel.value < spell.level){
+      if (slot.spellSlotLevel.value < spell.level) {
         throw new Meteor.Error('Slot too small',
           'Slot is not large enough to cast spell');
       }
       slotLevel = slot.spellSlotLevel.value;
       damagePropertyWork({
-        property: slot,
+        prop: slot,
         operation: 'increment',
         value: 1,
+        actionContext,
       });
     }
 
-    scope['slotLevel'] = slotLevel;
-
     // Post the slot level spent to the log
-    const log = CreatureLogSchema.clean({
-      creatureId: creature._id,
-      creatureName: creature.name,
-    });
-    if (slot?.spellSlotLevel?.value){
-      log.content.push({
+    if (slot?.spellSlotLevel?.value) {
+      actionContext.addLog({
         name: `Casting using a level ${slotLevel} spell slot`
       });
     } else if (slotLevel) {
-      log.content.push({
-        name: `Casting at level ${slotLevel}`
-      });
+      if (ritual) {
+        actionContext.addLog({
+          name: `Ritual casting at level ${slotLevel}`
+        });
+      } else {
+        actionContext.addLog({
+          name: `Casting at level ${slotLevel}`
+        });
+      }
     }
 
-    // Do the action
-    doActionWork({creature, targets, properties, ancestors, method: this, methodScope: scope, log});
+    actionContext.scope['slotLevel'] = slotLevel;
 
-    // Recompute all involved creatures
-    computeCreature(creature._id);
-    targets.forEach(target => {
-      computeCreature(target._id);
+    // Do the action
+    doActionWork({
+      properties, ancestors, actionContext, methodScope: scope,
+    });
+
+    // Force the characters involved to recalculate
+    Creatures.update({
+      _id: { $in: [creatureId, ...targetIds] }
+    }, {
+      $set: { dirty: true },
     });
   },
 });

@@ -1,8 +1,7 @@
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import CreatureProperties,
-  { DenormalisedOnlyCreaturePropertySchema as denormSchema }
+import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import linkInventory from './buildComputation/linkInventory.js';
@@ -13,7 +12,7 @@ import computeToggleDependencies from './buildComputation/computeToggleDependenc
 import linkCalculationDependencies from './buildComputation/linkCalculationDependencies.js';
 import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
-import CreatureComputation from './CreatureComputation.js';
+import CreatureComputation from './CreatureComputation.ts';
 import removeSchemaFields from './buildComputation/removeSchemaFields.js';
 
 /**
@@ -32,29 +31,15 @@ import removeSchemaFields from './buildComputation/removeSchemaFields.js';
 
 export default function buildCreatureComputation(creatureId){
   const creature = getCreature(creatureId);
+  const variables = getVariables(creatureId);
   const properties = getProperties(creatureId);
-  const computation = buildComputationFromProps(properties, creature);
+  const computation = buildComputationFromProps(properties, creature, variables);
   return computation;
 }
 
-function getProperties(creatureId){
-  return CreatureProperties.find({
-    'ancestors.id': creatureId,
-    'removed': {$ne: true},
-  }, {
-    sort: {order: 1}
-  }).fetch();
-}
+export function buildComputationFromProps(properties, creature, variables){
 
-function getCreature(creatureId){
-  return Creatures.findOne(creatureId, {
-    denormalizedStats: 1,
-  });
-}
-
-export function buildComputationFromProps(properties, creature){
-
-  const computation = new CreatureComputation(properties);
+  const computation = new CreatureComputation(properties, creature, variables);
   // Dependency graph where edge(a, b) means a depends on b
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies
@@ -81,8 +66,10 @@ export function buildComputationFromProps(properties, creature){
 
   // Process the properties one by one
   properties.forEach(prop => {
+    // The prop has been processed, it's no longer dirty
+    delete prop.dirty;
 
-    let computedSchema = computedOnlySchemas[prop.type];
+    const computedSchema = computedOnlySchemas[prop.type];
     removeSchemaFields([computedSchema, denormSchema], prop);
 
     // Add a place to store all the computation details
@@ -102,6 +89,10 @@ export function buildComputationFromProps(properties, creature){
   // Walk the property trees computing things that need to be inherited
   walkDown(forest, node => {
     computeInactiveStatus(node);
+  });
+  // Inactive status must be complete for the whole tree before toggle deps
+  // are calculated
+  walkDown(forest, node => {
     computeToggleDependencies(node, dependencyGraph);
     computeSlotQuantityFilled(node, dependencyGraph);
   });
@@ -114,5 +105,6 @@ export function buildComputationFromProps(properties, creature){
     linkTypeDependencies(dependencyGraph, prop, computation);
     linkCalculationDependencies(dependencyGraph, prop, computation);
   });
+
   return computation;
 }

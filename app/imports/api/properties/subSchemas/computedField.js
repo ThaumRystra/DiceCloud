@@ -28,6 +28,7 @@ function computedOnlyField(field){
     [`${field}.effects`]: {
       type: Array,
       optional: true,
+      removeBeforeCompute: true,
     },
     [`${field}.effects.$`]: {
       type: Object,

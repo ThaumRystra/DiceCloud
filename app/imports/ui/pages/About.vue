@@ -32,7 +32,7 @@
           <b>Sam;</b> without her love, DiceCloud could not hope to exist
         </p><p>
           <b>The "Heroes" of Asaea</b> The D&amp;D party whose joy was the fuel
-          with which the early versions of DiceCloud was powered
+          powering the early versions of DiceCloud.
         </p>
         <h3 class="text-h6">
           Paragon tier Patrons
@@ -83,6 +83,10 @@ export default {
       name: 'Lord of Junk',
       title: 'Archwizard of the Odd',
       avatar: 'lordOfJunk'
+    },{
+      name: 'Dai',
+      title: 'A Kobold\'s Best Friend',
+      avatar: 'dai'
     },],
   }},
 }

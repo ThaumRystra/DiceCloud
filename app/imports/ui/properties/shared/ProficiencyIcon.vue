@@ -8,16 +8,16 @@
 import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
 
 export default {
-	props: {
-		value: {
+  props: {
+    value: {
       type: Number,
       default: undefined,
     },
-	},
-	computed: {
-		displayedIcon(){
+  },
+  computed: {
+    displayedIcon(){
       return getProficiencyIcon(this.value);
-		}
-	}
+    }
+  }
 }
 </script>

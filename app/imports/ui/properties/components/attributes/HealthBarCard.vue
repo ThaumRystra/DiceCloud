@@ -17,17 +17,17 @@
 </template>
 
 <script lang="js">
-	import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.vue';
+import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.vue';
 
-	export default {
-		components: {
-			HealthBar,
-		},
-		props: {
-			attributes: {
-        type: Array,
-        required: true
-       },
-		},
-	}
+export default {
+  components: {
+    HealthBar,
+  },
+  props: {
+    attributes: {
+      type: Array,
+      required: true
+    },
+  },
+}
 </script>

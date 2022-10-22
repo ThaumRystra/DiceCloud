@@ -23,15 +23,17 @@
 </template>
 
 <script lang="js">
-	import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-	import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
-	export default {
-		components: {
-			DialogBase,
-			LibraryAndNode,
-		},
-		data(){return {
-			node: undefined,
-		};},
-	};
+import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
+import LibraryAndNode from '/imports/ui/library/LibraryAndNode.vue';
+export default {
+  components: {
+    DialogBase,
+    LibraryAndNode,
+  },
+  data() {
+    return {
+      node: undefined,
+    };
+  },
+};
 </script>

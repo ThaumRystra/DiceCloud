@@ -55,19 +55,27 @@
       :error-messages="errors.tags"
       @change="change('tags', ...arguments)"
     />
+    <form-section
+      v-if="$slots.children"
+      name="Children"
+      standalone
+    >
+      <slot name="children" />
+    </form-section>
   </div>
 </template>
 
 <script lang="js">
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-    mixins: [propertyFormMixin],
-    inject: {
-      context: { default: {} }
-    },
-	};
+export default {
+  mixins: [propertyFormMixin],
+  inject: {
+    context: { default: {} }
+  },
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

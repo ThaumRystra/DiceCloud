@@ -96,7 +96,7 @@ import TabletopCreatureCard from '/imports/ui/tabletop/TabletopCreatureCard.vue'
 import TabletopMap from '/imports/ui/tabletop/map/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import MiniCharacterSheet from '/imports/ui/creature/character/MiniCharacterSheet.vue';
-import snackbar from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
@@ -130,18 +130,34 @@ export default {
     name: 'context',
     include: ['editPermission'],
   },
-  data(){ return {
-    activeCreature: undefined,
+  data() {
+    return {
+      activeCreature: undefined,
     targets: [],
-  }},
+    }
+  },
   meteor: {
-    $subscribe:{
-      'tabletop'(){
+    $subscribe: {
+      'tabletop'() {
         return [this.model._id];
       },
     },
     creatures(){
-      return Creatures.find({tabletop: this.model._id});
+      return Creatures.find({ tabletop: this.model._id });
+    },
+    actions(){
+      return getProperties(this.activeCreature, 'action').map(a => {
+        delete a.summary;
+        return a;
+      });
+    },
+    editPermission(){
+      try {
+        assertEditPermission(this.activeCreature, Meteor.userId());
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
     actions(){
       return getProperties(this.activeCreature, 'action').map(a => {
@@ -159,10 +175,10 @@ export default {
     },
   },
   methods: {
-    addCreature(){
+    addCreature() {
       this.$store.commit('pushDialogStack', {
-				component: 'select-creatures-dialog',
-				elementId: 'select-creatures',
+        component: 'select-creatures-dialog',
+        elementId: 'select-creatures',
         data: {
           startingSelection: this.creatures.map(c => c._id),
         },
@@ -175,7 +191,7 @@ export default {
             if (error) snackbar(error.message);
           });
         },
-			});
+      });
     },
     openCharacterSheetDialog(){
       this.$store.commit('pushDialogStack', {
@@ -211,7 +227,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.initiative-row > .v-card {
+.initiative-row>.v-card {
   flex-grow: 0;
   flex-shrink: 0;
   height: 162px;

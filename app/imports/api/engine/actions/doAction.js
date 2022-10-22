@@ -1,14 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import {
+  getProperyAncestors, getPropertyDecendants
+} from '/imports/api/engine/loadCreatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import applyProperty from './applyProperty.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
+import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -35,51 +36,33 @@ const doAction = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({actionId, targetIds = [], scope}) {
+  run({ actionId, targetIds = [], scope }) {
+    // Get action context
     let action = CreatureProperties.findOne(actionId);
-		// Check permissions
-    let creature = getRootCreatureAncestor(action);
+    const creatureId = action.ancestors[0].id;
+    const actionContext = new ActionContext(creatureId, targetIds, this);
 
-    assertEditPermission(creature, this.userId);
-
-    // Get all the targets and make sure we can edit them
-    let targets = [];
-    targetIds.forEach(targetId => {
-      let target = Creatures.findOne(targetId);
+    // Check permissions
+    assertEditPermission(actionContext.creature, this.userId);
+    actionContext.targets.forEach(target => {
       assertEditPermission(target, this.userId);
-      targets.push(target);
     });
 
-    // Fetch all the action's ancestor creatureProperties
-    const ancestorIds = [];
-    action.ancestors.forEach(ref => {
-      if (ref.collection === 'creatureProperties') {
-        ancestorIds.push(ref.id);
-      }
-    });
+    const ancestors = getProperyAncestors(creatureId, action._id);
+    ancestors.sort((a, b) => a.order - b.order);
 
-    // Get cursor of ancestors
-    const ancestors = CreatureProperties.find({
-      _id: {$in: ancestorIds},
-    }, {
-      sort: {order: 1},
-    });
-
-    // Get cursor of the properties
-    const properties = CreatureProperties.find({
-      $or: [{_id: action._id}, {'ancestors.id': action._id}],
-      removed: {$ne: true},
-    }, {
-      sort: {order: 1},
-    });
+    const properties = getPropertyDecendants(creatureId, action._id);
+    properties.push(action);
+    properties.sort((a, b) => a.order - b.order);
 
     // Do the action
-    doActionWork({creature, targets, properties, ancestors, method: this, methodScope: scope});
+    doActionWork({ properties, ancestors, actionContext, methodScope: scope });
 
     // Recompute all involved creatures
-    computeCreature(creature._id);
-    targets.forEach(target => {
-      computeCreature(target._id);
+    Creatures.update({
+      _id: { $in: [creatureId, ...targetIds] }
+    }, {
+      $set: { dirty: true },
     });
   },
 });
@@ -87,41 +70,28 @@ const doAction = new ValidatedMethod({
 export default doAction;
 
 export function doActionWork({
-  creature, targets, properties, ancestors, method, methodScope = {}, log
-}){
+  properties, ancestors, actionContext, methodScope = {},
+}) {
   // get the docs
   const ancestorScope = getAncestorScope(ancestors);
   const propertyForest = nodeArrayToTree(properties);
-  if (propertyForest.length !== 1){
+  if (propertyForest.length !== 1) {
     throw new Meteor.Error(`The action has ${propertyForest.length} top level properties, expected 1`);
   }
 
-  // Create the log
-  if (!log) log = CreatureLogSchema.clean({
-    creatureId: creature._id,
-    creatureName: creature.name,
-  });
+  // Include the ancestry and method scope in the context scope
+  Object.assign(actionContext.scope, ancestorScope, methodScope);
 
   // Apply the top level property, it is responsible for applying its children
   // recursively
-  const scope = {
-    ...creature.variables,
-    ...ancestorScope,
-    ...methodScope
-  }
-  applyProperty(propertyForest[0], {
-    creature,
-    targets,
-    scope,
-    log,
-  });
+  applyProperty(propertyForest[0], actionContext);
 
   // Insert the log
-  insertCreatureLogWork({log, creature, method});
+  actionContext.writeLog();
 }
 
 // Assumes ancestors are in tree order already
-function getAncestorScope(ancestors){
+function getAncestorScope(ancestors) {
   let scope = {};
   ancestors.forEach(prop => {
     scope[`#${prop.type}`] = prop;

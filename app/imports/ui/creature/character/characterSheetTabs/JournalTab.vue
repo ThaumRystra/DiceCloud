@@ -19,8 +19,6 @@
 <script lang="js">
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import Slots from '/imports/ui/creature/slots/Slots.vue';
-import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
 import NoteCard from '/imports/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/ui/creature/character/CreatureSummary.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

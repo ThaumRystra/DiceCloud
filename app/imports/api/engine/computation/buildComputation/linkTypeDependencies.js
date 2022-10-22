@@ -1,4 +1,4 @@
-import { get, intersection, difference } from 'lodash';
+import { get, intersection, difference, union } from 'lodash';
 
 const linkDependenciesByType = {
   action: linkAction,
@@ -14,6 +14,7 @@ const linkDependenciesByType = {
   effect: linkEffects,
   proficiency: linkProficiencies,
   roll: linkRoll,
+  pointBuy: linkPointBuy,
   propertySlot: linkSlot,
   skill: linkSkill,
   spell: linkAction,
@@ -105,7 +106,8 @@ function linkBuff(dependencyGraph, prop){
   dependOnCalc({dependencyGraph, prop, key: 'duration'});
 }
 
-function linkClassLevel(dependencyGraph, prop){
+function linkClassLevel(dependencyGraph, prop) {
+  if (prop.inactive) return;
   // The variableName of the prop depends on the prop
   if (prop.variableName && prop.level){
     dependencyGraph.addLink(prop.variableName, prop._id, 'classLevel');
@@ -121,17 +123,33 @@ function linkDamage(dependencyGraph, prop){
   dependOnCalc({dependencyGraph, prop, key: 'amount'});
 }
 
-function linkEffects(dependencyGraph, prop, computation){
+function linkEffects(dependencyGraph, prop, computation) {
   // The effect depends on its amount calculation
-  dependOnCalc({dependencyGraph, prop, key: 'amount'});
+  dependOnCalc({ dependencyGraph, prop, key: 'amount' });
+  // Inactive effects aren't going to impact their targeted stats
+  if (prop.inactive) return;
   // The stats depend on the effect
-  if (prop.targetByTags){
+  if (prop.inactive) {
+    // Inactive effects apply to no stats
+    return;
+  } else if (prop.targetByTags){
     getEffectTagTargets(prop, computation).forEach(targetId => {
       const targetProp = computation.propsById[targetId];
-      const key = prop.targetField || getDefaultCalculationField(targetProp);
-      const calcObj = get(targetProp, key);
-      if (calcObj && calcObj.calculation){
-        dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id , 'effect');
+      if (
+        (targetProp.type === 'attribute' || targetProp.type === 'skill')
+        && targetProp.variableName
+        && !prop.targetField
+      ) {
+        // If the field wasn't specified and we're targeting an attribute or
+        // skill, just treat it like a normal effect on its variable name
+        dependencyGraph.addLink(targetProp.variableName, prop._id, 'effect');
+      } else {
+        // Otherwise target a field on that property
+        const key = prop.targetField || getDefaultCalculationField(targetProp);
+        const calcObj = get(targetProp, key);
+        if (calcObj && calcObj.calculation){
+          dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id , 'effect');
+        }
       }
     });
   } else {
@@ -144,16 +162,18 @@ function linkEffects(dependencyGraph, prop, computation){
 
 // Returns an array of IDs of the properties the effect targets
 function getEffectTagTargets(effect, computation){
-  const targets = getTargetListFromTags(effect.targetTags, computation);
-  const notIds = [];
+  let targets = getTargetListFromTags(effect.targetTags, computation);
+  let notIds = [];
   if (effect.extraTags){
     effect.extraTags.forEach(ex => {
-      if (ex.operation === 'OR'){
-        targets.push(...getTargetListFromTags(ex.tags, computation));
+      if (ex.operation === 'OR') {
+        targets = union(targets, getTargetListFromTags(ex.tags, computation));
       } else if (ex.operation === 'NOT'){
         ex.tags.forEach(tag => {
           const idList = computation.propsWithTag[tag];
-          if (idList) notIds.push(...computation.propsWithTag[tag])
+          if (idList) {
+            notIds = union(notIds, computation.propsWithTag[tag]);
+          }
         });
       }
     });
@@ -165,8 +185,8 @@ function getTargetListFromTags(tags, computation){
   const targetTagIdLists = [];
   if (!tags) return [];
   tags.forEach(tag => {
-    const idList = computation.propsWithTag[tag];
-    if (idList) targetTagIdLists.push(idList);
+    const idList = computation.propsWithTag[tag] || [];
+    targetTagIdLists.push(idList);
   });
   const targets = intersection(...targetTagIdLists);
   return targets;
@@ -208,13 +228,14 @@ function linkRoll(dependencyGraph, prop){
 }
 
 function linkVariableName(dependencyGraph, prop){
-  // The variableName of the prop depends on the prop
-  if (prop.variableName){
+  // The variableName of the prop depends on the prop if the prop is active
+  if (prop.variableName && !prop.inactive){
     dependencyGraph.addLink(prop.variableName, prop._id, 'definition');
   }
 }
 
-function linkDamageMultiplier(dependencyGraph, prop){
+function linkDamageMultiplier(dependencyGraph, prop) {
+  if (prop.inactive) return;
   prop.damageTypes.forEach(damageType => {
     // Remove all non-letter characters from the damage name
     const damageName = damageType.replace(/[^a-z]/gi, '')
@@ -222,8 +243,31 @@ function linkDamageMultiplier(dependencyGraph, prop){
   });
 }
 
+function linkPointBuy(dependencyGraph, prop){
+  dependOnCalc({ dependencyGraph, prop, key: 'min' });
+  dependOnCalc({ dependencyGraph, prop, key: 'max' });
+  dependOnCalc({ dependencyGraph, prop, key: 'cost' });
+  dependOnCalc({ dependencyGraph, prop, key: 'total' });
+  prop.values?.forEach(row => {
+    // Wrap the document in a new object so we don't bash it unintentionally
+    const pointBuyRow = {
+      ...row,
+      type: 'pointBuyRow',
+      tableName: prop.name,
+      tableId: prop._id,
+    }
+    dependencyGraph.addNode(row._id, pointBuyRow);
+    linkVariableName(dependencyGraph, pointBuyRow);
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.min' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.max' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.cost' });
+  });
+  if (prop.inactive) return;
+}
+
 function linkProficiencies(dependencyGraph, prop){
   // The stats depend on the proficiency
+  if (prop.inactive) return;
   prop.stats.forEach(statName => {
     if (!statName) return;
     dependencyGraph.addLink(statName, prop._id, prop.type);
@@ -235,6 +279,10 @@ function linkSavingThrow(dependencyGraph, prop){
 }
 
 function linkSkill(dependencyGraph, prop){
+  // Depends on base value
+  dependOnCalc({ dependencyGraph, prop, key: 'baseValue' });
+  // Link dependents
+  if (prop.inactive) return;
   linkVariableName(dependencyGraph, prop);
   // The prop depends on the variable references as the ability
   if (prop.ability){
@@ -242,9 +290,6 @@ function linkSkill(dependencyGraph, prop){
   }
   // Skills depend on the creature's proficiencyBonus
   dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
-
-  // Depends on base value
-  dependOnCalc({dependencyGraph, prop, key: 'baseValue'});
 }
 
 function linkSlot(dependencyGraph, prop){

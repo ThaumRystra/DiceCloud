@@ -39,32 +39,32 @@
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/ui/properties/shared/PropertySelector.vue';
-import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
   components: {
     DialogBase,
-		PropertySelector,
+    PropertySelector,
   },
-	props: {
+  props: {
     noLibraryOnlyProps: Boolean,
-		value: {
-			type: String,
+    value: {
+      type: String,
       default: undefined,
-		},
+    },
     parentType: {
       type: String,
       default: undefined,
     },
-	},
+  },
   meteor: {
-    showPropertyHelp(){
+    showPropertyHelp() {
       let user = Meteor.user();
       return !(user?.preferences?.hidePropertySelectDialogHelp)
     },
   },
   methods: {
-    propertyHelpChanged(value){
+    propertyHelpChanged(value) {
       Meteor.users.setPreference.call({
         preference: 'hidePropertySelectDialogHelp',
         value: !value
@@ -81,16 +81,23 @@ export default {
 </script>
 
 <style lang="css" scoped>
-	.slide-enter-active, .slide-leave-active {
-		transition: transform .3s ease;
-	}
-	.slide-enter-active.step-1, .slide-leave-active.step-1{
-		position: absolute;
-	}
-	.slide-enter.step-1, .slide-leave-to.step-1 {
-		transform: translateX(-100%);
-	}
-	.slide-enter.step-2, .slide-leave-to.step-2 {
-		transform: translateX(100%);
-	}
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform .3s ease;
+}
+
+.slide-enter-active.step-1,
+.slide-leave-active.step-1 {
+  position: absolute;
+}
+
+.slide-enter.step-1,
+.slide-leave-to.step-1 {
+  transform: translateX(-100%);
+}
+
+.slide-enter.step-2,
+.slide-leave-to.step-2 {
+  transform: translateX(100%);
+}
 </style>

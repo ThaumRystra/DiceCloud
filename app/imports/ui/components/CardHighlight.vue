@@ -18,7 +18,7 @@
     props: {
       active: Boolean,
       dark: Boolean,
-    }
+    },
   }
 </script>
 

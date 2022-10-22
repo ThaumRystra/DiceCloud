@@ -4,7 +4,7 @@
       <v-expansion-panel-header>
         {{ name }}
       </v-expansion-panel-header>
-      <v-expansion-panel-content>
+      <v-expansion-panel-content class="pt-2">
         <slot />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -13,7 +13,7 @@
     <v-expansion-panel-header>
       {{ name }}
     </v-expansion-panel-header>
-    <v-expansion-panel-content>
+    <v-expansion-panel-content class="pt-2">
       <slot />
     </v-expansion-panel-content>
   </v-expansion-panel>
@@ -22,16 +22,16 @@
 <script lang="js">
 import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
 export default {
-	components: {
-		FormSections,
-	},
-	props: {
-		name: {
+  components: {
+    FormSections,
+  },
+  props: {
+    name: {
       type: String,
       default: '',
     },
-		standalone: Boolean,
-	},
+    standalone: Boolean,
+  },
 }
 export { FormSections };
 </script>

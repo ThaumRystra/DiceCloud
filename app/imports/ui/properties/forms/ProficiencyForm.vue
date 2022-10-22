@@ -37,21 +37,29 @@
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />
+    <form-section
+      v-if="$slots.children"
+      name="Children"
+      standalone
+    >
+      <slot name="children" />
+    </form-section>
   </div>
 </template>
 
 <script lang="js">
-	import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
-  import skillListMixin from '/imports/ui/properties/forms/shared/lists/skillListMixin.js';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import ProficiencySelect from '/imports/ui/properties/forms/shared/ProficiencySelect.vue';
+import skillListMixin from '/imports/ui/properties/forms/shared/lists/skillListMixin.js';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-		components: {
-			ProficiencySelect,
-		},
-    mixins: [propertyFormMixin, skillListMixin],
-	};
+export default {
+  components: {
+    ProficiencySelect,
+  },
+  mixins: [propertyFormMixin, skillListMixin],
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

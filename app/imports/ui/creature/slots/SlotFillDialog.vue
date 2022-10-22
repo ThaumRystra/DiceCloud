@@ -27,20 +27,18 @@
     />
     <p>
       {{ slotPropertyTypeName }} with tags:
-      <template v-for="(tags, index) in tagsSearched.or">
-        <property-tags
-          :key="index"
-          :tags="tags"
-          :prefix="index ? 'OR' : undefined"
-        />
-      </template>
-      <template v-for="(tags, index) in tagsSearched.not">
-        <property-tags
-          :key="index"
-          :tags="tags"
-          prefix="NOT"
-        />
-      </template>
+      <property-tags
+        v-for="(tags, index) in tagsSearched.or"
+        :key="index + 'tags'"
+        :tags="tags"
+        :prefix="index ? 'OR' : undefined"
+      />
+      <property-tags
+        v-for="(tags, index) in tagsSearched.not"
+        :key="index + 'not'"
+        :tags="tags"
+        prefix="NOT"
+      />
     </p>
     <v-expansion-panels
       multiple
@@ -182,7 +180,7 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
@@ -200,13 +198,13 @@ import { clone } from 'lodash';
 
 export default {
   components: {
-		DialogBase,
+    DialogBase,
     TreeNodeView,
     PropertyDescription,
     LibraryNodeExpansionContent,
     PropertyTags,
-	},
-  props:{
+  },
+  props: {
     slotId: {
       type: String,
       default: undefined,
@@ -220,36 +218,38 @@ export default {
       default: undefined,
     },
   },
-  data(){return {
-    selectedNodeIds: [],
-    searchInput: undefined,
-    searchValue: undefined,
-    showDisabled: false,
-    disabledNodeCount: undefined,
-  }},
+  data() {
+    return {
+      selectedNodeIds: [],
+      searchInput: undefined,
+      searchValue: undefined,
+      showDisabled: false,
+      disabledNodeCount: undefined,
+    }
+  },
   reactiveProvide: {
     name: 'context',
     include: ['creatureId'],
   },
   computed: {
-    tagsSearched(){
+    tagsSearched() {
       let or = [];
       let not = [];
-      if (this.model.slotTags && this.model.slotTags.length){
+      if (this.model.slotTags && this.model.slotTags.length) {
         or.push(this.model.slotTags);
       }
       this.model.extraTags?.forEach(extras => {
-        if (extras.tags?.length){
-          if(extras.operation === 'OR'){
+        if (extras.tags?.length) {
+          if (extras.operation === 'OR') {
             or.push(extras.tags);
-          } else if (extras.operation === 'NOT'){
+          } else if (extras.operation === 'NOT') {
             not.push(extras.tags);
           }
         }
       });
-      return {or, not};
+      return { or, not };
     },
-    slotPropertyTypeName(){
+    slotPropertyTypeName() {
       if (!this.model) return;
       if (!this.model.slotType) return 'Property';
       let propName = getPropertyName(this.model.slotType);
@@ -257,11 +257,11 @@ export default {
     },
   },
   methods: {
-    loadMore(){
+    loadMore() {
       if (this.currentLimit >= this.countAll) return;
       this._subs['slotFillers'].setData('limit', this.currentLimit + 50);
     },
-    openPropertyDetails(id){
+    openPropertyDetails(id) {
       this.$store.commit('pushDialogStack', {
         component: 'library-node-dialog',
         elementId: id,
@@ -270,26 +270,26 @@ export default {
         },
       });
     },
-    isDisabled(node){
+    isDisabled(node) {
       return node._disabledBySlotFillerCondition ||
         node._disabledByAlreadyAdded ||
-      (
-        node._disabledByQuantityFilled &&
-        !this.selectedNodeIds.includes(node._id)
-      )
+        (
+          node._disabledByQuantityFilled &&
+          !this.selectedNodeIds.includes(node._id)
+        )
     },
   },
   meteor: {
     $subscribe: {
-      'slotFillers'(){
+      'slotFillers'() {
         return [this.slotId, this.searchValue || undefined]
       },
     },
-    searchLoading(){
+    searchLoading() {
       return !!this.searchValue && !this.$subReady.slotFillers;
     },
-    model(){
-      if (this.slotId){
+    model() {
+      if (this.slotId) {
         return CreatureProperties.findOne(this.slotId);
       } else if (this.dummySlot) {
         let model = clone(this.dummySlot)
@@ -299,44 +299,44 @@ export default {
         return model;
       }
     },
-    creature(){
-      if (!this.creatureId) return {variables: {}};
-      return Creatures.findOne(this.creatureId);
+    variables() {
+      if (!this.creatureId) return {};
+      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
     },
-    currentLimit(){
+    currentLimit() {
       return this._subs['slotFillers'].data('limit') || 50;
     },
-    countAll(){
+    countAll() {
       return this._subs['slotFillers'].data('countAll');
     },
-    alreadyAdded(){
+    alreadyAdded() {
       let added = new Set();
       if (!this.model.unique) return added;
       let ancestorId;
-      if (this.model.unique === 'uniqueInSlot'){
+      if (this.model.unique === 'uniqueInSlot') {
         ancestorId = this.model._id;
-      } else if (this.model.unique === 'uniqueInCreature'){
+      } else if (this.model.unique === 'uniqueInCreature') {
         ancestorId = this.creatureId;
       }
       CreatureProperties.find({
         'ancestors.id': ancestorId,
-        libraryNodeId: {$exists: true},
-        removed: {$ne: true},
+        libraryNodeId: { $exists: true },
+        removed: { $ne: true },
       }, {
-        fields: {libraryNodeId: 1},
+        fields: { libraryNodeId: 1 },
       }).forEach(prop => {
         added.add(prop.libraryNodeId);
       });
       return added;
     },
-    totalQuantitySelected(){
+    totalQuantitySelected() {
       let quantitySelected = 0;
       LibraryNodes.find({
-        _id: {$in: this.selectedNodeIds}
+        _id: { $in: this.selectedNodeIds }
       }, {
-        fields: {slotQuantityFilled: 1},
+        fields: { slotQuantityFilled: 1 },
       }).forEach(node => {
-        if (Number.isFinite(node.slotQuantityFilled)){
+        if (Number.isFinite(node.slotQuantityFilled)) {
           quantitySelected += node.slotQuantityFilled;
         } else {
           quantitySelected += 1;
@@ -344,30 +344,30 @@ export default {
       });
       return quantitySelected;
     },
-    spaceLeft(){
+    spaceLeft() {
       if (!this.model.quantityExpected || this.model.quantityExpected.value === 0) return undefined;
       return this.model.spaceLeft - this.totalQuantitySelected;
     },
-    libraryNames(){
+    libraryNames() {
       let names = {};
       Libraries.find().forEach(lib => names[lib._id] = lib.name)
       return names;
     },
-    libraryNodes(){
-      let filter = getSlotFillFilter({slot: this.model});
+    libraryNodes() {
+      let filter = getSlotFillFilter({ slot: this.model });
       let nodes = LibraryNodes.find(filter, {
-        sort: {name: 1, order: 1}
+        sort: { name: 1, order: 1 }
       }).fetch();
       let disabledNodeCount = 0;
       // Mark slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes.forEach(node => {
-        if (node.slotFillerCondition){
+        if (node.slotFillerCondition) {
           try {
             let parseNode = parse(node.slotFillerCondition);
-            const {result: resultNode} = resolve('reduce', parseNode, this.creature.variables);
-            if (resultNode?.parseType === 'constant'){
-              if (!resultNode.value){
+            const { result: resultNode } = resolve('reduce', parseNode, this.variables);
+            if (resultNode?.parseType === 'constant') {
+              if (!resultNode.value) {
                 node._disabledBySlotFillerCondition = true;
                 disabledNodeCount += 1;
               }
@@ -376,7 +376,7 @@ export default {
               node._conditionError = toString(resultNode);
               disabledNodeCount += 1;
             }
-          } catch (e){
+          } catch (e) {
             console.warn(e);
             let error = prettifyParseError(e);
             node._disabledBySlotFillerCondition = true;
@@ -387,10 +387,10 @@ export default {
         let quantityToFill = node.type === 'slotFiller' ? node.slotQuantityFilled : 1;
         if (
           quantityToFill > this.spaceLeft
-        ){
+        ) {
           node._disabledByQuantityFilled = true;
         }
-        if (this.alreadyAdded.has(node._id)){
+        if (this.alreadyAdded.has(node._id)) {
           node._disabledByAlreadyAdded = true;
         }
       });
@@ -402,7 +402,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .disabled {
-    opacity: 0.7;
-  }
+.disabled {
+  opacity: 0.7;
+}
 </style>

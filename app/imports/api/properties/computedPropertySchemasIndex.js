@@ -3,6 +3,7 @@ import { ComputedActionSchema } from '/imports/api/properties/Actions.js';
 import { ComputedAdjustmentSchema } from '/imports/api/properties/Adjustments.js';
 import { ComputedAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedBuffSchema } from '/imports/api/properties/Buffs.js';
+import { ComputedBuffRemoverSchema } from '/imports/api/properties/BuffRemovers.js';
 import { ComputedBranchSchema } from '/imports/api/properties/Branches.js';
 import { ComputedClassSchema } from '/imports/api/properties/Classes.js';
 import { ComputedClassLevelSchema } from '/imports/api/properties/ClassLevels.js';
@@ -15,6 +16,7 @@ import { ComputedFeatureSchema } from '/imports/api/properties/Features.js';
 import { FolderSchema } from '/imports/api/properties/Folders.js';
 import { ComputedItemSchema } from '/imports/api/properties/Items.js';
 import { ComputedNoteSchema } from '/imports/api/properties/Notes.js';
+import { ComputedPointBuySchema } from '/imports/api/properties/PointBuys.js';
 import { ProficiencySchema } from '/imports/api/properties/Proficiencies.js';
 import { ReferenceSchema } from '/imports/api/properties/References.js';
 import { ComputedRollSchema } from '/imports/api/properties/Rolls.js';
@@ -25,12 +27,14 @@ import { SlotFillerSchema } from '/imports/api/properties/SlotFillers.js';
 import { ComputedSpellSchema } from '/imports/api/properties/Spells.js';
 import { ComputedSpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ComputedToggleSchema } from '/imports/api/properties/Toggles.js';
+import { ComputedTriggerSchema } from '/imports/api/properties/Triggers.js';
 
 const propertySchemasIndex = {
   action: ComputedActionSchema,
   adjustment: ComputedAdjustmentSchema,
   attribute: ComputedAttributeSchema,
   buff: ComputedBuffSchema,
+  buffRemover: ComputedBuffRemoverSchema,
   branch: ComputedBranchSchema,
   class: ComputedClassSchema,
   classLevel: ComputedClassLevelSchema,
@@ -41,6 +45,7 @@ const propertySchemasIndex = {
   feature: ComputedFeatureSchema,
   folder: FolderSchema,
   note: ComputedNoteSchema,
+  pointBuy: ComputedPointBuySchema,
   proficiency: ProficiencySchema,
   propertySlot: ComputedSlotSchema,
   reference: ReferenceSchema,
@@ -51,6 +56,7 @@ const propertySchemasIndex = {
   spellList: ComputedSpellListSchema,
   spell: ComputedSpellSchema,
   toggle: ComputedToggleSchema,
+  trigger: ComputedTriggerSchema,
   container: ComputedContainerSchema,
   item: ComputedItemSchema,
   any: new SimpleSchema({}),

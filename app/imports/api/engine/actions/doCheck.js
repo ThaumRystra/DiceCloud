@@ -1,13 +1,13 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 import rollDice from '/imports/parser/rollDice.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',
@@ -23,53 +23,48 @@ const doCheck = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({propId, scope}) {
+  run({ propId, scope }) {
     const prop = CreatureProperties.findOne(propId);
-    const creature = getRootCreatureAncestor(prop);
+    const creatureId = prop.ancestors[0].id;
+    const actionContext = new ActionContext(creatureId, [creatureId], this);
+    Object.assign(actionContext.scope, scope);
 
     // Check permissions
-    assertEditPermission(creature, this.userId);
+    assertEditPermission(actionContext.creature, this.userId);
 
     // Do the check
-    doCheckWork({creature, prop, method: this, methodScope: scope});
-
-    // Recompute all involved creatures
-    computeCreature(creature._id);
+    doCheckWork({ prop, actionContext });
   },
 });
 
 export default doCheck;
 
-export function doCheckWork({
-  creature, prop, method, methodScope = {}
-}){
-  // Create the log
-  let log = CreatureLogSchema.clean({
-    creatureId: creature._id,
-    creatureName: creature.name,
-  });
+export function doCheckWork({ prop, actionContext }) {
 
-  rollCheck({prop, log, methodScope});
+  applyTriggers(actionContext.triggers.check?.before, prop, actionContext);
+  rollCheck(prop, actionContext);
+  applyTriggers(actionContext.triggers.check?.after, prop, actionContext);
 
   // Insert the log
-  insertCreatureLogWork({log, creature, method});
+  actionContext.writeLog();
 }
 
-function rollCheck({prop, log, methodScope}){
+function rollCheck(prop, actionContext) {
+  const scope = actionContext.scope;
   // get the modifier for the roll
   let rollModifier;
   let logName = `${prop.name} check`;
-  if (prop.type === 'skill'){
+  if (prop.type === 'skill') {
     rollModifier = prop.value;
-    if (prop.skillType === 'save'){
-      if (prop.name.match(/save/i)){
+    if (prop.skillType === 'save') {
+      if (prop.name.match(/save/i)) {
         logName = prop.name;
       } else {
         logName = prop.name ? `${prop.name} save` : 'Saving Throw';
       }
     }
-  } else if (prop.type === 'attribute'){
-    if (prop.attributeType === 'ability'){
+  } else if (prop.type === 'attribute') {
+    if (prop.attributeType === 'ability') {
       rollModifier = prop.modifier;
     } else {
       rollModifier = prop.value;
@@ -78,10 +73,14 @@ function rollCheck({prop, log, methodScope}){
     throw (`${prop.type} not supported for checks`);
   }
 
-  const rollModifierText = numberToSignedString(rollModifier, true);
+  let rollModifierText = numberToSignedString(rollModifier, true);
+
+  const { effectBonus, effectString } = applyUnresolvedEffects(prop, scope)
+  rollModifierText += effectString;
+  rollModifier += effectBonus;
 
   let value, values, resultPrefix;
-  if (methodScope['$checkAdvantage'] === 1){
+  if (scope['$checkAdvantage'] === 1) {
     logName += ' (Advantage)';
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
@@ -91,7 +90,7 @@ function rollCheck({prop, log, methodScope}){
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
     }
-  } else if (methodScope['$checkAdvantage'] === -1){
+  } else if (scope['$checkAdvantage'] === -1) {
     logName += ' (Disadvantage)';
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
@@ -107,8 +106,29 @@ function rollCheck({prop, log, methodScope}){
     resultPrefix = `1d20 [ ${value} ] ${rollModifierText} = `
   }
   const result = (value + rollModifier) || 0;
-  log.content.push({
+  scope['$checkDiceRoll'] = value;
+  scope['$checkRoll'] = result;
+  scope['$checkModifier'] = rollModifier;
+  actionContext.addLog({
     name: logName,
     value: `${resultPrefix} **${result}**`,
   });
+}
+
+function applyUnresolvedEffects(prop, scope) {
+  let effectBonus = 0;
+  let effectString = '';
+  if (!prop.effects) {
+    return { effectBonus, effectString };
+  }
+  prop.effects.forEach(effect => {
+    if (!effect.amount?.parseNode) return;
+    if (effect.operation !== 'add') return;
+    effect.amount._parseLevel = 'reduce';
+    evaluateCalculation(effect.amount, scope);
+    if (typeof effect.amount?.value !== 'number') return;
+    effectBonus += effect.amount.value;
+    effectString += ` ${effect.amount.value < 0 ? '-' : '+'} [${effect.amount.calculation}] ${Math.abs(effect.amount.value)}`
+  });
+  return { effectBonus, effectString };
 }

@@ -92,7 +92,7 @@
                   <v-list-item-action>
                     <v-icon>mdi-signature</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Transfer Onwership</v-list-item-title>
+                  <v-list-item-title>Transfer Ownership</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="updateSharing(user._id, 'none')">
                   <v-list-item-action>
@@ -132,110 +132,113 @@ import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
 
 export default {
-	components: {
-		DialogBase,
-	},
-	props: {
-		docRef: {
+  components: {
+    DialogBase,
+  },
+  props: {
+    docRef: {
       type: Object,
       required: true,
     },
-	},
-	data(){ return {
-		userSearched: undefined,
-		userFoundState: 'idle',
-		userId: undefined,
-	}},
-	methods: {
-		setSheetPublic({value, ack}){
-			setPublic.call({
-				docRef: this.docRef,
-				isPublic: value === 'true',
-			}, (error) => {
-				ack(error && error.reason || error);
-			});
-		},
-		getUser({value, ack}){
-			this.userSearched = value;
-			if (!value){
-				this.userFoundState = 'idle';
-				ack();
-				return;
-			}
-			Meteor.users.findUserByUsernameOrEmail.call({
-				usernameOrEmail: value
-			}, (error, result) => {
-				if (error) {
-					ack(error && error.reason || error);
-					this.userFoundState = 'failed';
-				} else {
-					this.userId = result;
-					if (result){
-						if (result === this.model.owner){
-							this.userFoundState = 'failed';
-							ack('User is already the owner')
-						} else {
-							this.userFoundState = 'found';
-							ack();
-						}
-					} else {
-						this.userFoundState = 'notFound';
-						ack('User not found');
-					}
-				}
-			});
-		},
-    updateSharing(userId, role){
+  },
+  data() {
+    return {
+      userSearched: undefined,
+      userFoundState: 'idle',
+      userId: undefined,
+    }
+  },
+  methods: {
+    setSheetPublic({ value, ack }) {
+      setPublic.call({
+        docRef: this.docRef,
+        isPublic: value === 'true',
+      }, (error) => {
+        ack(error && error.reason || error);
+      });
+    },
+    getUser({ value, ack }) {
+      this.userSearched = value;
+      if (!value) {
+        this.userFoundState = 'idle';
+        ack();
+        return;
+      }
+      Meteor.users.findUserByUsernameOrEmail.call({
+        usernameOrEmail: value
+      }, (error, result) => {
+        if (error) {
+          ack(error && error.reason || error);
+          this.userFoundState = 'failed';
+        } else {
+          this.userId = result;
+          if (result) {
+            if (result === this.model.owner) {
+              this.userFoundState = 'failed';
+              ack('User is already the owner')
+            } else {
+              this.userFoundState = 'found';
+              ack();
+            }
+          } else {
+            this.userFoundState = 'notFound';
+            ack('User not found');
+          }
+        }
+      });
+    },
+    updateSharing(userId, role) {
       updateUserSharePermissions.call({
         docRef: this.docRef,
         userId,
         role,
       });
     },
-    makeOwner(user){
+    makeOwner(user) {
       this.$store.commit('pushDialogStack', {
-				component: 'transfer-ownership-dialog',
-				elementId: 'menu-' + user._id,
-				data: {
-					docRef: this.docRef,
-					user,
-				},
-			});
+        component: 'transfer-ownership-dialog',
+        elementId: 'menu-' + user._id,
+        data: {
+          docRef: this.docRef,
+          user,
+        },
+      });
     },
-	},
-	meteor: {
-		model(){
-			if (!this.docRef || !this.docRef.id) return;
-			let model = fetchDocByRef(this.docRef);
-			return model;
-		},
-    sharedUsers(){
+  },
+  meteor: {
+    model() {
+      if (!this.docRef || !this.docRef.id) return;
+      let model = fetchDocByRef(this.docRef);
+      return model;
+    },
+    sharedUsers() {
       let users = [];
-      Meteor.users.find({_id: {$in: this.model.readers}}).forEach(user => {
+      Meteor.users.find({ _id: { $in: this.model.readers } }).forEach(user => {
         user.permission = 'reader';
         users.push(user);
       });
-      Meteor.users.find({_id: {$in: this.model.writers}}).forEach(user => {
+      Meteor.users.find({ _id: { $in: this.model.writers } }).forEach(user => {
         user.permission = 'writer';
         users.push(user);
       });
-      users.sort(function(a, b){
+      users.sort(function (a, b) {
         if (a.username < b.username) return -1;
         if (a.username > b.username) return 1;
         return 0;
       });
       return users;
     },
-		$subscribe: {
-			'userPublicProfiles'(){
-				let model = this.model;
-				if (!model) return false;
-				return [[model.owner, ...model.writers, ...model.readers]];
-			},
-		},
-	},
+    $subscribe: {
+      'userPublicProfiles'() {
+        let model = this.model;
+        if (!model) return false;
+        return [[model.owner, ...model.writers, ...model.readers]];
+      },
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

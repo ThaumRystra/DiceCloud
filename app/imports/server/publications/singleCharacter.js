@@ -1,10 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import computeCreature from '/imports/api/engine/computeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
+import { loadCreature } from '/imports/api/engine/loadCreatures.js';
 
 let schema = new SimpleSchema({
   creatureId: {
@@ -13,7 +15,8 @@ let schema = new SimpleSchema({
   },
 });
 
-Meteor.publish('singleCharacter', function(creatureId){
+Meteor.publish('singleCharacter', function (creatureId) {
+  const self = this;
   try {
     schema.validate({ creatureId });
   } catch (e){
@@ -21,21 +24,27 @@ Meteor.publish('singleCharacter', function(creatureId){
   }
   this.autorun(function (computation){
     let userId = this.userId;
-    let creatureCursor
-    creatureCursor = Creatures.find({
+    let permissionCreature = Creatures.findOne({
       _id: creatureId,
+    }, {
+      fields: { owner: 1, readers: 1, writers: 1, public: 1, computeVersion: 1 }
     });
-    let creature = creatureCursor.fetch()[0];
-    try { assertViewPermission(creature, userId) }
-    catch(e){ return [] }
-    if (creature.computeVersion !== VERSION && computation.firstRun){
+    try { assertViewPermission(permissionCreature, userId) }
+    catch (e) { return [] }
+    loadCreature(creatureId, self);
+    if (permissionCreature.computeVersion !== VERSION && computation.firstRun){
       try {
         computeCreature(creatureId)
       }
       catch(e){ console.error(e) }
     }
     return [
-      creatureCursor,
+      Creatures.find({
+        _id: creatureId,
+      }),
+      CreatureVariables.find({
+        _creatureId: creatureId,
+      }),
       CreatureProperties.find({
         'ancestors.id': creatureId,
       }),

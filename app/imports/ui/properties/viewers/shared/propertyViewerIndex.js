@@ -2,8 +2,10 @@ const ActionViewer = () => import ('/imports/ui/properties/viewers/ActionViewer.
 const AdjustmentViewer = () => import ('/imports/ui/properties/viewers/AdjustmentViewer.vue');
 const AttributeViewer = () => import ('/imports/ui/properties/viewers/AttributeViewer.vue');
 const BuffViewer = () => import ('/imports/ui/properties/viewers/BuffViewer.vue');
+const BuffRemoverViewer = () => import ('/imports/ui/properties/viewers/BuffRemoverViewer.vue');
 const BranchViewer = () => import ('/imports/ui/properties/viewers/BranchViewer.vue');
 const ContainerViewer = () => import ('/imports/ui/properties/viewers/ContainerViewer.vue');
+const ClassViewer = () => import ('/imports/ui/properties/viewers/ClassViewer.vue');
 const ClassLevelViewer = () => import ('/imports/ui/properties/viewers/ClassLevelViewer.vue');
 const ConstantViewer = () => import ('/imports/ui/properties/viewers/ConstantViewer.vue');
 const DamageViewer = () => import ('/imports/ui/properties/viewers/DamageViewer.vue');
@@ -13,6 +15,7 @@ const FeatureViewer = () => import ('/imports/ui/properties/viewers/FeatureViewe
 const FolderViewer = () => import ('/imports/ui/properties/viewers/FolderViewer.vue');
 const ItemViewer = () => import ('/imports/ui/properties/viewers/ItemViewer.vue');
 const NoteViewer = () => import ('/imports/ui/properties/viewers/NoteViewer.vue');
+const PointBuyViewer = () => import ('/imports/ui/properties/viewers/PointBuyViewer.vue');
 const ProficiencyViewer = () => import ('/imports/ui/properties/viewers/ProficiencyViewer.vue');
 const ReferenceViewer = () => import ('/imports/ui/properties/viewers/ReferenceViewer.vue');
 const RollViewer = () => import ('/imports/ui/properties/viewers/RollViewer.vue');
@@ -23,15 +26,17 @@ const SlotFillerViewer = () => import ('/imports/ui/properties/viewers/SlotFille
 const SpellListViewer = () => import ('/imports/ui/properties/viewers/SpellListViewer.vue');
 const SpellViewer = () => import ('/imports/ui/properties/viewers/SpellViewer.vue');
 const ToggleViewer = () => import ('/imports/ui/properties/viewers/ToggleViewer.vue');
+const TriggerViewer = () => import ('/imports/ui/properties/viewers/TriggerViewer.vue');
 
 export default {
   action: ActionViewer,
   adjustment: AdjustmentViewer,
   attribute: AttributeViewer,
   buff: BuffViewer,
+  buffRemover: BuffRemoverViewer,
   branch: BranchViewer,
   container: ContainerViewer,
-  class: SlotViewer,
+  class: ClassViewer,
   classLevel: ClassLevelViewer,
   constant: ConstantViewer,
   damage: DamageViewer,
@@ -41,6 +46,7 @@ export default {
   folder: FolderViewer,
   item: ItemViewer,
   note: NoteViewer,
+  pointBuy: PointBuyViewer,
   proficiency: ProficiencyViewer,
   propertySlot: SlotViewer,
   roll: RollViewer,
@@ -51,4 +57,5 @@ export default {
   spellList: SpellListViewer,
   spell: SpellViewer,
   toggle: ToggleViewer,
+  trigger: TriggerViewer,
 };

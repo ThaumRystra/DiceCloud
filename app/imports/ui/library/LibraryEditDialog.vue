@@ -26,6 +26,11 @@
         :value="model.name"
         @change="updateName"
       />
+      <text-area
+        label="Description"
+        :value="model.description"
+        @change="updateDescription"
+      />
     </template>
     <template v-if="removedDocs.length">
       <h3>Recently Deleted Properties</h3>
@@ -71,82 +76,93 @@
 
 <script lang="js">
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import Libraries, { updateLibraryName, removeLibrary } from '/imports/api/library/Libraries.js';
+import Libraries, { updateLibraryName, updateLibraryDescription, removeLibrary } from '/imports/api/library/Libraries.js';
 import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNodes.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
-	components: {
-		DialogBase,
+  components: {
+    DialogBase,
     TreeNodeView,
-	},
-	props: {
-		_id: String,
-	},
-	methods: {
-		updateName(value, ack){
-			updateLibraryName.call({_id: this._id, name: value}, (error) =>{
-				ack(error && error.reason || error);
-			});
-		},
-		remove(){
-			let that = this;
-			this.$store.commit('pushDialogStack', {
-				component: 'delete-confirmation-dialog',
-				elementId: 'delete-library-button',
-				data: {
-					name: this.model.name,
-					typeName: 'Library'
-				},
-				callback(confirmation){
-					if(!confirmation) return;
-					removeLibrary.call({_id: that._id}, (error) => {
-						if (error) {
-							console.error(error);
-						} else {
-							that.$store.dispatch('popDialogStack')
-						}
-					});
-				}
-			});
-		},
-    share(){
-			this.$store.commit('pushDialogStack', {
-				component: 'share-dialog',
-				elementId: 'share-library-button',
-				data: {
-					docRef: {
+  },
+  props: {
+    _id: String,
+  },
+  methods: {
+    updateName(value, ack) {
+      updateLibraryName.call({ _id: this._id, name: value }, (error) => {
+        ack(error && error.reason || error);
+      });
+    },
+    updateDescription(value, ack) {
+      updateLibraryDescription.call({ _id: this._id, description: value }, (error) => {
+        ack(error && error.reason || error);
+      });
+    },
+    remove() {
+      let that = this;
+      this.$store.commit('pushDialogStack', {
+        component: 'delete-confirmation-dialog',
+        elementId: 'delete-library-button',
+        data: {
+          name: this.model.name,
+          typeName: 'Library'
+        },
+        callback(confirmation) {
+          if (!confirmation) return;
+          removeLibrary.call({ _id: that._id }, (error) => {
+            if (error) {
+              console.error(error);
+              snackbar({
+                text: error.reason,
+              });
+            } else {
+              that.$router.push({ name: 'library', replace: true });
+              that.$store.dispatch('popDialogStack');
+            }
+          });
+        }
+      });
+    },
+    share() {
+      this.$store.commit('pushDialogStack', {
+        component: 'share-dialog',
+        elementId: 'share-library-button',
+        data: {
+          docRef: {
             id: this._id,
             collection: 'libraries',
           }
-				},
-			});
-		},
-    restore(_id){
-      restoreLibraryNode.call({_id});
+        },
+      });
     },
-	},
-	meteor: {
-    '$subscribe':{
-      softRemovedLibraryNodes(){
+    restore(_id) {
+      restoreLibraryNode.call({ _id });
+    },
+  },
+  meteor: {
+    '$subscribe': {
+      softRemovedLibraryNodes() {
         return [this._id];
       },
     },
-		model(){
-			return Libraries.findOne(this._id);
-		},
-    removedDocs(){
+    model() {
+      return Libraries.findOne(this._id);
+    },
+    removedDocs() {
       return LibraryNodes.find({
         'ancestors.0.id': this._id,
         removed: true,
-        removedWith: {$exists: false},
+        removedWith: { $exists: false },
       }, {
-        sort: {order: 1},
+        sort: { order: 1 },
       });
     }
-	}
+  }
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

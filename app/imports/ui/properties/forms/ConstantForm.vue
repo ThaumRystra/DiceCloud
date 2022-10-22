@@ -24,6 +24,13 @@
       @change="change('calculation', ...arguments)"
     />
     <calculation-error-list :errors="clientErrors" />
+    <form-section
+      v-if="$slots.children"
+      name="Children"
+      standalone
+    >
+      <slot name="children" />
+    </form-section>
   </div>
 </template>
 

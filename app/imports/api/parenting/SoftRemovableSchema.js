@@ -1,17 +1,17 @@
 import SimpleSchema from 'simpl-schema';
 
 let SoftRemovableSchema = new SimpleSchema({
-	"removed": {
+  'removed': {
     type: Boolean,
     optional: true,
     index: 1,
   },
-  "removedAt": {
+  'removedAt': {
     type: Date,
     optional: true,
     index: 1,
   },
-  "removedWith": {
+  'removedWith': {
     optional: true,
     type: String,
     regEx: SimpleSchema.RegEx.Id,

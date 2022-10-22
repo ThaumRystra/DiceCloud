@@ -52,40 +52,42 @@ export default {
     preparingSpells: Boolean,
     equipment: Boolean,
   },
-  data(){ return {
-    dataItems: [],
-  }},
+  data() {
+    return {
+      dataItems: [],
+    }
+  },
   computed: {
-    levels(){
+    levels() {
       let levels = new Set();
       this.items.forEach(item => levels.add(item.level));
       return levels;
     },
   },
   watch: {
-    items(value){
+    items(value) {
       this.dataItems = value;
     }
   },
-  mounted(){
+  mounted() {
     this.dataItems = this.items;
   },
   methods: {
-		clickProperty(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: _id,
-				data: {_id},
-			});
-		},
-    change({added, moved}){
+    clickProperty(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: _id,
+        data: { _id },
+      });
+    },
+    change({ added, moved }) {
       let event = added || moved;
-      if (event){
+      if (event) {
         // If this item is now adjacent to another, set the order accordingly
         let order;
         let before = this.dataItems[event.newIndex - 1];
         let after = this.dataItems[event.newIndex + 1];
-        if (before && before._id){
+        if (before && before._id) {
           order = before.order + 0.5;
         } else if (after && after._id) {
           order = after.order - 0.5;
@@ -101,7 +103,7 @@ export default {
           parentRef: this.parentRef,
           order,
         });
-        if (doc.type === 'item' && doc.equipped != this.equipment){
+        if (doc.type === 'item' && doc.equipped != this.equipment) {
           updateCreatureProperty.call({
             _id: doc._id,
             path: ['equipped'],
@@ -111,6 +113,6 @@ export default {
       }
       setTimeout(() => this.dataItems = this.items, 0);
     },
-	}
+  }
 }
 </script>

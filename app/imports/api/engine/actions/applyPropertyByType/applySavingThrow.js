@@ -2,38 +2,38 @@ import rollDice from '/imports/parser/rollDice.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applySavingThrow(node, {creature, targets, scope, log}){
+export default function applySavingThrow(node, actionContext){
+  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
 
-  let saveTargets = prop.target === 'self' ? [creature] : targets;
+  let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
-  recalculateCalculation(prop.dc, scope, log);
+  recalculateCalculation(prop.dc, actionContext);
 
   const dc = (prop.dc?.value);
   if (!isFinite(dc)){
-    log.content.push({
+    actionContext.addLog({
       name: 'Error',
       value: 'Saving throw requires a DC',
     });
-    return node.children.forEach(child => applyProperty(child, {
-      creature, targets, scope, log
-    }));
+    return node.children.forEach(child => applyProperty(child, actionContext));
   }
-  log.content.push({
+  if (!prop.silent) actionContext.addLog({
     name: prop.name,
     value: `DC **${dc}**`,
     inline: true,
   });
+  const scope = actionContext.scope;
 
   // If there are no save targets, apply all children as if the save both
   // succeeeded and failed
   if (!saveTargets?.length){
     scope['$saveFailed'] = {value: true};
-    scope['$saveSucceeded'] = {value: true};
-    return node.children.forEach(child => applyProperty(child, {
-      creature, targets, scope, log
-    }));
+    scope['$saveSucceeded'] = { value: true };
+    applyNodeTriggers(node, 'after', actionContext);
+    return node.children.forEach(child => applyProperty(child, actionContext));
   }
 
   // Each target makes the saving throw
@@ -43,16 +43,16 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
     delete scope['$saveDiceRoll'];
     delete scope['$saveRoll'];
 
-    const applyChildren = function(){
-      node.children.forEach(child => applyProperty(child, {
-        creature, targets: [target], scope, log
-      }));
+    const applyChildren = function () {
+      applyNodeTriggers(node, 'after', actionContext);
+      actionContext.targets = [target]
+      node.children.forEach(child => applyProperty(child, actionContext));
     };
 
     const save = target.variables[prop.stat];
 
     if (!save){
-      log.content.push({
+      actionContext.addLog({
         name: 'Saving throw error',
         value: 'No saving throw found: ' + prop.stat,
       });
@@ -94,7 +94,7 @@ export default function applySavingThrow(node, {creature, targets, scope, log}){
     } else {
       scope['$saveFailed'] = {value: true};
     }
-    log.content.push({
+    if (!prop.silent) actionContext.addLog({
       name: saveSuccess ? 'Successful save' : 'Failed save',
       value: resultPrefix + '\n**' + result + '**',
       inline: true,

@@ -1,7 +1,5 @@
 <template lang="html">
-  <div
-    class="stats-tab ma-2"
-  >
+  <div class="stats-tab ma-2">
     <health-bar-card-container :creature-id="creatureId" />
 
     <column-layout>
@@ -46,7 +44,7 @@
                   {{ buff.name }}
                 </v-list-item-title>
               </v-list-item-content>
-              <v-list-item-action>
+              <v-list-item-action v-if="!buff.hideRemoveButton">
                 <v-btn
                   icon
                   @click.stop="softRemove(buff._id)"
@@ -171,9 +169,7 @@
         v-if="spellSlots && spellSlots.length || hasSpells"
         class="spell-slots"
       >
-        <v-card
-          data-id="spell-slot-card"
-        >
+        <v-card data-id="spell-slot-card">
           <v-list
             v-if="spellSlots && spellSlots.length"
             two-line
@@ -250,18 +246,7 @@
           :model="action"
           :data-id="action._id"
           @click="clickProperty({_id: action._id})"
-        />
-      </div>
-      <div
-        v-for="attack in attacks"
-        :key="attack._id"
-        class="attack"
-      >
-        <action-card
-          attack
-          :model="attack"
-          :data-id="attack._id"
-          @click="clickProperty({_id: attack._id})"
+          @sub-click="_id => clickTreeProperty({_id})"
         />
       </div>
 
@@ -350,202 +335,207 @@
 </template>
 
 <script lang="js">
-  import Creatures from '/imports/api/creature/creatures/Creatures.js';
-	import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
-  import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-	import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
-	import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
-	import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-  import DamageMultiplierCard from '/imports/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
-  import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
-	import HitDiceListTile from '/imports/ui/properties/components/attributes/HitDiceListTile.vue';
-	import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
-	import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
-	import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
-  import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
-  import RestButton from '/imports/ui/creature/RestButton.vue';
-  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-  import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
-  import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
-  import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
+import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
+import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
+import DamageMultiplierCard from '/imports/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
+import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
+import HitDiceListTile from '/imports/ui/properties/components/attributes/HitDiceListTile.vue';
+import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
+import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
+import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
+import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
+import RestButton from '/imports/ui/creature/RestButton.vue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
+import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
+import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 
-  const getProperties = function(creature, filter, options = {
-    sort: {order: 1}
-  }){
-    if (!creature) return;
-    if (creature.settings.hideUnusedStats){
-      filter.hide = {$ne: true};
-    }
-    filter['ancestors.id'] = creature._id;
-    filter.removed = {$ne: true};
-    filter.inactive = {$ne: true};
-    filter.overridden = {$ne: true};
-
-    return CreatureProperties.find(filter, options);
-  };
-
-	const getAttributeOfType = function(creature, type){
-    return getProperties(creature, {
-      type: 'attribute',
-      attributeType: type,
-    });
-	};
-
-  const getSkillOfType = function(creature, type){
-    return getProperties(creature, {
-      type: 'skill',
-      skillType: type,
-    });
+const getProperties = function (creature, filter, options = {
+  sort: { order: 1 }
+}) {
+  if (!creature) return;
+  if (creature.settings.hideUnusedStats) {
+    filter.hide = { $ne: true };
   }
+  filter['ancestors.id'] = creature._id;
+  filter.removed = { $ne: true };
+  filter.inactive = { $ne: true };
+  filter.overridden = { $ne: true };
 
-	export default {
-		components: {
-      RestButton,
-			AbilityListTile,
-			AttributeCard,
-			ColumnLayout,
-      DamageMultiplierCard,
-			HealthBarCardContainer,
-			HitDiceListTile,
-			SkillListTile,
-			ResourceCard,
-			SpellSlotListTile,
-      ActionCard,
-      ToggleCard,
-		},
-		props: {
-			creatureId: {
-        type: String,
-        required: true,
-      },
-		},
-    data(){return {
+  return CreatureProperties.find(filter, options);
+};
+
+const getAttributeOfType = function (creature, type) {
+  return getProperties(creature, {
+    type: 'attribute',
+    attributeType: type,
+  });
+};
+
+const getSkillOfType = function (creature, type) {
+  return getProperties(creature, {
+    type: 'skill',
+    skillType: type,
+  });
+}
+
+export default {
+  components: {
+    RestButton,
+    AbilityListTile,
+    AttributeCard,
+    ColumnLayout,
+    DamageMultiplierCard,
+    HealthBarCardContainer,
+    HitDiceListTile,
+    SkillListTile,
+    ResourceCard,
+    SpellSlotListTile,
+    ActionCard,
+    ToggleCard,
+  },
+  props: {
+    creatureId: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
       doCheckLoading: false,
-    }},
-		meteor: {
-      creature(){
-        return Creatures.findOne(this.creatureId, {fields: {settings: 1}});
-      },
-			abilities(){
-				return getAttributeOfType(this.creature, 'ability');
-			},
-			stats(){
-				return getAttributeOfType(this.creature, 'stat');
-			},
-      toggles(){
-        return CreatureProperties.find({
-          'ancestors.id': this.creatureId,
-          type: 'toggle',
-          removed: {$ne: true},
-          deactivatedByAncestor: {$ne: true},
-          showUI: true,
-        }, {
-          sort: {order: 1}
-        });
-      },
-			modifiers(){
-				return getAttributeOfType(this.creature, 'modifier');
-			},
-			resources(){
-				return getAttributeOfType(this.creature, 'resource');
-			},
-			spellSlots(){
-				return getAttributeOfType(this.creature, 'spellSlot');
-			},
-      hasSpells(){
-        return getProperties(this.creature, {
-          type: 'spell',
-        }).count();
-      },
-			hitDice(){
-        return getAttributeOfType(this.creature, 'hitDice');
-			},
-			checks(){
-        return getSkillOfType(this.creature, 'check');
-			},
-			savingThrows(){
-        return getSkillOfType(this.creature, 'save');
-			},
-			skills(){
-        return getSkillOfType(this.creature, 'skill');
-			},
-      tools(){
-        return getSkillOfType(this.creature, 'tool');
-			},
-      weapons(){
-        return getSkillOfType(this.creature, 'weapon');
-			},
-      armors(){
-        return getSkillOfType(this.creature, 'armor');
-			},
-      languages(){
-        return getSkillOfType(this.creature, 'language');
-			},
-      actions(){
-        return getProperties(this.creature, {type: 'action'});
-			},
-      appliedBuffs(){
-        return getProperties(this.creature, {type: 'buff'});
-			},
-      multipliers(){
-        return getProperties(this.creature, {
-          type: 'damageMultiplier'
-        }, {
-          sort: {value: 1, order: 1}
-        });
-      },
-      attacks(){
-        let props = getProperties(this.creature, {type: 'attack'})
-        return props && props.map(attack => {
-          attack.children = CreatureProperties.find({
-            'ancestors.id': attack._id,
-            removed: {$ne: true},
-            inactive: {$ne: true},
-          }, {
-            sort: {order: 1}
-          });
-          return attack;
-        });
-			},
-		},
-		methods: {
-			clickProperty({_id}){
-				this.$store.commit('pushDialogStack', {
-					component: 'creature-property-dialog',
-					elementId: `${_id}`,
-					data: {_id},
-				});
-			},
-			incrementChange(_id, {type, value}){
-				if (type === 'increment'){
-					damageProperty.call({_id, operation: 'increment' ,value: -value});
-				}
-			},
-      softRemove(_id){
-        softRemoveProperty.call({_id}, error => {
-          if (error) console.error(error);
-        });
-      },
-      castSpell(){
-        this.$store.commit('pushDialogStack', {
-					component: 'cast-spell-with-slot-dialog',
-					elementId: 'spell-slot-card',
-					data: {
-            creatureId: this.creatureId,
-          },
-          callback({spellId, slotId} = {}){
-            if (!spellId) return;
-            doCastSpell.call({spellId, slotId}, error => {
-              if (!error) return;
-              snackbar({text: error.reason || error.message || error.toString()});
-              console.error(error);
-            });
-          },
-				});
+    }
+  },
+  meteor: {
+    creature() {
+      return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
+    },
+    abilities() {
+      return getAttributeOfType(this.creature, 'ability');
+    },
+    stats() {
+      return getAttributeOfType(this.creature, 'stat');
+    },
+    toggles() {
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'toggle',
+        removed: { $ne: true },
+        deactivatedByAncestor: { $ne: true },
+        showUI: true,
+      }, {
+        sort: { order: 1 }
+      });
+    },
+    modifiers() {
+      return getAttributeOfType(this.creature, 'modifier');
+    },
+    resources() {
+      return getAttributeOfType(this.creature, 'resource');
+    },
+    spellSlots() {
+      return getAttributeOfType(this.creature, 'spellSlot');
+    },
+    hasSpells() {
+      const cursor = getProperties(this.creature, {
+        type: 'spell',
+      })
+      return cursor && cursor.count();
+    },
+    hitDice() {
+      return getAttributeOfType(this.creature, 'hitDice');
+    },
+    checks() {
+      return getSkillOfType(this.creature, 'check');
+    },
+    savingThrows() {
+      return getSkillOfType(this.creature, 'save');
+    },
+    skills() {
+      return getSkillOfType(this.creature, 'skill');
+    },
+    tools() {
+      return getSkillOfType(this.creature, 'tool');
+    },
+    weapons() {
+      return getSkillOfType(this.creature, 'weapon');
+    },
+    armors() {
+      return getSkillOfType(this.creature, 'armor');
+    },
+    languages() {
+      return getSkillOfType(this.creature, 'language');
+    },
+    actions() {
+      return getProperties(this.creature, { type: 'action' });
+    },
+    appliedBuffs() {
+      return getProperties(this.creature, { type: 'buff' });
+    },
+    multipliers() {
+      return getProperties(this.creature, {
+        type: 'damageMultiplier'
+      }, {
+        sort: { value: 1, order: 1 }
+      });
+    },
+  },
+  methods: {
+    clickProperty({ _id }) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `${_id}`,
+        data: { _id },
+      });
+    },
+    clickTreeProperty({ _id }) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `tree-node-${_id}`,
+        data: { _id },
+      });
+    },
+    incrementChange(_id, { type, value }) {
+      if (type === 'increment') {
+        damageProperty.call({ _id, operation: 'increment', value: -value });
       }
-		},
-	};
+    },
+    softRemove(_id) {
+      softRemoveProperty.call({ _id }, error => {
+        if (error) console.error(error);
+      });
+    },
+    castSpell() {
+      this.$store.commit('pushDialogStack', {
+        component: 'cast-spell-with-slot-dialog',
+        elementId: 'spell-slot-card',
+        data: {
+          creatureId: this.creatureId,
+        },
+        callback({ spellId, slotId, advantage, ritual } = {}) {
+          if (!spellId) return;
+          doCastSpell.call({
+            spellId,
+            slotId,
+            ritual,
+            scope: {
+              $attackAdvantage: advantage,
+            },
+          }, error => {
+            if (!error) return;
+            snackbar({ text: error.reason || error.message || error.toString() });
+            console.error(error);
+          });
+        },
+      });
+    }
+  },
+};
 </script>
 
 <style lang="css" scoped>
+
 </style>

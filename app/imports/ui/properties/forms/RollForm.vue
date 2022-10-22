@@ -35,6 +35,13 @@
         $emit('change', {path: ['roll', ...path], value, ack})"
     />
     <form-sections>
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+
       <form-section name="Advanced">
         <v-row dense>
           <v-col
@@ -65,34 +72,38 @@
 </template>
 
 <script lang="js">
-	import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 
-	export default {
-		components: {
-			FormSection,
-			FormSections,
-		},
-    mixins: [propertyFormMixin],
-		data(){return {
-			addResultLoading: false,
-		}},
-		methods: {
-			acknowledgeAddResult(){
-				this.addResultLoading = false;
-			},
-		},
-	};
+export default {
+  components: {
+    FormSection,
+    FormSections,
+  },
+  mixins: [propertyFormMixin],
+  data() {
+    return {
+      addResultLoading: false,
+    }
+  },
+  methods: {
+    acknowledgeAddResult() {
+      this.addResultLoading = false;
+    },
+  },
+};
 </script>
 
 <style lang="css" scoped>
-	.no-flex {
-		flex: initial;
-	}
-	.layout.row.wrap {
-		margin-right: -8px;
-	}
-	.layout.row.wrap > *{
-		margin-right: 8px;
-	}
+.no-flex {
+  flex: initial;
+}
+
+.layout.row.wrap {
+  margin-right: -8px;
+}
+
+.layout.row.wrap>* {
+  margin-right: 8px;
+}
 </style>

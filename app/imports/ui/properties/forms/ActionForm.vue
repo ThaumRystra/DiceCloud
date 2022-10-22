@@ -79,7 +79,13 @@
     />
 
     <form-sections>
-      <form-section name="Resources">
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+      <form-section name="Resources Consumed">
         <resources-form
           :model="model.resources"
           @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
@@ -135,6 +141,18 @@
               @change="change('usesUsed', ...arguments)"
             />
           </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Don't show in log"
+              :value="model.silent"
+              :error-messages="errors.silent"
+              @change="change('silent', ...arguments)"
+            />
+          </v-col>
         </v-row>
         <smart-select
           label="Reset"
@@ -153,15 +171,12 @@
 </template>
 
 <script lang="js">
-  import FormSection, {FormSections} from '/imports/ui/properties/forms/shared/FormSection.vue';
   import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
   import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
   import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
 
   export default {
     components: {
-      FormSection,
-      FormSections,
       ResourcesForm,
       IconColorMenu,
     },

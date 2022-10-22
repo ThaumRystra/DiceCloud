@@ -3,8 +3,8 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 
 let BranchSchema = createPropertySchema({
-	branchType: {
-		type: String,
+  branchType: {
+    type: String,
     allowedValues: [
       // Uses the condition field to determine whether to apply children
       'if',
@@ -26,7 +26,7 @@ let BranchSchema = createPropertySchema({
       //'option',
     ],
     defaultValue: 'if',
-	},
+  },
   text: {
     type: String,
     optional: true,
@@ -36,6 +36,11 @@ let BranchSchema = createPropertySchema({
     type: 'fieldToCompute',
     optional: true,
     parseLevel: 'compile',
+  },
+  // Prevent the property from showing up in the log
+  silent: {
+    type: Boolean,
+    optional: true,
   },
 });
 

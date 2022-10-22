@@ -31,9 +31,7 @@
           </v-btn>
         </v-layout>
 
-        <v-layout
-          align-end
-        >
+        <v-layout align-end>
           <div class="text-h4">
             {{ model.value }}
           </div>
@@ -63,60 +61,71 @@ export default {
   inject: {
     context: { default: {} }
   },
-	props: {
+  props: {
     model: {
       type: Object,
       required: true,
     }
-	},
-	data(){ return{
-		hover: false,
-	}},
+  },
+  data() {
+    return {
+      hover: false,
+    }
+  },
   computed: {
-    signedConMod(){
+    signedConMod() {
       return numberToSignedString(this.model.constitutionMod);
     },
   },
-	methods: {
-		click(e){
-			this.$emit('click', e);
-		},
-		increment(value){
-			this.$emit('change', {type: 'increment', value})
-		},
-	},
+  methods: {
+    click(e) {
+      this.$emit('click', e);
+    },
+    increment(value) {
+      this.$emit('change', { type: 'increment', value })
+    },
+  },
 };
 </script>
 
 <style lang="css" scoped>
-	.hit-dice-list-tile {
-		background: inherit;
-	}
-	.hit-dice-list-tile >>> .v-list__tile {
-		height: 88px;
-	}
-	.left {
-		height: 100%;
-	}
-	.buttons {
-		height: 100%;
-	}
-	.buttons > .v-btn {
-		margin: 0;
-	}
-	.hit-dice-list-tile.hover {
-		background: #f5f5f5 !important;
-	}
-	.theme--dark .hit-dice-list-tile.hover {
-		background: #515151 !important;
-	}
-	.content {
-		cursor: pointer;
-	}
-	.max-value {
-		color: rgba(0,0,0,.54);
-	}
-	.theme--dark .max-value {
-		color: rgba(255, 255, 255, 0.54);
-	}
+.hit-dice-list-tile {
+  background: inherit;
+}
+
+.hit-dice-list-tile>>>.v-list__tile {
+  height: 88px;
+}
+
+.left {
+  height: 100%;
+}
+
+.buttons {
+  height: 100%;
+}
+
+.buttons>.v-btn {
+  margin: 0;
+}
+
+.hit-dice-list-tile.hover {
+  background: #f5f5f5 !important;
+}
+
+.theme--dark .hit-dice-list-tile.hover {
+  background: #515151 !important;
+}
+
+.content {
+  cursor: pointer;
+}
+
+.max-value {
+  color: rgba(0, 0, 0, .54);
+}
+
+.theme--dark .max-value {
+  color: rgba(255, 255, 255, 0.54);
+}
 </style>

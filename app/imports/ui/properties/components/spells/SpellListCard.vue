@@ -63,32 +63,34 @@ import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 
 export default {
-	components: {
-		ToolbarCard,
+  components: {
+    ToolbarCard,
     SpellList,
-	},
-	props: {
-		model: {
+  },
+  props: {
+    model: {
       type: Object,
       required: true,
     },
-		organize: Boolean,
-	},
-  data(){ return {
-    preparingSpells: false,
-  }},
+    organize: Boolean,
+  },
+  data() {
+    return {
+      preparingSpells: false,
+    }
+  },
   meteor: {
-    spells(){
+    spells() {
       let filter = {
         'ancestors.id': this.model._id,
         type: 'spell',
-        removed: {$ne: true},
+        removed: { $ne: true },
       };
-      if (this.preparingSpells){
-        filter.deactivatedByAncestor = {$ne: true};
-        filter.deactivatedByToggle = {$ne: true};
+      if (this.preparingSpells) {
+        filter.deactivatedByAncestor = { $ne: true };
+        filter.deactivatedByToggle = { $ne: true };
       } else {
-        filter.inactive = {$ne: true};
+        filter.inactive = { $ne: true };
       }
       return CreatureProperties.find(filter, {
         sort: {
@@ -97,35 +99,36 @@ export default {
         }
       });
     },
-    numPrepared(){
+    numPrepared() {
       return CreatureProperties.find({
         'ancestors.id': this.model._id,
         type: 'spell',
-        removed: {$ne: true},
+        removed: { $ne: true },
         prepared: true,
-        alwaysPrepared: {$ne: true},
-        deactivatedByAncestor: {$ne: true},
-        deactivatedByToggle: {$ne: true},
+        alwaysPrepared: { $ne: true },
+        deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
       }).count();
     },
-    preparedError(){
+    preparedError() {
       if (!this.model.maxPrepared) return;
       let numPrepared = this.numPrepared;
       let maxPrepared = this.model.maxPrepared.value || 0;
       return numPrepared !== maxPrepared
     },
   },
-	methods: {
-		clickSpellList(_id){
-			this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `${_id}`,
-				data: {_id},
-			});
-		},
-	}
+  methods: {
+    clickSpellList(_id) {
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-property-dialog',
+        elementId: `${_id}`,
+        data: { _id },
+      });
+    },
+  }
 };
 </script>
 
 <style lang="css" scoped>
+
 </style>

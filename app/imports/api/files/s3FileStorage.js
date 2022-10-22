@@ -1,5 +1,4 @@
 // https://github.com/VeliovGroup/Meteor-Files/blob/master/docs/aws-s3-integration.md
-
 import { Meteor } from 'meteor/meteor';
 import { each, clone } from 'lodash';
 import { Random } from 'meteor/random';
@@ -37,8 +36,9 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     secretAccessKey: s3Conf.secret,
     endpoint: s3Conf.endpoint,
     sslEnabled: true, // optional
+    maxRetries: 10,
     httpOptions: {
-      timeout: 6000,
+      timeout: 12000,
       agent: false
     }
   });
@@ -47,14 +47,18 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     collectionName,
     storagePath,
     onBeforeUpload,
-    debug = Meteor.isProduction,
+    onAfterUpload,
+    debug = !Meteor.isProduction,
     allowClientCode = false,
   }){
     const collection = new FilesCollection({
       collectionName,
       storagePath,
       onBeforeUpload,
-      onAfterUpload(fileRef){
+      onAfterUpload(fileRef) {
+        // Call the provided afterUpload hook first
+        onAfterUpload?.(fileRef);
+        
         // Start moving files to AWS:S3
         // after fully received by the Meteor server
 
@@ -217,18 +221,20 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     collectionName,
     storagePath,
     onBeforeUpload,
-    debug = Meteor.isProduction,
+    onAfterUpload,
+    debug = !Meteor.isProduction,
     allowClientCode = false,
   }){
     const collection = new FilesCollection({
       collectionName,
       storagePath,
       onBeforeUpload,
+      onAfterUpload,
       debug,
       allowClientCode,
     });
 
-    if (Meteor.isServer){
+    if (Meteor.isServer) {
       // Use the normal file system to read files
       collection.readJSONFile = async function(file){
         const fileString = await fsp.readFile(file.path, 'utf8');

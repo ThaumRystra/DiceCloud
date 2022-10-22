@@ -54,6 +54,14 @@
       :value="model.tags"
       @change="change('tags', ...arguments)"
     />
+
+    <form-section
+      v-if="$slots.children"
+      name="Children"
+      standalone
+    >
+      <slot name="children" />
+    </form-section>
   </div>
 </template>
 

@@ -238,7 +238,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
     <form-sections>
-      <form-section name="Resources">
+      <form-section name="Resources Consumed">
         <resources-form
           :model="model.resources"
           @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
@@ -246,9 +246,8 @@
           @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
         />
       </form-section>
-      <form-section
-        name="Limit Uses"
-      >
+
+      <form-section name="Limit Uses">
         <v-row dense>
           <v-col
             cols="12"
@@ -291,6 +290,14 @@
           @change="change('reset', ...arguments)"
         />
       </form-section>
+
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+
       <form-section name="Advanced">
         <smart-combobox
           label="Tags"
@@ -307,80 +314,81 @@
 </template>
 
 <script lang="js">
-	import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
-  import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
+import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
+import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
 
-	export default {
-		components: {
-      FormSections,
-			FormSection,
-      IconColorMenu,
-      ResourcesForm,
-		},
-    mixins: [propertyFormMixin],
-		data(){return {
-			magicSchools: [
-				{
-					text: 'Abjuration',
-					value: 'abjuration',
-				}, {
-					text: 'Conjuration',
-					value: 'conjuration',
-				}, {
-					text: 'Divination',
-					value: 'divination',
-				}, {
-					text: 'Enchantment',
-					value: 'enchantment',
-				}, {
-					text: 'Evocation',
-					value: 'evocation',
-				}, {
-					text: 'Illusion',
-					value: 'illusion',
-				}, {
-					text: 'Necromancy',
-					value: 'necromancy',
-				}, {
-					text: 'Transmutation',
-					value: 'transmutation',
-				},
-			],
-			spellLevels: [
-				{
-					text: 'Cantrip',
-					value: 0,
-				}, {
-					text: 'Level 1',
-					value: 1,
-				}, {
-					text: 'Level 2',
-					value: 2,
-				}, {
-					text: 'Level 3',
-					value: 3,
-				}, {
-					text: 'Level 4',
-					value: 4,
-				}, {
-					text: 'Level 5',
-					value: 5,
-				}, {
-					text: 'Level 6',
-					value: 6,
-				}, {
-					text: 'Level 7',
-					value: 7,
-				}, {
-					text: 'Level 8',
-					value: 8,
-				}, {
-					text: 'Level 9',
-					value: 9,
-				},
-			],
+export default {
+  components: {
+    FormSections,
+    FormSection,
+    IconColorMenu,
+    ResourcesForm,
+  },
+  mixins: [propertyFormMixin],
+  data() {
+    return {
+      magicSchools: [
+        {
+          text: 'Abjuration',
+          value: 'abjuration',
+        }, {
+          text: 'Conjuration',
+          value: 'conjuration',
+        }, {
+          text: 'Divination',
+          value: 'divination',
+        }, {
+          text: 'Enchantment',
+          value: 'enchantment',
+        }, {
+          text: 'Evocation',
+          value: 'evocation',
+        }, {
+          text: 'Illusion',
+          value: 'illusion',
+        }, {
+          text: 'Necromancy',
+          value: 'necromancy',
+        }, {
+          text: 'Transmutation',
+          value: 'transmutation',
+        },
+      ],
+      spellLevels: [
+        {
+          text: 'Cantrip',
+          value: 0,
+        }, {
+          text: 'Level 1',
+          value: 1,
+        }, {
+          text: 'Level 2',
+          value: 2,
+        }, {
+          text: 'Level 3',
+          value: 3,
+        }, {
+          text: 'Level 4',
+          value: 4,
+        }, {
+          text: 'Level 5',
+          value: 5,
+        }, {
+          text: 'Level 6',
+          value: 6,
+        }, {
+          text: 'Level 7',
+          value: 7,
+        }, {
+          text: 'Level 8',
+          value: 8,
+        }, {
+          text: 'Level 9',
+          value: 9,
+        },
+      ],
       targetOptions: [
         {
           text: 'Self',
@@ -403,17 +411,18 @@
         }
       ],
       attackSwitch: false,
-		};},
-    computed: {
-      isAttack(){
-        return this.attackSwitch || !!this.model.attackRoll?.calculation
-      }
+    };
+  },
+  computed: {
+    isAttack() {
+      return this.attackSwitch || !!this.model.attackRoll?.calculation
     }
-	};
+  }
+};
 </script>
 
 <style lang="css" scoped>
-	.v-input--checkbox {
-		margin-top: 0;
-	}
+.v-input--checkbox {
+  margin-top: 0;
+}
 </style>

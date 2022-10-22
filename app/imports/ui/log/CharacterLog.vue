@@ -9,6 +9,7 @@
 <script lang="js">
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import LogComponent from '/imports/ui/log/LogComponent.vue';
 
@@ -20,6 +21,39 @@ export default {
     creatureId: {
       type: String,
       required: true,
+    },
+  },
+  data(){return {
+    inputHint: undefined,
+    inputError: undefined,
+    input: undefined,
+  }},
+  watch: {
+    input(value){
+      this.input = value;
+      this.inputHint = this.inputError = undefined;
+      if (!this.input) return;
+      let result;
+      try {
+        result = parse(value);
+      } catch (e){
+        if (e.constructor.name === 'EndOfInputError'){
+          this.inputError = '...';
+        } else {
+          let error = prettifyParseError(e);
+          this.inputError = error;
+        }
+        return;
+      }
+      try {
+        let {result: compiled} = resolve('compile', result, this.variables);
+        this.inputHint = toString(compiled);
+        return;
+      } catch (e){
+        console.warn(e);
+        this.inputError = 'Compilation error';
+        return;
+      }
     },
   },
   methods: {
@@ -43,6 +77,9 @@ export default {
     },
     creature(){
       return Creatures.findOne(this.creatureId) || {};
+    },
+    variables(){
+      return CreatureVariables.findOne({_creatureId: this.creatureId}) || {};
     },
     editPermission(){
       try {

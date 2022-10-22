@@ -51,21 +51,21 @@ const sendMessage = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({content, tabletopId}) {
+  run({ content, tabletopId }) {
     let user = Meteor.user();
     if (!user) {
       throw new Meteor.Error('messages.send.denied',
-      'You need to be logged in to send a message');
+        'You need to be logged in to send a message');
     }
     assertUserInTabletop(tabletopId, this.userId);
 
     return Messages.insert({
-			content,
+      content,
       tabletopId,
       timestamp: new Date(),
       userId: user._id,
       username: user.username,
-		});
+    });
   },
 
 });
@@ -87,24 +87,24 @@ const removeMessages = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({messageId, tabletopId}) {
+  run({ messageId, tabletopId }) {
     if (!this.userId) {
       throw new Meteor.Error('messages.remove.denied',
-      'You need to be logged in to remove a tabletop');
+        'You need to be logged in to remove a tabletop');
     }
     let message = Messages.findOne(messageId);
     let tabletop = Tabletops.findOne(message.tabletopId);
-    if (this.userId !== message.userId && this.userId !== tabletop.gameMaster){
+    if (this.userId !== message.userId && this.userId !== tabletop.gameMaster) {
       throw new Meteor.Error('messages.remove.denied',
-      'You don\'t have permission to remove this message');
+        'You don\'t have permission to remove this message');
     }
     let removed = Messages.remove({
-			_id: messageId,
-		});
+      _id: messageId,
+    });
     Creatures.update({
       tabletop: tabletopId,
     }, {
-      $unset: {tabletop: 1},
+      $unset: { tabletop: 1 },
     });
     return removed;
   },

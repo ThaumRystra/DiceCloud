@@ -4,35 +4,35 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
 let SharingSchema = new SimpleSchema({
   owner: {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id,
-		index: 1
-	},
-	readers: {
-		type: Array,
-		defaultValue: [],
-		index: 1,
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    index: 1
+  },
+  readers: {
+    type: Array,
+    defaultValue: [],
+    index: 1,
     maxCount: STORAGE_LIMITS.readersCount,
-	},
-	'readers.$': {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id
-	},
-	writers: {
-		type: Array,
-		defaultValue: [],
-		index: 1,
+  },
+  'readers.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id
+  },
+  writers: {
+    type: Array,
+    defaultValue: [],
+    index: 1,
     maxCount: STORAGE_LIMITS.writersCount,
-	},
-	'writers.$': {
-		type: String,
-		regEx: SimpleSchema.RegEx.Id
-	},
-	public: {
-		type: Boolean,
-		defaultValue: false,
-		index: 1,
-	},
+  },
+  'writers.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id
+  },
+  public: {
+    type: Boolean,
+    defaultValue: false,
+    index: 1,
+  },
 });
 
 export default SharingSchema;

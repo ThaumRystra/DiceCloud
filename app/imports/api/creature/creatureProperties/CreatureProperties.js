@@ -18,23 +18,23 @@ let CreaturePropertySchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-	type: {
+  type: {
     type: String,
     allowedValues: Object.keys(propertySchemasIndex),
   },
-	tags: {
-		type: Array,
-		defaultValue: [],
+  tags: {
+    type: Array,
+    defaultValue: [],
     maxCount: STORAGE_LIMITS.tagCount,
-	},
-	'tags.$': {
-		type: String,
+  },
+  'tags.$': {
+    type: String,
     max: STORAGE_LIMITS.tagLength,
-	},
-	disabled: {
-		type: Boolean,
-		optional: true,
-	},
+  },
+  disabled: {
+    type: Boolean,
+    optional: true,
+  },
   icon: {
     type: storedIconsSchema,
     optional: true,
@@ -82,28 +82,31 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     index: 1,
     removeBeforeCompute: true,
   },
+  // When this is true on any property, the creature needs to be recomputed
+  dirty: {
+    type: Boolean,
+    // Default to true because new properties cause a recomputation
+    defaultValue: true,
+    optional: true,
+  },
 });
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
 
-for (let key in propertySchemasIndex){
-	let schema = new SimpleSchema({});
-	schema.extend(propertySchemasIndex[key]);
-	schema.extend(CreaturePropertySchema);
+for (let key in propertySchemasIndex) {
+  let schema = new SimpleSchema({});
+  schema.extend(propertySchemasIndex[key]);
+  schema.extend(CreaturePropertySchema);
   schema.extend(ColorSchema);
-	schema.extend(ChildSchema);
-	schema.extend(SoftRemovableSchema);
-	CreatureProperties.attachSchema(schema, {
-		selector: {type: key}
-	});
+  schema.extend(ChildSchema);
+  schema.extend(SoftRemovableSchema);
+  CreatureProperties.attachSchema(schema, {
+    selector: { type: key }
+  });
 }
-
-import '/imports/api/creature/creatureProperties/methods/index.js';
-//import '/imports/api/creature/actions/doAction.js';
-//import '/imports/api/creature/actions/castSpellWithSlot.js';
 
 export default CreatureProperties;
 export {
   DenormalisedOnlyCreaturePropertySchema,
-	CreaturePropertySchema,
+  CreaturePropertySchema,
 };

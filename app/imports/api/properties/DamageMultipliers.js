@@ -8,10 +8,10 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
  */
 let DamageMultiplierSchema = new SimpleSchema({
   name: {
-		type: String,
-		optional: true,
+    type: String,
+    optional: true,
     max: STORAGE_LIMITS.name,
-	},
+  },
   damageTypes: {
     type: Array,
     defaultValue: [],
@@ -23,11 +23,11 @@ let DamageMultiplierSchema = new SimpleSchema({
     max: STORAGE_LIMITS.calculation,
     regEx: VARIABLE_NAME_REGEX,
   },
-	// The value of the damage multiplier
-	value: {
+  // The value of the damage multiplier
+  value: {
     type: Number,
-		defaultValue: 0.5,
-		allowedValues: [0, 0.5, 2],
+    defaultValue: 0.5,
+    allowedValues: [0, 0.5, 2],
   },
   // Tags which bypass this multiplier (OR)
   excludeTags: {

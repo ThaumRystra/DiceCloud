@@ -29,7 +29,7 @@ export default function getAggregatorResult(node){
   if (aggregator.set !== undefined) {
     result = aggregator.set;
   }
-  if (!node.definingProp?.decimal && Number.isFinite(result)){
+  if (!node.data.definingProp?.decimal && Number.isFinite(result)){
     result = Math.floor(result);
   } else if (Number.isFinite(result)){
     result = stripFloatingPointOddities(result);

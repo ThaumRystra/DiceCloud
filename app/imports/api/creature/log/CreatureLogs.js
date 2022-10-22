@@ -1,17 +1,18 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import {assertEditPermission} from '/imports/api/creature/creatures/creaturePermissions.js';
-import {assertUserInTabletop} from '/imports/api/tabletop/methods/shared/tabletopPermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import { assertUserInTabletop } from '/imports/api/tabletop/methods/shared/tabletopPermissions.js';
 
-import {parse, prettifyParseError} from '/imports/parser/parser.js';
+import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
 const PER_CREATURE_LOG_LIMIT = 100;
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
-if (Meteor.isServer){
+if (Meteor.isServer) {
   var sendWebhookAsCreature = require('/imports/server/discord/sendWebhook.js').sendWebhookAsCreature;
 }
 
@@ -26,17 +27,17 @@ let CreatureLogSchema = new SimpleSchema({
   'content.$': {
     type: LogContentSchema,
   },
-	// The real-world date that it occured, usually sorted by date
-	date: {
-		type: Date,
-		autoValue: function() {
-			// If the date isn't set, set it to now
-			if (!this.isSet) {
-				return new Date();
-			}
-		},
+  // The real-world date that it occured, usually sorted by date
+  date: {
+    type: Date,
+    autoValue: function () {
+      // If the date isn't set, set it to now
+      if (!this.isSet) {
+        return new Date();
+      }
+    },
     index: 1,
-	},
+  },
   creatureId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -57,23 +58,23 @@ let CreatureLogSchema = new SimpleSchema({
 
 CreatureLogs.attachSchema(CreatureLogSchema);
 
-function removeOldLogs(creatureId){
+function removeOldLogs(creatureId) {
   // Find the first log that is over the limit
   let firstExpiredLog = CreatureLogs.find({
     creatureId
   }, {
-    sort: {date: -1},
+    sort: { date: -1 },
     skip: PER_CREATURE_LOG_LIMIT,
   });
   if (!firstExpiredLog) return;
   // Remove all logs older than the one over the limit
   CreatureLogs.remove({
     creatureId,
-    date: {$lte: firstExpiredLog.date},
+    date: { $lte: firstExpiredLog.date },
   });
 }
 
-function logToMessageData(log){
+function logToMessageData(log) {
   let embed = {
     fields: [],
   };
@@ -85,8 +86,8 @@ function logToMessageData(log){
   return { embeds: [embed] };
 }
 
-function logWebhook({log, creature}){
-  if (Meteor.isServer){
+function logWebhook({ log, creature }) {
+  if (Meteor.isServer) {
     sendWebhookAsCreature({
       creature,
       data: logToMessageData(log),
@@ -101,23 +102,25 @@ const insertCreatureLog = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-	validate: new SimpleSchema({
-		log: CreatureLogSchema.omit('date'),
-	}).validator(),
-  run({log}){
+  validate: new SimpleSchema({
+    log: CreatureLogSchema.omit('date'),
+  }).validator(),
+  run({ log }) {
     const creatureId = log.creatureId;
-    const creature = Creatures.findOne(creatureId, {fields: {
-      readers: 1,
-      writers: 1,
-      owner: 1,
-      'settings.discordWebhook': 1,
-      name: 1,
-      avatarPicture: 1,
-      tabletop: 1,
-    }});
+    const creature = Creatures.findOne(creatureId, {
+      fields: {
+        readers: 1,
+        writers: 1,
+        owner: 1,
+        'settings.discordWebhook': 1,
+        name: 1,
+        avatarPicture: 1,
+        tabletop: 1,
+      }
+    });
     assertEditPermission(creature, this.userId);
     // Build the new log
-    let id = insertCreatureLogWork({log, creature, method: this})
+    let id = insertCreatureLogWork({ log, creature, method: this })
     return id;
   },
 });
@@ -129,35 +132,35 @@ const insertTabletopLog = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-	validate: new SimpleSchema({
-		log: CreatureLogSchema.omit('date'),
-	}).validator(),
-  run({log}){
+  validate: new SimpleSchema({
+    log: CreatureLogSchema.omit('date'),
+  }).validator(),
+  run({ log }) {
     const tabletopId = log.tabletopId;
     assertUserInTabletop(tabletopId, this.userId);
     // Build the new log
-    let id = insertCreatureLogWork({log, method: this})
+    let id = insertCreatureLogWork({ log, method: this })
     return id;
   },
 });
 
-export function insertCreatureLogWork({log, creature, method}){
+export function insertCreatureLogWork({ log, creature, method }) {
   // Build the new log
-  if (typeof log === 'string'){
-    log = {content: [{value: log}]};
+  if (typeof log === 'string') {
+    log = { content: [{ value: log }] };
   }
   if (!log.content?.length) return;
   log.date = new Date();
   if (creature) log.tabletopId = creature.tabletop;
   // Insert it
   let id = CreatureLogs.insert(log);
-  if (Meteor.isServer){
+  if (Meteor.isServer) {
     method?.unblock();
-    if (creature){
+    if (creature) {
       removeOldLogs(creature._id);
-      logWebhook({log, creature});
+      logWebhook({ log, creature });
     }
-    if (log.tabletopId){
+    if (log.tabletopId) {
       // Todo remove old tabletop logs
       // Log webhook if it's different to creature webhook
     }
@@ -166,9 +169,9 @@ export function insertCreatureLogWork({log, creature, method}){
 }
 
 
-function equalIgnoringWhitespace(a, b){
+function equalIgnoringWhitespace(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string') return a === b;
-  return a.replace(/\s/g,'') === b.replace(/\s/g, '');
+  return a.replace(/\s/g, '') === b.replace(/\s/g, '');
 }
 
 const logRoll = new ValidatedMethod({
@@ -178,39 +181,41 @@ const logRoll = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-	validate: new SimpleSchema({
-		roll: {
-			type: String,
-		},
-		creatureId: {
-			type: String,
-			regEx: SimpleSchema.RegEx.Id,
-		},
-	}).validator(),
-  run({roll, creatureId}){
-    const creature = Creatures.findOne(creatureId, {fields: {
-      variables: 1,
-      readers: 1,
-      writers: 1,
-      owner: 1,
-      'settings.discordWebhook': 1,
-      name: 1,
-      avatarPicture: 1,
-    }});
+  validate: new SimpleSchema({
+    roll: {
+      type: String,
+    },
+    creatureId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+  }).validator(),
+  run({ roll, creatureId }) {
+    const creature = Creatures.findOne(creatureId, {
+      fields: {
+        readers: 1,
+        writers: 1,
+        owner: 1,
+        'settings.discordWebhook': 1,
+        name: 1,
+        avatarPicture: 1,
+      }
+    });
     assertEditPermission(creature, this.userId);
+    const variables = CreatureVariables.findOne({ _creatureId: creatureId });
     let logContent = []
     let parsedResult = undefined;
     try {
       parsedResult = parse(roll);
-    } catch (e){
+    } catch (e) {
       let error = prettifyParseError(e);
-      logContent.push({name: 'Parse Error', value: error});
+      logContent.push({ name: 'Parse Error', value: error });
     }
     if (parsedResult) try {
       let {
         result: compiled,
         context
-      } = resolve('compile', parsedResult, creature.variables);
+      } = resolve('compile', parsedResult, variables);
       const compiledString = toString(compiled);
       if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
         value: roll
@@ -218,19 +223,19 @@ const logRoll = new ValidatedMethod({
       logContent.push({
         value: compiledString
       });
-      let {result: rolled} = resolve('roll', compiled, creature.variables, context);
+      let { result: rolled } = resolve('roll', compiled, variables, context);
       let rolledString = toString(rolled);
       if (rolledString !== compiledString) logContent.push({
         value: rolledString
       });
-      let {result} = resolve('reduce', rolled, creature.variables, context);
+      let { result } = resolve('reduce', rolled, variables, context);
       let resultString = toString(result);
       if (resultString !== rolledString) logContent.push({
         value: resultString
       });
-    } catch (e){
+    } catch (e) {
       console.error(e);
-      logContent = [{name: 'Calculation error'}];
+      logContent = [{ name: 'Calculation error' }];
     }
     const log = {
       content: logContent,
@@ -238,11 +243,11 @@ const logRoll = new ValidatedMethod({
       date: new Date(),
     };
 
-    let id = insertCreatureLogWork({log, creature, method: this});
+    let id = insertCreatureLogWork({ log, creature, method: this });
 
     return id;
   },
 });
 
 export default CreatureLogs;
-export { CreatureLogSchema, insertCreatureLog, logRoll, insertTabletopLog};
+export { CreatureLogSchema, insertCreatureLog, logRoll, insertTabletopLog, PER_CREATURE_LOG_LIMIT };

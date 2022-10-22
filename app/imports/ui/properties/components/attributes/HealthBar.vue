@@ -41,7 +41,7 @@
             style="height: 100%; transform-origin: left; transition: all 0.5s ease;"
             :style="{
               backgroundColor: barColor,
-              transform: `scaleX(${value / maxValue})`,
+              transform: `scaleX(${fillFraction})`,
             }"
           />
           <div
@@ -92,87 +92,102 @@ import IncrementMenu from '/imports/ui/components/IncrementMenu.vue';
 import isDarkColor from '/imports/ui/utility/isDarkColor.js';
 import chroma from 'chroma-js';
 
-	export default {
-    components: {
-      IncrementMenu
-    },
-    inject: {
-      theme: {
-        default: {
-          isDark: false,
-        },
+export default {
+  components: {
+    IncrementMenu
+  },
+  inject: {
+    theme: {
+      default: {
+        isDark: false,
       },
     },
-		props: {
-			value: Number,
-			maxValue: Number,
-			name: String,
-      color: {
-        type: String,
-        default() {
-          return this.$vuetify.theme.currentTheme.primary
-        },
+  },
+  props: {
+    value: {
+      type: Number,
+      default: undefined,
+    },
+    maxValue: {
+      type: Number,
+      default: undefined,
+    },
+    name: {
+      type: String,
+      default: undefined,
+    },
+    color: {
+      type: String,
+      default() {
+        return this.$vuetify.theme.currentTheme.primary
       },
-      midColor: {
-        type: String,
-        default: undefined,
-      },
-      lowColor: {
-        type: String,
-        default: undefined,
-      },
-			_id: String,
-		},
-		data() {
-			return {
-				editing: false,
-				hover: false,
-			};
-		},
-    computed: {
-      barColor() {
-        const fraction = this.value / this.maxValue;
-        if (!Number.isFinite(fraction)) return this.color;
-        if (fraction > 0.5){
-          return this.color;
-        } else if (this.midColor && this.lowColor) {
-          return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
-        } else if (this.midColor){
-          return this.midColor;
-        }
+    },
+    midColor: {
+      type: String,
+      default: undefined,
+    },
+    lowColor: {
+      type: String,
+      default: undefined,
+    },
+    _id: String,
+  },
+  data() {
+    return {
+      editing: false,
+      hover: false,
+    };
+  },
+  computed: {
+    fillFraction() {
+      let fraction = this.value / this.maxValue;
+      if (fraction < 0) fraction = 0;
+      if (fraction > 1) fraction = 1;
+      return fraction;
+    },
+    barColor() {
+      const fraction = this.value / this.maxValue;
+      if (!Number.isFinite(fraction)) return this.color;
+      if (fraction > 0.5) {
         return this.color;
-      },
-      barBackgroundColor(){
-        return chroma(this.barColor)
+      } else if (this.midColor && this.lowColor) {
+        return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
+      } else if (this.midColor) {
+        return this.midColor;
+      }
+      return this.color;
+    },
+    barBackgroundColor() {
+      return chroma(this.barColor)
         .darken(1.5)
         .desaturate(1.5)
         .hex();
-      },
-      isTextLight(){
-        return isDarkColor(this.barBackgroundColor);
-        /* Change color at the halfway mark
-        const fraction = this.value / this.maxValue;
-        if (fraction >= 0.5){
-          return isDarkColor(this.barColor);
-        } else {
-          return isDarkColor(this.barBackgroundColor);
-        }
-        */
-      }
     },
-		methods: {
-			edit() {
-				this.editing = true;
-			},
-			cancelEdit() {
-				this.editing = false;
-			},
-      changeIncrementMenu(e){
-        this.$emit('change', e);
-        this.editing = false;
+    isTextLight() {
+      return isDarkColor(this.barBackgroundColor);
+      /* Change color at the halfway mark
+      const fraction = this.value / this.maxValue;
+      if (fraction >= 0.5){
+        return isDarkColor(this.barColor);
+      } else {
+        return isDarkColor(this.barBackgroundColor);
       }
-		},
-	};
+      */
+    }
+  },
+  methods: {
+    edit() {
+      this.editing = true;
+    },
+    cancelEdit() {
+      this.editing = false;
+    },
+    changeIncrementMenu(e) {
+      this.$emit('change', e);
+      this.editing = false;
+    }
+  },
+};
 </script>
 
 <style>
@@ -187,70 +202,85 @@ import chroma from 'chroma-js';
 </style>
 
 <style scoped>
-	.health-bar {
-		background: inherit;
-	}
-	.name {
-		text-align: center;
-		cursor: pointer;
-		min-width: 150px;
-		flex-basis: 150px;
-		flex-grow: 1;
-		flex-shrink: 1;
-	}
-	.name:hover {
-		font-weight: 500;
-	}
-	.bar {
-		transition: box-shadow 0.2s;
-	}
-	.bar:hover {
-		box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-			0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
-	}
-	.hover {
-		background: #f5f5f5 !important;
-	}
-	.theme--dark .hover {
-		background: #515151 !important;
-	}
-	.filled.theme--light {
-		background: #fff !important;
-	}
-	.filled.theme--dark {
-		background: #424242 !important;
-	}
-	.background-transition-enter-active,
-	.background-transition-leave-active {
-		transition: all 0.2s;
-	}
-	.background-transition-enter,
-	.background-transition-leave-to {
-		opacity: 0;
-	}
-	.transition-enter-active {
-		transition: all 0.2s;
-	}
-	.transition-leave-active {
-		transition: all 0.3s;
-	}
-	.transition-enter-to,
-	.transition-leave {
-		opacity: 1;
-		transform: scaleY(1) !important;
-	}
-	.transition-enter,
-	.transition-leave-to {
-		opacity: 0;
-		transform: scaleY(0) !important;
-	}
-	.page-tint {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background-color: rgba(0, 0, 0, 0.15);
-		z-index: 6;
-	}
+.health-bar {
+  background: inherit;
+}
+
+.name {
+  text-align: center;
+  cursor: pointer;
+  min-width: 150px;
+  flex-basis: 150px;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.name:hover {
+  font-weight: 500;
+}
+
+.bar {
+  transition: box-shadow 0.2s;
+}
+
+.bar:hover {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.hover {
+  background: #f5f5f5 !important;
+}
+
+.theme--dark .hover {
+  background: #515151 !important;
+}
+
+.filled.theme--light {
+  background: #fff !important;
+}
+
+.filled.theme--dark {
+  background: #424242 !important;
+}
+
+.background-transition-enter-active,
+.background-transition-leave-active {
+  transition: all 0.2s;
+}
+
+.background-transition-enter,
+.background-transition-leave-to {
+  opacity: 0;
+}
+
+.transition-enter-active {
+  transition: all 0.2s;
+}
+
+.transition-leave-active {
+  transition: all 0.3s;
+}
+
+.transition-enter-to,
+.transition-leave {
+  opacity: 1;
+  transform: scaleY(1) !important;
+}
+
+.transition-enter,
+.transition-leave-to {
+  opacity: 0;
+  transform: scaleY(0) !important;
+}
+
+.page-tint {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 6;
+}
 </style>

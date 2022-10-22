@@ -95,52 +95,54 @@ import Libraries from '/imports/api/library/Libraries.js';
 import CreatureListTile from '/imports/ui/creature/creatureList/CreatureListTile.vue';
 
 export default {
-	components: {
-		DialogBase,
+  components: {
+    DialogBase,
     CreatureListTile,
-	},
-  data(){return {
-    usernameInput: '',
-    verificationInput: '',
-  };},
+  },
+  data() {
+    return {
+      usernameInput: '',
+      verificationInput: '',
+    };
+  },
   meteor: {
     $subscribe: {
-      'ownedDocuments'(){
+      'ownedDocuments'() {
         return [];
       },
     },
-    characters(){
-      return Creatures.find({owner: Meteor.userId()});
+    characters() {
+      return Creatures.find({ owner: Meteor.userId() });
     },
-    libraries(){
-      return Libraries.find({owner: Meteor.userId()});
+    libraries() {
+      return Libraries.find({ owner: Meteor.userId() });
     },
-    user(){
+    user() {
       return Meteor.user();
     },
   },
-  computed:{
-    usernameInputValid(){
+  computed: {
+    usernameInputValid() {
       let username = this.user.username;
       if (!username) return true;
       let input = this.usernameInput;
       if (!input) return false;
-      if (input.toLowerCase() === username.toLowerCase()){
+      if (input.toLowerCase() === username.toLowerCase()) {
         return true;
       } else {
         return false;
       }
     },
-    verificationInputValid(){
+    verificationInputValid() {
       let input = this.verificationInput || '';
       return input.toLowerCase() === 'delete my account'
     },
-    valid(){
+    valid() {
       return this.usernameInputValid && this.verificationInputValid;
     }
   },
   methods: {
-    deleteAccount(){
+    deleteAccount() {
       this.$router.push('/');
       Meteor.users.deleteMyAccount.call();
       this.$store.dispatch('popDialogStack');
@@ -150,4 +152,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
 </style>

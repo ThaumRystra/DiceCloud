@@ -91,6 +91,20 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item
+            key="ritual-dummy-slot"
+            class="spell-slot-list-tile"
+            :class="{ 'primary--text': selectedSlotId === 'ritual' }"
+            value="ritual"
+            :disabled="!canCastSpellWithSlot(selectedSpell, 'ritual')"
+            @click="selectedSlotId = 'ritual'"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                Cast as ritual
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <spell-slot-list-tile
             v-for="spellSlot in spellSlots"
             :key="spellSlot._id"
@@ -105,13 +119,13 @@
       </template>
       <template slot="right">
         <div
-          key="spell-title"
+          key="spell-title-right"
           class="text-h6 my-3"
         >
           Spell
         </div>
         <v-list-item-group
-          key="slot-list"
+          key="slot-list-right"
           v-model="selectedSpellId"
         >
           <template v-for="spell in computedSpells">
@@ -145,10 +159,24 @@
       >
         Cancel
       </v-btn>
+      <roll-popup
+        v-if="selectedSpell && selectedSpell.attackRoll"
+        text
+        color="primary"
+        class="mx-2"
+        :disabled="!canCast"
+        :name="selectedSpell.name"
+        :advantage="selectedSpell.attackRoll && selectedSpell.attackRoll.advantage"
+        @roll="cast"
+      >
+        Cast
+      </roll-popup>
       <v-btn
+        v-else
         text
         :disabled="!canCast"
-        class="primary--text"
+        class="mx-2 px-4"
+        color="primary"
         @click="cast"
       >
         Cast
@@ -164,20 +192,22 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import spellsWithSubheaders from '/imports/ui/properties/components/spells/spellsWithSubheaders.js';
 import SpellSlotListTile from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/ui/properties/components/spells/SpellListTile.vue';
+import RollPopup from '/imports/ui/components/RollPopup.vue';
 import { find } from 'lodash';
 
 const slotFilter = {
   type: 'attribute',
   attributeType: 'spellSlot',
-  removed: {$ne: true},
-  inactive: {$ne: true},
-  overridden: {$ne: true},
-  'spellSlotLevel.value': {$gte: 1},
+  removed: { $ne: true },
+  inactive: { $ne: true },
+  overridden: { $ne: true },
+  'spellSlotLevel.value': { $gte: 1 },
 };
 
 export default {
   components: {
     DialogBase,
+    RollPopup,
     SplitListLayout,
     SpellSlotListTile,
     SpellListTile,
@@ -196,36 +226,38 @@ export default {
       default: undefined,
     },
   },
-  data(){ return {
-    searchString: undefined,
-    selectedSlotId: this.slotId,
-    selectedSpellId: this.spellId,
-    selectedSlot: undefined,
-    selectedSpell: undefined,
-    searchValue: undefined,
-    searchError: undefined,
-    filterMenuOpen: false,
-    booleanFilters: {
-      verbal: {name: 'Verbal', enabled: false, value: false},
-      somatic: {name: 'Somatic', enabled: false, value: false},
-      material: {name: 'Material', enabled: false, value: false},
-      concentration: {name: 'Concentration', enabled: false, value: false},
-      ritual: {name: 'Ritual', enabled: false, value: false},
-    },
-  }},
+  data() {
+    return {
+      searchString: undefined,
+      selectedSlotId: this.slotId,
+      selectedSpellId: this.spellId,
+      selectedSlot: undefined,
+      selectedSpell: undefined,
+      searchValue: undefined,
+      searchError: undefined,
+      filterMenuOpen: false,
+      booleanFilters: {
+        verbal: { name: 'Verbal', enabled: false, value: true },
+        somatic: { name: 'Somatic', enabled: false, value: true },
+        material: { name: 'Material', enabled: false, value: true },
+        concentration: { name: 'Concentration', enabled: false, value: true },
+        ritual: { name: 'Ritual', enabled: false, value: true },
+      },
+    }
+  },
   computed: {
-    computedSpells(){
+    computedSpells() {
       return spellsWithSubheaders(this.spells);
     },
-    canCast(){
+    canCast() {
       if (!this.selectedSpell || !this.selectedSlotId) return false;
       return this.canCastSpellWithSlot(
         this.selectedSpell, this.selectedSlotId, this.selectedSlot
       );
     },
-    filtersApplied(){
-      for (let key in this.booleanFilters){
-        if (this.booleanFilters[key].enabled){
+    filtersApplied() {
+      for (let key in this.booleanFilters) {
+        if (this.booleanFilters[key].enabled) {
           return true;
         }
       }
@@ -234,79 +266,82 @@ export default {
   },
   watch: {
     selectedSpellId: {
-      handler(spellId){
+      handler(spellId) {
         this.selectedSpell = CreatureProperties.findOne(spellId)
       },
       immediate: true
     },
     selectedSpell: {
-      handler(spell){
+      handler(spell) {
         if (!spell) return;
-        if(spell.level === 0 || spell.castWithoutSpellSlots){
-          this.selectedSlotId = 'no-slot';
-        } else if (
-          !this.selectedSlotId ||
-          this.selectedSlotId == 'no-slot' ||
-          this.selectedSlot.spellSlotLevel.value < spell.level
+        if (this.selectedSlotId && this.canCastSpellWithSlot(
+          spell, this.selectedSlotId, this.selectedSlot
+        )) return;
+        if (
+          (spell.level === 0 || spell.castWithoutSpellSlots)
         ) {
+          this.selectedSlotId = 'no-slot';
+        } else {
           const newSlot = find(
             CreatureProperties.find({
               'ancestors.id': this.creatureId,
               ...slotFilter
             }, {
-              sort: {'spellSlotLevel.value': 1, order: 1},
+              sort: { 'spellSlotLevel.value': 1, order: 1 },
             }).fetch(),
             slot => {
               return this.canCastSpellWithSlot(spell, slot._id, slot)
             }
           );
-          if (newSlot){
+          if (newSlot) {
             this.selectedSlotId = newSlot._id;
+          } else if (spell.ritual) {
+            this.selectedSlotId = 'ritual';
           }
         }
       },
       immediate: true,
     },
     selectedSlotId: {
-      handler(slotId){
+      handler(slotId) {
         this.selectedSlot = CreatureProperties.findOne(slotId);
       },
       immediate: true
     },
-    selectedSlot:{
-      handler(slot){
+    selectedSlot: {
+      handler(slot) {
         if (!slot) return;
         if (!this.selectedSpell) return;
-        if(this.selectedSpell.level > slot.spellSlotLevel.value){
+        if (this.selectedSpell.level > slot.spellSlotLevel.value) {
           this.selectedSpellId = undefined;
         }
       },
       immediate: true,
     },
   },
-  mounted(){
-    if (this.selectedSpellId){
-      this.$vuetify.goTo('.spell.v-list-item--active', {container: '.right'});
+  mounted() {
+    if (this.selectedSpellId) {
+      this.$vuetify.goTo('.spell.v-list-item--active', { container: '.right' });
     }
   },
   methods: {
-    clearBooleanFilters(){
-      for (let key in this.booleanFilters){
+    clearBooleanFilters() {
+      for (let key in this.booleanFilters) {
         this.booleanFilters[key].enabled = false;
       }
     },
-    spellDialog(_id){
+    spellDialog(_id) {
       this.$store.commit('pushDialogStack', {
-				component: 'creature-property-dialog',
-				elementId: `spell-info-btn-${_id}`,
-				data: {_id},
-			});
+        component: 'creature-property-dialog',
+        elementId: `spell-info-btn-${_id}`,
+        data: { _id },
+      });
     },
-    searchChanged(val, ack){
+    searchChanged(val, ack) {
       this.searchValue = val;
       setTimeout(ack, 200);
     },
-    canCastSpellWithSlot(spell, slotId, slot){
+    canCastSpellWithSlot(spell, slotId, slot) {
       if (slot && !slot.value) return false;
       if (!spell) return true;
       if (!slotId) return true;
@@ -314,66 +349,69 @@ export default {
         spell.castWithoutSpellSlots &&
         spell.insufficientResources
       ) return false;
-      return (!spell.level || spell.castWithoutSpellSlots) ? (
+      if (spell.ritual && slotId === 'ritual') return true;
+      if (!spell.level || spell.castWithoutSpellSlots) {
         // Cantrips and no-slot spells
-        slotId && slotId === 'no-slot'
-      ) : (
+        return slotId && slotId === 'no-slot'
+      } else {
         // Leveled spells
-        slotId !== 'no-slot' &&
-        slot && spell && (
-          spell.level <= slot.spellSlotLevel.value
-        )
-      )
+        return slotId !== 'no-slot' && slot && spell && (
+            spell.level <= slot.spellSlotLevel.value
+          );
+      }
     },
-    cast(){
+    cast({ advantage }) {
       let selectedSlotId = this.selectedSlotId;
-      if (selectedSlotId === 'no-slot') selectedSlotId = undefined;
+      const ritual = selectedSlotId === 'ritual';
+      if (selectedSlotId === 'no-slot' || selectedSlotId === 'ritual') selectedSlotId = undefined;
       this.$store.dispatch('popDialogStack', {
         spellId: this.selectedSpellId,
         slotId: selectedSlotId,
-      })
+        advantage,
+        ritual,
+      });
     }
   },
   meteor: {
-    spells(){
+    spells() {
       let filter = {
         'ancestors.id': this.creatureId,
-        removed: {$ne: true},
-        inactive: {$ne: true},
+        removed: { $ne: true },
+        inactive: { $ne: true },
         $or: [
-          {prepared: true},
-          {alwaysPrepared: true},
+          { prepared: true },
+          { alwaysPrepared: true },
         ],
       };
 
       // Apply the filters from the filter menu
-      for (let key in this.booleanFilters){
-        if (this.booleanFilters[key].enabled){
+      for (let key in this.booleanFilters) {
+        if (this.booleanFilters[key].enabled) {
           let value = this.booleanFilters[key].value;
-          if (key === 'material'){
-            filter[key] = {$exists: this.booleanFilters[key].value};
+          if (key === 'material') {
+            filter[key] = { $exists: this.booleanFilters[key].value };
           } else {
-            filter[key] = value ? true: {$ne: true};
+            filter[key] = value ? true : { $ne: true };
           }
         }
       }
       // Apply the search string to the name field
-      if (this.searchValue){
+      if (this.searchValue) {
         filter.name = {
           $regex: this.searchValue.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'),
           $options: 'i'
         };
       }
       return CreatureProperties.find(filter, {
-        sort: {order: 1}
+        sort: { order: 1 }
       });
     },
-    spellSlots(){
+    spellSlots() {
       return CreatureProperties.find({
         'ancestors.id': this.creatureId,
         ...slotFilter
       }, {
-        sort: {'spellSlotLevel.value': 1, order: 1},
+        sort: { 'spellSlotLevel.value': 1, order: 1 },
       });
     },
   },
@@ -381,10 +419,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .v-list {
-    flex-basis: 200px;
-  }
-  .v-list.spells {
-    flex-grow: 1;
-  }
+.v-list {
+  flex-basis: 200px;
+}
+
+.v-list.spells {
+  flex-grow: 1;
+}
 </style>

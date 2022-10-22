@@ -31,6 +31,8 @@ const STORAGE_LIMITS = Object.freeze({
   statsToTarget: 64,
   tagCount: 64,
   writersCount: 20,
+  libraryCollectionCount: 32,
+  pointBuyRowsCount: 32,
 });
 
 export default STORAGE_LIMITS;

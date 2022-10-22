@@ -35,7 +35,7 @@ export function assertOwnership(doc, userId){
 export function assertEditPermission(doc, userId) {
   assertIdValid(userId);
   assertdocExists(doc);
-  let user = Meteor.users.findOne(userId, {
+  const user = Meteor.users.findOne(userId, {
     fields: {
       'services.patreon': 1,
       'roles': 1,
@@ -83,6 +83,7 @@ export function assertViewPermission(doc, userId) {
   assertdocExists(doc);
   if (doc.public) return true;
   assertIdValid(userId);
+
   if (
     doc.owner === userId ||
     _.contains(doc.readers, userId) ||
@@ -90,6 +91,17 @@ export function assertViewPermission(doc, userId) {
   ){
     return true;
   } else {
+    
+    // Admin override
+    const user = Meteor.users.findOne(userId, {
+      fields: {
+        'roles': 1,
+      }
+    });
+    if (user.roles && user.roles.includes('admin')){
+      return true;
+    }
+
     throw new Meteor.Error('View permission denied',
       'You do not have permission to view this document');
   }

@@ -1,17 +1,17 @@
 <template lang="html">
   <v-speed-dial
-    v-if="speedDials"
     v-model="fab"
     direction="bottom"
+    :style="!speedDials ? 'visibility: hidden;' : ''"
   >
     <template #activator>
       <v-btn
         v-model="fab"
         color="primary"
         fab
+        small
         data-id="insert-creature-property-fab"
         class="insert-creature-property-fab"
-        small
       >
         <transition
           name="fab-rotate"
@@ -25,7 +25,6 @@
         </transition>
       </v-btn>
     </template>
-
     <labeled-fab
       v-for="type in speedDials"
       :key="type"
@@ -49,12 +48,13 @@
   import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
   import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
-  function getParentAndOrderFromSelectedTreeNode(creatureId){
+  function getParentAndOrderFromSelectedTreeNode(creatureId, $store){
     // find the parent based on the currently selected property
     let el = document.querySelector('.tree-tab .tree-node-title.primary--text');
     let selectedComponent = el && el.parentElement.__vue__.$parent;
     let parentRef, order;
-    if (selectedComponent){
+    const onTreeTab = $store.getters.tabNameById(creatureId) === 'tree';
+    if (onTreeTab && selectedComponent){
       if (selectedComponent.showExpanded){
         parentRef = {
           id: selectedComponent.node._id,
@@ -101,7 +101,8 @@
     'features',
     'inventory',
     'spells',
-    'character',
+    'journal',
+    'build',
     'tree',
   ];
 
@@ -134,7 +135,7 @@
         'features': ['feature'],
         'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
-        'character': ['note'],
+        'journal': ['note'],
         'tree': [null],
       };},
       properties(){
@@ -156,7 +157,7 @@
         let creatureId = this.creatureId;
         let fab = hideFab();
 
-        let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId);
+        let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId, this.$store);
         let parent;
         try {
           parent = fetchDocByRef(parentRef);
@@ -170,6 +171,7 @@
           data: {
             parentDoc: forcedType ? undefined : parent,
             forcedType,
+            creatureId: this.creatureId,
           },
           callback(result){
             if (!result){

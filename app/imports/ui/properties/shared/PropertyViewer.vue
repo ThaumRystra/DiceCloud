@@ -14,17 +14,18 @@
 <script lang="js">
 import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
 export default {
-	components: {
-		...propertyViewerIndex,
-	},
-	props: {
-		model: {
-			type: Object,
+  components: {
+    ...propertyViewerIndex,
+  },
+  props: {
+    model: {
+      type: Object,
       default: undefined
-		},
-	},
+    },
+  },
 }
 </script>
 
 <style lang="css">
+
 </style>

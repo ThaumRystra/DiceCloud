@@ -5,13 +5,12 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import {
-	setLineageOfDocs,
-	renewDocIds
+  setLineageOfDocs,
+  renewDocIds
 } from '/imports/api/parenting/parenting.js';
 import { reorderDocs } from '/imports/api/parenting/order.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
 var snackbar;
-if (Meteor.isClient){
+if (Meteor.isClient) {
   snackbar = require(
     '/imports/ui/components/snackbars/SnackbarQueue.js'
   ).snackbar
@@ -32,7 +31,7 @@ const duplicateProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({_id}) {
+  run({ _id }) {
     let property = CreatureProperties.findOne(_id);
     let creature = getRootCreatureAncestor(property);
 
@@ -45,17 +44,17 @@ const duplicateProperty = new ValidatedMethod({
 
     // Get all the descendants
     let nodes = CreatureProperties.find({
-			'ancestors.id': _id,
-			removed: {$ne: true},
-		}, {
+      'ancestors.id': _id,
+      removed: { $ne: true },
+    }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
-      sort: {order: 1},
+      sort: { order: 1 },
     }).fetch();
 
     // Alert the user if the limit was hit
-    if (nodes.length > DUPLICATE_CHILDREN_LIMIT){
+    if (nodes.length > DUPLICATE_CHILDREN_LIMIT) {
       nodes.pop();
-      if (Meteor.isClient){
+      if (Meteor.isClient) {
         snackbar({
           text: `Only the first ${DUPLICATE_CHILDREN_LIMIT} children were duplicated`,
         });
@@ -64,31 +63,31 @@ const duplicateProperty = new ValidatedMethod({
 
     // re-map all the ancestors
     setLineageOfDocs({
-			docArray: nodes,
-			newAncestry : [
+      docArray: nodes,
+      newAncestry: [
         ...property.ancestors,
-        {id: propertyId, collection: 'creatureProperties'}
+        { id: propertyId, collection: 'creatureProperties' }
       ],
-			oldParent : {id: _id, collection: 'creatureProperties'},
-		});
+      oldParent: { id: _id, collection: 'creatureProperties' },
+    });
 
     // Give the docs new IDs without breaking internal references
-    renewDocIds({docArray: nodes});
+    renewDocIds({ docArray: nodes });
 
     // Order the root node
     property.order += 0.5;
 
+    // Mark the sheet as needing recompute
+    property.dirty = true;
+
     // Insert the properties
-		CreatureProperties.batchInsert([property, ...nodes]);
+    CreatureProperties.batchInsert([property, ...nodes]);
 
     // Tree structure changed by inserts, reorder the tree
     reorderDocs({
       collection: CreatureProperties,
       ancestorId: property.ancestors[0].id,
     });
-
-    // Inserting a creature property invalidates dependencies: full recompute
-    computeCreature(creature._id);
 
     return propertyId;
   },

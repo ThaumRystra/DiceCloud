@@ -47,8 +47,12 @@
     </v-row>
     <form-sections>
       <form-section
-        name="Advanced"
+        v-if="$slots.children"
+        name="Children"
       >
+        <slot name="children" />
+      </form-section>
+      <form-section name="Advanced">
         <smart-combobox
           label="Damage tags required"
           hint="This damage multiplier will only apply to damage that has all of these tags"
@@ -84,59 +88,63 @@
 </template>
 
 <script lang="js">
-  import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-  import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
+import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/FormSection.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 
-	export default {
-		components: {
-      FormSections,
-			FormSection,
-		},
-    mixins: [propertyFormMixin],
-		data(){return {
-			DAMAGE_TYPES,
-			values: [
+export default {
+  components: {
+    FormSections,
+    FormSection,
+  },
+  mixins: [propertyFormMixin],
+  data() {
+    return {
+      DAMAGE_TYPES,
+      values: [
         {
-					value: 0,
-					text: 'Immunity',
-				}, {
-					value: 0.5,
-					text: 'Resistance',
-				}, {
-					value: 2,
-					text: 'Vulnerability',
-				},
-			],
+          value: 0,
+          text: 'Immunity',
+        }, {
+          value: 0.5,
+          text: 'Resistance',
+        }, {
+          value: 2,
+          text: 'Vulnerability',
+        },
+      ],
       damageTypeRules: [
         value => {
-          if (value && value.length){
-            for(let i = 0; i < value.length; i++){
-              if (!VARIABLE_NAME_REGEX.test(value[i])){
+          if (value && value.length) {
+            for (let i = 0; i < value.length; i++) {
+              if (!VARIABLE_NAME_REGEX.test(value[i])) {
                 return `${value[i]} is not a valid damage name`
               }
             }
           }
         }
       ],
-		};},
-    methods: {
-      error(e){
-        console.log({e})
-      }
+    };
+  },
+  methods: {
+    error(e) {
+      console.log({ e })
     }
-	};
+  }
+};
 </script>
 
 <style lang="css" scoped>
-	.no-flex {
-		flex: initial;
-	}
-	.layout.row.wrap {
-		margin-right: -8px;
-	}
-	.layout.row.wrap > *{
-		margin-right: 8px;
-	}
+.no-flex {
+  flex: initial;
+}
+
+.layout.row.wrap {
+  margin-right: -8px;
+}
+
+.layout.row.wrap>* {
+  margin-right: 8px;
+}
 </style>

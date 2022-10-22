@@ -51,6 +51,7 @@
         <div
           v-if="calculation && calculation.effects"
           class="flex-grow-1"
+          style="max-width: 100%;"
         >
           <inline-effect
             v-if="typeof calculation.value === 'number'"

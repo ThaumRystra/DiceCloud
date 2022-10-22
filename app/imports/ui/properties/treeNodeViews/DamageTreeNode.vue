@@ -8,13 +8,9 @@
     >
       {{ icon }}
     </v-icon>
-    <div
-      class="text-no-wrap text-truncate"
-    >
+    <div class="text-no-wrap text-truncate">
       {{ model.amount && model.amount.value }}
-      {{ model.damageType }}<span
-        v-if="model.damageType !== 'healing'"
-      >&nbsp;damage</span>
+      {{ model.damageType }}<span v-if="model.damageType !== 'healing'">&nbsp;damage</span>
       <span v-if="model.target === 'self'">to self</span>
     </div>
   </div>
@@ -27,13 +23,13 @@ import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 export default {
   mixins: [treeNodeViewMixin],
   computed: {
-		icon(){
-      if (this.model.damageType === 'healing'){
+    icon() {
+      if (this.model.damageType === 'healing') {
         return 'mdi-hospital-box-outline'
       } else {
         return getPropertyIcon('damage');
       }
-		},
-	},
+    },
+  },
 }
 </script>

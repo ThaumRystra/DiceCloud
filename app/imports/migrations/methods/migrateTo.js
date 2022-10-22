@@ -6,7 +6,7 @@ import { Migrations } from 'meteor/percolate:migrations';
 
 const migrateTo = new ValidatedMethod({
   name: 'admin.migrateTo',
-	validate: new SimpleSchema({
+  validate: new SimpleSchema({
     version: {
       type: SimpleSchema.oneOf(
         SimpleSchema.Integer,
@@ -19,7 +19,7 @@ const migrateTo = new ValidatedMethod({
     numRequests: 1,
     timeInterval: 10000,
   },
-  run({version}) {
+  run({ version }) {
     if (Meteor.isClient) return;
     assertAdmin(this.userId);
     Migrations.migrateTo(version);

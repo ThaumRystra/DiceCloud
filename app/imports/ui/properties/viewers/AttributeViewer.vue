@@ -107,25 +107,18 @@
     </v-row>
     <v-row dense>
       <property-field
-        v-if="baseEffects.length || effects.length"
+        v-if="effects && effects.length"
         :cols="{col: 12}"
         name="Effects"
       >
         <v-list style="width: 100%;">
           <attribute-effect
-            v-for="effect in baseEffects"
-            :key="effect._id"
-            :model="effect"
-            :hide-breadcrumbs="effect._id === model._id"
-            :data-id="effect._id"
-            @click="effect._id !== model._id && clickEffect(effect._id)"
-          />
-          <attribute-effect
             v-for="effect in effects"
             :key="effect._id"
             :model="effect"
             :data-id="effect._id"
-            @click="clickEffect(effect._id)"
+            :hide-breadcrumbs="effect._id === model._id"
+            @click="effect._id !== model._id && clickEffect(effect._id)"
           />
         </v-list>
       </property-field>
@@ -137,11 +130,11 @@
   import propertyViewerMixin from '/imports/ui/properties/viewers/shared/propertyViewerMixin.js'
   import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
   import AttributeEffect from '/imports/ui/properties/components/attributes/AttributeEffect.vue';
-  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
   import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
   import IncrementButton from '/imports/ui/components/IncrementButton.vue';
   import getProficiencyIcon from '/imports/ui/utility/getProficiencyIcon.js';
   import {snackbar} from '/imports/ui/components/snackbars/SnackbarQueue.js';
+  import sortEffects from '/imports/ui/utility/sortEffects.js';
 
   export default {
     components: {
@@ -185,6 +178,9 @@
       proficiencyIcon(){
         return getProficiencyIcon(this.model.proficiency);
       },
+      effects() {
+        return sortEffects(this.model.effects);
+      },
     },
     methods: {
       numberToSignedString,
@@ -208,42 +204,6 @@
             console.error(error);
           }
         });
-      },
-    },
-    meteor: {
-      baseEffects(){
-        if (this.context.creatureId && this.model.variableName){
-          let creatureId = this.context.creatureId;
-          return CreatureProperties.find({
-            'ancestors.id': creatureId,
-            type: 'attribute',
-            variableName: this.model.variableName,
-            removed: {$ne: true},
-            inactive: {$ne: true},
-          }).map( prop => ({
-            _id: prop._id,
-            name: 'Attribute base value',
-            operation: 'base',
-            amount: prop.baseValue,
-            stats: [prop.variableName],
-            ancestors: prop.ancestors,
-          }) ).filter(effect => effect.amount);
-        } else {
-          return [];
-        }
-      },
-      effects(){
-        if (this.context.creatureId && this.model.variableName){
-          let creatureId = this.context.creatureId;
-          return CreatureProperties.find({
-            'ancestors.id': creatureId,
-            'stats': this.model.variableName,
-            removed: {$ne: true},
-            inactive: {$ne: true},
-          });
-        } else {
-          return [];
-        }
       },
     },
   }
