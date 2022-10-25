@@ -1,9 +1,9 @@
 Meteor.methods({
-	"getUserId": function(username){
+	"getUserId": function (username) {
 		if (!username) return;
 		if (Meteor.isClient) return;
-		let user = Accounts.findUserByUsername(username) ||
-			Accounts.findUserByEmail(username);
+		const user = Meteor.users.findOne({ username }) ||
+			Meteor.users.findOne({ 'emails.address': username });
 		return user && user._id;
 	}
 });
