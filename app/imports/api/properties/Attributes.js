@@ -69,6 +69,16 @@ let AttributeSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  // Control how the health bar handles overflow
+  healthBarNoDamageOverflow: {
+    type: Boolean,
+    optional: true,
+  },
+  healthBarNoHealingOverflow: {
+    type: Boolean,
+    optional: true,
+  },
+  // Control when the health bar takes damage or healing
   healthBarDamageOrder: {
     type: SimpleSchema.Integer,
     optional: true,
@@ -104,6 +114,14 @@ let AttributeSchema = createPropertySchema({
   },
   // Can the damage value be negative
   ignoreUpperLimit: {
+    type: Boolean,
+    optional: true,
+  },
+  hideWhenTotalZero: {
+    type: Boolean,
+    optional: true,
+  },
+  hideWhenValueZero: {
     type: Boolean,
     optional: true,
   },

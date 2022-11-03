@@ -10,6 +10,7 @@
         :outlined="!!label"
         :icon="!label"
         :min-width="label && 108"
+        :disabled="context.editPermission === false"
         v-on="on"
       >
         {{ label }}
@@ -124,6 +125,9 @@
   }
 
   export default {
+    inject: {
+      context: { default: {} }
+    },
     props: {
      //hex string
       value: {

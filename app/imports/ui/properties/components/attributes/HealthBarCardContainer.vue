@@ -42,6 +42,10 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
         overridden: { $ne: true },
+        $nor: [
+          { hideWhenTotalZero: true, total: 0 },
+          { hideWhenValueZero: true, value: 0 },
+        ],
       };
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };

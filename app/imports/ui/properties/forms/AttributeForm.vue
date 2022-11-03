@@ -106,9 +106,16 @@
             />
             <smart-switch
               label="Ignore damage"
+              class="mr-4"
               :value="model.healthBarNoDamage"
               :error-messages="errors.healthBarNoDamage"
               @change="change('healthBarNoDamage', ...arguments)"
+            />
+            <smart-switch
+              label="Prevent damage overflow"
+              :value="model.healthBarNoDamageOverflow"
+              :error-messages="errors.healthBarNoDamageOverflow"
+              @change="change('healthBarNoDamageOverflow', ...arguments)"
             />
           </v-layout>
           <v-layout wrap>
@@ -125,14 +132,20 @@
             />
             <smart-switch
               label="Ignore healing"
+              class="mr-4"
               :value="model.healthBarNoHealing"
               :error-messages="errors.healthBarNoHealing"
               @change="change('healthBarNoHealing', ...arguments)"
             />
+            <smart-switch
+              label="Prevent healing overflow"
+              :value="model.healthBarNoHealingOverflow"
+              :error-messages="errors.healthBarNoHealingOverflow"
+              @change="change('healthBarNoHealingOverflow', ...arguments)"
+            />
           </v-layout>
         </form-section>
       </v-expand-transition>
-
       <form-section
         v-if="$slots.children"
         name="Children"
@@ -151,26 +164,74 @@
           @change="change('tags', ...arguments)"
         />
         <div class="layout column align-center">
-          <smart-switch
-            v-if="model.attributeType !== 'hitDice'"
-            label="Allow decimal values"
-            class="no-flex"
-            :value="model.decimal"
-            :error-messages="errors.decimal"
-            @change="change('decimal', ...arguments)"
-          />
-          <smart-switch
-            label="Can be damaged into negative values"
-            :value="model.ignoreLowerLimit"
-            :error-messages="errors.ignoreLowerLimit"
-            @change="change('ignoreLowerLimit', ...arguments)"
-          />
-          <smart-switch
-            label="Can be incremented above total"
-            :value="model.ignoreUpperLimit"
-            :error-messages="errors.ignoreUpperLimit"
-            @change="change('ignoreUpperLimit', ...arguments)"
-          />
+          <v-row dense>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <smart-switch
+                v-if="model.attributeType !== 'hitDice'"
+                label="Allow decimal values"
+                class="mx-4"
+                :value="model.decimal"
+                :error-messages="errors.decimal"
+                @change="change('decimal', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <smart-switch
+                label="Can be damaged into negative values"
+                class="mx-4"
+                :value="model.ignoreLowerLimit"
+                :error-messages="errors.ignoreLowerLimit"
+                @change="change('ignoreLowerLimit', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <smart-switch
+                label="Can be incremented above total"
+                class="mx-4"
+                :value="model.ignoreUpperLimit"
+                :error-messages="errors.ignoreUpperLimit"
+                @change="change('ignoreUpperLimit', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <smart-switch
+                label="Hide when total is zero"
+                class="mx-4"
+                :value="model.hideWhenTotalZero"
+                :error-messages="errors.hideWhenTotalZero"
+                @change="change('hideWhenTotalZero', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <smart-switch
+                label="Hide when value is zero"
+                class="mx-4"
+                :value="model.hideWhenValueZero"
+                :error-messages="errors.hideWhenValueZero"
+                @change="change('hideWhenValueZero', ...arguments)"
+              />
+            </v-col>
+          </v-row>
           <div
             class="layout justify-center"
             style="align-self: stretch;"

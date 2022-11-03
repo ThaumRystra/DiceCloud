@@ -365,6 +365,10 @@ const getProperties = function (creature, filter, options = {
   filter.removed = { $ne: true };
   filter.inactive = { $ne: true };
   filter.overridden = { $ne: true };
+  filter.$nor = [
+    { hideWhenTotalZero: true, total: 0 },
+    { hideWhenValueZero: true, value: 0 },
+  ];
 
   return CreatureProperties.find(filter, options);
 };

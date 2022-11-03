@@ -8,6 +8,7 @@
         :embedded="embedded"
         @duplicate="duplicate"
         @move="move"
+        @copy="copy"
         @remove="remove"
         @toggle-editing="editing = !editing"
         @color-changed="value => change({path: ['color'], value})"
@@ -95,10 +96,13 @@
   import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormIndex.js';
   import propertyViewerIndex from '/imports/ui/properties/viewers/shared/propertyViewerIndex.js';
   import { get } from 'lodash';
-  import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+  import {
+    assertDocEditPermission, assertDocCopyPermission
+  } from '/imports/api/sharing/sharingPermissions.js';
   import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
   import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
   import getPropertyTitle from '/imports/ui/properties/shared/getPropertyTitle.js';
+  import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo.js';
 
   let formIndex = {};
   for (let key in propertyFormIndex){
@@ -126,7 +130,7 @@
     },
     reactiveProvide: {
       name: 'context',
-      include: ['editPermission', 'isLibraryForm'],
+      include: ['editPermission', 'copyPermission', 'isLibraryForm'],
     },
     data(){return {
       editing: !!this.startInEditTab,
@@ -157,6 +161,14 @@
       editPermission(){
         try {
           assertDocEditPermission(this.model, Meteor.userId());
+          return true;
+        } catch (e) {
+          return false;
+        }
+      },
+      copyPermission(){
+        try {
+          assertDocCopyPermission(this.model, Meteor.userId());
           return true;
         } catch (e) {
           return false;
@@ -196,6 +208,37 @@
               order: -0.5
             }, (error) => {
               if (error) console.error(error);
+            });
+          }
+        });
+      },
+      copy(){
+        const thisId = this._id;
+        this.$store.commit('pushDialogStack', {
+          component: 'move-library-node-dialog',
+          elementId: 'property-toolbar-menu-button',
+          data: {
+            action: 'Copy',
+          },
+          callback(parentId){
+            if (!parentId) return;
+            copyLibraryNodeTo.call({
+              _id: thisId,
+              parent: {
+                collection: 'libraryNodes',
+                id: parentId
+              },
+            }, (error) => {
+              if (error) {
+                console.error(error);
+                snackbar({
+                  text: error.reason || error.message || error.toString(),
+                });
+              } else {
+                snackbar({
+                  text: 'Copied successfully',
+                });
+              }
             });
           }
         });
