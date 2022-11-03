@@ -107,6 +107,14 @@ let AttributeSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  hideWhenTotalZero: {
+    type: Boolean,
+    optional: true,
+  },
+  hideWhenValueZero: {
+    type: Boolean,
+    optional: true,
+  },
   // Automatically zero the adjustment on these conditions
   reset: {
     type: String,
