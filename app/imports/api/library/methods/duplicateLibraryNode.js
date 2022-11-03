@@ -16,7 +16,7 @@ if (Meteor.isClient) {
   ).snackbar
 }
 
-const DUPLICATE_CHILDREN_LIMIT = 100;
+const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const duplicateLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.duplicate',
@@ -28,7 +28,7 @@ const duplicateLibraryNode = new ValidatedMethod({
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
+    numRequests: 1,
     timeInterval: 5000,
   },
   run({ _id }) {

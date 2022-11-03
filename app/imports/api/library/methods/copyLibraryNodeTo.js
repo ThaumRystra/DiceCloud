@@ -1,10 +1,12 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
-i
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import {
+  assertDocCopyPermission,
+  assertDocEditPermission
+} from '/imports/api/sharing/sharingPermissions.js';
 import {
   setLineageOfDocs,
   renewDocIds
@@ -19,7 +21,7 @@ if (Meteor.isClient) {
   ).snackbar
 }
 
-const DUPLICATE_CHILDREN_LIMIT = 100;
+const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const copyLibraryNodeTo = new ValidatedMethod({
   name: 'libraryNodes.copyTo',
@@ -35,7 +37,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 1,
-    timeInterval: 5000,
+    timeInterval: 10000,
   },
   run({ _id, parent }) {
     if (parent.collection !== 'libraryNodes' && parent.collection !== 'libraries') {
@@ -45,11 +47,8 @@ const copyLibraryNodeTo = new ValidatedMethod({
     }
     const libraryNode = LibraryNodes.findOne(_id);
     const parentDoc = fetchDocByRef(parent);
-    assertDocEditPermission(libraryNode, this.userId);
-
-    let randomSrc = DDP.randomStream('copyLibraryNodeTo');
-    let libraryNodeId = randomSrc.id();
-    libraryNode._id = libraryNodeId;
+    assertDocCopyPermission(libraryNode, this.userId);
+    assertDocEditPermission(parentDoc, this.userId);
 
     let decendants = LibraryNodes.find({
       'ancestors.id': _id,
@@ -68,7 +67,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
       }
     }
 
-    const nodes = [libraryNode, decendants];
+    const nodes = [libraryNode, ...decendants];
 
     const newAncestry = parentDoc.ancestors || [];
     newAncestry.push(parent);
@@ -92,9 +91,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
       collection: LibraryNodes,
       ancestorId: parent.collection === 'libraries' ? parent.id : parentDoc.ancestors[0].id,
     });
-
-    return libraryNodeId;
   },
 });
 
-export default duplicateLibraryNode;
+export default copyLibraryNodeTo;

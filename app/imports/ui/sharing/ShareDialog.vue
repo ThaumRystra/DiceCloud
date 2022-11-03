@@ -13,6 +13,16 @@
         :value="!!model.public + ''"
         @change="(value, ack) => setSheetPublic({value, ack})"
       />
+      <smart-select
+        v-if="docRef.collection === 'libraries'"
+        label="Who can copy from this library"
+        :items="[
+          {text: 'Only people with edit permission', value: 'false'},
+          {text: 'Anyone with read permission', value: 'true'}
+        ]"
+        :value="!!model.readersCanCopy + ''"
+        @change="(value, ack) => setReadersCanCopy({value, ack})"
+      />
       <text-field
         v-if="model.public && docRef.collection === 'libraries'"
         readonly
@@ -30,6 +40,7 @@
           @change="(value, ack) => getUser({value, ack})"
         />
         <v-btn
+          class="ml-2 mt-2"
           :disabled="userFoundState !== 'found'"
           @click="updateSharing(userId, 'reader')"
         >
@@ -126,6 +137,7 @@
 <script lang="js">
 import {
   setPublic,
+  setReadersCanCopy,
   updateUserSharePermissions
 } from '/imports/api/sharing/sharing.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
@@ -153,6 +165,14 @@ export default {
       setPublic.call({
         docRef: this.docRef,
         isPublic: value === 'true',
+      }, (error) => {
+        ack(error && error.reason || error);
+      });
+    },
+    setReadersCanCopy({ value, ack }) {
+      setReadersCanCopy.call({
+        docRef: this.docRef,
+        readersCanCopy: value === 'true',
       }, (error) => {
         ack(error && error.reason || error);
       });

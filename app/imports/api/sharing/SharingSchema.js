@@ -33,6 +33,10 @@ let SharingSchema = new SimpleSchema({
     defaultValue: false,
     index: 1,
   },
+  readersCanCopy: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 export default SharingSchema;

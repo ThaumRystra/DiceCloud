@@ -16,7 +16,7 @@
         color="primary"
         @click="$store.dispatch('popDialogStack', node._id)"
       >
-        Move
+        {{ action || 'Move' }}
       </v-btn>
     </template>
   </dialog-base>
@@ -29,6 +29,12 @@ export default {
   components: {
     DialogBase,
     LibraryAndNode,
+  },
+  props: {
+    action: {
+      type: String,
+      default: undefined,
+    },
   },
   data() {
     return {

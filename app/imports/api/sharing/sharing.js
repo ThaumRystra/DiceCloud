@@ -27,6 +27,26 @@ const setPublic = new ValidatedMethod({
   },
 });
 
+const setReadersCanCopy = new ValidatedMethod({
+  name: 'sharing.setReadersCanCopy',
+  validate: new SimpleSchema({
+    docRef: RefSchema,
+    readersCanCopy: { type: Boolean },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  run({ docRef, readersCanCopy }) {
+    let doc = fetchDocByRef(docRef);
+    assertOwnership(doc, this.userId);
+    return getCollectionByName(docRef.collection).update(docRef.id, {
+      $set: { readersCanCopy },
+    });
+  },
+});
+
 const updateUserSharePermissions = new ValidatedMethod({
   name: 'sharing.updateUserSharePermissions',
   validate: new SimpleSchema({
@@ -129,4 +149,4 @@ const transferOwnership = new ValidatedMethod({
   },
 });
 
-export { setPublic, updateUserSharePermissions, transferOwnership };
+export { setPublic, setReadersCanCopy, updateUserSharePermissions, transferOwnership };
