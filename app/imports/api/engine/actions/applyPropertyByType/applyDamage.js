@@ -1,6 +1,6 @@
 import { some, intersection, difference, remove, includes } from 'lodash';
 import applyProperty from '../applyProperty.js';
-import {insertCreatureLog} from '/imports/api/creature/log/CreatureLogs.js';
+import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
 import logErrors from './shared/logErrors.js';
 import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
@@ -10,9 +10,9 @@ import {
 } from '/imports/api/engine/loadCreatures.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applyDamage(node, actionContext){
+export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const applyChildren = function(){
+  const applyChildren = function () {
     applyNodeTriggers(node, 'after', actionContext);
     node.children.forEach(child => applyProperty(child, actionContext));
   };
@@ -28,10 +28,10 @@ export default function applyDamage(node, actionContext){
   // Determine if the hit is critical
   let criticalHit = scope['$criticalHit']?.value &&
     prop.damageType !== 'healing' // Can't critically heal
-  ;
+    ;
   // Double the damage rolls if the hit is critical
   let context = new Context({
-    options: {doubleRolls: criticalHit},
+    options: { doubleRolls: criticalHit },
   });
 
   // Gather all the lines we need to log into an array
@@ -40,8 +40,8 @@ export default function applyDamage(node, actionContext){
 
   // roll the dice only and store that string
   applyEffectsToCalculationParseNode(prop.amount, actionContext.log);
-  const {result: rolled} = resolve('roll', prop.amount.parseNode, scope, context);
-  if (rolled.parseType !== 'constant'){
+  const { result: rolled } = resolve('roll', prop.amount.parseNode, scope, context);
+  if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
   }
   logErrors(context.errors, actionContext);
@@ -50,13 +50,13 @@ export default function applyDamage(node, actionContext){
   context.errors = [];
 
   // Resolve the roll to a final value
-  const {result: reduced} = resolve('reduce', rolled, scope, context);
+  const { result: reduced } = resolve('reduce', rolled, scope, context);
   logErrors(context.errors, actionContext);
 
   // Store the result
-  if (reduced.parseType === 'constant'){
+  if (reduced.parseType === 'constant') {
     prop.amount.value = reduced.value;
-  } else if (reduced.parseType === 'error'){
+  } else if (reduced.parseType === 'error') {
     prop.amount.value = null;
   } else {
     prop.amount.value = toString(reduced);
@@ -64,7 +64,7 @@ export default function applyDamage(node, actionContext){
   let damage = +reduced.value;
 
   // If we didn't end up with a constant of finite amount, give up
-  if (reduced?.parseType !== 'constant' || !isFinite(reduced.value)){
+  if (reduced?.parseType !== 'constant' || !isFinite(reduced.value)) {
     return applyChildren();
   }
 
@@ -83,7 +83,7 @@ export default function applyDamage(node, actionContext){
   // Memoise the damage suffix for the log
   let suffix = (criticalHit ? ' critical ' : ' ') +
     prop.damageType +
-    (prop.damageType !== 'healing' ? ' damage ': '');
+    (prop.damageType !== 'healing' ? ' damage ' : '');
 
   if (damageTargets && damageTargets.length) {
     // Iterate through all the targets
@@ -107,7 +107,7 @@ export default function applyDamage(node, actionContext){
       });
 
       // Log the damage done
-      if (target._id === actionContext.creature._id){
+      if (target._id === actionContext.creature._id) {
         // Target is same as self, log damage as such
         logValue.push(`**${damageDealt}** ${suffix}  to self`);
       } else {
@@ -136,33 +136,33 @@ export default function applyDamage(node, actionContext){
   return applyChildren();
 }
 
-function applyDamageMultipliers({target, damage, damageProp, logValue}){
+function applyDamageMultipliers({ target, damage, damageProp, logValue }) {
   const damageType = damageProp?.damageType;
   if (!damageType) return damage;
 
   const multiplier = target?.variables?.[damageType];
   if (!multiplier) return damage;
 
-  const damageTypeText = damageType == 'healing' ? 'healing': `${damageType} damage`;
+  const damageTypeText = damageType == 'healing' ? 'healing' : `${damageType} damage`;
 
   if (
     multiplier.immunity &&
     some(multiplier.immunities, multiplierAppliesTo(damageProp, 'immunity'))
-  ){
+  ) {
     logValue.push(`Immune to ${damageTypeText}`);
     return 0;
   } else {
     if (
       multiplier.resistance &&
       some(multiplier.resistances, multiplierAppliesTo(damageProp, 'resistance'))
-    ){
+    ) {
       logValue.push(`Resistant to ${damageTypeText}`);
       damage = Math.floor(damage / 2);
     }
     if (
       multiplier.vulnerability &&
       some(multiplier.vulnerabilities, multiplierAppliesTo(damageProp, 'vulnerability'))
-    ){
+    ) {
       logValue.push(`Vulnerable to ${damageTypeText}`);
       damage = Math.floor(damage * 2);
     }
@@ -170,7 +170,7 @@ function applyDamageMultipliers({target, damage, damageProp, logValue}){
   return damage;
 }
 
-function multiplierAppliesTo(damageProp, multiplierType){
+function multiplierAppliesTo(damageProp, multiplierType) {
   return multiplier => {
     // Apply the default 'ignore x' tags
     if (includes(damageProp.tags, `ignore ${multiplierType}`)) return false;
@@ -187,7 +187,7 @@ function multiplierAppliesTo(damageProp, multiplierType){
   }
 }
 
-function dealDamage({target, damageType, amount, actionContext}){
+function dealDamage({ target, damageType, amount, actionContext }) {
   // Get all the health bars and do damage to them
   let healthBars = getPropertiesOfType(target._id, 'attribute');
 
@@ -239,6 +239,14 @@ function dealDamage({target, damageType, amount, actionContext}){
       actionContext
     });
     damageLeft -= damageAdded;
+    // Prevent overflow
+    if (
+      damageType === 'healing' ?
+        healthBar.healthBarNoHealingOverflow :
+        healthBar.healthBarNoDamageOverflow
+    ) {
+      damageLeft = 0;
+    }
   });
   return totalDamage;
 }

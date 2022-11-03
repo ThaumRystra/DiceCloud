@@ -106,9 +106,16 @@
             />
             <smart-switch
               label="Ignore damage"
+              class="mr-4"
               :value="model.healthBarNoDamage"
               :error-messages="errors.healthBarNoDamage"
               @change="change('healthBarNoDamage', ...arguments)"
+            />
+            <smart-switch
+              label="Prevent damage overflow"
+              :value="model.healthBarNoDamageOverflow"
+              :error-messages="errors.healthBarNoDamageOverflow"
+              @change="change('healthBarNoDamageOverflow', ...arguments)"
             />
           </v-layout>
           <v-layout wrap>
@@ -125,14 +132,20 @@
             />
             <smart-switch
               label="Ignore healing"
+              class="mr-4"
               :value="model.healthBarNoHealing"
               :error-messages="errors.healthBarNoHealing"
               @change="change('healthBarNoHealing', ...arguments)"
             />
+            <smart-switch
+              label="Prevent healing overflow"
+              :value="model.healthBarNoHealingOverflow"
+              :error-messages="errors.healthBarNoHealingOverflow"
+              @change="change('healthBarNoHealingOverflow', ...arguments)"
+            />
           </v-layout>
         </form-section>
       </v-expand-transition>
-
       <form-section
         v-if="$slots.children"
         name="Children"
