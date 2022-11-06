@@ -1,0 +1,572 @@
+<template lang="html">
+  <div class="stats-tab ma-2">
+    <health-bar-card-container :creature-id="creatureId" />
+
+    <column-layout>
+      <div
+        v-if="abilities.length"
+        class="ability-scores"
+      >
+        <div class="layout flex column">
+          <div
+            v-for="ability in abilities"
+            :key="ability._id"
+            class="ability"
+          >
+            <div class="score">
+              <div class="double-border top big-number">
+                <template v-if="creature.settings.swapScoresAndMods">
+                  {{ ability.total }}
+                </template>
+                <template v-else>
+                  {{ numberToSignedString(ability.modifier) }}
+                </template>
+              </div>
+              <div class="bottom">
+                <template v-if="creature.settings.swapScoresAndMods">
+                  {{ numberToSignedString(ability.modifier) }}
+                </template>
+                <template v-else>
+                  {{ ability.total }}
+                </template>
+              </div>
+            </div>
+            <div class="double-border name label">
+              {{ ability.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-for="toggle in toggles"
+        :key="toggle._id"
+        class="number-label"
+      >
+        <div class="box double-border" />
+        <div class="label double-border">
+          {{ toggle.name }}
+        </div>
+      </div>
+
+      <div
+        v-for="stat in stats"
+        :key="stat._id"
+        class="number-label"
+        :class="stat.variableName == 'armor' && 'shield-number-label'"
+      >
+        <div
+          :class="stat.variableName == 'armor' ? 'shield-border' : 'octogon-border'"
+          class="number big-number"
+        >
+          {{ stat.value }}
+        </div>
+        <div class="label double-border">
+          {{ stat.name }}
+        </div>
+      </div>
+
+      <div
+        v-for="modifier in modifiers"
+        :key="modifier._id"
+        class="number-label"
+      >
+        <div class="number octogon-border big-number">
+          {{ numberToSignedString(modifier.value) }}
+        </div>
+        <div class="label double-border">
+          {{ modifier.name }}
+        </div>
+      </div>
+
+      <div
+        v-for="check in checks"
+        :key="check._id"
+        class="number-label"
+      >
+        <div class="number octogon-border big-number">
+          {{ numberToSignedString(check.value) }}
+        </div>
+        <div class="label double-border">
+          {{ check.name }}
+        </div>
+      </div>
+
+      <div
+        v-if="hitDice.length"
+        class="hit-dice m-2"
+      >
+        <div class="double-border">
+          <div>
+            <span class="label">
+              Total:
+            </span>
+            <span
+              v-for="hitDie in hitDice"
+              :key="hitDie._id"
+              style="margin-right: 4px;"
+            >
+              {{ hitDie.total }}{{ hitDie.hitDiceSize }}
+            </span>
+          </div>
+          <div style="height: 80px;" />
+          <div
+            style="text-align: center;"
+            class="label"
+          >
+            Hit Dice
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-for="resource in resources"
+        :key="resource._id"
+        class="resource"
+      >
+        <div>{{ resource.total }}</div>
+        <div>{{ resource.name }}</div>
+      </div>
+
+      <damage-multiplier-card
+        v-if="multipliers && multipliers.length"
+        :multipliers="multipliers"
+      />
+
+      <div
+        v-if="spellSlots && spellSlots.length"
+      >
+        <div>Spell Slots</div>
+        <div
+          v-for="spellSlot in spellSlots"
+          :key="spellSlot._id"
+        >
+          <div>
+            {{ spellSlot.name }}
+          </div>
+          <div
+            v-if="spellSlot.total > 6"
+          >
+            {{ spellSlot.total }}
+          </div>
+          <div
+            v-else
+          >
+            <v-icon
+              v-for="i in spellSlot.total"
+              :key="i"
+            >
+              mdi-radiobox-blank
+            </v-icon>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="savingThrows.length"
+        class="saving-throws"
+      >
+        <div>
+          <v-list>
+            <v-subheader>Saving Throws</v-subheader>
+            <skill-list-tile
+              v-for="save in savingThrows"
+              :key="save._id"
+              :model="save"
+              :data-id="save._id"
+            />
+          </v-list>
+        </div>
+      </div>
+
+      <div
+        v-if="skills.length"
+        class="skills"
+      >
+        <div>
+          <v-list>
+            <v-subheader>Skills</v-subheader>
+            <skill-list-tile
+              v-for="skill in skills"
+              :key="skill._id"
+              :model="skill"
+              :data-id="skill._id"
+            />
+          </v-list>
+        </div>
+      </div>
+
+      <div
+        v-for="action in actions"
+        :key="action._id"
+        class="action"
+      >
+        <action-card
+          :model="action"
+          :data-id="action._id"
+        />
+      </div>
+
+      <div
+        v-if="weapons && weapons.length"
+        class="weapon-proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>
+              Weapons
+            </v-subheader>
+            <skill-list-tile
+              v-for="weapon in weapons"
+              :key="weapon._id"
+              hide-modifier
+              :model="weapon"
+              :data-id="weapon._id"
+            />
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="armors && armors.length"
+        class="armor-proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>
+              Armor
+            </v-subheader>
+            <skill-list-tile
+              v-for="armor in armors"
+              :key="armor._id"
+              hide-modifier
+              :model="armor"
+              :data-id="armor._id"
+            />
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="tools && tools.length"
+        class="tool-proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>
+              Tools
+            </v-subheader>
+            <skill-list-tile
+              v-for="tool in tools"
+              :key="tool._id"
+              hide-modifier
+              :model="tool"
+              :data-id="tool._id"
+            />
+          </v-list>
+        </v-card>
+      </div>
+      <div
+        v-if="languages && languages.length"
+        class="language-proficiencies"
+      >
+        <v-card>
+          <v-list>
+            <v-subheader>
+              Languages
+            </v-subheader>
+            <skill-list-tile
+              v-for="language in languages"
+              :key="language._id"
+              hide-modifier
+              :model="language"
+              :data-id="language._id"
+            />
+          </v-list>
+        </v-card>
+      </div>
+    </column-layout>
+  </div>
+  </column-layout>
+  </div>
+</template>
+
+<script lang="js">
+import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
+import DamageMultiplierCard from '/imports/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
+import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
+import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
+import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+
+const getProperties = function (creature, filter, options = {
+  sort: { order: 1 }
+}) {
+  if (!creature) return;
+  if (creature.settings.hideUnusedStats) {
+    filter.hide = { $ne: true };
+  }
+  filter['ancestors.id'] = creature._id;
+  filter.removed = { $ne: true };
+  filter.inactive = { $ne: true };
+  filter.overridden = { $ne: true };
+  filter.$nor = [
+    { hideWhenTotalZero: true, total: 0 },
+    { hideWhenValueZero: true, value: 0 },
+  ];
+
+  return CreatureProperties.find(filter, options);
+};
+
+const getAttributeOfType = function (creature, type) {
+  return getProperties(creature, {
+    type: 'attribute',
+    attributeType: type,
+  });
+};
+
+const getSkillOfType = function (creature, type) {
+  return getProperties(creature, {
+    type: 'skill',
+    skillType: type,
+  });
+}
+
+export default {
+  components: {
+    ColumnLayout,
+    DamageMultiplierCard,
+    HealthBarCardContainer,
+    SkillListTile,
+    ActionCard,
+  },
+  props: {
+    creatureId: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      doCheckLoading: false,
+    }
+  },
+  meteor: {
+    creature() {
+      return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
+    },
+    abilities() {
+      return getAttributeOfType(this.creature, 'ability');
+    },
+    stats() {
+      return getAttributeOfType(this.creature, 'stat');
+    },
+    toggles() {
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'toggle',
+        removed: { $ne: true },
+        deactivatedByAncestor: { $ne: true },
+        showUI: true,
+      }, {
+        sort: { order: 1 }
+      });
+    },
+    modifiers() {
+      return getAttributeOfType(this.creature, 'modifier');
+    },
+    resources() {
+      return getAttributeOfType(this.creature, 'resource');
+    },
+    spellSlots() {
+      return getAttributeOfType(this.creature, 'spellSlot');
+    },
+    hasSpells() {
+      const cursor = getProperties(this.creature, {
+        type: 'spell',
+      })
+      return cursor && cursor.count();
+    },
+    hitDice() {
+      return getAttributeOfType(this.creature, 'hitDice');
+    },
+    checks() {
+      return getSkillOfType(this.creature, 'check');
+    },
+    savingThrows() {
+      return getSkillOfType(this.creature, 'save');
+    },
+    skills() {
+      return getSkillOfType(this.creature, 'skill');
+    },
+    tools() {
+      return getSkillOfType(this.creature, 'tool');
+    },
+    weapons() {
+      return getSkillOfType(this.creature, 'weapon');
+    },
+    armors() {
+      return getSkillOfType(this.creature, 'armor');
+    },
+    languages() {
+      return getSkillOfType(this.creature, 'language');
+    },
+    actions() {
+      return getProperties(this.creature, { type: 'action' });
+    },
+    appliedBuffs() {
+      return getProperties(this.creature, { type: 'buff' });
+    },
+    multipliers() {
+      return getProperties(this.creature, {
+        type: 'damageMultiplier'
+      }, {
+        sort: { value: 1, order: 1 }
+      });
+    },
+  },
+  methods: {
+    numberToSignedString,
+  },
+};
+</script>
+
+<style lang="css" scoped>
+  .double-border {
+    position: relative;
+    padding: 11px 10px;
+  }
+  .double-border::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-image-source: url(/images/print/doubleLineImageBorder.png);
+    border-image-slice: 110 126 fill;
+    border-image-width: 16px;
+    border-image-repeat: stretch;
+    box-sizing: content-box;
+    z-index: -1;
+  }
+  .octogon-border {
+    position: relative;
+    padding: 4px 20px;
+  }
+  .octogon-border::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-image: url(/images/print/octogonBorder.png) 124 118 fill;
+    border-image-width: 22px;
+    z-index: -1;
+  }
+  .shield-border {
+    min-width: 64px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    aspect-ratio: 0.87;
+    padding: 12px;
+  }
+  .shield-border::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url(/images/print/shieldBorder.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
+  .shield-number-label {
+    align-items: center !important;
+  }
+  .big-number {
+    font-size: 20pt;
+  }
+  .ability {
+    display: flex;
+    align-items: start;
+    margin: 4px 0;
+  }
+  .ability .score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ability .top {
+    min-width: 64px;
+    text-align: center;
+    margin-bottom: -10px;
+    padding: 14px;
+    z-index: 1;
+  }
+  .ability .bottom {
+    font-size: 10pt;
+    position: relative;
+    padding: 0 16px;
+    z-index: 2;
+  }
+  .ability .bottom::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: solid white;
+    border-image-source: url(/images/print/upwardPointingBorder.png);
+    border-image-slice: 0 85 fill;
+    border-image-width: 0 16px;
+    border-image-outset: 0px 0px;
+    border-image-repeat: stretch;
+    box-sizing: content-box;
+    z-index: -1;
+  }
+  .ability .name {
+    margin-top: 10px;
+    margin-left: -16px;
+    padding-left: 20px;
+  }
+
+  .number-label {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .label {
+    font-size: 10pt;
+    font-variant: small-caps;
+    flex-grow: 1;
+  }
+
+  .number-label .label {
+    margin-top: 4px;
+    margin-left: -30px;
+    padding-left: 34px;
+    z-index: -1;
+  }
+
+  .number-label .number {
+    min-width: 72px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .number-label .box {
+    width: 48px;
+    height: 48px;
+    margin-left: 10px;
+    z-index: 1;
+  }
+
+</style>
