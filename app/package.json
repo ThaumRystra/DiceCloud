@@ -44,6 +44,7 @@
     "ngraph.path": "^1.4.0",
     "pretty-bytes": "^6.0.0",
     "qrcode": "^1.5.1",
+    "qrcode.vue": "^1.7.0",
     "request": "^2.88.2",
     "sharp": "^0.30.7",
     "simpl-schema": "^1.13.1",

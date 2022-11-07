@@ -1,90 +1,84 @@
 <template lang="html">
-  <div class="inventory">
+  <div
+    class="inventory"
+    style="page-break-before: always;"
+  >
     <column-layout wide-columns>
-      <div>
-        <v-card>
-          <v-list>
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-icon>$vuetify.icons.injustice</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  Weight Carried
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-list-item-title>
-                  {{ weightCarried }} lb
-                </v-list-item-title>
-              </v-list-item-action>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-icon>$vuetify.icons.cash</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  Net worth
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-list-item-title>
-                  <coin-value :value="variables && variables.valueTotal && variables.valueTotal.value|| 0" />
-                </v-list-item-title>
-              </v-list-item-action>
-            </v-list-item>
-            <v-list-item v-if="variables && variables.itemsAttuned && variables.itemsAttuned.value">
-              <v-list-item-avatar>
-                <v-icon>$vuetify.icons.spell</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  Items attuned
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-list-item-title>
-                  {{ variables.itemsAttuned.value }}
-                </v-list-item-title>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </div>
-      <div>
-        <toolbar-card transparent-toolbar>
-          <v-toolbar-title slot="toolbar">
-            Equipped
-          </v-toolbar-title>
-          <v-card-text class="px-0">
-            <item-list
-              equipment
-              :items="equippedItems"
-              :parent-ref="equipmentParentRef"
+      <div class="span-all">
+        <div class="double-border">
+          <div class="label text-center">
+            Inventory
+          </div>
+          <div class="d-flex inventory-stat">
+            <v-icon>$vuetify.icons.injustice</v-icon>
+            Weight Carried:
+            {{ weightCarried }} lb
+          </div>
+          <div class="d-flex inventory-stat">
+            <v-icon>$vuetify.icons.cash</v-icon>
+            Net worth:
+            <coin-value
+              class="ml-2"
+              :value="variables && variables.valueTotal && variables.valueTotal.value|| 0"
             />
-          </v-card-text>
-        </toolbar-card>
+          </div>
+          <div class="d-flex inventory-stat">
+            <v-icon>$vuetify.icons.spell</v-icon>
+            Items attuned:
+            {{ variables.itemsAttuned && variables.itemsAttuned.value }}
+          </div>
+        </div>
       </div>
-      <div>
-        <toolbar-card transparent-toolbar>
-          <v-toolbar-title slot="toolbar">
-            Carried
-          </v-toolbar-title>
-          <v-card-text class="px-0">
-            <item-list
-              :items="carriedItems"
-              :parent-ref="carriedParentRef"
-            />
-          </v-card-text>
-        </toolbar-card>
+      <div class="span-all">
+        <div class="octagon-border label text-center">
+          Equipped
+        </div>
       </div>
       <div
-        v-for="container in containersWithoutAncestorContainers"
-        :key="container._id"
+        v-for="item in equippedItems"
+        :key="item._id"
       >
-        <container-card :model="container" />
+        <printed-item
+          class="double-border"
+          :model="item"
+        />
       </div>
+      <div class="span-all">
+        <div class="octagon-border label text-center">
+          Carried
+        </div>
+      </div>
+      <div
+        v-for="item in carriedItems"
+        :key="item._id"
+      >
+        <printed-item
+          class="double-border"
+          :model="item"
+        />
+      </div>
+      <template
+        v-for="container in containersWithoutAncestorContainers"
+      >
+        <div 
+          :key="container._id"
+          class="span-all container-header"
+        >
+          <printed-container
+            class="octagon-border"
+            :model="container"
+          />
+        </div>
+        <div
+          v-for="item in container.items"
+          :key="item._id"
+        >
+          <printed-item
+            class="double-border"
+            :model="item"
+          />
+        </div>
+      </template>
     </column-layout>
   </div>
 </template>
@@ -93,22 +87,20 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import ContainerCard from '/imports/ui/properties/components/inventory/ContainerCard.vue';
-import ToolbarCard from '/imports/ui/components/ToolbarCard.vue';
-import ItemList from '/imports/ui/properties/components/inventory/ItemList.vue';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
-import CreatureVariables from '../../../../api/creature/creatures/CreatureVariables';
+import PrintedItem from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedItem.vue';
+import PrintedContainer from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedContainer.vue';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 
 export default {
   components: {
     ColumnLayout,
-    ContainerCard,
-    ToolbarCard,
-    ItemList,
     CoinValue,
+    PrintedItem,
+    PrintedContainer,
   },
   props: {
     creatureId: {
@@ -154,6 +146,17 @@ export default {
         inactive: { $ne: true },
       }, {
         sort: { order: 1 },
+      }).map(c => {
+        c.items = CreatureProperties.find({
+          'parent.id': c._id,
+          type: { $in: ['item', 'container'] },
+          removed: { $ne: true },
+          equipped: { $ne: true },
+          deactivatedByAncestor: { $ne: true },
+        }, {
+          sort: { order: 1 },
+        }).fetch();
+        return c;
       });
     },
     carriedItems() {
@@ -229,5 +232,39 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.octagon-border {
+  position: relative;
+  padding: 4px 20px;
+  page-break-inside: avoid;
+}
+.octagon-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-image: url(/images/print/octagonBorder.png) 124 118 fill;
+  border-image-width: 22px;
+  z-index: -1;
+}
 
+.label {
+  font-size: 14pt;
+  font-variant: small-caps;
+  flex-grow: 1;
+}
+
+.inventory-stat {
+  font-size: 12pt;
+  line-height: 32px;
+}
+.inventory-stat > .v-icon {
+  margin-right: 8px;
+}
+
+.container-header {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
 </style>

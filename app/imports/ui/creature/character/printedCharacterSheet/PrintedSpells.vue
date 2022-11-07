@@ -1,23 +1,38 @@
 <template lang="html">
-  <div class="spells">
+  <div
+    class="spells"
+    style="page-break-before: always;"
+  >
     <column-layout wide-columns>
-      <div v-if="spellsWithoutList.length">
-        <v-card>
-          <spell-list
-            :spells="spellsWithoutList"
-            :parent-ref="{id: creatureId, collection: 'creatures'}"
-          />
-        </v-card>
+      <div class="span-all">
+        <div class="label text-center octagon-border">
+          Spells
+        </div>
       </div>
       <div
-        v-for="spellList in spellListsWithoutAncestorSpellLists"
-        :key="spellList._id"
+        v-for="spell in spellsWithoutList"
+        :key="spell._id"
       >
-        <spellList-card
-          :model="spellList"
-          :organize="organize"
-        />
+        <printed-spell :model="spell" />
       </div>
+      <template
+        v-for="spellList in spellListsWithoutAncestorSpellLists"
+      >
+        <div
+          :key="spellList._id"
+          class="span-all"
+        >
+          <printed-spell-list
+            :model="spellList"
+          />
+        </div>
+        <div
+          v-for="spell in spellList.spells"
+          :key="spell._id"
+        >
+          <printed-spell :model="spell" />
+        </div>
+      </template>
     </column-layout>
   </div>
 </template>
@@ -25,14 +40,14 @@
 <script lang="js">
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import SpellListCard from '/imports/ui/properties/components/spells/SpellListCard.vue';
-import SpellList from '/imports/ui/properties/components/spells/SpellList.vue';
+import PrintedSpell from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedSpell.vue';
+import PrintedSpellList from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedSpellList.vue';
 
 export default {
   components: {
     ColumnLayout,
-    SpellList,
-    SpellListCard,
+    PrintedSpell,
+    PrintedSpellList,
   },
   props: {
     creatureId: {
@@ -84,21 +99,25 @@ export default {
         inactive: { $ne: true },
       }, {
         sort: { order: 1 }
+      }).map(sl => {
+        sl.spells = CreatureProperties.find({
+          'ancestors.id': sl._id,
+          type: 'spell',
+          removed: { $ne: true },
+          inactive: { $ne: true },
+        }, {
+          sort: {
+            level: 1,
+            order: 1,
+          }
+        }).fetch();
+        return sl;
       });
     },
   },
   computed: {
     spellListIds() {
-      return this.spellLists.map(spellList => spellList._id);
-    },
-  },
-  methods: {
-    clickProperty(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `spell-list-tile-${_id}`,
-        data: { _id },
-      });
+      return this.spellLists?.map(spellList => spellList._id);
     },
   },
 }

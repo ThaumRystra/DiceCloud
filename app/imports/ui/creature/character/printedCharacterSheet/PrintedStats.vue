@@ -1,7 +1,5 @@
 <template lang="html">
-  <div class="stats-tab ma-2">
-    <health-bar-card-container :creature-id="creatureId" />
-
+  <div class="stats">
     <column-layout>
       <div
         v-if="abilities.length"
@@ -56,7 +54,7 @@
         :class="stat.variableName == 'armor' && 'shield-number-label'"
       >
         <div
-          :class="stat.variableName == 'armor' ? 'shield-border' : 'octogon-border'"
+          :class="stat.variableName == 'armor' ? 'shield-border' : 'octagon-border'"
           class="number big-number"
         >
           {{ stat.value }}
@@ -71,7 +69,7 @@
         :key="modifier._id"
         class="number-label"
       >
-        <div class="number octogon-border big-number">
+        <div class="number octagon-border big-number">
           {{ numberToSignedString(modifier.value) }}
         </div>
         <div class="label double-border">
@@ -84,14 +82,37 @@
         :key="check._id"
         class="number-label"
       >
-        <div class="number octogon-border big-number">
+        <div class="number octagon-border big-number">
           {{ numberToSignedString(check.value) }}
         </div>
         <div class="label double-border">
           {{ check.name }}
         </div>
       </div>
-
+      <div
+        v-for="healthBar in healthBars"
+        :key="healthBar._id"
+        class="m-2"
+      >
+        <div class="double-border">
+          <div class="label">
+            Total: {{ healthBar.total }}
+          </div>
+          <div style="height: 60px;" />
+          <div
+            style="text-align: center;"
+            class="label"
+          >
+            {{ healthBar.name }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <printed-damage-multipliers
+          class="double-border"
+          :multipliers="multipliers"
+        />
+      </div>
       <div
         v-if="hitDice.length"
         class="hit-dice m-2"
@@ -109,7 +130,7 @@
               {{ hitDie.total }}{{ hitDie.hitDiceSize }}
             </span>
           </div>
-          <div style="height: 80px;" />
+          <div style="height: 60px;" />
           <div
             style="text-align: center;"
             class="label"
@@ -122,182 +143,238 @@
       <div
         v-for="resource in resources"
         :key="resource._id"
-        class="resource"
       >
-        <div>{{ resource.total }}</div>
-        <div>{{ resource.name }}</div>
+        <div
+          class="double-border"
+          :class="resource.total <= 8 && 'mb-2'"
+        >
+          <div
+            v-if="resource.total <= 8"
+            class="label"
+          >
+            {{ resource.name }}
+          </div>
+          <div
+            v-if="resource.total > 8"
+          >
+            total: {{ resource.total }}
+            <div style="height: 60px;" />
+          </div>
+          <div
+            v-if="resource.total <= 8"
+            class="d-flex justify-end"
+          >
+            <div
+              v-for="i in resource.total"
+              :key="i"
+              class="resource-bubble"
+            />
+          </div>
+          <div
+            v-if="resource.total > 8"
+            class="label text-center"
+          >
+            {{ resource.name }}
+          </div>
+        </div>
       </div>
-
-      <damage-multiplier-card
-        v-if="multipliers && multipliers.length"
-        :multipliers="multipliers"
-      />
 
       <div
         v-if="spellSlots && spellSlots.length"
       >
-        <div>Spell Slots</div>
-        <div
-          v-for="spellSlot in spellSlots"
-          :key="spellSlot._id"
-        >
-          <div>
-            {{ spellSlot.name }}
+        <div class="double-border">
+          <div class="label text-center">
+            Spell Slots
           </div>
           <div
-            v-if="spellSlot.total > 6"
+            v-for="spellSlot in spellSlots"
+            :key="spellSlot._id"
+            class="mb-7"
+            :class="spellSlot.total <= 8 && 'mb-7'"
           >
-            {{ spellSlot.total }}
-          </div>
-          <div
-            v-else
-          >
-            <v-icon
-              v-for="i in spellSlot.total"
-              :key="i"
+            <div class="label">
+              {{ spellSlot.name }}
+            </div>
+            <div
+              v-if="spellSlot.total > 8"
             >
-              mdi-radiobox-blank
-            </v-icon>
+              Total: {{ spellSlot.total }}
+            </div>
+            <div
+              v-else
+              class="d-flex"
+            >
+              <div
+                v-for="i in spellSlot.total"
+                :key="i"
+                class="resource-bubble"
+              />
+            </div>
           </div>
         </div>
       </div>
 
       <div
         v-if="savingThrows.length"
-        class="saving-throws"
       >
-        <div>
-          <v-list>
-            <v-subheader>Saving Throws</v-subheader>
-            <skill-list-tile
-              v-for="save in savingThrows"
-              :key="save._id"
-              :model="save"
-              :data-id="save._id"
-            />
-          </v-list>
+        <div
+          class="double-border"
+        >
+          <printed-skill
+            v-for="save in savingThrows"
+            :key="save._id"
+            :model="save"
+            :data-id="save._id"
+          />
+          <div class="label text-center">
+            Saving Throws
+          </div>
         </div>
       </div>
 
       <div
         v-if="skills.length"
-        class="skills"
       >
-        <div>
-          <v-list>
-            <v-subheader>Skills</v-subheader>
-            <skill-list-tile
-              v-for="skill in skills"
-              :key="skill._id"
-              :model="skill"
-              :data-id="skill._id"
-            />
-          </v-list>
+        <div
+          class="double-border"
+        >
+          <printed-skill
+            v-for="skill in skills"
+            :key="skill._id"
+            :model="skill"
+            :data-id="skill._id"
+          />
+          <div class="label text-center">
+            Skills
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="weapons && weapons.length"
+      >
+        <div
+          class="double-border"
+        >
+          <printed-skill
+            v-for="weapon in weapons"
+            :key="weapon._id"
+            hide-modifier
+            :model="weapon"
+            :data-id="weapon._id"
+          />
+          <div class="label text-center">
+            Weapons
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="armors && armors.length"
+      >
+        <div
+          class="double-border"
+        >
+          <printed-skill
+            v-for="armor in armors"
+            :key="armor._id"
+            hide-modifier
+            :model="armor"
+            :data-id="armor._id"
+          />
+          <div class="label text-center">
+            Armor
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="tools && tools.length"
+      >
+        <div
+          class="double-border"
+        >
+          <printed-skill
+            v-for="tool in tools"
+            :key="tool._id"
+            hide-modifier
+            :model="tool"
+            :data-id="tool._id"
+          />
+          <div class="label text-center">
+            Tools
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="languages && languages.length"
+      >
+        <div
+          class="double-border"
+        >
+          <printed-skill
+            v-for="language in languages"
+            :key="language._id"
+            hide-modifier
+            :model="language"
+            :data-id="language._id"
+          />
+          <div class="label text-center">
+            Languages
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-for="note in notes"
+        :key="note._id"
+      >
+        <div class="double-border">
+          <div class="label text-center">
+            {{ note.name }}
+          </div>
+          <property-description
+            text
+            :model="note.summary"
+          />
         </div>
       </div>
 
       <div
         v-for="action in actions"
         :key="action._id"
-        class="action"
       >
-        <action-card
-          :model="action"
-          :data-id="action._id"
-        />
+        <div class="double-border">
+          <printed-action
+            :model="action"
+          />
+        </div>
       </div>
 
       <div
-        v-if="weapons && weapons.length"
-        class="weapon-proficiencies"
+        v-for="feature in features"
+        :key="feature._id"
       >
-        <v-card>
-          <v-list>
-            <v-subheader>
-              Weapons
-            </v-subheader>
-            <skill-list-tile
-              v-for="weapon in weapons"
-              :key="weapon._id"
-              hide-modifier
-              :model="weapon"
-              :data-id="weapon._id"
-            />
-          </v-list>
-        </v-card>
-      </div>
-      <div
-        v-if="armors && armors.length"
-        class="armor-proficiencies"
-      >
-        <v-card>
-          <v-list>
-            <v-subheader>
-              Armor
-            </v-subheader>
-            <skill-list-tile
-              v-for="armor in armors"
-              :key="armor._id"
-              hide-modifier
-              :model="armor"
-              :data-id="armor._id"
-            />
-          </v-list>
-        </v-card>
-      </div>
-      <div
-        v-if="tools && tools.length"
-        class="tool-proficiencies"
-      >
-        <v-card>
-          <v-list>
-            <v-subheader>
-              Tools
-            </v-subheader>
-            <skill-list-tile
-              v-for="tool in tools"
-              :key="tool._id"
-              hide-modifier
-              :model="tool"
-              :data-id="tool._id"
-            />
-          </v-list>
-        </v-card>
-      </div>
-      <div
-        v-if="languages && languages.length"
-        class="language-proficiencies"
-      >
-        <v-card>
-          <v-list>
-            <v-subheader>
-              Languages
-            </v-subheader>
-            <skill-list-tile
-              v-for="language in languages"
-              :key="language._id"
-              hide-modifier
-              :model="language"
-              :data-id="language._id"
-            />
-          </v-list>
-        </v-card>
+        <div class="double-border">
+          <div class="label text-center">
+            {{ feature.name }}
+          </div>
+          <property-description
+            text
+            :model="feature.summary"
+          />
+        </div>
       </div>
     </column-layout>
-  </div>
-  </column-layout>
   </div>
 </template>
 
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
-import DamageMultiplierCard from '/imports/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
-import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
-import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
-import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue';
+import PrintedAction from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import PrintedSkill from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedSkill.vue';
+import PrintedDamageMultipliers from '/imports/ui/creature/character/printedCharacterSheet/components/PrintedDamageMultipliers.vue';
+import PropertyDescription from '/imports/ui/properties/viewers/shared/PropertyDescription.vue';
 
 const getProperties = function (creature, filter, options = {
   sort: { order: 1 }
@@ -335,10 +412,10 @@ const getSkillOfType = function (creature, type) {
 export default {
   components: {
     ColumnLayout,
-    DamageMultiplierCard,
-    HealthBarCardContainer,
-    SkillListTile,
-    ActionCard,
+    PrintedDamageMultipliers,
+    PrintedAction,
+    PrintedSkill,
+    PropertyDescription,
   },
   props: {
     creatureId: {
@@ -371,6 +448,9 @@ export default {
       }, {
         sort: { order: 1 }
       });
+    },
+    healthBars() {
+      return getAttributeOfType(this.creature, 'healthBar');
     },
     modifiers() {
       return getAttributeOfType(this.creature, 'modifier');
@@ -412,7 +492,9 @@ export default {
       return getSkillOfType(this.creature, 'language');
     },
     actions() {
-      return getProperties(this.creature, { type: 'action' });
+      return getProperties(this.creature, { type: 'action' }, {
+        sort: { actionType: 1, order: 1 }
+      });
     },
     appliedBuffs() {
       return getProperties(this.creature, { type: 'buff' });
@@ -424,6 +506,12 @@ export default {
         sort: { value: 1, order: 1 }
       });
     },
+    features() {
+      return getProperties(this.creature, { type: 'feature' });
+    },
+    notes(){
+      return getProperties(this.creature, { type: 'note', summary: {$exists: true} });
+    },
   },
   methods: {
     numberToSignedString,
@@ -432,141 +520,120 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .double-border {
-    position: relative;
-    padding: 11px 10px;
-  }
-  .double-border::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-image-source: url(/images/print/doubleLineImageBorder.png);
-    border-image-slice: 110 126 fill;
-    border-image-width: 16px;
-    border-image-repeat: stretch;
-    box-sizing: content-box;
-    z-index: -1;
-  }
-  .octogon-border {
-    position: relative;
-    padding: 4px 20px;
-  }
-  .octogon-border::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-image: url(/images/print/octogonBorder.png) 124 118 fill;
-    border-image-width: 22px;
-    z-index: -1;
-  }
-  .shield-border {
-    min-width: 64px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    aspect-ratio: 0.87;
-    padding: 12px;
-  }
-  .shield-border::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: url(/images/print/shieldBorder.png);
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -1;
-  }
-  .shield-number-label {
-    align-items: center !important;
-  }
-  .big-number {
-    font-size: 20pt;
-  }
-  .ability {
-    display: flex;
-    align-items: start;
-    margin: 4px 0;
-  }
-  .ability .score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .ability .top {
-    min-width: 64px;
-    text-align: center;
-    margin-bottom: -10px;
-    padding: 14px;
-    z-index: 1;
-  }
-  .ability .bottom {
-    font-size: 10pt;
-    position: relative;
-    padding: 0 16px;
-    z-index: 2;
-  }
-  .ability .bottom::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border: solid white;
-    border-image-source: url(/images/print/upwardPointingBorder.png);
-    border-image-slice: 0 85 fill;
-    border-image-width: 0 16px;
-    border-image-outset: 0px 0px;
-    border-image-repeat: stretch;
-    box-sizing: content-box;
-    z-index: -1;
-  }
-  .ability .name {
-    margin-top: 10px;
-    margin-left: -16px;
-    padding-left: 20px;
-  }
+.shield-border {
+  min-width: 64px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  aspect-ratio: 0.87;
+  padding: 12px;
+}
+.shield-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: url(/images/print/shieldBorder.png);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+.shield-number-label {
+  align-items: center !important;
+}
+.big-number {
+  font-size: 20pt;
+}
+.ability {
+  display: flex;
+  align-items: start;
+  margin: 4px 0;
+}
+.ability .score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ability .top {
+  min-width: 64px;
+  text-align: center;
+  margin-bottom: -10px;
+  padding: 14px;
+  z-index: 1;
+}
+.ability .bottom {
+  font-size: 10pt;
+  position: relative;
+  padding: 0 16px;
+  z-index: 2;
+}
+.ability .bottom::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: solid white;
+  border-image-source: url(/images/print/upwardPointingBorder.png);
+  border-image-slice: 0 85 fill;
+  border-image-width: 0 16px;
+  border-image-outset: 0px 0px;
+  border-image-repeat: stretch;
+  box-sizing: content-box;
+  z-index: -1;
+}
+.ability .name {
+  margin-top: 10px;
+  margin-left: -16px;
+  padding-left: 20px;
+}
 
-  .number-label {
-    display: flex;
-    align-items: flex-start;
-  }
+.number-label {
+  display: flex;
+  align-items: flex-start;
+}
 
-  .label {
-    font-size: 10pt;
-    font-variant: small-caps;
-    flex-grow: 1;
-  }
+.label {
+  font-size: 10pt;
+  font-variant: small-caps;
+  flex-grow: 1;
+}
 
-  .number-label .label {
-    margin-top: 4px;
-    margin-left: -30px;
-    padding-left: 34px;
-    z-index: -1;
-  }
+.number-label .label {
+  margin-top: 4px;
+  margin-left: -30px;
+  padding-left: 34px;
+  z-index: -1;
+}
 
-  .number-label .number {
-    min-width: 72px;
-    text-align: center;
-    z-index: 1;
-  }
+.number-label .number {
+  min-width: 72px;
+  text-align: center;
+  z-index: 1;
+}
 
-  .number-label .box {
-    width: 48px;
-    height: 48px;
-    margin-left: 10px;
-    z-index: 1;
-  }
+.number-label .box {
+  width: 48px;
+  height: 48px;
+  margin-left: 10px;
+  z-index: 1;
+}
 
+.resource-bubble {
+  margin-bottom: -20px;
+  margin-top: 4px;
+  margin-right: 4px;
+  background-color: white;
+  border: solid black 2px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+}
 </style>
