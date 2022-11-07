@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div v-if="multipliers && multipliers.length">
         <printed-damage-multipliers
           class="double-border"
           :multipliers="multipliers"
