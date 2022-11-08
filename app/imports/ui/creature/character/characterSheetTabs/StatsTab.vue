@@ -4,6 +4,12 @@
 
     <column-layout>
       <div
+        v-for="folder in folders"
+        :key="folder._id"
+      >
+        <folder-group-card :model="folder" />
+      </div>
+      <div
         v-if="!creature.settings.hideRestButtons || (events && events.length)"
         class="character-buttons"
       >
@@ -365,6 +371,7 @@ import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue
 import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
 import EventButton from '/imports/ui/properties/components/actions/EventButton.vue';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import FolderGroupCard from '/imports/ui/properties/components/folders/FolderGroupCard.vue';
 import { uniqBy } from 'lodash';
 
 const getProperties = function (creature, filter, options = {
@@ -415,6 +422,7 @@ export default {
     ActionCard,
     ToggleCard,
     EventButton,
+    FolderGroupCard,
   },
   props: {
     creatureId: {
@@ -503,6 +511,9 @@ export default {
       }, {
         sort: { value: 1, order: 1 }
       });
+    },
+    folders() {
+      return getProperties(this.creature, { type: 'folder', groupStats: true });
     },
   },
   methods: {

@@ -26,6 +26,12 @@
             :value="model.tags"
             @change="change('tags', ...arguments)"
           />
+          <smart-switch
+            label="Group children on stats tab"
+            :value="model.groupStats"
+            :error-messages="errors.groupStats"
+            @change="change('groupStats', ...arguments)"
+          />
         </form-section>
       </form-sections>
     </div>
