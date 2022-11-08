@@ -24,14 +24,6 @@
         >
           <v-icon>mdi-help</v-icon>
         </v-btn>
-        <v-switch
-          v-if="tab === 0"
-          :input-value="showPropertyHelp"
-          append-icon="mdi-help"
-          hide-details
-          flat
-          @change="propertyHelpChanged"
-        />
         <text-field
           v-if="tab === 2"
           prepend-inner-icon="mdi-magnify"
