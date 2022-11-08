@@ -12,6 +12,7 @@ const LibraryCollectionToolbar = () => import('/imports/ui/library/LibraryCollec
 const CharacterSheetPage = () => import('/imports/ui/pages/CharacterSheetPage.vue');
 const CharacterSheetToolbar = () => import('/imports/ui/creature/character/CharacterSheetToolbar.vue');
 const CharacterSheetRightDrawer = () => import('/imports/ui/creature/character/CharacterSheetRightDrawer.vue');
+const CharacterSheetPrinted = () => import('/imports/ui/creature/character/printedCharacterSheet/CharacterSheetPrinted.vue');
 const SignIn = () => import('/imports/ui/pages/SignIn.vue');
 const Register = () => import('/imports/ui/pages/Register.vue');
 const IconAdmin = () => import('/imports/ui/icons/IconAdmin.vue');
@@ -176,6 +177,16 @@ RouterFactory.configure(router => {
     },
     meta: {
       title: 'Character Sheet',
+    },
+  }, {
+    name: 'printCharacterSheet',
+    path: '/print-character/:id',
+    alias: '/print-character/:id/:urlName',
+    components: {
+      default: CharacterSheetPrinted,
+    },
+    meta: {
+      title: 'Print Character Sheet',
     },
   }, {
     path: '/tabletops',
