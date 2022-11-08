@@ -18,6 +18,11 @@ let CreatureSettingsSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  //hide rest buttons
+  hideRestButtons: {
+    type: Boolean,
+    optional: true,
+  },
   // Swap around the modifier and stat
   swapStatAndModifier: {
     type: Boolean,

@@ -121,8 +121,7 @@
       "quotes": [
         "error",
         "single"
-      ],
-      "vuetify/no-deprecated-classes": "error"
+      ]
     }
   }
 }

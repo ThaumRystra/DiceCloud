@@ -40,6 +40,11 @@
           @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value})"
         />
         <v-switch
+          label="Hide rest buttons"
+          :input-value="model.settings.hideRestButtons"
+          @change="value => $emit('change', {path: ['settings','hideRestButtons'], value: !!value})"
+        />
+        <v-switch
           label="Show spells tab"
           :input-value="!model.settings.hideSpellsTab"
           @change="changeHideSpellsTab"

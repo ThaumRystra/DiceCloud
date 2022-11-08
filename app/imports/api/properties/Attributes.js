@@ -129,7 +129,9 @@ let AttributeSchema = createPropertySchema({
   reset: {
     type: String,
     optional: true,
-    allowedValues: ['shortRest', 'longRest'],
+    regEx: VARIABLE_NAME_REGEX,
+    min: 2,
+    max: STORAGE_LIMITS.variableName,
   },
 });
 

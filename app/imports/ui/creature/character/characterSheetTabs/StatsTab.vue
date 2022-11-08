@@ -3,17 +3,28 @@
     <health-bar-card-container :creature-id="creatureId" />
 
     <column-layout>
-      <div class="character-buttons">
+      <div
+        v-if="!creature.settings.hideRestButtons || (events && events.length)"
+        class="character-buttons"
+      >
         <v-card>
           <v-card-text class="layout column align-center">
             <rest-button
+              v-if="!creature.settings.hideRestButtons"
               :creature-id="creatureId"
               type="shortRest"
               class="ma-1"
             />
             <rest-button
+              v-if="!creature.settings.hideRestButtons"
               :creature-id="creatureId"
               type="longRest"
+              class="ma-1"
+            />
+            <event-button
+              v-for="event in events"
+              :key="event._id"
+              :model="event"
               class="ma-1"
             />
           </v-card-text>
@@ -352,7 +363,9 @@ import RestButton from '/imports/ui/creature/RestButton.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
 import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
+import EventButton from '/imports/ui/properties/components/actions/EventButton.vue';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
+import { uniqBy } from 'lodash';
 
 const getProperties = function (creature, filter, options = {
   sort: { order: 1 }
@@ -401,6 +414,7 @@ export default {
     SpellSlotListTile,
     ActionCard,
     ToggleCard,
+    EventButton,
   },
   props: {
     creatureId: {
@@ -473,8 +487,12 @@ export default {
     languages() {
       return getSkillOfType(this.creature, 'language');
     },
+    events() {
+      const events = getProperties(this.creature, { type: 'action', actionType: 'event' });
+      return uniqBy(events.fetch(), e => e.variableName);
+    },
     actions() {
-      return getProperties(this.creature, { type: 'action' });
+      return getProperties(this.creature, { type: 'action', actionType: { $ne: 'event' } });
     },
     appliedBuffs() {
       return getProperties(this.creature, { type: 'buff' });
