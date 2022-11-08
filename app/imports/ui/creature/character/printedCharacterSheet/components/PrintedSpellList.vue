@@ -6,6 +6,12 @@
     <div>
       Spell Save DC: {{ model.dc && model.dc.value }}
     </div>
+    <div v-if="model.ability">
+      Spell casting ability: {{ model.ability }}
+    </div>
+    <div v-if="model.ability">
+      Spell casting ability modifier: {{ model.abilityMod }}
+    </div>
     <div>
       Spell Attack Bonus: {{ model.attackRollBonus && model.attackRollBonus.value }}
     </div>

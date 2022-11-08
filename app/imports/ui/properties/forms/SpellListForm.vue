@@ -27,6 +27,15 @@
         $emit('change', {path: ['maxPrepared', ...path], value, ack})"
     />
 
+    <smart-combobox
+      label="Spellcasting ability"
+      :value="model.ability"
+      hint="Which ability is used to cast spells in this spell list"
+      :items="abilityScoreList"
+      :error-messages="errors.ability"
+      @change="changeAbility"
+    />
+
     <computed-field
       label="Spell save DC"
       hint="The spell save DC of spells in this list"
@@ -67,9 +76,46 @@
 
 <script lang="js">
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import createListOfProperties from '/imports/ui/properties/forms/shared/lists/createListOfProperties.js';
 
 export default {
   mixins: [propertyFormMixin],
+  meteor: {
+    abilityScoreList() {
+      return createListOfProperties({
+        type: 'attribute',
+        attributeType: 'ability',
+      });
+    },
+  },
+  methods: {
+    changeAbility(value, ack) {
+      this.$emit('change', { path: ['ability'], value, ack })
+      const oldValue = this.model.ability;
+
+      const attackRollBonus = this.model.attackRollBonus?.calculation;
+      if (
+        !attackRollBonus ||
+        attackRollBonus === `proficiencyBonus + ${oldValue}.modifier`
+      ) {
+        this.$emit('change', {
+          path: ['attackRollBonus', 'calculation'],
+          value: `proficiencyBonus + ${value}.modifier`
+        });
+      }
+
+      const dc = this.model.dc?.calculation;
+      if (
+        !dc || 
+        dc === `8 + proficiencyBonus + ${oldValue}.modifier`
+      ) {
+        this.$emit('change', {
+          path: ['dc', 'calculation'],
+          value: `8 + proficiencyBonus + ${value}.modifier`
+        });
+      }
+    }
+  }
 };
 </script>
 

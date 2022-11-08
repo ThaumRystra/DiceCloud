@@ -14,6 +14,18 @@
         :calculation="model.maxPrepared"
       />
       <property-field
+        name="Spellcasting ability"
+        mono
+        :value="model.ability"
+      />
+      <property-field
+        name="Spellcasting ability modifier"
+        large
+        center
+        signed
+        :value="model.abilityMod"
+      />
+      <property-field
         name="Spell Save DC"
         large
         center

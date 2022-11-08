@@ -41,7 +41,7 @@
         >
           <slot>
             <template v-if="value !== undefined">
-              {{ value }}
+              {{ valueText }}
             </template>
             <template v-else-if="calculation !== undefined">
               {{ calculationText }}
@@ -116,6 +116,13 @@ export default {
     valueNotReduced(){
       if (!this.calculation) return;
       return typeof this.calculation.value === 'string'
+    },
+    valueText() {
+      if (this.signed) {
+        return numberToSignedString(this.value);
+      } else {
+        return this.value;
+      }
     },
     calculationText(){
       const calculation = this.calculation;
