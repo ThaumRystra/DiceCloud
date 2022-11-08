@@ -253,6 +253,8 @@ export default {
   background-image: url(/crown-dice-logo-cropped-transparent.png);
   background-size: contain;
   background-position: 0 center;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
 .character-sheet-printed .v-divider {
