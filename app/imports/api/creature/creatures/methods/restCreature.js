@@ -137,6 +137,7 @@ function resetHitDice(creatureId, actionContext) {
     inactive: { $ne: true },
   }, {
     fields: {
+      name: 1,
       hitDiceSize: 1,
       damage: 1,
       total: 1,
