@@ -1,14 +1,29 @@
 <template lang="html">
   <div class="stats-tab ma-2">
-    <health-bar-card-container :creature-id="creatureId" />
+    <div
+      v-if="healthBars.length"
+      class="px-2 pt-2"
+    >
+      <v-card class="pa-2">
+        <health-bar
+          v-for="healthBar in healthBars"
+          :key="healthBar._id"
+          :model="healthBar"
+          @change="({ type, value }) => incrementChange(healthBar._id, { type, value: -value })"
+          @click="clickProperty({_id: healthBar._id})"
+        />
+      </v-card>
+    </div>
 
     <column-layout>
-      <div
+      <folder-group-card
         v-for="folder in folders"
         :key="folder._id"
-      >
-        <folder-group-card :model="folder" />
-      </div>
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
       <div
         v-if="!creature.settings.hideRestButtons || (events && events.length)"
         class="character-buttons"
@@ -50,26 +65,14 @@
         <v-card>
           <v-list>
             <v-subheader>Buffs and conditions</v-subheader>
-            <v-list-item
+            <buff-list-item
               v-for="buff in appliedBuffs"
               :key="buff._id"
               :data-id="buff._id"
+              :model="buff"
               @click="clickProperty({_id: buff._id})"
-            >
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ buff.name }}
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action v-if="!buff.hideRemoveButton">
-                <v-btn
-                  icon
-                  @click.stop="softRemove(buff._id)"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
+              @remove="softRemove(buff._id)"
+            />
           </v-list>
         </v-card>
       </div>
@@ -199,7 +202,6 @@
               :model="spellSlot"
               :data-id="spellSlot._id"
               @click="clickProperty({_id: spellSlot._id})"
-              @cast="castSpellWithSlot(spellSlot._id)"
             />
           </v-list>
           <div
@@ -355,11 +357,11 @@
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import HealthBar from '/imports/ui/properties/components/attributes/HealthBar.vue';
 import AttributeCard from '/imports/ui/properties/components/attributes/AttributeCard.vue';
 import AbilityListTile from '/imports/ui/properties/components/attributes/AbilityListTile.vue';
 import ColumnLayout from '/imports/ui/components/ColumnLayout.vue';
 import DamageMultiplierCard from '/imports/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
-import HealthBarCardContainer from '/imports/ui/properties/components/attributes/HealthBarCardContainer.vue';
 import HitDiceListTile from '/imports/ui/properties/components/attributes/HitDiceListTile.vue';
 import SkillListTile from '/imports/ui/properties/components/skills/SkillListTile.vue';
 import ResourceCard from '/imports/ui/properties/components/attributes/ResourceCard.vue';
@@ -368,13 +370,14 @@ import ActionCard from '/imports/ui/properties/components/actions/ActionCard.vue
 import RestButton from '/imports/ui/creature/RestButton.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ToggleCard from '/imports/ui/properties/components/toggles/ToggleCard.vue';
+import BuffListItem from '/imports/ui/properties/components/buffs/BuffListItem.vue';
 import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
 import EventButton from '/imports/ui/properties/components/actions/EventButton.vue';
 import { snackbar } from '/imports/ui/components/snackbars/SnackbarQueue.js';
 import FolderGroupCard from '/imports/ui/properties/components/folders/FolderGroupCard.vue';
 import { uniqBy } from 'lodash';
 
-const getProperties = function (creature, filter, options = {
+const getProperties = function (creature, folderIds, filter, options = {
   sort: { order: 1 }
 }) {
   if (!creature) return;
@@ -382,6 +385,7 @@ const getProperties = function (creature, filter, options = {
     filter.hide = { $ne: true };
   }
   filter['ancestors.id'] = creature._id;
+  filter['parent.id'] = {$nin: folderIds},
   filter.removed = { $ne: true };
   filter.inactive = { $ne: true };
   filter.overridden = { $ne: true };
@@ -393,15 +397,15 @@ const getProperties = function (creature, filter, options = {
   return CreatureProperties.find(filter, options);
 };
 
-const getAttributeOfType = function (creature, type) {
-  return getProperties(creature, {
+const getAttributeOfType = function (creature, folderIds, type) {
+  return getProperties(creature, folderIds, {
     type: 'attribute',
     attributeType: type,
   });
 };
 
-const getSkillOfType = function (creature, type) {
-  return getProperties(creature, {
+const getSkillOfType = function (creature, folderIds, type) {
+  return getProperties(creature, folderIds, {
     type: 'skill',
     skillType: type,
   });
@@ -409,12 +413,13 @@ const getSkillOfType = function (creature, type) {
 
 export default {
   components: {
+    HealthBar,
     RestButton,
+    BuffListItem,
     AbilityListTile,
     AttributeCard,
     ColumnLayout,
     DamageMultiplierCard,
-    HealthBarCardContainer,
     HitDiceListTile,
     SkillListTile,
     ResourceCard,
@@ -439,16 +444,27 @@ export default {
     creature() {
       return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
     },
+    
+    folders() {
+      return getProperties(this.creature, [], { type: 'folder', groupStats: true });
+    },
+    folderIds() {
+      return this.folders.map(f => f._id);
+    },
+    healthBars() {
+      return getAttributeOfType(this.creature, this.folderIds, 'healthBar');
+    },
     abilities() {
-      return getAttributeOfType(this.creature, 'ability');
+      return getAttributeOfType(this.creature, this.folderIds, 'ability');
     },
     stats() {
-      return getAttributeOfType(this.creature, 'stat');
+      return getAttributeOfType(this.creature, this.folderIds, 'stat');
     },
     toggles() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
         type: 'toggle',
+        'ancestors.id': this.creatureId,
+        'parent.id': { $nin: this.folderIds },
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
         showUI: true,
@@ -457,63 +473,60 @@ export default {
       });
     },
     modifiers() {
-      return getAttributeOfType(this.creature, 'modifier');
+      return getAttributeOfType(this.creature, this.folderIds, 'modifier');
     },
     resources() {
-      return getAttributeOfType(this.creature, 'resource');
+      return getAttributeOfType(this.creature, this.folderIds, 'resource');
     },
     spellSlots() {
-      return getAttributeOfType(this.creature, 'spellSlot');
+      return getAttributeOfType(this.creature, this.folderIds, 'spellSlot');
     },
     hasSpells() {
-      const cursor = getProperties(this.creature, {
+      const cursor = getProperties(this.creature, this.folderIds, {
         type: 'spell',
       })
       return cursor && cursor.count();
     },
     hitDice() {
-      return getAttributeOfType(this.creature, 'hitDice');
+      return getAttributeOfType(this.creature, this.folderIds, 'hitDice');
     },
     checks() {
-      return getSkillOfType(this.creature, 'check');
+      return getSkillOfType(this.creature, this.folderIds, 'check');
     },
     savingThrows() {
-      return getSkillOfType(this.creature, 'save');
+      return getSkillOfType(this.creature, this.folderIds, 'save');
     },
     skills() {
-      return getSkillOfType(this.creature, 'skill');
+      return getSkillOfType(this.creature, this.folderIds, 'skill');
     },
     tools() {
-      return getSkillOfType(this.creature, 'tool');
+      return getSkillOfType(this.creature, this.folderIds, 'tool');
     },
     weapons() {
-      return getSkillOfType(this.creature, 'weapon');
+      return getSkillOfType(this.creature, this.folderIds, 'weapon');
     },
     armors() {
-      return getSkillOfType(this.creature, 'armor');
+      return getSkillOfType(this.creature, this.folderIds, 'armor');
     },
     languages() {
-      return getSkillOfType(this.creature, 'language');
+      return getSkillOfType(this.creature, this.folderIds, 'language');
     },
     events() {
-      const events = getProperties(this.creature, { type: 'action', actionType: 'event' });
+      const events = getProperties(this.creature, this.folderIds, { type: 'action', actionType: 'event' });
       return uniqBy(events.fetch(), e => e.variableName);
     },
     actions() {
-      return getProperties(this.creature, { type: 'action', actionType: { $ne: 'event' } });
+      return getProperties(this.creature, this.folderIds, { type: 'action', actionType: { $ne: 'event' } });
     },
     appliedBuffs() {
-      return getProperties(this.creature, { type: 'buff' });
+      return getProperties(this.creature, this.folderIds, { type: 'buff' });
     },
     multipliers() {
-      return getProperties(this.creature, {
+      return getProperties(this.creature, this.folderIds, {
         type: 'damageMultiplier'
       }, {
         sort: { value: 1, order: 1 }
       });
-    },
-    folders() {
-      return getProperties(this.creature, { type: 'folder', groupStats: true });
     },
   },
   methods: {
@@ -532,13 +545,23 @@ export default {
       });
     },
     incrementChange(_id, { type, value }) {
-      if (type === 'increment') {
-        damageProperty.call({ _id, operation: 'increment', value: -value });
-      }
+      damageProperty.call({
+        _id,
+        operation: type,
+        value: -value
+      }, error => {
+        if (error) {
+          snackbar({ text: error.reason || error.message || error.toString() });
+          console.error(error);
+        }
+      });
     },
     softRemove(_id) {
       softRemoveProperty.call({ _id }, error => {
-        if (error) console.error(error);
+        if (error) {
+          snackbar({ text: error.reason || error.message || error.toString() });
+          console.error(error);
+        }
       });
     },
     castSpell() {

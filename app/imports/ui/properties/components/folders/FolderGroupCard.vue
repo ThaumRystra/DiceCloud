@@ -1,15 +1,25 @@
 <template>
-  <v-card>
-    <v-subheader v-if="model.name">
-      {{ model.name }}
-    </v-subheader>
-    <component
-      :is="prop.type"
-      v-for="prop in properties"
-      :key="prop._id"
-      :model="prop"
-    />
-  </v-card>
+  <div
+    v-if="model.name || (properties && properties.length)"
+  >
+    <v-card
+      class="folder-group-card pb-2"
+    >
+      <v-subheader v-if="model.name">
+        {{ model.name }}
+      </v-subheader>
+      <component
+        :is="prop.type"
+        v-for="prop in properties"
+        :key="prop._id"
+        :model="prop"
+        :data-id="prop._id"
+        @click="$emit('click-property', {_id: prop._id})"
+        @sub-click="_id => $emit('sub-click', _id)"
+        @remove="$emit('remove', prop._id)"
+      />
+    </v-card>
+  </div>
 </template>
 
 <script lang="js">
@@ -28,12 +38,44 @@ export default {
   },
   meteor: {
     properties() {
-      return CreatureProperties.find({
-        'ancestors.id': this.model._id
+      const props = [];
+      CreatureProperties.find({
+        'parent.id': this.model._id,
+        removed: { $ne: true },
+        overridden: { $ne: true },
+        $or: [
+          {
+            type: 'toggle',
+            showUI: true,
+            deactivatedByAncestor: { $ne: true },
+          },
+          {
+            inactive: { $ne: true }
+          },
+        ],
+        $nor: [
+          { hideWhenTotalZero: true, total: 0 },
+          { hideWhenValueZero: true, value: 0 },
+        ],
       }, {
         sort: { order: 1 },
+      }).forEach(prop => {
+        if (this.$options.components[prop.type]) {
+          props.push(prop);
+        }
       });
+      return props;
     },
   },
 }
 </script>
+
+<style>
+.folder-group-card .v-card {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.folder-group-card .drag-handle {
+  display: none !important;
+}
+</style>

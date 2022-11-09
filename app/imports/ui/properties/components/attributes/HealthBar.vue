@@ -6,7 +6,7 @@
     style="min-height: 42px;"
     :class="{ hover }"
     class="my-1 health-bar"
-    :data-id="_id"
+    :data-id="model._id"
   >
     <div
       class="subheading text-truncate pa-2 name"
@@ -14,14 +14,10 @@
       @mouseleave="hover = false"
       @click="$emit('click')"
     >
-      {{ name }}
+      {{ model.name }}
     </div>
     <v-flex
-      style="
-        height: 24px;
-        flex-basis: 300px;
-        flex-grow: 100;
-      "
+      style="height: 24px; flex-basis: 300px; flex-grow: 100;"
     >
       <div
         column
@@ -50,8 +46,7 @@
               'white--text': isTextLight,
               'black--text': !isTextLight,
             }"
-            style="
-              font-size: 15px;
+            style="font-size: 15px;
               line-height: 24px;
               font-weight: 600;
               position: absolute;
@@ -59,30 +54,30 @@
               top: 0;
               right: 0;
               bottom: 0;
-              text-align: center;
-
-            "
+              text-align: center;"
           >
-            {{ value }} / {{ maxValue }}
+            {{ model.value }} / {{ model.total }}
           </div>
         </div>
       </div>
-      <transition name="transition">
+      <v-menu
+        v-model="editing"
+        absolute
+        transition="scale-transition"
+        origin="center center"
+        content-class="no-menu-shadow"
+        :position-x="x"
+        :position-y="y"
+        :min-width="305"
+        :close-on-content-click="false"
+      >
         <increment-menu
-          v-show="editing"
-          :value="value"
+          :value="model.value"
           :open="editing"
           @change="changeIncrementMenu"
           @close="cancelEdit"
         />
-      </transition>
-      <transition name="background-transition">
-        <div
-          v-if="editing"
-          class="page-tint"
-          @click="cancelEdit"
-        />
-      </transition>
+      </v-menu>
     </v-flex>
   </v-layout>
 </template>
@@ -104,31 +99,9 @@ export default {
     },
   },
   props: {
-    value: {
-      type: Number,
-      default: undefined,
-    },
-    maxValue: {
-      type: Number,
-      default: undefined,
-    },
-    name: {
-      type: String,
-      default: undefined,
-    },
-    color: {
-      type: String,
-      default() {
-        return this.$vuetify.theme.currentTheme.primary
-      },
-    },
-    midColor: {
-      type: String,
-      default: undefined,
-    },
-    lowColor: {
-      type: String,
-      default: undefined,
+    model: {
+      type: Object,
+      required: true,
     },
     _id: String,
   },
@@ -136,24 +109,29 @@ export default {
     return {
       editing: false,
       hover: false,
+      x: 0,
+      y: 0,
     };
   },
   computed: {
     fillFraction() {
-      let fraction = this.value / this.maxValue;
+      let fraction = this.model.value / this.model.total;
       if (fraction < 0) fraction = 0;
       if (fraction > 1) fraction = 1;
       return fraction;
     },
+    color() {
+      return this.model.color || this.$vuetify.theme.currentTheme.primary
+    },
     barColor() {
-      const fraction = this.value / this.maxValue;
+      const fraction = this.model.value / this.model.total;
       if (!Number.isFinite(fraction)) return this.color;
       if (fraction > 0.5) {
         return this.color;
-      } else if (this.midColor && this.lowColor) {
-        return chroma.mix(this.lowColor, this.midColor, fraction * 2).hex();
-      } else if (this.midColor) {
-        return this.midColor;
+      } else if (this.model.healthBarColorMid && this.model.healthBarColorLow) {
+        return chroma.mix(this.model.healthBarColorLow, this.model.healthBarColorMid, fraction * 2).hex();
+      } else if (this.model.healthBarColorMid) {
+        return this.model.healthBarColorMid;
       }
       return this.color;
     },
@@ -166,7 +144,7 @@ export default {
     isTextLight() {
       return isDarkColor(this.barBackgroundColor);
       /* Change color at the halfway mark
-      const fraction = this.value / this.maxValue;
+      const fraction = this.model.value / this.model.total;
       if (fraction >= 0.5){
         return isDarkColor(this.barColor);
       } else {
@@ -176,8 +154,14 @@ export default {
     }
   },
   methods: {
-    edit() {
-      this.editing = true;
+    edit(e) {
+      e.preventDefault()
+      this.editing = false;
+      this.x = e.clientX - 165;
+      this.y = e.clientY - 24;
+      this.$nextTick(() => {
+        this.editing = true
+      });
     },
     cancelEdit() {
       this.editing = false;
@@ -198,6 +182,10 @@ export default {
   margin-top: -34px !important;
   z-index: 7;
   position: relative;
+}
+
+.no-menu-shadow {
+  box-shadow: none !important;
 }
 </style>
 

@@ -1,27 +1,27 @@
-import action from '/imports/ui/properties/components/actions/EventButton.vue';
+import action from '/imports/ui/properties/components/folders/folderGroupComponents/ActionGroupComponent.vue';
 //import adjustment from '';
-import attribute from '/imports/ui/properties/components/attributes/SpellSlotListTile.vue';
-//import buff from '';
+import attribute from './folderGroupComponents/AttributeGroupComponent.vue';
+import buff from '/imports/ui/properties/components/buffs/BuffListItem.vue';
 //import buffRemover from '';
 //import branch from '';
 //import constant from '';
-//import container from '';
+import container from '/imports/ui/properties/components/inventory/ContainerCard.vue';
 //import classComponent from '';
 //import classLevel from '';
 //import damage from '';
 //import damageMultiplier from '';
 //import effect from '';
-//import feature from '';
-//import folder from '';
-//import item from '';
-//import note from '';
+import feature from '/imports/ui/properties/components/features/FeatureCard.vue';
+// import folder from '';
+import item from '/imports/ui/properties/components/inventory/ItemListTile.vue';
+import note from '/imports/ui/properties/components/persona/NoteCard.vue';
 //import pointBuy from '';
 //import proficiency from '';
 //import propertySlot from '';
 //import reference from '';
 //import roll from '';
 //import savingThrow from '';
-//import skill from '';
+import skill from '/imports/ui/properties/components/skills/SkillListTile.vue';
 //import slotFiller from '';
 //import spellList from '';
 //import spell from '';
@@ -32,27 +32,27 @@ export default {
   action,
   //adjustment,
   attribute,
-  //buff,
+  buff,
   //buffRemover,
   //branch,
   //constant,
-  //container,
+  container,
   //class: classComponent,
   //classLevel,
   //damage,
   //damageMultiplier,
   //effect,
-  //feature,
+  feature,
   //folder,
-  //item,
-  //note,
+  item,
+  note,
   //pointBuy,
   //proficiency,
   //propertySlot,
   //reference,
   //roll,
   //savingThrow,
-  //skill,
+  skill,
   //slotFiller,
   //spellList,
   //spell,
