@@ -250,16 +250,11 @@
           </div>
         </div>
         <div class="layout wrap">
-          <smart-select
+          <reset-selector
             v-if="model.attributeType !== 'hitDice'"
-            label="Reset"
-            clearable
-            style="flex-basis: 300px;"
             hint="When damage should be reset to zero"
-            :items="resetOptions"
             :value="model.reset"
             :error-messages="errors.reset"
-            :menu-props="{auto: true, lazy: true}"
             @change="change('reset', ...arguments)"
           />
         </div>
@@ -273,12 +268,14 @@ import FormSection from '/imports/ui/properties/forms/shared/FormSection.vue';
 import FormSections from '/imports/ui/properties/forms/shared/FormSections.vue';
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 import ColorPicker from '/imports/ui/components/ColorPicker.vue';
+import ResetSelector from '/imports/ui/components/ResetSelector.vue';
 
 export default {
   components: {
     FormSection,
     FormSections,
     ColorPicker,
+    ResetSelector,
   },
   mixins: [propertyFormMixin],
   inject: {

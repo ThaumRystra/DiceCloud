@@ -12,6 +12,13 @@
         :value="model.color"
         @input="value => change({path: ['color'], value})"
       />
+      <v-btn
+        icon
+        data-id="help-button"
+        @click="helpDialog"
+      >
+        <v-icon>mdi-help</v-icon>
+      </v-btn>
     </template>
     <component
       :is="type"
@@ -44,6 +51,7 @@ import propertyFormIndex from '/imports/ui/properties/forms/shared/propertyFormI
 import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin.js';
 import ColorPicker from '/imports/ui/components/ColorPicker.vue';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
+import PROPERTIES from '/imports/constants/PROPERTIES.js';
 
 export default {
   components: {
@@ -77,6 +85,12 @@ export default {
       isLibraryForm: true,
     };
   },
+  computed: {
+    docsPath() {
+      const propDef = PROPERTIES[this.type];
+      return propDef && propDef.docsPath;
+    },
+  },
   watch: {
     type(newType) {
       if (!newType) return;
@@ -87,6 +101,17 @@ export default {
       this.model = model;
     },
   },
+  methods: {
+    helpDialog() {
+      this.$store.commit('pushDialogStack', {
+        component: 'help-dialog',
+        elementId: 'help-button',
+        data: {
+          path: this.docsPath,
+        },
+      });
+    },
+  }
 }
 </script>
 

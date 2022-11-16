@@ -1,7 +1,9 @@
 <template lang="html">
   <v-card
-    :hover="hasClickListener"
+    :class="hover ? 'elevation-8': ''"
     @click="click"
+    @mouseover="hover = true"
+    @mouseleave="hover = false"
   >
     <div class="layout align-center">
       <div
@@ -18,18 +20,28 @@
         {{ model.name }}
       </v-card-title>
     </div>
+    <card-highlight :active="hover" />
   </v-card>
 </template>
 
 <script lang="js">
 import flipToggle from '/imports/api/creature/creatureProperties/methods/flipToggle.js';
+import CardHighlight from '/imports/ui/components/CardHighlight.vue';
 
   export default {
+    components: {
+      CardHighlight,
+    },
     props: {
       model: {
         type: Object,
         required: true,
       },
+    },
+    data() {
+      return {
+        hover: false,
+      }
     },
     computed: {
       hasClickListener(){

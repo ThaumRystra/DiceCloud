@@ -278,15 +278,10 @@
             />
           </v-col>
         </v-row>
-        <smart-select
-          label="Reset"
-          clearable
+        <reset-selector
           hint="When number of uses used should be reset to zero"
-          style="flex-basis: 300px;"
-          :items="resetOptions"
           :value="model.reset"
           :error-messages="errors.reset"
-          :menu-props="{auto: true, lazy: true}"
           @change="change('reset', ...arguments)"
         />
       </form-section>
@@ -318,6 +313,7 @@ import FormSection, { FormSections } from '/imports/ui/properties/forms/shared/F
 import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
 import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
 import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
+import ResetSelector from '/imports/ui/components/ResetSelector.vue';
 
 export default {
   components: {
@@ -325,6 +321,7 @@ export default {
     FormSection,
     IconColorMenu,
     ResourcesForm,
+    ResetSelector,
   },
   mixins: [propertyFormMixin],
   data() {
@@ -400,15 +397,6 @@ export default {
           text: 'Multiple targets',
           value: 'multipleTargets',
         },
-      ],
-      resetOptions: [
-        {
-          text: 'Short rest',
-          value: 'shortRest',
-        }, {
-          text: 'Long rest',
-          value: 'longRest',
-        }
       ],
       attackSwitch: false,
     };

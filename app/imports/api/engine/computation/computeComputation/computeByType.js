@@ -5,6 +5,7 @@ import skill from './computeByType/computeSkill.js';
 import pointBuy from './computeByType/computePointBuy.js';
 import propertySlot from './computeByType/computeSlot.js';
 import container from './computeByType/computeContainer.js';
+import spellList from './computeByType/computeSpellList.js';
 import _calculation from './computeByType/computeCalculation.js';
 
 export default Object.freeze({
@@ -17,4 +18,5 @@ export default Object.freeze({
   pointBuy,
   propertySlot,
   spell: action,
+  spellList,
 });

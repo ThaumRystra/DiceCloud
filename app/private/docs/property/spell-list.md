@@ -18,6 +18,10 @@ Allows [inline calculations](/docs/inline-calculations).
 
 A [computed field](/docs/computed-fields) that determines how many spells can be considered ready to cast in this spell list.
 
+### Spell casting ability
+
+The spellcasting ablity for this spell list. The variable name of the ability can be accessed using `#spellList.ability` and the ability modifier with `#spellList.abilityMod`. Setting this field will automatically update Spell save DC and Attack roll bonus if they aren't set manually.
+
 ### Spell save DC
 
 A [computed field](/docs/computed-fields) that determines the DC of saving throws in this spell list. Spells can access the DC of their spell list using `#spellList.dc`

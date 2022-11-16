@@ -7,6 +7,7 @@ import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/met
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature.js';
 
 export default function applyAction(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
@@ -16,7 +17,7 @@ export default function applyAction(node, actionContext) {
 
   // Log the name and summary
   let content = { name: prop.name };
-  if (prop.summary?.text){
+  if (prop.summary?.text) {
     recalculateInlineCalculations(prop.summary, actionContext);
     content.value = prop.summary.value;
   }
@@ -29,24 +30,27 @@ export default function applyAction(node, actionContext) {
   const attack = prop.attackRoll || prop.attackRollBonus;
 
   // Attack if there is an attack roll
-  if (attack && attack.calculation){
-    if (targets.length){
+  if (attack && attack.calculation) {
+    if (targets.length) {
       targets.forEach(target => {
-        applyAttackToTarget({attack, target, actionContext});
+        applyAttackToTarget({ attack, target, actionContext });
         // Apply the children, but only to the current target
         actionContext.targets = [target];
         applyChildren(node, actionContext);
       });
     } else {
-      applyAttackWithoutTarget({attack, actionContext});
+      applyAttackWithoutTarget({ attack, actionContext });
       applyChildren(node, actionContext);
     }
   } else {
     applyChildren(node, actionContext);
   }
+  if (prop.actionType === 'event' && prop.variableName) {
+    resetProperties(actionContext.creature._id, prop.variableName, actionContext);
+  }
 }
 
-function applyAttackWithoutTarget({attack, actionContext}){
+function applyAttackWithoutTarget({ attack, actionContext }) {
   delete actionContext.scope['$attackHit'];
   delete actionContext.scope['$attackMiss'];
   delete actionContext.scope['$criticalHit'];
@@ -62,16 +66,16 @@ function applyAttackWithoutTarget({attack, actionContext}){
     criticalMiss,
   } = rollAttack(attack, scope);
   let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
-  if (scope['$attackAdvantage'] === 1){
+  if (scope['$attackAdvantage'] === 1) {
     name += ' (Advantage)';
-  } else if(scope['$attackAdvantage'] === -1){
+  } else if (scope['$attackAdvantage'] === -1) {
     name += ' (Disadvantage)';
   }
-  if (!criticalMiss){
-    scope['$attackHit'] = {value: true}
+  if (!criticalMiss) {
+    scope['$attackHit'] = { value: true }
   }
-  if (!criticalHit){
-    scope['$attackMiss'] = {value: true};
+  if (!criticalHit) {
+    scope['$attackMiss'] = { value: true };
   }
 
   actionContext.addLog({
@@ -81,7 +85,7 @@ function applyAttackWithoutTarget({attack, actionContext}){
   });
 }
 
-function applyAttackToTarget({attack, target, actionContext}){
+function applyAttackToTarget({ attack, target, actionContext }) {
   const scope = actionContext.scope;
   delete scope['$attackHit'];
   delete scope['$attackMiss'];
@@ -99,15 +103,15 @@ function applyAttackToTarget({attack, target, actionContext}){
     criticalMiss,
   } = rollAttack(attack, scope);
 
-  if (target.variables.armor){
+  if (target.variables.armor) {
     const armor = target.variables.armor.value;
 
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
-      result > armor ? 'Hit!' : 'Miss!';
-    if (scope['$attackAdvantage'] === 1){
+        result > armor ? 'Hit!' : 'Miss!';
+    if (scope['$attackAdvantage'] === 1) {
       name += ' (Advantage)';
-    } else if(scope['$attackAdvantage'] === -1){
+    } else if (scope['$attackAdvantage'] === -1) {
       name += ' (Disadvantage)';
     }
 
@@ -116,15 +120,15 @@ function applyAttackToTarget({attack, target, actionContext}){
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
     });
-    if (criticalMiss || result < armor){
-      scope['$attackMiss'] = {value: true};
+    if (criticalMiss || result < armor) {
+      scope['$attackMiss'] = { value: true };
     } else {
-      scope['$attackHit'] = {value: true};
+      scope['$attackHit'] = { value: true };
     }
   } else {
     actionContext.addLog({
       name: 'Error',
-      value:'Target has no `armor`',
+      value: 'Target has no `armor`',
     });
     actionContext.addLog({
       name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit',
@@ -134,10 +138,10 @@ function applyAttackToTarget({attack, target, actionContext}){
   }
 }
 
-function rollAttack(attack, scope){
+function rollAttack(attack, scope) {
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
-  if (scope['$attackAdvantage'] === 1){
+  if (scope['$attackAdvantage'] === 1) {
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
       value = a;
@@ -146,7 +150,7 @@ function rollAttack(attack, scope){
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
-  } else if (scope['$attackAdvantage'] === -1){
+  } else if (scope['$attackAdvantage'] === -1) {
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
@@ -159,25 +163,25 @@ function rollAttack(attack, scope){
     value = rollDice(1, 20)[0];
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
-  scope['$attackRoll'] = {value};
+  scope['$attackRoll'] = { value };
   const result = value + attack.value;
-  const {criticalHit, criticalMiss} = applyCrits(value, scope);
-  return {resultPrefix, result, value, criticalHit, criticalMiss};
+  const { criticalHit, criticalMiss } = applyCrits(value, scope);
+  return { resultPrefix, result, value, criticalHit, criticalMiss };
 }
 
-function applyCrits(value, scope){
+function applyCrits(value, scope) {
   let criticalHitTarget = scope.criticalHitTarget?.value || 20;
   let criticalHit = value >= criticalHitTarget;
   let criticalMiss;
-  if (criticalHit){
-    scope['$criticalHit'] = {value: true};
+  if (criticalHit) {
+    scope['$criticalHit'] = { value: true };
   } else {
     criticalMiss = value === 1;
-    if (criticalMiss){
-      scope['$criticalMiss'] = {value: true};
+    if (criticalMiss) {
+      scope['$criticalMiss'] = { value: true };
     }
   }
-  return {criticalHit, criticalMiss};
+  return { criticalHit, criticalMiss };
 }
 
 function applyChildren(node, actionContext) {
@@ -185,9 +189,9 @@ function applyChildren(node, actionContext) {
   node.children.forEach(child => applyProperty(child, actionContext));
 }
 
-function spendResources(prop, actionContext){
+function spendResources(prop, actionContext) {
   // Check Uses
-  if (prop.usesLeft <= 0){
+  if (prop.usesLeft <= 0) {
     if (!prop.silent) actionContext.addLog({
       name: 'Error',
       value: `${prop.name || 'action'} does not have enough uses left`,
@@ -195,7 +199,7 @@ function spendResources(prop, actionContext){
     return true;
   }
   // Resources
-  if (prop.insufficientResources){
+  if (prop.insufficientResources) {
     if (!prop.silent) actionContext.addLog({
       name: 'Error',
       value: 'This creature doesn\'t have sufficient resources to perform this action',
@@ -209,14 +213,14 @@ function spendResources(prop, actionContext){
   try {
     prop.resources.itemsConsumed.forEach(itemConsumed => {
       recalculateCalculation(itemConsumed.quantity, actionContext);
-      if (!itemConsumed.itemId){
+      if (!itemConsumed.itemId) {
         throw 'No ammo was selected for this prop';
       }
       let item = CreatureProperties.findOne(itemConsumed.itemId);
-      if (!item || item.ancestors[0].id !== prop.ancestors[0].id){
+      if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
         throw 'The prop\'s ammo was not found on the creature';
       }
-      if (!item.equipped){
+      if (!item.equipped) {
         throw 'The selected ammo is not equipped';
       }
       if (
@@ -229,16 +233,16 @@ function spendResources(prop, actionContext){
         value: itemConsumed.quantity.value,
       });
       let logName = item.name;
-      if (itemConsumed.quantity.value > 1 || itemConsumed.quantity.value < -1){
+      if (itemConsumed.quantity.value > 1 || itemConsumed.quantity.value < -1) {
         logName = item.plural || logName;
       }
-      if (itemConsumed.quantity.value > 0){
+      if (itemConsumed.quantity.value > 0) {
         spendLog.push(logName + ': ' + itemConsumed.quantity.value);
-      } else if (itemConsumed.quantity.value < 0){
+      } else if (itemConsumed.quantity.value < 0) {
         gainLog.push(logName + ': ' + -itemConsumed.quantity.value);
       }
     });
-  } catch (e){
+  } catch (e) {
     actionContext.addLog({
       name: 'Error',
       value: e,
@@ -251,9 +255,9 @@ function spendResources(prop, actionContext){
   itemQuantityAdjustments.forEach(adjustQuantityWork);
 
   // Use uses
-  if (prop.usesLeft){
+  if (prop.usesLeft) {
     CreatureProperties.update(prop._id, {
-      $inc: {usesUsed: 1}
+      $inc: { usesUsed: 1 }
     }, {
       selector: prop
     });
@@ -270,7 +274,7 @@ function spendResources(prop, actionContext){
 
     if (!attConsumed.quantity?.value) return;
     let stat = actionContext.scope[attConsumed.variableName];
-    if (!stat){
+    if (!stat) {
       spendLog.push(stat.name + ': ' + ' not found');
       return;
     }
@@ -280,9 +284,9 @@ function spendResources(prop, actionContext){
       value: attConsumed.quantity.value,
       actionContext,
     });
-    if (attConsumed.quantity.value > 0){
+    if (attConsumed.quantity.value > 0) {
       spendLog.push(stat.name + ': ' + attConsumed.quantity.value);
-    } else if (attConsumed.quantity.value < 0){
+    } else if (attConsumed.quantity.value < 0) {
       gainLog.push(stat.name + ': ' + -attConsumed.quantity.value);
     }
   });

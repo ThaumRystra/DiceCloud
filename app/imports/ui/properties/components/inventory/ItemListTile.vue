@@ -32,7 +32,7 @@
         @change="changeQuantity"
       />
     </v-list-item-action>
-    <v-list-item-action>
+    <v-list-item-action class="drag-handle">
       <v-icon
         :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"

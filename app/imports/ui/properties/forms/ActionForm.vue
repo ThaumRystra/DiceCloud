@@ -42,6 +42,17 @@
     </v-row>
 
     <v-slide-x-transition mode="out-in">
+      <text-field
+        v-if="model.actionType === 'event'"
+        label="Event variable name"
+        :value="model.variableName"
+        hint="Variable name of the event that this action represents"
+        :error-messages="errors.variableName"
+        @change="change('variableName', ...arguments)"
+      />
+    </v-slide-x-transition>
+
+    <v-slide-x-transition mode="out-in">
       <v-switch
         v-if="!isAttack"
         label="Attack roll"
@@ -154,15 +165,10 @@
             />
           </v-col>
         </v-row>
-        <smart-select
-          label="Reset"
-          clearable
+        <reset-selector
           hint="When number of uses used should be reset to zero"
-          style="flex-basis: 300px;"
-          :items="resetOptions"
           :value="model.reset"
           :error-messages="errors.reset"
-          :menu-props="{auto: true, lazy: true}"
           @change="change('reset', ...arguments)"
         />
       </form-section>
@@ -171,77 +177,74 @@
 </template>
 
 <script lang="js">
-  import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
-  import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
-  import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
+import ResourcesForm from '/imports/ui/properties/forms/ResourcesForm.vue';
+import propertyFormMixin from '/imports/ui/properties/forms/shared/propertyFormMixin.js';
+import IconColorMenu from '/imports/ui/properties/forms/shared/IconColorMenu.vue';
+import ResetSelector from '/imports/ui/components/ResetSelector.vue';
 
-  export default {
-    components: {
-      ResourcesForm,
-      IconColorMenu,
-    },
-    mixins: [propertyFormMixin],
-    data(){
-      let data = {
-        actionTypes: [
-          {
-            text: 'Action',
-            value: 'action',
-          }, {
-            text: 'Bonus action',
-            value: 'bonus',
-          }, {
-            text: 'Attack action',
-            value: 'attack',
-            help: 'Attack actions replace a single attack when you choose to use your Action to attack',
-          }, {
-            text: 'Reaction',
-            value: 'reaction',
-          }, {
-            text: 'Free action',
-            value: 'free',
-            help: 'You can take one free action on your turn without using an action or bonus action'
-          }, {
-            text: 'Long action',
-            value: 'long',
-            help: 'Long actions take longer than one turn to complete'
-          },
-        ],
-        targetOptions: [
-          {
-            text: 'Self',
-            value: 'self',
-          }, {
-            text: 'Single target',
-            value: 'singleTarget',
-          }, {
-            text: 'Multiple targets',
-            value: 'multipleTargets',
-          },
-        ],
-        resetOptions: [
-          {
-            text: 'Short rest',
-            value: 'shortRest',
-          }, {
-            text: 'Long rest',
-            value: 'longRest',
-          }
-        ],
-        attackSwitch: false,
-      };
-      data.actionTypeHints = {};
-      data.actionTypes.forEach(type => {
-        data.actionTypeHints[type.value] = type.help;
-      });
-      return data;
-    },
-    computed: {
-      isAttack(){
-        return this.attackSwitch || !!this.model.attackRoll?.calculation
-      }
+export default {
+  components: {
+    ResourcesForm,
+    IconColorMenu,
+    ResetSelector,
+  },
+  mixins: [propertyFormMixin],
+  data(){
+    let data = {
+      actionTypes: [
+        {
+          text: 'Action',
+          value: 'action',
+        }, {
+          text: 'Bonus action',
+          value: 'bonus',
+        }, {
+          text: 'Attack action',
+          value: 'attack',
+          help: 'Attack actions replace a single attack when you choose to use your Action to attack',
+        }, {
+          text: 'Reaction',
+          value: 'reaction',
+        }, {
+          text: 'Free action',
+          value: 'free',
+          help: 'You can take one free action on your turn without using an action or bonus action'
+        }, {
+          text: 'Long action',
+          value: 'long',
+          help: 'Long actions take longer than one turn to complete'
+        }, {
+          text: 'Event',
+          value: 'event',
+          help: 'Events are actions that happen to the character like rests or dawn'
+        },
+      ],
+      targetOptions: [
+        {
+          text: 'Self',
+          value: 'self',
+        }, {
+          text: 'Single target',
+          value: 'singleTarget',
+        }, {
+          text: 'Multiple targets',
+          value: 'multipleTargets',
+        },
+      ],
+      attackSwitch: false,
+    };
+    data.actionTypeHints = {};
+    data.actionTypes.forEach(type => {
+      data.actionTypeHints[type.value] = type.help;
+    });
+    return data;
+  },
+  computed: {
+    isAttack(){
+      return this.attackSwitch || !!this.model.attackRoll?.calculation
     }
-  };
+  },
+};
 </script>
 
 <style lang="css" scoped>

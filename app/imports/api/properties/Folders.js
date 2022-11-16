@@ -7,6 +7,11 @@ let FolderSchema = new createPropertySchema({
   name: {
     type: String,
     max: STORAGE_LIMITS.name,
+    optional: true,
+  },
+  groupStats: {
+    type: Boolean,
+    optional: true,
   },
 });
 

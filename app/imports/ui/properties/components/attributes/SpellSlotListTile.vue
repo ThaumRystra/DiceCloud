@@ -61,7 +61,6 @@ export default {
       required: true,
     },
     dark: Boolean,
-    hideCastButton: Boolean,
     disabled: Boolean,
   },
   computed: {

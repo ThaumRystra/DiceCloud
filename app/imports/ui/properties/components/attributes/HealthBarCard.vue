@@ -3,13 +3,7 @@
     <health-bar
       v-for="attribute in attributes"
       :key="attribute._id"
-      :value="attribute.value"
-      :max-value="attribute.total"
-      :name="attribute.name"
-      :color="attribute.color"
-      :mid-color="attribute.healthBarColorMid"
-      :low-color="attribute.healthBarColorLow"
-      :_id="attribute._id"
+      :model="attribute"
       @change="e => $emit('change', {_id: attribute._id, change: e})"
       @click="e => $emit('click', {_id: attribute._id})"
     />

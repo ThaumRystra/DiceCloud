@@ -16,6 +16,14 @@
           flat
           @change="propertyHelpChanged"
         />
+        <v-btn 
+          v-if="tab === 1"
+          icon
+          data-id="help-button"
+          @click="helpDialog"
+        >
+          <v-icon>mdi-help</v-icon>
+        </v-btn>
         <text-field
           v-if="tab === 2"
           prepend-inner-icon="mdi-magnify"
@@ -173,7 +181,7 @@
 <script lang="js">
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import TreeNodeView from '/imports/ui/properties/treeNodeViews/TreeNodeView.vue';
 import LibraryNodeExpansionContent from '/imports/ui/library/LibraryNodeExpansionContent.vue';
 import schemaFormMixin from '/imports/ui/properties/forms/shared/schemaFormMixin.js';
@@ -235,7 +243,11 @@ export default {
     },
     toolbarColor(){
       return getThemeColor('secondary');
-    }
+    },
+    docsPath() {
+      const propDef = PROPERTIES[this.type];
+      return propDef && propDef.docsPath;
+    },
   },
   watch: {
     type(newType){
@@ -257,6 +269,15 @@ export default {
         snackbar({
           text: error.reason,
         });
+      });
+    },
+    helpDialog() {
+      this.$store.commit('pushDialogStack', {
+        component: 'help-dialog',
+        elementId: 'help-button',
+        data: {
+          path: this.docsPath,
+        },
       });
     },
     searchChanged(val, ack){
