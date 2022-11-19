@@ -7,20 +7,30 @@
       justify-sm="start"
     >
       <property-field
+        v-if="model.value !== undefined ||
+          fallbackValue !== undefined"
         :name="model.damage !== undefined ? 'Value / Total': 'Value'"
         center
       >
         <v-spacer />
-        <div
-          class="text-h4 mr-3"
-        >
+        <div class="mr-3">
           <div
             v-if="model.damage !== undefined"
+            class="text-h4 mr-3"
           >
             {{ model.value }} / {{ model.total }}
           </div>
-          <div v-else>
+          <div
+            v-if="model.value !== undefined"
+            class="text-h4 mr-3"
+          >
             {{ model.value }}
+          </div>
+          <div
+            v-else
+            class="mono"
+          >
+            {{ fallbackValue }}
           </div>
         </div>
         <v-spacer />
@@ -181,6 +191,9 @@
       effects() {
         return sortEffects(this.model.effects);
       },
+      fallbackValue() {
+        return this.model.baseValue?.value ?? this.model.baseValue?.calculation;
+      },
     },
     methods: {
       numberToSignedString,
@@ -221,5 +234,8 @@
   }
   .attribute-value {
     text-align: center;
+  }
+  .mono {
+    font-family: monospace !important;
   }
 </style>
