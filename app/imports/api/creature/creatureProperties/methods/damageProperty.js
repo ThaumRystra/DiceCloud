@@ -59,7 +59,7 @@ const damageProperty = new ValidatedMethod({
   },
 });
 
-export function damagePropertyWork({ prop, operation, value, actionContext }) {
+export function damagePropertyWork({ prop, operation, value, actionContext, logFunction }) {
 
   // Save the value to the scope before applying the before triggers
   if (operation === 'increment') {
@@ -105,6 +105,7 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
     // Also write it straight to the prop so that it is updated in the actionContext
     prop.damage = damage;
     prop.value = newValue;
+    logFunction?.(newValue);
   } else if (operation === 'increment') {
     let currentValue = prop.value || 0;
     let currentDamage = prop.damage || 0;
@@ -125,6 +126,7 @@ export function damagePropertyWork({ prop, operation, value, actionContext }) {
     // Also write it straight to the prop so that it is updated in the actionContext
     prop.damage += increment;
     prop.value -= increment;
+    logFunction?.(increment);
   }
 
   applyTriggers(actionContext.triggers?.damageProperty?.after, prop, actionContext);
