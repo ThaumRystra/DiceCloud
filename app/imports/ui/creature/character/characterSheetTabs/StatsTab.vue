@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="stats-tab ma-2">
+    HMR TEST 2
     <div
       v-if="healthBars.length"
       class="px-2 pt-2"

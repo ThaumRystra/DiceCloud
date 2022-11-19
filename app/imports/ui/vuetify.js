@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+//import Vuetify from 'vuetify/lib';
+import Vuetify from 'vuetify/lib/framework';
 import { Scroll, Ripple } from 'vuetify/lib/directives';
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 import SvgIconByName from '/imports/ui/icons/SvgIconByName.vue';
