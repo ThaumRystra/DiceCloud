@@ -3,6 +3,7 @@ import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
 
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
@@ -59,7 +60,11 @@ export default function applySavingThrow(node, actionContext) {
       return applyChildren();
     }
 
-    const rollModifierText = numberToSignedString(save.value, true);
+    let rollModifierText = numberToSignedString(save.value, true);
+    let rollModifier = save.value
+    const { effectBonus, effectString } = applyUnresolvedEffects(save, scope)
+    rollModifierText += effectString;
+    rollModifier += effectBonus;
 
     let value, values, resultPrefix;
     if (save.advantage === 1) {
@@ -86,7 +91,7 @@ export default function applySavingThrow(node, actionContext) {
       resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
     }
     scope['$saveDiceRoll'] = { value };
-    const result = value + save.value || 0;
+    const result = value + rollModifier || 0;
     scope['$saveRoll'] = { value: result };
     const saveSuccess = result >= dc;
     if (saveSuccess) {

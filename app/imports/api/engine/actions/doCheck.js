@@ -115,7 +115,7 @@ function rollCheck(prop, actionContext) {
   });
 }
 
-function applyUnresolvedEffects(prop, scope) {
+export function applyUnresolvedEffects(prop, scope) {
   let effectBonus = 0;
   let effectString = '';
   if (!prop.effects) {
