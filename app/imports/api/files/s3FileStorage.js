@@ -50,7 +50,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     storagePath,
     onBeforeUpload,
     onAfterUpload,
-    debug = !Meteor.isProduction,
+    debug,// = !Meteor.isProduction,
     allowClientCode = false,
   }) {
     const collection = new FilesCollection({
@@ -224,7 +224,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     storagePath,
     onBeforeUpload,
     onAfterUpload,
-    debug = !Meteor.isProduction,
+    debug,// = !Meteor.isProduction,
     allowClientCode = false,
   }) {
     const collection = new FilesCollection({
