@@ -1,10 +1,10 @@
 import rollDice from '/imports/parser/rollDice.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
-import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applySavingThrow(node, actionContext){
+export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
 
@@ -13,7 +13,7 @@ export default function applySavingThrow(node, actionContext){
   recalculateCalculation(prop.dc, actionContext);
 
   const dc = (prop.dc?.value);
-  if (!isFinite(dc)){
+  if (!isFinite(dc)) {
     actionContext.addLog({
       name: 'Error',
       value: 'Saving throw requires a DC',
@@ -29,8 +29,8 @@ export default function applySavingThrow(node, actionContext){
 
   // If there are no save targets, apply all children as if the save both
   // succeeeded and failed
-  if (!saveTargets?.length){
-    scope['$saveFailed'] = {value: true};
+  if (!saveTargets?.length) {
+    scope['$saveFailed'] = { value: true };
     scope['$saveSucceeded'] = { value: true };
     applyNodeTriggers(node, 'after', actionContext);
     return node.children.forEach(child => applyProperty(child, actionContext));
@@ -51,7 +51,7 @@ export default function applySavingThrow(node, actionContext){
 
     const save = target.variables[prop.stat];
 
-    if (!save){
+    if (!save) {
       actionContext.addLog({
         name: 'Saving throw error',
         value: 'No saving throw found: ' + prop.stat,
@@ -62,7 +62,7 @@ export default function applySavingThrow(node, actionContext){
     const rollModifierText = numberToSignedString(save.value, true);
 
     let value, values, resultPrefix;
-    if (save.advantage === 1){
+    if (save.advantage === 1) {
       const [a, b] = rollDice(2, 20);
       if (a >= b) {
         value = a;
@@ -71,7 +71,7 @@ export default function applySavingThrow(node, actionContext){
         value = b;
         resultPrefix = `Advantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
       }
-    } else if (save.advantage === -1){
+    } else if (save.advantage === -1) {
       const [a, b] = rollDice(2, 20);
       if (a <= b) {
         value = a;
@@ -85,14 +85,14 @@ export default function applySavingThrow(node, actionContext){
       value = values[0];
       resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
     }
-    scope['$saveDiceRoll'] = {value};
+    scope['$saveDiceRoll'] = { value };
     const result = value + save.value || 0;
-    scope['$saveRoll'] = {value: result};
+    scope['$saveRoll'] = { value: result };
     const saveSuccess = result >= dc;
-    if (saveSuccess){
-      scope['$saveSucceeded'] = {value: true};
+    if (saveSuccess) {
+      scope['$saveSucceeded'] = { value: true };
     } else {
-      scope['$saveFailed'] = {value: true};
+      scope['$saveFailed'] = { value: true };
     }
     if (!prop.silent) actionContext.addLog({
       name: saveSuccess ? 'Successful save' : 'Failed save',

@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import rollDice from '/imports/parser/rollDice.js';
-import numberToSignedString from '/imports/ui/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
