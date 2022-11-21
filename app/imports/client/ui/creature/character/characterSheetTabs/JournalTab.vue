@@ -1,6 +1,14 @@
 <template>
   <div class="build-tab">
     <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
       <div>
         <creature-summary :creature="creature" />
       </div>
@@ -12,6 +20,14 @@
           :model="note"
         />
       </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
     </column-layout>
   </div>
 </template>
@@ -22,6 +38,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/client/ui/creature/character/CreatureSummary.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
 
 export default {
   components: {
@@ -29,11 +46,17 @@ export default {
     CreatureSummary,
     NoteCard,
   },
+  mixins: [tabFoldersMixin],
   props: {
     creatureId: {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      tabName: 'journal',
+    };
   },
   meteor: {
     notes(){

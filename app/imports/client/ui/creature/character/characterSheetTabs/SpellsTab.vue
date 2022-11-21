@@ -1,6 +1,14 @@
 <template lang="html">
   <div class="spells">
     <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
       <div v-if="spellsWithoutList.length">
         <v-card>
           <spell-list
@@ -18,6 +26,14 @@
           :organize="organize"
         />
       </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
     </column-layout>
   </div>
 </template>
@@ -27,6 +43,7 @@ import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SpellListCard from '/imports/client/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
 
 export default {
   components: {
@@ -34,6 +51,7 @@ export default {
     SpellList,
     SpellListCard,
   },
+  mixins: [tabFoldersMixin],
   props: {
     creatureId: {
       type: String,
@@ -43,6 +61,7 @@ export default {
   data() {
     return {
       organize: false,
+      tabName: 'spells',
     }
   },
   meteor: {
@@ -90,15 +109,6 @@ export default {
   computed: {
     spellListIds() {
       return this.spellLists.map(spellList => spellList._id);
-    },
-  },
-  methods: {
-    clickProperty(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `spell-list-tile-${_id}`,
-        data: { _id },
-      });
     },
   },
 }

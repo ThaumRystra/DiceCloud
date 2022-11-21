@@ -1,6 +1,14 @@
 <template lang="html">
   <div class="inventory">
     <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
       <div>
         <v-card>
           <v-list>
@@ -85,6 +93,14 @@
       >
         <container-card :model="container" />
       </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
     </column-layout>
   </div>
 </template>
@@ -101,6 +117,7 @@ import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
 
 export default {
   components: {
@@ -110,6 +127,7 @@ export default {
     ItemList,
     CoinValue,
   },
+  mixins: [tabFoldersMixin],
   props: {
     creatureId: {
       type: String,
@@ -119,7 +137,8 @@ export default {
   data() {
     return {
       organize: false,
-    }
+      tabName: 'inventory',
+    };
   },
   meteor: {
     containers() {
@@ -214,15 +233,6 @@ export default {
         this.variables.weightCarried &&
         this.variables.weightCarried.value || 0
       );
-    },
-  },
-  methods: {
-    clickProperty(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `tree-node-${_id}`,
-        data: { _id },
-      });
     },
   },
 }

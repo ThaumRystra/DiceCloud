@@ -13,6 +13,24 @@ let FolderSchema = new createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  hideStatsGroup: {
+    type: Boolean,
+    optional: true,
+  },
+  tab: {
+    type: String,
+    optional: true,
+    allowedValues: [
+      'stats', 'features', 'inventory', 'spells', 'journal', 'build'
+    ],
+  },
+  location: {
+    type: String,
+    optional: true,
+    allowedValues: [
+      'start', 'events', 'stats', 'skills', 'actions', 'proficiencies', 'end'
+    ],
+  },
 });
 
 const ComputedOnlyFolderSchema = new createPropertySchema({});

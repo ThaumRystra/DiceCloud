@@ -1,6 +1,14 @@
 <template lang="html">
   <div class="features">
     <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
       <div
         v-for="feature in features"
         :key="feature._id"
@@ -11,6 +19,14 @@
           @click="featureClicked(feature)"
         />
       </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
     </column-layout>
   </div>
 </template>
@@ -19,17 +35,24 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import FeatureCard from '/imports/client/ui/properties/components/features/FeatureCard.vue';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
 
 export default {
   components: {
     ColumnLayout,
     FeatureCard,
   },
+  mixins: [tabFoldersMixin],
   props: {
     creatureId: {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      tabName: 'features',
+    };
   },
   meteor: {
     features() {

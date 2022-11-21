@@ -1,12 +1,15 @@
 <template lang="html">
-  <div class="stats-tab ma-2">
+  <div
+    v-if="properties"
+    class="stats-tab ma-2"
+  >
     <div
-      v-if="healthBars.length"
+      v-if="properties.attribute.healthBar && properties.attribute.healthBar.length"
       class="px-2 pt-2"
     >
       <v-card class="pa-2">
         <health-bar
-          v-for="healthBar in healthBars"
+          v-for="healthBar in properties.attribute.healthBar"
           :key="healthBar._id"
           :model="healthBar"
           @change="({ type, value }) => incrementChange(healthBar._id, { type, value: -value })"
@@ -17,7 +20,7 @@
 
     <column-layout>
       <folder-group-card
-        v-for="folder in folders"
+        v-for="folder in properties.folder.start"
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
@@ -25,7 +28,7 @@
         @remove="softRemove"
       />
       <div
-        v-if="!creature.settings.hideRestButtons || (events && events.length)"
+        v-if="!creature.settings.hideRestButtons || (properties.action.event && properties.action.event.length)"
         class="character-buttons"
       >
         <v-card>
@@ -43,7 +46,7 @@
               class="ma-1"
             />
             <event-button
-              v-for="event in events"
+              v-for="event in properties.event"
               :key="event._id"
               :model="event"
               class="ma-1"
@@ -52,21 +55,30 @@
         </v-card>
       </div>
 
+      <folder-group-card
+        v-for="folder in properties.folder.events"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
+
       <damage-multiplier-card
-        v-if="multipliers && multipliers.length"
-        :multipliers="multipliers"
+        v-if="properties.multiplier && properties.multiplier.length"
+        :multipliers="properties.multiplier"
         @click-multiplier="clickProperty"
       />
 
       <div
-        v-if="appliedBuffs.length"
+        v-if="properties.buff && properties.buff.length"
         class="buffs"
       >
         <v-card>
           <v-list>
             <v-subheader>Buffs and conditions</v-subheader>
             <buff-list-item
-              v-for="buff in appliedBuffs"
+              v-for="buff in properties.buff"
               :key="buff._id"
               :data-id="buff._id"
               :model="buff"
@@ -78,12 +90,12 @@
       </div>
 
       <div
-        v-if="abilities.length"
+        v-if="properties.attribute.ability && properties.attribute.ability.length"
         class="ability-scores"
       >
         <v-card>
           <v-list>
-            <template v-for="(ability, index) in abilities">
+            <template v-for="(ability, index) in properties.attribute.ability">
               <v-divider
                 v-if="index !== 0"
                 :key="index"
@@ -100,7 +112,7 @@
       </div>
 
       <div
-        v-for="toggle in toggles"
+        v-for="toggle in properties.toggle"
         :key="toggle._id"
         class="toggle"
       >
@@ -112,7 +124,7 @@
       </div>
 
       <div
-        v-for="stat in stats"
+        v-for="stat in properties.attribute.stat"
         :key="stat._id"
         class="stat"
       >
@@ -124,7 +136,7 @@
       </div>
 
       <div
-        v-for="modifier in modifiers"
+        v-for="modifier in properties.attribute.modifier"
         :key="modifier._id"
         class="modifier"
       >
@@ -136,7 +148,7 @@
       </div>
 
       <div
-        v-for="check in checks"
+        v-for="check in properties.skill.check"
         :key="check._id"
         class="check"
       >
@@ -149,7 +161,7 @@
       </div>
 
       <div
-        v-if="hitDice.length"
+        v-if="properties.hitDice && properties.hitDice.length"
         class="hit-dice"
       >
         <v-card>
@@ -173,7 +185,7 @@
       </div>
 
       <div
-        v-for="resource in resources"
+        v-for="resource in properties.attribute.resource"
         :key="resource._id"
         class="resource"
       >
@@ -186,18 +198,18 @@
       </div>
 
       <div
-        v-if="spellSlots && spellSlots.length || hasSpells"
+        v-if="properties.attribute.spellSlot && properties.attribute.spellSlot.length || hasSpells"
         class="spell-slots"
       >
         <v-card data-id="spell-slot-card">
           <v-list
-            v-if="spellSlots && spellSlots.length"
+            v-if="properties.attribute.spellSlot && properties.attribute.spellSlot.length"
             two-line
             subheader
           >
             <v-subheader>Spell Slots</v-subheader>
             <spell-slot-list-tile
-              v-for="spellSlot in spellSlots"
+              v-for="spellSlot in properties.attribute.spellSlot"
               :key="spellSlot._id"
               :model="spellSlot"
               :data-id="spellSlot._id"
@@ -220,15 +232,24 @@
         </v-card>
       </div>
 
+      <folder-group-card
+        v-for="folder in properties.folder.stats"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
+
       <div
-        v-if="savingThrows.length"
+        v-if="properties.skill.save && properties.skill.save.length"
         class="saving-throws"
       >
         <v-card>
           <v-list>
             <v-subheader>Saving Throws</v-subheader>
             <skill-list-tile
-              v-for="save in savingThrows"
+              v-for="save in properties.skill.save"
               :key="save._id"
               :model="save"
               :data-id="save._id"
@@ -239,14 +260,14 @@
       </div>
 
       <div
-        v-if="skills.length"
+        v-if="properties.skill.skill && properties.skill.skill.length"
         class="skills"
       >
         <v-card>
           <v-list>
             <v-subheader>Skills</v-subheader>
             <skill-list-tile
-              v-for="skill in skills"
+              v-for="skill in properties.skill.skill"
               :key="skill._id"
               :model="skill"
               :data-id="skill._id"
@@ -256,8 +277,17 @@
         </v-card>
       </div>
 
+      <folder-group-card
+        v-for="folder in properties.folder.skills"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
+
       <div
-        v-for="action in actions"
+        v-for="action in properties.action"
         :key="action._id"
         class="action"
       >
@@ -269,8 +299,17 @@
         />
       </div>
 
+      <folder-group-card
+        v-for="folder in properties.folder.actions"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
+
       <div
-        v-if="weapons && weapons.length"
+        v-if="properties.skill.weapon && properties.skill.weapon.length"
         class="weapon-proficiencies"
       >
         <v-card>
@@ -279,7 +318,7 @@
               Weapons
             </v-subheader>
             <skill-list-tile
-              v-for="weapon in weapons"
+              v-for="weapon in properties.skill.weapon"
               :key="weapon._id"
               hide-modifier
               :model="weapon"
@@ -290,7 +329,7 @@
         </v-card>
       </div>
       <div
-        v-if="armors && armors.length"
+        v-if="properties.skill.armor && properties.skill.armor.length"
         class="armor-proficiencies"
       >
         <v-card>
@@ -299,7 +338,7 @@
               Armor
             </v-subheader>
             <skill-list-tile
-              v-for="armor in armors"
+              v-for="armor in properties.skill.armor"
               :key="armor._id"
               hide-modifier
               :model="armor"
@@ -310,7 +349,7 @@
         </v-card>
       </div>
       <div
-        v-if="tools && tools.length"
+        v-if="properties.skill.tool && properties.skill.tool.length"
         class="tool-proficiencies"
       >
         <v-card>
@@ -319,7 +358,7 @@
               Tools
             </v-subheader>
             <skill-list-tile
-              v-for="tool in tools"
+              v-for="tool in properties.skill.tool"
               :key="tool._id"
               hide-modifier
               :model="tool"
@@ -330,7 +369,7 @@
         </v-card>
       </div>
       <div
-        v-if="languages && languages.length"
+        v-if="properties.skill.language && properties.skill.language.length"
         class="language-proficiencies"
       >
         <v-card>
@@ -339,7 +378,7 @@
               Languages
             </v-subheader>
             <skill-list-tile
-              v-for="language in languages"
+              v-for="language in properties.skill.language"
               :key="language._id"
               hide-modifier
               :model="language"
@@ -349,6 +388,24 @@
           </v-list>
         </v-card>
       </div>
+
+      <folder-group-card
+        v-for="folder in properties.folder.proficiencies"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
+
+      <folder-group-card
+        v-for="folder in properties.folder.end"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({_id})"
+        @remove="softRemove"
+      />
     </column-layout>
   </div>
 </template>
@@ -375,40 +432,63 @@ import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
 import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import { uniqBy } from 'lodash';
+import { get, set } from 'lodash';
+import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js'
 
-const getProperties = function (creature, folderIds, filter, options = {
-  sort: { order: 1 }
-}) {
-  if (!creature) return;
-  if (creature.settings.hideUnusedStats) {
-    filter.hide = { $ne: true };
+function walkDown(forest, callback){
+  let stack = [...forest];
+  while(stack.length){
+    let node = stack.pop();
+    const { skipChildren } = callback(node) ?? { skipChildren: false };
+    if (!skipChildren) {
+      stack.push(...node.children);
+    }
   }
-  filter['ancestors.id'] = creature._id;
-  filter['parent.id'] = {$nin: folderIds},
-  filter.removed = { $ne: true };
-  filter.inactive = { $ne: true };
-  filter.overridden = { $ne: true };
-  filter.$nor = [
-    { hideWhenTotalZero: true, total: 0 },
-    { hideWhenValueZero: true, value: 0 },
-  ];
+}
 
-  return CreatureProperties.find(filter, options);
-};
-
-const getAttributeOfType = function (creature, folderIds, type) {
-  return getProperties(creature, folderIds, {
-    type: 'attribute',
-    attributeType: type,
-  });
-};
-
-const getSkillOfType = function (creature, folderIds, type) {
-  return getProperties(creature, folderIds, {
-    type: 'skill',
-    skillType: type,
-  });
+const propertyHandlers = {
+  folder(prop) {
+    let skipChildren;
+    let propPath = null;
+    if (prop.hideStatsGroup) {
+      return { skipChildren: true}
+    }
+    if (prop.tab === 'stats') {
+      propPath = ['folder', prop.location]
+    }
+    return { skipChildren, propPath }
+  },
+  attribute(prop) {
+    if (
+      prop.attributeType === 'utility' ||
+      prop.overridden ||
+      (prop.hideWhenTotalZero && prop.total === 0) ||
+      (prop.hideWhenValueZero && prop.value === 0)
+    ) return { propPath: null };
+    return {
+      propPath: ['attribute', prop.attributeType],
+    }
+  },
+  skill(prop) {
+    if (
+      prop.skillType === 'utility'
+    ) return { propPath: null };
+    return {
+      propPath: ['skill', prop.skillType],
+    }
+  },
+  toggle(prop) {
+    if (
+      prop.deactivatedByAncestor || !prop.showUI
+    ) return { propPath: null };
+    return { propPath: 'toggle' };
+  },
+  action(prop) {
+    if (prop.actionType === 'event') {
+      return { propPath: 'event' };
+    }
+    return { propPath: 'action' };
+  },
 }
 
 export default {
@@ -441,30 +521,50 @@ export default {
     }
   },
   meteor: {
+    properties() {
+      const creature = this.creature;
+      if (!creature) return;
+      const filter = {
+        'ancestors.id': this.creatureId,
+        $or: [
+          { inactive: { $ne: true } },
+          { type: 'toggle' },
+        ],
+        removed: { $ne: true },
+      };
+      if (creature.settings.hideUnusedStats) {
+        filter.hide = { $ne: true };
+      }
+      const allProps = CreatureProperties.find(filter);
+      const forest = nodeArrayToTree(allProps);
+      const properties = { folder: {}, attribute: {}, skill: {} };
+      walkDown(forest, node => {
+        const prop = node.node;
+        const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ||
+          { propPath: prop.type };
+        if (propPath) {
+          let propArray = get(properties, propPath);
+          if (!propArray) {
+            propArray = [];
+            set(properties, propPath, propArray);
+          }
+          if (!propArray?.push) {
+            console.log({propArray});
+          }
+          propArray.push(prop);
+        }
+        return { skipChildren };
+      });
+      return properties;
+    },
     creature() {
       return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
     },
     
-    folders() {
-      return getProperties(this.creature, [], { type: 'folder', groupStats: true });
-    },
-    folderIds() {
-      return this.folders.map(f => f._id);
-    },
-    healthBars() {
-      return getAttributeOfType(this.creature, this.folderIds, 'healthBar');
-    },
-    abilities() {
-      return getAttributeOfType(this.creature, this.folderIds, 'ability');
-    },
-    stats() {
-      return getAttributeOfType(this.creature, this.folderIds, 'stat');
-    },
     toggles() {
       return CreatureProperties.find({
         type: 'toggle',
         'ancestors.id': this.creatureId,
-        'parent.id': { $nin: this.folderIds },
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
         showUI: true,
@@ -472,61 +572,8 @@ export default {
         sort: { order: 1 }
       });
     },
-    modifiers() {
-      return getAttributeOfType(this.creature, this.folderIds, 'modifier');
-    },
-    resources() {
-      return getAttributeOfType(this.creature, this.folderIds, 'resource');
-    },
-    spellSlots() {
-      return getAttributeOfType(this.creature, this.folderIds, 'spellSlot');
-    },
     hasSpells() {
-      const cursor = getProperties(this.creature, this.folderIds, {
-        type: 'spell',
-      })
-      return cursor && cursor.count();
-    },
-    hitDice() {
-      return getAttributeOfType(this.creature, this.folderIds, 'hitDice');
-    },
-    checks() {
-      return getSkillOfType(this.creature, this.folderIds, 'check');
-    },
-    savingThrows() {
-      return getSkillOfType(this.creature, this.folderIds, 'save');
-    },
-    skills() {
-      return getSkillOfType(this.creature, this.folderIds, 'skill');
-    },
-    tools() {
-      return getSkillOfType(this.creature, this.folderIds, 'tool');
-    },
-    weapons() {
-      return getSkillOfType(this.creature, this.folderIds, 'weapon');
-    },
-    armors() {
-      return getSkillOfType(this.creature, this.folderIds, 'armor');
-    },
-    languages() {
-      return getSkillOfType(this.creature, this.folderIds, 'language');
-    },
-    events() {
-      const events = getProperties(this.creature, this.folderIds, { type: 'action', actionType: 'event' });
-      return uniqBy(events.fetch(), e => e.variableName);
-    },
-    actions() {
-      return getProperties(this.creature, this.folderIds, { type: 'action', actionType: { $ne: 'event' } });
-    },
-    appliedBuffs() {
-      return getProperties(this.creature, this.folderIds, { type: 'buff' });
-    },
-    multipliers() {
-      return getProperties(this.creature, this.folderIds, {
-        type: 'damageMultiplier'
-      }, {
-        sort: { value: 1, order: 1 }
-      });
+      return this.properties?.spell?.length
     },
   },
   methods: {

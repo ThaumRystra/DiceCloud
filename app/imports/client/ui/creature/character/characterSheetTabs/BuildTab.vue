@@ -13,9 +13,19 @@
     </v-row>
     <v-row dense>
       <v-col
-        cols="12"
-        md="8"
-        lg="6"
+        v-for="folder in startFolders"
+        :key="folder._id"
+        v-bind="cols"
+      >
+        <folder-group-card
+          :model="folder"
+          @click-property="clickProperty"
+          @sub-click="_id => clickTreeProperty({_id})"
+          @remove="softRemove"
+        />
+      </v-col>
+      <v-col
+        v-bind="cols"
       >
         <v-card class="pb-4">
           <v-card-title style="height: 68px;">
@@ -81,9 +91,7 @@
         </v-card>
       </v-col>
       <v-col
-        cols="12"
-        md="4"
-        lg="6"
+        v-bind="cols"
       >
         <v-card class="class-details mb-2">
           <v-card-title
@@ -174,6 +182,18 @@
           </v-list>
         </v-card>
       </v-col>
+      <v-col
+        v-for="folder in endFolders"
+        :key="folder._id"
+        v-bind="cols"
+      >
+        <folder-group-card
+          :model="folder"
+          @click-property="clickProperty"
+          @sub-click="_id => clickTreeProperty({_id})"
+          @remove="softRemove"
+        />
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -190,6 +210,7 @@ import CharacterErrors from '/imports/client/ui/creature/character/errors/Charac
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -204,11 +225,22 @@ export default {
     BuildTreeNodeList,
     SlotCardsToFill,
   },
+  mixins: [tabFoldersMixin],
   props: {
     creatureId: {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      tabName: 'build',
+      cols: {
+        cols: '12',
+        md: '6',
+        xl: '4',
+      }
+    };
   },
   computed: {
     highestLevels(){
