@@ -10,6 +10,9 @@
     :disabled="isDisabled"
     :outlined="!regular"
     @change="change"
+    @input="e => $emit('input', e)"
+    @end="e => $emit('end', e)"
+    @start="e => $emit('start', e)"
     @focus="focused = true"
     @blur="focused = false"
   >
@@ -23,12 +26,12 @@
 </template>
 
 <script lang="js">
-  import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
+import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 
-  export default {
-    mixins: [SmartInput],
-    props: {
-      regular: Boolean,
-    },
-  };
+export default {
+  mixins: [SmartInput],
+  props: {
+    regular: Boolean,
+  },
+};
 </script>
