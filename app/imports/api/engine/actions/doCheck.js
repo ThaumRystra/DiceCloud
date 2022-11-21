@@ -28,6 +28,7 @@ const doCheck = new ValidatedMethod({
     const creatureId = prop.ancestors[0].id;
     const actionContext = new ActionContext(creatureId, [creatureId], this);
     Object.assign(actionContext.scope, scope);
+    actionContext.scope[`#${prop.type}`] = prop;
 
     // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
