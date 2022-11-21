@@ -23,6 +23,7 @@ export default {
       type: Number,
       default: undefined,
     },
+    singleClick: Boolean,
   },
   data() {
     return {
@@ -52,18 +53,23 @@ export default {
   },
   methods: {
     click() {
-      this.timesClicked += 1;
-      this.debounceClicks();
+      if (this.singleClick) {
+        this.loading = true;
+      } else {
+        this.timesClicked += 1;
+        this.debounceClicks();
+      }
       this.$emit('click', this.acknowledgeChange);
     },
     clicks() {
-      this.$emit('clicks', this.timesClicked, this.acknowledgeChange);
       this.loading = true;
+      this.$emit('clicks', this.timesClicked, this.acknowledgeChange);
       this.timesClicked = 0;
     },
     acknowledgeChange(error){
       this.loading = false;
       if (error) {
+        console.error(error)
         snackbar({ text: error.reason || error.message || error.toString() });
       }
     },

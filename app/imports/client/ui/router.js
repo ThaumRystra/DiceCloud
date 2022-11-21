@@ -36,7 +36,8 @@ const TabletopRightDrawer = () => import('/imports/client/ui/tabletop/TabletopRi
 const Admin = () => import('/imports/client/ui/pages/Admin.vue');
 const Maintenance = () => import('/imports/client/ui/pages/Maintenance.vue');
 const Files = () => import('/imports/client/ui/pages/Files.vue');
-const Documentation = () => import('/imports/client/ui/pages/Documentation.vue');
+const DocsPage = () => import('/imports/client/ui/pages/DocsPage.vue');
+const DocToolbar = () => import('/imports/client/ui/docs/DocToolbar.vue');
 
 // Not found
 const NotFound = () => import('/imports/client/ui/pages/NotFound.vue');
@@ -264,17 +265,10 @@ RouterFactory.configure(router => {
       title: 'Functions',
     },
   }, {
-    path: '/docs/:docPath([^/]+.*)',
+    path: '/docs/:docPath([^/]+.*)?',
     components: {
-      default: Documentation,
-    },
-    meta: {
-      title: 'Documentation',
-    },
-  }, {
-    path: '/docs',
-    components: {
-      default: Documentation,
+      default: DocsPage,
+      toolbar: DocToolbar,
     },
     meta: {
       title: 'Documentation',
