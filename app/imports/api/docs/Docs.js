@@ -112,6 +112,22 @@ function getDocLink(doc, urlName) {
   return address.join('/');
 }
 
+// Add a means of seeding new servers with documentation
+if (Meteor.isClient) {
+  Docs.getJsonDocs = function () {
+    return JSON.stringify(Docs.find({}).fetch(), null, 2);
+  }
+} else if (Meteor.isServer) {
+  Meteor.startup(() => {
+    if (!Docs.findOne()) {
+      Assets.getText('docs/defaultDocs.json', (string) => {
+        const docs = JSON.parse(string)
+        docs.forEach(doc => Docs.insert(doc));
+      });
+    }
+  });
+}
+
 const insertDoc = new ValidatedMethod({
   name: 'docs.insert',
   validate: null,

@@ -5,12 +5,13 @@
       lg="8"
     >
       <v-card
-        style="float: right; z-index: 5;"
+        style="float: right; z-index: 4;"
         class="ma-4"
       >
         <v-fade-transition mode="out-in">
           <v-list
             v-if="siblingDocs.length > 1"
+            :dense="siblingDocs.length > 5"
           >
             <doc-list-item
               v-for="sibling in siblingDocs"
