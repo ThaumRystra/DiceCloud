@@ -51,10 +51,13 @@
             <features-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
-            <inventory-tab :creature-id="creatureId" />
+            <actions-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item v-if="!creature.settings.hideSpellsTab">
             <spells-tab :creature-id="creatureId" />
+          </v-tab-item>
+          <v-tab-item>
+            <inventory-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
             <character-tab :creature-id="creatureId" />
@@ -68,6 +71,60 @@
         </v-tabs-items>
       </div>
     </v-fade-transition>
+    <character-sheet-fab
+      v-if="$vuetify.breakpoint.xsOnly"
+      direction="top"
+      fixed
+      bottom
+      right
+      class="character-sheet-bottom-fab"
+      :edit-permission="editPermission"
+    />
+    <v-bottom-navigation
+      v-if="$vuetify.breakpoint.xsOnly && creature && creature.settings"
+      app
+      shift
+      mandatory
+      class="bottom-nav-btns"
+      :value="$store.getters.tabById($route.params.id)"
+      @change="e => $store.commit(
+        'setTabForCharacterSheet',
+        {id: $route.params.id, tab: e}
+      )"
+    >
+      <v-btn>
+        <span>Stats</span>
+        <v-icon>mdi-chart-box</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Features</span>
+        <v-icon>mdi-text</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Actions</span>
+        <v-icon>mdi-lightning-bolt</v-icon>
+      </v-btn>
+      <v-btn>
+        <span v-if="!creature.settings.hideSpellsTab">Spells</span>
+        <v-icon>mdi-fire</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Inventory</span>
+        <v-icon>mdi-cube</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Journal</span>
+        <v-icon>mdi-book-open-variant</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Build</span>
+        <v-icon>mdi-wrench</v-icon>
+      </v-btn>
+      <v-btn v-if="creature.settings.showTreeTab">
+        <span>Tree</span>
+        <v-icon>mdi-file-tree</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </div>
 </template>
 
@@ -85,16 +142,20 @@ import TreeTab from '/imports/client/ui/creature/character/characterSheetTabs/Tr
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
+import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
 
 export default {
   components: {
     StatsTab,
     FeaturesTab,
-    InventoryTab,
+    ActionsTab,
     SpellsTab,
+    InventoryTab,
     CharacterTab,
     BuildTab,
     TreeTab,
+    CharacterSheetFab,
   },
   props: {
     creatureId: {
@@ -170,6 +231,19 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.bottom-nav-btns > .v-btn{
+  min-width: 0 !important;
+  padding: 0 !important;
+  flex: 1 1 auto !important;
+  font-size: 0.6rem !important;
+}
+.character-sheet-bottom-fab {
+  z-index: 5;
+  bottom: 50px;
+}
+</style>
 
 <style>
 .character-sheet .v-window-item {

@@ -3,8 +3,8 @@
     app
     color="secondary"
     dark
-    tabs
-    extended
+    :extended="$vuetify.breakpoint.smAndUp"
+    :tabs="$vuetify.breakpoint.smAndUp"
     dense
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />

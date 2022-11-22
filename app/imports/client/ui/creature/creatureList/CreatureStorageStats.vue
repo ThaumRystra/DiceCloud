@@ -1,15 +1,17 @@
 <template>
   <div
-    class="creature-storage-stats"
-    style="display: inline-block;"
+    class="creature-storage-stats d-flex align-center"
+    style="white-space: nowrap;"
   >
-    {{ creatureCount }} /
+    <div>
+      {{ creatureCount }} /
+    </div>
     <v-icon v-if="characterSlots === -1">
       mdi-infinity
     </v-icon>
-    <template v-else>
+    <div v-else>
       {{ characterSlots }}
-    </template>
+    </div>
   </div>
 </template>
 

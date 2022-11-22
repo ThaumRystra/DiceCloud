@@ -46,8 +46,9 @@
                 :items="[
                   { text: 'Stats Tab', value: 'stats' },
                   { text: 'Features Tab', value: 'features' },
-                  { text: 'Inventory Tab', value: 'inventory' },
+                  { text: 'Actions Tab', value: 'actions' },
                   { text: 'Spells Tab', value: 'spells' },
+                  { text: 'Inventory Tab', value: 'inventory' },
                   { text: 'Journal Tab', value: 'journal' },
                   { text: 'Build Tab', value: 'build' },
                 ]"
@@ -90,7 +91,6 @@ export default {
           { text: 'After events', value: 'events' },
           { text: 'After stats', value: 'stats' },
           { text: 'After skills', value: 'skills' },
-          { text: 'After actions', value: 'actions' },
           { text: 'After proficiencies', value: 'proficiencies' },
           { text: 'End', value: 'end' },
         ];

@@ -2,8 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import dialogStackStore from '/imports/client/ui/dialogStack/dialogStackStore.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-const tabs = ['stats', 'features', 'inventory', 'spells', 'journal', 'build', 'tree'];
-const tabsWithoutSpells = ['stats', 'features', 'inventory', 'journal', 'build', 'tree'];
+const tabs = ['stats', 'features', 'actions', 'spells', 'inventory', 'journal', 'build', 'tree'];
+const tabsWithoutSpells = ['stats', 'features', 'actions', 'inventory', 'journal', 'build', 'tree'];
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -20,14 +20,10 @@ const store = new Vuex.Store({
   },
   getters: {
     tabById: (state) => (id) => {
-      if (id in state.characterSheetTabs){
-        return state.characterSheetTabs[id];
-      } else {
-        return 0;
-      }
+      return state.characterSheetTabs[id] ?? 0;
     },
     tabNameById: (state) => (id) => {
-      const tabNumber = state.characterSheetTabs[id];
+      const tabNumber = state.characterSheetTabs[id] ?? 0;
       const creature = Creatures.findOne(id);
       if (creature?.settings?.hideSpellsTab) {
         return tabsWithoutSpells[tabNumber];
@@ -37,26 +33,26 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    toggleDrawer (state) {
+    toggleDrawer(state) {
       state.drawer = !state.drawer;
     },
-    toggleRightDrawer (state) {
+    toggleRightDrawer(state) {
       state.rightDrawer = !state.rightDrawer;
     },
-    setDrawer (state, value) {
+    setDrawer(state, value) {
       state.drawer = value;
     },
-    setRightDrawer (state, value) {
+    setRightDrawer(state, value) {
       state.rightDrawer = value;
     },
-    setPageTitle (state, value) {
+    setPageTitle(state, value) {
       state.pageTitle = value;
       document.title = value;
     },
-    setTabForCharacterSheet(state, {tab, id}){
+    setTabForCharacterSheet(state, { tab, id }) {
       Vue.set(state.characterSheetTabs, id, tab);
     },
-    setShowDetailsDialog(state, value){
+    setShowDetailsDialog(state, value) {
       state.showDetailsDialog = value;
     },
   },

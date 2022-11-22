@@ -102,9 +102,12 @@
         let stackLength = this.$store.state.dialogStack.dialogs.length - offset;
         if (stackLength){
           let topDialog = this.$refs[stackLength - 1][0];
-          return topDialog.$el.querySelector(`[data-id='${elementId}']`);
+          // First look in the active window, then look elsewhere
+          return topDialog.$el.querySelector(`.v-window-item--active [data-id='${elementId}']`) ?? 
+            topDialog.$el.querySelector(`[data-id='${elementId}']`);
         } else {
-          return document.querySelector(`[data-id='${elementId}']`);
+          return document.querySelector(`.v-window-item--active [data-id='${elementId}']`) ??
+            document.querySelector(`[data-id='${elementId}']`);
         }
       },
       enter(target, done){

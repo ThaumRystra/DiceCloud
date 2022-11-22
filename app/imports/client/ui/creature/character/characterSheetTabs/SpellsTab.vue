@@ -9,6 +9,16 @@
         @sub-click="_id => clickTreeProperty({_id})"
         @remove="softRemove"
       />
+      <div
+        v-if="spellSlots && spellSlots.length || hasSpells"
+        class="spell-slots"
+      >
+        <spell-slot-card
+          :creature-id="creatureId"
+          :spell-slots="spellSlots"
+          :has-spells="hasSpells"
+        />
+      </div>
       <div v-if="spellsWithoutList.length">
         <v-card>
           <spell-list
@@ -44,12 +54,14 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import SpellListCard from '/imports/client/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
 import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
 
 export default {
   components: {
     ColumnLayout,
     SpellList,
     SpellListCard,
+    SpellSlotCard,
   },
   mixins: [tabFoldersMixin],
   props: {
@@ -65,6 +77,20 @@ export default {
     }
   },
   meteor: {
+    spellSlots() {
+      return CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        inactive: { $ne: true },
+        removed: { $ne: true },
+        overridden: { $ne: true },
+        type: 'attribute',
+        attributeType: 'spellSlot',
+        $nor: [
+          { hideWhenTotalZero: true, total: 0 },
+          { hideWhenValueZero: true, value: 0 },
+        ],
+      });
+    },
     spellLists() {
       return CreatureProperties.find({
         'ancestors.id': this.creatureId,
@@ -73,6 +99,14 @@ export default {
         inactive: { $ne: true },
       }, {
         sort: { order: 1 }
+      });
+    },
+    hasSpells() {
+      return !!CreatureProperties.findOne({
+        'ancestors.id': this.creatureId,
+        type: 'spell',
+        removed: { $ne: true },
+        inactive: { $ne: true },
       });
     },
     spellsWithoutList() {

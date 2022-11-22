@@ -12,7 +12,8 @@
       app
       color="secondary"
       dark
-      tabs
+      :extended="$vuetify.breakpoint.smAndUp"
+      :tabs="$vuetify.breakpoint.smAndUp"
       dense
     >
       <v-app-bar-nav-icon @click="toggleDrawer" />
@@ -25,11 +26,17 @@
       </v-toolbar-title>
       <v-spacer />
       <v-fade-transition mode="out-in">
-        <div :key="$route.meta.title">
+        <div
+          :key="$route.meta.title"
+          style="
+        text-overflow: ellipsis;
+        overflow: hidden;"
+        >
           <router-view name="toolbarItems" />
         </div>
       </v-fade-transition>
       <v-fade-transition
+        v-if="$vuetify.breakpoint.smAndUp"
         slot="extension"
         mode="out-in"
       >

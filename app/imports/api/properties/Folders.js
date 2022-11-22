@@ -21,14 +21,14 @@ let FolderSchema = new createPropertySchema({
     type: String,
     optional: true,
     allowedValues: [
-      'stats', 'features', 'inventory', 'spells', 'journal', 'build'
+      'stats', 'features', 'actions', 'spells', 'inventory', 'journal', 'build'
     ],
   },
   location: {
     type: String,
     optional: true,
     allowedValues: [
-      'start', 'events', 'stats', 'skills', 'actions', 'proficiencies', 'end'
+      'start', 'events', 'stats', 'skills', 'proficiencies', 'end'
     ],
   },
 });

@@ -65,8 +65,8 @@
       />
 
       <damage-multiplier-card
-        v-if="properties.multiplier && properties.multiplier.length"
-        :multipliers="properties.multiplier"
+        v-if="properties.damageMultiplier && properties.damageMultiplier.length"
+        :multipliers="properties.damageMultiplier"
         @click-multiplier="clickProperty"
       />
 
@@ -198,38 +198,13 @@
       </div>
 
       <div
-        v-if="properties.attribute.spellSlot && properties.attribute.spellSlot.length || hasSpells"
+        v-if="properties.attribute.spellSlot && properties.attribute.spellSlot.length"
         class="spell-slots"
       >
-        <v-card data-id="spell-slot-card">
-          <v-list
-            v-if="properties.attribute.spellSlot && properties.attribute.spellSlot.length"
-            two-line
-            subheader
-          >
-            <v-subheader>Spell Slots</v-subheader>
-            <spell-slot-list-tile
-              v-for="spellSlot in properties.attribute.spellSlot"
-              :key="spellSlot._id"
-              :model="spellSlot"
-              :data-id="spellSlot._id"
-              @click="clickProperty({_id: spellSlot._id})"
-            />
-          </v-list>
-          <div
-            v-if="hasSpells"
-            class="d-flex justify-end"
-          >
-            <v-btn
-              color="accent"
-              style="width: 100%;"
-              outlined
-              @click="castSpell"
-            >
-              Cast a spell
-            </v-btn>
-          </div>
-        </v-card>
+        <spell-slot-card
+          :creature-id="creatureId"
+          :spell-slots="properties.attribute.spellSlot"
+        />
       </div>
 
       <folder-group-card
@@ -255,6 +230,19 @@
               :data-id="save._id"
               @click="clickProperty({_id: save._id})"
             />
+            <v-list-item
+              v-for="(effect, index) in saveConditionals"
+              :key="effect._id"
+              :data-id="effect._id"
+              :class="{'mt-2': !index}"
+              @click="clickProperty({_id: effect._id})"
+            >
+              <v-list-item-content>
+                <v-list-item-subtitle style="white-space: unset;">
+                  {{ effect.text }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-card>
       </div>
@@ -273,34 +261,25 @@
               :data-id="skill._id"
               @click="clickProperty({_id: skill._id})"
             />
+            <v-list-item
+              v-for="(effect, index) in skillConditionals"
+              :key="effect._id"
+              :data-id="effect._id"
+              :class="{'mt-2': !index}"
+              @click="clickProperty({_id: effect._id})"
+            >
+              <v-list-item-content>
+                <v-list-item-subtitle style="white-space: unset;">
+                  {{ effect.text }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-card>
       </div>
 
       <folder-group-card
         v-for="folder in properties.folder.skills"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
-        @remove="softRemove"
-      />
-
-      <div
-        v-for="action in properties.action"
-        :key="action._id"
-        class="action"
-      >
-        <action-card
-          :model="action"
-          :data-id="action._id"
-          @click="clickProperty({_id: action._id})"
-          @sub-click="_id => clickTreeProperty({_id})"
-        />
-      </div>
-
-      <folder-group-card
-        v-for="folder in properties.folder.actions"
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
@@ -422,17 +401,15 @@ import DamageMultiplierCard from '/imports/client/ui/properties/components/damag
 import HitDiceListTile from '/imports/client/ui/properties/components/attributes/HitDiceListTile.vue';
 import SkillListTile from '/imports/client/ui/properties/components/skills/SkillListTile.vue';
 import ResourceCard from '/imports/client/ui/properties/components/attributes/ResourceCard.vue';
-import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
-import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import RestButton from '/imports/client/ui/creature/RestButton.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ToggleCard from '/imports/client/ui/properties/components/toggles/ToggleCard.vue';
 import BuffListItem from '/imports/client/ui/properties/components/buffs/BuffListItem.vue';
-import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
+import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
 import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import { get, set } from 'lodash';
+import { get, set, uniqBy } from 'lodash';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js'
 
 function walkDown(forest, callback){
@@ -487,7 +464,7 @@ const propertyHandlers = {
     if (prop.actionType === 'event') {
       return { propPath: 'event' };
     }
-    return { propPath: 'action' };
+    return { propPath: null };
   },
 }
 
@@ -503,8 +480,7 @@ export default {
     HitDiceListTile,
     SkillListTile,
     ResourceCard,
-    SpellSlotListTile,
-    ActionCard,
+    SpellSlotCard,
     ToggleCard,
     EventButton,
     FolderGroupCard,
@@ -520,6 +496,30 @@ export default {
       doCheckLoading: false,
     }
   },
+  computed: {
+    saveConditionals(){
+      const conditionals = [];
+      this.properties.skill?.save?.forEach(prop => {
+        prop?.effects?.forEach(effect => {
+          if (effect.operation === 'conditional') {
+            conditionals.push(effect);
+          }
+        });
+      });
+      return uniqBy(conditionals, '_id');
+    },
+    skillConditionals(){
+      const conditionals = [];
+      this.properties.skill?.skill?.forEach(prop => {
+        prop?.effects?.forEach(effect => {
+          if (effect.operation === 'conditional') {
+            conditionals.push(effect);
+          }
+        });
+      });
+      return uniqBy(conditionals, '_id');
+    },
+  },
   meteor: {
     properties() {
       const creature = this.creature;
@@ -531,11 +531,22 @@ export default {
           { type: 'toggle' },
         ],
         removed: { $ne: true },
+        type: {
+          $in: [
+            'action',
+            'attribute',
+            'buff',
+            'damageMultiplier',
+            'folder',
+            'skill',
+            'toggle',
+          ]
+        }
       };
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter);
+      const allProps = CreatureProperties.find(filter, { sort: { order: 1 } });
       const forest = nodeArrayToTree(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
@@ -555,6 +566,7 @@ export default {
         }
         return { skipChildren };
       });
+      properties.damageMultiplier?.sort((a, b) => a.value - b.value);
       return properties;
     },
     creature() {
@@ -571,9 +583,6 @@ export default {
       }, {
         sort: { order: 1 }
       });
-    },
-    hasSpells() {
-      return this.properties?.spell?.length
     },
   },
   methods: {
@@ -611,30 +620,6 @@ export default {
         }
       });
     },
-    castSpell() {
-      this.$store.commit('pushDialogStack', {
-        component: 'cast-spell-with-slot-dialog',
-        elementId: 'spell-slot-card',
-        data: {
-          creatureId: this.creatureId,
-        },
-        callback({ spellId, slotId, advantage, ritual } = {}) {
-          if (!spellId) return;
-          doCastSpell.call({
-            spellId,
-            slotId,
-            ritual,
-            scope: {
-              $attackAdvantage: advantage,
-            },
-          }, error => {
-            if (!error) return;
-            snackbar({ text: error.reason || error.message || error.toString() });
-            console.error(error);
-          });
-        },
-      });
-    }
   },
 };
 </script>

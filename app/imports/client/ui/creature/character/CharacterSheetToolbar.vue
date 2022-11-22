@@ -6,8 +6,8 @@
     :dark="isDark"
     :light="!isDark"
     clipped-right
-    extended
-    tabs
+    :extended="$vuetify.breakpoint.smAndUp"
+    :tabs="$vuetify.breakpoint.smAndUp"
     dense
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />
@@ -64,11 +64,14 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-app-bar-nav-icon @click="toggleRightDrawer" />
+          <v-app-bar-nav-icon @click="toggleRightDrawer">
+            <v-icon>mdi-forum</v-icon>
+          </v-app-bar-nav-icon>
         </template>
       </v-layout>
     </v-fade-transition>
     <v-fade-transition
+      v-if="$vuetify.breakpoint.smAndUp"
       slot="extension"
       mode="out-in"
     >
@@ -102,10 +105,13 @@
             Features
           </v-tab>
           <v-tab>
-            Inventory
+            Actions
           </v-tab>
           <v-tab v-if="!creature.settings.hideSpellsTab">
             Spells
+          </v-tab>
+          <v-tab>
+            Inventory
           </v-tab>
           <v-tab>
             Journal
@@ -119,7 +125,8 @@
         </v-tabs>
         <v-spacer />
         <character-sheet-fab
-          class="character-sheet-fab"
+          direction="bottom"
+          class="character-sheet-extension-fab"
           :edit-permission="editPermission"
         />
       </div>
@@ -250,7 +257,7 @@ export default {
   background: none !important;
 }
 
-.character-sheet-fab {
+.character-sheet-extension-fab {
   bottom: -24px;
   right: 8px;
   margin-left: 16px;

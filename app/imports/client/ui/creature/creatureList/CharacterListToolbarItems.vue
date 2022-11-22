@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="d-flex">
     <creature-storage-stats />
     <archive-button />
   </div>

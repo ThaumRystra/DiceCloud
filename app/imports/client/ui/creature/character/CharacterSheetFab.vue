@@ -1,7 +1,7 @@
 <template lang="html">
   <v-speed-dial
     v-model="fab"
-    direction="bottom"
+    v-bind="$attrs"
     :style="!speedDials ? 'visibility: hidden;' : ''"
   >
     <template #activator>
@@ -96,16 +96,6 @@
     }, 400);
   }
 
-  const tabs = [
-    'stats',
-    'features',
-    'inventory',
-    'spells',
-    'journal',
-    'build',
-    'tree',
-  ];
-
   export default {
     components: {
       LabeledFab,
@@ -120,21 +110,18 @@
       creatureId(){
         return this.$route.params.id;
       },
-      tabNumber(){
-        let tabNumber = this.$store.getters.tabById(this.creatureId);
-        if (this.hideSpellsTab && tabNumber > 2){
-          tabNumber += 1;
-        }
-        return tabNumber;
+      tabName(){
+        return this.$store.getters.tabNameById(this.creatureId);
       },
       speedDials(){
-        return this.speedDialsByTab[tabs[this.tabNumber]];
+        return this.speedDialsByTab[this.tabName];
       },
       speedDialsByTab() { return {
-        'stats': ['attribute', 'skill', 'action', 'buff'],
+        'stats': ['attribute', 'skill', 'buff'],
         'features': ['feature'],
-        'inventory': ['item', 'container'],
         'spells': ['spellList', 'spell'],
+        'actions': ['action'],
+        'inventory': ['item', 'container'],
         'journal': ['note'],
         'tree': [null],
       };},
