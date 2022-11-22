@@ -461,7 +461,7 @@ const propertyHandlers = {
     return { propPath: 'toggle' };
   },
   action(prop) {
-    if (prop.actionType === 'event') {
+    if (prop.actionType === 'event' && !prop.overridden) {
       return { propPath: 'event' };
     }
     return { propPath: null };
