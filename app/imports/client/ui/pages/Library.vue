@@ -10,8 +10,10 @@
           xl="8"
         >
           <v-card :class="{'mb-4': libraryCollections && libraryCollections.length}">
-            <library-list />
-            <v-expand-transition>
+            <v-fade-transition
+              hide-on-leave
+              leave-absolute
+            >
               <v-row
                 v-if="!$subReady.libraries"
                 align="center"
@@ -24,7 +26,8 @@
                   size="32"
                 />
               </v-row>
-            </v-expand-transition>
+              <library-list v-else />
+            </v-fade-transition>
           </v-card>
           <div class="layout justify-end mt-2">
             <v-btn

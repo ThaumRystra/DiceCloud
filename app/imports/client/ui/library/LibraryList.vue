@@ -44,20 +44,6 @@
         @select="val => $emit('select-library', library._id, val)"
       />
     </v-list-group>
-    <v-expand-transition>
-      <v-row
-        v-if="!$subReady.libraries"
-        align="center"
-        justify="center"
-        class="pa-4"
-      >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="32"
-        />
-      </v-row>
-    </v-expand-transition>
   </v-list>
 </template>
 
