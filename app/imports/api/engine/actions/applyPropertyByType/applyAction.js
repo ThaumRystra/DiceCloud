@@ -163,8 +163,9 @@ function rollAttack(attack, scope) {
     value = rollDice(1, 20)[0];
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
-  scope['$attackRoll'] = { value };
+  scope['$attackDiceRoll'] = { value };
   const result = value + attack.value;
+  scope['$attackRoll'] = { result };
   const { criticalHit, criticalMiss } = applyCrits(value, scope);
   return { resultPrefix, result, value, criticalHit, criticalMiss };
 }
