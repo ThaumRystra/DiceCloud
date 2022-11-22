@@ -112,6 +112,31 @@ function getDocLink(doc, urlName) {
   return address.join('/');
 }
 
+function rebuildDocAncestors(docId) {
+  const newDoc = Docs.findOne(docId);
+  Docs.find({ 'ancestors.id': docId }).forEach(doc => {
+    doc.ancestors.forEach((a, i) => {
+      if (a.id === docId) {
+        Docs.update(doc._id, {
+          $set: {
+            [`ancestors.${i}`]: {
+              id: newDoc._id,
+              collection: 'docs',
+              urlName: newDoc.urlName,
+              name: newDoc.name,
+            }
+          }
+        });
+      }
+    });
+    doc = Docs.findOne(doc._id);
+    const newLink = getDocLink(doc);
+    if (doc.href !== newLink) {
+      Docs.update(doc._id, { $set: { href: newLink } })
+    }
+  });
+}
+
 // Add a means of seeding new servers with documentation
 if (Meteor.isClient) {
   Docs.getJsonDocs = function () {
@@ -200,12 +225,17 @@ const updateDoc = new ValidatedMethod({
       }
       modifier.$set = modifier.$set || {};
       modifier.$set.href = newLink;
+      rebuildDocAncestors(_id);
+    }
+    const updates = Docs.update(_id, modifier);
+    if (pathString === 'name' || pathString === 'urlName') {
+      rebuildDocAncestors(_id);
     }
     reorderDocs({
       collection: Docs,
       ancestorId: 'root',
     });
-    return Docs.update(_id, modifier);
+    return updates;
   },
 });
 

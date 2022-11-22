@@ -78,8 +78,8 @@ export default {
       },
     },
     doc() {
-      const doc = Docs.findOne(this.path);
-      return doc && doc.text;
+      const doc = Docs.findOne({href: '/docs/' + this.path});
+      return doc && doc.description;
     },
   },
   methods: {
