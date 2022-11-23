@@ -6,6 +6,7 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { union } from 'lodash';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 
 const restCreature = new ValidatedMethod({
   name: 'creature.methods.rest',
@@ -49,7 +50,7 @@ const restCreature = new ValidatedMethod({
     applyTriggers(afterTriggers, null, actionContext);
 
     // Insert log
-    actionContext.writeLog();    
+    actionContext.writeLog();
   },
 });
 
@@ -57,88 +58,113 @@ function doRestWork(restType, actionContext) {
   const creatureId = actionContext.creature._id;
   // Long rests reset short rest properties as well
   let resetFilter;
-  if (restType === 'shortRest'){
+  if (restType === 'shortRest') {
     resetFilter = 'shortRest'
   } else {
-    resetFilter = {$in: ['shortRest', 'longRest']}
+    resetFilter = { $in: ['shortRest', 'longRest'] }
   }
+  resetProperties(creatureId, resetFilter, actionContext);
+
+  // Reset half hit dice on a long rest, starting with the highest dice
+  if (restType === 'longRest') {
+    resetHitDice(creatureId, actionContext);
+  }
+}
+
+export function resetProperties(creatureId, resetFilter, actionContext) {
   // Only apply to active properties
-  let filter = {
+  const filter = {
     'ancestors.id': creatureId,
     reset: resetFilter,
     removed: { $ne: true },
     inactive: { $ne: true },
   };
   // update all attribute's damage
-  filter.type = 'attribute';
-  CreatureProperties.update(filter, {
-    $set: {
-      damage: 0,
-      dirty: true,
-    }
-  }, {
-    selector: {type: 'attribute'},
-    multi: true,
+  const attributeFilter = {
+    ...filter,
+    type: 'attribute',
+    damage: { $ne: 0 },
+  }
+  CreatureProperties.find(attributeFilter).forEach(prop => {
+    damagePropertyWork({
+      prop,
+      operation: 'increment',
+      value: -prop.damage,
+      actionContext,
+      logFunction(increment) {
+        actionContext.addLog({
+          name: prop.name,
+          value: increment < 0 ? `Restored ${-increment}` : `Removed ${-increment}`
+        });
+      }
+    });
   });
   // Update all action-like properties' usesUsed
-  filter.type = {$in: [
-    'action',
-    'attack',
-    'spell'
-  ]};
-  CreatureProperties.update(filter, {
+  const actionFilter = {
+    ...filter,
+    type: {
+      $in: ['action', 'spell']
+    },
+    usesUsed: { $ne: 0 },
+  };
+  CreatureProperties.find(actionFilter, {
+    fields: { name: 1, usesUsed: 1 }
+  }).forEach(prop => {
+    actionContext.addLog({
+      name: prop.name,
+      value: prop.usesUsed >= 0 ? `Restored ${prop.usesUsed} uses` : `Removed ${-prop.usesUsed} uses`
+    });
+  });
+  CreatureProperties.update(actionFilter, {
     $set: {
       usesUsed: 0,
       dirty: true,
     }
   }, {
-    selector: {type: 'action'},
+    selector: { type: 'action' },
     multi: true,
   });
-  // Reset half hit dice on a long rest, starting with the highest dice
-  if (restType === 'longRest'){
-    let hitDice = CreatureProperties.find({
-      'ancestors.id': creatureId,
-      type: 'attribute',
-      attributeType: 'hitDice',
-      removed: {$ne: true},
-      inactive: {$ne: true},
-    }, {
-      fields: {
-        hitDiceSize: 1,
-        damage: 1,
-        total: 1,
+}
+
+function resetHitDice(creatureId, actionContext) {
+  let hitDice = CreatureProperties.find({
+    'ancestors.id': creatureId,
+    type: 'attribute',
+    attributeType: 'hitDice',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }).fetch();
+  // Use a collator to do sorting in natural order
+  let collator = new Intl.Collator('en', {
+    numeric: true, sensitivity: 'base'
+  });
+  // Get the hit dice in decending order of hitDiceSize
+  let compare = (a, b) => collator.compare(b.hitDiceSize, a.hitDiceSize)
+  hitDice.sort(compare);
+  // Get the total number of hit dice that can be recovered this rest
+  let totalHd = hitDice.reduce((sum, hd) => sum + (hd.total || 0), 0);
+  let resetMultiplier = actionContext.creature.settings.hitDiceResetMultiplier || 0.5;
+  let recoverableHd = Math.max(Math.floor(totalHd * resetMultiplier), 1);
+  // recover each hit dice in turn until the recoverable amount is used up
+  let amountToRecover;
+  hitDice.forEach(hd => {
+    if (!recoverableHd) return;
+    amountToRecover = Math.min(recoverableHd, hd.damage ?? 0);
+    if (!amountToRecover) return;
+    recoverableHd -= amountToRecover;
+    damagePropertyWork({
+      prop: hd,
+      operation: 'increment',
+      value: -amountToRecover,
+      actionContext,
+      logFunction(increment) {
+        actionContext.addLog({
+          name: hd.name,
+          value: increment < 0 ? `Restored ${-increment} hit dice` : `Removed ${increment} hit dice`
+        });
       }
-    }).fetch();
-    // Use a collator to do sorting in natural order
-    let collator = new Intl.Collator('en', {
-      numeric: true, sensitivity: 'base'
     });
-    // Get the hit dice in decending order of hitDiceSize
-    let compare = (a, b) => collator.compare(b.hitDiceSize, a.hitDiceSize)
-    hitDice.sort(compare);
-    // Get the total number of hit dice that can be recovered this rest
-    let totalHd = hitDice.reduce((sum, hd) => sum + (hd.total || 0), 0);
-    let resetMultiplier = actionContext.creature.settings.hitDiceResetMultiplier || 0.5;
-    let recoverableHd = Math.max(Math.floor(totalHd*resetMultiplier), 1);
-    // recover each hit dice in turn until the recoverable amount is used up
-    let amountToRecover, resultingDamage;
-    hitDice.forEach(hd => {
-      if (!recoverableHd) return;
-      amountToRecover = Math.min(recoverableHd, hd.damage || 0);
-      if (!amountToRecover) return;
-      recoverableHd -= amountToRecover;
-      resultingDamage = hd.damage - amountToRecover;
-      CreatureProperties.update(hd._id, {
-        $set: {
-          damage: resultingDamage,
-          dirty: true,
-        }
-      }, {
-        selector: {type: 'attribute'},
-      });
-    });
-  }
+  });
 }
 
 export default restCreature;

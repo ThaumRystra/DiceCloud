@@ -12,11 +12,11 @@ import { reorderDocs } from '/imports/api/parenting/order.js';
 var snackbar;
 if (Meteor.isClient) {
   snackbar = require(
-    '/imports/ui/components/snackbars/SnackbarQueue.js'
+    '/imports/client/ui/components/snackbars/SnackbarQueue.js'
   ).snackbar
 }
 
-const DUPLICATE_CHILDREN_LIMIT = 50;
+const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const duplicateLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.duplicate',
@@ -28,7 +28,7 @@ const duplicateLibraryNode = new ValidatedMethod({
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
+    numRequests: 1,
     timeInterval: 5000,
   },
   run({ _id }) {

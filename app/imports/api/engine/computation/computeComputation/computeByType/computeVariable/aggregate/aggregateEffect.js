@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 
-export default function aggregateEffect({node, linkedNode, link}){
+export default function aggregateEffect({ node, linkedNode, link }) {
   if (link.data !== 'effect') return;
   // store the effect aggregator, its presence indicates that the variable is
   // targeted by effects
@@ -38,21 +38,22 @@ export default function aggregateEffect({node, linkedNode, link}){
     operation: linkedNode.data.operation,
     amount: effectAmount,
     type: linkedNode.data.type,
+    text: linkedNode.data.text,
     // ancestors: linkedNode.data.ancestors,
   });
 
   // get a shorter reference to the aggregator document
   const aggregator = node.data.effectAggregator;
   // Get the result of the effect
-  const result = linkedNode.data.amount?.value;
-  // Skip aggregating if the result is not resolved completely
-  if (typeof result === 'string' || result === undefined) return;
+  let result = linkedNode.data.amount?.value;
+  if (typeof result !== 'number') result = undefined;
+
   // Aggregate the effect based on its operation
-  switch(linkedNode.data.operation){
+  switch (linkedNode.data.operation) {
     case 'base':
       // Take the largest base value
-      if (Number.isFinite(result)){
-        if(Number.isFinite(aggregator.base)){
+      if (Number.isFinite(result)) {
+        if (Number.isFinite(aggregator.base)) {
           aggregator.base = Math.max(aggregator.base, result);
         } else {
           aggregator.base = result;

@@ -28,8 +28,7 @@ let AttributeSchema = createPropertySchema({
       'stat', // Speed, Armor Class
       'modifier', // Proficiency Bonus, displayed as +x
       'hitDice', // d12 hit dice
-      'healthBar', // Hitpoints, Temporary Hitpoints, can take damage
-      'bar', // Displayed as a health bar, can't take damage
+      'healthBar', // Hitpoints, Temporary Hitpoints
       'resource', // Rages, sorcery points
       'spellSlot', // Level 1, 2, 3... spell slots
       'utility', // Aren't displayed, Jump height, Carry capacity
@@ -69,6 +68,16 @@ let AttributeSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  // Control how the health bar handles overflow
+  healthBarNoDamageOverflow: {
+    type: Boolean,
+    optional: true,
+  },
+  healthBarNoHealingOverflow: {
+    type: Boolean,
+    optional: true,
+  },
+  // Control when the health bar takes damage or healing
   healthBarDamageOrder: {
     type: SimpleSchema.Integer,
     optional: true,
@@ -107,11 +116,21 @@ let AttributeSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  hideWhenTotalZero: {
+    type: Boolean,
+    optional: true,
+  },
+  hideWhenValueZero: {
+    type: Boolean,
+    optional: true,
+  },
   // Automatically zero the adjustment on these conditions
   reset: {
     type: String,
     optional: true,
-    allowedValues: ['shortRest', 'longRest'],
+    regEx: VARIABLE_NAME_REGEX,
+    min: 2,
+    max: STORAGE_LIMITS.variableName,
   },
 });
 

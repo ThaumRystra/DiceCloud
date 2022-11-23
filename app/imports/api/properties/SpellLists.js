@@ -17,6 +17,12 @@ let SpellListSchema = createPropertySchema({
     type: 'fieldToCompute',
     optional: true,
   },
+  // The variable name of the ability this spell relies on
+  ability: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.variableName,
+  },
   // Calculation of The attack roll bonus used by spell attacks in this list
   attackRollBonus: {
     type: 'fieldToCompute',
@@ -37,6 +43,12 @@ const ComputedOnlySpellListSchema = createPropertySchema({
   maxPrepared: {
     type: 'computedOnlyField',
     optional: true,
+  },
+  // Computed value determined by the ability
+  abilityMod: {
+    type: SimpleSchema.Integer,
+    optional: true,
+    removeBeforeCompute: true,
   },
   attackRollBonus: {
     type: 'computedOnlyField',

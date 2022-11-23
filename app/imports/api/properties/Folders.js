@@ -7,6 +7,29 @@ let FolderSchema = new createPropertySchema({
   name: {
     type: String,
     max: STORAGE_LIMITS.name,
+    optional: true,
+  },
+  groupStats: {
+    type: Boolean,
+    optional: true,
+  },
+  hideStatsGroup: {
+    type: Boolean,
+    optional: true,
+  },
+  tab: {
+    type: String,
+    optional: true,
+    allowedValues: [
+      'stats', 'features', 'actions', 'spells', 'inventory', 'journal', 'build'
+    ],
+  },
+  location: {
+    type: String,
+    optional: true,
+    allowedValues: [
+      'start', 'events', 'stats', 'skills', 'proficiencies', 'end'
+    ],
   },
 });
 

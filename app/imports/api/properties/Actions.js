@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 
 /*
  * Actions are things a character can do
@@ -24,8 +25,16 @@ let ActionSchema = createPropertySchema({
   // long actions take longer than 1 round to cast
   actionType: {
     type: String,
-    allowedValues: ['action', 'bonus', 'attack', 'reaction', 'free', 'long'],
+    allowedValues: ['action', 'bonus', 'attack', 'reaction', 'free', 'long', 'event'],
     defaultValue: 'action',
+  },
+  // If the action type is an event, what is the variable name of that event?
+  variableName: {
+    type: String,
+    optional: true,
+    regEx: VARIABLE_NAME_REGEX,
+    min: 2,
+    max: STORAGE_LIMITS.variableName,
   },
   // Who is the action directed at
   target: {
@@ -56,8 +65,10 @@ let ActionSchema = createPropertySchema({
   // How this action's uses are reset automatically
   reset: {
     type: String,
-    allowedValues: ['longRest', 'shortRest'],
     optional: true,
+    regEx: VARIABLE_NAME_REGEX,
+    min: 2,
+    max: STORAGE_LIMITS.variableName,
   },
   // Resources
   resources: {
@@ -74,7 +85,7 @@ let ActionSchema = createPropertySchema({
   'resources.itemsConsumed.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
+    autoValue() {
       if (!this.isSet) return Random.id();
     }
   },
@@ -101,7 +112,7 @@ let ActionSchema = createPropertySchema({
   'resources.attributesConsumed.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
+    autoValue() {
       if (!this.isSet) return Random.id();
     }
   },
@@ -148,6 +159,12 @@ const ComputedOnlyActionSchema = createPropertySchema({
   // Uses - usesUsed
   usesLeft: {
     type: Number,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  // Denormalised tag if event is overridden by one with the same variable name
+  overridden: {
+    type: Boolean,
     optional: true,
     removeBeforeCompute: true,
   },
@@ -218,4 +235,4 @@ const ComputedActionSchema = new SimpleSchema()
   .extend(ActionSchema)
   .extend(ComputedOnlyActionSchema);
 
-export { ActionSchema, ComputedOnlyActionSchema, ComputedActionSchema};
+export { ActionSchema, ComputedOnlyActionSchema, ComputedActionSchema };

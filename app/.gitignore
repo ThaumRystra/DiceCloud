@@ -3,6 +3,7 @@
 .demeteorized
 .cache
 .vscode
+fileStorage
 settings.json
 public/components
 public/_imports.html
