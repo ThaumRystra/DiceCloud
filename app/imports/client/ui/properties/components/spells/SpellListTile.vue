@@ -29,14 +29,11 @@
         @click.native.stop="() => {}"
         @change="setPrepared"
       />
-      <v-icon
+      <drag-handle
         v-else-if="!hideHandle"
         :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"
-        class="handle"
-      >
-        mdi-drag
-      </v-icon>
+      />
       <v-btn
         v-else-if="showInfoButton"
         icon
