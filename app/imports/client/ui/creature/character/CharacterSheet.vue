@@ -104,8 +104,8 @@
         <span>Actions</span>
         <v-icon>mdi-lightning-bolt</v-icon>
       </v-btn>
-      <v-btn>
-        <span v-if="!creature.settings.hideSpellsTab">Spells</span>
+      <v-btn v-if="!creature.settings.hideSpellsTab">
+        <span>Spells</span>
         <v-icon>mdi-fire</v-icon>
       </v-btn>
       <v-btn>
