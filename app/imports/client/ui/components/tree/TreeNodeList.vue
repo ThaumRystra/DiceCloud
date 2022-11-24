@@ -4,7 +4,6 @@
     v-model="displayedChildren"
     class="drag-area"
     :group="group"
-    :move="move"
     :animation="200"
     ghost-class="ghost"
     draggable=".item"
@@ -27,7 +26,6 @@
       @selected="e => $emit('selected', e)"
       @reordered="e => $emit('reordered', e)"
       @reorganized="e => $emit('reorganized', e)"
-      @dragstart.native="e => e.dataTransfer.setData('cow', child.node && child.node.name)"
     />
   </draggable>
 </template>

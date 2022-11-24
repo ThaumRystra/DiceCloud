@@ -40,12 +40,9 @@
       <shared-icon :model="model" />
     </v-list-item-action>
     <v-list-item-action v-if="!selection && !dense">
-      <v-icon
-        style="height: 100%; width: 40px; cursor: move;"
-        class="handle"
-      >
-        mdi-drag
-      </v-icon>
+      <drag-handle
+        style="height: 100%; width: 40px;"
+      />
     </v-list-item-action>
   </v-list-item>
 </template>

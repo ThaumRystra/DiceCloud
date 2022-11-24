@@ -33,13 +33,10 @@
       />
     </v-list-item-action>
     <v-list-item-action class="drag-handle">
-      <v-icon
+      <drag-handle 
         :disabled="context.editPermission === false"
         style="height: 100%; width: 40px; cursor: move;"
-        class="handle"
-      >
-        mdi-drag
-      </v-icon>
+      />
     </v-list-item-action>
   </v-list-item>
 </template>

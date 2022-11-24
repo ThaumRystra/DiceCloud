@@ -30,14 +30,12 @@
         :class="{'ml-4': startExpanded}"
         style="flex-grow: 0;"
       >
-        <v-icon
+        <drag-handle
           v-if="organize"
-          class="handle mr-2"
+          class="mr-2"
           :class="selected && 'primary--text'"
           :disabled="expanded"
-        >
-          mdi-drag
-        </v-icon>
+        />
         <!--{{node && node.order}}-->
         <tree-node-view
           :model="node"
@@ -175,10 +173,6 @@ export default {
   box-shadow: -2px 0px 0px 0px #808080;
   margin-left: 0;
   min-height: 32px;
-}
-
-.handle {
-  cursor: move;
 }
 
 .empty .drag-area {

@@ -145,7 +145,7 @@ if (Meteor.isClient) {
 } else if (Meteor.isServer) {
   Meteor.startup(() => {
     if (!Docs.findOne()) {
-      Assets.getText('docs/defaultDocs.json', (string) => {
+      Assets.getText('docs/defaultDocs.json', (error, string) => {
         const docs = JSON.parse(string)
         docs.forEach(doc => Docs.insert(doc));
       });

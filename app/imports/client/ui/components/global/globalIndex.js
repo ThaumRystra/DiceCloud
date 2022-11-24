@@ -1,6 +1,7 @@
 import Vue from 'vue';
 // Global components
 import DatePicker from '/imports/client/ui/components/global/DatePicker.vue';
+import DragHandle from '/imports/client/ui/components/global/DragHandle.vue';
 import IconPicker from '/imports/client/ui/components/global/IconPicker.vue';
 import TextField from '/imports/client/ui/components/global/TextField.vue';
 import TextArea from '/imports/client/ui/components/global/TextArea.vue';
@@ -13,6 +14,7 @@ import SvgIcon from '/imports/client/ui/components/global/SvgIcon.vue';
 import SmartSlider from '/imports/client/ui/components/global/SmartSlider.vue';
 
 Vue.component('DatePicker', DatePicker);
+Vue.component('DragHandle', DragHandle);
 Vue.component('IconPicker', IconPicker);
 Vue.component('TextField', TextField);
 Vue.component('TextArea', TextArea);
