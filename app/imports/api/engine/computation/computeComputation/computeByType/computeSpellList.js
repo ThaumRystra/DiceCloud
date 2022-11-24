@@ -2,5 +2,9 @@ export default function computeSpelllist(computation, node) {
   const prop = node.data;
 
   const ability = computation.scope[prop.ability];
-  prop.abilityMod = ability?.modifier || 0;
+  if (Number.isFinite(ability?.modifier)) {
+    prop.abilityMod = ability.modifier;
+  } else if (Number.isFinite(ability?.value)) {
+    prop.abilityMod = ability.value;
+  }
 }

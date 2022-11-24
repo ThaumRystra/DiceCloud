@@ -4,7 +4,9 @@ import { each, clone } from 'lodash';
 import { Random } from 'meteor/random';
 import { FilesCollection } from 'meteor/ostrio:files';
 import stream from 'stream';
-import S3 from 'aws-sdk/clients/s3';
+if (Meteor.isServer) {
+  import S3 from '/imports/api/files/server/s3.js';
+}
 
 /* See fs-extra and graceful-fs NPM packages */
 /* For better i/o performance */
@@ -21,7 +23,7 @@ Meteor.settings.useS3 = !!(
   s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.endpoint
 );
 
-const bound  = Meteor.bindEnvironment((callback) => {
+const bound = Meteor.bindEnvironment((callback) => {
   return callback();
 });
 
@@ -43,14 +45,14 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     }
   });
 
-  createS3FilesCollection = function({
+  createS3FilesCollection = function ({
     collectionName,
     storagePath,
     onBeforeUpload,
     onAfterUpload,
-    debug = !Meteor.isProduction,
+    debug,// = !Meteor.isProduction,
     allowClientCode = false,
-  }){
+  }) {
     const collection = new FilesCollection({
       collectionName,
       storagePath,
@@ -58,7 +60,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
       onAfterUpload(fileRef) {
         // Call the provided afterUpload hook first
         onAfterUpload?.(fileRef);
-        
+
         // Start moving files to AWS:S3
         // after fully received by the Meteor server
 
@@ -128,19 +130,19 @@ if (Meteor.isServer && Meteor.settings.useS3) {
           };
 
           if (http.request.headers.range) {
-            const vRef  = fileRef.versions[version];
-            let range   = clone(http.request.headers.range);
+            const vRef = fileRef.versions[version];
+            let range = clone(http.request.headers.range);
             const array = range.split(/bytes=([0-9]*)-([0-9]*)/);
             const start = parseInt(array[1]);
-            let end     = parseInt(array[2]);
+            let end = parseInt(array[2]);
             if (isNaN(end)) {
               // Request data from AWS:S3 by small chunks
-              end       = (start + this.chunkSize) - 1;
+              end = (start + this.chunkSize) - 1;
               if (end >= vRef.size) {
-                end     = vRef.size - 1;
+                end = vRef.size - 1;
               }
             }
-            opts.Range   = `bytes=${start}-${end}`;
+            opts.Range = `bytes=${start}-${end}`;
             http.request.headers.range = `bytes=${start}-${end}`;
           }
 
@@ -198,9 +200,9 @@ if (Meteor.isServer && Meteor.settings.useS3) {
       _origRemove.call(this, search);
     };
 
-    collection.readJSONFile = async function(file){
+    collection.readJSONFile = async function (file) {
       // If there is the pipepath, use s3 to get the file
-      if (file?.versions?.original?.meta?.pipePath){
+      if (file?.versions?.original?.meta?.pipePath) {
         const path = file.versions.original.meta.pipePath;
         const data = await s3.getObject({
           Bucket: s3Conf.bucket,
@@ -217,14 +219,14 @@ if (Meteor.isServer && Meteor.settings.useS3) {
     return collection;
   }
 } else {
-  createS3FilesCollection = function({
+  createS3FilesCollection = function ({
     collectionName,
     storagePath,
     onBeforeUpload,
     onAfterUpload,
-    debug = !Meteor.isProduction,
+    debug,// = !Meteor.isProduction,
     allowClientCode = false,
-  }){
+  }) {
     const collection = new FilesCollection({
       collectionName,
       storagePath,
@@ -236,7 +238,7 @@ if (Meteor.isServer && Meteor.settings.useS3) {
 
     if (Meteor.isServer) {
       // Use the normal file system to read files
-      collection.readJSONFile = async function(file){
+      collection.readJSONFile = async function (file) {
         const fileString = await fsp.readFile(file.path, 'utf8');
         return JSON.parse(fileString);
       };

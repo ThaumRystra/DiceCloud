@@ -1,35 +1,17 @@
-import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
+import Docs from '/imports/api/docs/Docs.js';
 
-
-// Manual doc paths
-const docPaths = [
-  'computed-fields',
-  'inline-calculations',
-  'dependency-loops',
-  'docs',
-  'tags',
-  'walkthroughs/create-a-class',
-];
-const docs = new Map();
-docPaths.forEach(path => {
-  docs.set(path, Assets.getText(`docs/${path}.md`))
-});
-
-// Doc paths for properties
-propsByDocsPath.forEach(prop => {
-  docs.set(prop.docsPath, Assets.getText(`docs/${prop.docsPath}.md`));
-});
-
-Meteor.publish('docs', function (path) {
-  if (!path) {
-    docs.forEach((text, path) => {
-      this.added('docs', path, { text });
+Meteor.publish('docs', function () {
+  const filter = { published: true, removed: { $ne: true } };
+  if (this.userId) {
+    const user = Meteor.users.findOne(this.userId, {
+      fields: {
+        'roles': 1,
+      }
     });
-  } else {
-    const text = docs.get(path);
-    if (text) {
-      this.added('docs', path, { text });
+    if (user?.roles?.includes('docsWriter')) {
+      delete filter.published;
+      delete filter.removed
     }
   }
-  this.ready();
+  return Docs.find(filter);
 });

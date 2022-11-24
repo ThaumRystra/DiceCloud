@@ -9,6 +9,7 @@ import {
   getPropertiesOfType
 } from '/imports/api/engine/loadCreatures.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
@@ -173,14 +174,15 @@ function applyDamageMultipliers({ target, damage, damageProp, logValue }) {
 function multiplierAppliesTo(damageProp, multiplierType) {
   return multiplier => {
     // Apply the default 'ignore x' tags
-    if (includes(damageProp.tags, `ignore ${multiplierType}`)) return false;
+    const effectiveTags = getEffectivePropTags(damageProp);
+    if (includes(effectiveTags, `ignore ${multiplierType}`)) return false;
 
     const hasRequiredTags = difference(
-      multiplier.includeTags, damageProp.tags
+      multiplier.includeTags, effectiveTags
     ).length === 0;
 
     const hasNoExcludedTags = intersection(
-      multiplier.excludeTags, damageProp.tags
+      multiplier.excludeTags, effectiveTags
     ).length === 0;
 
     return hasRequiredTags && hasNoExcludedTags;

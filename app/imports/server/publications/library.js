@@ -18,6 +18,8 @@ const LIBRARY_NODE_TREE_FIELDS = {
   slotFillerCondition: 1,
   removed: 1,
   removedAt: 1,
+  // Actions
+  actionType: 1,
   // SlotFillers
   slotQuantityFilled: 1,
   slotFillerType: 1,
@@ -47,7 +49,7 @@ const LIBRARY_NODE_TREE_FIELDS = {
 }
 
 export { LIBRARY_NODE_TREE_FIELDS };
-  
+
 Meteor.publish('libraryCollection', function (libraryCollectionId) {
   this.autorun(function () {
     let userId = this.userId;
@@ -63,10 +65,10 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
         ]
       });
       const libraryCollection = libraryCollectionCursor.fetch()[0];
-      if (!libraryCollection) return [ libraryCollectionCursor ];
+      if (!libraryCollection) return [libraryCollectionCursor];
       this.autorun(function () {
         const libraryCursor = Libraries.find({
-          _id: {$in: libraryCollection.libraries},
+          _id: { $in: libraryCollection.libraries },
           $or: [
             { owner: userId },
             { writers: userId },
@@ -76,7 +78,7 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
         }, {
           sort: { name: 1 }
         });
-        return [ libraryCollectionCursor, libraryCursor ];
+        return [libraryCollectionCursor, libraryCursor];
       });
     });
   })
@@ -135,14 +137,14 @@ Meteor.publish('libraries', function () {
   });
 });
 
-Meteor.publish('library', function(libraryId){
+Meteor.publish('library', function (libraryId) {
   if (!libraryId) return [];
-  libraryIdSchema.validate({libraryId});
-  this.autorun(function (){
+  libraryIdSchema.validate({ libraryId });
+  this.autorun(function () {
     let userId = this.userId;
     let library = Libraries.findOne(libraryId);
     try { assertViewPermission(library, userId) }
-    catch(e){
+    catch (e) {
       return this.error(e);
     }
     return Libraries.find({
@@ -152,20 +154,20 @@ Meteor.publish('library', function(libraryId){
 });
 
 let libraryIdSchema = new SimpleSchema({
-  libraryId:{
+  libraryId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
 });
 
-Meteor.publish('libraryNodes', function(libraryId){
+Meteor.publish('libraryNodes', function (libraryId) {
   if (!libraryId) return [];
-  libraryIdSchema.validate({libraryId});
-  this.autorun(function (){
+  libraryIdSchema.validate({ libraryId });
+  this.autorun(function () {
     let userId = this.userId;
     let library = Libraries.findOne(libraryId);
     try { assertViewPermission(library, userId) }
-    catch(e){
+    catch (e) {
       return this.error(e);
     }
     return [
@@ -191,54 +193,54 @@ Meteor.publish('libraryNode', function (libraryNodeId) {
   nodeIdSchema.validate({ libraryNodeId });
   this.autorun(function () {
     const userId = this.userId;
-    const nodeCursor = LibraryNodes.find({_id: libraryNodeId});
+    const nodeCursor = LibraryNodes.find({ _id: libraryNodeId });
     let node = nodeCursor.fetch()[0];
     try { assertDocViewPermission(node, userId) }
     catch (e) {
       return this.error(e);
     }
-    return [ nodeCursor ];
+    return [nodeCursor];
   });
 });
 
-Meteor.publish('softRemovedLibraryNodes', function(libraryId){
+Meteor.publish('softRemovedLibraryNodes', function (libraryId) {
   if (!libraryId) return [];
-  libraryIdSchema.validate({libraryId});
-  this.autorun(function (){
+  libraryIdSchema.validate({ libraryId });
+  this.autorun(function () {
     let userId = this.userId;
     let library = Libraries.findOne(libraryId);
     try { assertViewPermission(library, userId) }
-    catch(e){
+    catch (e) {
       return this.error(e);
     }
     return [
       LibraryNodes.find({
         'ancestors.0.id': libraryId,
         removed: true,
-        removedWith: {$exists: false},
+        removedWith: { $exists: false },
       }, {
-        sort: {order: 1},
+        sort: { order: 1 },
       }),
     ];
   });
 });
 
-Meteor.publish('descendantLibraryNodes', function(nodeId){
+Meteor.publish('descendantLibraryNodes', function (nodeId) {
   let node = LibraryNodes.findOne(nodeId);
   let libraryId = node?.ancestors[0]?.id;
   if (!libraryId) return [];
-  this.autorun(function (){
+  this.autorun(function () {
     let userId = this.userId;
     let library = Libraries.findOne(libraryId);
     try { assertViewPermission(library, userId) }
-    catch(e){
+    catch (e) {
       return this.error(e);
     }
     return [
       LibraryNodes.find({
         'ancestors.id': nodeId,
       }, {
-        sort: {order: 1},
+        sort: { order: 1 },
       }),
     ];
   });

@@ -1,6 +1,6 @@
 # Skills
 
-Skills represent things the creature can be proficient in. Skills can have their values or behavior modifier by [effects](/docs/property/effect), and their proficiencies modified by [proficiencies](/docs/property/proficiency).
+Skills represent things the creature can be proficient in. Skills can have their values or behavior modified by [effects](/docs/property/effect), and their proficiencies modified by [proficiencies](/docs/property/proficiency).
 
 ---
 

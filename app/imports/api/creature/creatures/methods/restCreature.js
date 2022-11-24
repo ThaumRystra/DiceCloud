@@ -6,6 +6,7 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { union } from 'lodash';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 
 const restCreature = new ValidatedMethod({
   name: 'creature.methods.rest',
@@ -84,22 +85,19 @@ export function resetProperties(creatureId, resetFilter, actionContext) {
     type: 'attribute',
     damage: { $ne: 0 },
   }
-  CreatureProperties.find(attributeFilter, {
-    fields: { name: 1, damage: 1 }
-  }).forEach(prop => {
-    actionContext.addLog({
-      name: prop.name,
-      value: prop.damage >= 0 ? `Restored ${prop.damage}` : `Removed ${-prop.damage}`
+  CreatureProperties.find(attributeFilter).forEach(prop => {
+    damagePropertyWork({
+      prop,
+      operation: 'increment',
+      value: -prop.damage,
+      actionContext,
+      logFunction(increment) {
+        actionContext.addLog({
+          name: prop.name,
+          value: increment < 0 ? `Restored ${-increment}` : `Removed ${-increment}`
+        });
+      }
     });
-  });
-  CreatureProperties.update(attributeFilter, {
-    $set: {
-      damage: 0,
-      dirty: true,
-    }
-  }, {
-    selector: { type: 'attribute' },
-    multi: true,
   });
   // Update all action-like properties' usesUsed
   const actionFilter = {
@@ -135,13 +133,6 @@ function resetHitDice(creatureId, actionContext) {
     attributeType: 'hitDice',
     removed: { $ne: true },
     inactive: { $ne: true },
-  }, {
-    fields: {
-      name: 1,
-      hitDiceSize: 1,
-      damage: 1,
-      total: 1,
-    }
   }).fetch();
   // Use a collator to do sorting in natural order
   let collator = new Intl.Collator('en', {
@@ -155,24 +146,23 @@ function resetHitDice(creatureId, actionContext) {
   let resetMultiplier = actionContext.creature.settings.hitDiceResetMultiplier || 0.5;
   let recoverableHd = Math.max(Math.floor(totalHd * resetMultiplier), 1);
   // recover each hit dice in turn until the recoverable amount is used up
-  let amountToRecover, resultingDamage;
+  let amountToRecover;
   hitDice.forEach(hd => {
     if (!recoverableHd) return;
-    amountToRecover = Math.min(recoverableHd, hd.damage || 0);
+    amountToRecover = Math.min(recoverableHd, hd.damage ?? 0);
     if (!amountToRecover) return;
     recoverableHd -= amountToRecover;
-    resultingDamage = hd.damage - amountToRecover;
-    actionContext.addLog({
-      name: hd.name,
-      value: amountToRecover >= 0 ? `Restored ${amountToRecover} hit dice` : `Removed ${-amountToRecover} hit dice`
-    });
-    CreatureProperties.update(hd._id, {
-      $set: {
-        damage: resultingDamage,
-        dirty: true,
+    damagePropertyWork({
+      prop: hd,
+      operation: 'increment',
+      value: -amountToRecover,
+      actionContext,
+      logFunction(increment) {
+        actionContext.addLog({
+          name: hd.name,
+          value: increment < 0 ? `Restored ${-increment} hit dice` : `Removed ${increment} hit dice`
+        });
       }
-    }, {
-      selector: { type: 'attribute' },
     });
   });
 }

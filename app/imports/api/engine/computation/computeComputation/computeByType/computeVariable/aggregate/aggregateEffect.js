@@ -45,7 +45,8 @@ export default function aggregateEffect({ node, linkedNode, link }) {
   // get a shorter reference to the aggregator document
   const aggregator = node.data.effectAggregator;
   // Get the result of the effect
-  const result = linkedNode.data.amount?.value;
+  let result = linkedNode.data.amount?.value;
+  if (typeof result !== 'number') result = undefined;
 
   // Aggregate the effect based on its operation
   switch (linkedNode.data.operation) {

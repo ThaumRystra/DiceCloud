@@ -2,7 +2,7 @@ import { createS3FilesCollection } from '/imports/api/files/s3FileStorage.js';
 
 const UserImages = createS3FilesCollection({
   collectionName: 'userImages',
-  storagePath: Meteor.isDevelopment ? '/DiceCloud/userImages/' : 'assets/app/userImages',
+  storagePath: Meteor.isDevelopment ? '../../../../../fileStorage/userImages' : 'assets/app/userImages',
   onBeforeUpload(file) {
     // Allow upload files under 10MB
     if (file.size > 10485760) {

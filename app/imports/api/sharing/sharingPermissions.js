@@ -1,4 +1,4 @@
-import { _ } from 'meteor/underscore';
+import { includes } from 'lodash';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 
 function assertIdValid(userId) {
@@ -50,7 +50,7 @@ export function assertEditPermission(doc, userId) {
   // Ensure the user is authorized for this specific document
   if (
     doc.owner === userId ||
-    _.contains(doc.writers, userId)
+    includes(doc.writers, userId)
   ) {
     return true;
   } else {
@@ -82,11 +82,11 @@ export function assertCopyPermission(doc, userId) {
   // Ensure the user is authorized for this specific document
   if (
     doc.owner === userId ||
-    _.contains(doc.writers, userId)
+    includes(doc.writers, userId)
   ) {
     return true;
   } else if (
-    (_.contains(doc.readers, userId) || doc.public) &&
+    (includes(doc.readers, userId) || doc.public) &&
     doc.readersCanCopy
   ) {
     return true;
@@ -134,8 +134,8 @@ export function assertViewPermission(doc, userId) {
 
   if (
     doc.owner === userId ||
-    _.contains(doc.readers, userId) ||
-    _.contains(doc.writers, userId)
+    includes(doc.readers, userId) ||
+    includes(doc.writers, userId)
   ) {
     return true;
   } else {

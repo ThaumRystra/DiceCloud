@@ -162,6 +162,12 @@ const ComputedOnlyActionSchema = createPropertySchema({
     optional: true,
     removeBeforeCompute: true,
   },
+  // Denormalised tag if event is overridden by one with the same variable name
+  overridden: {
+    type: Boolean,
+    optional: true,
+    removeBeforeCompute: true,
+  },
   // Resources
   resources: {
     type: Object,

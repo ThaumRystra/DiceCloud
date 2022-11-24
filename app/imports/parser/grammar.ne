@@ -7,8 +7,8 @@
   const lexer = moo.compile({
     number: /[0-9]+(?:\.[0-9]+)?/,
     string: {
-      match: /'.*?'|".*?"/,
-      value: s => s.slice(1, -1),
+      match: /'[^']*'|"[^"]*"/,
+      value: s => s.slice(1, -1).replace('\\n', '\n'),
     },
     name: {
       match: /[a-zA-Z_#$]*[a-ce-zA-Z_#$][a-zA-Z0-9_#$]*/,

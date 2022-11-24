@@ -17,7 +17,7 @@ import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
 var snackbar;
 if (Meteor.isClient) {
   snackbar = require(
-    '/imports/ui/components/snackbars/SnackbarQueue.js'
+    '/imports/client/ui/components/snackbars/SnackbarQueue.js'
   ).snackbar
 }
 

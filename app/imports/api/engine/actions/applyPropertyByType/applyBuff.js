@@ -14,6 +14,7 @@ import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
 
 export default function applyBuff(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
@@ -46,12 +47,17 @@ export default function applyBuff(node, actionContext) {
     copyNodeListToTarget(propList, target, oldParent);
 
     //Log the buff
+    let logValue = prop.description?.value
+    if (prop.description?.text) {
+      recalculateInlineCalculations(prop.description, actionContext);
+      logValue = prop.description?.value;
+    }
     if ((prop.name || prop.description?.value) && !prop.silent) {
       if (target._id === actionContext.creature._id) {
         // Targeting self
         actionContext.addLog({
           name: prop.name,
-          value: prop.description?.value,
+          value: logValue,
         });
       } else {
         // Targeting other
@@ -60,7 +66,7 @@ export default function applyBuff(node, actionContext) {
             creatureId: target._id,
             content: [{
               name: prop.name,
-              value: prop.description?.value,
+              value: logValue,
             }],
           }
         });
