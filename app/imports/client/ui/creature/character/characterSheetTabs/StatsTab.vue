@@ -428,7 +428,7 @@ const propertyHandlers = {
     let skipChildren;
     let propPath = null;
     if (prop.hideStatsGroup) {
-      return { skipChildren: true}
+      skipChildren = true;
     }
     if (prop.tab === 'stats') {
       propPath = ['folder', prop.location]
@@ -546,7 +546,7 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: 1 } });
+      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } });
       const forest = nodeArrayToTree(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
