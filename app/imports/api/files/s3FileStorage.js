@@ -33,7 +33,7 @@ let createS3FilesCollection;
 /* This is the best practice for app security */
 if (Meteor.isServer && Meteor.settings.useS3) {
   // Create a new S3 object
-  const s3 = new S3({
+  const s3 = S3({
     accessKeyId: s3Conf.key,
     secretAccessKey: s3Conf.secret,
     endpoint: s3Conf.endpoint,
