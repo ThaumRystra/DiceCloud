@@ -34,7 +34,7 @@
 </template>
 
 <script lang="js">
-import LogEntry from '/imports/ui/log/LogEntry.vue';
+import LogEntry from '/imports/client/ui/log/LogEntry.vue';
 import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
 

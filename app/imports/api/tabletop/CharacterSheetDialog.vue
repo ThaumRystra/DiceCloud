@@ -34,8 +34,8 @@
 </template>
 
 <script lang="js">
-import DialogBase from '/imports/ui/dialogStack/DialogBase.vue';
-import CharacterSheet from '/imports/ui/creature/character/CharacterSheet.vue';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import CharacterSheet from '/imports/client/ui/creature/character/CharacterSheet.vue';
 
 export default {
 	components: {

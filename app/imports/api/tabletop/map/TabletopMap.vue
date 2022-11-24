@@ -10,7 +10,7 @@
 <script>
 import * as THREE from 'three';
 import { Tracker } from 'meteor/tracker'
-import { MapControls } from '/imports/ui/tabletop/three/OrbitControls.js';
+import { MapControls } from '/imports/client/ui/tabletop/three/OrbitControls.js';
 
 const maps = [
   {

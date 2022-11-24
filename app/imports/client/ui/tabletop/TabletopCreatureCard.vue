@@ -35,7 +35,7 @@
 </template>
 
 <script lang="js">
-import CardHighlight from '/imports/ui/components/CardHighlight.vue';
+import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 export default {
   components: {
     CardHighlight,

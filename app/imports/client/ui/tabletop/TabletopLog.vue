@@ -10,7 +10,7 @@
 <script lang="js">
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import insertTabletopLog from '/imports/api/creature/log/CreatureLogs.js';
-import LogComponent from '/imports/ui/log/LogComponent.vue';
+import LogComponent from '/imports/client/ui/log/LogComponent.vue';
 
 export default {
   components: {
