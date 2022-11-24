@@ -165,7 +165,7 @@ function rollAttack(attack, scope) {
   }
   scope['$attackDiceRoll'] = { value };
   const result = value + attack.value;
-  scope['$attackRoll'] = { result };
+  scope['$attackRoll'] = { value: result };
   const { criticalHit, criticalMiss } = applyCrits(value, scope);
   return { resultPrefix, result, value, criticalHit, criticalMiss };
 }
