@@ -1,8 +1,14 @@
-import { createS3FilesCollection } from '/imports/api/files/s3FileStorage.js';
+
 import SimpleSchema from 'simpl-schema';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
 import { CreaturePropertySchema } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { CreatureSchema } from '/imports/api/creature/creatures/Creatures.js';
+let createS3FilesCollection;
+if (Meteor.isServer) {
+  createS3FilesCollection = require('/imports/api/files/server/s3FileStorage.js').createS3FilesCollection
+} else {
+  createS3FilesCollection = require('/imports/api/files/client/s3FileStorage.js').createS3FilesCollection
+}
 
 const ArchiveCreatureFiles = createS3FilesCollection({
   collectionName: 'archiveCreatureFiles',
