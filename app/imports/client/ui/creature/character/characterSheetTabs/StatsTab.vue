@@ -161,13 +161,13 @@
       </div>
 
       <div
-        v-if="properties.hitDice && properties.hitDice.length"
+        v-if="properties.attribute.hitDice && properties.attribute.hitDice.length"
         class="hit-dice"
       >
         <v-card>
           <v-list>
             <v-subheader>Hit Dice</v-subheader>
-            <template v-for="(hitDie, index) in hitDice">
+            <template v-for="(hitDie, index) in properties.attribute.hitDice">
               <v-divider
                 v-if="index !== 0"
                 :key="hitDie._id + 'divider'"
