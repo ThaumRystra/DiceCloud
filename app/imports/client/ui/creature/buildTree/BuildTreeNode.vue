@@ -4,7 +4,7 @@
     :class="{
       'empty': !hasChildren,
     }"
-    :data-id="`build-tree-node-${node._id}`"
+    :data-id="`tree-node-${node._id}`"
   >
     <div
       class="layout align-center justify-start tree-node-title"

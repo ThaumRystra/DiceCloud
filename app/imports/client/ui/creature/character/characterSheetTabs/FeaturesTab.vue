@@ -56,8 +56,19 @@ export default {
   },
   meteor: {
     features() {
-      return CreatureProperties.find({
+      const folderIds = CreatureProperties.find({
         'ancestors.id': this.creatureId,
+        type: 'folder',
+        hideStatsGroup: true,
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, { fields: { _id: 1 } }).map(folder => folder._id);
+      
+      return CreatureProperties.find({
+        'ancestors.id': {
+          $eq: this.creatureId,
+          $nin: folderIds,
+        },
         type: 'feature',
         removed: { $ne: true },
         inactive: { $ne: true },

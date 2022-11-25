@@ -1,5 +1,8 @@
 <template>
-  <column-layout wide-columns class="slots-to-fill">
+  <column-layout
+    wide-columns
+    class="slots-to-fill"
+  >
     <v-fade-transition
       group
       leave-absolute
@@ -39,7 +42,6 @@ import SlotCard from '/imports/client/ui/creature/slots/SlotCard.vue';
 import PointBuyCard from '/imports/client/ui/properties/components/pointBuy/PointBuyCard.vue';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 
 export default {
@@ -64,31 +66,6 @@ export default {
         }
       });
     },
-    fillSlot(slotId){
-      this.$store.commit('pushDialogStack', {
-        component: 'slot-fill-dialog',
-        elementId: `slot-card-${slotId}`,
-        data: {
-          slotId,
-          creatureId: this.context.creatureId,
-        },
-        callback(nodeIds){
-          if (!nodeIds || !nodeIds.length) return;
-          insertPropertyFromLibraryNode.call({
-            nodeIds,
-            parentRef: {
-              'id': slotId,
-              'collection': 'creatureProperties',
-            },
-          }, error => {
-            if (error){
-              console.error(error);
-              snackbar({text: error.reason || error.message || error.toString()});
-            }
-          });
-        }
-      });
-    },
     editPointBuy(_id){
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
@@ -101,10 +78,21 @@ export default {
     },
   },
   meteor: {
-    slots(){
-      return CreatureProperties.find({
-        type: 'propertySlot',
+    slots() {
+      const folderIds = CreatureProperties.find({
         'ancestors.id': this.context.creatureId,
+        type: 'folder',
+        hideStatsGroup: true,
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, { fields: { _id: 1 } }).map(folder => folder._id);
+
+      return CreatureProperties.find({
+        'ancestors.id': {
+          $eq: this.context.creatureId,
+          $nin: folderIds,
+        },
+        type: 'propertySlot',
         ignored: { $ne: true },
         $and: [
           { 
