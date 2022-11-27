@@ -30,7 +30,7 @@
       <div
         v-else
         key="character-tabs"
-        class="fill-height"
+        class="card-background"
       >
         <v-tabs-items
           :key=" '' +
@@ -38,7 +38,6 @@
             creature.settings.showTreeTab
           "
           :value="$store.getters.tabById($route.params.id)"
-          class="card-background"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: $route.params.id, tab: e}
@@ -69,6 +68,7 @@
             <tree-tab :creature-id="creatureId" />
           </v-tab-item>
         </v-tabs-items>
+        <character-sheet-initiative />
       </div>
     </v-fade-transition>
     <character-sheet-fab
@@ -144,6 +144,7 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
+import CharacterSheetInitiative from '/imports/client/ui/creature/character/CharacterSheetInitiative.vue';
 
 export default {
   components: {
@@ -156,6 +157,7 @@ export default {
     BuildTab,
     TreeTab,
     CharacterSheetFab,
+    CharacterSheetInitiative,
   },
   props: {
     creatureId: {
@@ -248,6 +250,7 @@ export default {
 <style>
 .character-sheet .v-window-item {
   min-height: calc(100vh - 96px);
+  padding-bottom: 70px;
   overflow: hidden;
 }
 </style>
