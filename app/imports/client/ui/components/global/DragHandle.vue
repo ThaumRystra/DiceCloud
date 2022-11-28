@@ -2,8 +2,8 @@
   <v-icon
     class="handle"
     v-bind="$attrs"
-    @click.stop="() => { }"
-    @touchstart.native.stop="() => { }"
+    @click.native="e => { }"
+    @touchstart.native.stop="e => { }"
     @touchend.native="portalEvent"
   >
     mdi-drag
