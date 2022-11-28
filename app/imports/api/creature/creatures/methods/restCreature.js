@@ -83,13 +83,13 @@ export function resetProperties(creatureId, resetFilter, actionContext) {
   const attributeFilter = {
     ...filter,
     type: 'attribute',
-    damage: { $ne: 0 },
+    damage: { $nin: [0, undefined] },
   }
   CreatureProperties.find(attributeFilter).forEach(prop => {
     damagePropertyWork({
       prop,
       operation: 'increment',
-      value: -prop.damage,
+      value: -prop.damage ?? 0,
       actionContext,
       logFunction(increment) {
         actionContext.addLog({
