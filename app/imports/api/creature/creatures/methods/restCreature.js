@@ -105,7 +105,7 @@ export function resetProperties(creatureId, resetFilter, actionContext) {
     type: {
       $in: ['action', 'spell']
     },
-    usesUsed: { $ne: 0 },
+    usesUsed: { $nin: [0, undefined] },
   };
   CreatureProperties.find(actionFilter, {
     fields: { name: 1, usesUsed: 1 }
