@@ -5,10 +5,12 @@
   <v-list-item
     v-bind="$attrs"
     :class="isSelected && 'primary--text v-list-item--active'"
+    :dense="dense"
     v-on="selection ? { click() {$emit('click')} } : {}"
   >
     <v-list-item-avatar
       :color="isSelected ? 'red darken-1' : model.color || 'grey'"
+      :size="dense ? 30 : undefined"
       class="white--text"
       style="transition: background 0.3s;"
     >
