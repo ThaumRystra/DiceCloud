@@ -2,8 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import dialogStackStore from '/imports/client/ui/dialogStack/dialogStackStore.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-const tabs = ['stats', 'features', 'actions', 'spells', 'inventory', 'journal', 'build', 'tree'];
-const tabsWithoutSpells = ['stats', 'features', 'actions', 'inventory', 'journal', 'build', 'tree'];
+const tabs = ['stats', 'actions', 'spells', 'inventory', 'features', 'journal', 'build', 'tree'];
+const tabsWithoutSpells = ['stats', 'actions', 'inventory', 'features', 'journal', 'build', 'tree'];
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -50,6 +50,19 @@ const store = new Vuex.Store({
       document.title = value;
     },
     setTabForCharacterSheet(state, { tab, id }) {
+      // Convert tab names to tab numbers
+      if (typeof tab === 'string') {
+        const creature = Creatures.findOne(id);
+        if (creature?.settings?.hideSpellsTab) {
+          tab = tabsWithoutSpells.indexOf(tab);
+        } else {
+          tab = tabs.indexOf(tab);
+        }
+        if (!(tab > -1)) {
+          throw 'Could not find requested tab';
+        }
+        console.log('resolved: ', tab);
+      }
       Vue.set(state.characterSheetTabs, id, tab);
     },
     setShowDetailsDialog(state, value) {

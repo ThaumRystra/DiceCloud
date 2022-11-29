@@ -102,9 +102,6 @@
             Stats
           </v-tab>
           <v-tab>
-            Features
-          </v-tab>
-          <v-tab>
             Actions
           </v-tab>
           <v-tab v-if="!creature.settings.hideSpellsTab">
@@ -112,6 +109,9 @@
           </v-tab>
           <v-tab>
             Inventory
+          </v-tab>
+          <v-tab>
+            Features
           </v-tab>
           <v-tab>
             Journal
