@@ -50,6 +50,19 @@ const store = new Vuex.Store({
       document.title = value;
     },
     setTabForCharacterSheet(state, { tab, id }) {
+      // Convert tab names to tab numbers
+      if (typeof tab === 'string') {
+        const creature = Creatures.findOne(id);
+        if (creature?.settings?.hideSpellsTab) {
+          tab = tabsWithoutSpells.indexOf(tab);
+        } else {
+          tab = tabs.indexOf(tab);
+        }
+        if (!(tab > -1)) {
+          throw 'Could not find requested tab';
+        }
+        console.log('resolved: ', tab);
+      }
       Vue.set(state.characterSheetTabs, id, tab);
     },
     setShowDetailsDialog(state, value) {
