@@ -1,0 +1,37 @@
+html {
+  --scrollbarBG: #f0f0f0;
+  --thumbBG: #cdcdcd;
+  scrollbar-gutter: stable;
+  background-color: var(--scrollbarBG);
+}
+
+html:has(#app.theme--dark) {
+  --scrollbarBG: #212121;
+  --thumbBG: #404040;
+}
+
+#app.theme--dark {
+  --scrollbarBG: #212121;
+  --thumbBG: #404040;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbarBG);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: rgba(0, 0, 0, 0);
+}

@@ -63,21 +63,14 @@
     },
     watch: {
       dialogs(newDialogs) {
-        let el = document.documentElement;
+        const el = document.documentElement;
         if (newDialogs.length) {
           this.top = el.scrollTop;
           if (el.scrollHeight > el.clientHeight){
-            el.style.position = 'fixed';
-            el.style.top = `${-this.top}px`;
-            el.style.left = 0;
-            el.style.right = 0;
-            el.style.overflowY = 'scroll';
+            el.style.overflowY = 'hidden';
+            el.scrollTop = this.top;
           }
         } else {
-          el.style.position = null;
-          el.style.top = null;
-          el.style.left = null;
-          el.style.right = null;
           el.style.overflowY = null;
           el.scrollTop = this.top;
         }

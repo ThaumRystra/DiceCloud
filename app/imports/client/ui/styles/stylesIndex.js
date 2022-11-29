@@ -1,3 +1,4 @@
+import './body.css';
 import './cardColors.css';
 import './cardTitles.css';
 import './centeredInputs.css';
