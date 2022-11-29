@@ -11,7 +11,10 @@
         Sign in
       </v-btn>
     </v-layout>
-    <v-list>
+    <v-list
+      nav
+      class="links"
+    >
       <v-list-item v-if="signedIn">
         <v-list-item-content>
           <v-list-item-title>
@@ -138,3 +141,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.links .v-list-item:not(:last-child):not(:only-child) {
+  margin-bottom: 4px;
+}
+</style>

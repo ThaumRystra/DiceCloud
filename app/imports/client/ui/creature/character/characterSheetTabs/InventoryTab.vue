@@ -145,6 +145,7 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': this.creatureId,
         type: 'folder',
+        groupStats: true,
         hideStatsGroup: true,
         removed: { $ne: true },
         inactive: { $ne: true },

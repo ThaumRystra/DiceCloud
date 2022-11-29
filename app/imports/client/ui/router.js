@@ -189,7 +189,9 @@ RouterFactory.configure(router => {
     meta: {
       title: 'Print Character Sheet',
     },
-  }, {
+  },
+  /* Not ready for prime time <3
+  {
     path: '/tabletops',
     name: 'tabletops',
     component: Tabletops,
@@ -203,7 +205,9 @@ RouterFactory.configure(router => {
       rightDrawer: TabletopRightDrawer,
     },
     beforeEnter: ensureLoggedIn,
-  }, {
+  },
+  */
+  {
     path: '/friends',
     components: {
       default: NotImplemented,

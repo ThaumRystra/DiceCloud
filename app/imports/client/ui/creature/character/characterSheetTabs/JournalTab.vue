@@ -63,6 +63,7 @@ export default {
       const folderIds = CreatureProperties.find({
         'ancestors.id': this.creatureId,
         type: 'folder',
+        groupStats: true,
         hideStatsGroup: true,
         removed: { $ne: true },
         inactive: { $ne: true },
