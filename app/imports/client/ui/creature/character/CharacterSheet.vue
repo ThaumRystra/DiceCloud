@@ -48,9 +48,6 @@
             <stats-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
-            <features-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
             <actions-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item v-if="!creature.settings.hideSpellsTab">
@@ -58,6 +55,9 @@
           </v-tab-item>
           <v-tab-item>
             <inventory-tab :creature-id="creatureId" />
+          </v-tab-item>
+          <v-tab-item>
+            <features-tab :creature-id="creatureId" />
           </v-tab-item>
           <v-tab-item>
             <character-tab :creature-id="creatureId" />
@@ -97,10 +97,6 @@
         <v-icon>mdi-chart-box</v-icon>
       </v-btn>
       <v-btn>
-        <span>Features</span>
-        <v-icon>mdi-text</v-icon>
-      </v-btn>
-      <v-btn>
         <span>Actions</span>
         <v-icon>mdi-lightning-bolt</v-icon>
       </v-btn>
@@ -111,6 +107,10 @@
       <v-btn>
         <span>Inventory</span>
         <v-icon>mdi-cube</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Features</span>
+        <v-icon>mdi-text</v-icon>
       </v-btn>
       <v-btn>
         <span>Journal</span>
