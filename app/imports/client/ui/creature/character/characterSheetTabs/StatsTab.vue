@@ -427,10 +427,10 @@ const propertyHandlers = {
   folder(prop) {
     let skipChildren;
     let propPath = null;
-    if (prop.hideStatsGroup) {
+    if (prop.groupStats && prop.hideStatsGroup) {
       skipChildren = true;
     }
-    if (prop.tab === 'stats') {
+    if (prop.groupStats && prop.tab === 'stats') {
       propPath = ['folder', prop.location]
     }
     return { skipChildren, propPath }
