@@ -94,7 +94,7 @@ export default {
       let isLoggedIn = !!Meteor.userId();
       let links = [
         { title: 'Home', icon: 'mdi-home', to: '/' },
-        { title: 'Characters', icon: 'mdi-account-group', to: '/characterList', requireLogin: true },
+        { title: 'Characters', icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
         { title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
         //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
         //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
