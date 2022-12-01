@@ -2,36 +2,32 @@
   <div class="stats">
     <column-layout>
       <div
-        v-if="abilities.length"
-        class="ability-scores"
+        v-for="ability in abilities"
+        :key="ability._id"
       >
-        <div class="layout flex column">
-          <div
-            v-for="ability in abilities"
-            :key="ability._id"
-            class="ability"
-          >
-            <div class="score">
-              <div class="double-border top big-number">
-                <template v-if="creature.settings.swapScoresAndMods">
-                  {{ ability.total }}
-                </template>
-                <template v-else>
-                  {{ numberToSignedString(ability.modifier) }}
-                </template>
-              </div>
-              <div class="bottom">
-                <template v-if="creature.settings.swapScoresAndMods">
-                  {{ numberToSignedString(ability.modifier) }}
-                </template>
-                <template v-else>
-                  {{ ability.total }}
-                </template>
-              </div>
+        <div
+          class="ability"
+        >
+          <div class="score">
+            <div class="double-border top big-number">
+              <template v-if="creature.settings.swapScoresAndMods">
+                {{ ability.total }}
+              </template>
+              <template v-else>
+                {{ numberToSignedString(ability.modifier) }}
+              </template>
             </div>
-            <div class="double-border name label">
-              {{ ability.name }}
+            <div class="bottom">
+              <template v-if="creature.settings.swapScoresAndMods">
+                {{ numberToSignedString(ability.modifier) }}
+              </template>
+              <template v-else>
+                {{ ability.total }}
+              </template>
             </div>
+          </div>
+          <div class="double-border name label">
+            {{ ability.name }}
           </div>
         </div>
       </div>
@@ -39,60 +35,71 @@
       <div
         v-for="toggle in toggles"
         :key="toggle._id"
-        class="number-label"
       >
-        <div class="box double-border" />
-        <div class="label double-border">
-          {{ toggle.name }}
+        <div
+          class="number-label"
+        >
+          <div class="box double-border" />
+          <div class="label double-border">
+            {{ toggle.name }}
+          </div>
         </div>
       </div>
 
       <div
         v-for="stat in stats"
         :key="stat._id"
-        class="number-label"
-        :class="stat.variableName == 'armor' && 'shield-number-label'"
       >
         <div
-          :class="stat.variableName == 'armor' ? 'shield-border' : 'octagon-border'"
-          class="number big-number"
+          class="number-label"
+          :class="stat.variableName == 'armor' && 'shield-number-label'"
         >
-          {{ stat.value }}
-        </div>
-        <div class="label double-border">
-          {{ stat.name }}
+          <div
+            :class="stat.variableName == 'armor' ? 'shield-border' : 'octagon-border'"
+            class="number big-number"
+          >
+            {{ stat.value }}
+          </div>
+          <div class="label double-border">
+            {{ stat.name }}
+          </div>
         </div>
       </div>
 
       <div
         v-for="modifier in modifiers"
         :key="modifier._id"
-        class="number-label"
       >
-        <div class="number octagon-border big-number">
-          {{ numberToSignedString(modifier.value) }}
-        </div>
-        <div class="label double-border">
-          {{ modifier.name }}
+        <div
+          class="number-label"
+        >
+          <div class="number octagon-border big-number">
+            {{ numberToSignedString(modifier.value) }}
+          </div>
+          <div class="label double-border">
+            {{ modifier.name }}
+          </div>
         </div>
       </div>
 
       <div
         v-for="check in checks"
         :key="check._id"
-        class="number-label"
       >
-        <div class="number octagon-border big-number">
-          {{ numberToSignedString(check.value) }}
-        </div>
-        <div class="label double-border">
-          {{ check.name }}
+        <div
+          class="number-label"
+        >
+          <div class="number octagon-border big-number">
+            {{ numberToSignedString(check.value) }}
+          </div>
+          <div class="label double-border">
+            {{ check.name }}
+          </div>
         </div>
       </div>
       <div
         v-for="healthBar in healthBars"
         :key="healthBar._id"
-        class="m-2"
       >
         <div class="double-border">
           <div class="label">
@@ -115,7 +122,6 @@
       </div>
       <div
         v-if="hitDice.length"
-        class="hit-dice m-2"
       >
         <div class="double-border">
           <div>

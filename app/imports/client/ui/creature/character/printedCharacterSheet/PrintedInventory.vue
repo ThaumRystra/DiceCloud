@@ -62,7 +62,7 @@
       >
         <div 
           :key="container._id"
-          class="span-all container-header"
+          class="span-all"
         >
           <printed-container
             class="octagon-border"
@@ -232,22 +232,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.octagon-border {
-  position: relative;
-  padding: 4px 20px;
-  page-break-inside: avoid;
-}
-.octagon-border::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-image: url(/images/print/octagonBorder.png) 124 118 fill;
-  border-image-width: 22px;
-  z-index: -1;
-}
 
 .label {
   font-size: 14pt;
@@ -261,10 +245,5 @@ export default {
 }
 .inventory-stat > .v-icon {
   margin-right: 8px;
-}
-
-.container-header {
-  page-break-after: avoid;
-  page-break-inside: avoid;
 }
 </style>
