@@ -2,8 +2,8 @@
   <div>
     <section>
       <v-parallax
-        src="/images/paper-dice-crown-with-candy.png"
-        height="400"
+        src="/images/paper-dice-crown.webp"
+        height="300"
       >
         <v-layout
           column
@@ -12,7 +12,7 @@
           class="white--text"
         >
           <p
-            class="white--text ma-2 text-h5 text-center"
+            class="white--text ma-2 text-center"
             style="max-width: 1200px;"
           >
             DiceCloud is a single-developer project started in 2014 with the aim of

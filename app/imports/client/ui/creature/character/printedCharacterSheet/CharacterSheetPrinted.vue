@@ -42,7 +42,7 @@
                 {{ creature.alignment }} {{ background }}
               </div>
               <dir v-if="race || creature.gender">
-                {{ race }} {{ creature.gender }}
+                {{ creature.gender }} {{ race }}
               </dir>
               <div v-if="level && classes && classes.length === 1">
                 Level {{ level }} {{ classes[0].name }}
@@ -236,8 +236,40 @@ export default {
   color: black;
   font-size: 11pt;
 }
+
+.character-sheet-printed * {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  cursor: unset !important;
+}
+
 .page {
   padding: 4px;
+}
+
+.character-sheet-printed .column-layout, .character-sheet-printed .column-layout.wide-columns {
+  position:relative;
+  width: 100%;
+  widows: 0;
+  orphans: 0;
+  -webkit-column-fill: balance-all;
+  column-fill: balance-all;
+}
+
+.character-sheet-printed .column-layout>div {
+  position:relative;
+  display: block;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.character-sheet-printed .column-layout>div>* {
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 .character-sheet-printed .inactive {
   opacity: 1 !important;
@@ -253,8 +285,6 @@ export default {
   background-image: url(/crown-dice-logo-cropped-transparent.png);
   background-size: contain;
   background-position: 0 center;
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
 }
 
 .character-sheet-printed .v-divider {
@@ -265,7 +295,6 @@ export default {
 .character-sheet-printed .double-border {
   position: relative;
   padding: 11px 10px;
-  page-break-inside: avoid;
 }
 
 .character-sheet-printed .double-border::before {
@@ -286,8 +315,8 @@ export default {
 .character-sheet-printed .octagon-border {
   position: relative;
   padding: 4px 20px;
-  page-break-inside: avoid;
 }
+
 .character-sheet-printed .octagon-border::before {
   content: "";
   position: absolute;
@@ -326,6 +355,9 @@ export default {
   }
 }
 @media print {
+  .v-main, .v-application, .v-application--wrap, .character-sheet-printed {
+    display: block;
+  }
   header {
     display: none !important;
   }

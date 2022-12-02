@@ -13,6 +13,7 @@ const CharacterSheetPage = () => import('/imports/client/ui/pages/CharacterSheet
 const CharacterSheetToolbar = () => import('/imports/client/ui/creature/character/CharacterSheetToolbar.vue');
 const CharacterSheetRightDrawer = () => import('/imports/client/ui/creature/character/CharacterSheetRightDrawer.vue');
 const CharacterSheetPrinted = () => import('/imports/client/ui/creature/character/printedCharacterSheet/CharacterSheetPrinted.vue');
+const CharacterSheetPrintedToolbar = () => import('/imports/client/ui/creature/character/printedCharacterSheet/CharacterSheetPrintedToolbar.vue');
 const SignIn = () => import('/imports/client/ui/pages/SignIn.vue');
 const Register = () => import('/imports/client/ui/pages/Register.vue');
 const IconAdmin = () => import('/imports/client/ui/icons/IconAdmin.vue');
@@ -185,6 +186,7 @@ RouterFactory.configure(router => {
     alias: '/print-character/:id/:urlName',
     components: {
       default: CharacterSheetPrinted,
+      toolbar: CharacterSheetPrintedToolbar,
     },
     meta: {
       title: 'Print Character Sheet',
