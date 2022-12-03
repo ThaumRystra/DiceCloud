@@ -28,7 +28,7 @@
         @remove="softRemove"
       />
       <div
-        v-if="!creature.settings.hideRestButtons || (properties.action.event && properties.action.event.length)"
+        v-if="!creature.settings.hideRestButtons || (properties.action && properties.action.event && properties.action.event.length)"
         class="character-buttons"
       >
         <v-card>
