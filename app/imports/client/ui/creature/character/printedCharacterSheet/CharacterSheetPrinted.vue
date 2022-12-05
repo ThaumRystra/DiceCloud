@@ -258,13 +258,6 @@ export default {
 
 .character-sheet-printed .column-layout>div {
   position:relative;
-  display: block;
-  width: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -webkit-column-break-inside: avoid;
-  break-inside: avoid;
-  page-break-inside: avoid;
 }
 .character-sheet-printed .column-layout>div>* {
   -webkit-column-break-inside: avoid;
