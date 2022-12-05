@@ -42,6 +42,7 @@
         :key="i"
         :to="link.to"
         :href="link.href"
+        :target="link.href ? '_blank': undefined"
       >
         <v-list-item-action>
           <v-icon>{{ link.icon }}</v-icon>
@@ -103,7 +104,7 @@ export default {
         { title: 'About', icon: 'mdi-sign-text', to: '/about' },
         { title: 'Documentation', icon: 'mdi-book-open-variant', to: '/docs' },
         { title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud' },
-        { title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2' },
+        { title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/' },
       ];
       return links.filter(link => !link.requireLogin || isLoggedIn);
     },

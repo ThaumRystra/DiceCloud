@@ -39,6 +39,14 @@ export default {
 
 .column-layout>div,
 .column-layout>span>div {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateX(0);
+  -webkit-transform: translateX(0);
+  -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
   padding: 4px;
