@@ -534,21 +534,10 @@ export default {
   position: relative;
   aspect-ratio: 0.87;
   padding: 12px;
-}
-.shield-border::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background: url(/images/print/shieldBorder.png);
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: -1;
 }
 .shield-number-label {
   align-items: center !important;
@@ -577,23 +566,13 @@ export default {
   font-size: 10pt;
   position: relative;
   padding: 0 16px;
-  z-index: 2;
-}
-.ability .bottom::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   border: solid white;
   border-image-source: url(/images/print/upwardPointingBorder.png);
   border-image-slice: 0 85 fill;
   border-image-width: 0 16px;
   border-image-outset: 0px 0px;
   border-image-repeat: stretch;
-  box-sizing: content-box;
-  z-index: -1;
+  z-index: 2;
 }
 .ability .name {
   margin-top: 10px;
