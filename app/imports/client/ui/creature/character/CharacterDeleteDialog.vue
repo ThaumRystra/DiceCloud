@@ -5,7 +5,7 @@
     </v-toolbar-title>
     <div>
       <p v-if="name">
-        Type "{{ name }}" to permanenetly delete the character
+        Type "{{ name }}" to permanently delete the character
       </p>
       <v-text-field
         v-if="name"
