@@ -21,6 +21,8 @@ function isActive(prop){
   switch (prop.type){
     // Unprepared spells are inactive
     case 'spell': return !!prop.prepared || !!prop.alwaysPrepared;
+    // Notes that are children of notes are inactive
+    case 'note': return !(prop.ancestors[-1].type == 'note');
     default: return true;
   }
 }
@@ -35,8 +37,6 @@ function childrenActive(prop){
     case 'action': return false;
     case 'spell': return false;
     case 'trigger': return false;
-    // The children of notes are always inactive
-    case 'note': return false;
     // Other children are active
     default: return true;
   }
