@@ -36,7 +36,7 @@ Schemas.Report = new SimpleSchema({
 Reports.attachSchema(Schemas.Report);
 
 Meteor.methods({
-	insertReport: function(report) {
+	insertReport: function (report) {
 		check(report, {
 			title: String,
 			description: String,
@@ -59,16 +59,17 @@ Meteor.methods({
 			"\nSeverity: " + report.severity +
 			"\nType: " + report.type +
 			"\n\n" + report.description;
-		Email.send({
+		var sendAddress = Meteor.settings.public.feedbackEmail;
+		if (sendAddress) Email.send({
 			from: sender,
-			to: "stefan.zermatten@gmail.com",
+			to: sendAddress,
 			subject: "DiceCloud feedback - " + report.title,
 			text: bodyText,
 		});
 	},
-	deleteReport: function(id) {
+	deleteReport: function (id) {
 		var user = Meteor.users.findOne(this.userId);
-		if (!_.contains(user.roles, "admin")){
+		if (!_.contains(user.roles, "admin")) {
 			throw new Meteor.Error(
 				"not admin",
 				"The user must be an administrator to delete feedback"
