@@ -30,7 +30,7 @@ const STORAGE_LIMITS = Object.freeze({
   rollCount: 64,
   statsToTarget: 64,
   tagCount: 64,
-  writersCount: 20,
+  writersCount: 32,
   libraryCollectionCount: 32,
   pointBuyRowsCount: 32,
 });

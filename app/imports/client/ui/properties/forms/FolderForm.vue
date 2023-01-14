@@ -35,7 +35,7 @@
           <v-expand-transition>
             <div v-if="model.groupStats">
               <smart-switch
-                label="Hide children from stats tab"
+                label="Hide children from their default locations"
                 :value="model.hideStatsGroup"
                 :error-messages="errors.hideStatsGroup"
                 @change="change('hideStatsGroup', ...arguments)"

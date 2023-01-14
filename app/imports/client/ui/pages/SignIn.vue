@@ -39,7 +39,10 @@
         >
           Reset Password
         </v-btn>
-        <div class="error--text">
+        <div
+          v-if="error"
+          class="error--text"
+        >
           {{ error }}
         </div>
         <v-layout>
@@ -59,6 +62,13 @@
             Register
           </v-btn>
         </v-layout>
+        <div class="text-caption mt-4 px-4">
+          <p>
+            DiceCloud Version 2 requires a new account to use.
+          </p><p>
+            Version 1 is still available at <a href="https://v1.dicecloud.com">v1.dicecloud.com</a>
+          </p>
+        </div>
       </v-layout>
     </v-form>
     <v-divider class="ma-4" />

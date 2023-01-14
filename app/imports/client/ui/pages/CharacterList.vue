@@ -4,7 +4,10 @@
     style="height: 100%"
   >
     <v-container>
-      <v-row justify="center">
+      <v-row
+        justify="center"
+        class="mb-16"
+      >
         <v-col
           cols="12"
           xl="8"

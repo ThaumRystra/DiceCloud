@@ -82,8 +82,8 @@
             cols="12"
           >
             <text-area
-              auto-grow
               label="Body"
+              :rows="20"
               :value="doc.description"
               @change="(value, ack) => change({path: ['description'], value, ack})"
             />

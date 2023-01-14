@@ -218,30 +218,30 @@ export default {
   },
   methods: {
     changeShowTreeTab(value) {
+      let currentTab = this.$store.getters.tabNameById(this.model._id);
+      if (!value && currentTab === 'tree') {
+        this.$store.commit(
+          'setTabForCharacterSheet',
+          { id: this.model._id, tab: 'build' }
+        );
+      }
       this.$emit('change', {
         path: ['settings', 'showTreeTab'],
         value: !!value
       });
-      let currentTab = this.$store.getters.tabById(this.model._id);
-      if (!value && currentTab === 5) {
-        this.$store.commit(
-          'setTabForCharacterSheet',
-          { id: this.model._id, tab: 4 }
-        );
-      }
     },
     changeHideSpellsTab(value) {
+      let currentTab = this.$store.getters.tabNameById(this.model._id);
+      if (!value && currentTab === 'spells') {
+        this.$store.commit(
+          'setTabForCharacterSheet',
+          { id: this.model._id, tab: 'actions' }
+        );
+      }
       this.$emit('change', {
         path: ['settings', 'hideSpellsTab'],
         value: !value
       });
-      let currentTab = this.$store.getters.tabById(this.model._id);
-      if (!value && currentTab === 3) {
-        this.$store.commit(
-          'setTabForCharacterSheet',
-          { id: this.model._id, tab: 4 }
-        );
-      }
     },
     allUserLibrariesChange(value, ack) {
       toggleAllUserLibraries.call({

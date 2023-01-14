@@ -8,7 +8,7 @@
     class="slot-card d-flex flex-column"
     @mouseover="hover = true"
     @mouseleave="hover = false"
-    @click="$emit('click')"
+    @click="fillSlot"
   >
     <card-highlight 
       :active="hover"
@@ -28,7 +28,7 @@
       <v-btn
         icon
         color="accent"
-        @click.stop="$emit('ignore')"
+        @click.stop="ignoreProp"
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -39,6 +39,9 @@
 <script lang="js">
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 
 export default {
   components: {
@@ -50,6 +53,9 @@ export default {
       default: {
         isDark: false,
       },
+    },
+    context: {
+      default: {},
     },
   },
   props: {
@@ -72,5 +78,45 @@ export default {
       }
     }
   },
+  methods: {
+    fillSlot() {
+      const slotId = this.model._id;
+      this.$store.commit('pushDialogStack', {
+        component: 'slot-fill-dialog',
+        elementId: `slot-card-${slotId}`,
+        data: {
+          slotId,
+          creatureId: this.context.creatureId,
+        },
+        callback(nodeIds){
+          if (!nodeIds || !nodeIds.length) return;
+          insertPropertyFromLibraryNode.call({
+            nodeIds,
+            parentRef: {
+              'id': slotId,
+              'collection': 'creatureProperties',
+            },
+          }, error => {
+            if (error){
+              console.error(error);
+              snackbar({text: error.reason || error.message || error.toString()});
+            }
+          });
+        }
+      });
+    },
+    ignoreProp(){
+      updateCreatureProperty.call({
+        _id: this.model._id,
+        path: ['ignored'],
+        value: true
+      }, error => {
+        if (error){
+          console.error(error);
+          snackbar({text: error.reason || error.message || error.toString()});
+        }
+      });
+    },
+  }
 }
 </script>

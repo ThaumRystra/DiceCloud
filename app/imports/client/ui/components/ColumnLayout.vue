@@ -39,9 +39,6 @@ export default {
 
 .column-layout>div,
 .column-layout>span>div {
-  /*
-      Table and width set because firefox does not support break-inside: avoid
-    */
   display: table;
   table-layout: fixed;
   width: 100%;

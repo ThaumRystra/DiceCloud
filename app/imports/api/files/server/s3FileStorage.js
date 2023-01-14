@@ -4,9 +4,7 @@ import { each, clone } from 'lodash';
 import { Random } from 'meteor/random';
 import { FilesCollection } from 'meteor/ostrio:files';
 import stream from 'stream';
-if (Meteor.isServer) {
-  import S3 from '/imports/api/files/server/s3.js';
-}
+import S3 from 'aws-sdk/clients/s3';
 
 /* See fs-extra and graceful-fs NPM packages */
 /* For better i/o performance */
@@ -31,7 +29,7 @@ let createS3FilesCollection;
 
 /* Check settings existence in `Meteor.settings` */
 /* This is the best practice for app security */
-if (Meteor.isServer && Meteor.settings.useS3) {
+if (Meteor.settings.useS3) {
   // Create a new S3 object
   const s3 = new S3({
     accessKeyId: s3Conf.key,
@@ -236,13 +234,11 @@ if (Meteor.isServer && Meteor.settings.useS3) {
       allowClientCode,
     });
 
-    if (Meteor.isServer) {
-      // Use the normal file system to read files
-      collection.readJSONFile = async function (file) {
-        const fileString = await fsp.readFile(file.path, 'utf8');
-        return JSON.parse(fileString);
-      };
-    }
+    // Use the normal file system to read files
+    collection.readJSONFile = async function (file) {
+      const fileString = await fsp.readFile(file.path, 'utf8');
+      return JSON.parse(fileString);
+    };
 
     return collection;
   }

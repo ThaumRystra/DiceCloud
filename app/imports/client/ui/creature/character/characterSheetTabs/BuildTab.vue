@@ -86,7 +86,7 @@
           <build-tree-node-list
             :children="slotBuildTree"
             class="mx-2"
-            @selected="_id => propertyClicked({_id, prefix: 'build-tree-node-'})"
+            @selected="_id => propertyClicked({_id, prefix: 'tree-node-'})"
           />
         </v-card>
       </v-col>

@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-list-item-content style="min-height: 60px;">
+  <v-list-item-content :style="dense ? undefined : 'min-height: 60px;'">
     <v-list-item-title class="d-flex align-center">
       <div
         v-if="!renaming"

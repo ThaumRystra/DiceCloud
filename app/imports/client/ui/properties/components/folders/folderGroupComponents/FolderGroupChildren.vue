@@ -1,25 +1,18 @@
 <template>
   <div
-    v-if="model.name || (properties && properties.length)"
+    v-if="properties && properties.length"
   >
-    <v-card
-      class="folder-group-card pb-2"
-    >
-      <v-subheader v-if="model.name">
-        {{ model.name }}
-      </v-subheader>
-      <component
-        :is="prop.type"
-        v-for="prop in properties"
-        :key="prop._id"
-        :model="prop"
-        :data-id="prop._id"
-        @click="$emit('click-property', {_id: prop._id})"
-        @click-property="e => $emit('click-property', e)"
-        @sub-click="e => $emit('sub-click', e)"
-        @remove="$emit('remove', prop._id)"
-      />
-    </v-card>
+    <component
+      :is="prop.type"
+      v-for="prop in properties"
+      :key="prop._id"
+      :model="prop"
+      :data-id="prop._id"
+      @click="$emit('click-property', {_id: prop._id})"
+      @click-property="(e) => $emit('click-property', e)"
+      @sub-click="(e) => $emit('sub-click', e)"
+      @remove="$emit('remove', prop._id)"
+    />
   </div>
 </template>
 
@@ -52,7 +45,7 @@ export default {
           },
           {
             type: { $ne: 'toggle' },
-            inactive: { $ne: true }
+            inactive: { $ne: true },
           },
         ],
         $nor: [
@@ -71,13 +64,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.folder-group-card .v-card {
-  box-shadow: none !important;
-  border-radius: 0 !important;
-}
-.folder-group-card .drag-handle {
-  display: none !important;
-}
-</style>

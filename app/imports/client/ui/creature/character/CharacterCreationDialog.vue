@@ -195,7 +195,7 @@ export default {
         } else {
           this.$store.commit(
               'setTabForCharacterSheet',
-              {id: creatureId, tab: 5}
+              {id: creatureId, tab: 'build'}
             );
           this.$emit('pop', creatureId);
           defer(() => {

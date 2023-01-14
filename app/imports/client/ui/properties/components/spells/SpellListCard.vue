@@ -5,11 +5,21 @@
     @toolbarclick="clickSpellList(model._id)"
   >
     <template slot="toolbar">
-      <v-toolbar-title>
+      <v-toolbar-title
+        v-if="!preparingSpells"
+      >
         {{ model.name }}
+      </v-toolbar-title>
+      <v-spacer v-if="!preparingSpells && preparedError" />
+      <v-toolbar-title
+        v-if="preparingSpells || preparedError"
+        :class="{'error--text' : preparedError}"
+      >
+        {{ numPrepared }}/{{ model.maxPrepared.value }} spells prepared
       </v-toolbar-title>
       <v-spacer />
       <v-menu
+        v-if="!preparingSpells"
         bottom
         left
         transition="slide-y-transition"
@@ -33,22 +43,29 @@
           />
         </v-list>
       </v-menu>
-    </template>
-    <v-expand-transition>
-      <v-card-text
-        v-if="preparedError || preparingSpells"
-        :class="{'error--text' : preparedError}"
-        class="pb-0"
+      <v-btn
+        v-else
+        icon
+        @click.stop="preparingSpells = false"
       >
-        <div v-if="model.maxPrepared && model.maxPrepared.value">
-          {{ numPrepared }}/{{ model.maxPrepared.value }} spells prepared
-        </div>
-        <v-switch
-          v-model="preparingSpells"
-          label="Change prepared spells"
-        />
-      </v-card-text>
-    </v-expand-transition>
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+    </template>
+    <!-- Disabled because it changes the height of the card
+    <v-card-text
+      v-if="preparedError || preparingSpells"
+      :class="{'error--text' : preparedError}"
+      class="pb-0"
+    >
+      <div v-if="model.maxPrepared && model.maxPrepared.value">
+        {{ numPrepared }}/{{ model.maxPrepared.value }} spells prepared
+      </div>
+      <v-switch
+        v-model="preparingSpells"
+        label="Change prepared spells"
+      />
+    </v-card-text>
+    -->
     <spell-list
       :spells="spells"
       :parent-ref="{id: model._id, collection: 'creatureProperties'}"

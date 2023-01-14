@@ -28,7 +28,7 @@
         @remove="softRemove"
       />
       <div
-        v-if="!creature.settings.hideRestButtons || (properties.action.event && properties.action.event.length)"
+        v-if="!creature.settings.hideRestButtons || (properties.action && properties.action.event && properties.action.event.length)"
         class="character-buttons"
       >
         <v-card>
@@ -161,13 +161,13 @@
       </div>
 
       <div
-        v-if="properties.hitDice && properties.hitDice.length"
+        v-if="properties.attribute.hitDice && properties.attribute.hitDice.length"
         class="hit-dice"
       >
         <v-card>
           <v-list>
             <v-subheader>Hit Dice</v-subheader>
-            <template v-for="(hitDie, index) in hitDice">
+            <template v-for="(hitDie, index) in properties.attribute.hitDice">
               <v-divider
                 v-if="index !== 0"
                 :key="hitDie._id + 'divider'"
@@ -427,10 +427,10 @@ const propertyHandlers = {
   folder(prop) {
     let skipChildren;
     let propPath = null;
-    if (prop.hideStatsGroup) {
-      return { skipChildren: true}
+    if (prop.groupStats && prop.hideStatsGroup) {
+      skipChildren = true;
     }
-    if (prop.tab === 'stats') {
+    if (prop.groupStats && prop.tab === 'stats') {
       propPath = ['folder', prop.location]
     }
     return { skipChildren, propPath }
@@ -546,7 +546,7 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: 1 } });
+      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } });
       const forest = nodeArrayToTree(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
