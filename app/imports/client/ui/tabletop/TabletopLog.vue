@@ -1,16 +1,13 @@
 <template lang="html">
   <log-component
-    :logs="logs"
-    :edit-permission="context.editPermission"
-    show-name
-    @submit="submit"
+    :creature-id="tabletopId"
   />
 </template>
 
 <script lang="js">
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import insertTabletopLog from '/imports/api/creature/log/CreatureLogs.js';
-import LogComponent from '/imports/client/ui/log/LogComponent.vue';
+import LogComponent from '/imports/client/ui/log/CharacterLog.vue';
 
 export default {
   components: {
@@ -25,16 +22,6 @@ export default {
     tabletopId: {
       type: String,
       required: true,
-    },
-  },
-  meteor: {
-    logs() {
-      return CreatureLogs.find({
-        tabletopId: this.tabletopId,
-      }, {
-        sort: {date: -1},
-        limit: 50
-      });
     },
   },
   methods: {

@@ -192,7 +192,6 @@ RouterFactory.configure(router => {
       title: 'Print Character Sheet',
     },
   },
-  /* Not ready for prime time <3
   {
     path: '/tabletops',
     name: 'tabletops',
@@ -208,7 +207,6 @@ RouterFactory.configure(router => {
     },
     beforeEnter: ensureLoggedIn,
   },
-  */
   {
     path: '/friends',
     components: {

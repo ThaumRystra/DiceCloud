@@ -19,16 +19,29 @@
       <v-row
         dense
         class="initiative-row flex-grow-0"
-        style="flex-wrap: nowrap; overflow-x: auto;"
+        style="flex-wrap: nowrap; overflow-x: auto; padding-bottom: 50px;"
         @wheel="transformScroll($event)"
       >
         <tabletop-creature-card
           v-for="creature in creatures"
           :key="creature._id"
           :model="creature"
-          :active="activeCreature === creature._id"
+          :active="activeCreatureId === creature._id"
           :targeted="targets.includes(creature._id)"
-          @click="activeCreature = creature._id; targets = []"
+          :show-target-btn="!!activeActionId"
+          @click="() => {
+            if (activeActionId) {
+              if (targets.includes(creature._id)) {
+                untarget(creature._id)
+              } else {
+                targets.push(creature._id);
+              }
+            } else {
+              activeCreatureId = creature._id;
+              targets = [];
+              activeActionId = undefined;
+            }
+          }"
           @target="targets.push(creature._id)"
           @untarget="untarget(creature._id)"
         />
@@ -67,22 +80,23 @@
       <v-container fluid>
         <v-row
           dense
-          class="action-row"
-          style="flex-wrap: nowrap; overflow-x: auto;"
+          class="action-row overflow-x-auto align-end"
+          style="flex-wrap: nowrap; padding-top: 100px;"
           @wheel="transformScroll($event)"
         >
           <mini-character-sheet
-            v-if="activeCreature"
+            v-if="activeCreatureId"
             data-id="mini-character-sheet"
+            :creature-id="activeCreatureId"
             @click="openCharacterSheetDialog"
           />
           <action-card
             v-for="action in actions"
             :key="action._id"
             :model="action"
-            :data-id="action._id"
-            :targets="targets"
-            @click="clickProperty({_id: action._id})"
+            :active="activeActionId === action._id"
+            @activate="activeActionId = action._id"
+            @deactivate="activeActionId = undefined; targets = [];"
           />
         </v-row>
       </v-container>
@@ -95,9 +109,29 @@ import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesTo
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import TabletopActionCards from '/imports/client/ui/tabletop/TabletopActionCards.vue';
 import MiniCharacterSheet from '/imports/client/ui/creature/character/MiniCharacterSheet.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
+
+const getProperties = function (creatureId, selector = {}) {
+  return CreatureProperties.find({
+    'ancestors.id': {
+      $eq: creatureId,
+    },
+    inactive: { $ne: true },
+    removed: { $ne: true },
+    overridden: { $ne: true },
+    $nor: [
+      { hideWhenTotalZero: true, total: 0 },
+      { hideWhenValueZero: true, value: 0 },
+    ],
+    ...selector,
+  }, {
+    sort: { order: 1 }
+  });
+}
 
 export default {
   components: {
@@ -118,8 +152,9 @@ export default {
   },
   data() {
     return {
-      activeCreature: undefined,
-    targets: [],
+      activeCreatureId: undefined,
+      activeActionId: undefined,
+      targets: [],
     }
   },
   meteor: {
@@ -132,28 +167,11 @@ export default {
       return Creatures.find({ tabletop: this.model._id });
     },
     actions(){
-      return getProperties(this.activeCreature, 'action').map(a => {
-        delete a.summary;
-        return a;
-      });
+      return getProperties(this.activeCreatureId, { type: 'action', actionType: { $ne: 'event'} });
     },
     editPermission(){
       try {
-        assertEditPermission(this.activeCreature, Meteor.userId());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-    actions(){
-      return getProperties(this.activeCreature, 'action').map(a => {
-        delete a.summary;
-        return a;
-      });
-    },
-    editPermission(){
-      try {
-        assertEditPermission(this.activeCreature, Meteor.userId());
+        assertEditPermission(this.activeCreatureId, Meteor.userId());
         return true;
       } catch (e) {
         return false;
@@ -184,7 +202,7 @@ export default {
 				component: 'character-sheet-dialog',
 				elementId: 'mini-character-sheet',
         data: {
-          creatureId: this.activeCreature,
+          creatureId: this.activeCreatureId,
         },
 			});
     },
@@ -199,7 +217,7 @@ export default {
       if (!event.deltaY) {
         return;
       }
-      event.currentTarget.scrollLeft += event.deltaY + event.deltaX;
+      event.currentTarget.scrollLeft += event.deltaY;
       event.preventDefault();
     },
     untarget(id){
@@ -208,7 +226,7 @@ export default {
         this.targets.splice(index, 1);
       }
     }
-  }
+  },
 }
 </script>
 
@@ -220,12 +238,11 @@ export default {
   width: 100px;
   margin: 4px;
 }
-.action-row > .v-card {
+.action-row > div {
   flex-grow: 0;
   flex-shrink: 0;
-  max-height: 320px;
+  height: 120px;
   width: 200px;
   margin: 4px;
-  overflow-y: hidden;
 }
 </style>

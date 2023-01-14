@@ -80,6 +80,7 @@ export default {
   components: {
     CreatureFolderList
   },
+  // @ts-ignore
   meteor: {
     $subscribe: {
       'characterList': [],
@@ -97,7 +98,7 @@ export default {
         { title: 'Home', icon: 'mdi-home', to: '/' },
         { title: 'Characters', icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
         { title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
-        //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
+        {title: 'Tabletops', icon: 'mdi-table-furniture', to: '/tabletops', requireLogin: true},
         //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
         { title: 'Files', icon: 'mdi-file-multiple', to: '/my-files' },
         { title: 'Feedback', icon: 'mdi-bug', to: '/feedback' },

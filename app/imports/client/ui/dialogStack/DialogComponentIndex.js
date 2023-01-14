@@ -1,6 +1,7 @@
 // Load commonly used dialogs immediately
 import AddCreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/AddCreaturePropertyDialog.vue';
 import CharacterCreationDialog from '/imports/client/ui/creature/character/CharacterCreationDialog.vue';
+import CharacterSheetDialog from '/imports/client/ui/tabletop/CharacterSheetDialog.vue';
 import CastSpellWithSlotDialog from '/imports/client/ui/properties/components/spells/CastSpellWithSlotDialog.vue';
 import CreatureFormDialog from '/imports/client/ui/creature/CreatureFormDialog.vue';
 import CreaturePropertyCreationDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue';
@@ -8,9 +9,9 @@ import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperti
 import CreaturePropertyFromLibraryDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue';
 import CreatureRootDialog from '/imports/client/ui/creature/character/CreatureRootDialog.vue';
 import DeleteConfirmationDialog from '/imports/client/ui/dialogStack/DeleteConfirmationDialog.vue';
-import ExperienceInsertDialog from  '/imports/client/ui/creature/experiences/ExperienceInsertDialog.vue';
-import ExperienceListDialog from  '/imports/client/ui/creature/experiences/ExperienceListDialog.vue';
-import HelpDialog from  '/imports/client/ui/dialogStack/HelpDialog.vue';
+import ExperienceInsertDialog from '/imports/client/ui/creature/experiences/ExperienceInsertDialog.vue';
+import ExperienceListDialog from '/imports/client/ui/creature/experiences/ExperienceListDialog.vue';
+import HelpDialog from '/imports/client/ui/dialogStack/HelpDialog.vue';
 import LevelUpDialog from '/imports/client/ui/creature/slots/LevelUpDialog.vue';
 import SelectLibraryNodeDialog from '/imports/client/ui/library/SelectLibraryNodeDialog.vue';
 import SlotFillDialog from '/imports/client/ui/creature/slots/SlotFillDialog.vue';
@@ -37,6 +38,7 @@ export default {
   ArchiveDialog,
   CastSpellWithSlotDialog,
   CharacterCreationDialog,
+  CharacterSheetDialog,
   CreatureFormDialog,
   CreaturePropertyCreationDialog,
   CreaturePropertyDialog,

@@ -12,8 +12,8 @@
         <v-btn
           v-bind="$attrs"
           :class="buttonClass"
-          v-on="on"
-          @click.stop
+          v-on="noClick ? {} : on"
+          @click="e => { if (!noClick) e.stopPropagation(); }"
         >
           <slot />
         </v-btn>
@@ -87,6 +87,7 @@ export default {
       type: Number,
       default: undefined,
     },
+    noClick: Boolean,
   },
   data(){return {
     open: false,
