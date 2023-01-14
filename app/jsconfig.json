@@ -10,14 +10,25 @@
     "paths": {
       "/*": [
         "./*"
+      ],
+      "meteor/aldeed:collection2": [
+        "packages\\collection2\\collection2.js"
       ]
-    }
+    },
+    "checkJs": true,
+    "allowJs": true
   },
   "vueCompilerOptions": {
-    "target": 2,
+    "target": 2
   },
   "exclude": [
     "node_modules",
-    "**/node_modules/*"
-  ]
+    "**/node_modules/*",
+    ".meteor"
+  ],
+  "typeAcquisition": {
+    "include": [
+      "meteor"
+    ]
+  }
 }
