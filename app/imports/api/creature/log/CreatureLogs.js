@@ -125,33 +125,16 @@ const insertCreatureLog = new ValidatedMethod({
   },
 });
 
-const insertTabletopLog = new ValidatedMethod({
-  name: 'creatureLogs.methods.insertTabletopLog',
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  validate: new SimpleSchema({
-    log: CreatureLogSchema.omit('date'),
-  }).validator(),
-  run({ log }) {
-    const tabletopId = log.tabletopId;
-    assertUserInTabletop(tabletopId, this.userId);
-    // Build the new log
-    let id = insertCreatureLogWork({ log, method: this })
-    return id;
-  },
-});
-
-export function insertCreatureLogWork({ log, creature, method }) {
+export function insertCreatureLogWork({ log, creature, tabletopId, method }) {
   // Build the new log
   if (typeof log === 'string') {
     log = { content: [{ value: log }] };
   }
   if (!log.content?.length) return;
   log.date = new Date();
-  if (creature) log.tabletopId = creature.tabletop;
+  if (tabletopId) log.tabletopId = tabletopId;
+  if (creature && creature.tabletop) log.tabletopId = creature.tabletop;
+  console.log(log.tabletopId);
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer) {
@@ -185,24 +168,39 @@ const logRoll = new ValidatedMethod({
     roll: {
       type: String,
     },
+    tabletopId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      optional: true,
+    },
     creatureId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
+      optional: true,
     },
   }).validator(),
-  run({ roll, creatureId }) {
-    const creature = Creatures.findOne(creatureId, {
-      fields: {
-        readers: 1,
-        writers: 1,
-        owner: 1,
-        'settings.discordWebhook': 1,
-        name: 1,
-        avatarPicture: 1,
-      }
-    });
-    assertEditPermission(creature, this.userId);
-    const variables = CreatureVariables.findOne({ _creatureId: creatureId });
+  run({ roll, tabletopId, creatureId }) {
+    if (!creatureId && !tabletopId) throw new Meteor.Error('no-id',
+      'A creature id or tabletop id must be given'
+    );
+    let creature;
+    if (creatureId) {
+      creature = Creatures.findOne(creatureId, {
+        fields: {
+          readers: 1,
+          writers: 1,
+          owner: 1,
+          'settings.discordWebhook': 1,
+          name: 1,
+          avatarPicture: 1,
+        }
+      });
+      assertEditPermission(creature, this.userId);
+    }
+    if (tabletopId) {
+      assertUserInTabletop(tabletopId, this.userId);
+    }
+    const variables = CreatureVariables.findOne({ _creatureId: creatureId }) || {};
     let logContent = []
     let parsedResult = undefined;
     try {
@@ -243,11 +241,11 @@ const logRoll = new ValidatedMethod({
       date: new Date(),
     };
 
-    let id = insertCreatureLogWork({ log, creature, method: this });
+    let id = insertCreatureLogWork({ log, creature, tabletopId, method: this });
 
     return id;
   },
 });
 
 export default CreatureLogs;
-export { CreatureLogSchema, insertCreatureLog, logRoll, insertTabletopLog, PER_CREATURE_LOG_LIMIT };
+export { CreatureLogSchema, insertCreatureLog, logRoll, PER_CREATURE_LOG_LIMIT };

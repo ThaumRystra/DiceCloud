@@ -28,20 +28,22 @@
           :model="creature"
           :active="activeCreatureId === creature._id"
           :targeted="targets.includes(creature._id)"
-          :show-target-btn="!!activeActionId"
-          @click="() => {
-            if (activeActionId) {
-              if (targets.includes(creature._id)) {
-                untarget(creature._id)
+          :show-target-btn="targets.includes(creature._id) || moreTargets"
+          v-on="(!activeActionId || (targets.includes(creature._id) || moreTargets)) ? {
+            click: () => {
+              if (activeActionId) {
+                if (targets.includes(creature._id)) {
+                  untarget(creature._id)
+                } else {
+                  if (moreTargets) targets.push(creature._id);
+                }
               } else {
-                targets.push(creature._id);
+                activeCreatureId = creature._id;
+                targets = [];
+                activeActionId = undefined;
               }
-            } else {
-              activeCreatureId = creature._id;
-              targets = [];
-              activeActionId = undefined;
             }
-          }"
+          } : {}"
           @target="targets.push(creature._id)"
           @untarget="untarget(creature._id)"
         />
@@ -95,6 +97,7 @@
             :key="action._id"
             :model="action"
             :active="activeActionId === action._id"
+            :targets="targets"
             @activate="activeActionId = action._id"
             @deactivate="activeActionId = undefined; targets = [];"
           />
@@ -157,6 +160,11 @@ export default {
       targets: [],
     }
   },
+  watch: {
+    activeCreatureId(id) {
+      this.$root.$emit('active-tabletop-character-change', id);
+    }
+  },
   meteor: {
     $subscribe: {
       'tabletop'() {
@@ -168,6 +176,15 @@ export default {
     },
     actions(){
       return getProperties(this.activeCreatureId, { type: 'action', actionType: { $ne: 'event'} });
+    },
+    moreTargets(){
+      const activeAction = CreatureProperties.findOne(this.activeActionId);
+      if (!activeAction) return;
+      if (activeAction.target === 'singleTarget') {
+        return this.targets.length === 0;
+      } else if (activeAction.target === 'multipleTargets') {
+        return true;
+      }
     },
     editPermission(){
       try {

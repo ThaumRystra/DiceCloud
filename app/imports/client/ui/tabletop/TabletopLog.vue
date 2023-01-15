@@ -1,17 +1,17 @@
 <template lang="html">
-  <log-component
-    :creature-id="tabletopId"
+  <character-log
+    :tabletop-id="tabletopId"
+    :creature-id="activeCreatureId"
   />
 </template>
 
 <script lang="js">
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import insertTabletopLog from '/imports/api/creature/log/CreatureLogs.js';
-import LogComponent from '/imports/client/ui/log/CharacterLog.vue';
+import { insertTabletopLog } from '/imports/api/creature/log/CreatureLogs.js';
+import CharacterLog from '/imports/client/ui/log/CharacterLog.vue';
 
 export default {
   components: {
-    LogComponent,
+    CharacterLog,
   },
   inject: {
     context: {
@@ -21,18 +21,18 @@ export default {
   props: {
     tabletopId: {
       type: String,
-      required: true,
+      default: undefined,
     },
   },
-  methods: {
-    submit(){
-      insertTabletopLog.call({
-        content: this.logContent,
-        tabletopId: this.tabletopId,
-      }, (error) => {
-        if (error) console.error(error);
-      });
-    },
+  data() {
+    return {
+      activeCreatureId: undefined,
+    }
+  },
+  mounted() {
+    this.$root.$on('active-tabletop-character-change', (id) => {
+      this.activeCreatureId = id;
+    });
   },
 }
 </script>

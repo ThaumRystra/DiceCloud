@@ -25,8 +25,11 @@
         :hint="inputHint"
         :error-messages="inputError"
         :disabled="!editPermission"
+        :loading="submitLoading"
         @click:append-outer="submit"
         @keyup.enter="submit"
+        @keyup.up="decrementHistory"
+        @keyup.down="incrementHistory"
       />
     </v-card>
   </div>
@@ -40,6 +43,7 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
 import LogEntry from '/imports/client/ui/log/LogEntry.vue';
+import { Tracker } from 'meteor/tracker'
 
 export default {
   components: {
@@ -48,22 +52,70 @@ export default {
   props: {
     creatureId: {
       type: String,
-      required: true,
+      default: undefined,
+    },
+    tabletopId: {
+      type: String,
+      default: undefined,
     },
   },
   data(){return {
     inputHint: undefined,
     inputError: undefined,
     input: undefined,
+    history: [],
+    historyIndex: 1,
+    submitLoading: false,
   }},
   watch: {
     input(value){
       this.input = value;
+      this.recalculate();
+    },
+    creatureId() {
+      Tracker.afterFlush(() => this.recalculate())
+    },
+    historyIndex(i) {
+      if (typeof this.history[i] === 'string') {
+        this.input = this.history[i];
+      }
+    }
+  },
+  methods: {
+    submit() {
+      if (!this.input) return;
+      if (this.submitLoading) return;
+      const log = {
+        roll: this.input,
+      };
+      if (this.tabletopId) log.tabletopId = this.tabletopId;
+      if (this.creatureId) log.creatureId = this.creatureId;
+      this.submitLoading = true;
+      logRoll.call(log, (error) => {
+        this.submitLoading = false;
+        if (!error) {
+          this.addHistory(this.input);
+          this.input = '';
+          this.inputError = undefined;
+          return;
+        }
+        this.inputError = error.message || error.toString();
+        console.error(error);
+      });
+    },
+    addHistory(string) {
+      // Don't add duplicates back to back in history
+      if (string === this.history[this.history.length - 1]) return;
+      this.history.push(string);
+      if (this.history.length > 50) this.history.shift();
+      this.historyIndex = this.history.length;
+    },
+    recalculate() {
       this.inputHint = this.inputError = undefined;
       if (!this.input) return;
       let result;
       try {
-        result = parse(value);
+        result = parse(this.input);
       } catch (e){
         if (e.constructor.name === 'EndOfInputError'){
           this.inputError = '...';
@@ -83,24 +135,29 @@ export default {
         return;
       }
     },
-  },
-  methods: {
-    submit(input){
-      logRoll.call({
-        roll: input,
-        creatureId: this.creatureId,
-      }, (error) => {
-        if (error) console.error(error);
-      });
+    incrementHistory() {
+      if (this.historyIndex < this.history.length) {
+        this.historyIndex += 1;
+      }
     },
+    decrementHistory() {
+      if (this.historyIndex > 0) {
+        this.historyIndex -= 1;
+      }
+    }
   },
+  // @ts-ignore
   meteor: {
-    logs(){
-      return CreatureLogs.find({
-        creatureId: this.creatureId,
-      }, {
+    logs() {
+      const filter = {};
+      if (this.tabletopId) {
+        filter.tabletopId = this.tabletopId;
+      } else if (this.creatureId) {
+        filter.creatureId = this.creatureId;
+      }
+      return CreatureLogs.find(filter, {
         sort: {date: -1},
-        limit: 20
+        limit: 100
       });
     },
     creature(){

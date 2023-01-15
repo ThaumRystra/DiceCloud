@@ -66,7 +66,7 @@ Meteor.publish('tabletop', function (tabletopId) {
     const logs = CreatureLogs.find({
       tabletopId,
     }, {
-      limit: 50,
+      limit: 100,
       sort: { date: -1 },
     });
     return [tabletopCursor, creatureSummaries, properties, logs, variables]

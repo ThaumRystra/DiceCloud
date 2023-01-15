@@ -53,7 +53,11 @@
           :loading="doActionLoading"
           :disabled="model.insufficientResources || !context.editPermission || !!targetingError"
           v-on="active ? {
-            'click.stop': doAction
+            click: e => {
+              if (!active) return;
+              e.stopPropagation();
+              doAction({});
+            }
           } : {}"
         >
           <template v-if="rollBonus && !rollBonusTooLong">
@@ -224,12 +228,14 @@ export default {
     actionTypeIcon() {
       return `$vuetify.icons.${this.model.actionType}`;
     },
-    targetingError(){
-      // Can always do an action without a target
-      if (!this.targets || !this.targets.length) return undefined;
-      if (this.targets.length > 1 && this.model.target !== 'multipleTargets'){
-        return 'Single target';
-      } else if (this.model.target === 'self' && this.targets[0] !== this.model.ancestors[0]._id){
+    targetingError() {
+      if (!this.active) return;
+      const targets = this.targets || [];
+      if (this.model.target === 'singleTarget' && targets.length === 0) {
+        return 'Select target';
+      } else if (targets.length > 1 && this.model.target !== 'multipleTargets'){
+        return 'Single target only';
+      } else if (this.model.target === 'self' && targets.length > 0){
         return 'Can only target self';
       }
       return undefined;
@@ -280,6 +286,7 @@ export default {
         }
       }, error => {
         this.doActionLoading = false;
+        this.$emit('deactivate');
         if (error) {
           console.error(error);
           snackbar({ text: error.reason });

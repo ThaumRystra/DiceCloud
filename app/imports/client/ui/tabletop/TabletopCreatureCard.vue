@@ -2,12 +2,12 @@
   <v-card
     style="height: 100px; width: 70px;"
     class="tabletop-creature-card"
-    :color="active ? 'accent' : ''"
-    hover
+    :class="{ active }"
+    :hover="hasClickListener"
     :elevation="active ? 8 : 2"
-    @mouseover="hover = true"
+    @mouseover="() => { if (hasClickListener) hover = true; }"
     @mouseleave="hover = false"
-    @click="$emit('click')"
+    v-on="hasClickListener ? {click: () => $emit('click')} : {}"
   >
     <v-progress-linear
       v-if="variables.hitPoints"
@@ -25,16 +25,18 @@
     </div>
     <card-highlight :active="hover" />
     <div class="d-flex justify-center">
-      <v-btn
-        v-if="showTargetBtn"
-        :color="targeted ? 'accent' : ''"
-        :elevation="targeted ? 8 : 2"
-        fab
-        small
-        @click.stop="targeted ? $emit('untarget') : $emit('target')"
-      >
-        <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
-      </v-btn>
+      <v-scale-transition>
+        <v-btn
+          v-if="showTargetBtn"
+          :color="targeted ? 'accent' : ''"
+          :elevation="targeted ? 8 : 2"
+          fab
+          small
+          @click.stop="targeted ? $emit('untarget') : $emit('target')"
+        >
+          <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
+        </v-btn>
+      </v-scale-transition>
     </div>
   </v-card>
 </template>
@@ -59,6 +61,11 @@ export default {
   data(){return {
     hover: false,
   }
+  },
+  computed: {
+    hasClickListener() {
+      return this.$listeners && !!this.$listeners.click;
+    },
   },
   // @ts-ignore
   meteor: {
