@@ -134,7 +134,6 @@ export function insertCreatureLogWork({ log, creature, tabletopId, method }) {
   log.date = new Date();
   if (tabletopId) log.tabletopId = tabletopId;
   if (creature && creature.tabletop) log.tabletopId = creature.tabletop;
-  console.log(log.tabletopId);
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer) {
