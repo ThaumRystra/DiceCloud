@@ -46,7 +46,7 @@ export default function applyRoll(node, actionContext) {
     }
     const value = reduced.value;
 
-    actionContext.scope[prop.variableName] = value;
+    actionContext.scope[prop.variableName] = { value };
     logValue.push(`**${value}**`);
 
     if (!prop.silent) {

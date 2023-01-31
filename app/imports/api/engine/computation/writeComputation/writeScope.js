@@ -15,18 +15,21 @@ export default function writeScope(creatureId, computation) {
 
   let $set, $unset;
 
-  for (const key in scope){
+  for (const key in scope) {
+    // Mongo can't handle keys that start with a dollar sign
+    if (key[0] === '$' || key[0] === '_') continue;
+
     // Remove large properties that aren't likely to be accessed
     delete scope[key].parent;
     delete scope[key].ancestors;
-    
+
     // Remove empty keys
     for (const subKey in scope[key]) {
       if (scope[key][subKey] === undefined) {
         delete scope[key][subKey]
       }
     }
-    
+
     // Only update changed fields
     if (!EJSON.equals(variables[key], scope[key])) {
       if (!$set) $set = {};
@@ -53,9 +56,9 @@ export default function writeScope(creatureId, computation) {
     const update = {};
     if ($set) update.$set = $set;
     if ($unset) update.$unset = $unset;
-    CreatureVariables.update({_creatureId: creatureId}, update);
+    CreatureVariables.update({ _creatureId: creatureId }, update);
   }
   if (computation.creature?.dirty) {
-    Creatures.update({_id: creatureId}, {$unset: { dirty: 1 }});
+    Creatures.update({ _id: creatureId }, { $unset: { dirty: 1 } });
   }
 }

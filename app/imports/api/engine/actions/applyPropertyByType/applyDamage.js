@@ -27,7 +27,7 @@ export default function applyDamage(node, actionContext) {
   // Choose target
   let damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
   // Determine if the hit is critical
-  let criticalHit = scope['$criticalHit'] &&
+  let criticalHit = scope['~criticalHit']?.value &&
     prop.damageType !== 'healing' // Can't critically heal
     ;
   // Double the damage rolls if the hit is critical
@@ -73,12 +73,12 @@ export default function applyDamage(node, actionContext) {
   damage = Math.floor(damage);
 
   // Convert extra damage into the stored type
-  if (prop.damageType === 'extra' && scope['$lastDamageType']) {
-    prop.damageType = scope['$lastDamageType'];
+  if (prop.damageType === 'extra' && scope['~lastDamageType']?.value) {
+    prop.damageType = scope['~lastDamageType']?.value;
   }
   // Store current damage type
   if (prop.damageType !== 'healing') {
-    scope['$lastDamageType'] = prop.damageType;
+    scope['~lastDamageType'] = { value: prop.damageType };
   }
 
   // Memoise the damage suffix for the log

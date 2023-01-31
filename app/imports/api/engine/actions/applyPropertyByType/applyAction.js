@@ -51,11 +51,11 @@ export default function applyAction(node, actionContext) {
 }
 
 function applyAttackWithoutTarget({ attack, actionContext }) {
-  delete actionContext.scope['$attackHit'];
-  delete actionContext.scope['$attackMiss'];
-  delete actionContext.scope['$criticalHit'];
-  delete actionContext.scope['$criticalMiss'];
-  delete actionContext.scope['$attackRoll'];
+  delete actionContext.scope['~attackHit'];
+  delete actionContext.scope['~attackMiss'];
+  delete actionContext.scope['~criticalHit'];
+  delete actionContext.scope['~criticalMiss'];
+  delete actionContext.scope['~attackRoll'];
 
   recalculateCalculation(attack, actionContext);
   const scope = actionContext.scope;
@@ -66,16 +66,16 @@ function applyAttackWithoutTarget({ attack, actionContext }) {
     criticalMiss,
   } = rollAttack(attack, scope);
   let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
-  if (scope['$attackAdvantage'] === 1) {
+  if (scope['~attackAdvantage']?.value === 1) {
     name += ' (Advantage)';
-  } else if (scope['$attackAdvantage'] === -1) {
+  } else if (scope['~attackAdvantage']?.value === -1) {
     name += ' (Disadvantage)';
   }
   if (!criticalMiss) {
-    scope['$attackHit'] = true
+    scope['~attackHit'] = { value: true }
   }
   if (!criticalHit) {
-    scope['$attackMiss'] = true;
+    scope['~attackMiss'] = { value: true };
   }
 
   actionContext.addLog({
@@ -87,12 +87,12 @@ function applyAttackWithoutTarget({ attack, actionContext }) {
 
 function applyAttackToTarget({ attack, target, actionContext }) {
   const scope = actionContext.scope;
-  delete scope['$attackHit'];
-  delete scope['$attackMiss'];
-  delete scope['$criticalHit'];
-  delete scope['$criticalMiss'];
-  delete scope['$attackDiceRoll'];
-  delete scope['$attackRoll'];
+  delete scope['~attackHit'];
+  delete scope['~attackMiss'];
+  delete scope['~criticalHit'];
+  delete scope['~criticalMiss'];
+  delete scope['~attackDiceRoll'];
+  delete scope['~attackRoll'];
 
   recalculateCalculation(attack, actionContext);
 
@@ -109,9 +109,9 @@ function applyAttackToTarget({ attack, target, actionContext }) {
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
         result > armor ? 'Hit!' : 'Miss!';
-    if (scope['$attackAdvantage'] === 1) {
+    if (scope['~attackAdvantage']?.value === 1) {
       name += ' (Advantage)';
-    } else if (scope['$attackAdvantage'] === -1) {
+    } else if (scope['~attackAdvantage']?.value === -1) {
       name += ' (Disadvantage)';
     }
 
@@ -121,9 +121,9 @@ function applyAttackToTarget({ attack, target, actionContext }) {
       inline: true,
     });
     if (criticalMiss || result < armor) {
-      scope['$attackMiss'] = true;
+      scope['~attackMiss'] = { value: true };
     } else {
-      scope['$attackHit'] = true;
+      scope['~attackHit'] = { value: true };
     }
   } else {
     actionContext.addLog({
@@ -141,7 +141,7 @@ function applyAttackToTarget({ attack, target, actionContext }) {
 function rollAttack(attack, scope) {
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
-  if (scope['$attackAdvantage'] === 1) {
+  if (scope['~attackAdvantage']?.value === 1) {
     const [a, b] = rollDice(2, 20);
     if (a >= b) {
       value = a;
@@ -150,7 +150,7 @@ function rollAttack(attack, scope) {
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
-  } else if (scope['$attackAdvantage'] === -1) {
+  } else if (scope['~attackAdvantage']?.value === -1) {
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
@@ -163,23 +163,23 @@ function rollAttack(attack, scope) {
     value = rollDice(1, 20)[0];
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
-  scope['$attackDiceRoll'] = value;
+  scope['~attackDiceRoll'] = { value };
   const result = value + attack.value;
-  scope['$attackRoll'] = result;
+  scope['~attackRoll'] = { value: result };
   const { criticalHit, criticalMiss } = applyCrits(value, scope);
   return { resultPrefix, result, value, criticalHit, criticalMiss };
 }
 
 function applyCrits(value, scope) {
-  let criticalHitTarget = scope.criticalHitTarget?.value || 20;
+  const criticalHitTarget = 20; // scope['~criticalHitTarget']?.value || 20;
   let criticalHit = value >= criticalHitTarget;
   let criticalMiss;
   if (criticalHit) {
-    scope['$criticalHit'] = true;
+    scope['~criticalHit'] = { value: true };
   } else {
     criticalMiss = value === 1;
     if (criticalMiss) {
-      scope['$criticalMiss'] = true;
+      scope['~criticalMiss'] = { value: true };
     }
   }
   return { criticalHit, criticalMiss };
