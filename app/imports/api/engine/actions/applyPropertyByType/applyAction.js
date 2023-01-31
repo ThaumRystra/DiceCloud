@@ -72,10 +72,10 @@ function applyAttackWithoutTarget({ attack, actionContext }) {
     name += ' (Disadvantage)';
   }
   if (!criticalMiss) {
-    scope['$attackHit'] = { value: true }
+    scope['$attackHit'] = true
   }
   if (!criticalHit) {
-    scope['$attackMiss'] = { value: true };
+    scope['$attackMiss'] = true;
   }
 
   actionContext.addLog({
@@ -121,9 +121,9 @@ function applyAttackToTarget({ attack, target, actionContext }) {
       inline: true,
     });
     if (criticalMiss || result < armor) {
-      scope['$attackMiss'] = { value: true };
+      scope['$attackMiss'] = true;
     } else {
-      scope['$attackHit'] = { value: true };
+      scope['$attackHit'] = true;
     }
   } else {
     actionContext.addLog({
@@ -163,9 +163,9 @@ function rollAttack(attack, scope) {
     value = rollDice(1, 20)[0];
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
-  scope['$attackDiceRoll'] = { value };
+  scope['$attackDiceRoll'] = value;
   const result = value + attack.value;
-  scope['$attackRoll'] = { value: result };
+  scope['$attackRoll'] = result;
   const { criticalHit, criticalMiss } = applyCrits(value, scope);
   return { resultPrefix, result, value, criticalHit, criticalMiss };
 }
@@ -175,11 +175,11 @@ function applyCrits(value, scope) {
   let criticalHit = value >= criticalHitTarget;
   let criticalMiss;
   if (criticalHit) {
-    scope['$criticalHit'] = { value: true };
+    scope['$criticalHit'] = true;
   } else {
     criticalMiss = value === 1;
     if (criticalMiss) {
-      scope['$criticalMiss'] = { value: true };
+      scope['$criticalMiss'] = true;
     }
   }
   return { criticalHit, criticalMiss };

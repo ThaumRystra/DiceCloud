@@ -27,7 +27,7 @@ export default function applyDamage(node, actionContext) {
   // Choose target
   let damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
   // Determine if the hit is critical
-  let criticalHit = scope['$criticalHit']?.value &&
+  let criticalHit = scope['$criticalHit'] &&
     prop.damageType !== 'healing' // Can't critically heal
     ;
   // Double the damage rolls if the hit is critical
