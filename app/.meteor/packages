@@ -49,3 +49,4 @@ littledata:synced-cron
 mdg:meteor-apm-agent
 typescript@4.5.4
 seba:minifiers-autoprefixer
+mixmax:smart-disconnect

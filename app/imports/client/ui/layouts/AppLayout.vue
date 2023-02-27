@@ -49,6 +49,7 @@
       </v-fade-transition>
     </v-app-bar>
     <v-main>
+      <connection-banner />
       <v-fade-transition mode="out-in">
         <router-view />
       </v-fade-transition>
@@ -66,12 +67,14 @@ import DialogStack from '/imports/client/ui/dialogStack/DialogStack.vue';
 import { mapMutations } from 'vuex';
 import SnackbarQueue from '/imports/client/ui/components/snackbars/SnackbarQueue.vue';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import ConnectionBanner from '/imports/client/ui/layouts/ConnectionBanner.vue';
 
 export default {
   components: {
     Sidebar,
     DialogStack,
     SnackbarQueue,
+    ConnectionBanner,
   },
   data() {
     return {
