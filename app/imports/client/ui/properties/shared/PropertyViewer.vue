@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <component
     :is="model.type"
     v-if="model && $options.components[model.type]"
@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
 export default {
   components: {

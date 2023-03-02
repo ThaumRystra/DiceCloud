@@ -5,7 +5,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import CharacterSheet from '/imports/client/ui/creature/character/CharacterSheet.vue';
 export default {
   components: {

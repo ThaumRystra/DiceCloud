@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
@@ -77,7 +77,7 @@
   </v-menu>
 </template>
 
-<script lang="js">
+<script>
 import SvgIcon from '/imports/client/ui/components/global/SvgIcon.vue';
 import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 import { findIcons } from '/imports/api/icons/Icons.js';

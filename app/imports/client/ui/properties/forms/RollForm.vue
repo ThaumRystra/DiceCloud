@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="roll-form">
     <v-row dense>
       <v-col
@@ -71,7 +71,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 

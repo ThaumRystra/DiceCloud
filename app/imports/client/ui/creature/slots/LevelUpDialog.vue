@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base
     :color="model.color"
     dark-body
@@ -178,7 +178,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';

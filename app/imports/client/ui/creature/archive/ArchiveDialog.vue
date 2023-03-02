@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template #toolbar>
       <v-toolbar-title>
@@ -56,7 +56,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';

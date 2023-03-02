@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
@@ -185,7 +185,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import SplitListLayout from '/imports/client/ui/properties/components/attributes/SplitListLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

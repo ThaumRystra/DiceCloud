@@ -97,7 +97,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
 import UserImages from '/imports/api/files/UserImages.js';
 import prettyBytes from 'pretty-bytes';

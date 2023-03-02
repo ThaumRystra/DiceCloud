@@ -127,7 +127,7 @@
   </v-row>
 </template>
 
-<script lang="js">
+<script>
 import Docs, {
   insertDoc,
   pullFromDoc,

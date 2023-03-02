@@ -36,7 +36,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';

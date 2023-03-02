@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-btn
     :fab="fab"
     :outlined="!fab"
@@ -12,7 +12,7 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script>
 import { getAncestry } from  '/imports/api/parenting/parenting.js';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
 import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';

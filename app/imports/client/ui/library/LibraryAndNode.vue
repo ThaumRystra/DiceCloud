@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <tree-detail-layout>
     <div
       slot="tree"
@@ -79,7 +79,7 @@
   </tree-detail-layout>
 </template>
 
-<script lang="js">
+<script>
 import TreeDetailLayout from '/imports/client/ui/components/TreeDetailLayout.vue';
 import LibraryBrowser from '/imports/client/ui/library/LibraryBrowser.vue';
 import LibraryNodeDialog from '/imports/client/ui/library/LibraryNodeDialog.vue';

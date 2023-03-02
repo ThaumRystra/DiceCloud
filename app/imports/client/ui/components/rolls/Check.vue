@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card>
     <template v-if="!result">
       <v-btn-toggle v-model="advantage">
@@ -47,7 +47,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../api/utility/numberToSignedString.js';
 export default {
   props: {

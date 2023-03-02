@@ -42,7 +42,7 @@
   </v-layout>
 </template>
 
-<script lang="js">
+<script>
 
 export default {
   inject: {

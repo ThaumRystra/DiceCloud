@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="tags.length"
     class="tags"
@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props:{
     tags: {

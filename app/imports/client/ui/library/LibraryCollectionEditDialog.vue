@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
@@ -56,7 +56,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import LibraryCollections, { updateLibraryCollection, removeLibraryCollection } from '/imports/api/library/LibraryCollections.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';

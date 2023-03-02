@@ -33,7 +33,7 @@
   </v-layout>
 </template>
 
-<script lang="js">
+<script>
   import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE.js';
   export default {
     data(){return {

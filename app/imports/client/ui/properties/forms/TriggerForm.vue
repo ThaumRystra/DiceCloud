@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="trigger-form">
     <text-field
       ref="focusFirst"
@@ -151,7 +151,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import {

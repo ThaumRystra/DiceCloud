@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="folder-form">
     <div class="layout wrap">
       <text-field
@@ -74,7 +74,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 

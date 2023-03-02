@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-btn 
     v-bind="$attrs"
     :disabled="isDisabled"
@@ -9,7 +9,7 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script>
 import { debounce } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 

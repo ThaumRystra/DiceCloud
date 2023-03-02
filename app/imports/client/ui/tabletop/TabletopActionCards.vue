@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="action-cards">
     <action-card
       v-for="action in actions"
@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 

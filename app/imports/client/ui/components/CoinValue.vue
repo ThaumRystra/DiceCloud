@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <span
       v-if="coinValue.gp || value === 0"
@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import valueToCoins from '/imports/client/ui/utility/valueToCoins.js';
 
 export default {

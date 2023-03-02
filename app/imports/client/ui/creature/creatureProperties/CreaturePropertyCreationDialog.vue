@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <selectable-property-dialog
     :value="forcedType || type"
     no-library-only-props
@@ -12,7 +12,7 @@
   </selectable-property-dialog>
 </template>
 
-<script lang="js">
+<script>
 import SelectablePropertyDialog from '/imports/client/ui/properties/shared/SelectablePropertyDialog.vue';
 import CreaturePropertyInsertForm from '/imports/client/ui/creature/creatureProperties/CreaturePropertyInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

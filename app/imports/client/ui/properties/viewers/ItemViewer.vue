@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="item-viewer">
     <v-row dense>
       <property-field
@@ -134,7 +134,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';

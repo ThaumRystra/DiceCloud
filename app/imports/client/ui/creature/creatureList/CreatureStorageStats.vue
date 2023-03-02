@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-combobox
     v-model="filterTerms"
     :items="filterOptions"
@@ -12,7 +12,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 const filterOptions = [];
 for (let key in PROPERTIES) {

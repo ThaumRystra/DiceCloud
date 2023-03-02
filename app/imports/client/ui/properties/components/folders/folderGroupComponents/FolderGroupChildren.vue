@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import propComponents from '/imports/client/ui/properties/components/folders/propertyComponentIndex.js';
 

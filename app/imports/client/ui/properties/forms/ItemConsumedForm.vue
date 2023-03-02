@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-row dense>
     <v-col
       cols="12"
@@ -30,7 +30,7 @@
   </v-row>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

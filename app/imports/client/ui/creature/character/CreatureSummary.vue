@@ -21,7 +21,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
 export default {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-container class="pa-6">
     <v-row
       v-if="collection && collection.description"
@@ -43,7 +43,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';

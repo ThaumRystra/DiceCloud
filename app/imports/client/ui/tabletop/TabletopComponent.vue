@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-container
     class="tabletop"
     fluid
@@ -36,7 +36,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop.js';
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';

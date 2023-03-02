@@ -11,7 +11,7 @@
   </v-banner>
 </template>
 
-<script lang="js">
+<script>
 export default {
   meteor: {
     status() {

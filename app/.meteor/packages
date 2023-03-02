@@ -37,7 +37,6 @@ simple:rest
 simple:rest-method-mixin
 mikowals:batch-insert
 peerlibrary:subscription-data
-zer0th:meteor-vuetify-loader
 akryum:vue-component
 akryum:vue-router2
 percolate:migrations
@@ -50,3 +49,4 @@ mdg:meteor-apm-agent
 typescript@4.5.4
 seba:minifiers-autoprefixer
 mixmax:smart-disconnect
+vite:bundler

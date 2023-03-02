@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     class="resource-card"
     :class="hover ? 'elevation-8': ''"
@@ -15,7 +15,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import ResourceCardContent from '/imports/client/ui/properties/components/attributes/ResourceCardContent.vue';
 

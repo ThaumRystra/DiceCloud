@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-icon
       slot="toolbar"
@@ -36,7 +36,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';

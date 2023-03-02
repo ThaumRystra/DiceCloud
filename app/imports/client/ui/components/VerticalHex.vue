@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="d-flex justify-center align-center"
     :style="`height: ${height}px; width: ${width}px;`"
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   export default {
     inject: {
       theme: {

@@ -101,7 +101,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';

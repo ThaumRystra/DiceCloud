@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <single-card-layout>
     <library-and-node
       :library-id="$route.params.id"
@@ -6,7 +6,7 @@
   </single-card-layout>
 </template>
 
-<script lang="js">
+<script>
 import SingleCardLayout from '/imports/client/ui/layouts/SingleCardLayout.vue';
 import LibraryAndNode from '/imports/client/ui/library/LibraryAndNode.vue';
 import Libraries from '/imports/api/library/Libraries.js';

@@ -90,7 +90,7 @@
   </v-row>
 </template>
 
-<script lang="js">
+<script>
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import DocCard from '/imports/client/ui/docs/DocCard.vue';
 import DocListItem from '/imports/client/ui/docs/DocListItem.vue';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <v-menu
       v-model="open"
@@ -63,7 +63,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
 
 export default {

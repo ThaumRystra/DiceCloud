@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="experience-form">
     <div class="layout column align-center">
       <smart-switch
@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

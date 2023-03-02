@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="library-browser"
     style="
@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';

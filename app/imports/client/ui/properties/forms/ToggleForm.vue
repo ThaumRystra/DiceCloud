@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="feature-form">
     <v-row dense>
       <v-col
@@ -93,7 +93,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

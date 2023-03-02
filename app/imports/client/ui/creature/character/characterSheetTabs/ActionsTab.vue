@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="actions-tab ma-2"
   >
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

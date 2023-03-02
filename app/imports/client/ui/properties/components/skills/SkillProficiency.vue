@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="proficiency-viewer layout align-center"
     v-on="!hideBreadcrumbs ? {click} : {}"
@@ -40,7 +40,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
   import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
   import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
   import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';

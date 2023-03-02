@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <v-row dense>
       <v-col
@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';

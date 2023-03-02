@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     style="min-height: 60px; min-width: 0;"
     class="px-0 font-weight-bold"
@@ -51,7 +51,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 

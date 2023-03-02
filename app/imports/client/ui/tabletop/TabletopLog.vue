@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="tabletop-log">
     <div class="messages layout column justify-end align-end">
       <div
@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import Messages, { sendMessage } from '/imports/api/tabletop/Messages.js';
 export default {
   props: {

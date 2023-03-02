@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <v-btn
     v-if="!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft"
     :icon="!$slots.default"
@@ -13,7 +13,7 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script>
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 
 export default {

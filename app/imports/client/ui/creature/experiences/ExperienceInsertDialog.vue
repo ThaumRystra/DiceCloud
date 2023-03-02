@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
       Add Experience
@@ -26,7 +26,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import ExperienceForm from '/imports/client/ui/creature/experiences/ExperienceForm.vue';
 import { ExperienceSchema, insertExperience } from '/imports/api/creature/experience/Experiences.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-select
     v-bind="$attrs"
     :loading="loading"
@@ -22,7 +22,7 @@
   </v-select>
 </template>
 
-<script lang="js">
+<script>
 import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 
 export default {

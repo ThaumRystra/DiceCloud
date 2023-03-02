@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import UserImages from '/imports/api/files/UserImages.js';
 
 export default {

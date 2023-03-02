@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template #replace-toolbar="{flat}">
       <property-toolbar
@@ -62,7 +62,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';

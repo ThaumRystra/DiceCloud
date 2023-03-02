@@ -47,7 +47,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import Docs from '/imports/api/docs/Docs.js';
 import DocEditForm from '/imports/client/ui/docs/DocEditForm.vue';
 import DocViewer from '/imports/client/ui/docs/DocViewer.vue';

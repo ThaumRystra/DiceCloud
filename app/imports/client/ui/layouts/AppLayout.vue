@@ -60,7 +60,7 @@
   </v-app>
 </template>
 
-<script lang="js">
+<script>
 import '/imports/api/users/Users.js';
 import Sidebar from '/imports/client/ui/layouts/Sidebar.vue';
 import DialogStack from '/imports/client/ui/dialogStack/DialogStack.vue';

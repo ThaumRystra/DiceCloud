@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-container fluid>
     <v-row dense>
       <v-col cols="12">
@@ -198,7 +198,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';

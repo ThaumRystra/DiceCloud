@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="item-form">
     <div class="layout justify-space-around">
       <div>
@@ -153,7 +153,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 

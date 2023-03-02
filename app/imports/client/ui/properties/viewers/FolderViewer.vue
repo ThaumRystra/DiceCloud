@@ -1,8 +1,8 @@
-<template lang="html">
+<template>
   <div class="folder-viewer" />
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {
   mixins: [propertyViewerMixin],

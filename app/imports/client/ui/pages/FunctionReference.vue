@@ -41,7 +41,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import functions from '/imports/parser/functions.js';
 export default {
   computed:{

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item-content :style="dense ? undefined : 'min-height: 60px;'">
     <v-list-item-title class="d-flex align-center">
       <div
@@ -48,7 +48,7 @@
   </v-list-item-content>
 </template>
 
-<script lang="js">
+<script>
   import Vue from 'vue';
   import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName.js';
   import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/removeCreatureFolder.js';

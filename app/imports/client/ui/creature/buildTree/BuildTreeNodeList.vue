@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="build-tree-node-list">
     <build-tree-node
       v-for="child in children"
@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import BuildTreeNode from '/imports/client/ui/creature/buildTree/BuildTreeNode.vue';
 
 export default {

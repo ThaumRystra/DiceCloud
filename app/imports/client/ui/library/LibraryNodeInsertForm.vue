@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base
     :override-back-button="() => $emit('back')"
     :color="model.color"
@@ -45,7 +45,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
 import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin.js';

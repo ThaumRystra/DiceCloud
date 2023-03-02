@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="computedErrors.length"
     class="error-list"
@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     errors: {

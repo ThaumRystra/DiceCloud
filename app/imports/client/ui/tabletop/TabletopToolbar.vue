@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-app-bar
     app
     dark
@@ -15,7 +15,7 @@
   </v-app-bar>
 </template>
 
-<script lang="js">
+<script>
 import { mapMutations } from 'vuex';
 
 export default {

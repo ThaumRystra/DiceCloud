@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="log-content">
     <div
       v-for="(content, index) in model"
@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 
 export default {

@@ -1,8 +1,8 @@
-<template lang="html">
+<template>
   <div class="tabletop-map" />
 </template>
 
-<script lang="js">
+<script>
 export default {
 }
 </script>

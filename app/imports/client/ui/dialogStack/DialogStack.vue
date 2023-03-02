@@ -41,7 +41,7 @@
   </v-layout>
 </template>
 
-<script lang="js">
+<script>
   import '/imports/client/ui/dialogStack/dialogStackWindowEvents.js';
   import mockElement from '/imports/client/ui/dialogStack/mockElement.js';
   import DialogComponentIndex from '/imports/client/ui/dialogStack/DialogComponentIndex.js';

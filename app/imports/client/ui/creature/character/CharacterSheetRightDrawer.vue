@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-navigation-drawer
     v-model="drawer"
     app
@@ -9,7 +9,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="js">
+<script>
 import CharacterLog from '/imports/client/ui/log/CharacterLog.vue';
 export default {
   components: {

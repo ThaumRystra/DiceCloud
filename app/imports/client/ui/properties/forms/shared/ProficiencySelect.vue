@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <smart-select
     append-icon="mdi-menu-down"
     :clearable="clearable"
@@ -19,7 +19,7 @@
   </smart-select>
 </template>
 
-<script lang="js">
+<script>
   import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
 
   const ICON_SPIN_DURATION = 300;

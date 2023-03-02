@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="effect-viewer layout align-center"
     dense
@@ -31,7 +31,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
   import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
   import { isFinite } from 'lodash';
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <toolbar-card
     :id="model._id"
     :color="model.color"
@@ -19,7 +19,7 @@
   </toolbar-card>
 </template>
 
-<script lang="js">
+<script>
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue'
 

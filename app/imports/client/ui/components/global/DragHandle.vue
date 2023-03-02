@@ -10,7 +10,7 @@
   </v-icon>
 </template>
 
-<script lang="js">
+<script>
 import { defer } from 'lodash'
 
 export default {

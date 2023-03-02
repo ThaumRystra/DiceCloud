@@ -1,10 +1,10 @@
-<template lang="html">
+<template>
   <v-icon v-if="value !== undefined">
     {{ displayedIcon }}
   </v-icon>
 </template>
 
-<script lang="js">
+<script>
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
 
 export default {

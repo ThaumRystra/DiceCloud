@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="properties"
     class="stats-tab ma-2"
@@ -389,7 +389,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';

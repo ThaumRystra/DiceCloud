@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     :class="hover ? 'elevation-8': ''"
     @click="click"
@@ -24,7 +24,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import flipToggle from '/imports/api/creature/creatureProperties/methods/flipToggle.js';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="spell-form">
     <v-row
       justify="center"
@@ -308,7 +308,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';

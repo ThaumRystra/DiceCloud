@@ -34,7 +34,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import Docs from '/imports/api/docs/Docs.js';
 import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';

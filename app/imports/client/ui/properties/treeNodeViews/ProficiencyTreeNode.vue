@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="layout align-center justify-start">
     <proficiency-icon
       v-if="!hideIcon"
@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 // Most of this was copied from EffectViewer and should probably be generalised
 import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';

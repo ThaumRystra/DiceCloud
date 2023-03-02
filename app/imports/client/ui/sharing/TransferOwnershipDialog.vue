@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
       Transfer Ownership
@@ -36,7 +36,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { transferOwnership } from '/imports/api/sharing/sharing.js';
 

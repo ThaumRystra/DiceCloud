@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="adjustment-viewer">
     <v-row dense>
       <property-field
@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 

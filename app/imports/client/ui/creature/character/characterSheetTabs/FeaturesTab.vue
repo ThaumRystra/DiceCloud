@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="features">
     <column-layout wide-columns>
       <folder-group-card
@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import FeatureCard from '/imports/client/ui/properties/components/features/FeatureCard.vue';

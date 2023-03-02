@@ -225,7 +225,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   import router from '/imports/client/ui/router.js';
   import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
   import Invites from '/imports/api/users/Invites.js';

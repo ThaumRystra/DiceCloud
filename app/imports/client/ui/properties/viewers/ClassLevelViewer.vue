@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="class-level-viewer">
     <v-row
       dense
@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 
 export default {

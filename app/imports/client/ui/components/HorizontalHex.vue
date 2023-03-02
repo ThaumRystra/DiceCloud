@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="d-flex justify-center align-center"
     style="height: 120px; width: 120px;"
@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   export default {
     data(){return {
       hover: false,

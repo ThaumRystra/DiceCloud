@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="buff-form">
     <smart-select
       label="Branch Type"
@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <component
       :is="model.type"
@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import nodesToTree from '/imports/api/parenting/nodesToTree.js'
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';

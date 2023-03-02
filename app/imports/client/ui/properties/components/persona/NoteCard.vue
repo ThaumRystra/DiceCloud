@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     :color="model.color"
     :data-id="model._id"
@@ -25,7 +25,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';

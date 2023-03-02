@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-menu
     v-model="open"
     origin="center center"
@@ -31,7 +31,7 @@
   </v-menu>
 </template>
 
-<script lang="js">
+<script>
 import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
 
 export default {

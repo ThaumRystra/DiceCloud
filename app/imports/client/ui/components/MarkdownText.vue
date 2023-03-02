@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <!-- eslint-disable vue/no-v-html -->
   <div
     class="markdown"
@@ -7,7 +7,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import { marked } from 'marked';
 
 export default {

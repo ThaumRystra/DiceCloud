@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="action-card"
     :class="cardClasses"
@@ -76,7 +76,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '../../../../../../api/utility/numberToSignedString.js';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';

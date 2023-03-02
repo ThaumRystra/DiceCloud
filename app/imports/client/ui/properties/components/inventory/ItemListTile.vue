@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="item"
     v-on="hasClickListener ? {click} : {}"
@@ -41,7 +41,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';

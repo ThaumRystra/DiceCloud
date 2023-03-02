@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="double-border"
   >
@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 
 const levelText = [

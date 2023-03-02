@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="tree-tab pa-4 layout column align-center"
     style="height: calc(100vh - 96px); display: flex;"
@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   import TreeDetailLayout from '/imports/client/ui/components/TreeDetailLayout.vue';
   import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
   import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyDialog.vue';

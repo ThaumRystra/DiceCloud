@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="point-buy-form">
     <point-buy-spend-form 
       :model="model"
@@ -175,7 +175,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import { PointBuySchema } from '/imports/api/properties/PointBuys.js';

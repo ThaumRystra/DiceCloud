@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="saving-throw-form">
     <v-row dense>
       <v-col
@@ -81,7 +81,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import saveListMixin from '/imports/client/ui/properties/forms/shared/lists/saveListMixin.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="$vuetify.breakpoint.smAndUp"
     class="layout split"
@@ -51,7 +51,7 @@
   </v-list>
 </template>
 
-<script lang="js">
+<script>
 export default {
 }
 </script>

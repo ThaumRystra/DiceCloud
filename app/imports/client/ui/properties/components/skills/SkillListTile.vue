@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="skill-list-tile pl-0"
     style="min-height: 36px;"
@@ -57,7 +57,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 import RollPopup from '/imports/client/ui/components/RollPopup.vue';

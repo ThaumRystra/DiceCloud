@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list
     expand
     :nav="nav"
@@ -38,7 +38,7 @@
   </v-list>
 </template>
 
-<script lang="js">
+<script>
 import CreatureFolderHeader from '/imports/client/ui/creature/creatureList/CreatureFolderHeader.vue';
 import CreatureList from '/imports/client/ui/creature/creatureList/CreatureList.vue';
 

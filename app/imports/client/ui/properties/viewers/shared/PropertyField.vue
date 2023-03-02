@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-col
     v-if="value !== undefined ||
       calculation !== undefined ||
@@ -76,7 +76,7 @@
   </v-col>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 import InlineEffect from '/imports/client/ui/properties/components/effects/InlineEffect.vue';
 

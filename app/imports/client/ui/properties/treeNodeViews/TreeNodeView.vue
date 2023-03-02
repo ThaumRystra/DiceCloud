@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <component
     :is="treeNodeView"
     :model="model"
@@ -10,7 +10,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import treeNodeViewIndex from '/imports/client/ui/properties/treeNodeViews/treeNodeViewIndex.js';
 
 export default {

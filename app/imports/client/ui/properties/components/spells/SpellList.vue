@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list
     two-line
     dense
@@ -37,7 +37,7 @@
   </v-list>
 </template>
 
-<script lang="js">
+<script>
 import draggable from 'vuedraggable';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';

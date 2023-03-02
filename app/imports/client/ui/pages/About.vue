@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <section>
       <v-parallax
@@ -64,7 +64,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   data(){ return {
     paragons:[{

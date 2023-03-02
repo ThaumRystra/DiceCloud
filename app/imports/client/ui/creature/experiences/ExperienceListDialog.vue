@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
@@ -84,7 +84,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import { format } from 'date-fns';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Experiences, { removeExperience, recomputeExperiences } from '/imports/api/creature/experience/Experiences.js';

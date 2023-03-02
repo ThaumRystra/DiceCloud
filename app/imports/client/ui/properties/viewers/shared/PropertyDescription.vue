@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <markdown-text
     v-if="text && model"
     :markdown="textValue"
@@ -12,7 +12,7 @@
   </property-field>
 </template>
 
-<script lang="js">
+<script>
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
 

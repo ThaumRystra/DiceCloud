@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <i
     ref="icon"
     aria-hidden
@@ -19,7 +19,7 @@
   </i>
 </template>
 
-<script lang="js">
+<script>
 const SIZE_MAP = {
   xSmall: '12px',
   small: '16px',

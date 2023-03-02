@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="spell"
     v-bind="$attrs"
@@ -48,7 +48,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
 

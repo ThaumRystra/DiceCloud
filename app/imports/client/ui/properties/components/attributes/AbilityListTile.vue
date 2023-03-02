@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="ability-list-tile pl-0"
     v-on="hasClickListener ? {click} : {}"
@@ -51,7 +51,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import doCheck from '/imports/api/engine/actions/doCheck.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <text-field
       label="Username"
@@ -24,7 +24,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 
 export default {

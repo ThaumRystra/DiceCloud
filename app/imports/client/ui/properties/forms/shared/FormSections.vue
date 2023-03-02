@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-expansion-panels
     popout
     multiple
@@ -7,6 +7,6 @@
   </v-expansion-panels>
 </template>
 
-<script lang="js">
+<script>
 export default {}
 </script>

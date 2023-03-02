@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <tree-node-list
     v-if="root"
     :children="children"
@@ -12,7 +12,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import nodesToTree from '/imports/api/parenting/nodesToTree.js'
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';

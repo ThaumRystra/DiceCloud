@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="value"
     class="mb-3"
@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     value: {

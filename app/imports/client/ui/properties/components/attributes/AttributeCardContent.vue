@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import doCheck from '/imports/api/engine/actions/doCheck.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="slot-viewer">
     <v-row dense>
       <property-field
@@ -59,7 +59,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';

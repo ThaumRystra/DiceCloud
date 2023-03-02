@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="stats">
     <column-layout>
       <div
@@ -372,7 +372,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import PrintedAction from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="card-raised-background">
     <v-container fluid>
       <v-row
@@ -55,7 +55,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import PropertySelectCard from '/imports/client/ui/properties/shared/PropertySelectCard.vue';
 export default {

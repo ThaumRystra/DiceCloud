@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-app-bar
     app
     class="character-sheet-toolbar"
@@ -152,7 +152,7 @@
   </v-app-bar>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';
 import { mapMutations } from 'vuex';

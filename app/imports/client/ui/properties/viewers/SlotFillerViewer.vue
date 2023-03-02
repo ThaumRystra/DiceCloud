@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="slot-filler-viewer">
     <v-row dense>
       <property-field
@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';

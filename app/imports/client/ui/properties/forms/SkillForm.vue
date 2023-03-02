@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="skill-form">
     <div class="layout wrap">
       <text-field
@@ -84,7 +84,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';

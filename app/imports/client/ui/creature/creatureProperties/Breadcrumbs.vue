@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="breadcrumbs layout align-center wrap"
     :class="{'no-icons': noIcons}"
@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
   import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 

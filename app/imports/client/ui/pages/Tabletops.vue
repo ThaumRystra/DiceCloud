@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <single-card-layout class="tabletops">
     <v-list
       v-if="tabletops.length"
@@ -33,7 +33,7 @@
   </single-card-layout>
 </template>
 
-<script lang="js">
+<script>
 import SingleCardLayout from '/imports/client/ui/layouts/SingleCardLayout.vue'
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
 import insertTabletop from '/imports/api/tabletop/methods/insertTabletop.js';

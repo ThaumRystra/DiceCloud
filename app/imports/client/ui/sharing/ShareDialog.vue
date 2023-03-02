@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
       Sharing
@@ -134,7 +134,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import {
   setPublic,
   setReadersCanCopy,

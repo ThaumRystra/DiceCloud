@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     :key="model._id"
     class="spell-slot-list-tile"
@@ -52,7 +52,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 export default {
   props: {

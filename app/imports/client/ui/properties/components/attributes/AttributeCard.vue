@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     :hover="hasClickListener"
     @click="click"
@@ -10,7 +10,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
   import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
   import AttributeCardContent from '/imports/client/ui/properties/components/attributes/AttributeCardContent.vue';
 

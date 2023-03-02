@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="skill-viewer">
     <v-row
       dense
@@ -118,7 +118,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import numberToSignedString from '../../../../api/utility/numberToSignedString.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

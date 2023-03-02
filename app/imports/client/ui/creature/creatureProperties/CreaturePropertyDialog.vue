@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template #replace-toolbar="{flat}">
       <property-toolbar
@@ -108,7 +108,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty.js';

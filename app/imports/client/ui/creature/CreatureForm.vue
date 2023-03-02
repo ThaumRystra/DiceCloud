@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="creature-form">
     <text-field
       label="Name"
@@ -124,7 +124,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import { union, without, debounce } from 'lodash';
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template #replace-toolbar="{flat}">
       <property-toolbar
@@ -80,7 +80,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
   import LibraryNodes, {
     updateLibraryNode,
     pushToLibraryNode,

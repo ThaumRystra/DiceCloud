@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="class-form">
     <div class="layout column align-center">
       <text-field
@@ -65,7 +65,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

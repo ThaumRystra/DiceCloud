@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <div
       v-for="(multiplier, multiplierIndex) in multipliers"
@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     multipliers:{

@@ -109,7 +109,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import { defer, union, without } from 'lodash';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';

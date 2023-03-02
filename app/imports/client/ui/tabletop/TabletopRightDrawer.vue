@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-navigation-drawer
     v-model="drawer"
     app
@@ -9,7 +9,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="js">
+<script>
 import TabletopLog from '/imports/client/ui/tabletop/TabletopLog.vue';
 export default {
   components: {

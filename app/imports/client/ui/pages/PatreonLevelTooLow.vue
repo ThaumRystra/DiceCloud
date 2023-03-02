@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 export default {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="container-viewer">
     <v-row dense>
       <property-field
@@ -99,7 +99,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {

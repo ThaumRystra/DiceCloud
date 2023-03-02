@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="point-buy-spend-form">
     <v-row
       v-if="model.values && model.values.length"
@@ -90,7 +90,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
 import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';

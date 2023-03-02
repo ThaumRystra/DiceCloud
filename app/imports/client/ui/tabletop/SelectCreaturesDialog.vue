@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
       Add Characters
@@ -29,7 +29,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';

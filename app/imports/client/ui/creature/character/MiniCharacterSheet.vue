@@ -1,8 +1,8 @@
-<template lang="html">
+<template>
   <div class="mini-character-sheet" />
 </template>
 
-<script lang="js">
+<script>
 export default {
 }
 </script>

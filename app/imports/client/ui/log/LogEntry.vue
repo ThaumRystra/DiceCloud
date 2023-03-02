@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     class="ma-2 log-entry"
   >
@@ -11,7 +11,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import LogContent from '/imports/client/ui/log/LogContent.vue';
 
 export default {

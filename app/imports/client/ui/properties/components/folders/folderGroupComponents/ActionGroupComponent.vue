@@ -16,7 +16,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
 

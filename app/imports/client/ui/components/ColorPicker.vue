@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-menu
     v-model="opened"
     :close-on-content-click="false"
@@ -98,9 +98,9 @@
   </v-menu>
 </template>
 
-<script lang="js">
+<script>
   import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
-  import vuetifyColors from 'vuetify/es5/util/colors';
+  //import vuetifyColors from 'vuetify/es5/util/colors';
   import { kebabToCamelCase, camelToKebabCase } from '/imports/client/ui/utility/swapCase.js';
 
   function colorToHex(color, shade = 'base'){

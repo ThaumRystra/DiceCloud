@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-app-bar
     app
     color="secondary"
@@ -27,7 +27,7 @@
   </v-app-bar>
 </template>
 
-<script lang="js">
+<script>
 import { mapMutations } from 'vuex';
 import { Session } from 'meteor/session';
 

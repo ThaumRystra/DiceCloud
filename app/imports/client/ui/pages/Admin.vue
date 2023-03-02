@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-container>
     <v-row>
       <v-col cols="12">
@@ -52,7 +52,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import getVersion from '/imports/migrations/methods/getVersion.js';
 import migrateTo from '/imports/migrations/methods/migrateTo.js';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';

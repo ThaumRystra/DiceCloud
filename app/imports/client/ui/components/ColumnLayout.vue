@@ -1,5 +1,5 @@
 <template
-  lang="html"
+ 
   functional
 >
   <div
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     wideColumns: Boolean,

@@ -17,7 +17,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: { 
     doc: {

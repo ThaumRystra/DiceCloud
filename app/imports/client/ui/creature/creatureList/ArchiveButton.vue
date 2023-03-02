@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-btn
     :icon="!text"
     :text="text"
@@ -15,7 +15,7 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     text: Boolean,

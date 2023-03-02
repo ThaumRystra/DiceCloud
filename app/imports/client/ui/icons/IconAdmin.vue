@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <div class="content">
       <v-card class="ma-4">
@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   import {importIcons, importIconMetadata} from '/imports/client/ui/icons/importIcons.js';
   import IconPicker from '/imports/client/ui/components/global/IconPicker.vue';
   import UploadButton from 'vuetify-upload-button';

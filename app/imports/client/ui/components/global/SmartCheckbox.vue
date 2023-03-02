@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-checkbox
     v-bind="$attrs"
     :loading="loading"
@@ -9,7 +9,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
   import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 
   export default {

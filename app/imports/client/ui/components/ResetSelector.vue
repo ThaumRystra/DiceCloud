@@ -12,7 +12,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';
 
 export default {

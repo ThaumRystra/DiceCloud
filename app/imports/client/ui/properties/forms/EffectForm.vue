@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="effect-form">
     <text-field
       ref="focusFirst"
@@ -180,7 +180,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin.js';

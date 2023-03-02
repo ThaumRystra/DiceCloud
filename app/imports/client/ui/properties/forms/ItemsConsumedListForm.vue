@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="mt-4">
     <v-slide-x-transition group>
       <div
@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ItemConsumedForm from '/imports/client/ui/properties/forms/ItemConsumedForm.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 

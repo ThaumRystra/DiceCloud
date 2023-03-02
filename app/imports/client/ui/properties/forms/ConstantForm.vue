@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <div class="layout wrap">
       <text-field
@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
 import { ConstantSchema } from '/imports/api/properties/Constants.js';

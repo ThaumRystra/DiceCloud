@@ -6,7 +6,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';

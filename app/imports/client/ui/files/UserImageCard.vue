@@ -33,7 +33,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 
 export default {
   props: {

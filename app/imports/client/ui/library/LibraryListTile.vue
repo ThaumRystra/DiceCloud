@@ -1,5 +1,5 @@
 <template
-  lang="html"
+ 
   functional
 >
   <v-list-item
@@ -29,7 +29,7 @@
   </v-list-item>
 </template>
 
-<script lang="js" functional>
+<script functional>
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 
 export default {

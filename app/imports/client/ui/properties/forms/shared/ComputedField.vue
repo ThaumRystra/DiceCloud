@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="computed-field">
     <text-field
       :value="model.calculation"
@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {

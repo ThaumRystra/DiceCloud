@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-app-bar
     app
     color="secondary"
@@ -37,7 +37,7 @@
   </v-app-bar>
 </template>
 
-<script lang="js">
+<script>
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { mapMutations } from 'vuex';

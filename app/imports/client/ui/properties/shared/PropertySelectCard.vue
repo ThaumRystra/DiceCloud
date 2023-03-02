@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     hover
     style="height: 100%; overflow: hidden;"
@@ -36,7 +36,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     property: {

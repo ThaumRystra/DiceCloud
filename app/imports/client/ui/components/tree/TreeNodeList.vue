@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <!--use value for immutable, list for auto-updating children -->
   <draggable
     v-model="displayedChildren"
@@ -30,7 +30,7 @@
   </draggable>
 </template>
 
-<script lang="js">
+<script>
 import draggable from 'vuedraggable';
 import TreeNode from '/imports/client/ui/components/tree/TreeNode.vue';
 import { isParentAllowed } from '/imports/api/parenting/parenting.js';

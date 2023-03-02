@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <transition-group name="slide">
     <dialog-base
       v-show="!value"
@@ -36,7 +36,7 @@
   </transition-group>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="action-viewer">
     <v-row dense>
       <property-field
@@ -104,7 +104,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';

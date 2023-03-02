@@ -58,7 +58,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import { union } from 'lodash';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';

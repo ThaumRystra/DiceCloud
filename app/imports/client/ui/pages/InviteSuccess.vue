@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <v-layout
       column
@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
 }
 </script>

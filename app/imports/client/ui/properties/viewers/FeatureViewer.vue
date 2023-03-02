@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="feature-viewer">
     <v-row dense>
       <property-description
@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 export default {
   mixins: [propertyViewerMixin],

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <action-viewer
     :model="model"
     class="spell-viewer"
@@ -30,7 +30,7 @@
   </action-viewer>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import ActionViewer from './ActionViewer.vue';
 

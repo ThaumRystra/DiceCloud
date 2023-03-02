@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="layout align-center justify-start"
     :class="insufficient && 'error--text'"
@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     model: {

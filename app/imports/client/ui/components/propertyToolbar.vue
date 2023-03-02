@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-toolbar
     :color="color || 'secondary'"
     :dark="isDark"
@@ -161,7 +161,7 @@
   </v-toolbar>
 </template>
 
-<script lang="js">
+<script>
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-text-field
     ref="input"
     v-bind="$attrs"
@@ -19,7 +19,7 @@
   </v-text-field>
 </template>
 
-<script lang="js">
+<script>
   import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 
   export default {

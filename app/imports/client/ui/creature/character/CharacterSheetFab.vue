@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-speed-dial
     v-model="fab"
     v-bind="$attrs"
@@ -38,7 +38,7 @@
   </v-speed-dial>
 </template>
 
-<script lang="js">
+<script>
   import LabeledFab from '/imports/client/ui/components/LabeledFab.vue';
   import { getHighestOrder } from '/imports/api/parenting/order.js';
   import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';

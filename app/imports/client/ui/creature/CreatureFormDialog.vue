@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base
     v-if="model"
     :color="model.color"
@@ -31,7 +31,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import updateCreature from '/imports/api/creature/creatures/methods/updateCreature.js';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';

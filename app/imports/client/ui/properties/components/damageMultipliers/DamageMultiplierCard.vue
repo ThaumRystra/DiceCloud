@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <v-card>
       <v-list>
@@ -74,7 +74,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     multipliers:{

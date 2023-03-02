@@ -36,7 +36,7 @@
   </column-layout>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SlotCard from '/imports/client/ui/creature/slots/SlotCard.vue';
 import PointBuyCard from '/imports/client/ui/properties/components/pointBuy/PointBuyCard.vue';

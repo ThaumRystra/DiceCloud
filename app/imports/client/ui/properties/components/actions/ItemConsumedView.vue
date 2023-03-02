@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     :class="{
       'theme--dark': theme.isDark,
@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import SelectItemToConsume from '/imports/client/ui/properties/components/actions/SelectItemToConsume.vue';
 export default {
   components: {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     class="action-card"
     :class="cardClasses"
@@ -99,7 +99,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 import doAction from '/imports/api/engine/actions/doAction.js';

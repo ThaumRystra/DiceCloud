@@ -47,7 +47,7 @@
   </v-list>
 </template>
 
-<script lang="js">
+<script>
 import { union } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <selectable-property-dialog v-model="type">
     <library-node-insert-form
       :type="type"
@@ -8,7 +8,7 @@
   </selectable-property-dialog>
 </template>
 
-<script lang="js">
+<script>
 import SelectablePropertyDialog from '/imports/client/ui/properties/shared/SelectablePropertyDialog.vue';
 import LibraryNodeInsertForm from '/imports/client/ui/library/LibraryNodeInsertForm.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';

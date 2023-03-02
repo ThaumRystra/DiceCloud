@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 
 export default {

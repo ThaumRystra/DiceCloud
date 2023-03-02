@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
@@ -43,7 +43,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Libraries from '/imports/api/library/Libraries.js';
 

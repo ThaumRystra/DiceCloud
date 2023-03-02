@@ -49,7 +49,7 @@
   </v-layout>
 </template>
 
-<script lang="js">
+<script>
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 

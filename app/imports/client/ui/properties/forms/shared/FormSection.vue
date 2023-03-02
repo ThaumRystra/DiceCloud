@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <form-sections v-if="standalone">
     <v-expansion-panel>
       <v-expansion-panel-header>
@@ -19,7 +19,7 @@
   </v-expansion-panel>
 </template>
 
-<script lang="js">
+<script>
 import FormSections from '/imports/client/ui/properties/forms/shared/FormSections.vue';
 export default {
   components: {

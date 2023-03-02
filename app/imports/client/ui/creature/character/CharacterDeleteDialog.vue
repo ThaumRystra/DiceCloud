@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
       Delete Character
@@ -30,7 +30,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';

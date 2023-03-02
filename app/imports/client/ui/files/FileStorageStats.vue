@@ -27,7 +27,7 @@
   </v-col>
 </template>
 
-<script lang="js">
+<script>
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import updateFileStorageUsed from '/imports/api/users/methods/updateFileStorageUsed.js';

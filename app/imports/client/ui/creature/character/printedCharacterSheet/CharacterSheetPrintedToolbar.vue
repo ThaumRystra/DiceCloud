@@ -42,7 +42,7 @@
   </v-app-bar>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { mapMutations } from 'vuex';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';

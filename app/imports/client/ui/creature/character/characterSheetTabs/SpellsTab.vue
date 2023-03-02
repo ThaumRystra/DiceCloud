@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="spells">
     <column-layout wide-columns>
       <folder-group-card
@@ -48,7 +48,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import SpellListCard from '/imports/client/ui/properties/components/spells/SpellListCard.vue';

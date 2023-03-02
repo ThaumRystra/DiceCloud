@@ -1,10 +1,10 @@
-<template lang="html">
+<template>
   <div class="name text-h5 mb-2">
     {{ value }}
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     value: {

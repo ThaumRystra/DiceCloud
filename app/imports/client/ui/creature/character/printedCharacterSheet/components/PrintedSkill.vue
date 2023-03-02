@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="printed-skill pl-0 d-flex align-center"
   >
@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../../api/utility/numberToSignedString.js';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 

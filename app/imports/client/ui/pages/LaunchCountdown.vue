@@ -25,7 +25,7 @@
 </template>
 
 
-<script lang="js">
+<script>
   import VueCountdown from '@chenfengyuan/vue-countdown';
   import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE.js';
   export default{

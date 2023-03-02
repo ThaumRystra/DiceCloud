@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="folder-form layout justify-start wrap">
     <property-field
       name="Linked Property"
@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
   import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
   import updateReferenceNode from '/imports/api/library/methods/updateReferenceNode.js';

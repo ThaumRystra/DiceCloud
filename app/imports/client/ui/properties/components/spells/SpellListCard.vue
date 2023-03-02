@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <toolbar-card
     :color="model.color"
     :data-id="model._id"
@@ -74,7 +74,7 @@
   </toolbar-card>
 </template>
 
-<script lang="js">
+<script>
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

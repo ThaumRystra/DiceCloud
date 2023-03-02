@@ -1,10 +1,10 @@
-<template lang="html">
+<template>
   <svg-icon
     :shape="shape"
   />
 </template>
 
-<script lang="js">
+<script>
 import SvgIcon from '/imports/client/ui/components/global/SvgIcon.vue'
 import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
 

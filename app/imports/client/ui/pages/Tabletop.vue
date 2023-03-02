@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-container
     v-if="!$subReady.tabletop"
     fluid
@@ -37,7 +37,7 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script>
 import Tabletops from '/imports/api/tabletop/Tabletops.js';
 import TabletopComponent from '/imports/client/ui/tabletop/TabletopComponent.vue';
 

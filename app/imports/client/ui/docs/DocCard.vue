@@ -23,7 +23,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
   

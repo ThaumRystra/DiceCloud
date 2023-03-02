@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-btn
     :loading="doActionLoading"
     :disabled="context.editPermission === false"
@@ -20,7 +20,7 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script>
 import doAction from '/imports/api/engine/actions/doAction.js';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';

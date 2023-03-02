@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="inline-computation-field">
     <text-area
       :value="model.text"
@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
 
 export default {

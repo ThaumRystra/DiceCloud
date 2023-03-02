@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     style="height: 150px; min-width: 120px;"
   >
@@ -15,7 +15,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props: {
     model: {

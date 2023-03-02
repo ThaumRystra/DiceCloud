@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="effect-viewer layout align-center"
     v-on="!hideBreadcrumbs ? {click} : {}"
@@ -40,7 +40,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';

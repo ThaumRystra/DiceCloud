@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="action-form">
     <v-row
       justify="center"
@@ -176,7 +176,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';

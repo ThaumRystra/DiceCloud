@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="d-flex justify-center flex-wrap"
   >
@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
   import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
   import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
 

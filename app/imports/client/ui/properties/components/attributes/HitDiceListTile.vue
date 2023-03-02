@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list-item
     class="hit-dice-list-tile"
     :class="{hover}"
@@ -55,7 +55,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 export default {
   inject: {

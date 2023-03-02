@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list v-if="items.length">
     <v-list-item
       v-for="item in items"
@@ -18,7 +18,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import ItemTreeNode from '/imports/client/ui/properties/treeNodeViews/ItemTreeNode.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import selectAmmoItem from '/imports/api/creature/creatureProperties/methods/selectAmmoItem.js';

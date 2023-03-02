@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-slider
     ref="input"
     v-bind="$attrs"
@@ -25,7 +25,7 @@
   </v-slider>
 </template>
 
-<script lang="js">
+<script>
 import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 
 export default {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="resources-form">
     <div
       v-if="model.attributesConsumed && model.attributesConsumed.length"
@@ -54,7 +54,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import AttributesConsumedListForm from '/imports/client/ui/properties/forms/AttributesConsumedListForm.vue';
 import ItemsConsumedListForm from '/imports/client/ui/properties/forms/ItemsConsumedListForm.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';

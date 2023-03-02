@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="feature-form">
     <text-field
       ref="focusFirst"
@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {

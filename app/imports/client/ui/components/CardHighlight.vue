@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="dark || theme.isDark"
     class="overlay"
@@ -6,7 +6,7 @@
   />
 </template>
 
-<script lang="js">
+<script>
   export default {
     inject: {
       theme: {

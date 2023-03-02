@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <svg-icon
     v-if="model.icon"
     :shape="model.icon.shape"
@@ -14,7 +14,7 @@
   </v-icon>
 </template>
 
-<script lang="js">
+<script>
 import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 
 export default {

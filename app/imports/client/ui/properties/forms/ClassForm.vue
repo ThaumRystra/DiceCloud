@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="class-form">
     <v-row dense>
       <v-col
@@ -125,7 +125,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-sheet
     class="tree-node"
     :class="{
@@ -116,7 +116,7 @@
   </v-sheet>
 </template>
 
-<script lang="js">
+<script>
 /**
 * TreeNode's are list item views of character properties. Every property which
 * can belong to the character is shown in the tree view of the character

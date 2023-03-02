@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-combobox
     v-bind="$attrs"
     :loading="loading"
@@ -20,7 +20,7 @@
   </v-combobox>
 </template>
 
-<script lang="js">
+<script>
 import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 
 export default {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="proficiency-viewer">
     <v-row dense>
       <property-field
@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 

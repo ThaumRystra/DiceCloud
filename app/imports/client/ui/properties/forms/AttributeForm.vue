@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="attribute-form">
     <div class="layout column align-center">
       <computed-field
@@ -263,7 +263,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import FormSections from '/imports/client/ui/properties/forms/shared/FormSections.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';

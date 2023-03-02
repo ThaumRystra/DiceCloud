@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
@@ -29,7 +29,7 @@
   </v-menu>
 </template>
 
-<script lang="js">
+<script>
 import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
 import { format } from 'date-fns';
 

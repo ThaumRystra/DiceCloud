@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-tooltip
     v-if="accessRights === 'reader' || accessRights === 'writer' || accessRights === 'public'"
     bottom
@@ -15,7 +15,7 @@
   </v-tooltip>
 </template>
 
-<script lang="js">
+<script>
 export default {
   props:{
     model: {

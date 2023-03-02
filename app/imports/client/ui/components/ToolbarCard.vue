@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card
     :hover="hasClickListener"
     class="toolbar-card"
@@ -26,7 +26,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';

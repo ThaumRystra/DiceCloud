@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title class="mr-4">
@@ -178,7 +178,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES.js';

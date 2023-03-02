@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="buff-viewer">
     <!--<property-field
       name="Duration"
@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 import numberToSignedString from '../../../../api/utility/numberToSignedString.js';
 

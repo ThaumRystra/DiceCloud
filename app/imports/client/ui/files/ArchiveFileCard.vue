@@ -31,7 +31,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';

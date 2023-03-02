@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="reference-viewer">
     <v-row>
       <property-field
@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 

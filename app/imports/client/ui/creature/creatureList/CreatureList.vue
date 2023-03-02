@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <draggable
     v-model="dataCreatures"
     style="min-height: 24px;"
@@ -25,7 +25,7 @@
   </draggable>
 </template>
 
-<script lang="js">
+<script>
   import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
   import draggable from 'vuedraggable';
   import moveCreatureToFolder from '/imports/api/creature/creatureFolders/methods.js/moveCreatureToFolder.js';

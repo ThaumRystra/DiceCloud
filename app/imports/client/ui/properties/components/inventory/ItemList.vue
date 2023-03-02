@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-list
     dense
     class="item-list"
@@ -26,7 +26,7 @@
   </v-list>
 </template>
 
-<script lang="js">
+<script>
 import draggable from 'vuedraggable';
 import ItemListTile from '/imports/client/ui/properties/components/inventory/ItemListTile.vue';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';

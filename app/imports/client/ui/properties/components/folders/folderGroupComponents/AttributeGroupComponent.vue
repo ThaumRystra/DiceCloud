@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import AbilityListTile from '/imports/client/ui/properties/components/attributes/AbilityListTile.vue';
 import HitDiceListTile from '/imports/client/ui/properties/components/attributes/HitDiceListTile.vue';
 import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';

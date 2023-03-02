@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';

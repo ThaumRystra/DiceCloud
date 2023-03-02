@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <text-field
       ref="focusFirst"
@@ -47,7 +47,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
 import skillListMixin from '/imports/client/ui/properties/forms/shared/lists/skillListMixin.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';

@@ -75,7 +75,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import PrintedStats from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedStats.vue';

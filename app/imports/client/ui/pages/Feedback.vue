@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     class="layout column align-center pa-2"
   >
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 export default {
 }
 </script>

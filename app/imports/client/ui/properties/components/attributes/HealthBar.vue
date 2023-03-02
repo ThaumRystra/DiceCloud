@@ -82,7 +82,7 @@
   </v-layout>
 </template>
 
-<script lang="js">
+<script>
 import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import chroma from 'chroma-js';

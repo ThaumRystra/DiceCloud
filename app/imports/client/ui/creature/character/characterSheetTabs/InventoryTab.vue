@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="inventory">
     <column-layout wide-columns>
       <folder-group-card
@@ -105,7 +105,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';

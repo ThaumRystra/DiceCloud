@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <dialog-base>
     <v-layout
       column
@@ -45,7 +45,7 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script>
 import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon.js'

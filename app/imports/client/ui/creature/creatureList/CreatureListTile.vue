@@ -1,7 +1,4 @@
-<template
-  lang="html"
-  functional
->
+<template>
   <v-list-item
     v-bind="$attrs"
     :class="isSelected && 'primary--text v-list-item--active'"
@@ -49,7 +46,7 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script>
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 
 export default {

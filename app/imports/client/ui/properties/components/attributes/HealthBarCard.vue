@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-card class="pa-2">
     <health-bar
       v-for="attribute in attributes"
@@ -10,7 +10,7 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script>
 import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
 
 export default {

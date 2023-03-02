@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="effect-viewer">
     <v-row dense>
       <property-field name="Operation">
@@ -74,7 +74,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 import { isFinite } from 'lodash';

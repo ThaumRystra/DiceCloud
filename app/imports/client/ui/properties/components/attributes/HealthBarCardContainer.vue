@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-if="attributes.length"
     class="px-2 pt-2"
@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 

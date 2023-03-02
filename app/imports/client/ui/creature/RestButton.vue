@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <v-btn
     :loading="loading"
     :disabled="context.editPermission === false"
@@ -13,7 +13,7 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script>
 import restCreature from '/imports/api/creature/creatures/methods/restCreature.js';
 
 export default {

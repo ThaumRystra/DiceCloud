@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     style="height: 100%; overflow: hidden;"
     class="character-log layout column justify-end"
@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';

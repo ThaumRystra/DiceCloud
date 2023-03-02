@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="attribute-form">
     <v-row dense>
       <v-col
@@ -87,7 +87,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
