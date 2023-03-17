@@ -268,13 +268,35 @@ function linkPointBuy(dependencyGraph, prop) {
   if (prop.inactive) return;
 }
 
-function linkProficiencies(dependencyGraph, prop) {
+function linkProficiencies(dependencyGraph, prop, computation) {
   // The stats depend on the proficiency
   if (prop.inactive) return;
-  prop.stats.forEach(statName => {
-    if (!statName) return;
-    dependencyGraph.addLink(statName, prop._id, prop.type);
-  });
+  if (prop.targetByTags) {
+    getEffectTagTargets(prop, computation).forEach(targetId => {
+      const targetProp = computation.propsById[targetId];
+      if (
+        (targetProp.type === 'attribute' || targetProp.type === 'skill')
+        && targetProp.variableName
+        && !prop.targetField
+      ) {
+        // If the field wasn't specified and we're targeting an attribute or
+        // skill, just treat it like a normal proficiency on its variable name
+        dependencyGraph.addLink(targetProp.variableName, prop._id, 'proficiency');
+      } else {
+        // Otherwise target a field on that property
+        const key = prop.targetField || getDefaultCalculationField(targetProp);
+        const calcObj = get(targetProp, key);
+        if (calcObj && calcObj.calculation) {
+          dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'proficiency');
+        }
+      }
+    });
+  } else {
+    prop.stats.forEach(statName => {
+      if (!statName) return;
+      dependencyGraph.addLink(statName, prop._id, 'proficiency');
+    });
+  }
 }
 
 function linkSavingThrow(dependencyGraph, prop) {
