@@ -36,6 +36,27 @@ let LibraryNodeSchema = new SimpleSchema({
     type: String,
     max: STORAGE_LIMITS.tagLength,
   },
+  icon: {
+    type: storedIconsSchema,
+    optional: true,
+    max: STORAGE_LIMITS.icon,
+  },
+
+  // Library-specific properties, these can be stripped from the resulting
+  // creature properties
+
+  // Will this property show up in the slot-fill dialog
+  fillSlots: {
+    type: Boolean,
+    optional: true,
+    index: 1,
+  },
+  // Will this property show up in the insert-from-library dialog
+  searchable: {
+    type: Boolean,
+    optional: true,
+    index: 1,
+  },
   libraryTags: {
     type: Array,
     defaultValue: [],
@@ -45,11 +66,36 @@ let LibraryNodeSchema = new SimpleSchema({
     type: String,
     max: STORAGE_LIMITS.tagLength,
   },
-  icon: {
-    type: storedIconsSchema,
+  // Overrides the type when searching for properties
+  slotFillerType: {
+    type: String,
     optional: true,
-    max: STORAGE_LIMITS.icon,
-  }
+    max: STORAGE_LIMITS.variableName,
+  },
+  // Image to display when filling the slot
+  slotFillImage: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.url,
+  },
+  // Fill more than one quantity in a slot, like feats and ability score
+  // improvements, filtered out of UI if there isn't space in quantityExpected
+  slotQuantityFilled: {
+    type: SimpleSchema.Integer,
+    optional: true, // Undefined implies 1
+  },
+  // Filters out of UI if condition isn't met, but isn't otherwise enforced
+  slotFillerCondition: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.calculation,
+  },
+  // Text to display if slot filler condition fails
+  slotFillerConditionNote: {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.calculation,
+  },
 });
 
 // Set up server side search index
