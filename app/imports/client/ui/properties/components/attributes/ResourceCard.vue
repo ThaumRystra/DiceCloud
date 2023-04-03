@@ -2,6 +2,9 @@
   <v-card
     class="resource-card"
     :class="hover ? 'elevation-8': ''"
+    :color="model.color"
+    :dark="model.color && isDark"
+    :light="model.color && !isDark"
   >
     <resource-card-content
       :model="model"
@@ -18,6 +21,7 @@
 <script lang="js">
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import ResourceCardContent from '/imports/client/ui/properties/components/attributes/ResourceCardContent.vue';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 
 export default {
   components: {
@@ -38,6 +42,12 @@ export default {
       hover: false,
     }
   },
+  computed: {
+    isDark() {
+      if (!this.model.color) return;
+      return isDarkColor(this.model.color);
+    },
+  }
 };
 </script>
 

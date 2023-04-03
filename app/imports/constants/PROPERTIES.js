@@ -209,12 +209,23 @@ const PROPERTIES = Object.freeze({
 
 export default PROPERTIES;
 
-export function getPropertyName(type){
+export function getPropertyName(type) {
   return type && PROPERTIES[type] && PROPERTIES[type].name;
 }
 
-export function getPropertyIcon(type){
+export function getPropertyIcon(type) {
   return type && PROPERTIES[type] && PROPERTIES[type].icon;
+}
+
+export function getSuggestedChildren(type) {
+  const suggestions = [];
+  for (const key in PROPERTIES) {
+    const prop = PROPERTIES[key];
+    if (prop.suggestedParents.includes(type)) {
+      suggestions.push({ type: key, details: prop });
+    }
+  }
+  return suggestions;
 }
 
 const propsByDocsPath = new Map();

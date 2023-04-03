@@ -1,40 +1,45 @@
 <template lang="html">
   <div
-    class="d-flex justify-center flex-wrap"
+    class="d-flex flex-wrap align-start"
   >
-    <div class="mx-1">
-      <color-picker
-        label="Color"
-        :value="model.color"
-        @input="value =>$emit('change', {path: ['color'], value})"
-      />
-    </div>
-    <div class="mx-1">
+    <outlined-input
+      name="Icon"
+      class="mb-4"
+    >
       <icon-picker
-        label="Icon"
         :value="model.icon"
-        :error-messages="errors.icon"
+        :width="54"
+        :height="54"
         @change="(value, ack) =>$emit('change', {path: ['icon'], value, ack})"
       />
-    </div>
+    </outlined-input>
+    <outlined-input
+      name="Color"
+      class="mb-4 ml-2"
+    >
+      <color-picker
+        :value="model.color"
+        :width="54"
+        :height="54"
+        @input="value =>$emit('change', {path: ['color'], value})"
+      />
+    </outlined-input>
   </div>
 </template>
 
 <script lang="js">
   import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
   import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
+  import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
   export default {
     components: {
+      OutlinedInput,
       PropertyIcon,
       ColorPicker,
     },
     props: {
       model: {
-        type: Object,
-        required: true,
-      },
-      errors: {
         type: Object,
         required: true,
       },

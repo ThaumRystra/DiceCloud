@@ -29,11 +29,6 @@
         style="flex-shrink: 0;"
       >
         <v-spacer />
-        <color-picker
-          v-if="$listeners && $listeners['color-changed']"
-          :value="model.color"
-          @input="colorChanged"
-        />
         <v-menu
           v-if="$listeners && (
             $listeners.move ||

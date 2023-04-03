@@ -10,7 +10,6 @@
         @duplicate="duplicate"
         @remove="remove"
         @toggle-editing="editing = !editing"
-        @color-changed="value => change({path: ['color'], value})"
       />
     </template>
     <template v-if="model">
@@ -32,37 +31,16 @@
         mode="out-in"
       >
         <div v-if="editing">
-          <component
-            :is="model.type + 'Form'"
+          <property-form
             :key="_id"
             class="creature-property-form"
             :model="model"
+            :embedded="embedded"
             @change="change"
             @push="push"
             @pull="pull"
-          >
-            <template #children>
-              <creature-properties-tree
-                style="width: 100%;"
-                class="mb-2"
-                organize
-                :root="{collection: 'creatureProperties', id: model._id}"
-                @length="childrenLength = $event"
-                @selected="selectSubProperty"
-              />
-              <v-btn
-                icon
-                outlined
-                color="accent"
-                data-id="insert-creature-property-btn"
-                @click="addProperty"
-              >
-                <v-icon>
-                  mdi-plus
-                </v-icon>
-              </v-btn>
-            </template>
-          </component>
+            @add-child="addProperty"
+          />
         </div>
         <div v-else>
           <component
@@ -123,6 +101,7 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
+import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
@@ -150,6 +129,7 @@ export default {
   components: {
     ...formIndex,
     ...viewerIndex,
+    PropertyForm,
     PropertyIcon,
     DialogBase,
     PropertyToolbar,
