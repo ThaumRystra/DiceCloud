@@ -82,31 +82,58 @@ Meteor.publish('searchLibraryNodes', function(creatureId){
       let searchTerm = self.data('searchTerm') || '';
       check(searchTerm, String);
 
-      let options = undefined;
-      if (searchTerm){
-        filter.$text = {$search: searchTerm};
-        options = {
-          // relevant documents have a higher score.
-          fields: {
-            score: { $meta: 'textScore' }
-          },
-          sort: {
-            // `score` property specified in the projection fields above.
-            score: { $meta: 'textScore' },
-            'ancestors.0.id': 1,
-            name: 1,
-            order: 1,
-          }
-        }
-      } else {
-        delete filter.$text
-        options = {sort: {
+      
+      let options = {
+        sort: {
           'ancestors.0.id': 1,
           name: 1,
           order: 1,
-        }};
+        },
+        limit: limit,
+      };
+    
+      // Reset the resultSet
+      let allNodes = LibraryNodes.find().fetch();
+      resultSet = new Set(allNodes.map(node => node._id));
+    
+      if (filter._id) {
+        delete filter._id;
       }
-      options.limit = limit;
+
+      if (searchTerm) {
+        const orTerms = searchTerm.split('|').map(term => term.trim()).filter(term => term.length > 0);
+        const andTerms = searchTerm.replace('|',' ').split('&').map(term => term.trim()).filter(term => term.length > 0 && !orTerms.includes(term));
+        
+        if (orTerms.length > 0) {
+          resultSet = new Set();
+          orTerms.forEach(term => {
+            const result = searchNodes(term, filter, options);
+            result.forEach(id => resultSet.add(id));
+          });
+        }
+    
+        if (andTerms.length > 0) {
+          let andResults = andTerms.map(term => searchNodes(term, filter, options));
+          resultSet = andResults.shift();
+          andResults.forEach(result => {
+            resultSet = new Set([...resultSet].filter(id => result.has(id)));
+          });
+        }
+        
+        delete filter.$text;
+        filter._id = { $in: [...resultSet] };
+      
+        options.limit = limit;
+        
+        if (orTerms.length > 0 || andTerms.length > 0) {
+          if (resultSet.size > 0) {
+            filter._id = { '$in': Array.from(resultSet) };
+          } else {
+            // No results found, ensure no documents are returned
+            filter._id = { '$in': ['non-existent-id'] };
+          }
+        }
+      }
 
       this.autorun(function () {
         self.setData('countAll', LibraryNodes.find(filter).count());
@@ -141,3 +168,14 @@ Meteor.publish('searchLibraryNodes', function(creatureId){
     });
   });
 });
+
+function searchNodes(term, filter, options) {
+  if (!term) return new Set();
+
+  filter.$text = { $search: term };
+  const cursor = LibraryNodes.find(filter, options);
+  const resultSet = new Set();
+  cursor.forEach(doc => resultSet.add(doc._id));
+
+  return resultSet;
+}
