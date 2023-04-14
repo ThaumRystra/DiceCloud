@@ -2,7 +2,7 @@ import { buildComputationFromProps } from '/imports/api/engine/computation/build
 import { assert } from 'chai';
 import clean from '../../utility/cleanProp.testFn.js';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   const totalFilled = computation.propsById['slotId'].totalFilled;
   assert.equal(totalFilled, 4);
@@ -13,7 +13,7 @@ var testProperties = [
   clean({
     _id: 'slotId',
     type: 'propertySlot',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   // Children
   clean({
@@ -21,16 +21,16 @@ var testProperties = [
     type: 'slotFiller',
     slotQuantityFilled: 3,
     slotFillerType: 'item',
-    ancestors: [{id: 'charId'}, {id: 'slotId'}],
+    ancestors: [{ id: 'charId' }, { id: 'slotId' }],
   }),
   clean({
     _id: 'slotChildId',
     type: 'item',
-    ancestors: [{id: 'charId'}, {id: 'slotId'}],
+    ancestors: [{ id: 'charId' }, { id: 'slotId' }],
   }),
   clean({
     _id: 'slotGrandchildId',
     type: 'effect',
-    ancestors: [{id: 'charId'}, {id: 'slotId'}, {id: 'slotChildId'}],
+    ancestors: [{ id: 'charId' }, { id: 'slotId' }, { id: 'slotChildId' }],
   }),
 ];

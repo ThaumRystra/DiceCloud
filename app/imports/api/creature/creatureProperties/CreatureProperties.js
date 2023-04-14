@@ -46,6 +46,12 @@ let CreaturePropertySchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
+  // Fill more than one quantity in a slot, like feats and ability score
+  // improvements, filtered out of UI if there isn't space in quantityExpected
+  slotQuantityFilled: {
+    type: SimpleSchema.Integer,
+    optional: true, // Undefined implies 1
+  },
 });
 
 const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
