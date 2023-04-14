@@ -52,7 +52,7 @@ export default function () {
   assert.isTrue(
     triggerMatchTags(clean({
       type: 'trigger',
-      extraTags: [{ operation: 'Or', tags: ['or1'] }]
+      extraTags: [{ operation: 'OR', tags: ['or1'] }]
     }), positiveProp),
     'Trigger matches when OR tags are present'
   );
@@ -60,7 +60,7 @@ export default function () {
     triggerMatchTags(clean({
       type: 'trigger',
       targetTags: ['missing1'],
-      extraTags: [{ operation: 'Or', tags: ['or1'] }]
+      extraTags: [{ operation: 'OR', tags: ['or1'] }]
     }), positiveProp),
     'Trigger matches when only OR tags are present'
   );
