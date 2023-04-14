@@ -89,23 +89,26 @@ export function triggerMatchTags(trigger, prop) {
     matched = true;
   }
   // Check the extra tags
-  trigger.extraTags?.forEach(extra => {
-    if (extra.operation === 'OR') {
-      if (matched) return;
-      if (
-        !extra.tags.length ||
-        difference(extra.tags, propTags).length === 0
-      ) {
-        matched = true;
-      }
-    } else if (extra.operation === 'NOT') {
-      if (
-        extra.tags.length &&
-        intersection(extra.tags, propTags)
-      ) {
-        return false;
+  if (trigger.extraTags) {
+    for (const extra of trigger.extraTags) {
+      if (extra.operation === 'OR') {
+        if (matched) break;
+        if (
+          !extra.tags.length ||
+          difference(extra.tags, propTags).length === 0
+        ) {
+          matched = true;
+        }
+      } else if (extra.operation === 'NOT') {
+        if (
+          extra.tags.length &&
+          intersection(extra.tags, propTags).length > 0
+        ) {
+          matched = false;
+          break;
+        }
       }
     }
-  });
+  }
   return matched;
 }
