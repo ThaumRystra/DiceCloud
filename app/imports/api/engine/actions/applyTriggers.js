@@ -35,7 +35,7 @@ export function applyTrigger(trigger, prop, actionContext) {
   if (trigger.inactive) {
     return;
   }
-  
+
   // Prevent triggers from firing if their condition is false
   if (trigger.condition?.parseNode) {
     recalculateCalculation(trigger.condition, actionContext);
@@ -61,11 +61,11 @@ export function applyTrigger(trigger, prop, actionContext) {
     value: trigger.description,
     inline: false,
   }
-  if (trigger.description?.text){
+  if (trigger.description?.text) {
     recalculateInlineCalculations(trigger.description, actionContext);
     content.value = trigger.description.value;
   }
-  if(!trigger.silent) actionContext.addLog(content);
+  if (!trigger.silent) actionContext.addLog(content);
 
   // Get all the trigger's properties and apply them
   const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
@@ -78,7 +78,7 @@ export function applyTrigger(trigger, prop, actionContext) {
   trigger.firing = false;
 }
 
-function triggerMatchTags(trigger, prop) {
+export function triggerMatchTags(trigger, prop) {
   let matched = false;
   const propTags = getEffectivePropTags(prop);
   // Check the target tags
