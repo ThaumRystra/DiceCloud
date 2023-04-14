@@ -194,14 +194,18 @@ function dealDamage({ target, damageType, amount, actionContext }) {
   let healthBars = getPropertiesOfType(target._id, 'attribute');
 
   // Keep only the healthbars that can take damage/healing
-  remove(healthBars, (bar) =>
-    bar.attributeType !== 'healthBar' ||
-    bar.inactive ||
-    bar.removed ||
-    bar.overridden ||
-    (amount >= 0 && bar.healthBarNoDamage) ||
-    (amount < 0 && bar.healthBarNoHealing)
-  );
+  healthBars = healthBars.filter((bar) => {
+    if (bar.attributeType !== 'healthBar' || bar.inactive || bar.removed || bar.overridden) {
+      return false;
+    }
+    if (damageType === 'healing' && bar.healthBarNoHealing) {
+      return false;
+    }
+    if (damageType !== 'healing' && amount >= 0 && bar.healthBarNoDamage) {
+      return false;
+    }
+    return true;
+  });
 
   // Sort healthbars by damage/healing order or tree order as a fallback
   healthBars.sort((a, b) => {
