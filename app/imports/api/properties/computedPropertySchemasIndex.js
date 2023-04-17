@@ -13,7 +13,7 @@ import { ComputedDamageSchema } from '/imports/api/properties/Damages.js';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
 import { ComputedEffectSchema } from '/imports/api/properties/Effects.js';
 import { ComputedFeatureSchema } from '/imports/api/properties/Features.js';
-import { FolderSchema } from '/imports/api/properties/Folders.js';
+import { ComputedFolderSchema } from '/imports/api/properties/Folders.js';
 import { ComputedItemSchema } from '/imports/api/properties/Items.js';
 import { ComputedNoteSchema } from '/imports/api/properties/Notes.js';
 import { ComputedPointBuySchema } from '/imports/api/properties/PointBuys.js';
@@ -43,7 +43,7 @@ const propertySchemasIndex = {
   damageMultiplier: DamageMultiplierSchema,
   effect: ComputedEffectSchema,
   feature: ComputedFeatureSchema,
-  folder: FolderSchema,
+  folder: ComputedFolderSchema,
   note: ComputedNoteSchema,
   pointBuy: ComputedPointBuySchema,
   proficiency: ProficiencySchema,
