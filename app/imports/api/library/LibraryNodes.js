@@ -72,14 +72,12 @@ let LibraryNodeSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.variableName,
   },
-  /* TODO: Disabled for now until image upload is working
   // Image to display when filling the slot
   slotFillImage: {
     type: String,
     optional: true,
     max: STORAGE_LIMITS.url,
   },
-  */
   // Fill more than one quantity in a slot, like feats and ability score
   // improvements, filtered out of UI if there isn't space in quantityExpected
   slotQuantityFilled: {

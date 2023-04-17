@@ -58,6 +58,33 @@ const emptyFolderExample = {
   }],
 };
 
+const exampleSlotFiller = {
+  _id: 'DXPYsHKF6888h3hZs',
+  type: 'slotFiller',
+  name: 'Slot Filler Example',
+  'picture': 'https://url.to.pic',
+  'tags': ['slot', 'tags'],
+  'parent': {
+    'collection': 'creatures',
+    'id': 'm9sdCvs6iDf7qRaGv',
+  },
+  'ancestors': [{
+    'collection': 'creatures',
+    'id': 'm9sdCvs6iDf7qRaGv',
+  }],
+};
+const expectedSlotFillerUpdate = {
+  $set: {
+    'libraryTags': ['slot', 'tags'],
+    'fillSlots': true,
+    'searchable': true,
+    'slotFillImage': 'https://url.to.pic',
+  },
+  $unset: {
+    picture: 1,
+  },
+};
+
 const DownMergeExample = {
   _id: 'DXPYsHKF6W8Hh3hZs',
   type: 'feature',
@@ -103,6 +130,13 @@ describe('dbv2 Migrate library nodes', function () {
     assert.equal(timesFind, 0, 'Find should be called zero times on a prop with no tags');
     assert.isUndefined(update, 'There should be no update on a prop with no tags');
     assert.equal(timesUpdate, 0, 'Update should be called zero times on a prop with no tags');
+  });
+  it('Migrates slot fillers up', function () {
+    const bulk = stubBulk();
+    migratePropUp(bulk, exampleSlotFiller);
+    const { query, update } = bulk.result();
+    assert.deepEqual(query, { _id: 'DXPYsHKF6888h3hZs' }, 'The query should match the id of the given prop');
+    assert.deepEqual(update, expectedSlotFillerUpdate, 'The update should match the expected update');
   });
   it('Merges tags when down migrating', function () {
     const bulk = stubBulk();

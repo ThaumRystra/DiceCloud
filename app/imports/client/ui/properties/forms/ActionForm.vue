@@ -172,6 +172,7 @@
           @change="change('reset', ...arguments)"
         />
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>

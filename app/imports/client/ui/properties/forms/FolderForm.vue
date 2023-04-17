@@ -1,31 +1,8 @@
 <template lang="html">
   <div class="folder-form">
     <div class="layout wrap">
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        style="flex-basis: 300px;"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
       <form-sections>
-        <form-section
-          v-if="$slots.children"
-          name="Children"
-        >
-          <slot name="children" />
-        </form-section>
-
         <form-section name="Advanced">
-          <smart-combobox
-            label="Tags"
-            multiple
-            chips
-            deletable-chips
-            :value="model.tags"
-            @change="change('tags', ...arguments)"
-          />
           <smart-switch
             label="Group children on a card"
             :value="model.groupStats"
@@ -69,6 +46,7 @@
             </div>
           </v-expand-transition>
         </form-section>
+        <slot />
       </form-sections>
     </div>
   </div>

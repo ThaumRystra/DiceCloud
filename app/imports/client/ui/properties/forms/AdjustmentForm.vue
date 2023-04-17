@@ -65,13 +65,15 @@
       :error-messages="errors.silent"
       @change="change('silent', ...arguments)"
     />
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
-    >
-      <slot name="children" />
-    </form-section>
+    <form-sections>
+      <form-section
+        v-if="$slots.children"
+        name="Children"
+      >
+        <slot name="children" />
+      </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 

@@ -45,7 +45,10 @@
       <v-tab :disabled="!type">
         Create
       </v-tab>
-      <v-tab :disabled="!type">
+      <v-tab
+        v-if="!hideLibraryTab"
+        :disabled="!type"
+      >
         Library
       </v-tab>
     </v-tabs>
@@ -77,7 +80,10 @@
           />
         </v-card-text>
       </v-tab-item>
-      <v-tab-item :disabled="!type">
+      <v-tab-item
+        v-if="!hideLibraryTab"
+        :disabled="!type"
+      >
         <v-expansion-panels
           multiple
           inset
@@ -222,6 +228,7 @@ export default {
       type: Object,
       default: undefined,
     },
+    hideLibraryTab: Boolean,
   },
   reactiveProvide: {
     name: 'context',
@@ -258,7 +265,6 @@ export default {
     this.changeType(this.type);
   },
   methods: {
-
     propertyHelpChanged(value){
       Meteor.users.setPreference.call({
         preference: 'hidePropertySelectDialogHelp',
@@ -290,10 +296,6 @@ export default {
     loadMore(){
       if (this.currentLimit >= this.countAll) return;
       this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
-    },
-    insert(){
-      if (!this.selectedNodeIds.length) return;
-      this.$store.dispatch('popDialogStack', this.selectedNodeIds);
     },
     changeType(type){
       this._subs.searchLibraryNodes.setData('type', type);

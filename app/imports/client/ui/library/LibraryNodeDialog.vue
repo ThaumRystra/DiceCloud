@@ -28,15 +28,16 @@
           size="64"
         />
       </div>
-      <component
-        :is="model.type + 'Form'"
+      <property-form
         v-else-if="model && editing"
         :key="_id"
         class="library-node-form"
         :model="model"
+        :embedded="embedded"
         @change="change"
         @push="push"
         @pull="pull"
+        @add-child="addLibraryNode"
       />
       <component
         :is="model.type + 'Viewer'"
@@ -87,6 +88,7 @@
     pullFromLibraryNode,
     softRemoveLibraryNode,
     restoreLibraryNode,
+    insertNode,
   } from '/imports/api/library/LibraryNodes.js';
   import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode.js';
   import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
@@ -103,15 +105,12 @@
   import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
   import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
   import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo.js';
-
-  let formIndex = {};
-  for (let key in propertyFormIndex){
-    formIndex[key + 'Form'] = propertyFormIndex[key];
-  }
-
+  import { getHighestOrder } from '/imports/api/parenting/order.js';
+  import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+  import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
   let viewerIndex = {};
   for (let key in propertyViewerIndex){
-    formIndex[key + 'Viewer'] = propertyViewerIndex[key];
+    viewerIndex[key + 'Viewer'] = propertyViewerIndex[key];
   }
 
   export default {
@@ -119,7 +118,7 @@
       PropertyToolbar,
       PropertyIcon,
       DialogBase,
-      ...formIndex,
+      PropertyForm,
       ...viewerIndex,
     },
     props: {
@@ -269,6 +268,44 @@
             ack(error && error.reason || error);
           } else if (error){
             console.error(error);
+          }
+        });
+      },
+      addLibraryNode() {
+        // Check tier has paid benefits
+        let tier = getUserTier(Meteor.userId());
+        if (!(tier && tier.paidBenefits)){
+          this.$store.commit('pushDialogStack', {
+            component: 'tier-too-low-dialog',
+            elementId: 'insert-library-node-button',
+          });
+          return;
+        }
+        let parentPropertyId = this.model._id;
+        this.$store.commit('pushDialogStack', {
+          component: 'add-creature-property-dialog',
+          elementId: 'insert-creature-property-btn',
+          data: {
+            parentDoc: this.model,
+            creatureId: this.creatureId,
+            hideLibraryTab: true,
+          },
+          callback(result){
+            if (!result) return;
+            let parentRef = {
+              id: parentPropertyId,
+              collection: 'libraryNodes',
+            };
+            let order = getHighestOrder({
+              collection: LibraryNodes,
+              ancestorId: parentRef.id,
+            }) + 0.5;
+            let creatureProperty = result;
+            // Get order and parent
+            creatureProperty.order = order;
+            // Insert the property
+            let id = insertNode.call({creatureProperty, parentRef});
+            return `tree-node-${id}`;
           }
         });
       },

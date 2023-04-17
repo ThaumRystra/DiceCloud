@@ -25,15 +25,22 @@ Migrations.add({
 });
 
 export function migratePropUp(bulk, prop) {
+  let update;
+  // If the prop is a slot filler with an image, move it
+  if (prop.type === 'slotFiller' && typeof prop.picture === 'string') {
+    update = { $set: {} };
+    update.$set.slotFillImage = prop.picture;
+    update.$unset = { picture: 1 };
+  }
   // If there are tags, copy them to libraryTags and set findable flags
   if (Array.isArray(prop.tags) && prop.tags.length) {
-    bulk.find({ _id: prop._id }).updateOne({
-      $set: {
-        libraryTags: prop.tags,
-        fillSlots: true,
-        searchable: true,
-      },
-    });
+    update = update || { $set: {} };
+    update.$set.libraryTags = prop.tags;
+    update.$set.fillSlots = true;
+    update.$set.searchable = true;
+  }
+  if (update) {
+    bulk.find({ _id: prop._id }).updateOne(update);
   }
 }
 
