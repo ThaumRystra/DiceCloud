@@ -68,8 +68,7 @@
         <v-card-text
           v-if="!$slots['unwrapped-content']"
         >
-          <component
-            :is="type"
+          <property-form
             v-if="type"
             class="creature-property-form"
             :model="model"
@@ -191,12 +190,12 @@ import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin.js';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
 import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 
 export default {
   components: {
@@ -204,7 +203,7 @@ export default {
     DialogBase,
     TreeNodeView,
     LibraryNodeExpansionContent,
-    ...propertyFormIndex,
+    PropertyForm,
   },
   mixins: [schemaFormMixin],
   props: {

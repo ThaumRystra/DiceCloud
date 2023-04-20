@@ -139,17 +139,17 @@
           <creature-properties-tree
             style="width: 100%;"
             organize
-            :root="{collection: 'creatureProperties', id: model._id}"
-            @selected="selectSubProperty"
+            :root="{collection, id: model._id}"
+            :collection="collection"
+            @selected="e => $emit('select-sub-property', e)"
           />
           <v-btn
             v-for="suggestion in suggestedChildren"
             :key="suggestion.type"
-            text
             tile
-            color="accent"
-            data-id="insert-creature-property-btn"
-            @click="$event=>$emit('add-child')"
+            plain
+            :data-id="`insert-${suggestion.type}-property-btn`"
+            @click="$event => $emit('add-child', {suggestedType: suggestion.type, elementId: `insert-${suggestion.type}-property-btn`})"
           >
             <v-icon left>
               mdi-plus
@@ -157,11 +157,10 @@
             {{ suggestion.details.name }}
           </v-btn>
           <v-btn
-            text
             tile
-            color="accent"
-            data-id="insert-creature-property-btn"
-            @click="$event=>$emit('add-child')"
+            plain
+            data-id="insert-any-property-btn"
+            @click="$event => $emit('add-child', {elementId: 'insert-any-property-btn'})"
           >
             <v-icon
               v-if="!suggestedChildren.length"
@@ -215,6 +214,10 @@ export default {
     model: {
       type: [Object, Array],
       default: () => ({}),
+    },
+    collection: {
+      type: String,
+      default: 'creatureProperties'
     },
     embedded: Boolean, // This dialog is embedded in a page
   },

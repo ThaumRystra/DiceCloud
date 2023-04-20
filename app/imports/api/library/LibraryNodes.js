@@ -4,7 +4,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema.js';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
@@ -15,6 +15,8 @@ import '/imports/api/library/methods/index.js';
 import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import { restore } from '/imports/api/parenting/softRemove.js';
+import { getAncestry } from '/imports/api/parenting/parenting.js';
+import { reorderDocs } from '/imports/api/parenting/order.js';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -132,20 +134,56 @@ function assertNodeEditPermission(node, userId) {
 
 const insertNode = new ValidatedMethod({
   name: 'libraryNodes.insert',
-  validate: null,
+  validate: new SimpleSchema({
+    libraryNode: {
+      type: Object,
+      blackbox: true,
+    },
+    parentRef: RefSchema,
+  }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  run(libraryNode) {
+  run({ libraryNode, parentRef }) {
+    // get the new ancestry
+    let { parentDoc, ancestors } = getAncestry({ parentRef });
+
+    // Check permission to edit
+    let root;
+    if (parentRef.collection === 'libraries') {
+      root = parentDoc;
+    } else if (parentRef.collection === 'libraryNodes') {
+      root = Libraries.findOne(parentDoc.ancestors[0].id);
+    } else {
+      throw `${parentRef.collection} is not a valid parent collection`
+    }
+    assertEditPermission(root, this.userId);
+
+    // Set the ancestry of the library node
+    libraryNode.parent = parentRef;
+    libraryNode.ancestors = ancestors;
+    // Remove its ID if it came with one to force a random one to be generated
+    // server-side
     delete libraryNode._id;
-    assertNodeEditPermission(libraryNode, this.userId);
-    let nodeId = LibraryNodes.insert(libraryNode);
+
+    // Insert the node
+    const nodeId = LibraryNodes.insert(libraryNode);
+
+    // Update the node if it was a reference node
     if (libraryNode.type == 'reference') {
       libraryNode._id = nodeId;
       updateReferenceNodeWork(libraryNode, this.userId);
     }
+
+    // Tree structure changed by insert, reorder the tree
+    reorderDocs({
+      collection: LibraryNodes,
+      ancestorId: root._id,
+    });
+
+    // Return the id of the inserted node
     return nodeId;
   },
 });

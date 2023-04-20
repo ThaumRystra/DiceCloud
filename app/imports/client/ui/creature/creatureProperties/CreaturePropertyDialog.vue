@@ -40,6 +40,7 @@
             @push="push"
             @pull="pull"
             @add-child="addProperty"
+            @select-sub-property="selectSubProperty"
           />
         </div>
         <div v-else>
@@ -244,7 +245,11 @@ export default {
         },
       });
     },
-    selectSubProperty(_id){
+    selectSubProperty(_id) {
+      if (this.embedded) {
+        this.$emit('select-sub-property', _id);
+        return;
+      }
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
         elementId: `tree-node-${_id}`,
@@ -254,14 +259,15 @@ export default {
         },
       });
     },
-    addProperty(){
+    addProperty({elementId, suggestedType}){
       let parentPropertyId = this.model._id;
       this.$store.commit('pushDialogStack', {
         component: 'add-creature-property-dialog',
-        elementId: 'insert-creature-property-btn',
+        elementId,
         data: {
           parentDoc: this.model,
           creatureId: this.creatureId,
+          suggestedType,
         },
         callback(result){
           if (!result) return;

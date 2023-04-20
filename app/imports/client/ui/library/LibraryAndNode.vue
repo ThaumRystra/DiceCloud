@@ -74,6 +74,7 @@
         embedded
         @removed="selectedNodeId = undefined"
         @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selectedNodeId = id}"
+        @select-sub-property="id => selectedNodeId = id"
       />
     </div>
   </tree-detail-layout>
