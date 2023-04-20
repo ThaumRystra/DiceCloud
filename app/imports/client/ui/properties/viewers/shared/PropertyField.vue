@@ -6,18 +6,18 @@
     v-bind="cols"
     class="mb-3"
   >
-    <v-sheet
-      outlined
-      class="pa-2 layout column align-start fill-height"
+    <fieldset
+      :class="theme.isDark? 'theme--dark' :'theme--light'"
+      class="rounded v-sheet--outlined pa-2 layout column align-start fill-height"
       @click="$emit('click', $event)"
     >
-      <v-sheet
+      <legend
         v-if="name"
         class="text-caption px-1 name"
-        style="margin-top: -18px;"
+        style="line-height: 0;"
       >
         {{ name }}
-      </v-sheet>
+      </legend>
       <div
         class="flex-grow-1 d-flex align-center flex-wrap"
         style="width: 100%;"
@@ -72,7 +72,7 @@
           />
         </div>
       </div>
-    </v-sheet>
+    </fieldset>
   </v-col>
 </template>
 
@@ -83,6 +83,13 @@ import InlineEffect from '/imports/client/ui/properties/components/effects/Inlin
 export default {
   components: {
     InlineEffect,
+  },
+  inject: {
+    theme: {
+      default: {
+        isDark: false,
+      },
+    },
   },
   props: {
     name: {
