@@ -93,6 +93,7 @@
             v-if="showExpanded"
             :children="computedChildren"
             :parent-slot-id="computedSlotId"
+            :depth="depth"
             @selected="e => $emit('selected', e)"
           />
           <div v-else>
@@ -141,6 +142,10 @@ export default {
     context: { default: {} }
   },
   props: {
+    depth: {
+      type: Number,
+      default: 0,
+    },
     node: {
       type: Object,
       required: true,
@@ -155,7 +160,7 @@ export default {
     },
   },
   data(){return {
-    expanded: false,
+    expanded: this.depth <= 2,
     /* expand if there's a slot needing attention:
       this.node._descendantCanFill || (
         this.node.type === 'propertySlot' &&
