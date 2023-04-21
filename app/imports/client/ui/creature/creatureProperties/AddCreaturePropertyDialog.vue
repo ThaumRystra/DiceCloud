@@ -155,7 +155,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ tab === 1 ? "Discard" : "Cancel" }}
       </v-btn>
       <v-spacer />
       <v-btn

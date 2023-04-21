@@ -14,6 +14,7 @@
     <transition-group
       name="dialog-list"
       class="dialog-sizer"
+      :class="{shake}"
       tag="div"
       @enter="enter"
       @leave="leave"
@@ -55,6 +56,7 @@
     },
     data(){return {
       hiddenElements: [],
+      shake: false,
     }},
     computed: {
       dialogs(){
@@ -80,8 +82,25 @@
       popDialogStack(result){
         this.$store.dispatch('popDialogStack', result);
       },
-      backdropClicked(event){
-        if (event.target === event.currentTarget) this.popDialogStack();
+      backdropClicked(event) {
+        // If the target was not the backdrop, ignore
+        if (event.target !== event.currentTarget) return;
+
+        // If the top dialog can't be closed with the backdrop, shake shake
+        const topDialog = this.dialogs[this.dialogs.length - 1];
+        if (topDialog.data.noBackdropClose) {
+          this.shakeTopDialog();
+          return;
+        }
+
+        // Otherwise close the top dialog
+        this.popDialogStack();
+      },
+      shakeTopDialog() {
+        this.shake = false;
+        requestAnimationFrame(() => {
+          this.shake = true;
+        });
       },
       getDialogStyle(index){
         const length = this.$store.state.dialogStack.dialogs.length;
@@ -240,12 +259,23 @@
     z-index: 7;
     flex: initial;
   }
+
+  .dialog-sizer.shake {
+    animation: shake 0.2s;
+  }
+
+  @keyframes shake {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
   /* sm */
   @media only screen and (max-width:  960px) and (min-width:  601px){
     .dialog-sizer {
       width: calc(100% - 32px);
       height: calc(100% - 32px);
-  }
+    }
   }
   /* xs */
   @media only screen and (max-width: 600px) {

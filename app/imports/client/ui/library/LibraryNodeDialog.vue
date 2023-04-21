@@ -306,6 +306,7 @@ export default {
           creatureId: this.creatureId,
           hideLibraryTab: true,
           suggestedType,
+          noBackdropClose: true,
         },
         callback(result){
           if (!result) return;
