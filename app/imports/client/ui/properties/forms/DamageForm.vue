@@ -8,7 +8,7 @@
         <computed-field
           ref="focusFirst"
           label="Damage"
-          hint="A caculation including dice rolls of the damge to deal to the target when activated by an action"
+          hint="A calculation including dice rolls of the damage to deal to the target when activated by an action"
           :model="model.amount"
           :error-messages="errors.amount"
           @change="({path, value, ack}) =>

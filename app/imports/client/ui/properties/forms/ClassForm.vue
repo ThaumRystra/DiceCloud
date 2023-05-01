@@ -113,7 +113,7 @@
 
         <computed-field
           label="Condition"
-          hint="A caclulation to determine if this class can have levels added to it"
+          hint="A calculation to determine if this class can have levels added to it"
           placeholder="Always allow"
           :model="model.slotCondition"
           :error-messages="errors.slotCondition"

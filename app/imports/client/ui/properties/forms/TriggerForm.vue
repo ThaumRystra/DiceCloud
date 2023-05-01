@@ -103,7 +103,7 @@
 
     <computed-field
       label="Condition"
-      hint="A caclulation to determine if this trigger should fire"
+      hint="A calculation to determine if this trigger should fire"
       placeholder="Always active"
       :model="model.condition"
       :error-messages="errors.condition"

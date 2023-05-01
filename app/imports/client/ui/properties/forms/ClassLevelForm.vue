@@ -22,7 +22,7 @@
         label="Class variable name"
         :value="model.variableName"
         style="flex-basis: 300px;"
-        hint="This should be the same for each level in a class, use `variablName.level` to reference the highest class level for a given class variable name in calculations"
+        hint="This should be the same for each level in a class, use `variableName.level` to reference the highest class level for a given class variable name in calculations"
         :error-messages="errors.variableName"
         @change="change('variableName', ...arguments)"
       />
@@ -30,7 +30,7 @@
     <text-field
       v-if="context.isLibraryForm"
       label="Condition"
-      hint="A caclulation to determine if this can be added to the character"
+      hint="A calculation to determine if this can be added to the character"
       placeholder="Always active"
       :value="model.slotFillerCondition"
       :error-messages="errors.slotFillerCondition"

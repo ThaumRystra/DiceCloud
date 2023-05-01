@@ -118,7 +118,7 @@
 
     <computed-field
       label="Condition"
-      hint="A caclulation to determine if this slot should be active"
+      hint="A calculation to determine if this slot should be active"
       placeholder="Always active"
       :model="model.slotCondition"
       :error-messages="errors.slotCondition"
