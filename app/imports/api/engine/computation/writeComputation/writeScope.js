@@ -62,3 +62,13 @@ export default function writeScope(creatureId, computation) {
     Creatures.update({ _id: creatureId }, { $unset: { dirty: 1 } });
   }
 }
+/*
+function calculateSize(computation) {
+  const sizeEstimator = {
+    creature: computation.creature,
+    variables: computation.variables,
+    props: computation.originalPropsById,
+  };
+  return MongoInternals.NpmModule.BSON.calculateObjectSize(sizeEstimator, { checkKeys: false })
+}
+*/
