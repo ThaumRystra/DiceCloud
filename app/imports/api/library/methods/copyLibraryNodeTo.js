@@ -50,7 +50,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
     assertDocCopyPermission(libraryNode, this.userId);
     assertDocEditPermission(parentDoc, this.userId);
 
-    let decendants = LibraryNodes.find({
+    let descendants = LibraryNodes.find({
       'ancestors.id': _id,
       removed: { $ne: true },
     }, {
@@ -58,8 +58,8 @@ const copyLibraryNodeTo = new ValidatedMethod({
       sort: { order: 1 },
     }).fetch();
 
-    if (decendants.length > DUPLICATE_CHILDREN_LIMIT) {
-      decendants.pop();
+    if (descendants.length > DUPLICATE_CHILDREN_LIMIT) {
+      descendants.pop();
       if (Meteor.isClient) {
         snackbar({
           text: `Only the first ${DUPLICATE_CHILDREN_LIMIT} children were duplicated`,
@@ -67,7 +67,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
       }
     }
 
-    const nodes = [libraryNode, ...decendants];
+    const nodes = [libraryNode, ...descendants];
 
     const newAncestry = parentDoc.ancestors || [];
     newAncestry.push(parent);

@@ -3,7 +3,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import {
-  getProperyAncestors, getPropertyDecendants
+  getProperyAncestors, getPropertyDescendants
 } from '/imports/api/engine/loadCreatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
@@ -60,7 +60,7 @@ const doAction = new ValidatedMethod({
     const ancestors = getProperyAncestors(creatureId, spell._id);
     ancestors.sort((a, b) => a.order - b.order);
 
-    const properties = getPropertyDecendants(creatureId, spell._id);
+    const properties = getPropertyDescendants(creatureId, spell._id);
     properties.push(spell);
     properties.sort((a, b) => a.order - b.order);
 

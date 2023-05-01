@@ -153,7 +153,7 @@ export default {
   meteor: {
     children() {
       const indicesOfTerminatingProps = [];
-      const decendants = CreatureProperties.find({
+      const descendants = CreatureProperties.find({
         'ancestors.id': this.model._id,
         'removed': { $ne: true },
       }, {
@@ -176,7 +176,7 @@ export default {
           return prop.ancestors[buffIndex.ancestorIndex]?.id === buffIndex.id;
         });
       });
-      return nodeArrayToTree(decendants);
+      return nodeArrayToTree(descendants);
     },
   },
 }

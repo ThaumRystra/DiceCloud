@@ -155,11 +155,11 @@ export function getProperyAncestors(creatureId, propertyId) {
   }
 }
 
-export function getPropertyDecendants(creatureId, propertyId) {
+export function getPropertyDescendants(creatureId, propertyId) {
   const property = getSingleProperty(creatureId, propertyId);
   if (!property) return [];
   // This prop will always appear at the same position in the ancestor array
-  // of its decendants, so only check there
+  // of its descendants, so only check there
   const expectedAncestorPostition = property.ancestors.length;
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);

@@ -1,6 +1,6 @@
 import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations.js';
-import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
+import { getPropertyDescendants } from '/imports/api/engine/loadCreatures.js';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import applyProperty from '/imports/api/engine/actions/applyProperty.js';
 import { difference, intersection } from 'lodash';
@@ -68,7 +68,7 @@ export function applyTrigger(trigger, prop, actionContext) {
   if(!trigger.silent) actionContext.addLog(content);
 
   // Get all the trigger's properties and apply them
-  const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
+  const properties = getPropertyDescendants(actionContext.creature._id, trigger._id);
   properties.sort((a, b) => a.order - b.order);
   const propertyForest = nodeArrayToTree(properties);
   propertyForest.forEach(node => {
