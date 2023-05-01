@@ -23,19 +23,19 @@ export default function applyBuff(node, actionContext) {
 
   // Then copy the descendants of the buff to the targets
   let propList = [prop];
-  function addChildrenToPropList(children, { skipCrystalize } = {}) {
+  function addChildrenToPropList(children, { skipCrystallize } = {}) {
     children.forEach(child => {
-      if (skipCrystalize) child.node._skipCrystalize = true;
+      if (skipCrystallize) child.node._skipCrystallize = true;
       propList.push(child.node);
       // recursively add the child's children, but don't crystallize nested buffs
       addChildrenToPropList(child.children, {
-        skipCrystalize: skipCrystalize || child.node.type === 'buff'
+        skipCrystallize: skipCrystallize || child.node.type === 'buff'
       });
     });
   }
   addChildrenToPropList(node.children);
   if (!prop.skipCrystallization) {
-    crystalizeVariables({ propList, actionContext });
+    crystallizeVariables({ propList, actionContext });
   }
 
   let oldParent = {
@@ -99,10 +99,10 @@ function copyNodeListToTarget(propList, target, oldParent) {
  * Replaces all variables with their resolved values
  * except variables of the form `$target.thing.total` become `thing.total`
  */
-function crystalizeVariables({ propList, actionContext }) {
+function crystallizeVariables({ propList, actionContext }) {
   propList.forEach(prop => {
-    if (prop._skipCrystalize) {
-      delete prop._skipCrystalize;
+    if (prop._skipCrystallize) {
+      delete prop._skipCrystallize;
       return;
     }
     // Iterate through all the calculations and crystallize them
