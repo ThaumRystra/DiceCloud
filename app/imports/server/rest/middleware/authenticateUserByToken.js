@@ -7,7 +7,7 @@ import { RestMiddleware  } from 'meteor/simple:json-routes';
  * This middleware must be processed after the request.token has been set to a
  * valid login token for a Meteor.user account (from a separate layer of
  * middleware). If authentication is successful, the request.userId will be set
- * to the ID of the authenticated user. An invalid token will result in a error.
+ * to the ID of the authenticated user. An invalid token will result in an error.
  *
  * @middleware
  */

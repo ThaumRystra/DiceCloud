@@ -14,9 +14,9 @@ import authenticateMeteorUserByToken from './middleware/authenticateUserByToken.
  *
  * Warning: Your token may expire before the given date.
  * Since each user has a limited pool of login tokens. If you get a permission
- * error, you may need to login again to refresh your token
+ * error, you may need to log in again to refresh your token
  *
- * Once you have your token, you can use it as a standard bearer token header
+ * Once you have your token, you can use it as a standard-bearer token header
  * in other API endpoints:
  *  HTTP.post("/methods/return-five-auth", {
  *    headers: { Authorization: "Bearer <token>" }

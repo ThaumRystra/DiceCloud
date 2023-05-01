@@ -7,7 +7,7 @@ if (Meteor.isServer) {
 }
 
 /** No schema because the structure isn't known until compute time
- * Expect documents to looke like:
+ * Expect documents to look like:
  * {
  *   _id: "nE8Ngd6K4L4jSxLY2",
  *   _creatureId: "nE8Ngd6K4L4jSxLY2", // indexed reference to the creature

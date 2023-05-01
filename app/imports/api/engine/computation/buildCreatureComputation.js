@@ -25,7 +25,7 @@ import removeSchemaFields from './buildComputation/removeSchemaFields.js';
  */
 
 /**
- * Forseen issues: Anything that computes during the build step will not obey
+ * Foreseen issues: Anything that computes during the build step will not obey
  * computed toggles
  */
 

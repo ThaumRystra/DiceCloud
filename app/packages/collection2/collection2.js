@@ -126,7 +126,7 @@ Mongo.Collection.prototype.attachSchema = function c2AttachSchema(ss, options) {
   /**
    * simpleSchema
    * @description function detect the correct schema by given params. If it
-   * detect multi-schema presence in the collection, then it made an attempt to find a
+   * detects multi-schema presence in the collection, then it made an attempt to find a
    * `selector` in args
    * @param {Object} doc - It could be <update> on update/upsert or document
    * itself on insert/remove
