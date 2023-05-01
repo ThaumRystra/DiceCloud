@@ -77,9 +77,9 @@
           >
             <smart-switch
               label="Don't freeze variables"
-              :value="model.skipCrystalization"
-              :error-messages="errors.skipCrystalization"
-              @change="change('skipCrystalization', ...arguments)"
+              :value="model.skipCrystallization"
+              :error-messages="errors.skipCrystallization"
+              @change="change('skipCrystallization', ...arguments)"
             />
           </v-col>
         </v-row>

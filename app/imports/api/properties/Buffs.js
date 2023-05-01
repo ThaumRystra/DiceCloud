@@ -35,7 +35,7 @@ let BuffSchema = createPropertySchema({
     optional: true,
   },
   // Prevent the children from being crystallized
-  skipCrystalization: {
+  skipCrystallization: {
     type: Boolean,
     optional: true,
   },

@@ -34,7 +34,7 @@ export default function applyBuff(node, actionContext) {
     });
   }
   addChildrenToPropList(node.children);
-  if (!prop.skipCrystalization) {
+  if (!prop.skipCrystallization) {
     crystalizeVariables({ propList, actionContext });
   }
 
