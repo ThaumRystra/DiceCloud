@@ -113,8 +113,8 @@ export function getVariables(creatureId) {
     const loadedCreature = loadedCreatures.get(creatureId);
     const variables = loadedCreature.variables;
     if (variables) {
-      const cloneVarables = EJSON.clone(variables);
-      return cloneVarables;
+      const cloneVariables = EJSON.clone(variables);
+      return cloneVariables;
     }
   }
   // console.time(`Cache miss on variables: ${creatureId}`);
@@ -123,7 +123,7 @@ export function getVariables(creatureId) {
   return variables;
 }
 
-export function getProperyAncestors(creatureId, propertyId) {
+export function getPropertyAncestors(creatureId, propertyId) {
   const prop = getSingleProperty(creatureId, propertyId);
   if (!prop) return [];
   const ancestorIds = [];
@@ -160,12 +160,12 @@ export function getPropertyDescendants(creatureId, propertyId) {
   if (!property) return [];
   // This prop will always appear at the same position in the ancestor array
   // of its descendants, so only check there
-  const expectedAncestorPostition = property.ancestors.length;
+  const expectedAncestorPosition = property.ancestors.length;
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
     const props = [];
     for(const prop of creature.properties.values()){
-      if (prop.ancestors[expectedAncestorPostition]?.id === propertyId) {
+      if (prop.ancestors[expectedAncestorPosition]?.id === propertyId) {
         props.push(prop);
       }
     }

@@ -1,7 +1,7 @@
 import { findLast, difference, intersection, filter } from 'lodash';
 import applyProperty from '../applyProperty.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import { getProperyAncestors, getPropertiesOfType } from '/imports/api/engine/loadCreatures.js';
+import { getPropertyAncestors, getPropertiesOfType } from '/imports/api/engine/loadCreatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
@@ -20,7 +20,7 @@ export default function applyBuffRemover(node, actionContext) {
   // Remove buffs
   if (prop.targetParentBuff) {
     // Remove the nearest ancestor buff
-    const ancestors = getProperyAncestors(actionContext.creature._id, prop._id);
+    const ancestors = getPropertyAncestors(actionContext.creature._id, prop._id);
     const nearestBuff = findLast(ancestors, ancestor => ancestor.type === 'buff');
     if (!nearestBuff) {
       actionContext.addLog({

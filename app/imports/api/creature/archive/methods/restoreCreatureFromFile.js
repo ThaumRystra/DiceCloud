@@ -60,8 +60,8 @@ function restoreCreature(archive, userId){
   }
 }
 
-const restoreCreaturefromFile = new ValidatedMethod({
-  name: 'Creatures.methods.restoreCreaturefromFile',
+const restoreCreatureFromFile = new ValidatedMethod({
+  name: 'Creatures.methods.restoreCreatureFromFile',
   validate: new SimpleSchema({
     'fileId': {
       type: String,
@@ -101,4 +101,4 @@ const restoreCreaturefromFile = new ValidatedMethod({
   },
 });
 
-export default restoreCreaturefromFile;
+export default restoreCreatureFromFile;

@@ -44,14 +44,14 @@ function alignInvitesWithPatreonTier(user){
   const tier = getUserTier(user);
   let availableInvites = tier.invites;
   let currentlyFundedInvites = [];
-  let currenltyUnfundedInvites = [];
+  let currentlyUnfundedInvites = [];
   Invites.find({
     inviter: user._id
   }).forEach(invite => {
     if (invite.isFunded){
       currentlyFundedInvites.push(invite);
     } else {
-      currenltyUnfundedInvites.push(invite);
+      currentlyUnfundedInvites.push(invite);
     }
   });
 
@@ -60,7 +60,7 @@ function alignInvitesWithPatreonTier(user){
 
   // Sort the invites by date forwards and backwards
   currentlyFundedInvites.sort((a, b) => a.dateConfirmed - b.dateConfirmed);
-  currenltyUnfundedInvites.sort((a, b) => b.dateConfirmed - a.dateConfirmed);
+  currentlyUnfundedInvites.sort((a, b) => b.dateConfirmed - a.dateConfirmed);
 
   // Defund or delete excess invites
   while (currentlyFundedInvites.length > availableInvites){
@@ -73,8 +73,8 @@ function alignInvitesWithPatreonTier(user){
   }
   // Fund unfunded invites or insert new ones
   while (currentlyFundedInvites.length < availableInvites){
-    if (currenltyUnfundedInvites.length){
-      let inviteToFund = currenltyUnfundedInvites.pop();
+    if (currentlyUnfundedInvites.length){
+      let inviteToFund = currentlyUnfundedInvites.pop();
       currentlyFundedInvites.push(inviteToFund);
       Invites.update(inviteToFund._id, {$set: {isFunded: true}});
     } else {

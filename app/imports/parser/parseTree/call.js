@@ -32,7 +32,7 @@ const call = {
     });
 
     // Check that the arguments match what is expected
-    let checkFailed = call.checkArugments({
+    let checkFailed = call.checkArguments({
       node,
       fn,
       resolvedArgs,
@@ -115,7 +115,7 @@ const call = {
     }
     return resultingNode;
   },
-  checkArugments({node, fn, argumentsExpected, resolvedArgs, context}){
+  checkArguments({node, fn, argumentsExpected, resolvedArgs, context}){
     // Check that the number of arguments matches the number expected
     if (
       !argumentsExpected.anyLength &&

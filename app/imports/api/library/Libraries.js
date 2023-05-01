@@ -121,11 +121,11 @@ const removeLibrary = new ValidatedMethod({
     let library = Libraries.findOne(_id);
     assertOwnership(library, this.userId);
     this.unblock();
-    removeLibaryWork(_id)
+    removeLibraryWork(_id)
   }
 });
 
-export function removeLibaryWork(libraryId) {
+export function removeLibraryWork(libraryId) {
   Libraries.remove(libraryId);
   LibraryNodes.remove({ 'ancestors.id': libraryId });
 }

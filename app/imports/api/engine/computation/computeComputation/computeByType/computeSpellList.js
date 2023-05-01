@@ -1,4 +1,4 @@
-export default function computeSpelllist(computation, node) {
+export default function computeSpellList(computation, node) {
   const prop = node.data;
 
   const ability = computation.scope[prop.ability];

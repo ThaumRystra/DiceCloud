@@ -1,6 +1,6 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Libraries, { removeLibaryWork } from '/imports/api/library/Libraries.js';
+import Libraries, { removeLibraryWork } from '/imports/api/library/Libraries.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
 
@@ -38,7 +38,7 @@ Meteor.users.deleteMyAccount = new ValidatedMethod({
 
     // Delete all libraries
     let libraries = Libraries.find({ owner: userId }, { fields: { _id: 1 } }).fetch();
-    libraries.forEach(library => removeLibaryWork(library._id));
+    libraries.forEach(library => removeLibraryWork(library._id));
 
     // Remove permissions from all creatures
     Libraries.update({

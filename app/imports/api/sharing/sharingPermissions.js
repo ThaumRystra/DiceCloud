@@ -8,7 +8,7 @@ function assertIdValid(userId) {
   }
 }
 
-function assertdocExists(doc) {
+function assertDocExists(doc) {
   if (!doc) {
     throw new Meteor.Error('Permission denied',
       'Permission denied: No such document exists');
@@ -17,7 +17,7 @@ function assertdocExists(doc) {
 
 export function assertOwnership(doc, userId) {
   assertIdValid(userId);
-  assertdocExists(doc);
+  assertDocExists(doc);
 
   if (doc.owner === userId) {
     return true;
@@ -35,7 +35,7 @@ export function assertOwnership(doc, userId) {
  */
 export function assertEditPermission(doc, userId) {
   assertIdValid(userId);
-  assertdocExists(doc);
+  assertDocExists(doc);
   const user = Meteor.users.findOne(userId, {
     fields: {
       'roles': 1,
@@ -67,7 +67,7 @@ export function assertEditPermission(doc, userId) {
  */
 export function assertCopyPermission(doc, userId) {
   assertIdValid(userId);
-  assertdocExists(doc);
+  assertDocExists(doc);
   const user = Meteor.users.findOne(userId, {
     fields: {
       'roles': 1,
@@ -97,7 +97,7 @@ export function assertCopyPermission(doc, userId) {
 }
 
 function getRoot(doc) {
-  assertdocExists(doc);
+  assertDocExists(doc);
   if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]) {
     return fetchDocByRef(doc.ancestors[0]);
   } else {

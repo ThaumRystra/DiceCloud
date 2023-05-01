@@ -94,9 +94,9 @@ export default function nodesToTree({
   }
   let descendants = [];
   if (filter && includeFilteredDocDescendants) {
-    let exludeIds = union(ancestorIds, docIds);
+    let excludeIds = union(ancestorIds, docIds);
     descendants = collection.find({
-      '_id': { $nin: exludeIds },
+      '_id': { $nin: excludeIds },
       'ancestors.id': { $in: docIds },
       'removed': { $ne: true },
     }).map(doc => {

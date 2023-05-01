@@ -5,7 +5,7 @@ export default function createListOfProperties(filter = {}, getNamesWithValues) 
   filter.removed = { $ne: true };
   let propertyList = [];
   let variableNames = new Set();
-  function addUniquePropertys(property) {
+  function addUniqueProperties(property) {
     if (property.variableName && !variableNames.has(property.variableName)) {
       variableNames.add(property.variableName);
       propertyList.push({
@@ -16,8 +16,8 @@ export default function createListOfProperties(filter = {}, getNamesWithValues) 
     }
   }
   let options = { sort: { order: 1, variableName: 1 } }
-  CreatureProperties.find(filter, options).forEach(addUniquePropertys);
-  LibraryNodes.find(filter, options).forEach(addUniquePropertys);
+  CreatureProperties.find(filter, options).forEach(addUniqueProperties);
+  LibraryNodes.find(filter, options).forEach(addUniqueProperties);
   if (getNamesWithValues) return propertyList;
   return Array.from(variableNames);
 }

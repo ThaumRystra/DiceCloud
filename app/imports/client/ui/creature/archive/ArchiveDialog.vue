@@ -185,7 +185,7 @@ export default {
         }
       ).map(characterTransform);
     },
-    archivefolders(){
+    archiveFolders(){
       const userId = Meteor.userId();
       let folders =  CreatureFolders.find(
         {owner: userId},
