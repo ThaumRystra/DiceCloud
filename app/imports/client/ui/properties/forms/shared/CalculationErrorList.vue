@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     errorIcon(type){
-      if (type === 'subsitution'){
+      if (type === 'substitution'){
         return 'mdi-information';
       } else if (type === 'evaluation'){
         return 'mdi-alert-circle';
@@ -61,7 +61,7 @@ export default {
       }
     },
     errorColor(type){
-      if (type === 'subsitution'){
+      if (type === 'substitution'){
         return 'info';
       } else if (type === 'evaluation'){
         return 'warning';

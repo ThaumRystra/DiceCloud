@@ -242,7 +242,7 @@ export default {
     operationHint() {
       switch (this.model.operation) {
         case 'base': return 'Stats take their largest base value, and then apply all other effects';
-        case 'add': return 'Add this vaulue to the stat';
+        case 'add': return 'Add this value to the stat';
         case 'mul': return 'Multiply the stat by this value';
         case 'min': return 'The stat will be at least this value';
         case 'max': return 'The stat will not exceed this value';

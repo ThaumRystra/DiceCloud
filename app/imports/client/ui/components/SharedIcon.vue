@@ -46,7 +46,7 @@ export default {
       switch (this.accessRights){
         case 'writer': return 'Shared with edit permission';
         case 'reader': return 'Shared as view-only';
-        case 'public': return 'Shared publically';
+        case 'public': return 'Shared publicly';
         default: return '';
       }
     },

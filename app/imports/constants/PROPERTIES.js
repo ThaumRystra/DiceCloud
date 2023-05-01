@@ -111,7 +111,7 @@ const PROPERTIES = Object.freeze({
     icon: 'mdi-cube-outline',
     name: 'Item',
     docsPath: 'property/item',
-    helpText: 'Objects and equipment your charcter finds on their adventures',
+    helpText: 'Objects and equipment your character finds on their adventures',
     suggestedParents: ['container'],
   },
   note: {
@@ -174,7 +174,7 @@ const PROPERTIES = Object.freeze({
     icon: 'mdi-power-plug-outline',
     name: 'Slot filler',
     docsPath: 'property/slot-filler',
-    helpText: 'A slot filler allows for more advanced logic when it attempts to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
+    helpText: 'A slot filler allows for more advanced logic when it attempts to fill a slot. It can masquerade as any property type, and calculate whether it should fill a slot or not.',
     suggestedParents: ['propertySlot'],
   },
   spellList: {
@@ -195,7 +195,7 @@ const PROPERTIES = Object.freeze({
     icon: '$vuetify.icons.toggle',
     name: 'Toggle',
     docsPath: 'property/toggle',
-    helpText: 'Togggles allow parts of the character sheet to be turned on and off, either manually or as the result of a calculation.',
+    helpText: 'Toggles allow parts of the character sheet to be turned on and off, either manually or as the result of a calculation.',
     suggestedParents: [],
   },
   trigger: {

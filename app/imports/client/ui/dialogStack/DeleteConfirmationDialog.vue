@@ -11,7 +11,7 @@
         This can't be undone
       </v-alert>
       <p v-if="name">
-        Type "{{ name }}" to permanenetly delete.
+        Type "{{ name }}" to permanently delete.
       </p>
       <v-text-field
         v-if="name"

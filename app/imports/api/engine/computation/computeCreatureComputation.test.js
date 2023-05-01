@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import computeTests from './computeComputation/tests/index.js';
 
-describe('Compute compuation', function(){
+describe('Compute computation', function(){
   it('Computes something at all', function(){
     let computation = buildComputationFromProps(testProperties);
     computeCreatureComputation(computation);

@@ -199,7 +199,7 @@ if (Meteor.settings.useS3) {
     };
 
     collection.readJSONFile = async function (file) {
-      // If there is the pipepath, use s3 to get the file
+      // If there is the pipePath, use s3 to get the file
       if (file?.versions?.original?.meta?.pipePath) {
         const path = file.versions.original.meta.pipePath;
         const data = await s3.getObject({

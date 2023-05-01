@@ -119,7 +119,7 @@ export default function applyDamage(node, actionContext) {
             creatureId: target._id,
             content: [{
               name,
-              value: `Recieved **${damageDealt}** ${suffix}`,
+              value: `Received **${damageDealt}** ${suffix}`,
             }],
           }
         });

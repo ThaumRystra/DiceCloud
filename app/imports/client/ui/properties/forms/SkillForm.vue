@@ -133,7 +133,7 @@ export default {
         'weapon': 'A weapon proficiency. Be sure to add a base proficiency in the advanced section.',
         'armor': 'A armor proficiency. Be sure to add a base proficiency in the advanced section.',
         'language': 'A language proficiency. Be sure to add a base proficiency in the advanced section.',
-        'utility': 'A skill that does not show up in the sheet, but can be used by other caclulations',
+        'utility': 'A skill that does not show up in the sheet, but can be used by other calculations',
       }
     };
   },

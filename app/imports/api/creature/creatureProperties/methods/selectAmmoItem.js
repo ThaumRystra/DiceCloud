@@ -26,7 +26,7 @@ const selectAmmoItem = new ValidatedMethod({
     // Check that this index has a document to edit
     let itemConsumed = action.resources.itemsConsumed[itemConsumedIndex];
     if (!itemConsumed) {
-      throw new Meteor.Error('Resouce not found',
+      throw new Meteor.Error('Resource not found',
         'Could not set ammo, because the ammo document was not found');
     }
     let itemToLink = CreatureProperties.findOne(itemId);

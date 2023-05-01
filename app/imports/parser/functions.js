@@ -112,7 +112,7 @@ export default {
     }
   },
   'resolve': {
-    comment: 'Forces the given calcultion to resolve into a number, even in calculations where it would usually keep the unknown values as is',
+    comment: 'Forces the given calculation to resolve into a number, even in calculations where it would usually keep the unknown values as is',
     examples: [
       {input: 'resolve(someUndefinedVariable + 3 + 4)', result: '7'},
       {input: 'resolve(1d6)', result: '4'},
