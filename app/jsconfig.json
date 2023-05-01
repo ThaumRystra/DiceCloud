@@ -15,7 +15,7 @@
         "packages\\collection2\\collection2.js"
       ]
     },
-    "checkJs": true,
+    "checkJs": false,
     "allowJs": true
   },
   "vueCompilerOptions": {
