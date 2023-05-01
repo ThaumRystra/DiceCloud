@@ -8,9 +8,9 @@ export default function(){
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
 
-  assert.equal(prop('atheleticsId').proficiency, 2, 'Inherits proficiency from ability');
-  assert.equal(prop('atheleticsId').value, 7, 'calculates value correctly');
-  assert.equal(prop('atheleticsId').advantage, 1, 'Inherits advantage from ability');
+  assert.equal(prop('athleticsId').proficiency, 2, 'Inherits proficiency from ability');
+  assert.equal(prop('athleticsId').value, 7, 'calculates value correctly');
+  assert.equal(prop('athleticsId').advantage, 1, 'Inherits advantage from ability');
   assert.equal(prop('strengthSaveId').advantage, undefined, 'Saves don\'t inherit effects');
   assert.equal(prop('strengthSaveId').value, 4, 'Saves calculate correctly');
 
@@ -38,7 +38,7 @@ var testProperties = [
     },
   }),
   clean({
-    _id: 'atheleticsId',
+    _id: 'athleticsId',
     variableName: 'athletics',
     type: 'skill',
     skillType: 'skill',
