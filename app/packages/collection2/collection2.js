@@ -205,7 +205,7 @@ Mongo.Collection.prototype.attachSchema = function c2AttachSchema(ss, options) {
         Meteor.isServer // isFromTrustedCode
       );
       if (!args) {
-        // doValidate already called the callback or threw the error so we're done.
+        // doValidate already called the callback or threw the error, so we're done.
         // But insert should always return an ID to match core behavior.
         return methodName === 'insert' ? this._makeNewID() : undefined;
       }
@@ -463,7 +463,7 @@ function doValidate(collection, type, args, getAutoValues, userId, isFromTrusted
     }
 
     // Update the args to reflect the cleaned doc
-    // XXX not sure this is necessary since we mutate
+    // XXX not sure if this is necessary since we mutate
     if (type === 'insert') {
       args[0] = doc;
     } else {

@@ -143,7 +143,7 @@ function linkEffects(dependencyGraph, prop, computation) {
         && targetProp.variableName
         && !prop.targetField
       ) {
-        // If the field wasn't specified and we're targeting an attribute or
+        // If the field wasn't specified, and we're targeting an attribute or
         // skill, just treat it like a normal effect on its variable name
         dependencyGraph.addLink(targetProp.variableName, prop._id, 'effect');
       } else {
@@ -252,7 +252,7 @@ function linkPointBuy(dependencyGraph, prop) {
   dependOnCalc({ dependencyGraph, prop, key: 'cost' });
   dependOnCalc({ dependencyGraph, prop, key: 'total' });
   prop.values?.forEach(row => {
-    // Wrap the document in a new object so we don't bash it unintentionally
+    // Wrap the document in a new object, so we don't bash it unintentionally
     const pointBuyRow = {
       ...row,
       type: 'pointBuyRow',

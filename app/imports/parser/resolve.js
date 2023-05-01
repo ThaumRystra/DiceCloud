@@ -1,6 +1,6 @@
 import nodeTypeIndex from './parseTree/_index.js';
 
-// Takes a parse ndoe and computes it to a set detail level
+// Takes a parse node and computes it to a set detail level
 // returns {result, context}
 export default function resolve(fn, node, scope, context = new Context()){
   if (!node) return {result: undefined, context};

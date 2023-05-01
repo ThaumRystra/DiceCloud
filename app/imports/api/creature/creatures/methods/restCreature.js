@@ -138,7 +138,7 @@ function resetHitDice(creatureId, actionContext) {
   let collator = new Intl.Collator('en', {
     numeric: true, sensitivity: 'base'
   });
-  // Get the hit dice in decending order of hitDiceSize
+  // Get the hit dice in descending order of hitDiceSize
   let compare = (a, b) => collator.compare(b.hitDiceSize, a.hitDiceSize)
   hitDice.sort(compare);
   // Get the total number of hit dice that can be recovered this rest

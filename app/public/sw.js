@@ -16,7 +16,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // only processes http:// & https:// requests, prevents chrome-extention:// errors
+  // only processes http:// & https:// requests, prevents chrome-extension:// errors
   if (event.request.url.startsWith('http')){
 
     const requestToFetch = event.request.clone();
@@ -25,7 +25,7 @@ self.addEventListener('fetch', (event) => {
       // We don't return cached HTML (except if fetch failed)
       if (cached) {
         const resourceType = cached.headers.get('content-type');
-        // We only return non css/js/html cached response e.g images
+        // We only return non css/js/html cached response e.g. images
         if (!hasHash(event.request.url) && !/text\/html/.test(resourceType)) {
           return cached;
         }
@@ -63,7 +63,7 @@ self.addEventListener('fetch', (event) => {
         return response;
       }).catch(() => {
         if (hasHash(event.request.url)) return caches.match(event.request.url);
-        // If the request URL hasn't been served from cache and isn't sockjs we suppose it's HTML
+        // If the request URL hasn't been served from cache and isn't sockjs we suppose its HTML
         else if (!/\/sockjs\//.test(event.request.url)) return caches.match(HTMLToCache);
         // Only for sockjs
         return new Response('No connection to the server', {

@@ -34,7 +34,7 @@ export default function nodesToTree({
   collection, ancestorId, filter, options = {},
   includeFilteredDocAncestors = false, includeFilteredDocDescendants = false
 }) {
-  // Setup the filter
+  // Set up the filter
   let collectionFilter = {
     'ancestors.id': ancestorId,
     'removed': { $ne: true },

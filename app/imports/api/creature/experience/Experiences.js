@@ -26,7 +26,7 @@ let ExperienceSchema = new SimpleSchema({
     min: 0,
     index: 1,
   },
-  // The real-world date that it occured, usually sorted by date
+  // The real-world date that it occurred, usually sorted by date
   date: {
     type: Date,
     autoValue: function () {

@@ -19,7 +19,7 @@ export default function applyBuffRemover(node, actionContext) {
 
   // Remove buffs
   if (prop.targetParentBuff) {
-    // Remove nearest ancestor buff
+    // Remove the nearest ancestor buff
     const ancestors = getProperyAncestors(actionContext.creature._id, prop._id);
     const nearestBuff = findLast(ancestors, ancestor => ancestor.type === 'buff');
     if (!nearestBuff) {

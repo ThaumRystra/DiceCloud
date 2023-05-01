@@ -9,7 +9,7 @@ let RollResultsSchema = new SimpleSchema({
       if (!this.isSet) return Random.id();
     }
   },
-  // Expression of whether or not to apply the roll
+  // Expression of whether to apply the roll
   // Evaluates to an expression which gets compared to the roll
   // or a number which the roll must equal
   comparison: {

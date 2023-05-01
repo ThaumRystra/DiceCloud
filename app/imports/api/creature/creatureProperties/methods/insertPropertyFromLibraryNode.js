@@ -76,7 +76,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 });
 
 function insertPropertyFromNode(nodeId, ancestors, order) {
-  // Fetch the library node and its decendents, provided they have not been
+  // Fetch the library node and its descendants, provided they have not been
   // removed
   // TODO: Check permission to read the library this node is in
   let node = LibraryNodes.findOne({
@@ -193,7 +193,7 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     // We are adding the referenced node and its descendants
     let addedNodes = [referencedNode, ...descendents];
 
-    // re-map all the ancestors to parent the new sub-tree into our existing
+    // re-map all the ancestors to parent the new subtree into our existing
     // node tree
     setLineageOfDocs({
       docArray: addedNodes,
@@ -220,7 +220,7 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     // Before renewing Ids make sure the library node reference is stored
     storeLibraryNodeReferences(addedNodes);
 
-    // Give the new referenced sub-tree new ids
+    // Give the new referenced subtree new ids
     // The referenced node must get the id of the ref node so that the
     // descendants of the ref node keep their ancestry intact
     renewDocIds({

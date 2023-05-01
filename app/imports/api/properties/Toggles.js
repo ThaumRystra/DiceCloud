@@ -25,7 +25,7 @@ const ToggleSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
-  // if neither disabled or enabled, the condition will be run to determine
+  // if neither disabled nor enabled, the condition will be run to determine
   // if the children of the toggle should be active
   condition: {
     type: 'fieldToCompute',

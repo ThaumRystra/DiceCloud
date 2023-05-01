@@ -26,7 +26,7 @@ handles = _.map(["weapons", "armor", "adventuringGear", "tools"],
 	category => Meteor.subscribe("standardLibraryItems", category)
 );
 // Wait until all the handles are ready
-handles.map(h => h.ready()); // must reaturn [...true]
+handles.map(h => h.ready()); // must return [...true]
 
 _.each(items, (item) => {
 	var existingItem = LibraryItems.findOne({
@@ -43,7 +43,7 @@ handles = _.map([0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 	category => Meteor.subscribe("standardLibrarySpells", category)
 );
 // Wait until all the handles are ready
-handles.map(h => h.ready()); // must reaturn [...true]
+handles.map(h => h.ready()); // must return [...true]
 
 _.each(spells, (spell) => {
 	var existingSpell = LibrarySpells.findOne({

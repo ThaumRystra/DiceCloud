@@ -116,7 +116,7 @@ let CreatureSchema = new SimpleSchema({
     type: deathSaveSchema,
     defaultValue: {},
   },
-  // Stats that are computed and denormalised outside of recomputation
+  // Stats that are computed and denormalized outside of recomputation
   denormalizedStats: {
     type: Object,
     defaultValue: {},
@@ -131,7 +131,7 @@ let CreatureSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
     defaultValue: 0,
   },
-  // Does the character need a recompute?
+  // Does the character need recomputing?
   dirty: {
     type: Boolean,
     optional: true,

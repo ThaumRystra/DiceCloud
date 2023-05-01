@@ -43,7 +43,7 @@ export function buildComputationFromProps(properties, creature, variables){
   // Dependency graph where edge(a, b) means a depends on b
   // The graph includes all dependencies even of inactive properties
   // such that any properties changing without changing their dependencies
-  // can limit the recompute to connected parts of the graph
+  // can limit the recomputing to connected parts of the graph
   // Each node's data represents a prop or a virtual prop like a variable
   // Each link's data is a string representing the link type
   const dependencyGraph = computation.dependencyGraph;

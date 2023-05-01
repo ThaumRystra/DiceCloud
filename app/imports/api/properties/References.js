@@ -16,7 +16,7 @@ let ReferenceSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.collectionName,
   },
-  // Denormalised store of referenced property's details
+  // Denormalized store of referenced property's details
   cache: {
     type: Object,
     defaultValue: {},

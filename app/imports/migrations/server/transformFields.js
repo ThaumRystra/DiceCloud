@@ -77,7 +77,7 @@ function transformArrayField(src, doc, {from, to, up}, reversed){
   }];
   while(stack.length){
     const state = stack.pop();
-    // Iterate forwads or backwads defpending on our migration direction
+    // Iterate forwards or backwards depending on our migration direction
     if (reversed){
       forEachRight(state.array, iterate(stack, state, src, doc, toSplit, up));
     } else {

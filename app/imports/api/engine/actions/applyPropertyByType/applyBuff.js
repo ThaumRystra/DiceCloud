@@ -21,13 +21,13 @@ export default function applyBuff(node, actionContext) {
   const prop = node.node;
   let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
-  // Then copy the decendants of the buff to the targets
+  // Then copy the descendants of the buff to the targets
   let propList = [prop];
   function addChildrenToPropList(children, { skipCrystalize } = {}) {
     children.forEach(child => {
       if (skipCrystalize) child.node._skipCrystalize = true;
       propList.push(child.node);
-      // recursively add the child's children, but don't crystalize nested buffs
+      // recursively add the child's children, but don't crystallize nested buffs
       addChildrenToPropList(child.children, {
         skipCrystalize: skipCrystalize || child.node.type === 'buff'
       });
@@ -105,7 +105,7 @@ function crystalizeVariables({ propList, actionContext }) {
       delete prop._skipCrystalize;
       return;
     }
-    // Iterate through all the calculations and crystalize them
+    // Iterate through all the calculations and crystallize them
     computedSchemas[prop.type].computedFields().forEach(calcKey => {
       applyFnToKey(prop, calcKey, (prop, key) => {
         const calcObj = get(prop, key);

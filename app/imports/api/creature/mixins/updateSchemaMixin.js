@@ -10,7 +10,7 @@ const argumentSchema = new SimpleSchema({
 import SimpleSchema from 'simpl-schema';
 
 export default function updateSchemaMixin(methodOptions) {
-  // If the user didn't give us a schema and they did give us a validate, assume
+  // If the user didn't give us a schema, and they did give us a validate, assume
   // that they are choosing to use the validate way of doing things in this call.
   if ((
     typeof methodOptions.schema === 'undefined' &&

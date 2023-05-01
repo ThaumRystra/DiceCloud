@@ -367,7 +367,7 @@ RouterFactory.configure(router => {
   ]);
 });
 
-// Not found route has lowest priority
+// Not found route has the lowest priority
 RouterFactory.configure(router => {
   router.addRoute({
     path: '*',

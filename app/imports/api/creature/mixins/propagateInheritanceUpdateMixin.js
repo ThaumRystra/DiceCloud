@@ -8,7 +8,7 @@ import MONGO_OPERATORS from '/imports/constants/MONGO_OPERATORS.js';
 // This mixin can be safely applied to all update methods which are validated
 // with the updateSchemaMixin. It will propagate updates to fields which
 // are inherited and normalised on the parent or ancestor docs
-// It should have neglible performance impact for updates that aren't inherited
+// It should have negligible performance impact for updates that aren't inherited
 function propagateInheritanceUpdate({_id, update}){
   let childModifier = {};
   let descendantModifier = {};

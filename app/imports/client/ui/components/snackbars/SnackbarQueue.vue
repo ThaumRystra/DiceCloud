@@ -97,7 +97,7 @@ export default {
       // Wait for the first next snackbar to be available.
       this.unwait = this.$wait(function () {
         // Snackbars are enqueued from oldest to newest and "find" searches array elements in
-        // same order as well, so the first one which matches is also the oldest one.
+        // same order as well, so the first one which matches are also the oldest one.
         return globalState.queue.find((element) => element.shown === false);
       }, function (snackbar) {
         this.unwait = null;

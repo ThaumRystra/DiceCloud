@@ -6,7 +6,7 @@ const RefSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     // TODO: Rather than indexing this field, index `ancestors.0.id` to only
-    // index the root of the ancestor heirarchy to significantly reduce
+    // index the root of the ancestor hierarchy to significantly reduce
     // index size and improve performance
     // All queries on an ancestor document need to target `ancestors.0.id` first
     // before targeting a younger ancestor

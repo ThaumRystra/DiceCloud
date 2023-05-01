@@ -115,7 +115,7 @@ const writePatreonToken = function(userId, {
   // The expiry date is now plus `expires_in` seconds
   let expiryDate = new Date();
   expiryDate.setSeconds(expiryDate.getSeconds() + expires_in);
-  // Expire a day early so we don't accidentally miss it
+  // Expire a day early, so we don't accidentally miss it
   expiryDate.setDate(expiryDate.getDate() - 1);
 
   // Write

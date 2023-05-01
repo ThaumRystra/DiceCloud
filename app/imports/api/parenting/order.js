@@ -113,7 +113,7 @@ export function safeUpdateDocOrder({docRef, order}){
   }, {
     selector: {type: 'any'}
   });
-  // reorder all related docs so that order is back to being a continous
+  // reorder all related docs so that order is back to being a continuous
   // set of whole numbers
   let movedDoc = fetchDocByRef(docRef, {fields: {ancestors: 1}});
   let ancestorId = movedDoc.ancestors[0].id;

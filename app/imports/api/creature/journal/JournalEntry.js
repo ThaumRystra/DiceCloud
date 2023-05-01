@@ -13,7 +13,7 @@ let ExperienceSchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.description,
   },
-  // The real-world date that it occured
+  // The real-world date that it occurred
   date: {
     type: Date,
     autoValue: function () {

@@ -29,13 +29,13 @@ import getAggregatorResult from './getAggregatorResult.js';
      prop.proficiency = node.data.proficiency;
    }
 
-   // denormalise class level aggregator
+   // denormalize class level aggregator
    let classLevelAgg = node.data.classLevelAggregator;
    if (classLevelAgg){
      prop.level = classLevelAgg.level;
    }
 
-   // denormalise the effect aggregator fields
+   // denormalize the effect aggregator fields
    const aggregator = node.data.effectAggregator;
    if (aggregator){
      if (aggregator.advantage && !aggregator.disadvantage){

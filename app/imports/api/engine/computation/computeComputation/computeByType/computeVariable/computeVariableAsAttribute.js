@@ -14,7 +14,7 @@ export default function computeVariableAsAttribute(computation, node, prop){
     prop.modifier = Math.floor((prop.value - 10) / 2);
   }
 
-  // Hit dice denormalise constitution modifier
+  // Hit dice denormalize constitution modifier
   if (prop.attributeType === 'hitDice') {
     prop.constitutionMod = computation.scope['constitution']?.modifier || 0;
   }

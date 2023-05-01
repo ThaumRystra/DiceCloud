@@ -25,7 +25,7 @@ let CreatureLogSchema = new SimpleSchema({
   'content.$': {
     type: LogContentSchema,
   },
-  // The real-world date that it occured, usually sorted by date
+  // The real-world date that it occurred, usually sorted by date
   date: {
     type: Date,
     autoValue: function () {

@@ -47,7 +47,7 @@ export default function applyDamage(node, actionContext) {
   }
   logErrors(context.errors, actionContext);
 
-  // Reset the errors so we don't log the same errors twice
+  // Reset the errors, so we don't log the same errors twice
   context.errors = [];
 
   // Resolve the roll to a final value

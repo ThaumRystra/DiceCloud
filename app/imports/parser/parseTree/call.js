@@ -61,7 +61,7 @@ const call = {
       }
     }
 
-    // Map contant nodes to constants before attempting to run the function
+    // Map constant nodes to constants before attempting to run the function
     let mappedArgs = resolvedArgs.map((arg, index) => {
       if (
         arg.parseType === 'constant' &&

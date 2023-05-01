@@ -56,7 +56,7 @@ function pushDependenciesToStack(nodeId, graph, stack, computation){
       // and store that path as a dependency loop error
       const pather = path.nba(graph, { oriented: true });
       let loop = [];
-      // Pather doesn't like going from a node to iteself, so find all the
+      // Pather doesn't like going from a node to itself, so find all the
       // paths going from the next node back to the original node
       // and return the shortest one
       graph.forEachLinkedNode(nodeId, nextNode => {

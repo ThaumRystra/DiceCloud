@@ -49,15 +49,15 @@ let CreaturePropertySchema = new SimpleSchema({
 });
 
 const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
-  // Denormalised flag if this property is inactive on the sheet for any reason
-  // Including being disabled, or a decendent of a disabled property
+  // Denormalized flag if this property is inactive on the sheet for any reason
+  // Including being disabled, or a descendant of a disabled property
   inactive: {
     type: Boolean,
     optional: true,
     index: 1,
     removeBeforeCompute: true,
   },
-  // Denormalised flag if this property was made inactive by an inactive
+  // Denormalized flag if this property was made inactive by an inactive
   // ancestor. True if this property has an inactive ancestor even if this
   // property is itself inactive
   deactivatedByAncestor: {
@@ -66,7 +66,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     index: 1,
     removeBeforeCompute: true,
   },
-  // Denormalised flag if this property was made inactive because of its own
+  // Denormalized flag if this property was made inactive because of its own
   // state
   deactivatedBySelf: {
     type: Boolean,
@@ -74,7 +74,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     index: 1,
     removeBeforeCompute: true,
   },
-  // Denormalised flag if this property was made inactive because of a toggle
+  // Denormalized flag if this property was made inactive because of a toggle
   // calculation. Either an ancestor toggle calculation or its own.
   deactivatedByToggle: {
     type: Boolean,

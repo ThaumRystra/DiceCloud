@@ -29,7 +29,7 @@ export default function applySavingThrow(node, actionContext) {
   const scope = actionContext.scope;
 
   // If there are no save targets, apply all children as if the save both
-  // succeeeded and failed
+  // succeeded and failed
   if (!saveTargets?.length) {
     scope['$saveFailed'] = { value: true };
     scope['$saveSucceeded'] = { value: true };

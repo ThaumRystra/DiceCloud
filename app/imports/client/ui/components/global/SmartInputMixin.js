@@ -45,7 +45,7 @@ export default {
       }
       // Start the loading bar on defocus if the input is dirty
       // It might be a lie, we aren't doing the work yet, but it feels laggy
-      // to defocus an element and then it starts working after a delay
+      // to defocus an element, and then it starts working after a delay
       if (
         !newFocus &&
         this.dirty &&

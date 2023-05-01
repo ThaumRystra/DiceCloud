@@ -75,7 +75,7 @@ const ComputedOnlyClassSchema = createPropertySchema({
     optional: true,
   },
   
-  // Denormalised fields
+  // Denormalized fields
   level: {
     type: SimpleSchema.Integer,
     optional: true,

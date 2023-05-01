@@ -159,7 +159,7 @@ export default {
       }, {
         sort: {order: 1}
       }).map(prop => {
-        // Get all the props we don't want to show the decendants of and
+        // Get all the props we don't want to show the descendants of and
         // where they might appear in the ancestor list
         if (prop.type === 'buff' || prop.type === 'folder') {
           indicesOfTerminatingProps.push({
@@ -171,7 +171,7 @@ export default {
       }).filter(prop => {
         // Filter out folders entirely
         if (prop.type === 'folder') return false;
-        // Filter out decendants of terminating props
+        // Filter out descendants of terminating props
         return !some(indicesOfTerminatingProps, buffIndex => {
           return prop.ancestors[buffIndex.ancestorIndex]?.id === buffIndex.id;
         });

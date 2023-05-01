@@ -78,7 +78,7 @@ let SlotSchema = createPropertySchema({
     allowedValues: [
       // Can't choose the same slot filler twice in this slot
       'uniqueInSlot',
-      // Can't choose the same slot filler twice accross the whole creature
+      // Can't choose the same slot filler twice across the whole creature
       'uniqueInCreature'
     ],
     optional: true,
@@ -101,7 +101,7 @@ const ComputedOnlySlotSchema = createPropertySchema({
     optional: true,
   },
 
-  // Denormalised fields
+  // Denormalized fields
   totalFilled: {
     type: SimpleSchema.Integer,
     defaultValue: 0,

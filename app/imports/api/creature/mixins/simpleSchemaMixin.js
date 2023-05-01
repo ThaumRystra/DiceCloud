@@ -3,7 +3,7 @@
 import SimpleSchema from 'simpl-schema';
 
 export default function simpleSchemaMixin(methodOptions) {
-  // If the user didn't give us a schema and they did give us a validate, assume
+  // If the user didn't give us a schema, and they did give us a validate, assume
   // that they are choosing to use the validate way of doing things in this call.
   //  If they've built a wrapper around ValidateMethod that includes this mixin
   // all the time, this could happen semi-"intentionally". There may be times they
