@@ -29,7 +29,7 @@ changes on the fly. Let's look at a hypothetical example.
 >
 > Fortunately you have DiceCloud, so it's a matter of dragging
 > your Plate Armor +1 Con from your "equipment" box to your "backpack" box and
-> you're done. Your hitpoints change correctly, your saving throws are up to date,
+> you're done. Your hitpoints change correctly, your saving throws are up-to-date,
 > your armor class goes back to reflecting the fact that you have natural armor
 > from being a dragonborn. Your character sheet keeps up and you
 > ultimately get more time to play the game. Huzzah!
@@ -39,7 +39,7 @@ Getting started
 
 Running DiceCloud locally, either to host it yourself away from an internet
 connection, or to contribute to developing it further, is fairly
-straightforward and it should work on Linux, Windows, and Mac.
+straightforward, and it should work on Linux, Windows, and Mac.
 
 You'll need to have installed:
 

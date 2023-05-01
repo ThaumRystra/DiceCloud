@@ -1,4 +1,4 @@
-The grammer.js file is built separately from the rest of the build process
+The grammar.js file is built separately from the rest of the build process
 to rebuild the grammar after changing grammar.ne:
 
 make sure Nearley in installed

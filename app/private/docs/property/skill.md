@@ -10,7 +10,7 @@ The name of the skill.
 
 ### Variable name
 
-The name used to refer to the skill in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.
+The name used to refer to the skill in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctuation.
 
 ### Ability
 
@@ -25,7 +25,7 @@ The ability score that is the basis for checks made with this skill
 - **Weapon** Weapon proficiencies
 - **Armor** Armor proficiencies
 - **Language** Language proficiencies
-- **Utility** Skills that don't show on the charcater sheet but can be used in calculations
+- **Utility** Skills that don't show on the character sheet but can be used in calculations
 
 ### Description
 

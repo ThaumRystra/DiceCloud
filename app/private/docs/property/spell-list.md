@@ -20,7 +20,7 @@ A [computed field](/docs/computed-fields) that determines how many spells can be
 
 ### Spell casting ability
 
-The spellcasting ablity for this spell list. The variable name of the ability can be accessed using `#spellList.ability` and the ability modifier with `#spellList.abilityMod`. Setting this field will automatically update Spell save DC and Attack roll bonus if they aren't set manually.
+The spellcasting ability for this spell list. The variable name of the ability can be accessed using `#spellList.ability` and the ability modifier with `#spellList.abilityMod`. Setting this field will automatically update Spell save DC and Attack roll bonus if they aren't set manually.
 
 ### Spell save DC
 
