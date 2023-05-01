@@ -1,5 +1,5 @@
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
+import { DenormalizedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';

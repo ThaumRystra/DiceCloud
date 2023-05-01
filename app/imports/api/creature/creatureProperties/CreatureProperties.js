@@ -48,7 +48,7 @@ let CreaturePropertySchema = new SimpleSchema({
   },
 });
 
-const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
+const DenormalizedOnlyCreaturePropertySchema = new SimpleSchema({
   // Denormalized flag if this property is inactive on the sheet for any reason
   // Including being disabled, or a descendant of a disabled property
   inactive: {
@@ -91,7 +91,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   },
 });
 
-CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
+CreaturePropertySchema.extend(DenormalizedOnlyCreaturePropertySchema);
 
 for (let key in propertySchemasIndex) {
   let schema = new SimpleSchema({});
@@ -107,6 +107,6 @@ for (let key in propertySchemasIndex) {
 
 export default CreatureProperties;
 export {
-  DenormalisedOnlyCreaturePropertySchema,
+  DenormalizedOnlyCreaturePropertySchema,
   CreaturePropertySchema,
 };
