@@ -25,7 +25,6 @@
         <div
           v-else
           class="layout align-center slot-bubbles"
-          @click.stop
         >
           <smart-btn
             v-for="i in model.total"

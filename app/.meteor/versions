@@ -4,7 +4,7 @@ accounts-oauth@1.4.2
 accounts-password@2.3.4
 accounts-patreon@0.1.0
 akryum:npm-check@0.1.2
-akryum:vue-component@0.16.0
+akryum:vue-component@0.15.2
 akryum:vue-component-dev-client@0.4.7
 akryum:vue-component-dev-server@0.1.4
 akryum:vue-router2@0.2.3
