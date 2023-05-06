@@ -35,7 +35,7 @@ let ProficiencySchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.variableName,
   },
-  // Which tags the effect is applied to
+  // Which tags the proficiency is applied to
   targetTags: {
     type: Array,
     optional: true,

@@ -61,8 +61,7 @@ function aggregateCalculationProficiencies(node, computation) {
       if (!linkedNode.data) return;
       // Ignore inactive props
       if (linkedNode.data.inactive) return;
-
-      // Collate effects
+      // Collate proficiencies
       calcObj.proficiencies = calcObj.proficiencies || [];
       calcObj.proficiencies.push({
         _id: linkedNode.data._id,

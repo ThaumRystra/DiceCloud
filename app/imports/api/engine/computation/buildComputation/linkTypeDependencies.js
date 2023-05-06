@@ -272,6 +272,9 @@ function linkProficiencies(dependencyGraph, prop, computation) {
   // The stats depend on the proficiency
   if (prop.inactive) return;
   if (prop.targetByTags) {
+    // Tag targeted proficiencies depend on the creature's proficiencyBonus,
+    // since they add it directly to the targeted field
+    dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
     getEffectTagTargets(prop, computation).forEach(targetId => {
       const targetProp = computation.propsById[targetId];
       if (
