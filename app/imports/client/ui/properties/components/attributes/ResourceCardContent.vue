@@ -1,26 +1,28 @@
 <template>
   <v-layout>
     <div class="buttons layout column justify-center pl-3">
-      <v-btn
+      <smart-btn
         icon
         small
-        :disabled="(model.value >= model.total && !model.ignoreUpperLimit) || context.editPermission === false"
-        @click="increment(1)"
+        :disabled="(optimisticValue >= model.total && !model.ignoreUpperLimit) || context.editPermission === false"
+        @clicks="(times, ack) => increment(times, ack)"
+        @click="optimisticIncrement += 1"
       >
         <v-icon>mdi-chevron-up</v-icon>
-      </v-btn>
-      <v-btn
+      </smart-btn>
+      <smart-btn
         icon
         small
-        :disabled="(model.value <= 0 && !model.ignoreLowerLimit) || context.editPermission === false"
-        @click="increment(-1)"
+        :disabled="(optimisticValue <= 0 && !model.ignoreLowerLimit) || context.editPermission === false"
+        @clicks="(times, ack) => increment(-1 * times, ack)"
+        @click="optimisticIncrement -= 1"
       >
         <v-icon>mdi-chevron-down</v-icon>
-      </v-btn>
+      </smart-btn>
     </div>
     <div class="layout align-center value pl-2 pr-3">
       <div class="text-h4">
-        {{ model.value }}
+        {{ optimisticValue }}
       </div>
       <div
         v-if="model.total !== 0"
@@ -57,12 +59,27 @@ export default {
       type: Boolean,
     }
   },
+  data(){
+    return {
+      optimisticIncrement: 0,
+    };
+  },
+  computed: {
+    optimisticValue() {
+      return this.model?.value + this.optimisticIncrement;
+    },
+  },
+  watch: {
+    'model.value'() {
+      this.optimisticIncrement = 0;
+    },
+  },
   methods: {
     click(e) {
       this.$emit('click', e);
     },
-    increment(value) {
-      this.$emit('change', { type: 'increment', value })
+    increment(value, ack) {
+      this.$emit('change', { type: 'increment', value, ack })
     },
   },
 };

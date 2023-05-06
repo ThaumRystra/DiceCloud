@@ -600,13 +600,15 @@ export default {
         data: { _id },
       });
     },
-    incrementChange(_id, { type, value }) {
+    incrementChange(_id, { type, value, ack }) {
       damageProperty.call({
         _id,
         operation: type,
         value: -value
       }, error => {
-        if (error) {
+        if (ack) {
+          ack(error);
+        } else if (error) {
           snackbar({ text: error.reason || error.message || error.toString() });
           console.error(error);
         }
