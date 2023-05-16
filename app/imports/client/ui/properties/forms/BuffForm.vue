@@ -1,12 +1,5 @@
 <template lang="html">
   <div class="buff-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
     <inline-computation-field
       label="Description"
       :model="model.description"
@@ -44,7 +37,7 @@
       >
         <slot name="children" />
       </form-section>
-      <form-section name="Advanced">
+      <form-section name="Behavior">
         <v-row dense>
           <v-col
             cols="12"
@@ -64,18 +57,6 @@
             md="4"
           >
             <smart-switch
-              label="Don't show in log"
-              :value="model.silent"
-              :error-messages="errors.silent"
-              @change="change('silent', ...arguments)"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
               label="Don't freeze variables"
               :value="model.skipCrystalization"
               :error-messages="errors.skipCrystalization"
@@ -83,14 +64,13 @@
             />
           </v-col>
         </v-row>
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
+      </form-section>
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
         />
       </form-section>
       <slot />

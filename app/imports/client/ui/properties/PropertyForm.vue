@@ -30,7 +30,7 @@
     >
       <form-section
         v-if="context.isLibraryForm"
-        name="Library Options"
+        name="Library"
       >
         <v-row
           v-if="context.isLibraryForm"
