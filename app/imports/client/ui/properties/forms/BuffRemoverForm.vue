@@ -1,34 +1,16 @@
 <template lang="html">
   <div class="buff-remover-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-    <smart-switch
-      label="Remove parent buff"
-      :value="model.targetParentBuff"
-      :error-messages="errors.targetParentBuff"
-      @change="change('targetParentBuff', ...arguments)"
+    <smart-toggle
+      label="Target buffs"
+      :value="model.targetParentBuff ? 'parent' : 'tag'"
+      :options="[
+        {name: 'Remove tagged buffs', value: 'tag'},
+        {name: 'Remove parent buff', value: 'parent'},
+      ]"
+      @change="(value, ack) => change('targetParentBuff', value === 'parent' ? true : undefined, ack)"
     />
     <v-expand-transition>
       <div v-if="!model.targetParentBuff">
-        <smart-switch
-          :label="model.removeAll ? 'Remove All. All matching buffs will be removed' : 'Remove All. Only 1 matching buff will be removed'"
-          :value="model.removeAll"
-          :error-messages="errors.removeAll"
-          @change="change('removeAll', ...arguments)"
-        />
-        <smart-select
-          label="Target"
-          :items="targetOptions"
-          :value="model.target"
-          :error-messages="errors.target"
-          :menu-props="{auto: true, lazy: true}"
-          @change="change('target', ...arguments)"
-        />
         <v-layout
           align-center
         >
@@ -93,6 +75,38 @@
             </v-btn>
           </div>
         </v-slide-x-transition>
+        <div class="mb-8" />
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <smart-toggle
+              label="Remove matching buffs"
+              :value="model.removeAll ? 'all' : 'one'"
+              :options="[
+                {name: 'Remove 1 buff', value: 'one'},
+                {name: 'Remove all buffs', value: 'all'},
+              ]"
+              @change="(value, ack) => change('removeAll', value === 'all' ? true : undefined, ack)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <smart-toggle
+              label="Target creature"
+              :value="model.target"
+              :options="[
+                {name: 'Action Target', value: 'target'},
+                {name: 'Self', value: 'self'},
+              ]"
+              :error-messages="errors.target"
+              @change="change('target', ...arguments)"
+            />
+          </v-col>
+        </v-row>
       </div>
     </v-expand-transition>
     <form-sections>
@@ -104,31 +118,14 @@
         <slot name="children" />
       </form-section>
       <form-section
-        name="Advanced"
+        name="Log"
       >
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
         />
-        <v-row dense>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
-              label="Don't show in log"
-              :value="model.silent"
-              :error-messages="errors.silent"
-              @change="change('silent', ...arguments)"
-            />
-          </v-col>
-        </v-row>
       </form-section>
     </form-sections>
   </div>
@@ -145,15 +142,6 @@ export default {
   data(){return {
     addExtraTagsLoading: false,
     extraTagOperations: ['OR', 'NOT'],
-    targetOptions: [
-      {
-        text: 'Self',
-        value: 'self',
-      }, {
-        text: 'Target',
-        value: 'target',
-      },
-    ],
   }},
   computed: {
     extraTagsFull(){
