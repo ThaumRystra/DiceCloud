@@ -34,11 +34,14 @@
         cols="12"
         md="6"
       >
-        <smart-select
+        <smart-toggle
           label="Operation"
           hint="Should the attribute be damaged by the amount, or set to the amount"
-          :items="adjustmentOps"
           :value="model.operation"
+          :options="[
+            { name: 'Damage', value: 'increment' },
+            { name: 'Set', value: 'set' },
+          ]"
           :error-messages="errors.operation"
           @change="change('operation', ...arguments)"
         />
@@ -47,14 +50,14 @@
         cols="12"
         md="6"
       >
-        <smart-select
-          v-if="parentTarget !== 'self'"
-          label="Target"
-          :hint="targetOptionHint"
-          :items="targetOptions"
+        <smart-toggle
+          label="Target creature"
           :value="model.target"
+          :options="[
+            {name: 'Action Target', value: 'target'},
+            {name: 'Self', value: 'self'},
+          ]"
           :error-messages="errors.target"
-          :menu-props="{auto: true, lazy: true}"
           @change="change('target', ...arguments)"
         />
       </v-col>
@@ -85,58 +88,10 @@ import propertyFormMixin from '/imports/client/ui/properties/forms/shared/proper
 
 export default {
   mixins: [propertyFormMixin, attributeListMixin],
-  props: {
-    parentTarget: {
-      type: String,
-      default: undefined,
-    },
-  },
   data() {
     return {
-      adjustmentOps: [
-        { text: 'Damage', value: 'increment' },
-        { text: 'Set', value: 'set' },
-      ],
-      damageHint: 'The amount of damage to apply to the selected stat, can be a calculation or roll. Negative values will restore the selected from previous damage. If the operation is set, this is the final value of the stat instead.',
-      setHint: 'The value of the stat after applying this adjustment. The stat\'s value can\'t exceed its total',
-    }
-  },
-  computed: {
-    targetOptions() {
-      if (this.parentTarget === 'singleTarget') {
-        return [
-          {
-            text: 'Self',
-            value: 'self',
-          }, {
-            text: 'Target',
-            value: 'every',
-          },
-        ];
-      } else {
-        return [
-          {
-            text: 'Self',
-            value: 'self',
-          }, {
-            text: 'Target',
-            value: 'target',
-          },
-        ];
-      }
-    },
-    targetOptionHint() {
-      let hints = {
-        self: 'The damage will be applied to the character\'s own attribute when taking the action',
-        target: 'The damage will be applied to the target of the action',
-        each: 'The damage will be rolled separately for each of the targets of the action',
-        every: 'The damage will be rolled once and applied to each of the targets of the action',
-      };
-      if (this.parentTarget === 'singleTarget') {
-        hints.each = hints.target;
-        hints.every = hints.target;
-      }
-      return hints[this.model.target];
+      damageHint: 'The amount of damage to apply, negative values will heal',
+      setHint: 'The value to set the stat to',
     }
   },
 }

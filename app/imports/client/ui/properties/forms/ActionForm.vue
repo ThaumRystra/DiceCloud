@@ -63,19 +63,21 @@
       />
     </v-slide-x-transition>
 
-    <smart-select
-      label="Target"
-      style="flex-basis: 300px;"
-      :items="targetOptions"
+    <smart-toggle
+      label="Target creature"
       :value="model.target"
+      :options="[
+        {name: 'Single Target', value: 'singleTarget'},
+        {name: 'Multiple Targets', value: 'multipleTargets'},
+        {name: 'Self', value: 'self'},
+      ]"
       :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
       @change="change('target', ...arguments)"
     />
 
     <inline-computation-field
       label="Summary"
-      hint="This will appear in the action card in the character sheet, summarise what the action does"
+      hint="This will appear in the action card in the character sheet, summarize what the action does"
       :model="model.summary"
       :error-messages="errors.summary"
       @change="({path, value, ack}) =>

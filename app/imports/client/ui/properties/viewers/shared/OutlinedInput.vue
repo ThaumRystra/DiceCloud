@@ -49,4 +49,10 @@ export default {
 .outlined-input.theme--dark:not(.no-hover):hover {
   border-color: #fff;
 }
+.outlined-input .name {
+  color: rgba(0,0,0,.6);
+}
+.outlined-input.theme--dark .name {
+  color: rgba(255,255,255,.7);
+}
 </style>

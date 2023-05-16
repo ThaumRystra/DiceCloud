@@ -18,16 +18,17 @@
         $emit('change', {path: ['duration', ...path], value, ack})"
     />
     -->
-    <v-expand-transition>
-      <smart-select
-        v-if="!model.applied"
-        label="Target"
-        :items="targetOptions"
-        :value="model.target"
-        :error-messages="errors.target"
-        :menu-props="{auto: true, lazy: true}"
-        @change="change('target', ...arguments)"
-      />
+    <smart-toggle
+      v-if="!model.applied"
+      label="Target creature"
+      :value="model.target"
+      :options="[
+        {name: 'Action Target', value: 'target'},
+        {name: 'Self', value: 'self'},
+      ]"
+      :error-messages="errors.target"
+      @change="change('target', ...arguments)"
+    />
     </v-expand-transition>
     <form-sections>
       <form-section

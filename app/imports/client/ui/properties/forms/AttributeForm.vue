@@ -79,90 +79,115 @@
           v-if="model.attributeType === 'healthBar'"
           name="Health Bar"
         >
-          <div
-            class="d-flex flex-wrap align-center justify-start"
-          >
-            <div class="text-subtitle-1">
-              Damaged Colors:
+          <div class="d-flex flex-column align-center mb-4">
+            <div class="text-caption mb-4">
+              Damaged Colors
             </div>
-            <outlined-input
-              name="Half"
-              class="mb-4 ml-2"
+            <div
+              class="d-flex flex-wrap align-center justify-start"
             >
-              <color-picker
-                :value="model.healthBarColorMid"
-                :width="54"
-                :height="54"
-                @input="value => $emit('change', {path: ['healthBarColorMid'], value})"
-              />
-            </outlined-input>
-            <outlined-input
-              name="Empty"
-              class="mb-4 ml-2"
-            >
-              <color-picker
-                :value="model.healthBarColorLow"
-                :width="54"
-                :height="54"
-                @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
-              />
-            </outlined-input>
+              <outlined-input
+                name="Half"
+                class="mb-4"
+              >
+                <color-picker
+                  :value="model.healthBarColorMid"
+                  :width="54"
+                  :height="54"
+                  @input="value => $emit('change', {path: ['healthBarColorMid'], value})"
+                />
+              </outlined-input>
+              <outlined-input
+                name="Empty"
+                class="mb-4 ml-2"
+              >
+                <color-picker
+                  :value="model.healthBarColorLow"
+                  :width="54"
+                  :height="54"
+                  @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
+                />
+              </outlined-input>
+            </div>
           </div>
-          <v-layout
-            wrap
-            class="mt-4"
-          >
-            <text-field
-              label="Damage order"
-              type="number"
-              style="max-width: 300px;"
-              hint="Lower ordered health bars will take damage before higher ordered ones"
-              class="mr-4"
-              :disabled="model.healthBarNoDamage"
-              :value="model.healthBarDamageOrder"
-              :error-messages="errors.healthBarDamageOrder"
-              @change="change('healthBarDamageOrder', ...arguments)"
-            />
-            <smart-switch
-              label="Ignore damage"
-              class="mr-4"
-              :value="model.healthBarNoDamage"
-              :error-messages="errors.healthBarNoDamage"
-              @change="change('healthBarNoDamage', ...arguments)"
-            />
-            <smart-switch
-              label="Prevent damage overflow"
-              :value="model.healthBarNoDamageOverflow"
-              :error-messages="errors.healthBarNoDamageOverflow"
-              @change="change('healthBarNoDamageOverflow', ...arguments)"
-            />
-          </v-layout>
-          <v-layout wrap>
-            <text-field
-              label="Healing order"
-              type="number"
-              style="max-width: 300px;"
-              hint="Lower ordered health bars will take healing before higher ordered ones"
-              class="mr-4"
-              :disabled="model.healthBarNoHealing"
-              :value="model.healthBarHealingOrder"
-              :error-messages="errors.healthBarHealingOrder"
-              @change="change('healthBarHealingOrder', ...arguments)"
-            />
-            <smart-switch
-              label="Ignore healing"
-              class="mr-4"
-              :value="model.healthBarNoHealing"
-              :error-messages="errors.healthBarNoHealing"
-              @change="change('healthBarNoHealing', ...arguments)"
-            />
-            <smart-switch
-              label="Prevent healing overflow"
-              :value="model.healthBarNoHealingOverflow"
-              :error-messages="errors.healthBarNoHealingOverflow"
-              @change="change('healthBarNoHealingOverflow', ...arguments)"
-            />
-          </v-layout>
+          <v-row dense>
+            <v-col
+              cols="12"
+              md="4"
+            >
+              <text-field
+                label="Damage order"
+                type="number"
+                hint="Lower ordered health bars will take damage before higher ordered ones"
+                :disabled="model.healthBarNoDamage"
+                :value="model.healthBarDamageOrder"
+                :error-messages="errors.healthBarDamageOrder"
+                @change="change('healthBarDamageOrder', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+              sm="6"
+            >
+              <smart-switch
+                label="Ignore damage"
+                :value="model.healthBarNoDamage"
+                :error-messages="errors.healthBarNoDamage"
+                @change="change('healthBarNoDamage', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+              sm="6"
+            >
+              <smart-switch
+                label="Prevent damage overflow"
+                :value="model.healthBarNoDamageOverflow"
+                :error-messages="errors.healthBarNoDamageOverflow"
+                @change="change('healthBarNoDamageOverflow', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+            >
+              <text-field
+                label="Healing order"
+                type="number"
+                hint="Lower ordered health bars will take healing before higher ordered ones"
+                :disabled="model.healthBarNoHealing"
+                :value="model.healthBarHealingOrder"
+                :error-messages="errors.healthBarHealingOrder"
+                @change="change('healthBarHealingOrder', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+              sm="6"
+            >
+              <smart-switch
+                label="Ignore healing"
+                :value="model.healthBarNoHealing"
+                :error-messages="errors.healthBarNoHealing"
+                @change="change('healthBarNoHealing', ...arguments)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+              sm="6"
+            >
+              <smart-switch
+                label="Prevent healing overflow"
+                :value="model.healthBarNoHealingOverflow"
+                :error-messages="errors.healthBarNoHealingOverflow"
+                @change="change('healthBarNoHealingOverflow', ...arguments)"
+              />
+            </v-col>
+          </v-row>
         </form-section>
       </v-expand-transition>
       <form-section name="Damage">

@@ -28,14 +28,12 @@
 </template>
 
 <script lang="js">
-  import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
   import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
   import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
   export default {
     components: {
       OutlinedInput,
-      PropertyIcon,
       ColorPicker,
     },
     props: {
