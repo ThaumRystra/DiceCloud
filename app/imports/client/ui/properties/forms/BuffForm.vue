@@ -29,7 +29,6 @@
       :error-messages="errors.target"
       @change="change('target', ...arguments)"
     />
-    </v-expand-transition>
     <form-sections>
       <form-section
         v-if="$slots.children"
