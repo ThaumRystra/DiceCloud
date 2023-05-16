@@ -77,18 +77,37 @@
       <v-expand-transition>
         <form-section
           v-if="model.attributeType === 'healthBar'"
-          name="Health Bar Settings"
+          name="Health Bar"
         >
-          <color-picker
-            :value="model.healthBarColorMid"
-            label="Half-filled color"
-            @input="value => $emit('change', {path: ['healthBarColorMid'], value})"
-          />
-          <color-picker
-            :value="model.healthBarColorLow"
-            label="Empty color"
-            @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
-          />
+          <div
+            class="d-flex flex-wrap align-center justify-start"
+          >
+            <div class="text-subtitle-1">
+              Damaged Colors:
+            </div>
+            <outlined-input
+              name="Half"
+              class="mb-4 ml-2"
+            >
+              <color-picker
+                :value="model.healthBarColorMid"
+                :width="54"
+                :height="54"
+                @input="value => $emit('change', {path: ['healthBarColorMid'], value})"
+              />
+            </outlined-input>
+            <outlined-input
+              name="Empty"
+              class="mb-4 ml-2"
+            >
+              <color-picker
+                :value="model.healthBarColorLow"
+                :width="54"
+                :height="54"
+                @input="value => $emit('change', {path: ['healthBarColorLow'], value})"
+              />
+            </outlined-input>
+          </div>
           <v-layout
             wrap
             class="mt-4"
@@ -146,118 +165,106 @@
           </v-layout>
         </form-section>
       </v-expand-transition>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
-      </form-section>
-
-      <form-section name="Advanced">
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
-        />
-        <div class="layout column align-center">
-          <v-row dense>
-            <v-col
-              cols="12"
-              sm="6"
-              md="4"
-            >
-              <smart-switch
-                v-if="model.attributeType !== 'hitDice'"
-                label="Allow decimal values"
-                class="mx-4"
-                :value="model.decimal"
-                :error-messages="errors.decimal"
-                @change="change('decimal', ...arguments)"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              sm="6"
-              md="4"
-            >
-              <smart-switch
-                label="Can be damaged into negative values"
-                class="mx-4"
-                :value="model.ignoreLowerLimit"
-                :error-messages="errors.ignoreLowerLimit"
-                @change="change('ignoreLowerLimit', ...arguments)"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              sm="6"
-              md="4"
-            >
-              <smart-switch
-                label="Can be incremented above total"
-                class="mx-4"
-                :value="model.ignoreUpperLimit"
-                :error-messages="errors.ignoreUpperLimit"
-                @change="change('ignoreUpperLimit', ...arguments)"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              sm="6"
-              md="4"
-            >
-              <smart-switch
-                label="Hide when total is zero"
-                class="mx-4"
-                :value="model.hideWhenTotalZero"
-                :error-messages="errors.hideWhenTotalZero"
-                @change="change('hideWhenTotalZero', ...arguments)"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              sm="6"
-              md="4"
-            >
-              <smart-switch
-                label="Hide when value is zero"
-                class="mx-4"
-                :value="model.hideWhenValueZero"
-                :error-messages="errors.hideWhenValueZero"
-                @change="change('hideWhenValueZero', ...arguments)"
-              />
-            </v-col>
-          </v-row>
-          <div
-            class="layout justify-center"
-            style="align-self: stretch;"
+      <form-section name="Damage">
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
           >
             <text-field
               label="Damage"
               type="number"
               class="damage-field text-center"
-              style="max-width: 300px;"
-              hint="The attribute's final value is reduced by this amount. Attribute damage can increase this value until it matches the attribute's computed value. Should mostly be left blank."
+              hint="Damage reduces the attribute's final value"
               :disabled="!context.isLibraryForm"
               :value="model.damage"
               :error-messages="errors.damage"
               @change="change('damage', ...arguments)"
             />
-          </div>
-        </div>
-        <div class="layout wrap">
-          <reset-selector
-            v-if="model.attributeType !== 'hitDice'"
-            hint="When damage should be reset to zero"
-            :value="model.reset"
-            :error-messages="errors.reset"
-            @change="change('reset', ...arguments)"
-          />
-        </div>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <reset-selector
+              v-if="model.attributeType !== 'hitDice'"
+              hint="When damage should be reset to zero"
+              :value="model.reset"
+              :error-messages="errors.reset"
+              @change="change('reset', ...arguments)"
+            />
+          </v-col>
+        </v-row>
+      </form-section>
+      <form-section name="Behavior"> 
+        <v-row dense>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              v-if="model.attributeType !== 'hitDice'"
+              label="Allow decimal values"
+              class="mx-4"
+              :value="model.decimal"
+              :error-messages="errors.decimal"
+              @change="change('decimal', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Can be damaged into negative values"
+              class="mx-4"
+              :value="model.ignoreLowerLimit"
+              :error-messages="errors.ignoreLowerLimit"
+              @change="change('ignoreLowerLimit', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Can be incremented above total"
+              class="mx-4"
+              :value="model.ignoreUpperLimit"
+              :error-messages="errors.ignoreUpperLimit"
+              @change="change('ignoreUpperLimit', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Hide when total is zero"
+              class="mx-4"
+              :value="model.hideWhenTotalZero"
+              :error-messages="errors.hideWhenTotalZero"
+              @change="change('hideWhenTotalZero', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <smart-switch
+              label="Hide when value is zero"
+              class="mx-4"
+              :value="model.hideWhenValueZero"
+              :error-messages="errors.hideWhenValueZero"
+              @change="change('hideWhenValueZero', ...arguments)"
+            />
+          </v-col>
+        </v-row>
       </form-section>
       <slot />
     </form-sections>
@@ -270,11 +277,13 @@ import FormSections from '/imports/client/ui/properties/forms/shared/FormSection
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
 import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
 export default {
   components: {
     FormSection,
     FormSections,
+    OutlinedInput,
     ColorPicker,
     ResetSelector,
   },
