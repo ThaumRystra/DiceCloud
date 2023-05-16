@@ -70,6 +70,7 @@
           @change="change('silent', ...arguments)"
         />
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
