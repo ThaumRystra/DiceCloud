@@ -7,7 +7,7 @@
       >
         <smart-combobox
           label="Attribute"
-          hint="The attribute this adjustment will apply to"
+          hint="The attribute that will be damaged or healed"
           style="flex-basis: 300px;"
           :items="attributeList"
           :value="model.stat"
@@ -22,7 +22,6 @@
         <computed-field
           label="Amount"
           :hint="model.operation === 'set' ? setHint : damageHint"
-          style="flex-basis: 300px;"
           :model="model.amount"
           :error-messages="errors.amount"
           @change="({path, value, ack}) =>
@@ -30,42 +29,45 @@
         />
       </v-col>
     </v-row>
-    <smart-select
-      label="Operation"
-      class="mx-1"
-      style="flex-basis: 300px;"
-      hint="Should the attribute be damaged by the amount, or set to the amount"
-      :items="adjustmentOps"
-      :value="model.operation"
-      :error-messages="errors.operation"
-      @change="change('operation', ...arguments)"
-    />
-    <smart-select
-      v-if="parentTarget !== 'self'"
-      label="Target"
-      :hint="targetOptionHint"
-      :items="targetOptions"
-      :value="model.target"
-      :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('target', ...arguments)"
-    />
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <smart-switch
-      label="Don't show in log"
-      :value="model.silent"
-      :error-messages="errors.silent"
-      @change="change('silent', ...arguments)"
-    />
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Operation"
+          hint="Should the attribute be damaged by the amount, or set to the amount"
+          :items="adjustmentOps"
+          :value="model.operation"
+          :error-messages="errors.operation"
+          @change="change('operation', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          v-if="parentTarget !== 'self'"
+          label="Target"
+          :hint="targetOptionHint"
+          :items="targetOptions"
+          :value="model.target"
+          :error-messages="errors.target"
+          :menu-props="{auto: true, lazy: true}"
+          @change="change('target', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <form-sections>
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
+        />
+      </form-section>
       <form-section
         v-if="$slots.children"
         name="Children"

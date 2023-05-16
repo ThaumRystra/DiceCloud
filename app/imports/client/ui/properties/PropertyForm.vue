@@ -7,6 +7,7 @@
         style="gap: 8px"
       >
         <text-field
+          v-if="schemaHasName"
           ref="focusFirst"
           label="Name"
           style="flex-basis: 320px;"
@@ -31,8 +32,9 @@
         v-if="context.isLibraryForm"
         name="Library Options"
       >
-        <v-row 
+        <v-row
           v-if="context.isLibraryForm"
+          dense
         >
           <v-col
             cols="12"
@@ -89,7 +91,6 @@
           </v-col>
           <v-col
             cols="12"
-            md="6"
           >
             <smart-combobox
               label="Library Tags"
@@ -97,7 +98,7 @@
               small-chips
               deletable-chips
               hint="Used to let slots find this property in a library"
-              :value="model.tags"
+              :value="model.libraryTags"
               @change="(value, ack) => $emit('change', {path: ['libraryTags'], value, ack})"
             />
           </v-col>
@@ -190,6 +191,7 @@ import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperti
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 import { getSuggestedChildren } from '/imports/constants/PROPERTIES.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
 
 const slotTypes = [];
 for (let key in PROPERTIES) {
@@ -231,6 +233,11 @@ export default {
       if (!this.model?.type) return;
       return getSuggestedChildren(this.model.type);
     },
+    schemaHasName() {
+      if (!this.model?.type) return true;
+      const schema = propertySchemasIndex[this.model.type];
+      return schema.allowsKey('name');
+    }
   },
   mounted() {
     // Don't autofocus on mobile, it brings up the on-screen keyboard
