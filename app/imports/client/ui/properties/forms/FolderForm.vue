@@ -2,7 +2,7 @@
   <div class="folder-form">
     <div class="layout wrap">
       <form-sections>
-        <form-section name="Advanced">
+        <form-section name="Grouping">
           <smart-switch
             label="Group children on a card"
             :value="model.groupStats"
