@@ -1,49 +1,41 @@
 <template lang="html">
-  <div>
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-    <div class="layout wrap justify-start proficiency-form">
-      <smart-combobox
-        label="Skills"
-        class="mr-2"
-        multiple
-        chips
-        deletable-chips
-        hint="Which skills does this proficiency apply to"
-        :value="model.stats"
-        :items="skillList"
-        :error-messages="errors.stats"
-        @change="change('stats', ...arguments)"
-      />
-      <proficiency-select
-        label="Proficiency"
-        style="flex-basis: 300px;"
-        :clearable="false"
-        :value="model.value"
-        @change="change('value', ...arguments)"
-      />
-    </div>
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
+  <div class="proficiency-form">
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-combobox
+          label="Skills"
+          class="mr-2"
+          multiple
+          small-chips
+          deletable-chips
+          hint="Which skills does this proficiency apply to"
+          :value="model.stats"
+          :items="skillList"
+          :error-messages="errors.stats"
+          @change="change('stats', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <proficiency-select
+          label="Proficiency"
+          style="flex-basis: 300px;"
+          :clearable="false"
+          :value="model.value"
+          @change="change('value', ...arguments)"
+        />
+      </v-col>
+    </v-row>
+    <form-sections
+      v-if="$slots.default"
     >
-      <slot name="children" />
-    </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 

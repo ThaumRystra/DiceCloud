@@ -75,7 +75,7 @@
         label="Stats"
         class="mr-2"
         multiple
-        chips
+        small-chips
         deletable-chips
         hint="Which stats will this effect apply to"
         persistent-hint
