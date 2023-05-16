@@ -17,22 +17,22 @@
       </v-btn>
       <smart-combobox
         label="Tags Required"
-        hint="Applied to properties that have all the listed tags"
+        :hint="tagHint"
         class="mb-2"
         multiple
         small-chips
         deletable-chips
         persistent-hint
-        :value="model.targetTags"
-        :error-messages="errors.targetTags"
-        @change="change('targetTags', ...arguments)"
+        :value="model[tagField]"
+        :error-messages="errors[tagField]"
+        @change="change(tagField, ...arguments)"
       />
     </v-layout>
     <v-slide-x-transition
       group
     >
       <div
-        v-for="(extras, i) in model.extraTags"
+        v-for="(extras, i) in model[extraTagsField]"
         :key="extras._id"
         class="target-tags layout align-center justify-space-between"
       >
@@ -41,24 +41,24 @@
           style="width: 90px; flex-grow: 0;"
           :items="['OR', 'NOT']"
           :value="extras.operation"
-          :error-messages="errors.extraTags && errors.extraTags[i]"
-          @change="change(['extraTags', i, 'operation'], ...arguments)"
+          :error-messages="errors[extraTagsField] && errors[extraTagsField][i]"
+          @change="change([extraTagsField, i, 'operation'], ...arguments)"
         />
         <smart-combobox
           label="Tags"
-          :hint="extras.operation === 'OR' ? 'Also applied to properties that have all of these tags' : 'Ignore properties that have any of these tags'"
+          :hint="extras.operation === 'OR' ? orHint : notHint"
           class="mx-2 mb-2"
           multiple
           small-chips
           deletable-chips
           persistent-hint
           :value="extras.tags"
-          @change="change(['extraTags', i, 'tags'], ...arguments)"
+          @change="change([extraTagsField, i, 'tags'], ...arguments)"
         />
         <v-btn
           icon
           style="margin-top: -30px;"
-          @click="$emit('pull', {path: ['extraTags', i]})"
+          @click="$emit('pull', {path: [extraTagsField, i]})"
         >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -80,6 +80,26 @@ export default {
       type: Object,
       required: true,
     },
+    tagField: {
+      type: String,
+      default: 'targetTags',
+    },
+    extraTagsField: {
+      type: String,
+      default: 'extraTags',
+    },
+    tagHint: {
+      type: String,
+      default: 'Applied to properties that have all the listed tags',
+    },
+    orHint: {
+      type: String,
+      default: 'Also applied to properties that have all of these tags',
+    },
+    notHint: {
+      type: String,
+      default: 'Ignore properties that have any of these tags',
+    },
   },
   data() {
     return {
@@ -90,18 +110,18 @@ export default {
     maxTags() {
       if (!this.model?.type) return 0;
       const schema = propertySchemasIndex[this.model.type];
-      return schema.get('extraTags', 'maxCount');
+      return schema.get(this.extraTagsField, 'maxCount');
     },
     extraTagsFull() {
-      if (!this.model.extraTags) return false;
-      return this.model.extraTags.length >= this.maxTags;
+      if (!this.model[this.extraTagsField]) return false;
+      return this.model[this.extraTagsField].length >= this.maxTags;
     },
   },
   methods: {
     addExtraTags() {
       this.addExtraTagsLoading = true;
       this.$emit('push', {
-        path: ['extraTags'],
+        path: [this.extraTagsField],
         value: {
           _id: Random.id(),
           operation: 'OR',

@@ -3,19 +3,6 @@
     <v-row dense>
       <v-col
         cols="12"
-        md="6"
-      >
-        <text-field
-          ref="focusFirst"
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        md="6"
       >
         <text-field
           label="Variable name"
@@ -36,91 +23,30 @@
     />
 
     <form-sections>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
-      </form-section>
-
-      <form-section name="Advanced">
-        <smart-combobox
-          label="Tags"
-          hint="This class's own tags"
-          multiple
-          chips
-          deletable-chips
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
+      <form-section name="Class levels from libraries">
+        <tag-targeting
+          :model="model"
+          :errors="errors"
+          tag-field="slotTags"
+          tag-hint="Find class levels that have all of these tags"
+          or-hint="Also find class levels that have all of these tags instead"
+          not-hint="Ignore class levels that have any of these tags"
+          @change="e => $emit('change', e)"
+          @push="e => $emit('push', e)"
+          @pull="e => $emit('pull', e)"
         />
-        <v-layout align-center>
-          <v-btn
-            icon
-            style="margin-top: -30px;"
-            class="mr-2"
-            :loading="addExtraTagsLoading"
-            :disabled="extraTagsFull"
-            @click="addExtraTags"
-          >
-            <v-icon>
-              mdi-plus
-            </v-icon>
-          </v-btn>
-          <smart-combobox
-            label="Tags Required"
-            hint="Class levels added to this class must have these tags"
-            multiple
-            chips
-            deletable-chips
-            :value="model.slotTags"
-            :error-messages="errors.slotTags"
-            @change="change('slotTags', ...arguments)"
-          />
-        </v-layout>
-        <v-slide-x-transition group>
-          <div
-            v-for="(extras, i) in model.extraTags"
-            :key="extras._id"
-            class="extra-tags layout align-center justify-space-between"
-          >
-            <smart-select
-              label="Operation"
-              style="width: 90px; flex-grow: 0;"
-              :items="extraTagOperations"
-              :value="extras.operation"
-              :error-messages="errors.extraTags && errors.extraTags[i]"
-              @change="change(['extraTags', i, 'operation'], ...arguments)"
-            />
-            <smart-combobox
-              label="Tags"
-              :hint="extras.operation === 'OR' ? 'The class levels can have these tags instead' : 'The class levels can not have any of these tags'"
-              class="mx-2"
-              multiple
-              chips
-              deletable-chips
-              :value="extras.tags"
-              @change="change(['extraTags', i, 'tags'], ...arguments)"
-            />
-            <v-btn
-              icon
-              style="margin-top: -30px;"
-              @click="$emit('pull', {path: ['extraTags', i]})"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </v-slide-x-transition>
 
         <computed-field
-          label="Condition"
-          hint="A caclulation to determine if this class can have levels added to it"
-          placeholder="Always allow"
+          label="Active condition"
+          hint="A calculation to determine if this class can have class levels added to it"
+          placeholder="Always active"
           :model="model.slotCondition"
           :error-messages="errors.slotCondition"
           @change="({path, value, ack}) =>
             $emit('change', {path: ['slotCondition', ...path], value, ack})"
         />
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
@@ -130,10 +56,12 @@ import propertyFormMixin from '/imports/client/ui/properties/forms/shared/proper
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import { SlotSchema } from '/imports/api/properties/Slots.js';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {
   components: {
     FormSection,
+    TagTargeting,
   },
   mixins: [propertyFormMixin],
   inject: {
