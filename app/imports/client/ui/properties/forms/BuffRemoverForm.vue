@@ -11,71 +11,14 @@
     />
     <v-expand-transition>
       <div v-if="!model.targetParentBuff">
-        <v-layout
-          align-center
-        >
-          <v-btn
-            icon
-            style="margin-top: -30px;"
-            class="mr-2"
-            :loading="addExtraTagsLoading"
-            :disabled="extraTagsFull"
-            @click="addExtraTags"
-          >
-            <v-icon>
-              mdi-plus
-            </v-icon>
-          </v-btn>
-          <smart-combobox
-            label="Tags Required"
-            hint="The effect will apply to properties that have all the listed tags"
-            multiple
-            chips
-            deletable-chips
-            persistent-hint
-            :value="model.targetTags"
-            :error-messages="errors.targetTags"
-            @change="change('targetTags', ...arguments)"
-          />
-        </v-layout>
-        <v-slide-x-transition
-          v-if="!model.targetParentBuff"
-          group
-        >
-          <div
-            v-for="(extras, i) in model.extraTags"
-            :key="extras._id"
-            class="target-tags layout align-center justify-space-between"
-          >
-            <smart-select
-              label="Operation"
-              style="width: 90px; flex-grow: 0;"
-              :items="['OR', 'NOT']"
-              :value="extras.operation"
-              :error-messages="errors.extraTags && errors.extraTags[i]"
-              @change="change(['extraTags', i, 'operation'], ...arguments)"
-            />
-            <smart-combobox
-              label="Tags"
-              :hint="extras.operation === 'OR' ? 'The effect will also target properties that have all of these tags instead' : 'The effect will ignore properties that have any of these tags'"
-              class="mx-2"
-              multiple
-              chips
-              deletable-chips
-              persistent-hint
-              :value="extras.tags"
-              @change="change(['extraTags', i, 'tags'], ...arguments)"
-            />
-            <v-btn
-              icon
-              style="margin-top: -30px;"
-              @click="$emit('pull', {path: ['extraTags', i]})"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </v-slide-x-transition>
-        <div class="mb-8" />
+        <tag-targeting
+          :model="model"
+          :errors="errors"
+          @change="e => $emit('change', e)"
+          @push="e => $emit('push', e)"
+          @pull="e => $emit('pull', e)"
+        />
+        <div class="mb-6" />
         <v-row dense>
           <v-col
             cols="12"
@@ -133,11 +76,16 @@
 
 <script lang="js">
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
+
 import {
   BuffRemoverSchema
 } from '/imports/api/properties/BuffRemovers.js';
 
 export default {
+  components: {
+    TagTargeting,
+  },
   mixins: [propertyFormMixin],
   data(){return {
     addExtraTagsLoading: false,
