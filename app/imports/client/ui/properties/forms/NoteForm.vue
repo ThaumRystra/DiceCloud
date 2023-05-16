@@ -1,13 +1,5 @@
 <template lang="html">
   <div class="feature-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-
     <inline-computation-field
       label="Summary"
       hint="This will appear in the card in the character sheet"
@@ -26,22 +18,11 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
+    <form-sections
+      v-if="$slots.default"
     >
-      <slot name="children" />
-    </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 
