@@ -94,7 +94,7 @@
             <smart-combobox
               label="Library Tags"
               multiple
-              chips
+              small-chips
               deletable-chips
               hint="Used to let slots find this property in a library"
               :value="model.tags"
@@ -105,7 +105,7 @@
       </form-section>
     </component>
     <v-divider
-      class="mb-4"
+      class="mt-10 mb-8"
     />
     <v-row>
       <v-col
@@ -114,7 +114,7 @@
         <smart-combobox
           label="Tags"
           multiple
-          chips
+          small-chips
           deletable-chips
           hint="Tags let other properties target this property with interactions"
           :value="model.tags"
@@ -134,7 +134,7 @@
         <outlined-input
           name="Child properties"
           style="width: 100%"
-          class="pa-2"
+          class="pa-2 no-hover"
         >
           <creature-properties-tree
             style="width: 100%;"

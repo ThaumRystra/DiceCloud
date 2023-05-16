@@ -43,10 +43,10 @@ export default {
 .outlined-input.theme--dark {
   border-color: rgba(255,255,255,.24);
 }
-.outlined-input.theme--light:hover {
+.outlined-input.theme--light:not(.no-hover):hover {
   border-color: rgba(0,0,0,.86);
 }
-.outlined-input.theme--dark:hover {
+.outlined-input.theme--dark:not(.no-hover):hover {
   border-color: #fff;
 }
 </style>

@@ -11,6 +11,9 @@
       >
         {{ model.value }}
       </template>
+      <template #prepend>
+        <slot name="prepend" />
+      </template>
     </text-field>
     <calculation-error-list :errors="errorList" />
   </div>

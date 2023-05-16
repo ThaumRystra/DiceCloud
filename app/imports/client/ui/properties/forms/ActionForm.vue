@@ -1,33 +1,44 @@
 <template lang="html">
   <div class="action-form">
-    <v-row
-      justify="center"
-      class="mb-3"
-    >
-      <v-col cols="12">
-        <icon-color-menu
-          :model="model"
-          :errors="errors"
-          @change="e => $emit('change', e)"
-        />
-      </v-col>
-    </v-row>
     <v-row dense>
       <v-col
         cols="12"
-        md="6"
+        md="8"
       >
-        <text-field
-          ref="focusFirst"
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
-        />
+        <v-slide-x-transition mode="out-in">
+          <v-switch
+            v-if="!isAttack"
+            class="ml-4"
+            label="Attack roll"
+            :value="attackSwitch"
+            @change="e => attackSwitch = e"
+          />
+          <computed-field
+            v-else
+            label="To Hit"
+            prefix="1d20 + "
+            hint="The bonus to attack if this action has an attack roll"
+            :model="model.attackRoll"
+            :error-messages="errors.attackRoll"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['attackRoll', ...path], value, ack})"
+          >
+            <template #prepend>
+              <v-btn
+                :disabled="!!(model.attackRoll && model.attackRoll.calculation)"
+                icon
+                style="margin-top: -12px;"
+                @click="attackSwitch = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+          </computed-field>
+        </v-slide-x-transition>
       </v-col>
       <v-col
         cols="12"
-        md="6"
+        md="4"
       >
         <smart-select
           label="Action type"
@@ -52,24 +63,15 @@
       />
     </v-slide-x-transition>
 
-    <v-slide-x-transition mode="out-in">
-      <v-switch
-        v-if="!isAttack"
-        label="Attack roll"
-        :value="attackSwitch"
-        @change="e => attackSwitch = e"
-      />
-      <computed-field
-        v-else
-        label="To Hit"
-        prefix="1d20 + "
-        hint="The bonus to attack if this action has an attack roll"
-        :model="model.attackRoll"
-        :error-messages="errors.attackRoll"
-        @change="({path, value, ack}) =>
-          $emit('change', {path: ['attackRoll', ...path], value, ack})"
-      />
-    </v-slide-x-transition>
+    <smart-select
+      label="Target"
+      style="flex-basis: 300px;"
+      :items="targetOptions"
+      :value="model.target"
+      :error-messages="errors.target"
+      :menu-props="{auto: true, lazy: true}"
+      @change="change('target', ...arguments)"
+    />
 
     <inline-computation-field
       label="Summary"
@@ -90,12 +92,6 @@
     />
 
     <form-sections>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
-      </form-section>
       <form-section name="Resources Consumed">
         <resources-form
           :model="model.resources"
@@ -104,25 +100,7 @@
           @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
         />
       </form-section>
-      <form-section name="Advanced">
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
-        />
-        <smart-select
-          label="Target"
-          style="flex-basis: 300px;"
-          :items="targetOptions"
-          :value="model.target"
-          :error-messages="errors.target"
-          :menu-props="{auto: true, lazy: true}"
-          @change="change('target', ...arguments)"
-        />
+      <form-section name="Limit Uses">
         <v-row dense>
           <v-col
             cols="12"
@@ -152,24 +130,21 @@
               @change="change('usesUsed', ...arguments)"
             />
           </v-col>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
-              label="Don't show in log"
-              :value="model.silent"
-              :error-messages="errors.silent"
-              @change="change('silent', ...arguments)"
-            />
-          </v-col>
         </v-row>
         <reset-selector
           hint="When number of uses used should be reset to zero"
           :value="model.reset"
           :error-messages="errors.reset"
           @change="change('reset', ...arguments)"
+        />
+      </form-section>
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          class="ml-4 mt-0 mb-4"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
         />
       </form-section>
       <slot />
@@ -180,13 +155,11 @@
 <script lang="js">
 import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
 import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
 
 export default {
   components: {
     ResourcesForm,
-    IconColorMenu,
     ResetSelector,
   },
   mixins: [propertyFormMixin],

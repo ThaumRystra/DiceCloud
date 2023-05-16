@@ -1,6 +1,6 @@
 <template lang="html">
   <v-expansion-panels
-    popout
+    accordion
     multiple
   >
     <slot />
