@@ -1,30 +1,6 @@
 <template lang="html">
   <div class="attribute-form">
-    <div class="layout column align-center">
-      <computed-field
-        ref="focusFirst"
-        label="Base Value"
-        class="base-value-field"
-        hint="This is the value of the attribute before effects are applied. Can be a number or a calculation"
-        style="width: 332px;"
-        :model="model.baseValue"
-        :error-messages="errors.baseValue"
-        @change="({path, value, ack}) =>
-          $emit('change', {path: ['baseValue', ...path], value, ack})"
-      />
-    </div>
     <v-row dense>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <text-field
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
-        />
-      </v-col>
       <v-col
         cols="12"
         md="6"
@@ -37,35 +13,60 @@
           @change="change('variableName', ...arguments)"
         />
       </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          ref="focusFirst"
+          label="Base Value"
+          class="base-value-field"
+          hint="This is the value of the attribute before effects are applied. Can be a number or a calculation"
+          :model="model.baseValue"
+          :error-messages="errors.baseValue"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['baseValue', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col cols="12">
+        <smart-select
+          label="Type"
+          :items="attributeTypes"
+          :value="model.attributeType"
+          :error-messages="errors.attributeType"
+          :menu-props="{auto: true, lazy: true}"
+          :hint="attributeTypeHints[model.attributeType]"
+          @change="change('attributeType', ...arguments)"
+        />
+      </v-col>
+      <v-expand-transition>
+        <v-col
+          v-if="model.attributeType === 'hitDice'"
+          cols="12"
+        >
+          <smart-select
+            label="Hit Dice Size"
+            :items="['d4', 'd6', 'd8', 'd10', 'd12', 'd20']"
+            :value="model.hitDiceSize"
+            :error-messages="errors.hitDiceSize"
+            :menu-props="{auto: true, lazy: true}"
+            @change="change('hitDiceSize', ...arguments)"
+          />
+        </v-col>
+        <v-col
+          v-if="model.attributeType === 'spellSlot'"
+          cols="12"
+        >
+          <computed-field
+            label="Spell slot level"
+            :model="model.spellSlotLevel"
+            :error-messages="errors.spellSlotLevel"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['spellSlotLevel', ...path], value, ack})"
+          />
+        </v-col>
+      </v-expand-transition>
     </v-row>
-    <smart-select
-      label="Type"
-      :items="attributeTypes"
-      :value="model.attributeType"
-      :error-messages="errors.attributeType"
-      :menu-props="{auto: true, lazy: true}"
-      :hint="attributeTypeHints[model.attributeType]"
-      @change="change('attributeType', ...arguments)"
-    />
-    <v-expand-transition>
-      <smart-select
-        v-if="model.attributeType === 'hitDice'"
-        label="Hit Dice Size"
-        :items="['d4', 'd6', 'd8', 'd10', 'd12', 'd20']"
-        :value="model.hitDiceSize"
-        :error-messages="errors.hitDiceSize"
-        :menu-props="{auto: true, lazy: true}"
-        @change="change('hitDiceSize', ...arguments)"
-      />
-      <computed-field
-        v-if="model.attributeType === 'spellSlot'"
-        label="Spell slot level"
-        :model="model.spellSlotLevel"
-        :error-messages="errors.spellSlotLevel"
-        @change="({path, value, ack}) =>
-          $emit('change', {path: ['spellSlotLevel', ...path], value, ack})"
-      />
-    </v-expand-transition>
     <inline-computation-field
       label="Description"
       :model="model.description"
