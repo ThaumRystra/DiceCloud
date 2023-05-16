@@ -307,6 +307,7 @@ export default {
           hideLibraryTab: true,
           suggestedType,
           noBackdropClose: true,
+          showLibraryOnlyProps: true,
         },
         callback(result){
           if (!result) return;

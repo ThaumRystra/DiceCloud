@@ -88,7 +88,7 @@
 
         // If the top dialog can't be closed with the backdrop, shake shake
         const topDialog = this.dialogs[this.dialogs.length - 1];
-        if (topDialog.data.noBackdropClose) {
+        if (topDialog?.data?.noBackdropClose) {
           this.shakeTopDialog();
           return;
         }

@@ -59,7 +59,7 @@
     >
       <v-tab-item :disabled="!!forcedType">
         <property-selector
-          no-library-only-props
+          :no-library-only-props="!showLibraryOnlyProps"
           :parent-type="parentDoc && parentDoc.type"
           @select="e => type = e"
         />
@@ -228,6 +228,7 @@ export default {
       default: undefined,
     },
     hideLibraryTab: Boolean,
+    showLibraryOnlyProps: Boolean,
   },
   reactiveProvide: {
     name: 'context',
