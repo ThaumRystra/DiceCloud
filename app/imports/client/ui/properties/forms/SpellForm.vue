@@ -1,17 +1,5 @@
 <template lang="html">
   <div class="spell-form">
-    <v-row
-      justify="center"
-      class="mb-3"
-    >
-      <v-col cols="12">
-        <icon-color-menu
-          :model="model"
-          :errors="errors"
-          @change="e => $emit('change', e)"
-        />
-      </v-col>
-    </v-row>
     <v-row dense>
       <v-col
         cols="12"
@@ -19,6 +7,7 @@
         md="4"
       >
         <smart-switch
+          class="ml-2"
           label="Always prepared"
           :value="model.alwaysPrepared"
           :error-messages="errors.alwaysPrepared"
@@ -32,6 +21,7 @@
         md="4"
       >
         <smart-switch
+          class="ml-2"
           label="Prepared"
           :value="model.prepared"
           :error-messages="errors.prepared"
@@ -45,6 +35,7 @@
         md="4"
       >
         <smart-switch
+          class="ml-2"
           label="Cast without spell slots"
           :value="model.castWithoutSpellSlots"
           :error-messages="errors.castWithoutSpellSlots"
@@ -53,18 +44,6 @@
       </v-col>
     </v-row>
     <v-row dense>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <text-field
-          ref="focusFirst"
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
-        />
-      </v-col>
       <v-col
         cols="12"
         md="6"
@@ -189,12 +168,15 @@
         cols="12"
         md="6"
       >
-        <smart-select
-          label="Target"
-          :items="targetOptions"
+        <smart-toggle
+          label="Target creature"
           :value="model.target"
+          :options="[
+            {name: 'Single Target', value: 'singleTarget'},
+            {name: 'Multiple Targets', value: 'multipleTargets'},
+            {name: 'Self', value: 'self'},
+          ]"
           :error-messages="errors.target"
-          :menu-props="{auto: true, lazy: true}"
           @change="change('target', ...arguments)"
         />
       </v-col>
@@ -205,6 +187,7 @@
         <v-slide-x-transition mode="out-in">
           <v-switch
             v-if="!isAttack"
+            class="ml-4"
             label="Attack roll"
             :value="attackSwitch"
             @change="e => attackSwitch = e"
@@ -218,7 +201,18 @@
             :error-messages="errors.attackRoll"
             @change="({path, value, ack}) =>
               $emit('change', {path: ['attackRoll', ...path], value, ack})"
-          />
+          >
+            <template #prepend>
+              <v-btn
+                :disabled="!!(model.attackRoll && model.attackRoll.calculation)"
+                icon
+                style="margin-top: -12px;"
+                @click="attackSwitch = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+          </computed-field>
         </v-slide-x-transition>
       </v-col>
     </v-row>
@@ -285,25 +279,7 @@
           @change="change('reset', ...arguments)"
         />
       </form-section>
-
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
-      </form-section>
-
-      <form-section name="Advanced">
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
-        />
-      </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
@@ -311,7 +287,6 @@
 <script lang="js">
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
 import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
 import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
 
@@ -319,7 +294,6 @@ export default {
   components: {
     FormSections,
     FormSection,
-    IconColorMenu,
     ResourcesForm,
     ResetSelector,
   },
@@ -384,18 +358,6 @@ export default {
         }, {
           text: 'Level 9',
           value: 9,
-        },
-      ],
-      targetOptions: [
-        {
-          text: 'Self',
-          value: 'self',
-        }, {
-          text: 'Single target',
-          value: 'singleTarget',
-        }, {
-          text: 'Multiple targets',
-          value: 'multipleTargets',
         },
       ],
       attackSwitch: false,

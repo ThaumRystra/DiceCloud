@@ -22,6 +22,12 @@
         height="42"
         v-on="(value == option.value) ? {} : { click() { click(option.value) } }"
       >
+        <v-icon
+          v-if="option.icon"
+          left
+        >
+          {{ option.icon }}
+        </v-icon>
         {{ option.name }}
       </v-btn>
     </v-btn-toggle>

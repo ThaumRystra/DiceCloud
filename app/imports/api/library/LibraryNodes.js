@@ -203,7 +203,7 @@ const updateLibraryNode = new ValidatedMethod({
   },
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
+    numRequests: 15,
     timeInterval: 5000,
   },
   run({ _id, path, value }) {

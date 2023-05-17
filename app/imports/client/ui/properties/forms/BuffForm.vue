@@ -83,19 +83,6 @@ import propertyFormMixin from '/imports/client/ui/properties/forms/shared/proper
 
 export default {
   mixins: [propertyFormMixin],
-  data() {
-    return {
-      targetOptions: [
-        {
-          text: 'Self',
-          value: 'self',
-        }, {
-          text: 'Target',
-          value: 'target',
-        },
-      ],
-    }
-  },
 }
 </script>
 

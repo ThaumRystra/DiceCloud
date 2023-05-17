@@ -1,14 +1,59 @@
 <template lang="html">
-  <div class="attribute-form">
-    <div class="layout wrap">
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-    </div>
+  <div class="spell-list-form">
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Maximum prepared spells"
+          hint="How many spells can be prepared"
+          :model="model.maxPrepared"
+          :error-messages="errors.maxPrepared"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['maxPrepared', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-combobox
+          label="Spellcasting ability"
+          :value="model.ability"
+          hint="Which ability is used to cast spells in this spell list"
+          :items="abilityScoreList"
+          :error-messages="errors.ability"
+          @change="changeAbility"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Spell save DC"
+          hint="The spell save DC of spells in this list"
+          :model="model.dc"
+          :error-messages="errors.dc"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['dc', ...path], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <computed-field
+          label="Attack roll bonus"
+          hint="The attack roll bonus of spell attacks made by spells in this list"
+          :model="model.attackRollBonus"
+          :error-messages="errors.attackRollBonus"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['attackRollBonus', ...path], value, ack})"
+        />
+      </v-col>
+    </v-row>
 
     <inline-computation-field
       label="Description"
@@ -18,59 +63,11 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <computed-field
-      label="Maximum prepared spells"
-      hint="How many spells can be prepared"
-      :model="model.maxPrepared"
-      :error-messages="errors.maxPrepared"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['maxPrepared', ...path], value, ack})"
-    />
-
-    <smart-combobox
-      label="Spellcasting ability"
-      :value="model.ability"
-      hint="Which ability is used to cast spells in this spell list"
-      :items="abilityScoreList"
-      :error-messages="errors.ability"
-      @change="changeAbility"
-    />
-
-    <computed-field
-      label="Spell save DC"
-      hint="The spell save DC of spells in this list"
-      :model="model.dc"
-      :error-messages="errors.dc"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['dc', ...path], value, ack})"
-    />
-
-    <computed-field
-      label="Attack roll bonus"
-      hint="The attack roll bonus of spell attacks made by spells in this list"
-      :model="model.attackRollBonus"
-      :error-messages="errors.attackRollBonus"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['attackRollBonus', ...path], value, ack})"
-    />
-
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
+    <form-sections
+      v-if="$slots.default"
     >
-      <slot name="children" />
-    </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 
@@ -95,8 +92,9 @@ export default {
 
       const attackRollBonus = this.model.attackRollBonus?.calculation;
       if (
-        !attackRollBonus ||
-        attackRollBonus === `proficiencyBonus + ${oldValue}.modifier`
+        value &&
+        (!attackRollBonus ||
+        attackRollBonus === `proficiencyBonus + ${oldValue}.modifier`)
       ) {
         this.$emit('change', {
           path: ['attackRollBonus', 'calculation'],
@@ -106,8 +104,9 @@ export default {
 
       const dc = this.model.dc?.calculation;
       if (
-        !dc || 
-        dc === `8 + proficiencyBonus + ${oldValue}.modifier`
+        value &&
+        (!dc || 
+        dc === `8 + proficiencyBonus + ${oldValue}.modifier`)
       ) {
         this.$emit('change', {
           path: ['dc', 'calculation'],
@@ -118,6 +117,3 @@ export default {
   }
 };
 </script>
-
-<style lang="css" scoped>
-</style>
