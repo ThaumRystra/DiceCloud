@@ -49,7 +49,7 @@
           </slot>
         </div>
         <div
-          v-if="calculation && calculation.effects"
+          v-if="calculation && (calculation.effects || calculation.proficiencies)"
           class="flex-grow-1"
           style="max-width: 100%;"
         >
@@ -70,6 +70,14 @@
             :model="effect"
             @click="clickEffect(effect._id)"
           />
+          <inline-proficiency
+            v-for="proficiency in calculation.proficiencies"
+            :key="proficiency._id"
+            :data-id="proficiency._id"
+            :model="proficiency"
+            :proficiency-bonus="calculation.proficiencyBonus"
+            @click="clickEffect(proficiency._id)"
+          />
         </div>
       </div>
     </fieldset>
@@ -77,12 +85,14 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import InlineEffect from '/imports/client/ui/properties/components/effects/InlineEffect.vue';
+import InlineProficiency from '/imports/client/ui/properties/components/proficiencies/InlineProficiency.vue';
 
 export default {
   components: {
     InlineEffect,
+    InlineProficiency,
   },
   inject: {
     theme: {

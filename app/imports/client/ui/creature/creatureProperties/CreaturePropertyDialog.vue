@@ -211,7 +211,6 @@ export default {
     },
     change(arg) {
       const { path, value, ack } = arg;
-      console.log('creaturePropDialogChangeHandler', arg);
       if (path && path[0] === 'equipped'){
         equipItem.call({_id: this.currentId, equipped: value}, ack);
         return;
