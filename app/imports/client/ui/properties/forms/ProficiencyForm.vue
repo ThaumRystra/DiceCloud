@@ -34,7 +34,7 @@
       <v-col
         cols="12"
       >
-        <v-slide-x-transition mode="out-in">
+        <v-slide-y-transition hide-on-leave>
           <tag-targeting
             v-if="model.targetByTags"
             :model="model"
@@ -56,8 +56,24 @@
             :error-messages="errors.stats"
             @change="change('stats', ...arguments)"
           />
-        </v-slide-x-transition>
+        </v-slide-y-transition>
       </v-col>
+      <v-expand-transition>
+        <v-col
+          v-if="model.targetByTags"
+          cols="12"
+        >
+          <text-field
+            label="Target field"
+            :value="model.targetField"
+            hint="Target a specific calculation field on the affected properties"
+            placeholder="Default field"
+            persistent-placeholder
+            :error-messages="errors.targetField"
+            @change="change('targetField', ...arguments)"
+          />
+        </v-col>
+      </v-expand-transition>
     </v-row>
     <form-sections
       v-if="$slots.default"

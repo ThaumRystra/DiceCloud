@@ -69,7 +69,7 @@
       @change="changeTargetByTags"
     />
 
-    <v-slide-x-transition mode="out-in">
+    <v-slide-y-transition hide-on-leave>
       <smart-combobox
         v-if="!model.targetByTags"
         label="Stats"
@@ -92,10 +92,25 @@
         @push="e => $emit('push', e)"
         @pull="e => $emit('pull', e)"
       />
-    </v-slide-x-transition>
+    </v-slide-y-transition>
+    <v-expand-transition>
+      <v-col
+        v-if="model.targetByTags"
+        cols="12"
+      >
+        <text-field
+          label="Target field"
+          :value="model.targetField"
+          hint="Target a specific calculation field on the affected properties"
+          placeholder="Default field"
+          persistent-placeholder
+          :error-messages="errors.targetField"
+          @change="change('targetField', ...arguments)"
+        />
+      </v-col>
+    </v-expand-transition>
     <form-sections
       v-if="$slots.default"
-      class="mt-4"
     >
       <slot />
     </form-sections>
