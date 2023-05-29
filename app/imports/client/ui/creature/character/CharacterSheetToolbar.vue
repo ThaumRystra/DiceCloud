@@ -55,13 +55,6 @@
                     </v-icon> Delete
                   </v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="showDependencyGraph">
-                  <v-list-item-title>
-                    <v-icon left>
-                      mdi-graph
-                    </v-icon> Dependency Graph
-                  </v-list-item-title>
-                </v-list-item>
                 <v-list-item @click="showCharacterForm">
                   <v-list-item-title>
                     <v-icon left>
@@ -242,15 +235,6 @@ export default {
             }
           });
         }
-      });
-    },
-    showDependencyGraph() {
-      this.$store.commit('pushDialogStack', {
-        component: 'dependency-graph-dialog',
-        elementId: 'creature-menu',
-        data: {
-          creatureId: this.creatureId,
-        },
       });
     },
     unshareWithMe() {

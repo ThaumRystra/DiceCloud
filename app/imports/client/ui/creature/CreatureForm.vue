@@ -120,6 +120,18 @@
           {{ libraryWriteError }}
         </p>
       </form-section>
+      <form-section name="Debug">
+        <v-btn
+          data-id="dependency-graph-button"
+          text
+          @click="showDependencyGraph"
+        >
+          <v-icon left>
+            mdi-graph
+          </v-icon>
+          Dependency Graph
+        </v-btn>
+      </form-section>
     </form-sections>
   </div>
 </template>
@@ -266,6 +278,15 @@ export default {
       }
       this.dirty = true;
       this.updateAllowedLibraryCollections();
+    },
+    showDependencyGraph() {
+      this.$store.commit('pushDialogStack', {
+        component: 'dependency-graph-dialog',
+        elementId: 'dependency-graph-button',
+        data: {
+          creatureId: this.model._id,
+        },
+      });
     },
   },
 };
