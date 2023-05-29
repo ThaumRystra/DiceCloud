@@ -8,9 +8,9 @@ import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperti
 import CreaturePropertyFromLibraryDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue';
 import CreatureRootDialog from '/imports/client/ui/creature/character/CreatureRootDialog.vue';
 import DeleteConfirmationDialog from '/imports/client/ui/dialogStack/DeleteConfirmationDialog.vue';
-import ExperienceInsertDialog from  '/imports/client/ui/creature/experiences/ExperienceInsertDialog.vue';
-import ExperienceListDialog from  '/imports/client/ui/creature/experiences/ExperienceListDialog.vue';
-import HelpDialog from  '/imports/client/ui/dialogStack/HelpDialog.vue';
+import ExperienceInsertDialog from '/imports/client/ui/creature/experiences/ExperienceInsertDialog.vue';
+import ExperienceListDialog from '/imports/client/ui/creature/experiences/ExperienceListDialog.vue';
+import HelpDialog from '/imports/client/ui/dialogStack/HelpDialog.vue';
 import LevelUpDialog from '/imports/client/ui/creature/slots/LevelUpDialog.vue';
 import SelectLibraryNodeDialog from '/imports/client/ui/library/SelectLibraryNodeDialog.vue';
 import SlotFillDialog from '/imports/client/ui/creature/slots/SlotFillDialog.vue';
@@ -20,6 +20,7 @@ import TransferOwnershipDialog from '/imports/client/ui/sharing/TransferOwnershi
 // Lazily load less common dialogs
 const ArchiveDialog = () => import('/imports/client/ui/creature/archive/ArchiveDialog.vue');
 const DeleteUserAccountDialog = () => import('/imports/client/ui/user/DeleteUserAccountDialog.vue');
+const DependencyGraphDialog = () => import('/imports/client/ui/creature/dependencyGraph/DependencyGraphDialog.vue');
 const InviteDialog = () => import('/imports/client/ui/user/InviteDialog.vue');
 const LibraryCollectionCreationDialog = () => import('/imports/client/ui/library/LibraryCollectionCreationDialog.vue');
 const LibraryCollectionEditDialog = () => import('/imports/client/ui/library/LibraryCollectionEditDialog.vue');
@@ -44,6 +45,7 @@ export default {
   CreatureRootDialog,
   DeleteConfirmationDialog,
   DeleteUserAccountDialog,
+  DependencyGraphDialog,
   ExperienceInsertDialog,
   ExperienceListDialog,
   HelpDialog,
