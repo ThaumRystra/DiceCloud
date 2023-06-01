@@ -1,3 +1,3 @@
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 
-LibraryNodes.startCaching();
+LibraryNodes.startCaching?.();
