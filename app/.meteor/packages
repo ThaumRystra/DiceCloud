@@ -3,6 +3,7 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
+zegenie:redis-oplog
 accounts-password@2.3.4
 random@1.2.1
 underscore@1.0.13
@@ -46,7 +47,7 @@ ostrio:files
 simple:rest-bearer-token-parser
 simple:rest-json-error-handler
 littledata:synced-cron
-mdg:meteor-apm-agent
+#mdg:meteor-apm-agent
 typescript@4.9.4
 seba:minifiers-autoprefixer
 mixmax:smart-disconnect
