@@ -50,7 +50,6 @@ describe('Slot fill filter', function () {
       $or: [{
         type: 'feature'
       }, {
-        type: 'slotFiller',
         slotFillerType: 'feature',
       }],
     }]);

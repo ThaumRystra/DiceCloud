@@ -1,7 +1,7 @@
 export default function getSlotFillFilter({ slot, libraryIds }) {
 
-  if (!slot) throw 'Slot is required';
-  if (!libraryIds) throw 'LibraryIds is required';
+  if (!slot) throw 'Slot is required for getSlotFillFilter';
+  if (!libraryIds) throw 'LibraryIds is required for getSlotFillFilter';
 
   let filter = {
     removed: { $ne: true },
@@ -13,7 +13,6 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
       $or: [{
         type: slot.slotType
       }, {
-        type: 'slotFiller',
         slotFillerType: slot.slotType,
       }]
     });
@@ -22,7 +21,6 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
       $or: [{
         type: 'classLevel',
       }, {
-        type: 'slotFiller',
         slotFillerType: 'classLevel',
       }]
     });

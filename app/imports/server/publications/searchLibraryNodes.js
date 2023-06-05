@@ -4,10 +4,7 @@ import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
 import getUserLibraryIds from '/imports/api/library/getUserLibraryIds.js';
 import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
-
-function escapeRegex(string) {
-  return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '');
-}
+import escapeRegex from '/imports/api/utility/escapeRegex.js';
 
 Meteor.publish('selectedLibraryNodes', function (selectedNodeIds) {
   check(selectedNodeIds, Array);

@@ -14,15 +14,18 @@ const LIBRARY_NODE_TREE_FIELDS = {
   order: 1,
   parent: 1,
   ancestors: 1,
-  tags: 1,
-  slotFillerCondition: 1,
   removed: 1,
   removedAt: 1,
   // Actions
   actionType: 1,
   // SlotFillers
+  libraryTags: 1,
   slotQuantityFilled: 1,
   slotFillerType: 1,
+  slotFillerConditionNote: 1,
+  slotFillerCondition: 1,
+  searchable: 1,
+  slotFillImage: 1,
   // Effect
   operation: 1,
   targetTags: 1,
