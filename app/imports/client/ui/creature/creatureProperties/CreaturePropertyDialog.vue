@@ -261,12 +261,13 @@ export default {
     addProperty({elementId, suggestedType}){
       let parentPropertyId = this.model._id;
       this.$store.commit('pushDialogStack', {
-        component: 'add-creature-property-dialog',
+        component: 'insert-property-dialog',
         elementId,
         data: {
           parentDoc: this.model,
           creatureId: this.creatureId,
           suggestedType,
+          noBackdropClose: true,
         },
         callback(result){
           if (!result) return;

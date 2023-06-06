@@ -146,6 +146,22 @@
         Load More
       </v-btn>
     </v-layout>
+    <v-layout
+      column
+      align-center
+      justify-center
+      class="ma-4"
+    >
+      <v-btn
+        text
+        color="accent"
+        :disabled="!model"
+        data-id="custom-button"
+        @click="insertCustomFiller"
+      >
+        Create custom
+      </v-btn>
+    </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
       <v-layout
         column
@@ -208,6 +224,9 @@ import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeE
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import { clone } from 'lodash';
+import getDefaultSlotFiller from '/imports/api/library/methods/getDefaultSlotFiller.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 
 export default {
   components: {
@@ -291,6 +310,49 @@ export default {
           node._disabledByQuantityFilled &&
           !this.selectedNodeIds.includes(node._id)
         )
+    },
+    insertCustomFiller() {
+      if (!this.model) return;
+      const prop = getDefaultSlotFiller(this.model);
+      const parentRef = { id: this.slotId, collection: 'creatureProperties' };
+      const order = this.model.order + 0.5;
+      const $store = this.$store;
+      $store.commit('pushDialogStack', {
+        component: 'insert-property-dialog',
+        elementId: 'custom-button',
+        data: {
+          parentDoc: this.model,
+          creatureId: this.creatureId,
+          prop,
+          noBackdropClose: true,
+        },
+        callback(result) {
+          if (!result) return;
+          if (Array.isArray(result)){
+            let nodeIds = result;
+            insertPropertyFromLibraryNode.call({ nodeIds, parentRef, order });
+            setTimeout(() => $store.dispatch('popDialogStack'), 200);
+          } else if (typeof result === 'object') {
+            let creatureProperty = result;
+            creatureProperty.order = order;
+            insertProperty.call({ creatureProperty, parentRef });
+            setTimeout(() => $store.dispatch('popDialogStack'), 200);
+
+            /* Maybe replace the dialog with the edit version? 
+             * It's a bit jank, but a common use case
+            $store.commit('replaceDialog', {
+              component: 'creature-property-dialog',
+              //elementId: `?`,
+              data: {
+                _id,
+                startInEditTab: true,
+              },
+            });
+            */
+           
+          }
+        }
+      });
     },
   },
   meteor: {

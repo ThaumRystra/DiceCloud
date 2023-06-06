@@ -23,6 +23,7 @@
             >
               <property-select-card
                 :property="property"
+                :disabled="type === currentType"
                 @click="$emit('select', type)"
               />
             </v-col>
@@ -46,6 +47,7 @@
           >
             <property-select-card
               :property="property"
+              :disabled="type === currentType"
               @click="$emit('select', type)"
             />
           </v-col>
@@ -72,6 +74,10 @@ export default {
       type: Array,
       default: undefined,
     },
+    currentType: {
+      type: String,
+      default: undefined,
+    }
   },
   data() {
     return {

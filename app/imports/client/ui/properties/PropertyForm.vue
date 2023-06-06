@@ -147,6 +147,7 @@
           <v-btn
             v-for="suggestion in suggestedChildren"
             :key="suggestion.type"
+            :disabled="noChildInsert"
             tile
             plain
             :data-id="`insert-${suggestion.type}-property-btn`"
@@ -158,6 +159,7 @@
             {{ suggestion.details.name }}
           </v-btn>
           <v-btn
+            :disabled="noChildInsert"
             tile
             plain
             data-id="insert-any-property-btn"
@@ -171,6 +173,12 @@
             </v-icon>
             {{ suggestedChildren.length ? '...Other' : 'Child' }}
           </v-btn>
+          <div
+            v-if="noChildInsert"
+            class="ma-2 text--disabled"
+          >
+            Children can be added after this property is created
+          </div>
         </outlined-input>
       </v-col>
     </v-row>
@@ -222,6 +230,7 @@ export default {
       default: 'creatureProperties'
     },
     embedded: Boolean, // This dialog is embedded in a page
+    noChildInsert: Boolean, // Don't allow inserting of children in this form
   },
   data() {
     return {

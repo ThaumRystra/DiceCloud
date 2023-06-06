@@ -299,7 +299,7 @@ export default {
       }
       let parentPropertyId = this.model._id;
       this.$store.commit('pushDialogStack', {
-        component: 'add-creature-property-dialog',
+        component: 'insert-property-dialog',
         elementId,
         data: {
           parentDoc: this.model,

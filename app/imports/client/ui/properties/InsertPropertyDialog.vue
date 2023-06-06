@@ -16,7 +16,7 @@
           flat
           @change="propertyHelpChanged"
         />
-        <v-btn 
+        <v-btn
           v-if="tab === 1"
           icon
           data-id="help-button"
@@ -61,16 +61,23 @@
         <property-selector
           :no-library-only-props="!showLibraryOnlyProps"
           :parent-type="parentDoc && parentDoc.type"
+          :current-type="type"
           @select="e => type = e"
         />
       </v-tab-item>
-      <v-tab-item :disabled="!type">
+      <v-tab-item
+        :disabled="!type"
+        class="dialog-background"
+        style="min-height: 100%;"
+      >
         <v-card-text
           v-if="!$slots['unwrapped-content']"
+          class="dialog-background"
         >
           <property-form
             v-if="type"
             class="creature-property-form"
+            no-child-insert
             :model="model"
             :errors="errors"
             @change="change"
@@ -84,8 +91,10 @@
         :disabled="!type"
       >
         <v-expansion-panels
+          accordion
+          tile
           multiple
-          inset
+          hover
         >
           <v-expansion-panel
             v-for="libraryNode in libraryNodes"
@@ -196,6 +205,7 @@ import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
 import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
+import SimpleSchema from 'simpl-schema';
 
 export default {
   components: {
@@ -227,6 +237,14 @@ export default {
       type: Object,
       default: undefined,
     },
+    prop: {
+      type: Object,
+      default: undefined,
+    },
+    children: {
+      type: Array,
+      default: () => [],
+    },
     hideLibraryTab: Boolean,
     showLibraryOnlyProps: Boolean,
   },
@@ -236,9 +254,10 @@ export default {
   },
   data(){return {
     selectedNodeIds: [],
-    type: this.forcedType || this.suggestedType,
-    model: {
+    type: this.forcedType || this.suggestedType || this.prop?.type || undefined,
+    model: this.prop || {
       type: this.type,
+      children: [],
     },
     searchValue: undefined,
     debounceTime: 0,
@@ -259,6 +278,9 @@ export default {
   watch: {
     type(newType){
       this.changeType(newType);
+    },
+    prop(newProp) {
+      this.model = newProp
     },
   },
   mounted(){
@@ -298,12 +320,16 @@ export default {
       this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
     },
     changeType(type){
+      if (type == 'slotFiller') {
+        type = 'folder';
+        this.type = 'folder';
+      }
       this._subs.searchLibraryNodes.setData('type', type);
       if (!type) return;
       this.tab = 1;
       this.schema = propertySchemasIndex[type];
       this.validationContext = this.schema.newContext();
-      let model = this.schema.clean({});
+      let model = this.schema.clean(this.model || {});
       model.type = type;
       this.model = model;
     },
@@ -357,4 +383,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.dialog-background {
+  background-color: #fafafa;
+}
+
+.theme--dark .dialog-background {
+  background-color: #303030;
+}
 </style>
