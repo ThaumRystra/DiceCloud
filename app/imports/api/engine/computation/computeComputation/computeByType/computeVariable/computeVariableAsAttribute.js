@@ -1,6 +1,6 @@
 import getAggregatorResult from './getAggregatorResult.js';
 
-export default function computeVariableAsAttribute(computation, node, prop){
+export default function computeVariableAsAttribute(computation, node, prop) {
   let result = getAggregatorResult(node) || 0;
 
   prop.total = result;
@@ -9,8 +9,20 @@ export default function computeVariableAsAttribute(computation, node, prop){
   // Proficiency
   prop.proficiency = node.data.proficiency;
 
+  // Advantage/disadvantage
+  const aggregator = node.data.effectAggregator;
+  if (aggregator) {
+    if (aggregator.advantage && !aggregator.disadvantage) {
+      prop.advantage = 1;
+    } else if (aggregator.disadvantage && !aggregator.advantage) {
+      prop.advantage = -1;
+    } else {
+      prop.advantage = 0;
+    }
+  }
+
   // Ability scores get modifiers
-  if (prop.attributeType === 'ability'){
+  if (prop.attributeType === 'ability') {
     prop.modifier = Math.floor((prop.value - 10) / 2);
   }
 
