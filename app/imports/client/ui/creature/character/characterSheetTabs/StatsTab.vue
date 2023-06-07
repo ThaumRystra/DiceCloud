@@ -456,7 +456,7 @@ const propertyHandlers = {
   },
   toggle(prop) {
     if (
-      prop.deactivatedByAncestor || !prop.showUI
+      prop.deactivatedByToggle || prop.deactivatedByAncestor || !prop.showUI
     ) return { propPath: null };
     return { propPath: 'toggle' };
   },
@@ -580,6 +580,7 @@ export default {
         'ancestors.id': this.creatureId,
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
         showUI: true,
       }, {
         sort: { order: 1 }

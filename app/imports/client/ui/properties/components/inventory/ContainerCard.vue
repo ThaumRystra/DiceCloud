@@ -99,6 +99,7 @@ export default {
         removed: { $ne: true },
         equipped: { $ne: true },
         deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
       }, {
         sort: { order: 1 },
       });

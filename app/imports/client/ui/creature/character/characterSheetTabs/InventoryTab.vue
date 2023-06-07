@@ -198,6 +198,7 @@ export default {
         equipped: { $ne: true },
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
       }, {
         sort: { order: 1 },
       });

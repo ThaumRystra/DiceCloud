@@ -450,6 +450,7 @@ export default {
         type: 'toggle',
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
         showUI: true,
       }, {
         sort: { order: 1 }
