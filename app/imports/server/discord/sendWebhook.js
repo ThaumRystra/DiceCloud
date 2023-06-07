@@ -1,5 +1,5 @@
 import Discord from 'discord.js'
-export default function sendWebhook({webhookURL, data = {}}){
+export default function sendWebhook({ webhookURL, data = {} }) {
   //webhookURL = https://discordapp.com/api/webhooks/<id>/<token>
   let urlArray = webhookURL.split('/');
   let token = urlArray.pop();
@@ -9,11 +9,16 @@ export default function sendWebhook({webhookURL, data = {}}){
   data.disableMentions = 'all';
 
   const hook = new Discord.WebhookClient(id, token);
-  // Send a message using the webhook
-  hook.send(data);
+  try {
+    // Send a message using the webhook
+    hook.send(data);
+  } catch (e) {
+    // Swallow the error, we don't really care
+    console.error(e);
+  }
 }
 
-export function sendWebhookAsCreature({creature, data = {}}){
+export function sendWebhookAsCreature({ creature, data = {} }) {
   if (!creature || !creature.settings || !creature.settings.discordWebhook) return;
   data.username = creature.name;
   data.avatarURL = creature.avatarPicture;
