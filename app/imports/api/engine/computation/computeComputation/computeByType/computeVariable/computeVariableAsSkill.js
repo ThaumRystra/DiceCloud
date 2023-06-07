@@ -66,6 +66,18 @@ export default function computeVariableAsSkill(computation, node, prop) {
   }
   // Passive bonus
   prop.passiveBonus = aggregator.passiveAdd;
+  // +/- 5 to passive bonus if the skill has advantage/disadvantage
+  if (
+    prop.advantage === 1
+    && Number.isFinite(prop.passiveBonus)
+  ) {
+    prop.passiveBonus += 5;
+  } else if (
+    prop.advantage === -1
+    && Number.isFinite(prop.passiveBonus)
+  ) {
+    prop.bassiveBonus -= 5;
+  }
   // conditional benefits
   prop.conditionalBenefits = aggregator.conditional;
   // Roll bonuses
