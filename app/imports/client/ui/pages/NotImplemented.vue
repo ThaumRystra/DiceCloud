@@ -4,7 +4,7 @@
       :value="true"
       type="info"
     >
-      This page is not available in this version of the beta.
+      This page is not available in this version of DiceCloud.
     </v-alert>
   </div>
 </template>
