@@ -76,6 +76,7 @@
         />
       </v-col>
       <v-col
+        v-if="context.isLibraryForm"
         cols="12"
         md="6"
       >
@@ -84,7 +85,6 @@
           data-id="test-slot-button"
         >
           <v-btn
-            v-if="context.isLibraryForm"
             text
             class="ma-0"
             height="54"
@@ -115,6 +115,7 @@
 
       <form-section name="Behavior">
         <v-row dense>
+          <!--
           <v-col
             cols="12"
             md="6"
@@ -128,6 +129,7 @@
               @change="change('hideWhenFull', ...arguments)"
             />
           </v-col>
+          -->
           <v-col
             cols="12"
             md="6"
