@@ -43,7 +43,7 @@
             {{ node.name }}
           </span>
           <fill-slot-button
-            v-if="(node.quantityExpected && node.quantityExpected.value === 1) && node.spaceLeft === 1"
+            v-if="canFillWithOne"
             :model="node"
           />
         </div>
@@ -175,7 +175,8 @@ export default {
       this.children.length === 1 &&
       this.children[0].node.type !== 'propertySlot' &&
       this.node.quantityExpected &&
-      this.node.quantityExpected.value === 1;
+      this.node.quantityExpected.value === 1 &&
+      !this.canFill;
     },
     isSlot(){
       return this.node.type === 'propertySlot';
@@ -185,15 +186,18 @@ export default {
     },
     canFillWithOne(){
       return this.isSlot &&
-        this.node.quantityExpected && 
+        this.canFill &&
+        this.node.quantityExpected &&
         this.node.quantityExpected.value === 1 &&
-        this.node.spaceLeft === 1
+        this.node.spaceLeft === 1 &&
+        !this.children?.length;
     },
     canFillWithMany(){
-      return this.isSlot && (
+      return this.isSlot && this.canFill && (
         !this.node.quantityExpected ||
         this.node.quantityExpected.value === 0 ||
-        (this.node.quantityExpected.value > 1 && this.node.spaceLeft > 0)
+        (this.node.quantityExpected.value > 1 && this.node.spaceLeft > 0) ||
+        (this.node.quantityExpected.value === 1 && this.children?.length) 
       );
     },
     hasChildren(){
