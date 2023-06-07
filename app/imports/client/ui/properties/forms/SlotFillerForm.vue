@@ -3,7 +3,7 @@
     <text-area
       label="Description"
       :value="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="change('description', ...arguments)"
     />
     <form-sections

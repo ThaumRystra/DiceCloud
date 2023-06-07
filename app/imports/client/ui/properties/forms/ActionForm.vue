@@ -79,7 +79,7 @@
       label="Summary"
       hint="This will appear in the action card in the character sheet, summarize what the action does"
       :model="model.summary"
-      :error-messages="errors.summary"
+      :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['summary', ...path], value, ack})"
     />
@@ -88,7 +88,7 @@
       label="Description"
       hint="This text will be displayed in the log when the action is taken"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />

@@ -66,7 +66,7 @@
       class="mt-4"
       label="Description"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />

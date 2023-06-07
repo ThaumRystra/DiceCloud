@@ -77,7 +77,7 @@
       label="Description"
       hint="The rest of the description that doesn't fit in the summary goes here"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />

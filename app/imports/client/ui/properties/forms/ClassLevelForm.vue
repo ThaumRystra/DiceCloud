@@ -33,7 +33,7 @@
       label="Description"
       hint="A brief description of what this class level gives a character"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />

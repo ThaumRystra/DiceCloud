@@ -12,6 +12,7 @@
           label="Name"
           style="flex-basis: 320px;"
           :value="model.name"
+          :error-messages="errors.name"
           @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
         />
         <icon-color-menu
@@ -24,6 +25,7 @@
       :is="model.type"
       class="creature-property-form mb-4"
       :model="model"
+      :errors="errors"
       @change="e => $emit('change', e)"
       @push="e => $emit('push', e)"
       @pull="e => $emit('pull', e)"
@@ -47,6 +49,7 @@
               hint="The property type that this slot filler pretends to be when being searched for by a slot"
               :items="slotTypes"
               :value="model.slotFillerType"
+              :error-messages="errors.slotFillerType"
               @change="(value, ack) => $emit('change', {path: ['slotFillerType'], value, ack})"
             />
           </v-col>
@@ -60,6 +63,7 @@
               min="0"
               hint="How many properties this counts as when filling a slot"
               :value="model.slotQuantityFilled"
+              :error-messages="errors.slotQuantityFilled"
               @change="(value, ack) => $emit('change', {path: ['slotQuantityFilled'], value, ack})"
             />
           </v-col>
@@ -73,6 +77,7 @@
               hint="A caclulation to determine if this property can be added to a character"
               placeholder="Always active"
               :value="model.slotFillerCondition"
+              :error-messages="errors.slotFillerCondition"
               @change="(value, ack) => $emit('change', {path: ['slotFillerCondition'], value, ack})"
             />
           </v-col>
@@ -86,6 +91,7 @@
               hint="Text to display if the condition isn't met"
               placeholder="Always active"
               :value="model.slotFillerConditionNote"
+              :error-messages="errors.slotFillerConditionNote"
               @change="(value, ack) => $emit('change', {path: ['slotFillerConditionNote'], value, ack})"
             />
           </v-col>
@@ -99,6 +105,7 @@
               deletable-chips
               hint="Used to let slots find this property in a library"
               :value="model.libraryTags"
+              :error-messages="errors.libraryTags"
               @change="(value, ack) => $emit('change', {path: ['libraryTags'], value, ack})"
             />
           </v-col>
@@ -119,6 +126,7 @@
           deletable-chips
           hint="Tags let other properties target this property with interactions"
           :value="model.tags"
+          :error-messages="errors.tags"
           @change="(value, ack) => $emit('change', {path: ['tags'], value, ack})"
         />
       </v-col>
@@ -228,6 +236,10 @@ export default {
     collection: {
       type: String,
       default: 'creatureProperties'
+    },
+    errors: {
+      type: Object,
+      default: () => ({}),
     },
     embedded: Boolean, // This dialog is embedded in a page
     noChildInsert: Boolean, // Don't allow inserting of children in this form

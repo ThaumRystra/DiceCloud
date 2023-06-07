@@ -4,7 +4,7 @@
       label="Summary"
       hint="This will appear in the card in the character sheet"
       :model="model.summary"
-      :error-messages="errors.summary"
+      :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['summary', ...path], value, ack})"
     />
@@ -13,7 +13,7 @@
       label="Description"
       hint="Text that does not fit in the summary"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
