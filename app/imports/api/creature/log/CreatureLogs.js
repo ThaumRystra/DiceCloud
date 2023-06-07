@@ -76,10 +76,10 @@ function logToMessageData(log) {
     if (!field.name) field.name = '\u200b';
     if (!field.value) field.value = '\u200b';
     // Enforce Discord field character limits
-    if (field.name.length > 256) {
+    if (field.name?.length > 256) {
       field.name = field.name.substring(0, 255);
     }
-    if (field.value.length > 1024) {
+    if (field.value?.length > 1024) {
       field.value = field.value.substring(0, 1024 - 3) + '...';
     }
     // Enforce Discord 25 field limit
@@ -137,7 +137,7 @@ export function insertCreatureLogWork({ log, creature, method }) {
 
   // Truncate the string lengths to fit the log content schema
   log.content.forEach((logItem) => {
-    if (logItem.value.length > STORAGE_LIMITS.summary) {
+    if (logItem.value?.length > STORAGE_LIMITS.summary) {
       logItem.value = logItem.value.substring(0, STORAGE_LIMITS.summary - 3) + '...';
     }
   });
