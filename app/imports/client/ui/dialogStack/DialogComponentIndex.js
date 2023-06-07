@@ -3,7 +3,6 @@ import InsertPropertyDialog from '/imports/client/ui/properties/InsertPropertyDi
 import CharacterCreationDialog from '/imports/client/ui/creature/character/CharacterCreationDialog.vue';
 import CastSpellWithSlotDialog from '/imports/client/ui/properties/components/spells/CastSpellWithSlotDialog.vue';
 import CreatureFormDialog from '/imports/client/ui/creature/CreatureFormDialog.vue';
-import CreaturePropertyCreationDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyCreationDialog.vue';
 import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
 import CreaturePropertyFromLibraryDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyFromLibraryDialog.vue';
 import CreatureRootDialog from '/imports/client/ui/creature/character/CreatureRootDialog.vue';
@@ -26,7 +25,6 @@ const LibraryCollectionCreationDialog = () => import('/imports/client/ui/library
 const LibraryCollectionEditDialog = () => import('/imports/client/ui/library/LibraryCollectionEditDialog.vue');
 const LibraryCreationDialog = () => import('/imports/client/ui/library/LibraryCreationDialog.vue');
 const LibraryEditDialog = () => import('/imports/client/ui/library/LibraryEditDialog.vue');
-const LibraryNodeCreationDialog = () => import('/imports/client/ui/library/LibraryNodeCreationDialog.vue');
 const LibraryNodeDialog = () => import('/imports/client/ui/library/LibraryNodeDialog.vue');
 const MoveLibraryNodeDialog = () => import('/imports/client/ui/library/MoveLibraryNodeDialog.vue');
 const SelectCreaturesDialog = () => import('/imports/client/ui/tabletop/SelectCreaturesDialog.vue');
@@ -39,7 +37,6 @@ export default {
   CastSpellWithSlotDialog,
   CharacterCreationDialog,
   CreatureFormDialog,
-  CreaturePropertyCreationDialog,
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,
   CreatureRootDialog,
@@ -55,7 +52,6 @@ export default {
   LibraryCollectionEditDialog,
   LibraryCreationDialog,
   LibraryEditDialog,
-  LibraryNodeCreationDialog,
   LibraryNodeDialog,
   MoveLibraryNodeDialog,
   SelectCreaturesDialog,
