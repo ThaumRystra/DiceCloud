@@ -111,7 +111,7 @@ export default {
       doCheck.call({
         propId: this.model._id,
         scope: {
-          $checkAdvantage: advantage,
+          '~checkAdvantage': { value: advantage },
         },
       }, error => {
         this.checkLoading = false;

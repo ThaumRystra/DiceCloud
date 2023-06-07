@@ -46,6 +46,18 @@
     <v-list-item-content>
       <v-list-item-title>
         {{ model.name }}
+        <v-icon
+          v-if="model.advantage > 0"
+          right
+        >
+          mdi-chevron-double-up
+        </v-icon>
+        <v-icon
+          v-if="model.advantage < 0"
+          right
+        >
+          mdi-chevron-double-down
+        </v-icon>
       </v-list-item-title>
     </v-list-item-content>
   </v-list-item>
@@ -89,7 +101,7 @@ export default {
       doCheck.call({
         propId: this.model._id,
         scope: {
-          $checkAdvantage: advantage,
+          '~checkAdvantage': { value: advantage },
         },
       }, error => {
         this.checkLoading = false;

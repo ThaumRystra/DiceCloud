@@ -211,7 +211,7 @@ export default {
       doAction.call({
         actionId: this.model._id,
         scope: {
-          $attackAdvantage: advantage,
+          '~attackAdvantage': { value: advantage },
         }
       }, error => {
         this.doActionLoading = false;
