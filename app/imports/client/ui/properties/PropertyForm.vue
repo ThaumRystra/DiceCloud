@@ -239,7 +239,7 @@ export default {
   },
   computed: {
     suggestedChildren() {
-      if (!this.model?.type) return;
+      if (!this.model?.type) return [];
       return getSuggestedChildren(this.model.type);
     },
     schemaHasName() {

@@ -13,9 +13,7 @@
 </template>
 
 <script lang="js">
-import { getAncestry } from  '/imports/api/parenting/parenting.js';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import LibraryNodes, { insertNode } from '/imports/api/library/LibraryNodes.js';
+import { insertNode } from '/imports/api/library/LibraryNodes.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 
 export default {
@@ -45,48 +43,29 @@ export default {
       }
 
       // Get ancestry reference
-      let order, parentRef;
-      let selectedComponent = document.querySelector(
-        `[data-id="tree-node-${this.selectedNodeId}"]`
-      );
-      if (selectedComponent){
-        let vueInstance = selectedComponent.__vue__.$parent;
-        if (vueInstance.showExpanded){
-          parentRef = {
-            id: this.selectedNodeId,
-            collection: 'libraryNodes',
-          };
-        } else {
-          parentRef = vueInstance.node.parent;
-          order = vueInstance.node.order + 0.5;
-        }
-      } else {
-        parentRef = {
-          id: libraryId,
-          collection: 'libraries',
-        };
-      }
-      let {ancestors} = getAncestry({parentRef});
+      const parentRef = {
+        id: libraryId,
+        collection: 'libraries',
+      };
 
       // Insert form dialog
-      let that = this;
+      const that = this;
       this.$store.commit('pushDialogStack', {
-        component: 'library-node-creation-dialog',
+        component: 'insert-property-dialog',
         elementId: 'insert-library-node-button',
+        data: {
+          hideLibraryTab: true,
+          noBackdropClose: true,
+          showLibraryOnlyProps: true,
+        },
         callback(libraryNode){
           if (!libraryNode) return;
 
-          // Set ancestry and order
-          libraryNode.parent = parentRef;
-          libraryNode.ancestors = ancestors;
-          if (order){
-            libraryNode.order = order;
-          } else {
-            setDocToLastOrder({collection: LibraryNodes, doc: libraryNode});
-          }
+          // Set order to first
+          libraryNode.order = -1;
 
           // Insert doc
-          let libraryNodeId = insertNode.call(libraryNode);
+          let libraryNodeId = insertNode.call({ libraryNode, parentRef });
           that.$emit('selected', libraryNodeId);
           return `tree-node-${libraryNodeId}`;
         }

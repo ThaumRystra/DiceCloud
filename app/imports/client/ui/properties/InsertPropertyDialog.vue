@@ -329,7 +329,8 @@ export default {
       this.tab = 1;
       this.schema = propertySchemasIndex[type];
       this.validationContext = this.schema.newContext();
-      let model = this.schema.clean(this.model || {});
+      let model = this.model || {};
+      model = this.schema.clean(model);
       model.type = type;
       this.model = model;
     },
