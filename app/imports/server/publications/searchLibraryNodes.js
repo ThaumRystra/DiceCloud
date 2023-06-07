@@ -65,13 +65,12 @@ Meteor.publish('searchLibraryNodes', function (creatureId) {
     let filter = {
       'ancestors.id': { $in: libraryIds },
       removed: { $ne: true },
-      tags: { $ne: [] }, // Only tagged library nodes are considered
+      searchable: true //library nodes must opt-in
     };
     if (type) {
       filter.$or = [{
         type,
       }, {
-        type: 'slotFiller',
         slotFillerType: type,
       }];
     }

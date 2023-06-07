@@ -24,6 +24,7 @@ const LIBRARY_NODE_TREE_FIELDS = {
   slotFillerType: 1,
   slotFillerConditionNote: 1,
   slotFillerCondition: 1,
+  fillSlots: 1,
   searchable: 1,
   slotFillImage: 1,
   // Effect

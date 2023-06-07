@@ -4,6 +4,7 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
   if (!libraryIds) throw 'LibraryIds is required for getSlotFillFilter';
 
   let filter = {
+    fillSlots: true,
     removed: { $ne: true },
     $and: []
   };

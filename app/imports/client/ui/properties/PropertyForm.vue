@@ -42,6 +42,28 @@
             cols="12"
             md="6"
           >
+            <smart-switch
+              label="Can fill slots"
+              :value="model.fillSlots"
+              :error-messages="errors.fillSlots"
+              @change="(value, ack) => $emit('change', {path: ['fillSlots'], value, ack})"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <smart-switch
+              label="Searchable from character sheet"
+              :value="model.searchable"
+              :error-messages="errors.searchable"
+              @change="(value, ack) => $emit('change', {path: ['searchable'], value, ack})"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
             <smart-select
               label="Slot Fill Type"
               style="flex-basis: 300px;"
