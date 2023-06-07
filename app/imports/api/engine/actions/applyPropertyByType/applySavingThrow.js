@@ -8,6 +8,7 @@ import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
+  const originalTargets = actionContext.targets;
 
   let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
@@ -45,8 +46,8 @@ export default function applySavingThrow(node, actionContext) {
     delete scope['~saveRoll'];
 
     const applyChildren = function () {
-      applyNodeTriggers(node, 'after', actionContext);
       actionContext.targets = [target]
+      applyNodeTriggers(node, 'after', actionContext);
       node.children.forEach(child => applyProperty(child, actionContext));
     };
 
@@ -106,4 +107,6 @@ export default function applySavingThrow(node, actionContext) {
     });
     return applyChildren();
   });
+  // reset the targets after the save to each child
+  actionContext.targets = originalTargets;
 }
