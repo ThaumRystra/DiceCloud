@@ -192,7 +192,7 @@ import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
-import { clone } from 'lodash';
+import { clone, difference } from 'lodash';
 
 export default {
   components: {
@@ -247,6 +247,29 @@ export default {
       });
       return { or, not };
     },
+  },
+  watch: {
+    selectedNodeIds(selectedIds, oldSelectedIds) {
+      // Skip if we didn't increase the length by adding a new Id
+      if (oldSelectedIds.length >= selectedIds.length) return;
+      // Find out which library node was added
+      const addedId = difference(selectedIds, oldSelectedIds)[0];
+      if (!addedId) return;
+      const addedNode = LibraryNodes.findOne(addedId);
+      if (!addedNode) return;
+      // Tick any unchecked nodes of a lower level, but only one per level
+      const backFilledLevels = new Set();
+      this.libraryNodes.forEach(node => {
+        if (
+          !selectedIds.includes(node._id)
+          && node.level < addedNode.level
+          && !backFilledLevels.has(node.level)
+        ) {
+          selectedIds.push(node._id);
+        }
+      });
+      this.selectedNodeIds = selectedIds;
+    }
   },
   methods: {
     loadMore() {
@@ -345,9 +368,15 @@ export default {
       Libraries.find().forEach(lib => names[lib._id] = lib.name)
       return names;
     },
+    libraryNodeFilter() {
+      const filterString = this._subs['classFillers'].data('libraryNodeFilter');
+      if (!filterString) return;
+      return EJSON.parse(filterString);
+    },
     libraryNodes() {
-      let filter = getSlotFillFilter({ slot: this.model });
-      let nodes = LibraryNodes.find(filter, {
+      if (!this.libraryNodeFilter) return [];
+      if (!this.$subReady.classFillers) return [];
+      let nodes = LibraryNodes.find(this.libraryNodeFilter, {
         sort: { name: 1, order: 1 }
       }).fetch();
       let disabledNodeCount = 0;

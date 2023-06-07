@@ -32,7 +32,7 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
     if (slot.missingLevels && slot.missingLevels.length) {
       filter.level = { $in: slot.missingLevels };
     } else {
-      filter.level = (slot.level || 0) + 1;
+      filter.level = { $gt: slot.level || 0 };
     }
   }
   let tagsOr = [];

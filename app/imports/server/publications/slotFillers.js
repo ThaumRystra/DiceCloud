@@ -126,6 +126,7 @@ Meteor.publish('classFillers', function (classId) {
 
       let options = {
         sort: {
+          level: 1,
           name: 1,
           order: 1,
         },
@@ -135,6 +136,7 @@ Meteor.publish('classFillers', function (classId) {
 
       self.autorun(function () {
         self.setData('countAll', LibraryNodes.find(filter).count());
+        self.setData('libraryNodeFilter', EJSON.stringify(filter));
       });
       self.autorun(function () {
         return [LibraryNodes.find(filter, options), libraries];
