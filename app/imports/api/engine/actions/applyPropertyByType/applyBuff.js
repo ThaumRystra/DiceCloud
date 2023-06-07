@@ -21,7 +21,10 @@ export default function applyBuff(node, actionContext) {
   const prop = node.node;
   let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
-  // Then copy the decendants of the buff to the targets
+  // Mark the buff as dirty for recalculation
+  prop.dirty = true;
+
+  // Then copy the descendants of the buff to the targets
   let propList = [prop];
   function addChildrenToPropList(children, { skipCrystalize } = {}) {
     children.forEach(child => {
