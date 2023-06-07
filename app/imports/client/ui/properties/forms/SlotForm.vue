@@ -79,17 +79,22 @@
         cols="12"
         md="6"
       >
-        <v-layout justify-center>
+        <outlined-input
+          name="Test"
+          data-id="test-slot-button"
+        >
           <v-btn
             v-if="context.isLibraryForm"
-            color="accent"
-            class="ma-2 mb-4"
-            data-id="test-slot-button"
+            text
+            class="ma-0"
+            height="54"
+            width="100%"
+            style="justify-content: start;"
             @click="testSlot"
           >
             Test Slot
           </v-btn>
-        </v-layout>
+        </outlined-input>
       </v-col>
     </v-row>
     <inline-computation-field
@@ -148,11 +153,13 @@ import propertyFormMixin from '/imports/client/ui/properties/forms/shared/proper
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
 export default {
   components: {
     FormSection,
     TagTargeting,
+    OutlinedInput,
   },
   mixins: [propertyFormMixin],
   inject: {

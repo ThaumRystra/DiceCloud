@@ -153,6 +153,7 @@
       class="ma-4"
     >
       <v-btn
+        v-if="!dummySlot"
         text
         color="accent"
         :disabled="!model"
@@ -358,7 +359,7 @@ export default {
   meteor: {
     $subscribe: {
       'slotFillers'() {
-        return [this.slotId, this.searchValue || undefined]
+        return [this.slotId || this.dummySlot?._id, this.searchValue || undefined, !!this.dummySlot]
       },
     },
     searchLoading() {

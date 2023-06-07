@@ -7,7 +7,7 @@ import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';
 import escapeRegex from '/imports/api/utility/escapeRegex.js';
 
-Meteor.publish('slotFillers', function (slotId, searchTerm) {
+Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
   if (searchTerm) check(searchTerm, String);
 
   let self = this;
@@ -16,11 +16,16 @@ Meteor.publish('slotFillers', function (slotId, searchTerm) {
     if (!userId) {
       return [];
     }
-    // Get the slot
-    let slot = CreatureProperties.findOne(slotId);
-    if (!slot) {
-      return [];
+
+    // Get the slot from the right collection
+    let slot;
+    if (isDummySlot) {
+      slot = LibraryNodes.findOne(slotId);
+    } else {
+      slot = CreatureProperties.findOne(slotId);
     }
+
+    if (!slot) return [];
 
     // Get all the ids of libraries the user can access
     const creatureId = slot.ancestors[0].id;
