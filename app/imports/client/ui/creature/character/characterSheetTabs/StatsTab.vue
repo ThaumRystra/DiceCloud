@@ -530,6 +530,7 @@ export default {
           { inactive: { $ne: true } },
           { type: 'toggle' },
         ],
+        overridden: {$ne: true},
         removed: { $ne: true },
         type: {
           $in: [
