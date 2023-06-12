@@ -31,6 +31,11 @@
         :value="model.description"
         @change="updateDescription"
       />
+      <smart-switch
+        :value="model.showInMarket"
+        label="Show in community library browser"
+        @change="updateShowInMarket"
+      />
     </template>
     <template v-if="removedDocs.length">
       <h3>Recently Deleted Properties</h3>
@@ -76,7 +81,7 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Libraries, { updateLibraryName, updateLibraryDescription, removeLibrary } from '/imports/api/library/Libraries.js';
+import Libraries, { updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary } from '/imports/api/library/Libraries.js';
 import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNodes.js';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
@@ -100,8 +105,15 @@ export default {
         ack(error && error.reason || error);
       });
     },
+    updateShowInMarket(value, ack) {
+      updateLibraryShowInMarket.call({ _id: this._id, value }, (error) => {
+        ack(error && error.reason || error);
+      });
+    },
     remove() {
-      let that = this;
+      const _id = this._id;
+      const $router = this.$router;
+      const $store = this.$store;
       this.$store.commit('pushDialogStack', {
         component: 'delete-confirmation-dialog',
         elementId: 'delete-library-button',
@@ -111,15 +123,15 @@ export default {
         },
         callback(confirmation) {
           if (!confirmation) return;
-          removeLibrary.call({ _id: that._id }, (error) => {
+          removeLibrary.call({ _id }, (error) => {
             if (error) {
               console.error(error);
               snackbar({
                 text: error.reason,
               });
             } else {
-              that.$router.push({ name: 'library', replace: true });
-              that.$store.dispatch('popDialogStack');
+              $router.push({ name: 'library', replace: true });
+              $store.dispatch('popDialogStack');
             }
           });
         }

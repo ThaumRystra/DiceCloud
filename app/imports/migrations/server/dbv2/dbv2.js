@@ -1,9 +1,11 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { union } from 'lodash';
+import Libraries from '/imports/api/library/Libraries.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections.js';
 
-// Git version 2.0-beta.33
-// Database version 1
+// Git version 2.0.52
+// Database version 2
 Migrations.add({
   version: 2,
   name: 'Separates creature property tags from library tags',
@@ -13,10 +15,11 @@ Migrations.add({
     const bulk = LibraryNodes.rawCollection().initializeUnorderedBulkOp();
     LibraryNodes.find({}).forEach(prop => migratePropUp(bulk, prop));
     bulk.execute();
+    countSubscribers();
   },
 
   down() {
-    console.log('migrating down library nodes 2 -> 1');
+    console.log('Migrating down library nodes 2 -> 1');
     const bulk = LibraryNodes.rawCollection().initializeUnorderedBulkOp();
     LibraryNodes.find({}).forEach(prop => migratePropDown(bulk, prop));
     bulk.execute();
@@ -60,4 +63,31 @@ export function migratePropDown(bulk, prop) {
     }
   }
   bulk.find({ _id: prop._id }).updateOne(update);
+}
+
+function countSubscribers() {
+  console.log('Migrating up libraries and collections to count subscribers');
+  const bulkLib = Libraries.rawCollection().initializeUnorderedBulkOp();
+  Libraries.find({}, {
+    fields: { _id: 1 }
+  }).forEach(lib => {
+    bulkLib.find({ _id: lib._id }).updateOne({
+      $set: {
+        subscriberCount: Meteor.users.find({ subscribedLibraries: lib._id }).count(),
+      }
+    });
+  });
+  bulkLib.execute();
+
+  const bulkLibCols = Libraries.rawCollection().initializeUnorderedBulkOp();
+  LibraryCollections.find({}, {
+    fields: { _id: 1 }
+  }).forEach(col => {
+    bulkLibCols.find({ _id: col._id }).updateOne({
+      $set: {
+        subscriberCount: Meteor.users.find({ subscribedLibraryCollections: col._id }).count(),
+      }
+    });
+  });
+  bulkLibCols.execute();
 }

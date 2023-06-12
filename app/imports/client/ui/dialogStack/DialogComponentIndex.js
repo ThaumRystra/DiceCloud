@@ -15,6 +15,7 @@ import SelectLibraryNodeDialog from '/imports/client/ui/library/SelectLibraryNod
 import SlotFillDialog from '/imports/client/ui/creature/slots/SlotFillDialog.vue';
 import TierTooLowDialog from '/imports/client/ui/user/TierTooLowDialog.vue';
 import TransferOwnershipDialog from '/imports/client/ui/sharing/TransferOwnershipDialog.vue';
+import LibraryBrowserDialog from '/imports/client/ui/library/LibraryBrowserDialog.vue';
 
 // Lazily load less common dialogs
 const ArchiveDialog = () => import('/imports/client/ui/creature/archive/ArchiveDialog.vue');
@@ -48,6 +49,7 @@ export default {
   HelpDialog,
   InviteDialog,
   LevelUpDialog,
+  LibraryBrowserDialog,
   LibraryCollectionCreationDialog,
   LibraryCollectionEditDialog,
   LibraryCreationDialog,

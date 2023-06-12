@@ -1,11 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
+import Libraries from '/imports/api/library/Libraries.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections.js';
 import '/imports/api/users/methods/deleteMyAccount.js';
 import '/imports/api/users/methods/addEmail.js';
 import '/imports/api/users/methods/removeEmail.js';
 import '/imports/api/users/methods/updateFileStorageUsed.js';
-
 import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 const defaultLibraryCollections = process.env.DEFAULT_LIBRARY_COLLECTIONS && process.env.DEFAULT_LIBRARY_COLLECTIONS.split(',') || [];
@@ -250,6 +251,29 @@ Meteor.users.setPreference = new ValidatedMethod({
   },
 });
 
+if (Meteor.isServer) {
+  Accounts.onCreateUser(() => {
+    if (defaultLibraries?.length) {
+      Libraries.update({
+        _id: { $in: defaultLibraries }
+      }, {
+        $inc: { subscriberCount: 1 }
+      }, {
+        multi: true,
+      }, () => {/**/ });
+    }
+    if (defaultLibraryCollections?.length) {
+      LibraryCollections.update({
+        _id: { $in: defaultLibraryCollections }
+      }, {
+        $inc: { subscriberCount: 1 }
+      }, {
+        multi: true,
+      }, () => {/**/ });
+    }
+  });
+}
+
 Meteor.users.subscribeToLibrary = new ValidatedMethod({
   name: 'users.subscribeToLibrary',
   validate: new SimpleSchema({
@@ -264,15 +288,17 @@ Meteor.users.subscribeToLibrary = new ValidatedMethod({
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
-    timeInterval: 5000,
+    timeInterval: 2000,
   },
   run({ libraryId, subscribe }) {
     if (!this.userId) throw 'Can only subscribe if logged in';
     if (subscribe) {
+      Libraries.update({ _id: libraryId }, { $inc: { subscriberCount: 1 } }, () => {/**/ });
       return Meteor.users.update(this.userId, {
         $addToSet: { subscribedLibraries: libraryId },
       });
     } else {
+      Libraries.update({ _id: libraryId }, { $inc: { subscriberCount: -1 } }, () => {/**/ });
       return Meteor.users.update(this.userId, {
         $pullAll: { subscribedLibraries: libraryId },
       });
@@ -299,10 +325,12 @@ Meteor.users.subscribeToLibraryCollection = new ValidatedMethod({
   run({ libraryCollectionId, subscribe }) {
     if (!this.userId) throw 'Can only subscribe if logged in';
     if (subscribe) {
+      LibraryCollections.update({ _id: libraryCollectionId }, { $inc: { subscriberCount: 1 } }, () => {/**/ });
       return Meteor.users.update(this.userId, {
         $addToSet: { subscribedLibraryCollections: libraryCollectionId },
       });
     } else {
+      LibraryCollections.update({ _id: libraryCollectionId }, { $inc: { subscriberCount: -1 } }, () => {/**/ });
       return Meteor.users.update(this.userId, {
         $pullAll: { subscribedLibraryCollections: libraryCollectionId },
       });

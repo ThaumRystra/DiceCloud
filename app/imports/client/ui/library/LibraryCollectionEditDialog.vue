@@ -31,6 +31,11 @@
         :value="model.description"
         @change="(description, ack) => updateLibraryCollection({description}, ack)"
       />
+      <smart-switch
+        :value="model.showInMarket"
+        label="Show in community library browser"
+        @change="(showInMarket, ack) => updateLibraryCollection({showInMarket}, ack)"
+      />
       <smart-select
         label="Libraries"
         :items="libraryOptions"

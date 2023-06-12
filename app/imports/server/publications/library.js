@@ -141,6 +141,24 @@ Meteor.publish('libraries', function () {
   });
 });
 
+Meteor.publish('browseLibraries', function () {
+  if (!this.userId) return [];
+  return [
+    Libraries.find({
+      showInMarket: true,
+      public: true,
+    }, {
+      sort: { name: 1 }
+    }),
+    LibraryCollections.find({
+      showInMarket: true,
+      public: true,
+    }, {
+      sort: { name: 1 }
+    }),
+  ];
+});
+
 Meteor.publish('library', function (libraryId) {
   if (!libraryId) return [];
   libraryIdSchema.validate({ libraryId });

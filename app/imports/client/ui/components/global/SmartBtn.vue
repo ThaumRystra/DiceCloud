@@ -3,7 +3,7 @@
     v-bind="$attrs"
     :disabled="isDisabled"
     :loading="loading"
-    @click.stop="click"
+    @click.stop.prevent="click"
   >
     <slot />
   </v-btn>

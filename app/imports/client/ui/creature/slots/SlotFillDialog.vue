@@ -147,11 +147,27 @@
       </v-btn>
     </v-layout>
     <v-layout
-      column
       align-center
       justify-center
-      class="ma-4"
+      class="text-caption text--disabled mt-8 mb-2"
     >
+      Can't find what you're looking for?
+    </v-layout>
+    <v-layout
+      align-center
+      justify-center
+      wrap
+      class="mx-4 mb-4"
+    >
+      <v-btn
+        v-if="!dummySlot"
+        text
+        data-id="library-browser-button"
+        :disabled="!model"
+        @click="openLibraryBrowser"
+      >
+        Browse community libraries
+      </v-btn>
       <v-btn
         v-if="!dummySlot"
         text
@@ -160,7 +176,7 @@
         data-id="custom-button"
         @click="insertCustomFiller"
       >
-        Create custom
+        Create custom filler
       </v-btn>
     </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
@@ -302,6 +318,12 @@ export default {
         data: {
           _id: id,
         },
+      });
+    },
+    openLibraryBrowser() {
+      this.$store.commit('pushDialogStack', {
+        component: 'library-browser-dialog',
+        elementId: 'library-browser-button',
       });
     },
     isDisabled(node) {
