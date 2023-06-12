@@ -1,8 +1,11 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { union } from 'lodash';
+import { union, get } from 'lodash';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 
 // Git version 2.0.52
 // Database version 2
@@ -12,20 +15,24 @@ Migrations.add({
 
   up() {
     console.log('migrating up library nodes 1 -> 2');
-    const bulk = LibraryNodes.rawCollection().initializeUnorderedBulkOp();
-    LibraryNodes.find({}).forEach(prop => migratePropUp(bulk, prop));
-    bulk.execute();
+    migrateCollection(LibraryNodes, migratePropUp);
+    migrateCollection(CreatureProperties, migratePropUp);
     countSubscribers();
   },
 
   down() {
     console.log('Migrating down library nodes 2 -> 1');
-    const bulk = LibraryNodes.rawCollection().initializeUnorderedBulkOp();
-    LibraryNodes.find({}).forEach(prop => migratePropDown(bulk, prop));
-    bulk.execute();
+    migrateCollection(LibraryNodes, migratePropDown);
+    migrateCollection(CreatureProperties, migratePropDown);
   },
 
 });
+
+function migrateCollection(collection, migrateDoc) {
+  const bulk = collection.rawCollection().initializeUnorderedBulkOp();
+  collection.find({}).forEach(doc => migrateDoc(bulk, doc));
+  bulk.execute();
+}
 
 export function migratePropUp(bulk, prop) {
   let update;
@@ -42,6 +49,7 @@ export function migratePropUp(bulk, prop) {
     update.$set.fillSlots = true;
     update.$set.searchable = true;
   }
+  update = dollarSignToTilde(prop, update);
   if (update) {
     bulk.find({ _id: prop._id }).updateOne(update);
   }
@@ -90,4 +98,39 @@ function countSubscribers() {
     });
   });
   bulkLibCols.execute();
+}
+
+const dollarSignRegex = /(\W)\$(\w+)/gi;
+function dollarSignToTilde(prop, update) {
+  computedSchemas[prop.type]?.inlineCalculationFields()?.forEach(calcKey => {
+    applyFnToKey(prop, calcKey, (prop, key) => {
+      const inlineCalcObj = get(prop, key);
+      const string = inlineCalcObj?.text;
+      if (!string) return;
+      const newString = string.replace(dollarSignRegex, '$1~$2');
+      if (string !== newString) {
+        // If changed
+        update = update || { $set: {} };
+        if (!update.$unset) update.$unset = {};
+        update.$unset[key + '.hash'] = 1; // zero the hash so it re-parses the calculation
+        update.$set[key + '.text'] = newString
+      }
+    });
+  });
+  computedSchemas[prop.type]?.computedFields()?.forEach(calcKey => {
+    applyFnToKey(prop, calcKey, (prop, key) => {
+      const inlineCalcObj = get(prop, key);
+      const string = inlineCalcObj?.calculation;
+      if (!string) return;
+      const newString = string.replace(dollarSignRegex, '$1~$2');
+      if (string !== newString) {
+        // If changed
+        update = update || { $set: {} };
+        if (!update.$unset) update.$unset = {};
+        update.$unset[key + '.hash'] = 1; // remove the hash so it re-parses the calculation
+        update.$set[key + '.calculation'] = newString
+      }
+    });
+  });
+  return update;
 }

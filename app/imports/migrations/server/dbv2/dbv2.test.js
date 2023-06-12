@@ -11,7 +11,12 @@ const exampleAttack = {
     'attributesConsumed': []
   },
   'attackRoll': {
-    calculation: 'dexterity.modifier + proficiencyBonus + 2 - hp.total + hp.value',
+    calculation: 'dexterity.modifier + proficiency$Bonus + 2 - hp.total + hp.value + $dollarSign',
+    hash: 1234567,
+  },
+  'summary': {
+    text: 'What if we {$had} two {$dollarSigns?} ',
+    hash: 123456,
   },
   'type': 'action',
   'name': 'Claws',
@@ -38,10 +43,16 @@ const exampleAttack = {
 
 const expectedAttackUpdate = {
   $set: {
+    'attackRoll.calculation': 'dexterity.modifier + proficiency$Bonus + 2 - hp.total + hp.value + ~dollarSign',
     'libraryTags': ['attack', 'magical', 'very cool'],
     'fillSlots': true,
     'searchable': true,
-  }
+    'summary.text': 'What if we {~had} two {~dollarSigns?} ',
+  },
+  $unset: {
+    'attackRoll.hash': 1,
+    'summary.hash': 1,
+  },
 };
 
 const emptyFolderExample = {

@@ -27,7 +27,7 @@ describe('Slot fill filter', function () {
       slot: {
         slotTags: ['tag1', 'tag2']
       },
-      libraryIds: ['libraryId1', 'libraryId2']
+      libraryIds: ['libraryId1', 'libraryId2'],
     });
     assert.deepStrictEqual(filter, {
       $or: [{
@@ -35,6 +35,7 @@ describe('Slot fill filter', function () {
       }],
       'ancestors.id': { $in: ['libraryId1', 'libraryId2'] },
       removed: { $ne: true },
+      fillSlots: true,
     });
   });
 
@@ -65,7 +66,7 @@ describe('Slot fill filter', function () {
           { operation: 'NOT', tags: ['tag7', 'tag8'] },
         ],
       },
-      libraryIds: ['libraryId1', 'libraryId2']
+      libraryIds: ['libraryId1', 'libraryId2'],
     });
     assert.deepStrictEqual(filter, {
       $or: [
@@ -77,6 +78,7 @@ describe('Slot fill filter', function () {
       ],
       'ancestors.id': { $in: ['libraryId1', 'libraryId2'] },
       removed: { $ne: true },
+      fillSlots: true,
     });
   });
 
