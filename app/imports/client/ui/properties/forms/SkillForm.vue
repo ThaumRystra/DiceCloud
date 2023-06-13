@@ -81,6 +81,7 @@
           </v-col>
         </v-row>
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
