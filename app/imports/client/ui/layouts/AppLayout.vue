@@ -66,7 +66,6 @@ import Sidebar from '/imports/client/ui/layouts/Sidebar.vue';
 import DialogStack from '/imports/client/ui/dialogStack/DialogStack.vue';
 import { mapMutations } from 'vuex';
 import SnackbarQueue from '/imports/client/ui/components/snackbars/SnackbarQueue.vue';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import ConnectionBanner from '/imports/client/ui/layouts/ConnectionBanner.vue';
 
 export default {
@@ -95,9 +94,8 @@ export default {
   meteor: {
     darkMode() {
       let user = Meteor.user();
-      if (!user) return;
-      let tier = getUserTier(user);
-      return tier.paidBenefits && user.darkMode;
+      if (!user) return null;
+      return user.darkMode;
     },
   },
   watch: {
@@ -106,12 +104,21 @@ export default {
       handler(newDarkModeValue) {
         if (typeof newDarkModeValue === 'boolean') {
           this.$vuetify.theme.dark = newDarkModeValue;
+        } else {
+          const deviceDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          this.$vuetify.theme.dark = !!deviceDarkMode;
         }
       },
     },
     '$route'(to) {
       this.$store.commit('setPageTitle', to.meta && to.meta.title || 'DiceCloud');
     }
+  },
+  mounted() {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (typeof this.darkMode === 'boolean') return;
+      this.$vuetify.theme.dark = !!e.matches;
+    });
   },
   methods: {
     ...mapMutations([

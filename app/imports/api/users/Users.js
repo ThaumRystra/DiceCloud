@@ -143,12 +143,12 @@ Meteor.users.generateApiKey = new ValidatedMethod({
 Meteor.users.setDarkMode = new ValidatedMethod({
   name: 'users.setDarkMode',
   validate: new SimpleSchema({
-    darkMode: { type: Boolean },
+    darkMode: { type: Boolean, optional: true },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
-    timeInterval: 5000,
+    timeInterval: 2000,
   },
   run({ darkMode }) {
     if (!this.userId) return;
