@@ -67,7 +67,7 @@
     <div
       slot="detail"
       data-id="selected-node-card"
-      style="overflow: hidden;"
+      style="overflow: hidden; min-height: 100%;"
     >
       <library-node-dialog
         :_id="selectedNodeId"

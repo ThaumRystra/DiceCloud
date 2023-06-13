@@ -214,7 +214,7 @@ const PROPERTIES = Object.freeze({
 export default PROPERTIES;
 
 export function getPropertyName(type) {
-  return type && PROPERTIES[type] && PROPERTIES[type].name;
+  return (type && PROPERTIES[type] && PROPERTIES[type].name) || type;
 }
 
 export function getPropertyIcon(type) {

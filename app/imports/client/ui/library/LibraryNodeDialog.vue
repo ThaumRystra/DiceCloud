@@ -14,6 +14,24 @@
         @color-changed="value => change({path: ['color'], value})"
       />
     </template>
+    <v-fade-transition>
+      <div
+        v-if="model"
+        class="layout mb-4"
+      >
+        <breadcrumbs
+          :model="model"
+          :editing="editing"
+          :embedded="embedded"
+          collection="libraryNodes"
+          @select-sub-property="selectSubProperty"
+        />
+        <v-spacer />
+        <v-chip disabled>
+          {{ typeName }}
+        </v-chip>
+      </div>
+    </v-fade-transition>
     <v-fade-transition
       mode="out-in"
     >
@@ -41,16 +59,13 @@
         @add-child="addLibraryNode"
         @select-sub-property="selectSubProperty"
       />
-      <component
-        :is="model.type + 'Viewer'"
-        v-else-if="model && !editing && $options.components[model.type + 'Viewer']"
+      <property-viewer 
+        v-else-if="model"
         :key="_id"
-        class="creature-property-viewer"
         :model="model"
+        collection="libraryNodes"
+        @select-sub-property="selectSubProperty"
       />
-      <p v-else>
-        This property can't be viewed yet.
-      </p>
     </v-fade-transition>
     <div
       v-if="!embedded"
@@ -96,9 +111,6 @@ import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryN
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
 import { get } from 'lodash';
 import {
   assertDocEditPermission, assertDocCopyPermission
@@ -110,18 +122,16 @@ import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo.js
 import { getHighestOrder } from '/imports/api/parenting/order.js';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
-let viewerIndex = {};
-for (let key in propertyViewerIndex){
-  viewerIndex[key + 'Viewer'] = propertyViewerIndex[key];
-}
+import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
+import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 
 export default {
   components: {
     PropertyToolbar,
-    PropertyIcon,
+    Breadcrumbs,
     DialogBase,
     PropertyForm,
-    ...viewerIndex,
+    PropertyViewer,
   },
   props: {
     _id: String,
@@ -140,6 +150,12 @@ export default {
     currentId: undefined,
     isLibraryForm: true,
   }},
+  computed: {
+    typeName(){
+      if (!this.model) return;
+      return getPropertyName(this.model.type)
+    },
+  },
   watch: {
     _id: {
       immediate: true,
@@ -205,7 +221,7 @@ export default {
       });
     },
     move(){
-      let that = this;
+      const id = this._id;
       this.$store.commit('pushDialogStack', {
         component: 'move-library-node-dialog',
         elementId: 'property-toolbar-menu-button',
@@ -214,7 +230,7 @@ export default {
           organizeDoc.call({
             docRef: {
               collection: 'libraryNodes',
-              id: that._id,
+              id,
             },
             parentRef: {
               collection: 'libraryNodes',

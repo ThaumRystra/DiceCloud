@@ -13,7 +13,7 @@
       <v-divider vertical />
       <div
         class="flex layout column"
-        style="background-color: inherit; overflow: hidden;"
+        style="background-color: inherit; overflow: hidden; min-height: 100%;"
         data-id="selected-node-card"
       >
         <slot name="detail" />

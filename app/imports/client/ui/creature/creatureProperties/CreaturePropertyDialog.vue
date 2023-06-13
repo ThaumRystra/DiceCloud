@@ -16,12 +16,12 @@
       <div
         class="layout mb-4"
       >
-        <template v-if="!embedded">
-          <breadcrumbs
-            :model="model"
-            :editing="editing"
-          />
-        </template>
+        <breadcrumbs
+          :model="model"
+          :editing="editing"
+          :embedded="embedded"
+          @select-sub-property="selectSubProperty"
+        />
         <v-spacer />
         <v-chip disabled>
           {{ typeName }}
@@ -43,31 +43,12 @@
             @select-sub-property="selectSubProperty"
           />
         </div>
-        <div v-else>
-          <component
-            :is="model.type + 'Viewer'"
-            :key="_id"
-            class="creature-property-viewer"
-            :model="model"
-          />
-          <v-row
-            v-show="!embedded && childrenLength"
-            class="mt-1"
-            dense
-          >
-            <property-field
-              name="Child properties"
-              :cols="{cols: 12}"
-            >
-              <creature-properties-tree
-                style="width: 100%;"
-                :root="{collection: 'creatureProperties', id: model._id}"
-                @length="childrenLength = $event"
-                @selected="selectSubProperty"
-              />
-            </property-field>
-          </v-row>
-        </div>
+        <property-viewer 
+          v-else
+          :key="_id"
+          :model="model"
+          @select-sub-property="selectSubProperty"
+        />
       </v-fade-transition>
     </template>
     <div
@@ -100,11 +81,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
-import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { get, findLast } from 'lodash';
@@ -114,29 +91,15 @@ import { getHighestOrder } from '/imports/api/parenting/order.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
-
-let formIndex = {};
-for (let key in propertyFormIndex){
-  formIndex[key + 'Form'] = propertyFormIndex[key];
-}
-
-let viewerIndex = {};
-for (let key in propertyViewerIndex){
-  formIndex[key + 'Viewer'] = propertyViewerIndex[key];
-}
+import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 
 export default {
   components: {
-    ...formIndex,
-    ...viewerIndex,
     PropertyForm,
-    PropertyIcon,
     DialogBase,
     PropertyToolbar,
-    CreaturePropertiesTree,
     Breadcrumbs,
-    PropertyField,
+    PropertyViewer,
   },
   props: {
     _id: String,
@@ -148,7 +111,6 @@ export default {
     // CurrentId lags behind Id by one tick so that events fired by destroying
     // forms keyed to the old ID are applied before the new ID overwrites it
     currentId: undefined,
-    childrenLength: 0,
   }},
   meteor: {
     model(){

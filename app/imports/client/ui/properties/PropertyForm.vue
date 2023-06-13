@@ -65,7 +65,7 @@
             md="6"
           >
             <smart-select
-              label="Slot Fill Type"
+              label="Slot fill type"
               style="flex-basis: 300px;"
               clearable
               hint="The property type that this slot filler pretends to be when being searched for by a slot"
@@ -80,7 +80,7 @@
             md="6"
           >
             <text-field
-              label="Slot Fill Quantity"
+              label="Slot quantity filled"
               type="number"
               min="0"
               hint="How many properties this counts as when filling a slot"
