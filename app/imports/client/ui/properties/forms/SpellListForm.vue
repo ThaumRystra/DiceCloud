@@ -65,6 +65,7 @@
 
     <form-sections
       v-if="$slots.default"
+      type="spellList"
     >
       <slot />
     </form-sections>

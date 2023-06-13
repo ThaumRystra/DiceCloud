@@ -21,6 +21,7 @@
 
     <form-sections
       v-if="$slots.default"
+      type="feature"
     >
       <slot />
     </form-sections>

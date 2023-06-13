@@ -283,6 +283,7 @@ export default {
     }
   },
   mounted() {
+    /** Disable auto-focus, it gets in the way more than it helps
     // Don't autofocus on mobile, it brings up the on-screen keyboard
     if (this.$vuetify.breakpoint.smAndDown) return;
 
@@ -291,6 +292,7 @@ export default {
         this.$refs.focusFirst.focus()
       }
     }, 300);
+    */
   },
   methods: {
     selectSubProperty(_id){

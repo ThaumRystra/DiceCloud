@@ -39,7 +39,7 @@
         />
       </v-col>
     </v-row>
-    <form-sections>
+    <form-sections type="damageMultiplier">
       <form-section
         v-if="$slots.children"
         name="Children"

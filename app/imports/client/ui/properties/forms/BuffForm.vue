@@ -29,7 +29,7 @@
       :error-messages="errors.target"
       @change="change('target', ...arguments)"
     />
-    <form-sections>
+    <form-sections type="buff">
       <form-section
         v-if="$slots.children"
         name="Children"

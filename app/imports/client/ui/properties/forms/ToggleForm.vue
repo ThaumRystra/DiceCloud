@@ -47,7 +47,7 @@
       </v-expand-transition>
     </v-row>
 
-    <form-sections>
+    <form-sections type="toggle">
       <form-section name="Behavior">
         <v-col
           cols="12"

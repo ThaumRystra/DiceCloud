@@ -20,6 +20,7 @@
 
     <form-sections
       v-if="$slots.default"
+      type="note"
     >
       <slot />
     </form-sections>

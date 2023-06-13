@@ -231,7 +231,7 @@
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <form-sections>
+    <form-sections type="spell">
       <form-section name="Resources Consumed">
         <resources-form
           :model="model.resources"

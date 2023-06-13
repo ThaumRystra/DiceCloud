@@ -42,7 +42,7 @@
       :error-messages="errors.target"
       @change="change('target', ...arguments)"
     />
-    <form-sections>
+    <form-sections type="damage">
       <form-section name="Log">
         <smart-switch
           label="Don't show in log"

@@ -52,7 +52,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
+    <form-sections type="skill">
       <form-section name="Base Values">
         <v-row dense>
           <v-col

@@ -82,7 +82,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
+    <form-sections type="trigger">
       <form-section
         name="Log"
       >

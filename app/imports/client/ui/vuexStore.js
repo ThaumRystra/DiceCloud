@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     pageTitle: undefined,
     characterSheetTabs: {},
     showDetailsDialog: false,
+    formExpansions: {},
   },
   getters: {
     tabById: (state) => (id) => {
@@ -30,7 +31,10 @@ const store = new Vuex.Store({
       } else {
         return tabs[tabNumber]
       }
-    }
+    },
+    formExpansionByType: (state) => (type) => {
+      return state.formExpansions[type] || [];
+    },
   },
   mutations: {
     toggleDrawer(state) {
@@ -67,6 +71,9 @@ const store = new Vuex.Store({
     },
     setShowDetailsDialog(state, value) {
       state.showDetailsDialog = value;
+    },
+    setFormExpansion(state, { type, value }) {
+      state.formExpansions[type] = value;
     },
   },
 });

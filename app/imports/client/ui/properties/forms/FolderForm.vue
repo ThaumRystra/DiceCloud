@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="folder-form">
     <div class="layout wrap">
-      <form-sections>
+      <form-sections type="folder">
         <form-section name="Grouping">
           <smart-switch
             label="Group children on a card"

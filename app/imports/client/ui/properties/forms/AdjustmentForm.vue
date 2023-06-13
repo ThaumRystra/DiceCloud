@@ -62,7 +62,7 @@
         />
       </v-col>
     </v-row>
-    <form-sections>
+    <form-sections type="adjustment">
       <form-section name="Log">
         <smart-switch
           label="Don't show in log"
@@ -70,12 +70,6 @@
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"
         />
-      </form-section>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
       </form-section>
       <slot />
     </form-sections>

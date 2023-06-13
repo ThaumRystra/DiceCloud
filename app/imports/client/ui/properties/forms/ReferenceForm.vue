@@ -57,6 +57,7 @@
     </v-row>
     <form-sections
       v-if="$slots.default"
+      type="reference"
     >
       <slot />
     </form-sections>

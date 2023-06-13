@@ -28,7 +28,7 @@
         />
       </v-col>
     </v-row>
-    <form-sections>
+    <form-sections type="roll">
       <form-section name="Log">
         <smart-switch
           label="Don't show in log"

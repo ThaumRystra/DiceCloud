@@ -24,6 +24,7 @@
     </v-row>
     <form-sections
       v-if="$slots.default"
+      type="constant"
     >
       <slot />
     </form-sections>

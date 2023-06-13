@@ -71,7 +71,10 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections v-if="$slots.default">
+    <form-sections
+      v-if="$slots.default"
+      type="container"
+    >
       <slot />
     </form-sections>
   </div>

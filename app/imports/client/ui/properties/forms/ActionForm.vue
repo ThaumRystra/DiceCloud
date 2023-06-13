@@ -93,7 +93,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
+    <form-sections type="action">
       <form-section name="Resources Consumed">
         <resources-form
           :model="model.resources"

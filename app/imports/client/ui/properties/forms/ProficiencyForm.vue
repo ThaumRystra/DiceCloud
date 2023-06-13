@@ -77,6 +77,7 @@
     </v-row>
     <form-sections
       v-if="$slots.default"
+      type="proficiency"
     >
       <slot />
     </form-sections>

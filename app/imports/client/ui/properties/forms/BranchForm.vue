@@ -29,7 +29,7 @@
           $emit('change', {path: ['condition', ...path], value, ack})"
       />
     </v-expand-transition>
-    <form-sections>
+    <form-sections type="branch">
       <form-section name="Log">
         <smart-switch
           label="Don't show in log"

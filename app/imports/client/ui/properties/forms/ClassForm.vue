@@ -22,7 +22,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
+    <form-sections type="class">
       <form-section name="Class levels from libraries">
         <tag-targeting
           :model="model"

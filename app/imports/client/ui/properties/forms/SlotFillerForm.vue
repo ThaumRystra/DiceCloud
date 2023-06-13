@@ -8,6 +8,7 @@
     />
     <form-sections
       v-if="$slots.default"
+      type="slotFiller"
     >
       <slot />
     </form-sections>

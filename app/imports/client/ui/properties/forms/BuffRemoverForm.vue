@@ -52,7 +52,7 @@
         </v-row>
       </div>
     </v-expand-transition>
-    <form-sections>
+    <form-sections type="buffRemover">
       <form-section
         v-if="$slots.children"
         name="Children"

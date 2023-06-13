@@ -74,7 +74,7 @@
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
-    <form-sections>
+    <form-sections type="attribute">
       <v-expand-transition>
         <form-section
           v-if="model.attributeType === 'healthBar'"

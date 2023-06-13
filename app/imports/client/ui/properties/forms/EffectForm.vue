@@ -111,6 +111,7 @@
     </v-expand-transition>
     <form-sections
       v-if="$slots.default"
+      type="effect"
     >
       <slot />
     </form-sections>

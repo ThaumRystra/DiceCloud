@@ -105,14 +105,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
-      </form-section>
-
+    <form-sections type="slot">
       <form-section name="Behavior">
         <v-row dense>
           <!--

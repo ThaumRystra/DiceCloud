@@ -5,7 +5,7 @@
       :model="model"
       @change="e => $emit('change', e)"
     />
-    <form-sections>
+    <form-sections type="pointBuy">
       <form-section name="Point buy settings">
         <v-row dense>
           <v-col

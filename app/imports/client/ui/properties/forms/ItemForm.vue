@@ -80,7 +80,7 @@
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
+    <form-sections type="item">
       <form-section
         name="Behavior"
       >

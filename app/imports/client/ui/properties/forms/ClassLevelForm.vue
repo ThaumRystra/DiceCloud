@@ -39,6 +39,7 @@
     />
     <form-sections
       v-if="$slots.default"
+      type="classLevel"
     >
       <slot />
     </form-sections>
