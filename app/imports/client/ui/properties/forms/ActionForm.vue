@@ -15,9 +15,8 @@
           />
           <computed-field
             v-else
-            label="To Hit"
-            prefix="1d20 + "
-            hint="The bonus to attack if this action has an attack roll"
+            label="Base attack roll bonus"
+            hint="Must be set for the action to have an attack roll"
             :model="model.attackRoll"
             :error-messages="errors.attackRoll"
             @change="({path, value, ack}) =>

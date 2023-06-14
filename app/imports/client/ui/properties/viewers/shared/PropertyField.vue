@@ -54,7 +54,7 @@
           style="max-width: 100%;"
         >
           <inline-effect
-            v-if="typeof calculation.value === 'number'"
+            v-if="typeof calculation.value === 'number' && calculation.baseValue !== 0"
             hide-breadcrumbs
             :model="{
               name: 'Base value',

@@ -81,6 +81,24 @@
           </v-col>
         </v-row>
       </form-section>
+      <form-section name="Apply skill">
+        <smart-switch
+          label="Apply skill to targeted tags"
+          :value="model.targetByTags"
+          :error-messages="errors.targetByTags"
+          @change="change('targetByTags', ...arguments)"
+        />
+        <v-expand-transition>
+          <tag-targeting
+            v-if="model.targetByTags"
+            :model="model"
+            :errors="errors"
+            @change="e => $emit('change', e)"
+            @push="e => $emit('push', e)"
+            @pull="e => $emit('pull', e)"
+          />
+        </v-expand-transition>
+      </form-section>
       <slot />
     </form-sections>
   </div>
@@ -91,11 +109,13 @@ import ProficiencySelect from '/imports/client/ui/properties/forms/shared/Profic
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {
   components: {
     ProficiencySelect,
     FormSection,
+    TagTargeting,
   },
   mixins: [propertyFormMixin],
   data() {

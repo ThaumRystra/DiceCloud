@@ -7,7 +7,7 @@
   >
     <div class="effect-icon">
       <proficiency-icon
-        :value="model.value"
+        :value="model.proficiency"
         class="prof-icon"
       />
     </div>
@@ -16,7 +16,7 @@
         <span
           class="effect-value mr-2"
         >
-          {{ proficiencyValue }}
+          {{ displayedValue }}
         </span>
         {{ displayedText }}
       </v-list-item-title>
@@ -26,34 +26,25 @@
 
 <script lang="js">
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 
 export default {
   components: {
     ProficiencyIcon,
   },
   props: {
-    hideBreadcrumbs: Boolean,
     model: {
       type: Object,
       required: true,
     },
-    proficiencyBonus: {
-      type: Number,
-      default: 0,
-    },
   },
   computed: {
     displayedText(){
-      return this.model.name || 'Proficiency'
+      return this.model.name || (this.model.type == 'proficiency' ? 'Proficiency' : 'Skill')
     },
-    proficiencyValue(){
-        if (!this.proficiencyBonus) return;
-        if (this.model.value === 0.49){
-          return Math.floor(0.5 * this.proficiencyBonus);
-        } else {
-          return Math.ceil(this.model.value * this.proficiencyBonus);
-        }
-      },
+    displayedValue() {
+      return numberToSignedString(this.model.value);
+    },
   },
   methods: {
     click(e){

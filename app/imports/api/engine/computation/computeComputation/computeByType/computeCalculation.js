@@ -1,4 +1,5 @@
 import evaluateCalculation from '../../utility/evaluateCalculation.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 
 export default function computeCalculation(computation, node) {
   const calcObj = node.data;
@@ -54,6 +55,9 @@ function aggregateCalculationProficiencies(node, computation) {
   const calcObj = node.data;
   delete calcObj.proficiencies;
   delete calcObj.proficiency;
+  let profBonus = computation.scope['proficiencyBonus']?.value || 0;
+
+  // Go through all the links and collect them on the calculation
   computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
@@ -61,40 +65,51 @@ function aggregateCalculationProficiencies(node, computation) {
       if (link.data !== 'proficiency') return;
       // That have data
       if (!linkedNode.data) return;
-      // Ignore inactive props
+      // Ignoring inactive props
       if (linkedNode.data.inactive) return;
+      // Compute the proficiency and value
+      let proficiency, value;
+      if (linkedNode.data.type === 'proficiency') {
+        proficiency = linkedNode.data.value || 0;
+        // Multiply the proficiency bonus by the actual proficiency
+        if (proficiency === 0.49) {
+          // Round down proficiency bonus in the special case
+          value = Math.floor(profBonus * 0.5);
+        } else {
+          value = Math.ceil(profBonus * proficiency);
+        }
+      } else if (linkedNode.data.type === 'skill') {
+        value = linkedNode.data.value || 0;
+        proficiency = linkedNode.data.proficiency || 0;
+      }
       // Collate proficiencies
       calcObj.proficiencies = calcObj.proficiencies || [];
       calcObj.proficiencies.push({
         _id: linkedNode.data._id,
         name: linkedNode.data.name,
-        value: linkedNode.data.value,
+        type: linkedNode.data.type,
+        proficiency,
+        value,
       });
     },
     true // enumerate only outbound links
   );
+
+  // Apply the highest proficiency, marking all others as overridden
   if (calcObj.proficiencies && typeof calcObj.value === 'number') {
     calcObj.proficiency = 0;
+    calcObj.proficiencyBonus = 0;
     let currentProf;
     calcObj.proficiencies.forEach(prof => {
-      if (prof.value > calcObj.proficiency) {
+      if (prof.value > calcObj.proficiencyBonus) {
         if (currentProf) currentProf.overridden = true;
-        calcObj.proficiency = prof.value;
+        calcObj.proficiencyBonus = prof.value;
+        calcObj.proficiency = prof.proficiency;
+        currentProf = prof;
       } else {
         prof.overridden = true;
       }
     });
-    // Get the character's proficiency bonus to apply
-    let profBonus = computation.scope['proficiencyBonus']?.value || 0;
-    calcObj.proficiencyBonus = profBonus;
-    let totalBonus;
-    // Multiply the proficiency bonus by the actual proficiency
-    if (calcObj.proficiency === 0.49) {
-      // Round down proficiency bonus in the special case
-      totalBonus = Math.floor(profBonus * 0.5);
-    } else {
-      totalBonus = Math.ceil(profBonus * calcObj.proficiency);
-    }
-    calcObj.value += totalBonus;
+    calcObj.value += calcObj.proficiencyBonus;
   }
 }

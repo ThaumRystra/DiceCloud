@@ -306,7 +306,7 @@ function linkSavingThrow(dependencyGraph, prop) {
   dependOnCalc({ dependencyGraph, prop, key: 'dc' });
 }
 
-function linkSkill(dependencyGraph, prop) {
+function linkSkill(dependencyGraph, prop, computation) {
   // Depends on base value
   dependOnCalc({ dependencyGraph, prop, key: 'baseValue' });
   // Link dependents
@@ -318,6 +318,20 @@ function linkSkill(dependencyGraph, prop) {
   }
   // Skills depend on the creature's proficiencyBonus
   dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
+
+  // Skills can apply their value as a proficiency bonus to calculations based on tag
+  if (prop.targetByTags) {
+    getEffectTagTargets(prop, computation).forEach(targetId => {
+      const targetProp = computation.propsById[targetId];
+      // Always target a field on the target property, applying a skill to an attribute or
+      // other skill isn't supported
+      const key = prop.targetField || getDefaultCalculationField(targetProp);
+      const calcObj = get(targetProp, key);
+      if (calcObj && calcObj.calculation) {
+        dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'proficiency');
+      }
+    });
+  }
 }
 
 function linkSlot(dependencyGraph, prop) {

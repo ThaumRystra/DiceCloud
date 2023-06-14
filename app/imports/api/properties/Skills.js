@@ -59,6 +59,51 @@ let SkillSchema = createPropertySchema({
     type: 'inlineCalculationFieldToCompute',
     optional: true,
   },
+  // Skills can apply their value to other calculations as a proficiency
+  // True when applying skill to tagged props
+  targetByTags: {
+    type: Boolean,
+    optional: true,
+  },
+  // Which tags the proficiency is applied to
+  targetTags: {
+    type: Array,
+    optional: true,
+    maxCount: STORAGE_LIMITS.tagCount,
+  },
+  'targetTags.$': {
+    type: String,
+    max: STORAGE_LIMITS.tagLength,
+  },
+  extraTags: {
+    type: Array,
+    optional: true,
+    maxCount: STORAGE_LIMITS.extraTagsCount,
+  },
+  'extraTags.$': {
+    type: Object,
+  },
+  'extraTags.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue() {
+      if (!this.isSet) return Random.id();
+    }
+  },
+  'extraTags.$.operation': {
+    type: String,
+    allowedValues: ['OR', 'NOT'],
+    defaultValue: 'OR',
+  },
+  'extraTags.$.tags': {
+    type: Array,
+    defaultValue: [],
+    maxCount: STORAGE_LIMITS.tagCount,
+  },
+  'extraTags.$.tags.$': {
+    type: String,
+    max: STORAGE_LIMITS.tagLength,
+  },
 });
 
 let ComputedOnlySkillSchema = createPropertySchema({
