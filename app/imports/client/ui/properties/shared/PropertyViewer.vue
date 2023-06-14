@@ -3,6 +3,50 @@
     v-if="model && $options.components[model.type]"
     class="property-viewer"
   >
+    <v-row dense>
+      <property-field
+        v-if="model.inactive"
+        name="Status"
+        :cols="{cols: 12}"
+      >
+        <div
+          style="width: 100%"
+          class="text--disabled"
+        >
+          <div>
+            Inactive
+          </div>
+          <div
+            v-if="model.deactivatedByToggle && deactivatingToggle"
+            class="pt-2"
+          >
+            <div>Deactivated by:</div>
+            <v-btn
+              block
+              :data-id="`tree-node-${model.deactivatingToggleId}`"
+              style="text-transform: initial;"
+              @click="selectSubProperty(model.deactivatingToggleId)"
+            >
+              <tree-node-view
+                :model="deactivatingToggle"
+              />
+            </v-btn>
+          </div>
+          <div
+            v-if="model.deactivatedByAncestor"
+            class="pt-2"
+          >
+            Deactivated by ancestor
+          </div>
+          <div
+            v-if="model.deactivatedBySelf"
+            class="pt-2"
+          >
+            Deactivated by own settings
+          </div>
+        </div>
+      </property-field>
+    </v-row>
     <component
       :is="model.type"
       :key="model._id"
@@ -109,12 +153,15 @@ import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/pr
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 export default {
   components: {
     ...propertyViewerIndex,
     CreaturePropertiesTree,
     PropertyField,
+    TreeNodeView,
   },
   props: {
     model: {
@@ -129,6 +176,12 @@ export default {
   data() {
     return {
       childrenLength: 0,
+    }
+  },
+  meteor: {
+    deactivatingToggle() {
+      if (!this.model.deactivatingToggleId) return;
+      return CreatureProperties.findOne(this.model.deactivatingToggleId);
     }
   },
   computed: {

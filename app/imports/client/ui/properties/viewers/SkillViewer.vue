@@ -53,6 +53,9 @@
         name="Overridden"
         value="Overriden by another property with the same variable name"
       />
+      <property-target-tags
+        :model="model"
+      />
     </v-row>
     <v-row dense>
       <property-description
@@ -127,11 +130,13 @@ import SkillProficiency from '/imports/client/ui/properties/components/skills/Sk
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
 import sortEffects from '/imports/client/ui/utility/sortEffects.js';
+import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
 
 export default {
   components: {
     AttributeEffect,
     SkillProficiency,
+    PropertyTargetTags,
   },
   mixins: [propertyViewerMixin],
   inject: {

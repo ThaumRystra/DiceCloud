@@ -26,6 +26,7 @@ export function nodeArrayToTree(nodes) {
       forest.push(treeNode);
     }
   });
+  forest.nodeIndex = nodeIndex;
   return forest;
 }
 

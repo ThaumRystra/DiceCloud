@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
@@ -59,52 +60,8 @@ let SkillSchema = createPropertySchema({
     type: 'inlineCalculationFieldToCompute',
     optional: true,
   },
-  // Skills can apply their value to other calculations as a proficiency
-  // True when applying skill to tagged props
-  targetByTags: {
-    type: Boolean,
-    optional: true,
-  },
-  // Which tags the proficiency is applied to
-  targetTags: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.tagCount,
-  },
-  'targetTags.$': {
-    type: String,
-    max: STORAGE_LIMITS.tagLength,
-  },
-  extraTags: {
-    type: Array,
-    optional: true,
-    maxCount: STORAGE_LIMITS.extraTagsCount,
-  },
-  'extraTags.$': {
-    type: Object,
-  },
-  'extraTags.$._id': {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    autoValue() {
-      if (!this.isSet) return Random.id();
-    }
-  },
-  'extraTags.$.operation': {
-    type: String,
-    allowedValues: ['OR', 'NOT'],
-    defaultValue: 'OR',
-  },
-  'extraTags.$.tags': {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.tagCount,
-  },
-  'extraTags.$.tags.$': {
-    type: String,
-    max: STORAGE_LIMITS.tagLength,
-  },
-});
+  // Skills can apply their value to other calculations as a proficiency using tag targeting
+}).extend(TagTargetingSchema);
 
 let ComputedOnlySkillSchema = createPropertySchema({
   // Computed value of skill to be added to skill rolls

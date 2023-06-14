@@ -45,6 +45,29 @@
           />
         </v-col>
       </v-expand-transition>
+      <v-col cols="12">
+        <smart-toggle
+          label="Enabled or disable properties"
+          :value="model.targetByTags"
+          :options="[
+            {name: 'Descendants', value: false},
+            {name: 'By target tags', value: true},
+          ]"
+          @change="change('targetByTags', ...arguments)"
+        />
+      </v-col>
+      <v-col cols="12">
+        <v-expand-transition>
+          <tag-targeting
+            v-if="model.targetByTags"
+            :model="model"
+            :errors="errors"
+            @change="e => $emit('change', e)"
+            @push="e => $emit('push', e)"
+            @pull="e => $emit('pull', e)"
+          />
+        </v-expand-transition>
+      </v-col>
     </v-row>
 
     <form-sections type="toggle">
@@ -69,8 +92,12 @@
 
 <script lang="js">
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {
+  components: {
+    TagTargeting,
+  },
   mixins: [propertyFormMixin],
   computed: {
     radioSelection() {

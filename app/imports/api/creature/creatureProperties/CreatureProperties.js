@@ -88,6 +88,12 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     index: 1,
     removeBeforeCompute: true,
   },
+  deactivatingToggleId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+    removeBeforeCompute: true,
+  },
   // When this is true on any property, the creature needs to be recomputed
   dirty: {
     type: Boolean,

@@ -164,7 +164,7 @@ function linkEffects(dependencyGraph, prop, computation) {
 }
 
 // Returns an array of IDs of the properties the effect targets
-function getEffectTagTargets(effect, computation) {
+export function getEffectTagTargets(effect, computation) {
   let targets = getTargetListFromTags(effect.targetTags, computation);
   let notIds = [];
   if (effect.extraTags) {

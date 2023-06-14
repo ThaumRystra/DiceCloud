@@ -3,12 +3,12 @@ import { EJSON } from 'meteor/ejson';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import propertySchemasIndex from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 
-export default function writeAlteredProperties(computation){
+export default function writeAlteredProperties(computation) {
   let bulkWriteOperations = [];
   // Loop through all properties on the memo
   computation.props.forEach(changed => {
     let schema = propertySchemasIndex[changed.type];
-    if (!schema){
+    if (!schema) {
       console.warn('No schema for ' + changed.type);
       return;
     }
@@ -20,12 +20,13 @@ export default function writeAlteredProperties(computation){
       'deactivatedBySelf',
       'deactivatedByAncestor',
       'deactivatedByToggle',
+      'deactivatingToggleId',
       'damage',
       'dirty',
       ...schema.objectKeys(),
     ];
     op = addChangedKeysToOp(op, keys, original, changed);
-    if (op){
+    if (op) {
       bulkWriteOperations.push(op);
     }
   });
@@ -37,10 +38,10 @@ function addChangedKeysToOp(op, keys, original, changed) {
   // Loop through all keys that can be changed by computation
   // and compile an operation that sets all those keys
   for (let key of keys) {
-    if (!EJSON.equals(original[key], changed[key])){
+    if (!EJSON.equals(original[key], changed[key])) {
       if (!op) op = newOperation(original._id, changed.type);
       let value = changed[key];
-      if (value === undefined){
+      if (value === undefined) {
         // Unset values that become undefined
         addUnsetOp(op, key);
       } else {
@@ -52,32 +53,32 @@ function addChangedKeysToOp(op, keys, original, changed) {
   return op;
 }
 
-function newOperation(_id, type){
+function newOperation(_id, type) {
   let newOp = {
     updateOne: {
-      filter: {_id},
+      filter: { _id },
       update: {},
     }
   };
-  if (Meteor.isClient){
+  if (Meteor.isClient) {
     newOp.type = type;
   }
   return newOp;
 }
 
-function addSetOp(op, key, value){
-  if (op.updateOne.update.$set){
+function addSetOp(op, key, value) {
+  if (op.updateOne.update.$set) {
     op.updateOne.update.$set[key] = value;
   } else {
-    op.updateOne.update.$set = {[key]: value};
+    op.updateOne.update.$set = { [key]: value };
   }
 }
 
-function addUnsetOp(op, key){
-  if (op.updateOne.update.$unset){
+function addUnsetOp(op, key) {
+  if (op.updateOne.update.$unset) {
     op.updateOne.update.$unset[key] = 1;
   } else {
-    op.updateOne.update.$unset = {[key]: 1};
+    op.updateOne.update.$unset = { [key]: 1 };
   }
 }
 
@@ -100,14 +101,14 @@ function writePropertiesSequentially(bulkWriteOps) {
 // in the UI because of incompatibility with latency compensation. If the
 // duplicate redraws can be fixed, this is a strictly better way of processing
 // writes
-function bulkWriteProperties(bulkWriteOps){
+function bulkWriteProperties(bulkWriteOps) {
   if (!bulkWriteOps.length) return;
   // bulkWrite is only available on the server
   if (Meteor.isServer) {
     CreatureProperties.rawCollection().bulkWrite(
       bulkWriteOps,
-      {ordered : false},
-      function(e){
+      { ordered: false },
+      function (e) {
         if (e) {
           console.error('Bulk write failed: ');
           console.error(e);
