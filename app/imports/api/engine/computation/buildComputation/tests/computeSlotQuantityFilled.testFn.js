@@ -18,7 +18,7 @@ var testProperties = [
   // Children
   clean({
     _id: 'slotFillerId',
-    type: 'slotFiller',
+    type: 'folder',
     slotQuantityFilled: 3,
     slotFillerType: 'item',
     ancestors: [{ id: 'charId' }, { id: 'slotId' }],

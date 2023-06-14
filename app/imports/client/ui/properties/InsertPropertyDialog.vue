@@ -320,10 +320,6 @@ export default {
       this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
     },
     changeType(type){
-      if (type == 'slotFiller') {
-        type = 'folder';
-        this.type = 'folder';
-      }
       this._subs.searchLibraryNodes.setData('type', type);
       if (!type) return;
       this.tab = 1;

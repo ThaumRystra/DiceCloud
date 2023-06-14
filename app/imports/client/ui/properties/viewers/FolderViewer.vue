@@ -2,13 +2,14 @@
   <div class="folder-viewer">
     <v-row
       dense
-      align="stretch"
-      justify="center"
-      justify-sm="start"
     >
       <property-field
         name="Name"
         :value="model.name"
+      />
+      <property-description
+        name="Description"
+        :model="model.description"
       />
     </v-row>
   </div>

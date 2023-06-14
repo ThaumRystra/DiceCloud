@@ -39,10 +39,6 @@ let FolderSchema = createPropertySchema({
 });
 
 const ComputedOnlyFolderSchema = createPropertySchema({
-  summary: {
-    type: 'computedOnlyInlineCalculationField',
-    optional: true,
-  },
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,

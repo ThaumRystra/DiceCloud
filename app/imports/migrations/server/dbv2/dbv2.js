@@ -16,13 +16,16 @@ Migrations.add({
   up() {
     console.log('migrating up library nodes 1 -> 2');
     migrateCollection(LibraryNodes, migratePropUp);
+    console.log('migrating up creature props 1 -> 2');
     migrateCollection(CreatureProperties, migratePropUp);
+    console.log('Migrating up libraries and collections to count subscribers');
     countSubscribers();
   },
 
   down() {
     console.log('Migrating down library nodes 2 -> 1');
     migrateCollection(LibraryNodes, migratePropDown);
+    console.log('Migrating down creature props 2 -> 1');
     migrateCollection(CreatureProperties, migratePropDown);
   },
 
@@ -36,11 +39,15 @@ function migrateCollection(collection, migrateDoc) {
 
 export function migratePropUp(bulk, prop) {
   let update;
-  // If the prop is a slot filler with an image, move it
-  if (prop.type === 'slotFiller' && typeof prop.picture === 'string') {
-    update = { $set: {} };
-    update.$set.slotFillImage = prop.picture;
-    update.$unset = { picture: 1 };
+  if (prop.type === 'slotFiller') {
+    update = update || { $set: {} };
+    // Change the type to folder, slotFiller is deprecated
+    update.$set.type = 'folder'
+    // If the slot filler has an image set, move it
+    if (typeof prop.picture === 'string') {
+      update.$set.slotFillImage = prop.picture;
+      update.$unset = { picture: 1 };
+    }
   }
   // If there are tags, copy them to libraryTags and set findable flags
   if (Array.isArray(prop.tags) && prop.tags.length) {
@@ -74,7 +81,6 @@ export function migratePropDown(bulk, prop) {
 }
 
 function countSubscribers() {
-  console.log('Migrating up libraries and collections to count subscribers');
   const bulkLib = Libraries.rawCollection().initializeUnorderedBulkOp();
   Libraries.find({}, {
     fields: { _id: 1 }

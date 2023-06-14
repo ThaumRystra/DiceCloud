@@ -170,17 +170,6 @@ const PROPERTIES = Object.freeze({
     helpText: 'A slot in the character sheet is used to specify that a property needs to be selected from a library to fill the slot. The slot can determine what tags it is looking for, and any subscribed library property with matching tags can fill the slot',
     suggestedParents: [],
   },
-  /* Deprecated
-   * Slot fillers are no longer suggested as possible property types,
-   * but existing slot fillers are still supported for backwards compatibility
-  slotFiller: {
-    icon: 'mdi-power-plug-outline',
-    name: 'Slot filler',
-    docsPath: 'property/slot-filler',
-    helpText: 'A slot filler allows for more advanced logic when it attempts to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
-    suggestedParents: ['propertySlot'],
-  },
-  */
   spellList: {
     icon: '$vuetify.icons.spell_list',
     name: 'Spell list',

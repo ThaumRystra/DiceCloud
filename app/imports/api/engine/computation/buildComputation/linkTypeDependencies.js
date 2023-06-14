@@ -218,7 +218,6 @@ function getDefaultCalculationField(prop) {
     case 'roll': return 'roll';
     case 'savingThrow': return 'dc';
     case 'skill': return 'baseValue';
-    case 'slotFiller': return null;
     case 'slot': return 'quantityExpected';
     case 'spellList': return 'attackRollBonus';
     case 'spell': return null;
