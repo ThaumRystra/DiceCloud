@@ -87,7 +87,12 @@ export default {
       name: 'Dai',
       title: 'A Kobold\'s Best Friend',
       avatar: 'dai'
-    },],
+    }, {
+      name: 'Vibes',
+      title: 'Kell of Nothing',
+      avatar: 'vibes'
+    }
+    ],
   }},
 }
 </script>
