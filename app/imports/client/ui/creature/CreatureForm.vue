@@ -2,18 +2,21 @@
   <div class="creature-form">
     <text-field
       label="Name"
+      :disabled="!editPermission"
       :value="model.name"
       :error-messages="errors.name"
       @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
     />
     <text-field
       label="Alignment"
+      :disabled="!editPermission"
       :value="model.alignment"
       :error-messages="errors.alignment"
       @change="(value, ack) => $emit('change', {path: ['alignment'], value, ack})"
     />
     <text-field
       label="Gender"
+      :disabled="!editPermission"
       :value="model.gender"
       :error-messages="errors.gender"
       @change="(value, ack) => $emit('change', {path: ['gender'], value, ack})"
@@ -21,6 +24,7 @@
     <text-field
       label="Picture URL"
       hint="A link to a high resolution image"
+      :disabled="!editPermission"
       :value="model.picture"
       :error-messages="errors.picture"
       @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
@@ -28,6 +32,7 @@
     <text-field
       label="Avatar picture URL"
       hint="A link to a smaller, square image to use as an avatar"
+      :disabled="!editPermission"
       :value="model.avatarPicture"
       :error-messages="errors.avatarPicture"
       @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
@@ -36,21 +41,25 @@
       <form-section name="Settings">
         <v-switch
           label="Hide redundant stats"
+          :disabled="!editPermission"
           :input-value="model.settings.hideUnusedStats"
           @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value})"
         />
         <v-switch
           label="Hide rest buttons"
+          :disabled="!editPermission"
           :input-value="model.settings.hideRestButtons"
           @change="value => $emit('change', {path: ['settings','hideRestButtons'], value: !!value})"
         />
         <v-switch
           label="Show spells tab"
+          :disabled="!editPermission"
           :input-value="!model.settings.hideSpellsTab"
           @change="changeHideSpellsTab"
         />
         <v-switch
           label="Show tree tab"
+          :disabled="!editPermission"
           :input-value="model.settings.showTreeTab"
           @change="changeShowTreeTab"
         />
@@ -62,6 +71,7 @@
           min="0"
           max="1"
           step="0.1"
+          :disabled="!editPermission"
           :value="model.settings.hitDiceResetMultiplier"
           @change="(value, ack) => $emit('change', {path: ['settings','hitDiceResetMultiplier'], value, ack})"
         />
@@ -69,6 +79,7 @@
           label="Discord Webhook URL"
           hint="This creature's logs will be posted to the discord channel"
           placeholder="https://discordapp.com/api/webhooks/<id>/<token>"
+          :disabled="!editPermission"
           :value="model.settings.discordWebhook"
           @change="(value, ack) => $emit('change', {path: ['settings','discordWebhook'], value, ack})"
         />
@@ -96,12 +107,13 @@
       <form-section name="Libraries">
         <smart-switch
           label="All user libraries"
+          :disabled="!editPermission"
           :value="allUserLibraries"
           @change="allUserLibrariesChange"
         />
         <library-list
           selection
-          :disabled="!model.allowedLibraries && !model.allowedLibraryCollections"
+          :disabled="!editPermission || (!model.allowedLibraries && !model.allowedLibraryCollections)"
           :libraries-selected="model.allowedLibraries"
           :library-collections-selected="model.allowedLibraryCollections"
           :libraries-selected-by-collections="librariesSelectedByCollections"
@@ -142,6 +154,7 @@ import FormSection, { FormSections } from '/imports/client/ui/properties/forms/s
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
 import { changeAllowedLibraries, toggleAllUserLibraries } from '/imports/api/creature/creatures/methods/changeAllowedLibraries.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 
 export default {
   components: {
@@ -226,6 +239,14 @@ export default {
         ids = union(ids, collection.libraries);
       });
       return ids;
+    },
+    editPermission() {
+      try {
+        assertEditPermission(this.model, Meteor.userId());
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
   },
   methods: {

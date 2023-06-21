@@ -8,6 +8,7 @@
       <v-btn
         icon
         data-id="share-library-button"
+        :disabled="!isOwner"
         @click="share"
       >
         <v-icon>mdi-share-variant</v-icon>
@@ -15,12 +16,32 @@
       <v-btn
         icon
         data-id="delete-library-button"
+        :disabled="!isOwner"
         @click="remove"
       >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </template>
     <template v-if="model">
+      <v-list-item
+        v-if="!isOwner"
+        class="px-0"
+        two-line
+      >
+        <v-list-item-avatar>
+          <v-icon>
+            mdi-account
+          </v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ ownerName || '?' }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            Collection owner
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
       <text-field
         label="name"
         :value="model.name"
@@ -33,6 +54,7 @@
       />
       <smart-switch
         :value="model.showInMarket"
+        :disabled="!isOwner"
         label="Show in community library browser"
         @change="(showInMarket, ack) => updateLibraryCollection({showInMarket}, ack)"
       />
@@ -121,6 +143,9 @@ export default {
   meteor: {
     '$subscribe': {
       libraries: [],
+      libraryCollection() {
+        return [this._id]
+      },
     },
     model() {
       return LibraryCollections.findOne(this._id);
@@ -143,6 +168,15 @@ export default {
           value: library._id,
         };
       });
+    },
+    isOwner() {
+      if (!this.model) return;
+      return Meteor.userId() === this.model.owner;
+    },
+    ownerName() {
+      if (!this.model) return;
+      const username = Meteor.users.findOne(this.model.owner)?.username;
+      return username;
     },
   }
 }

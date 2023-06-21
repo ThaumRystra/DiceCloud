@@ -82,7 +82,14 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
         }, {
           sort: { name: 1 }
         });
-        return [libraryCollectionCursor, libraryCursor];
+        return [
+          libraryCollectionCursor,
+          libraryCursor,
+          Meteor.users.find(
+            libraryCollection.owner,
+            { fields: { username: 1 } }
+          ),
+        ];
       });
     });
   })
@@ -148,13 +155,21 @@ Meteor.publish('browseLibraries', function () {
       showInMarket: true,
       public: true,
     }, {
-      sort: { name: 1 }
+      sort: {
+        subscriberCount: 1,
+        name: 1,
+      },
+      limit: 500,
     }),
     LibraryCollections.find({
       showInMarket: true,
       public: true,
     }, {
-      sort: { name: 1 }
+      sort: {
+        subscriberCount: 1,
+        name: 1
+      },
+      limit: 500,
     }),
   ];
 });
@@ -169,9 +184,15 @@ Meteor.publish('library', function (libraryId) {
     catch (e) {
       return this.error(e);
     }
-    return Libraries.find({
-      _id: libraryId,
-    });
+    return [
+      Libraries.find({
+        _id: libraryId,
+      }),
+      Meteor.users.find(
+        library.owner,
+        { fields: { username: 1 } }
+      ),
+    ];
   });
 });
 

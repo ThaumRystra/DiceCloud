@@ -8,6 +8,7 @@
       <v-btn
         icon
         data-id="share-library-button"
+        :disabled="!isOwner"
         @click="share"
       >
         <v-icon>mdi-share-variant</v-icon>
@@ -15,12 +16,32 @@
       <v-btn
         icon
         data-id="delete-library-button"
+        :disabled="!isOwner"
         @click="remove"
       >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </template>
     <template v-if="model">
+      <v-list-item
+        v-if="!isOwner && ownerName"
+        class="px-0"
+        two-line
+      >
+        <v-list-item-avatar>
+          <v-icon>
+            mdi-account
+          </v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ ownerName }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            Library owner
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
       <text-field
         label="name"
         :value="model.name"
@@ -33,6 +54,7 @@
       />
       <smart-switch
         :value="model.showInMarket"
+        :disabled="!isOwner"
         label="Show in community library browser"
         @change="updateShowInMarket"
       />
@@ -170,7 +192,16 @@ export default {
       }, {
         sort: { order: 1 },
       });
-    }
+    },
+    isOwner() {
+      if (!this.model) return;
+      return Meteor.userId() === this.model.owner;
+    },
+    ownerName() {
+      if (!this.model) return;
+      const username = Meteor.users.findOne(this.model.owner)?.username;
+      return username;
+    },
   }
 }
 </script>
