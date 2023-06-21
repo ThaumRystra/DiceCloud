@@ -42,6 +42,11 @@ const duplicateProperty = new ValidatedMethod({
     let propertyId = randomSrc.id();
     property._id = propertyId;
 
+    // Change the variableName so it isn't immediately overridden
+    if (property.variableName) {
+      property.variableName += 'Copy'
+    }
+
     // Get all the descendants
     let nodes = CreatureProperties.find({
       'ancestors.id': _id,
