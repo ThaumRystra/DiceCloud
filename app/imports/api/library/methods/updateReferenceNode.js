@@ -58,7 +58,10 @@ function updateReferenceNodeWork(node, userId) {
     node: doc,
   };
   if (library) {
-    cache.library = { name: library.name };
+    cache.library = {
+      id: library._id,
+      name: library.name,
+    };
   }
   writeCache(node._id, cache);
 }

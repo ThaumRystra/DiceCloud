@@ -52,6 +52,7 @@
       :key="model._id"
       class="property-viewer"
       :model="model"
+      @select-sub-property="id => selectSubProperty(id)"
     />
     <v-row dense>
       <template
