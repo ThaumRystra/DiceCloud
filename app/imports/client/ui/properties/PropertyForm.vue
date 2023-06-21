@@ -189,7 +189,7 @@
             {{ suggestion.details.name }}
           </v-btn>
           <v-btn
-            :disabled="noChildInsert"
+            :disabled="noChildInsert || context.editPermission === false"
             tile
             plain
             data-id="insert-any-property-btn"
