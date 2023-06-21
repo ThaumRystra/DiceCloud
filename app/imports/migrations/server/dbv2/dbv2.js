@@ -33,11 +33,11 @@ Migrations.add({
 
 function migrateCollection(collection, migrateDoc) {
   const bulk = collection.rawCollection().initializeUnorderedBulkOp();
-  collection.find({}).forEach(doc => migrateDoc(bulk, doc));
+  collection.find({}).forEach(doc => migrateDoc(bulk, doc, collection));
   bulk.execute();
 }
 
-export function migratePropUp(bulk, prop) {
+export function migratePropUp(bulk, prop, collection) {
   let update;
   if (prop.type === 'slotFiller') {
     update = update || { $set: {} };
@@ -49,14 +49,25 @@ export function migratePropUp(bulk, prop) {
       update.$unset = { picture: 1 };
     }
   }
+
+  // Don't look for slot fillers
+  if (prop.slotType === 'slotFiller') {
+    update = update || { $set: {} };
+    update.$set.slotType = 'folder'
+  }
+
   // If there are tags, copy them to libraryTags and set findable flags
-  if (Array.isArray(prop.tags) && prop.tags.length) {
+  if (Array.isArray(prop.tags) && prop.tags.length && collection === LibraryNodes) {
     update = update || { $set: {} };
     update.$set.libraryTags = prop.tags;
     update.$set.fillSlots = true;
     update.$set.searchable = true;
   }
+
+  // Replace dollar sign with tilde in calculated fields
   update = dollarSignToTilde(prop, update);
+
+  // Add the update to the bulk op
   if (update) {
     bulk.find({ _id: prop._id }).updateOne(update);
   }

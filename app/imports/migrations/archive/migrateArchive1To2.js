@@ -11,6 +11,10 @@ export default function migrate1To2(archive) {
       if (prop.type === 'slotFiller') {
         prop.type = 'folder';
       }
+      // Migrate slot filler slot type to folders
+      if (prop.slotType === 'slotFiller') {
+        prop.slotType = 'folder';
+      }
       // Get the schema
       const schema = CreatureProperties.simpleSchema(prop);
       // Replace dollar signs in calculations with tildes
