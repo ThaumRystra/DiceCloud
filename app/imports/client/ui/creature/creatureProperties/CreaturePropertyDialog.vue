@@ -9,6 +9,7 @@
         style="flex-grow: 0;"
         @duplicate="duplicate"
         @remove="remove"
+        @copy-to-library="copyToLibrary"
         @toggle-editing="editing = !editing"
       />
     </template>
@@ -92,6 +93,7 @@ import insertProperty from '/imports/api/creature/creatureProperties/methods/ins
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
+import copyPropertyToLibrary from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary.js';
 
 export default {
   components: {
@@ -218,6 +220,37 @@ export default {
           _id,
           startInEditTab: this.editing,
         },
+      });
+    },
+    copyToLibrary() {
+      const thisId = this._id;
+      this.$store.commit('pushDialogStack', {
+        component: 'move-library-node-dialog',
+        elementId: 'property-toolbar-menu-button',
+        data: {
+          action: 'Copy',
+        },
+        callback(parentId){
+          if (!parentId) return;
+          copyPropertyToLibrary.call({
+            propId: thisId,
+            parentRef: {
+              collection: 'libraryNodes',
+              id: parentId
+            },
+          }, (error) => {
+            if (error) {
+              console.error(error);
+              snackbar({
+                text: error.reason || error.message || error.toString(),
+              });
+            } else {
+              snackbar({
+                text: 'Copied successfully',
+              });
+            }
+          });
+        }
       });
     },
     addProperty({elementId, suggestedType}){

@@ -1,4 +1,5 @@
 import '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
+import '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary.js';
 import '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import '/imports/api/creature/creatureProperties/methods/duplicateProperty.js';
 import '/imports/api/creature/creatureProperties/methods/equipItem.js';

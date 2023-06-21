@@ -105,6 +105,20 @@
               </v-list-item-action>
             </v-list-item>
             <v-list-item
+              v-if="$listeners && $listeners['copy-to-library'] && userPaid"
+              :disabled="context.editPermission === false"
+              @click="$emit('copy-to-library')"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  Copy to library
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>mdi-content-duplicate</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item
               v-if="$listeners && $listeners.remove"
               :disabled="context.editPermission === false"
               @click="$emit('remove')"
@@ -160,14 +174,13 @@
 import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
 
 export default {
   components: {
     PropertyIcon,
-    ColorPicker,
   },
   inject: {
     context: { default: {} }
@@ -204,6 +217,16 @@ export default {
     docsPath() {
       const propDef = PROPERTIES[this.model.type];
       return propDef && propDef.docsPath;
+    },
+  },
+  meteor: {
+    userPaid() {
+      try {
+        assertUserHasPaidBenefits(Meteor.user())
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
   },
   methods: {
