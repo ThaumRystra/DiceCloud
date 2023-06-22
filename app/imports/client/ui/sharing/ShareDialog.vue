@@ -27,7 +27,7 @@
         v-if="model.public && docRef.collection === 'libraries'"
         readonly
         label="Link"
-        :value="'https://beta.dicecloud.com' + $router.resolve({
+        :value="'https://dicecloud.com' + $router.resolve({
           name: 'singleLibrary',
           params: { id: model._id },
         }).href"

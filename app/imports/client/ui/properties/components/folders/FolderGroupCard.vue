@@ -17,7 +17,7 @@
         @click="$emit('click-property', {_id: prop._id})"
         @click-property="e => $emit('click-property', e)"
         @sub-click="e => $emit('sub-click', e)"
-        @remove="$emit('remove', prop._id)"
+        @remove="id => $emit('remove', id || prop._id)"
       />
     </v-card>
   </div>
@@ -49,6 +49,7 @@ export default {
             type: 'toggle',
             showUI: true,
             deactivatedByAncestor: { $ne: true },
+            deactivatedByToggle: { $ne: true },
           },
           {
             type: { $ne: 'toggle' },

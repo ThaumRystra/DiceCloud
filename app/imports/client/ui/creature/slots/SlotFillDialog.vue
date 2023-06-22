@@ -26,7 +26,7 @@
       :string="model.description"
     />
     <p>
-      {{ slotPropertyTypeName }} with tags:
+      {{ slotPropertyTypeName }} with library tags:
       <property-tags
         v-for="(tags, index) in tagsSearched.or"
         :key="index + 'tags'"
@@ -40,82 +40,97 @@
         prefix="NOT"
       />
     </p>
-    <v-expansion-panels
-      multiple
-      inset
-    >
-      <template v-for="libraryNode in libraryNodes">
-        <v-expansion-panel
-          v-if="showDisabled || !libraryNode._disabledBySlotFillerCondition"
-          :key="libraryNode._id"
-          :model="libraryNode"
-          :data-id="libraryNode._id"
-          :class="{disabled: isDisabled(libraryNode)}"
-        >
-          <v-expansion-panel-header>
-            <template #default="{ open }">
-              <v-layout
-                align-center
-                class="flex-grow-0 mr-2"
-              >
-                <v-checkbox
-                  v-if="libraryNode._disabledByAlreadyAdded"
-                  class="my-0 py-0"
-                  hide-details
-                  :input-value="true"
-                  disabled
-                />
-                <v-checkbox
-                  v-else
-                  v-model="selectedNodeIds"
-                  class="my-0 py-0"
-                  hide-details
-                  :disabled="isDisabled(libraryNode)"
-                  :value="libraryNode._id"
-                  @click.stop
-                />
-              </v-layout>
-              <v-layout column>
-                <v-layout align-center>
-                  <tree-node-view :model="libraryNode" />
-                  <div
-                    v-if="libraryNode._disabledBySlotFillerCondition"
-                    class="error--text text-no-wrap text-truncate"
-                  >
-                    {{ libraryNode.slotFillerCondition }}
+    <v-fade-transition>
+      <div
+        v-if="!$subReady.slotFillers"
+        class="fill-height layout justify-center align-center"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="64"
+        />
+      </div>
+      <v-expansion-panels
+        v-else
+        accordion
+        tile
+        multiple
+        hover
+      >
+        <template v-for="libraryNode in libraryNodes">
+          <v-expansion-panel
+            v-if="showDisabled || !libraryNode._disabledBySlotFillerCondition"
+            :key="libraryNode._id"
+            :model="libraryNode"
+            :data-id="libraryNode._id"
+            :class="{disabled: isDisabled(libraryNode)}"
+          >
+            <v-expansion-panel-header>
+              <template #default="{ open }">
+                <v-layout
+                  align-center
+                  class="flex-grow-0 mr-2"
+                >
+                  <v-checkbox
+                    v-if="libraryNode._disabledByAlreadyAdded"
+                    class="my-0 py-0"
+                    hide-details
+                    :input-value="true"
+                    disabled
+                  />
+                  <v-checkbox
+                    v-else
+                    v-model="selectedNodeIds"
+                    class="my-0 py-0"
+                    hide-details
+                    :disabled="isDisabled(libraryNode)"
+                    :value="libraryNode._id"
+                    @click.stop
+                  />
+                </v-layout>
+                <v-layout column>
+                  <v-layout align-center>
+                    <tree-node-view :model="libraryNode" />
+                    <div
+                      v-if="libraryNode._disabledBySlotFillerCondition"
+                      class="error--text text-no-wrap text-truncate"
+                    >
+                      {{ libraryNode._conditionError }}
+                    </div>
+                  </v-layout>
+                  <div class="text-caption text-no-wrap text-truncate">
+                    {{ libraryNames[libraryNode.ancestors[0].id ] }}
                   </div>
                 </v-layout>
-                <div class="text-caption text-no-wrap text-truncate">
-                  {{ libraryNames[libraryNode.ancestors[0].id ] }}
-                </div>
-              </v-layout>
-              <div
-                v-if="libraryNode.slotQuantityFilled !== undefined && libraryNode.slotQuantityFilled !== 1"
-                class="text-overline flex-grow-0 text-no-wrap"
-                :class="{
-                  'error--text': isDisabled(libraryNode) &&
-                    libraryNode._disabledByQuantityFilled
-                }"
-              >
-                {{ libraryNode.slotQuantityFilled }} slots
-              </div>
-              <template v-if="open">
-                <v-btn
-                  icon
-                  class="flex-grow-0"
-                  @click.stop="openPropertyDetails(libraryNode._id)"
+                <div
+                  v-if="libraryNode.slotQuantityFilled !== undefined && libraryNode.slotQuantityFilled !== 1"
+                  class="text-overline flex-grow-0 text-no-wrap"
+                  :class="{
+                    'error--text': isDisabled(libraryNode) &&
+                      libraryNode._disabledByQuantityFilled
+                  }"
                 >
-                  <v-icon>mdi-window-restore</v-icon>
-                </v-btn>
+                  {{ libraryNode.slotQuantityFilled }} slots
+                </div>
+                <template v-if="open">
+                  <v-btn
+                    icon
+                    class="flex-grow-0"
+                    @click.stop="openPropertyDetails(libraryNode._id)"
+                  >
+                    <v-icon>mdi-window-restore</v-icon>
+                  </v-btn>
+                </template>
               </template>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <library-node-expansion-content :model="libraryNode" />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </template>
-    </v-expansion-panels>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <library-node-expansion-content :model="libraryNode" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </template>
+      </v-expansion-panels>
+    </v-fade-transition>
     <v-layout
       v-if="(!$subReady.slotFillers && !searchValue) || currentLimit < countAll"
       column
@@ -129,6 +144,39 @@
         @click="loadMore"
       >
         Load More
+      </v-btn>
+    </v-layout>
+    <v-layout
+      align-center
+      justify-center
+      class="text-caption text--disabled mt-8 mb-2"
+    >
+      Can't find what you're looking for?
+    </v-layout>
+    <v-layout
+      align-center
+      justify-center
+      wrap
+      class="mx-4 mb-4"
+    >
+      <v-btn
+        v-if="!dummySlot"
+        text
+        data-id="library-browser-button"
+        :disabled="!model"
+        @click="openLibraryBrowser"
+      >
+        Browse community libraries
+      </v-btn>
+      <v-btn
+        v-if="!dummySlot"
+        text
+        color="accent"
+        :disabled="!model"
+        data-id="custom-button"
+        @click="insertCustomFiller"
+      >
+        Create custom filler
       </v-btn>
     </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
@@ -188,13 +236,14 @@ import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeVi
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue'
 import resolve, { toString } from '/imports/parser/resolve.js';
 import { prettifyParseError, parse } from '/imports/parser/parser.js';
-// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
-import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import { clone } from 'lodash';
+import getDefaultSlotFiller from '/imports/api/library/methods/getDefaultSlotFiller.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 
 export default {
   components: {
@@ -225,6 +274,7 @@ export default {
       searchValue: undefined,
       showDisabled: false,
       disabledNodeCount: undefined,
+      autoSelectRan: false,
     }
   },
   reactiveProvide: {
@@ -270,6 +320,12 @@ export default {
         },
       });
     },
+    openLibraryBrowser() {
+      this.$store.commit('pushDialogStack', {
+        component: 'library-browser-dialog',
+        elementId: 'library-browser-button',
+      });
+    },
     isDisabled(node) {
       return node._disabledBySlotFillerCondition ||
         node._disabledByAlreadyAdded ||
@@ -278,11 +334,54 @@ export default {
           !this.selectedNodeIds.includes(node._id)
         )
     },
+    insertCustomFiller() {
+      if (!this.model) return;
+      const prop = getDefaultSlotFiller(this.model);
+      const parentRef = { id: this.slotId, collection: 'creatureProperties' };
+      const order = this.model.order + 0.5;
+      const $store = this.$store;
+      $store.commit('pushDialogStack', {
+        component: 'insert-property-dialog',
+        elementId: 'custom-button',
+        data: {
+          parentDoc: this.model,
+          creatureId: this.creatureId,
+          prop,
+          noBackdropClose: true,
+        },
+        callback(result) {
+          if (!result) return;
+          if (Array.isArray(result)){
+            let nodeIds = result;
+            insertPropertyFromLibraryNode.call({ nodeIds, parentRef, order });
+            setTimeout(() => $store.dispatch('popDialogStack'), 200);
+          } else if (typeof result === 'object') {
+            let creatureProperty = result;
+            creatureProperty.order = order;
+            insertProperty.call({ creatureProperty, parentRef });
+            setTimeout(() => $store.dispatch('popDialogStack'), 200);
+
+            /* Maybe replace the dialog with the edit version? 
+             * It's a bit jank, but a common use case
+            $store.commit('replaceDialog', {
+              component: 'creature-property-dialog',
+              //elementId: `?`,
+              data: {
+                _id,
+                startInEditTab: true,
+              },
+            });
+            */
+           
+          }
+        }
+      });
+    },
   },
   meteor: {
     $subscribe: {
       'slotFillers'() {
-        return [this.slotId, this.searchValue || undefined]
+        return [this.slotId || this.dummySlot?._id, this.searchValue || undefined, !!this.dummySlot]
       },
     },
     searchLoading() {
@@ -308,6 +407,11 @@ export default {
     },
     countAll() {
       return this._subs['slotFillers'].data('countAll');
+    },
+    libraryNodeFilter() {
+      const filterString = this._subs['slotFillers'].data('libraryNodeFilter');
+      if (!filterString) return;
+      return EJSON.parse(filterString);
     },
     alreadyAdded() {
       let added = new Set();
@@ -354,8 +458,9 @@ export default {
       return names;
     },
     libraryNodes() {
-      let filter = getSlotFillFilter({ slot: this.model });
-      let nodes = LibraryNodes.find(filter, {
+      if (!this.libraryNodeFilter) return [];
+      if (!this.$subReady.slotFillers) return [];
+      let nodes = LibraryNodes.find(this.libraryNodeFilter, {
         sort: { name: 1, order: 1 }
       }).fetch();
       let disabledNodeCount = 0;
@@ -368,32 +473,50 @@ export default {
             const { result: resultNode } = resolve('reduce', parseNode, this.variables);
             if (resultNode?.parseType === 'constant') {
               if (!resultNode.value) {
+                node._disabled = true;
                 node._disabledBySlotFillerCondition = true;
+                node._conditionError = node.slotFillerConditionNote || node.slotFillerCondition;
                 disabledNodeCount += 1;
               }
             } else {
+              node._disabled = true;
               node._disabledBySlotFillerCondition = true;
-              node._conditionError = toString(resultNode);
+              node._conditionError = node.slotFillerConditionNote || toString(resultNode);
               disabledNodeCount += 1;
             }
           } catch (e) {
             console.warn(e);
             let error = prettifyParseError(e);
+            node._disabled = true;
             node._disabledBySlotFillerCondition = true;
-            node._conditionError = error;
+            node._conditionError = 'Condition error: '+ error;
             disabledNodeCount += 1;
           }
         }
-        let quantityToFill = node.type === 'slotFiller' ? node.slotQuantityFilled : 1;
+        let quantityToFill = typeof node.slotQuantityFilled == 'number' ? node.slotQuantityFilled : 1;
         if (
           quantityToFill > this.spaceLeft
         ) {
+          node._disabled = true;
           node._disabledByQuantityFilled = true;
         }
         if (this.alreadyAdded.has(node._id)) {
+          node._disabled = true;
           node._disabledByAlreadyAdded = true;
         }
       });
+      // Only run the auto-select once
+      if (!this.autoSelectRan) {
+        this.autoSelectRan = true;
+        // If we have exactly one active node and no selected nodes, pre-select it
+        if (
+          nodes.length === 1
+          && !nodes[0]._disabled
+          && !this.selectedNodeIds?.length
+        ) {
+          this.selectedNodeIds = [nodes[0]._id];
+        }
+      }
       this.disabledNodeCount = disabledNodeCount;
       return nodes;
     },

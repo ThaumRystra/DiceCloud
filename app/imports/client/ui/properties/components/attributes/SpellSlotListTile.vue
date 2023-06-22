@@ -3,7 +3,6 @@
     :key="model._id"
     class="spell-slot-list-tile"
     v-bind="$attrs"
-    :disabled="disabled"
     v-on="hasClickListener ? {click} : {}"
   >
     <v-list-item-content>
@@ -27,17 +26,26 @@
           v-else
           class="layout align-center slot-bubbles"
         >
-          <v-icon
+          <smart-btn
             v-for="i in model.total"
             :key="i"
-            :disabled="disabled"
+            :disabled="disabled(i)"
+            icon
+            single-click
+            @click="ack => damageProperty({
+              type: 'increment',
+              value: i <= model.value ? 1 : -1,
+              ack
+            })"
           >
-            {{
-              i > model.value ?
-                'mdi-radiobox-blank' :
-                'mdi-radiobox-marked'
-            }}
-          </v-icon>
+            <v-icon>
+              {{
+                i > model.value ?
+                  'mdi-radiobox-blank' :
+                  'mdi-radiobox-marked'
+              }}
+            </v-icon>
+          </smart-btn>
         </div>
       </v-list-item-title>
       <v-list-item-title v-else>
@@ -53,15 +61,20 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+
 export default {
+  inject: {
+    context: { default: {} }
+  },
   props: {
     model: {
       type: Object,
       required: true,
     },
     dark: Boolean,
-    disabled: Boolean,
   },
   computed: {
     hasClickListener() {
@@ -72,6 +85,27 @@ export default {
     signed: numberToSignedString,
     click(e) {
       this.$emit('click', e);
+    },
+    disabled(i) {
+      if (!this.context.editPermission) return true;
+      // Use these if only the next filled or empty slot can be clicked
+      // if (this.model.value ===  i) return false;
+      // if (this.model.value === i - 1) return false;
+      // return true
+      return false;
+    },
+    damageProperty({type, value, ack}) {
+      damageProperty.call({
+        _id: this.model._id,
+        operation: type,
+        value: value
+      }, error => {
+        if (ack) ack(error);
+        if (error) {
+          snackbar({ text: error.reason || error.message || error.toString() });
+          console.error(error);
+        }
+      });
     },
   },
 };

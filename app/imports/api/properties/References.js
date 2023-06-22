@@ -51,6 +51,10 @@ let ReferenceSchema = new SimpleSchema({
     type: Object,
     optional: true,
   },
+  'cache.library.id': {
+    type: String,
+    optional: true,
+  },
   'cache.library.name': {
     type: String,
     optional: true,

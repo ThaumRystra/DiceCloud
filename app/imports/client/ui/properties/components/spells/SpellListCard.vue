@@ -15,7 +15,7 @@
         v-if="preparingSpells || preparedError"
         :class="{'error--text' : preparedError}"
       >
-        {{ numPrepared }}/{{ model.maxPrepared.value }} spells prepared
+        {{ numPrepared }}/{{ model.maxPrepared && model.maxPrepared.value || 0 }} spells prepared
       </v-toolbar-title>
       <v-spacer />
       <v-menu

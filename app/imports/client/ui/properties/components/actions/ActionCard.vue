@@ -211,13 +211,13 @@ export default {
       doAction.call({
         actionId: this.model._id,
         scope: {
-          $attackAdvantage: advantage,
+          '~attackAdvantage': { value: advantage },
         }
       }, error => {
         this.doActionLoading = false;
         if (error) {
           console.error(error);
-          snackbar({ text: error.reason });
+          snackbar({ text: error.reason || error.message || error.toString() });
         }
       });
     },

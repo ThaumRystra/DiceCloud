@@ -46,6 +46,7 @@
             :_id="selectedNodeId"
             @removed="selectedNodeId = undefined"
             @duplicated="id => selectedNodeId = id"
+            @select-sub-property="clickNode"
           />
         </template>
       </tree-detail-layout>

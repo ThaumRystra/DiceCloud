@@ -5,6 +5,7 @@ import '/imports/server/rest/index.js';
 import '/imports/server/config/accountsEmailConfig.js';
 import '/imports/server/config/simpleSchemaDebug.js';
 import '/imports/server/config/SyncedCronConfig.js';
+import '/imports/server/config/redisCaching.js';
 import '/imports/server/publications/index.js';
 import '/imports/server/cron/deleteSoftRemovedDocuments.js';
 import '/imports/api/parenting/organizeMethods.js';

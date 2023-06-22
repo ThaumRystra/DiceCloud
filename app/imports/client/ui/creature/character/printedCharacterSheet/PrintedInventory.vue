@@ -152,6 +152,7 @@ export default {
           removed: { $ne: true },
           equipped: { $ne: true },
           deactivatedByAncestor: { $ne: true },
+          deactivatedByToggle: { $ne: true },
         }, {
           sort: { order: 1 },
         }).fetch();
@@ -168,6 +169,7 @@ export default {
         equipped: { $ne: true },
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
       }, {
         sort: { order: 1 },
       });

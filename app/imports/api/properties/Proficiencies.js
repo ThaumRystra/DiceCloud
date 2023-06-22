@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema.js';
 
 let ProficiencySchema = new SimpleSchema({
   name: {
@@ -24,7 +25,7 @@ let ProficiencySchema = new SimpleSchema({
     allowedValues: [0.49, 0.5, 1, 2],
     defaultValue: 1,
   },
-});
+}).extend(TagTargetingSchema);
 
 const ComputedOnlyProficiencySchema = new SimpleSchema({});
 

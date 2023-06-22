@@ -173,6 +173,13 @@ let ComputedOnlyAttributeSchema = createPropertySchema({
     optional: true,
     removeBeforeCompute: true,
   },
+  // Attributes with advantage grant it to all skills based on the attribute
+  advantage: {
+    type: SimpleSchema.Integer,
+    optional: true,
+    allowedValues: [-1, 0, 1],
+    removeBeforeCompute: true,
+  },
   // The computed creature constitution modifier for hit dice
   constitutionMod: {
     type: Number,

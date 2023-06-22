@@ -1,16 +1,27 @@
 <template lang="html">
   <div>
-    <component
-      :is="model.type"
-      :model="model"
-      class="property-viewer"
+    <v-progress-linear
+      v-if="!subsReady"
+      indeterminate
+      color="accent"
     />
-    <tree-node-list
-      v-if="$subReady.descendantLibraryNodes"
-      group="library-node-expansion"
-      :children="propertyChildren"
-      @selected="clickChild"
-    />
+    <v-expand-transition>
+      <div
+        v-if="subsReady"
+        class="pt-4"
+      >
+        <component
+          :is="model.type"
+          :model="model"
+          class="property-viewer"
+        />
+        <tree-node-list
+          group="library-node-expansion"
+          :children="propertyChildren"
+          @selected="clickChild"
+        />
+      </div>
+    </v-expand-transition>
   </div>
 </template>
 
@@ -30,6 +41,11 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  computed: {
+    subsReady() {
+      return this.$subReady.descendantLibraryNodes && this.$subReady.libraryNode;
+    }
   },
   methods: {
     clickChild(id){
@@ -57,7 +73,7 @@ export default {
         ancestorId: this.model._id
       });
     },
-  },
+  }
 }
 </script>
 

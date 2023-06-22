@@ -13,10 +13,10 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import nodesToTree from '/imports/api/parenting/nodesToTree.js'
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
+import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 
 export default {
   components: {
@@ -40,12 +40,16 @@ export default {
       type: String,
       default: 'creatureProperties'
     },
+    collection: {
+      type: String,
+      default: 'creatureProperties'
+    },
     expanded: Boolean,
   },
   meteor: {
     children() {
       const children = nodesToTree({
-        collection: CreatureProperties,
+        collection: getCollectionByName(this.collection),
         ancestorId: this.root.id,
         filter: this.filter,
         includeFilteredDocAncestors: true,
@@ -60,7 +64,7 @@ export default {
       reorderDoc.call({
         docRef: {
           id: doc._id,
-          collection: 'creatureProperties',
+          collection: this.collection,
         },
         order: newIndex,
       });
@@ -70,7 +74,7 @@ export default {
       if (parent) {
         parentRef = {
           id: parent._id,
-          collection: 'creatureProperties',
+          collection: this.collection,
         };
       } else {
         parentRef = this.root;
@@ -78,7 +82,7 @@ export default {
       organizeDoc.call({
         docRef: {
           id: doc._id,
-          collection: 'creatureProperties',
+          collection: this.collection,
         },
         parentRef,
         order: newIndex,

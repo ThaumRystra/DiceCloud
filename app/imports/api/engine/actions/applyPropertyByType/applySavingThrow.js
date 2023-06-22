@@ -8,6 +8,7 @@ import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
+  const originalTargets = actionContext.targets;
 
   let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
@@ -31,22 +32,22 @@ export default function applySavingThrow(node, actionContext) {
   // If there are no save targets, apply all children as if the save both
   // succeeeded and failed
   if (!saveTargets?.length) {
-    scope['$saveFailed'] = { value: true };
-    scope['$saveSucceeded'] = { value: true };
+    scope['~saveFailed'] = { value: true };
+    scope['~saveSucceeded'] = { value: true };
     applyNodeTriggers(node, 'after', actionContext);
     return node.children.forEach(child => applyProperty(child, actionContext));
   }
 
   // Each target makes the saving throw
   saveTargets.forEach(target => {
-    delete scope['$saveFailed'];
-    delete scope['$saveSucceeded'];
-    delete scope['$saveDiceRoll'];
-    delete scope['$saveRoll'];
+    delete scope['~saveFailed'];
+    delete scope['~saveSucceeded'];
+    delete scope['~saveDiceRoll'];
+    delete scope['~saveRoll'];
 
     const applyChildren = function () {
-      applyNodeTriggers(node, 'after', actionContext);
       actionContext.targets = [target]
+      applyNodeTriggers(node, 'after', actionContext);
       node.children.forEach(child => applyProperty(child, actionContext));
     };
 
@@ -90,14 +91,14 @@ export default function applySavingThrow(node, actionContext) {
       value = values[0];
       resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
     }
-    scope['$saveDiceRoll'] = { value };
+    scope['~saveDiceRoll'] = { value };
     const result = value + rollModifier || 0;
-    scope['$saveRoll'] = { value: result };
+    scope['~saveRoll'] = { value: result };
     const saveSuccess = result >= dc;
     if (saveSuccess) {
-      scope['$saveSucceeded'] = { value: true };
+      scope['~saveSucceeded'] = { value: true };
     } else {
-      scope['$saveFailed'] = { value: true };
+      scope['~saveFailed'] = { value: true };
     }
     if (!prop.silent) actionContext.addLog({
       name: saveSuccess ? 'Successful save' : 'Failed save',
@@ -106,4 +107,6 @@ export default function applySavingThrow(node, actionContext) {
     });
     return applyChildren();
   });
+  // reset the targets after the save to each child
+  actionContext.targets = originalTargets;
 }

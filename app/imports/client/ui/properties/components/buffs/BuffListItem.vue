@@ -10,7 +10,7 @@
     <v-list-item-action v-if="!model.hideRemoveButton">
       <v-btn
         icon
-        @click.stop="$emit('remove')"
+        @click.stop="$emit('remove', model.id)"
       >
         <v-icon>mdi-delete</v-icon>
       </v-btn>

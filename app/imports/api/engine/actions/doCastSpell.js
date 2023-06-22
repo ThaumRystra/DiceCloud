@@ -117,7 +117,8 @@ const doAction = new ValidatedMethod({
       }
     }
 
-    actionContext.scope['slotLevel'] = slotLevel;
+    actionContext.scope['slotLevel'] = { value: slotLevel };
+    actionContext.scope['~slotLevel'] = { value: slotLevel };
 
     // Do the action
     doActionWork({

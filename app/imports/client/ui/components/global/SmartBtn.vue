@@ -3,7 +3,7 @@
     v-bind="$attrs"
     :disabled="isDisabled"
     :loading="loading"
-    @click="click"
+    @click.stop.prevent="click"
   >
     <slot />
   </v-btn>
@@ -41,7 +41,7 @@ export default {
       } else if (Number.isFinite(this.context.debounceTime)){
         return this.context.debounceTime;
       } else {
-        return 750;
+        return 400;
       }
     },
   },
@@ -62,11 +62,12 @@ export default {
       this.$emit('click', this.acknowledgeChange);
     },
     clicks() {
+      if (!this.$listeners?.clicks) return;
       this.loading = true;
       this.$emit('clicks', this.timesClicked, this.acknowledgeChange);
       this.timesClicked = 0;
     },
-    acknowledgeChange(error){
+    acknowledgeChange(error) {      
       this.loading = false;
       if (error) {
         console.error(error)

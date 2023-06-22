@@ -2,14 +2,6 @@
   <div class="item-form">
     <div class="layout justify-space-around">
       <div>
-        <icon-picker
-          label="Icon"
-          :value="model.icon"
-          :error-messages="errors.icon"
-          @change="change('icon', ...arguments)"
-        />
-      </div>
-      <div>
         <smart-switch
           label="Equipped"
           :value="model.equipped"
@@ -24,11 +16,13 @@
         md="6"
       >
         <text-field
-          ref="focusFirst"
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
+          label="Quantity"
+          type="number"
+          min="0"
+          prepend-inner-icon="$vuetify.icons.abacus"
+          :value="model.quantity"
+          :error-messages="errors.quantity"
+          @change="change('quantity', ...arguments)"
         />
       </v-col>
       <v-col
@@ -76,79 +70,59 @@
           @change="change('weight', ...arguments)"
         />
       </v-col>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <text-field
-          label="Quantity"
-          type="number"
-          min="0"
-          prepend-inner-icon="$vuetify.icons.abacus"
-          :value="model.quantity"
-          :error-messages="errors.quantity"
-          @change="change('quantity', ...arguments)"
-        />
-      </v-col>
     </v-row>
 
     <inline-computation-field
       label="Description"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
+    <form-sections type="item">
       <form-section
-        v-if="$slots.children"
-        name="Children"
+        name="Behavior"
       >
-        <slot name="children" />
-      </form-section>
-
-      <form-section
-        name="Advanced"
-        standalone
-      >
-        <smart-combobox
-          label="Tags"
-          class="mr-2"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          :error-messages="errors.tags"
-          @change="change('tags', ...arguments)"
-        />
         <smart-switch
           label="Show increment button"
           :value="model.showIncrement"
           :error-messages="errors.showIncrement"
           @change="change('showIncrement', ...arguments)"
         />
-        <smart-switch
-          label="Requires attunement"
-          :value="model.requiresAttunement"
-          :error-messages="errors.requiresAttunement"
-          @change="change('requiresAttunement', ...arguments)"
-        />
-        <v-expand-transition>
-          <div
-            v-show="model.requiresAttunement"
-            style="padding-top: 0.1px;"
+      </form-section>
+      <form-section
+        name="Attunement"
+      >
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
           >
             <smart-switch
-              label="Attuned"
-              :value="model.attuned"
-              :error-messages="errors.attuned"
-              @change="change('attuned', ...arguments)"
+              label="Requires attunement"
+              :value="model.requiresAttunement"
+              :error-messages="errors.requiresAttunement"
+              @change="change('requiresAttunement', ...arguments)"
             />
-          </div>
-        </v-expand-transition>
+          </v-col>
+          <v-slide-x-transition>
+            <v-col
+              v-show="model.requiresAttunement"
+              cols="12"
+              md="6"
+            >
+              <smart-switch
+                label="Attuned"
+                :value="model.attuned"
+                :error-messages="errors.attuned"
+                @change="change('attuned', ...arguments)"
+              />
+            </v-col>
+          </v-slide-x-transition>
+        </v-row>
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>

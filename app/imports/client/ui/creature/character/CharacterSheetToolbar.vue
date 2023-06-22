@@ -29,10 +29,10 @@
             bottom
             left
             transition="slide-y-transition"
-            data-id="creature-menu"
           >
             <template #activator="{ on }">
               <v-btn
+                data-id="creature-menu"
                 icon
                 v-on="on"
               >
@@ -40,6 +40,35 @@
               </v-btn>
             </template>
             <v-list>
+              <v-list-item
+                v-if="!isOwner && ownerName"
+                two-line
+                disabled
+              >
+                <v-list-item-avatar>
+                  <v-icon>
+                    mdi-account
+                  </v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ ownerName }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Sheet owner
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item
+                v-if="!isOwner"
+                @click="unshareWithMe"
+              >
+                <v-list-item-title>
+                  <v-icon left>
+                    mdi-cancel
+                  </v-icon> Unshare with me
+                </v-list-item-title>
+              </v-list-item>
               <v-list-item :to="printUrl">
                 <v-list-item-title>
                   <v-icon left>
@@ -47,37 +76,31 @@
                   </v-icon> Print
                 </v-list-item-title>
               </v-list-item>
-              <template v-if="editPermission">
-                <v-list-item @click="deleteCharacter">
-                  <v-list-item-title>
-                    <v-icon left>
-                      mdi-delete
-                    </v-icon> Delete
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="showCharacterForm">
-                  <v-list-item-title>
-                    <v-icon left>
-                      mdi-pencil
-                    </v-icon> Edit details
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="showShareDialog">
-                  <v-list-item-title>
-                    <v-icon left>
-                      mdi-share-variant
-                    </v-icon> Sharing
-                  </v-list-item-title>
-                </v-list-item>
-              </template>
+              <v-list-item @click="showCharacterForm">
+                <v-list-item-title>
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon> Edit details
+                </v-list-item-title>
+              </v-list-item>
               <v-list-item
-                v-else
-                @click="unshareWithMe"
+                :disabled="!isOwner"
+                @click="showShareDialog"
+              >
+                <v-list-item-title>
+                  <v-icon left>
+                    mdi-share-variant
+                  </v-icon> Sharing
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                :disabled="!isOwner"
+                @click="deleteCharacter"
               >
                 <v-list-item-title>
                   <v-icon left>
                     mdi-delete
-                  </v-icon> Unshare with me
+                  </v-icon> Delete
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -265,6 +288,15 @@ export default {
       } catch (e) {
         return false;
       }
+    },
+    isOwner() {
+      if (!this.creature) return;
+      return Meteor.userId() === this.creature.owner;
+    },
+    ownerName() {
+      if (!this.creature) return;
+      const username = Meteor.users.findOne(this.creature.owner)?.username;
+      return username;
     },
   },
 }

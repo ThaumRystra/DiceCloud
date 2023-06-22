@@ -29,6 +29,16 @@ let LibrarySchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.summary,
   },
+  showInMarket: {
+    index: 1,
+    type: Boolean,
+    optional: true,
+  },
+  subscriberCount: {
+    index: 1,
+    type: Number,
+    optional: true,
+  },
 });
 
 LibrarySchema.extend(SharingSchema);
@@ -104,6 +114,29 @@ const updateLibraryDescription = new ValidatedMethod({
   },
 });
 
+const updateLibraryShowInMarket = new ValidatedMethod({
+  name: 'libraries.updateShowInMarket',
+  validate: new SimpleSchema({
+    _id: {
+      type: String,
+      regEx: SimpleSchema.RegEx.id
+    },
+    value: {
+      type: Boolean,
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  run({ _id, value }) {
+    let library = Libraries.findOne(_id);
+    assertEditPermission(library, this.userId);
+    Libraries.update(_id, { $set: { showInMarket: value } });
+  },
+});
+
 const removeLibrary = new ValidatedMethod({
   name: 'libraries.remove',
   validate: new SimpleSchema({
@@ -130,4 +163,4 @@ export function removeLibaryWork(libraryId) {
   LibraryNodes.remove({ 'ancestors.id': libraryId });
 }
 
-export { LibrarySchema, insertLibrary, updateLibraryName, updateLibraryDescription, removeLibrary };
+export { LibrarySchema, insertLibrary, updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary };

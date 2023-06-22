@@ -14,15 +14,19 @@ const LIBRARY_NODE_TREE_FIELDS = {
   order: 1,
   parent: 1,
   ancestors: 1,
-  tags: 1,
-  slotFillerCondition: 1,
   removed: 1,
   removedAt: 1,
   // Actions
   actionType: 1,
   // SlotFillers
+  libraryTags: 1,
   slotQuantityFilled: 1,
   slotFillerType: 1,
+  slotFillerConditionNote: 1,
+  slotFillerCondition: 1,
+  fillSlots: 1,
+  searchable: 1,
+  slotFillImage: 1,
   // Effect
   operation: 1,
   targetTags: 1,
@@ -78,7 +82,14 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
         }, {
           sort: { name: 1 }
         });
-        return [libraryCollectionCursor, libraryCursor];
+        return [
+          libraryCollectionCursor,
+          libraryCursor,
+          Meteor.users.find(
+            libraryCollection.owner,
+            { fields: { username: 1 } }
+          ),
+        ];
       });
     });
   })
@@ -137,6 +148,32 @@ Meteor.publish('libraries', function () {
   });
 });
 
+Meteor.publish('browseLibraries', function () {
+  if (!this.userId) return [];
+  return [
+    Libraries.find({
+      showInMarket: true,
+      public: true,
+    }, {
+      sort: {
+        subscriberCount: 1,
+        name: 1,
+      },
+      limit: 500,
+    }),
+    LibraryCollections.find({
+      showInMarket: true,
+      public: true,
+    }, {
+      sort: {
+        subscriberCount: 1,
+        name: 1
+      },
+      limit: 500,
+    }),
+  ];
+});
+
 Meteor.publish('library', function (libraryId) {
   if (!libraryId) return [];
   libraryIdSchema.validate({ libraryId });
@@ -147,9 +184,15 @@ Meteor.publish('library', function (libraryId) {
     catch (e) {
       return this.error(e);
     }
-    return Libraries.find({
-      _id: libraryId,
-    });
+    return [
+      Libraries.find({
+        _id: libraryId,
+      }),
+      Meteor.users.find(
+        library.owner,
+        { fields: { username: 1 } }
+      ),
+    ];
   });
 });
 

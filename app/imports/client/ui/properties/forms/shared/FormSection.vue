@@ -4,7 +4,7 @@
       <v-expansion-panel-header>
         {{ name }}
       </v-expansion-panel-header>
-      <v-expansion-panel-content class="pt-2">
+      <v-expansion-panel-content class="pt-4">
         <slot />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -13,7 +13,7 @@
     <v-expansion-panel-header>
       {{ name }}
     </v-expansion-panel-header>
-    <v-expansion-panel-content class="pt-2">
+    <v-expansion-panel-content class="pt-4">
       <slot />
     </v-expansion-panel-content>
   </v-expansion-panel>

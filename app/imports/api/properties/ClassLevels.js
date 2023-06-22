@@ -26,12 +26,6 @@ const ClassLevelSchema = createPropertySchema({
     defaultValue: 1,
     max: STORAGE_LIMITS.levelMax,
   },
-  // Filters out of UI if condition isn't met, but isn't otherwise enforced
-  slotFillerCondition: {
-    type: String,
-    optional: true,
-    max: STORAGE_LIMITS.calculation,
-  },
 });
 
 const ComputedOnlyClassLevelSchema = createPropertySchema({

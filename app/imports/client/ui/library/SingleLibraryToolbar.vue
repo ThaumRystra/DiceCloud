@@ -10,7 +10,7 @@
     <v-app-bar-nav-icon @click="toggleDrawer" />
     <v-btn
       icon
-      @click="$router.push('/library')"
+      @click="back"
     >
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
@@ -34,11 +34,20 @@
     >
       <v-icon>mdi-cog</v-icon>
     </v-btn>
+    <v-spacer slot="extension" />
+    <div
+      v-if="library && library.subscriberCount"
+      slot="extension"
+      class="mx-4 text--disabled"
+    >
+      {{ formatNumber(library.subscriberCount) }} subscribers
+    </div>
   </v-app-bar>
 </template>
 
 <script lang="js">
 import Libraries from '/imports/api/library/Libraries.js';
+import formatter from '/imports/client/ui/utility/numberFormatter.js';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { mapMutations } from 'vuex';
 
@@ -87,6 +96,9 @@ export default {
     ...mapMutations([
       'toggleDrawer',
     ]),
+    formatNumber(num) {
+      return formatter.format(num);
+    },
     subscribe(value) {
       this.loading = true;
       Meteor.users.subscribeToLibrary.call({
@@ -102,6 +114,9 @@ export default {
         elementId: 'library-edit-button',
         data: { _id: this.$route.params.id },
       });
+    },
+    back() {
+      return window.history.length > 2 ? this.$router.back() : this.$router.push('/library');
     },
   },
 }

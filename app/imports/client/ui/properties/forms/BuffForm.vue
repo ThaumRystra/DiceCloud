@@ -1,16 +1,9 @@
 <template lang="html">
   <div class="buff-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
     <inline-computation-field
       label="Description"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
@@ -25,18 +18,18 @@
         $emit('change', {path: ['duration', ...path], value, ack})"
     />
     -->
-    <v-expand-transition>
-      <smart-select
-        v-if="!model.applied"
-        label="Target"
-        :items="targetOptions"
-        :value="model.target"
-        :error-messages="errors.target"
-        :menu-props="{auto: true, lazy: true}"
-        @change="change('target', ...arguments)"
-      />
-    </v-expand-transition>
-    <form-sections>
+    <smart-toggle
+      v-if="!model.applied"
+      label="Target creature"
+      :value="model.target"
+      :options="[
+        {name: 'Action Target', value: 'target'},
+        {name: 'Self', value: 'self'},
+      ]"
+      :error-messages="errors.target"
+      @change="change('target', ...arguments)"
+    />
+    <form-sections type="buff">
       <form-section
         v-if="$slots.children"
         name="Children"
@@ -44,7 +37,7 @@
       >
         <slot name="children" />
       </form-section>
-      <form-section name="Advanced">
+      <form-section name="Behavior">
         <v-row dense>
           <v-col
             cols="12"
@@ -64,18 +57,6 @@
             md="4"
           >
             <smart-switch
-              label="Don't show in log"
-              :value="model.silent"
-              :error-messages="errors.silent"
-              @change="change('silent', ...arguments)"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
               label="Don't freeze variables"
               :value="model.skipCrystalization"
               :error-messages="errors.skipCrystalization"
@@ -83,16 +64,16 @@
             />
           </v-col>
         </v-row>
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
+      </form-section>
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
         />
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
@@ -102,19 +83,6 @@ import propertyFormMixin from '/imports/client/ui/properties/forms/shared/proper
 
 export default {
   mixins: [propertyFormMixin],
-  data() {
-    return {
-      targetOptions: [
-        {
-          text: 'Self',
-          value: 'self',
-        }, {
-          text: 'Target',
-          value: 'target',
-        },
-      ],
-    }
-  },
 }
 </script>
 

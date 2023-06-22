@@ -6,18 +6,18 @@
     v-bind="cols"
     class="mb-3"
   >
-    <v-sheet
-      outlined
-      class="pa-2 layout column align-start fill-height"
+    <fieldset
+      :class="theme.isDark? 'theme--dark' :'theme--light'"
+      class="rounded v-sheet--outlined pa-2 layout column align-start fill-height"
       @click="$emit('click', $event)"
     >
-      <v-sheet
+      <legend
         v-if="name"
         class="text-caption px-1 name"
-        style="margin-top: -18px;"
+        style="line-height: 0;"
       >
         {{ name }}
-      </v-sheet>
+      </legend>
       <div
         class="flex-grow-1 d-flex align-center flex-wrap"
         style="width: 100%;"
@@ -49,12 +49,12 @@
           </slot>
         </div>
         <div
-          v-if="calculation && calculation.effects"
+          v-if="calculation && (calculation.effects || calculation.proficiencies)"
           class="flex-grow-1"
           style="max-width: 100%;"
         >
           <inline-effect
-            v-if="typeof calculation.value === 'number'"
+            v-if="typeof calculation.value === 'number' && calculation.baseValue !== 0"
             hide-breadcrumbs
             :model="{
               name: 'Base value',
@@ -70,19 +70,36 @@
             :model="effect"
             @click="clickEffect(effect._id)"
           />
+          <inline-proficiency
+            v-for="proficiency in calculation.proficiencies"
+            :key="proficiency._id"
+            :data-id="proficiency._id"
+            :model="proficiency"
+            :proficiency-bonus="calculation.proficiencyBonus"
+            @click="clickEffect(proficiency._id)"
+          />
         </div>
       </div>
-    </v-sheet>
+    </fieldset>
   </v-col>
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import InlineEffect from '/imports/client/ui/properties/components/effects/InlineEffect.vue';
+import InlineProficiency from '/imports/client/ui/properties/components/proficiencies/InlineProficiency.vue';
 
 export default {
   components: {
     InlineEffect,
+    InlineProficiency,
+  },
+  inject: {
+    theme: {
+      default: {
+        isDark: false,
+      },
+    },
   },
   props: {
     name: {

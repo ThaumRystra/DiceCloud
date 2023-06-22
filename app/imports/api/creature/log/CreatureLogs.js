@@ -7,8 +7,9 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { parse, prettifyParseError } from '/imports/parser/parser.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
-const PER_CREATURE_LOG_LIMIT = 100;
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+
+const PER_CREATURE_LOG_LIMIT = 100;
 
 if (Meteor.isServer) {
   var sendWebhookAsCreature = require('/imports/server/discord/sendWebhook.js').sendWebhookAsCreature;
@@ -70,10 +71,21 @@ function logToMessageData(log) {
   let embed = {
     fields: [],
   };
-  log.content.forEach(field => {
+  log.content.forEach((field, index) => {
+    // Empty character for blank names
     if (!field.name) field.name = '\u200b';
     if (!field.value) field.value = '\u200b';
-    embed.fields.push(field);
+    // Enforce Discord field character limits
+    if (field.name?.length > 256) {
+      field.name = field.name.substring(0, 255);
+    }
+    if (field.value?.length > 1024) {
+      field.value = field.value.substring(0, 1024 - 3) + '...';
+    }
+    // Enforce Discord 25 field limit
+    if (index < 25) {
+      embed.fields.push(field);
+    }
   });
   return { embeds: [embed] };
 }
@@ -122,7 +134,15 @@ export function insertCreatureLogWork({ log, creature, method }) {
     log = { content: [{ value: log }] };
   }
   if (!log.content?.length) return;
+
+  // Truncate the string lengths to fit the log content schema
+  log.content.forEach((logItem) => {
+    if (logItem.value?.length > STORAGE_LIMITS.summary) {
+      logItem.value = logItem.value.substring(0, STORAGE_LIMITS.summary - 3) + '...';
+    }
+  });
   log.date = new Date();
+
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer) {

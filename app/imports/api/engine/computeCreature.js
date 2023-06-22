@@ -4,7 +4,7 @@ import writeAlteredProperties from './computation/writeComputation/writeAlteredP
 import writeScope from './computation/writeComputation/writeScope.js';
 import writeErrors from './computation/writeComputation/writeErrors.js';
 
-export default function computeCreature(creatureId){
+export default function computeCreature(creatureId) {
   if (Meteor.isClient) return;
   // console.log('compute ' + creatureId);
   const computation = buildCreatureComputation(creatureId);
@@ -16,7 +16,7 @@ function computeComputation(computation, creatureId) {
     computeCreatureComputation(computation);
     writeAlteredProperties(computation);
     writeScope(creatureId, computation);
-  } catch (e){
+  } catch (e) {
     const errorText = e.reason || e.message || e.toString();
     computation.errors.push({
       type: 'crash',
@@ -32,6 +32,19 @@ function computeComputation(computation, creatureId) {
     console.error(logError);
     throw e;
   } finally {
+    checkPropertyCount(computation)
     writeErrors(creatureId, computation.errors);
   }
+}
+
+const MAX_PROPS = 1000;
+function checkPropertyCount(computation) {
+  const count = computation.props.length;
+  if (count <= MAX_PROPS) return;
+  computation.errors.push({
+    type: 'warning',
+    details: {
+      error: `This character sheet has too many properties and may perform poorly ( ${count} / ${MAX_PROPS} )`
+    },
+  });
 }

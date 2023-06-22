@@ -10,6 +10,7 @@ import SmartBtn from '/imports/client/ui/components/global/SmartBtn.vue';
 import SmartCombobox from '/imports/client/ui/components/global/SmartCombobox.vue';
 import SmartCheckbox from '/imports/client/ui/components/global/SmartCheckbox.vue';
 import SmartSwitch from '/imports/client/ui/components/global/SmartSwitch.vue';
+import SmartToggle from '/imports/client/ui/components/global/SmartToggle.vue';
 import SvgIcon from '/imports/client/ui/components/global/SvgIcon.vue';
 import SmartSlider from '/imports/client/ui/components/global/SmartSlider.vue';
 
@@ -24,4 +25,5 @@ Vue.component('SmartCombobox', SmartCombobox);
 Vue.component('SmartCheckbox', SmartCheckbox);
 Vue.component('SmartSlider', SmartSlider);
 Vue.component('SmartSwitch', SmartSwitch);
+Vue.component('SmartToggle', SmartToggle);
 Vue.component('SvgIcon', SvgIcon);

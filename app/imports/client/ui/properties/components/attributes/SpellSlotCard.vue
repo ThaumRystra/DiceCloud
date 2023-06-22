@@ -65,7 +65,7 @@ export default {
             slotId,
             ritual,
             scope: {
-              $attackAdvantage: advantage,
+              '~attackAdvantage': { value: advantage },
             },
           }, error => {
             if (!error) return;

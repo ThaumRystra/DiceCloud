@@ -9,7 +9,10 @@
         v-if="showValue"
         #value
       >
-        {{ model.value }}
+        {{ displayedValue }}
+      </template>
+      <template #prepend>
+        <slot name="prepend" />
       </template>
     </text-field>
     <calculation-error-list :errors="errorList" />
@@ -34,13 +37,21 @@ export default {
   },
   computed: {
     showValue() {
-      const value = this.model.value;
+      let value = this.displayedValue;
       if (
         this.hideValue || 
         (value === undefined || value === null) ||
         value == this.model.calculation
       ) return false;
       return true;
+    },
+    displayedValue() {
+      let value = this.model.value;
+      // Use the base value instead if the calculation has it, because effects can modify the value
+      if (this.model.baseValue !== undefined) {
+        value = this.model.baseValue;
+      }
+      return value;
     },
     errorList(){
       if (this.model.parseError){

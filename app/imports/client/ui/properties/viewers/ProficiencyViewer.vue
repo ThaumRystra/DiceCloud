@@ -14,7 +14,12 @@
           {{ proficiencyText }}
         </div>
       </property-field>
+      <property-target-tags
+        v-if="model.targetByTags"
+        :model="model"
+      />
       <property-field
+        v-else
         name="Stats"
         :value="model.stats && model.stats.join(', ')"
         mono
@@ -26,10 +31,12 @@
 <script lang="js">
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
+import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
 
 export default {
   components: {
     ProficiencyIcon,
+    PropertyTargetTags,
   },
   mixins: [propertyViewerMixin],
   computed: {
