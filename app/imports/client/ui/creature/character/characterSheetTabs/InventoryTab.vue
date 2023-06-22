@@ -155,6 +155,8 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
+        },
+        'parent.id': {
           $nin: this.folderIds,
         },
         type: 'container',
@@ -179,7 +181,10 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
-          $nin: [...this.containerIds, ...this.folderIds],
+          $nin: this.containerIds,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
         },
         type: 'container',
         removed: { $ne: true },
@@ -192,7 +197,10 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
-          $nin: [...this.containerIds, ...this.folderIds],
+          $nin: this.containerIds,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
         },
         type: 'item',
         equipped: { $ne: true },

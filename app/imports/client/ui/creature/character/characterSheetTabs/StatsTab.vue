@@ -425,15 +425,11 @@ function walkDown(forest, callback){
 
 const propertyHandlers = {
   folder(prop) {
-    let skipChildren;
     let propPath = null;
-    if (prop.groupStats && prop.hideStatsGroup) {
-      skipChildren = true;
-    }
     if (prop.groupStats && prop.tab === 'stats') {
       propPath = ['folder', prop.location]
     }
-    return { skipChildren, propPath }
+    return { propPath }
   },
   attribute(prop) {
     if (
@@ -524,8 +520,20 @@ export default {
     properties() {
       const creature = this.creature;
       if (!creature) return;
+      const folderIds = CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'folder',
+        groupStats: true,
+        hideStatsGroup: true,
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, { fields: { _id: 1 } }).map(folder => folder._id);
+
       const filter = {
         'ancestors.id': this.creatureId,
+        'parent.id': {
+          $nin: folderIds,
+        },
         $or: [
           { inactive: { $ne: true } },
           { type: 'toggle' },
