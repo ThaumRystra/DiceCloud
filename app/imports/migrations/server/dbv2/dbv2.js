@@ -32,12 +32,15 @@ Migrations.add({
 });
 
 function migrateCollection(collection, migrateDoc) {
-  const bulk = collection.rawCollection().initializeUnorderedBulkOp();
-  collection.find({}).forEach(doc => migrateDoc(bulk, doc, collection));
-  bulk.execute();
+  collection.find({}).forEach((doc, index) => {
+    if (index % 1000 === 0) {
+      console.log(`Migrating document #${index}`);
+    }
+    migrateDoc(doc, collection)
+  });
 }
 
-export function migratePropUp(bulk, prop, collection) {
+export function migratePropUp(prop, collection) {
   let update;
   if (prop.type === 'slotFiller') {
     update = update || { $set: {} };
@@ -67,13 +70,17 @@ export function migratePropUp(bulk, prop, collection) {
   // Replace dollar sign with tilde in calculated fields
   update = dollarSignToTilde(prop, update);
 
-  // Add the update to the bulk op
+  // update the document, respecting the schema
   if (update) {
-    bulk.find({ _id: prop._id }).updateOne(update);
+    try {
+      collection.update({ _id: prop._id }, update, { selector: { type: prop.type } });
+    } catch (e) {
+      console.warn('Doc Migration failed: ', prop._id, e);
+    }
   }
 }
 
-export function migratePropDown(bulk, prop) {
+export function migratePropDown(prop, collection) {
   const update = {
     $unset: {
       slotFillImage: 1,
@@ -88,7 +95,13 @@ export function migratePropDown(bulk, prop) {
       tags: union(prop.libraryTags, prop.tags)
     }
   }
-  bulk.find({ _id: prop._id }).updateOne(update);
+  if (update) {
+    try {
+      collection.update({ _id: prop._id }, update, { selector: { type: prop.type } });
+    } catch (e) {
+      console.warn('Doc Migration failed: ', prop._id, e);
+    }
+  }
 }
 
 function countSubscribers() {
