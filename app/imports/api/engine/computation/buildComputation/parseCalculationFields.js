@@ -5,14 +5,14 @@ import { get, unset } from 'lodash';
 import errorNode from '/imports/parser/parseTree/error.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 
-export default function parseCalculationFields(prop, schemas){
+export default function parseCalculationFields(prop, schemas) {
   discoverInlineCalculationFields(prop, schemas);
   parseAllCalculationFields(prop, schemas);
 }
 
-function discoverInlineCalculationFields(prop, schemas){
+function discoverInlineCalculationFields(prop, schemas) {
   // For each key in the schema
-  schemas[prop.type].inlineCalculationFields().forEach( calcKey => {
+  schemas[prop.type]?.inlineCalculationFields?.()?.forEach(calcKey => {
     // That ends in .inlineCalculations
     applyFnToKey(prop, calcKey, (prop, key) => {
       const inlineCalcObj = get(prop, key);
@@ -22,7 +22,7 @@ function discoverInlineCalculationFields(prop, schemas){
       // Extract the calculations and store them on the property
       let string = inlineCalcObj.text;
       // If there is no text, delete the whole field
-      if (!string){
+      if (!string) {
         unset(prop, calcKey);
         return;
       }
@@ -32,7 +32,7 @@ function discoverInlineCalculationFields(prop, schemas){
 
       // Has the text, if it matches the existing hash, stop
       const inlineCalcHash = cyrb53(inlineCalcObj.text);
-      if (inlineCalcHash === inlineCalcObj.hash){
+      if (inlineCalcHash === inlineCalcObj.hash) {
         return;
       }
       inlineCalcObj.hash = inlineCalcHash;
@@ -41,7 +41,7 @@ function discoverInlineCalculationFields(prop, schemas){
       // It will be re set including the embedded calculation at the end of
       // the computation
       let matches = string.matchAll(INLINE_CALCULATION_REGEX);
-      for (let match of matches){
+      for (let match of matches) {
         let calculation = match[1];
         inlineCalcObj.inlineCalculations.push({
           calculation,
@@ -51,9 +51,9 @@ function discoverInlineCalculationFields(prop, schemas){
   });
 }
 
-function parseAllCalculationFields(prop, schemas){
+function parseAllCalculationFields(prop, schemas) {
   // For each computed key in the schema
-  schemas[prop.type].computedFields().forEach( calcKey => {
+  schemas[prop.type]?.computedFields?.()?.forEach(calcKey => {
     // Determine the level the calculation should compute down to
     let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel || 'reduce';
 
@@ -66,7 +66,7 @@ function parseAllCalculationFields(prop, schemas){
       const calcObj = get(prop, key);
       if (!calcObj) return;
       // Delete the whole calculation object if the calculation string isn't set
-      if (!calcObj.calculation){
+      if (!calcObj.calculation) {
         unset(prop, calcKey);
         return;
       }
@@ -84,10 +84,10 @@ function parseAllCalculationFields(prop, schemas){
   });
 }
 
-function parseCalculation(calcObj){
+function parseCalculation(calcObj) {
   const calcHash = cyrb53(calcObj.calculation);
   // If the cached parse calculation is equal to the calculation, skip
-  if (calcHash === calcObj.hash){
+  if (calcHash === calcObj.hash) {
     return;
   }
   calcObj.hash = calcHash;
@@ -100,6 +100,6 @@ function parseCalculation(calcObj){
       message: prettifyParseError(e),
     };
     calcObj.parseError = error;
-    calcObj.parseNode = errorNode.create({error});
+    calcObj.parseNode = errorNode.create({ error });
   }
 }
