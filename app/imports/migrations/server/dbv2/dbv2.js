@@ -70,10 +70,10 @@ export function migratePropUp(prop, collection) {
   // Replace dollar sign with tilde in calculated fields
   update = dollarSignToTilde(prop, update);
 
-  // update the document, respecting the schema
+  // update the document
   if (update) {
     try {
-      collection.update({ _id: prop._id }, update, { selector: { type: prop.type } });
+      collection.update({ _id: prop._id }, update, { bypassCollection2: true });
     } catch (e) {
       console.warn('Doc Migration failed: ', prop._id, e);
     }
@@ -97,7 +97,7 @@ export function migratePropDown(prop, collection) {
   }
   if (update) {
     try {
-      collection.update({ _id: prop._id }, update, { selector: { type: prop.type } });
+      collection.update({ _id: prop._id }, update, { bypassCollection2: true });
     } catch (e) {
       console.warn('Doc Migration failed: ', prop._id, e);
     }
@@ -130,7 +130,7 @@ function countSubscribers() {
   bulkLibCols.execute();
 }
 
-const dollarSignRegex = /(\W)\$(\w+)/gi;
+const dollarSignRegex = /(\W|^)\$(\w+)/gi;
 function dollarSignToTilde(prop, update) {
   computedSchemas[prop.type]?.inlineCalculationFields()?.forEach(calcKey => {
     applyFnToKey(prop, calcKey, (prop, key) => {

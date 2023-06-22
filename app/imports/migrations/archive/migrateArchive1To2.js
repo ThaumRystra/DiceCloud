@@ -2,7 +2,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 import { get } from 'lodash';
 
-const dollarSignRegex = /(\W)\$(\w+)/gi;
+const dollarSignRegex = /(\W|^)\$(\w+)/gi;
 
 export default function migrate1To2(archive) {
   archive.properties = archive.properties.map(prop => {
