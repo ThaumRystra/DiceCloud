@@ -125,7 +125,7 @@ function countSubscribers() {
   });
   bulkLib.execute();
 
-  const bulkLibCols = Libraries.rawCollection().initializeUnorderedBulkOp();
+  const bulkLibCols = LibraryCollections.rawCollection().initializeUnorderedBulkOp();
   LibraryCollections.find({}, {
     fields: { _id: 1 }
   }).forEach(col => {
