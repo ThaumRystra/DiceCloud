@@ -75,7 +75,7 @@
 </template>
 
 <script lang="js">
-import { sortBy } from 'lodash';
+import { orderBy } from 'lodash';
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
@@ -122,7 +122,7 @@ export default {
       });
     },
     libraryCards() {
-      return sortBy([...this.libraries, ...this.collections], 'name');
+      return orderBy([...this.libraries, ...this.collections], ['subscriberCount', 'name'], ['desc', 'asc']);
     },
   },
   methods: {
