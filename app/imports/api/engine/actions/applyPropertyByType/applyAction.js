@@ -225,7 +225,7 @@ function spendResources(prop, actionContext) {
         throw 'The prop\'s ammo was not found on the creature';
       }
       if (
-        !itemConsumed.quantity.value ||
+        !itemConsumed?.quantity?.value ||
         !isFinite(itemConsumed.quantity.value)
       ) return;
       itemQuantityAdjustments.push({
@@ -247,8 +247,9 @@ function spendResources(prop, actionContext) {
   } catch (e) {
     actionContext.addLog({
       name: 'Error',
-      value: e,
+      value: e.toString(),
     });
+    console.error(e);
     return true;
   }
   // No more errors should be thrown after this line

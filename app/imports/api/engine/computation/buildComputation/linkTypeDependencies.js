@@ -29,9 +29,9 @@ export default function linkTypeDependencies(dependencyGraph, prop, computation)
 
 function dependOnCalc({ dependencyGraph, prop, key }) {
   let calc = get(prop, key);
-  if (!calc) return;
+  if (!calc?.type) return;
   if (calc.type !== '_calculation') {
-    throw `Expected calculation got ${calc.type}`
+    throw `Failed to dependOnCal for prop: ${prop._id}, key: ${key}. Expected calculation got ${calc.type}`
   }
   dependencyGraph.addLink(prop._id, `${prop._id}.${key}`, 'calculation');
 }
