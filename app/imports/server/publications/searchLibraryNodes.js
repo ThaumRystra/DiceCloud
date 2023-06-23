@@ -86,7 +86,13 @@ Meteor.publish('searchLibraryNodes', function (creatureId) {
 
       let options = undefined;
       if (searchTerm) {
-        filter.name = { $regex: escapeRegex(searchTerm), '$options': 'i' };
+        // Regex search instead of text index
+        filter.$and = [{
+          $or: [
+            { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },
+            { libraryTags: searchTerm },
+          ],
+        }];
         // filter.$text = {$search: searchTerm};
         options = {
           /*
@@ -105,7 +111,7 @@ Meteor.publish('searchLibraryNodes', function (creatureId) {
         }
       } else {
         //delete filter.$text
-        delete filter.name;
+        delete filter.$and;
         options = {
           sort: {
             'ancestors.0.id': 1,
