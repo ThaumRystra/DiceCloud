@@ -80,6 +80,7 @@
             no-child-insert
             :model="model"
             :errors="errors"
+            :collection="collection"
             @change="change"
             @push="push"
             @pull="pull"
@@ -229,6 +230,10 @@ export default {
       type: Array,
       default: undefined,
     },
+    collection: {
+      type: String,
+      default: undefined,
+    },
     suggestedType: {
       type: String,
       default: undefined,
@@ -250,7 +255,7 @@ export default {
   },
   reactiveProvide: {
     name: 'context',
-    include: ['debounceTime'],
+    include: ['debounceTime', 'isLibraryForm'],
   },
   data(){return {
     selectedNodeIds: [],
@@ -273,6 +278,9 @@ export default {
     docsPath() {
       const propDef = PROPERTIES[this.type];
       return propDef && propDef.docsPath;
+    },
+    isLibraryForm() {
+      return this.collection === 'libraryNodes' || undefined;
     },
   },
   watch: {

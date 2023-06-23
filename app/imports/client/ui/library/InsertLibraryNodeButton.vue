@@ -57,6 +57,7 @@ export default {
           hideLibraryTab: true,
           noBackdropClose: true,
           showLibraryOnlyProps: true,
+          collection: 'libraryNodes',
         },
         callback(libraryNode){
           if (!libraryNode) return;

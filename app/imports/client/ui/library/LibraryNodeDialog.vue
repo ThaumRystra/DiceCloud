@@ -324,6 +324,7 @@ export default {
           suggestedType,
           noBackdropClose: true,
           showLibraryOnlyProps: true,
+          collection: 'libraryNodes',
         },
         callback(result){
           if (!result) return;
