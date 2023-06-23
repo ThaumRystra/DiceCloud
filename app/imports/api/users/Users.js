@@ -252,7 +252,7 @@ Meteor.users.setPreference = new ValidatedMethod({
 });
 
 if (Meteor.isServer) {
-  Accounts.onCreateUser(() => {
+  Accounts.onCreateUser((options, user) => {
     if (defaultLibraries?.length) {
       Libraries.update({
         _id: { $in: defaultLibraries }
@@ -271,6 +271,7 @@ if (Meteor.isServer) {
         multi: true,
       }, () => {/**/ });
     }
+    return user;
   });
 }
 
