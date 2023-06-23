@@ -51,6 +51,10 @@ export function migratePropUp(prop, collection) {
       update.$set.slotFillImage = prop.picture;
       update.$unset = { picture: 1 };
     }
+    // If the slot filler has a description, change it to a computed one
+    if (typeof prop.description == 'string') {
+      prop.description = { text: prop.description };
+    }
   }
 
   // Don't look for slot fillers
@@ -73,7 +77,9 @@ export function migratePropUp(prop, collection) {
   // update the document
   if (update) {
     try {
-      collection.update({ _id: prop._id }, update, { bypassCollection2: true });
+      collection.update({ _id: prop._id }, update, { bypassCollection2: true }, e => {
+        if (e) console.warn('Doc Migration failed: ', prop._id, e);
+      });
     } catch (e) {
       console.warn('Doc Migration failed: ', prop._id, e);
     }
@@ -97,7 +103,9 @@ export function migratePropDown(prop, collection) {
   }
   if (update) {
     try {
-      collection.update({ _id: prop._id }, update, { bypassCollection2: true });
+      collection.update({ _id: prop._id }, update, { bypassCollection2: true }, e => {
+        if (e) console.warn('Doc Migration failed: ', prop._id, e);
+      });
     } catch (e) {
       console.warn('Doc Migration failed: ', prop._id, e);
     }

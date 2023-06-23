@@ -10,6 +10,10 @@ export default function migrate1To2(archive) {
       // Migrate slot fillers to folders
       if (prop.type === 'slotFiller') {
         prop.type = 'folder';
+        // If the slot filler has a description, change it to a computed one
+        if (typeof prop.description == 'string') {
+          prop.description = { text: prop.description };
+        }
       }
       // Migrate slot filler slot type to folders
       if (prop.slotType === 'slotFiller') {
