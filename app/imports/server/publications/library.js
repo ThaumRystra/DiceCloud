@@ -203,22 +203,42 @@ let libraryIdSchema = new SimpleSchema({
   },
 });
 
-Meteor.publish('libraryNodes', function (libraryId) {
+const extraFieldsSchema = new SimpleSchema({
+  extraFields: {
+    type: Array,
+    optional: true,
+  },
+  'extraFields.$': {
+    type: String,
+  },
+});
+
+Meteor.publish('libraryNodes', function (libraryId, extraFields) {
   if (!libraryId) return [];
-  libraryIdSchema.validate({ libraryId });
+  try {
+    libraryIdSchema.validate({ libraryId });
+    extraFieldsSchema.validate({ extraFields });
+  } catch (e) {
+    return this.error(e);
+  }
   this.autorun(function () {
     let userId = this.userId;
     let library = Libraries.findOne(libraryId);
-    try { assertViewPermission(library, userId) }
-    catch (e) {
+    try {
+      assertViewPermission(library, userId)
+    } catch (e) {
       return this.error(e);
     }
+    const fields = { ...LIBRARY_NODE_TREE_FIELDS };
+    extraFields?.forEach(field => {
+      fields[field] = 1;
+    });
     return [
       LibraryNodes.find({
         'ancestors.id': libraryId,
       }, {
         sort: { order: 1 },
-        fields: LIBRARY_NODE_TREE_FIELDS,
+        fields,
       }),
     ];
   });

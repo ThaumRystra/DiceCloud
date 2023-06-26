@@ -17,6 +17,12 @@
         :dark="isToolbarDark"
         :light="!isToolbarDark"
       >
+        <tree-search-input
+          ref="searchBox"
+          v-model="filter"
+          class="mx-4"
+          @extra-fields-changed="val => extraFields = val"
+        />
         <v-spacer />
         <v-switch
           v-if="!libraryId || canEditLibrary"
@@ -25,15 +31,8 @@
           class="mx-3"
           style="flex-grow: 0; height: 32px;"
         />
-        <tree-search-input
-          ref="searchBox"
-          slot="extension"
-          v-model="filter"
-          class="mx-4"
-        />
         <insert-library-node-button
           v-if="libraryId && canEditLibrary"
-          slot="extension"
           style="bottom: -24px"
           fab
           :library-id="libraryId"
@@ -49,6 +48,7 @@
           :library-id="libraryId"
           :organize-mode="organize"
           :selected-node="selectedNode"
+          :extra-fields="extraFields"
           should-subscribe
           :filter="filter"
           @selected="clickNode"
@@ -114,6 +114,7 @@ export default {
     organize: false,
     selectedNodeId: undefined,
     filter: undefined,
+    extraFields: [],
   };},
   computed: {
     isToolbarDark(){
@@ -121,7 +122,7 @@ export default {
         this.selectedNode && this.selectedNode.color ||
         getThemeColor('secondary')
       );
-    }
+    },
   },
   watch:{
     selectedNode(val){

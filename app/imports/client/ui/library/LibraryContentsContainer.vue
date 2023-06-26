@@ -50,6 +50,10 @@ export default {
       type: Object,
       default: undefined,
     },
+    extraFields: {
+      type: Array,
+      default: undefined,
+    },
   },
   data() {
     return {
@@ -75,7 +79,7 @@ export default {
     $subscribe: {
       'libraryNodes'() {
         if (this.slowShouldSubscribe) {
-          return [this.libraryId];
+          return [this.libraryId, this.extraFields];
         } else {
           return [];
         }

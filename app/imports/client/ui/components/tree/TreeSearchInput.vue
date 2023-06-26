@@ -1,19 +1,111 @@
 <template lang="html">
-  <v-combobox
-    v-model="filterTerms"
-    :items="filterOptions"
-    prepend-inner-icon="mdi-magnify"
-    hide-no-data
-    hide-selected
-    multiple
-    clearable
-    small-chips
-    deletable-chips
-  />
+  <v-menu
+    v-model="menu"
+    :close-on-content-click="false"
+  >
+    <template #activator="{ on, attrs }">
+      <v-btn
+        v-bind="attrs"
+        icon
+        v-on="on"
+      >
+        <v-badge
+          :content="numFilters"
+          :value="numFilters"
+          color="primary"
+          overlap
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-badge>
+      </v-btn>
+    </template>
+
+    <v-card>
+      <v-card-title>
+        Search
+      </v-card-title>
+      <v-card-text>
+        <v-select
+          v-model="typeFilterInput"
+          outlined
+          label="Type"
+          :items="filterOptions"
+          multiple
+          clearable
+          small-chips
+          deletable-chips
+        />
+        <v-slide-x-transition group>
+          <div
+            v-for="(fieldFilter, index) in fieldFilters"
+            :key="index"
+            class="d-flex"
+          >
+            <v-text-field
+              v-model="fieldFilter.field"
+              class="text--mono"
+              label="Field"
+              outlined
+            />
+            <v-text-field
+              v-model="fieldFilter.value"
+              label="Text"
+              class="ml-2"
+              outlined
+            />
+            <v-btn
+              v-if="fieldFilters.length > 1"
+              icon
+              @click="fieldFilters.splice(index, 1)"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+        </v-slide-x-transition>
+        <div
+          v-if="fieldFilters.length < 5"
+          class="d-flex"
+        >
+          <v-spacer />
+          <v-btn
+            icon
+            @click="fieldFilters.push({name: '', value: undefined})"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <v-card-actions>
+          <v-btn
+            text
+            @click="
+              fieldFilters = [{field: 'name', value: undefined}];
+              typeFilterInput = [];
+              menu = false;
+            "
+          >
+            <v-icon left>
+              mdi-close
+            </v-icon>
+            Clear
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            text
+            color="primary"
+            @click="menu = false"
+          >
+            Find
+          </v-btn>
+        </v-card-actions>
+      </v-card-text>
+    </v-card>
+  </v-menu>
 </template>
 
 <script lang="js">
 import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import escapeRegex from '/imports/api/utility/escapeRegex.js';
+
 const filterOptions = [];
 for (let key in PROPERTIES) {
   if (key === 'reference') continue;
@@ -31,39 +123,62 @@ export default {
     },
   },
   data(){return {
-    filterTerms: [],
+    typeFilterInput: [],
+    fieldFilters: [{field: 'name', value: undefined}],
     filterOptions,
+    menu: false,
   }},
   computed: {
-    filter(){
-      if (!this.filterTerms.length) return;
-      let typeFilters = [];
-      let nameFilters = [];
-      this.filterTerms.forEach(filter => {
-        if (filter.value){
-          typeFilters.push(filter.value);
+    filter() {
+      let filter = undefined;
+      if (this.typeFilterInput?.length) {
+        filter = filter || {};
+        filter.type = {$in: this.typeFilterInput};
+      }
+      this.fieldFilters?.forEach(fieldFilter => {
+        if (!fieldFilter.field || !fieldFilter.value) return;
+        const search = { $regex: escapeRegex(fieldFilter.value), '$options': 'i' };
+        filter = filter || {};
+        if (fieldFilter.field.includes('.')) {
+          // The user used dot notation, search exactly where they are looking
+          filter[fieldFilter.field] = search;
         } else {
-          // escape string
-          let term = filter.replace( /[-/\\^$*+?.()|[\]{}]/g, '\\$&' );
-          var reg = new RegExp( '.*' + term + '.*', 'i' );
-          nameFilters.push(reg)
+          // No dot notation, search fields and their likely sub-fields
+          filter.$and = filter.$and || [];
+          filter.$and.push({
+            $or: [
+              { [fieldFilter.field]: search },
+              { [fieldFilter.field + '.calculation']: search },
+              { [fieldFilter.field + '.text']: search },
+            ],
+          });
         }
       });
-      let filter = {};
-      if (typeFilters.length){
-        filter.type = {$in: typeFilters};
-      }
-      if (nameFilters.length){
-        filter.name = {$in: nameFilters};
-      }
       return filter;
     },
-  },
-  watch:{
-    filter(value){
-      this.$emit('input', value);
+    extraFields() {
+      let extraFields = [];
+      this.fieldFilters?.forEach(fieldFilter => {
+        if (!fieldFilter.field || !fieldFilter.value) return;
+        extraFields.push(fieldFilter.field);
+      });
+      return extraFields;
+    },
+    numFilters() {
+      let numFilters = 0;
+      if (this.typeFilterInput?.length) numFilters += 1;
+      numFilters += this.extraFields.length;
+      return numFilters;
     }
-  }
+  },
+  watch: {
+    menu(val) {
+      if (!val) {
+        this.$emit('input', this.filter);
+        this.$emit('extra-fields-changed', this.extraFields);
+      }
+    }
+  },
 }
 </script>
 
