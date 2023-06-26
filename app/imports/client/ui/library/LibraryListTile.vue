@@ -5,10 +5,11 @@
   <v-list-item
     v-bind="$attrs"
     :class="(isSelected || selectedByCollection) && !disabled && 'primary--text v-list-item--active'"
-    :to="selection ? undefined : to"
+    :to="singleSelect ? undefined : to"
+    @click="singleSelect && $emit('select')"
   >
     <v-list-item-action
-      v-if="selection"
+      v-if="selection && !singleSelect"
     >
       <v-checkbox
         :disabled="disabled"
@@ -42,6 +43,7 @@ export default {
       required: true,
     },
     selection: Boolean,
+    singleSelect: Boolean,
     isSelected: Boolean,
     selectedByCollection: Boolean,
     disabled: Boolean,

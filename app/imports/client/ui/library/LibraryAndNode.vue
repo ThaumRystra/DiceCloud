@@ -1,5 +1,12 @@
 <template lang="html">
   <tree-detail-layout>
+    <library-second-tree
+      v-if="showSecondTree"
+      slot="left-tree"
+      :selected-node="selectedNode"
+      @close="showSecondTree = false"
+      @selected="clickNode"
+    />
     <div
       slot="tree"
       class="layout column"
@@ -24,11 +31,33 @@
           @extra-fields-changed="val => extraFields = val"
         />
         <v-spacer />
+        <v-fade-transition>
+          <v-menu v-if="organize && $vuetify.breakpoint.mdAndUp">
+            <template #activator="{ on, attrs }">
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-text>
+                <v-switch
+                  v-model="showSecondTree"
+                  label="Show second library tree"
+                />
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </v-fade-transition>
         <v-switch
           v-if="!libraryId || canEditLibrary"
           v-model="organize"
+          hide-details
           label="Organize"
-          class="mx-3"
+          class="ml-1 mr-3 mt-2"
           style="flex-grow: 0; height: 32px;"
         />
         <insert-library-node-button
@@ -93,6 +122,7 @@ import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import TreeSearchInput from '/imports/client/ui/components/tree/TreeSearchInput.vue';
+import LibrarySecondTree from '/imports/client/ui/library/LibrarySecondTree.vue';
 
 export default {
   components: {
@@ -102,6 +132,7 @@ export default {
     LibraryContentsContainer,
     InsertLibraryNodeButton,
     TreeSearchInput,
+    LibrarySecondTree,
   },
   props: {
     selection: Boolean,
@@ -115,6 +146,7 @@ export default {
     selectedNodeId: undefined,
     filter: undefined,
     extraFields: [],
+    showSecondTree: false,
   };},
   computed: {
     isToolbarDark(){

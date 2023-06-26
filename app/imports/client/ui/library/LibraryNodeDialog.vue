@@ -10,6 +10,7 @@
         @move="move"
         @copy="copy"
         @remove="remove"
+        @make-reference="makeReference"
         @toggle-editing="editing = !editing"
         @color-changed="value => change({path: ['color'], value})"
       />
@@ -201,6 +202,26 @@ export default {
         if (error) console.error(error);
         if (this.embedded){
           this.$emit('duplicated', duplicateId);
+        } else {
+          this.$store.dispatch('popDialogStack');
+        }
+      });
+    },
+    makeReference() {
+      insertNode.call({
+        libraryNode: {
+          type: 'reference',
+          ref: {
+            collection: 'libraryNodes',
+            id: this.model._id,
+          },
+          order: (this.model.order || 0) + 0.5,
+        },
+        parentRef: this.model.parent,
+      }, (error, docId) => {
+        if (error) console.error(error);
+        if (this.embedded){
+          this.$emit('duplicated', docId);
         } else {
           this.$store.dispatch('popDialogStack');
         }

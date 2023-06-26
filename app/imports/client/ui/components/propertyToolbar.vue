@@ -91,6 +91,20 @@
               </v-list-item-action>
             </v-list-item>
             <v-list-item
+              v-if="$listeners && $listeners['make-reference']"
+              :disabled="context.editPermission === false"
+              @click="$emit('make-reference')"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  Create Reference
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>mdi-link-plus</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item
               v-if="$listeners && $listeners.move"
               :disabled="context.editPermission === false"
               @click="$emit('move')"

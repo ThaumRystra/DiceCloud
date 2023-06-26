@@ -4,6 +4,19 @@
     style="height: 100%;"
   >
     <div
+      v-if="$slots['left-tree']"
+      class="layout column justify-start"
+      :style="computedTreeStyle"
+    >
+      <slot
+        name="left-tree"
+      />
+    </div>
+    <v-divider
+      v-if="$slots['left-tree']" 
+      vertical
+    />
+    <div
       class="layout column justify-start"
       :style="computedTreeStyle"
     >
