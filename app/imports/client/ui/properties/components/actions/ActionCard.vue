@@ -234,13 +234,13 @@ export default {
         actionId: this.model._id,
         targetIds: this.targets,
         scope: {
-          $attackAdvantage: advantage,
+          '~attackAdvantage': { value: advantage },
         }
       }, error => {
         this.doActionLoading = false;
         if (error) {
           console.error(error);
-          snackbar({ text: error.reason });
+          snackbar({ text: error.reason || error.message || error.toString() });
         }
       });
     },

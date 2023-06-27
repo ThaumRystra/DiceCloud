@@ -98,12 +98,13 @@ function insertPropertyFromNode(nodeId, ancestors, order) {
     removed: { $ne: true },
   }).fetch();
 
-  // Convert all references into actual nodes
-  nodes = reifyNodeReferences(nodes);
 
   // The root node is first in the array of nodes
   // It must get the first generated ID to prevent flickering
   nodes = [node, ...nodes];
+
+  // Convert all references into actual nodes
+  nodes = reifyNodeReferences(nodes);
 
   // set libraryNodeIds
   storeLibraryNodeReferences(nodes);

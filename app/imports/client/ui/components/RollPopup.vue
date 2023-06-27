@@ -19,7 +19,10 @@
         </v-btn>
       </template>
       <v-sheet class="d-flex flex-column align-center justify-center">
-        <v-btn-toggle v-model="dataAdvantage">
+        <v-btn-toggle
+          v-model="dataAdvantage"
+          color="accent"
+        >
           <v-btn :value="-1">
             Disadvantage
           </v-btn>

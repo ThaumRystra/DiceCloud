@@ -22,7 +22,6 @@ import RollViewer from '/imports/client/ui/properties/viewers/RollViewer.vue';
 import SkillViewer from '/imports/client/ui/properties/viewers/SkillViewer.vue';
 import SavingThrowViewer from '/imports/client/ui/properties/viewers/SavingThrowViewer.vue';
 import SlotViewer from '/imports/client/ui/properties/viewers/SlotViewer.vue';
-import SlotFillerViewer from '/imports/client/ui/properties/viewers/SlotFillerViewer.vue';
 import SpellListViewer from '/imports/client/ui/properties/viewers/SpellListViewer.vue';
 import SpellViewer from '/imports/client/ui/properties/viewers/SpellViewer.vue';
 import ToggleViewer from '/imports/client/ui/properties/viewers/ToggleViewer.vue';
@@ -52,7 +51,6 @@ export default {
   roll: RollViewer,
   reference: ReferenceViewer,
   savingThrow: SavingThrowViewer,
-  slotFiller: SlotFillerViewer,
   skill: SkillViewer,
   spellList: SpellListViewer,
   spell: SpellViewer,

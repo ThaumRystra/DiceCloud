@@ -8,6 +8,7 @@
       <v-btn
         icon
         data-id="share-library-button"
+        :disabled="!isOwner"
         @click="share"
       >
         <v-icon>mdi-share-variant</v-icon>
@@ -15,12 +16,32 @@
       <v-btn
         icon
         data-id="delete-library-button"
+        :disabled="!isOwner"
         @click="remove"
       >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </template>
     <template v-if="model">
+      <v-list-item
+        v-if="!isOwner && ownerName"
+        class="px-0"
+        two-line
+      >
+        <v-list-item-avatar>
+          <v-icon>
+            mdi-account
+          </v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ ownerName }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            Library owner
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
       <text-field
         label="name"
         :value="model.name"
@@ -30,6 +51,12 @@
         label="Description"
         :value="model.description"
         @change="updateDescription"
+      />
+      <smart-switch
+        :value="model.showInMarket"
+        :disabled="!isOwner"
+        label="Show in community library browser"
+        @change="updateShowInMarket"
       />
     </template>
     <template v-if="removedDocs.length">
@@ -76,7 +103,7 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Libraries, { updateLibraryName, updateLibraryDescription, removeLibrary } from '/imports/api/library/Libraries.js';
+import Libraries, { updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary } from '/imports/api/library/Libraries.js';
 import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNodes.js';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
@@ -100,8 +127,15 @@ export default {
         ack(error && error.reason || error);
       });
     },
+    updateShowInMarket(value, ack) {
+      updateLibraryShowInMarket.call({ _id: this._id, value }, (error) => {
+        ack(error && error.reason || error);
+      });
+    },
     remove() {
-      let that = this;
+      const _id = this._id;
+      const $router = this.$router;
+      const $store = this.$store;
       this.$store.commit('pushDialogStack', {
         component: 'delete-confirmation-dialog',
         elementId: 'delete-library-button',
@@ -111,15 +145,15 @@ export default {
         },
         callback(confirmation) {
           if (!confirmation) return;
-          removeLibrary.call({ _id: that._id }, (error) => {
+          removeLibrary.call({ _id }, (error) => {
             if (error) {
               console.error(error);
               snackbar({
                 text: error.reason,
               });
             } else {
-              that.$router.push({ name: 'library', replace: true });
-              that.$store.dispatch('popDialogStack');
+              $router.push({ name: 'library', replace: true });
+              $store.dispatch('popDialogStack');
             }
           });
         }
@@ -158,7 +192,16 @@ export default {
       }, {
         sort: { order: 1 },
       });
-    }
+    },
+    isOwner() {
+      if (!this.model) return;
+      return Meteor.userId() === this.model.owner;
+    },
+    ownerName() {
+      if (!this.model) return;
+      const username = Meteor.users.findOne(this.model.owner)?.username;
+      return username;
+    },
   }
 }
 </script>

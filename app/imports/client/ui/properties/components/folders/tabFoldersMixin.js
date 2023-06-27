@@ -11,6 +11,10 @@ function getFolders(creatureId, tab, location) {
     removed: { $ne: true },
     tab,
     location,
+  }, {
+    sort: {
+      order: 1,
+    }
   });
 }
 

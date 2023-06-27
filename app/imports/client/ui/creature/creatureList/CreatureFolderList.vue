@@ -1,6 +1,8 @@
 <template lang="html">
   <v-list
     expand
+    :nav="nav"
+    :dense="dense"
     class="creature-folder-list"
   >
     <creature-list
@@ -14,7 +16,7 @@
       v-for="folder in folders"
       :key="folder._id"
       v-model="openFolders[folder._id]"
-      group="folder"
+      :dense="dense"
     >
       <template #activator>
         <creature-folder-header
@@ -60,6 +62,7 @@ export default {
       default: undefined,
     },
     dense: Boolean,
+    nav: Boolean,
   },
   data(){return{
     openFolders: {},

@@ -9,10 +9,12 @@ const CharacterListToolbarItems = () => import('/imports/client/ui/creature/crea
 const Library = () => import('/imports/client/ui/pages/Library.vue');
 const LibraryCollection = () => import('/imports/client/ui/pages/LibraryCollection.vue');
 const LibraryCollectionToolbar = () => import('/imports/client/ui/library/LibraryCollectionToolbar.vue');
+const LibraryBrowser = () => import('/imports/client/ui/pages/LibraryBrowser.vue');
 const CharacterSheetPage = () => import('/imports/client/ui/pages/CharacterSheetPage.vue');
 const CharacterSheetToolbar = () => import('/imports/client/ui/creature/character/CharacterSheetToolbar.vue');
 const CharacterSheetRightDrawer = () => import('/imports/client/ui/creature/character/CharacterSheetRightDrawer.vue');
 const CharacterSheetPrinted = () => import('/imports/client/ui/creature/character/printedCharacterSheet/CharacterSheetPrinted.vue');
+const CharacterSheetPrintedToolbar = () => import('/imports/client/ui/creature/character/printedCharacterSheet/CharacterSheetPrintedToolbar.vue');
 const SignIn = () => import('/imports/client/ui/pages/SignIn.vue');
 const Register = () => import('/imports/client/ui/pages/Register.vue');
 const IconAdmin = () => import('/imports/client/ui/icons/IconAdmin.vue');
@@ -168,6 +170,15 @@ RouterFactory.configure(router => {
       title: 'Library Collection',
     },
   }, {
+    name: 'libraryBrowser',
+    path: '/community-libraries',
+    components: {
+      default: LibraryBrowser,
+    },
+    meta: {
+      title: 'Community Libraries',
+    },
+  }, {
     name: 'characterSheet',
     path: '/character/:id',
     alias: '/character/:id/:urlName',
@@ -185,11 +196,14 @@ RouterFactory.configure(router => {
     alias: '/print-character/:id/:urlName',
     components: {
       default: CharacterSheetPrinted,
+      toolbar: CharacterSheetPrintedToolbar,
     },
     meta: {
       title: 'Print Character Sheet',
     },
-  }, {
+  },
+  /* Not ready for prime time <3
+  {
     path: '/tabletops',
     name: 'tabletops',
     component: Tabletops,
@@ -203,7 +217,9 @@ RouterFactory.configure(router => {
       rightDrawer: TabletopRightDrawer,
     },
     beforeEnter: ensureLoggedIn,
-  }, {
+  },
+  */
+  {
     path: '/friends',
     components: {
       default: NotImplemented,
@@ -371,7 +387,11 @@ RouterFactory.configure(router => {
 
 function redirectIfMaintenance(to, from, next) {
   if (!MAINTENANCE_MODE) return next();
-  if (to?.path === '/admin' || to?.path === '/maintenance' || to?.path === '/sign-in') return next();
+  if (
+    to?.path === '/admin' ||
+    to?.path === '/maintenance' ||
+    to?.path === '/sign-in'
+  ) return next();
   Tracker.autorun((computation) => {
     if (userSubscription.ready()) {
       computation.stop();

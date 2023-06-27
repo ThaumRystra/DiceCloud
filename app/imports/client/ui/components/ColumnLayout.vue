@@ -16,6 +16,14 @@ export default {
     wideColumns: Boolean,
   },
 };
+
+/*
+Removed to improve chrome layout performance, put it back if there are rendering errors
+.column-layout>span>div {
+  display: table;
+  table-layout: fixed;
+}
+*/
 </script>
 
 <style lang="css">
@@ -39,17 +47,9 @@ export default {
 
 .column-layout>div,
 .column-layout>span>div {
-  /*
-      Table and width set because firefox does not support break-inside: avoid
-    */
-  display: table;
-  table-layout: fixed;
   width: 100%;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   transform: translateX(0);
-  -webkit-transform: translateX(0);
-  -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
   padding: 4px;

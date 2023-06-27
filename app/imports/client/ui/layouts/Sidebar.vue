@@ -11,7 +11,10 @@
         Sign in
       </v-btn>
     </v-layout>
-    <v-list>
+    <v-list
+      nav
+      class="links"
+    >
       <v-list-item v-if="signedIn">
         <v-list-item-content>
           <v-list-item-title>
@@ -39,6 +42,7 @@
         :key="i"
         :to="link.to"
         :href="link.href"
+        :target="link.href ? '_blank': undefined"
       >
         <v-list-item-action>
           <v-icon>{{ link.icon }}</v-icon>
@@ -91,7 +95,7 @@ export default {
       let isLoggedIn = !!Meteor.userId();
       let links = [
         { title: 'Home', icon: 'mdi-home', to: '/' },
-        { title: 'Characters', icon: 'mdi-account-group', to: '/characterList', requireLogin: true },
+        { title: 'Characters', icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
         { title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
         //{title: 'Tabletops', icon: 'api', to: '/tabletops', requireLogin: true},
         //{title: 'Friends', icon: 'people', to: '/friends', requireLogin: true},
@@ -100,7 +104,7 @@ export default {
         { title: 'About', icon: 'mdi-sign-text', to: '/about' },
         { title: 'Documentation', icon: 'mdi-book-open-variant', to: '/docs' },
         { title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud' },
-        { title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/tree/version-2' },
+        { title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/' },
       ];
       return links.filter(link => !link.requireLogin || isLoggedIn);
     },
@@ -138,3 +142,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.links .v-list-item:not(:last-child):not(:only-child) {
+  margin-bottom: 4px;
+}
+</style>

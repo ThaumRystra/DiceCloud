@@ -9,20 +9,20 @@
         style="flex-grow: 0;"
         @duplicate="duplicate"
         @remove="remove"
+        @copy-to-library="copyToLibrary"
         @toggle-editing="editing = !editing"
-        @color-changed="value => change({path: ['color'], value})"
       />
     </template>
     <template v-if="model">
       <div
         class="layout mb-4"
       >
-        <template v-if="!embedded">
-          <breadcrumbs
-            :model="model"
-            :editing="editing"
-          />
-        </template>
+        <breadcrumbs
+          :model="model"
+          :editing="editing"
+          :embedded="embedded"
+          @select-sub-property="selectSubProperty"
+        />
         <v-spacer />
         <v-chip disabled>
           {{ typeName }}
@@ -32,63 +32,24 @@
         mode="out-in"
       >
         <div v-if="editing">
-          <component
-            :is="model.type + 'Form'"
+          <property-form
             :key="_id"
             class="creature-property-form"
             :model="model"
+            :embedded="embedded"
             @change="change"
             @push="push"
             @pull="pull"
-          >
-            <template #children>
-              <creature-properties-tree
-                style="width: 100%;"
-                class="mb-2"
-                organize
-                :root="{collection: 'creatureProperties', id: model._id}"
-                @length="childrenLength = $event"
-                @selected="selectSubProperty"
-              />
-              <v-btn
-                icon
-                outlined
-                color="accent"
-                data-id="insert-creature-property-btn"
-                @click="addProperty"
-              >
-                <v-icon>
-                  mdi-plus
-                </v-icon>
-              </v-btn>
-            </template>
-          </component>
-        </div>
-        <div v-else>
-          <component
-            :is="model.type + 'Viewer'"
-            :key="_id"
-            class="creature-property-viewer"
-            :model="model"
+            @add-child="addProperty"
+            @select-sub-property="selectSubProperty"
           />
-          <v-row
-            v-show="!embedded && childrenLength"
-            class="mt-1"
-            dense
-          >
-            <property-field
-              name="Child properties"
-              :cols="{cols: 12}"
-            >
-              <creature-properties-tree
-                style="width: 100%;"
-                :root="{collection: 'creatureProperties', id: model._id}"
-                @length="childrenLength = $event"
-                @selected="selectSubProperty"
-              />
-            </property-field>
-          </v-row>
         </div>
+        <property-viewer 
+          v-else
+          :key="_id"
+          :model="model"
+          @select-sub-property="selectSubProperty"
+        />
       </v-fade-transition>
     </template>
     <div
@@ -121,10 +82,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
-import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { get, findLast } from 'lodash';
@@ -134,28 +92,16 @@ import { getHighestOrder } from '/imports/api/parenting/order.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
-
-let formIndex = {};
-for (let key in propertyFormIndex){
-  formIndex[key + 'Form'] = propertyFormIndex[key];
-}
-
-let viewerIndex = {};
-for (let key in propertyViewerIndex){
-  formIndex[key + 'Viewer'] = propertyViewerIndex[key];
-}
+import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
+import copyPropertyToLibrary from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary.js';
 
 export default {
   components: {
-    ...formIndex,
-    ...viewerIndex,
-    PropertyIcon,
+    PropertyForm,
     DialogBase,
     PropertyToolbar,
-    CreaturePropertiesTree,
     Breadcrumbs,
-    PropertyField,
+    PropertyViewer,
   },
   props: {
     _id: String,
@@ -167,7 +113,6 @@ export default {
     // CurrentId lags behind Id by one tick so that events fired by destroying
     // forms keyed to the old ID are applied before the new ID overwrites it
     currentId: undefined,
-    childrenLength: 0,
   }},
   meteor: {
     model(){
@@ -228,7 +173,8 @@ export default {
         }
       });
     },
-    change({path, value, ack}){
+    change(arg) {
+      const { path, value, ack } = arg;
       if (path && path[0] === 'equipped'){
         equipItem.call({_id: this.currentId, equipped: value}, ack);
         return;
@@ -262,7 +208,11 @@ export default {
         },
       });
     },
-    selectSubProperty(_id){
+    selectSubProperty(_id) {
+      if (this.embedded) {
+        this.$emit('select-sub-property', _id);
+        return;
+      }
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
         elementId: `tree-node-${_id}`,
@@ -272,14 +222,47 @@ export default {
         },
       });
     },
-    addProperty(){
+    copyToLibrary() {
+      const thisId = this._id;
+      this.$store.commit('pushDialogStack', {
+        component: 'move-library-node-dialog',
+        elementId: 'property-toolbar-menu-button',
+        data: {
+          action: 'Copy',
+        },
+        callback(parentId){
+          if (!parentId) return;
+          copyPropertyToLibrary.call({
+            propId: thisId,
+            parentRef: {
+              collection: 'libraryNodes',
+              id: parentId
+            },
+          }, (error) => {
+            if (error) {
+              console.error(error);
+              snackbar({
+                text: error.reason || error.message || error.toString(),
+              });
+            } else {
+              snackbar({
+                text: 'Copied successfully',
+              });
+            }
+          });
+        }
+      });
+    },
+    addProperty({elementId, suggestedType}){
       let parentPropertyId = this.model._id;
       this.$store.commit('pushDialogStack', {
-        component: 'add-creature-property-dialog',
-        elementId: 'insert-creature-property-btn',
+        component: 'insert-property-dialog',
+        elementId,
         data: {
           parentDoc: this.model,
           creatureId: this.creatureId,
+          suggestedType,
+          noBackdropClose: true,
         },
         callback(result){
           if (!result) return;

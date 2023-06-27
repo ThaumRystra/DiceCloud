@@ -4,14 +4,14 @@ import functions from '/imports/parser/functions.js';
 import resolve, { toString, traverse, map } from '../resolve.js';
 
 const call = {
-  create({functionName, args}) {
+  create({ functionName, args }) {
     return {
       parseType: 'call',
       functionName,
       args,
     }
   },
-  resolve(fn, node, scope, context){
+  resolve(fn, node, scope, context) {
     let func = functions[node.functionName];
     // Check that the function exists
     if (!func) {
@@ -25,9 +25,22 @@ const call = {
       };
     }
 
+    // Resolve a given node to a maximum depth of resolution
+    const resolveToLevel = (node, maxResolveFn = 'reduce') => {
+      // Determine the actual depth to resolve to
+      let resolveFn = 'reduce';
+      if (fn === 'compile' || maxResolveFn === 'compile') {
+        resolveFn = 'compile';
+      } else if (fn === 'roll' || maxResolveFn === 'roll') {
+        resolveFn = 'roll';
+      }
+      // Resolve
+      return resolve(resolveFn, node, scope, context);
+    }
+
     // Resolve the arguments
-    let resolvedArgs = node.args.map(arg => {
-      let { result } = resolve(fn, arg, scope, context);
+    let resolvedArgs = node.args.map((arg, i) => {
+      let { result } = resolveToLevel(arg, func.maxResolveLevels?.[i]);
       return result;
     });
 
@@ -36,12 +49,12 @@ const call = {
       node,
       fn,
       resolvedArgs,
-      argumentsExpected: func.arguments,
+      func,
       context,
     });
 
-    if (checkFailed){
-      if (fn === 'reduce'){
+    if (checkFailed) {
+      if (fn === 'reduce') {
         context.error(`Invalid arguments to ${node.functionName} function`);
         return {
           result: error.create({
@@ -66,7 +79,7 @@ const call = {
       if (
         arg.parseType === 'constant' &&
         func.arguments[index] !== 'parseNode'
-      ){
+      ) {
         return arg.value;
       } else {
         return arg;
@@ -75,20 +88,21 @@ const call = {
 
     try {
       // Run the function
-      let value = func.fn.apply({scope, context}, mappedArgs);
+      let value = func.fn.apply({
+        scope,
+        context,
+      }, mappedArgs);
 
       let valueType = typeof value;
-      if (valueType === 'number' || valueType === 'string' || valueType === 'boolean'){
+      if (valueType === 'number' || valueType === 'string' || valueType === 'boolean') {
         // Convert constant results into constant nodes
         return {
-          result: constant.create({ value, valueType }),
+          result: constant.create({ value }),
           context,
         };
       } else {
-        return {
-          result: value,
-          context,
-        };
+        // Resolve the return value
+        return resolve(fn, value, scope, context);
       }
     } catch (error) {
       context.error(error.message || error);
@@ -101,26 +115,28 @@ const call = {
       }
     }
   },
-  toString(node){
+  toString(node) {
     return `${node.functionName}(${node.args.map(arg => toString(arg)).join(', ')})`;
   },
-  traverse(node, fn){
+  traverse(node, fn) {
     fn(node);
     node.args.forEach(arg => traverse(arg, fn));
   },
-  map(node, fn){
+  map(node, fn) {
     const resultingNode = fn(node);
-    if (resultingNode === node){
+    if (resultingNode === node) {
       node.args = node.args.map(arg => map(arg, fn));
     }
     return resultingNode;
   },
-  checkArugments({node, fn, argumentsExpected, resolvedArgs, context}){
+  checkArugments({ node, fn, func, resolvedArgs, context }) {
+    const argumentsExpected = func.arguments;
     // Check that the number of arguments matches the number expected
     if (
       !argumentsExpected.anyLength &&
-      argumentsExpected.length !== resolvedArgs.length
-    ){
+      resolvedArgs.length > (func.maxArguments ?? argumentsExpected.length) ||
+      resolvedArgs.length < (func.minArguments ?? argumentsExpected.length)
+    ) {
       context.error('Incorrect number of arguments ' +
         `to ${node.functionName} function, ` +
         `expected ${argumentsExpected.length} got ${resolvedArgs.length}`);
@@ -131,14 +147,14 @@ const call = {
     // Check that each argument is of the correct type
     resolvedArgs.forEach((node, index) => {
       let type;
-      if (argumentsExpected.anyLength){
+      if (argumentsExpected.anyLength) {
         type = argumentsExpected[0];
       } else {
         type = argumentsExpected[index];
       }
       if (type === 'parseNode') return;
       if (node.parseType !== type && node.valueType !== type) failed = true;
-      if (failed && fn === 'reduce'){
+      if (failed && fn === 'reduce') {
         let typeName = typeof type === 'string' ? type : type.constructor.name;
         let nodeName = node.parseType;
         context.error(`Incorrect arguments to ${node.functionName} function` +

@@ -29,7 +29,7 @@ import removeSchemaFields from './buildComputation/removeSchemaFields.js';
  * computed toggles
  */
 
-export default function buildCreatureComputation(creatureId){
+export default function buildCreatureComputation(creatureId) {
   const creature = getCreature(creatureId);
   const variables = getVariables(creatureId);
   const properties = getProperties(creatureId);
@@ -37,7 +37,7 @@ export default function buildCreatureComputation(creatureId){
   return computation;
 }
 
-export function buildComputationFromProps(properties, creature, variables){
+export function buildComputationFromProps(properties, creature, variables) {
 
   const computation = new CreatureComputation(properties, creature, variables);
   // Dependency graph where edge(a, b) means a depends on b
@@ -49,14 +49,14 @@ export function buildComputationFromProps(properties, creature, variables){
   const dependencyGraph = computation.dependencyGraph;
 
   // Link the denormalizedStats from the creature
-  if (creature && creature.denormalizedStats){
-    if (creature.denormalizedStats.xp){
+  if (creature && creature.denormalizedStats) {
+    if (creature.denormalizedStats.xp) {
       dependencyGraph.addNode('xp', {
         baseValue: creature.denormalizedStats.xp,
         type: '_variable'
       });
     }
-    if (creature.denormalizedStats.milestoneLevels){
+    if (creature.denormalizedStats.milestoneLevels) {
       dependencyGraph.addNode('milestoneLevels', {
         baseValue: creature.denormalizedStats.milestoneLevels,
         type: '_variable'
@@ -93,7 +93,7 @@ export function buildComputationFromProps(properties, creature, variables){
   // Inactive status must be complete for the whole tree before toggle deps
   // are calculated
   walkDown(forest, node => {
-    computeToggleDependencies(node, dependencyGraph);
+    computeToggleDependencies(node, dependencyGraph, computation, forest);
     computeSlotQuantityFilled(node, dependencyGraph);
   });
 

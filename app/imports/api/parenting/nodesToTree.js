@@ -1,4 +1,4 @@
-import { union, difference, sortBy, findLast } from 'lodash';
+import { union, difference, sortBy, findLast, intersection } from 'lodash';
 
 export function nodeArrayToTree(nodes) {
   // Store a dict and list of all the nodes
@@ -26,6 +26,7 @@ export function nodeArrayToTree(nodes) {
       forest.push(treeNode);
     }
   });
+  forest.nodeIndex = nodeIndex;
   return forest;
 }
 
@@ -82,9 +83,15 @@ export default function nodesToTree({
     docs.forEach(doc => {
       ancestorIds = union(ancestorIds, doc.ancestors.map(ref => ref.id));
     });
-    // Remove the IDs of docs we have already found
+    // Get all the docs that are also ancestors and mark them
+    docs.forEach(doc => {
+      if (ancestorIds.includes(doc._id)) {
+        doc._ancestorOfMatchedDocument = true;
+      }
+    });
+    // Remove the ancestor IDs of docs we have already found
     ancestorIds = difference(ancestorIds, docIds);
-    // Get the docs from the collection, don't worry about `removed` docs,
+    // Get the ancestor docs from the collection, don't worry about `removed` docs,
     // if their descendant was not removed, neither are they
     ancestors = collection.find({ _id: { $in: ancestorIds } }).map(doc => {
       // Mark that the nodes are ancestors of the found nodes

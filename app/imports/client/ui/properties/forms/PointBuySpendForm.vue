@@ -118,6 +118,7 @@ export default {
       const currentSpent = this.model.spent;
       let newSpent = currentSpent - row.spent;
       const costFunction = EJSON.clone(row.cost || this.model.cost);
+      if (!costFunction?.parseNode) return;
       if (costFunction) costFunction.parseLevel = 'reduce';
       evaluateCalculation(costFunction, { value });
       if (Number.isFinite(costFunction.value)) {

@@ -21,7 +21,7 @@ const updateReferenceNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({_id}) {
+  run({ _id }) {
     let userId = this.userId;
     let node = LibraryNodes.findOne(_id);
     assertDocEditPermission(node, userId);
@@ -29,15 +29,15 @@ const updateReferenceNode = new ValidatedMethod({
   },
 });
 
-function writeCache(_id, cache){
-  LibraryNodes.update(_id, {$set: {cache}}, {
-    selector: {type: 'reference'},
+function writeCache(_id, cache) {
+  LibraryNodes.update(_id, { $set: { cache } }, {
+    selector: { type: 'reference' },
   });
 }
 
-function updateReferenceNodeWork(node, userId){
+function updateReferenceNodeWork(node, userId) {
   let cache = {}
-  if (!node.ref){
+  if (!node.ref?.collection || !node.ref?.id) {
     writeCache(node._id, cache);
     return;
   }
@@ -45,20 +45,23 @@ function updateReferenceNodeWork(node, userId){
   try {
     doc = fetchDocByRef(node.ref);
     if (doc.removed) throw 'Property has been deleted';
-    if (doc.ancestors[0].id !== node.ancestors[0].id){
+    if (doc.ancestors[0].id !== node.ancestors[0].id) {
       library = fetchDocByRef(doc.ancestors[0]);
       assertViewPermission(library, userId)
     }
-  } catch(e){
-    cache = {error: e.reason || e.message || e.toString()}
+  } catch (e) {
+    cache = { error: e.reason || e.message || e.toString() }
     writeCache(node._id, cache);
     return;
   }
   cache = {
     node: doc,
   };
-  if (library){
-    cache.library = {name: library.name};
+  if (library) {
+    cache.library = {
+      id: library._id,
+      name: library.name,
+    };
   }
   writeCache(node._id, cache);
 }

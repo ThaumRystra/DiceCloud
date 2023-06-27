@@ -5,26 +5,32 @@
     transition="slide-y-transition"
     min-width="290px"
     style="overflow-y: auto;"
+    left
   >
     <template #activator="{ on }">
       <v-btn
         :loading="loading"
-        outlined
-        :min-width="108"
-        v-bind="$attrs"
+        :outlined="!!label"
+        :icon="!label"
+        :tile="!label"
+        :min-width="label && 108"
+        :height="height"
+        :width="width"
         :style="buttonStyle"
+        :disabled="context.editPermission === false"
+        v-bind="$attrs"
         v-on="on"
       >
         {{ label }}
         <svg-icon
           v-if="safeValue && safeValue.shape"
           right
-          class="ml-2"
+          :class="{'ml-2': !!label}"
           :shape="safeValue.shape"
         />
         <v-icon
           v-else
-          right
+          :right="!!label"
         >
           mdi-select-search
         </v-icon>
@@ -87,13 +93,24 @@ export default {
     SvgIcon,
   },
   mixins: [SmartInput],
+  inject: {
+    context: { default: {} }
+  },
   props: {
     label: {
       type: String,
-      default: 'Icon',
+      default: undefined,
     },
     buttonStyle: {
       type: String,
+      default: undefined,
+    },
+    height: {
+        type: Number,
+        default: undefined,
+    },
+    width: {
+      type: Number,
       default: undefined,
     },
   },

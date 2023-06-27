@@ -29,9 +29,9 @@ export default function linkTypeDependencies(dependencyGraph, prop, computation)
 
 function dependOnCalc({ dependencyGraph, prop, key }) {
   let calc = get(prop, key);
-  if (!calc) return;
+  if (!calc?.type) return;
   if (calc.type !== '_calculation') {
-    throw `Expected calculation got ${calc.type}`
+    throw `Failed to dependOnCal for prop: ${prop._id}, key: ${key}. Expected calculation got ${calc.type}`
   }
   dependencyGraph.addLink(prop._id, `${prop._id}.${key}`, 'calculation');
 }
@@ -164,7 +164,7 @@ function linkEffects(dependencyGraph, prop, computation) {
 }
 
 // Returns an array of IDs of the properties the effect targets
-function getEffectTagTargets(effect, computation) {
+export function getEffectTagTargets(effect, computation) {
   let targets = getTargetListFromTags(effect.targetTags, computation);
   let notIds = [];
   if (effect.extraTags) {
@@ -218,7 +218,6 @@ function getDefaultCalculationField(prop) {
     case 'roll': return 'roll';
     case 'savingThrow': return 'dc';
     case 'skill': return 'baseValue';
-    case 'slotFiller': return null;
     case 'slot': return 'quantityExpected';
     case 'spellList': return 'attackRollBonus';
     case 'spell': return null;
@@ -268,20 +267,45 @@ function linkPointBuy(dependencyGraph, prop) {
   if (prop.inactive) return;
 }
 
-function linkProficiencies(dependencyGraph, prop) {
+function linkProficiencies(dependencyGraph, prop, computation) {
   // The stats depend on the proficiency
   if (prop.inactive) return;
-  prop.stats.forEach(statName => {
-    if (!statName) return;
-    dependencyGraph.addLink(statName, prop._id, prop.type);
-  });
+  if (prop.targetByTags) {
+    // Tag targeted proficiencies depend on the creature's proficiencyBonus,
+    // since they add it directly to the targeted field
+    dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
+    getEffectTagTargets(prop, computation).forEach(targetId => {
+      const targetProp = computation.propsById[targetId];
+      if (
+        (targetProp.type === 'attribute' || targetProp.type === 'skill')
+        && targetProp.variableName
+        && !prop.targetField
+      ) {
+        // If the field wasn't specified and we're targeting an attribute or
+        // skill, just treat it like a normal proficiency on its variable name
+        dependencyGraph.addLink(targetProp.variableName, prop._id, 'proficiency');
+      } else {
+        // Otherwise target a field on that property
+        const key = prop.targetField || getDefaultCalculationField(targetProp);
+        const calcObj = get(targetProp, key);
+        if (calcObj && calcObj.calculation) {
+          dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'proficiency');
+        }
+      }
+    });
+  } else {
+    prop.stats.forEach(statName => {
+      if (!statName) return;
+      dependencyGraph.addLink(statName, prop._id, 'proficiency');
+    });
+  }
 }
 
 function linkSavingThrow(dependencyGraph, prop) {
   dependOnCalc({ dependencyGraph, prop, key: 'dc' });
 }
 
-function linkSkill(dependencyGraph, prop) {
+function linkSkill(dependencyGraph, prop, computation) {
   // Depends on base value
   dependOnCalc({ dependencyGraph, prop, key: 'baseValue' });
   // Link dependents
@@ -293,6 +317,20 @@ function linkSkill(dependencyGraph, prop) {
   }
   // Skills depend on the creature's proficiencyBonus
   dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus');
+
+  // Skills can apply their value as a proficiency bonus to calculations based on tag
+  if (prop.targetByTags) {
+    getEffectTagTargets(prop, computation).forEach(targetId => {
+      const targetProp = computation.propsById[targetId];
+      // Always target a field on the target property, applying a skill to an attribute or
+      // other skill isn't supported
+      const key = prop.targetField || getDefaultCalculationField(targetProp);
+      const calcObj = get(targetProp, key);
+      if (calcObj && calcObj.calculation) {
+        dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'proficiency');
+      }
+    });
+  }
 }
 
 function linkSlot(dependencyGraph, prop) {

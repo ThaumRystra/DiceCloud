@@ -29,37 +29,78 @@
             bottom
             left
             transition="slide-y-transition"
-            data-id="creature-menu"
           >
             <template #activator="{ on }">
               <v-btn
+                data-id="creature-menu"
                 icon
                 v-on="on"
               >
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
-            <v-list v-if="editPermission">
-              <v-list-item @click="deleteCharacter">
+            <v-list>
+              <v-list-item
+                v-if="!isOwner && ownerName"
+                two-line
+                disabled
+              >
+                <v-list-item-avatar>
+                  <v-icon>
+                    mdi-account
+                  </v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ ownerName }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Sheet owner
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item
+                v-if="!isOwner"
+                @click="unshareWithMe"
+              >
                 <v-list-item-title>
-                  <v-icon>mdi-delete</v-icon> Delete
+                  <v-icon left>
+                    mdi-cancel
+                  </v-icon> Unshare with me
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item :to="printUrl">
+                <v-list-item-title>
+                  <v-icon left>
+                    mdi-printer
+                  </v-icon> Print
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showCharacterForm">
                 <v-list-item-title>
-                  <v-icon>mdi-pencil</v-icon> Edit details
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon> Edit details
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item @click="showShareDialog">
+              <v-list-item
+                :disabled="!isOwner"
+                @click="showShareDialog"
+              >
                 <v-list-item-title>
-                  <v-icon>mdi-share-variant</v-icon> Sharing
+                  <v-icon left>
+                    mdi-share-variant
+                  </v-icon> Sharing
                 </v-list-item-title>
               </v-list-item>
-            </v-list>
-            <v-list v-else>
-              <v-list-item @click="unshareWithMe">
+              <v-list-item
+                :disabled="!isOwner"
+                @click="deleteCharacter"
+              >
                 <v-list-item-title>
-                  <v-icon>mdi-delete</v-icon> Unshare with me
+                  <v-icon left>
+                    mdi-delete
+                  </v-icon> Delete
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -102,9 +143,6 @@
             Stats
           </v-tab>
           <v-tab>
-            Features
-          </v-tab>
-          <v-tab>
             Actions
           </v-tab>
           <v-tab v-if="!creature.settings.hideSpellsTab">
@@ -112,6 +150,9 @@
           </v-tab>
           <v-tab>
             Inventory
+          </v-tab>
+          <v-tab>
+            Features
           </v-tab>
           <v-tab>
             Journal
@@ -144,6 +185,7 @@ import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
 
 export default {
   components: {
@@ -166,6 +208,9 @@ export default {
     },
     isDark() {
       return isDarkColor(this.toolbarColor);
+    },
+    printUrl() {
+      return `/print-character/${this.creature._id}/${getCreatureUrlName(this.creature)}`;
     },
   },
   methods: {
@@ -243,6 +288,15 @@ export default {
       } catch (e) {
         return false;
       }
+    },
+    isOwner() {
+      if (!this.creature) return;
+      return Meteor.userId() === this.creature.owner;
+    },
+    ownerName() {
+      if (!this.creature) return;
+      const username = Meteor.users.findOne(this.creature.owner)?.username;
+      return username;
     },
   },
 }

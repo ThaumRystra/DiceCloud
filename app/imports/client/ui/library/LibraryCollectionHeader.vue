@@ -5,7 +5,7 @@
     :class="isSelected && !disabled && 'primary--text v-list-item--active'"
   >
     <v-list-item-action
-      v-if="selection"
+      v-if="selection && !singleSelect"
     >
       <v-checkbox
         :disabled="disabled"
@@ -66,6 +66,7 @@ export default {
     },
     open: Boolean,
     selection: Boolean,
+    singleSelect: Boolean,
     dense: Boolean,
     isSelected: Boolean,
     disabled: Boolean,

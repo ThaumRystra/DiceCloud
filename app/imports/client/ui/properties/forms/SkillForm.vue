@@ -1,85 +1,105 @@
 <template lang="html">
   <div class="skill-form">
-    <div class="layout wrap">
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-      <text-field
-        label="Variable name"
-        :value="model.variableName"
-        style="flex-basis: 300px;"
-        hint="Use this name in formulae to reference this skill"
-        :error-messages="errors.variableName"
-        @change="change('variableName', ...arguments)"
-      />
-      <smart-combobox
-        label="Ability"
-        :value="model.ability"
-        style="flex-basis: 300px;"
-        hint="Which ability is this skill based off of"
-        :items="abilityScoreList"
-        :error-messages="errors.ability"
-        @change="change('ability', ...arguments)"
-      />
-    </div>
-    <smart-select
-      label="Type"
-      clearable
-      :items="skillTypes"
-      :value="model.skillType"
-      :error-messages="errors.skillType"
-      :menu-props="{auto: true, lazy: true}"
-      :hint="skillTypeHints[model.skillType]"
-      @change="change('skillType', ...arguments)"
-    />
-
+    <v-row dense>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          style="flex-basis: 300px;"
+          hint="Use this name in formulae to reference this skill"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-combobox
+          label="Ability"
+          :value="model.ability"
+          style="flex-basis: 300px;"
+          hint="Which ability is this skill based off of"
+          :items="abilityScoreList"
+          :error-messages="errors.ability"
+          @change="change('ability', ...arguments)"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-select
+          label="Type"
+          clearable
+          :items="skillTypes"
+          :value="model.skillType"
+          :error-messages="errors.skillType"
+          :menu-props="{auto: true, lazy: true}"
+          :hint="skillTypeHints[model.skillType]"
+          @change="change('skillType', ...arguments)"
+        />
+      </v-col>
+    </v-row>
     <inline-computation-field
       label="Description"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <form-sections>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
+    <form-sections type="skill">
+      <form-section name="Base Values">
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <proficiency-select
+              label="Base Proficiency"
+              :value="model.baseProficiency"
+              :error-messages="errors.baseProficiency"
+              @change="change('baseProficiency', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <computed-field
+              label="Base Value"
+              hint="This is the value of the skill before effects are applied"
+              :model="model.baseValue"
+              :error-messages="errors.baseValue"
+              @change="({path, value, ack}) =>
+                $emit('change', {path: ['baseValue', ...path], value, ack})"
+            />
+          </v-col>
+        </v-row>
       </form-section>
-
-      <form-section name="Advanced">
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
+      <form-section name="Apply skill">
+        <smart-switch
+          label="Apply skill to targeted tags"
+          :value="model.targetByTags"
+          :error-messages="errors.targetByTags"
+          @change="change('targetByTags', ...arguments)"
         />
-        <div class="layout justify-center">
-          <computed-field
-            label="Base Value"
-            hint="This is the value of the skill before effects are applied"
-            :model="model.baseValue"
-            :error-messages="errors.baseValue"
-            @change="({path, value, ack}) =>
-              $emit('change', {path: ['baseValue', ...path], value, ack})"
+        <v-expand-transition>
+          <tag-targeting
+            v-if="model.targetByTags"
+            :model="model"
+            :errors="errors"
+            @change="e => $emit('change', e)"
+            @push="e => $emit('push', e)"
+            @pull="e => $emit('pull', e)"
           />
-          <proficiency-select
-            style="flex-basis: 300px;"
-            label="Base Proficiency"
-            :value="model.baseProficiency"
-            :error-messages="errors.baseProficiency"
-            @change="change('baseProficiency', ...arguments)"
-          />
-        </div>
+        </v-expand-transition>
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
@@ -89,11 +109,13 @@ import ProficiencySelect from '/imports/client/ui/properties/forms/shared/Profic
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {
   components: {
     ProficiencySelect,
     FormSection,
+    TagTargeting,
   },
   mixins: [propertyFormMixin],
   data() {

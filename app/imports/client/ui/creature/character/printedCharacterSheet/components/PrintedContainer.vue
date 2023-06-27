@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="inventory-container">
     <div class="d-flex justify-center">
       <property-icon
         class="ml-2"

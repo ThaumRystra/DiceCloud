@@ -17,14 +17,13 @@ import item from '/imports/client/ui/properties/components/inventory/ItemListTil
 import note from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 //import pointBuy from '';
 //import proficiency from '';
-//import propertySlot from '';
+import propertySlot from '/imports/client/ui/properties/components/folders/folderGroupComponents/SlotBuildTree.vue';
 //import reference from '';
 //import roll from '';
 //import savingThrow from '';
 import skill from '/imports/client/ui/properties/components/skills/SkillListTile.vue';
-//import slotFiller from '';
-//import spellList from '';
-//import spell from '';
+import spellList from '/imports/client/ui/properties/components/spells/SpellListCard.vue';
+import spell from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
 import toggle from '/imports/client/ui/properties/components/toggles/ToggleCard.vue';
 //import trigger from '';
 
@@ -43,19 +42,18 @@ export default {
   //damageMultiplier,
   //effect,
   feature,
-  //folder,
+  // folder // Like actions, we don't show sub-folders
   item,
   note,
   //pointBuy,
   //proficiency,
-  //propertySlot,
+  propertySlot,
   //reference,
   //roll,
   //savingThrow,
   skill,
-  //slotFiller,
-  //spellList,
-  //spell,
+  spellList,
+  spell,
   toggle,
   //trigger,
 };

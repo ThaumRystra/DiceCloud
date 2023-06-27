@@ -10,7 +10,7 @@
         @remove="softRemove"
       />
       <div
-        v-if="spellSlots && spellSlots.length || hasSpells"
+        v-if="hasSpellSlots || hasSpells"
         class="spell-slots"
       >
         <spell-slot-card
@@ -77,9 +77,35 @@ export default {
     }
   },
   meteor: {
-    spellSlots() {
+    folderIds() {
       return CreatureProperties.find({
         'ancestors.id': this.creatureId,
+        type: 'folder',
+        groupStats: true,
+        hideStatsGroup: true,
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, { fields: { _id: 1 } }).map(folder => folder._id);
+    },
+    hasSpellSlots() {
+      return !!CreatureProperties.findOne({
+        'ancestors.id': this.creatureId,
+        inactive: { $ne: true },
+        removed: { $ne: true },
+        overridden: { $ne: true },
+        level: { $ne: 0 },
+        type: 'attribute',
+        attributeType: 'spellSlot',
+      });
+    },
+    spellSlots() {
+      return CreatureProperties.find({
+        'ancestors.id': {
+          $eq: this.creatureId,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
+        },
         inactive: { $ne: true },
         removed: { $ne: true },
         overridden: { $ne: true },
@@ -89,11 +115,18 @@ export default {
           { hideWhenTotalZero: true, total: 0 },
           { hideWhenValueZero: true, value: 0 },
         ],
+      }, {
+        sort: { order: 1 }
       });
     },
     spellLists() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        'ancestors.id': {
+          $eq: this.creatureId,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
+        },
         type: 'spellList',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -115,6 +148,9 @@ export default {
           $eq: this.creatureId,
           $nin: this.spellListIds,
         },
+        'parent.id': {
+          $nin: this.folderIds,
+        },
         type: 'spell',
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
@@ -131,6 +167,9 @@ export default {
         'ancestors.id': {
           $eq: this.creatureId,
           $nin: this.spellListIds,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
         },
         type: 'spellList',
         removed: { $ne: true },

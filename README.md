@@ -1,7 +1,7 @@
 DiceCloud
 ========
 
-This is the repo for [DiceCloud](dicecloud.com).
+This is the repo for [DiceCloud](https://dicecloud.com).
 
 DiceCloud is a free, auditable, real-time character sheet for D&D 5e.
 

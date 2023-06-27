@@ -1,7 +1,6 @@
 <template lang="html">
   <div
     class="spells"
-    style="page-break-before: always;"
   >
     <column-layout wide-columns>
       <div class="span-all">

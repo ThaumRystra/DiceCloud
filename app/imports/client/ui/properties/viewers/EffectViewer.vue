@@ -17,39 +17,10 @@
         name="Amount"
         :value="displayedValue || ' '"
       />
-      <property-field
+      <property-target-tags
         v-if="model.targetByTags"
-        name="Targeted tags"
-      >
-        <div>
-          <div class="d-flex flex-wrap">
-            <v-chip
-              v-for="(tag, index) in model.targetTags"
-              :key="index"
-              class="ma-1"
-            >
-              {{ tag }}
-            </v-chip>
-          </div>
-          <div
-            v-for="ex in model.extraTags"
-            :key="ex._id"
-          >
-            <span class="ma-2">
-              {{ ex.operation }}
-            </span>
-            <div class="d-flex flex-wrap">
-              <v-chip
-                v-for="(extraTag, index) in ex.tags"
-                :key="index"
-                class="ma-1"
-              >
-                {{ extraTag }}
-              </v-chip>
-            </div>
-          </div>
-        </div>
-      </property-field>
+        :model="model"
+      />
       <property-field
         v-else
         name="Stats"
@@ -76,10 +47,14 @@
 
 <script lang="js">
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
+import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 import { isFinite } from 'lodash';
 
 export default {
+  components: {
+    PropertyTargetTags,
+  },
   mixins: [propertyViewerMixin],
   computed: {
     resolvedValue() {

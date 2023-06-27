@@ -4,10 +4,13 @@
     :class="{'no-icons': noIcons}"
   >
     <span
-      v-if="noLinks"
+      v-if="noLinks || embedded || collection !== 'creatureProperties'"
     >
-      <v-icon>
+      <v-icon v-if="collection === 'creatureProperties'">
         mdi-account
+      </v-icon>
+      <v-icon v-else-if="collection === 'libraryNodes'">
+        mdi-book-open-blank-variant
       </v-icon>
     </span>
     <a
@@ -62,20 +65,29 @@
         type: Object,
         required: true,
       },
+      collection: {
+        type: String,
+        default: 'creatureProperties',
+      },
       noLinks: Boolean,
       noIcons: Boolean,
       editing: Boolean,
+      embedded: Boolean,
     },
     computed:{
       props(){
         return this.model.ancestors
           .slice(1)
           .map(ref => fetchDocByRef(ref))
-          .filter(prop => prop.type !== 'propertySlot');
+          .filter(prop => (this.collection !== 'creatureProperties' || prop.type !== 'propertySlot'));
       },
     },
     methods: {
-      click(id){
+      click(id) {
+        if (this.embedded) {
+          this.$emit('select-sub-property', id);
+          return;
+        }
         const store = this.$store;
         // Check if there is a dialog open for this doc already
         let dialogFound;
@@ -92,9 +104,12 @@
           // Pop dialogs until we get to it
           store.dispatch('popDialogStacks', dialogsToPop);
         } else {
+          const component = this.collection === 'creatureProperties' ? 'creature-property-dialog'
+            : this.collection === 'libraryNodes' ? 'library-node-dialog'
+            : undefined;
           // Otherwise open it as a new dialog
           store.commit('pushDialogStack', {
-            component: 'creature-property-dialog',
+            component,
             elementId: `breadcrumb-${id}`,
             data: {
               _id: id,
@@ -139,9 +154,6 @@
 .breadcrumbs {
   margin-bottom: 16px;
   opacity: 0.8;
-}
-.no-icons {
-
 }
 </style>
 

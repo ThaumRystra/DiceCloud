@@ -2,32 +2,6 @@
   <div class="slot-filler-viewer">
     <v-row dense>
       <property-field
-        name="Type"
-        :value="slotTypeName"
-      />
-      <property-field
-        name="Quantity filled"
-        :value="model.slotQuantityFilled"
-      />
-      <property-field
-        v-if="!context.creatureId"
-        name="Condition"
-        mono
-        :value="model.slotFillerCondition"
-      />
-      <property-field
-        v-if="model.picture"
-        name="Image"
-        :cols="{cols: 12}"
-      >
-        <v-img
-          :src="model.picture"
-          :height="200"
-          contain
-          class="slot-card-image"
-        />
-      </property-field>
-      <property-field
         v-if="model.description"
         name="Description"
         :cols="{cols: 12}"

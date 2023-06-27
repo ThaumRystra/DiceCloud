@@ -15,8 +15,9 @@
         :model="prop"
         :data-id="prop._id"
         @click="$emit('click-property', {_id: prop._id})"
-        @sub-click="_id => $emit('sub-click', _id)"
-        @remove="$emit('remove', prop._id)"
+        @click-property="e => $emit('click-property', e)"
+        @sub-click="e => $emit('sub-click', e)"
+        @remove="id => $emit('remove', id || prop._id)"
       />
     </v-card>
   </div>
@@ -27,14 +28,14 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import propComponents from '/imports/client/ui/properties/components/folders/propertyComponentIndex.js';
 
 export default {
-  components: {
-    ...propComponents,
-  },
   props: {
     model: {
       type: Object,
       required: true,
     }
+  },
+  beforeCreate() {
+    Object.assign(this.$options.components, propComponents);
   },
   meteor: {
     properties() {
@@ -48,8 +49,10 @@ export default {
             type: 'toggle',
             showUI: true,
             deactivatedByAncestor: { $ne: true },
+            deactivatedByToggle: { $ne: true },
           },
           {
+            type: { $ne: 'toggle' },
             inactive: { $ne: true }
           },
         ],
@@ -60,7 +63,7 @@ export default {
       }, {
         sort: { order: 1 },
       }).forEach(prop => {
-        if (this.$options.components[prop.type]) {
+        if (propComponents[prop.type]) {
           props.push(prop);
         }
       });

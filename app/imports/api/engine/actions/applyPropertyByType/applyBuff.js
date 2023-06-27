@@ -21,7 +21,10 @@ export default function applyBuff(node, actionContext) {
   const prop = node.node;
   let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
-  // Then copy the decendants of the buff to the targets
+  // Mark the buff as dirty for recalculation
+  prop.dirty = true;
+
+  // Then copy the descendants of the buff to the targets
   let propList = [prop];
   function addChildrenToPropList(children, { skipCrystalize } = {}) {
     children.forEach(child => {
@@ -97,7 +100,7 @@ function copyNodeListToTarget(propList, target, oldParent) {
 
 /**
  * Replaces all variables with their resolved values
- * except variables of the form `$target.thing.total` become `thing.total`
+ * except variables of the form `~target.thing.total` become `thing.total`
  */
 function crystalizeVariables({ propList, actionContext }) {
   propList.forEach(prop => {
@@ -116,8 +119,8 @@ function crystalizeVariables({ propList, actionContext }) {
             node.parseType !== 'accessor' && node.parseType !== 'symbol'
           ) return node;
           // Handle variables
-          if (node.name === '$target') {
-            // strip $target
+          if (node.name === '~target') {
+            // strip ~target
             if (node.parseType === 'accessor') {
               node.name = node.path.shift();
               if (!node.path.length) {
@@ -127,7 +130,7 @@ function crystalizeVariables({ propList, actionContext }) {
               // Can't strip symbols
               actionContext.addLog({
                 name: 'Error',
-                value: 'Variable `$target` should not be used without a property: $target.property',
+                value: 'Variable `~target` should not be used without a property: ~target.property',
               });
             }
             return node;

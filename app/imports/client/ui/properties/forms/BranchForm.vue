@@ -29,27 +29,17 @@
           $emit('change', {path: ['condition', ...path], value, ack})"
       />
     </v-expand-transition>
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <smart-switch
-      label="Don't show in log"
-      :value="model.silent"
-      :error-messages="errors.silent"
-      @change="change('silent', ...arguments)"
-    />
-    <form-section
-      name="Children"
-      standalone
-    >
-      <slot name="children" />
-    </form-section>
+    <form-sections type="branch">
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
+        />
+      </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 

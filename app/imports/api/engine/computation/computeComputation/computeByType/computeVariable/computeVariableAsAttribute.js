@@ -1,16 +1,40 @@
 import getAggregatorResult from './getAggregatorResult.js';
 
-export default function computeVariableAsAttribute(computation, node, prop){
+export default function computeVariableAsAttribute(computation, node, prop) {
   let result = getAggregatorResult(node) || 0;
 
   prop.total = result;
+
+  // Apply damage in a way that respects the damage rules, modifying damage if need be
+  // Bound the damage
+  if (!prop.ignoreLowerLimit && prop.damage > prop.total) {
+    console.log(`reducing damage from ${prop.damage} to ${prop.total}`);
+    prop.damage = prop.total;
+  }
+  if (!prop.ignoreUpperLimit && prop.damage < 0) {
+    console.log(`increasing damage from ${prop.damage} to 0`);
+    prop.damage = 0;
+  }
+  // Apply damage
   prop.value = prop.total - (prop.damage || 0);
 
   // Proficiency
   prop.proficiency = node.data.proficiency;
 
+  // Advantage/disadvantage
+  const aggregator = node.data.effectAggregator;
+  if (aggregator) {
+    if (aggregator.advantage && !aggregator.disadvantage) {
+      prop.advantage = 1;
+    } else if (aggregator.disadvantage && !aggregator.advantage) {
+      prop.advantage = -1;
+    } else {
+      prop.advantage = 0;
+    }
+  }
+
   // Ability scores get modifiers
-  if (prop.attributeType === 'ability'){
+  if (prop.attributeType === 'ability') {
     prop.modifier = Math.floor((prop.value - 10) / 2);
   }
 

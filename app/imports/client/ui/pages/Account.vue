@@ -20,15 +20,18 @@
             <creature-storage-stats />
           </v-list-item-title>
         </v-list-item>
-        <v-subheader>
+        <v-subheader class="mb-4">
           Preferences
         </v-subheader>
         <v-list-item>
-          <smart-switch
-            :value="darkMode"
-            label="Dark mode"
-            :disabled="!tier.paidBenefits"
-            :error-messages="tier.paidBenefits ? undefined : 'Patreon reward'"
+          <smart-toggle
+            label="Theme"
+            :value="darkMode === true ? 'true' : darkMode === false ? 'false' : darkMode === null ? 'unset': undefined"
+            :options="[
+              {name: 'Dark', value: 'true', icon: 'mdi-brightness-5'},
+              {name: 'Match device theme', value: 'unset'},
+              {name: 'Light', value: 'false', icon: 'mdi-brightness-7'},
+            ]"
             @change="setDarkMode"
           />
         </v-list-item>
@@ -260,7 +263,7 @@
         return user && user.emails;
       },
       darkMode(){
-        return this.user && this.tier.paidBenefits && this.user.darkMode;
+        return this.user && this.user.darkMode;
       },
       invites(){
         let usernames = {};
@@ -342,8 +345,16 @@
         Meteor.logout();
         router.push('/');
       },
-      setDarkMode(value, ack){
-        Meteor.users.setDarkMode.call({darkMode: !!value}, ack);
+      setDarkMode(value, ack) {
+        let darkMode;
+        if (value === 'true') {
+          darkMode = true;
+        } else if (value === 'false') {
+          darkMode = false;
+        } else if (value === 'unset') {
+          darkMode = null;
+        }
+        Meteor.users.setDarkMode.call({darkMode}, ack);
       },
       swapAbilityScoresAndModifiers(value, ack){
         Meteor.users.setPreference.call({

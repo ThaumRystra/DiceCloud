@@ -11,9 +11,14 @@
         <template slot="tree">
           <v-toolbar
             flat
-            dense
+            dark
             style="flex-grow: 0;"
           >
+            <tree-search-input
+              ref="searchBox"
+              v-model="filter"
+              class="mx-4"
+            />
             <v-spacer />
             <v-switch
               v-if="context.editPermission !== false"
@@ -22,12 +27,6 @@
               class="mx-3"
               :disabled="organizeDisabled"
               style="flex-grow: 0; height: 32px;"
-            />
-            <tree-search-input
-              ref="searchBox"
-              slot="extension"
-              v-model="filter"
-              class="mx-4"
             />
           </v-toolbar>
           <creature-properties-tree
@@ -46,6 +45,7 @@
             :_id="selectedNodeId"
             @removed="selectedNodeId = undefined"
             @duplicated="id => selectedNodeId = id"
+            @select-sub-property="clickNode"
           />
         </template>
       </tree-detail-layout>

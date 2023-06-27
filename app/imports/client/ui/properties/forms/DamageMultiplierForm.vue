@@ -1,29 +1,23 @@
 <template lang="html">
-  <div class="attribute-form">
+  <div class="damage-multiplier-form">
     <v-row dense>
       <v-col
         cols="12"
-        md="6"
       >
-        <text-field
-          ref="focusFirst"
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <smart-select
-          label="Value"
-          style="flex-basis: 300px;"
-          :items="values"
+        <smart-toggle
+          label="Multiplier"
           :value="model.value"
+          :options="[{
+            value: 2,
+            name: 'Vulnerability',
+          },{
+            value: 0.5,
+            name: 'Resistance',
+          }, {
+            value: 0,
+            name: 'Immunity',
+          }]"
           :error-messages="errors.value"
-          :menu-props="{auto: true, lazy: true}"
           @change="change('value', ...arguments)"
         />
       </v-col>
@@ -45,44 +39,44 @@
         />
       </v-col>
     </v-row>
-    <form-sections>
+    <form-sections type="damageMultiplier">
       <form-section
         v-if="$slots.children"
         name="Children"
       >
         <slot name="children" />
       </form-section>
-      <form-section name="Advanced">
-        <smart-combobox
-          label="Damage tags required"
-          hint="This damage multiplier will only apply to damage that has all of these tags"
-          multiple
-          chips
-          deletable-chips
-          :items="['magical', 'silvered']"
-          :value="model.includeTags"
-          @change="change('includeTags', ...arguments)"
-        />
-        <smart-combobox
-          label="Damage tags excluded"
-          hint="Damage that includes any of these tags will bypass this damage multiplier"
-          multiple
-          chips
-          deletable-chips
-          :items="['magical', 'silvered']"
-          :value="model.excludeTags"
-          @change="change('excludeTags', ...arguments)"
-        />
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint=""
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
-        />
+      <form-section name="Apply by tag">
+        <v-row dense>
+          <v-col cols="12">
+            <smart-combobox
+              label="Tags required"
+              hint="Only apply to damage that has all of these tags"
+              multiple
+              small-chips
+              deletable-chips
+              persistent-hint
+              :items="['magical', 'silvered']"
+              :value="model.includeTags"
+              @change="change('includeTags', ...arguments)"
+            />
+          </v-col>
+          <v-col cols="12">
+            <smart-combobox
+              label="Tags excluded"
+              hint="Don't apply to damage that has any of these tags"
+              multiple
+              small-chips
+              deletable-chips
+              persistent-hint
+              :items="['magical', 'silvered']"
+              :value="model.excludeTags"
+              @change="change('excludeTags', ...arguments)"
+            />
+          </v-col>
+        </v-row>
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
@@ -102,18 +96,6 @@ export default {
   data() {
     return {
       DAMAGE_TYPES,
-      values: [
-        {
-          value: 0,
-          text: 'Immunity',
-        }, {
-          value: 0.5,
-          text: 'Resistance',
-        }, {
-          value: 2,
-          text: 'Vulnerability',
-        },
-      ],
       damageTypeRules: [
         value => {
           if (value && value.length) {

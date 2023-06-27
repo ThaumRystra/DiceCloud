@@ -14,15 +14,19 @@ const LIBRARY_NODE_TREE_FIELDS = {
   order: 1,
   parent: 1,
   ancestors: 1,
-  tags: 1,
-  slotFillerCondition: 1,
   removed: 1,
   removedAt: 1,
   // Actions
   actionType: 1,
   // SlotFillers
+  libraryTags: 1,
   slotQuantityFilled: 1,
   slotFillerType: 1,
+  slotFillerConditionNote: 1,
+  slotFillerCondition: 1,
+  fillSlots: 1,
+  searchable: 1,
+  slotFillImage: 1,
   // Effect
   operation: 1,
   targetTags: 1,
@@ -78,7 +82,14 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
         }, {
           sort: { name: 1 }
         });
-        return [libraryCollectionCursor, libraryCursor];
+        return [
+          libraryCollectionCursor,
+          libraryCursor,
+          Meteor.users.find(
+            libraryCollection.owner,
+            { fields: { username: 1 } }
+          ),
+        ];
       });
     });
   })
@@ -137,6 +148,32 @@ Meteor.publish('libraries', function () {
   });
 });
 
+Meteor.publish('browseLibraries', function () {
+  if (!this.userId) return [];
+  return [
+    Libraries.find({
+      showInMarket: true,
+      public: true,
+    }, {
+      sort: {
+        subscriberCount: 1,
+        name: 1,
+      },
+      limit: 500,
+    }),
+    LibraryCollections.find({
+      showInMarket: true,
+      public: true,
+    }, {
+      sort: {
+        subscriberCount: 1,
+        name: 1
+      },
+      limit: 500,
+    }),
+  ];
+});
+
 Meteor.publish('library', function (libraryId) {
   if (!libraryId) return [];
   libraryIdSchema.validate({ libraryId });
@@ -147,9 +184,15 @@ Meteor.publish('library', function (libraryId) {
     catch (e) {
       return this.error(e);
     }
-    return Libraries.find({
-      _id: libraryId,
-    });
+    return [
+      Libraries.find({
+        _id: libraryId,
+      }),
+      Meteor.users.find(
+        library.owner,
+        { fields: { username: 1 } }
+      ),
+    ];
   });
 });
 
@@ -160,22 +203,42 @@ let libraryIdSchema = new SimpleSchema({
   },
 });
 
-Meteor.publish('libraryNodes', function (libraryId) {
+const extraFieldsSchema = new SimpleSchema({
+  extraFields: {
+    type: Array,
+    optional: true,
+  },
+  'extraFields.$': {
+    type: String,
+  },
+});
+
+Meteor.publish('libraryNodes', function (libraryId, extraFields) {
   if (!libraryId) return [];
-  libraryIdSchema.validate({ libraryId });
+  try {
+    libraryIdSchema.validate({ libraryId });
+    extraFieldsSchema.validate({ extraFields });
+  } catch (e) {
+    return this.error(e);
+  }
   this.autorun(function () {
     let userId = this.userId;
     let library = Libraries.findOne(libraryId);
-    try { assertViewPermission(library, userId) }
-    catch (e) {
+    try {
+      assertViewPermission(library, userId)
+    } catch (e) {
       return this.error(e);
     }
+    const fields = { ...LIBRARY_NODE_TREE_FIELDS };
+    extraFields?.forEach(field => {
+      fields[field] = 1;
+    });
     return [
       LibraryNodes.find({
         'ancestors.id': libraryId,
       }, {
         sort: { order: 1 },
-        fields: LIBRARY_NODE_TREE_FIELDS,
+        fields,
       }),
     ];
   });

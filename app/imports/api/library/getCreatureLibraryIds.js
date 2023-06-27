@@ -4,6 +4,7 @@ import getUserLibraryIds from './getUserLibraryIds';
 import { intersection, union } from 'lodash';
 
 export default function getCreatureLibraryIds(creature, userId) {
+  if (!userId) console.log('no userId, returning empty array');
   if (!userId) return [];
 
   // Get the ids of libraries the user is permitted to view
@@ -17,14 +18,14 @@ export default function getCreatureLibraryIds(creature, userId) {
         allowedLibraryCollections: 1,
       }
     });
-    if (!creature) return [];
+    if (!creature) return userLibIds;
   }
 
   // If the creature does not restrict the libraries, let it use them all
   if (!creature.allowedLibraryCollections && !creature.allowedLibraries) {
     return userLibIds;
   }
-  
+
   // Get the ids of the libraries that the creature allows
   const allowedCollections = creature.allowedLibraryCollections || [];
   let creatureLibIds = creature.allowedLibraries || [];

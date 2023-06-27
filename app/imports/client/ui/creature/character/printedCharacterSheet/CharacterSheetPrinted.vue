@@ -32,7 +32,7 @@
         light
       >
         <div class="page pa-3">
-          <div class="px-3 d-flex align-center">
+          <div class="title-block px-3 d-flex align-center">
             <div class="logo-background" />
             <div class="creature-name mr-3">
               {{ creature.name }}
@@ -42,7 +42,7 @@
                 {{ creature.alignment }} {{ background }}
               </div>
               <dir v-if="race || creature.gender">
-                {{ race }} {{ creature.gender }}
+                {{ creature.gender }} {{ race }}
               </dir>
               <div v-if="level && classes && classes.length === 1">
                 Level {{ level }} {{ classes[0].name }}
@@ -236,9 +236,33 @@ export default {
   color: black;
   font-size: 11pt;
 }
+
+.character-sheet-printed * {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  cursor: unset !important;
+}
+
 .page {
   padding: 4px;
 }
+
+.character-sheet-printed .column-layout, .character-sheet-printed .column-layout.wide-columns {
+  position:relative;
+  width: 100%;
+  widows: 0;
+  orphans: 0;
+  -webkit-column-fill: balance-all;
+  column-fill: balance-all;
+}
+
+.character-sheet-printed .column-layout>div {
+  position:relative;
+}
+.character-sheet-printed .column-layout > div > * {
+  page-break-inside: avoid;
+}
+
 .character-sheet-printed .inactive {
   opacity: 1 !important;
 }
@@ -253,8 +277,6 @@ export default {
   background-image: url(/crown-dice-logo-cropped-transparent.png);
   background-size: contain;
   background-position: 0 center;
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
 }
 
 .character-sheet-printed .v-divider {
@@ -265,39 +287,26 @@ export default {
 .character-sheet-printed .double-border {
   position: relative;
   padding: 11px 10px;
-  page-break-inside: avoid;
-}
-
-.character-sheet-printed .double-border::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   border-image-source: url(/images/print/doubleLineImageBorder.png);
   border-image-slice: 110 126 fill;
   border-image-width: 16px;
   border-image-repeat: stretch;
-  box-sizing: content-box;
-  z-index: -1;
 }
 
 .character-sheet-printed .octagon-border {
   position: relative;
   padding: 4px 20px;
-  page-break-inside: avoid;
-}
-.character-sheet-printed .octagon-border::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   border-image: url(/images/print/octagonBorder.png) 124 118 fill;
   border-image-width: 22px;
-  z-index: -1;
+}
+
+.character-sheet-printed .span-all {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+.span-all + div {
+  page-break-before: avoid;
+  break-before: avoid;
 }
 
 .character-sheet-printed .stats .label {
@@ -326,10 +335,32 @@ export default {
   }
 }
 @media print {
-  header {
-    display: none !important;
+  @page { 
+      size: auto;
+      margin: 8mm 8mm 8mm 8mm;  
   }
-  nav {
+  body {  
+      margin: 0;  
+  }
+  .character-sheet-printed .page {
+    width: 100%;
+    padding: 0 !important;
+  }
+  .character-sheet-printed .column-layout {
+    padding: 4px 0 !important;
+  }
+  .character-sheet-printed .title-block {
+    padding-left: 0 !important;
+    padding-right: 4px !important;
+  }
+  .v-main, .v-application, .v-application--wrap, .character-sheet-printed {
+    display: block !important;
+    background-color: white !important;
+  }
+  html {
+    background-color: white !important;
+  }
+  header, nav, .v-snack, .dialog-stack {
     display: none !important;
   }
   .v-main {

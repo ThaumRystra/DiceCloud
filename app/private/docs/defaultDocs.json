@@ -3,10 +3,9 @@
     "_id": "ioei4uvDdGTAFqZrB",
     "name": "Properties",
     "order": 1,
-    "urlName": "properties",
-    "tags": [],
+    "urlName": "property",
     "ancestors": [],
-    "href": "/docs/properties",
+    "href": "/docs/property",
     "published": true,
     "description": "Properties are all the things you can add to a character, like ability scores, actions, spells, and items."
   },
@@ -21,16 +20,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 2,
-    "urlName": "actions",
-    "tags": [],
-    "description": "Actions are things your character can do. When an action is taken, all the properties under it are applied.\n\nAdd actions to your character sheet, then add children under the action to determine what happenes when the action is applied.\n\nWhen an action is applied it will create an entry in the character's log detailing all the properties that were applied and what their results were.\n\nThe following properties can all be applied by an action: \n\n  - [Attribute Damage](/docs/property/attribute-damage)\n  - [Branches](/docs/property/branch)\n  - [Buffs](/docs/property/buff)\n  - [Buff Removers](/docs/property/remove-buff)\n  - [Damage](/docs/property/damage)\n  - [Notes](/docs/property/note)\n  - [Rolls](/docs/property/roll)\n  - [Saving Throws](/docs/property/saving-throw)\n  - Other actions\n\n---\n\n### Name\n\nThe name of the action.\n\n### Action type\n\nHow long the action takes to perform.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Attack roll\n\nA [computed field](/docs/computed-fields) which calculates the attack roll modifier. If this field is empty, no attack roll will be made. Use 0 to make an attack roll without a modifier.\n\nThe following variables may be added to the action scope when attack rolls are made:\n\n  - `$attackDiceRoll` The value of the d20 roll before any modifiers were applied.\n  - `$attackRoll` The total attack roll after modifiers.\n  - `$criticalHit` Set to `true` if the attack roll's d20 is a natural 20. If `criticalHitTarget` is set, the attack roll's d20 must instead be equal to or greater than `criticalHitTarget` for this to be set to `true`.\n  - `$criticalMiss` Set to `true` if the attack roll was not a critical hit and rolled a natural 1 on the d20 roll.\n  - `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.\n  - `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.\n\n### Summary\n\nA brief overview of what the action does. This will appear in the action card, and shows in the log when the action is applied.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Description\n\nA more detailed description of the action. The description does not show in the action card or the log when the action is applied.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Resource\n\nA resource can be any attribute that has a variable name. If the resource attribute is less than the amount required, the action can't be applied.\n\nIf you want to reduce an attribute when taking the action, but want the action to be applied regardless of the value of that attribute, consider using an [Attribute Damage](/docs/property/attribute-damage) property as a child of the action instead. Also use Attribute Damage when the amount to reduce the attribute is determined by a dice roll rather than a stable computed number.\n\n#### Resource attribute\n\nThe variable name of the attribute that will be consumed when taking this action.\n\n#### Resource quantity\n\nA [computed field](/docs/computed-fields) which determines how much of the attribute is required to apply this action. This amount will be deducted from the attribute every time the action is taken.\n\n### Ammo\n\nAmmo represents items that are requied to take the action. If an item is not selected, or there is insufficient quantity of the selected item, the action can't be appled.\n\n#### Ammo item\n\nSpecify what tag an item must have to be considered valid ammo for this action. Any item with this tag can be selected as ammo for this action.\n\n#### Ammo quantity\n\nA [computed field](/docs/computed-fields) which determines how many of the selected items are required to take this action. The quantity is deducted from the total quantity of the item when this action is applied.\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Target\n\nWho this action should apply to. The properties under the action will be applied to the Targets.\n\n- **Self** The action will apply its properties to the creature taking the action\n- **Single Target** The action will apply its properties without a target (for now)\n- **Multiple Targets** The action will apply its properties without a target (for now)\n\n### Uses\n\nA [computed field](/docs/computed-fields) which determines how many times this action can be used before it needs to be reset.\n\n### Uses used\n\nHow many of this action's uses have already been used. Should ideally be between 0 and the total uses available. This number is set to 0 when the action has uses and its uses are reset.\n\n### Don't show in log\n\nWhen this is true, the action does not show up in the log. This does not stop the action's children from appearing in the log when they are applied.\n\n### Reset\n\nIf set, the uses used field is set to 0 at the appropriate time.\n\n- **Long rest** Reset when the long rest button is pushed\n- **Short rest** Reset when either the long or short rest button is pushed",
+    "urlName": "action",
+    "description": "Actions are things your character can do. When an action is taken, all the properties under it are applied.\n\nAdd actions to your character sheet, then add children under the action to determine what happenes when the action is applied.\n\nWhen an action is applied it will create an entry in the character's log detailing all the properties that were applied and what their results were.\n\nThe following properties can all be applied by an action: \n\n  - [Attribute Damage](/docs/property/attribute-damage)\n  - [Branches](/docs/property/branch)\n  - [Buffs](/docs/property/buff)\n  - [Buff Removers](/docs/property/remove-buff)\n  - [Damage](/docs/property/damage)\n  - [Notes](/docs/property/note)\n  - [Rolls](/docs/property/roll)\n  - [Saving Throws](/docs/property/saving-throw)\n  - Other actions\n\n---\n\n### Name\n\nThe name of the action.\n\n### Action type\n\nHow long the action takes to perform.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Attack roll\n\nA [computed field](/docs/concepts/computed-fields) which calculates the attack roll modifier. If this field is empty, no attack roll will be made. Use 0 to make an attack roll without a modifier.\n\nThe following variables may be added to the action scope when attack rolls are made:\n\n  - `$attackDiceRoll` The value of the d20 roll before any modifiers were applied.\n  - `$attackRoll` The total attack roll after modifiers.\n  - `$criticalHit` Set to `true` if the attack roll's d20 is a natural 20. If `criticalHitTarget` is set, the attack roll's d20 must instead be equal to or greater than `criticalHitTarget` for this to be set to `true`.\n  - `$criticalMiss` Set to `true` if the attack roll was not a critical hit and rolled a natural 1 on the d20 roll.\n  - `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.\n  - `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.\n\n### Summary\n\nA brief overview of what the action does. This will appear in the action card, and shows in the log when the action is applied.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Description\n\nA more detailed description of the action. The description does not show in the action card or the log when the action is applied.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Resource\n\nA resource can be any attribute that has a variable name. If the resource attribute is less than the amount required, the action can't be applied.\n\nIf you want to reduce an attribute when taking the action, but want the action to be applied regardless of the value of that attribute, consider using an [Attribute Damage](/docs/property/attribute-damage) property as a child of the action instead. Also use Attribute Damage when the amount to reduce the attribute is determined by a dice roll rather than a stable computed number.\n\n#### Resource attribute\n\nThe variable name of the attribute that will be consumed when taking this action.\n\n#### Resource quantity\n\nA [computed field](/docs/concepts/computed-fields) which determines how much of the attribute is required to apply this action. This amount will be deducted from the attribute every time the action is taken.\n\n### Ammo\n\nAmmo represents items that are requied to take the action. If an item is not selected, or there is insufficient quantity of the selected item, the action can't be appled.\n\n#### Ammo item\n\nSpecify what tag an item must have to be considered valid ammo for this action. Any item with this tag can be selected as ammo for this action.\n\n#### Ammo quantity\n\nA [computed field](/docs/concepts/computed-fields) which determines how many of the selected items are required to take this action. The quantity is deducted from the total quantity of the item when this action is applied.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Target\n\nWho this action should apply to. The properties under the action will be applied to the Targets.\n\n- **Self** The action will apply its properties to the creature taking the action\n- **Single Target** The action will apply its properties without a target (for now)\n- **Multiple Targets** The action will apply its properties without a target (for now)\n\n### Uses\n\nA [computed field](/docs/concepts/computed-fields) which determines how many times this action can be used before it needs to be reset.\n\n### Uses used\n\nHow many of this action's uses have already been used. Should ideally be between 0 and the total uses available. This number is set to 0 when the action has uses and its uses are reset.\n\n### Don't show in log\n\nWhen this is true, the action does not show up in the log. This does not stop the action's children from appearing in the log when they are applied.\n\n### Reset\n\nIf set, the uses used field is set to 0 at the appropriate time.\n\n- **Long rest** Reset when the long rest button is pushed\n- **Short rest** Reset when either the long or short rest button is pushed",
     "published": true,
-    "href": "/docs/properties/actions"
+    "href": "/docs/property/action"
   },
   {
     "_id": "FwpkjToybWQKCDhSr",
@@ -43,15 +41,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 3,
     "urlName": "attribute-damage",
-    "tags": [],
-    "description": "When applied, attribute damage reduces the value of the [Attribute](/docs/properties/attributes) by some amount or set the value of an attribute to some amount. Attribute damage can by applied by actions or triggers.\n\nUsing a negative value to damage an attribute will heal the attribute instead.\n\n---\n\n### Attribute\n\nThe variable name of the attribute to target.\n\n### Amount\n\nA [computed field](/docs/computed-fields) which determined the amount to damage the attribute or set the attribute's value to.\n\n### Operation\n\n- **Damage** Reduce the value of the attribute by the amount, negative values heal the attribute instead\n- **Set** Set the value of the attribute to the amount\n\n### Target\n\n- **Target** Apply the attribute damage to the same target as the action applying this property\n- **Self** Apply the attribute damage to the creature taking the action\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Don't show in log\n\nWhen this is set, the attribute damage is applied, but does not show in the log.",
-    "href": "/docs/properties/attribute-damage",
+    "description": "When applied, attribute damage reduces the value of the [Attribute](/docs/property/attribute) by some amount or set the value of an attribute to some amount. Attribute damage can by applied by actions or triggers.\n\nUsing a negative value to damage an attribute will heal the attribute instead.\n\n---\n\n### Attribute\n\nThe variable name of the attribute to target.\n\n### Amount\n\nA [computed field](/docs/concepts/computed-fields) which determined the amount to damage the attribute or set the attribute's value to.\n\n### Operation\n\n- **Damage** Reduce the value of the attribute by the amount, negative values heal the attribute instead\n- **Set** Set the value of the attribute to the amount\n\n### Target\n\n- **Target** Apply the attribute damage to the same target as the action applying this property\n- **Self** Apply the attribute damage to the creature taking the action\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Don't show in log\n\nWhen this is set, the attribute damage is applied, but does not show in the log.",
+    "href": "/docs/property/attribute-damage",
     "published": true
   },
   {
@@ -65,16 +62,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 4,
-    "urlName": "attributes",
-    "tags": [],
-    "description": "Attributes represent the numerical values of the creature.\n\nAttributes can be targeted by [effects](/docs/property/effect) which can change their total value in a non-destructive way. For example, if a class level gives you an ability score increase of +2 strength when it is taken, instead of directly editing the strength attribute, you add an effect to the class level that adds 2 to strength. The total value of strength will increase by 2 and it will show a record of that ability score increase and where it came from.\n\nAttributes, [skills](/docs/properties/skill), and [effects](/docs/property/effect) are the core properties of DiceCloud's creature engine.\n\nAttributes have the following fields that can be accessed in calculations with `variableName.field`:\n\n- `.total` The total of the attribute before being damaged\n- `.damage` the amount of damage the attribute has taken\n- `.value` The current value of the attribute including damage. `variableName` and `variableName.value` are equivalent.\n- `.modifier` If the attribute is an ability, this is its roll modifier, eg. `strength.modifier` is +2 when `strength.value` is 14\n\n---\n\n### Base value\n\nA [computed field](/docs/computed-fields) that determines the starting value of the attribute before it is modified by effects and other properties. Multiple properties can set the base value for a given variable name, when this happens the highest base value is chosen, and then all other effects are applied.\n\n### Name\n\nThe name of the attribute\n\n### Variable name\n\nThe name used to refer to the attribute in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\nIf multiple attributes share a variable name, only the last attribute on the [character tree](/docs/tree) will count as the defining attribute and appear on the sheet, while other attributes with that variable name will be used as base value [effects](/docs/property/effect).\n\n### Attribute type\n\n- **Ability** Ablity scores like Strength, Dexterity, etc. Ability scores get a modifier which can be accessed in calculations as `variableName.modifier`,\n- **Stat** Any numerical value that appears on the sheet. Speed, armor class.\n- **Modifier** Any numical value that appears on the sheet with a `+` or `-` sign, eg. Proficiency bonus.\n- **Hit Dice** Hit dice let you select the appropriate hit dice size. Creatures regain half their total hit dice on long rest.\n- **Health Bar** Health bars can by made to take or ignore damage in a specified order\n- **Resource** Rages, sourcery points, things that are spent to use actions.\n- **Spell Slot** Spell slots have a specific level and are used to cast spells.\n- **Utility** Utility attributes don't show up anywhere on the sheet, but can still be used for calculations\n\n### Description\n\nA detailed description of the attribute.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Health bar settings\n\nHealth bars can take or ignore damage and healing from applied damage properties targeting a creature. A lower ordered health bar will take damage before a higher ordered one.\n\nHealth bars can also change color depending on their value. At 50%+ full they are their property color, between 50% and 0% they fade from their half-full color to their empty color.\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Allow decimal values\n\nIf this is set, the attribute will not round-down when its value has a decimal.\n\n### Can be damaged into negative values\n\nIf this is set the attribute can be damaged past zero into negative values.\n\n### Can be incremented above total\n\nIf this is set the attribute can have negative damage such that the value exceeds the total. This can be useful if you are using the attribute to count, it can start at zero and be healed upwards to keep count.\n\n### Reset\n\nIf set, the damage on this attribute is reset to 0 at the appropriate time.\n\n- **Long rest** Reset when the long rest button is pushed\n- **Short rest** Reset when either the long or short rest button is pushed",
+    "urlName": "attribute",
+    "description": "Attributes represent the numerical values of the creature.\n\nAttributes can be targeted by [effects](/docs/property/effect) which can change their total value in a non-destructive way. For example, if a class level gives you an ability score increase of +2 strength when it is taken, instead of directly editing the strength attribute, you add an effect to the class level that adds 2 to strength. The total value of strength will increase by 2 and it will show a record of that ability score increase and where it came from.\n\nAttributes, [skills](/docs/property/skill), and [effects](/docs/property/effect) are the core properties of DiceCloud's creature engine.\n\nAttributes have the following fields that can be accessed in calculations with `variableName.field`:\n\n- `.total` The total of the attribute before being damaged\n- `.damage` the amount of damage the attribute has taken\n- `.value` The current value of the attribute including damage. `variableName` and `variableName.value` are equivalent.\n- `.modifier` If the attribute is an ability, this is its roll modifier, eg. `strength.modifier` is +2 when `strength.value` is 14\n\n---\n\n### Base value\n\nA [computed field](/docs/concepts/computed-fields) that determines the starting value of the attribute before it is modified by effects and other properties. Multiple properties can set the base value for a given variable name, when this happens the highest base value is chosen, and then all other effects are applied.\n\n### Name\n\nThe name of the attribute\n\n### Variable name\n\nThe name used to refer to the attribute in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\nIf multiple attributes share a variable name, only the last attribute on the [character tree](/docs/concepts/tree) will count as the defining attribute and appear on the sheet, while other attributes with that variable name will be used as base value [effects](/docs/property/effect).\n\n### Attribute type\n\n- **Ability** Ablity scores like Strength, Dexterity, etc. Ability scores get a modifier which can be accessed in calculations as `variableName.modifier`,\n- **Stat** Any numerical value that appears on the sheet. Speed, armor class.\n- **Modifier** Any numical value that appears on the sheet with a `+` or `-` sign, eg. Proficiency bonus.\n- **Hit Dice** Hit dice let you select the appropriate hit dice size. Creatures regain half their total hit dice on long rest.\n- **Health Bar** Health bars can by made to take or ignore damage in a specified order\n- **Resource** Rages, sourcery points, things that are spent to use actions.\n- **Spell Slot** Spell slots have a specific level and are used to cast spells.\n- **Utility** Utility attributes don't show up anywhere on the sheet, but can still be used for calculations\n\n### Description\n\nA detailed description of the attribute.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Health bar settings\n\nHealth bars can take or ignore damage and healing from applied damage properties targeting a creature. A lower ordered health bar will take damage before a higher ordered one.\n\nHealth bars can also change color depending on their value. At 50%+ full they are their property color, between 50% and 0% they fade from their half-full color to their empty color.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Allow decimal values\n\nIf this is set, the attribute will not round-down when its value has a decimal.\n\n### Can be damaged into negative values\n\nIf this is set the attribute can be damaged past zero into negative values.\n\n### Can be incremented above total\n\nIf this is set the attribute can have negative damage such that the value exceeds the total. This can be useful if you are using the attribute to count, it can start at zero and be healed upwards to keep count.\n\n### Reset\n\nIf set, the damage on this attribute is reset to 0 at the appropriate time.\n\n- **Long rest** Reset when the long rest button is pushed\n- **Short rest** Reset when either the long or short rest button is pushed",
     "published": true,
-    "href": "/docs/properties/attributes"
+    "href": "/docs/property/attribute"
   },
   {
     "_id": "X5NKw8m6ruy9Srynd",
@@ -87,16 +83,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 5,
-    "urlName": "branches",
-    "tags": [],
+    "urlName": "branch",
     "published": true,
-    "description": "Branches are applied by actions, when they are applied they can control which of their immediate children are applied.\n\n---\n\n### Branch type\n\n- **If condition is true** Apply children if the condition (a [computed field](/docs/computed-fields)) resolves to `true` or a non-zero number\n- **Attack hit** Apply children if the attack roll hit the target\n- **Attack hit** Apply children if the attack roll missed the target\n- **Save failed** Apply children if target failed its saving throw\n- **Save suceeded** Apply children if target made its saving throw\n- **Apply to each target** Apply children separately to each target\n- **Random** Apply one of the immediate children at random\n- **Calculated Index** Use the index (a [computed field](/docs/computed-fields)) to choose which child to apply, starting at 1 for the first child.\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Don't show in log\n\nWhen this is set, the branch is applied, but does not show in the log. This does not prevent its children from appearing in the log.",
-    "href": "/docs/properties/branches"
+    "description": "Branches are applied by actions, when they are applied they can control which of their immediate children are applied.\n\n---\n\n### Branch type\n\n- **If condition is true** Apply children if the condition (a [computed field](/docs/concepts/computed-fields)) resolves to `true` or a non-zero number\n- **Attack hit** Apply children if the attack roll hit the target\n- **Attack hit** Apply children if the attack roll missed the target\n- **Save failed** Apply children if target failed its saving throw\n- **Save suceeded** Apply children if target made its saving throw\n- **Apply to each target** Apply children separately to each target\n- **Random** Apply one of the immediate children at random\n- **Calculated Index** Use the index (a [computed field](/docs/concepts/computed-fields)) to choose which child to apply, starting at 1 for the first child.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Don't show in log\n\nWhen this is set, the branch is applied, but does not show in the log. This does not prevent its children from appearing in the log.",
+    "href": "/docs/property/branch"
   },
   {
     "_id": "7KzMFHqo8DJtFtj7Q",
@@ -109,14 +104,13 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 6,
     "urlName": "new-doc-6",
-    "href": "/docs/properties/new-doc-6",
-    "tags": [],
+    "href": "/docs/property/new-doc-6",
     "removed": true,
     "removedAt": "2022-11-21T15:45:45.975Z"
   },
@@ -131,14 +125,13 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 7,
     "urlName": "new-doc-7",
-    "href": "/docs/properties/new-doc-7",
-    "tags": [],
+    "href": "/docs/property/new-doc-7",
     "removed": true,
     "removedAt": "2022-11-21T15:49:16.862Z"
   },
@@ -153,15 +146,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 8,
-    "urlName": "buffs",
-    "href": "/docs/properties/buffs",
-    "tags": [],
-    "description": "Buffs are temporary changes to a character sheet that can be applied by actions. When a buff is applied, it is copied to the target character along with all of its children properties. \n\nBuffs can either be manually removed from the stats page, or be removed by an action applying a [buff remover](/docs/property/remove-buff/) property.\n\n### Variable freezing\n\nWhen a buff is applied, all the calculations in the child properties have their variables frozen to their values at the time the buff is applied. You can prevent this behavior for the whole buff by using the `don't freeze variables` option, or on an individual variable reference by prefixing the variable with the keyword `$target.`.\n\nFor example, if a character has 10 strength and 16 dexterity, and applies a buff with some child property containing the calculation `$target.strength + dexterity` the property's calculation will become `strength + 16` when it is copied to the target character.\n\n---\n\n### Name\n\nThe name of the buff.\n\n### Description\n\nDescription of the applied buff.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Target\n\n- **Target** Apply the buff to the target of the action\n- **Self** Apply the buff to the creature taking the action\n\n### Hide remove button\n\nIf this is set, the remove button next to the buff on the stats page will be hidden. Use this when you expect the buff to be removed automatically by another action.\n\n### Don't show in log\n\nIf set, the buff will not show its name and description in the log when applied.\n\n### Don't freeze variables\n\nPrevent the buff from freezing variables in child property calculations to their value at the time the buff was applied.\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "buff",
+    "href": "/docs/property/buff",
+    "description": "Buffs are temporary changes to a character sheet that can be applied by actions. When a buff is applied, it is copied to the target character along with all of its children properties. \n\nBuffs can either be manually removed from the stats page, or be removed by an action applying a [buff remover](/docs/property/remove-buff/) property.\n\n### Variable freezing\n\nWhen a buff is applied, all the calculations in the child properties have their variables frozen to their values at the time the buff is applied. You can prevent this behavior for the whole buff by using the `don't freeze variables` option, or on an individual variable reference by prefixing the variable with the keyword `~target.`.\n\nFor example, if a character has 10 strength and 16 dexterity, and applies a buff with some child property containing the calculation `~target.strength + dexterity` the property's calculation will become `strength + 16` when it is copied to the target character.\n\n---\n\n### Name\n\nThe name of the buff.\n\n### Description\n\nDescription of the applied buff.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Target\n\n- **Target** Apply the buff to the target of the action\n- **Self** Apply the buff to the creature taking the action\n\n### Hide remove button\n\nIf this is set, the remove button next to the buff on the stats page will be hidden. Use this when you expect the buff to be removed automatically by another action.\n\n### Don't show in log\n\nIf set, the buff will not show its name and description in the log when applied.\n\n### Don't freeze variables\n\nPrevent the buff from freezing variables in child property calculations to their value at the time the buff was applied.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -170,7 +162,6 @@
     "order": 9,
     "urlName": "new-doc-9",
     "href": "/docs/new-doc-9",
-    "tags": [],
     "ancestors": [],
     "removed": true,
     "removedAt": "2022-11-21T15:49:40.176Z"
@@ -196,14 +187,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 11,
-    "urlName": "class-levels",
-    "href": "/docs/properties/class-levels",
-    "description": "A class level is a property that represents a single level in a class. It is generally used as a child of a [Class property](/docs/property/class).\n\nFeatures and bonuses that are given by a class level get added as children of the class level.\n\n---\n\n### Level\n\nWhich level this property represents.\n\n### Name\n\nThe name of the class or subclass this level is part of\n\n### Variable name\n\nThe same variable name of the class this level belongs to.\n\n### Description\n\nA description of the benefits gained with this level.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "class-level",
+    "href": "/docs/property/class-level",
+    "description": "A class level is a property that represents a single level in a class. It is generally used as a child of a [Class property](/docs/property/class).\n\nFeatures and bonuses that are given by a class level get added as children of the class level.\n\n---\n\n### Level\n\nWhich level this property represents.\n\n### Name\n\nThe name of the class or subclass this level is part of\n\n### Variable name\n\nThe same variable name of the class this level belongs to.\n\n### Description\n\nA description of the benefits gained with this level.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -217,15 +208,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 12,
-    "urlName": "classes",
-    "href": "/docs/properties/classes",
+    "urlName": "class",
+    "href": "/docs/property/class",
     "published": true,
-    "description": "A class is a property that expects [class levels](/docs/property/class-level) as its immediate children.\n\nLeveling up a class means choosing, or manually adding, class level properties to it. Class levels with the same variable name as the class, and that match all the required tags are found in libraries and added to the class.\n\nThe total level of the class can be accessed in calculations using `classVariableName.level`.\n\n## Making your own class\n\nSee [Create a Class](/docs/walkthroughs/create-a-class)\n\n---\n\n### Name\n\nThe name of the class\n\n### Variable name\n\nThe name used to refer to the class in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Description\n\nA description of the class.\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Tags required\n\nOnly class levels with the same variable name as the class, and with tags that match the tags required will be returned from libraries when leveling up this class.\n\n### Condition\n\nA [computed field](/docs/computed-fields) to determine if the class is allowed to level up. If this field results in `true` or a number that is not 0, the class can be levelled, otherwise leveling is disabled."
+    "description": "A class is a property that expects [class levels](/docs/property/class-level) as its immediate children.\n\nLeveling up a class means choosing, or manually adding, class level properties to it. Class levels with the same variable name as the class, and that match all the required tags are found in libraries and added to the class.\n\nThe total level of the class can be accessed in calculations using `classVariableName.level`.\n\n---\n\n### Name\n\nThe name of the class\n\n### Variable name\n\nThe name used to refer to the class in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctuation.\n\n### Description\n\nA description of the class.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Tags required\n\nOnly class levels with the same variable name as the class, and with tags that match the tags required will be returned from libraries when leveling up this class.\n\n### Condition\n\nA [computed field](/docs/concepts/computed-fields) to determine if the class is allowed to level up. If this field results in `true` or a number that is not 0, the class can be levelled, otherwise leveling is disabled."
   },
   {
     "_id": "giHu6Ej7qvsZr4zrJ",
@@ -238,14 +229,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 13,
-    "urlName": "constants",
-    "href": "/docs/properties/constants",
-    "description": "Constants are properties that store some primitive value in a variable name for use in other calculations.\n\nUnlike attributes, constants can store more than just numbers:\n\n- Arrays: `[1,2,3,4]`\n- Text strings: `'I am a cat'`\n- Numbers: `3.14`\n- Boolean values: `true`, `false`\n- Dice rolls: `1d20 + 2`\n\nConstants just can't use other variables in their calculations.\n\n### Overriding constants\n\nIf multiple constants have the same variable name, only the last active constant in the [character tree](/docs/tree) will be used as the definition for that variable name.\n\nThis can be used to re-write the value of some constant by ensuring there is a new active constant later in the sheet.\n\n---\n\n### Name\n\nThe name of the constants\n\n### Variable Name\n\nThe name used to refer to the constant in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Value\n\nA [calculation](/docs/computed-fields) of the final value of the constant.",
+    "urlName": "constant",
+    "href": "/docs/property/constant",
+    "description": "Constants are properties that store some primitive value in a variable name for use in other calculations.\n\nUnlike attributes, constants can store more than just numbers:\n\n- Arrays: `[1,2,3,4]`\n- Text strings: `'I am a cat'`\n- Numbers: `3.14`\n- Boolean values: `true`, `false`\n- Dice rolls: `1d20 + 2`\n\nConstants just can't use other variables in their calculations.\n\n### Overriding constants\n\nIf multiple constants have the same variable name, only the last active constant in the [character tree](/docs/concepts/tree) will be used as the definition for that variable name.\n\nThis can be used to re-write the value of some constant by ensuring there is a new active constant later in the sheet.\n\n---\n\n### Name\n\nThe name of the constants\n\n### Variable Name\n\nThe name used to refer to the constant in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctuation.\n\n### Value\n\nA [calculation](/docs/concepts/computed-fields) of the final value of the constant.",
     "published": true
   },
   {
@@ -259,14 +250,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 14,
-    "urlName": "containers",
-    "href": "/docs/properties/containers",
-    "description": "Containers are things that [items](/docs/property/item) can be put inside of.\n\n---\n\n### Name\n\nThe name of the container\n\n### Carried\n\nIf this is set the weight of the container and its contents will be added to the character's weight carried.\n\n### Value\n\nThe value of the container in gold pieces. Silver pieces are worth 0.1 gp and copper pieces are worth 0.01 gp. So a container that is worth 2 gp 4 sp 7 cp will have a value of  2.47 gp.\n\n### Weight\n\nThe weight of the container in lb.\n\n### Description\n\nA description of the container. \n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Contents are weightless\n\nIf this is set and the container is carried, only the container's own weight will be added to the weight carried by the creature.",
+    "urlName": "container",
+    "href": "/docs/property/container",
+    "description": "Containers are things that [items](/docs/property/item) can be put inside of.\n\n---\n\n### Name\n\nThe name of the container\n\n### Carried\n\nIf this is set the weight of the container and its contents will be added to the character's weight carried.\n\n### Value\n\nThe value of the container in gold pieces. Silver pieces are worth 0.1 gp and copper pieces are worth 0.01 gp. So a container that is worth 2 gp 4 sp 7 cp will have a value of  2.47 gp.\n\n### Weight\n\nThe weight of the container in lb.\n\n### Description\n\nA description of the container. \n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Contents are weightless\n\nIf this is set and the container is carried, only the container's own weight will be added to the weight carried by the creature.",
     "published": true
   },
   {
@@ -280,14 +271,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 15,
-    "urlName": "damage-multipliers",
-    "href": "/docs/properties/damage-multipliers",
-    "description": "Damage multipliers are used to define vulnerability, resistance, and immunity to damage types.\n\nA single multiplier can apply to multiple damage types, and choose whether or not to apply to an incoming source of damage based on the tags present on that damage.\n\n---\n\n### Name\n\nThe name of the feature that gives this damage multiplier\n\n### Value\n\n- **Immunity** The creature takes no damage from matching damage sources\n- **Resistance** Damage from matching sources is halved.\n- **Vulnerability** Damage from matching sources is doubled.\n\n### Damage types\n\nA list of damage types that this property applies to. Custom types can be used.\n\n### Damage tags required\n\nThis damage multiplier will only be applied if the incoming damage has all of these tags present.\n\n### Damage tags excluded\n\nThis damage multiplier will only apply if the incoming damage has none of these tags present.\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "damage-multiplier",
+    "href": "/docs/property/damage-multiplier",
+    "description": "Damage multipliers are used to define vulnerability, resistance, and immunity to damage types.\n\nA single multiplier can apply to multiple damage types, and choose whether or not to apply to an incoming source of damage based on the tags present on that damage.\n\n---\n\n### Name\n\nThe name of the feature that gives this damage multiplier\n\n### Value\n\n- **Immunity** The creature takes no damage from matching damage sources\n- **Resistance** Damage from matching sources is halved.\n- **Vulnerability** Damage from matching sources is doubled.\n\n### Damage types\n\nA list of damage types that this property applies to. Custom types can be used.\n\n### Damage tags required\n\nThis damage multiplier will only be applied if the incoming damage has all of these tags present.\n\n### Damage tags excluded\n\nThis damage multiplier will only apply if the incoming damage has none of these tags present.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -301,15 +292,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 16,
     "urlName": "damage",
-    "href": "/docs/properties/damage",
+    "href": "/docs/property/damage",
     "published": true,
-    "description": "Damage can be applied by an action to damage a target creature's [health bars](/docs/property/attribute). The damage will be modified by [damage multipliers](/docs/property/damage-multiplier), which apply vulnerability, resistance, and immunity before the damage is applied.\n\n---\n\n### Damage\n\nA [computed field](/docs/computed-fields) that determines how much damage to do to the target creature.\n\n### Damage type\n\nDamage type determines how the damage is treated by [damage multipliers](/docs/property/damage-multiplier). A custom type can be used, or one of the existing types can be selected.\n\nThere are two special damage types:\n\n**Extra damage** Damage with the `extra` type will take on the damage type of whatever damage was applied before it by an action. So if an action deals 12 `piercing` damage and `3` extra damage, it will instead deal 15 `piercing` damage.\n\n**Healing** Damage with the `healing` type will heal a creature instead of damaging them.\n\n### Target\n\n- **Target** Apply the damage to the target of the action\n- **Self** Apply the damage to the creature taking the action\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Don't show in log\n\nIf set, the damage will be applied but not show in the log."
+    "description": "Damage can be applied by an action to damage a target creature's [health bars](/docs/property/attribute). The damage will be modified by [damage multipliers](/docs/property/damage-multiplier), which apply vulnerability, resistance, and immunity before the damage is applied.\n\n---\n\n### Damage\n\nA [computed field](/docs/concepts/computed-fields) that determines how much damage to do to the target creature.\n\n### Damage type\n\nDamage type determines how the damage is treated by [damage multipliers](/docs/property/damage-multiplier). A custom type can be used, or one of the existing types can be selected.\n\nThere are two special damage types:\n\n**Extra damage** Damage with the `extra` type will take on the damage type of whatever damage was applied before it by an action. So if an action deals 12 `piercing` damage and `3` extra damage, it will instead deal 15 `piercing` damage.\n\n**Healing** Damage with the `healing` type will heal a creature instead of damaging them.\n\n### Target\n\n- **Target** Apply the damage to the target of the action\n- **Self** Apply the damage to the creature taking the action\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Don't show in log\n\nIf set, the damage will be applied but not show in the log."
   },
   {
     "_id": "FHdAjYY2er9xfYsJs",
@@ -322,14 +313,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 17,
-    "urlName": "effects",
-    "href": "/docs/properties/effects",
-    "description": "Effects are the core of the DiceCloud engine. Effect change the values of attributes, skills, and calculations in a way that is transparent and auditable, keeping character sheets organized and understandable, even when using intricate homebrew rules on high level characters.\n\n---\n\n### Name\n\nThe name of the feature that causes this effect.\n\n### Operation\n\nThe operation determines what the effect will do to the affected property or calcualtion.\n\n- **Base Value** Set the base value of the affected property. If a property has multiple base values, the highest is used\n- **Add** Add the value to the affected property or calculation\n- **Muliply** Multiply the affected property by the value\n- **Minimum** Prevent the affected property from having a value less than the effect value\n- **Maximum** Prevent the affected property from having a value greater than the effect value\n- **Maximum** Prevent the affected property from having a value greater than the effect value\n- **Set** Set the value affected property to the effect value\n- **Advantage** Give advantage to checks made using the affected property\n- **Disadvantage** Give disadvantage to checks made using the affected property\n- **Passive bonus** Add the effect value to the passive scores based on the affected property\n- **Fail** Checks made using the affected property automatically fail\n- **Conditional benefit** Add some text to the affected property describing the benefit recieved\n\n### Value\n\nA [computed field](/docs/computed-fields) that determines the value of the effect.\n\n### Text\n\nIf the operation is a conditional benefit, the note text that will show on affected properties.\n\n### Target stats by variable name\n\nIf selected the effect will apply to all properties that have the given variable names.\n\n### Variable names\n\nA list of variable names of properties to target with this effect.\n\n### Target properties by tags\n\nWhen targeting properties by tag, any property can be targeted with an effect. If the property is one that can usually be targeted by variable name, the effect will apply as ususal, however if the effect targets another property, it will apply to a [computed field](/docs/computed-fields) on the property instead.\n\nThese effects can be used for adding a bonus to a specific attack or damage roll, or manipulating any computed field on the creature.\n\n### Tags required\n\nOnly properties that match the required tags will be targeted by the effect.\n\n### Target field\n\nIf a property has multiple computed fields, which field should be targeted by this effect.\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "effect",
+    "href": "/docs/property/effect",
+    "description": "Effects are the core of the DiceCloud engine. Effect change the values of attributes, skills, and calculations in a way that is transparent and auditable, keeping character sheets organized and understandable, even when using intricate homebrew rules on high level characters.\n\n---\n\n### Name\n\nThe name of the feature that causes this effect.\n\n### Operation\n\nThe operation determines what the effect will do to the affected property or calcualtion.\n\n- **Base Value** Set the base value of the affected property. If a property has multiple base values, the highest is used\n- **Add** Add the value to the affected property or calculation\n- **Muliply** Multiply the affected property by the value\n- **Minimum** Prevent the affected property from having a value less than the effect value\n- **Maximum** Prevent the affected property from having a value greater than the effect value\n- **Maximum** Prevent the affected property from having a value greater than the effect value\n- **Set** Set the value affected property to the effect value\n- **Advantage** Give advantage to checks made using the affected property\n- **Disadvantage** Give disadvantage to checks made using the affected property\n- **Passive bonus** Add the effect value to the passive scores based on the affected property\n- **Fail** Checks made using the affected property automatically fail\n- **Conditional benefit** Add some text to the affected property describing the benefit recieved\n\n### Value\n\nA [computed field](/docs/concepts/computed-fields) that determines the value of the effect.\n\n### Text\n\nIf the operation is a conditional benefit, the note text that will show on affected properties.\n\n### Target stats by variable name\n\nIf selected the effect will apply to all properties that have the given variable names.\n\n### Variable names\n\nA list of variable names of properties to target with this effect.\n\n### Target properties by tags\n\nWhen targeting properties by tag, any property can be targeted with an effect. If the property is one that can usually be targeted by variable name, the effect will apply as usual, however if the effect targets another property, it will apply to a [computed field](/docs/concepts/computed-fields) on the property instead.\n\nThese effects can be used for adding a bonus to a specific attack or damage roll, or manipulating any computed field on the creature.\n\n### Tags required\n\nOnly properties that match the required tags will be targeted by the effect.\n\n### Target field\n\nIf a property has multiple computed fields, which field should be targeted by this effect.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -343,14 +334,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 18,
-    "urlName": "features",
-    "href": "/docs/properties/features",
-    "description": "Features appear on the features tab. Classes, backgrounds, and race can all give a creature features.\n\n---\n\n### Name\n\nThe name of the feature.\n\n### Summary\n\nA summary of the feature. This will appear on the feature card.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Description\n\nA detailed description of the feature.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "feature",
+    "href": "/docs/property/feature",
+    "description": "Features appear on the features tab. Classes, backgrounds, and race can all give a creature features.\n\n---\n\n### Name\n\nThe name of the feature.\n\n### Summary\n\nA summary of the feature. This will appear on the feature card.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Description\n\nA detailed description of the feature.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -364,15 +355,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 19,
-    "urlName": "folders",
-    "href": "/docs/properties/folders",
+    "urlName": "folder",
+    "href": "/docs/property/folder",
     "published": true,
-    "description": "Folders allow the [character tree](/docs/tree) to be organized.\n\n### Folders in actions\n\nWhen a folder is the child of an action, it and its children will not show on the action card, but will still appear in the detail view of the action and be applied when the action is taken.\n\n---\n\n### Name\n\nThe name of the folder.\n\n### Tags\n\nSee [Tags](/docs/tags)"
+    "description": "Folders allow the [character tree](/docs/concepts/tree) to be organized.\n\n### Folders in actions\n\nWhen a folder is the child of an action, it and its children will not show on the action card, but will still appear in the detail view of the action and be applied when the action is taken.\n\n### Grouping children\n\nWhen the folder is set to group stats on a card, the immediate children of the folder will be shown in a single card in a location on the sheet you can specify. For now, the following properties are supported:\n\n- Actions, including event actions\n- Attributes\n- Buffs\n- Containers\n- Features\n- Items\n- Notes\n- Skills\n- Toggles (with _Show on character sheet_ enabled)\n\n---\n\n### Name\n\nThe name of the folder.\n\n### Group children on a card\n\nImmediate children will be grouped on a card in the sheet.\n\n### Hide children from stats tab\n\nThe children of this card will not appear on the stats tab, but may still  appear in other tabs.\n\n### Tab\n\nDetermines which tab the card will show up on.\n\n### Location\n\nWhere on the tab the card will be positioned.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)"
   },
   {
     "_id": "5MsdJBbpALgMnYBwk",
@@ -385,15 +376,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 20,
-    "urlName": "items",
-    "href": "/docs/properties/items",
+    "urlName": "item",
+    "href": "/docs/property/item",
     "published": true,
-    "description": "Items are shown on the Inventory tab. Items can be carried, put in containers, or equipped on a creature. The children of an item are not active unless the item is equipped.\n\n---\n\n### Icon\n\nAn icon representing the item.\n\n### Equipped\n\nIf set, the item appears in the equipment list on the inventory tab and its children become active on the creature.\n\n### Name\n\nThe name of the item.\n\n### Plural name\n\nThe name to use if the quantity of the item is higher than 1.\n\n### Value\n\nThe value of a single item in gold pieces. Silver pieces are worth 0.1 gp and copper pieces are worth 0.01 gp. So an item that is worth 2 gp 4 sp 7 cp will have a value of  2.47 gp.\n\n### Weight\n\nThe weight of a single item in lb.\n\n### Quantity\n\nNumber of items. The value and quantity will be multiplied by the quantity to get the total value and weight of this stack of items.\n\n### Description\n\nA description of the item. \n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Show increment button\n\nIf this is set, the item will show an increment button in the detail view and on the inventory tab. This button can be used to quickly adjust the quantity of the item.\n\n### Requires attunemnt\n\nIf set, the item requires attunemnt to use.\n\n### Attuned\n\nIf set, the item is attuned and counts towards the total number of attuned items for the creature.\n\nIf a child property needs to determine if its parent item is attuned it can use `#item.attuned` in calculations, see *Ancestor references* in [computed fields](/docs/computed-fields)."
+    "description": "Items are shown on the Inventory tab. Items can be carried, put in containers, or equipped on a creature. The children of an item are not active unless the item is equipped.\n\n---\n\n### Icon\n\nAn icon representing the item.\n\n### Equipped\n\nIf set, the item appears in the equipment list on the inventory tab and its children become active on the creature.\n\n### Name\n\nThe name of the item.\n\n### Plural name\n\nThe name to use if the quantity of the item is higher than 1.\n\n### Value\n\nThe value of a single item in gold pieces. Silver pieces are worth 0.1 gp and copper pieces are worth 0.01 gp. So an item that is worth 2 gp 4 sp 7 cp will have a value of  2.47 gp.\n\n### Weight\n\nThe weight of a single item in lb.\n\n### Quantity\n\nNumber of items. The value and quantity will be multiplied by the quantity to get the total value and weight of this stack of items.\n\n### Description\n\nA description of the item. \n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Show increment button\n\nIf this is set, the item will show an increment button in the detail view and on the inventory tab. This button can be used to quickly adjust the quantity of the item.\n\n### Requires attunement\n\nIf set, the item requires attunement to use.\n\n### Attuned\n\nIf set, the item is attuned and counts towards the total number of attuned items for the creature.\n\nIf a child property needs to determine if its parent item is attuned it can use `#item.attuned` in calculations, see *Ancestor references* in [computed fields](/docs/concepts/computed-fields)."
   },
   {
     "_id": "74utQna6D4ayYyrLp",
@@ -406,15 +397,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 21,
-    "urlName": "notes",
-    "href": "/docs/properties/notes",
+    "urlName": "note",
+    "href": "/docs/property/note",
     "published": true,
-    "description": "Notes are used to store text on the creature that does not have a direct mechanical impact. Notes appear on the journal tab when active on the character, or are shown in the log when applied by an [action](/docs/property/action).\n\n---\n\n### Name\n\nName of the note.\n\n### Summary\n\nA summary of the note. This will appear on the note card and in the log when applied by an [action](/docs/property/action).\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Description\n\nA detailed description of the feature.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)"
+    "description": "Notes are used to store text on the creature that does not have a direct mechanical impact. Notes appear on the journal tab when active on the character, or are shown in the log when applied by an [action](/docs/property/action).\n\n---\n\n### Name\n\nName of the note.\n\n### Summary\n\nA summary of the note. This will appear on the note card and in the log when applied by an [action](/docs/property/action).\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Description\n\nA detailed description of the feature.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)"
   },
   {
     "_id": "cuhusZb8xYW8dj743",
@@ -427,15 +418,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 22,
     "urlName": "point-buy",
-    "href": "/docs/properties/point-buy",
+    "href": "/docs/property/point-buy",
     "published": true,
-    "description": "A point buy is a set of rows that lets the user choose a set of stats based on a cost per stat.\n\n---\n\n### Table name\n\nThe name of the point buy table.\n\n### Min\n\nThe lowest value available for each row\n\n### Max\n\nThe highest value available for each row\n\n### Cost\n\nA function that uses `value` as the value of a row and determines the cost of that value. For standard D&D 5e 27 point buy, this function is `[0, 1, 2, 3, 4, 5, 7, 9][value - 7]`\n\n### Total available points\n\nA [computed field](/docs/computed-fields) that determines how many points are available to spend in total\n\n## Rows\n\nUp to 32 rows can be added to a point buy table\n\n### Row name\n\nThe name of the row that will appear in the table\n\n### Row variable name\n\nThe variable name of the row that can be used in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\nIf the variable name matches an attribute with the same variable name, the row's value will be used as a base value for that attribute."
+    "description": "A point buy is a set of rows that lets the user choose a set of stats based on a cost per stat.\n\n---\n\n### Table name\n\nThe name of the point buy table.\n\n### Min\n\nThe lowest value available for each row\n\n### Max\n\nThe highest value available for each row\n\n### Cost\n\nA function that uses `value` as the value of a row and determines the cost of that value. For standard D&D 5e 27 point buy, this function is `[0, 1, 2, 3, 4, 5, 7, 9][value - 7]`\n\n### Total available points\n\nA [computed field](/docs/concepts/computed-fields) that determines how many points are available to spend in total\n\n## Rows\n\nUp to 32 rows can be added to a point buy table\n\n### Row name\n\nThe name of the row that will appear in the table\n\n### Row variable name\n\nThe variable name of the row that can be used in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctuation.\n\nIf the variable name matches an attribute with the same variable name, the row's value will be used as a base value for that attribute."
   },
   {
     "_id": "Jh92aYezHsEbSkriy",
@@ -448,14 +439,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 23,
-    "urlName": "proficiencies",
-    "href": "/docs/properties/proficiencies",
-    "description": "Proficiencies add proficiency to an existing skill on the creature. If you need to add a tool or language proficiency to a creature, use a [Skill](/docs/property/skill) instead.\n\n---\n\n### Name\n\nName of the feature that is adding this proficiency\n\n### Skills\n\nA list of variable names of the skills to add proficiency to.\n\n### Proficiency\n\nHow much proficiency to add to the skill. If a skill has multiple proficiencies added to it, the highest one will be used.\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "proficiency",
+    "href": "/docs/property/proficiency",
+    "description": "Proficiencies add proficiency to an existing skill on the creature. If you need to add a tool or language proficiency to a creature, use a [Skill](/docs/property/skill) instead.\n\n---\n\n### Name\n\nName of the feature that is adding this proficiency\n\n### Skills\n\nA list of variable names of the skills to add proficiency to.\n\n### Proficiency\n\nHow much proficiency to add to the skill. If a skill has multiple proficiencies added to it, the highest one will be used.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -469,15 +460,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 24,
     "urlName": "remove-buff",
-    "href": "/docs/properties/remove-buff",
+    "href": "/docs/property/remove-buff",
     "published": true,
-    "description": "This property can remove a specific buff from a targeted creature.\n\n### Name\n\nThe name of the property. This shows in the log when the property is applied.\n\n### Remove parent buff\n\nWhen this is set and the property is applied, the property will remove the nearest parent buff. If this property is not the child of any buffs, it will log an error.\n\n### Remove all\n\nWhen this is set, all buffs that match the target tags will be removed from the targeted creature. If not set, only the first buff found with the matching tags will be removed.\n\n### Target\n\n- **Target** Matching buffs will be removed from the targeted creature\n- **Self** Matching buffs will be removed from the creature that applied the action\n\n### Tags required\n\nAny buff that has all of the required tags will be removed when the property is applied.\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Don't show in log\n\nWhen this is set, the property is applied, but does not show in the log."
+    "description": "This property can remove a specific buff from a targeted creature.\n\n### Name\n\nThe name of the property. This shows in the log when the property is applied.\n\n### Remove parent buff\n\nWhen this is set and the property is applied, the property will remove the nearest parent buff. If this property is not the child of any buffs, it will log an error.\n\n### Remove all\n\nWhen this is set, all buffs that match the target tags will be removed from the targeted creature. If not set, only the first buff found with the matching tags will be removed.\n\n### Target\n\n- **Target** Matching buffs will be removed from the targeted creature\n- **Self** Matching buffs will be removed from the creature that applied the action\n\n### Tags required\n\nAny buff that has all of the required tags will be removed when the property is applied.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Don't show in log\n\nWhen this is set, the property is applied, but does not show in the log."
   },
   {
     "_id": "8e67Pmq7RvggHp4pX",
@@ -490,15 +481,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 25,
-    "urlName": "rolls",
-    "href": "/docs/properties/rolls",
+    "urlName": "roll",
+    "href": "/docs/property/roll",
     "published": true,
-    "description": "Rolls are properties that store the result of a calculation to a variable name when applied by an [action](/docs/property/action). The variable name only exists for the duration of that particalar action.\n\nRolls can be useful if you need to deal the same damage to multiple targets, or if damage needs to be rolled then halved by succeeding on a saving throw.\n\n---\n\n### Name\n\nName of the roll. This will be shown in the log when the roll is applied.\n\n### Variable name\n\nThe variable name to store the result of the roll for the duration of the action. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Roll\n\nA [computed field](/docs/computed-fields) that is computed when the roll is applied by an action.\n\n### Don't show in log\n\nIf set, the roll will be applied and store its result in the variable name, but not be shown in the log.\n\n### Tags\n\nSee [Tags](/docs/tags)"
+    "description": "Rolls are properties that store the result of a calculation to a variable name when applied by an [action](/docs/property/action). The variable name only exists for the duration of that particalar action.\n\nRolls can be useful if you need to deal the same damage to multiple targets, or if damage needs to be rolled then halved by succeeding on a saving throw.\n\n---\n\n### Name\n\nName of the roll. This will be shown in the log when the roll is applied.\n\n### Variable name\n\nThe variable name to store the result of the roll for the duration of the action. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Roll\n\nA [computed field](/docs/concepts/computed-fields) that is computed when the roll is applied by an action.\n\n### Don't show in log\n\nIf set, the roll will be applied and store its result in the variable name, but not be shown in the log.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)"
   },
   {
     "_id": "Ecc7oWEtoJgXaYLtS",
@@ -511,14 +502,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 26,
-    "urlName": "saving-throws",
-    "href": "/docs/properties/saving-throws",
-    "description": "Saving throws are properties that cause the target to make a saving throw when applied. If you want to add a type of saving throw like Strength Save to a creature, use a [skill](/docs/property/skill) instead.\n\nWhen a saving throw is applied, the following variables are added to the scope of that action:\n\n- `$saveFailed` Set to `true` if the target failed its saving throw or there are no targets for the saving throw\n- `$saveSucceeded` Set to `true` if the target made its saving throw or there are no targets for the saving throw\n- `$saveDiceRoll` The unmodified d20 roll the target made to save\n- `$saveRoll` The final value of the saving throw roll after modifiers\n\n### Name\n\nThe name of the saving throw. Usually the ability saving throw targeted: \"Strength Save\".\n\n### DC\n\nThe DC of the saving throw that the target needs to meet\n\n### Save\n\nThe variable name of the skill that will be used to make the saving throw.\n\n### Target\n\n- **Target** Apply the saving throw to the targets of the action. Each target will make the saving throw in turn. Child properties will be applied to each target separately with the results of their individual saving throw. If a value like damage needs to be shared between targets, it should be calculated in a [Roll](/docs/property/roll) before the saving throw.\n- **Self** Apply the saving throw to the creature taking the action. The creature taking the action will become the target for all child properties.\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Don't show in log\n\nIf set, the saving throw will not show in the log when applied, but will still be rolled and apply its children.",
+    "urlName": "saving-throw",
+    "href": "/docs/property/saving-throw",
+    "description": "Saving throws are properties that cause the target to make a saving throw when applied. If you want to add a type of saving throw like Strength Save to a creature, use a [skill](/docs/property/skill) instead.\n\nWhen a saving throw is applied, the following variables are added to the scope of that action:\n\n- `$saveFailed` Set to `true` if the target failed its saving throw or there are no targets for the saving throw\n- `$saveSucceeded` Set to `true` if the target made its saving throw or there are no targets for the saving throw\n- `$saveDiceRoll` The unmodified d20 roll the target made to save\n- `$saveRoll` The final value of the saving throw roll after modifiers\n\n### Name\n\nThe name of the saving throw. Usually the ability saving throw targeted: \"Strength Save\".\n\n### DC\n\nThe DC of the saving throw that the target needs to meet\n\n### Save\n\nThe variable name of the skill that will be used to make the saving throw.\n\n### Target\n\n- **Target** Apply the saving throw to the targets of the action. Each target will make the saving throw in turn. Child properties will be applied to each target separately with the results of their individual saving throw. If a value like damage needs to be shared between targets, it should be calculated in a [Roll](/docs/property/roll) before the saving throw.\n- **Self** Apply the saving throw to the creature taking the action. The creature taking the action will become the target for all child properties.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Don't show in log\n\nIf set, the saving throw will not show in the log when applied, but will still be rolled and apply its children.",
     "published": true
   },
   {
@@ -532,14 +523,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 27,
-    "urlName": "skills",
-    "href": "/docs/properties/skills",
-    "description": "Skills represent things the creature can be proficient in. Skills can have their values or behavior modified by [effects](/docs/property/effect), and their proficiencies modified by [proficiencies](/docs/property/proficiency).\n\n---\n\n### Name\n\nThe name of the skill.\n\n### Variable name\n\nThe name used to refer to the skill in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Ability\n\nThe ability score that is the basis for checks made with this skill\n\n### Type\n\n- **Skill** Regular skills like *Athletics*, *Sleight* of Hand\n- **Save** Saving throws like *Strength*, *Charisma*\n- **Check** Checks that aren't skill like *Initiative*\n- **Tool** Tool proficiencies\n- **Weapon** Weapon proficiencies\n- **Armor** Armor proficiencies\n- **Language** Language proficiencies\n- **Utility** Skills that don't show on the charcater sheet but can be used in calculations\n\n### Description\n\nA detailed description of the skill.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Base value\n\nA [computed field](/docs/computed-fields) that determines the starting value of the skill before it is modified by effects and other properties. Multiple properties can set the base value for a given variable name, when this happens the highest base value is chosen, and then all other effects are applied.\n\n### Base proficiency\n\nThe starting proficiency of the skill.",
+    "urlName": "skill",
+    "href": "/docs/property/skill",
+    "description": "Skills represent things the creature can be proficient in. Skills can have their values or behavior modifier by [effects](/docs/property/effect), and their proficiencies modified by [proficiencies](/docs/property/proficiency).\n\n---\n\n### Name\n\nThe name of the skill.\n\n### Variable name\n\nThe name used to refer to the skill in calculations and by effects. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Ability\n\nThe ability score that is the basis for checks made with this skill\n\n### Type\n\n- **Skill** Regular skills like *Athletics*, *Sleight* of Hand\n- **Save** Saving throws like *Strength*, *Charisma*\n- **Check** Checks that aren't skill like *Initiative*\n- **Tool** Tool proficiencies\n- **Weapon** Weapon proficiencies\n- **Armor** Armor proficiencies\n- **Language** Language proficiencies\n- **Utility** Skills that don't show on the charcater sheet but can be used in calculations\n\n### Description\n\nA detailed description of the skill.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Base value\n\nA [computed field](/docs/concepts/computed-fields) that determines the starting value of the skill before it is modified by effects and other properties. Multiple properties can set the base value for a given variable name, when this happens the highest base value is chosen, and then all other effects are applied.\n\n### Base proficiency\n\nThe starting proficiency of the skill.",
     "published": true
   },
   {
@@ -553,15 +544,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 28,
     "urlName": "slot-filler",
-    "href": "/docs/properties/slot-filler",
+    "href": "/docs/property/slot-filler",
     "published": true,
-    "description": "A slot filler is a property that can be used to add more complex behavior to filling a [slot](/docs/property/slot) from a library.\n\n---\n\n### Name\n\nThe name of the slot filler that will show when choosing the filler from the library.\n\n### Icon\n\nIcon of the slot filler\n\n### Description\n\nA detailed description of the slot filler.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Picture URL\n\nA link to an image to use for this slot filler when being chosen from a library.\n\n### Type\n\nSlot fillers can pretend to be any type of property when a slot is being filled.\n\n### Quantity\n\nHow many spaces the slot filler will take up in a slot.\n\n### Condition\n\nA [computed field](/docs/computed-fields) that determines whether this slot filler can be added to a character.\n\n### Tags\n\nSee [Tags](/docs/tags)"
+    "description": "A slot filler is a property that can be used to add more complex behavior to filling a [slot](/docs/property/slot) from a library.\n\n---\n\n### Name\n\nThe name of the slot filler that will show when choosing the filler from the library.\n\n### Icon\n\nIcon of the slot filler\n\n### Description\n\nA detailed description of the slot filler.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Picture URL\n\nA link to an image to use for this slot filler when being chosen from a library.\n\n### Type\n\nSlot fillers can pretend to be any type of property when a slot is being filled.\n\n### Quantity\n\nHow many spaces the slot filler will take up in a slot.\n\n### Condition\n\nA [computed field](/docs/concepts/computed-fields) that determines whether this slot filler can be added to a character.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)"
   },
   {
     "_id": "bj5Bh5gsmjkLpYqA4",
@@ -574,14 +565,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 29,
-    "urlName": "slots",
-    "href": "/docs/properties/slots",
-    "description": "Slots are the main way creatures interact with libraries. A slot can be filled by choosing a property from a library that fits that particular slot.\n\nIn a complete library, a creature can be built entirely by choosing which properties to fill each slot with.\n\nSlots show up on the build tab, and are highlighted when they have space that can be filled.\n\nIf you are building a creature without a library, you should either ignore slots entirely, or fill them with your own custom properties.\n\n---\n\n### Name\n\nThe name of the slot.\n\n### Type \n\nWhat kind of property this slot expects to fill it.\n\n### Tags required\n\nProperties in a library must have the required tags to fill the slot.\n\n### Quantity\n\nHow many properties are expected to fill this slot. Use 0 for allowing an unlimited number of properties.\n\n### Condition\n\nA [computed field](/docs/computed-fields) that determines whether this slot can accept new properties.\n\n### Unique\n\nThe slot can control how it deals with the uniqueness of properties that fill it.\n\n### Description\n\nA detailed description of the attribute.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Hide when full\n\nWhen set the slot will hide itself when it is filled.\n\n### Ignored\n\nWhen set the slot will not show a prompt card on the build tab.\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "slot",
+    "href": "/docs/property/slot",
+    "description": "Slots are the main way creatures interact with libraries. A slot can be filled by choosing a property from a library that fits that particular slot.\n\nIn a complete library, a creature can be built entirely by choosing which properties to fill each slot with.\n\nSlots show up on the build tab, and are highlighted when they have space that can be filled.\n\nIf you are building a creature without a library, you should either ignore slots entirely, or fill them with your own custom properties.\n\n---\n\n### Name\n\nThe name of the slot.\n\n### Type \n\nWhat kind of property this slot expects to fill it.\n\n### Tags required\n\nProperties in a library must have the required tags to fill the slot.\n\n### Quantity\n\nHow many properties are expected to fill this slot. Use 0 for allowing an unlimited number of properties.\n\n### Condition\n\nA [computed field](/docs/concepts/computed-fields) that determines whether this slot can accept new properties.\n\n### Unique\n\nThe slot can control how it deals with the uniqueness of properties that fill it.\n\n### Description\n\nA detailed description of the attribute.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Hide when full\n\nWhen set the slot will hide itself when it is filled.\n\n### Ignored\n\nWhen set the slot will not show a prompt card on the build tab.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -595,15 +586,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 30,
-    "urlName": "spell-lists",
-    "href": "/docs/properties/spell-lists",
+    "urlName": "spell-list",
+    "href": "/docs/property/spell-list",
     "published": true,
-    "description": "Spell lists are collections of [spells](/docs/property/spell).\n\n---\n\n### Name\n\nThe name of the spell list.\n\n### Description\n\nA detailed description of the spell list.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Maximum prepared spells\n\nA [computed field](/docs/computed-fields) that determines how many spells can be considered ready to cast in this spell list.\n\n### Spell casting ability\n\nThe spellcasting ablity for this spell list. The variable name of the ability can be accessed using `#spellList.ability` and the ability modifier with `#spellList.abilityMod`. Setting this field will automatically update Spell save DC and Attack roll bonus if they aren't set manually.\n\n### Spell save DC\n\nA [computed field](/docs/computed-fields) that determines the DC of saving throws in this spell list. Spells can access the DC of their spell list using `#spellList.dc`\n\n### Attack roll bonus\n\nA [computed field](/docs/computed-fields) that determines the bonus to add to a d20 when making a spell attack with a spell in this spell list. Spells can access the attack roll bonus of their spell list using `#spellList.attackRollBonus`\n\n### Tags\n\nSee [Tags](/docs/tags)"
+    "description": "Spell lists are collections of [spells](/docs/property/spell).\n\n---\n\n### Name\n\nThe name of the spell list.\n\n### Description\n\nA detailed description of the spell list.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Maximum prepared spells\n\nA [computed field](/docs/concepts/computed-fields) that determines how many spells can be considered ready to cast in this spell list.\n\n### Spell casting ability\n\nThe spellcasting ability for this spell list. The variable name of the ability can be accessed using `#spellList.ability` and the ability modifier with `#spellList.abilityMod`. Setting this field will automatically update Spell save DC and Attack roll bonus if they aren't set manually.\n\n### Spell save DC\n\nA [computed field](/docs/concepts/computed-fields) that determines the DC of saving throws in this spell list. Spells can access the DC of their spell list using `#spellList.dc`\n\n### Attack roll bonus\n\nA [computed field](/docs/concepts/computed-fields) that determines the bonus to add to a d20 when making a spell attack with a spell in this spell list. Spells can access the attack roll bonus of their spell list using `#spellList.attackRollBonus`\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)"
   },
   {
     "_id": "Mji9Cnp2TcFHmQebt",
@@ -616,14 +607,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 31,
-    "urlName": "spells",
-    "href": "/docs/properties/spells",
-    "description": "Spells work similarly to [actions](/docs/property/action). They appear on the spells tab and can be cast with or without using up spell slots.\n\n---\n\n### Always prepared\n\nA spell that is always prepared does not count towards the spell list's maximum prepared spells and is always active and ready to cast.\n\n### Prepared\n\nA prepared spell is ready to cast and counts against a spell list's maximum prepared spells.\n\n### Cast without spell slots\n\nWhen set, this spell can be cast without consuming spell slots. It will however consume its own uses and resources.\n\n### School\n\nWhat school the spell belongs to.\n\n### Casting time\n\nHow long the spell takes to Cast\n\n### Range\n\nThe range of the spell\n\n### Duration\n\nHow long the spell lasts\n\n### Components\n\nWhether the spell requires verbal, somatic, or material components and whether the spell is a ritual or requires concentration.\n\n### Target\n\nWho this spell should apply to. The properties under the spell will be applied to the targets.\n\n- **Self** The spell will apply its properties to the creature casting the spell\n- **Single Target** The spell will apply its properties without a target (for now)\n- **Multiple Targets** The spell will apply its properties without a target (for now)\n\n### Attack roll\n\nA [computed field](/docs/computed-fields) which calculates the spell attack roll modifier. If this field is empty, no attack roll will be made. Use 0 to make an attack roll without a modifier. To use the spell list's attack roll bonus use `#spellList.attackRollBonus`.\n\nThe following variables may be added to the action scope when attack rolls are made:\n\n  - `$attackDiceRoll` The value of the d20 roll before any modifiers were applied.\n  - `$attackRoll` The total attack roll after modifiers.\n  - `$criticalHit` Set to `true` if the attack roll's d20 is a natural 20. If `criticalHitTarget` is set, the attack roll's d20 must instead be equal to or greater than `criticalHitTarget` for this to be set to `true`.\n  - `$criticalMiss` Set to `true` if the attack roll was not a critical hit and rolled a natural 1 on the d20 roll.\n  - `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.\n  - `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.\n\n### Summary\n\nA brief overview of what the spell does. This will show in the log when the spell is cast.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Description\n\nA more detailed description of the spell. The description does not show in the log when the spell is cast.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Resource\n\nA resource can be any attribute that has a variable name. If the resource attribute is less than the amount required, the spell can't be cast.\n\nIf you want to reduce an attribute when casting the spell, but want the spell to be applied regardless of the value of that attribute, consider using an [Attribute Damage](/docs/property/attribute-damage) property as a child of the spell instead. Also use Attribute Damage when the amount to reduce the attribute is determined by a dice roll rather than a stable computed number.\n\n#### Resource attribute\n\nThe variable name of the attribute that will be consumed when casting this spell.\n\n#### Resource quantity\n\nA [computed field](/docs/computed-fields) which determines how much of the attribute is required to apply this spell. This amount will be deducted from the attribute every time the spell is cast\n### Ammo\n\nAmmo represents items that are requied to cast the spell. If an item is not selected, or there is insufficient quantity of the selected item, the spell can't be appled.\n\n#### Ammo item\n\nSpecify what tag an item must have to be considered valid ammo for this spell. Any item with this tag can be selected as ammo for this spell.\n\n#### Ammo quantity\n\nA [computed field](/docs/computed-fields) which determines how many of the selected items are required to cast this spell. The quantity is deducted from the total quantity of the item when this spell is applied.\n\n### Uses\n\nA [computed field](/docs/computed-fields) which determines how many times this spell can be used before it needs to be reset.\n\n### Uses used\n\nHow many of this spell's uses have already been used. Should ideally be between 0 and the total uses available. This number is set to 0 when the spell has uses and its uses are reset.\n\n### Reset\n\nIf set, the uses used field is set to 0 at the appropriate time.\n\n- **Long rest** Reset when the long rest button is pushed\n- **Short rest** Reset when either the long or short rest button is pushed\n\n\n### Tags\n\nSee [Tags](/docs/tags)",
+    "urlName": "spell",
+    "href": "/docs/property/spell",
+    "description": "Spells work similarly to [actions](/docs/property/action). They appear on the spells tab and can be cast with or without using up spell slots.\n\n---\n\n### Always prepared\n\nA spell that is always prepared does not count towards the spell list's maximum prepared spells and is always active and ready to cast.\n\n### Prepared\n\nA prepared spell is ready to cast and counts against a spell list's maximum prepared spells.\n\n### Cast without spell slots\n\nWhen set, this spell can be cast without consuming spell slots. It will however consume its own uses and resources.\n\n### School\n\nWhat school the spell belongs to.\n\n### Casting time\n\nHow long the spell takes to Cast\n\n### Range\n\nThe range of the spell\n\n### Duration\n\nHow long the spell lasts\n\n### Components\n\nWhether the spell requires verbal, somatic, or material components and whether the spell is a ritual or requires concentration.\n\n### Target\n\nWho this spell should apply to. The properties under the spell will be applied to the targets.\n\n- **Self** The spell will apply its properties to the creature casting the spell\n- **Single Target** The spell will apply its properties without a target (for now)\n- **Multiple Targets** The spell will apply its properties without a target (for now)\n\n### Attack roll\n\nA [computed field](/docs/concepts/computed-fields) which calculates the spell attack roll modifier. If this field is empty, no attack roll will be made. Use 0 to make an attack roll without a modifier. To use the spell list's attack roll bonus use `#spellList.attackRollBonus`.\n\nThe following variables may be added to the action scope when attack rolls are made:\n\n  - `$attackDiceRoll` The value of the d20 roll before any modifiers were applied.\n  - `$attackRoll` The total attack roll after modifiers.\n  - `$criticalHit` Set to `true` if the attack roll's d20 is a natural 20. If `criticalHitTarget` is set, the attack roll's d20 must instead be equal to or greater than `criticalHitTarget` for this to be set to `true`.\n  - `$criticalMiss` Set to `true` if the attack roll was not a critical hit and rolled a natural 1 on the d20 roll.\n  - `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.\n  - `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.\n\n### Summary\n\nA brief overview of what the spell does. This will show in the log when the spell is cast.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Description\n\nA more detailed description of the spell. The description does not show in the log when the spell is cast.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Resource\n\nA resource can be any attribute that has a variable name. If the resource attribute is less than the amount required, the spell can't be cast.\n\nIf you want to reduce an attribute when casting the spell, but want the spell to be applied regardless of the value of that attribute, consider using an [Attribute Damage](/docs/property/attribute-damage) property as a child of the spell instead. Also use Attribute Damage when the amount to reduce the attribute is determined by a dice roll rather than a stable computed number.\n\n#### Resource attribute\n\nThe variable name of the attribute that will be consumed when casting this spell.\n\n#### Resource quantity\n\nA [computed field](/docs/concepts/computed-fields) which determines how much of the attribute is required to apply this spell. This amount will be deducted from the attribute every time the spell is cast\n### Ammo\n\nAmmo represents items that are requied to cast the spell. If an item is not selected, or there is insufficient quantity of the selected item, the spell can't be appled.\n\n#### Ammo item\n\nSpecify what tag an item must have to be considered valid ammo for this spell. Any item with this tag can be selected as ammo for this spell.\n\n#### Ammo quantity\n\nA [computed field](/docs/concepts/computed-fields) which determines how many of the selected items are required to cast this spell. The quantity is deducted from the total quantity of the item when this spell is applied.\n\n### Uses\n\nA [computed field](/docs/concepts/computed-fields) which determines how many times this spell can be used before it needs to be reset.\n\n### Uses used\n\nHow many of this spell's uses have already been used. Should ideally be between 0 and the total uses available. This number is set to 0 when the spell has uses and its uses are reset.\n\n### Reset\n\nIf set, the uses used field is set to 0 at the appropriate time.\n\n- **Long rest** Reset when the long rest button is pushed\n- **Short rest** Reset when either the long or short rest button is pushed\n\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)",
     "published": true
   },
   {
@@ -637,15 +628,15 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 32,
-    "urlName": "toggles",
-    "href": "/docs/properties/toggles",
+    "urlName": "toggle",
+    "href": "/docs/property/toggle",
     "published": true,
-    "description": "Toggles are a way to turn on and off parts of a creature. When a toggle is off, none of its children will be active.\n\nCalculated toggles should be avoided if possible, because while they offer a lot of power and flexibility to the creature engine, they often create [dependency loops](/docs/dependency-loops) that can be difficult to troubleshoot, causing parts of a creature to calculate incorrectly.\n\nCalculated toggles can be applied by [actions](/docs/property/action) and will apply their children if the condition is true, but they should be avoided in favor of [conditional branches](/docs/property/branch) which can do the same, but are more efficient.\n\n---\n\n### Name\n\nThe name of the toggle.\n\n### Variable name\n\nThe name used to refer to the value of the toggle in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Show on character sheet\n\nIf set, the toggle with show a checkbox on the character sheet. A calculated toggle will show a disabled checkbox, filled in if the toggle's calculation returned `true` or a value that isn't 0.\n\n### State\n\n- **Enabled** The toggle and its children are active\n- **Disabled** The toggle and its children are inactive\n- **Calculated** The active status of the toggle depends on the result of the condition. Use with caution.\n\n### Condition\n\nA [computed field](/docs/computed-fields) that determines if the toggle is active. Use with caution.\n\n### Tags\n\nSee [Tags](/docs/tags)"
+    "description": "Toggles are a way to turn on and off parts of a creature. When a toggle is off, none of its children will be active.\n\nCalculated toggles should be avoided if possible, because while they offer a lot of power and flexibility to the creature engine, they often create [dependency loops](/docs/concepts/dependency-loops) that can be difficult to troubleshoot, causing parts of a creature to calculate incorrectly.\n\nCalculated toggles can be applied by [actions](/docs/property/action) and will apply their children if the condition is true, but they should be avoided in favor of [conditional branches](/docs/property/branch) which can do the same, but are more efficient.\n\n---\n\n### Name\n\nThe name of the toggle.\n\n### Variable name\n\nThe name used to refer to the value of the toggle in calculations. Must start with a letter and be made up of only letters and numbers without spaces, symbols, or punctiation.\n\n### Show on character sheet\n\nIf set, the toggle with show a checkbox on the character sheet. A calculated toggle will show a disabled checkbox, filled in if the toggle's calculation returned `true` or a value that isn't 0.\n\n### State\n\n- **Enabled** The toggle and its children are active\n- **Disabled** The toggle and its children are inactive\n- **Calculated** The active status of the toggle depends on the result of the condition. Use with caution.\n\n### Condition\n\nA [computed field](/docs/concepts/computed-fields) that determines if the toggle is active. Use with caution.\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)"
   },
   {
     "_id": "v7eRZRdMoDPah7ZtE",
@@ -658,14 +649,14 @@
       {
         "id": "ioei4uvDdGTAFqZrB",
         "collection": "docs",
-        "name": "Properties",
-        "urlName": "properties"
+        "urlName": "property",
+        "name": "Properties"
       }
     ],
     "order": 33,
-    "urlName": "triggers",
-    "href": "/docs/properties/triggers",
-    "description": "Triggers apply their children whenever their condition is met. They work like [actions](/docs/property/action) that are taken automatically.\n\n---\n\n### Name\n\nThe name of the trigger.\n\n### Timing\n\n- **Before** The trigger is applied before the triggering event takes place\n- **After** The trigger is fired after the triggering event\n\n### Event\n\n- **Do action** While the creature is doing an action, the action property specified in *Event type* is applied\n- **Roll check** The creature makes a check\n- **Attribute damaged or healed** One of the creature's attributes changed value through attribute damage or manual adjustment\n- **Short or long rest**\n- **Short rest**\n- **Long Rest**\n\n### Event type\n\nThe trigger will apply when this property type is applied by the action\n\n### Tags required\n\nIf this trigger is fired by a property, the property must match these tags for the trigger to fire.\n\n### Condition\n\nA [computed field](/docs/computed-fields) to determine if the trigger should fire. The trigger will fire if the condition field is empty or if it returns `true` or a value that isn't 0.\n\n### Description\n\nA detailed description of the trigger.\n\nAllows [inline calculations](/docs/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/tags)\n\n### Don't show in log\n\nWhen this is true, the trigger does not show up in the log. This does not stop the trigger's children from appearing in the log when they are applied.",
+    "urlName": "trigger",
+    "href": "/docs/property/trigger",
+    "description": "Triggers apply their children whenever their condition is met. They work like [actions](/docs/property/action) that are taken automatically.\n\n---\n\n### Name\n\nThe name of the trigger.\n\n### Timing\n\n- **Before** The trigger is applied before the triggering event takes place\n- **After** The trigger is fired after the triggering event\n\n### Event\n\n- **Do action** While the creature is doing an action, the action property specified in *Event type* is applied\n- **Roll check** The creature makes a check\n- **Attribute damaged or healed** One of the creature's attributes changed value through attribute damage or manual adjustment\n- **Short or long rest**\n- **Short rest**\n- **Long Rest**\n\n### Event type\n\nThe trigger will apply when this property type is applied by the action\n\n### Tags required\n\nIf this trigger is fired by a property, the property must match these tags for the trigger to fire.\n\n### Condition\n\nA [computed field](/docs/concepts/computed-fields) to determine if the trigger should fire. The trigger will fire if the condition field is empty or if it returns `true` or a value that isn't 0.\n\n### Description\n\nA detailed description of the trigger.\n\nAllows [inline calculations](/docs/concepts/inline-calculations).\n\n### Tags\n\nSee [Tags](/docs/concepts/tags)\n\n### Don't show in log\n\nWhen this is true, the trigger does not show up in the log. This does not stop the trigger's children from appearing in the log when they are applied.",
     "published": true
   },
   {
@@ -687,7 +678,7 @@
     "urlName": "computed-fields",
     "href": "/docs/concepts/computed-fields",
     "published": true,
-    "description": "Some fields in DiceCloud creature properties expect calculations. These fields are then computed by the DiceCloud engine.\n\nSome fields, like the value of an attirbute, resolve down to a single number, while others, like the damage to deal in an attack, only simplify their calculation as far as they can, and then resolve down to a number when applied. Avoid adding dice rolls to calculations that expect to resolve down to a number, because they will re-roll every time the creature is recalculated, causing instability in the creature's stats.\n\n## Parser\n\nThe DiceCloud parser can understand the following syntax:\n\n|  |  |\n| :- | :- |\n| **Numbers** | `13`, `3.14` |\n| **Dice rolls** | `3d6`, `(1 + 2)d4`|\n| **Strings of text** | `'Some text'`, `\"some other text\"` |\n| **Boolean values** | `true` or `false`. When DiceCloud expects a boolean, `0`, an empty string `''` and `false` are all considered false by DiceCloud's engine, every other value is considered true. |\n| **Variable names** | `variableName` |\n| **Addition and subtraction** | `1 + 2 + 3`, `12 - 6` |\n| **Multiplication** | `6 * 4`, `12 * 2` = `24` |\n| **Exponents** | `3 ^ 2` Raise 3 to the power of 2 |\n| **Modulo** | Returns the remainder of a division operation `15 % 6` = `3` |\n| **AND** | `&` or `&&`: Returns the value of the right hand side if the left side is true `true & 'cat'` = `'cat'` |\n| **OR** | `|` or `||`: Returns the left hand side if it is true, otherwise returns the right hand side `'dog' || 'cat'` = `'dog'` |\n| **NOT** | `!` returns false if the value after it is true, otherwise returns false  |\n| **Comparisons** | greater than: `>`, less than: `<`, greater than or equal to: `>=`, less than or equal to: `<=`, equal: `=` or `==` or `===`, not equal: `!=` or `!==` |\n| **If-else** | `condition ? resultIfTrue : resultIfFalse`, `level > 10 ? 'high tier' : 'low tier'` |\n| **Arrays** | lists of values `[3, 6, 9, 12]`. |\n| **Array Indexes** | A value can be chosen from an array using another set of square brackets: `[3, 6, 9, 12][2]` = `[6]` because `[2]` fetches the 2nd value in the array. Arrays start at 1 in DiceCloud so that level tables can have 20 entries and be accessed by `array[level]`. |\n| **Function calls** | `functionName(argument1, argument1)` See [Functions](/docs/functions) for a full list of available functions. |\n\n## Special variables\n\n### Built-in variables\n\nThese variables are added to the creature automatically when relevant. They can be overriden if needed by creating a property with the same variable name. They can also be targetted by effects.\n\n- `xp` A total of all the experiences with xp added to the character sheet\n- `milestoneLevels` A total of all the experiences with milestone levels added to the character sheet\n- `itemsAttuned` Number of items the creature is attuned to\n- `weightEquipment` Total weight of all equipment on the creature\n- `valueEquipment` Total value of all equipment on the creature\n- `weightTotal` Total weight of the creature's entire inventory\n- `valueTotal` Total value of the creature's entire inventory\n- `weightCarried` Total weight of all carried items and containers\n- `valueCarried` Total value of all carried items and containers\n- `level` The current level of the creature, including all class levels\n- `criticalHitTarget` Defaults to 20, the natural roll needed to consider an attack roll as a critical hit\n\n### Action variables\n\nThese variables are available during an action after the relevant property has been applied.\n\nFor Advanced users, a [Roll](/docs/property/roll) can set these variables, overriding the default behavior.\n\n#### [Actions](/docs/property/action)\n\n- `$attackDiceRoll` The value of the d20 roll before any modifiers were applied.\n- `$attackRoll` The total attack roll after modifiers.\n- `$criticalHit` Set to `true` if the attack roll's d20 is a natural 20. If `criticalHitTarget` is set, the attack roll's d20 must instead be equal to or greater than `criticalHitTarget` for this to be set to `true`.\n- `$criticalMiss` Set to `true` if the attack roll was not a critical hit and rolled a natural 1 on the d20 roll.\n- `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.\n- `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.\n\n#### [Damage](/docs/property/damage)\n\n- `$lastDamageType` The type of damage dealt last, any damage that has the `extra` type will use this damage type instead\n\n#### [Saving throws](/docs/property/saving-throw)\n\n- `$saveFailed` Set to `true` if the target failed its saving throw or there are no targets for the saving throw\n- `$saveSucceeded` Set to `true` if the target made its saving throw or there are no targets for the saving throw\n- `$saveDiceRoll` The unmodified d20 roll the target made to save\n- `$saveRoll` The final value of the saving throw roll after modifiers\n\n## Ancestor references\n\nThe ancestors of a property can be accessed directly using the `#ancestorType` syntax.\n\nFor example, a spell might need to know the save DC of the spell list that it is inside of, it can use `#spellList.dc`.\n\nTriggers and their children work differently: They don't have access to their own ancestors, but rather inherit the ancestors of the property that caused them to fire. For example, a trigger at the root of the creature's tree might be fired by a spell being cast, you can still use references to ancestors like `#spellList.attackRollBonus` inside that trigger as if it were under the spell itself."
+    "description": "Some fields in DiceCloud creature properties expect calculations. These fields are then computed by the DiceCloud engine.\n\nSome fields, like the value of an attirbute, resolve down to a single number, while others, like the damage to deal in an attack, only simplify their calculation as far as they can, and then resolve down to a number when applied. Avoid adding dice rolls to calculations that expect to resolve down to a number, because they will re-roll every time the creature is recalculated, causing instability in the creature's stats.\n\n## Parser\n\nThe DiceCloud parser can understand the following syntax:\n\n|  |  |\n| :- | :- |\n| **Numbers** | `13`, `3.14` |\n| **Dice rolls** | `3d6`, `(1 + 2)d4`|\n| **Strings of text** | `'Some text'`, `\"some other text\"` |\n| **Boolean values** | `true` or `false`. When DiceCloud expects a boolean, `0`, an empty string `''` and `false` are all considered false by DiceCloud's engine, every other value is considered true. |\n| **Variable names** | `variableName` |\n| **Addition and subtraction** | `1 + 2 + 3`, `12 - 6` |\n| **Multiplication** | `6 * 4`, `12 * 2` = `24` |\n| **Exponents** | `3 ^ 2` Raise 3 to the power of 2 |\n| **Modulo** | Returns the remainder of a division operation `15 % 6` = `3` |\n| **AND** | `&` or `&&`: Returns the value of the right hand side if the left side is true `true & 'cat'` = `'cat'` |\n| **OR** | `|` or `||`: Returns the left hand side if it is true, otherwise returns the right hand side `'dog' || 'cat'` = `'dog'` |\n| **NOT** | `!` returns false if the value after it is true, otherwise returns false  |\n| **Comparisons** | greater than: `>`, less than: `<`, greater than or equal to: `>=`, less than or equal to: `<=`, equal: `=` or `==` or `===`, not equal: `!=` or `!==` |\n| **If-else** | `condition ? resultIfTrue : resultIfFalse`, `level > 10 ? 'high tier' : 'low tier'` |\n| **Arrays** | lists of values `[3, 6, 9, 12]`. |\n| **Array Indexes** | A value can be chosen from an array using another set of square brackets: `[3, 6, 9, 12][2]` = `[6]` because `[2]` fetches the 2nd value in the array. Arrays start at 1 in DiceCloud so that level tables can have 20 entries and be accessed by `array[level]`. |\n| **Function calls** | `functionName(argument1, argument1)` See [Functions](/docs/concepts/functions) for a full list of available functions. |\n\n## Special variables\n\n### Built-in variables\n\nThese variables are added to the creature automatically when relevant. They can be overriden if needed by creating a property with the same variable name. They can also be targetted by effects.\n\n- `xp` A total of all the experiences with xp added to the character sheet\n- `milestoneLevels` A total of all the experiences with milestone levels added to the character sheet\n- `itemsAttuned` Number of items the creature is attuned to\n- `weightEquipment` Total weight of all equipment on the creature\n- `valueEquipment` Total value of all equipment on the creature\n- `weightTotal` Total weight of the creature's entire inventory\n- `valueTotal` Total value of the creature's entire inventory\n- `weightCarried` Total weight of all carried items and containers\n- `valueCarried` Total value of all carried items and containers\n- `level` The current level of the creature, including all class levels\n- `criticalHitTarget` Defaults to 20, the natural roll needed to consider an attack roll as a critical hit\n\n### Action variables\n\nThese variables are available during an action after the relevant property has been applied.\n\nFor Advanced users, a [Roll](/docs/property/roll) can set these variables, overriding the default behavior.\n\n#### [Actions](/docs/property/action)\n\n- `$attackDiceRoll` The value of the d20 roll before any modifiers were applied.\n- `$attackRoll` The total attack roll after modifiers.\n- `$criticalHit` Set to `true` if the attack roll's d20 is a natural 20. If `criticalHitTarget` is set, the attack roll's d20 must instead be equal to or greater than `criticalHitTarget` for this to be set to `true`.\n- `$criticalMiss` Set to `true` if the attack roll was not a critical hit and rolled a natural 1 on the d20 roll.\n- `$attackHit` If the attack roll is higher than or equal to the target's AC or a critical hit this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical hit.\n- `$attackMiss` If the attack roll is lower than the target's AC or a critical miss, this is set to `true`. Remains unset if there is no target for the attack unless the attack is a critical miss.\n\n#### [Damage](/docs/property/damage)\n\n- `$lastDamageType` The type of damage dealt last, any damage that has the `extra` type will use this damage type instead\n\n#### [Saving throws](/docs/property/saving-throw)\n\n- `$saveFailed` Set to `true` if the target failed its saving throw or there are no targets for the saving throw\n- `$saveSucceeded` Set to `true` if the target made its saving throw or there are no targets for the saving throw\n- `$saveDiceRoll` The unmodified d20 roll the target made to save\n- `$saveRoll` The final value of the saving throw roll after modifiers\n\n## Ancestor references\n\nThe ancestors of a property can be accessed directly using the `#ancestorType` syntax.\n\nFor example, a spell might need to know the save DC of the spell list that it is inside of, it can use `#spellList.dc`.\n\nTriggers and their children work differently: They don't have access to their own ancestors, but rather inherit the ancestors of the property that caused them to fire. For example, a trigger at the root of the creature's tree might be fired by a spell being cast, you can still use references to ancestors like `#spellList.attackRollBonus` inside that trigger as if it were under the spell itself."
   },
   {
     "_id": "o8u2Z5gZW54ZXNeZB",
@@ -708,7 +699,7 @@
     "urlName": "dependency-loops",
     "href": "/docs/concepts/dependency-loops",
     "published": true,
-    "description": "When a variable is referenced in a calculation, that calculation can be said to depend on that variable. In order for the calculation to compute, the value of the variable needs to be known.\n\nBut consider the following property values that could be added to a creature\n\n- The creature's Strength base value is set to `dexterity + 1` so that it will always have 1 more strength than dexterity\n- The creature's Dexterity base value is set to `constitution + 1` so that it will always have 1 more dexterity than constitution\n- The creature's Constitution base value is set to `strength` so that its constitution is always equal to its strength\n\nIt is not possible to resolve these calculations, not just because no values exist which satisfy the constraints, but because strength depends on dexterity which depends on constitution which depends on strength. None can be computed before the others have finalized their values. This is a dependency loop.\n\nMost dependency loops that appear in actual DiceCloud creatures are less trivial than this example, but they cause the same result: a sheet that can't be accurately computed. In these cases, DiceCloud does its best, chooses an order to resolve the calculations arbitrarily, and continues calculating. An error will show on the Build tab to let you know that something went wrong.\n\n![dependency loop example](/images/docs/dependency-loop.png)\n\n## Toggles\n\nCalculated [Toggles](/docs/property/toggle) are the main source of dependency loops on creatures, because they create a dependency that isn't as obvious as a calculation might be. When a toggle is in calculated mode, its children do not know whether they are active or not until the calulation is resolved. Because of this, every calculation under the toggle depends on the toggles calaculation, making the chance for a loop to be formed more likely the more children are under a toggle.\n\nConsider this example\n\n- A calculated toggle that is active if `strength < 10`\n- An effect under that toggle that adds 2 to `strength`\n\nThe effect can't compute, because it does not know if it is active yet, so the toggle must compute its calculation first. The toggle needs to know if `strength` is greater than 10. Strength depends on all of the effects targeting it, it must know if the +2 effect is active or not. This creates a dependency loop, because there is no valid order in which everything can be calculated.\n\n## Troubleshooting a dependency loop\n\n- First, identify all the properties that make up the dependency loop. These are linked in the depdency loop error message. The field names in square brackets after the property name indicates which calculations on the property are directly involved.\n- Move any properties in the loop out from being children of calculated Toggles\n- Use static values in place of variables where they are not stricly needed\n- Ask for [help](/feedback)"
+    "description": "When a variable is referenced in a calculation, that calculation can be said to depend on that variable. In order for the calculation to compute, the value of the variable needs to be known.\n\nBut consider the following property values that could be added to a creature\n\n- The creature's Strength base value is set to `dexterity + 1` so that it will always have 1 more strength than dexterity\n- The creature's Dexterity base value is set to `constitution + 1` so that it will always have 1 more dexterity than constitution\n- The creature's Constitution base value is set to `strength` so that its constitution is always equal to its strength\n\nIt is not possible to resolve these calculations, not just because no values exist which satisfy the constraints, but because strength depends on dexterity which depends on constitution which depends on strength. None can be computed before the others have finalized their values. This is a dependency loop.\n\nMost dependency loops that appear in actual DiceCloud creatures are less trivial than this example, but they cause the same result: a sheet that can't be accurately computed. In these cases, DiceCloud does its best, chooses an order to resolve the calculations arbitrarily, and continues calculating. An error will show on the Build tab to let you know that something went wrong.\n\n![dependency loop example](/images/docs/dependency-loop.png)\n\n## Toggles\n\nCalculated [Toggles](/docs/property/toggle) are the main source of dependency loops on creatures, because they create a dependency that isn't as obvious as a calculation might be. When a toggle is in calculated mode, its children do not know whether they are active or not until the calulation is resolved. Because of this, every calculation under the toggle depends on the toggles calaculation, making the chance for a loop to be formed more likely the more children are under a toggle.\n\nConsider this example\n\n- A calculated toggle that is active if `strength < 10`\n- An effect under that toggle that adds 2 to `strength`\n\nThe effect can't compute, because it does not know if it is active yet, so the toggle must compute its calculation first. The toggle needs to know if `strength` is greater than 10. Strength depends on all of the effects targeting it, it must know if the +2 effect is active or not. This creates a dependency loop, because there is no valid order in which everything can be calculated.\n\n## Troubleshooting a dependency loop\n\n- First, identify all the properties that make up the dependency loop. These are linked in the dependency loop error message. The field names in square brackets after the property name indicates which calculations on the property are directly involved.\n- Move any properties in the loop out from being children of calculated Toggles\n- Use static values in place of variables where they are not strictly needed\n- Ask for [help](/feedback)"
   },
   {
     "_id": "KFkmXFLQrdPQNpJ7X",
@@ -728,7 +719,7 @@
     "order": 36,
     "urlName": "inline-calculations",
     "href": "/docs/concepts/inline-calculations",
-    "description": "Most long-format fields allow inline [calculations](/docs/computed-fields) to be included. Calculations inside of curly bracers will be computed down to numbers using the characters stats.\n\nFor example a creature's strength attribute may have the following in its description:  `Your carrying capacity is {strength * 15} lbs.`\n\nWhen the creature is calculated, if it has 8 strength, the action description will become: \"Your carrying capacity is 120 lbs.\"\n\nIf a description includes a dice roll, only the part that can be calculated to a single number should be included in the calulation bracers: `The attack does an extra {paladin.level}d8 damage`, which becomes `The attack does an extra 4d8 damage`.\n\nDo not inlclude the dice roll in the calaculation: `The attack does an extra {(paladin.level)d8} damage`, because it will become `The attack does an extra 16 damage` but the number 16 will change every time the creature recalculates.",
+    "description": "Most long-format fields allow inline [calculations](/docs/concepts/computed-fields) to be included. Calculations inside of curly bracers will be computed down to numbers using the characters stats.\n\nFor example a creature's strength attribute may have the following in its description:  `Your carrying capacity is {strength * 15} lbs.`\n\nWhen the creature is calculated, if it has 8 strength, the action description will become: \"Your carrying capacity is 120 lbs.\"\n\nIf a description includes a dice roll, only the part that can be calculated to a single number should be included in the calulation bracers: `The attack does an extra {paladin.level}d8 damage`, which becomes `The attack does an extra 4d8 damage`.\n\nDo not inlclude the dice roll in the calaculation: `The attack does an extra {(paladin.level)d8} damage`, because it will become `The attack does an extra 16 damage` but the number 16 will change every time the creature recalculates.",
     "published": true
   },
   {
@@ -771,5 +762,26 @@
     "href": "/docs/concepts/functions",
     "description": "## min\nReturns the smallest of the given numbers\n`min(12, 6, 3, 168)` = `3`\n\n## round\nReturns the value of a number rounded to the nearest integer\n`round(5.95)` = `6`\n`round(5.5)` = `6`\n`round(5.05)` = `5`\n\n## floor\nRounds a number down to the next smallest integer\n`floor(5.95)` = `5`\n`floor(5.05)` = `5`\n`floor(5)` = `5`\n`floor(-5.5)` = `-6`\n\n## ceil\nRounds a number up to the next largest integer\n`ceil(5.95)` = `6`\n`ceil(5.05)` = `6`\n`ceil(5)` = `5`\n`ceil(-5.5)` = `-5`\n\n## trunc\nReturns the integer part of a number by removing any fractional digits\n`trunc(5.95)` = `5`\n`trunc(5.05)` = `5`\n`trunc(5)` = `5`\n`trunc(-5.5)` = `-5`\n\n## sign\nReturns either a positive or negative 1, indicating the sign of a number, or zero\n`sign(-3)` = `-1`\n`sign(3)` = `1`\n`sign(0)` = `0`\n\n## tableLookup\nReturns the index of the last value in the array that is less than the specified amount\n`tableLookup([100, 300, 900], 457)` = `2`\n`tableLookup([100, 300, 900], 23)` = `0`\n`tableLookup([100, 300, 900, 1200], 900)` = `3`\n`tableLookup([100, 300], 594)` = `2`\n\n## resolve\nForces the given calcultion to resolve into a number, even in calculations where it would usually keep the unknown values as is\n`resolve(someUndefinedVariable + 3 + 4)` = `7`\n`resolve(1d6)` = `4`",
     "published": true
+  },
+  {
+    "_id": "AQGjqq6grmKXZN6dB",
+    "name": "Character Tree",
+    "parent": {
+      "id": "E2DFwsCoiKy2Rc9Mz",
+      "collection": "docs"
+    },
+    "ancestors": [
+      {
+        "id": "E2DFwsCoiKy2Rc9Mz",
+        "collection": "docs",
+        "name": "Concepts",
+        "urlName": "concepts"
+      }
+    ],
+    "order": 39,
+    "urlName": "tree",
+    "href": "/docs/concepts/tree",
+    "published": false,
+    "description": "TODO"
   }
 ]

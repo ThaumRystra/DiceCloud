@@ -28,7 +28,7 @@
         @remove="softRemove"
       />
       <div
-        v-if="!creature.settings.hideRestButtons || (properties.action.event && properties.action.event.length)"
+        v-if="!creature.settings.hideRestButtons || (properties.action && properties.action.event && properties.action.event.length)"
         class="character-buttons"
       >
         <v-card>
@@ -161,13 +161,13 @@
       </div>
 
       <div
-        v-if="properties.hitDice && properties.hitDice.length"
+        v-if="properties.attribute.hitDice && properties.attribute.hitDice.length"
         class="hit-dice"
       >
         <v-card>
           <v-list>
             <v-subheader>Hit Dice</v-subheader>
-            <template v-for="(hitDie, index) in hitDice">
+            <template v-for="(hitDie, index) in properties.attribute.hitDice">
               <v-divider
                 v-if="index !== 0"
                 :key="hitDie._id + 'divider'"
@@ -425,15 +425,11 @@ function walkDown(forest, callback){
 
 const propertyHandlers = {
   folder(prop) {
-    let skipChildren;
     let propPath = null;
-    if (prop.hideStatsGroup) {
-      return { skipChildren: true}
-    }
-    if (prop.tab === 'stats') {
+    if (prop.groupStats && prop.tab === 'stats') {
       propPath = ['folder', prop.location]
     }
-    return { skipChildren, propPath }
+    return { propPath }
   },
   attribute(prop) {
     if (
@@ -456,7 +452,7 @@ const propertyHandlers = {
   },
   toggle(prop) {
     if (
-      prop.deactivatedByAncestor || !prop.showUI
+      prop.deactivatedByToggle || prop.deactivatedByAncestor || !prop.showUI
     ) return { propPath: null };
     return { propPath: 'toggle' };
   },
@@ -524,12 +520,25 @@ export default {
     properties() {
       const creature = this.creature;
       if (!creature) return;
+      const folderIds = CreatureProperties.find({
+        'ancestors.id': this.creatureId,
+        type: 'folder',
+        groupStats: true,
+        hideStatsGroup: true,
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      }, { fields: { _id: 1 } }).map(folder => folder._id);
+
       const filter = {
         'ancestors.id': this.creatureId,
+        'parent.id': {
+          $nin: folderIds,
+        },
         $or: [
           { inactive: { $ne: true } },
           { type: 'toggle' },
         ],
+        overridden: {$ne: true},
         removed: { $ne: true },
         type: {
           $in: [
@@ -546,7 +555,7 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: 1 } });
+      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } });
       const forest = nodeArrayToTree(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
@@ -579,6 +588,7 @@ export default {
         'ancestors.id': this.creatureId,
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
+        deactivatedByToggle: { $ne: true },
         showUI: true,
       }, {
         sort: { order: 1 }
@@ -600,13 +610,15 @@ export default {
         data: { _id },
       });
     },
-    incrementChange(_id, { type, value }) {
+    incrementChange(_id, { type, value, ack }) {
       damageProperty.call({
         _id,
         operation: type,
         value: -value
       }, error => {
-        if (error) {
+        if (ack) {
+          ack(error);
+        } else if (error) {
           snackbar({ text: error.reason || error.message || error.toString() });
           console.error(error);
         }
