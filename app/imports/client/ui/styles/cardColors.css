@@ -7,7 +7,15 @@
   background: #151515;
 }
 
+.card-background .v-tabs-items.theme--dark {
+  background: #151515;
+}
+
 .theme--light .card-background {
+  background: #f6f6f6;
+}
+
+.card-background .v-tabs-items.theme--light {
   background: #f6f6f6;
 }
 

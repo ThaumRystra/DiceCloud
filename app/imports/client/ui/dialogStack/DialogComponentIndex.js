@@ -1,6 +1,7 @@
 // Load commonly used dialogs immediately
 import InsertPropertyDialog from '/imports/client/ui/properties/InsertPropertyDialog.vue';
 import CharacterCreationDialog from '/imports/client/ui/creature/character/CharacterCreationDialog.vue';
+import CharacterSheetDialog from '/imports/client/ui/tabletop/CharacterSheetDialog.vue';
 import CastSpellWithSlotDialog from '/imports/client/ui/properties/components/spells/CastSpellWithSlotDialog.vue';
 import CreatureFormDialog from '/imports/client/ui/creature/CreatureFormDialog.vue';
 import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
@@ -37,6 +38,7 @@ export default {
   ArchiveDialog,
   CastSpellWithSlotDialog,
   CharacterCreationDialog,
+  CharacterSheetDialog,
   CreatureFormDialog,
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,

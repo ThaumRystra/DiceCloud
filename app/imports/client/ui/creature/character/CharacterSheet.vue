@@ -30,17 +30,17 @@
       <div
         v-else
         key="character-tabs"
-        class="card-background"
+        class="card-background fill-height"
       >
         <v-tabs-items
           :key=" '' +
             creature.settings.hideSpellsTab +
             creature.settings.showTreeTab
           "
-          :value="$store.getters.tabById($route.params.id)"
+          :value="$store.getters.tabById(creatureId)"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
-            {id: $route.params.id, tab: e}
+            {id: creatureId, tab: e}
           )"
         >
           <v-tab-item>
@@ -68,11 +68,10 @@
             <tree-tab :creature-id="creatureId" />
           </v-tab-item>
         </v-tabs-items>
-        <character-sheet-initiative />
       </div>
     </v-fade-transition>
     <character-sheet-fab
-      v-if="$vuetify.breakpoint.xsOnly"
+      v-if="!embedded && $vuetify.breakpoint.xsOnly"
       direction="top"
       fixed
       bottom
@@ -81,15 +80,15 @@
       :edit-permission="editPermission"
     />
     <v-bottom-navigation
-      v-if="$vuetify.breakpoint.xsOnly && creature && creature.settings"
+      v-if="!embedded && $vuetify.breakpoint.xsOnly && creature && creature.settings"
       app
       shift
       mandatory
       class="bottom-nav-btns"
-      :value="$store.getters.tabById($route.params.id)"
+      :value="$store.getters.tabById(creatureId)"
       @change="e => $store.commit(
         'setTabForCharacterSheet',
-        {id: $route.params.id, tab: e}
+        {id: creatureId, tab: e}
       )"
     >
       <v-btn>
@@ -164,7 +163,9 @@ export default {
       type: String,
       required: true,
     },
+    embedded: Boolean,
   },
+  // @ts-ignore
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -250,7 +251,11 @@ export default {
 <style>
 .character-sheet .v-window-item {
   min-height: calc(100vh - 96px);
-  padding-bottom: 70px;
   overflow: hidden;
+}
+
+.dialog-component .character-sheet .v-window-item {
+  min-height: unset;
+  overflow: unset;
 }
 </style>

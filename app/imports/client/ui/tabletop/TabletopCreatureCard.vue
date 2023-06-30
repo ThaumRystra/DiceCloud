@@ -1,15 +1,17 @@
 <template lang="html">
   <v-card
     style="height: 100px; width: 70px;"
-    :color="active ? 'accent' : ''"
-    hover
-    @mouseover="hover = true"
+    class="tabletop-creature-card"
+    :class="{ active }"
+    :hover="hasClickListener"
+    :elevation="active ? 8 : 2"
+    @mouseover="() => { if (hasClickListener) hover = true; }"
     @mouseleave="hover = false"
-    @click="$emit('click')"
+    v-on="hasClickListener ? {click: () => $emit('click')} : {}"
   >
     <v-progress-linear
-      v-if="model.variables.hitPoints"
-      :value="model.variables.hitPoints.value * 100 / model.variables.hitPoints.total"
+      v-if="variables.hitPoints"
+      :value="variables.hitPoints.value * 100 / variables.hitPoints.total"
     />
     <v-img
       :src="model.picture"
@@ -22,20 +24,27 @@
       {{ model.name }}
     </div>
     <card-highlight :active="hover" />
-    <v-btn
-      :color="targeted ? 'accent' : ''"
-      fab
-      small
-      style="position: fixed;"
-      @click.stop="targeted ? $emit('untarget') : $emit('target')"
-    >
-      <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
-    </v-btn>
+    <div class="d-flex justify-center">
+      <v-scale-transition>
+        <v-btn
+          v-if="showTargetBtn"
+          :color="targeted ? 'accent' : ''"
+          :elevation="targeted ? 8 : 2"
+          fab
+          small
+          @click.stop="targeted ? $emit('untarget') : $emit('target')"
+        >
+          <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
+        </v-btn>
+      </v-scale-transition>
+    </div>
   </v-card>
 </template>
 
 <script lang="js">
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
+
 export default {
   components: {
     CardHighlight,
@@ -47,10 +56,23 @@ export default {
     },
     active: Boolean,
     targeted: Boolean,
+    showTargetBtn: Boolean,
   },
   data(){return {
     hover: false,
-  }},
+  }
+  },
+  computed: {
+    hasClickListener() {
+      return this.$listeners && !!this.$listeners.click;
+    },
+  },
+  // @ts-ignore
+  meteor: {
+    variables() {
+      return CreatureVariables.findOne({ _creatureId: this.model._id }) || {};
+    }
+  }
 }
 </script>
 
@@ -61,5 +83,11 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+</style>
+
+<style lang="css">
+.tabletop-creature-card .v-btn {
+  transition: all .3s ease;
 }
 </style>

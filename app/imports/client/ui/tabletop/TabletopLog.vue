@@ -1,20 +1,17 @@
 <template lang="html">
-  <log-component
-    :logs="logs"
-    :edit-permission="context.editPermission"
-    show-name
-    @submit="submit"
+  <character-log
+    :tabletop-id="tabletopId"
+    :creature-id="activeCreatureId"
   />
 </template>
 
 <script lang="js">
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import insertTabletopLog from '/imports/api/creature/log/CreatureLogs.js';
-import LogComponent from '/imports/client/ui/log/LogComponent.vue';
+import { insertTabletopLog } from '/imports/api/creature/log/CreatureLogs.js';
+import CharacterLog from '/imports/client/ui/log/CharacterLog.vue';
 
 export default {
   components: {
-    LogComponent,
+    CharacterLog,
   },
   inject: {
     context: {
@@ -24,28 +21,18 @@ export default {
   props: {
     tabletopId: {
       type: String,
-      required: true,
+      default: undefined,
     },
   },
-  meteor: {
-    logs() {
-      return CreatureLogs.find({
-        tabletopId: this.tabletopId,
-      }, {
-        sort: {date: -1},
-        limit: 50
-      });
-    },
+  data() {
+    return {
+      activeCreatureId: undefined,
+    }
   },
-  methods: {
-    submit(){
-      insertTabletopLog.call({
-        content: this.logContent,
-        tabletopId: this.tabletopId,
-      }, (error) => {
-        if (error) console.error(error);
-      });
-    },
+  mounted() {
+    this.$root.$on('active-tabletop-character-change', (id) => {
+      this.activeCreatureId = id;
+    });
   },
 }
 </script>

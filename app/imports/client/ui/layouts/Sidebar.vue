@@ -80,6 +80,7 @@ export default {
   components: {
     CreatureFolderList
   },
+  // @ts-ignore
   meteor: {
     $subscribe: {
       'characterList': [],
