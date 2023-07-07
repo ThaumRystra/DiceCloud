@@ -241,7 +241,6 @@ export default {
       return undefined;
     }
   },
-  // @ts-ignore
   meteor: {
     children() {
       const indicesOfTerminatingProps = [];

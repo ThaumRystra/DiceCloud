@@ -72,37 +72,23 @@
     <v-footer
       inset
       class="pa-0"
-      style="background: none; 
-      box-shadow: none;
-      position: absolute;
-      left: 0; 
-      bottom:0;
-      right: 0;"
+      style="
+        background: none; 
+        box-shadow: none;
+        position: absolute;
+        left: 0; 
+        bottom:0;
+        right: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+      "
     >
-      <v-container fluid>
-        <v-row
-          dense
-          class="action-row overflow-x-auto align-end"
-          style="flex-wrap: nowrap; padding-top: 100px;"
-          @wheel="transformScroll($event)"
-        >
-          <mini-character-sheet
-            v-if="activeCreatureId"
-            data-id="mini-character-sheet"
-            :creature-id="activeCreatureId"
-            @click="openCharacterSheetDialog"
-          />
-          <action-card
-            v-for="action in actions"
-            :key="action._id"
-            :model="action"
-            :active="activeActionId === action._id"
-            :targets="targets"
-            @activate="activeActionId = action._id"
-            @deactivate="activeActionId = undefined; targets = [];"
-          />
-        </v-row>
-      </v-container>
+      <v-slide-y-reverse-transition mode="out-in">
+        <selected-creature-bar
+          :key="activeCreatureId"
+          :creature-id="activeCreatureId"
+        />
+      </v-slide-y-reverse-transition>
     </v-footer>
   </div>
 </template>
@@ -117,6 +103,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
+import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';
 
 const getProperties = function (creatureId, selector = {}) {
   return CreatureProperties.find({
@@ -142,6 +129,7 @@ export default {
     TabletopMap,
     ActionCard,
     MiniCharacterSheet,
+    SelectedCreatureBar,
   },
   props: {
     model: {
