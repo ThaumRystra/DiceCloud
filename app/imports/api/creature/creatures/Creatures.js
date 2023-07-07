@@ -62,6 +62,34 @@ let CreatureSettingsSchema = new SimpleSchema({
   },
 });
 
+let IconGroupSchema = new SimpleSchema({
+  name: {
+    type: String,
+    max: STORAGE_LIMITS.name,
+    optional: true,
+  },
+  iconIds: {
+    type: Array,
+    max: 4,
+    defaultValue: [],
+  },
+  'iconIds.$': {
+    type: String,
+    max: STORAGE_LIMITS.variableName,
+  },
+});
+
+let CreatureTabletopSettingsSchema = new SimpleSchema({
+  iconGroups: {
+    type: Array,
+    defaultValue: [],
+    max: 10,
+  },
+  'iconGroups.$': {
+    type: IconGroupSchema,
+  },
+});
+
 let CreatureSchema = new SimpleSchema({
   // Strings
   name: {
@@ -180,6 +208,10 @@ let CreatureSchema = new SimpleSchema({
   },
   initiativeRoll: {
     type: SimpleSchema.Integer,
+    optional: true,
+  },
+  tabletopSettings: {
+    type: CreatureTabletopSettingsSchema,
     optional: true,
   },
 
