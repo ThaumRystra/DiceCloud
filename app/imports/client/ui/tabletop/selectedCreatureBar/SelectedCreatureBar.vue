@@ -1,8 +1,8 @@
 <template lang="html">
   <div
     v-if="creatureId"
-    class="selected-creature-bar d-flex pa-4"
-    style="gap: 8px;"
+    class="selected-creature-bar d-flex pa-3 justify-center"
+    style="gap: 8px; min-width: 100%;"
   >
     <!--
     <tabletop-buff-icons
@@ -15,17 +15,42 @@
     />
     -->
     <v-menu
-      v-model="selectedProp"
+      v-model="menuOpen"
+      v-click-outside="{
+        handler: clickOutsideMenu,
+        include: menuClickOutsideInclude,
+      }"
       :position-x="menuX"
       :position-y="menuY"
       absolute
-      offset-y
+      top
+      :nudge-left="150"
+      origin="center bottom"
+      :close-on-click="false"
+      :content-class="`tabletop-prop-menu rows-${rows}`"
       :close-on-content-click="false"
     >
       <tabletop-action-card
         v-if="selectedProp && selectedProp.type === 'action'"
+        style="width: 300px;"
+        :style="{
+          width: '300px',
+          opacity: selectedIcon ? 1 : 0.5,
+          transition: 'opacity 0.2s ease',
+        }"
         :model="selectedProp"
       />
+      <v-card
+        v-else-if="activeIcon && activeIcon.tab"
+        style="width: 300px"
+      >
+        <v-card-title>
+          <v-icon left>
+            {{ activeIcon.icon }}
+          </v-icon>
+          {{ activeIcon.tabName }}
+        </v-card-title>
+      </v-card>
     </v-menu>
     <v-card
       v-for="group in iconGroups"
@@ -43,8 +68,11 @@
             :key="icon.propId || iconIndex"
             :prop-id="icon.propId"
             :icon="icon.icon"
-            @click="selectedIcon = icon"
-            @hover="e => {selectedIcon = icon; menuX = e.clientX; menuY = e.clientY; log(e)}"
+            :selected="selectedIcon === icon"
+            :data-id="icon.propId || icon.standardId"
+            @click="e => selectIcon(e, icon)"
+            @mouseenter="e => hoverIcon(e, icon)"
+            @mouseleave="unHoverIcon(icon)"
           />
         </template>
       </div>
@@ -101,10 +129,84 @@ export default {
   data() {
     return {
       rows: 2,
+      hoveredIcon: undefined,
       selectedIcon: undefined,
+      menuOpen: false,
       menuX: 200,
-      menuY: 200,
+      menuY: window.innerHeight - 200,
     };
+  },
+  computed: {
+    activeIcon() {
+      return this.selectedIcon || this.hoveredIcon;
+    }
+  },
+  watch: {
+    menuOpen(val) {
+      if (!val && this.selectIcon) {
+        this.selectedIcon = undefined;
+      }
+    },
+  },
+  methods: {
+    log(e) {
+      console.log(e);
+    },
+    hoverIcon(e, icon) {
+      if (this.selectedIcon) return;
+      // this.menuX = e.clientX - (e.clientX % 44);
+      const { left, right } = e.target.getBoundingClientRect();
+      const x = ( left + right ) / 2
+      this.menuX = x;
+      this.hoveredIcon = icon;
+      this.menuOpen = true;
+    },
+    unHoverIcon(icon) {
+      if (this.hoveredIcon === icon) {
+        this.hoveredIcon = undefined;
+        if (!this.selectedIcon) {
+          this.menuOpen = false;
+        }
+      }
+    },
+    selectIcon(e, icon) {
+      if (icon.tab) {
+        this.openCharacterSheet(icon.tab, icon.standardId);
+        return;
+      }
+      if (this.selectedIcon === icon) {
+        this.selectedIcon = undefined;
+        this.menuOpen = false;
+        return;
+      }
+      const { left, right } = e.target.getBoundingClientRect();
+      const x = ( left + right ) / 2
+      this.menuX = x;
+      this.selectedIcon = icon;
+      this.menuOpen = true;
+    },
+    clickOutsideMenu () {
+      this.menuOpen = false;
+    },
+    menuClickOutsideInclude() {
+      return [
+        document.querySelector('.selected-creature-bar'),
+        document.querySelector('.tabletop-prop-menu')
+      ];
+    },
+    openCharacterSheet(tab, elementId) {
+      this.$store.commit(
+        'setTabForCharacterSheet',
+        { id: this.creatureId, tab }
+      );
+      this.$store.commit('pushDialogStack', {
+				component: 'character-sheet-dialog',
+				elementId,
+        data: {
+          creatureId: this.creatureId,
+        },
+			});
+    },
   },
   meteor: {
     creature() {
@@ -112,8 +214,9 @@ export default {
       return Creatures.findOne(this.creatureId)
     },
     selectedProp() {
-      if (!this.selectedIcon?.propId) return;
-      return CreatureProperties.findOne(this.selectedIcon.propId);
+      const propId = this.activeIcon?.propId;
+      if (!propId) return;
+      return CreatureProperties.findOne(propId);
     },
     iconGroups() {
       if (!this.creature) return;
@@ -121,16 +224,16 @@ export default {
 
       // Get the standard icons
       const standardIconsById = {
-        'cast-spell': { groupName: 'Standard Actions', icon: 'mdi-fire' },
-        'make-check': { groupName: 'Standard Actions', icon: 'mdi-radiobox-marked' },
-        'roll-dice': { groupName: 'Standard Actions', icon: 'mdi-dice-d20' },
-        'tab-stats': { groupName: 'Tabs', icon: 'mdi-chart-box' },
-        'tab-actions': { groupName: 'Tabs', icon: 'mdi-lightning-bolt' },
-        'tab-spells': { groupName: 'Tabs', icon: 'mdi-fire' },
-        'tab-inventory': { groupName: 'Tabs', icon: 'mdi-cube' },
-        'tab-features': { groupName: 'Tabs', icon: 'mdi-text' },
-        'tab-journal': { groupName: 'Tabs', icon: 'mdi-book-open-variant' },
-        'tab-build': { groupName: 'Tabs', icon: 'mdi-wrench' },
+        'cast-spell': {standardId: 'cast-spell', groupName: 'Standard Actions', icon: 'mdi-fire' },
+        'make-check': {standardId: 'make-check', groupName: 'Standard Actions', icon: 'mdi-radiobox-marked' },
+        'roll-dice': {standardId: 'roll-dice', groupName: 'Standard Actions', icon: 'mdi-dice-d20' },
+        'tab-stats': {standardId: 'tab-stats', groupName: 'Tabs', icon: 'mdi-chart-box', tab: 'stats', tabName: 'Stats' },
+        'tab-actions': {standardId: 'tab-actions', groupName: 'Tabs', icon: 'mdi-lightning-bolt', tab: 'actions', tabName: 'Actions' },
+        'tab-spells': this.creature?.settings?.hideSpellsTab ? undefined : {standardId: 'tab-spells', groupName: 'Tabs', icon: 'mdi-fire', tab: 'spells', tabName: 'Spells' },
+        'tab-inventory': {standardId: 'tab-inventory', groupName: 'Tabs', icon: 'mdi-cube', tab: 'inventory', tabName: 'Inventory' },
+        'tab-features': {standardId: 'tab-features', groupName: 'Tabs', icon: 'mdi-text', tab: 'features', tabName: 'Features' },
+        'tab-journal': {standardId: 'tab-journal', groupName: 'Tabs', icon: 'mdi-book-open-variant', tab: 'journal', tabName: 'Journal' },
+        'tab-build': {standardId: 'tab-build', groupName: 'Tabs', icon: 'mdi-wrench', tab: 'build', tabName: 'Build' },
       };
 
       // Get the folders that could hide a property
@@ -226,7 +329,8 @@ export default {
       // Add default groups for standard icons
       for (let key in standardIconsById) {
         const standardIcon = standardIconsById[key];
-        if (standardIcon._placedInGroup) return;
+        if (!standardIcon) continue;
+        if (standardIcon._placedInGroup) continue;
 
         const groupName = standardIcon.groupName || 'no';
         if (!groupsByName[groupName]) {
@@ -234,7 +338,7 @@ export default {
           defaultGroups.push(groupsByName[groupName]);
         }
 
-        groupsByName[groupName].iconList.push({ standardId: key, icon: standardIcon.icon });
+        groupsByName[groupName].iconList.push(standardIcon);
       }
 
       iconGroups.push(...defaultGroups);
@@ -247,16 +351,24 @@ export default {
       return iconGroups;
     }
   },
-  methods: {
-    selectIcon(e) {
-      this.$emit('select-icon', e);
-    },
-    log(e) {
-      console.log(e);
-    },
-  }
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+  .tabletop-prop-menu {
+    top: unset !important;
+    transition: all 0.2s ease;
+  }
+  .tabletop-prop-menu.rows-1 {
+    bottom: 68px;
+  }
+  .tabletop-prop-menu.rows-2 {
+    bottom: 112px;
+  }
+  .tabletop-prop-menu.rows-3 {
+    bottom: 156px;
+  }
+  .tabletop-prop-menu.rows-4 {
+    bottom: 200px;
+  }
 </style>

@@ -1,45 +1,9 @@
 <template>
   <dialog-base>
-    <template #toolbar-extension>
-      <v-tabs
-        v-if="creature && creature.settings"
-        :value="$store.getters.tabById(creatureId)"
-        :color="$vuetify.theme.themes.dark.primary" 
-        class="flex"
-        style="min-width: 0"
-        centered
-        grow
-        max="100px"
-        @change="e => $store.commit(
-          'setTabForCharacterSheet',
-          {id: creatureId, tab: e}
-        )"
-      >
-        <v-tab>
-          Stats
-        </v-tab>
-        <v-tab>
-          Actions
-        </v-tab>
-        <v-tab v-if="!creature.settings.hideSpellsTab">
-          Spells
-        </v-tab>
-        <v-tab>
-          Inventory
-        </v-tab>
-        <v-tab>
-          Features
-        </v-tab>
-        <v-tab>
-          Journal
-        </v-tab>
-        <v-tab>
-          Build
-        </v-tab>
-        <v-tab v-if="creature.settings.showTreeTab">
-          Tree
-        </v-tab>
-      </v-tabs>
+    <template #toolbar>
+      <v-toolbar-title>
+        {{ creature && creature.name }}
+      </v-toolbar-title>
     </template>
     <template #unwrapped-content>
       <character-sheet
@@ -48,6 +12,47 @@
         :creature-id="creatureId"
       />
     </template>
+    <v-bottom-navigation
+      slot="actions"
+      shift
+      mandatory
+      class="bottom-nav-btns"
+      style="position: relative;"
+      :value="$store.getters.tabById(creatureId)"
+      @change="e => $store.commit(
+        'setTabForCharacterSheet',
+        {id: creatureId, tab: e}
+      )"
+    >
+      <v-btn>
+        <span>Stats</span>
+        <v-icon>mdi-chart-box</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Actions</span>
+        <v-icon>mdi-lightning-bolt</v-icon>
+      </v-btn>
+      <v-btn v-if="!creature.settings.hideSpellsTab">
+        <span>Spells</span>
+        <v-icon>mdi-fire</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Inventory</span>
+        <v-icon>mdi-cube</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Features</span>
+        <v-icon>mdi-text</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Journal</span>
+        <v-icon>mdi-book-open-variant</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Build</span>
+        <v-icon>mdi-wrench</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </dialog-base>
 </template>
 
@@ -67,15 +72,26 @@ export default {
       required: true,
     },
   },
-  // @ts-ignore
   meteor: {
     creature() {
       if (!this.creatureId) return;
       return Creatures.findOne(this.creatureId);
     },
   },
-  data(){return {
-    tab: 0,
-  }},
 }
 </script>
+
+<style lang="css" scoped>
+.bottom-nav-btns {
+  margin: -8px;
+  box-shadow: none !important;
+  flex-grow: 1;
+  max-width: unset !important;
+}
+.bottom-nav-btns > .v-btn{
+  min-width: 0 !important;
+  padding: 0 !important;
+  flex: 1 1 auto !important;
+  font-size: 0.6rem !important;
+}
+</style>

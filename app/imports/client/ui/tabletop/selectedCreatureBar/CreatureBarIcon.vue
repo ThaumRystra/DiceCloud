@@ -1,14 +1,19 @@
 <template lang="html">
   <v-btn
     icon
-    plain
+    :plain="!selected"
     large
-    @click="$emit('click')"
-    @mouseover="$emit('hover', $event)"
+    tile
+    :outlined="selected"
+    :color="prop && prop.color"
+    @click.prevent="$emit('click', $event)"
+    @mouseenter="$emit('mouseenter', $event)"
+    @mouseleave="$emit('mouseleave', $event)"
   >
     <property-icon
       v-if="prop"
       :model="prop"
+      :color="prop.color"
     />
     <v-icon v-else-if="icon">
       {{ icon }}
@@ -35,7 +40,8 @@ export default {
     icon: {
       type: String,
       default: undefined,
-    }
+    },
+    selected: Boolean,
   },
   meteor: {
     prop() {

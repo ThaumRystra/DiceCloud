@@ -50,6 +50,7 @@ Meteor.publish('tabletop', function (tabletopId) {
         avatarPicture: 1,
         tabletop: 1,
         initiativeRoll: 1,
+        settings: 1,
       },
     });
     const creatureIds = creatureSummaries.map(c => c._id);
