@@ -28,8 +28,8 @@ const duplicateLibraryNode = new ValidatedMethod({
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 1,
-    timeInterval: 5000,
+    numRequests: 4,
+    timeInterval: 6000,
   },
   run({ _id }) {
     let libraryNode = LibraryNodes.findOne(_id);
