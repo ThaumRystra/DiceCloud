@@ -41,16 +41,21 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
       sort: { name: 1 }
     });
 
-    // Build a filter for nodes in those libraries that match the slot
-    let filter = getSlotFillFilter({ slot, libraryIds });
     this.autorun(function () {
+      // Build a filter for nodes in those libraries that match the slot
+      let filter = getSlotFillFilter({ slot, libraryIds });
       // Get the limit of the documents the user can fetch
       var limit = self.data('limit') || 50;
       check(limit, Number);
 
       let options = undefined;
       if (searchTerm) {
-        filter.name = { $regex: escapeRegex(searchTerm), '$options': 'i' };
+        filter.$and.push({
+          $or: [
+            { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },
+            { libraryTags: searchTerm }
+          ]
+        });
         //filter.$text = { $search: searchTerm };
         options = {
           // relevant documents have a higher score.
