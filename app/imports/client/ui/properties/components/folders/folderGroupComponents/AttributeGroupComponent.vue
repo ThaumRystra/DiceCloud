@@ -30,7 +30,7 @@
         v-else-if="model.attributeType === 'resource'"
         :model="model"
         @click="$emit('click')"
-        @change="({ type, value }) => damageProperty({type, value: -value})"
+        @change="({ type, value, ack }) => damageProperty({type, value: -value, ack})"
         @mouseover="hover = true"
         @mouseleave="hover = false"
       />
@@ -96,6 +96,9 @@ export default {
         _id: this.model._id,
         operation: change.type,
         value: change.value
+      }, e => {
+        console.log(change);
+        change.ack?.(e);
       });
     },
     log({_id}) {
