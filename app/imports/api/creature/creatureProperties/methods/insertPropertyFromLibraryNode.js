@@ -60,6 +60,8 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     nodeIds.forEach(nodeId => {
       // TODO: Check library view permission for each node before starting
       node = insertPropertyFromNode(nodeId, ancestors, order);
+      // Increment order, slightly, to keep the nodes inserted in the given id order
+      order += 0.001;
     });
 
     // get one of the root inserted docs

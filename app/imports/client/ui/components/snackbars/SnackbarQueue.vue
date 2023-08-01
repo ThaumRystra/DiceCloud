@@ -52,7 +52,7 @@ export default {
   props: {
     timeout: {
       type: Number,
-      default: 6000000,
+      default: 15000,
     },
     pause: {
       type: Number,

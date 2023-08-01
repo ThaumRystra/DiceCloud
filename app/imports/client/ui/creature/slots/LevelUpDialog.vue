@@ -81,7 +81,7 @@
                     v-if="libraryNode._disabledBySlotFillerCondition"
                     class="error--text text-no-wrap text-truncate"
                   >
-                    {{ libraryNode.slotFillerCondition }}
+                    {{ libraryNode._conditionError }}
                   </div>
                 </v-layout>
                 <div class="text-caption text-no-wrap text-truncate">
@@ -192,7 +192,7 @@ import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
-import { clone, difference } from 'lodash';
+import { clone, difference, isEqual } from 'lodash';
 
 export default {
   components: {
@@ -250,25 +250,39 @@ export default {
   },
   watch: {
     selectedNodeIds(selectedIds, oldSelectedIds) {
-      // Skip if we didn't increase the length by adding a new Id
-      if (oldSelectedIds.length >= selectedIds.length) return;
-      // Find out which library node was added
-      const addedId = difference(selectedIds, oldSelectedIds)[0];
-      if (!addedId) return;
-      const addedNode = LibraryNodes.findOne(addedId);
-      if (!addedNode) return;
-      // Tick any unchecked nodes of a lower level, but only one per level
-      const backFilledLevels = new Set();
-      this.libraryNodes.forEach(node => {
-        if (
-          !selectedIds.includes(node._id)
-          && node.level < addedNode.level
-          && !backFilledLevels.has(node.level)
-        ) {
-          selectedIds.push(node._id);
-        }
-      });
-      this.selectedNodeIds = selectedIds;
+      // Skip if we increased the length by adding a new Id, see if we need to backfill levels
+      if (oldSelectedIds.length < selectedIds.length) {
+        // Find out which library node was added
+        const addedId = difference(selectedIds, oldSelectedIds)[0];
+        if (!addedId) return;
+        const addedNode = LibraryNodes.findOne(addedId);
+        if (!addedNode) return;
+        // Tick any unchecked nodes of a lower level, but only one per level
+        const backFilledLevels = new Set();
+        this.libraryNodes.forEach(node => {
+          if (
+            !selectedIds.includes(node._id)
+            && node.level < addedNode.level
+            && !backFilledLevels.has(node.level)
+            && !this.isDisabled(node)
+          ) {
+            selectedIds.push(node._id);
+            backFilledLevels.add(node.level)
+          }
+        });
+        this.selectedNodeIds = sortedIds;
+      }
+      
+      // Refetch the library nodes to sort them correctly
+      const sortedIds = LibraryNodes.find({
+        _id: { $in: selectedIds }
+      }, {
+        sort: { level: 1, name: 1, order: 1 }
+      }).map(node => node._id);
+      // Only update if the order changed
+      if (!isEqual(this.selectedNodeIds, sortedIds)) {
+        this.selectedNodeIds = sortedIds;
+      }
     }
   },
   methods: {
@@ -377,7 +391,7 @@ export default {
       if (!this.libraryNodeFilter) return [];
       if (!this.$subReady.classFillers) return [];
       let nodes = LibraryNodes.find(this.libraryNodeFilter, {
-        sort: { name: 1, order: 1 }
+        sort: { level: 1, name: 1, order: 1 }
       }).fetch();
       let disabledNodeCount = 0;
       // Mark classFillers whose condition isn't met or are too big to fit
@@ -390,18 +404,19 @@ export default {
             if (resultNode?.parseType === 'constant') {
               if (!resultNode.value) {
                 node._disabledBySlotFillerCondition = true;
+                node._conditionError = node.slotFillerConditionNote || node.slotFillerCondition;
                 disabledNodeCount += 1;
               }
             } else {
               node._disabledBySlotFillerCondition = true;
-              node._conditionError = toString(resultNode);
+              node._conditionError = node.slotFillerConditionNote || toString(resultNode);
               disabledNodeCount += 1;
             }
           } catch (e) {
             console.warn(e);
             let error = prettifyParseError(e);
             node._disabledBySlotFillerCondition = true;
-            node._conditionError = error;
+            node._conditionError = 'Condition error: ' + error;
             disabledNodeCount += 1;
           }
         }
