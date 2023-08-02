@@ -1,8 +1,8 @@
 <template lang="html">
   <div
     v-if="creatureId"
-    class="selected-creature-bar d-flex pa-3 justify-center"
-    style="gap: 8px; min-width: 100%;"
+    class="selected-creature-bar d-flex pa-3"
+    style="gap: 8px;"
   >
     <!--
     <tabletop-buff-icons
@@ -133,7 +133,7 @@ export default {
       selectedIcon: undefined,
       menuOpen: false,
       menuX: 200,
-      menuY: window.innerHeight - 200,
+      menuY: window.innerHeight - 216,
     };
   },
   computed: {
@@ -360,15 +360,15 @@ export default {
     transition: all 0.2s ease;
   }
   .tabletop-prop-menu.rows-1 {
-    bottom: 68px;
+    bottom: 80px;
   }
   .tabletop-prop-menu.rows-2 {
-    bottom: 112px;
+    bottom: 124px;
   }
   .tabletop-prop-menu.rows-3 {
-    bottom: 156px;
+    bottom: 168px;
   }
   .tabletop-prop-menu.rows-4 {
-    bottom: 200px;
+    bottom: 212px;
   }
 </style>
