@@ -179,11 +179,6 @@ let CreatureSchema = new SimpleSchema({
     blackbox: true,
     defaultValue: {}
   },
-  variables: {
-    type: Object,
-    blackbox: true,
-    defaultValue: {}
-  },
   computeErrors: {
     type: Array,
     optional: true,

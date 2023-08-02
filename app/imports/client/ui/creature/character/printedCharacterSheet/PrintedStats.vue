@@ -596,7 +596,6 @@ export default {
   margin-top: 4px;
   margin-left: -30px;
   padding-left: 34px;
-  z-index: -1;
 }
 
 .number-label .number {

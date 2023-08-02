@@ -5,7 +5,7 @@
   <v-list-item
     v-bind="$attrs"
     :class="(isSelected || selectedByCollection) && !disabled && 'primary--text v-list-item--active'"
-    :to="singleSelect ? undefined : to"
+    :to="selection ? undefined : to"
     @click="singleSelect && $emit('select')"
   >
     <v-list-item-action

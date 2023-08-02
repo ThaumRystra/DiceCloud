@@ -105,6 +105,8 @@ function insertPropertyFromNode(nodeId, ancestors, order) {
 
   // Convert all references into actual nodes
   nodes = reifyNodeReferences(nodes);
+  // Refetch the root node, it might have been reified
+  node = nodes[0] || node;
 
   // set libraryNodeIds
   storeLibraryNodeReferences(nodes);

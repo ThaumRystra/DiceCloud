@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div :key="id">
     <v-progress-linear
       v-if="!subsReady"
       indeterminate
@@ -37,8 +37,8 @@ export default {
     ...propertyViewerIndex,
   },
   props: {
-    model: {
-      type: Object,
+    id: {
+      type: String,
       required: true,
     },
   },
@@ -61,16 +61,19 @@ export default {
   meteor: {
     $subscribe: {
       libraryNode(){
-        return [this.model._id];
+        return [this.id];
       },
       descendantLibraryNodes(){
-        return [this.model._id];
+        return [this.id];
       },
+    },
+    model() {
+      return LibraryNodes.findOne(this.id);
     },
     propertyChildren(){
       return nodesToTree({
         collection: LibraryNodes,
-        ancestorId: this.model._id
+        ancestorId: this.id
       });
     },
   }

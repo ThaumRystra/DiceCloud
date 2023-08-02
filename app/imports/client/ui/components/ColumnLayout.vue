@@ -16,42 +16,27 @@ export default {
     wideColumns: Boolean,
   },
 };
-
-/*
-Removed to improve chrome layout performance, put it back if there are rendering errors
-.column-layout>span>div {
-  display: table;
-  table-layout: fixed;
-}
-*/
 </script>
 
 <style lang="css">
 .column-layout {
   column-count: 12;
   column-fill: balance;
-  column-gap: 0;
+  column-gap: 8px;
   column-width: 240px;
-  transform: translateZ(0);
-  padding: 4px;
+  padding: 8px;
 }
 
 .column-layout.wide-columns {
-  column-count: 12;
-  column-fill: balance;
-  column-gap: 0;
   column-width: 320px;
-  transform: translateZ(0);
-  padding: 4px;
 }
 
-.column-layout>div,
+.column-layout>*,
 .column-layout>span>div {
-  width: 100%;
-  backface-visibility: hidden;
-  transform: translateX(0);
-  page-break-inside: avoid;
+  display: inline-block;
   break-inside: avoid;
-  padding: 4px;
+  page-break-inside: avoid;
+  margin-bottom: 8px;
+  width: 100%;
 }
 </style>

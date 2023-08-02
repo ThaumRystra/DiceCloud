@@ -64,7 +64,7 @@
             :key="libraryNode._id"
             :model="libraryNode"
             :data-id="libraryNode._id"
-            :class="{disabled: isDisabled(libraryNode)}"
+            :class="{disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition}"
           >
             <v-expansion-panel-header>
               <template #default="{ open }">
@@ -84,6 +84,7 @@
                     v-model="selectedNodeIds"
                     class="my-0 py-0"
                     hide-details
+                    :color="libraryNode._disabledBySlotFillerCondition ? 'error' : ''"
                     :disabled="isDisabled(libraryNode)"
                     :value="libraryNode._id"
                     @click.stop
@@ -125,7 +126,7 @@
               </template>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <library-node-expansion-content :model="libraryNode" />
+              <library-node-expansion-content :id="libraryNode._id" />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </template>
@@ -136,16 +137,38 @@
       column
       align-center
       justify-center
-      class="ma-3"
+      class="ma-3 mt-8"
     >
       <v-btn
         :loading="!$subReady.slotFillers"
         color="accent"
+        outlined
         @click="loadMore"
       >
         Load More
       </v-btn>
     </v-layout>
+    <template v-if="!showDisabled && disabledNodeCount">
+      <v-layout
+        column
+        align-center
+        justify-center
+        class="ma-3 mt-8"
+      >
+        <div>
+          Requirements of {{ disabledNodeCount }} properties were not met
+        </div>
+        <v-btn
+          class="mt-2"
+          elevation="0"
+          color="accent"
+          outlined
+          @click="showDisabled = true"
+        >
+          Show All
+        </v-btn>
+      </v-layout>
+    </template>
     <v-layout
       align-center
       justify-center
@@ -162,6 +185,7 @@
       <v-btn
         v-if="!dummySlot"
         text
+        small
         data-id="library-browser-button"
         :disabled="!model"
         @click="openLibraryBrowser"
@@ -171,7 +195,7 @@
       <v-btn
         v-if="!dummySlot"
         text
-        color="accent"
+        small
         :disabled="!model"
         data-id="custom-button"
         @click="insertCustomFiller"
@@ -179,26 +203,7 @@
         Create custom filler
       </v-btn>
     </v-layout>
-    <template v-if="!showDisabled && disabledNodeCount">
-      <v-layout
-        column
-        align-center
-        justify-center
-        class="ma-3"
-      >
-        <div>
-          Requirements of {{ disabledNodeCount }} properties were not met
-        </div>
-        <v-btn
-          class="mt-2"
-          elevation="0"
-          color="accent"
-          @click="showDisabled = true"
-        >
-          Show All
-        </v-btn>
-      </v-layout>
-    </template>
+    
     <template slot="actions">
       <v-btn
         text
@@ -306,6 +311,19 @@ export default {
       return propName;
     },
   },
+  watch: {
+    activeCount(val) {
+      // Still loading fillers
+      if (!this._subs['slotFillers'].ready()) return;
+      // Can load more, and not showing enough active choices, so load more
+      if (
+        this.currentLimit < this.countAll
+        && val < 25
+      ) {
+        this.loadMore();
+      }
+    },
+  },
   methods: {
     loadMore() {
       if (this.currentLimit >= this.countAll) return;
@@ -327,8 +345,7 @@ export default {
       });
     },
     isDisabled(node) {
-      return node._disabledBySlotFillerCondition ||
-        node._disabledByAlreadyAdded ||
+      return node._disabledByAlreadyAdded ||
         (
           node._disabledByQuantityFilled &&
           !this.selectedNodeIds.includes(node._id)
@@ -407,6 +424,10 @@ export default {
     },
     countAll() {
       return this._subs['slotFillers'].data('countAll');
+    },
+    activeCount() {
+      if (!this.libraryNodes) return;
+      return this.libraryNodes.length - (this.disabledNodeCount || 0);
     },
     libraryNodeFilter() {
       const filterString = this._subs['slotFillers'].data('libraryNodeFilter');
