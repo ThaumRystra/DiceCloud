@@ -199,5 +199,7 @@ export default {
 </script>
 
 <style lang="css">
-
+.property-viewer ol, .property-viewer ul {
+  padding-left: 36px;
+}
 </style>
