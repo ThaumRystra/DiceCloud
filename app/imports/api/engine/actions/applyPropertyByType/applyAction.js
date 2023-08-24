@@ -272,9 +272,10 @@ function spendResources(prop, actionContext) {
     recalculateCalculation(attConsumed.quantity, actionContext);
 
     if (!attConsumed.quantity?.value) return;
+    if (!attConsumed.variableName) return;
     let stat = actionContext.scope[attConsumed.variableName];
     if (!stat) {
-      spendLog.push(stat.name + ': ' + ' not found');
+      spendLog.push(attConsumed.variableName + ': ' + ' not found');
       return;
     }
     damagePropertyWork({
