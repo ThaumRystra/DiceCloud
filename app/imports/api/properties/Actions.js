@@ -77,6 +77,7 @@ let ActionSchema = createPropertySchema({
   'resources.itemsConsumed': {
     type: Array,
     defaultValue: [],
+    max: 32,
   },
   'resources.itemsConsumed.$': {
     type: Object,
@@ -104,6 +105,7 @@ let ActionSchema = createPropertySchema({
   'resources.attributesConsumed': {
     type: Array,
     defaultValue: [],
+    max: 32,
   },
   'resources.attributesConsumed.$': {
     type: Object,
@@ -123,6 +125,30 @@ let ActionSchema = createPropertySchema({
   'resources.attributesConsumed.$.quantity': {
     type: 'fieldToCompute',
     optional: true,
+  },
+  'resources.conditions': {
+    type: Array,
+    defaultValue: [],
+    max: 32,
+  },
+  'resources.conditions.$': {
+    type: Object,
+  },
+  'resources.conditions.$._id': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue() {
+      if (!this.isSet) return Random.id();
+    }
+  },
+  'resources.conditions.$.condition': {
+    type: 'fieldToCompute',
+    optional: true,
+  },
+  'resources.conditions.$.conditionNote': {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.calculation,
   },
   // Prevent the property from showing up in the log
   silent: {

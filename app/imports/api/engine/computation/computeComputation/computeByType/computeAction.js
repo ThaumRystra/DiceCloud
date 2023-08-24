@@ -8,13 +8,20 @@ export default function computeAction(computation, node) {
   }
   computeResources(computation, node);
   if (!prop.resources) return;
-  prop.resources.itemsConsumed.forEach(itemConsumed => {
+  prop.resources.conditions?.forEach(conObj => {
+    const condition = conObj.condition;
+    if (!condition) return;
+    if (condition.calculation && !condition.value) {
+      prop.insufficientResources = true;
+    }
+  });
+  prop.resources.itemsConsumed?.forEach(itemConsumed => {
     if (!itemConsumed.itemId) return;
     if (itemConsumed.available < itemConsumed.quantity?.value) {
       prop.insufficientResources = true;
     }
   });
-  prop.resources.attributesConsumed.forEach(attConsumed => {
+  prop.resources.attributesConsumed?.forEach(attConsumed => {
     if (!attConsumed.variableName) return;
     if (!(attConsumed.available >= attConsumed.quantity?.value)) {
       prop.insufficientResources = true;

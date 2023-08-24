@@ -10,7 +10,7 @@
       {{ model.quantity && model.quantity.value }}
     </div>
     <div
-      v-if="(typeof model.quantity.value !== 'string')"
+      v-if="model.quantity && (typeof model.quantity.value !== 'string')"
       class="text-no-wrap text-truncate"
     >
       {{ model.statName || model.variableName }}
