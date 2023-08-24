@@ -19,6 +19,7 @@ const applyPropertyByType = {
   damage,
   folder,
   note,
+  propertySlot: folder,
   roll,
   savingThrow,
   spell: action,
