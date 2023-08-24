@@ -7,6 +7,58 @@ import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';
 import escapeRegex from '/imports/api/utility/escapeRegex.js';
 
+// Publish docs the user has already selected so they don't disappear when searching
+Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
+  let autorun = this.autorun;
+  autorun(function () {
+    let userId = this.userId;
+    if (!userId) {
+      return [];
+    }
+
+    // Get the slot from the right collection
+    let slot;
+    if (isDummySlot) {
+      slot = LibraryNodes.findOne(slotId);
+    } else {
+      slot = CreatureProperties.findOne(slotId);
+    }
+
+    if (!slot) return [];
+
+    // Get all the ids of libraries the user can access
+    const creatureId = slot.ancestors[0].id;
+    const libraryIds = getCreatureLibraryIds(creatureId, userId);
+    const libraries = Libraries.find({
+      $or: [
+        { owner: userId },
+        { writers: userId },
+        { readers: userId },
+        { _id: { $in: libraryIds }, public: true },
+      ]
+    }, {
+      sort: { name: 1 }
+    });
+
+    let filter = { _id: { $in: nodeIds } };
+    // Get the limit of the documents the user can fetch
+    let options = {
+      sort: {
+        name: 1,
+        order: 1,
+      },
+      limit: 100,
+      fields: LIBRARY_NODE_TREE_FIELDS,
+    };
+    autorun(function () {
+      return [
+        LibraryNodes.find(filter, options),
+        libraries
+      ];
+    });
+  });
+});
+
 Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
   if (searchTerm) check(searchTerm, String);
 
@@ -50,6 +102,7 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
 
       let options = undefined;
       if (searchTerm) {
+        if (!filter.$and) filter.$and = [];
         filter.$and.push({
           $or: [
             { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },

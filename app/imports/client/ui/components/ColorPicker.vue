@@ -18,7 +18,7 @@
         {{ label }}
         <v-icon
           :right="!!label"
-          :color="value"
+          :color="noColorChange ? undefined : value"
         >
           mdi-format-paint
         </v-icon>
@@ -148,6 +148,7 @@
         type: Number,
         default: undefined,
       },
+      noColorChange: Boolean,
     },
     data(){ return {
       colors: [

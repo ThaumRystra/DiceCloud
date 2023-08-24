@@ -18,23 +18,31 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
       }]
     });
   } else if (slot.type === 'class') {
-    filter.$and.push({
-      $or: [{
-        type: 'classLevel',
-      }, {
-        slotFillerType: 'classLevel',
-      }]
-    });
+    const classLevelFilter = {
+      type: 'classLevel',
+    };
+    const slotFillerFilter = {
+      slotFillerType: 'classLevel',
+    };
+
+    // Match variable name or tags
     if (slot.variableName) {
-      filter.variableName = slot.variableName;
+      classLevelFilter.variableName = slot.variableName;
+      slotFillerFilter.libraryTags = slot.variableName;
     }
 
     // Only search for levels the class needs
     if (slot.missingLevels && slot.missingLevels.length) {
-      filter.level = { $in: slot.missingLevels };
+      classLevelFilter.level = { $in: slot.missingLevels };
+      slotFillerFilter['cache.node.level'] = { $in: slot.missingLevels };
     } else {
-      filter.level = { $gt: slot.level || 0 };
+      classLevelFilter.level = { $gt: slot.level || 0 };
+      slotFillerFilter['cache.node.level'] = { $gt: slot.level || 0 };
     }
+
+    filter.$and.push({
+      $or: [classLevelFilter, slotFillerFilter]
+    });
   }
   let tagsOr = [];
   let tagsNin = [];

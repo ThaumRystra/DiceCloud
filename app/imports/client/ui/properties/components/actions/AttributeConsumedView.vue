@@ -4,12 +4,13 @@
     :class="insufficient && 'error--text'"
   >
     <div
-      class="mr-2"
-      style="width: 24px; text-align: center;"
+      class="mr-2 text-no-wrap text-truncate"
+      style="min-width: 24px; text-align: center;"
     >
       {{ model.quantity && model.quantity.value }}
     </div>
     <div
+      v-if="(typeof model.quantity.value !== 'string')"
       class="text-no-wrap text-truncate"
     >
       {{ model.statName || model.variableName }}

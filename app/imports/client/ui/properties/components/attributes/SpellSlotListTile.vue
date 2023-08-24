@@ -8,7 +8,7 @@
     <v-list-item-content>
       <v-list-item-title v-if="Number.isFinite(model.total)">
         <div
-          v-if="model.total > 4"
+          v-if="model.total <= 0 || model.total > 5 || model.value > model.total || model.value < 0"
           class="layout value"
           style="align-items: baseline;"
         >
@@ -18,7 +18,10 @@
           >
             {{ model.value }}
           </div>
-          <div class="ml-2 max-value">
+          <div
+            v-if="model.total"
+            class="ml-2 max-value"
+          >
             /{{ model.total }}
           </div>
         </div>

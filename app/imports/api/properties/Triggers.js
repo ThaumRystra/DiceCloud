@@ -18,6 +18,7 @@ const eventOptions = {
 const timingOptions = {
   before: 'Before',
   after: 'After',
+  afterChildren: 'After Children',
 }
 
 const actionPropertyTypeOptions = {
@@ -91,7 +92,7 @@ let TriggerSchema = createPropertySchema({
   'extraTags.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
+    autoValue() {
       if (!this.isSet) return Random.id();
     }
   },
