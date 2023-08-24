@@ -58,7 +58,7 @@
         multiple
         hover
       >
-        <template v-for="libraryNode in libraryNodes">
+        <template v-for="libraryNode in [...selectedExcludedNodes, ...libraryNodes]">
           <v-expansion-panel
             v-if="showDisabled || !libraryNode._disabledBySlotFillerCondition"
             :key="libraryNode._id"
@@ -245,7 +245,7 @@ import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import { clone } from 'lodash';
+import { clone, difference } from 'lodash';
 import getDefaultSlotFiller from '/imports/api/library/methods/getDefaultSlotFiller.js';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
@@ -400,6 +400,9 @@ export default {
       'slotFillers'() {
         return [this.slotId || this.dummySlot?._id, this.searchValue || undefined, !!this.dummySlot]
       },
+      'selectedFillers'() {
+        return [this.slotId || this.dummySlot?._id, this.selectedNodeIds, !!this.dummySlot]
+      },
     },
     searchLoading() {
       return !!this.searchValue && !this.$subReady.slotFillers;
@@ -541,6 +544,11 @@ export default {
       this.disabledNodeCount = disabledNodeCount;
       return nodes;
     },
+    selectedExcludedNodes() {
+      const displayedIds = this.libraryNodes.map(node => node._id);
+      const excludedNodeIds = difference(this.selectedNodeIds, displayedIds);
+      return LibraryNodes.find({ _id: { $in: excludedNodeIds } });
+    }
   }
 }
 </script>
