@@ -125,7 +125,7 @@ arguments ->
 | "(" _ ")" {% d => [] %}
 
 indexExpression ->
-  arrayExpression "[" _ expression _ "]" {% d => node.index.create({array: d[0], index: d[3]}) %}
+  indexExpression "[" _ expression _ "]" {% d => node.index.create({array: d[0], index: d[3]}) %}
 | arrayExpression {% id %}
 
 arrayExpression ->
