@@ -1,4 +1,4 @@
-import applyProperty from '../applyProperty.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import logErrors from './shared/logErrors.js';
 import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
@@ -7,11 +7,6 @@ import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js'
 export default function applyRoll(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
-
-  const applyChildren = function () {
-    applyNodeTriggers(node, 'after', actionContext);
-    node.children.forEach(child => applyProperty(child, actionContext));
-  };
 
   if (prop.roll?.calculation) {
     const logValue = [];
@@ -42,7 +37,7 @@ export default function applyRoll(node, actionContext) {
 
     // If we didn't end up with a constant or a number of finite value, give up
     if (reduced?.parseType !== 'constant' || (reduced.valueType === 'number' && !isFinite(reduced.value))) {
-      return applyChildren();
+      return applyChildren(node, actionContext);
     }
     const value = reduced.value;
 
@@ -57,5 +52,5 @@ export default function applyRoll(node, actionContext) {
       });
     }
   }
-  return applyChildren();
+  return applyChildren(node, actionContext);
 }

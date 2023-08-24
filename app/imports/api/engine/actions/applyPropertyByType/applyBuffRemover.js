@@ -5,6 +5,7 @@ import { getProperyAncestors, getPropertiesOfType } from '/imports/api/engine/lo
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { softRemove } from '/imports/api/parenting/softRemove.js';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 
 export default function applyBuffRemover(node, actionContext) {
   // Apply triggers
@@ -13,7 +14,7 @@ export default function applyBuffRemover(node, actionContext) {
   const prop = node.node;
 
   // Log Name
-  if (prop.name && !prop.silent){
+  if (prop.name && !prop.silent) {
     actionContext.addLog({ name: prop.name });
   }
 
@@ -53,11 +54,7 @@ export default function applyBuffRemover(node, actionContext) {
       }
     }
   }
-
-  // Apply triggers
-  applyNodeTriggers(node, 'after', actionContext);
-  // Apply children
-  node.children.forEach(child => applyProperty(child, actionContext));
+  applyChildren(node, actionContext);
 }
 
 function removeBuff(buff, actionContext, prop) {

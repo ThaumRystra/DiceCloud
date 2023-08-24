@@ -1,5 +1,5 @@
 import { some, intersection, difference, remove, includes } from 'lodash';
-import applyProperty from '../applyProperty.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
 import logErrors from './shared/logErrors.js';
@@ -13,10 +13,6 @@ import getEffectivePropTags from '/imports/api/engine/computation/utility/getEff
 
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const applyChildren = function () {
-    applyNodeTriggers(node, 'after', actionContext);
-    node.children.forEach(child => applyProperty(child, actionContext));
-  };
 
   const prop = node.node;
   const scope = actionContext.scope;
@@ -66,7 +62,7 @@ export default function applyDamage(node, actionContext) {
 
   // If we didn't end up with a constant of finite amount, give up
   if (reduced?.parseType !== 'constant' || !isFinite(reduced.value)) {
-    return applyChildren();
+    return applyChildren(node, actionContext);
   }
 
   // Round the damage to a whole number
@@ -134,7 +130,7 @@ export default function applyDamage(node, actionContext) {
     value: logValue.join('\n'),
     inline: true,
   });
-  return applyChildren();
+  return applyChildren(node, actionContext);
 }
 
 function applyDamageMultipliers({ target, damage, damageProp, logValue }) {

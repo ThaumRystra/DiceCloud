@@ -3,6 +3,7 @@ import recalculateCalculation from './shared/recalculateCalculation.js';
 import rollDice from '/imports/parser/rollDice.js';
 import applyProperty from '../applyProperty.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
@@ -185,11 +186,6 @@ function applyCrits(value, scope) {
     }
   }
   return { criticalHit, criticalMiss };
-}
-
-function applyChildren(node, actionContext) {
-  applyNodeTriggers(node, 'after', actionContext);
-  node.children.forEach(child => applyProperty(child, actionContext));
 }
 
 function spendResources(prop, actionContext) {
