@@ -10,6 +10,7 @@
       <v-spacer />
       <color-picker
         :value="model.color"
+        no-color-change
         @input="value => change({path: ['color'], value})"
       />
     </template>
