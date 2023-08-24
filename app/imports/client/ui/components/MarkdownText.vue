@@ -9,6 +9,7 @@
 
 <script lang="js">
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 export default {
   props: {
@@ -20,7 +21,7 @@ export default {
   computed: {
     compiledMarkdown() {
       if (!this.markdown) return;
-      return marked(this.markdown);
+      return DOMPurify.sanitize(marked(this.markdown));
     },
   },
 }
