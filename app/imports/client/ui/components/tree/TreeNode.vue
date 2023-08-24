@@ -40,6 +40,7 @@
         <tree-node-view
           :model="node"
           :selected="selected"
+          :show-external-details="showExternalDetails"
         />
       </div>
     </div>
@@ -57,6 +58,7 @@
             :organize="organize"
             :selected-node="selectedNode"
             :start-expanded="startExpanded"
+            :show-external-details="showExternalDetails"
             @reordered="e => $emit('reordered', e)"
             @reorganized="e => $emit('reorganized', e)"
             @selected="e => $emit('selected', e)"
@@ -115,6 +117,7 @@ export default {
     },
     selected: Boolean,
     startExpanded: Boolean,
+    showExternalDetails: Boolean,
   },
   data() {
     return {
@@ -214,6 +217,6 @@ export default {
 
 .tree-node-title,
 .dummy-node {
-  height: 40px;
+  min-height: 40px;
 }
 </style>

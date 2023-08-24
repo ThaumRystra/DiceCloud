@@ -23,6 +23,7 @@
       :organize="organize"
       :lazy="lazy"
       :start-expanded="startExpanded"
+      :show-external-details="showExternalDetails"
       @selected="e => $emit('selected', e)"
       @reordered="e => $emit('reordered', e)"
       @reorganized="e => $emit('reorganized', e)"
@@ -64,6 +65,7 @@ export default {
       default: () => [],
     },
     startExpanded: Boolean,
+    showExternalDetails: Boolean,
   },
   data() {
     return {
