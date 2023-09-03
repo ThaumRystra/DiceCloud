@@ -20,6 +20,10 @@ import getAggregatorResult from './getAggregatorResult.js';
     prop.vulnerability = node.data.vulnerability;
     prop.vulnerabilities = node.data.vulnerabilities;
   }
+  if (node.data.reduction){
+    prop.reduction = node.data.reduction;
+    prop.reductions = node.data.reductions;
+  }
 
    const result = getAggregatorResult(node);
    if (result !== undefined){

@@ -163,6 +163,14 @@ function applyDamageMultipliers({ target, damage, damageProp, logValue }) {
       logValue.push(`Vulnerable to ${damageTypeText}`);
       damage = Math.floor(damage * 2);
     }
+    if (
+      multiplier.reduction &&
+      some(multiplier.reductions, multiplierAppliesTo(damageProp, 'reduction'))
+    ) {
+      let reductionAmount = multiplier.reductions.reduce((a,b) => a + b.reductionAmount.value, 0);
+      logValue.push(`${damageType[0].toUpperCase()}${damageTypeText.slice(1)} reduced by ${reductionAmount}`);
+      damage = Math.max(damage - reductionAmount, 0);
+    }
   }
   return damage;
 }

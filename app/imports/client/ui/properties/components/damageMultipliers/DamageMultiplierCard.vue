@@ -13,7 +13,10 @@
               {{ title(multiplier) }}
             </v-list-item-title>
             <v-list-item-subtitle v-if="multiplier.name">
-              {{ multiplier.name }}
+              {{ multiplier.name }} 
+              <span v-if="multiplier.value === -1 && multiplier.reductionAmount">
+                (reduction by {{ multiplier.reductionAmount.value }})
+              </span>
             </v-list-item-subtitle>
             <v-list-item-subtitle class="d-flex flex-wrap align-center">
               <v-chip
@@ -88,6 +91,7 @@ export default {
         case 0: return 'Immunity';
         case 0.5: return 'Resistance';
         case 2: return 'Vulnerability';
+        case -1: return 'Reduction';
       }
     }
   }

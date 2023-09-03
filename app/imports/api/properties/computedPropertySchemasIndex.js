@@ -10,7 +10,7 @@ import { ComputedClassLevelSchema } from '/imports/api/properties/ClassLevels.js
 import { ConstantSchema } from '/imports/api/properties/Constants.js';
 import { ComputedContainerSchema } from '/imports/api/properties/Containers.js';
 import { ComputedDamageSchema } from '/imports/api/properties/Damages.js';
-import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
+import { ComputedDamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers.js';
 import { ComputedEffectSchema } from '/imports/api/properties/Effects.js';
 import { ComputedFeatureSchema } from '/imports/api/properties/Features.js';
 import { ComputedFolderSchema } from '/imports/api/properties/Folders.js';
@@ -39,7 +39,7 @@ const propertySchemasIndex = {
   classLevel: ComputedClassLevelSchema,
   constant: ConstantSchema,
   damage: ComputedDamageSchema,
-  damageMultiplier: DamageMultiplierSchema,
+  damageMultiplier: ComputedDamageMultiplierSchema,
   effect: ComputedEffectSchema,
   feature: ComputedFeatureSchema,
   folder: ComputedFolderSchema,

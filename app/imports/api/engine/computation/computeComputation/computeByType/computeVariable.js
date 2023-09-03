@@ -69,6 +69,10 @@ function computeVariableProp(computation, node, prop) {
     prop.vulnerability = node.data.vulnerability;
     prop.vulnerabilities = node.data.vulnerabilities;
   }
+  if (node.data.reduction) {
+    prop.reduction = node.data.reduction;
+    prop.reductions = node.data.reductions;
+  }
 
   if (prop.type === 'attribute') {
     computeVariableAsAttribute(computation, node, prop);
@@ -100,5 +104,9 @@ function combineMultiplierAggregator(node) {
   if (aggregator.vulnerabilities?.length) {
     node.data.vulnerability = true;
     node.data.vulnerabilities = aggregator.vulnerabilities;
+  }
+  if (aggregator.reductions?.length) {
+    node.data.reduction = true;
+    node.data.reductions = aggregator.reductions;
   }
 }
