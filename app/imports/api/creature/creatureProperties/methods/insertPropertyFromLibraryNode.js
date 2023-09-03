@@ -178,6 +178,7 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     try {
       referencedNode = fetchDocByRef(node.ref);
       referencedNode.order = node.order;
+      referencedNode.tags = [...new Set(referencedNode.tags.concat(node.tags ?? []))];
       // We are definitely replacing this node, so add it to the list
       visitedRefs.add(node._id);
     } catch (e) {
