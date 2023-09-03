@@ -29,6 +29,7 @@
           v-model="filter"
           class="mx-4"
           @extra-fields-changed="val => extraFields = val"
+          :is-library="true"
         />
         <v-spacer />
         <v-fade-transition>
