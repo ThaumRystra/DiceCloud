@@ -71,9 +71,14 @@
     </div>
     <div class="px-3 pb-3">
       <template
-        v-if="model.resources && model.resources.attributesConsumed.length ||
-          model.resources.itemsConsumed.length"
+        v-if="showResources"
       >
+        <action-condition-view
+          v-for="condition in model.resources.conditions"
+          :key="condition._id"
+          class="action-child"
+          :model="condition"
+        />
         <attribute-consumed-view
           v-for="attributeConsumed in model.resources.attributesConsumed"
           :key="attributeConsumed._id"
@@ -99,6 +104,7 @@
       <tree-node-list
         v-if="children && children.length"
         start-expanded
+        show-external-details
         :children="children"
         @selected="e => $emit('sub-click', e)"
       />
@@ -111,6 +117,7 @@
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
 import doAction from '/imports/api/engine/actions/doAction.js';
+import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
@@ -125,6 +132,7 @@ import { some } from 'lodash';
 
 export default {
   components: {
+    ActionConditionView,
     AttributeConsumedView,
     ItemConsumedView,
     MarkdownText,
@@ -161,6 +169,11 @@ export default {
     }
   },
   computed: {
+    showResources() {
+      if (this.model.resources?.attributesConsumed?.length
+        || this.model.resources?.itemsConsumed?.length) return true;
+      return some(this.model.resources?.conditions, con => con.condition && !con.condition.value);
+    },
     rollBonus() {
       if (!this.model.attackRoll) return;
       return numberToSignedString(this.model.attackRoll.value);

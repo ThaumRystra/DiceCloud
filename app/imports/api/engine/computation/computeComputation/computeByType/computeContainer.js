@@ -1,11 +1,17 @@
 import aggregate from './computeVariable/aggregate/index.js';
+import { safeStrip } from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
 
-export default function computeContainer(computation, node){
+export default function computeContainer(computation, node) {
   if (!node.data) node.data = {};
   aggregateLinks(computation, node);
+
+  // Clean up floating points
+  const prop = node.data;
+  prop.contentsWeight = safeStrip(prop.contentsWeight);
+  prop.carriedWeight = safeStrip(prop.carriedWeight);
 }
 
-function aggregateLinks(computation, node){
+function aggregateLinks(computation, node) {
   computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
@@ -13,7 +19,7 @@ function aggregateLinks(computation, node){
       // Ignore inactive props
       if (linkedNode.data.inactive) return;
       // Aggregate inventory links
-      aggregate.inventory({node, linkedNode, link});
+      aggregate.inventory({ node, linkedNode, link });
     },
     true // enumerate only outbound links
   );

@@ -1,6 +1,18 @@
 <template lang="html">
   <div class="resources-form">
     <div
+      v-if="model.conditions && model.conditions.length"
+      class="subheading"
+    >
+      Conditions
+    </div>
+    <action-conditions-list-form
+      :model="model.conditions"
+      @change="({path, value, ack}) => $emit('change', {path: ['conditions', ...path], value, ack})"
+      @push="({path, value, ack}) => $emit('push', {path: ['conditions', ...path], value, ack})"
+      @pull="({path, ack}) => $emit('pull', {path: ['conditions', ...path], ack})"
+    />
+    <div
       v-if="model.attributesConsumed && model.attributesConsumed.length"
       class="subheading"
     >
@@ -43,6 +55,9 @@
         </v-btn>
       </template>
       <v-list>
+        <v-list-item @click="addCondition">
+          <v-list-item-title>Add Condition</v-list-item-title>
+        </v-list-item>
         <v-list-item @click="addAttributesConsumed">
           <v-list-item-title>Add Resource</v-list-item-title>
         </v-list-item>
@@ -56,11 +71,13 @@
 
 <script lang="js">
 import AttributesConsumedListForm from '/imports/client/ui/properties/forms/AttributesConsumedListForm.vue';
+import ActionConditionsListForm from '/imports/client/ui/properties/forms/ActionConditionsListForm.vue';
 import ItemsConsumedListForm from '/imports/client/ui/properties/forms/ItemsConsumedListForm.vue';
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 
 export default {
   components: {
+    ActionConditionsListForm,
     AttributesConsumedListForm,
     ItemsConsumedListForm,
   },
@@ -98,6 +115,14 @@ export default {
       this.addResourceLoading = true;
       this.$emit('push', {
         path: ['itemsConsumed'],
+        value: { _id: Random.id() },
+        ack: this.acknowledgeAddResult,
+      });
+    },
+    addCondition() {
+      this.addResourceLoading = true;
+      this.$emit('push', {
+        path: ['conditions'],
         value: { _id: Random.id() },
         ack: this.acknowledgeAddResult,
       });

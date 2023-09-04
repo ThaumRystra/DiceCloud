@@ -77,6 +77,7 @@ export default function applyBuff(node, actionContext) {
     }
   });
   applyNodeTriggers(node, 'after', actionContext);
+  applyNodeTriggers(node, 'afterChildren', actionContext);
 
   // Don't apply the children of the buff, they get copied to the target instead
 }

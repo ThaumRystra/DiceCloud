@@ -132,6 +132,9 @@ function insertNodeFromProperty(propId, ancestors, order, method) {
     prop.order = order;
   }
 
+  // Clean the props
+  props = cleanProps(props);
+
   // Insert the props as library nodes
   LibraryNodes.batchInsert(props);
   return prop;
@@ -183,6 +186,13 @@ function assertSourceLibraryCopyPermission(props, method) {
       throw new Meteor.Error('Copy permission denied',
         `One of the properties you are copying comes from ${lib.name}, which you do not have permission to copy from`);
     }
+  });
+}
+
+function cleanProps(props) {
+  return props.map(prop => {
+    let schema = LibraryNodes.simpleSchema(prop);
+    return schema.clean(prop);
   });
 }
 

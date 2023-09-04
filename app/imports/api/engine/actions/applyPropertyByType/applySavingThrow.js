@@ -2,6 +2,7 @@ import rollDice from '/imports/parser/rollDice.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
 
@@ -34,8 +35,7 @@ export default function applySavingThrow(node, actionContext) {
   if (!saveTargets?.length) {
     scope['~saveFailed'] = { value: true };
     scope['~saveSucceeded'] = { value: true };
-    applyNodeTriggers(node, 'after', actionContext);
-    return node.children.forEach(child => applyProperty(child, actionContext));
+    return applyChildren(node, actionContext);
   }
 
   // Each target makes the saving throw
@@ -45,10 +45,9 @@ export default function applySavingThrow(node, actionContext) {
     delete scope['~saveDiceRoll'];
     delete scope['~saveRoll'];
 
-    const applyChildren = function () {
-      actionContext.targets = [target]
-      applyNodeTriggers(node, 'after', actionContext);
-      node.children.forEach(child => applyProperty(child, actionContext));
+    const applyChildrenToTarget = function () {
+      actionContext.targets = [target];
+      return applyChildren(node, actionContext);
     };
 
     const save = target.variables[prop.stat];
@@ -58,7 +57,7 @@ export default function applySavingThrow(node, actionContext) {
         name: 'Saving throw error',
         value: 'No saving throw found: ' + prop.stat,
       });
-      return applyChildren();
+      return applyChildrenToTarget();
     }
 
     let rollModifierText = numberToSignedString(save.value, true);
@@ -105,7 +104,7 @@ export default function applySavingThrow(node, actionContext) {
       value: resultPrefix + '\n**' + result + '**',
       inline: true,
     });
-    return applyChildren();
+    return applyChildrenToTarget();
   });
   // reset the targets after the save to each child
   actionContext.targets = originalTargets;

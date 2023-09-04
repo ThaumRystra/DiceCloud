@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import { SavingThrowSchema, ComputedOnlySavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 
 const DamageSchema = createPropertySchema({
   // The roll that determines how much to damage the attribute
@@ -32,10 +33,28 @@ const DamageSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  save: {
+    type: SavingThrowSchema,
+    optional: true,
+  },
+  'save.damageFunction': {
+    type: 'fieldToCompute',
+    optional: true,
+    parseLevel: 'compile',
+  },
 });
 
 const ComputedOnlyDamageSchema = createPropertySchema({
   amount: {
+    type: 'computedOnlyField',
+    optional: true,
+    parseLevel: 'compile',
+  },
+  save: {
+    type: ComputedOnlySavingThrowSchema,
+    optional: true,
+  },
+  'save.damageFunction': {
     type: 'computedOnlyField',
     optional: true,
     parseLevel: 'compile',

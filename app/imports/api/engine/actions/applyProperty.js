@@ -19,6 +19,7 @@ const applyPropertyByType = {
   damage,
   folder,
   note,
+  propertySlot: folder,
   roll,
   savingThrow,
   spell: action,
@@ -26,6 +27,7 @@ const applyPropertyByType = {
 };
 
 export default function applyProperty(node, actionContext, ...rest) {
+  if (node.node.deactivatedByToggle) return;
   actionContext.scope[`#${node.node.type}`] = node.node;
   applyPropertyByType[node.node.type]?.(node, actionContext, ...rest);
 }

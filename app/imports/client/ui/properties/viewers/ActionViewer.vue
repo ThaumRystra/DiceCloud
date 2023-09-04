@@ -65,6 +65,19 @@
         :value="reset"
       />
       <property-field
+        v-if="model.resources.conditions.length"
+        name="Conditions"
+      >
+        <div style="width: 100%;">
+          <action-condition-view
+            v-for="condition in model.resources.conditions"
+            :key="condition._id"
+            class="action-child"
+            :model="condition"
+          />
+        </div>
+      </property-field>
+      <property-field
         v-if="model.resources.attributesConsumed.length"
         name="Attributes consumed"
       >
@@ -107,6 +120,7 @@
 <script lang="js">
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
 import doAction from '/imports/api/engine/actions/doAction.js';
+import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
@@ -116,6 +130,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.
 
 export default {
   components: {
+    ActionConditionView,
     AttributeConsumedView,
     ItemConsumedView,
     PropertyIcon,

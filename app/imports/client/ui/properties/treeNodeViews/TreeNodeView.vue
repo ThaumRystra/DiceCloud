@@ -3,6 +3,7 @@
     :is="treeNodeView"
     :model="model"
     :selected="selected"
+    :show-external-details="showExternalDetails"
     :class="{
       'inactive': model.inactive,
     }"
@@ -24,6 +25,7 @@ export default {
       required: true,
     },
     selected: Boolean,
+    showExternalDetails: Boolean,
   },
   computed: {
     treeNodeView(){

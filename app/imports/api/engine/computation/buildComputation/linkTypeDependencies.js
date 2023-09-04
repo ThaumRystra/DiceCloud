@@ -80,6 +80,15 @@ function linkAction(dependencyGraph, prop, { propsById }) {
       key: `resources.attributesConsumed[${index}].quantity`,
     });
   });
+  // Link conditions
+  prop.resources.conditions?.forEach((con, index) => {
+    // Link the property to its condition calculation
+    dependOnCalc({
+      dependencyGraph,
+      prop,
+      key: `resources.conditions[${index}].condition`,
+    });
+  });
 }
 
 function linkAdjustment(dependencyGraph, prop) {
