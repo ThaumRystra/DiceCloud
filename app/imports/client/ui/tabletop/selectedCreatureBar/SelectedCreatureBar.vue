@@ -1,7 +1,7 @@
 <template lang="html">
   <div
     v-if="creatureId"
-    class="selected-creature-bar d-flex pa-3"
+    class="selected-creature-bar d-flex pa-3  align-end"
     style="gap: 8px;"
   >
     <!--
@@ -35,7 +35,7 @@
         style="width: 300px;"
         :style="{
           width: '300px',
-          opacity: selectedIcon ? 1 : 0.5,
+          opacity: selectedIcon ? 1 : 0.7,
           transition: 'opacity 0.2s ease',
         }"
         :model="selectedProp"
@@ -52,6 +52,54 @@
         </v-card-title>
       </v-card>
     </v-menu>
+    <v-card
+      v-if="iconGroups.buffs"
+      class="buffs-card"
+    >
+      <div
+        v-for="(row, rowIndex) in iconGroups.buffs.rows"
+        :key="rowIndex"
+        class="d-flex"
+      >
+        <template
+          v-for="(icon, iconIndex) in row"
+        >
+          <creature-bar-icon
+            :key="icon.propId || iconIndex"
+            :prop-id="icon.propId"
+            :icon="icon.icon"
+            :selected="selectedIcon === icon"
+            :data-id="icon.propId || icon.standardId"
+            @click="e => selectIcon(e, icon)"
+            @mouseenter="e => hoverIcon(e, icon)"
+            @mouseleave="unHoverIcon(icon)"
+          />
+        </template>
+      </div>
+    </v-card>
+    <v-card
+      class="creature-portrait"
+      :width="90"
+      :height="120"
+    >
+      <v-img
+        v-if="creature.picture"
+        :height="120"
+        :src="creature.picture"
+        position="top center"
+      />
+      <div
+        v-else
+        class="fill-height d-flex align-center justify-center"
+        style="opacity: 0.2;"
+      >
+        <v-icon
+          size="90"
+        >
+          mdi-account
+        </v-icon>
+      </div>
+    </v-card>
     <v-card
       v-for="group in iconGroups"
       :key="group.name"
@@ -259,6 +307,7 @@ export default {
               { type: 'folder', groupStats: true },
               { type: 'attribute' },
               { type: 'toggle' },
+              { type: 'buff' }
             ],
           },
           {
@@ -314,6 +363,7 @@ export default {
         if (prop._placedInGroup) return;
         let groupName;
         switch (prop.type) {
+          case 'buff': groupName = 'Buffs'; break;
           case 'action': groupName = 'Actions'; break;
           case 'resource': groupName = 'Resources'; break;
           case 'folder': groupName = 'Folders'; break;
@@ -321,7 +371,9 @@ export default {
         if (!groupName) return;
         if (!groupsByName[groupName]) {
           groupsByName[groupName] = { name: groupName, iconList: [] };
-          defaultGroups.push(groupsByName[groupName]);
+          if (groupName !== 'Buffs') { // don't add buffs to the default groups, it is handled differently
+            defaultGroups.push(groupsByName[groupName]);
+          }
         }
         groupsByName[groupName].iconList.push({ propId: prop._id });
       });
@@ -343,10 +395,16 @@ export default {
 
       iconGroups.push(...defaultGroups);
 
+      // Store a specific reference to buffs outside of the list order
+      iconGroups.buffs = groupsByName['Buffs'];
+
       // Divide the icons into rows
       iconGroups.forEach(group => {
         group.rows = splitToNChunks(group.iconList, this.rows);
       });
+      if (iconGroups.buffs) {
+        iconGroups.buffs.rows = splitToNChunks(iconGroups.buffs.iconList, this.rows);
+      }
 
       return iconGroups;
     }

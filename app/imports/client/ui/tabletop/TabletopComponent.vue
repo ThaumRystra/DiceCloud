@@ -80,7 +80,6 @@
         bottom:0;
         right: 0;
         overflow-x: auto;
-        overflow-y: hidden;
       "
     >
       <v-slide-y-reverse-transition mode="out-in">
