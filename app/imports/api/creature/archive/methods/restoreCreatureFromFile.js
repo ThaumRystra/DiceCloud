@@ -13,12 +13,12 @@ import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileS
 import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety.js';
 
 let migrateArchive;
-if (Meteor.isServer){
-  migrateArchive = require('/imports/migrations/server/migrateArchive.js').default;
+if (Meteor.isServer) {
+  migrateArchive = require('/imports/migrations/archive/migrateArchive.js').default;
 }
 
-function restoreCreature(archive, userId){
-  if (SCHEMA_VERSION < archive.meta.schemaVersion){
+function restoreCreature(archive, userId) {
+  if (SCHEMA_VERSION < archive.meta.schemaVersion) {
     throw new Meteor.Error('Incompatible',
       'The archive file is from a newer version. Update required to read.')
   }
@@ -35,7 +35,7 @@ function restoreCreature(archive, userId){
   });
   if (existingCreature) throw new Meteor.Error('Already exists',
     'The creature you are trying to restore already exists.')
-  
+
   // Ensure the user owns the restored creature
   archive.creature.owner = userId;
 
@@ -44,13 +44,13 @@ function restoreCreature(archive, userId){
   Creatures.insert(archive.creature);
   try {
     // Add all the properties
-    if (archive.properties && archive.properties.length){
+    if (archive.properties && archive.properties.length) {
       CreatureProperties.batchInsert(archive.properties);
     }
-    if (archive.experiences && archive.experiences.length){
+    if (archive.experiences && archive.experiences.length) {
       Experiences.batchInsert(archive.experiences);
     }
-    if (archive.logs && archive.logs.length){
+    if (archive.logs && archive.logs.length) {
       CreatureLogs.batchInsert(archive.logs);
     }
   } catch (e) {
@@ -73,23 +73,23 @@ const restoreCreaturefromFile = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  async run({fileId}) {
+  async run({ fileId }) {
     // fetch the file
-    const file = ArchiveCreatureFiles.findOne({_id: fileId}).get();
-    if (!file){
+    const file = ArchiveCreatureFiles.findOne({ _id: fileId }).get();
+    if (!file) {
       throw new Meteor.Error('File not found',
-      'The requested creature archive does not exist');
+        'The requested creature archive does not exist');
     }
     // Assert ownership
     const userId = file?.userId;
-    if (!userId || userId !== this.userId){
+    if (!userId || userId !== this.userId) {
       throw new Meteor.Error('Permission denied',
-      'You can only restore creatures you own');
+        'You can only restore creatures you own');
     }
 
     assertHasCharactersSlots(this.userId);
 
-    if (Meteor.isServer){
+    if (Meteor.isServer) {
       // Read the file data
       const archive = await ArchiveCreatureFiles.readJSONFile(file);
       restoreCreature(archive, this.userId);

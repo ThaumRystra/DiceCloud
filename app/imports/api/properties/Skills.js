@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema.js';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20
@@ -59,7 +60,8 @@ let SkillSchema = createPropertySchema({
     type: 'inlineCalculationFieldToCompute',
     optional: true,
   },
-});
+  // Skills can apply their value to other calculations as a proficiency using tag targeting
+}).extend(TagTargetingSchema);
 
 let ComputedOnlySkillSchema = createPropertySchema({
   // Computed value of skill to be added to skill rolls

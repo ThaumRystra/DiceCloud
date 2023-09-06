@@ -13,7 +13,7 @@
   </v-list>
   <v-card v-else>
     <v-card-text>
-      No equipped items found with the tag "{{ itemConsumed.tag }}"
+      No active items found with the tag "{{ itemConsumed.tag }}"
     </v-card-text>
   </v-card>
 </template>
@@ -42,7 +42,6 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': this.action.ancestors[0].id,
         type: 'item',
-        equipped: true,
         tags: this.itemConsumed.tag,
         removed: {$ne: true},
         inactive: {$ne: true},

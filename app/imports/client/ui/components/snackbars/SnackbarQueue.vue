@@ -2,6 +2,8 @@
   <v-snackbar
     bottom
     left
+    outlined
+    color="accent"
     v-bind="$attrs"
     :value="isShown"
     :timeout="timeout"
@@ -50,7 +52,7 @@ export default {
   props: {
     timeout: {
       type: Number,
-      default: 6000,
+      default: 15000,
     },
     pause: {
       type: Number,

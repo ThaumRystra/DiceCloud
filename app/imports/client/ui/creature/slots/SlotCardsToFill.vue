@@ -1,39 +1,35 @@
 <template>
-  <column-layout
-    wide-columns
-    class="slots-to-fill"
+  <v-fade-transition
+    group
+    leave-absolute
+    hide-on-leave
+    class="column-layout wide-columns"
   >
-    <v-fade-transition
-      group
-      leave-absolute
-      hide-on-leave
+    <div
+      v-for="pointBuy in pointBuys"
+      :key="pointBuy._id"
+      style="transition: all 0.3s !important"
     >
-      <div
-        v-for="pointBuy in pointBuys"
-        :key="pointBuy._id"
-        style="transition: all 0.3s !important"
-      >
-        <point-buy-card
-          :model="pointBuy"
-          hover
-          @ignore="ignoreProp(pointBuy._id)"
-          @click="editPointBuy(pointBuy._id)"
-        />
-      </div>
-      <div
-        v-for="slot in slots"
-        :key="slot._id"
-        style="transition: all 0.3s !important"
-      >
-        <slot-card
-          :model="slot"
-          hover
-          @ignore="ignoreProp(slot._id)"
-          @click="fillSlot(slot._id)"
-        />
-      </div>
-    </v-fade-transition>
-  </column-layout>
+      <point-buy-card
+        :model="pointBuy"
+        hover
+        @ignore="ignoreProp(pointBuy._id)"
+        @click="editPointBuy(pointBuy._id)"
+      />
+    </div>
+    <div
+      v-for="slot in slots"
+      :key="slot._id"
+      style="transition: all 0.3s !important"
+    >
+      <slot-card
+        :model="slot"
+        hover
+        @ignore="ignoreProp(slot._id)"
+        @click="fillSlot(slot._id)"
+      />
+    </div>
+  </v-fade-transition>
 </template>
 
 <script lang="js">

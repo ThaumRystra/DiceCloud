@@ -16,7 +16,7 @@
           flat
           @change="propertyHelpChanged"
         />
-        <v-btn 
+        <v-btn
           v-if="tab === 1"
           icon
           data-id="help-button"
@@ -45,7 +45,10 @@
       <v-tab :disabled="!type">
         Create
       </v-tab>
-      <v-tab :disabled="!type">
+      <v-tab
+        v-if="!hideLibraryTab"
+        :disabled="!type"
+      >
         Library
       </v-tab>
     </v-tabs>
@@ -56,31 +59,43 @@
     >
       <v-tab-item :disabled="!!forcedType">
         <property-selector
-          no-library-only-props
+          :no-library-only-props="!showLibraryOnlyProps"
           :parent-type="parentDoc && parentDoc.type"
+          :current-type="type"
           @select="e => type = e"
         />
       </v-tab-item>
-      <v-tab-item :disabled="!type">
+      <v-tab-item
+        :disabled="!type"
+        class="dialog-background"
+        style="min-height: 100%;"
+      >
         <v-card-text
           v-if="!$slots['unwrapped-content']"
+          class="dialog-background"
         >
-          <component
-            :is="type"
+          <property-form
             v-if="type"
             class="creature-property-form"
+            no-child-insert
             :model="model"
             :errors="errors"
+            :collection="collection"
             @change="change"
             @push="push"
             @pull="pull"
           />
         </v-card-text>
       </v-tab-item>
-      <v-tab-item :disabled="!type">
+      <v-tab-item
+        v-if="!hideLibraryTab"
+        :disabled="!type"
+      >
         <v-expansion-panels
+          accordion
+          tile
           multiple
-          inset
+          hover
         >
           <v-expansion-panel
             v-for="libraryNode in libraryNodes"
@@ -150,7 +165,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ tab === 1 ? "Discard" : "Cancel" }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -185,12 +200,13 @@ import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin.js';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
 import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
+import SimpleSchema from 'simpl-schema';
 
 export default {
   components: {
@@ -198,7 +214,7 @@ export default {
     DialogBase,
     TreeNodeView,
     LibraryNodeExpansionContent,
-    ...propertyFormIndex,
+    PropertyForm,
   },
   mixins: [schemaFormMixin],
   props: {
@@ -214,6 +230,10 @@ export default {
       type: Array,
       default: undefined,
     },
+    collection: {
+      type: String,
+      default: undefined,
+    },
     suggestedType: {
       type: String,
       default: undefined,
@@ -222,16 +242,27 @@ export default {
       type: Object,
       default: undefined,
     },
+    prop: {
+      type: Object,
+      default: undefined,
+    },
+    children: {
+      type: Array,
+      default: () => [],
+    },
+    hideLibraryTab: Boolean,
+    showLibraryOnlyProps: Boolean,
   },
   reactiveProvide: {
     name: 'context',
-    include: ['debounceTime'],
+    include: ['debounceTime', 'isLibraryForm'],
   },
   data(){return {
     selectedNodeIds: [],
-    type: this.forcedType || this.suggestedType,
-    model: {
+    type: this.forcedType || this.suggestedType || this.prop?.type || undefined,
+    model: this.prop || {
       type: this.type,
+      children: [],
     },
     searchValue: undefined,
     debounceTime: 0,
@@ -248,17 +279,22 @@ export default {
       const propDef = PROPERTIES[this.type];
       return propDef && propDef.docsPath;
     },
+    isLibraryForm() {
+      return this.collection === 'libraryNodes' || undefined;
+    },
   },
   watch: {
     type(newType){
       this.changeType(newType);
+    },
+    prop(newProp) {
+      this.model = newProp
     },
   },
   mounted(){
     this.changeType(this.type);
   },
   methods: {
-
     propertyHelpChanged(value){
       Meteor.users.setPreference.call({
         preference: 'hidePropertySelectDialogHelp',
@@ -291,17 +327,14 @@ export default {
       if (this.currentLimit >= this.countAll) return;
       this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
     },
-    insert(){
-      if (!this.selectedNodeIds.length) return;
-      this.$store.dispatch('popDialogStack', this.selectedNodeIds);
-    },
     changeType(type){
       this._subs.searchLibraryNodes.setData('type', type);
       if (!type) return;
       this.tab = 1;
       this.schema = propertySchemasIndex[type];
       this.validationContext = this.schema.newContext();
-      let model = this.schema.clean({});
+      let model = this.model || {};
+      model = this.schema.clean(model);
       model.type = type;
       this.model = model;
     },
@@ -355,4 +388,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.dialog-background {
+  background-color: #fafafa;
+}
+
+.theme--dark .dialog-background {
+  background-color: #303030;
+}
 </style>

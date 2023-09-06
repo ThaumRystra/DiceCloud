@@ -9,6 +9,7 @@ const CharacterListToolbarItems = () => import('/imports/client/ui/creature/crea
 const Library = () => import('/imports/client/ui/pages/Library.vue');
 const LibraryCollection = () => import('/imports/client/ui/pages/LibraryCollection.vue');
 const LibraryCollectionToolbar = () => import('/imports/client/ui/library/LibraryCollectionToolbar.vue');
+const LibraryBrowser = () => import('/imports/client/ui/pages/LibraryBrowser.vue');
 const CharacterSheetPage = () => import('/imports/client/ui/pages/CharacterSheetPage.vue');
 const CharacterSheetToolbar = () => import('/imports/client/ui/creature/character/CharacterSheetToolbar.vue');
 const CharacterSheetRightDrawer = () => import('/imports/client/ui/creature/character/CharacterSheetRightDrawer.vue');
@@ -167,6 +168,15 @@ RouterFactory.configure(router => {
     },
     meta: {
       title: 'Library Collection',
+    },
+  }, {
+    name: 'libraryBrowser',
+    path: '/community-libraries',
+    components: {
+      default: LibraryBrowser,
+    },
+    meta: {
+      title: 'Community Libraries',
     },
   }, {
     name: 'characterSheet',
@@ -377,7 +387,11 @@ RouterFactory.configure(router => {
 
 function redirectIfMaintenance(to, from, next) {
   if (!MAINTENANCE_MODE) return next();
-  if (to?.path === '/admin' || to?.path === '/maintenance' || to?.path === '/sign-in') return next();
+  if (
+    to?.path === '/admin' ||
+    to?.path === '/maintenance' ||
+    to?.path === '/sign-in'
+  ) return next();
   Tracker.autorun((computation) => {
     if (userSubscription.ready()) {
       computation.stop();

@@ -35,6 +35,16 @@
             :model="error"
           />
           <v-alert
+            v-else-if="error.type === 'warning'"
+            :key="index + 'otherError'"
+            border="bottom"
+            colored-border
+            elevation="2"
+            type="warning"
+          >
+            {{ error.details.error }}
+          </v-alert>
+          <v-alert
             v-else
             :key="index + 'otherError'"
             border="bottom"

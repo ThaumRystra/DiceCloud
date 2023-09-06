@@ -10,6 +10,7 @@
       <v-btn
         v-if="characterSlots > 0"
         text
+        :loading="restoreLoading"
         @click="restore(model._id)"
       >
         Restore

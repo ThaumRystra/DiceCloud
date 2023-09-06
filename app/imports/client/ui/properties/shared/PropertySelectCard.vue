@@ -2,6 +2,8 @@
   <v-card
     hover
     style="height: 100%; overflow: hidden;"
+    :class="{'accent--text': disabled}"
+    :disabled="disabled"
     @click="e => $emit('click', e)"
   >
     <v-card-title
@@ -42,7 +44,8 @@ export default {
     property: {
       type: Object,
       required: true,
-    }
+    },
+    disabled: Boolean,
   },
   meteor: {
     showPropertyHelp(){

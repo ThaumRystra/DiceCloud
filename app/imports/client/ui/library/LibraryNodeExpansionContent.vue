@@ -1,16 +1,27 @@
 <template lang="html">
-  <div>
-    <component
-      :is="model.type"
-      :model="model"
-      class="property-viewer"
+  <div :key="id">
+    <v-progress-linear
+      v-if="!subsReady"
+      indeterminate
+      color="accent"
     />
-    <tree-node-list
-      v-if="$subReady.descendantLibraryNodes"
-      group="library-node-expansion"
-      :children="propertyChildren"
-      @selected="clickChild"
-    />
+    <v-expand-transition>
+      <div
+        v-if="subsReady"
+        class="pt-4"
+      >
+        <component
+          :is="model.type"
+          :model="model"
+          class="property-viewer"
+        />
+        <tree-node-list
+          group="library-node-expansion"
+          :children="propertyChildren"
+          @selected="clickChild"
+        />
+      </div>
+    </v-expand-transition>
   </div>
 </template>
 
@@ -26,10 +37,15 @@ export default {
     ...propertyViewerIndex,
   },
   props: {
-    model: {
-      type: Object,
+    id: {
+      type: String,
       required: true,
     },
+  },
+  computed: {
+    subsReady() {
+      return this.$subReady.descendantLibraryNodes && this.$subReady.libraryNode;
+    }
   },
   methods: {
     clickChild(id){
@@ -45,19 +61,22 @@ export default {
   meteor: {
     $subscribe: {
       libraryNode(){
-        return [this.model._id];
+        return [this.id];
       },
       descendantLibraryNodes(){
-        return [this.model._id];
+        return [this.id];
       },
+    },
+    model() {
+      return LibraryNodes.findOne(this.id);
     },
     propertyChildren(){
       return nodesToTree({
         collection: LibraryNodes,
-        ancestorId: this.model._id
+        ancestorId: this.id
       });
     },
-  },
+  }
 }
 </script>
 

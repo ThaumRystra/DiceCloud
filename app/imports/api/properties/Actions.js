@@ -50,7 +50,6 @@ let ActionSchema = createPropertySchema({
   attackRoll: {
     type: 'fieldToCompute',
     optional: true,
-    defaultValue: 'strength.modifier + proficiencyBonus',
   },
   // Calculation of how many times this action can be used
   uses: {

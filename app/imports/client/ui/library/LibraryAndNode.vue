@@ -1,5 +1,12 @@
 <template lang="html">
   <tree-detail-layout>
+    <library-second-tree
+      v-if="showSecondTree"
+      slot="left-tree"
+      :selected-node="selectedNode"
+      @close="showSecondTree = false"
+      @selected="clickNode"
+    />
     <div
       slot="tree"
       class="layout column"
@@ -17,23 +24,44 @@
         :dark="isToolbarDark"
         :light="!isToolbarDark"
       >
+        <tree-search-input
+          ref="searchBox"
+          v-model="filter"
+          class="mx-4"
+          @extra-fields-changed="val => extraFields = val"
+        />
         <v-spacer />
+        <v-fade-transition>
+          <v-menu v-if="organize && $vuetify.breakpoint.mdAndUp">
+            <template #activator="{ on, attrs }">
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-text>
+                <v-switch
+                  v-model="showSecondTree"
+                  label="Show second library tree"
+                />
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </v-fade-transition>
         <v-switch
           v-if="!libraryId || canEditLibrary"
           v-model="organize"
+          hide-details
           label="Organize"
-          class="mx-3"
+          class="ml-1 mr-3 mt-2"
           style="flex-grow: 0; height: 32px;"
-        />
-        <tree-search-input
-          ref="searchBox"
-          slot="extension"
-          v-model="filter"
-          class="mx-4"
         />
         <insert-library-node-button
           v-if="libraryId && canEditLibrary"
-          slot="extension"
           style="bottom: -24px"
           fab
           :library-id="libraryId"
@@ -49,6 +77,7 @@
           :library-id="libraryId"
           :organize-mode="organize"
           :selected-node="selectedNode"
+          :extra-fields="extraFields"
           should-subscribe
           :filter="filter"
           @selected="clickNode"
@@ -67,13 +96,14 @@
     <div
       slot="detail"
       data-id="selected-node-card"
-      style="overflow: hidden;"
+      style="overflow: hidden; min-height: 100%;"
     >
       <library-node-dialog
         :_id="selectedNodeId"
         embedded
         @removed="selectedNodeId = undefined"
         @duplicated="id => {if ($vuetify.breakpoint.mdAndUp) selectedNodeId = id}"
+        @select-sub-property="id => selectedNodeId = id"
       />
     </div>
   </tree-detail-layout>
@@ -92,6 +122,7 @@ import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
 import TreeSearchInput from '/imports/client/ui/components/tree/TreeSearchInput.vue';
+import LibrarySecondTree from '/imports/client/ui/library/LibrarySecondTree.vue';
 
 export default {
   components: {
@@ -101,6 +132,7 @@ export default {
     LibraryContentsContainer,
     InsertLibraryNodeButton,
     TreeSearchInput,
+    LibrarySecondTree,
   },
   props: {
     selection: Boolean,
@@ -113,6 +145,8 @@ export default {
     organize: false,
     selectedNodeId: undefined,
     filter: undefined,
+    extraFields: [],
+    showSecondTree: false,
   };},
   computed: {
     isToolbarDark(){
@@ -120,7 +154,7 @@ export default {
         this.selectedNode && this.selectedNode.color ||
         getThemeColor('secondary')
       );
-    }
+    },
   },
   watch:{
     selectedNode(val){

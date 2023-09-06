@@ -43,7 +43,7 @@
             {{ node.name }}
           </span>
           <fill-slot-button
-            v-if="(node.quantityExpected && node.quantityExpected.value === 1) && node.spaceLeft === 1"
+            v-if="canFillWithOne"
             :model="node"
           />
         </div>
@@ -93,6 +93,7 @@
             v-if="showExpanded"
             :children="computedChildren"
             :parent-slot-id="computedSlotId"
+            :depth="depth"
             @selected="e => $emit('selected', e)"
           />
           <div v-else>
@@ -141,6 +142,10 @@ export default {
     context: { default: {} }
   },
   props: {
+    depth: {
+      type: Number,
+      default: 0,
+    },
     node: {
       type: Object,
       required: true,
@@ -155,7 +160,7 @@ export default {
     },
   },
   data(){return {
-    expanded: false,
+    expanded: this.depth <= 2,
     /* expand if there's a slot needing attention:
       this.node._descendantCanFill || (
         this.node.type === 'propertySlot' &&
@@ -170,7 +175,8 @@ export default {
       this.children.length === 1 &&
       this.children[0].node.type !== 'propertySlot' &&
       this.node.quantityExpected &&
-      this.node.quantityExpected.value === 1;
+      this.node.quantityExpected.value === 1 &&
+      !this.canFill;
     },
     isSlot(){
       return this.node.type === 'propertySlot';
@@ -180,15 +186,18 @@ export default {
     },
     canFillWithOne(){
       return this.isSlot &&
-        this.node.quantityExpected && 
+        this.canFill &&
+        this.node.quantityExpected &&
         this.node.quantityExpected.value === 1 &&
-        this.node.spaceLeft === 1
+        this.node.spaceLeft === 1 &&
+        !this.children?.length;
     },
     canFillWithMany(){
-      return this.isSlot && (
+      return this.isSlot && this.canFill && (
         !this.node.quantityExpected ||
         this.node.quantityExpected.value === 0 ||
-        (this.node.quantityExpected.value > 1 && this.node.spaceLeft > 0)
+        (this.node.quantityExpected.value > 1 && this.node.spaceLeft > 0) ||
+        (this.node.quantityExpected.value === 1 && this.children?.length) 
       );
     },
     hasChildren(){

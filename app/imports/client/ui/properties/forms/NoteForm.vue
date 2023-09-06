@@ -1,18 +1,10 @@
 <template lang="html">
   <div class="feature-form">
-    <text-field
-      ref="focusFirst"
-      label="Name"
-      :value="model.name"
-      :error-messages="errors.name"
-      @change="change('name', ...arguments)"
-    />
-
     <inline-computation-field
       label="Summary"
       hint="This will appear in the card in the character sheet"
       :model="model.summary"
-      :error-messages="errors.summary"
+      :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['summary', ...path], value, ack})"
     />
@@ -21,27 +13,17 @@
       label="Description"
       hint="Text that does not fit in the summary"
       :model="model.description"
-      :error-messages="errors.description"
+      :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
 
-    <smart-combobox
-      label="Tags"
-      multiple
-      chips
-      deletable-chips
-      hint="Used to let slots find this property in a library, should otherwise be left blank"
-      :value="model.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
+    <form-sections
+      v-if="$slots.default"
+      type="note"
     >
-      <slot name="children" />
-    </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 

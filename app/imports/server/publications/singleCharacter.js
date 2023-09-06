@@ -19,10 +19,10 @@ Meteor.publish('singleCharacter', function (creatureId) {
   const self = this;
   try {
     schema.validate({ creatureId });
-  } catch (e){
+  } catch (e) {
     this.error(e);
   }
-  this.autorun(function (computation){
+  this.autorun(function (computation) {
     let userId = this.userId;
     let permissionCreature = Creatures.findOne({
       _id: creatureId,
@@ -32,11 +32,11 @@ Meteor.publish('singleCharacter', function (creatureId) {
     try { assertViewPermission(permissionCreature, userId) }
     catch (e) { return [] }
     loadCreature(creatureId, self);
-    if (permissionCreature.computeVersion !== VERSION && computation.firstRun){
+    if (permissionCreature.computeVersion !== VERSION && computation.firstRun) {
       try {
         computeCreature(creatureId)
       }
-      catch(e){ console.error(e) }
+      catch (e) { console.error(e) }
     }
     return [
       Creatures.find({
@@ -52,7 +52,13 @@ Meteor.publish('singleCharacter', function (creatureId) {
         creatureId,
       }, {
         limit: 20,
-        sort: {date: -1},
+        sort: { date: -1 },
+      }),
+      // Also publish the owner's username
+      Meteor.users.find(permissionCreature.owner, {
+        fields: {
+          username: 1,
+        },
       }),
     ];
   });

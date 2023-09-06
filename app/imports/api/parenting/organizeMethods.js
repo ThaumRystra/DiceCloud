@@ -23,13 +23,20 @@ const organizeDoc = new ValidatedMethod({
       type: Boolean,
       optional: true,
     },
+    skipClient: {
+      type: Boolean,
+      optional: true,
+    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({docRef, parentRef, order, skipRecompute}) {
+  run({ docRef, parentRef, order, skipRecompute, skipClient }) {
+    if (skipClient && this.isSimulation) {
+      return;
+    }
     let doc = fetchDocByRef(docRef);
     let collection = getCollectionByName(docRef.collection);
     // The user must be able to edit both the doc and its parent to move it
@@ -39,23 +46,23 @@ const organizeDoc = new ValidatedMethod({
     assertDocEditPermission(parent, this.userId);
 
     // Change the doc's parent
-    updateParent({docRef, parentRef});
+    updateParent({ docRef, parentRef });
     // Change the doc's order to be a half step ahead of its target location
-    collection.update(doc._id, {$set: {order}}, {selector: {type: 'any'}});
+    collection.update(doc._id, { $set: { order } }, { selector: { type: 'any' } });
 
     // Reorder both ancestors' documents
     let oldAncestorId = doc.ancestors[0].id;
-    reorderDocs({collection, ancestorId: oldAncestorId});
+    reorderDocs({ collection, ancestorId: oldAncestorId });
 
     let newAncestorId = getRootId(parent);
-    if (newAncestorId !== oldAncestorId){
-      reorderDocs({collection, ancestorId: newAncestorId});
+    if (newAncestorId !== oldAncestorId) {
+      reorderDocs({ collection, ancestorId: newAncestorId });
     }
 
     // Figure out which creatures need to be recalculated after this move
     let docCreatures = getCreatureAncestors(doc);
     let parentCreatures = getCreatureAncestors(parent);
-    if (!skipRecompute){
+    if (!skipRecompute) {
       let creaturesToRecompute = union(docCreatures, parentCreatures);
       // Mark the creatures for recompute
       Creatures.update({
@@ -81,10 +88,10 @@ const reorderDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({docRef, order}) {
+  run({ docRef, order }) {
     let doc = fetchDocByRef(docRef);
     assertDocEditPermission(doc, this.userId);
-    safeUpdateDocOrder({docRef, order});
+    safeUpdateDocOrder({ docRef, order });
     // Recompute the affected creatures
     const ancestors = getCreatureAncestors(doc);
     if (ancestors.length) {
@@ -97,22 +104,22 @@ const reorderDoc = new ValidatedMethod({
   },
 });
 
-function getRootId(doc){
-  if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]){
+function getRootId(doc) {
+  if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]) {
     return doc.ancestors[0].id;
   } else {
     return doc._id;
   }
 }
 
-function getCreatureAncestors(doc){
+function getCreatureAncestors(doc) {
   let ids = [];
-  if(doc.type === 'pc' || doc.type === 'npc' || doc.type === 'monster'){
+  if (doc.type === 'pc' || doc.type === 'npc' || doc.type === 'monster') {
     ids.push(doc._id);
   }
-  if (doc.ancestors){
+  if (doc.ancestors) {
     doc.ancestors.forEach(ancestorRef => {
-      if (ancestorRef.collection === 'creatures'){
+      if (ancestorRef.collection === 'creatures') {
         ids.push(ancestorRef.id);
       }
     });

@@ -170,13 +170,6 @@ const PROPERTIES = Object.freeze({
     helpText: 'A slot in the character sheet is used to specify that a property needs to be selected from a library to fill the slot. The slot can determine what tags it is looking for, and any subscribed library property with matching tags can fill the slot',
     suggestedParents: [],
   },
-  slotFiller: {
-    icon: 'mdi-power-plug-outline',
-    name: 'Slot filler',
-    docsPath: 'property/slot-filler',
-    helpText: 'A slot filler allows for more advanced logic when it attempts to fill a slot. It can masquarade as any property type, and calculate whether it should fill a slot or not.',
-    suggestedParents: ['propertySlot'],
-  },
   spellList: {
     icon: '$vuetify.icons.spell_list',
     name: 'Spell list',
@@ -209,12 +202,23 @@ const PROPERTIES = Object.freeze({
 
 export default PROPERTIES;
 
-export function getPropertyName(type){
-  return type && PROPERTIES[type] && PROPERTIES[type].name;
+export function getPropertyName(type) {
+  return (type && PROPERTIES[type] && PROPERTIES[type].name) || type;
 }
 
-export function getPropertyIcon(type){
+export function getPropertyIcon(type) {
   return type && PROPERTIES[type] && PROPERTIES[type].icon;
+}
+
+export function getSuggestedChildren(type) {
+  const suggestions = [];
+  for (const key in PROPERTIES) {
+    const prop = PROPERTIES[key];
+    if (prop.suggestedParents.includes(type)) {
+      suggestions.push({ type: key, details: prop });
+    }
+  }
+  return suggestions;
 }
 
 const propsByDocsPath = new Map();

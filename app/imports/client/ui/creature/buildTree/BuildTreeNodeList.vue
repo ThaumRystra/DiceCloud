@@ -6,6 +6,7 @@
       :node="child.node"
       :children="child.children"
       :parent-slot-id="parentSlotId"
+      :depth="depth + 1"
       @selected="e => $emit('selected', e)"
     />
   </div>
@@ -26,6 +27,10 @@ export default {
     parentSlotId: {
       type: String,
       default: undefined,
+    },
+    depth: {
+      type: Number,
+      default: 0,
     },
   },
   data() {

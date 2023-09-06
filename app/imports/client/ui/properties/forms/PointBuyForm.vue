@@ -1,26 +1,13 @@
 <template lang="html">
   <div class="point-buy-form">
     <point-buy-spend-form 
+      v-if="!context.isLibraryForm"
       :model="model"
       @change="e => $emit('change', e)"
-      @push="e => $emit('change', e)"
-      @pull="e => $emit('change', e)"
     />
-    <form-sections>
-      <form-section name="Settings">
+    <form-sections type="pointBuy">
+      <form-section name="Point buy settings">
         <v-row dense>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <text-field
-              ref="focusFirst"
-              label="Table name"
-              :value="model.name"
-              :error-messages="errors.name"
-              @change="change('name', ...arguments)"
-            />
-          </v-col>
           <v-col
             cols="12"
             md="6"
@@ -28,6 +15,7 @@
             <computed-field
               label="Min"
               hint="The minimum value for each row"
+              placeholder="0"
               :model="model.min"
               :error-messages="errors.min"
               @change="({path, value, ack}) =>
@@ -41,6 +29,7 @@
             <computed-field
               label="Max"
               hint="The maximum value for each row"
+              placeholder="100"
               :model="model.max"
               :error-messages="errors.max"
               @change="({path, value, ack}) =>
@@ -52,7 +41,7 @@
             md="6"
           >
             <computed-field
-              label="Cost"
+              label="Cost function"
               hint="A function of `value` that determines the cost of each row"
               hide-value
               :model="model.cost"
@@ -118,6 +107,19 @@
                   />
                 </v-col>
                 <v-col
+                  v-if="context.isLibraryForm"
+                  cols="12"
+                  md="6"
+                >
+                  <text-field
+                    label="Default value"
+                    :value="row.value"
+                    hint="The starting value of the row"
+                    :error-messages="errors.values && errors.values[i] && errors.values[i].value"
+                    @change="change(['values', i, 'value'], ...arguments)"
+                  />
+                </v-col>
+                <v-col
                   v-if="row.errors && row.errors.length"
                   cols="12"
                 >
@@ -165,12 +167,7 @@
           </v-row>
         </v-slide-x-transition>
       </form-section>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
-      >
-        <slot name="children" />
-      </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>
@@ -188,6 +185,9 @@ export default {
     PointBuySpendForm,
   },
   mixins: [propertyFormMixin, attributeListMixin],
+  inject: {
+    context: { default: {} }
+  },
   data() {
     return {
       addRowLoading: false,

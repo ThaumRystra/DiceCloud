@@ -23,7 +23,6 @@ import { ComputedOnlyRollSchema } from '/imports/api/properties/Rolls.js';
 import { ComputedOnlySavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { ComputedOnlySkillSchema } from '/imports/api/properties/Skills.js';
 import { ComputedOnlySlotSchema } from '/imports/api/properties/Slots.js';
-import { ComputedOnlySlotFillerSchema } from '/imports/api/properties/SlotFillers.js';
 import { ComputedOnlySpellSchema } from '/imports/api/properties/Spells.js';
 import { ComputedOnlySpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ComputedOnlyToggleSchema } from '/imports/api/properties/Toggles.js';
@@ -54,7 +53,6 @@ const propertySchemasIndex = {
   roll: ComputedOnlyRollSchema,
   savingThrow: ComputedOnlySavingThrowSchema,
   skill: ComputedOnlySkillSchema,
-  slotFiller: ComputedOnlySlotFillerSchema,
   spellList: ComputedOnlySpellListSchema,
   spell: ComputedOnlySpellSchema,
   toggle: ComputedOnlyToggleSchema,

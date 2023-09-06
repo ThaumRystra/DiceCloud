@@ -16,6 +16,9 @@
     <template #append>
       <slot name="value" />
     </template>
+    <template #prepend>
+      <slot name="prepend" />
+    </template>
   </v-text-field>
 </template>
 

@@ -29,11 +29,18 @@
               <library-list v-else />
             </v-fade-transition>
           </v-card>
-          <div class="layout justify-end mt-2">
+          <div class="layout wrap justify-end mt-2">
+            <v-btn
+              text
+              to="/community-libraries"
+            >
+              Browse community libraries
+            </v-btn>
             <v-btn
               v-if="paidBenefits"
               text
               data-id="insert-library-collection-button"
+              color="accent"
               :loading="loadingInsertLibraryCollection"
               @click="insertLibraryCollection"
             >

@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.20.1
+// Generated automatically by nearley, version 2.16.0
 // http://github.com/Hardmath123/nearley
 function id(x) { return x[0]; }
 
@@ -13,7 +13,7 @@ function id(x) { return x[0]; }
       value: s => s.slice(1, -1).replace('\\n', '\n'),
     },
     name: {
-      match: /[a-zA-Z_#$]*[a-ce-zA-Z_#$][a-zA-Z0-9_#$]*/,
+      match: /[~#]?[a-zA-Z]*[a-ce-zA-Z][a-zA-Z0-9_]*/,
       type: moo.keywords({
         'keywords': ['true', 'false'],
       }),
@@ -93,7 +93,7 @@ let ParserRules = [
         d => [d[2], ...d[3]]
         },
     {"name": "arguments", "symbols": [{"literal":"("}, "_", {"literal":")"}], "postprocess": d => []},
-    {"name": "indexExpression", "symbols": ["arrayExpression", {"literal":"["}, "_", "expression", "_", {"literal":"]"}], "postprocess": d => node.index.create({array: d[0], index: d[3]})},
+    {"name": "indexExpression", "symbols": ["indexExpression", {"literal":"["}, "_", "expression", "_", {"literal":"]"}], "postprocess": d => node.index.create({array: d[0], index: d[3]})},
     {"name": "indexExpression", "symbols": ["arrayExpression"], "postprocess": id},
     {"name": "arrayExpression$subexpression$1", "symbols": ["expression"], "postprocess": d => d[0]},
     {"name": "arrayExpression$ebnf$1", "symbols": []},

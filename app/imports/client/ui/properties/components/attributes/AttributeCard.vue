@@ -1,6 +1,9 @@
 <template lang="html">
   <v-card
     :hover="hasClickListener"
+    :color="model.color"
+    :dark="model.color && isDark"
+    :light="model.color && !isDark"
     @click="click"
     @mouseover="hasClickListener ? hovering = true : undefined"
     @mouseleave="hasClickListener ? hovering = false : undefined"
@@ -13,6 +16,7 @@
 <script lang="js">
   import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
   import AttributeCardContent from '/imports/client/ui/properties/components/attributes/AttributeCardContent.vue';
+  import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
 
   export default {
     components: {
@@ -32,6 +36,10 @@
     computed: {
       hasClickListener(){
         return this.$listeners && !!this.$listeners.click
+      },
+      isDark() {
+        if (!this.model.color) return;
+        return isDarkColor(this.model.color);
       },
     },
     methods: {

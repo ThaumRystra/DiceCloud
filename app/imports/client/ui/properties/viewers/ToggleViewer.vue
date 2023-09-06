@@ -8,13 +8,16 @@
       />
       <property-field
         v-if="model.disabled || model.enabled"
-        name="Status"
+        name="State"
         :value="model.enabled ? 'Enabled' : 'Disabled'"
       />
       <template v-else-if="model.condition">
         <property-field
           name="Condition"
           :calculation="model.condition"
+        />
+        <property-target-tags
+          :model="model"
         />
       </template>
     </v-row>
@@ -23,8 +26,12 @@
 
 <script lang="js">
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
+import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
 
 export default {
+  components: {
+    PropertyTargetTags,
+  },
   mixins: [propertyViewerMixin],
 }
 </script>

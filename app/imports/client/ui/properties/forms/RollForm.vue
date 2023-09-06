@@ -6,17 +6,6 @@
         md="6"
       >
         <text-field
-          label="Name"
-          :value="model.name"
-          :error-messages="errors.name"
-          @change="change('name', ...arguments)"
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <text-field
           label="Variable name"
           :value="model.variableName"
           style="flex-basis: 300px;"
@@ -25,48 +14,30 @@
           @change="change('variableName', ...arguments)"
         />
       </v-col>
-    </v-row>
-    <computed-field
-      label="Roll"
-      hint="The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
-      :model="model.roll"
-      :error-messages="errors.roll"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['roll', ...path], value, ack})"
-    />
-    <form-sections>
-      <form-section
-        v-if="$slots.children"
-        name="Children"
+      <v-col
+        cols="12"
+        md="6"
       >
-        <slot name="children" />
-      </form-section>
-
-      <form-section name="Advanced">
-        <v-row dense>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
-              label="Don't show in log"
-              :value="model.silent"
-              :error-messages="errors.silent"
-              @change="change('silent', ...arguments)"
-            />
-          </v-col>
-        </v-row>
-        <smart-combobox
-          label="Tags"
-          multiple
-          chips
-          deletable-chips
-          hint="Used to let slots find this property in a library, should otherwise be left blank"
-          :value="model.tags"
-          @change="change('tags', ...arguments)"
+        <computed-field
+          label="Roll"
+          hint="The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
+          :model="model.roll"
+          :error-messages="errors.roll"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['roll', ...path], value, ack})"
+        />
+      </v-col>
+    </v-row>
+    <form-sections type="roll">
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
         />
       </form-section>
+      <slot />
     </form-sections>
   </div>
 </template>

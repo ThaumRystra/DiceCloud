@@ -49,7 +49,7 @@
           :key="libraryNode._id"
           :model="libraryNode"
           :data-id="libraryNode._id"
-          :class="{disabled: isDisabled(libraryNode)}"
+          :class="{disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition}"
         >
           <v-expansion-panel-header>
             <template #default="{ open }">
@@ -69,6 +69,7 @@
                   v-model="selectedNodeIds"
                   class="my-0 py-0"
                   hide-details
+                  :color="libraryNode._disabledBySlotFillerCondition ? 'error' : ''"
                   :disabled="isDisabled(libraryNode)"
                   :value="libraryNode._id"
                   @click.stop
@@ -81,7 +82,7 @@
                     v-if="libraryNode._disabledBySlotFillerCondition"
                     class="error--text text-no-wrap text-truncate"
                   >
-                    {{ libraryNode.slotFillerCondition }}
+                    {{ libraryNode._conditionError }}
                   </div>
                 </v-layout>
                 <div class="text-caption text-no-wrap text-truncate">
@@ -110,7 +111,7 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <library-node-expansion-content :model="libraryNode" />
+            <library-node-expansion-content :id="libraryNode._id" />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </template>
@@ -120,11 +121,12 @@
       column
       align-center
       justify-center
-      class="ma-3"
+      class="ma-3 mt-8"
     >
       <v-btn
         :loading="!$subReady.classFillers"
         color="accent"
+        outlined
         @click="loadMore"
       >
         Load More
@@ -192,7 +194,7 @@ import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
-import { clone } from 'lodash';
+import { clone, difference, isEqual } from 'lodash';
 
 export default {
   components: {
@@ -247,6 +249,69 @@ export default {
       });
       return { or, not };
     },
+    filledLevels() {
+      return LibraryNodes.find({
+        _id: { $in: this.selectedNodeIds }
+      }).map(
+        node => node.level || node.cache?.node?.level || 0
+      ).sort((a, b) => a - b);
+    }
+  },
+  watch: {
+    selectedNodeIds(selectedIds, oldSelectedIds) {
+      // Skip if we increased the length by adding a new Id, see if we need to backfill levels
+      if (oldSelectedIds.length < selectedIds.length) {
+        // Find out which library node was added
+        const addedId = difference(selectedIds, oldSelectedIds)[0];
+        if (!addedId) return;
+        const addedNode = LibraryNodes.findOne(addedId);
+        if (!addedNode) return;
+        // Check which levels are already backfilled
+        const backFilledLevels = new Set();
+        const sortedIds = LibraryNodes.find({
+          _id: { $in: selectedIds }
+        }).map(node => backFilledLevels.add(node.level || node.cache?.node?.level || 0));
+        // Tick any unchecked nodes of a lower level, but only one per level
+        this.libraryNodes.forEach(node => {
+          if (
+            !selectedIds.includes(node._id)
+            && (node.level < addedNode.level)
+            && !backFilledLevels.has(node.level)
+            && !this.isDisabled(node)
+            && !node._disabledBySlotFillerCondition
+          ) {
+            selectedIds.push(node._id);
+            backFilledLevels.add(node.level)
+          }
+        });
+        this.selectedNodeIds = sortedIds;
+      }
+      
+      // Refetch the library nodes to sort them correctly
+      const sortedIds = LibraryNodes.find({
+        _id: { $in: selectedIds }
+      }, {
+        sort: { level: 1, name: 1, order: 1 }
+      })
+        .fetch()
+        .sort((a, b) => (a.level || a.cache?.node?.level || 0) - (b.level || b.cache?.node?.level || 0))
+        .map(node => node._id);
+      // Only update if the order changed
+      if (!isEqual(this.selectedNodeIds, sortedIds)) {
+        this.selectedNodeIds = sortedIds;
+      }
+    },
+    activeCount(val) {
+      // Still loading fillers
+      if (!this._subs['classFillers'].ready()) return;
+      // Can load more, and not showing enough active choices, so load more
+      if (
+        this.currentLimit < this.countAll
+        && val < 20
+      ) {
+        this.loadMore();
+      }
+    },
   },
   methods: {
     loadMore() {
@@ -263,12 +328,10 @@ export default {
       });
     },
     isDisabled(node) {
-      return node._disabledBySlotFillerCondition ||
-        node._disabledByAlreadyAdded ||
-        (
-          node._disabledByQuantityFilled &&
-          !this.selectedNodeIds.includes(node._id)
-        )
+      const selected = this.selectedNodeIds.includes(node._id);
+      return node._disabledByAlreadyAdded
+        || ( node._disabledByQuantityFilled && !selected )
+        || ( this.filledLevels.includes(node.level || node.cache?.node?.level || 0) && !selected )
     },
   },
   meteor: {
@@ -300,6 +363,10 @@ export default {
     },
     countAll() {
       return this._subs['classFillers'].data('countAll');
+    },
+    activeCount() {
+      if (!this.libraryNodes) return;
+      return this.libraryNodes.length - (this.disabledNodeCount || 0);
     },
     alreadyAdded() {
       let added = new Set();
@@ -345,15 +412,24 @@ export default {
       Libraries.find().forEach(lib => names[lib._id] = lib.name)
       return names;
     },
+    libraryNodeFilter() {
+      const filterString = this._subs['classFillers'].data('libraryNodeFilter');
+      if (!filterString) return;
+      return EJSON.parse(filterString);
+    },
     libraryNodes() {
-      let filter = getSlotFillFilter({ slot: this.model });
-      let nodes = LibraryNodes.find(filter, {
-        sort: { name: 1, order: 1 }
+      if (!this.libraryNodeFilter) return [];
+      if (!this.$subReady.classFillers) return [];
+      let nodes = LibraryNodes.find(this.libraryNodeFilter, {
+        sort: { level: 1, name: 1, order: 1 }
       }).fetch();
       let disabledNodeCount = 0;
       // Mark classFillers whose condition isn't met or are too big to fit
       // the quantity to fill
       nodes.forEach(node => {
+        if (node.cache?.node) {
+          node.level = node.cache.node.level;
+        }
         if (node.slotFillerCondition) {
           try {
             let parseNode = parse(node.slotFillerCondition);
@@ -361,18 +437,19 @@ export default {
             if (resultNode?.parseType === 'constant') {
               if (!resultNode.value) {
                 node._disabledBySlotFillerCondition = true;
+                node._conditionError = node.slotFillerConditionNote || node.slotFillerCondition;
                 disabledNodeCount += 1;
               }
             } else {
               node._disabledBySlotFillerCondition = true;
-              node._conditionError = toString(resultNode);
+              node._conditionError = node.slotFillerConditionNote || toString(resultNode);
               disabledNodeCount += 1;
             }
           } catch (e) {
             console.warn(e);
             let error = prettifyParseError(e);
             node._disabledBySlotFillerCondition = true;
-            node._conditionError = error;
+            node._conditionError = 'Condition error: ' + error;
             disabledNodeCount += 1;
           }
         }
@@ -386,6 +463,7 @@ export default {
           node._disabledByAlreadyAdded = true;
         }
       });
+      nodes.sort((a, b) => a.level - b.level);
       this.disabledNodeCount = disabledNodeCount;
       return nodes;
     },

@@ -1,5 +1,5 @@
 import { some, intersection, difference, remove, includes } from 'lodash';
-import applyProperty from '../applyProperty.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';
 import logErrors from './shared/logErrors.js';
@@ -13,10 +13,6 @@ import getEffectivePropTags from '/imports/api/engine/computation/utility/getEff
 
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const applyChildren = function () {
-    applyNodeTriggers(node, 'after', actionContext);
-    node.children.forEach(child => applyProperty(child, actionContext));
-  };
 
   const prop = node.node;
   const scope = actionContext.scope;
@@ -27,7 +23,7 @@ export default function applyDamage(node, actionContext) {
   // Choose target
   let damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
   // Determine if the hit is critical
-  let criticalHit = scope['$criticalHit']?.value &&
+  let criticalHit = scope['~criticalHit']?.value &&
     prop.damageType !== 'healing' // Can't critically heal
     ;
   // Double the damage rolls if the hit is critical
@@ -66,19 +62,19 @@ export default function applyDamage(node, actionContext) {
 
   // If we didn't end up with a constant of finite amount, give up
   if (reduced?.parseType !== 'constant' || !isFinite(reduced.value)) {
-    return applyChildren();
+    return applyChildren(node, actionContext);
   }
 
   // Round the damage to a whole number
   damage = Math.floor(damage);
 
   // Convert extra damage into the stored type
-  if (prop.damageType === 'extra' && scope['$lastDamageType']) {
-    prop.damageType = scope['$lastDamageType'];
+  if (prop.damageType === 'extra' && scope['~lastDamageType']?.value) {
+    prop.damageType = scope['~lastDamageType']?.value;
   }
   // Store current damage type
   if (prop.damageType !== 'healing') {
-    scope['$lastDamageType'] = prop.damageType;
+    scope['~lastDamageType'] = { value: prop.damageType };
   }
 
   // Memoise the damage suffix for the log
@@ -134,7 +130,7 @@ export default function applyDamage(node, actionContext) {
     value: logValue.join('\n'),
     inline: true,
   });
-  return applyChildren();
+  return applyChildren(node, actionContext);
 }
 
 function applyDamageMultipliers({ target, damage, damageProp, logValue }) {
@@ -194,14 +190,18 @@ function dealDamage({ target, damageType, amount, actionContext }) {
   let healthBars = getPropertiesOfType(target._id, 'attribute');
 
   // Keep only the healthbars that can take damage/healing
-  remove(healthBars, (bar) =>
-    bar.attributeType !== 'healthBar' ||
-    bar.inactive ||
-    bar.removed ||
-    bar.overridden ||
-    (amount >= 0 && bar.healthBarNoDamage) ||
-    (amount < 0 && bar.healthBarNoHealing)
-  );
+  healthBars = healthBars.filter((bar) => {
+    if (bar.attributeType !== 'healthBar' || bar.inactive || bar.removed || bar.overridden) {
+      return false;
+    }
+    if (damageType === 'healing' && bar.healthBarNoHealing) {
+      return false;
+    }
+    if (damageType !== 'healing' && amount >= 0 && bar.healthBarNoDamage) {
+      return false;
+    }
+    return true;
+  });
 
   // Sort healthbars by damage/healing order or tree order as a fallback
   healthBars.sort((a, b) => {

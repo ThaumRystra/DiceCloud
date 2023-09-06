@@ -102,6 +102,8 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
+        },
+        'parent.id': {
           $nin: this.folderIds,
         },
         inactive: { $ne: true },
@@ -121,6 +123,8 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
+        },
+        'parent.id': {
           $nin: this.folderIds,
         },
         type: 'spellList',
@@ -142,7 +146,10 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
-          $nin: [...this.spellListIds, ...this.folderIds],
+          $nin: this.spellListIds,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
         },
         type: 'spell',
         removed: { $ne: true },
@@ -159,7 +166,10 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
-          $nin: [...this.spellListIds, ...this.folderIds],
+          $nin: this.spellListIds,
+        },
+        'parent.id': {
+          $nin: this.folderIds,
         },
         type: 'spellList',
         removed: { $ne: true },

@@ -153,12 +153,13 @@
         }
 
         this.$store.commit('pushDialogStack', {
-          component: 'add-creature-property-dialog',
+          component: 'insert-property-dialog',
           elementId: 'insert-creature-property-type-' + forcedType,
           data: {
             parentDoc: forcedType ? undefined : parent,
             forcedType,
             creatureId: this.creatureId,
+            noBackdropClose: true,
           },
           callback(result){
             if (!result){

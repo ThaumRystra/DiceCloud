@@ -70,6 +70,8 @@ export default {
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
+        },
+        'parent.id': {
           $nin: folderIds,
         },
         type: 'action',

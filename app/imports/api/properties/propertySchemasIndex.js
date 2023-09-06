@@ -21,7 +21,6 @@ import { RollSchema } from '/imports/api/properties/Rolls.js';
 import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SkillSchema } from '/imports/api/properties/Skills.js';
 import { SlotSchema } from '/imports/api/properties/Slots.js';
-import { SlotFillerSchema } from '/imports/api/properties/SlotFillers.js';
 import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { SpellSchema } from '/imports/api/properties/Spells.js';
 import { ToggleSchema } from '/imports/api/properties/Toggles.js';
@@ -52,7 +51,6 @@ const propertySchemasIndex = {
   roll: RollSchema,
   savingThrow: SavingThrowSchema,
   skill: SkillSchema,
-  slotFiller: SlotFillerSchema,
   spellList: SpellListSchema,
   spell: SpellSchema,
   toggle: ToggleSchema,

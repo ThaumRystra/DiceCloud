@@ -1,76 +1,59 @@
 <template lang="html">
   <div class="folder-form">
-    <div class="layout wrap">
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        style="flex-basis: 300px;"
-        :value="model.name"
-        :error-messages="errors.name"
-        @change="change('name', ...arguments)"
-      />
-      <form-sections>
-        <form-section
-          v-if="$slots.children"
-          name="Children"
-        >
-          <slot name="children" />
-        </form-section>
-
-        <form-section name="Advanced">
-          <smart-combobox
-            label="Tags"
-            multiple
-            chips
-            deletable-chips
-            :value="model.tags"
-            @change="change('tags', ...arguments)"
-          />
-          <smart-switch
-            label="Group children on a card"
-            :value="model.groupStats"
-            :error-messages="errors.groupStats"
-            @change="change('groupStats', ...arguments)"
-          />
-          <v-expand-transition>
-            <div v-if="model.groupStats">
-              <smart-switch
-                label="Hide children from their default locations"
-                :value="model.hideStatsGroup"
-                :error-messages="errors.hideStatsGroup"
-                @change="change('hideStatsGroup', ...arguments)"
-              />
-              <smart-select
-                clearable
-                label="Tab"
-                :items="[
-                  { text: 'Stats Tab', value: 'stats' },
-                  { text: 'Features Tab', value: 'features' },
-                  { text: 'Actions Tab', value: 'actions' },
-                  { text: 'Spells Tab', value: 'spells' },
-                  { text: 'Inventory Tab', value: 'inventory' },
-                  { text: 'Journal Tab', value: 'journal' },
-                  { text: 'Build Tab', value: 'build' },
-                ]"
-                :value="model.tab"
-                :error-messages="errors.tab"
-                :menu-props="{auto: true, lazy: true}"
-                @change="changeTab('tab', ...arguments)"
-              />
-              <smart-select
-                clearable
-                label="Location"
-                :items="locationItems"
-                :value="model.location"
-                :error-messages="errors.location"
-                :menu-props="{auto: true, lazy: true}"
-                @change="change('location', ...arguments)"
-              />
-            </div>
-          </v-expand-transition>
-        </form-section>
-      </form-sections>
-    </div>
+    <inline-computation-field
+      label="Description"
+      :model="model.description"
+      :error-messages="errors['description.text']"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
+    />
+    <form-sections type="folder">
+      <form-section name="Grouping">
+        <smart-switch
+          label="Group children on a card"
+          :value="model.groupStats"
+          :error-messages="errors.groupStats"
+          @change="change('groupStats', ...arguments)"
+        />
+        <v-expand-transition>
+          <div v-if="model.groupStats">
+            <smart-switch
+              label="Hide children from their default locations"
+              :value="model.hideStatsGroup"
+              :error-messages="errors.hideStatsGroup"
+              @change="change('hideStatsGroup', ...arguments)"
+            />
+            <smart-select
+              clearable
+              label="Tab"
+              :items="[
+                { text: 'Stats Tab', value: 'stats' },
+                { text: 'Features Tab', value: 'features' },
+                { text: 'Actions Tab', value: 'actions' },
+                { text: 'Spells Tab', value: 'spells' },
+                { text: 'Inventory Tab', value: 'inventory' },
+                { text: 'Journal Tab', value: 'journal' },
+                { text: 'Build Tab', value: 'build' },
+              ]"
+              :value="model.tab"
+              :error-messages="errors.tab"
+              :menu-props="{auto: true, lazy: true}"
+              @change="changeTab('tab', ...arguments)"
+            />
+            <smart-select
+              clearable
+              label="Location"
+              :items="locationItems"
+              :value="model.location"
+              :error-messages="errors.location"
+              :menu-props="{auto: true, lazy: true}"
+              @change="change('location', ...arguments)"
+            />
+          </div>
+        </v-expand-transition>
+      </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 

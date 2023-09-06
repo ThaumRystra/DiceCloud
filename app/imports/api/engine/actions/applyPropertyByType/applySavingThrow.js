@@ -2,12 +2,14 @@ import rollDice from '/imports/parser/rollDice.js';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import applyProperty from '../applyProperty.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
 
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
+  const originalTargets = actionContext.targets;
 
   let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
@@ -31,23 +33,21 @@ export default function applySavingThrow(node, actionContext) {
   // If there are no save targets, apply all children as if the save both
   // succeeeded and failed
   if (!saveTargets?.length) {
-    scope['$saveFailed'] = { value: true };
-    scope['$saveSucceeded'] = { value: true };
-    applyNodeTriggers(node, 'after', actionContext);
-    return node.children.forEach(child => applyProperty(child, actionContext));
+    scope['~saveFailed'] = { value: true };
+    scope['~saveSucceeded'] = { value: true };
+    return applyChildren(node, actionContext);
   }
 
   // Each target makes the saving throw
   saveTargets.forEach(target => {
-    delete scope['$saveFailed'];
-    delete scope['$saveSucceeded'];
-    delete scope['$saveDiceRoll'];
-    delete scope['$saveRoll'];
+    delete scope['~saveFailed'];
+    delete scope['~saveSucceeded'];
+    delete scope['~saveDiceRoll'];
+    delete scope['~saveRoll'];
 
-    const applyChildren = function () {
-      applyNodeTriggers(node, 'after', actionContext);
-      actionContext.targets = [target]
-      node.children.forEach(child => applyProperty(child, actionContext));
+    const applyChildrenToTarget = function () {
+      actionContext.targets = [target];
+      return applyChildren(node, actionContext);
     };
 
     const save = target.variables[prop.stat];
@@ -57,7 +57,7 @@ export default function applySavingThrow(node, actionContext) {
         name: 'Saving throw error',
         value: 'No saving throw found: ' + prop.stat,
       });
-      return applyChildren();
+      return applyChildrenToTarget();
     }
 
     let rollModifierText = numberToSignedString(save.value, true);
@@ -90,20 +90,22 @@ export default function applySavingThrow(node, actionContext) {
       value = values[0];
       resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
     }
-    scope['$saveDiceRoll'] = { value };
+    scope['~saveDiceRoll'] = { value };
     const result = value + rollModifier || 0;
-    scope['$saveRoll'] = { value: result };
+    scope['~saveRoll'] = { value: result };
     const saveSuccess = result >= dc;
     if (saveSuccess) {
-      scope['$saveSucceeded'] = { value: true };
+      scope['~saveSucceeded'] = { value: true };
     } else {
-      scope['$saveFailed'] = { value: true };
+      scope['~saveFailed'] = { value: true };
     }
     if (!prop.silent) actionContext.addLog({
       name: saveSuccess ? 'Successful save' : 'Failed save',
       value: resultPrefix + '\n**' + result + '**',
       inline: true,
     });
-    return applyChildren();
+    return applyChildrenToTarget();
   });
+  // reset the targets after the save to each child
+  actionContext.targets = originalTargets;
 }

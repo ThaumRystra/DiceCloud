@@ -42,6 +42,7 @@ export default {
             type: 'toggle',
             showUI: true,
             deactivatedByAncestor: { $ne: true },
+            deactivatedByToggle: { $ne: true },
           },
           {
             type: { $ne: 'toggle' },

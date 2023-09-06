@@ -8,7 +8,7 @@
         <computed-field
           ref="focusFirst"
           label="Damage"
-          hint="A caculation including dice rolls of the damge to deal to the target when activated by an action"
+          hint="A calculation including dice rolls of the damage to deal to the target when activated by an action"
           :model="model.amount"
           :error-messages="errors.amount"
           @change="({path, value, ack}) =>
@@ -32,40 +32,27 @@
         />
       </v-col>
     </v-row>
-    <smart-select
-      label="Target"
-      :hint="targetOptionHint"
-      :items="targetOptions"
+    <smart-toggle
+      label="Target creature"
       :value="model.target"
+      :options="[
+        {name: 'Action Target', value: 'target'},
+        {name: 'Self', value: 'self'},
+      ]"
       :error-messages="errors.target"
-      :menu-props="{auto: true, lazy: true}"
       @change="change('target', ...arguments)"
     />
-    <smart-combobox
-      label="Tags"
-      class="mr-2"
-      multiple
-      chips
-      deletable-chips
-      hint=""
-      :items="['magical', 'silvered', 'ignore resistance', 'ignore vulnerability', 'ignore immunity']"
-      :value="model.tags"
-      :error-messages="errors.tags"
-      @change="change('tags', ...arguments)"
-    />
-    <smart-switch
-      label="Don't show in log"
-      :value="model.silent"
-      :error-messages="errors.silent"
-      @change="change('silent', ...arguments)"
-    />
-    <form-section
-      v-if="$slots.children"
-      name="Children"
-      standalone
-    >
-      <slot name="children" />
-    </form-section>
+    <form-sections type="damage">
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
+        />
+      </form-section>
+      <slot />
+    </form-sections>
   </div>
 </template>
 

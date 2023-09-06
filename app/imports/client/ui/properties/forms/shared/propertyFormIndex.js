@@ -22,7 +22,6 @@ import RollForm from '/imports/client/ui/properties/forms/RollForm.vue';
 import SavingThrowForm from '/imports/client/ui/properties/forms/SavingThrowForm.vue';
 import SkillForm from '/imports/client/ui/properties/forms/SkillForm.vue';
 import SlotForm from '/imports/client/ui/properties/forms/SlotForm.vue';
-import SlotFillerForm from '/imports/client/ui/properties/forms/SlotFillerForm.vue';
 import SpellListForm from '/imports/client/ui/properties/forms/SpellListForm.vue';
 import SpellForm from '/imports/client/ui/properties/forms/SpellForm.vue';
 import ToggleForm from '/imports/client/ui/properties/forms/ToggleForm.vue';
@@ -53,7 +52,6 @@ export default {
   roll: RollForm,
   savingThrow: SavingThrowForm,
   skill: SkillForm,
-  slotFiller: SlotFillerForm,
   spellList: SpellListForm,
   spell: SpellForm,
   toggle: ToggleForm,

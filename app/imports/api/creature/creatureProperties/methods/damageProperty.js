@@ -64,12 +64,12 @@ export function damagePropertyWork({ prop, operation, value, actionContext, logF
   // Save the value to the scope before applying the before triggers
   if (operation === 'increment') {
     if (value >= 0) {
-      actionContext.scope['$damage'] = value;
+      actionContext.scope['~damage'] = { value };
     } else {
-      actionContext.scope['$healing'] = -value;
+      actionContext.scope['~healing'] = { value: -value };
     }
   } else {
-    actionContext.scope['$set'] = value;
+    actionContext.scope['~set'] = { value };
   }
 
   applyTriggers(actionContext.triggers?.damageProperty?.before, prop, actionContext);
@@ -77,12 +77,12 @@ export function damagePropertyWork({ prop, operation, value, actionContext, logF
   // fetch the value from the scope after the before triggers, in case they changed them
   if (operation === 'increment') {
     if (value >= 0) {
-      value = actionContext.scope['$damage'];
+      value = actionContext.scope['~damage']?.value;
     } else {
-      value = -actionContext.scope['$healing'];
+      value = -actionContext.scope['~healing']?.value;
     }
   } else {
-    value = actionContext.scope['$set'];
+    value = actionContext.scope['~set']?.value;
   }
 
   let damage, newValue, increment;

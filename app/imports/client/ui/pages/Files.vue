@@ -44,6 +44,7 @@
           style="height: 100%; width: 100%; min-height: 120px;"
           class="archive-button"
           :color="archiveFileError ? 'error' : undefined"
+          :disabled="archiveUploadInProgress"
           @click="$refs.archiveFileInput.click()"
         >
           <v-icon left>
@@ -57,7 +58,7 @@
           </template>
           <v-progress-linear
             v-if="archiveUploadInProgress"
-            :progress="archiveUploadProgress"
+            :value="archiveUploadProgress"
             :indeterminate="archiveUploadIndeterminate"
           />
         </v-btn>
@@ -107,6 +108,7 @@ import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue
 import UserImageCard from '/imports/client/ui/files/UserImageCard.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import migrateArchive from '/imports/migrations/archive/migrateArchive.js';
 
 export default {
   components: {
@@ -120,8 +122,8 @@ export default {
     archiveFileError: undefined,
     archiveFile: undefined,
     archiveUploadInProgress: false,
-    archiveUploadProgress: undefined,
-    archiveUploadIndeterminate: false,
+    archiveUploadProgress: 0,
+    archiveUploadIndeterminate: true,
   }},
   meteor: {
     $subscribe: {
@@ -158,11 +160,21 @@ export default {
       });
     }
   },
+  watch: {
+    archiveUploadInProgress(val){
+      if (val === false) {
+        this.archiveUploadProgress = 0;
+        this.archiveUploadIndeterminate = true;
+      }
+    },
+  },
   methods: {
     inputArchiveFile(){
       this.archiveFile = undefined;
       this.archiveFileError = undefined;
       const file = this.$refs.archiveFileInput.files[0];
+      // Reset the file input
+      this.$refs.archiveFileInput.value = null;
       if (!file) return;
       if (file.type !== 'application/json'){
         this.archiveFileError = 'File must be .json';
@@ -174,6 +186,8 @@ export default {
       }
       this.archiveFile = file;
       this.archiveUploadIndeterminate = true;
+      this.archiveUploadInProgress = true;
+      this.archiveUploadProgress = undefined;
 
       const fr = new FileReader();
       const self = this;
@@ -184,14 +198,18 @@ export default {
           data = JSON.parse(fr.result);
         } catch (e){
           self.archiveFileError = 'File could not be parsed';
+          self.archiveUploadInProgress = false;
           console.error(e);
           return;
         }
-
         try {
-          archiveSchema.validate(archiveSchema.clean(data));
+          // Migrate, clean, and validate the archive
+          migrateArchive(data);
+          data = archiveSchema.clean(data);
+          archiveSchema.validate(data);
         } catch (e){
           self.archiveFileError = 'File failed validation: ' + (e.reason || e.message || e.toString());
+          self.archiveUploadInProgress = false;
           console.error(e);
           return;
         }
@@ -210,7 +228,6 @@ export default {
         uploadInstance.on('start', function () {
           console.log('Starting');
           self.archiveUploadIndeterminate = false;
-          self.archiveUploadInProgress = true;
         });
 
         uploadInstance.on('end', function (error, fileObj) {
@@ -226,7 +243,6 @@ export default {
 
           // Reset our state for the next file
           self.archiveUploadInProgress = false;
-          self.archiveUploadProgress = 0;
         });
 
         uploadInstance.on('error', function (error, fileObj) {
@@ -234,6 +250,7 @@ export default {
           const text = error.reason || error.message || error;
           snackbar({text});
           self.archiveFileError = text;
+          self.archiveUploadInProgress = false;
         });
 
         uploadInstance.on('progress', function (progress, fileObj) {

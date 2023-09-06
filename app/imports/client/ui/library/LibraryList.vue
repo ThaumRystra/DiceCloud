@@ -9,6 +9,7 @@
       :model="library"
       :to="{ name: 'singleLibrary', params: { id: library._id }}"
       :selection="selection"
+      :single-select="singleSelect"
       :is-selected="librariesSelected && librariesSelected.includes(library._id)"
       :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
       :disabled="disabled"
@@ -26,6 +27,7 @@
           :open="openCollections[libraryCollection._id]"
           :model="libraryCollection"
           :selection="selection"
+          :single-select="singleSelect"
           :is-selected="libraryCollectionsSelected && libraryCollectionsSelected.includes(libraryCollection._id)"
           :disabled="disabled"
           @select="val => $emit('select-library-collection', libraryCollection._id, val)"
@@ -37,6 +39,7 @@
         :model="library"
         :to="{ name: 'singleLibrary', params: { id: library._id }}"
         :selection="selection"
+        :single-select="singleSelect"
         :is-selected="librariesSelected && librariesSelected.includes(library._id)"
         :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
         :disabled="disabled"
@@ -44,6 +47,14 @@
         @select="val => $emit('select-library', library._id, val)"
       />
     </v-list-group>
+    <v-list-item v-if="!$subReady.libraries">
+      <v-spacer />
+      <v-progress-circular
+        indeterminate
+        color="primary"
+      />
+      <v-spacer />
+    </v-list-item>
   </v-list>
 </template>
 
@@ -62,6 +73,7 @@ export default {
   },
   props: {
     selection: Boolean,
+    singleSelect: Boolean,
     disabled: Boolean,
     librariesSelected: {
       type: Array,
@@ -87,7 +99,7 @@ export default {
     libraryCollections(){
       const userId = Meteor.userId();
       if (!userId) return;
-      const subCollections = Meteor.user().subscribedLibraryCollections || [];
+      const subCollections = Meteor.user()?.subscribedLibraryCollections || [];
       return LibraryCollections.find({
         $or: [
           { owner: userId },

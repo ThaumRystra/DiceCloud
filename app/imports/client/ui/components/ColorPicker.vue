@@ -7,16 +7,18 @@
   >
     <template #activator="{ on }">
       <v-btn
-        :outlined="!!label"
         :icon="!label"
+        :tile="!label"
         :min-width="label && 108"
+        :height="height"
+        :width="width"
         :disabled="context.editPermission === false"
         v-on="on"
       >
         {{ label }}
         <v-icon
           :right="!!label"
-          :color="label && value"
+          :color="noColorChange ? undefined : value"
         >
           mdi-format-paint
         </v-icon>
@@ -137,7 +139,16 @@
       label: {
         type: String,
         default: undefined,
-      }
+      },
+      height: {
+        type: Number,
+        default: undefined,
+      },
+      width: {
+        type: Number,
+        default: undefined,
+      },
+      noColorChange: Boolean,
     },
     data(){ return {
       colors: [
