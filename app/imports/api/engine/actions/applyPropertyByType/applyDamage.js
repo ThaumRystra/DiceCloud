@@ -167,7 +167,7 @@ function applyDamageMultipliers({ target, damage, damageProp, logValue }) {
       multiplier.reduction &&
       some(multiplier.reductions, multiplierAppliesTo(damageProp, 'reduction'))
     ) {
-      let reductionAmount = multiplier.reductions.reduce((a,b) => a + b.reductionAmount.value, 0);
+      let reductionAmount = multiplier.reductions.filter(multiplierAppliesTo(damageProp, 'reduction')).reduce((a,b) => a+b.reductionAmount.value, 0);
       logValue.push(`${damageType[0].toUpperCase()}${damageTypeText.slice(1)} reduced by ${reductionAmount}`);
       damage = Math.max(damage - reductionAmount, 0);
     }
