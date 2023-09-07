@@ -12,7 +12,7 @@
             <v-list-item-title>
               {{ title(multiplier) }}
               <span v-if="multiplier.value === -1 && multiplier.reductionAmount">
-                by {{ multiplier.reductionAmount.value }}
+                by {{ Math.abs(multiplier.reductionAmount.value) }}
               </span>
             </v-list-item-title>
             <v-list-item-subtitle v-if="multiplier.name">
@@ -91,7 +91,7 @@ export default {
         case 0: return 'Immunity';
         case 0.5: return 'Resistance';
         case 2: return 'Vulnerability';
-        case -1: return 'Reduction';
+        case -1: return (prop.reductionAmount?.value ?? 0) >= 0 ? 'Reduction' : 'Increase';
       }
     }
   }
