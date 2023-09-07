@@ -11,12 +11,12 @@
           <v-list-item-content>
             <v-list-item-title>
               {{ title(multiplier) }}
+              <span v-if="multiplier.value === -1 && multiplier.reductionAmount">
+                by {{ multiplier.reductionAmount.value }}
+              </span>
             </v-list-item-title>
             <v-list-item-subtitle v-if="multiplier.name">
               {{ multiplier.name }} 
-              <span v-if="multiplier.value === -1 && multiplier.reductionAmount">
-                (reduction by {{ multiplier.reductionAmount.value }})
-              </span>
             </v-list-item-subtitle>
             <v-list-item-subtitle class="d-flex flex-wrap align-center">
               <v-chip
