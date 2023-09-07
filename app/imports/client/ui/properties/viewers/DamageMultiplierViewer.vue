@@ -7,7 +7,7 @@
       />
       <property-field
         v-if="model.value === -1 && model.reductionAmount"
-        name="Reduction Amount"
+        name="Reduction amount"
         :value="model.reductionAmount.value"
       />
       <property-field
