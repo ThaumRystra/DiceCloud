@@ -1,10 +1,11 @@
+import evaluateCalculation from '../../../utility/evaluateCalculation.js';
 import getAggregatorResult from './getAggregatorResult.js';
 
 /*
  * Variables with effects, proficiencies, or damage multipliers but no defining
  * properties are added to the scope as implicit variables
  */
- export default function computeImplicitVariable(node){
+ export default function computeImplicitVariable(computation, node){
    const prop = {};
 
   // Combine damage multipliers
@@ -23,6 +24,12 @@ import getAggregatorResult from './getAggregatorResult.js';
   if (node.data.reduction){
     prop.reduction = node.data.reduction;
     prop.reductions = node.data.reductions;
+
+    prop.reductionAmount = 0;
+    prop.reductions.forEach(r => {
+      evaluateCalculation(r.reductionAmount, computation.scope);
+      prop.reductionAmount += r.reductionAmount.value;
+    });
   }
 
    const result = getAggregatorResult(node);

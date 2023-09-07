@@ -20,7 +20,7 @@ export default function computeVariable(computation, node) {
     scope[node.id] = node.data.definingProp
   } else {
     // Otherwise add an implicit variable to the scope
-    scope[node.id] = computeImplicitVariable(node);
+    scope[node.id] = computeImplicitVariable(computation, node);
   }
 }
 
