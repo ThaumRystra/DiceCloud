@@ -14,6 +14,7 @@ import {
 import { reorderDocs } from '/imports/api/parenting/order.js';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
 import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import { union } from 'lodash';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
   name: 'creatureProperties.insertPropertyFromLibraryNode',
@@ -178,6 +179,7 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     try {
       referencedNode = fetchDocByRef(node.ref);
       referencedNode.order = node.order;
+      referencedNode.tags = union(node.tags, referencedNode.tags);
       // We are definitely replacing this node, so add it to the list
       visitedRefs.add(node._id);
     } catch (e) {
