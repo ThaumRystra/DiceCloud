@@ -36,7 +36,7 @@ export default function aggregateDamageMultipliers({node, linkedNode, link}){
     aggregator.resistances.push(storedMultiplier);
   } else if (multiplierValue === 2){
     aggregator.vulnerabilities.push(storedMultiplier);
-  } else if (multiplierValue === -1){
+  } else if (multiplierValue === -1 && linkedNode.data.reductionAmount){
     aggregator.reductions.push(storedMultiplier);
   }
 }
