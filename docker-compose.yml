@@ -1,13 +1,26 @@
-version: "3.7"
+version: '3.7'
 services:
-  web:
+  dicecloud-db:
+    container_name: dicecloud-db
+    image: mongo:latest
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - ./dicecloud/data/db:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=meteor
+      - MONGO_INITDB_ROOT_PASSWORD=meteor
+  dicecloud:
+    container_name: dicecloud
     build:
       context: ./
-    volumes:
-      - .:/home/dicecloud/DiceCloud
+    environment:
+    #update ROOT_URL, PORT, and MAIL_URL for your environment
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://meteor:meteor@dicecloud-db:27017
+      - PORT=3000
+      - NODE_ENV=production
+      - METEOR_SETTINGS={"public":{"environment":"production","disablePatreon":true}}
+      - MAIL_URL=smtp://EMAIL:PASSWORD@SERVER:PORT
     ports:
-      - "3000:3000"
-      - "3003:3003"
-    # entrypoint: /bin/bash
-    # stdin_open: true
-    # tty: true
+      - '3000:3000' #The internal port should match the port set in the environmental variables
