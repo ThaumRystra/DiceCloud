@@ -71,14 +71,14 @@
       />
 
       <div
-        v-if="properties.buff && properties.buff.length"
+        v-if="properties.buff && shownBuffs.length"
         class="buffs"
       >
         <v-card>
           <v-list>
             <v-subheader>Buffs and conditions</v-subheader>
             <buff-list-item
-              v-for="buff in properties.buff"
+              v-for="buff in shownBuffs"
               :key="buff._id"
               :data-id="buff._id"
               :model="buff"
@@ -515,6 +515,9 @@ export default {
       });
       return uniqBy(conditionals, '_id');
     },
+    shownBuffs(){
+      return this.properties.buff.filter(buff => !buff.hideStatTab);
+    }
   },
   meteor: {
     properties() {

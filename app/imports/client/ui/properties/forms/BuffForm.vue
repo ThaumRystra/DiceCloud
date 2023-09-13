@@ -39,30 +39,28 @@
       </form-section>
       <form-section name="Behavior">
         <v-row dense>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
-              label="Hide remove button"
-              :value="model.hideRemoveButton"
-              :error-messages="errors.hideRemoveButton"
-              @change="change('hideRemoveButton', ...arguments)"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <smart-switch
-              label="Don't freeze variables"
-              :value="model.skipCrystalization"
-              :error-messages="errors.skipCrystalization"
-              @change="change('skipCrystalization', ...arguments)"
-            />
-          </v-col>
+          <smart-switch 
+            label="Hide remove button" 
+            :value="model.hideRemoveButton"
+            :error-messages="errors.hideRemoveButton" 
+            @change="change('hideRemoveButton', ...arguments)" 
+          />
+        </v-row>
+        <v-row dense>
+          <smart-switch 
+            label="Don't freeze variables" 
+            :value="model.skipCrystalization"
+            :error-messages="errors.skipCrystalization" 
+            @change="change('skipCrystalization', ...arguments)" 
+          />
+        </v-row>
+        <v-row dense>
+          <smart-switch 
+            label="Hide from stat tab" 
+            :value="model.hideStatTab" 
+            :error-messages="errors.hideStatTab"
+            @change="change('hideStatTab', ...arguments)" 
+          />
         </v-row>
       </form-section>
       <form-section name="Log">

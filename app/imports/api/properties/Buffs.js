@@ -39,6 +39,11 @@ let BuffSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  // Hide from normal stats tab location
+  hideStatTab: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 let ComputedOnlyBuffSchema = createPropertySchema({
