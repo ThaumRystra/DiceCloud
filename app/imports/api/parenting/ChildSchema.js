@@ -26,6 +26,7 @@ let ChildSchema = new SimpleSchema({
     type: RefSchema,
     optional: true,
   },
+  // Change this from ancestor list to left and right indices
   ancestors: {
     type: Array,
     defaultValue: [],
