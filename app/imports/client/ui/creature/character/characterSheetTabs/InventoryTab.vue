@@ -194,7 +194,7 @@ export default {
         sort: { order: 1 },
       });
     },
-    carriedItems() {
+    carriedItems() { //Would modify to remove items w/ quantity=0
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
@@ -212,7 +212,7 @@ export default {
         sort: { order: 1 },
       });
     },
-    equippedItems() {
+    equippedItems() {//Would modify to remove items w/ quantity=0
       return CreatureProperties.find({
         'ancestors.id': {
           $eq: this.creatureId,
@@ -244,7 +244,7 @@ export default {
         id: this.creatureId,
         collection: 'creatures'
       };
-    },
+    }, // Would add new calculated field for items w/ quantity=0, for use in depleted list
   },
   computed: {
     containerIds() {
