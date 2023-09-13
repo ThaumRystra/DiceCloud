@@ -2,12 +2,9 @@ import SimpleSchema from 'simpl-schema';
 import { union } from 'lodash';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { updateParent } from '/imports/api/parenting/parenting.js';
-import { reorderDocs, safeUpdateDocOrder } from '/imports/api/parenting/order.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { changeParent, fetchDocByRef, getCollectionByName } from '/imports/api/parenting/parentingFunctions';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
-import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 
 const organizeDoc = new ValidatedMethod({
@@ -33,47 +30,45 @@ const organizeDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ docRef, parentRef, order, skipRecompute, skipClient }) {
+  async run({ docRef, parentId, order, skipRecompute, skipClient }) {
     if (skipClient && this.isSimulation) {
       return;
     }
-    let doc = fetchDocByRef(docRef);
-    let collection = getCollectionByName(docRef.collection);
+    const collection = getCollectionByName(docRef.collection);
+    const [doc, parent] = await Promise.all([
+      collection.findOneAsync(docRef.id),
+      collection.findOneAsync(parentId),
+    ]);
+
+    if (!doc) throw new Meteor.Error('Document not found', 'The property to move could not be found');
+    if (!parent) throw new Meteor.Error('Document not found', 'The new parent could not be found');
     // The user must be able to edit both the doc and its parent to move it
     // successfully
-    assertDocEditPermission(doc, this.userId);
-    let parent = fetchDocByRef(parentRef);
-    assertDocEditPermission(parent, this.userId);
+    await Promise.all([
+      assertDocEditPermission(doc, this.userId),
+      // Only check parent if it has a different root
+      doc.root.id !== parent.root.id && assertDocEditPermission(parent, this.userId),
+    ]);
 
     // Change the doc's parent
-    updateParent({ docRef, parentRef });
-    // Change the doc's order to be a half step ahead of its target location
-    collection.update(doc._id, { $set: { order } }, { selector: { type: 'any' } });
-
-    // Reorder both ancestors' documents
-    let oldAncestorId = doc.ancestors[0].id;
-    reorderDocs({ collection, ancestorId: oldAncestorId });
-
-    let newAncestorId = getRootId(parent);
-    if (newAncestorId !== oldAncestorId) {
-      reorderDocs({ collection, ancestorId: newAncestorId });
-    }
+    await changeParent(doc, parent, collection, order);
 
     // Figure out which creatures need to be recalculated after this move
-    let docCreatures = getCreatureAncestors(doc);
-    let parentCreatures = getCreatureAncestors(parent);
-    if (!skipRecompute) {
-      let creaturesToRecompute = union(docCreatures, parentCreatures);
+    if (!skipRecompute && docRef.collection === 'creatures') {
+      const creaturesToRecompute = union[doc.root.id, parent.root.id];
       // Mark the creatures for recompute
-      Creatures.update({
+      await Creatures.updateAsync({
         _id: { $in: creaturesToRecompute }
       }, {
         $set: { dirty: true },
+      }, {
+        multi: true
       });
     }
   },
 });
 
+// TODO, rewrite
 const reorderDoc = new ValidatedMethod({
   name: 'organize.reorderDoc',
   validate: new SimpleSchema({
@@ -103,28 +98,5 @@ const reorderDoc = new ValidatedMethod({
     }
   },
 });
-
-function getRootId(doc) {
-  if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]) {
-    return doc.ancestors[0].id;
-  } else {
-    return doc._id;
-  }
-}
-
-function getCreatureAncestors(doc) {
-  let ids = [];
-  if (doc.type === 'pc' || doc.type === 'npc' || doc.type === 'monster') {
-    ids.push(doc._id);
-  }
-  if (doc.ancestors) {
-    doc.ancestors.forEach(ancestorRef => {
-      if (ancestorRef.collection === 'creatures') {
-        ids.push(ancestorRef.id);
-      }
-    });
-  }
-  return ids;
-}
 
 export { organizeDoc, reorderDoc };

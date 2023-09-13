@@ -23,6 +23,7 @@
     "@babel/runtime": "^7.21.5",
     "@chenfengyuan/vue-countdown": "^1.1.5",
     "@tozd/vue-observer-utils": "^0.5.0",
+    "@types/meteor": "^2.9.4",
     "aws-sdk": "^2.1373.0",
     "bcrypt": "^5.1.0",
     "chroma-js": "^2.4.2",
