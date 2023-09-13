@@ -59,7 +59,8 @@ export default {
     };
   },
   meteor: {
-    notes(){
+    notes() {
+      // Get all the notes that aren't children of group folders or of other displayed notes
       const folderIds = CreatureProperties.find({
         'ancestors.id': this.creatureId,
         type: 'folder',
@@ -68,8 +69,8 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
       }, { fields: { _id: 1 } }).map(folder => folder._id);
-      
-      return CreatureProperties.find({
+
+      const noteFilter = {
         'ancestors.id': {
           $eq: this.creatureId,
         },
@@ -77,9 +78,20 @@ export default {
           $nin: folderIds,
         },
         type: 'note',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
+        removed: { $ne: true },
+        inactive: { $ne: true },
+      };
+      const noteIds = CreatureProperties.find(noteFilter, {
+        sort: { order: 1 },
+        fields: {_id: 1},
+      }).map(note => note._id);
+
+      noteFilter['ancestors.id'] = {
+        $eq: this.creatureId,
+        $nin: noteIds,
+      }
+      
+      return CreatureProperties.find(noteFilter, {
         sort: {order: 1},
       });
     },
