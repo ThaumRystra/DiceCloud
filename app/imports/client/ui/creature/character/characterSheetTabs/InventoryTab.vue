@@ -87,6 +87,7 @@
           </v-card-text>
         </toolbar-card>
       </div>
+      <!-- Proposal would implement a third calculated card here, with an alternative item-list that does not permit dragging, and includes an easy delete feature -->
       <div
         v-for="container in containersWithoutAncestorContainers"
         :key="container._id"
