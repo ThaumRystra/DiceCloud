@@ -6,6 +6,11 @@
   >
     <template slot="toolbar">
       <v-toolbar-title>
+        <property-icon v-if="model.icon"
+          class="mr-2"
+          :model="model"
+          :color="model.color"
+        />
         {{ model.name }}
       </v-toolbar-title>
       <v-spacer />
@@ -22,11 +27,13 @@
 <script lang="js">
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue'
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 
 export default {
   components: {
     ToolbarCard,
     PropertyDescription,
+    PropertyIcon,
   },
   props: {
     model: {
