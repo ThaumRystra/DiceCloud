@@ -5,7 +5,12 @@
     <v-card
       class="folder-group-card pb-2"
     >
-      <v-subheader v-if="model.name">
+      <v-subheader v-if="model.name || model.icon">
+        <property-icon v-if="model.icon"
+          class="mr-2"
+          :model="model"
+          :color="model.color"
+        />
         {{ model.name }}
       </v-subheader>
       <component
@@ -26,8 +31,10 @@
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import propComponents from '/imports/client/ui/properties/components/folders/propertyComponentIndex.js';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 
 export default {
+  components: { PropertyIcon }, 
   props: {
     model: {
       type: Object,
