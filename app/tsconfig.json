@@ -19,9 +19,7 @@
       "meteor/aldeed:collection2": [
         "packages/collection2/collection2.js"
       ]
-    },
-    "checkJs": false,
-    "allowJs": true
+    }
   },
   "vueCompilerOptions": {
     "target": 2 // For Vue version <= 2.6.14

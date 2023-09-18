@@ -369,12 +369,7 @@ export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, r
     'root.id': rootId,
     removed: { $ne: true }
   }, {
-    fields: {
-      root: 1,
-      parentId: 1,
-      left: 1,
-      right: 1,
-    },
+    fields: treeDocFields,
     sort: {
       //Reverse sorting so that arrays can be used as stacks with the first item on top
       left: 1,
