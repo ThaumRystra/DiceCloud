@@ -259,19 +259,23 @@ function linkPointBuy(dependencyGraph, prop) {
   dependOnCalc({ dependencyGraph, prop, key: 'max' });
   dependOnCalc({ dependencyGraph, prop, key: 'cost' });
   dependOnCalc({ dependencyGraph, prop, key: 'total' });
-  prop.values?.forEach(row => {
+  prop.values?.forEach((row, index) => {
+    // Get a unique id for the row because it might be shared among duplicated point buy tables
+    // prop._id is forced unique by the database, so it can be used instead
+    const uniqueRowId = prop._id + '_row_' + index;
     // Wrap the document in a new object so we don't bash it unintentionally
     const pointBuyRow = {
       ...row,
+      _id: uniqueRowId,
       type: 'pointBuyRow',
       tableName: prop.name,
       tableId: prop._id,
     }
-    dependencyGraph.addNode(row._id, pointBuyRow);
+    dependencyGraph.addNode(pointBuyRow._id, pointBuyRow);
     linkVariableName(dependencyGraph, pointBuyRow);
-    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.min' });
-    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.max' });
-    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'row.cost' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'min' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'max' });
+    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'cost' });
   });
   if (prop.inactive) return;
 }
