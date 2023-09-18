@@ -29,7 +29,6 @@
       </v-col>
       <v-col
         cols="12"
-        md="6"
       >
         <smart-toggle
           label="Target creature"
