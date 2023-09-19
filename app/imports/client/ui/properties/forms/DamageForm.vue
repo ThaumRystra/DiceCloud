@@ -32,8 +32,21 @@
         />
       </v-col>
       <v-col cols="12">
+        <smart-toggle
+          label="Target creature"
+          :value="model.target"
+          :options="[
+            {name: 'Action Target', value: 'target'},
+            {name: 'Self', value: 'self'},
+          ]"
+          :error-messages="errors.target"
+          @change="change('target', ...arguments)"
+        />
+      </v-col>
+      <v-col cols="12">
         <smart-switch
-          label="Save for half damage"
+          class="mt-0"
+          label="Saving throw"
           :value="!!model.save"
           :error-messages="errors.save"
           @change="(val, ack) => $emit('change', {
@@ -76,24 +89,23 @@
               $emit('change', {path: ['save', 'stat'], value, ack})"
           />
         </v-col>
+        <v-col cols="12">
+          <computed-field
+            v-if="!!model.save"
+            label="Damage on successful save"
+            hint="Use &quot;~damage&quot; to reference the damage that would normally be dealt"
+            placeholder="Half damage"
+            persistent-placeholder
+            :model="model.save.damageFunction"
+            :error-messages="errors['save.damageFunction']"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['save', 'damageFunction', ...path], value, ack})"
+          />
+        </v-col>
       </v-row>
     </v-expand-transition>
-    <v-row>
-      <v-col cols="12">
-        <smart-toggle
-          label="Target creature"
-          :value="model.target"
-          :options="[
-            {name: 'Action Target', value: 'target'},
-            {name: 'Self', value: 'self'},
-          ]"
-          :error-messages="errors.target"
-          @change="change('target', ...arguments)"
-        />
-      </v-col>
-    </v-row>
     <form-sections type="damage">
-      <form-section name="Behavior">
+      <form-section name="Log">
         <v-row>
           <v-col cols="12">
             <smart-switch
@@ -101,19 +113,6 @@
               :value="model.silent"
               :error-messages="errors.silent"
               @change="change('silent', ...arguments)"
-            />
-          </v-col>
-          <v-col cols="12">
-            <computed-field
-              v-if="!!model.save"
-              label="Damage function"
-              hint="Instead of half, you can use a function to determine the new damage to deal; use &quot;~damage&quot; to reference the standard damage"
-              placeholder="~damage / 2"
-              persistent-placeholder
-              :model="model.save.damageFunction"
-              :error-messages="errors['save.damageFunction']"
-              @change="({path, value, ack}) =>
-                $emit('change', {path: ['save', 'damageFunction', ...path], value, ack})"
             />
           </v-col>
         </v-row>
