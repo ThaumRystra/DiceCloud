@@ -243,6 +243,9 @@ function spendResources(prop, actionContext) {
         gainLog.push(logName + ': ' + -itemConsumed.quantity.value);
       }
       ammoChildren.push(...getItemChildren(item, actionContext, prop));
+      // simulate the increment and add the item to the action scope
+      item.quantity -= itemConsumed.quantity.value;
+      actionContext.scope['~ammo'] = item;
     });
   } catch (e) {
     actionContext.addLog({
