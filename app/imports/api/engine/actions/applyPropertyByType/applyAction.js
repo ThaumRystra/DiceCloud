@@ -243,9 +243,14 @@ function spendResources(prop, actionContext) {
         gainLog.push(logName + ': ' + -itemConsumed.quantity.value);
       }
       ammoChildren.push(...getItemChildren(item, actionContext, prop));
+      /* Disabled this for now. Applying an item as ammo should be its own "applyPropertyByType"
+       * which will set #item correctly before applying the item's children
+       * and make triggers compatible in the future
+    
       // simulate the increment and add the item to the action scope
       item.quantity -= itemConsumed.quantity.value;
       actionContext.scope['~ammo'] = item;
+      */
     });
   } catch (e) {
     actionContext.addLog({
