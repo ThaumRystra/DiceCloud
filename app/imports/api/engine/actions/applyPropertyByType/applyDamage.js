@@ -10,6 +10,7 @@ import {
 } from '/imports/api/engine/loadCreatures.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
+import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/applySavingThrow.js';
 
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
@@ -36,7 +37,7 @@ export default function applyDamage(node, actionContext) {
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // roll the dice only and store that string
-  applyEffectsToCalculationParseNode(prop.amount, actionContext.log);
+  applyEffectsToCalculationParseNode(prop.amount, actionContext);
   const { result: rolled } = resolve('roll', prop.amount.parseNode, scope, context);
   if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
@@ -67,6 +68,7 @@ export default function applyDamage(node, actionContext) {
 
   // Round the damage to a whole number
   damage = Math.floor(damage);
+  scope['~damage'] = damage;
 
   // Convert extra damage into the stored type
   if (prop.damageType === 'extra' && scope['~lastDamageType']?.value) {
@@ -82,24 +84,74 @@ export default function applyDamage(node, actionContext) {
     prop.damageType +
     (prop.damageType !== 'healing' ? ' damage ' : '');
 
+  // If there is a save, calculate the save damage
+  let damageOnSave, saveNode, saveRoll;
+  if (prop.save) {
+    if (prop.save.damageFunction?.calculation) {
+      applyEffectsToCalculationParseNode(prop.save.damageFunction, actionContext);
+      let { result: saveDamageRolled } = resolve('roll', prop.save.damageFunction.parseNode, scope, context);
+      saveRoll = toString(saveDamageRolled);
+      let { result: saveDamageResult } = resolve('reduce', saveDamageRolled, scope, context);
+      // If we didn't end up with a constant of finite amount, give up
+      if (reduced?.parseType !== 'constant' || !isFinite(reduced.value)) {
+        return applyChildren(node, actionContext);
+      }
+      damageOnSave = +saveDamageResult.value;
+      // Round the damage to a whole number
+      damageOnSave = Math.floor(damageOnSave);
+    } else {
+      damageOnSave = Math.floor(damage / 2);
+    }
+    saveNode = {
+      node: {
+        ...prop.save,
+        name: prop.save.stat,
+        silent: prop.silent,
+      },
+      children: [],
+    }
+  }
+
   if (damageTargets && damageTargets.length) {
     // Iterate through all the targets
     damageTargets.forEach(target => {
+      actionContext.target = [target];
+      let damageToApply = damage;
+
+      // If there is a saving throw, apply that first
+      if (prop.save) {
+        applySavingThrow(saveNode, actionContext);
+        if (scope['~saveSucceeded']?.value) {
+          // Log the total damage
+          logValue.push(toString(reduced));
+          // Log the save damage
+          const damageText = damageFunctionText(prop.save);
+          if (damageText) {
+            logValue.push(damageText);
+          } else {
+            logValue.push(
+              '**Damage on successful save**',
+              prop.save.damageFunction.calculation,
+              saveRoll
+            );
+          }
+          damageToApply = damageOnSave;
+        }
+      }
 
       // Apply weaknesses/resistances/immunities
-      damage = applyDamageMultipliers({
+      damageToApply = applyDamageMultipliers({
         target,
-        damage,
+        damage: damageToApply,
         damageProp: prop,
         logValue
       });
 
-      actionContext.target = [target];
       // Deal the damage to the target
       let damageDealt = dealDamage({
         target,
         damageType: prop.damageType,
-        amount: damage,
+        amount: damageToApply,
         actionContext
       });
 
@@ -124,6 +176,10 @@ export default function applyDamage(node, actionContext) {
   } else {
     // There are no targets, just log the result
     logValue.push(`**${damage}** ${suffix}`);
+    if (prop.save) {
+      applySavingThrow(saveNode, actionContext);
+      logValue.push(`**${damageOnSave}** ${suffix} on a successful save`);
+    }
   }
   if (!prop.silent) actionContext.addLog({
     name: logName,
@@ -131,6 +187,16 @@ export default function applyDamage(node, actionContext) {
     inline: true,
   });
   return applyChildren(node, actionContext);
+}
+
+function damageFunctionText(save, scope, context, actionContext) {
+  if (!save) return [];
+  if (!save.damageFunction) {
+    return '**Half damage on successful save**';
+  }
+  if (save.damageFunction.calculation == '0' || save.damageFunction.value === 0) {
+    return '**No damage on successful save**'
+  }
 }
 
 function applyDamageMultipliers({ target, damage, damageProp, logValue }) {

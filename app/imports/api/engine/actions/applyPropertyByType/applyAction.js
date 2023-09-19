@@ -174,7 +174,11 @@ function rollAttack(attack, scope) {
 }
 
 function applyCrits(value, scope) {
-  const criticalHitTarget = scope['~criticalHitTarget']?.value || 20;
+  let scopeCrit = scope['~criticalHitTarget']?.value;
+  if (scopeCrit?.parseType === 'constant') {
+    scopeCrit = scopeCrit.value;
+  }
+  const criticalHitTarget = scopeCrit || 20;
   let criticalHit = value >= criticalHitTarget;
   let criticalMiss;
   if (criticalHit) {
