@@ -4,13 +4,10 @@ import rollDice from '/imports/parser/rollDice.js';
 import applyProperty from '../applyProperty.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature.js';
-import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 
 export default function applyAction(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
@@ -210,10 +207,9 @@ function spendResources(prop, actionContext) {
     return true;
   }
   // Items
-  let itemQuantityAdjustments = [];
   let spendLog = [];
   let gainLog = [];
-  let ammoChildren = [];
+  const ammoToApply = [];
   try {
     prop.resources.itemsConsumed.forEach(itemConsumed => {
       recalculateCalculation(itemConsumed.quantity, actionContext);
@@ -228,11 +224,6 @@ function spendResources(prop, actionContext) {
         !itemConsumed?.quantity?.value ||
         !isFinite(itemConsumed.quantity.value)
       ) return;
-      itemQuantityAdjustments.push({
-        property: item,
-        operation: 'increment',
-        value: itemConsumed.quantity.value,
-      });
       let logName = item.name;
       if (itemConsumed.quantity.value > 1 || itemConsumed.quantity.value < -1) {
         logName = item.plural || logName;
@@ -242,15 +233,20 @@ function spendResources(prop, actionContext) {
       } else if (itemConsumed.quantity.value < 0) {
         gainLog.push(logName + ': ' + -itemConsumed.quantity.value);
       }
-      ammoChildren.push(...getItemChildren(item, actionContext, prop));
-      /* Disabled this for now. Applying an item as ammo should be its own "applyPropertyByType"
-       * which will set #item correctly before applying the item's children
-       * and make triggers compatible in the future
-    
-      // simulate the increment and add the item to the action scope
-      item.quantity -= itemConsumed.quantity.value;
-      actionContext.scope['~ammo'] = item;
-      */
+      // So long as the item isn't an ancestor of the current prop apply it
+      // If it was an ancestor this would be an infinite loop
+      if (!hasAncestorRelationship(item, prop)) {
+        ammoToApply.push({
+          node: {
+            ...item,
+            // Use ammo pseudo-type
+            type: 'ammo',
+            // Store the adjustment to be applied
+            adjustment: itemConsumed.quantity.value,
+          },
+          children: []
+        });
+      }
     });
   } catch (e) {
     actionContext.addLog({
@@ -261,9 +257,6 @@ function spendResources(prop, actionContext) {
     return true;
   }
   // No more errors should be thrown after this line
-  // Now that we have confirmed that there are no errors, do actual work
-  //Items
-  itemQuantityAdjustments.forEach(adjustQuantityWork);
 
   // Use uses
   if (prop.usesLeft) {
@@ -303,6 +296,11 @@ function spendResources(prop, actionContext) {
     }
   });
 
+  // Apply the ammo children
+  ammoToApply.forEach(node => {
+    applyProperty(node, actionContext);
+  });
+
   // Log all the spending
   if (gainLog.length && !prop.silent) actionContext.addLog({
     name: 'Gained',
@@ -314,21 +312,6 @@ function spendResources(prop, actionContext) {
     value: spendLog.join('\n'),
     inline: true,
   });
-
-  // Apply the ammo children
-  ammoChildren.forEach(prop => {
-    applyProperty(prop, actionContext);
-  });
-}
-
-function getItemChildren(item, actionContext, prop) {
-  // Skip if the prop or the item are ancestors of one another, otherwise infinite loop
-  if (hasAncestorRelationship(item, prop)) return [];
-  // Get the item children
-  const itemProperties = getPropertyDecendants(actionContext.creature._id, item._id);
-  // Tree them up
-  const propertyForest = nodeArrayToTree(itemProperties);
-  return propertyForest
 }
 
 function hasAncestorRelationship(a, b) {

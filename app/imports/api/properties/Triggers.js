@@ -23,6 +23,7 @@ const timingOptions = {
 
 const actionPropertyTypeOptions = {
   action: 'Action',
+  ammo: 'Ammo used',
   adjustment: 'Attribute damage',
   branch: 'Branch',
   buff: 'Buff',
