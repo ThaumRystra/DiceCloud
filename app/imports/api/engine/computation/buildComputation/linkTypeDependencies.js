@@ -159,7 +159,7 @@ function linkEffects(dependencyGraph, prop, computation) {
         // Otherwise target a field on that property
         const key = prop.targetField || getDefaultCalculationField(targetProp);
         const calcObj = get(targetProp, key);
-        if (calcObj && calcObj.calculation) {
+        if (calcObj) {
           dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'effect');
         }
       }
@@ -301,7 +301,7 @@ function linkProficiencies(dependencyGraph, prop, computation) {
         // Otherwise target a field on that property
         const key = prop.targetField || getDefaultCalculationField(targetProp);
         const calcObj = get(targetProp, key);
-        if (calcObj && calcObj.calculation) {
+        if (calcObj) {
           dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'proficiency');
         }
       }
@@ -339,7 +339,7 @@ function linkSkill(dependencyGraph, prop, computation) {
       // other skill isn't supported
       const key = prop.targetField || getDefaultCalculationField(targetProp);
       const calcObj = get(targetProp, key);
-      if (calcObj && calcObj.calculation) {
+      if (calcObj) {
         dependencyGraph.addLink(`${targetProp._id}.${key}`, prop._id, 'proficiency');
       }
     });

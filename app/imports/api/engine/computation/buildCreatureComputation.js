@@ -75,6 +75,7 @@ export function buildComputationFromProps(properties, creature, variables) {
     // Add a place to store all the computation details
     prop._computationDetails = {
       calculations: [],
+      emptyCalculations: [],
       inlineCalculations: [],
       toggleAncestors: [],
     };
