@@ -1,21 +1,29 @@
 <template lang="html">
   <div class="stats">
-    <column-layout>
+    <div
+      class="d-flex wrap justify-space-between px-2 pt-3 pb-1"
+      style="page-break-after: avoid"
+    >
       <div
         v-for="ability in abilities"
         :key="ability._id"
       >
         <div
-          class="ability"
+          class="ability ma-0"
         >
           <div class="score">
-            <div class="double-border top big-number">
-              <template v-if="creature.settings.swapScoresAndMods">
-                {{ ability.total }}
-              </template>
-              <template v-else>
-                {{ numberToSignedString(ability.modifier) }}
-              </template>
+            <div class="double-border top">
+              <div class="label text-center mb-0">
+                {{ ability.name }}
+              </div>
+              <div class="big-number mb-1">
+                <template v-if="creature.settings.swapScoresAndMods">
+                  {{ ability.total }}
+                </template>
+                <template v-else>
+                  {{ numberToSignedString(ability.modifier) }}
+                </template>
+              </div>
             </div>
             <div class="bottom">
               <template v-if="creature.settings.swapScoresAndMods">
@@ -26,12 +34,10 @@
               </template>
             </div>
           </div>
-          <div class="double-border name label">
-            {{ ability.name }}
-          </div>
         </div>
       </div>
-
+    </div>
+    <column-layout>
       <div
         v-for="toggle in toggles"
         :key="toggle._id"
@@ -105,7 +111,7 @@
           <div class="label">
             Total: {{ healthBar.total }}
           </div>
-          <div style="height: 60px;" />
+          <div style="height: 40px;" />
           <div
             style="text-align: center;"
             class="label"
@@ -136,7 +142,7 @@
               {{ hitDie.total }}{{ hitDie.hitDiceSize }}
             </span>
           </div>
-          <div style="height: 60px;" />
+          <div style="height: 40px;" />
           <div
             style="text-align: center;"
             class="label"
@@ -232,6 +238,13 @@
             :model="save"
             :data-id="save._id"
           />
+          <div
+            v-for="(effect) in saveConditionals"
+            :key="effect._id"
+            class="mt-2"
+          >
+            * {{ effect.text }}
+          </div>
           <div class="label text-center">
             Saving Throws
           </div>
@@ -250,6 +263,13 @@
             :model="skill"
             :data-id="skill._id"
           />
+          <div
+            v-for="(effect) in skillConditionals"
+            :key="effect._id"
+            class="mt-2"
+          >
+            * {{ effect.text }}
+          </div>
           <div class="label text-center">
             Skills
           </div>
@@ -261,69 +281,20 @@
         <div
           class="double-border"
         >
-          <printed-skill
-            v-for="weapon in weapons"
-            :key="weapon._id"
-            hide-modifier
-            :model="weapon"
-            :data-id="weapon._id"
-          />
+          <p>
+            <b>Weapons:</b> {{ weapons.map(p => p.name).join(', ') }}
+          </p>
+          <p>
+            <b>Armor:</b> {{ armors.map(p => p.name).join(', ') }}
+          </p>
+          <p>
+            <b>Tools:</b> {{ tools.map(p => p.name).join(', ') }}
+          </p>
+          <p>
+            <b>Languages:</b> {{ languages.map(p => p.name).join(', ') }}
+          </p>
           <div class="label text-center">
-            Weapons
-          </div>
-        </div>
-      </div>
-      <div
-        v-if="armors && armors.length"
-      >
-        <div
-          class="double-border"
-        >
-          <printed-skill
-            v-for="armor in armors"
-            :key="armor._id"
-            hide-modifier
-            :model="armor"
-            :data-id="armor._id"
-          />
-          <div class="label text-center">
-            Armor
-          </div>
-        </div>
-      </div>
-      <div
-        v-if="tools && tools.length"
-      >
-        <div
-          class="double-border"
-        >
-          <printed-skill
-            v-for="tool in tools"
-            :key="tool._id"
-            hide-modifier
-            :model="tool"
-            :data-id="tool._id"
-          />
-          <div class="label text-center">
-            Tools
-          </div>
-        </div>
-      </div>
-      <div
-        v-if="languages && languages.length"
-      >
-        <div
-          class="double-border"
-        >
-          <printed-skill
-            v-for="language in languages"
-            :key="language._id"
-            hide-modifier
-            :model="language"
-            :data-id="language._id"
-          />
-          <div class="label text-center">
-            Languages
+            Proficiencies
           </div>
         </div>
       </div>
@@ -381,6 +352,7 @@ import numberToSignedString from '../../../../../api/utility/numberToSignedStrin
 import PrintedSkill from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSkill.vue';
 import PrintedDamageMultipliers from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedDamageMultipliers.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
+import { uniqBy } from 'lodash';
 
 const getProperties = function (creature, filter, options = {
   sort: { order: 1 }
@@ -483,8 +455,30 @@ export default {
     savingThrows() {
       return getSkillOfType(this.creature, 'save');
     },
+    saveConditionals(){
+      const conditionals = [];
+      this.savingThrows?.forEach(prop => {
+        prop?.effects?.forEach(effect => {
+          if (effect.operation === 'conditional') {
+            conditionals.push(effect);
+          }
+        });
+      });
+      return uniqBy(conditionals, '_id');
+    },
     skills() {
       return getSkillOfType(this.creature, 'skill');
+    },
+    skillConditionals(){
+      const conditionals = [];
+      this.skills?.forEach(prop => {
+        prop?.effects?.forEach(effect => {
+          if (effect.operation === 'conditional') {
+            conditionals.push(effect);
+          }
+        });
+      });
+      return uniqBy(conditionals, '_id');
     },
     tools() {
       return getSkillOfType(this.creature, 'tool');
@@ -557,10 +551,10 @@ export default {
   align-items: center;
 }
 .ability .top {
-  min-width: 64px;
+  min-width: 86px;
   text-align: center;
-  margin-bottom: -10px;
-  padding: 14px;
+  margin: 4px 4px -10px;
+  padding: 8px;
   z-index: 1;
 }
 .ability .bottom {

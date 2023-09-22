@@ -11,7 +11,7 @@
           :value="model.proficiency"
           class="prof-icon"
         />
-        <div class="prof-mod ml-2 mr-4 text-right">
+        <div class="prof-mod mr-3 text-right">
           {{ displayedModifier }}
         </div>
         <v-icon
@@ -88,7 +88,7 @@ export default {
 
 <style lang="css" scoped>
 .printed-skill{
-  min-height: 30px;
+  min-height: 0;
 }
 
 .prof-icon {

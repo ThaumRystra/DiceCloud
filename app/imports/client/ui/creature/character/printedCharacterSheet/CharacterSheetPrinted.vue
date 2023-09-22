@@ -32,7 +32,10 @@
         light
       >
         <div class="page pa-3">
-          <div class="title-block px-3 d-flex align-center">
+          <div
+            class="title-block px-3 d-flex align-center"
+            style="page-break-after: avoid;"
+          >
             <div class="logo-background" />
             <div class="creature-name mr-3">
               {{ creature.name }}
@@ -59,7 +62,7 @@
           </div>
           <div
             class="text-right mt-3 mr-4"
-            style="font-size: 8pt; margin-bottom: -4px;"
+            style="font-size: 8pt; margin-bottom: -4px; page-break-after: avoid;"
           >
             {{ creatureUrl }}
           </div>
@@ -234,7 +237,7 @@ export default {
 .character-sheet-printed {
   background: white;
   color: black;
-  font-size: 11pt;
+  font-size: 10pt;
 }
 
 .character-sheet-printed * {
@@ -247,6 +250,14 @@ export default {
   padding: 4px;
 }
 
+.character-sheet-printed p {
+  margin-bottom: 8px;
+}
+
+.character-sheet-printed .double-border > .label:first-child {
+  margin-bottom: 8px;
+}
+
 .character-sheet-printed .column-layout, .character-sheet-printed .column-layout.wide-columns {
   position:relative;
   width: 100%;
@@ -254,6 +265,10 @@ export default {
   orphans: 0;
   -webkit-column-fill: balance-all;
   column-fill: balance-all;
+}
+
+.character-sheet-printed .column-layout {
+  column-width: 200px;
 }
 
 .character-sheet-printed .column-layout>div {
@@ -267,9 +282,10 @@ export default {
   opacity: 1 !important;
 }
 .character-sheet-printed .creature-name {
-  font-size: 24pt;
+  font-size: 16pt;
   background-color: white;
 }
+
 .character-sheet-printed .logo-background {
   width: 60px;
   height: 60px;
@@ -284,6 +300,10 @@ export default {
   max-width: unset;
 }
 
+.character-sheet-printed .tree-node-title {
+  min-height: unset !important;
+}
+
 .character-sheet-printed .double-border {
   position: relative;
   padding: 11px 10px;
@@ -291,6 +311,8 @@ export default {
   border-image-slice: 110 126 fill;
   border-image-width: 16px;
   border-image-repeat: stretch;
+  box-decoration-break: clone;
+  page-break-inside: avoid;
 }
 
 .character-sheet-printed .octagon-border {
@@ -298,6 +320,8 @@ export default {
   padding: 4px 20px;
   border-image: url(/images/print/octagonBorder.png) 124 118 fill;
   border-image-width: 22px;
+  box-decoration-break: clone;
+  page-break-inside: avoid;
 }
 
 .character-sheet-printed .span-all {
@@ -322,6 +346,7 @@ export default {
 
 .character-sheet-printed .span-all {
   column-span: all;
+  display: block;
 }
 
 @media screen {
@@ -337,7 +362,7 @@ export default {
 @media print {
   @page { 
       size: auto;
-      margin: 8mm 8mm 8mm 8mm;  
+      margin: 8mm;  
   }
   body {  
       margin: 0;  
