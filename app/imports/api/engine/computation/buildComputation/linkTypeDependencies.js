@@ -175,7 +175,7 @@ function linkEffects(dependencyGraph, prop, computation) {
 // Returns an array of IDs of the properties the effect targets
 export function getEffectTagTargets(effect, computation) {
   let targets = getTargetListFromTags(effect.targetTags, computation);
-  let notIds = [];
+  let notIds = [effect._id]; // Can't target itself
   if (effect.extraTags) {
     effect.extraTags.forEach(ex => {
       if (ex.operation === 'OR') {
