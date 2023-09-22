@@ -65,7 +65,7 @@
         :value="reset"
       />
       <property-field
-        v-if="model.resources.conditions.length"
+        v-if="model.resources.conditions && model.resources.conditions.length"
         name="Conditions"
       >
         <div style="width: 100%;">
