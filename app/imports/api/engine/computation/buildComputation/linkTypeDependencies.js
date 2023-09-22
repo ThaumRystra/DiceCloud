@@ -98,8 +98,10 @@ function linkAdjustment(dependencyGraph, prop) {
 
 function linkAttribute(dependencyGraph, prop) {
   linkVariableName(dependencyGraph, prop);
-  // Depends on spellSlotLevel
-  dependOnCalc({ dependencyGraph, prop, key: 'spellSlotLevel' });
+  // Spell slots depend on spellSlotLevel
+  if (prop.type === 'spellSlot') {
+    dependOnCalc({ dependencyGraph, prop, key: 'spellSlotLevel' });
+  }
 
   // Depends on base value
   dependOnCalc({ dependencyGraph, prop, key: 'baseValue' });
@@ -257,8 +259,8 @@ function linkDamageMultiplier(dependencyGraph, prop) {
 function linkPointBuy(dependencyGraph, prop) {
   dependOnCalc({ dependencyGraph, prop, key: 'min' });
   dependOnCalc({ dependencyGraph, prop, key: 'max' });
-  dependOnCalc({ dependencyGraph, prop, key: 'cost' });
   dependOnCalc({ dependencyGraph, prop, key: 'total' });
+
   prop.values?.forEach((row, index) => {
     // Get a unique id for the row because it might be shared among duplicated point buy tables
     // prop._id is forced unique by the database, so it can be used instead
@@ -273,9 +275,7 @@ function linkPointBuy(dependencyGraph, prop) {
     }
     dependencyGraph.addNode(pointBuyRow._id, pointBuyRow);
     linkVariableName(dependencyGraph, pointBuyRow);
-    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'min' });
-    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'max' });
-    dependOnCalc({ dependencyGraph, pointBuyRow, key: 'cost' });
+    dependencyGraph.addLink(pointBuyRow._id, prop._id, 'pointBuyRow');
   });
   if (prop.inactive) return;
 }

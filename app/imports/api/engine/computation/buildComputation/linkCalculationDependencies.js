@@ -9,8 +9,15 @@ export default function linkCalculationDependencies(dependencyGraph, prop, { pro
     };
     // Add this calculation to the dependency graph
     const calcNodeId = `${prop._id}.${calcObj._key}`;
-    dependencyGraph.addNode(calcNodeId, calcObj);
 
+    // Skip empty calculations that aren't targeted by anything
+    if (
+      !calcObj.calculation
+      && !calcObj.effects
+      && !calcObj.proficiencies
+    ) return;
+
+    dependencyGraph.addNode(calcNodeId, calcObj);
     // Traverse the parsed calculation looking for variable names
     traverse(calcObj.parseNode, node => {
       // Skip nodes that aren't symbols or accessors
