@@ -100,16 +100,15 @@ export default {
 <style lang="css" scoped>
   .quantity {
     flex-basis: 32px;
-    font-weight: 500;
-    text-align: center;
+    font-weight: 700;
+    text-align: end;
+    padding-right: 8px;
   }
   .each {
     font-weight: 300;
   }
   .total {
-
-  }
-  .weight-value {
+    font-weight: 500;
   }
   .value {
     min-width: 40px;

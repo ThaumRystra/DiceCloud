@@ -13,7 +13,10 @@
         >
           <div class="score">
             <div class="double-border top">
-              <div class="label text-center mb-0">
+              <div
+                class="label text-center mb-0"
+                style="line-height: 16px"
+              >
                 {{ ability.name }}
               </div>
               <div class="big-number mb-1">
@@ -108,8 +111,13 @@
         :key="healthBar._id"
       >
         <div class="double-border">
-          <div class="label">
-            Total: {{ healthBar.total }}
+          <div>
+            <b>
+              Total:
+            </b>
+            <span>
+              {{ healthBar.total }}
+            </span>
           </div>
           <div style="height: 40px;" />
           <div
@@ -131,9 +139,9 @@
       >
         <div class="double-border">
           <div>
-            <span class="label">
+            <b>
               Total:
-            </span>
+            </b>
             <span
               v-for="hitDie in hitDice"
               :key="hitDie._id"
@@ -162,7 +170,7 @@
         >
           <div
             v-if="resource.total <= 8"
-            class="label"
+            class="label mb-0"
           >
             {{ resource.name }}
           </div>
@@ -175,6 +183,7 @@
           <div
             v-if="resource.total <= 8"
             class="d-flex justify-end"
+            style="margin-top: -4px"
           >
             <div
               v-for="i in resource.total"
@@ -187,41 +196,6 @@
             class="label text-center"
           >
             {{ resource.name }}
-          </div>
-        </div>
-      </div>
-
-      <div
-        v-if="spellSlots && spellSlots.length"
-      >
-        <div class="double-border">
-          <div class="label text-center">
-            Spell Slots
-          </div>
-          <div
-            v-for="spellSlot in spellSlots"
-            :key="spellSlot._id"
-            class="mb-7"
-            :class="spellSlot.total <= 8 && 'mb-7'"
-          >
-            <div class="label">
-              {{ spellSlot.name }}
-            </div>
-            <div
-              v-if="spellSlot.total > 8"
-            >
-              Total: {{ spellSlot.total }}
-            </div>
-            <div
-              v-else
-              class="d-flex"
-            >
-              <div
-                v-for="i in spellSlot.total"
-                :key="i"
-                class="resource-bubble"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -275,9 +249,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="weapons && weapons.length"
-      >
+      <div>
         <div
           class="double-border"
         >
@@ -295,6 +267,41 @@
           </p>
           <div class="label text-center">
             Proficiencies
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="spellSlots && spellSlots.length"
+      >
+        <div class="double-border">
+          <div class="label text-center">
+            Spell Slots
+          </div>
+          <div
+            v-for="spellSlot in spellSlots"
+            :key="spellSlot._id"
+            class="mb-7"
+            :class="spellSlot.total <= 8 && 'mb-7'"
+          >
+            <div class="label">
+              {{ spellSlot.name }}
+            </div>
+            <div
+              v-if="spellSlot.total > 8"
+            >
+              Total: {{ spellSlot.total }}
+            </div>
+            <div
+              v-else
+              class="d-flex"
+            >
+              <div
+                v-for="i in spellSlot.total"
+                :key="i"
+                class="resource-bubble"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -511,7 +518,15 @@ export default {
       return getProperties(this.creature, { type: 'feature' });
     },
     notes(){
-      return getProperties(this.creature, { type: 'note', summary: {$exists: true} });
+      const allNoteIds = getProperties(this.creature, { 
+        type: 'note',
+      }).map(note => note._id);
+      const topLevelNotes = getProperties(this.creature, {
+        type: 'note',
+        summary: { $exists: true },
+        'ancestor.id': {$nin: allNoteIds}
+      });
+      return topLevelNotes;
     },
   },
   methods: {
@@ -554,7 +569,6 @@ export default {
   min-width: 86px;
   text-align: center;
   margin: 4px 4px -10px;
-  padding: 8px;
   z-index: 1;
 }
 .ability .bottom {

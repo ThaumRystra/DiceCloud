@@ -2,37 +2,38 @@
   <div
     class="spells"
   >
-    <column-layout wide-columns>
-      <div class="span-all">
-        <div class="label text-center octagon-border">
-          Spells
-        </div>
-      </div>
+    <div
+      class="label text-center octagon-border my-2 avoid-page-break-after"
+    >
+      Spells
+    </div>
+    <column-layout
+      v-if="spellsWithoutList && spellsWithoutList.length"
+      wide-columns
+    >
       <div
         v-for="spell in spellsWithoutList"
         :key="spell._id"
       >
         <printed-spell :model="spell" />
       </div>
-      <template
-        v-for="spellList in spellListsWithoutAncestorSpellLists"
-      >
-        <div
-          :key="spellList._id"
-          class="span-all"
-        >
-          <printed-spell-list
-            :model="spellList"
-          />
-        </div>
+    </column-layout>
+    <div
+      v-for="spellList in spellListsWithoutAncestorSpellLists"
+      :key="spellList._id"
+    >
+      <printed-spell-list
+        :model="spellList"
+      />
+      <column-layout wide-columns>
         <div
           v-for="spell in spellList.spells"
           :key="spell._id"
         >
           <printed-spell :model="spell" />
         </div>
-      </template>
-    </column-layout>
+      </column-layout>
+    </div>
   </div>
 </template>
 

@@ -88,11 +88,6 @@
         </div>
       </div>
     </div>
-
-    <property-description
-      text
-      :model="model.description"
-    />
   </div>
 </template>
 
