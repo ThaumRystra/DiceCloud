@@ -2,7 +2,7 @@
   <div
     class="inventory"
   >
-    <div class="double-border">
+    <div class="double-border my-2">
       <div class="label text-center">
         Inventory
       </div>
