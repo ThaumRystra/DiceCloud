@@ -67,9 +67,13 @@
             {{ creatureUrl }}
           </div>
           <printed-stats :creature-id="creatureId" />
-          <printed-inventory :creature-id="creatureId" />
+          <printed-inventory
+            :creature-id="creatureId"
+            class="page-break-before"
+          />
           <printed-spells
             v-if="!creature.settings.hideSpellsTab"
+            class="page-break-before" 
             :creature-id="creatureId"
           />
         </div>
@@ -263,8 +267,8 @@ export default {
   width: 100%;
   widows: 0;
   orphans: 0;
-  -webkit-column-fill: balance-all;
-  column-fill: balance-all;
+  column-fill: balance;
+  padding: 0;
 }
 
 .character-sheet-printed .column-layout {
@@ -273,6 +277,8 @@ export default {
 
 .character-sheet-printed .column-layout>div {
   position:relative;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 .character-sheet-printed .column-layout > div > * {
   page-break-inside: avoid;
@@ -306,7 +312,8 @@ export default {
 
 .character-sheet-printed .double-border {
   position: relative;
-  padding: 11px 10px;
+  border-style: solid;
+  border-width: 11px 10px;
   border-image-source: url(/images/print/doubleLineImageBorder.png);
   border-image-slice: 110 126 fill;
   border-image-width: 16px;
@@ -335,7 +342,7 @@ export default {
 
 .character-sheet-printed .stats .label {
   font-size: 10pt;
-  font-variant: small-caps;
+  font-variant: all-small-caps
 }
 
 .character-sheet-printed .label {
@@ -347,6 +354,14 @@ export default {
 .character-sheet-printed .span-all {
   column-span: all;
   display: block;
+}
+
+.character-sheet-printed .page-break-before {
+  page-break-before: always;
+}
+
+.character-sheet-printed .avoid-page-break-after {
+  page-break-after: avoid;
 }
 
 @media screen {
