@@ -84,12 +84,30 @@
       <form-section
         name="Behavior"
       >
-        <smart-switch
-          label="Show increment button"
-          :value="model.showIncrement"
-          :error-messages="errors.showIncrement"
-          @change="change('showIncrement', ...arguments)"
-        />
+        <v-row dense>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <smart-switch
+              label="Show increment button"
+              :value="model.showIncrement"
+              :error-messages="errors.showIncrement"
+              @change="change('showIncrement', ...arguments)"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <smart-switch
+              label="Don't show in log"
+              :value="model.silent"
+              :error-messages="errors.silent"
+              @change="change('silent', ...arguments)"
+            />
+          </v-col>
+        </v-row>
       </form-section>
       <form-section
         name="Attunement"

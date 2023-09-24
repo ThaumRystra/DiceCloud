@@ -77,7 +77,8 @@ const duplicateProperty = new ValidatedMethod({
     });
 
     // Give the docs new IDs without breaking internal references
-    renewDocIds({ docArray: nodes });
+    const allNodes = [property, ...nodes];
+    renewDocIds({ docArray: allNodes });
 
     // Order the root node
     property.order += 0.5;
@@ -86,7 +87,7 @@ const duplicateProperty = new ValidatedMethod({
     property.dirty = true;
 
     // Insert the properties
-    CreatureProperties.batchInsert([property, ...nodes]);
+    CreatureProperties.batchInsert(allNodes);
 
     // Tree structure changed by inserts, reorder the tree
     reorderDocs({

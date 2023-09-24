@@ -1,6 +1,9 @@
 <template lang="html">
   <div>
-    <div class="layout align-center justify-start" style="height:40px;">
+    <div
+      class="layout align-center justify-start"
+      style="height:40px;"
+    >
       <v-icon
         v-if="!hideIcon"
         class="mr-2"
@@ -15,19 +18,24 @@
         <span v-if="model.target === 'self'">to self</span>
       </div>
     </div>
-    <div
-      v-if="showExternalDetails"
-      v-for="effect in model.amount.effects">
-      <div v-if="effect.amount.value !== 0"
-        style="position:relative; top:-15px; left:5px; height:25px;">
-        <inline-effect
-          hide-breadcrumbs
-          :key="effect._id"
-          :data-id="effect._id"
-          :model="effect"
-        />
+    <template v-if="showExternalDetails">
+      <div
+        v-for="effect in (model.amount && model.amount.effects)"
+        :key="effect._id"
+      >
+        <div
+          v-if="effect.amount.value !== 0"
+          style="position:relative; top:-15px; left:5px; height:25px;"
+        >
+          <inline-effect
+            :key="effect._id"
+            hide-breadcrumbs
+            :data-id="effect._id"
+            :model="effect"
+          />
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -37,8 +45,8 @@ import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 import InlineEffect from '../components/effects/InlineEffect.vue';
 
 export default {
-  mixins: [treeNodeViewMixin],
   components: {InlineEffect},
+  mixins: [treeNodeViewMixin],
   computed: {
     icon() {
       if (this.model.damageType === 'healing') {

@@ -1,9 +1,10 @@
 import computeToggles from '/imports/api/engine/computation/computeComputation/computeToggles.js';
 import computeByType from '/imports/api/engine/computation/computeComputation/computeByType.js';
 import embedInlineCalculations from './utility/embedInlineCalculations.js';
+import { removeEmptyCalculations } from './buildComputation/parseCalculationFields.js';
 import path from 'ngraph.path';
 
-export default function computeCreatureComputation(computation){
+export default function computeCreatureComputation(computation) {
   const stack = [];
   // Computation scope of {variableName: prop}
   const graph = computation.dependencyGraph;
@@ -20,16 +21,16 @@ export default function computeCreatureComputation(computation){
   stack.reverse();
 
   // Depth first traversal of nodes
-  while (stack.length){
+  while (stack.length) {
     let top = stack[stack.length - 1];
-    if (top._visited){
+    if (top._visited) {
       // The object has already been computed, skip
       stack.pop();
-    } else if (top._visitedChildren){
+    } else if (top._visitedChildren) {
       // Mark the object as visited and remove from stack
       top._visited = true;
       stack.pop();
-    // Compute the top object of the stack
+      // Compute the top object of the stack
       compute(computation, top);
     } else {
       top._visitedChildren = true;
@@ -42,14 +43,14 @@ export default function computeCreatureComputation(computation){
   computation.props.forEach(finalizeProp);
 }
 
-function compute(computation, node){
+function compute(computation, node) {
   // Determine the prop's active status by its toggles
   computeToggles(computation, node);
   // Compute the property by type
   computeByType[node.data?.type || '_variable']?.(computation, node);
 }
 
-function pushDependenciesToStack(nodeId, graph, stack, computation){
+function pushDependenciesToStack(nodeId, graph, stack, computation) {
   graph.forEachLinkedNode(nodeId, linkedNode => {
     if (linkedNode._visitedChildren && !linkedNode._visited) {
       // This is a dependency loop, find a path from the node to itself
@@ -66,7 +67,7 @@ function pushDependenciesToStack(nodeId, graph, stack, computation){
           loop = [linkedNode, ...newLoop];
         }
       }, true);
-      
+
       if (loop.length) {
         computation.errors.push({
           type: 'dependencyLoop',
@@ -80,11 +81,13 @@ function pushDependenciesToStack(nodeId, graph, stack, computation){
   }, true);
 }
 
-function finalizeProp(prop){
+function finalizeProp(prop) {
   // Embed the inline calculations
   prop._computationDetails?.inlineCalculations?.forEach(inlineCalcObj => {
     embedInlineCalculations(inlineCalcObj);
   });
+  // Clean up the calculations that were never used
+  removeEmptyCalculations(prop);
   // Clean up the computation details
   delete prop._computationDetails;
 }

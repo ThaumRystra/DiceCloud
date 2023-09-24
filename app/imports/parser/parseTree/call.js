@@ -104,12 +104,12 @@ const call = {
         // Resolve the return value
         return resolve(fn, value, scope, context);
       }
-    } catch (error) {
-      context.error(error.message || error);
+    } catch (err) {
+      context.error(`Internal error: ${err.message || err}`);
       return {
         result: error.create({
           node: node,
-          error: error.message || error,
+          error: `Internal error: ${err.message || err}`,
         }),
         context,
       }

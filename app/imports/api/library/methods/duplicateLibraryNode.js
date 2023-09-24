@@ -67,12 +67,13 @@ const duplicateLibraryNode = new ValidatedMethod({
     });
 
     // Give the docs new IDs without breaking internal references
-    renewDocIds({ docArray: nodes });
+    const allNodes = [libraryNode, ...nodes];
+    renewDocIds({ docArray: allNodes });
 
     // Order the root node
     libraryNode.order += 0.5;
 
-    LibraryNodes.batchInsert([libraryNode, ...nodes]);
+    LibraryNodes.batchInsert(allNodes);
 
     // Tree structure changed by inserts, reorder the tree
     reorderDocs({

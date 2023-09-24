@@ -23,31 +23,31 @@ const allowedParenting = {
 
 const allParentTypes = new Set(flatten(Object.values(allowedParenting)));
 
-export function canBeParent(type){
+export function canBeParent(type) {
   return true;
   //TODO until there is a good reason to disallow certain parenting options,
   // this should just let the user do whatever
   return type && allParentTypes.has(type);
 }
 
-export function getAllowedParents({childType}){
+export function getAllowedParents({ childType }) {
   return allowedParenting[childType] || generalParents;
 }
 
-export function isParentAllowed({parentType = 'root', childType}){
+export function isParentAllowed({ parentType = 'root', childType }) {
   return true;
   //TODO until there is a good reason to disallow certain parenting options,
   // this should just let the user do whatever
   if (!childType) throw 'childType is required';
-  let allowedParents = getAllowedParents({childType});
+  let allowedParents = getAllowedParents({ childType });
   return allowedParents.includes(parentType);
 }
 
-export function fetchParent({id, collection}){
-  return fetchDocByRef({id, collection});
+export function fetchParent({ id, collection }) {
+  return fetchDocByRef({ id, collection });
 }
 
-export function fetchChildren({ collection, parentId, filter = {}, options = {sort: {order: 1}} }){
+export function fetchChildren({ collection, parentId, filter = {}, options = { sort: { order: 1 } } }) {
   filter['parent.id'] = parentId;
   let children = [];
   children.push(
@@ -58,37 +58,37 @@ export function fetchChildren({ collection, parentId, filter = {}, options = {so
   return children;
 }
 
-export function updateChildren({collection, parentId, filter = {}, modifier, options={}}){
+export function updateChildren({ collection, parentId, filter = {}, modifier, options = {} }) {
   filter['parent.id'] = parentId;
   options.multi = true;
   collection.update(filter, modifier, options);
 }
 
-export function fetchDescendants({ collection, ancestorId, filter = {}, options}){
+export function fetchDescendants({ collection, ancestorId, filter = {}, options }) {
   filter['ancestors.id'] = ancestorId;
   let descendants = [];
   descendants.push(...collection.find(filter, options).fetch());
   return descendants;
 }
 
-export function updateDescendants({collection, ancestorId, filter = {}, modifier, options={}}){
+export function updateDescendants({ collection, ancestorId, filter = {}, modifier, options = {} }) {
   filter['ancestors.id'] = ancestorId;
   options.multi = true;
-  options.selector = {type: 'any'};
+  options.selector = { type: 'any' };
   collection.update(filter, modifier, options);
 }
 
-export function forEachDescendant({collection, ancestorId, filter = {}, options}, callback){
+export function forEachDescendant({ collection, ancestorId, filter = {}, options }, callback) {
   filter['ancestors.id'] = ancestorId;
   collection.find(filter, options).forEach(callback);
 }
 
 // 1 database read
-export function getAncestry({parentRef, inheritedFields = {}}){
-  let parentDoc = fetchDocByRef(parentRef, {fields: inheritedFields});
-  let parent = { ...parentRef};
-  for (let field in inheritedFields){
-    if (inheritedFields[field]){
+export function getAncestry({ parentRef, inheritedFields = {} }) {
+  let parentDoc = fetchDocByRef(parentRef, { fields: inheritedFields });
+  let parent = { ...parentRef };
+  for (let field in inheritedFields) {
+    if (inheritedFields[field]) {
       parent[field] = parentDoc[field];
     }
   }
@@ -97,13 +97,13 @@ export function getAncestry({parentRef, inheritedFields = {}}){
   let ancestors = parentDoc.ancestors || [];
   ancestors.push(parent);
 
-  return {parentDoc, parent, ancestors};
+  return { parentDoc, parent, ancestors };
 }
 
-export function setLineageOfDocs({docArray, oldParent, newAncestry}){
+export function setLineageOfDocs({ docArray, oldParent, newAncestry }) {
   const newParent = newAncestry[newAncestry.length - 1];
   docArray.forEach(doc => {
-    if(doc.parent.id === oldParent.id){
+    if (doc.parent.id === oldParent.id) {
       doc.parent = newParent;
     }
     let oldAncestors = doc.ancestors;
@@ -117,22 +117,37 @@ export function setLineageOfDocs({docArray, oldParent, newAncestry}){
  * Give documents new random ids and transform their references.
  * Transform collections of re-IDed docs according to the collection map
  */
-export function renewDocIds({docArray, collectionMap, idMap = {}}){
+export function renewDocIds({ docArray, collectionMap, idMap = {} }) {
   // idMap is a map of {oldId: newId}
   // Get a random generator that's consistent on client and server
   let randomSrc = DDP.randomStream('renewDocIds');
 
-  // Give new ids and map the changes as {oldId: newId}
+  // Replaces all the ids of a sub-document array with new random ids
+  function replaceIds(arr) {
+    arr?.forEach?.(obj => {
+      obj._id = randomSrc.id();
+    });
+  }
+
   docArray.forEach(doc => {
+    // Give new ids and map the changes as {oldId: newId}
     let oldId = doc._id;
+    // Respect the existing map if a document appears in the array twice
     let newId = idMap[oldId] || randomSrc.id();
     doc._id = newId;
     idMap[oldId] = newId;
+
+    // Replace ids of sub-properties that might have _id fields
+    replaceIds(doc.resources?.conditions);
+    replaceIds(doc.resources?.attributesConsumed);
+    replaceIds(doc.resources?.itemsConsumed);
+    replaceIds(doc.extraTags);
+    replaceIds(doc.values);
   });
 
   // Remap all references using the new IDs
   const remapReference = ref => {
-    if (idMap[ref.id]){
+    if (idMap[ref.id]) {
       ref.id = idMap[ref.id];
       ref.collection = collectionMap && collectionMap[ref.collection] || ref.collection;
     }
@@ -143,24 +158,26 @@ export function renewDocIds({docArray, collectionMap, idMap = {}}){
   });
 }
 
-export function updateParent({docRef, parentRef}){
+export function updateParent({ docRef, parentRef }) {
   let collection = getCollectionByName(docRef.collection);
-  let oldDoc = fetchDocByRef(docRef, {fields: {
-    parent: 1,
-    ancestors: 1,
-    type: 1,
-  }});
-  let updateOptions = { selector: {type: 'any'} };
+  let oldDoc = fetchDocByRef(docRef, {
+    fields: {
+      parent: 1,
+      ancestors: 1,
+      type: 1,
+    }
+  });
+  let updateOptions = { selector: { type: 'any' } };
 
   // Skip if we aren't changing the parent id
   if (oldDoc.parent.id === parentRef.id) return;
 
   // Get the parent and its ancestry
-  let {parentDoc, parent, ancestors} = getAncestry({parentRef});
+  let { parentDoc, parent, ancestors } = getAncestry({ parentRef });
 
   // Check that the doc isn't its own ancestor
   ancestors.forEach(ancestor => {
-    if (docRef.id === ancestor.id){
+    if (docRef.id === ancestor.id) {
       throw new Meteor.Error('invalid parenting',
         'A doc can\'t be its own ancestor')
     }
@@ -168,12 +185,12 @@ export function updateParent({docRef, parentRef}){
 
   // If the doc and its parent are in the same collection, apply the allowed
   // parent rules based on type
-  if (docRef.collection === parentRef.collection){
+  if (docRef.collection === parentRef.collection) {
     let parentAllowed = isParentAllowed({
       parentType: parentDoc.type,
       childType: oldDoc.type
     });
-    if (!parentAllowed){
+    if (!parentAllowed) {
       throw new Meteor.Error('invalid parenting',
         `Can't make ${oldDoc.type} a child of ${parentDoc.type}`)
     }
@@ -181,16 +198,18 @@ export function updateParent({docRef, parentRef}){
 
   // update the document's parenting
   collection.update(docRef.id, {
-    $set: {parent, ancestors}
+    $set: { parent, ancestors }
   }, updateOptions);
 
   // Remove the old ancestors from the descendants
   updateDescendants({
     collection,
     ancestorId: docRef.id,
-    modifier: {$pullAll: {
-      ancestors: oldDoc.ancestors,
-    }},
+    modifier: {
+      $pullAll: {
+        ancestors: oldDoc.ancestors,
+      }
+    },
     options: updateOptions,
   });
 
@@ -198,20 +217,22 @@ export function updateParent({docRef, parentRef}){
   updateDescendants({
     collection,
     ancestorId: docRef.id,
-    modifier: {$push: {
-      ancestors: {
-        $each: ancestors,
-        $position: 0,
-      },
-    }},
+    modifier: {
+      $push: {
+        ancestors: {
+          $each: ancestors,
+          $position: 0,
+        },
+      }
+    },
     options: updateOptions,
   });
 }
 
-export function getName(doc){
+export function getName(doc) {
   if (doc.name) return name;
   var i = doc.ancestors.length;
-  while(i--) {
+  while (i--) {
     if (doc.ancestors[i].name) return doc.ancestors[i].name;
   }
 }

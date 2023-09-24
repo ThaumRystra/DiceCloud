@@ -16,6 +16,23 @@
         name="Target"
         value="Self"
       />
+      <template v-if="model.save">
+        <property-field
+          name="DC"
+          large
+          center
+          :calculation="model.save.dc"
+        />
+        <property-field
+          name="Save"
+          mono
+          :value="model.save.stat"
+        />
+        <property-field
+          name="On a successful saving throw"
+          v-bind="saveDamage"
+        />
+      </template>
     </v-row>
   </div>
 </template>
@@ -30,6 +47,16 @@ export default {
       if (this.model.damageType === 'healing') return this.model.damageType;
       return `${this.model.damageType} damage`
     },
+    saveDamage() {
+      if (!this.model.save) return;
+      if (!this.model.save.damageFunction?.calculation) {
+        return { value: 'Half damage' };
+      }
+      if (this.model.save.damageFunction.calculation == '0' || this.model.save.damageFunction.value === 0) {
+        return { value: 'No damage' };
+      }
+      return { calculation: this.model.save.damageFunction };
+    }
   }
 }
 </script>

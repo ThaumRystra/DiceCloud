@@ -1,4 +1,5 @@
 import action from './applyPropertyByType/applyAction.js';
+import ammo from './applyPropertyByType/applyItemAsAmmo.js'
 import adjustment from './applyPropertyByType/applyAdjustment.js';
 import branch from './applyPropertyByType/applyBranch.js';
 import buff from './applyPropertyByType/applyBuff.js';
@@ -12,6 +13,7 @@ import toggle from './applyPropertyByType/applyToggle.js';
 
 const applyPropertyByType = {
   action,
+  ammo,
   adjustment,
   branch,
   buff,

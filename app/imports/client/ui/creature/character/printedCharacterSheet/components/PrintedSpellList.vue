@@ -1,5 +1,8 @@
 <template>
-  <div class="octagon-border">
+  <div
+    class="octagon-border my-1"
+    style="page-break-after: avoid;"
+  >
     <div class="label text-center">
       {{ model.name }}
     </div>

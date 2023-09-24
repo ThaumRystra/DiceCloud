@@ -21,7 +21,7 @@ const updateCreatureProperty = new ValidatedMethod({
   },
   mixins: [RateLimiterMixin],
   rateLimit: {
-    numRequests: 5,
+    numRequests: 12,
     timeInterval: 5000,
   },
   run({ _id, path, value }) {
