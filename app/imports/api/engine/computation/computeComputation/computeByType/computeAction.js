@@ -1,6 +1,6 @@
 export default function computeAction(computation, node) {
   const prop = node.data;
-  if (prop.uses) {
+  if (Number.isFinite(prop.uses?.value)) {
     prop.usesLeft = prop.uses.value - (prop.usesUsed || 0);
     if (!prop.usesLeft) {
       prop.insufficientResources = true;

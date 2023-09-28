@@ -1,7 +1,7 @@
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import { prettifyParseError, parse } from '/imports/parser/parser.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
-import { get, unset } from 'lodash';
+import { get, set, unset } from 'lodash';
 import errorNode from '/imports/parser/parseTree/error.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
 
@@ -63,12 +63,21 @@ function parseAllCalculationFields(prop, schemas) {
     // For all fields matching they keys
     // supports `keys.$.with.$.arrays`
     applyFnToKey(prop, calcKey, (prop, key) => {
-      const calcObj = get(prop, key);
+      let calcObj = get(prop, key);
+      // Create a calculation object if one doesn't exist, it will get deleted again later if
+      // it's not used, but if an effect targets a calculated field, we should have one to target
+      if (
+        !calcObj
+        && subDocsExist(prop, key)
+      ) {
+        calcObj = {};
+        set(prop, key, calcObj);
+      }
+      // Sub document didn't exist, skip this field
       if (!calcObj) return;
-      // Delete the whole calculation object if the calculation string isn't set
+      // Keep a list of empty calculations for potential deletion if they aren't used
       if (!calcObj.calculation) {
-        unset(prop, calcKey);
-        return;
+        prop._computationDetails.emptyCalculations.push(calcObj);
       }
       // Store a reference to all the calculations
       prop._computationDetails.calculations.push(calcObj);
@@ -84,15 +93,31 @@ function parseAllCalculationFields(prop, schemas) {
   });
 }
 
+function subDocsExist(prop, key) {
+  const path = key.split('.');
+  if (path.length < 2) return !!prop;
+  path.pop();
+  const subPath = path.join('.');
+  return !!get(prop, subPath);
+}
+
+export function removeEmptyCalculations(prop) {
+  prop._computationDetails.emptyCalculations.forEach(calcObj => {
+    if (!calcObj.effects?.length) {
+      unset(prop, calcObj._key);
+    }
+  });
+}
+
 function parseCalculation(calcObj) {
-  const calcHash = cyrb53(calcObj.calculation);
+  const calcHash = cyrb53(calcObj.calculation || '0');
   // If the cached parse calculation is equal to the calculation, skip
   if (calcHash === calcObj.hash) {
     return;
   }
   calcObj.hash = calcHash;
   try {
-    calcObj.parseNode = parse(calcObj.calculation);
+    calcObj.parseNode = parse(calcObj.calculation || '0');
     calcObj.parseError = null;
   } catch (e) {
     let error = {

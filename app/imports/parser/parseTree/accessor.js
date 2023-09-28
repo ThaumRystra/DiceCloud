@@ -3,7 +3,7 @@ import constant from './constant.js';
 import { toString } from '../resolve.js';
 
 const accessor = {
-  create({name, path}) {
+  create({ name, path }) {
     return {
       parseType: 'accessor',
       path,
@@ -19,12 +19,12 @@ const accessor = {
     });
     let valueType = Array.isArray(value) ? 'array' : typeof value;
     // If the accessor returns an objet, get the object's value instead
-    while (valueType === 'object'){
+    while (valueType === 'object') {
       value = value.value;
       valueType = Array.isArray(value) ? 'array' : typeof value;
     }
     // Return a parse node based on the type returned
-    if (valueType === 'string' || valueType === 'number' || valueType === 'boolean'){
+    if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
       return {
         result: constant.create({
           value,
@@ -65,10 +65,9 @@ const accessor = {
       };
     }
   },
-  reduce(node, scope, context){
+  reduce(node, scope, context) {
     let { result } = accessor.compile(node, scope, context);
-    if (result.parseType === 'accessor'){
-      context.error(`${toString(result)} not found, set to 0`);
+    if (result.parseType === 'accessor') {
       return {
         result: constant.create({
           value: 0,
@@ -76,10 +75,10 @@ const accessor = {
         context
       };
     } else {
-      return {result, context};
+      return { result, context };
     }
   },
-  toString(node){
+  toString(node) {
     return `${node.name}.${node.path.join('.')}`;
   }
 }

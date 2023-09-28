@@ -3,35 +3,20 @@
     class="action-card"
     :class="cardClasses"
   >
-    <div class="label text-center">
-      {{ actionTypeName }}
-    </div>
-    <div class="d-flex align-center">
+    <div class="d-flex align-center mb-2">
+      <div class="roll-bonus">
+        <template v-if="!onHitDamage && rollBonus">
+          {{ rollBonus }}
+        </template>
+      </div>
+      <div class="action-title text-center flex-grow-1">
+        {{ model.name || propertyName }}
+      </div>
       <div class="avatar">
-        <div
-          v-if="rollBonus"
-        >
-          <template v-if="rollBonus && !rollBonusTooLong">
-            {{ rollBonus }}
-          </template>
-          <property-icon
-            v-else
-            :model="model"
-            color="rgba(0,0,0,0.7)"
-          />
-        </div>
         <property-icon
-          v-else
           :model="model"
           color="rgba(0,0,0,0.7)"
         />
-      </div>
-      <div
-        class="action-header flex d-flex column justify-center pl-1"
-      >
-        <div class="action-title my-1">
-          {{ model.name || propertyName }}
-        </div>
       </div>
     </div>
     <div
@@ -40,7 +25,7 @@
     >
       {{ model.uses }} uses
     </div>
-    <div class="pb-3">
+    <div>
       <div
         v-if="model.resources && model.resources.attributesConsumed.length ||
           model.resources.itemsConsumed.length"
@@ -65,20 +50,41 @@
       <template v-if="model.summary">
         <markdown-text :markdown="model.summary.value || model.summary.text" />
       </template>
-      <v-divider v-if="children && children.length" />
+      <div
+        v-if="onHitDamage"
+      >
+        <span class="damage">
+          {{ rollBonus }}
+        </span>
+        <span>
+          to hit
+        </span>
+      </div>
+      <div v-if="onHitDamage">
+        <span class="damage">
+          {{ onHitDamage.damage }}
+        </span>
+        <span>
+          {{ onHitDamage.suffix }}
+        </span>
+      </div>
       <tree-node-list
-        v-if="children && children.length"
+        v-else-if="children && children.length"
         start-expanded
+        show-external-details
         :children="children"
         @selected="e => $emit('sub-click', e)"
       />
+    </div>
+    <div class="action-subtitle text-center">
+      {{ actionTypeName }}
     </div>
   </div>
 </template>
 
 <script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import numberToSignedString from '../../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
@@ -87,6 +93,8 @@ import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { some } from 'lodash';
+import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
+import resolve, { Context, toString } from '/imports/parser/resolve.js';
 
 export default {
   components: {
@@ -148,7 +156,24 @@ export default {
         'free': 'Free Action',
         'long': 'Long Action'
       }[this.model.actionType] || this.model.actionType
-    }
+    },
+    onHitDamage() {
+      /**
+       * Only match a property who has exactly one to-hit child with one damage under that
+       */
+      if (this.children?.length !== 1) return;
+      if (this.children[0]?.node?.type !== 'branch') return;
+      if (this.children[0].children?.length !== 1) return;
+      if (this.children[0].children[0]?.node?.type !== 'damage') return;
+      if (this.children[0].children[0].children?.length !== 0) return;
+      const damage = this.children[0].children[0]?.node;
+      applyEffectsToCalculationParseNode(damage.amount);
+      const { result } = resolve('compile', damage.amount.parseNode, {});
+      return {
+        damage: toString(result),
+        suffix: damage.damageType + (damage.damageType !== 'healing' ? ' damage ' : '')
+      };
+    },
   },
   meteor: {
     children() {
@@ -187,28 +212,39 @@ export default {
   transition: box-shadow .4s cubic-bezier(0.25, 0.8, 0.25, 1),
     transform 0.075s ease;
 }
-
-.avatar {
+.roll-bonus {
   font-size: 18pt;
-  text-align: center;
-  min-width: 40px;
-  min-height: 40px;
+  flex-basis: 24px;
+}
+.avatar {
+  min-width: 24px;
+  min-height: 24px;
+  line-height: 24px;
 }
 
 .label {
   font-size: 10pt;
-  font-variant: small-caps;
+  font-variant: all-small-caps;
   flex-grow: 1;
 }
 
+.damage {
+  font-size: 12pt;
+  font-weight: 500;
+}
 .action-title {
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  position: relative;
-  text-align: left;
-  transition: .3s cubic-bezier(.25, .8, .5, 1);
-  width: 100%;
+  font-size: 12pt;
+  font-weight: 600;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-variant: all-small-caps;
+}
+
+.action-subtitle {
+  font-variant: all-small-caps;
+  font-size: 11pt;
 }
 
 .resources {

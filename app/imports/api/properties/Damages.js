@@ -33,10 +33,23 @@ const DamageSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  // remove the entire object if there is no saving throw
   save: {
-    type: SavingThrowSchema,
+    type: Object,
     optional: true,
   },
+  // The computed DC
+  'save.dc': {
+    type: 'fieldToCompute',
+    optional: true,
+  },
+  // The variable name of save to roll
+  'save.stat': {
+    type: String,
+    optional: true,
+    max: STORAGE_LIMITS.variableName,
+  },
+  // The damage to deal on a successful save
   'save.damageFunction': {
     type: 'fieldToCompute',
     optional: true,
@@ -51,13 +64,18 @@ const ComputedOnlyDamageSchema = createPropertySchema({
     parseLevel: 'compile',
   },
   save: {
-    type: ComputedOnlySavingThrowSchema,
+    type: Object,
+    optional: true,
+  },
+  'save.dc': {
+    type: 'computedOnlyField',
+    parseLevel: 'compile',
     optional: true,
   },
   'save.damageFunction': {
     type: 'computedOnlyField',
-    optional: true,
     parseLevel: 'compile',
+    optional: true,
   },
 });
 

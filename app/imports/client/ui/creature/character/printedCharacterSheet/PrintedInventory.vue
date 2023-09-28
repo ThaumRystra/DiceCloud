@@ -2,83 +2,72 @@
   <div
     class="inventory"
   >
-    <column-layout wide-columns>
-      <div class="span-all">
-        <div class="double-border">
-          <div class="label text-center">
-            Inventory
-          </div>
-          <div class="d-flex inventory-stat">
-            <v-icon>$vuetify.icons.injustice</v-icon>
-            Weight Carried:
-            {{ weightCarried }} lb
-          </div>
-          <div class="d-flex inventory-stat">
-            <v-icon>$vuetify.icons.cash</v-icon>
-            Net worth:
-            <coin-value
-              class="ml-2"
-              :value="variables && variables.valueTotal && variables.valueTotal.value|| 0"
-            />
-          </div>
-          <div class="d-flex inventory-stat">
-            <v-icon>$vuetify.icons.spell</v-icon>
-            Items attuned:
-            {{ variables.itemsAttuned && variables.itemsAttuned.value }}
-          </div>
-        </div>
+    <div class="double-border my-2">
+      <div class="label text-center">
+        Inventory
       </div>
-      <div class="span-all">
-        <div class="octagon-border label text-center">
-          Equipped
-        </div>
+      <div class="d-flex inventory-stat">
+        <v-icon>$vuetify.icons.injustice</v-icon>
+        Weight Carried:
+        {{ weightCarried }} lb
       </div>
-      <div
-        v-for="item in equippedItems"
-        :key="item._id"
-      >
-        <printed-item
-          class="double-border"
-          :model="item"
+      <div class="d-flex inventory-stat">
+        <v-icon>$vuetify.icons.cash</v-icon>
+        Net worth:
+        <coin-value
+          class="ml-2"
+          :value="variables && variables.valueTotal && variables.valueTotal.value|| 0"
         />
       </div>
-      <div class="span-all">
-        <div class="octagon-border label text-center">
-          Carried
-        </div>
-      </div>
       <div
-        v-for="item in carriedItems"
-        :key="item._id"
+        v-if="variables.itemsAttuned && variables.itemsAttuned.value"
+        class="d-flex inventory-stat"
       >
+        <v-icon>$vuetify.icons.spell</v-icon>
+        Items attuned:
+        {{ variables.itemsAttuned && variables.itemsAttuned.value }}
+      </div>
+    </div>
+    <div class="double-border my-2">
+      <div class="label text-center">
+        Equipped
+      </div>
+      <column-layout wide-columns>
         <printed-item
-          class="double-border"
+          v-for="item in equippedItems"
+          :key="item._id"
           :model="item"
         />
+      </column-layout>
+    </div>
+    <div class="double-border my-2">
+      <div class="label text-center">
+        Carried
       </div>
-      <template
-        v-for="container in containersWithoutAncestorContainers"
-      >
-        <div 
-          :key="container._id"
-          class="span-all"
-        >
-          <printed-container
-            class="octagon-border"
-            :model="container"
-          />
-        </div>
-        <div
+      <column-layout wide-columns>
+        <printed-item
+          v-for="item in carriedItems"
+          :key="item._id"
+          :model="item"
+        />
+      </column-layout>
+    </div>
+    <div
+      v-for="container in containersWithoutAncestorContainers"
+      :key="container._id"
+      class="double-border my-2"
+    >
+      <printed-container
+        :model="container"
+      />
+      <column-layout wide-columns>
+        <printed-item
           v-for="item in container.items"
           :key="item._id"
-        >
-          <printed-item
-            class="double-border"
-            :model="item"
-          />
-        </div>
-      </template>
-    </column-layout>
+          :model="item"
+        />
+      </column-layout>
+    </div>
   </div>
 </template>
 
@@ -90,7 +79,7 @@ import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
-import PrintedItem from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedItem.vue';
+import PrintedLineItem from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedLineItem.vue';
 import PrintedContainer from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedContainer.vue';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 
@@ -98,7 +87,7 @@ export default {
   components: {
     ColumnLayout,
     CoinValue,
-    PrintedItem,
+    PrintedItem: PrintedLineItem,
     PrintedContainer,
   },
   props: {
@@ -233,15 +222,17 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
 .label {
-  font-size: 14pt;
+  font-size: 12pt;
   font-variant: small-caps;
   flex-grow: 1;
 }
 
+.inventory .double-border {
+  box-decoration-break: slice;
+}
 .inventory-stat {
-  font-size: 12pt;
+  font-size: 11pt;
   line-height: 32px;
 }
 .inventory-stat > .v-icon {

@@ -3,8 +3,8 @@ import evaluateCalculation from '../../utility/evaluateCalculation.js';
 
 export default function computePointBuy(computation, node) {
   const prop = node.data;
-  const tableMin = prop.min?.value || null;
-  const tableMax = prop.max?.value || null;
+  const min = has(prop, 'min.value') ? prop.min.value : null;
+  const max = has(prop, 'max.value') ? prop.max.value : null;
   prop.spent = 0;
   prop.values?.forEach(row => {
     // Clean up added properties
@@ -14,9 +14,7 @@ export default function computePointBuy(computation, node) {
 
     row.spent = 0;
     if (row.value === undefined) return;
-    const min = has(row, 'min.value') ? row.min.value : tableMin;
-    const max = has(row, 'max.value') ? row.max.value : tableMax;
-    const costFunction = EJSON.clone(row.cost || prop.cost);
+    const costFunction = EJSON.clone(prop.cost);
     if (costFunction) costFunction.parseLevel = 'reduce';
 
     // Check min and max
