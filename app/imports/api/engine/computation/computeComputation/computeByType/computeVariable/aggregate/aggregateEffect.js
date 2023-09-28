@@ -39,7 +39,6 @@ export default function aggregateEffect({ node, linkedNode, link }) {
     amount: effectAmount,
     type: linkedNode.data.type,
     text: linkedNode.data.text,
-    // ancestors: linkedNode.data.ancestors,
   });
 
   // get a shorter reference to the aggregator document

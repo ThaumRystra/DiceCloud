@@ -381,18 +381,23 @@ export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, r
   await writeBulkOperations(collection, operations);
 }
 
+/** Calculates the operations needed to make a tree of nested sets
+  * Warning: Will reverse the order of docs!
+  * Walk around the tree numbering left on the way down and right on the way up like so:
+  *
+  *           1 Books 12
+  *               ┃
+  *        2 Programming 11
+  *      ┏━━━━━━━━┻━━━━━━━━━┓
+  * 3 Languages 4     5 Databases 10
+  *                 ┏━━━━━━━┻━━━━━━━┓  
+  *            6 MongoDB 7       8 dbm 9
+  *
+ * 
+ * @param docs 
+ * @returns 
+ */
 export function calculateNestedSetOperations(docs: TreeDoc[]) {
-  // Walk around the tree numbering left on the way down and right on the way up like so:
-  /*
-   *           1 Books 12
-   *               ┃
-   *        2 Programming 11
-   *      ┏━━━━━━━━┻━━━━━━━━━┓
-   * 3 Languages 4     5 Databases 10
-   *                 ┏━━━━━━━┻━━━━━━━┓  
-   *            6 MongoDB 7       8 dbm 9
-   */
-  // Get the forest, but in reverse order so that the stack always has the first documents on top
   const { forest: stack, orphanIds } = docsToForestByParentId(reverse(docs));
   const removeMissingParentsOp = orphanIds.length ? {
     updateMany: {
@@ -440,6 +445,51 @@ export function calculateNestedSetOperations(docs: TreeDoc[]) {
   const operations = [...Object.values(opsById)];
   if (removeMissingParentsOp) operations.push(removeMissingParentsOp);
   return operations;
+}
+
+/**
+ * Same as calculateNestedSetOperations, but applies the ops to the properties
+ * Mostly used to create testing documents.
+ * @param docs 
+ * @returns 
+ */
+export function applyNestedSetProperties(docs: TreeDoc[]) {
+  // Walk around the tree numbering left on the way down and right on the way up like so:
+  const { forest: stack, orphanIds } = docsToForestByParentId(reverse([...docs]));
+
+  const visitedNodes = new Set();
+  const visitedChildren = new Set();
+  let count = 1;
+
+  while (stack.length) {
+    const top = stack[stack.length - 1];
+    if (orphanIds.includes(top.doc._id)) {
+      delete top.doc.parentId;
+    }
+    if (visitedNodes.has(top)) {
+      // We've arrived at this node again for some reason, this shouldn't happen
+      console.log('visited already, parent loop maybe?')
+      stack.pop();
+    } else if (visitedChildren.has(top)) {
+      // We've arrived at this node after visiting the children,
+      // we must be on the way up, mark the right number
+      visitedNodes.add(top);
+      stack.pop();
+      if (top.doc.right !== count) {
+        top.doc.right = count;
+      }
+      count += 1;
+    } else {
+      // We're arriving at this node for the first time
+      // We must be on the way down, mark the left number and go visit the children
+      visitedChildren.add(top);
+      stack.push(...top.children);
+      if (top.doc.left !== count) {
+        top.doc.left = count;
+      }
+      count += 1;
+    }
+  }
 }
 
 /**

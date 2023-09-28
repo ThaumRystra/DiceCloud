@@ -1,5 +1,5 @@
 
-export default function aggregateDefinition({node, linkedNode, link}){
+export default function aggregateDefinition({ node, linkedNode, link }) {
   // Look at all definition links
   if (link.data !== 'definition') return;
 
@@ -12,7 +12,7 @@ export default function aggregateDefinition({node, linkedNode, link}){
     !definingProp ||
     prop.type !== 'pointBuyRow' && (
       definingProp.type === 'pointBuyRow' ||
-      prop.order > definingProp.order
+      prop.left > definingProp.left
     )
   ) {
     // override the current defining prop
@@ -50,12 +50,12 @@ export default function aggregateDefinition({node, linkedNode, link}){
       type: prop.type,
     });
   }
-  if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue){
+  if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue) {
     node.data.baseValue = propBaseValue;
   }
 }
 
-function overrideProp(prop, node){
+function overrideProp(prop, node) {
   if (!prop) return;
   prop.overridden = true;
   if (!node.data.overriddenProps) node.data.overriddenProps = [];

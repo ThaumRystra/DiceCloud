@@ -2,7 +2,7 @@ import { buildComputationFromProps } from '/imports/api/engine/computation/build
 import { assert } from 'chai';
 import clean from '../../utility/cleanProp.testFn.js';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
   const prop = (id) => computation.propsById[id];
@@ -32,7 +32,8 @@ var testProperties = [
   clean({
     _id: 'spellListId',
     type: 'spellList',
-    ancestors: [{id: 'charId'}],
+    left: 1,
+    right: 6,
   }),
   clean({
     _id: 'childId',
@@ -40,7 +41,9 @@ var testProperties = [
     description: {
       text: 'DC {#spellList.dc} save or suck'
     },
-    ancestors: [{id: 'charId'}, {id: 'spellListId'}],
+    parentId: 'spellListId',
+    left: 2,
+    right: 5,
   }),
   clean({
     _id: 'grandchildId',
@@ -48,7 +51,9 @@ var testProperties = [
     dc: {
       calculation: '#spellList.dc + strength + wisdom.modifier'
     },
-    ancestors: [{id: 'charId'}, {id: 'spellListId'}, {id: 'childId'}],
+    parentId: 'childId',
+    left: 3,
+    right: 4,
   }),
   clean({
     _id: 'strengthId',
@@ -57,6 +62,7 @@ var testProperties = [
     baseValue: {
       calculation: '15 + ',
     },
-    ancestors: [{id: 'charId'}],
+    left: 7,
+    right: 8,
   }),
 ];

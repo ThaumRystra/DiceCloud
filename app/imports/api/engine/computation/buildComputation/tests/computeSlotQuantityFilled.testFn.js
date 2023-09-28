@@ -13,7 +13,8 @@ var testProperties = [
   clean({
     _id: 'slotId',
     type: 'propertySlot',
-    ancestors: [{ id: 'charId' }],
+    left: 1,
+    right: 8,
   }),
   // Children
   clean({
@@ -21,16 +22,22 @@ var testProperties = [
     type: 'folder',
     slotQuantityFilled: 3,
     slotFillerType: 'item',
-    ancestors: [{ id: 'charId' }, { id: 'slotId' }],
+    parentId: 'slotId',
+    left: 2,
+    right: 3,
   }),
   clean({
     _id: 'slotChildId',
     type: 'item',
-    ancestors: [{ id: 'charId' }, { id: 'slotId' }],
+    parentId: 'slotId',
+    left: 4,
+    right: 7,
   }),
   clean({
     _id: 'slotGrandchildId',
     type: 'effect',
-    ancestors: [{ id: 'charId' }, { id: 'slotId' }, { id: 'slotChildId' }],
+    parentId: 'slotChildId',
+    left: 5,
+    right: 6,
   }),
 ];

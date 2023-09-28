@@ -2,9 +2,11 @@ import { buildComputationFromProps } from '/imports/api/engine/computation/build
 import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation.js';
 import clean from '../../utility/cleanProp.testFn.js';
+import { applyNestedSetProperties, compareOrder } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
   const computation = buildComputationFromProps(testProperties);
+  const hasLink = computation.dependencyGraph.hasLink;
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   assert.equal(
@@ -14,6 +16,10 @@ export default function () {
   assert.equal(
     prop('strengthId').modifier, -1,
     'The proficiency bonus should not change the strength modifier'
+  );
+  assert.isTrue(
+    !!hasLink('actionId.attackRoll', 'tagTargetedProficiency'),
+    'There should be a link from the proficiency to the attack roll'
   );
   assert.exists(prop('actionId').attackRoll.proficiencies, 'The proficiency aggregator should be here')
   assert.exists(prop('actionId').attackRoll.proficiencies[0], 'The proficiency should be here')
@@ -62,3 +68,5 @@ var testProperties = [
     targetTags: ['martial weapon']
   }),
 ];
+applyNestedSetProperties(testProperties);
+testProperties.sort(compareOrder);

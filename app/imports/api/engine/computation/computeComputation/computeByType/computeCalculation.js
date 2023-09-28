@@ -32,9 +32,7 @@ function aggregateCalculationEffects(node, computation) {
         operation: linkedNode.data.operation,
         amount: linkedNode.data.amount && {
           value: linkedNode.data.amount.value,
-          //parseNode: linkedNode.data.amount.parseNode,
         },
-        // ancestors: linkedNode.data.ancestors,
       });
     },
     true // enumerate only outbound links

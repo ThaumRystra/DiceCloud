@@ -1,4 +1,3 @@
-import findAncestorByType from '/imports/api/engine/computation/utility/findAncestorByType.js';
 import { traverse } from '/imports/parser/resolve.js';
 
 export default function linkCalculationDependencies(dependencyGraph, prop, { propsById }) {
@@ -55,5 +54,16 @@ function getAncestorProp(type, memo, prop, propsById) {
     if (!memo.ancestors) memo.ancestors = {};
     memo.ancestors['#' + type] = ancestorProp;
     return ancestorProp;
+  }
+}
+
+function findAncestorByType(prop, type, propsById) {
+  if (!prop || !prop.parentId) return;
+  let parentProp = prop;
+  while (parentProp) {
+    parentProp = propsById[parentProp.parentId];
+    if (parentProp?.type === type) {
+      return parentProp;
+    }
   }
 }

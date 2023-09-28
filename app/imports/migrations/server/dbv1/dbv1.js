@@ -43,7 +43,7 @@ export function migrateProperty({ collection, reversed, prop }) {
   let migratedProp = transformFields(prop, transforms, reversed);
   const schema = collection.simpleSchema({ type: migratedProp.type });
   // Only clean if the schema version matches our destination version
-  if (!reversed && SCHEMA_VERSION >= 1) {
+  if (!reversed && SCHEMA_VERSION == 1) {
     try {
       migratedProp = schema.clean(migratedProp);
       schema.validate(migratedProp);
@@ -81,6 +81,7 @@ const transformsByPropType = {
     ...getComputedPropertyTransforms('rollBonus', 'attackRoll'),
     //change type to action
     { from: 'type', to: 'type', up: () => 'action' },
+    { from: 'results' },
   ],
   'attribute': [
     // from: baseValue must be first or else it will delete the field we need

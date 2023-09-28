@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation.js';
 import clean from '../../utility/cleanProp.testFn.js';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
@@ -27,6 +27,8 @@ var testProperties = [
     _id: 'emptyId',
     type: 'attribute',
     attributeType: 'ability',
+    left: 1,
+    right: 2,
   }),
   clean({
     _id: 'noVariableNameId',
@@ -35,6 +37,8 @@ var testProperties = [
     baseValue: {
       calculation: '8'
     },
+    left: 3,
+    right: 4,
   }),
   clean({
     _id: 'strengthId',
@@ -44,6 +48,8 @@ var testProperties = [
     baseValue: {
       calculation: '12'
     },
+    left: 5,
+    right: 6,
   }),
   clean({
     _id: 'overriddenDexId',
@@ -54,6 +60,8 @@ var testProperties = [
     baseValue: {
       calculation: '15'
     },
+    left: 7,
+    right: 8,
   }),
   clean({
     _id: 'dexterityId',
@@ -64,6 +72,8 @@ var testProperties = [
     baseValue: {
       calculation: '15'
     },
+    left: 9,
+    right: 10,
   }),
   clean({
     _id: 'constitutionId',
@@ -73,6 +83,8 @@ var testProperties = [
     baseValue: {
       calculation: '21'
     },
+    left: 11,
+    right: 12,
   }),
   clean({
     _id: 'referencesDexId',
@@ -81,6 +93,8 @@ var testProperties = [
     baseValue: {
       calculation: 'dexterity.modifier + 2'
     },
+    left: 13,
+    right: 14,
   }),
   clean({
     _id: 'hitDiceId',
@@ -91,6 +105,8 @@ var testProperties = [
     baseValue: {
       calculation: '4'
     },
+    left: 15,
+    right: 16,
   }),
   clean({
     _id: 'parseErrorId',
@@ -100,5 +116,7 @@ var testProperties = [
     baseValue: {
       calculation: '12 +'
     },
+    left: 17,
+    right: 18,
   }),
 ];

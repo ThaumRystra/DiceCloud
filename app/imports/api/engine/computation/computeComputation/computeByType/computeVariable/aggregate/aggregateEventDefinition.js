@@ -10,7 +10,7 @@ export default function aggregateEventDefinition({ node, linkedNode, link }) {
   // Find the last defining event
   if (
     !definingEvent ||
-    prop.order > definingEvent.order
+    prop.left > definingEvent.left
   ) {
     // override the current defining prop
     if (definingEvent) definingEvent.overridden = true;

@@ -21,7 +21,6 @@ export default function writeScope(creatureId, computation) {
 
     // Remove large properties that aren't likely to be accessed
     delete scope[key].parent;
-    delete scope[key].ancestors;
 
     // Remove empty keys
     for (const subKey in scope[key]) {

@@ -74,6 +74,25 @@ describe('Parenting with nested sets', function () {
       op('dbm', 8, 9),
     ]);
   });
+  it('Can recalculate left and right for docs with set parents in random order', function () {
+    const docArray = [
+      doc('MongoDB', 71, 33, 'Databases'),
+      doc('Programming', 72, 33, 'Books'),
+      doc('Languages', 73, 33, 'Programming'),
+      doc('Books', 74, 33, undefined),
+      doc('Databases', 75, 33, 'Programming'),
+      doc('dbm', 76, 33, 'Databases'),
+    ];
+    const ops = calculateNestedSetOperations(docArray);
+    assert.deepEqual(ops, [
+      op('Books', 1, 12),
+      op('Programming', 2, 11),
+      op('Languages', 3, 4),
+      op('Databases', 5, 10),
+      op('MongoDB', 6, 7),
+      op('dbm', 8, 9),
+    ]);
+  });
 });
 
 describe('Document tree filters can fetch other documents based on their position in the tree', function () {

@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation.js';
 import clean from '../../utility/cleanProp.testFn.js';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
 
@@ -33,7 +33,6 @@ var testProperties = [
   clean({
     _id: 'actionId',
     type: 'action',
-    ancestors: [{id: 'charId'}],
     summary: {
       text: 'test summary {1 + 2} without referencing anything {3 + 4}',
     },
@@ -61,14 +60,17 @@ var testProperties = [
       calculation: 'nonExistantProperty + 7',
     },
     usesUsed: 5,
+    left: 1,
+    right: 2,
   }),
   clean({
     _id: 'rolledDescriptionId',
     type: 'action',
-    ancestors: [{id: 'charId'}],
     summary: {
       text: 'test roll gets compiled {4 + (2 + 2)} properly',
     },
+    left: 3,
+    right: 4,
   }),
   clean({
     _id: 'numItemsConumedId',
@@ -77,6 +79,8 @@ var testProperties = [
     baseValue: {
       calculation: '3',
     },
+    left: 5,
+    right: 6,
   }),
   clean({
     _id: 'numResourceConumedId',
@@ -85,6 +89,8 @@ var testProperties = [
     baseValue: {
       calculation: '4',
     },
+    left: 7,
+    right: 8,
   }),
   clean({
     _id: 'resourceVarId',
@@ -94,6 +100,8 @@ var testProperties = [
     baseValue: {
       calculation: '9',
     },
+    left: 9,
+    right: 10,
   }),
   clean({
     _id: 'inlineRefResourceId',
@@ -102,6 +110,8 @@ var testProperties = [
     baseValue: {
       calculation: '1 + 5',
     },
+    left: 11,
+    right: 12,
   }),
   clean({
     _id: 'arrowId',
@@ -110,5 +120,7 @@ var testProperties = [
     quantity: 27,
     icon: 'itemIcon',
     color: 'itemColor',
+    left: 13,
+    right: 14,
   }),
 ];

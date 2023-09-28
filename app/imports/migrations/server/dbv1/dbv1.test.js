@@ -124,7 +124,6 @@ const expectedMigratedAttribute = {
   damage: 3,
   value: 17,
   constitutionMod: 2,
-  dirty: true,
 }
 
 const exampleAttack = {
@@ -183,6 +182,7 @@ const expectedMigratedAttack = {
   },
   'attackRoll': {
     calculation: 'dexterity.modifier + proficiencyBonus + 2 - hp.total + hp.value',
+    value: 6,
   },
   'type': 'action',
   'name': 'Claws',
@@ -221,7 +221,6 @@ describe('migrateProperty', function () {
       prop: newAction,
       reversed: true,
     });
-    delete reversedAction.dirty;
     assert.deepEqual(action, exampleAction, 'action should not be bashed');
     assert.deepEqual(exampleAction, reversedAction, 'operation should be reversible');
   });
@@ -237,14 +236,14 @@ describe('migrateProperty', function () {
       'Attribute should match the expected result');
   });
   it('Migrates attacks as expected', function () {
-    const attribute = {
+    const attack = {
       ...exampleAttack
     };
-    const newAttribute = migrateProperty({
+    const newAttack = migrateProperty({
       collection: LibraryNodes,
-      prop: attribute
+      prop: attack
     });
-    assert.deepEqual(newAttribute, expectedMigratedAttack,
-      'Attribute should match the expected result');
+    assert.deepEqual(newAttack, expectedMigratedAttack,
+      'Attack should match the expected result');
   });
 });
