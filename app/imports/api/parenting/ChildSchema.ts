@@ -1,6 +1,19 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
+export interface Reference {
+  collection: string,
+  id: string,
+}
+
+export interface TreeDoc {
+  _id: string,
+  root: Reference,
+  parentId?: string,
+  left: number,
+  right: number,
+}
+
 const RefSchema = new SimpleSchema({
   id: {
     type: String,
@@ -56,19 +69,6 @@ const ChildSchema = new SimpleSchema({
     index: 1,
   }
 });
-
-export interface Reference {
-  collection: string,
-  id: string,
-}
-
-export interface TreeDoc {
-  _id: string,
-  root: Reference,
-  parentId?: string,
-  left: number,
-  right: number,
-}
 
 export const treeDocFields = {
   _id: 1,

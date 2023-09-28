@@ -123,7 +123,8 @@
       "quotes": [
         "error",
         "single"
-      ]
+      ],
+      "@typescript-eslint/no-this-alias": "off"
     }
   }
 }

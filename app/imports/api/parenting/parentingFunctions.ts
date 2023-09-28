@@ -80,7 +80,7 @@ type FilteredDoc = {
 export default async function filterToForest(
   collection: Mongo.Collection<TreeDoc>,
   rootId: string,
-  filter: Mongo.Query<TreeDoc>,
+  filter: Mongo.Selector<TreeDoc>,
   options: Mongo.Options<object> = {},
   includeFilteredDocAncestors = false,
   includeFilteredDocDescendants = false
@@ -200,14 +200,14 @@ export const getFilter = {
    * @param doc A document or array of documents that share a root
    * @returns A query filter that finds all the ancestors of the doc(s)
    */
-  ancestors(doc: TreeDoc): Mongo.Query<TreeDoc> {
+  ancestors(doc: TreeDoc) {
     return {
       'root.id': doc.root.id,
       left: { $lt: doc.left },
       right: { $gt: doc.right },
     };
   },
-  ancestorsOfAll(docs: Array<TreeDoc>): Mongo.Query<TreeDoc> {
+  ancestorsOfAll(docs: Array<TreeDoc>) {
     // The ancestors of no documents is a query that returns nothing
     if (docs.length === 0) {
       return { _id: '' };
@@ -229,14 +229,14 @@ export const getFilter = {
     });
     return filter;
   },
-  descendants(doc: TreeDoc): Mongo.Query<TreeDoc> {
+  descendants(doc: TreeDoc) {
     return {
       'root.id': doc.root.id,
       left: { $gt: doc.left },
       right: { $lt: doc.right },
     };
   },
-  descendantsOfAll(docs: Array<TreeDoc>): Mongo.Query<TreeDoc> {
+  descendantsOfAll(docs: Array<TreeDoc>) {
     // The descendants of no documents is a query that returns nothing
     if (docs.length === 0) {
       return { _id: '' };
@@ -248,7 +248,10 @@ export const getFilter = {
     // Build a filter that selects all descendants
     const filter = {
       'root.id': docs[0].root.id,
-      $or: <object[]>[],
+      $or: <{
+        left: { $gt: number },
+        right: { $lt: number },
+      }[]>[],
     };
     docs.forEach(doc => {
       filter.$or.push({
@@ -258,13 +261,13 @@ export const getFilter = {
     });
     return filter;
   },
-  children(doc: TreeDoc): Mongo.Query<TreeDoc> {
+  children(doc: TreeDoc) {
     return {
       'root.id': doc.root.id,
       parentId: doc._id,
     };
   },
-  parent(doc: TreeDoc): Mongo.Query<TreeDoc> {
+  parent(doc: TreeDoc) {
     return {
       _id: doc.parentId,
     };

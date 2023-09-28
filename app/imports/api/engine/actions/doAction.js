@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import {
-  getProperyAncestors, getPropertyDecendants
+  getPropertyAncestors, getPropertyDescendants
 } from '/imports/api/engine/loadCreatures';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -49,10 +49,10 @@ const doAction = new ValidatedMethod({
       assertEditPermission(target, this.userId);
     });
 
-    const ancestors = getProperyAncestors(creatureId, action._id);
+    const ancestors = getPropertyAncestors(creatureId, action._id);
     ancestors.sort((a, b) => a.order - b.order);
 
-    const properties = getPropertyDecendants(creatureId, action._id);
+    const properties = getPropertyDescendants(creatureId, action._id);
     properties.push(action);
     properties.sort((a, b) => a.order - b.order);
 
