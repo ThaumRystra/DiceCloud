@@ -90,6 +90,7 @@ const expectedSlotFillerUpdate = {
     'fillSlots': true,
     'searchable': true,
     'slotFillImage': 'https://url.to.pic',
+    'type': 'folder'
   },
   $unset: {
     picture: 1,
@@ -127,32 +128,32 @@ const expectedDownMergeUpdate = {
 
 describe('dbv2 Migrate library nodes', function () {
   it('Migrates attacks up', function () {
-    const bulk = stubBulk();
-    migratePropUp(bulk, exampleAttack);
-    const { query, update } = bulk.result();
+    const collection = stubCollection();
+    migratePropUp(exampleAttack, collection);
+    const { query, update } = collection.result();
     assert.deepEqual(query, { _id: 'vw23EnJwBRcXEJg7i' }, 'The query should match the id of the given prop');
     assert.deepEqual(update, expectedAttackUpdate, 'The update should match the expected update');
   });
   it('Migrates props without tags up', function () {
-    const bulk = stubBulk();
-    migratePropUp(bulk, emptyFolderExample);
-    const { query, update, timesFind, timesUpdate } = bulk.result();
+    const collection = stubCollection();
+    migratePropUp(emptyFolderExample, collection);
+    const { query, update, timesFind, timesUpdate } = collection.result();
     assert.isUndefined(query, 'There should be no query on a prop with no tags');
     assert.equal(timesFind, 0, 'Find should be called zero times on a prop with no tags');
     assert.isUndefined(update, 'There should be no update on a prop with no tags');
     assert.equal(timesUpdate, 0, 'Update should be called zero times on a prop with no tags');
   });
   it('Migrates slot fillers up', function () {
-    const bulk = stubBulk();
-    migratePropUp(bulk, exampleSlotFiller);
-    const { query, update } = bulk.result();
+    const collection = stubCollection();
+    migratePropUp(exampleSlotFiller, collection);
+    const { query, update } = collection.result();
     assert.deepEqual(query, { _id: 'DXPYsHKF6888h3hZs' }, 'The query should match the id of the given prop');
     assert.deepEqual(update, expectedSlotFillerUpdate, 'The update should match the expected update');
   });
   it('Merges tags when down migrating', function () {
-    const bulk = stubBulk();
-    migratePropDown(bulk, DownMergeExample);
-    const { query, update } = bulk.result();
+    const collection = stubCollection();
+    migratePropDown(DownMergeExample, collection);
+    const { query, update } = collection.result();
     assert.deepEqual(query, { _id: 'DXPYsHKF6W8Hh3hZs' }, 'The query should match the id of the given prop');
     assert.deepEqual(update, expectedDownMergeUpdate, 'The update should match the expected update');
   });
@@ -175,5 +176,20 @@ function stubBulk() {
     result() {
       return { query, update, timesFind, timesUpdate }
     }
+  }
+}
+
+function stubCollection() {
+  let query, update, timesFind = 0, timesUpdate = 0;
+  return {
+    update(inputQuery, inputUpdate) {
+      query = inputQuery;
+      timesUpdate += 1;
+      update = inputUpdate;
+    },
+    result() {
+      return { query, update, timesFind, timesUpdate }
+    },
+    _name: 'libraryNodes'
   }
 }

@@ -64,7 +64,7 @@ export function migratePropUp(prop, collection) {
   }
 
   // If there are tags, copy them to libraryTags and set findable flags
-  if (Array.isArray(prop.tags) && prop.tags.length && collection === LibraryNodes) {
+  if (Array.isArray(prop.tags) && prop.tags.length && collection?._name === 'libraryNodes') {
     update = update || { $set: {} };
     update.$set.libraryTags = prop.tags;
     update.$set.fillSlots = true;
