@@ -1,4 +1,4 @@
-import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures.js';
@@ -12,7 +12,7 @@ import computeToggleDependencies from './buildComputation/computeToggleDependenc
 import linkCalculationDependencies from './buildComputation/linkCalculationDependencies.js';
 import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
-import CreatureComputation from './CreatureComputation.ts';
+import CreatureComputation from './CreatureComputation';
 import removeSchemaFields from './buildComputation/removeSchemaFields.js';
 
 /**
@@ -86,7 +86,7 @@ export function buildComputationFromProps(properties, creature, variables) {
   });
 
   // Get all the properties as trees based on their ancestors
-  let forest = nodeArrayToTree(properties);
+  let forest = docsToForest(properties);
   // Walk the property trees computing things that need to be inherited
   walkDown(forest, node => {
     computeInactiveStatus(node);
