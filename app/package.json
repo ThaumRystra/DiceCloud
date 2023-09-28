@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/ThaumRystra/DiceCloud"
   },
-  "author": "Stefan Zermatten",
+  "author": "Thaum Rystra",
   "scripts": {
     "run": "meteor",
     "debug": "meteor --inspect",
