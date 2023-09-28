@@ -11,7 +11,7 @@ export default function applyBuffRemover(node, actionContext) {
   // Apply triggers
   applyNodeTriggers(node, 'before', actionContext);
 
-  const prop = node.node;
+  const prop = node.doc
 
   // Log Name
   if (prop.name && !prop.silent) {

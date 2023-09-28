@@ -3,11 +3,11 @@
  * before `spacesLeft` can be computed
  */
 export default function computeSlotQuantityFilled(node, dependencyGraph) {
-  let slot = node.node;
+  let slot = node.doc;
   if (slot.type !== 'propertySlot') return;
   slot.totalFilled = 0;
   node.children.forEach(child => {
-    let childProp = child.node;
+    let childProp = child.doc;
     dependencyGraph.addLink(slot._id, childProp._id, 'slotFill');
     if (
       Number.isFinite(childProp.slotQuantityFilled)

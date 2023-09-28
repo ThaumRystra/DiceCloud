@@ -13,8 +13,8 @@ export default function computeInactiveStatus(node: TreeNode<CreatureProperty>):
   if (!childrenActive(prop)) {
     // Mark children as inactive due to ancestor
     walkDown(node.children, child => {
-      child.node.inactive = true;
-      child.node.deactivatedByAncestor = true;
+      child.doc.inactive = true;
+      child.doc.deactivatedByAncestor = true;
     });
   }
 }
@@ -23,9 +23,8 @@ function isActive(prop: CreatureProperty): boolean {
   if (prop.disabled) return false;
   if (isSpell(prop)) {
     return !!prop.prepared || !!prop.alwaysPrepared;
-  } else {
-    return true;
   }
+  return true;
 }
 
 function childrenActive(prop): boolean {

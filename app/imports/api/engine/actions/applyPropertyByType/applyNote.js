@@ -4,7 +4,7 @@ import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyNote(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
 
   // Log Name, summary
   let content = { name: prop.name };

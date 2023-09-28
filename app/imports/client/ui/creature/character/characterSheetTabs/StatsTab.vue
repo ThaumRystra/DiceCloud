@@ -559,7 +559,7 @@ export default {
       const forest = nodeArrayToTree(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
-        const prop = node.node;
+        const prop = node.doc
         const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ||
           { propPath: prop.type };
         if (propPath) {

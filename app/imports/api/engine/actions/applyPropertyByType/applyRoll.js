@@ -6,7 +6,7 @@ import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyRoll(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
 
   if (prop.roll?.calculation) {
     const logValue = [];

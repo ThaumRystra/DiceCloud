@@ -2,7 +2,7 @@ import walkDown from '/imports/api/engine/computation/utility/walkdown.js';
 import { getEffectTagTargets } from '/imports/api/engine/computation/buildComputation/linkTypeDependencies.js';
 
 export default function computeToggleDependencies(node, dependencyGraph, computation, forest) {
-  const prop = node.node;
+  const prop = node.doc
   // Only for toggles
   if (prop.type !== 'toggle') return;
 
@@ -11,12 +11,12 @@ export default function computeToggleDependencies(node, dependencyGraph, computa
     getEffectTagTargets(prop, computation).forEach(targetId => {
       const target = forest.nodeIndex[targetId];
       if (!target) return;
-      target.node._computationDetails.toggleAncestors.push(prop);
-      dependencyGraph.addLink(target.node._id, prop._id, 'toggle');
+      target.doc._computationDetails.toggleAncestors.push(prop);
+      dependencyGraph.addLink(target.doc._id, prop._id, 'toggle');
       walkDown(target.children, child => {
         // The child nodes depend on the toggle
-        child.node._computationDetails.toggleAncestors.push(prop);
-        dependencyGraph.addLink(child.node._id, prop._id, 'toggle');
+        child.doc._computationDetails.toggleAncestors.push(prop);
+        dependencyGraph.addLink(child.doc._id, prop._id, 'toggle');
       });
     });
   }
@@ -26,7 +26,7 @@ export default function computeToggleDependencies(node, dependencyGraph, computa
 
   walkDown(node.children, child => {
     // The child nodes depend on the toggle
-    child.node._computationDetails.toggleAncestors.push(prop);
-    dependencyGraph.addLink(child.node._id, prop._id, 'toggle');
+    child.doc._computationDetails.toggleAncestors.push(prop);
+    dependencyGraph.addLink(child.doc._id, prop._id, 'toggle');
   });
 }

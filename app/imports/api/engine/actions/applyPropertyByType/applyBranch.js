@@ -8,7 +8,7 @@ export default function applyBranch(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const scope = actionContext.scope;
   const targets = actionContext.targets;
-  const prop = node.node;
+  const prop = node.doc
   switch (prop.branchType) {
     case 'if':
       recalculateCalculation(prop.condition, actionContext);

@@ -17,7 +17,7 @@ import recalculateInlineCalculations from './shared/recalculateInlineCalculation
 
 export default function applyBuff(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
   let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
   // Mark the buff as dirty for recalculation

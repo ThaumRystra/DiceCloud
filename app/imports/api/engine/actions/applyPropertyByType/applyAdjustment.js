@@ -5,7 +5,7 @@ import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyAdjustment(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
   const damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
   if (!prop.amount) {

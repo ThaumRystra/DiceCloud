@@ -15,7 +15,7 @@ import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/ap
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
 
-  const prop = node.node;
+  const prop = node.doc
   const scope = actionContext.scope;
 
   // Skip if there is no parse node to work with

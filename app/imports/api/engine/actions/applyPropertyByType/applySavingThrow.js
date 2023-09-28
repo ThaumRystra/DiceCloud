@@ -8,7 +8,7 @@ import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
 
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
   const originalTargets = actionContext.targets;
 
   let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
