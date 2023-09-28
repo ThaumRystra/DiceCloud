@@ -1,11 +1,11 @@
 import { Migrations } from 'meteor/percolate:migrations';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { union, get } from 'lodash';
-import Libraries from '/imports/api/library/Libraries.js';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 
 // Git version 2.0.52
 // Database version 2

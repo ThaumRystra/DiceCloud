@@ -16,8 +16,8 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
 
 export default {
   meteor: {

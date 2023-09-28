@@ -46,9 +46,9 @@
 </template>
 
 <script lang="js">
-import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon.js'
+import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon'
 
 export default {
   components: {

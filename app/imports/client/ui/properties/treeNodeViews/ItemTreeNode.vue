@@ -25,8 +25,8 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+import PROPERTIES from '/imports/constants/PROPERTIES';
 
 export default {
   mixins: [treeNodeViewMixin],

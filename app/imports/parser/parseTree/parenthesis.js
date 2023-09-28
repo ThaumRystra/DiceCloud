@@ -1,37 +1,37 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
+import resolve, { toString, traverse, map } from '../resolve';
 
 const parenthesis = {
-  create({content}) {
+  create({ content }) {
     return {
       parseType: 'parenthesis',
       content,
     };
   },
-  resolve(fn, node, scope, context){
-    const {result: content} = resolve(fn, node.content, scope, context);
+  resolve(fn, node, scope, context) {
+    const { result: content } = resolve(fn, node.content, scope, context);
     if (
       fn === 'reduce' ||
       content.parseType === 'constant' ||
       content.parseType === 'error'
-    ){
-      return {result: content, context};
+    ) {
+      return { result: content, context };
     } else {
       return {
-        result: parenthesis.create({content}),
+        result: parenthesis.create({ content }),
         context
       };
     }
   },
-  toString(node){
+  toString(node) {
     return `(${toString(node.content)})`;
   },
-  traverse(node, fn){
+  traverse(node, fn) {
     fn(node);
     traverse(node.content, fn);
   },
-  map(node, fn){
+  map(node, fn) {
     const resultingNode = fn(node);
-    if (resultingNode === node){
+    if (resultingNode === node) {
       node.content = map(node.content, fn);
     }
     return resultingNode;

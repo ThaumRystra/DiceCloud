@@ -64,9 +64,9 @@
 </template>
 
 <script lang="js">
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   inject: {

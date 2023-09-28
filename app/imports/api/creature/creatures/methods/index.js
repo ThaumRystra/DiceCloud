@@ -1,5 +1,5 @@
-import '/imports/api/creature/creatures/methods/insertCreature.js';
-import '/imports/api/creature/creatures/methods/removeCreature.js';
-import '/imports/api/creature/creatures/methods/restCreature.js';
-import '/imports/api/creature/creatures/methods/updateCreature.js';
-import '/imports/api/creature/creatures/methods/changeAllowedLibraries.js';
+import '/imports/api/creature/creatures/methods/insertCreature';
+import '/imports/api/creature/creatures/methods/removeCreature';
+import '/imports/api/creature/creatures/methods/restCreature';
+import '/imports/api/creature/creatures/methods/updateCreature';
+import '/imports/api/creature/creatures/methods/changeAllowedLibraries';

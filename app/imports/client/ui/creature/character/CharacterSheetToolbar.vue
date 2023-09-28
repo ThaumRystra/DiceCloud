@@ -176,16 +176,16 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import removeCreature from '/imports/api/creature/creatures/methods/removeCreature';
 import { mapMutations } from 'vuex';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { updateUserSharePermissions } from '/imports/api/sharing/sharing.js';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { updateUserSharePermissions } from '/imports/api/sharing/sharing';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
-import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 
 export default {
   components: {

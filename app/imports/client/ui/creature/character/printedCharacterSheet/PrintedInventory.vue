@@ -73,15 +73,15 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
-import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 import PrintedLineItem from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedLineItem.vue';
 import PrintedContainer from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedContainer.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 
 export default {
   components: {

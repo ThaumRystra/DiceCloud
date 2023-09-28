@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import '/imports/api/sharing/sharing.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import '/imports/api/sharing/sharing';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 let SharingSchema = new SimpleSchema({
   owner: {

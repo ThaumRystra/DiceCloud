@@ -1,6 +1,6 @@
-import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
-import logErrors from './logErrors.js';
+import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation';
+import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode';
+import logErrors from './logErrors';
 
 export default function recalculateCalculation(calc, actionContext, context) {
   if (!calc?.parseNode) return;

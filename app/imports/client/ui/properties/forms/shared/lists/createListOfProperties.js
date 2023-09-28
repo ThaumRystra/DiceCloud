@@ -1,5 +1,5 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 
 export default function createListOfProperties(filter = {}, getNamesWithValues) {
   filter.removed = { $ne: true };

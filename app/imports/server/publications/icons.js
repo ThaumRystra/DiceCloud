@@ -1,4 +1,4 @@
-import Icons from '/imports/api/icons/Icons.js';
+import Icons from '/imports/api/icons/Icons';
 
 Meteor.publish('sampleIcons', function () {
   return Icons.find({}, { limit: 50 });

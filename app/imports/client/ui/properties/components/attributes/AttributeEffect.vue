@@ -41,7 +41,7 @@
 </template>
 
 <script lang="js">
-import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
+import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { isFinite } from 'lodash';

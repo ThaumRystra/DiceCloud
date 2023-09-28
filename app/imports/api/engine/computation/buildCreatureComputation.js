@@ -1,19 +1,19 @@
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures.js';
-import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
-import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
-import linkInventory from './buildComputation/linkInventory.js';
-import walkDown from './utility/walkdown.js';
-import parseCalculationFields from './buildComputation/parseCalculationFields.js';
+import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures';
+import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
+import linkInventory from './buildComputation/linkInventory';
+import walkDown from './utility/walkdown';
+import parseCalculationFields from './buildComputation/parseCalculationFields';
 import computeInactiveStatus from './buildComputation/computeInactiveStatus';
-import computeToggleDependencies from './buildComputation/computeToggleDependencies.js';
-import linkCalculationDependencies from './buildComputation/linkCalculationDependencies.js';
-import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';
-import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled.js';
+import computeToggleDependencies from './buildComputation/computeToggleDependencies';
+import linkCalculationDependencies from './buildComputation/linkCalculationDependencies';
+import linkTypeDependencies from './buildComputation/linkTypeDependencies';
+import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled';
 import CreatureComputation from './CreatureComputation';
-import removeSchemaFields from './buildComputation/removeSchemaFields.js';
+import removeSchemaFields from './buildComputation/removeSchemaFields';
 
 /**
  * Store index of properties

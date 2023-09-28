@@ -38,9 +38,9 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
+import { propsByDocsPath } from '/imports/constants/PROPERTIES';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import Docs from '/imports/api/docs/Docs.js';
+import Docs from '/imports/api/docs/Docs';
 
 export default {
   components: {

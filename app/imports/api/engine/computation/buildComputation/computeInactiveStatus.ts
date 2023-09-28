@@ -1,5 +1,5 @@
 import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
-import walkDown from '/imports/api/engine/computation/utility/walkdown.js';
+import walkDown from '/imports/api/engine/computation/utility/walkdown';
 import { TreeNode } from '/imports/api/parenting/parentingFunctions';
 import { isSpell } from '/imports/api/properties/Spells';
 

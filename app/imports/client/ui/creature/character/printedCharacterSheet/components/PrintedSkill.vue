@@ -46,7 +46,7 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '../../../../../../api/utility/numberToSignedString';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 
 export default {

@@ -1,11 +1,11 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
-import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
+import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
 import ChildSchema, { TreeDoc } from '/imports/api/parenting/ChildSchema';
-import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
-import { storedIconsSchema } from '/imports/api/icons/Icons.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
+import { storedIconsSchema } from '/imports/api/icons/Icons';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 const CreatureProperties: Mongo.Collection<CreatureProperty> = new Mongo.Collection('creatureProperties');
 

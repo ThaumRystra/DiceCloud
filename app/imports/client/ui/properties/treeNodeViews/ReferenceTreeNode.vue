@@ -21,7 +21,7 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
 
 export default {
   name: 'ReferenceTreeNode',

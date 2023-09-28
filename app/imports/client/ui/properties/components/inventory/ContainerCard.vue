@@ -47,7 +47,7 @@ import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
 export default {
   components: {

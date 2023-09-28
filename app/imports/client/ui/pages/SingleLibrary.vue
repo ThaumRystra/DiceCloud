@@ -9,7 +9,7 @@
 <script lang="js">
 import SingleCardLayout from '/imports/client/ui/layouts/SingleCardLayout.vue';
 import LibraryAndNode from '/imports/client/ui/library/LibraryAndNode.vue';
-import Libraries from '/imports/api/library/Libraries.js';
+import Libraries from '/imports/api/library/Libraries';
 
 export default {
   components: {

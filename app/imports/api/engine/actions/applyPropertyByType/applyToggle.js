@@ -1,6 +1,6 @@
-import recalculateCalculation from './shared/recalculateCalculation.js';
+import recalculateCalculation from './shared/recalculateCalculation';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
 
 export default function applyToggle(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);

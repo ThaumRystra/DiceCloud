@@ -2,9 +2,9 @@ import Vue from 'vue';
 //import Vuetify from 'vuetify/lib';
 import Vuetify from 'vuetify/lib/framework';
 import { Scroll, Ripple } from 'vuetify/lib/directives';
-import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
+import SVG_ICONS from '/imports/constants/SVG_ICONS';
 import SvgIconByName from '/imports/client/ui/icons/SvgIconByName.vue';
-import themes from '/imports/client/ui/themes.js';
+import themes from '/imports/client/ui/themes';
 import minifyTheme from 'minify-css-string';
 
 Vue.use(Vuetify, {

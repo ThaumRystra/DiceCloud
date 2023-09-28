@@ -1,6 +1,6 @@
-import operator from '/imports/parser/parseTree/operator.js';
-import { parse } from '/imports/parser/parser.js';
-import logErrors from './logErrors.js';
+import operator from '/imports/parser/parseTree/operator';
+import { parse } from '/imports/parser/parser';
+import logErrors from './logErrors';
 
 export default function applyEffectsToCalculationParseNode(calcObj, actionContext) {
   calcObj.effects?.forEach(effect => {

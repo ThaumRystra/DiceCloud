@@ -1,8 +1,8 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
-import constant from './constant.js';
+import resolve, { toString, traverse, map } from '../resolve';
+import constant from './constant';
 
 const operator = {
-  create({left, right, operator, fn}) {
+  create({ left, right, operator, fn }) {
     return {
       parseType: 'operator',
       left,
@@ -11,11 +11,11 @@ const operator = {
       fn
     };
   },
-  resolve(fn, node, scope, context){
-    const {result: leftNode} = resolve(fn, node.left, scope, context);
-    const {result: rightNode} = resolve(fn, node.right, scope, context);
+  resolve(fn, node, scope, context) {
+    const { result: leftNode } = resolve(fn, node.left, scope, context);
+    const { result: rightNode } = resolve(fn, node.right, scope, context);
     let left, right;
-    if (leftNode.parseType !== 'constant' || rightNode.parseType !== 'constant'){
+    if (leftNode.parseType !== 'constant' || rightNode.parseType !== 'constant') {
       return {
         result: operator.create({
           left: leftNode,
@@ -30,7 +30,7 @@ const operator = {
       right = rightNode.value;
     }
     let result;
-    switch(node.operator){
+    switch (node.operator) {
       case '+': result = left + right; break;
       case '-': result = left - right; break;
       case '*': result = left * right; break;
@@ -42,9 +42,9 @@ const operator = {
       case '|':
       case '||': result = left || right; break;
       case '=':
-      case '==':  result = left == right; break;
+      case '==': result = left == right; break;
       case '===': result = left === right; break;
-      case '!=':  result = left != right; break;
+      case '!=': result = left != right; break;
       case '!==': result = left !== right; break;
       case '>': result = left > right; break;
       case '<': result = left < right; break;
@@ -58,22 +58,22 @@ const operator = {
       context,
     };
   },
-  toString(node){
-    let {left, right, operator} = node;
+  toString(node) {
+    let { left, right, operator } = node;
     // special case of adding a negative number
-    if (operator === '+' && right.valueType === 'number' && right.value < 0){
+    if (operator === '+' && right.valueType === 'number' && right.value < 0) {
       return `${toString(left)} - ${-right.value}`
     }
     return `${toString(left)} ${operator} ${toString(right)}`;
   },
-  traverse(node, fn){
+  traverse(node, fn) {
     fn(node);
     traverse(node.left, fn);
     traverse(node.right, fn);
   },
-  map(node, fn){
+  map(node, fn) {
     const resultingNode = fn(node);
-    if (resultingNode === node){
+    if (resultingNode === node) {
       node.left = map(node.left, fn);
       node.right = map(node.right, fn);
     }

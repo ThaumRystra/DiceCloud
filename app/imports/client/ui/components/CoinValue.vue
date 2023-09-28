@@ -19,7 +19,7 @@
 </template>
 
 <script lang="js">
-import valueToCoins from '/imports/client/ui/utility/valueToCoins.js';
+import valueToCoins from '/imports/client/ui/utility/valueToCoins';
 
 export default {
   props:{

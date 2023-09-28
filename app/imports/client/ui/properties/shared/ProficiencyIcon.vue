@@ -5,7 +5,7 @@
 </template>
 
 <script lang="js">
-import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
+import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 
 export default {
   props: {

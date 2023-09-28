@@ -1,5 +1,5 @@
 import { has } from 'lodash';
-import evaluateCalculation from '../../utility/evaluateCalculation.js';
+import evaluateCalculation from '../../utility/evaluateCalculation';
 
 export default function computePointBuy(computation, node) {
   const prop = node.data;

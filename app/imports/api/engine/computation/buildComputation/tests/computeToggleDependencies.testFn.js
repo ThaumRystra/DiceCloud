@@ -1,8 +1,8 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import clean from '../../utility/cleanProp.testFn.js';
+import clean from '../../utility/cleanProp.testFn';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
   assert.include(
@@ -37,38 +37,38 @@ var testProperties = [
     _id: 'enabledToggleId',
     type: 'toggle',
     enabled: true,
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   clean({
     _id: 'disabledToggleId',
     type: 'toggle',
     disabled: true,
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   clean({
     _id: 'conditionToggleId',
     type: 'toggle',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   // Children
   clean({
     _id: 'enabledToggleChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'enabledToggleId'}],
+    ancestors: [{ id: 'charId' }, { id: 'enabledToggleId' }],
   }),
   clean({
     _id: 'disabledToggleChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'disabledToggleId'}],
+    ancestors: [{ id: 'charId' }, { id: 'disabledToggleId' }],
   }),
   clean({
     _id: 'conditionToggleChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'conditionToggleId'}],
+    ancestors: [{ id: 'charId' }, { id: 'conditionToggleId' }],
   }),
   clean({
     _id: 'conditionToggleGrandChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'conditionToggleId'}, {id: 'conditionToggleChildId'}],
+    ancestors: [{ id: 'charId' }, { id: 'conditionToggleId' }, { id: 'conditionToggleChildId' }],
   }),
 ];

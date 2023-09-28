@@ -1,5 +1,5 @@
-import resolve, { toString } from '../resolve.js';
-import constant from './constant.js';
+import resolve, { toString } from '../resolve';
+import constant from './constant';
 
 const symbol = {
   create({ name }) {

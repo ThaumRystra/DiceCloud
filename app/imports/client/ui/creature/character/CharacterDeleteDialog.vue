@@ -31,10 +31,10 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import removeCreature from '/imports/api/creature/creatures/methods/removeCreature.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import removeCreature from '/imports/api/creature/creatures/methods/removeCreature';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

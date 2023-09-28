@@ -1,5 +1,5 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get } from 'lodash';
 
 const dollarSignRegex = /(\W|^)\$(\w+)/gi;

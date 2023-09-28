@@ -1,7 +1,7 @@
-import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
+import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs';
 import {
   getCreature, getVariables, getPropertiesOfType
-} from '/imports/api/engine/loadCreatures.js';
+} from '/imports/api/engine/loadCreatures';
 import { groupBy, remove } from 'lodash';
 
 export default class ActionContext {

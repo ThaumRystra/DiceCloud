@@ -34,7 +34,7 @@
 </template>
 
 <script lang="js">
-  import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE.js';
+  import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE';
   export default {
     data(){return {
       maintenanceMode: MAINTENANCE_MODE,

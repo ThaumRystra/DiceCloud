@@ -92,11 +92,11 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+import PROPERTIES from '/imports/constants/PROPERTIES';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
 export default {
   components: {

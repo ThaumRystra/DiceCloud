@@ -1,5 +1,5 @@
-import evaluateCalculation from '../../utility/evaluateCalculation.js';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import evaluateCalculation from '../../utility/evaluateCalculation';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
 
 export default function computeCalculation(computation, node) {
   const calcObj = node.data;

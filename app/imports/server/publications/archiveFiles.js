@@ -1,4 +1,4 @@
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
 
 Meteor.publish('archiveCreatureFiles', function () {
   return ArchiveCreatureFiles.find({

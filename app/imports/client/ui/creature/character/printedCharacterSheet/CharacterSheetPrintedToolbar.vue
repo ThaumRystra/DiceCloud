@@ -43,11 +43,11 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import { mapMutations } from 'vuex';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
-import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 
 export default {
   inject: {

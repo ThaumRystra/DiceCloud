@@ -50,8 +50,8 @@
 </template>
 
 <script lang="js">
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 
 export default {
   props: {

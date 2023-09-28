@@ -2,12 +2,12 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import rollDice from '/imports/parser/rollDice.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import rollDice from '/imports/parser/rollDice';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers';
 import ActionContext from '/imports/api/engine/actions/ActionContext';
-import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
+import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',

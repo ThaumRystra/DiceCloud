@@ -1,5 +1,5 @@
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 
 export default function assertHasCharactersSlots(userId) {
   if (characterSlotsRemaining(userId) <= 0) {

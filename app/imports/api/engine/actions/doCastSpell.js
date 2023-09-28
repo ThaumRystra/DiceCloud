@@ -1,14 +1,14 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import {
   getProperyAncestors, getPropertyDecendants
-} from '/imports/api/engine/loadCreatures.js';
+} from '/imports/api/engine/loadCreatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import { doActionWork } from '/imports/api/engine/actions/doAction.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import { doActionWork } from '/imports/api/engine/actions/doAction';
 import ActionContext from '/imports/api/engine/actions/ActionContext';
 
 const doAction = new ValidatedMethod({

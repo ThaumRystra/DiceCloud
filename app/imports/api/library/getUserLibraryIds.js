@@ -1,5 +1,5 @@
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import Libraries from '/imports/api/library/Libraries';
 import { union } from 'lodash';
 
 export default function getUserLibraryIds(userId) {

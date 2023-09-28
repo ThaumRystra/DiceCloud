@@ -1,18 +1,18 @@
 import SimpleSchema from 'simpl-schema';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { parse, prettifyParseError } from '/imports/parser/parser.js';
-import resolve, { toString } from '/imports/parser/resolve.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { parse, prettifyParseError } from '/imports/parser/parser';
+import resolve, { toString } from '/imports/parser/resolve';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 const PER_CREATURE_LOG_LIMIT = 100;
 
 if (Meteor.isServer) {
-  var sendWebhookAsCreature = require('/imports/server/discord/sendWebhook.js').sendWebhookAsCreature;
+  var sendWebhookAsCreature = require('/imports/server/discord/sendWebhook').sendWebhookAsCreature;
 }
 
 let CreatureLogs = new Mongo.Collection('creatureLogs');

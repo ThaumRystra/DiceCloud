@@ -52,10 +52,10 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import { SlotSchema } from '/imports/api/properties/Slots.js';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import { SlotSchema } from '/imports/api/properties/Slots';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {

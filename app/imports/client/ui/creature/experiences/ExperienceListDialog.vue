@@ -87,7 +87,7 @@
 <script lang="js">
 import { format } from 'date-fns';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Experiences, { removeExperience, recomputeExperiences } from '/imports/api/creature/experience/Experiences.js';
+import Experiences, { removeExperience, recomputeExperiences } from '/imports/api/creature/experience/Experiences';
 
 export default {
   components: {

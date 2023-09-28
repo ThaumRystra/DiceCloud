@@ -184,7 +184,3 @@ describe('Document tree filters can fetch other documents based on their positio
     assert.sameMembers(parentIds['dbm'], ['Databases']);
   });
 });
-
-
-
-

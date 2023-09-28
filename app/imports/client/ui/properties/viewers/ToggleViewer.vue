@@ -25,7 +25,7 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
 import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
 
 export default {

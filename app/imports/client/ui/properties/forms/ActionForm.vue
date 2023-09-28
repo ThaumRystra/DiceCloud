@@ -155,7 +155,7 @@
 
 <script lang="js">
 import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
 
 export default {

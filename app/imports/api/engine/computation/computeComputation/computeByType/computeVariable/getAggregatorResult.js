@@ -1,6 +1,6 @@
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
-export default function getAggregatorResult(node){
+export default function getAggregatorResult(node) {
   // Work out the base value as the greater of the deining stat value
   // This baseValue comes from aggregating definitions
   let statBase = node.data.baseValue;
@@ -12,9 +12,9 @@ export default function getAggregatorResult(node){
   if (!aggregator) return statBase;
 
   let base;
-  if (!Number.isFinite(aggregator.base)){
+  if (!Number.isFinite(aggregator.base)) {
     base = statBase || 0;
-  } else if (!Number.isFinite(statBase)){
+  } else if (!Number.isFinite(statBase)) {
     base = aggregator.base || 0;
   } else {
     base = Math.max(aggregator.base, statBase);
@@ -29,9 +29,9 @@ export default function getAggregatorResult(node){
   if (aggregator.set !== undefined) {
     result = aggregator.set;
   }
-  if (!node.data.definingProp?.decimal && Number.isFinite(result)){
+  if (!node.data.definingProp?.decimal && Number.isFinite(result)) {
     result = Math.floor(result);
-  } else if (Number.isFinite(result)){
+  } else if (Number.isFinite(result)) {
     result = stripFloatingPointOddities(result);
   }
 

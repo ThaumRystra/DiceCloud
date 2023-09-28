@@ -31,8 +31,8 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin';
 
 export default {
   mixins: [propertyFormMixin, attributeListMixin],

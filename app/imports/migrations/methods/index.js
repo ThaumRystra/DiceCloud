@@ -1,3 +1,3 @@
-import './migrateTo.js';
-import './validateDatabase.js';
-import './getVersion.js';
+import './migrateTo';
+import './validateDatabase';
+import './getVersion';

@@ -1,11 +1,11 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import {
   assertDocEditPermission,
   assertViewPermission,
-} from '/imports/api/sharing/sharingPermissions.js';
+} from '/imports/api/sharing/sharingPermissions';
 import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
 const updateReferenceNode = new ValidatedMethod({

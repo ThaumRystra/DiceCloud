@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
-import { storedIconsSchema } from '/imports/api/icons/Icons.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import { storedIconsSchema } from '/imports/api/icons/Icons';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
 import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { InlineCalculation } from '/imports/api/properties/subSchemas/inlineCalculationField';
 import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';

@@ -1,6 +1,6 @@
-import constant from './constant.js';
-// import array from './array.js';
-import { toString } from '../resolve.js';
+import constant from './constant';
+// import array from './array';
+import { toString } from '../resolve';
 
 const accessor = {
   create({ name, path }) {

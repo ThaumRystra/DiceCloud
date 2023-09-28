@@ -137,14 +137,14 @@
 </template>
 
 <script lang="js">
-  import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
-  import numberToSignedString from '../../../../api/utility/numberToSignedString.js';
+  import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
+  import numberToSignedString from '../../../../api/utility/numberToSignedString';
   import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
-  import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+  import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
   import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
-  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
-  import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-  import sortEffects from '/imports/client/ui/utility/sortEffects.js';
+  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
+  import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
+  import sortEffects from '/imports/client/ui/utility/sortEffects';
 
   export default {
     components: {

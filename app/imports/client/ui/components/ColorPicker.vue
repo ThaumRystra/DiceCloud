@@ -101,9 +101,9 @@
 </template>
 
 <script lang="js">
-  import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+  import isDarkColor from '/imports/client/ui/utility/isDarkColor';
   import vuetifyColors from 'vuetify/es5/util/colors';
-  import { kebabToCamelCase, camelToKebabCase } from '/imports/client/ui/utility/swapCase.js';
+  import { kebabToCamelCase, camelToKebabCase } from '/imports/client/ui/utility/swapCase';
 
   function colorToHex(color, shade = 'base'){
     if (!color) return;

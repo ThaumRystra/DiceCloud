@@ -1,6 +1,6 @@
 import { ActionBase, ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions';
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export interface Spell extends ActionBase {

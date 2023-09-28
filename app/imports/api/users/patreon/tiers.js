@@ -1,6 +1,6 @@
 import { findLast } from 'lodash';
-import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
-import Invites from '/imports/api/users/Invites.js';
+import getEntitledCents from '/imports/api/users/patreon/getEntitledCents';
+import Invites from '/imports/api/users/Invites';
 const patreonDisabled = !!Meteor.settings?.public?.disablePatreon;
 
 const TIERS = Object.freeze([
@@ -80,14 +80,14 @@ const PATREON_DISABLED_TIER = Object.freeze({
   paidBenefits: true,
 });
 
-export function getTierByEntitledCents(entitledCents = 0){
+export function getTierByEntitledCents(entitledCents = 0) {
   if (patreonDisabled) return PATREON_DISABLED_TIER;
   return findLast(TIERS, tier => entitledCents >= tier.minimumEntitledCents);
 }
 
-export function getUserTier(user){
+export function getUserTier(user) {
   if (!user) throw 'user must be provided';
-  if (typeof user === 'string'){
+  if (typeof user === 'string') {
     user = Meteor.users.findOne(user, {
       fields: {
         'services.patreon': 1,
@@ -99,19 +99,19 @@ export function getUserTier(user){
   const entitledCents = getEntitledCents(user);
   const tier = getTierByEntitledCents(entitledCents);
   if (tier.paidBenefits) return tier;
-  let invite = Invites.findOne({invitee: user._id, isFunded: true});
-  if (invite){
+  let invite = Invites.findOne({ invitee: user._id, isFunded: true });
+  if (invite) {
     return GUEST_TIER;
   } else {
     return tier;
   }
 }
 
-export function assertUserHasPaidBenefits(user){
+export function assertUserHasPaidBenefits(user) {
   let tier = getUserTier(user);
-  if (!tier.paidBenefits){
+  if (!tier.paidBenefits) {
     throw new Meteor.Error('no paid benefits',
-    `The ${tier.name} tier does not have the required benefits`);
+      `The ${tier.name} tier does not have the required benefits`);
   }
 }
 

@@ -99,11 +99,11 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import {
   TriggerSchema, eventOptions, timingOptions, actionPropertyTypeOptions
-} from '/imports/api/properties/Triggers.js';
+} from '/imports/api/properties/Triggers';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {

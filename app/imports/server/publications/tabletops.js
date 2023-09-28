@@ -1,35 +1,35 @@
-import Tabletops from '/imports/api/tabletop/Tabletops.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import Messages from '/imports/api/tabletop/Messages.js';
+import Tabletops from '/imports/api/tabletop/Tabletops';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import Messages from '/imports/api/tabletop/Messages';
 
-Meteor.publish('tabletops', function(){
+Meteor.publish('tabletops', function () {
   var userId = this.userId;
   if (!userId) {
     return [];
   }
   return Tabletops.find({
     $or: [
-      {players: userId},
-      {gameMaster: userId},
+      { players: userId },
+      { gameMaster: userId },
     ],
   });
 });
 
-Meteor.publish('tabletop', function(tabletopId){
+Meteor.publish('tabletop', function (tabletopId) {
   var userId = this.userId;
   if (!userId) {
     return [];
   }
-  this.autorun(function (){
+  this.autorun(function () {
     let tabletopCursor = Tabletops.find({
       _id: tabletopId,
       $or: [
-        {players: userId},
-        {gameMaster: userId},
+        { players: userId },
+        { gameMaster: userId },
       ]
     });
     let tabletop = tabletopCursor.fetch()[0];
-    if (!tabletop){
+    if (!tabletop) {
       return [];
     }
     // Warning, this leaks data to users of the same tabletop who may not have
@@ -55,6 +55,6 @@ Meteor.publish('tabletop', function(tabletopId){
       },
       limit: 100,
     });
-    return [ tabletopCursor, creatureSummaries, recentMessages]
+    return [tabletopCursor, creatureSummaries, recentMessages]
   })
 });

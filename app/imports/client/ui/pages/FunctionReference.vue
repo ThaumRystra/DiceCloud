@@ -42,7 +42,7 @@
 </template>
 
 <script lang="js">
-import functions from '/imports/parser/functions.js';
+import functions from '/imports/parser/functions';
 export default {
   computed:{
     functions(){

@@ -1,9 +1,9 @@
-import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
-import { prettifyParseError, parse } from '/imports/parser/parser.js';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
+import { prettifyParseError, parse } from '/imports/parser/parser';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get, set, unset } from 'lodash';
-import errorNode from '/imports/parser/parseTree/error.js';
-import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
+import errorNode from '/imports/parser/parseTree/error';
+import cyrb53 from '/imports/api/engine/computation/utility/cyrb53';
 
 export default function parseCalculationFields(prop, schemas) {
   discoverInlineCalculationFields(prop, schemas);

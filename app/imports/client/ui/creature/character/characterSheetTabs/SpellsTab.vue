@@ -53,7 +53,7 @@ import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import SpellListCard from '/imports/client/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
 
 export default {

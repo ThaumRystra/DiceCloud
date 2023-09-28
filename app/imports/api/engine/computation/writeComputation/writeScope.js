@@ -1,5 +1,5 @@
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import { EJSON } from 'meteor/ejson';
 
 export default function writeScope(creatureId, computation) {

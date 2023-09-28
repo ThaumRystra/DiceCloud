@@ -1,11 +1,11 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import {
   migrateProperty
-} from './dbv1.js';
+} from './dbv1';
 import {
   assert
 } from 'chai';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 
 const exampleAction = {
   '_id': 'hY5MKZ4ivaoTRpNWy',

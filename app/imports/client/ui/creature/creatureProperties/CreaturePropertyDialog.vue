@@ -71,29 +71,29 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty.js';
-import pullFromProperty from '/imports/api/creature/creatureProperties/methods/pullFromProperty.js';
-import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
-import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
-import duplicateProperty from '/imports/api/creature/creatureProperties/methods/duplicateProperty.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty';
+import pullFromProperty from '/imports/api/creature/creatureProperties/methods/pullFromProperty';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import duplicateProperty from '/imports/api/creature/creatureProperties/methods/duplicateProperty';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import { get, findLast } from 'lodash';
-import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import { getHighestOrder } from '/imports/api/parenting/order.js';
-import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
+import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { getHighestOrder } from '/imports/api/parenting/order';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
-import copyPropertyToLibrary from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary.js';
+import copyPropertyToLibrary from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary';
 
 export default {
   components: {

@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
-import VERSION from '/imports/constants/VERSION.js';
-import { loadCreature } from '/imports/api/engine/loadCreatures.js';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
+import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import computeCreature from '/imports/api/engine/computeCreature';
+import VERSION from '/imports/constants/VERSION';
+import { loadCreature } from '/imports/api/engine/loadCreatures';
 
 let schema = new SimpleSchema({
   creatureId: {

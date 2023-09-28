@@ -1,10 +1,10 @@
-import rollDice from '/imports/parser/rollDice.js';
-import recalculateCalculation from './shared/recalculateCalculation.js';
+import rollDice from '/imports/parser/rollDice';
+import recalculateCalculation from './shared/recalculateCalculation';
 import applyProperty from '../applyProperty';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
-import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
+import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck';
 
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);

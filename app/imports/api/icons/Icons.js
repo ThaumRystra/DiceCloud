@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 let Icons = new Mongo.Collection('icons');
 

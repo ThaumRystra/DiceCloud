@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
 
 // Folders organize a character sheet into a tree, particularly to group things
 // like 'race' and 'background'

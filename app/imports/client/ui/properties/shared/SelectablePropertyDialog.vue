@@ -39,7 +39,7 @@
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

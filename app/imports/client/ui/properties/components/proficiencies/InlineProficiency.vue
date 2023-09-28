@@ -26,7 +26,7 @@
 
 <script lang="js">
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 
 export default {
   components: {

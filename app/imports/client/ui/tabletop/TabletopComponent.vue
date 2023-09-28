@@ -37,13 +37,13 @@
 </template>
 
 <script lang="js">
-import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop.js';
+import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop';
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import TabletopActionCards from '/imports/client/ui/tabletop/TabletopActionCards.vue';
 import MiniCharacterSheet from '/imports/client/ui/creature/character/MiniCharacterSheet.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

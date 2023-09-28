@@ -15,7 +15,7 @@
 </template>
 
 <script lang="js">
-import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
+import { getPropertyIcon } from '/imports/constants/PROPERTIES';
 
 export default {
   props: {

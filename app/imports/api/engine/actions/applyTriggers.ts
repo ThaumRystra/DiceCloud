@@ -1,10 +1,10 @@
-import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js';
-import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations.js';
-import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
+import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
+import { getPropertyDecendants } from '/imports/api/engine/loadCreatures';
 import { TreeNode, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import applyProperty from '/imports/api/engine/actions/applyProperty';
 import { difference, intersection } from 'lodash';
-import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 
 export function applyNodeTriggers(node: TreeNode<any>, timing, actionContext) {
   const prop = node.doc;

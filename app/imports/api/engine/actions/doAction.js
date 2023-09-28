@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import {
   getProperyAncestors, getPropertyDecendants
-} from '/imports/api/engine/loadCreatures.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+} from '/imports/api/engine/loadCreatures';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import applyProperty from './applyProperty';
 import ActionContext from '/imports/api/engine/actions/ActionContext';

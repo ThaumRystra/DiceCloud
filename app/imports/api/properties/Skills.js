@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
-import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema';
 
 /*
  * Skills are anything that results in a modifier to be added to a D20

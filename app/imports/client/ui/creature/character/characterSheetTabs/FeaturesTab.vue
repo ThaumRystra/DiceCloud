@@ -35,7 +35,7 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import FeatureCard from '/imports/client/ui/properties/components/features/FeatureCard.vue';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 
 export default {
   components: {

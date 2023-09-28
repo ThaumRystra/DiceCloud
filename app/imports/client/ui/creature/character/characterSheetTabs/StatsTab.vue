@@ -390,9 +390,9 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
 import AttributeCard from '/imports/client/ui/properties/components/attributes/AttributeCard.vue';
 import AbilityListTile from '/imports/client/ui/properties/components/attributes/AbilityListTile.vue';
@@ -407,10 +407,10 @@ import ToggleCard from '/imports/client/ui/properties/components/toggles/ToggleC
 import BuffListItem from '/imports/client/ui/properties/components/buffs/BuffListItem.vue';
 import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
 import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import { get, set, uniqBy } from 'lodash';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js'
+import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree'
 
 function walkDown(forest, callback){
   let stack = [...forest];

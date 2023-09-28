@@ -1,4 +1,4 @@
-import { migratePropUp, migratePropDown } from './dbv2.js';
+import { migratePropUp, migratePropDown } from './dbv2';
 import { assert } from 'chai';
 
 const exampleAttack = {

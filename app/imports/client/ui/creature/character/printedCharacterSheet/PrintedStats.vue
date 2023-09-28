@@ -351,11 +351,11 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import PrintedAction from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '../../../../../api/utility/numberToSignedString';
 import PrintedSkill from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSkill.vue';
 import PrintedDamageMultipliers from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedDamageMultipliers.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';

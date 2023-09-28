@@ -14,7 +14,7 @@
 </template>
 
 <script lang="js">
-import restCreature from '/imports/api/creature/creatures/methods/restCreature.js';
+import restCreature from '/imports/api/creature/creatures/methods/restCreature';
 
 export default {
   inject: {

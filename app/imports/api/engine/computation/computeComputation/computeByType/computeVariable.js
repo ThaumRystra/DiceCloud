@@ -1,11 +1,11 @@
-import aggregate from './computeVariable/aggregate/index.js';
-import computeVariableAsAttribute from './computeVariable/computeVariableAsAttribute.js';
-import computeVariableAsSkill from './computeVariable/computeVariableAsSkill.js';
-import computeVariableAsConstant from './computeVariable/computeVariableAsConstant.js';
-import computeVariableAsClass from './computeVariable/computeVariableAsClass.js';
-import computeVariableAsToggle from './computeVariable/computeVariableAsToggle.js';
-import computeImplicitVariable from './computeVariable/computeImplicitVariable.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import aggregate from './computeVariable/aggregate/index';
+import computeVariableAsAttribute from './computeVariable/computeVariableAsAttribute';
+import computeVariableAsSkill from './computeVariable/computeVariableAsSkill';
+import computeVariableAsConstant from './computeVariable/computeVariableAsConstant';
+import computeVariableAsClass from './computeVariable/computeVariableAsClass';
+import computeVariableAsToggle from './computeVariable/computeVariableAsToggle';
+import computeImplicitVariable from './computeVariable/computeImplicitVariable';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
 
 export default function computeVariable(computation, node) {
   const scope = computation.scope;

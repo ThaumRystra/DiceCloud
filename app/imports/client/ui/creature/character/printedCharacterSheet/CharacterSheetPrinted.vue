@@ -83,13 +83,13 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PrintedStats from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedStats.vue';
 import PrintedInventory from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedInventory.vue';
 import PrintedSpells from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedSpells.vue';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import QrcodeVue from 'qrcode.vue'
 
 export default {

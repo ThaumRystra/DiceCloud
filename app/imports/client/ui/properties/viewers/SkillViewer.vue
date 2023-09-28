@@ -122,14 +122,14 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
-import numberToSignedString from '../../../../api/utility/numberToSignedString.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
+import numberToSignedString from '../../../../api/utility/numberToSignedString';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/client/ui/properties/components/skills/SkillProficiency.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
-import sortEffects from '/imports/client/ui/utility/sortEffects.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
+import sortEffects from '/imports/client/ui/utility/sortEffects';
 import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
 
 export default {

@@ -1,49 +1,49 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
-import constant from './constant.js';
+import resolve, { toString, traverse, map } from '../resolve';
+import constant from './constant';
 
 const array = {
-  create({values}) {
+  create({ values }) {
     return {
       parseType: 'array',
       values,
     };
   },
-  fromConstantArray(array){
-    let values = array.map( value => {
+  fromConstantArray(array) {
+    let values = array.map(value => {
       let valueType = typeof value;
       if (
         valueType === 'string' ||
         valueType === 'number' ||
         valueType === 'boolean' ||
         valueType === 'undefined'
-      ){
-        return constant.create({value, valueType});
+      ) {
+        return constant.create({ value, valueType });
       } else {
         throw `Unexpected type in constant array: ${valueType}`
       }
     });
-    return array.create({values});
+    return array.create({ values });
   },
-  resolve(fn, node, scope, context){
+  resolve(fn, node, scope, context) {
     let values = node.values.map(node => {
       let { result } = resolve(fn, node, scope, context);
       return result;
     });
     return {
-      result: array.create({values}),
+      result: array.create({ values }),
       context,
     };
   },
-  toString(node){
+  toString(node) {
     return `[${node.values.map(value => toString(value)).join(', ')}]`;
   },
-  traverse(node, fn){
+  traverse(node, fn) {
     fn(node);
     node.values.forEach(value => traverse(value, fn));
   },
-  map(node, fn){
+  map(node, fn) {
     const resultingNode = fn(node);
-    if (resultingNode === node){
+    if (resultingNode === node) {
       node.values = node.values.map(value => map(value, fn));
     }
     return resultingNode;

@@ -1,4 +1,4 @@
-import constant from './constant.js';
+import constant from './constant';
 
 const rollArray = {
   create({ values, diceSize, diceNum }) {

@@ -29,8 +29,8 @@
 <script lang="js">
 import draggable from 'vuedraggable';
 import ItemListTile from '/imports/client/ui/properties/components/inventory/ItemListTile.vue';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 
 export default {
   components: {

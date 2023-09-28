@@ -77,14 +77,14 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
 import ArchiveButton from '/imports/client/ui/creature/creatureList/ArchiveButton.vue';
-import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
 
 const characterTransform = function (char) {

@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema.js';
+import ResultsSchema from '/imports/api/properties/subSchemas/ResultsSchema';
 
 let RollResultsSchema = new SimpleSchema({
   _id: {

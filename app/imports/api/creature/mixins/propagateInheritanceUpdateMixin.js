@@ -3,7 +3,7 @@ import {
   updateDescendants,
 } from '/imports/api/parenting/parentingFunctions';
 import { inheritedFields } from '/imports/api/parenting/ChildSchema';
-import MONGO_OPERATORS from '/imports/constants/MONGO_OPERATORS.js';
+import MONGO_OPERATORS from '/imports/constants/MONGO_OPERATORS';
 
 // This mixin can be safely applied to all update methods which are validated
 // with the updateSchemaMixin. It will propagate updates to fields which

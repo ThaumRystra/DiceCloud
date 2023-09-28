@@ -1,8 +1,8 @@
-import computeCreatureComputation from './computeCreatureComputation.js';
-import { buildComputationFromProps } from './buildCreatureComputation.js';
+import computeCreatureComputation from './computeCreatureComputation';
+import { buildComputationFromProps } from './buildCreatureComputation';
 import { assert } from 'chai';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import computeTests from './computeComputation/tests/index.js';
+import computeTests from './computeComputation/tests/index';
 
 describe('Compute compuation', function () {
   it('Computes something at all', function () {

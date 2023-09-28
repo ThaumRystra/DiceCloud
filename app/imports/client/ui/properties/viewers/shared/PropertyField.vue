@@ -85,7 +85,7 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import InlineEffect from '/imports/client/ui/properties/components/effects/InlineEffect.vue';
 import InlineProficiency from '/imports/client/ui/properties/components/proficiencies/InlineProficiency.vue';
 

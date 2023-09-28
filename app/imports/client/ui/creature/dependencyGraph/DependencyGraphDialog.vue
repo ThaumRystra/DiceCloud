@@ -13,12 +13,12 @@
 </template>
 
 <script lang="js">
-import buildCreatureComputation from '/imports/api/engine/computation/buildCreatureComputation.js';
+import buildCreatureComputation from '/imports/api/engine/computation/buildCreatureComputation';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import computeCreatureComputation from '/imports/api/engine/computation/computeCreatureComputation.js';
+import computeCreatureComputation from '/imports/api/engine/computation/computeCreatureComputation';
 import cytoscape from 'cytoscape';
 import klay from 'cytoscape-klay';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import PROPERTIES from '/imports/constants/PROPERTIES';
 
 cytoscape.use(klay);
 

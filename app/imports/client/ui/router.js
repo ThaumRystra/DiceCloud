@@ -1,6 +1,6 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
-import { acceptInviteToken } from '/imports/api/users/Invites.js';
-import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE.js';
+import { acceptInviteToken } from '/imports/api/users/Invites';
+import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE';
 // Components
 const Home = () => import('/imports/client/ui/pages/Home.vue');
 const About = () => import('/imports/client/ui/pages/About.vue');

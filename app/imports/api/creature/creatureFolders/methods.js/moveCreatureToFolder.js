@@ -1,4 +1,4 @@
-import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 
@@ -10,33 +10,33 @@ const moveCreatureToFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({creatureId, folderId}) {
+  run({ creatureId, folderId }) {
     // Ensure logged in
     let userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('creatureFolders.methods.updateName.denied',
-      'You need to be logged in to remove a folder');
+        'You need to be logged in to remove a folder');
     }
     // Check that this folder is owned by the user
-    if (folderId){
+    if (folderId) {
       let existingFolder = CreatureFolders.findOne(folderId);
-      if (existingFolder.owner !== userId){
+      if (existingFolder.owner !== userId) {
         throw new Meteor.Error('creatureFolders.methods.updateName.denied',
-        'This folder does not belong to you');
+          'This folder does not belong to you');
       }
     }
     // Remove from other folders
     CreatureFolders.update({
       owner: userId
     }, {
-      $pull: {creatures: creatureId},
+      $pull: { creatures: creatureId },
     }, {
       multi: true,
     });
-    if (folderId){
+    if (folderId) {
       // Add to this folder
       CreatureFolders.update(folderId, {
-        $addToSet: {creatures: creatureId},
+        $addToSet: { creatures: creatureId },
       });
     }
   },

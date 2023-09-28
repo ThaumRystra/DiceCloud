@@ -61,9 +61,9 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import DependencyLoopError from '/imports/client/ui/creature/character/errors/DependencyLoopError.vue';
-import updateCreature from '/imports/api/creature/creatures/methods/updateCreature.js';
+import updateCreature from '/imports/api/creature/creatures/methods/updateCreature';
 
 export default {
   components: {

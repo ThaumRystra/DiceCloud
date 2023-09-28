@@ -1,16 +1,16 @@
 import { some, intersection, difference, remove, includes } from 'lodash';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
-import resolve, { Context, toString } from '/imports/parser/resolve.js';
-import logErrors from './shared/logErrors.js';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs';
+import resolve, { Context, toString } from '/imports/parser/resolve';
+import logErrors from './shared/logErrors';
+import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import {
   getPropertiesOfType
-} from '/imports/api/engine/loadCreatures.js';
+} from '/imports/api/engine/loadCreatures';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
-import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
-import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/applySavingThrow.js';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
+import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/applySavingThrow';
 
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);

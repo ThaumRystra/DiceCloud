@@ -84,7 +84,7 @@
 * character comes from.
 **/
 import { canBeParent } from '/imports/api/parenting/parentingFunctions';
-import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
+import { getPropertyIcon } from '/imports/constants/PROPERTIES';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { some } from 'lodash';
 

@@ -1,6 +1,6 @@
 import { EJSON } from 'meteor/ejson';
 import createGraph, { Graph } from 'ngraph.graph';
-import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 
 interface CreatureProperty {
   _id: string;

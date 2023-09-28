@@ -26,9 +26,9 @@
 </template>
 
 <script lang="js">
-import nodesToTree from '/imports/api/parenting/nodesToTree.js'
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
+import nodesToTree from '/imports/api/parenting/nodesToTree'
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 
 export default {

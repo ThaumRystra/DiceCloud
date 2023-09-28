@@ -1,4 +1,4 @@
-import { traverse } from '/imports/parser/resolve.js';
+import { traverse } from '/imports/parser/resolve';
 
 export default function linkCalculationDependencies(dependencyGraph, prop, { propsById }) {
   prop._computationDetails.calculations.forEach(calcObj => {

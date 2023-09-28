@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeCreature from './computeCreature';

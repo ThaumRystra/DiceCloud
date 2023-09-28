@@ -67,8 +67,8 @@
 <script lang="js">
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 import draggable from 'vuedraggable';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

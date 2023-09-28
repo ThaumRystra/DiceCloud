@@ -58,8 +58,8 @@
 <script lang="js">
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import romanize from '/imports/client/ui/utility/romanize.js';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import romanize from '/imports/client/ui/utility/romanize';
 
 const levelText = [
   'cantrip', '1st-level', '2nd-level', '3rd-level', '4th-level', '5th-level',

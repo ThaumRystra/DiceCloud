@@ -1,6 +1,6 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import clean from '../../utility/cleanProp.testFn.js';
+import clean from '../../utility/cleanProp.testFn';
 
 export default function () {
   const computation = buildComputationFromProps(testProperties);

@@ -11,7 +11,7 @@
 
 <script lang="js">
 import { debounce } from 'lodash';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   inject: {

@@ -107,8 +107,8 @@
 <script lang="js">
 import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {

@@ -43,7 +43,7 @@
 </template>
 
 <script lang="js">
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
+import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
 export default {

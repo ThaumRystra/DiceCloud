@@ -17,7 +17,7 @@
 </template>
 
 <script lang="js">
-import Messages, { sendMessage } from '/imports/api/tabletop/Messages.js';
+import Messages, { sendMessage } from '/imports/api/tabletop/Messages';
 export default {
   props: {
     tabletopId: {

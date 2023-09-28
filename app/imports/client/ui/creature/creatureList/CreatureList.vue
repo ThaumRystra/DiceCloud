@@ -28,8 +28,8 @@
 <script lang="js">
   import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
   import draggable from 'vuedraggable';
-  import moveCreatureToFolder from '/imports/api/creature/creatureFolders/methods.js/moveCreatureToFolder.js';
-  import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+  import moveCreatureToFolder from '/imports/api/creature/creatureFolders/methods.js/moveCreatureToFolder';
+  import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
   export default {
     components: {

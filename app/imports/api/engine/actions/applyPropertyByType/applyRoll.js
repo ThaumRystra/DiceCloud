@@ -1,7 +1,7 @@
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import logErrors from './shared/logErrors.js';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
-import resolve, { toString } from '/imports/parser/resolve.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import logErrors from './shared/logErrors';
+import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode';
+import resolve, { toString } from '/imports/parser/resolve';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyRoll(node, actionContext) {

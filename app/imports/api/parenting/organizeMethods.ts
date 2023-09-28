@@ -4,8 +4,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { changeParent, fetchDocByRef, getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 
 const organizeDoc = new ValidatedMethod({
   name: 'organize.organizeDoc',

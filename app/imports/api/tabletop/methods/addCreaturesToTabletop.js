@@ -1,10 +1,10 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertUserInTabletop } from './shared/tabletopPermissions.js';
-import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
-import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { assertUserInTabletop } from './shared/tabletopPermissions';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
+import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 
 const addCreaturesToTabletop = new ValidatedMethod({
 
@@ -30,23 +30,23 @@ const addCreaturesToTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({tabletopId, creatureIds}) {
+  run({ tabletopId, creatureIds }) {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.addCreatures.denied',
-      'You need to be logged in to remove a tabletop');
+        'You need to be logged in to remove a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
     assertUserInTabletop(tabletopId, this.userId);
     assertAdmin(this.userId);
 
     Creatures.update({
-      _id: {$in: creatureIds},
+      _id: { $in: creatureIds },
       $or: [
-        {writers: this.userId},
-        {owner: this.userId},
+        { writers: this.userId },
+        { owner: this.userId },
       ],
     }, {
-      $set: {tabletop: tabletopId},
+      $set: { tabletop: tabletopId },
     }, {
       multi: true,
     });

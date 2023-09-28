@@ -1,4 +1,4 @@
-import resolve, { toString } from '/imports/parser/resolve.js';
+import resolve, { toString } from '/imports/parser/resolve';
 
 export default function evaluateCalculation(calculation, scope, givenContext) {
   const parseNode = calculation.parseNode;

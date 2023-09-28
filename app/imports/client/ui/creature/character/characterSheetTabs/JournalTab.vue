@@ -34,11 +34,11 @@
 
 <script lang="js">
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/client/ui/creature/character/CreatureSummary.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 
 export default {
   components: {

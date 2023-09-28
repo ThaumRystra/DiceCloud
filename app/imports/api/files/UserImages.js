@@ -1,8 +1,8 @@
 let createS3FilesCollection;
 if (Meteor.isServer) {
-  createS3FilesCollection = require('/imports/api/files/server/s3FileStorage.js').createS3FilesCollection
+  createS3FilesCollection = require('/imports/api/files/server/s3FileStorage').createS3FilesCollection
 } else {
-  createS3FilesCollection = require('/imports/api/files/client/s3FileStorage.js').createS3FilesCollection
+  createS3FilesCollection = require('/imports/api/files/client/s3FileStorage').createS3FilesCollection
 }
 
 const UserImages = createS3FilesCollection({

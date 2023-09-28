@@ -1,9 +1,9 @@
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js'
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties'
 
 const saveListMixin = {
   meteor: {
-    saveList(){
-      return createListOfProperties({type: 'skill', skillType: 'save'});
+    saveList() {
+      return createListOfProperties({ type: 'skill', skillType: 'save' });
     },
   },
 };

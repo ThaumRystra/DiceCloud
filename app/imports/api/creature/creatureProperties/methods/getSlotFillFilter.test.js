@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js';
+import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter';
 
 describe('Slot fill filter', function () {
 

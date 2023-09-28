@@ -1,5 +1,5 @@
 import { JsonRoutes } from 'meteor/simple:json-routes';
-import authenticateMeteorUserByToken from './middleware/authenticateUserByToken.js';
+import authenticateMeteorUserByToken from './middleware/authenticateUserByToken';
 /**
  * Login with username/email and password:
  *   POST /api/login

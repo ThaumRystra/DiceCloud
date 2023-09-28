@@ -86,8 +86,8 @@
 
 <script lang="js">
 import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
-import skillListMixin from '/imports/client/ui/properties/forms/shared/lists/skillListMixin.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import skillListMixin from '/imports/client/ui/properties/forms/shared/lists/skillListMixin';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 export default {

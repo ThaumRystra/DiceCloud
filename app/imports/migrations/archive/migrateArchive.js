@@ -1,6 +1,6 @@
-import migrateTo1 from './migrateArchiveTo1.js';
-import migrate1To2 from './migrateArchive1To2.js';
-import cleanAt2 from './cleanArchiveAt2.js';
+import migrateTo1 from './migrateArchiveTo1';
+import migrate1To2 from './migrateArchive1To2';
+import cleanAt2 from './cleanArchiveAt2';
 
 /* eslint no-fallthrough: "off" -- Using switch fallthrough to run all
 migration steps after the current version of the file. */

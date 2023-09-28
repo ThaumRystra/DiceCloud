@@ -101,7 +101,7 @@
 
 <script lang="js">
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
 export default {
   components: {
     CoinValue,

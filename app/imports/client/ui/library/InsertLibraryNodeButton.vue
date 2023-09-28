@@ -13,8 +13,8 @@
 </template>
 
 <script lang="js">
-import { insertNode } from '/imports/api/library/LibraryNodes.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import { insertNode } from '/imports/api/library/LibraryNodes';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
 
 export default {
   props: {

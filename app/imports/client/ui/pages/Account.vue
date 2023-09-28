@@ -229,13 +229,13 @@
 </template>
 
 <script lang="js">
-  import router from '/imports/client/ui/router.js';
-  import getEntitledCents from '/imports/api/users/patreon/getEntitledCents.js';
-  import Invites from '/imports/api/users/Invites.js';
-  import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon.js'
-  import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-  import addEmail from '/imports/api/users/methods/addEmail.js';
-  import removeEmail from '/imports/api/users/methods/removeEmail.js';
+  import router from '/imports/client/ui/router';
+  import getEntitledCents from '/imports/api/users/patreon/getEntitledCents';
+  import Invites from '/imports/api/users/Invites';
+  import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon'
+  import { getUserTier } from '/imports/api/users/patreon/tiers';
+  import addEmail from '/imports/api/users/methods/addEmail';
+  import removeEmail from '/imports/api/users/methods/removeEmail';
   import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
   import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
 

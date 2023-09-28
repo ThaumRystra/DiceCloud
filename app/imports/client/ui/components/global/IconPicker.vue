@@ -85,8 +85,8 @@
 
 <script lang="js">
 import SvgIcon from '/imports/client/ui/components/global/SvgIcon.vue';
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin.js';
-import { findIcons } from '/imports/api/icons/Icons.js';
+import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+import { findIcons } from '/imports/api/icons/Icons';
 
 export default {
   components: {

@@ -2,8 +2,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
 const adjustQuantity = new ValidatedMethod({
   name: 'creatureProperties.adjustQuantity',

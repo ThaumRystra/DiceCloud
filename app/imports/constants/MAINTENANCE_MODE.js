@@ -1,5 +1,5 @@
 import { Migrations } from 'meteor/percolate:migrations';
-import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
+import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
 
 if (Meteor.isServer) {
   Meteor.startup(() => {

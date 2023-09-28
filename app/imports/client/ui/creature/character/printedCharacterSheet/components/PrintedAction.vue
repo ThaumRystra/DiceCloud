@@ -83,8 +83,8 @@
 </template>
 
 <script lang="js">
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
@@ -93,8 +93,8 @@ import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
-import resolve, { Context, toString } from '/imports/parser/resolve.js';
+import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode';
+import resolve, { Context, toString } from '/imports/parser/resolve';
 
 export default {
   components: {

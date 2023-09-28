@@ -103,8 +103,8 @@
 </template>
 
 <script lang="js">
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import escapeRegex from '/imports/api/utility/escapeRegex.js';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import escapeRegex from '/imports/api/utility/escapeRegex';
 
 const filterOptions = [];
 for (let key in PROPERTIES) {

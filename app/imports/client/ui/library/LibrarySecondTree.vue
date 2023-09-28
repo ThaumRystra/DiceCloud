@@ -76,8 +76,8 @@
 <script lang="js">
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
 import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
-import Libraries from '/imports/api/library/Libraries.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import Libraries from '/imports/api/library/Libraries';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
 export default {
   components: {

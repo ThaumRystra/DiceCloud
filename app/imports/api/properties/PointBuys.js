@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
 
 /*
  * PointBuys are reason-value attached to skills and abilities

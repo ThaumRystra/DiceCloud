@@ -21,7 +21,7 @@
 <script lang="js">
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import ResourceCardContent from '/imports/client/ui/properties/components/attributes/ResourceCardContent.vue';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 
 export default {
   components: {

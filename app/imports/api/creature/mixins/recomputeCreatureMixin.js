@@ -1,8 +1,8 @@
-import computeCreature from '/imports/api/engine/computeCreature.js';
+import computeCreature from '/imports/api/engine/computeCreature';
 
-export default function recomputeCreatureMixin(methodOptions){
+export default function recomputeCreatureMixin(methodOptions) {
   let runFunc = methodOptions.run;
-  methodOptions.run = function({charId}){
+  methodOptions.run = function ({ charId }) {
     const result = runFunc.apply(this, arguments);
     if (
       methodOptions.skipRecompute &&

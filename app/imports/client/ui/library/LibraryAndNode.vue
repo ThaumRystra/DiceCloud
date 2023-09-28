@@ -113,14 +113,14 @@
 import TreeDetailLayout from '/imports/client/ui/components/TreeDetailLayout.vue';
 import LibraryBrowser from '/imports/client/ui/library/LibraryBrowser.vue';
 import LibraryNodeDialog from '/imports/client/ui/library/LibraryNodeDialog.vue';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import Libraries from '/imports/api/library/Libraries';
 import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
 import InsertLibraryNodeButton from '/imports/client/ui/library/InsertLibraryNodeButton.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import TreeSearchInput from '/imports/client/ui/components/tree/TreeSearchInput.vue';
 import LibrarySecondTree from '/imports/client/ui/library/LibrarySecondTree.vue';
 

@@ -1,17 +1,17 @@
-import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
-import recalculateCalculation from './shared/recalculateCalculation.js';
-import rollDice from '/imports/parser/rollDice.js';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations';
+import recalculateCalculation from './shared/recalculateCalculation';
+import rollDice from '/imports/parser/rollDice';
 import applyProperty from '../applyProperty';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
-import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature.js';
+import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature';
 import { TreeNode } from '/imports/api/parenting/parentingFunctions';
 import { Action } from '/imports/api/properties/Actions';
-import { LogContent } from '/imports/api/creature/log/LogContentSchema.js';
-import { Item } from '/imports/api/properties/Items.js';
+import { LogContent } from '/imports/api/creature/log/LogContentSchema';
+import { Item } from '/imports/api/properties/Items';
 
 interface Ammo extends Item {
   type: 'ammo'

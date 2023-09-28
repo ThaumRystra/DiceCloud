@@ -41,9 +41,9 @@
 </template>
 
 <script lang="js">
-  import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
+  import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
   import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
-  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
+  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 
   export default {
     components: {

@@ -28,9 +28,9 @@
 </template>
 
 <script lang="js">
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import updateFileStorageUsed from '/imports/api/users/methods/updateFileStorageUsed.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import updateFileStorageUsed from '/imports/api/users/methods/updateFileStorageUsed';
 import prettyBytes from 'pretty-bytes';
 
 export default {

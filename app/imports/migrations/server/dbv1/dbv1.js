@@ -1,9 +1,9 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import transformFields from '/imports/migrations/server/transformFields.js';
-import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import transformFields from '/imports/migrations/server/transformFields';
+import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 // Git version 2.0-beta.33
 // Database version 1

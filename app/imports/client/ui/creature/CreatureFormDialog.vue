@@ -33,11 +33,11 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import updateCreature from '/imports/api/creature/creatures/methods/updateCreature.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import updateCreature from '/imports/api/creature/creatures/methods/updateCreature';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import CreatureForm from '/imports/client/ui/creature/CreatureForm.vue'
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
 
 export default {

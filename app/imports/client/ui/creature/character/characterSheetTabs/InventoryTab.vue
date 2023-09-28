@@ -107,17 +107,17 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/client/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
-import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 
 export default {
   components: {

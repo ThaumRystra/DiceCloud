@@ -1,5 +1,5 @@
-import walkDown from '/imports/api/engine/computation/utility/walkdown.js';
-import { getEffectTagTargets } from '/imports/api/engine/computation/buildComputation/linkTypeDependencies.js';
+import walkDown from '/imports/api/engine/computation/utility/walkdown';
+import { getEffectTagTargets } from '/imports/api/engine/computation/buildComputation/linkTypeDependencies';
 
 export default function computeToggleDependencies(node, dependencyGraph, computation, forest) {
   const prop = node.doc

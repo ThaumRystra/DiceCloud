@@ -33,12 +33,12 @@
 </template>
 
 <script lang="js">
-import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { parse, prettifyParseError } from '/imports/parser/parser.js';
-import resolve, { toString } from '/imports/parser/resolve.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { parse, prettifyParseError } from '/imports/parser/parser';
+import resolve, { toString } from '/imports/parser/resolve';
 import LogEntry from '/imports/client/ui/log/LogEntry.vue';
 
 export default {

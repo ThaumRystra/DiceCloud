@@ -2,20 +2,20 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import {
   assertEditPermission,
   assertDocEditPermission,
   assertCopyPermission
-} from '/imports/api/sharing/sharingPermissions.js';
+} from '/imports/api/sharing/sharingPermissions';
 import {
   setLineageOfDocs,
   getAncestry,
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import Libraries from '/imports/api/library/Libraries.js';
+import Libraries from '/imports/api/library/Libraries';
 const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const copyPropertyToLibrary = new ValidatedMethod({

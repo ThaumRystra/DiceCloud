@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
 
 // Classes are like slots, except they only take class levels and enforce that
 // lower levels are taken before higher levels
@@ -40,7 +40,7 @@ let ClassSchema = createPropertySchema({
   'extraTags.$._id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoValue(){
+    autoValue() {
       if (!this.isSet) return Random.id();
     }
   },
@@ -74,7 +74,7 @@ const ComputedOnlyClassSchema = createPropertySchema({
     type: 'computedOnlyField',
     optional: true,
   },
-  
+
   // Denormalised fields
   level: {
     type: SimpleSchema.Integer,

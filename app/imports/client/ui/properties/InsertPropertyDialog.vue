@@ -194,17 +194,17 @@
 </template>
 
 <script lang="js">
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
-import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin.js';
-import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
-import Libraries from '/imports/api/library/Libraries.js';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
+import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin';
+import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex';
+import Libraries from '/imports/api/library/Libraries';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
-import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import SimpleSchema from 'simpl-schema';
 

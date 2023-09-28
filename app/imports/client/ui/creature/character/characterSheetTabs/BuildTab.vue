@@ -199,18 +199,18 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CharacterErrors from '/imports/client/ui/creature/character/errors/CharacterErrors.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {

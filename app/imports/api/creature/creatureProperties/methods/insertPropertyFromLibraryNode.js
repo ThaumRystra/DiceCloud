@@ -2,17 +2,17 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import {
   setLineageOfDocs,
   getAncestry,
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
+import { setDocToLastOrder } from '/imports/api/parenting/order';
 import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import { union } from 'lodash';
 

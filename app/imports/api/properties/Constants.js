@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
 import {
   parse,
   prettifyParseError,
-} from '/imports/parser/parser.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import resolve, { Context, traverse } from '/imports/parser/resolve.js';
+} from '/imports/parser/parser';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import resolve, { Context, traverse } from '/imports/parser/resolve';
 
 /*
  * Constants are primitive values that can be used elsewhere in computations

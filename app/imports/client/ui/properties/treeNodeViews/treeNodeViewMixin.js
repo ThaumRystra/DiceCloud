@@ -1,4 +1,4 @@
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import PROPERTIES from '/imports/constants/PROPERTIES';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 
 export default {
@@ -15,7 +15,7 @@ export default {
     showExternalDetails: Boolean,
   },
   computed: {
-    title(){
+    title() {
       let model = this.model;
       if (!model) return;
       if (model.name) return model.name;

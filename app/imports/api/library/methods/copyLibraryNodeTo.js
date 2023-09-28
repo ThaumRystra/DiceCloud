@@ -2,11 +2,11 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import {
   assertDocCopyPermission,
   assertDocEditPermission
-} from '/imports/api/sharing/sharingPermissions.js';
+} from '/imports/api/sharing/sharingPermissions';
 import {
   setLineageOfDocs,
   renewDocIds
@@ -17,7 +17,7 @@ import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 var snackbar;
 if (Meteor.isClient) {
   snackbar = require(
-    '/imports/client/ui/components/snackbars/SnackbarQueue.js'
+    '/imports/client/ui/components/snackbars/SnackbarQueue'
   ).snackbar
 }
 

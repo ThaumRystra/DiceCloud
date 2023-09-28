@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers';
 import ActionContext from '/imports/api/engine/actions/ActionContext';
 

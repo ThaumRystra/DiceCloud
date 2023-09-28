@@ -77,8 +77,8 @@
 </template>
 
 <script lang="js">
-import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 
 export default {
   mixins: [propertyFormMixin, attributeListMixin],

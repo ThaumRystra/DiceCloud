@@ -26,8 +26,8 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
-import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
+import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 
 export default {
   mixins: [propertyViewerMixin],

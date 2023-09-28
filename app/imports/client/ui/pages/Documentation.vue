@@ -36,8 +36,8 @@
 
 <script lang="js">
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import Docs from '/imports/api/docs/Docs.js';
-import { propsByDocsPath } from '/imports/constants/PROPERTIES.js';
+import Docs from '/imports/api/docs/Docs';
+import { propsByDocsPath } from '/imports/constants/PROPERTIES';
 
 export default {
   components: {

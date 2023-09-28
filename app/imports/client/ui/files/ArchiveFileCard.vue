@@ -33,10 +33,10 @@
 </template>
 
 <script lang="js">
-import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
-import removeArchiveCreature from '/imports/api/creature/archive/methods/removeArchiveCreature.js';
+import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
+import removeArchiveCreature from '/imports/api/creature/archive/methods/removeArchiveCreature';
 
 export default {
   props: {

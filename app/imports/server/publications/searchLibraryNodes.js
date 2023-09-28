@@ -1,10 +1,10 @@
 import { check } from 'meteor/check';
-import Libraries from '/imports/api/library/Libraries.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
-import getUserLibraryIds from '/imports/api/library/getUserLibraryIds.js';
-import { assertViewPermission } from '/imports/api/sharing/sharingPermissions.js';
-import escapeRegex from '/imports/api/utility/escapeRegex.js';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds';
+import getUserLibraryIds from '/imports/api/library/getUserLibraryIds';
+import { assertViewPermission } from '/imports/api/sharing/sharingPermissions';
+import escapeRegex from '/imports/api/utility/escapeRegex';
 
 Meteor.publish('selectedLibraryNodes', function (selectedNodeIds) {
   check(selectedNodeIds, Array);

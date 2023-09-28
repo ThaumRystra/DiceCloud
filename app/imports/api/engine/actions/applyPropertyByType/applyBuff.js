@@ -3,17 +3,17 @@ import {
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get } from 'lodash';
-import resolve, { map, toString } from '/imports/parser/resolve.js';
-import symbol from '/imports/parser/parseTree/symbol.js';
-import logErrors from './shared/logErrors.js';
-import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
-import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
+import resolve, { map, toString } from '/imports/parser/resolve';
+import symbol from '/imports/parser/parseTree/symbol';
+import logErrors from './shared/logErrors';
+import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs';
+import cyrb53 from '/imports/api/engine/computation/utility/cyrb53';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
-import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
-import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations';
 
 export default function applyBuff(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);

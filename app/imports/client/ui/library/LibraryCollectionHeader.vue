@@ -52,7 +52,7 @@
 </template>
 
 <script lang="js">
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 
 export default {

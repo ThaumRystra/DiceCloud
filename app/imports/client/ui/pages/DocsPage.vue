@@ -48,7 +48,7 @@
 </template>
 
 <script lang="js">
-import Docs from '/imports/api/docs/Docs.js';
+import Docs from '/imports/api/docs/Docs';
 import DocEditForm from '/imports/client/ui/docs/DocEditForm.vue';
 import DocViewer from '/imports/client/ui/docs/DocViewer.vue';
 import DocBreadcrumbs from '/imports/client/ui/docs/DocBreadcrumbs.vue';

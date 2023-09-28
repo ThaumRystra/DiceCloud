@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import Libraries from '/imports/api/library/Libraries.js';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { assertViewPermission, assertDocViewPermission } from '/imports/api/sharing/sharingPermissions.js';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { assertViewPermission, assertDocViewPermission } from '/imports/api/sharing/sharingPermissions';
 import { union } from 'lodash';
 
 const LIBRARY_NODE_TREE_FIELDS = {

@@ -1,7 +1,7 @@
-import error from './error.js';
-import constant from './constant.js';
-import functions from '/imports/parser/functions.js';
-import resolve, { toString, traverse, map } from '../resolve.js';
+import error from './error';
+import constant from './constant';
+import functions from '/imports/parser/functions';
+import resolve, { toString, traverse, map } from '../resolve';
 
 const call = {
   create({ functionName, args }) {

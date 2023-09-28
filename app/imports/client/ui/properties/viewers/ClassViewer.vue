@@ -73,8 +73,8 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 
 export default {
   mixins: [propertyViewerMixin],

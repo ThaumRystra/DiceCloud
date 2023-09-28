@@ -40,8 +40,8 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+import { getPropertyIcon } from '/imports/constants/PROPERTIES';
 import InlineEffect from '../components/effects/InlineEffect.vue';
 
 export default {

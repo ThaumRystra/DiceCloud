@@ -39,7 +39,7 @@
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 
 export default {
   components: {

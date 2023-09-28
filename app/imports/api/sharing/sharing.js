@@ -1,10 +1,10 @@
 import SimpleSchema from 'simpl-schema';
-import { assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
+import { assertOwnership } from '/imports/api/sharing/sharingPermissions';
 import { getCollectionByName, fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
 
 const setPublic = new ValidatedMethod({
   name: 'sharing.setPublic',

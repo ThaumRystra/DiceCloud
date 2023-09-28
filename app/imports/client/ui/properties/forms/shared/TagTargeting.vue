@@ -68,7 +68,7 @@
 </template>
 
 <script lang="js">
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
 
 export default {
   props: {

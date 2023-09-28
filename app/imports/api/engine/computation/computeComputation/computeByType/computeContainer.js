@@ -1,5 +1,5 @@
-import aggregate from './computeVariable/aggregate/index.js';
-import { safeStrip } from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import aggregate from './computeVariable/aggregate/index';
+import { safeStrip } from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
 export default function computeContainer(computation, node) {
   if (!node.data) node.data = {};

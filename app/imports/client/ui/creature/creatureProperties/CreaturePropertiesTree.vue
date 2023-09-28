@@ -13,9 +13,9 @@
 </template>
 
 <script lang="js">
-import nodesToTree from '/imports/api/parenting/nodesToTree.js'
+import nodesToTree from '/imports/api/parenting/nodesToTree'
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
+import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods';
 import { getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 
 export default {

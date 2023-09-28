@@ -1,14 +1,14 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import SimpleSchema from 'simpl-schema';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import { getAncestry } from '/imports/api/parenting/parentingFunctions';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
-import { getHighestOrder } from '/imports/api/parenting/order.js';
+import { getHighestOrder } from '/imports/api/parenting/order';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',

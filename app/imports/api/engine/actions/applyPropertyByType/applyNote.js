@@ -1,5 +1,5 @@
-import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyNote(node, actionContext) {

@@ -29,8 +29,8 @@
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import ExperienceForm from '/imports/client/ui/creature/experiences/ExperienceForm.vue';
-import { ExperienceSchema, insertExperience } from '/imports/api/creature/experience/Experiences.js';
-import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin.js';
+import { ExperienceSchema, insertExperience } from '/imports/api/creature/experience/Experiences';
+import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin';
 
 export default {
   components: {
