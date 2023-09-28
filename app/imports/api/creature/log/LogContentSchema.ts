@@ -3,6 +3,17 @@ import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import RollDetailsSchema from '/imports/api/properties/subSchemas/RollDetailsSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
+export interface LogContent {
+  name?: string
+  value?: string
+  inline?: boolean
+  context?: {
+    errors: any[]
+    rolls: any[]
+    doubleRolls?: boolean
+  }
+}
+
 let LogContentSchema = new SimpleSchema({
   // The name of the field, included in discord webhook message
   name: {
@@ -26,7 +37,7 @@ let LogContentSchema = new SimpleSchema({
     type: Object,
     optional: true,
   },
-  'context.errors':{
+  'context.errors': {
     type: Array,
     defaultValue: [],
     maxCount: STORAGE_LIMITS.errorCount,

@@ -1,7 +1,7 @@
 
 import SimpleSchema from 'simpl-schema';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
-import { CreaturePropertySchema } from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { CreaturePropertySchema } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { CreatureSchema } from '/imports/api/creature/creatures/Creatures.js';
 let createS3FilesCollection;
 if (Meteor.isServer) {

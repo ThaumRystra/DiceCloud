@@ -43,7 +43,7 @@
 <script lang="js">
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { isFinite } from 'lodash';
 
 export default {

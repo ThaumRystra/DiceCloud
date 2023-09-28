@@ -83,7 +83,7 @@
 * the tree view shows off the full character structure, and where each part of
 * character comes from.
 **/
-import { canBeParent } from '/imports/api/parenting/parenting.js';
+import { canBeParent } from '/imports/api/parenting/parentingFunctions';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES.js';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { some } from 'lodash';

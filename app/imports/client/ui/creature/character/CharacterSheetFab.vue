@@ -42,11 +42,11 @@
   import LabeledFab from '/imports/client/ui/components/LabeledFab.vue';
   import { getHighestOrder } from '/imports/api/parenting/order.js';
   import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
-  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
   import Creatures from '/imports/api/creature/creatures/Creatures.js';
   import PROPERTIES from '/imports/constants/PROPERTIES.js';
   import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-  import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+  import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
   function getParentAndOrderFromSelectedTreeNode(creatureId, $store){
     // find the parent based on the currently selected property

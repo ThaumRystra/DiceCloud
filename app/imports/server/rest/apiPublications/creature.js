@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import computeCreature from '/imports/api/engine/computeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
 
-Meteor.publish('api-creature', function(creatureId){
+Meteor.publish('api-creature', function (creatureId) {
   try {
     new SimpleSchema({
       creatureId: {
@@ -14,7 +14,7 @@ Meteor.publish('api-creature', function(creatureId){
         regEx: SimpleSchema.RegEx.Id,
       },
     }).validate({ creatureId });
-  } catch (e){
+  } catch (e) {
     this.error(e);
     return;
   }
@@ -25,14 +25,14 @@ Meteor.publish('api-creature', function(creatureId){
   const creature = creatureCursor.fetch()[0];
   try {
     assertViewPermission(creature, userId)
-  } catch(e){
+  } catch (e) {
     this.error(e);
     return;
   }
-  if (creature.computeVersion !== VERSION){
+  if (creature.computeVersion !== VERSION) {
     try {
       computeCreature(creatureId)
-    } catch(e){
+    } catch (e) {
       console.error(e)
     }
   }

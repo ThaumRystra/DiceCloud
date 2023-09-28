@@ -1,13 +1,13 @@
 import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations.js';
 import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import applyProperty from '/imports/api/engine/actions/applyProperty.js';
+import { TreeNode, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import applyProperty from '/imports/api/engine/actions/applyProperty';
 import { difference, intersection } from 'lodash';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
-export function applyNodeTriggers(node, timing, actionContext) {
-  const prop = node.node;
+export function applyNodeTriggers(node: TreeNode<any>, timing, actionContext) {
+  const prop = node.doc;
   const type = prop.type;
   const triggers = actionContext.triggers?.doActionProperty?.[type]?.[timing];
   if (triggers) {

@@ -200,8 +200,8 @@
 
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';

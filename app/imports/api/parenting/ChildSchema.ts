@@ -14,12 +14,16 @@ const RefSchema = new SimpleSchema({
 
 const ChildSchema = new SimpleSchema({
   root: {
-    type: RefSchema,
+    type: Object,
   },
   'root.id': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     index: 1,
+  },
+  'root.collection': {
+    type: String,
+    max: STORAGE_LIMITS.collectionName,
   },
   // Parent id of a document in the same collection
   // Undefined parent id implies the root is the parent

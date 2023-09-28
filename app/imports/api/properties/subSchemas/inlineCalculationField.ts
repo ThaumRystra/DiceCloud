@@ -1,10 +1,18 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import { CalculatedField } from './computedField';
+
+export interface InlineCalculation {
+  text?: string,
+  hash?: number,
+  value?: string,
+  inlineCalculations: CalculatedField[],
+}
 
 // Get schemas that apply fields directly so they can be gracefully extended
 // because {type: Schema} fields can't be extended
-function inlineCalculationFieldToCompute(field){
+function inlineCalculationFieldToCompute(field) {
   return new SimpleSchema({
     // The object should already be set, but set again just in case
     [field]: {
@@ -20,7 +28,7 @@ function inlineCalculationFieldToCompute(field){
   });
 }
 
-function computedOnlyInlineCalculationField(field){
+function computedOnlyInlineCalculationField(field) {
   return new SimpleSchema({
     // The object should already be set, but set again just in case
     [field]: {
@@ -30,9 +38,8 @@ function computedOnlyInlineCalculationField(field){
     },
     // a hash of the text to see if the current cached values need to be updated
     [`${field}.hash`]: {
-      type: String,
+      type: Number,
       optional: true,
-      max: STORAGE_LIMITS.inlineCalculationField,
     },
     [`${field}.value`]: {
       type: String,
@@ -90,7 +97,7 @@ function computedOnlyInlineCalculationField(field){
   });
 }
 
-function computedInlineCalculationField(field){
+function computedInlineCalculationField(field) {
   return inlineCalculationFieldToCompute(field).extend(
     computedOnlyInlineCalculationField(field)
   )

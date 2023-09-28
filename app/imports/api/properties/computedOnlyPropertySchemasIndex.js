@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import { ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
+import { ComputedOnlyActionSchema } from '/imports/api/properties/Actions';
 import { ComputedOnlyAdjustmentSchema } from '/imports/api/properties/Adjustments.js';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes.js';
 import { ComputedOnlyBuffSchema } from '/imports/api/properties/Buffs.js';
@@ -14,7 +14,7 @@ import { ComputedOnlyDamageMultiplierSchema } from '/imports/api/properties/Dama
 import { ComputedOnlyEffectSchema } from '/imports/api/properties/Effects.js';
 import { ComputedOnlyFeatureSchema } from '/imports/api/properties/Features.js';
 import { ComputedOnlyFolderSchema } from '/imports/api/properties/Folders.js';
-import { ComputedOnlyItemSchema } from '/imports/api/properties/Items.js';
+import { ComputedOnlyItemSchema } from '/imports/api/properties/Items';
 import { ComputedOnlyNoteSchema } from '/imports/api/properties/Notes.js';
 import { ComputedOnlyPointBuySchema } from '/imports/api/properties/PointBuys.js';
 import { ComputedOnlyProficiencySchema } from '/imports/api/properties/Proficiencies.js';
@@ -23,7 +23,7 @@ import { ComputedOnlyRollSchema } from '/imports/api/properties/Rolls.js';
 import { ComputedOnlySavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { ComputedOnlySkillSchema } from '/imports/api/properties/Skills.js';
 import { ComputedOnlySlotSchema } from '/imports/api/properties/Slots.js';
-import { ComputedOnlySpellSchema } from '/imports/api/properties/Spells.js';
+import { ComputedOnlySpellSchema } from '/imports/api/properties/Spells';
 import { ComputedOnlySpellListSchema } from '/imports/api/properties/SpellLists.js';
 import { ComputedOnlyToggleSchema } from '/imports/api/properties/Toggles.js';
 import { ComputedOnlyTriggerSchema } from '/imports/api/properties/Triggers.js';

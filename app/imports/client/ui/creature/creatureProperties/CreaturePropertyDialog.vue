@@ -70,7 +70,7 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty.js';
 import pullFromProperty from '/imports/api/creature/creatureProperties/methods/pullFromProperty.js';

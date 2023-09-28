@@ -6,8 +6,8 @@ import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions
 import {
   setLineageOfDocs,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 var snackbar;
 if (Meteor.isClient) {

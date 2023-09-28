@@ -1,8 +1,8 @@
-import applyProperty from '../applyProperty.js';
+import applyProperty from '../applyProperty';
 import recalculateCalculation from './shared/recalculateCalculation.js';
 import rollDice from '/imports/parser/rollDice.js';
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyBranch(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);

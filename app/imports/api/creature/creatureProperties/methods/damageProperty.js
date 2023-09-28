@@ -1,10 +1,10 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+import { applyTriggers } from '/imports/api/engine/actions/applyTriggers';
+import ActionContext from '/imports/api/engine/actions/ActionContext';
 
 const damageProperty = new ValidatedMethod({
   name: 'creatureProperties.damage',
@@ -59,7 +59,7 @@ const damageProperty = new ValidatedMethod({
   },
 });
 
-export function damagePropertyWork({ prop, operation, value, actionContext, logFunction }) {
+export function damagePropertyWork({ prop, operation, value, actionContext, logFunction = undefined }) {
 
   // Save the value to the scope before applying the before triggers
   if (operation === 'increment') {

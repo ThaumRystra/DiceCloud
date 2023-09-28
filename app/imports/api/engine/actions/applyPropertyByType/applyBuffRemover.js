@@ -1,9 +1,9 @@
 import { findLast, difference, intersection, filter } from 'lodash';
-import applyProperty from '../applyProperty.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import applyProperty from '../applyProperty';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 import { getProperyAncestors, getPropertiesOfType } from '/imports/api/engine/loadCreatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { softRemove } from '/imports/api/parenting/softRemove.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { softRemove } from '/imports/api/parenting/softRemove';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 

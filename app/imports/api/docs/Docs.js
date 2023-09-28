@@ -3,14 +3,14 @@ import { Mongo } from 'meteor/mongo';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import { softRemove } from '/imports/api/parenting/softRemove.js';
+import { softRemove } from '/imports/api/parenting/softRemove';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import '/imports/api/library/methods/index.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import { restore } from '/imports/api/parenting/softRemove.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { getAncestry } from '/imports/api/parenting/parenting.js';
+import { restore } from '/imports/api/parenting/softRemove';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import { getAncestry } from '/imports/api/parenting/parentingFunctions';
 
 const Docs = new Mongo.Collection('docs');
 
@@ -184,10 +184,7 @@ const insertDoc = new ValidatedMethod({
     }
 
     const docId = Docs.insert(doc);
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    rebuildNestedSets(Docs, 'root');
     return docId;
   },
 });
@@ -231,10 +228,7 @@ const updateDoc = new ValidatedMethod({
     if (pathString === 'name' || pathString === 'urlName') {
       rebuildDocAncestors(_id);
     }
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    rebuildNestedSets(Docs, 'root');
     return updates;
   },
 });
@@ -284,10 +278,7 @@ const softRemoveDoc = new ValidatedMethod({
   run({ _id }) {
     assertDocsEditPermission(this.userId);
     softRemove({ _id, collection: Docs });
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    rebuildNestedSets(Docs, 'root');
   }
 });
 
@@ -304,10 +295,7 @@ const restoreDoc = new ValidatedMethod({
   run({ _id }) {
     assertDocsEditPermission(this.userId);
     restore({ _id, collection: Docs });
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    rebuildNestedSets(Docs, 'root');
   }
 });
 

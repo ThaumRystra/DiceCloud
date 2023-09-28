@@ -1,8 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
-import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { getCollectionByName, fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { getUserTier } from '/imports/api/users/patreon/tiers.js';

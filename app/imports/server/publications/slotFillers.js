@@ -1,7 +1,7 @@
 import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
 import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds.js';
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library.js';

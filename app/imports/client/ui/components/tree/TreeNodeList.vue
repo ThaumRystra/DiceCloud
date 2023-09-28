@@ -34,7 +34,7 @@
 <script lang="js">
 import draggable from 'vuedraggable';
 import TreeNode from '/imports/client/ui/components/tree/TreeNode.vue';
-import { isParentAllowed } from '/imports/api/parenting/parenting.js';
+import { isParentAllowed } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {

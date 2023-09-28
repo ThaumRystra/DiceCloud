@@ -1,11 +1,12 @@
 import { debounce } from 'lodash';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeCreature from './computeCreature';
 
 const COMPUTE_DEBOUNCE_TIME = 100; // ms
 export const loadedCreatures = new Map(); // creatureId => {creature, properties, etc.}
+// TODO: migrate to nested sets
 
 export function loadCreature(creatureId, subscription) {
   if (!creatureId) throw 'creatureId is required';
@@ -43,7 +44,7 @@ export function getSingleProperty(creatureId, propertyId) {
   const prop = CreatureProperties.findOne({
     _id: propertyId,
     'ancestors.id': creatureId,
-    'removed': {$ne: true},
+    'removed': { $ne: true },
   }, {
     sort: { order: 1 },
   });
@@ -61,7 +62,7 @@ export function getProperties(creatureId) {
   // console.time(`Cache miss on creature properties: ${creatureId}`)
   const props = CreatureProperties.find({
     'ancestors.id': creatureId,
-    'removed': {$ne: true},
+    'removed': { $ne: true },
   }, {
     sort: { order: 1 },
   }).fetch();
@@ -73,7 +74,7 @@ export function getPropertiesOfType(creatureId, propType) {
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
     const props = []
-    for (const prop of creature.properties.values()){
+    for (const prop of creature.properties.values()) {
       if (prop.type === propType) {
         props.push(prop);
       }
@@ -97,7 +98,7 @@ export function getCreature(creatureId) {
   if (loadedCreatures.has(creatureId)) {
     const loadedCreature = loadedCreatures.get(creatureId);
     const creature = loadedCreature.creature;
-    if (creature) {  
+    if (creature) {
       const cloneCreature = EJSON.clone(creature);
       return cloneCreature;
     }
@@ -118,7 +119,7 @@ export function getVariables(creatureId) {
     }
   }
   // console.time(`Cache miss on variables: ${creatureId}`);
-  const variables = CreatureVariables.findOne({_creatureId: creatureId});
+  const variables = CreatureVariables.findOne({ _creatureId: creatureId });
   // console.timeEnd(`Cache miss on variables: ${creatureId}`);
   return variables;
 }
@@ -148,7 +149,7 @@ export function getProperyAncestors(creatureId, propertyId) {
     // Fetch from database
     return CreatureProperties.find({
       _id: { $in: ancestorIds },
-      removed: {$ne: true},
+      removed: { $ne: true },
     }, {
       sort: { order: 1 },
     }).fetch();
@@ -164,7 +165,7 @@ export function getPropertyDecendants(creatureId, propertyId) {
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
     const props = [];
-    for(const prop of creature.properties.values()){
+    for (const prop of creature.properties.values()) {
       if (prop.ancestors[expectedAncestorPostition]?.id === propertyId) {
         props.push(prop);
       }
@@ -216,7 +217,7 @@ class LoadedCreature {
           compute();
         },
       });
-      
+
       // Observe the creature itself
       self.creatureObserver = Creatures.find({
         _id: creatureId,
@@ -239,7 +240,7 @@ class LoadedCreature {
       self.variablesObserver = CreatureVariables.find({
         _creatureId: creatureId,
       }, {
-        fields: { _creatureId: 0},
+        fields: { _creatureId: 0 },
       }).observeChanges({
         added(id, fields) {
           fields._id = id;

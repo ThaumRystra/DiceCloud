@@ -1,19 +1,19 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import {
   setLineageOfDocs,
   getAncestry,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import { union } from 'lodash';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
@@ -67,10 +67,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     let rootId = node._id;
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: CreatureProperties,
-      ancestorId: rootCreature._id,
-    });
+    rebuildNestedSets(CreatureProperties, rootCreature._id);
     // Return the docId of the last property, the inserted root property
     return rootId;
   },

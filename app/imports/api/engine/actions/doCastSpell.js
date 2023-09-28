@@ -5,11 +5,11 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import {
   getProperyAncestors, getPropertyDecendants
 } from '/imports/api/engine/loadCreatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
 import { doActionWork } from '/imports/api/engine/actions/doAction.js';
-import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+import ActionContext from '/imports/api/engine/actions/ActionContext';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doCastSpell',

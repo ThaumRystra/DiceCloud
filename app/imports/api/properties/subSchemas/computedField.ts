@@ -2,9 +2,19 @@ import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 
+export interface CalculatedField {
+  calculation?: string,
+  value?: string | number,
+  effectIds?: string[],
+  parseNode?: any,
+  parseError?: any,
+  hash?: number,
+  errors?: any[],
+}
+
 // Get schemas that apply fields directly so they can be gracefully extended
 // because {type: Schema} fields can't be extended
-function fieldToCompute(field){
+function fieldToCompute(field) {
   const schemaObj = {
     [`${field}.calculation`]: {
       type: String,
@@ -17,7 +27,7 @@ function fieldToCompute(field){
   return new SimpleSchema(schemaObj);
 }
 
-function computedOnlyField(field){
+function computedOnlyField(field) {
   const schemaObj = {
     [`${field}.value`]: {
       type: SimpleSchema.oneOf(String, Number),
@@ -56,7 +66,7 @@ function computedOnlyField(field){
       maxCount: STORAGE_LIMITS.errorCount,
       removeBeforeCompute: true,
     },
-    [`${field}.errors.$`]:{
+    [`${field}.errors.$`]: {
       type: ErrorSchema,
     },
   }
@@ -65,9 +75,9 @@ function computedOnlyField(field){
 }
 
 // We must include parent array and object fields for the schema to be valid
-function includeParentFields(field, schemaObj){
+function includeParentFields(field, schemaObj) {
   const splitField = field.split('.');
-  if (splitField.length === 1){
+  if (splitField.length === 1) {
     schemaObj[field] = {
       type: Object,
       optional: true,
@@ -78,8 +88,8 @@ function includeParentFields(field, schemaObj){
   let key = '';
   splitField.push('');
   splitField.forEach((value, index) => {
-    if (key){
-      if (value === '$'){
+    if (key) {
+      if (value === '$') {
         schemaObj[key] = {
           type: Array,
           optional: true
@@ -90,7 +100,7 @@ function includeParentFields(field, schemaObj){
           optional: true,
         };
         // the last object is the computed field
-        if (index === splitField.length - 1){
+        if (index === splitField.length - 1) {
           schemaObj[key].computedField = true;
         }
       }
@@ -102,7 +112,7 @@ function includeParentFields(field, schemaObj){
 
 // This should rarely be used, since the other two will merge correctly when
 // uncomputed and computedOnly schemas are merged
-function computedField(field){
+function computedField(field) {
   return computedField(field).extend(computedOnlyField(field));
 }
 

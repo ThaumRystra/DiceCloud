@@ -1,13 +1,13 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { getAncestry } from '/imports/api/parenting/parenting.js';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import { getAncestry } from '/imports/api/parenting/parentingFunctions';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import { getHighestOrder } from '/imports/api/parenting/order.js';
 
 const insertProperty = new ValidatedMethod({
@@ -134,10 +134,7 @@ export function insertPropertyWork({ property, creature }) {
   property.dirty = true;
   let _id = CreatureProperties.insert(property);
   // Tree structure changed by insert, reorder the tree
-  reorderDocs({
-    collection: CreatureProperties,
-    ancestorId: creature._id,
-  });
+  rebuildNestedSets(CreatureProperties, creature._id);
   return _id;
 }
 

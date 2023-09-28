@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import LogContentSchema from '/imports/api/creature/log/LogContentSchema.js';
+import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';

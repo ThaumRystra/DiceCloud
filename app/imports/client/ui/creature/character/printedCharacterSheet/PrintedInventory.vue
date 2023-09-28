@@ -72,7 +72,7 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';

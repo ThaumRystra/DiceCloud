@@ -402,7 +402,7 @@ import HitDiceListTile from '/imports/client/ui/properties/components/attributes
 import SkillListTile from '/imports/client/ui/properties/components/skills/SkillListTile.vue';
 import ResourceCard from '/imports/client/ui/properties/components/attributes/ResourceCard.vue';
 import RestButton from '/imports/client/ui/creature/RestButton.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import ToggleCard from '/imports/client/ui/properties/components/toggles/ToggleCard.vue';
 import BuffListItem from '/imports/client/ui/properties/components/buffs/BuffListItem.vue';
 import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';

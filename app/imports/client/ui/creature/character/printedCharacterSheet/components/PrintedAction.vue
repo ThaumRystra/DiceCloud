@@ -90,8 +90,8 @@ import ItemConsumedView from '/imports/client/ui/properties/components/actions/I
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
 import resolve, { Context, toString } from '/imports/parser/resolve.js';

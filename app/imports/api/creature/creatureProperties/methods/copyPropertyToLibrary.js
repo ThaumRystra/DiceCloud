@@ -1,9 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import {
   assertEditPermission,
   assertDocEditPermission,
@@ -13,9 +13,8 @@ import {
   setLineageOfDocs,
   getAncestry,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import Libraries from '/imports/api/library/Libraries.js';
 const DUPLICATE_CHILDREN_LIMIT = 500;
 
@@ -57,10 +56,7 @@ const copyPropertyToLibrary = new ValidatedMethod({
     const insertedRootNode = insertNodeFromProperty(propId, ancestors, order, this);
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: LibraryNodes,
-      ancestorId: rootLibrary._id,
-    });
+    rebuildNestedSets(LibraryNodes, rootLibrary._id);
 
     // Return the docId of the inserted root property
     return insertedRootNode?._id;
@@ -124,10 +120,7 @@ function insertNodeFromProperty(propId, ancestors, order, method) {
 
   // Order the root node
   if (order === undefined) {
-    setDocToLastOrder({
-      collection: LibraryNodes,
-      doc: prop,
-    });
+    rebuildNestedSets(LibraryNodes, prop.root.id);
   } else {
     prop.order = order;
   }

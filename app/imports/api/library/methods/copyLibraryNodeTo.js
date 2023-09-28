@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import {
   assertDocCopyPermission,
@@ -10,9 +10,9 @@ import {
 import {
   setLineageOfDocs,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
 var snackbar;
 if (Meteor.isClient) {
@@ -87,10 +87,9 @@ const copyLibraryNodeTo = new ValidatedMethod({
     LibraryNodes.batchInsert(nodes);
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: LibraryNodes,
-      ancestorId: parent.collection === 'libraries' ? parent.id : parentDoc.ancestors[0].id,
-    });
+    // TODO: rebuild tree nested sets
+
+    rebuildNestedSets(LibraryNodes, parentDoc.root.id);
   },
 });
 

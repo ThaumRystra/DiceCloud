@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import { ActionSchema } from '/imports/api/properties/Actions.js';
+import { ActionSchema } from '/imports/api/properties/Actions';
 import { AdjustmentSchema } from '/imports/api/properties/Adjustments.js';
 import { AttributeSchema } from '/imports/api/properties/Attributes.js';
 import { BuffSchema } from '/imports/api/properties/Buffs.js';
@@ -22,11 +22,11 @@ import { SavingThrowSchema } from '/imports/api/properties/SavingThrows.js';
 import { SkillSchema } from '/imports/api/properties/Skills.js';
 import { SlotSchema } from '/imports/api/properties/Slots.js';
 import { SpellListSchema } from '/imports/api/properties/SpellLists.js';
-import { SpellSchema } from '/imports/api/properties/Spells.js';
+import { SpellSchema } from '/imports/api/properties/Spells';
 import { ToggleSchema } from '/imports/api/properties/Toggles.js';
 import { TriggerSchema } from '/imports/api/properties/Triggers.js';
 import { ContainerSchema } from '/imports/api/properties/Containers.js';
-import { ItemSchema } from '/imports/api/properties/Items.js';
+import { ItemSchema } from '/imports/api/properties/Items';
 
 const propertySchemasIndex = {
   action: ActionSchema,

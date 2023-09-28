@@ -11,8 +11,8 @@ export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
   return collection;
 }
 
-export async function fetchDocByRef(ref: Reference, options?: Mongo.Options<object>) {
-  const doc = await getCollectionByName(ref.collection).findOneAsync(ref.id, options);
+export function fetchDocByRef(ref: Reference, options?: Mongo.Options<object>): Promise<TreeDoc> {
+  const doc = getCollectionByName(ref.collection).findOneAsync(ref.id, options);
   if (!doc) {
     throw new Meteor.Error('document-not-found',
       `No document could be found with id: ${ref.id} in ${ref.collection}`
@@ -21,7 +21,7 @@ export async function fetchDocByRef(ref: Reference, options?: Mongo.Options<obje
   return doc;
 }
 
-interface TreeNode<T> {
+export interface TreeNode<T> {
   doc: T,
   children: TreeNode<T>[]
 }
@@ -271,8 +271,8 @@ export const getFilter = {
   },
 }
 
-export async function fetchParent({ id, collection }) {
-  return await fetchDocByRef({ id, collection });
+export function fetchParent({ id, collection }) {
+  return fetchDocByRef({ id, collection });
 }
 
 /**

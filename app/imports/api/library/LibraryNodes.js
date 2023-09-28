@@ -4,19 +4,19 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
-import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex.js';
 import Libraries from '/imports/api/library/Libraries.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { softRemove } from '/imports/api/parenting/softRemove.js';
+import { softRemove } from '/imports/api/parenting/softRemove';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
 import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import '/imports/api/library/methods/index.js';
 import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import { restore } from '/imports/api/parenting/softRemove.js';
-import { getAncestry } from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
+import { restore } from '/imports/api/parenting/softRemove';
+import { getAncestry } from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
@@ -178,10 +178,7 @@ const insertNode = new ValidatedMethod({
     }
 
     // Tree structure changed by insert, reorder the tree
-    reorderDocs({
-      collection: LibraryNodes,
-      ancestorId: root._id,
-    });
+    rebuildNestedSets(LibraryNodes, root._id);
 
     // Return the id of the inserted node
     return nodeId;

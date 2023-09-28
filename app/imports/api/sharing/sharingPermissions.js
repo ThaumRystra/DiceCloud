@@ -1,5 +1,5 @@
 import { includes } from 'lodash';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
 function assertIdValid(userId) {
   if (!userId || typeof userId !== 'string') {

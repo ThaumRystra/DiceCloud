@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { EJSON } from 'meteor/ejson';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import propertySchemasIndex from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 
 export default function writeAlteredProperties(computation) {

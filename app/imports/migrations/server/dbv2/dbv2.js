@@ -3,7 +3,7 @@ import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import { union, get } from 'lodash';
 import Libraries from '/imports/api/library/Libraries.js';
 import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 

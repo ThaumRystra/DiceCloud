@@ -16,7 +16,7 @@
 import nodesToTree from '/imports/api/parenting/nodesToTree.js'
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
-import getCollectionByName from '/imports/api/parenting/getCollectionByName.js';
+import { getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {

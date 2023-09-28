@@ -1,14 +1,14 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import {
   setLineageOfDocs,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 var snackbar;
 if (Meteor.isClient) {
   snackbar = require(
@@ -90,10 +90,7 @@ const duplicateProperty = new ValidatedMethod({
     CreatureProperties.batchInsert(allNodes);
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: CreatureProperties,
-      ancestorId: property.ancestors[0].id,
-    });
+    rebuildNestedSets(CreatureProperties, property.root.id);
 
     return propertyId;
   },

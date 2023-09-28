@@ -8,6 +8,8 @@
     "strictFunctionTypes": true,
     "baseUrl": ".",
     "preserveSymlinks": true,
+    "allowJs": true,
+    "checkJs": true,
     "paths": {
       "/*": [
         "./*"

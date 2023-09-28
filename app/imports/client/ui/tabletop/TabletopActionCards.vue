@@ -9,7 +9,7 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 
 function getProperties(ancestorId, type){

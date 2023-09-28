@@ -24,7 +24,7 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import propComponents from '/imports/client/ui/properties/components/folders/propertyComponentIndex.js';
 
 export default {

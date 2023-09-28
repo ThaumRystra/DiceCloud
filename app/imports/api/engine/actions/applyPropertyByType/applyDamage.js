@@ -8,7 +8,7 @@ import { damagePropertyWork } from '/imports/api/creature/creatureProperties/met
 import {
   getPropertiesOfType
 } from '/imports/api/engine/loadCreatures.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/applySavingThrow.js';
 

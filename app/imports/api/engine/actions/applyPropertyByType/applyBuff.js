@@ -1,9 +1,8 @@
 import {
   setLineageOfDocs,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+} from '/imports/api/parenting/parentingFunctions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 import { get } from 'lodash';
@@ -12,7 +11,7 @@ import symbol from '/imports/parser/parseTree/symbol.js';
 import logErrors from './shared/logErrors.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
 import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
 
@@ -92,10 +91,12 @@ function copyNodeListToTarget(propList, target, oldParent) {
   renewDocIds({
     docArray: propList,
   });
+  /*
   setDocToLastOrder({
     collection: CreatureProperties,
     doc: propList[0],
   });
+  */
   CreatureProperties.batchInsert(propList);
 }
 

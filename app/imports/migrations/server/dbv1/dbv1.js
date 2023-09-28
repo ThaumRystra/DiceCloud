@@ -1,5 +1,5 @@
 import { Migrations } from 'meteor/percolate:migrations';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes.js';
 import transformFields from '/imports/migrations/server/transformFields.js';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';

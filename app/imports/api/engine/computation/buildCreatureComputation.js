@@ -1,13 +1,13 @@
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
-  from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+  from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures.js';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
 import linkInventory from './buildComputation/linkInventory.js';
 import walkDown from './utility/walkdown.js';
 import parseCalculationFields from './buildComputation/parseCalculationFields.js';
-import computeInactiveStatus from './buildComputation/computeInactiveStatus.js';
+import computeInactiveStatus from './buildComputation/computeInactiveStatus';
 import computeToggleDependencies from './buildComputation/computeToggleDependencies.js';
 import linkCalculationDependencies from './buildComputation/linkCalculationDependencies.js';
 import linkTypeDependencies from './buildComputation/linkTypeDependencies.js';

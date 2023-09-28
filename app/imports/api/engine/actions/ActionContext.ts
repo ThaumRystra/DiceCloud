@@ -4,7 +4,7 @@ import {
 } from '/imports/api/engine/loadCreatures.js';
 import { groupBy, remove } from 'lodash';
 
-export default class ActionContext{
+export default class ActionContext {
   constructor(creatureId, targetIds = [], method) {
     // Get the creature
     this.creature = getCreature(creatureId)
@@ -64,7 +64,7 @@ export default class ActionContext{
     }
   }
   addLog(content) {
-    if (content.name || content.value){
+    if (content.name || content.value) {
       this.log.content.push(content);
     }
   }

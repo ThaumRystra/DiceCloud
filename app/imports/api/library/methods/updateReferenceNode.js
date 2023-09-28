@@ -6,7 +6,7 @@ import {
   assertDocEditPermission,
   assertViewPermission,
 } from '/imports/api/sharing/sharingPermissions.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
 const updateReferenceNode = new ValidatedMethod({
   name: 'libraryNodes.updateReferenceNode',

@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js'
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties'
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';

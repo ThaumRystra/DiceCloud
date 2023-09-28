@@ -1,7 +1,7 @@
 import '/imports/api/simpleSchemaConfig.js';
 import { buildComputationFromProps } from './buildCreatureComputation.js';
 import { assert } from 'chai';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeInactiveStatus from './buildComputation/tests/computeInactiveStatus.testFn.js';
 import computeSlotQuantityFilled from './buildComputation/tests/computeSlotQuantityFilled.testFn.js';
 import computeToggleDependencies from './buildComputation/tests/computeToggleDependencies.testFn.js';
@@ -9,8 +9,8 @@ import linkCalculationDependencies from './buildComputation/tests/linkCalculatio
 import linkInventory from './buildComputation/tests/linkInventory.testFn.js';
 import linkTypeDependencies from './buildComputation/tests/linkTypeDependencies.testFn.js';
 
-describe('buildComputation', function(){
-  it('Builds something at all', function(){
+describe('buildComputation', function () {
+  it('Builds something at all', function () {
     let computation = buildComputationFromProps(testProperties);
     assert.exists(computation);
   });
@@ -37,7 +37,7 @@ var testProperties = [
   }),
 ];
 
-function clean(prop){
+function clean(prop) {
   let schema = CreatureProperties.simpleSchema(prop);
   return schema.clean(prop);
 }

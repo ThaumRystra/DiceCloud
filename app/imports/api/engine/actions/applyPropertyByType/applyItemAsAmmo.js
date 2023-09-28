@@ -1,7 +1,7 @@
 import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
-import applyProperty from '../applyProperty.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import applyProperty from '../applyProperty';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
 
 export default function applyItemAsAmmo(node, actionContext) {
