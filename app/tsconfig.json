@@ -10,6 +10,7 @@
     "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
+    "outDir": "build",
     "paths": {
       "/*": [
         "./*"
