@@ -11,13 +11,23 @@ export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
   return collection;
 }
 
-export function fetchDocByRef(ref: Reference, options?: Mongo.Options<object>): Promise<TreeDoc> {
-  const doc = getCollectionByName(ref.collection).findOneAsync(ref.id, options);
+function assertDocFound(doc) {
   if (!doc) {
     throw new Meteor.Error('document-not-found',
       `No document could be found with id: ${ref.id} in ${ref.collection}`
     );
   }
+}
+
+export function fetchDocByRefAsync(ref: Reference, options?: Mongo.Options<object>): Promise<TreeDoc> {
+  const doc = getCollectionByName(ref.collection).findOneAsync(ref.id, options);
+  assertDocFound(doc);
+  return doc;
+}
+
+export function fetchDocByRef(ref: Reference, options?: Mongo.Options<object>): TreeDoc {
+  const doc: TreeDoc = getCollectionByName(ref.collection).findOne(ref.id, options);
+  assertDocFound(doc);
   return doc;
 }
 
@@ -274,15 +284,11 @@ export const getFilter = {
   },
 }
 
-export function fetchParent({ id, collection }) {
-  return fetchDocByRef({ id, collection });
-}
-
 /**
  * Give documents new random ids and transform their references.
  * Transform collections of re-IDed docs according to the collection map
  */
-export function renewDocIds({ docArray, collectionMap, idMap = {} }) {
+export function renewDocIds({ docArray, collectionMap = {}, idMap = {} }) {
   // idMap is a map of {oldId: newId}
   // Get a random generator that's consistent on client and server
   const randomSrc = DDP.randomStream('renewDocIds');
@@ -295,16 +301,21 @@ export function renewDocIds({ docArray, collectionMap, idMap = {} }) {
     idMap[oldId] = newId;
   });
 
-  // Remap all references using the new IDs
-  const remapReference = ref => {
-    if (idMap[ref.id]) {
-      ref.id = idMap[ref.id];
-      ref.collection = collectionMap && collectionMap[ref.collection] || ref.collection;
-    }
-  }
+  // Get the id from the map if it exists, leave unchanged otherwise
+  const remap = id => idMap[id] || id
+
+  // If there are references by id that need to be maintained when copying from 
+  // a library, here is where we would update them
   docArray.forEach(doc => {
-    remapReference(doc.parent);
-    remapReference(doc.root);
+    // Remap the root and parent ids
+    doc.root.id = remap(doc.root.id);
+    doc.root.collection = collectionMap[doc.root.collection] || doc.root.collection;
+    doc.parentId = remap(doc.parentId);
+
+    // Remap itemIds of items selected as ammo
+    doc.resource?.itemsConsumed?.forEach(itemConsumed => {
+      itemConsumed.itemId = remap(itemConsumed.itemId);
+    });
   });
 }
 

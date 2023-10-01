@@ -63,10 +63,14 @@ const ChildSchema = new SimpleSchema({
   left: {
     type: Number,
     index: 1,
+    // Default to absolutely last with space for right
+    defaultValue: Number.MAX_SAFE_INTEGER - 1,
   },
   right: {
     type: Number,
     index: 1,
+    // Default to zero children, so right = left + 1
+    defaultValue: Number.MAX_SAFE_INTEGER,
   }
 });
 

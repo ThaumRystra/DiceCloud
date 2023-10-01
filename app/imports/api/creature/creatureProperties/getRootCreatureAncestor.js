@@ -1,5 +1,8 @@
 import Creatures from '/imports/api/creature/creatures/Creatures';
 
 export default function getRootCreatureAncestor(property) {
-  return Creatures.findOne(property.ancestors[0].id);
+  if (property.root?.collection !== 'creatures') {
+    throw 'Property does not have a root ancestor'
+  }
+  return Creatures.findOne(property.root.id);
 }
