@@ -40,7 +40,6 @@
 
 <script lang="js">
   import LabeledFab from '/imports/client/ui/components/LabeledFab.vue';
-  import { getHighestOrder } from '/imports/api/parenting/order';
   import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
   import Creatures from '/imports/api/creature/creatures/Creatures';
@@ -48,11 +47,11 @@
   import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
   import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
-  function getParentAndOrderFromSelectedTreeNode(creatureId, $store){
+  function getParentFromSelectedTreeNode(creatureId, $store){
     // find the parent based on the currently selected property
     let el = document.querySelector('.tree-tab .tree-node-title.primary--text');
     let selectedComponent = el && el.parentElement.__vue__.$parent;
-    let parentRef, order;
+    let parentRef;
     const onTreeTab = $store.getters.tabNameById(creatureId) === 'tree';
     if (onTreeTab && selectedComponent){
       if (selectedComponent.showExpanded){
@@ -60,22 +59,13 @@
           id: selectedComponent.node._id,
           collection: 'creatureProperties',
         };
-        order = getHighestOrder({
-          collection: CreatureProperties,
-          ancestorId: parentRef.id,
-        }) + 0.5;
       } else {
         parentRef = selectedComponent.node.parent;
-        order = selectedComponent.node.order + 0.5;
       }
     } else {
       parentRef = {collection: 'creatures', id: creatureId};
-      order = getHighestOrder({
-        collection: CreatureProperties,
-        ancestorId: parentRef.id,
-      }) + 0.5;
     }
-    return {parentRef, order}
+    return parentRef;
   }
 
   function hideFab(){
@@ -144,7 +134,7 @@
         let creatureId = this.creatureId;
         let fab = hideFab();
 
-        let {parentRef, order } = getParentAndOrderFromSelectedTreeNode(creatureId, this.$store);
+        let parentRef  = getParentFromSelectedTreeNode(creatureId, this.$store);
         let parent;
         try {
           parent = fetchDocByRef(parentRef);
@@ -168,13 +158,11 @@
             if (Array.isArray(result)){
               revealFab(fab);
               let nodeIds = result;
-              let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
+              let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef});
               return forcedType ? id : `tree-node-${id}`;
             } else {
               revealFab(fab);
               let creatureProperty = result;
-              // Get order and parent
-              creatureProperty.order = order;
               // Insert the property
               let id = insertProperty.call({creatureProperty, parentRef});
               return forcedType ? id : `tree-node-${id}`;

@@ -26,7 +26,7 @@
 </template>
 
 <script lang="js">
-import nodesToTree from '/imports/api/parenting/nodesToTree'
+import { filterToForest } from '/imports/api/parenting/parentingFunctions';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
@@ -70,11 +70,8 @@ export default {
     model() {
       return LibraryNodes.findOne(this.id);
     },
-    propertyChildren(){
-      return nodesToTree({
-        collection: LibraryNodes,
-        ancestorId: this.id
-      });
+    propertyChildren() {
+      return filterToForest(LibraryNodes, this.id, {});
     },
   }
 }

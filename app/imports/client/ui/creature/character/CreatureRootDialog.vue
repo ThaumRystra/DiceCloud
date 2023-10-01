@@ -72,7 +72,6 @@ import propertyFormIndex from '/imports/client/ui/properties/forms/shared/proper
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
-import { getHighestOrder } from '/imports/api/parenting/order';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 
@@ -163,18 +162,12 @@ export default {
             id: parentPropertyId,
             collection: 'creatures',
           };
-          let order = getHighestOrder({
-            collection: CreatureProperties,
-            ancestorId: parentRef.id,
-          }) + 0.5;
           if (Array.isArray(result)){
             let nodeIds = result;
-            let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
+            let id = insertPropertyFromLibraryNode.call({ nodeIds, parentRef });
             return `tree-node-${id}`;
           } else {
             let creatureProperty = result;
-            // Get order and parent
-            creatureProperty.order = order;
             // Insert the property
             let id = insertProperty.call({creatureProperty, parentRef});
             return `tree-node-${id}`;

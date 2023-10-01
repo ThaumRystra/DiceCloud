@@ -87,13 +87,15 @@ type FilteredDoc = {
   _ancestorOfMatchedDocument?: boolean,
 } & TreeDoc;
 
-export default async function filterToForest(
+export async function filterToForest(
   collection: Mongo.Collection<TreeDoc>,
   rootId: string,
   filter: Mongo.Selector<TreeDoc>,
-  options: Mongo.Options<object> = {},
-  includeFilteredDocAncestors = false,
-  includeFilteredDocDescendants = false
+  {
+    options = <Mongo.Options<object>>{},
+    includeFilteredDocAncestors = false,
+    includeFilteredDocDescendants = false
+  } = {}
 ): Promise<TreeNode<FilteredDoc>[]> {
   // Setup the filter
   let collectionFilter = {

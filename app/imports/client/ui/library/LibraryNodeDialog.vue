@@ -120,7 +120,6 @@ import { organizeDoc } from '/imports/api/parenting/organizeMethods';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo';
-import { getHighestOrder } from '/imports/api/parenting/order';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
@@ -215,7 +214,6 @@ export default {
             collection: 'libraryNodes',
             id: this.model._id,
           },
-          order: (this.model.order || 0) + 0.5,
         },
         parentRef: this.model.parent,
       }, (error, docId) => {
@@ -257,7 +255,6 @@ export default {
               collection: 'libraryNodes',
               id: parentId
             },
-            order: -0.5
           }, (error) => {
             if (error) console.error(error);
           });
@@ -353,13 +350,7 @@ export default {
             id: parentPropertyId,
             collection: 'libraryNodes',
           };
-          let order = getHighestOrder({
-            collection: LibraryNodes,
-            ancestorId: parentRef.id,
-          }) + 0.5;
           let libraryNode = result;
-          // Get order and parent
-          libraryNode.order = order;
           // Insert the property
           let id = insertNode.call({libraryNode, parentRef});
           return `tree-node-${id}`;

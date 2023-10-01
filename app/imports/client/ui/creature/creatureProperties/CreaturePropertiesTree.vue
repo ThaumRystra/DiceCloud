@@ -13,7 +13,7 @@
 </template>
 
 <script lang="js">
-import nodesToTree from '/imports/api/parenting/nodesToTree'
+import { filterToForest } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods';
 import { getCollectionByName } from '/imports/api/parenting/parentingFunctions';
@@ -47,14 +47,16 @@ export default {
     expanded: Boolean,
   },
   meteor: {
-    children() {
-      const children = nodesToTree({
-        collection: getCollectionByName(this.collection),
-        ancestorId: this.root.id,
-        filter: this.filter,
-        includeFilteredDocAncestors: true,
-        includeFilteredDocDescendants: true,
-      });
+    async children() {
+      const children = await filterToForest(
+        getCollectionByName(this.collection),
+        this.root.id,
+        this.filter,
+        {
+          includeFilteredDocAncestors: true,
+          includeFilteredDocDescendants: true,
+        }
+      );
       this.$emit('length', children.length);
       return children;
     },

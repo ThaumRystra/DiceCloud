@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export default function cleanArchiveAtCurrent(archive) {
   archive.properties = archive.properties.map(prop => {

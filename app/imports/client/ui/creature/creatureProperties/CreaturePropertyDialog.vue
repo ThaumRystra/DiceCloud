@@ -88,7 +88,6 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { get, findLast } from 'lodash';
 import equipItem from '/imports/api/creature/creatureProperties/methods/equipItem';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import { getHighestOrder } from '/imports/api/parenting/order';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
@@ -270,18 +269,12 @@ export default {
             id: parentPropertyId,
             collection: 'creatureProperties',
           };
-          let order = getHighestOrder({
-            collection: CreatureProperties,
-            ancestorId: parentRef.id,
-          }) + 0.5;
           if (Array.isArray(result)){
             let nodeIds = result;
-            let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
+            let id = insertPropertyFromLibraryNode.call({ nodeIds, parentRef });
             return `tree-node-${id}`;
           } else {
             let creatureProperty = result;
-            // Get order and parent
-            creatureProperty.order = order;
             // Insert the property
             let id = insertProperty.call({creatureProperty, parentRef});
             return `tree-node-${id}`;

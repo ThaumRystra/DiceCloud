@@ -410,7 +410,7 @@ import EventButton from '/imports/client/ui/properties/components/actions/EventB
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import { get, set, uniqBy } from 'lodash';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree'
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 
 function walkDown(forest, callback){
   let stack = [...forest];
@@ -555,8 +555,8 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } });
-      const forest = nodeArrayToTree(allProps);
+      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } }).fetch();
+      const forest = docsToForest(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
         const prop = node.doc
