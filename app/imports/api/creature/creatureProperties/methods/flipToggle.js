@@ -17,7 +17,7 @@ const flipToggle = new ValidatedMethod({
   run({ _id }) {
     // Permission
     let property = CreatureProperties.findOne(_id, {
-      fields: { type: 1, ancestors: 1, enabled: 1, disabled: 1 }
+      fields: { type: 1, root: 1, enabled: 1, disabled: 1 }
     });
     if (property.type !== 'toggle') {
       throw new Meteor.Error('wrong property',

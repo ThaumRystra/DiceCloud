@@ -1,8 +1,9 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default function getParentRefByTag(creatureId, tag) {
   let prop = CreatureProperties.findOne({
-    'ancestors.id': creatureId,
+    ...getFilter.descendantsOfRoot(creatureId),
     removed: { $ne: true },
     inactive: { $ne: true },
     tags: tag,

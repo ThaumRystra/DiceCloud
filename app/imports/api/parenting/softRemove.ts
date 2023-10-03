@@ -51,7 +51,7 @@ const restoreError = function () {
   );
 };
 
-export async function restore(collection: Mongo.Collection<TreeDoc> | string, doc: TreeDoc | string, extraUpdates) {
+export async function restore(collection: Mongo.Collection<TreeDoc> | string, doc: TreeDoc | string, extraUpdates?) {
   if (typeof collection === 'string') {
     collection = getCollectionByName(collection);
   }

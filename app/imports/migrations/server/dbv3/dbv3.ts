@@ -11,6 +11,8 @@ Migrations.add({
     migrateCollection('libraryNodes');
     console.log('migrating up creature props 2 -> 3');
     migrateCollection('creatureProperties');
+    console.log('migrating up docs 2 -> 3');
+    migrateCollection('docs');
     console.log('New schema fields added, if it was done correctly remove the old fields manually');
   },
 

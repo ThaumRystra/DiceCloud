@@ -211,6 +211,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -271,6 +272,7 @@ export default {
       return this.hiddenSlots.length + this.hiddenPointBuys.length;
     },
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     creature(){
       return Creatures.findOne(this.creatureId);
@@ -281,7 +283,7 @@ export default {
     hiddenPointBuys() {
       return CreatureProperties.find({
         type: 'pointBuy',
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         ignored: true,
         pointsLeft: {$ne: 0},
         removed: {$ne: true},
@@ -291,7 +293,7 @@ export default {
     hiddenSlots(){
       return CreatureProperties.find({
         type: 'propertySlot',
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         ignored: true,
         $and: [
           { 
@@ -313,7 +315,7 @@ export default {
     },
     classProperties(){
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'class',
         removed: {$ne: true},
         inactive: {$ne: true},
@@ -324,7 +326,7 @@ export default {
     classLevels() {
       const classVariableNames = this.classProperties.map(c => c.variableName)
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'classLevel',
         variableName: {$nin: classVariableNames},
         removed: {$ne: true},
@@ -335,7 +337,7 @@ export default {
     },
     slotBuildTree(){
       const slots = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: {$in: ['propertySlot', 'pointBuy']},
         $or: [
           {'slotCondition.value': {$nin: [false, 0, '']}},

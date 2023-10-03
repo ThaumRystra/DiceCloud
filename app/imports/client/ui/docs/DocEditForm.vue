@@ -180,10 +180,7 @@ export default {
         doc: {
           name: 'New Doc',
         },
-        parentRef: this.doc && {
-          id: this.docId,
-          collection: 'docs',
-        },
+        parentId: this.docId,
       }, ack);
     },
     remove({ ack } = {}) {

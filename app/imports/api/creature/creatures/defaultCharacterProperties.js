@@ -5,7 +5,6 @@ export default function defaultCharacterProperties(creatureId) {
   const creatureRef = { collection: 'creatures', id: creatureId };
   let randomSrc = DDP.randomStream('defaultProperties');
   const inventoryId = randomSrc.id();
-  const inventoryRef = { collection: 'creatureProperties', id: inventoryId };
   return [
     {
       type: 'propertySlot',
@@ -17,31 +16,35 @@ export default function defaultCharacterProperties(creatureId) {
       hideWhenFull: true,
       spaceLeft: 1,
       totalFilled: 0,
-      order: 0,
-      parent: creatureRef,
-      ancestors: [creatureRef],
+      left: 1,
+      right: 2,
+      parentId: creatureId,
+      root: creatureRef,
     }, {
       _id: inventoryId,
       type: 'folder',
       name: 'Inventory',
       tags: [BUILT_IN_TAGS.inventory],
-      order: 1,
-      parent: creatureRef,
-      ancestors: [creatureRef],
+      left: 3,
+      right: 8,
+      parentId: creatureId,
+      root: creatureRef,
     }, {
       type: 'folder',
       name: 'Equipment',
       tags: [BUILT_IN_TAGS.equipment],
-      order: 2,
-      parent: inventoryRef,
-      ancestors: [creatureRef, inventoryRef],
+      left: 4,
+      right: 5,
+      parentId: inventoryId,
+      root: creatureRef,
     }, {
       type: 'folder',
       name: 'Carried',
       tags: [BUILT_IN_TAGS.carried],
-      order: 3,
-      parent: inventoryRef,
-      ancestors: [creatureRef, inventoryRef],
+      left: 6,
+      right: 7,
+      parent: inventoryId,
+      root: creatureRef,
     },
   ];
 }

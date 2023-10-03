@@ -11,8 +11,8 @@ export default function getDefaultSlotFiller(slot) {
     type: slotType,
     libraryTags: slot.slotTags || [],
     name: 'Custom ' + slot.name || 'slot filler',
-    parent: { collection: 'creatureProperties', id: slot._id },
-    ancestors: [...slot.ancestors, { collection: 'creatureProperties', id: slot._id }],
+    parentId: slot._id,
+    root: { ...slot.root },
   };
   return filler;
 }

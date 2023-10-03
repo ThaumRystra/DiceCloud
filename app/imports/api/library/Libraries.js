@@ -7,6 +7,7 @@ import { assertEditPermission, assertOwnership } from '/imports/api/sharing/shar
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { getUserTier } from '/imports/api/users/patreon/tiers'
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 /**
  * Libraries are trees of library nodes where each node represents a character
@@ -160,7 +161,7 @@ const removeLibrary = new ValidatedMethod({
 
 export function removeLibaryWork(libraryId) {
   Libraries.remove(libraryId);
-  LibraryNodes.remove({ 'ancestors.id': libraryId });
+  LibraryNodes.remove(getFilter.descendantsOfRoot(libraryId));
 }
 
 export { LibrarySchema, insertLibrary, updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary };

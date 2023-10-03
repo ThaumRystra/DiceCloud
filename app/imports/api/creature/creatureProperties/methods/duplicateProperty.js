@@ -5,7 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import {
-  setLineageOfDocs,
+  getFilter,
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
@@ -33,6 +33,8 @@ const duplicateProperty = new ValidatedMethod({
   },
   run({ _id }) {
     let property = CreatureProperties.findOne(_id);
+    if (!property) throw new Meteor.Error('not-found', 'The source property was not found');
+
     let creature = getRootCreatureAncestor(property);
 
     assertEditPermission(creature, this.userId);
@@ -49,7 +51,7 @@ const duplicateProperty = new ValidatedMethod({
 
     // Get all the descendants
     let nodes = CreatureProperties.find({
-      'ancestors.id': _id,
+      ...getFilter.descendants(property),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
@@ -66,22 +68,13 @@ const duplicateProperty = new ValidatedMethod({
       }
     }
 
-    // re-map all the ancestors
-    setLineageOfDocs({
-      docArray: nodes,
-      newAncestry: [
-        ...property.ancestors,
-        { id: propertyId, collection: 'creatureProperties' }
-      ],
-      oldParent: { id: _id, collection: 'creatureProperties' },
-    });
-
     // Give the docs new IDs without breaking internal references
     const allNodes = [property, ...nodes];
     renewDocIds({ docArray: allNodes });
 
     // Order the root node
-    property.order += 0.5;
+    property.left = Number.MAX_SAFE_INTEGER - 1;
+    property.right = Number.MAX_SAFE_INTEGER;
 
     // Mark the sheet as needing recompute
     property.dirty = true;

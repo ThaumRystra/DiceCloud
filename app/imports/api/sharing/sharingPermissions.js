@@ -98,8 +98,8 @@ export function assertCopyPermission(doc, userId) {
 
 function getRoot(doc) {
   assertdocExists(doc);
-  if (doc.ancestors && doc.ancestors.length && doc.ancestors[0]) {
-    return fetchDocByRef(doc.ancestors[0]);
+  if (doc.root) {
+    return fetchDocByRef(doc.root);
   } else {
     return doc;
   }

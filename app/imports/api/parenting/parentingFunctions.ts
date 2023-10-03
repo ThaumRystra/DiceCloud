@@ -241,6 +241,20 @@ export const getFilter = {
     });
     return filter;
   },
+  descendantsOfRoot(rootId: string) {
+    return {
+      'root.id': rootId,
+    }
+  },
+  /**
+   * @param rootIds a non-empty array of ids
+   */
+  descendantsOfAllRoots(rootIds: string[]) {
+    if (!rootIds.length) throw 'rootIds can\'t be empty';
+    return {
+      'root.id': { $in: rootIds },
+    };
+  },
   descendants(doc: TreeDoc) {
     return {
       'root.id': doc.root.id,
@@ -371,6 +385,26 @@ export function compareOrder(docA, docB) {
   } else {
     return docA.left - docB.left;
   }
+}
+
+/**
+ * Determine if two properties have an ancestor relationship, returns true if A is an ancestor of B
+ * or B is an ancestor of A
+ */
+export function hasAncestorRelationship(propA: TreeDoc, propB: TreeDoc): boolean {
+  // If they don't share a root, they can't share an ancestor relationship
+  if (propA.root.id !== propB.root.id) {
+    return false;
+  }
+  // Return if there is an ancestor relationship in either direction
+  return isAncestor(propA, propB) || isAncestor(propB, propA);
+}
+
+/**
+ * Returns true if A is a direct ancestor of B, assuming their roots are equal
+ */
+export function isAncestor(propA: TreeDoc, propB: TreeDoc): boolean {
+  return propA.left < propB.left && propA.right > propB.right;
 }
 
 /**

@@ -9,11 +9,12 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import Experiences from '/imports/api/creature/experience/Experiences';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export function getArchiveObj(creatureId) {
   // Build the archive document
   const creature = Creatures.findOne(creatureId);
-  const properties = CreatureProperties.find({ 'ancestors.id': creatureId }).fetch();
+  const properties = CreatureProperties.find({ ...getFilter.descendantsOfRoot(creatureId) }).fetch();
   const experiences = Experiences.find({ creatureId }).fetch();
   const logs = CreatureLogs.find({ creatureId }).fetch();
   let archiveCreature = {
@@ -68,7 +69,7 @@ const archiveCreatureToFile = new ValidatedMethod({
   async run({ creatureId }) {
     assertOwnership(creatureId, this.userId);
     if (Meteor.isServer) {
-      archiveCreature(creatureId, this.userId);
+      archiveCreature(creatureId);
     } else {
       removeCreatureWork(creatureId);
     }

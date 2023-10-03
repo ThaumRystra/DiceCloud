@@ -2,11 +2,8 @@ import computeCreature from '/imports/api/engine/computeCreature';
 
 /**
  * Recomputes all ancestor creatures of this property
+ * @deprecated
  */
 export default function recomputeCreaturesByProperty(property) {
-  for (let ref of property.ancestors) {
-    if (ref.collection === 'creatures') {
-      computeCreature.call(ref.id);
-    }
-  }
+  computeCreature.call(property.root.id);
 }

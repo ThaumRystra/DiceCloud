@@ -25,7 +25,8 @@ const doCheck = new ValidatedMethod({
   },
   run({ propId, scope }) {
     const prop = CreatureProperties.findOne(propId);
-    const creatureId = prop.ancestors[0].id;
+    if (!prop) throw new Meteor.Error('not-found', 'The property was not found');
+    const creatureId = prop.root.id;
     const actionContext = new ActionContext(creatureId, [creatureId], this);
     Object.assign(actionContext.scope, scope);
     actionContext.scope[`#${prop.type}`] = prop;

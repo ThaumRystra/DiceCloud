@@ -411,6 +411,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import { get, set, uniqBy } from 'lodash';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 function walkDown(forest, callback){
   let stack = [...forest];
@@ -516,12 +517,13 @@ export default {
       return uniqBy(conditionals, '_id');
     },
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     properties() {
       const creature = this.creature;
       if (!creature) return;
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -530,8 +532,8 @@ export default {
       }, { fields: { _id: 1 } }).map(folder => folder._id);
 
       const filter = {
-        'ancestors.id': this.creatureId,
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        parentId: {
           $nin: folderIds,
         },
         $or: [
@@ -585,7 +587,7 @@ export default {
     toggles() {
       return CreatureProperties.find({
         type: 'toggle',
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
         deactivatedByToggle: { $ne: true },

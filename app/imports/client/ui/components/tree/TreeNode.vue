@@ -86,6 +86,7 @@
 import { canBeParent } from '/imports/api/parenting/parentingFunctions';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import { isAncestor } from '/imports/api/parenting/parentingFunctions';
 import { some } from 'lodash';
 
 export default {
@@ -121,9 +122,9 @@ export default {
   },
   data() {
     return {
-      expanded: this.startExpanded || this.node._ancestorOfMatchedDocument ||
-        some(this.selectedNode?.ancestors, ref => ref.id === this.node._id) ||
-        false,
+      expanded: this.startExpanded ||
+        this.node._ancestorOfMatchedDocument ||
+        isAncestor(this.node, this.selectedNode),
     }
   },
   computed: {
@@ -152,8 +153,8 @@ export default {
       this.expanded = !!value ||
         some(this.selectedNode?.ancestors, ref => ref.id === this.node._id);
     },
-    'selectedNode.ancestors'(value) {
-      this.expanded = !!some(value, ref => ref.id === this.node._id) || this.expanded;
+    'selectedNode.parentId'() {
+      this.expanded = isAncestor(this.node, this.selectedNode) || this.expanded;
     },
   },
   beforeCreate() {

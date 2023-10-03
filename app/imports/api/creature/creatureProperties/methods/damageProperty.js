@@ -28,7 +28,7 @@ const damageProperty = new ValidatedMethod({
     if (!prop) throw new Meteor.Error(
       'Damage property failed', 'Property doesn\'t exist'
     );
-    const creatureId = prop.ancestors[0].id;
+    const creatureId = prop.root.id;
     const actionContext = new ActionContext(creatureId, [creatureId], this);
 
     // Check permissions

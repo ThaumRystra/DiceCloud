@@ -7,6 +7,7 @@ import { union } from 'lodash';
 import ActionContext from '/imports/api/engine/actions/ActionContext';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 const restCreature = new ValidatedMethod({
   name: 'creature.methods.rest',
@@ -74,7 +75,7 @@ function doRestWork(restType, actionContext) {
 export function resetProperties(creatureId, resetFilter, actionContext) {
   // Only apply to active properties
   const filter = {
-    'ancestors.id': creatureId,
+    ...getFilter.descendantsOfRoot(creatureId),
     reset: resetFilter,
     removed: { $ne: true },
     inactive: { $ne: true },
@@ -128,7 +129,7 @@ export function resetProperties(creatureId, resetFilter, actionContext) {
 
 function resetHitDice(creatureId, actionContext) {
   let hitDice = CreatureProperties.find({
-    'ancestors.id': creatureId,
+    ...getFilter.descendantsOfRoot(creatureId),
     type: 'attribute',
     attributeType: 'hitDice',
     removed: { $ne: true },

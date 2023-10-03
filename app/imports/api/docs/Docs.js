@@ -9,52 +9,10 @@ import { storedIconsSchema } from '/imports/api/icons/Icons';
 import '/imports/api/library/methods/index';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
-import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import { getAncestry } from '/imports/api/parenting/parentingFunctions';
+import { getFilter, rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import ChildSchema from '/imports/api/parenting/ChildSchema';
 
 const Docs = new Mongo.Collection('docs');
-
-const RefSchema = new SimpleSchema({
-  id: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    index: 1
-  },
-  collection: {
-    type: String,
-    max: STORAGE_LIMITS.collectionName,
-  },
-  urlName: {
-    type: String,
-    regEx: /[a-z]+(?:[a-z]|-)+/,
-    min: 2,
-    max: STORAGE_LIMITS.variableName,
-    optional: true,
-  },
-  name: {
-    type: String,
-    max: STORAGE_LIMITS.description,
-    optional: true,
-  },
-});
-
-let ChildSchema = new SimpleSchema({
-  order: {
-    type: Number,
-  },
-  parent: {
-    type: RefSchema,
-    optional: true,
-  },
-  ancestors: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.ancestorCount,
-  },
-  'ancestors.$': {
-    type: RefSchema,
-  },
-});
 
 let DocSchema = new SimpleSchema({
   _id: {
@@ -105,36 +63,12 @@ function assertDocsEditPermission(userId) {
 function getDocLink(doc, urlName) {
   if (!urlName) urlName = doc.urlName;
   const address = ['/docs'];
-  doc.ancestors?.forEach(a => {
+  const ancestorDocs = Docs.find(getFilter.ancestors(doc));
+  ancestorDocs?.forEach(a => {
     address.push(a.urlName);
   });
   address.push(urlName);
   return address.join('/');
-}
-
-function rebuildDocAncestors(docId) {
-  const newDoc = Docs.findOne(docId);
-  Docs.find({ 'ancestors.id': docId }).forEach(doc => {
-    doc.ancestors.forEach((a, i) => {
-      if (a.id === docId) {
-        Docs.update(doc._id, {
-          $set: {
-            [`ancestors.${i}`]: {
-              id: newDoc._id,
-              collection: 'docs',
-              urlName: newDoc.urlName,
-              name: newDoc.name,
-            }
-          }
-        });
-      }
-    });
-    doc = Docs.findOne(doc._id);
-    const newLink = getDocLink(doc);
-    if (doc.href !== newLink) {
-      Docs.update(doc._id, { $set: { href: newLink } })
-    }
-  });
 }
 
 // Add a means of seeding new servers with documentation
@@ -161,18 +95,11 @@ const insertDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ doc, parentRef }) {
+  run({ doc, parentId }) {
     delete doc._id;
     assertDocsEditPermission(this.userId);
-    // get the new ancestry for the properties
-    if (parentRef) {
-      var { ancestors } = getAncestry({
-        parentRef,
-        inheritedFields: { name: 1, urlName: 1 },
-      });
-    }
-    doc.parent = parentRef;
-    doc.ancestors = ancestors;
+
+    doc.parentId = parentId;
 
     const lastOrder = Docs.find({}, { sort: { order: -1 } }).fetch()[0]?.order || 0;
     doc.order = lastOrder + 1;
@@ -184,7 +111,7 @@ const insertDoc = new ValidatedMethod({
     }
 
     const docId = Docs.insert(doc);
-    rebuildNestedSets(Docs, 'root');
+    rebuildNestedSets(Docs);
     return docId;
   },
 });
@@ -222,13 +149,9 @@ const updateDoc = new ValidatedMethod({
       }
       modifier.$set = modifier.$set || {};
       modifier.$set.href = newLink;
-      rebuildDocAncestors(_id);
     }
     const updates = Docs.update(_id, modifier);
-    if (pathString === 'name' || pathString === 'urlName') {
-      rebuildDocAncestors(_id);
-    }
-    rebuildNestedSets(Docs, 'root');
+    rebuildNestedSets(Docs);
     return updates;
   },
 });
@@ -278,7 +201,7 @@ const softRemoveDoc = new ValidatedMethod({
   run({ _id }) {
     assertDocsEditPermission(this.userId);
     softRemove({ _id, collection: Docs });
-    rebuildNestedSets(Docs, 'root');
+    rebuildNestedSets(Docs);
   }
 });
 
@@ -294,8 +217,8 @@ const restoreDoc = new ValidatedMethod({
   },
   run({ _id }) {
     assertDocsEditPermission(this.userId);
-    restore({ _id, collection: Docs });
-    rebuildNestedSets(Docs, 'root');
+    restore('docs', _id);
+    rebuildNestedSets(Docs);
   }
 });
 

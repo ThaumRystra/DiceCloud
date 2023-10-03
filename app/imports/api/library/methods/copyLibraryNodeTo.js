@@ -9,7 +9,8 @@ import {
 } from '/imports/api/sharing/sharingPermissions';
 import {
   setLineageOfDocs,
-  renewDocIds
+  renewDocIds,
+  getFilter
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
@@ -46,12 +47,14 @@ const copyLibraryNodeTo = new ValidatedMethod({
       );
     }
     const libraryNode = LibraryNodes.findOne(_id);
+    if (!libraryNode) throw new Meteor.Error('not-found', 'Library node was not found');
+
     const parentDoc = fetchDocByRef(parent);
     assertDocCopyPermission(libraryNode, this.userId);
     assertDocEditPermission(parentDoc, this.userId);
 
     let decendants = LibraryNodes.find({
-      'ancestors.id': _id,
+      ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
@@ -69,26 +72,16 @@ const copyLibraryNodeTo = new ValidatedMethod({
 
     const nodes = [libraryNode, ...decendants];
 
-    const newAncestry = parentDoc.ancestors || [];
-    newAncestry.push(parent);
-    // re-map all the ancestors
-    setLineageOfDocs({
-      docArray: nodes,
-      newAncestry,
-      oldParent: libraryNode.parent,
-    });
-
     // Give the docs new IDs without breaking internal references
     renewDocIds({ docArray: nodes });
 
     // Order the root node
-    libraryNode.order = (parentDoc.order || 0) + 0.5;
+    libraryNode.left = Number.MAX_SAFE_INTEGER - 1;
+    libraryNode.right = Number.MAX_SAFE_INTEGER;
 
     LibraryNodes.batchInsert(nodes);
 
     // Tree structure changed by inserts, reorder the tree
-    // TODO: rebuild tree nested sets
-
     rebuildNestedSets(LibraryNodes, parentDoc.root.id);
   },
 });

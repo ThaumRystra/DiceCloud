@@ -45,8 +45,8 @@ function updateReferenceNodeWork(node, userId) {
   try {
     doc = fetchDocByRef(node.ref);
     if (doc.removed) throw 'Property has been deleted';
-    if (doc.ancestors[0].id !== node.ancestors[0].id) {
-      library = fetchDocByRef(doc.ancestors[0]);
+    if (doc.root.id !== node.root.id) {
+      library = fetchDocByRef(doc.root);
       assertViewPermission(library, userId)
     }
   } catch (e) {

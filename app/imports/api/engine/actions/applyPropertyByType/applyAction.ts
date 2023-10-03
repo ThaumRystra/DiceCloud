@@ -8,7 +8,7 @@ import { damagePropertyWork } from '/imports/api/creature/creatureProperties/met
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature';
-import { TreeNode } from '/imports/api/parenting/parentingFunctions';
+import { TreeNode, hasAncestorRelationship } from '/imports/api/parenting/parentingFunctions';
 import { Action } from '/imports/api/properties/Actions';
 import { LogContent } from '/imports/api/creature/log/LogContentSchema';
 import { Item } from '/imports/api/properties/Items';
@@ -326,21 +326,4 @@ function spendResources(prop: Action, actionContext) {
     value: spendLog.join('\n'),
     inline: true,
   });
-}
-
-function hasAncestorRelationship(a, b) {
-  let top, bottom;
-  if (a.ancestors.length === b.ancestors.length) {
-    // Can't be ancestors of one another if they have the same number of ancestors
-    return false;
-  } else if (a.ancestors.length > b.ancestors.length) {
-    // longer ancestor list goes on the bottom
-    top = b;
-    bottom = a;
-  } else {
-    top = a;
-    bottom = b;
-  }
-  const expectedAncestorPosition = top.ancestors.length;
-  return bottom.ancestors[expectedAncestorPosition]?.id === top._id;
 }

@@ -15,7 +15,7 @@ import '/imports/api/library/methods/index';
 import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
-import { getAncestry } from '/imports/api/parenting/parentingFunctions';
+import { fetchDocByRef, getAncestry } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
@@ -122,7 +122,7 @@ for (let key in propertySchemasIndex) {
 
 function getLibrary(node) {
   if (!node) throw new Meteor.Error('No node provided');
-  let library = Libraries.findOne(node.ancestors[0].id);
+  let library = Libraries.findOne(node.root.id);
   if (!library) throw new Meteor.Error('Library does not exist');
   return library;
 }
@@ -148,22 +148,20 @@ const insertNode = new ValidatedMethod({
   },
   run({ libraryNode, parentRef }) {
     // get the new ancestry
-    let { parentDoc, ancestors } = getAncestry({ parentRef });
+    const parentDoc = fetchDocByRef(parentRef);
 
     // Check permission to edit
     let root;
     if (parentRef.collection === 'libraries') {
       root = parentDoc;
     } else if (parentRef.collection === 'libraryNodes') {
-      root = Libraries.findOne(parentDoc.ancestors[0].id);
+      root = Libraries.findOne(parentDoc.root.id);
+      libraryNode.parentId = parentRef.id;
     } else {
       throw `${parentRef.collection} is not a valid parent collection`
     }
     assertEditPermission(root, this.userId);
 
-    // Set the ancestry of the library node
-    libraryNode.parent = parentRef;
-    libraryNode.ancestors = ancestors;
     // Remove its ID if it came with one to force a random one to be generated
     // server-side
     delete libraryNode._id;
@@ -195,6 +193,8 @@ const updateLibraryNode = new ValidatedMethod({
       case 'order':
       case 'parent':
       case 'ancestors':
+      case 'parentId':
+      case 'root':
         return false;
     }
   },
@@ -296,7 +296,7 @@ const restoreLibraryNode = new ValidatedMethod({
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
     // Do work
-    restore({ _id, collection: LibraryNodes });
+    restore(LibraryNodes, _id);
   }
 });
 

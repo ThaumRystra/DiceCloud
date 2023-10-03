@@ -1,3 +1,5 @@
+import { getFilter } from "/imports/api/parenting/parentingFunctions";
+
 export default function getSlotFillFilter({ slot, libraryIds }) {
 
   if (!slot) throw 'Slot is required for getSlotFillFilter';
@@ -6,9 +8,14 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
   let filter = {
     fillSlots: true,
     removed: { $ne: true },
-    $and: []
+    $and: [],
   };
-  filter['ancestors.id'] = { $in: libraryIds };
+  if (libraryIds.length) {
+    Object.assign(
+      filter,
+      getFilter.descendantsOfAllRoots(libraryIds)
+    );
+  }
   if (slot.slotType) {
     filter.$and.push({
       $or: [{

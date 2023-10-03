@@ -40,6 +40,7 @@ import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -56,10 +57,11 @@ export default {
   data() { return {
     tabName: 'actions',
   }},
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     actions() {
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -68,9 +70,7 @@ export default {
       }, { fields: { _id: 1 } }).map(folder => folder._id);
 
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
         'parent.id': {
           $nin: folderIds,
         },

@@ -48,7 +48,7 @@ const doAction = new ValidatedMethod({
   run({ spellId, slotId, ritual, targetIds = [], scope = {} }) {
     // Get action context
     let spell = CreatureProperties.findOne(spellId);
-    const creatureId = spell.ancestors[0].id;
+    const creatureId = spell.root.id;
     const actionContext = new ActionContext(creatureId, targetIds, this);
 
     // Check permissions
