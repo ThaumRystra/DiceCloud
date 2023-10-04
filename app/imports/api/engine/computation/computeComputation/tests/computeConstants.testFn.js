@@ -2,6 +2,7 @@ import { buildComputationFromProps } from '/imports/api/engine/computation/build
 import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
   const computation = buildComputationFromProps(testProperties);
@@ -23,6 +24,7 @@ var testProperties = [
     baseValue: {
       calculation: 'arrayConstant[3]',
     },
-    ancestors: [{ id: 'charId' }],
   }),
 ];
+
+applyNestedSetProperties(testProperties);

@@ -42,6 +42,7 @@ import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PrintedSpell from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSpell.vue';
 import PrintedSpellList from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSpellList.vue';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -60,23 +61,22 @@ export default {
       organize: false,
     }
   },
+  // @ts-ignore-error Meteor not defined on vue
   meteor: {
     spellLists() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'spellList',
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
         sort: { order: 1 }
-      });
+      }).fetch();
     },
     spellsWithoutList() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.spellListIds,
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.spellLists),
         type: 'spell',
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
@@ -90,10 +90,8 @@ export default {
     },
     spellListsWithoutAncestorSpellLists() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.spellListIds,
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.spellLists),
         type: 'spellList',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -101,7 +99,7 @@ export default {
         sort: { order: 1 }
       }).map(sl => {
         sl.spells = CreatureProperties.find({
-          'ancestors.id': sl._id,
+          ...getFilter.descendants(sl),
           type: 'spell',
           removed: { $ne: true },
           inactive: { $ne: true },

@@ -1,6 +1,7 @@
 import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
 import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
   const computation = buildComputationFromProps(testProperties);
@@ -32,8 +33,6 @@ var testProperties = [
   clean({
     _id: 'spellListId',
     type: 'spellList',
-    left: 1,
-    right: 6,
   }),
   clean({
     _id: 'childId',
@@ -42,8 +41,6 @@ var testProperties = [
       text: 'DC {#spellList.dc} save or suck'
     },
     parentId: 'spellListId',
-    left: 2,
-    right: 5,
   }),
   clean({
     _id: 'grandchildId',
@@ -52,8 +49,6 @@ var testProperties = [
       calculation: '#spellList.dc + strength + wisdom.modifier'
     },
     parentId: 'childId',
-    left: 3,
-    right: 4,
   }),
   clean({
     _id: 'strengthId',
@@ -62,7 +57,7 @@ var testProperties = [
     baseValue: {
       calculation: '15 + ',
     },
-    left: 7,
-    right: 8,
   }),
 ];
+
+applyNestedSetProperties(testProperties);

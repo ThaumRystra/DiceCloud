@@ -1,6 +1,7 @@
 import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
 import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
   const computation = buildComputationFromProps(testProperties);
@@ -13,8 +14,6 @@ var testProperties = [
   clean({
     _id: 'slotId',
     type: 'propertySlot',
-    left: 1,
-    right: 8,
   }),
   // Children
   clean({
@@ -23,21 +22,17 @@ var testProperties = [
     slotQuantityFilled: 3,
     slotFillerType: 'item',
     parentId: 'slotId',
-    left: 2,
-    right: 3,
   }),
   clean({
     _id: 'slotChildId',
     type: 'item',
     parentId: 'slotId',
-    left: 4,
-    right: 7,
   }),
   clean({
     _id: 'slotGrandchildId',
     type: 'effect',
     parentId: 'slotChildId',
-    left: 5,
-    right: 6,
   }),
 ];
+
+applyNestedSetProperties(testProperties);

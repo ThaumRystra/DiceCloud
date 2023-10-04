@@ -22,6 +22,5 @@ var testProperties = [
     _id: 'strengthId',
     type: 'attribute',
     variableName: 'strength',
-    ancestors: [{ id: 'charId' }],
   }),
 ];

@@ -44,7 +44,6 @@ var testProperties = [
   clean({
     _id: 'actionId',
     type: 'action',
-    ancestors: [{ id: 'charId' }],
     attackRoll: {
       calculation: 'strength.modifier',
     },
@@ -54,7 +53,6 @@ var testProperties = [
     _id: 'profBonusId',
     type: 'attribute',
     variableName: 'proficiencyBonus',
-    ancestors: [{ id: 'charId' }],
     baseValue: {
       calculation: '13'
     },

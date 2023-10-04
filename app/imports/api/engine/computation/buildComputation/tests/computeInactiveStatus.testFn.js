@@ -1,6 +1,7 @@
 import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
 import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
   let computation = buildComputationFromProps(testProperties);
@@ -53,30 +54,22 @@ var testProperties = [
     _id: 'itemUnequippedId',
     type: 'item',
     parentId: 'charId',
-    left: 1,
-    right: 4,
   }),
   clean({
     _id: 'itemUnequippedChildId',
     type: 'folder',
     parentId: 'itemUnequippedId',
-    left: 2,
-    right: 3,
   }),
   clean({
     _id: 'itemEquippedId',
     type: 'item',
     equipped: true,
     parentId: 'charId',
-    left: 5,
-    right: 8,
   }),
   clean({
     _id: 'itemEquippedChildId',
     type: 'folder',
     parentId: 'itemEquippedId',
-    left: 6,
-    right: 7,
   }),
   // Spells
   clean({
@@ -84,58 +77,44 @@ var testProperties = [
     type: 'spell',
     parentId: 'charId',
     prepared: true,
-    left: 9,
-    right: 12,
   }),
   clean({
     _id: 'spellPreparedChildId',
     type: 'folder',
     parentId: 'spellPreparedId',
-    left: 10,
-    right: 11,
   }),
   clean({
     _id: 'spellAlwaysPreparedId',
     type: 'spell',
     parentId: 'charId',
     alwaysPrepared: true,
-    left: 13,
-    right: 16,
   }),
   clean({
     _id: 'spellAlwaysPreparedChildId',
     type: 'folder',
     parentId: 'spellAlwaysPreparedId',
-    left: 14,
-    right: 15,
   }),
   clean({
     _id: 'spellUnpreparedId',
     type: 'spell',
     parentId: 'charId',
-    left: 17,
-    right: 20,
   }),
   clean({
     _id: 'spellUnpreparedChildId',
     type: 'folder',
     parentId: 'spellUnpreparedId',
-    left: 18,
-    right: 19,
   }),
   // Notes
   clean({
     _id: 'NoteId',
     type: 'note',
     parentId: 'charId',
-    left: 21,
-    right: 24,
   }),
   clean({
     _id: 'NoteChildId',
     type: 'folder',
     parentId: 'NoteId',
-    left: 22,
-    right: 23,
   }),
 ];
+
+applyNestedSetProperties(testProperties);
