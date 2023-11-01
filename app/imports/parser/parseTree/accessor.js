@@ -17,13 +17,20 @@ const accessor = {
       if (value === undefined) return;
       value = value[name];
     });
-    let valueType = Array.isArray(value) ? 'array' : typeof value;
+    let valueType = getType(value);
     // If the accessor returns an objet, get the object's value instead
     while (valueType === 'object') {
       value = value.value;
-      valueType = Array.isArray(value) ? 'array' : typeof value;
+      valueType = getType(value);
     }
-    // Return a parse node based on the type returned
+    // Return a discovered parse node
+    if (valueType === 'parseNode') {
+      return {
+        result: value,
+        context,
+      };
+    }
+    // Return a parse node based on the constant type returned
     if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
       return {
         result: constant.create({
@@ -81,6 +88,13 @@ const accessor = {
   toString(node) {
     return `${node.name}.${node.path.join('.')}`;
   }
+}
+
+function getType(val) {
+  if (!val) return typeof val;
+  if (Array.isArray(val)) return 'array';
+  if (val.parseType) return 'parseNode';
+  return typeof val;
 }
 
 export default accessor;

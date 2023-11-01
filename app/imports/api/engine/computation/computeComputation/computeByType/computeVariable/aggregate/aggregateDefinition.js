@@ -1,5 +1,5 @@
 
-export default function aggregateDefinition({node, linkedNode, link}){
+export default function aggregateDefinition({ node, linkedNode, link }) {
   // Look at all definition links
   if (link.data !== 'definition') return;
 
@@ -24,7 +24,14 @@ export default function aggregateDefinition({node, linkedNode, link}){
   }
 
   // Aggregate the base value due to the defining properties
-  let propBaseValue = prop.baseValue?.value;
+  let propBaseValue = undefined;
+  const valueNode = prop.baseValue?.value;
+  if (
+    valueNode?.parseType === 'constant'
+    && valueNode?.valueType === 'number'
+  ) {
+    propBaseValue = valueNode.value;
+  }
   // Point buy rows use prop.value instead of prop.baseValue
   if (prop.type === 'pointBuyRow') {
     propBaseValue = prop.value;
@@ -38,7 +45,7 @@ export default function aggregateDefinition({node, linkedNode, link}){
       _id: prop.tableId,
       name: prop.tableName,
       operation: 'base',
-      amount: { value: propBaseValue },
+      amount: propBaseValue,
       type: 'pointBuy',
     });
   } else {
@@ -46,16 +53,16 @@ export default function aggregateDefinition({node, linkedNode, link}){
       _id: prop._id,
       name: prop.name,
       operation: 'base',
-      amount: { value: propBaseValue },
+      amount: propBaseValue,
       type: prop.type,
     });
   }
-  if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue){
+  if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue) {
     node.data.baseValue = propBaseValue;
   }
 }
 
-function overrideProp(prop, node){
+function overrideProp(prop, node) {
   if (!prop) return;
   prop.overridden = true;
   if (!node.data.overriddenProps) node.data.overriddenProps = [];

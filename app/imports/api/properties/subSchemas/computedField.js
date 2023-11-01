@@ -25,28 +25,24 @@ function computedOnlyField(field) {
       optional: true,
       blackbox: true,
     },
-    /*
-    // toString(.baseValue)
-    [`${field}.baseValueString`]: {
+    // toString(.unaffected)
+    [`${field}.displayUnaffected`]: {
       type: SimpleSchema.oneOf(String, Number),
       optional: true,
       removeBeforeCompute: true,
     },
-    */
     // The compiled parseNode after applying all effects
     [`${field}.value`]: {
       type: Object,
       optional: true,
       blackbox: true,
     },
-    /*
-    // toString(.value)
-    [`${field}.valueString`]: {
+    // The displayed value of the calculation: toString(.value)
+    [`${field}.displayValue`]: {
       type: SimpleSchema.oneOf(String, Number),
       optional: true,
       removeBeforeCompute: true,
     },
-    */
     // A list of effect Ids targeting this calculation
     [`${field}.effectIds`]: {
       type: Array,
@@ -88,6 +84,30 @@ function computedOnlyField(field) {
     },
     [`${field}.errors.$`]: {
       type: ErrorSchema,
+    },
+    // Effect aggregations
+    [`${field}.advantage`]: {
+      type: Number,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.disadvantage`]: {
+      type: Number,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.fail`]: {
+      type: Number,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.conditional`]: {
+      type: Array,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.conditional.$`]: {
+      type: String,
     },
   }
   includeParentFields(field, schemaObj);

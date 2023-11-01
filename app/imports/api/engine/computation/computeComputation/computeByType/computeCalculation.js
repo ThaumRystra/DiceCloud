@@ -1,19 +1,25 @@
 import evaluateCalculation from '../../utility/evaluateCalculation.js';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import call from '/imports/parser/parseTree/call.js';
+import constant from '/imports/parser/parseTree/constant.js';
+import operator from '/imports/parser/parseTree/operator.js';
+import parenthesis from '/imports/parser/parseTree/parenthesis.js';
+import { toString } from '/imports/parser/resolve.js';
 
 export default function computeCalculation(computation, node) {
   const calcObj = node.data;
   evaluateCalculation(calcObj, computation.scope);
   if (calcObj.effects || calcObj.proficiencies) {
-    calcObj.baseValue = calcObj.value;
+    calcObj.unaffected = calcObj.value;
+    calcObj.displayUnaffected = toString(calcObj.unaffected);
   }
   aggregateCalculationEffects(node, computation);
   aggregateCalculationProficiencies(node, computation);
+  calcObj.displayValue = toString(calcObj.value);
 }
 
 function aggregateCalculationEffects(node, computation) {
   const calcObj = node.data;
-  delete calcObj.effects;
+  delete calcObj.effectIds;
   computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
@@ -25,29 +31,104 @@ function aggregateCalculationEffects(node, computation) {
       if (linkedNode.data.inactive) return;
 
       // Collate effects
-      calcObj.effects = calcObj.effects || [];
-      calcObj.effects.push({
-        _id: linkedNode.data._id,
-        name: linkedNode.data.name,
-        operation: linkedNode.data.operation,
-        amount: linkedNode.data.amount && {
-          value: linkedNode.data.amount.value,
-          //parseNode: linkedNode.data.amount.parseNode,
-        },
-        // ancestors: linkedNode.data.ancestors,
-      });
+      calcObj.effectIds = calcObj.effectIds || [];
+      calcObj.effectIds.push(linkedNode.data._id);
     },
     true // enumerate only outbound links
   );
-  if (calcObj.effects && typeof calcObj.value === 'number') {
+  if (calcObj.effectIds) {
+    // dictionary of {[operation]: parseNode}
+    const aggregator = {};
+    // Store all effect values
     calcObj.effects.forEach(effect => {
-      if (
-        effect.operation === 'add' &&
-        effect.amount && typeof effect.amount.value === 'number'
-      ) {
-        calcObj.value += effect.amount.value
+      const op = effect.operation;
+      switch (op) {
+        case undefined:
+          break;
+        // Conditionals stored as a list of text
+        case 'conditional':
+          if (!aggregator[op]) aggregator[op] = [];
+          aggregator[op].push(effect.text);
+          break;
+        // Adv/Dis and Fails just count instances
+        case 'advantage':
+        case 'disadvantage':
+        case 'fail':
+          if (calcObj[op] === undefined) calcObj[op] = 0;
+          calcObj[op]++;
+          break;
+        // Math functions store value parseNodes
+        case 'base':
+        case 'add':
+        case 'mul':
+        case 'min':
+        case 'max':
+        case 'set':
+          if (!aggregator[op]) aggregator[op] = [];
+          aggregator[op].push(effect.amount.value);
+          break;
+        // No case for passiveAdd, it doesn't make sense in this context
       }
     });
+    /**
+     * Aggregate the effects in a parse tree like so
+     * x = ( max(...base, unaffectedValue) + sum(...add) ) * mul(...mul)
+     * min(...min, x)
+     * max(...max, x)
+     * set(last(...set))a
+     */
+    // Set
+    // If we do set, return early, nothing else matters
+    if (aggregator.set) {
+      calcObj.value = aggregator.set[aggregator.set.length - 1];
+      return;
+    }
+    // Base value
+    if (aggregator.base) {
+      calcObj.value = call.create({
+        functionName: 'max',
+        args: [calcObj.value, aggregator.base]
+      });
+    }
+    // Add
+    aggregator.add?.forEach(node => {
+      calcObj.value = operator.create({
+        left: calcObj.value,
+        right: node,
+        operator: '+'
+      });
+    });
+    // Multiply
+    if (aggregator.mul) {
+      // Wrap the previous node in brackets if it's another operator
+      if (calcObj.parseType === 'operator') {
+        calcObj.value = parenthesis.create({
+          content: calcObj.value
+        });
+      }
+      // Append all multiplications
+      aggregator.mul.forEach(node => {
+        calcObj.value = operator.create({
+          left: calcObj.value,
+          right: node,
+          operator: '*'
+        });
+      });
+    }
+    // Min
+    if (aggregator.min) {
+      calcObj.value = call.create({
+        functionName: 'max',
+        args: [calcObj.value, aggregator.min]
+      });
+    }
+    // Max
+    if (aggregator.max) {
+      calcObj.value = call.create({
+        functionName: 'min',
+        args: [calcObj.value, aggregator.max]
+      });
+    }
   }
 }
 
@@ -110,6 +191,10 @@ function aggregateCalculationProficiencies(node, computation) {
         prof.overridden = true;
       }
     });
-    calcObj.value += calcObj.proficiencyBonus;
+    calcObj.value = operator.create({
+      left: calcObj.value,
+      right: constant.create({ value: calcObj.proficiencyBonus }),
+      operator: '+'
+    });
   }
 }

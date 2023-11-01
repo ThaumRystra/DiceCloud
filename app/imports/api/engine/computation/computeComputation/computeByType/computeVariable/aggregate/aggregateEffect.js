@@ -22,21 +22,11 @@ export default function aggregateEffect({ node, linkedNode, link }) {
   // Store a summary of the effect itself
   node.data.effects = node.data.effects || [];
   // Store either just 
-  let effectAmount;
-  if (!linkedNode.data.amount) {
-    effectAmount = undefined;
-  } else if (typeof linkedNode.data.amount.value === 'string') {
-    effectAmount = pick(linkedNode.data.amount, [
-      'calculation', 'parseNode', 'parseError', 'value'
-    ]);
-  } else {
-    effectAmount = pick(linkedNode.data.amount, ['value']);
-  }
   node.data.effects.push({
     _id: linkedNode.data._id,
     name: linkedNode.data.name,
     operation: linkedNode.data.operation,
-    amount: effectAmount,
+    amount: linkedNode.data.amount.displayValue,
     type: linkedNode.data.type,
     text: linkedNode.data.text,
     // ancestors: linkedNode.data.ancestors,
@@ -45,7 +35,14 @@ export default function aggregateEffect({ node, linkedNode, link }) {
   // get a shorter reference to the aggregator document
   const aggregator = node.data.effectAggregator;
   // Get the result of the effect
-  let result = linkedNode.data.amount?.value;
+  let result = undefined;
+  const valueNode = linkedNode.data.amount?.value;
+  if (
+    valueNode?.parseType === 'constant'
+    && valueNode?.valueType === 'number'
+  ) {
+    result = valueNode.value;
+  }
   if (typeof result !== 'number') result = undefined;
 
   // Aggregate the effect based on its operation
