@@ -1,10 +1,10 @@
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
 import {
-  getCreature, getVariables, getPropertiesOfType
+  getCreature, getVariables, getPropertiesOfType, replaceLinkedVariablesWithProps
 } from '/imports/api/engine/loadCreatures.js';
 import { groupBy, remove } from 'lodash';
 
-export default class ActionContext{
+export default class ActionContext {
   constructor(creatureId, targetIds = [], method) {
     // Get the creature
     this.creature = getCreature(creatureId)
@@ -20,6 +20,7 @@ export default class ActionContext{
 
     // Get the variables of the acting creature
     this.creature.variables = getVariables(creatureId);
+    replaceLinkedVariablesWithProps(this.creature.variables);
     delete this.creature.variables._id;
     delete this.creature.variables._creatureId;
     // Alias as scope
@@ -64,7 +65,7 @@ export default class ActionContext{
     }
   }
   addLog(content) {
-    if (content.name || content.value){
+    if (content.name || content.value) {
       this.log.content.push(content);
     }
   }

@@ -93,7 +93,7 @@
 <script lang="js">
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
-import resolveCalculationNode from 'imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js';
+import resolveCalculationNode from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js';
 import { Tracker } from 'meteor/tracker'
 
 export default {

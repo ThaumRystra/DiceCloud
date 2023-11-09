@@ -8,7 +8,7 @@ import computedSchemas from '/imports/api/properties/computedPropertySchemasInde
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
 import { get } from 'lodash';
 import resolve, { map, toString } from '/imports/parser/resolve.js';
-import symbol from '/imports/parser/parseTree/symbol.js';
+import accessor from '/imports/parser/parseTree/accessor.js';
 import logErrors from './shared/logErrors.js';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
@@ -117,7 +117,7 @@ function crystalizeVariables({ propList, actionContext }) {
         calcObj.parseNode = map(calcObj.parseNode, node => {
           // Skip nodes that aren't symbols or accessors
           if (
-            node.parseType !== 'accessor' && node.parseType !== 'symbol'
+            node.parseType !== 'accessor'
           ) return node;
           // Handle variables
           if (node.name === '~target') {
@@ -125,7 +125,7 @@ function crystalizeVariables({ propList, actionContext }) {
             if (node.parseType === 'accessor') {
               node.name = node.path.shift();
               if (!node.path.length) {
-                return symbol.create({ name: node.name })
+                return accessor.create({ name: node.name })
               }
             } else {
               // Can't strip symbols
