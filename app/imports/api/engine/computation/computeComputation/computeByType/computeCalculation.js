@@ -6,6 +6,7 @@ import resolve, { toPrimitiveOrString } from '/imports/parser/resolve.js';
 
 export default function computeCalculation(computation, node) {
   const calcObj = node.data;
+  if (!calcObj) return;
   // resolve the parse node into the initial value
   resolveCalculationNode(calcObj, calcObj.parseNode, computation.scope);
   // Store the unaffected value
