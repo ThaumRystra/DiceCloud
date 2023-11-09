@@ -37,7 +37,6 @@ export function resolveCalculationNode(calculation, parseNode, scope) {
   calculation.valueNode = resultNode;
 }
 
-
 function linkCalculationEffects(node, computation) {
   const calcObj = node.data;
   delete calcObj.effectIds;
