@@ -159,7 +159,7 @@ number ->
   %number {% d => node.constant.create({value: +d[0].value}) %}
 
 name ->
-  %name {% d => node.symbol.create({name: d[0].value}) %}
+  %name {% d => node.accessor.create({name: d[0].value}) %}
 
 string ->
   %string {% d => node.constant.create({value: d[0].value}) %}

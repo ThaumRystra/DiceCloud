@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.16.0
+// Generated automatically by nearley, version 2.20.1
 // http://github.com/Hardmath123/nearley
 function id(x) { return x[0]; }
 
@@ -122,7 +122,7 @@ let ParserRules = [
     {"name": "valueExpression", "symbols": ["string"], "postprocess": id},
     {"name": "valueExpression", "symbols": ["boolean"], "postprocess": id},
     {"name": "number", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": d => node.constant.create({value: +d[0].value})},
-    {"name": "name", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => node.symbol.create({name: d[0].value})},
+    {"name": "name", "symbols": [(lexer.has("name") ? {type: "name"} : name)], "postprocess": d => node.accessor.create({name: d[0].value})},
     {"name": "string", "symbols": [(lexer.has("string") ? {type: "string"} : string)], "postprocess": d => node.constant.create({value: d[0].value})},
     {"name": "boolean", "symbols": [{"literal":"true"}], "postprocess": d => node.constant.create({value: true})},
     {"name": "boolean", "symbols": [{"literal":"false"}], "postprocess": d => node.constant.create({value: false})},

@@ -1,6 +1,7 @@
 import constant from './constant.js';
-// import array from './array.js';
-import { toString } from '../resolve.js';
+import array from './array.js';
+import resolve from '../resolve.js';
+import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 
 const accessor = {
   create({ name, path }) {
@@ -11,16 +12,21 @@ const accessor = {
     };
   },
   compile(node, scope, context) {
-    let value = scope && scope[node.name];
-    // For objects, get their value
-    node.path.forEach(name => {
+    let value = getFromScope(node.name, scope);
+    // Get the value from the given path
+    node.path?.forEach(name => {
       if (value === undefined) return;
       value = value[name];
     });
     let valueType = getType(value);
-    // If the accessor returns an objet, get the object's value instead
+    // If the accessor returns an object, get the object's value instead
     while (valueType === 'object') {
-      value = value.value;
+      // Prefer the valueNode over the value
+      if (value.valueNode) {
+        value = value.valueNode;
+      } else {
+        value = value.value;
+      }
       valueType = getType(value);
     }
     // Return a discovered parse node
@@ -40,40 +46,44 @@ const accessor = {
         context,
       };
     }
-    /* Can't access #object.tags until this is fixed
-     * If we activate this, the array node expects values to be an array of
-     * parse nodes, so it will break unless the values are coerced here or at 
-     * in the array node's code to be parse nodes, not raw js
-    else if (valueType === 'array') {
+    // Return a parser array
+    if (valueType === 'array') {
+      // If the first value is a parse node, assume all the values are
+      if (getType(value[0]) === 'parseNode') {
+        return {
+          result: array.create({
+            values: value,
+          }),
+          context,
+        };
+      }
+      // Create the array from js primitives instead
       return {
-        result: array.create({
-          values: value,
-        }),
+        result: array.fromConstantArray(value),
         context,
       };
     }
-    */
-    else if (valueType === 'undefined') {
+    if (valueType === 'undefined') {
+      // Undefined defaults to zero
       return {
-        result: accessor.create({
-          name: node.name,
-          path: node.path,
+        result: constant.create({
+          value: 0,
         }),
-        context,
-      };
-    } else {
-      context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
-      return {
-        result: accessor.create({
-          name: node.name,
-          path: node.path,
-        }),
-        context,
+        context
       };
     }
+    context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
+    return {
+      result: accessor.create({
+        name: node.name,
+        path: node.path,
+      }),
+      context,
+    };
   },
   reduce(node, scope, context) {
     let { result } = accessor.compile(node, scope, context);
+    ({ result } = resolve('reduce', result, scope, context));
     if (result.parseType === 'accessor') {
       return {
         result: constant.create({
@@ -86,6 +96,7 @@ const accessor = {
     }
   },
   toString(node) {
+    if (!node.path) return `${node.name}`;
     return `${node.name}.${node.path.join('.')}`;
   }
 }
