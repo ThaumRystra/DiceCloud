@@ -6,6 +6,7 @@ import {
   resolveCalculationNode,
 } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
+import resolve from '/imports/parser/resolve.js';
 
 // Redo the work of imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js
 // But in the action scope
@@ -35,4 +36,24 @@ export default function recalculateCalculation(calcObj, actionContext, context, 
   calcObj.value = toPrimitiveOrString(calcObj.valueNode);
 
   logErrors(calcObj.errors, actionContext);
+}
+
+export function rollAndReduceCalculation(calcObj, actionContext, context) {
+  // Compile
+  recalculateCalculation(calcObj, actionContext, context, 'compile');
+  const compiled = calcObj.valueNode;
+  const compileErrors = context.errors;
+
+  // Roll
+  context.errors = [];
+  const { result: rolled } = resolve('roll', calcObj.valueNode, actionContext.scope, context);
+  const rollErrors = context.errors;
+
+  // Reduce
+  context.errors = [];
+  const { result: reduced } = resolve('reduce', rolled, actionContext.scope, context);
+  const reduceErrors = context.errors;
+
+  // Return
+  return { compiled, compileErrors, rolled, rollErrors, reduced, reduceErrors };
 }
