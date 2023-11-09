@@ -19,29 +19,23 @@ function fieldToCompute(field) {
 
 function computedOnlyField(field) {
   const schemaObj = {
-    // The parseNode of the compiled value before any effects are applied or rolls made
+    // The value (or calculation string) before any effects/proficiencies are applied or rolls made
     [`${field}.unaffected`]: {
-      type: Object,
+      type: SimpleSchema.oneOf(String, Number),
       optional: true,
       blackbox: true,
     },
-    // toString(.unaffected)
-    [`${field}.displayUnaffected`]: {
-      type: SimpleSchema.oneOf(String, Number),
-      optional: true,
-      removeBeforeCompute: true,
-    },
-    // The compiled parseNode after applying all effects
+    // The value (or calculation string) after applying all effects
     [`${field}.value`]: {
-      type: Object,
+      type: SimpleSchema.oneOf(String, Number),
       optional: true,
       blackbox: true,
     },
-    // The displayed value of the calculation: toString(.value)
-    [`${field}.displayValue`]: {
+    // The value as a parse node, after applying all effects
+    [`${field}.valueNode`]: {
       type: SimpleSchema.oneOf(String, Number),
       optional: true,
-      removeBeforeCompute: true,
+      blackbox: true,
     },
     // A list of effect Ids targeting this calculation
     [`${field}.effectIds`]: {

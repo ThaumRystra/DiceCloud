@@ -7,7 +7,7 @@ import rollDice from '/imports/parser/rollDice.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
-import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation.js';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',
@@ -76,7 +76,7 @@ function rollCheck(prop, actionContext) {
 
   let rollModifierText = numberToSignedString(rollModifier, true);
 
-  const { effectBonus, effectString } = applyUnresolvedEffects(prop, scope)
+  const { effectBonus, effectString } = applyUnresolvedEffects(prop, actionContext)
   rollModifierText += effectString;
   rollModifier += effectBonus;
 
@@ -116,7 +116,8 @@ function rollCheck(prop, actionContext) {
   });
 }
 
-export function applyUnresolvedEffects(prop, scope) {
+// TODO replace this with recalculating and then rolling/reducing the value node
+export function applyUnresolvedEffects(prop, actionContext) {
   let effectBonus = 0;
   let effectString = '';
   if (!prop.effects) {
@@ -125,8 +126,7 @@ export function applyUnresolvedEffects(prop, scope) {
   prop.effects.forEach(effect => {
     if (!effect.amount?.parseNode) return;
     if (effect.operation !== 'add') return;
-    effect.amount._parseLevel = 'reduce';
-    evaluateCalculation(effect.amount, scope);
+    recalculateCalculation(effect.amount, actionContext, context, 'reduce');
     if (typeof effect.amount?.value !== 'number') return;
     effectBonus += effect.amount.value;
     effectString += ` ${effect.amount.value < 0 ? '-' : '+'} [${effect.amount.calculation}] ${Math.abs(effect.amount.value)}`

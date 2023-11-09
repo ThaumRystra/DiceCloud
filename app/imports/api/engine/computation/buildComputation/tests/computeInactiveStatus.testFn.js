@@ -2,7 +2,7 @@ import { buildComputationFromProps } from '/imports/api/engine/computation/build
 import { assert } from 'chai';
 import clean from '../../utility/cleanProp.testFn.js';
 
-export default function(){
+export default function () {
   let computation = buildComputationFromProps(testProperties);
   const bySelf = (propId, note) => assertDeactivatedBySelf(computation, propId, note);
   const byAncestor = (propId, note) => assertDeactivatedByAncestor(computation, propId, note);
@@ -24,22 +24,22 @@ export default function(){
 
   // Notes
   active('NoteId', 'Notes should be active');
-  byAncestor('NoteChildId', 'children of notes should always be inactive');
+  active('NoteChildId', 'children of notes should be active');
 }
 
-function assertDeactivatedBySelf(computation, propId, note){
+function assertDeactivatedBySelf(computation, propId, note) {
   const prop = computation.propsById[propId];
   assert.isTrue(prop.deactivatedBySelf, note);
   assert.isTrue(prop.inactive, note + '. The property should be inactive');
 }
 
-function assertDeactivatedByAncestor(computation, propId, note){
+function assertDeactivatedByAncestor(computation, propId, note) {
   const prop = computation.propsById[propId];
   assert.isTrue(prop.deactivatedByAncestor, note);
   assert.isTrue(prop.inactive, 'The property should be inactive');
 }
 
-function assertActive(computation, propId, note){
+function assertActive(computation, propId, note) {
   const prop = computation.propsById[propId];
   assert.isNotTrue(prop.inactive, note);
   assert.isNotTrue(prop.deactivatedBySelf, note);
@@ -51,66 +51,66 @@ var testProperties = [
   clean({
     _id: 'itemUnequippedId',
     type: 'item',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   clean({
     _id: 'itemUnequippedChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'itemUnequippedId'}],
+    ancestors: [{ id: 'charId' }, { id: 'itemUnequippedId' }],
   }),
   clean({
     _id: 'itemEquippedId',
     type: 'item',
     equipped: true,
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   clean({
     _id: 'itemEquippedChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'itemEquippedId'}],
+    ancestors: [{ id: 'charId' }, { id: 'itemEquippedId' }],
   }),
   // Spells
   clean({
     _id: 'spellPreparedId',
     type: 'spell',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
     prepared: true,
   }),
   clean({
     _id: 'spellPreparedChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'spellPreparedId'}],
+    ancestors: [{ id: 'charId' }, { id: 'spellPreparedId' }],
   }),
   clean({
     _id: 'spellAlwaysPreparedId',
     type: 'spell',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
     alwaysPrepared: true,
   }),
   clean({
     _id: 'spellAlwaysPreparedChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'spellAlwaysPreparedId'}],
+    ancestors: [{ id: 'charId' }, { id: 'spellAlwaysPreparedId' }],
   }),
   clean({
     _id: 'spellUnpreparedId',
     type: 'spell',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   clean({
     _id: 'spellUnpreparedChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'spellUnpreparedId'}],
+    ancestors: [{ id: 'charId' }, { id: 'spellUnpreparedId' }],
   }),
   // Notes
   clean({
     _id: 'NoteId',
     type: 'note',
-    ancestors: [{id: 'charId'}],
+    ancestors: [{ id: 'charId' }],
   }),
   clean({
     _id: 'NoteChildId',
     type: 'folder',
-    ancestors: [{id: 'charId'}, {id: 'NoteId'}],
+    ancestors: [{ id: 'charId' }, { id: 'NoteId' }],
   }),
 ];

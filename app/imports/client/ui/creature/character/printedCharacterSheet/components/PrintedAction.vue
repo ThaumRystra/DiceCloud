@@ -85,21 +85,15 @@
 <script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
-import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import { some } from 'lodash';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
-import resolve, { Context, toString } from '/imports/parser/resolve.js';
 
 export default {
   components: {
-    AttributeConsumedView,
-    ItemConsumedView,
     MarkdownText,
     PropertyIcon,
     TreeNodeList,
@@ -167,10 +161,8 @@ export default {
       if (this.children[0].children[0]?.node?.type !== 'damage') return;
       if (this.children[0].children[0].children?.length !== 0) return;
       const damage = this.children[0].children[0]?.node;
-      applyEffectsToCalculationParseNode(damage.amount);
-      const { result } = resolve('compile', damage.amount.parseNode, {});
       return {
-        damage: toString(result),
+        damage: damage.value,
         suffix: damage.damageType + (damage.damageType !== 'healing' ? ' damage ' : '')
       };
     },

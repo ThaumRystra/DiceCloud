@@ -15,8 +15,8 @@ export default function () {
     prop('strengthId').modifier, -1,
     'The proficiency bonus should not change the strength modifier'
   );
-  assert.exists(prop('actionId').attackRoll.proficiencies, 'The proficiency aggregator should be here')
-  assert.exists(prop('actionId').attackRoll.proficiencies[0], 'The proficiency should be here')
+  assert.exists(prop('actionId').attackRoll.proficiencyIds, 'The proficiency aggregator should be here')
+  assert.exists(prop('actionId').attackRoll.proficiencyIds[0], 'The proficiency should be here')
   // attack roll = strength.mod + proficiencyBonus/2 rounded down
   // = -1 + 13/2 = -1 + 6 = 5
   assert.equal(

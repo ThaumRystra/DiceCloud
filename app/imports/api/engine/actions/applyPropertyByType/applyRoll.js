@@ -1,6 +1,6 @@
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import logErrors from './shared/logErrors.js';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode.js';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js';
 import resolve, { toString } from '/imports/parser/resolve.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
@@ -12,8 +12,8 @@ export default function applyRoll(node, actionContext) {
     const logValue = [];
 
     // roll the dice only and store that string
-    applyEffectsToCalculationParseNode(prop.roll, actionContext);
-    const { result: rolled, context } = resolve('roll', prop.roll.parseNode, actionContext.scope);
+    recalculateCalculation(prop.roll, actionContext, undefined, 'compile');
+    const { result: rolled, context } = resolve('roll', prop.roll.valueNode, actionContext.scope);
     if (rolled.parseType !== 'constant') {
       logValue.push(toString(rolled));
     }

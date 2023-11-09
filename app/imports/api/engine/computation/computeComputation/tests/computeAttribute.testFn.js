@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation.js';
 import clean from '../../utility/cleanProp.testFn.js';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
