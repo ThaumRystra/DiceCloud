@@ -9,15 +9,17 @@ export default function computeCalculation(computation, node) {
   if (!calcObj) return;
   // resolve the parse node into the initial value
   resolveCalculationNode(calcObj, calcObj.parseNode, computation.scope);
-  // Store the unaffected value
-  if (calcObj.effectIds || calcObj.proficiencyIds) {
-    calcObj.unaffected = toPrimitiveOrString(calcObj.valueNode);
-  }
+
   // link and aggregate the effects and proficiencies
   linkCalculationEffects(node, computation);
   aggregateCalculationEffects(calcObj, id => computation.propsById[id]);
   linkCalculationProficiencies(node, computation)
   aggregateCalculationProficiencies(calcObj, id => computation.propsById[id], computation.scope['proficiencyBonus']?.value || 0);
+
+  // Store the unaffected value
+  if (calcObj.effectIds || calcObj.proficiencyIds) {
+    calcObj.unaffected = toPrimitiveOrString(calcObj.valueNode);
+  }
 
   // Resolve the valueNode after effects and proficiencies have been applied to it
   resolveCalculationNode(calcObj, calcObj.valueNode, computation.scope);
@@ -145,14 +147,14 @@ export function aggregateCalculationEffects(calcObj, getEffectFromId) {
   if (aggregator.min) {
     calcObj.valueNode = call.create({
       functionName: 'max',
-      args: [calcObj.valueNode, aggregator.min]
+      args: [calcObj.valueNode, ...aggregator.min]
     });
   }
   // Max
   if (aggregator.max) {
     calcObj.valueNode = call.create({
       functionName: 'min',
-      args: [calcObj.valueNode, aggregator.max]
+      args: [calcObj.valueNode, ...aggregator.max]
     });
   }
 }

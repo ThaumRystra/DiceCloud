@@ -1,5 +1,6 @@
 import computeAction from './computeAction.testFn.js';
 import computeAttribute from './computeAttribute.testFn.js';
+import computeCalculations from './computeCalculations.testFn.js';
 import computeClasses from './computeClasses.testFn.js';
 import computeConstants from './computeConstants.testFn.js';
 import computeInventory from './computeInventory.testFn.js';
@@ -14,6 +15,9 @@ export default [{
 }, {
   text: 'Computes attributes',
   fn: computeAttribute,
+}, {
+  text: 'Computes calculations',
+  fn: computeCalculations,
 }, {
   text: 'Computes classes',
   fn: computeClasses,

@@ -55,7 +55,7 @@ function parseAllCalculationFields(prop, schemas) {
   // For each computed key in the schema
   schemas[prop.type]?.computedFields?.()?.forEach(calcKey => {
     // Determine the level the calculation should compute down to
-    let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel || 'reduce';
+    let parseLevel = schemas[prop.type].getDefinition(calcKey).parseLevel || 'compile';
 
     // Special case of effects, when targeting by tags compile
     if (prop.type === 'effect' && prop.targetByTags) parseLevel = 'compile';

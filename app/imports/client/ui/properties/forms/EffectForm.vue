@@ -8,7 +8,6 @@
         <smart-select
           label="Operation"
           append-icon="mdi-menu-down"
-          :disabled="model.targetByTags"
           :hint="operationHint"
           :error-messages="errors.operation"
           :menu-props="{transition: 'slide-y-transition', lazy: true}"
@@ -213,15 +212,8 @@ export default {
     changeTargetByTags(value, ack) {
       if (value === 'stats') {
         this.$emit('change', { path: ['targetByTags'], value: undefined, ack });
-        if (this.oldOperation && this.oldOperation !== this.model.operation) {
-          this.$emit('change', { path: ['operation'], value: this.oldOperation });
-        }
       } else if (value === 'tags') {
         this.$emit('change', { path: ['targetByTags'], value: true, ack });
-        if (this.model.operation !== 'add') {
-          this.oldOperation = this.model.operation;
-          this.$emit('change', { path: ['operation'], value: 'add' });
-        }
       }
     },
   }
