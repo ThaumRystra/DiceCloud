@@ -20,7 +20,6 @@ describe('Parser', function () {
   });
   it('simplifies addition when possible, even if a roll is in the way', function () {
     let { result } = resolve('compile', parse('1 + 3 + d12 + 3 + 4'));
-    console.log(result);
     assert.equal(toString(result), 'd12 + 11');
   });
 });

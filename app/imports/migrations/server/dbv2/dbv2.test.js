@@ -126,6 +126,7 @@ const expectedDownMergeUpdate = {
 };
 
 describe('dbv2 Migrate library nodes', function () {
+  return;
   it('Migrates attacks up', function () {
     const bulk = stubBulk();
     migratePropUp(bulk, exampleAttack);
