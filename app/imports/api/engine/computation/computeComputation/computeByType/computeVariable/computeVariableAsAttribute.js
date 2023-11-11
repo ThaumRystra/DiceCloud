@@ -49,5 +49,5 @@ export default function computeVariableAsAttribute(computation, node, prop) {
     undefined
 
   // Store effects
-  prop.effects = node.data.effects;
+  prop.effectIds = node.data.effectIds;
 }

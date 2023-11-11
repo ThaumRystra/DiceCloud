@@ -29,20 +29,40 @@ function fieldToCompute(field) {
 
 function computedOnlyField(field) {
   const schemaObj = {
+    // The value (or calculation string) before any effects/proficiencies are applied or rolls made
+    [`${field}.unaffected`]: {
+      type: SimpleSchema.oneOf(String, Number),
+      optional: true,
+      blackbox: true,
+    },
+    // The value (or calculation string) after applying all effects
     [`${field}.value`]: {
       type: SimpleSchema.oneOf(String, Number),
       optional: true,
-      removeBeforeCompute: true,
+      blackbox: true,
     },
-    // A list of effects targeting this calculation
-    [`${field}.effects`]: {
+    // The value as a parse node, after applying all effects
+    [`${field}.valueNode`]: {
+      type: SimpleSchema.oneOf(String, Number),
+      optional: true,
+      blackbox: true,
+    },
+    // A list of effect Ids targeting this calculation
+    [`${field}.effectIds`]: {
       type: Array,
       optional: true,
       removeBeforeCompute: true,
     },
-    [`${field}.effects.$`]: {
-      type: Object,
-      blackbox: true,
+    [`${field}.effectIds.$`]: {
+      type: String,
+    },
+    [`${field}.proficiencyIds`]: {
+      type: Array,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.proficiencyIds.$`]: {
+      type: String,
     },
     // A cache of the parse result of the calculation
     [`${field}.parseNode`]: {
@@ -68,6 +88,30 @@ function computedOnlyField(field) {
     },
     [`${field}.errors.$`]: {
       type: ErrorSchema,
+    },
+    // Effect aggregations
+    [`${field}.advantage`]: {
+      type: Number,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.disadvantage`]: {
+      type: Number,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.fail`]: {
+      type: Number,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.conditional`]: {
+      type: Array,
+      optional: true,
+      removeBeforeCompute: true,
+    },
+    [`${field}.conditional.$`]: {
+      type: String,
     },
   }
   includeParentFields(field, schemaObj);

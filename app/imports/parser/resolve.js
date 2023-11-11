@@ -30,6 +30,13 @@ export function toString(node) {
   return type.toString(node);
 }
 
+export function toPrimitiveOrString(node) {
+  if (!node) return '';
+  if (node.parseType === 'constant') return node.value;
+  if (node.parseType === 'error') return null;
+  return toString(node);
+}
+
 export function traverse(node, fn) {
   if (!node) return;
   let type = nodeTypeIndex[node.parseType];

@@ -91,7 +91,11 @@ export default {
       name: 'Vibes',
       title: 'Kell of Nothing',
       avatar: 'vibes'
-    }
+    }, {
+      name: 'ßlue',
+      title: 'Embodiment of Greed',
+      avatar: 'blue'
+    },
     ],
   }},
 }

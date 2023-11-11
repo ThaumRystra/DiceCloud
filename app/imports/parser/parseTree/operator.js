@@ -2,13 +2,12 @@ import resolve, { toString, traverse, map } from '../resolve';
 import constant from './constant';
 
 const operator = {
-  create({ left, right, operator, fn }) {
+  create({ left, right, operator }) {
     return {
       parseType: 'operator',
       left,
       right,
       operator,
-      fn
     };
   },
   resolve(fn, node, scope, context) {
@@ -21,7 +20,6 @@ const operator = {
           left: leftNode,
           right: rightNode,
           operator: node.operator,
-          fn: node.fn,
         }),
         context,
       };

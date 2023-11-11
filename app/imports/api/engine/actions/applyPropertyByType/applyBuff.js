@@ -1,13 +1,12 @@
 import {
-  setLineageOfDocs,
-  renewDocIds
+  renewDocIds,
 } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get } from 'lodash';
 import resolve, { map, toString } from '/imports/parser/resolve';
-import symbol from '/imports/parser/parseTree/symbol';
+import accessor from '/imports/parser/parseTree/accessor';
 import logErrors from './shared/logErrors';
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs';
 import cyrb53 from '/imports/api/engine/computation/utility/cyrb53';
@@ -25,7 +24,7 @@ export default function applyBuff(node, actionContext) {
 
   // Then copy the descendants of the buff to the targets
   let propList = [prop];
-  function addChildrenToPropList(children, { skipCrystalize } = {}) {
+  function addChildrenToPropList(children, { skipCrystalize } = { skipCrystalize: false }) {
     children.forEach(child => {
       if (skipCrystalize) child.node._skipCrystalize = true;
       propList.push(child.node);
@@ -40,13 +39,20 @@ export default function applyBuff(node, actionContext) {
     crystalizeVariables({ propList, actionContext });
   }
 
-  let oldParent = {
-    id: prop.parent.id,
-    collection: prop.parent.collection,
-  };
   buffTargets.forEach(target => {
+    const targetPropList = EJSON.clone(propList);
+    // Move the properties to the target by replacing the old subtree parent and root with the '
+    // target id
+    renewDocIds({
+      docArray: targetPropList,
+      idMap: {
+        [prop.parentId]: target._id,
+        [prop.root.id]: target._id,
+      },
+      collectionMap: { [prop.root.collection]: 'creatures' }
+    });
     // Apply the buff
-    copyNodeListToTarget(propList, target, oldParent);
+    CreatureProperties.batchInsert(targetPropList);
 
     //Log the buff
     let logValue = prop.description?.value
@@ -81,25 +87,6 @@ export default function applyBuff(node, actionContext) {
   // Don't apply the children of the buff, they get copied to the target instead
 }
 
-function copyNodeListToTarget(propList, target, oldParent) {
-  let ancestry = [{ collection: 'creatures', id: target._id }];
-  setLineageOfDocs({
-    docArray: propList,
-    newAncestry: ancestry,
-    oldParent,
-  });
-  renewDocIds({
-    docArray: propList,
-  });
-  /*
-  setDocToLastOrder({
-    collection: CreatureProperties,
-    doc: propList[0],
-  });
-  */
-  CreatureProperties.batchInsert(propList);
-}
-
 /**
  * Replaces all variables with their resolved values
  * except variables of the form `~target.thing.total` become `thing.total`
@@ -118,7 +105,7 @@ function crystalizeVariables({ propList, actionContext }) {
         calcObj.parseNode = map(calcObj.parseNode, node => {
           // Skip nodes that aren't symbols or accessors
           if (
-            node.parseType !== 'accessor' && node.parseType !== 'symbol'
+            node.parseType !== 'accessor'
           ) return node;
           // Handle variables
           if (node.name === '~target') {
@@ -126,7 +113,7 @@ function crystalizeVariables({ propList, actionContext }) {
             if (node.parseType === 'accessor') {
               node.name = node.path.shift();
               if (!node.path.length) {
-                return symbol.create({ name: node.name })
+                return accessor.create({ name: node.name })
               }
             } else {
               // Can't strip symbols

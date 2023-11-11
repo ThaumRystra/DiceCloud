@@ -12,8 +12,8 @@ export default function linkCalculationDependencies(dependencyGraph, prop, { pro
     // Skip empty calculations that aren't targeted by anything
     if (
       !calcObj.calculation
-      && !calcObj.effects
-      && !calcObj.proficiencies
+      && !calcObj.effectIds
+      && !calcObj.proficiencyIds
     ) return;
 
     dependencyGraph.addNode(calcNodeId, calcObj);

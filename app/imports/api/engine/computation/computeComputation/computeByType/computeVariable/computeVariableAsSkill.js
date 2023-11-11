@@ -34,7 +34,7 @@ export default function computeVariableAsSkill(computation, node, prop) {
   const aggregatorBase = aggregator?.base || 0;
 
   // Store effects
-  prop.effects = node.data.effects;
+  prop.effectIds = node.data.effectIds;
 
   // If there is no aggregator, determine if the prop can hide, then exit
   if (!aggregator) {

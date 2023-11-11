@@ -1,19 +1,46 @@
-import evaluateCalculation from '../../utility/evaluateCalculation';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
+import call from '/imports/parser/parseTree/call';
+import constant from '/imports/parser/parseTree/constant';
+import operator from '/imports/parser/parseTree/operator';
+import parenthesis from '/imports/parser/parseTree/parenthesis';
+import resolve, { toPrimitiveOrString } from '/imports/parser/resolve';
 
 export default function computeCalculation(computation, node) {
   const calcObj = node.data;
-  evaluateCalculation(calcObj, computation.scope);
-  if (calcObj.effects || calcObj.proficiencies) {
-    calcObj.baseValue = calcObj.value;
+  if (!calcObj) return;
+  // resolve the parse node into the initial value
+  resolveCalculationNode(calcObj, calcObj.parseNode, computation.scope);
+  // Store the unaffected value
+  if (calcObj.effectIds || calcObj.proficiencyIds) {
+    calcObj.unaffected = toPrimitiveOrString(calcObj.valueNode);
   }
-  aggregateCalculationEffects(node, computation);
-  aggregateCalculationProficiencies(node, computation);
+  // link and aggregate the effects and proficiencies
+  linkCalculationEffects(node, computation);
+  aggregateCalculationEffects(calcObj, id => computation.propsById[id]);
+  linkCalculationProficiencies(node, computation)
+  aggregateCalculationProficiencies(calcObj, id => computation.propsById[id], computation.scope['proficiencyBonus']?.value || 0);
+
+  // Resolve the valueNode after effects and proficiencies have been applied to it
+  resolveCalculationNode(calcObj, calcObj.valueNode, computation.scope);
+
+  // Store the value as a primitive
+  calcObj.value = toPrimitiveOrString(calcObj.valueNode);
+
+  // remove the working fields
+  delete calcObj._parseLevel;
+  delete calcObj._localScope;
 }
 
-function aggregateCalculationEffects(node, computation) {
+export function resolveCalculationNode(calculation, parseNode, scope) {
+  const fn = calculation._parseLevel;
+  const calculationScope = { ...calculation._localScope, ...scope };
+  const { result: resultNode, context } = resolve(fn, parseNode, calculationScope);
+  calculation.errors = context.errors;
+  calculation.valueNode = resultNode;
+}
+
+function linkCalculationEffects(node, computation) {
   const calcObj = node.data;
-  delete calcObj.effects;
+  delete calcObj.effectIds;
   computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
@@ -25,35 +52,115 @@ function aggregateCalculationEffects(node, computation) {
       if (linkedNode.data.inactive) return;
 
       // Collate effects
-      calcObj.effects = calcObj.effects || [];
-      calcObj.effects.push({
-        _id: linkedNode.data._id,
-        name: linkedNode.data.name,
-        operation: linkedNode.data.operation,
-        amount: linkedNode.data.amount && {
-          value: linkedNode.data.amount.value,
-        },
-      });
+      calcObj.effectIds = calcObj.effectIds || [];
+      calcObj.effectIds.push(linkedNode.data._id);
     },
     true // enumerate only outbound links
   );
-  if (calcObj.effects && typeof calcObj.value === 'number') {
-    calcObj.effects.forEach(effect => {
-      if (
-        effect.operation === 'add' &&
-        effect.amount && typeof effect.amount.value === 'number'
-      ) {
-        calcObj.value += effect.amount.value
-      }
+}
+
+export function aggregateCalculationEffects(calcObj, getEffectFromId) {
+  // dictionary of {[operation]: parseNode}
+  const aggregator = {};
+  // Store all effect values
+  calcObj.effectIds?.forEach(effectId => {
+    const effect = getEffectFromId(effectId);
+    const op = effect.operation;
+    switch (op) {
+      case undefined:
+        break;
+      // Conditionals stored as a list of text
+      case 'conditional':
+        if (!aggregator[op]) aggregator[op] = [];
+        aggregator[op].push(effect.text);
+        break;
+      // Adv/Dis and Fails just count instances
+      case 'advantage':
+      case 'disadvantage':
+      case 'fail':
+        if (calcObj[op] === undefined) calcObj[op] = 0;
+        calcObj[op]++;
+        break;
+      // Math functions store value parseNodes
+      case 'base':
+      case 'add':
+      case 'mul':
+      case 'min':
+      case 'max':
+      case 'set':
+        if (!aggregator[op]) aggregator[op] = [];
+        aggregator[op].push(effect.amount.valueNode);
+        break;
+      // No case for passiveAdd, it doesn't make sense in this context
+    }
+  });
+  /**
+   * Aggregate the effects in a parse tree like so
+   * x = max(...base, unaffectedValue)
+   * x = x + sum(...add)
+   * x = x * mul(...mul)
+   * x = min(...min, x)
+   * x = max(...max, x)
+   * x = set(last(...set))a
+   */
+  // Set
+  // If we do set, return early, nothing else matters
+  if (aggregator.set) {
+    calcObj.valueNode = aggregator.set[aggregator.set.length - 1];
+    return;
+  }
+  // Base value
+  if (aggregator.base) {
+    calcObj.valueNode = call.create({
+      functionName: 'max',
+      args: [calcObj.valueNode, aggregator.base]
+    });
+  }
+  // Add
+  aggregator.add?.forEach(node => {
+    calcObj.valueNode = operator.create({
+      left: calcObj.valueNode,
+      right: node,
+      operator: '+'
+    });
+  });
+  // Multiply
+  if (aggregator.mul) {
+    // Wrap the previous node in brackets if it's another operator
+    if (calcObj.parseType === 'operator') {
+      calcObj.valueNode = parenthesis.create({
+        content: calcObj.valueNode
+      });
+    }
+    // Append all multiplications
+    aggregator.mul.forEach(node => {
+      calcObj.valueNode = operator.create({
+        left: calcObj.valueNode,
+        right: node,
+        operator: '*'
+      });
+    });
+  }
+  // Min
+  if (aggregator.min) {
+    calcObj.valueNode = call.create({
+      functionName: 'max',
+      args: [calcObj.valueNode, aggregator.min]
+    });
+  }
+  // Max
+  if (aggregator.max) {
+    calcObj.valueNode = call.create({
+      functionName: 'min',
+      args: [calcObj.valueNode, aggregator.max]
     });
   }
 }
 
-function aggregateCalculationProficiencies(node, computation) {
+function linkCalculationProficiencies(node, computation) {
   const calcObj = node.data;
-  delete calcObj.proficiencies;
+  delete calcObj.proficiencyIds;
   delete calcObj.proficiency;
-  let profBonus = computation.scope['proficiencyBonus']?.value || 0;
 
   // Go through all the links and collect them on the calculation
   computation.dependencyGraph.forEachLinkedNode(
@@ -65,49 +172,52 @@ function aggregateCalculationProficiencies(node, computation) {
       if (!linkedNode.data) return;
       // Ignoring inactive props
       if (linkedNode.data.inactive) return;
-      // Compute the proficiency and value
-      let proficiency, value;
-      if (linkedNode.data.type === 'proficiency') {
-        proficiency = linkedNode.data.value || 0;
-        // Multiply the proficiency bonus by the actual proficiency
-        if (proficiency === 0.49) {
-          // Round down proficiency bonus in the special case
-          value = Math.floor(profBonus * 0.5);
-        } else {
-          value = Math.ceil(profBonus * proficiency);
-        }
-      } else if (linkedNode.data.type === 'skill') {
-        value = linkedNode.data.value || 0;
-        proficiency = linkedNode.data.proficiency || 0;
-      }
       // Collate proficiencies
-      calcObj.proficiencies = calcObj.proficiencies || [];
-      calcObj.proficiencies.push({
-        _id: linkedNode.data._id,
-        name: linkedNode.data.name,
-        type: linkedNode.data.type,
-        proficiency,
-        value,
-      });
+      calcObj.proficiencyIds = calcObj.proficiencyIds || [];
+      calcObj.proficiencyIds.push(linkedNode.data._id);
     },
     true // enumerate only outbound links
   );
+}
 
+export function aggregateCalculationProficiencies(calcObj, getProficiencyFromId, profBonus) {
+  if (!calcObj.proficiencyIds) return;
   // Apply the highest proficiency, marking all others as overridden
-  if (calcObj.proficiencies && typeof calcObj.value === 'number') {
-    calcObj.proficiency = 0;
-    calcObj.proficiencyBonus = 0;
-    let currentProf;
-    calcObj.proficiencies.forEach(prof => {
-      if (prof.value > calcObj.proficiencyBonus) {
-        if (currentProf) currentProf.overridden = true;
-        calcObj.proficiencyBonus = prof.value;
-        calcObj.proficiency = prof.proficiency;
-        currentProf = prof;
+  calcObj.proficiency = 0;
+  calcObj.proficiencyBonus = 0;
+  let currentProf;
+  calcObj.proficiencyIds.forEach(profId => {
+    const profProp = getProficiencyFromId(profId)
+    if (!profProp) {
+      console.warn('proficiency linked but not found ', profId);
+    }
+    // Compute the proficiency and value
+    let proficiency, value;
+    if (profProp.type === 'proficiency') {
+      proficiency = profProp.value || 0;
+      // Multiply the proficiency bonus by the actual proficiency
+      if (proficiency === 0.49) {
+        // Round down proficiency bonus in the special case
+        value = Math.floor(profBonus * 0.5);
       } else {
-        prof.overridden = true;
+        value = Math.ceil(profBonus * proficiency);
       }
-    });
-    calcObj.value += calcObj.proficiencyBonus;
-  }
+    } else if (profProp.type === 'skill') {
+      value = profProp.value || 0;
+      proficiency = profProp.proficiency || 0;
+    }
+    if (value > calcObj.proficiencyBonus) {
+      if (currentProf) currentProf.overridden = true;
+      calcObj.proficiencyBonus = value;
+      calcObj.proficiency = proficiency;
+      currentProf = profProp;
+    } else {
+      profProp.overridden = true;
+    }
+  });
+  calcObj.valueNode = operator.create({
+    left: calcObj.valueNode,
+    right: constant.create({ value: calcObj.proficiencyBonus }),
+    operator: '+'
+  });
 }

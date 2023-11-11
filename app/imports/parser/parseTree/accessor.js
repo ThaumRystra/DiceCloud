@@ -1,6 +1,7 @@
 import constant from './constant';
-// import array from './array';
-import { toString } from '../resolve';
+import array from './array';
+import resolve from '../resolve';
+import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 
 const accessor = {
   create({ name, path }) {
@@ -11,62 +12,75 @@ const accessor = {
     };
   },
   compile(node, scope, context) {
-    let value = scope && scope[node.name];
-    // For objects, get their value
-    node.path.forEach(name => {
+    let value = getFromScope(node.name, scope);
+    // Get the value from the given path
+    node.path?.forEach(name => {
       if (value === undefined) return;
       value = value[name];
     });
-    let valueType = Array.isArray(value) ? 'array' : typeof value;
-    // If the accessor returns an objet, get the object's value instead
+    let valueType = getType(value);
+    // If the accessor returns an object, get the object's value instead
     while (valueType === 'object') {
-      value = value.value;
-      valueType = Array.isArray(value) ? 'array' : typeof value;
+      // Prefer the valueNode over the value
+      if (value.valueNode) {
+        value = value.valueNode;
+      } else {
+        value = value.value;
+      }
+      valueType = getType(value);
     }
-    // Return a parse node based on the type returned
+    // Return a discovered parse node
+    if (valueType === 'parseNode') {
+      return {
+        result: value,
+        context,
+      };
+    }
+    // Return a parse node based on the constant type returned
     if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
       return {
+        result: constant.create({ value }),
+        context,
+      };
+    }
+    // Return a parser array
+    if (valueType === 'array') {
+      // If the first value is a parse node, assume all the values are
+      if (getType(value[0]) === 'parseNode') {
+        return {
+          result: array.create({
+            values: value,
+          }),
+          context,
+        };
+      }
+      // Create the array from js primitives instead
+      return {
+        result: array.fromConstantArray(value),
+        context,
+      };
+    }
+    if (valueType === 'undefined') {
+      // Undefined defaults to zero
+      return {
         result: constant.create({
-          value,
-          valueType
+          value: 0,
         }),
-        context,
+        context
       };
     }
-    /* Can't access #object.tags until this is fixed
-     * If we activate this, the array node expects values to be an array of
-     * parse nodes, so it will break unless the values are coerced here or at 
-     * in the array node's code to be parse nodes, not raw js
-    else if (valueType === 'array') {
-      return {
-        result: array.create({
-          values: value,
-        }),
-        context,
-      };
-    }
-    */
-    else if (valueType === 'undefined') {
-      return {
-        result: accessor.create({
-          name: node.name,
-          path: node.path,
-        }),
-        context,
-      };
-    } else {
-      context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
-      return {
-        result: accessor.create({
-          name: node.name,
-          path: node.path,
-        }),
-        context,
-      };
-    }
+    context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
+    return {
+      result: accessor.create({
+        name: node.name,
+        path: node.path,
+      }),
+      context,
+    };
   },
   reduce(node, scope, context) {
     let { result } = accessor.compile(node, scope, context);
+    ({ result } = resolve('reduce', result, scope, context));
     if (result.parseType === 'accessor') {
       return {
         result: constant.create({
@@ -79,8 +93,16 @@ const accessor = {
     }
   },
   toString(node) {
+    if (!node.path) return `${node.name}`;
     return `${node.name}.${node.path.join('.')}`;
   }
+}
+
+function getType(val) {
+  if (!val) return typeof val;
+  if (Array.isArray(val)) return 'array';
+  if (val.parseType) return 'parseNode';
+  return typeof val;
 }
 
 export default accessor;

@@ -3,7 +3,7 @@ import applyChildren from '/imports/api/engine/actions/applyPropertyByType/share
 import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs';
 import resolve, { Context, toString } from '/imports/parser/resolve';
 import logErrors from './shared/logErrors';
-import applyEffectsToCalculationParseNode from '/imports/api/engine/actions/applyPropertyByType/shared/applyEffectsToCalculationParseNode';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation'
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import {
   getPropertiesOfType
@@ -37,8 +37,8 @@ export default function applyDamage(node, actionContext) {
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // roll the dice only and store that string
-  applyEffectsToCalculationParseNode(prop.amount, actionContext);
-  const { result: rolled } = resolve('roll', prop.amount.parseNode, scope, context);
+  recalculateCalculation(prop.amount, actionContext, undefined, 'compile');
+  const { result: rolled } = resolve('roll', prop.amount.valueNode, scope, context);
   if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
   }
@@ -88,8 +88,8 @@ export default function applyDamage(node, actionContext) {
   let damageOnSave, saveNode, saveRoll;
   if (prop.save) {
     if (prop.save.damageFunction?.calculation) {
-      applyEffectsToCalculationParseNode(prop.save.damageFunction, actionContext);
-      let { result: saveDamageRolled } = resolve('roll', prop.save.damageFunction.parseNode, scope, context);
+      recalculateCalculation(prop.save.damageFunction, actionContext, undefined, 'compile');
+      let { result: saveDamageRolled } = resolve('roll', prop.save.damageFunction.valueNode, scope, context);
       saveRoll = toString(saveDamageRolled);
       let { result: saveDamageResult } = resolve('reduce', saveDamageRolled, scope, context);
       // If we didn't end up with a constant of finite amount, give up
@@ -167,7 +167,7 @@ export default function applyDamage(node, actionContext) {
             creatureId: target._id,
             content: [{
               name,
-              value: `Recieved **${damageDealt}** ${suffix}`,
+              value: `Received **${damageDealt}** ${suffix}`,
             }],
           }
         });

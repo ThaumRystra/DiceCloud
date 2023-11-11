@@ -19,6 +19,12 @@ export default function writeScope(creatureId, computation) {
     // Mongo can't handle keys that start with a dollar sign
     if (key[0] === '$' || key[0] === '_') continue;
 
+    // Remove empty objects
+    if (Object.keys(scope[key]).length === 0) {
+      delete scope[key];
+      continue;
+    }
+
     // Remove large properties that aren't likely to be accessed
     delete scope[key].parent;
 
@@ -27,6 +33,11 @@ export default function writeScope(creatureId, computation) {
       if (scope[key][subKey] === undefined) {
         delete scope[key][subKey]
       }
+    }
+
+    // If this is a creature property, replace the property with a link
+    if (scope[key]._id && scope[key].type) {
+      scope[key] = { _propId: scope[key]._id };
     }
 
     // Only update changed fields

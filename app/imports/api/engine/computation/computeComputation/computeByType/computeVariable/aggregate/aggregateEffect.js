@@ -1,5 +1,3 @@
-import { pick } from 'lodash';
-
 export default function aggregateEffect({ node, linkedNode, link }) {
   if (link.data !== 'effect') return;
   // store the effect aggregator, its presence indicates that the variable is
@@ -19,27 +17,9 @@ export default function aggregateEffect({ node, linkedNode, link }) {
     rollBonus: [],
   };
 
-  // Store a summary of the effect itself
-  node.data.effects = node.data.effects || [];
-  // Store either just 
-  let effectAmount;
-  if (!linkedNode.data.amount) {
-    effectAmount = undefined;
-  } else if (typeof linkedNode.data.amount.value === 'string') {
-    effectAmount = pick(linkedNode.data.amount, [
-      'calculation', 'parseNode', 'parseError', 'value'
-    ]);
-  } else {
-    effectAmount = pick(linkedNode.data.amount, ['value']);
-  }
-  node.data.effects.push({
-    _id: linkedNode.data._id,
-    name: linkedNode.data.name,
-    operation: linkedNode.data.operation,
-    amount: effectAmount,
-    type: linkedNode.data.type,
-    text: linkedNode.data.text,
-  });
+  // Store a link to the effect
+  node.data.effectIds = node.data.effectIds || [];
+  node.data.effectIds.push(linkedNode.data._id);
 
   // get a shorter reference to the aggregator document
   const aggregator = node.data.effectAggregator;

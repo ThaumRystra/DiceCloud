@@ -1,5 +1,5 @@
 import { has } from 'lodash';
-import evaluateCalculation from '../../utility/evaluateCalculation';
+import { resolveCalculationNode } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 
 export default function computePointBuy(computation, node) {
   const prop = node.data;
@@ -26,7 +26,9 @@ export default function computePointBuy(computation, node) {
     }
     // Evaluate the cost function
     if (!costFunction) return;
-    evaluateCalculation(costFunction, { ...computation.scope, value: row.value });
+    resolveCalculationNode(costFunction, costFunction.parseNode, {
+      ...computation.scope, value: row.value
+    });
     // Write calculation errors
     costFunction.errors?.forEach(error => {
       if (error?.message) {

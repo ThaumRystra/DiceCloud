@@ -10,7 +10,6 @@ import operator from './operator';
 import parenthesis from './parenthesis';
 import roll from './roll';
 import rollArray from './rollArray';
-import symbol from './symbol';
 import unaryOperator from './unaryOperator';
 
 export default Object.freeze({
@@ -26,6 +25,7 @@ export default Object.freeze({
   parenthesis,
   roll,
   rollArray,
-  symbol,
+  // What used to be symbols are now just treated as accessors without a path
+  symbol: accessor,
   unaryOperator,
 });

@@ -114,6 +114,14 @@ export function getVariables(creatureId) {
   return variables;
 }
 
+export function replaceLinkedVariablesWithProps(variables) {
+  for (const key in variables) {
+    const propId = variables[key]?._propId;
+    if (!propId) continue;
+    variables[key] = getSingleProperty(variables._creatureId, propId);
+  }
+}
+
 export function getPropertyAncestors(creatureId: string, propertyId: string) {
   const prop = getSingleProperty(creatureId, propertyId);
   if (!prop) return [];

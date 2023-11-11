@@ -1,11 +1,18 @@
 import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs';
 import {
-  getCreature, getVariables, getPropertiesOfType
+  getCreature, getVariables, getPropertiesOfType, replaceLinkedVariablesWithProps
 } from '/imports/api/engine/loadCreatures';
 import { groupBy, remove } from 'lodash';
 
 export default class ActionContext {
-  constructor(creatureId, targetIds = [], method) {
+  creature: any;
+  log: any;
+  scope: any;
+  targets: Array<any>;
+  triggers: Array<any>;
+  method: any;
+
+  constructor(creatureId, targetIds: string[] = [], method) {
     // Get the creature
     this.creature = getCreature(creatureId)
 
@@ -20,6 +27,7 @@ export default class ActionContext {
 
     // Get the variables of the acting creature
     this.creature.variables = getVariables(creatureId);
+    replaceLinkedVariablesWithProps(this.creature.variables);
     delete this.creature.variables._id;
     delete this.creature.variables._creatureId;
     // Alias as scope
@@ -52,10 +60,10 @@ export default class ActionContext {
     // Group the triggers into triggers.<event>.<timing> or
     // triggers.doActionProperty.<propertyType>.<timing>
     this.triggers = groupBy(this.triggers, 'event');
-    for (let event in this.triggers) {
+    for (const event in this.triggers) {
       if (event === 'doActionProperty') {
         this.triggers[event] = groupBy(this.triggers[event], 'actionPropertyType');
-        for (let propertyType in this.triggers[event]) {
+        for (const propertyType in this.triggers[event]) {
           this.triggers[event][propertyType] = groupBy(this.triggers[event][propertyType], 'timing');
         }
       } else {

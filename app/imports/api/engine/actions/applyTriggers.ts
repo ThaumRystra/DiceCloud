@@ -39,7 +39,7 @@ export function applyTrigger(trigger, prop, actionContext) {
   // Prevent triggers from firing if their condition is false
   if (trigger.condition?.parseNode) {
     recalculateCalculation(trigger.condition, actionContext);
-    if (!trigger.condition.value) return;
+    if (!trigger.condition.value?.value) return;
   }
 
   // Prevent triggers from firing themselves in a loop

@@ -93,7 +93,7 @@
 <script lang="js">
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
-import evaluateCalculation from '/imports/api/engine/computation/utility/evaluateCalculation';
+import { resolveCalculationNode } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 import { Tracker } from 'meteor/tracker'
 
 export default {
@@ -120,7 +120,7 @@ export default {
       const costFunction = EJSON.clone(row.cost || this.model.cost);
       if (!costFunction?.parseNode) return;
       if (costFunction) costFunction.parseLevel = 'reduce';
-      evaluateCalculation(costFunction, { value });
+      resolveCalculationNode(costFunction, costFunction.parseNode, { value });
       if (Number.isFinite(costFunction.value)) {
         newSpent += costFunction.value;
         if (this.useEstimate) this.estimatedCost = newSpent;

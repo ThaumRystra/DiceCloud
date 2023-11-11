@@ -19,7 +19,9 @@ const array = {
       ) {
         return constant.create({ value, valueType });
       } else {
-        throw `Unexpected type in constant array: ${valueType}`
+        // Gracefully create an empty spot in the array for unsupported types
+        return undefined;
+        // throw `Unexpected type in constant array: ${valueType}`
       }
     });
     return array.create({ values });

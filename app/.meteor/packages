@@ -11,7 +11,7 @@ accounts-google@1.4.0
 email@2.2.5
 meteor-base@1.5.1
 mobile-experience@1.1.0
-mongo@1.16.6
+mongo@1.16.7
 session@1.2.1
 tracker@1.3.2
 logging@1.3.2

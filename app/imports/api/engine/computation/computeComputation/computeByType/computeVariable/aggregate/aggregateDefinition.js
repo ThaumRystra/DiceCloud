@@ -32,23 +32,11 @@ export default function aggregateDefinition({ node, linkedNode, link }) {
 
   if (propBaseValue === undefined) return;
   // Store a summary of the definition as a base value effect
-  node.data.effects = node.data.effects || [];
+  node.data.effectIds = node.data.effectIds || [];
   if (prop.type === 'pointBuyRow') {
-    node.data.effects.push({
-      _id: prop.tableId,
-      name: prop.tableName,
-      operation: 'base',
-      amount: { value: propBaseValue },
-      type: 'pointBuy',
-    });
+    node.data.effectIds.push(prop.tableId);
   } else {
-    node.data.effects.push({
-      _id: prop._id,
-      name: prop.name,
-      operation: 'base',
-      amount: { value: propBaseValue },
-      type: prop.type,
-    });
+    node.data.effectIds.push(prop._id);
   }
   if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue) {
     node.data.baseValue = propBaseValue;

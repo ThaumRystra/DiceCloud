@@ -134,14 +134,21 @@ let ComputedOnlySkillSchema = createPropertySchema({
     removeBeforeCompute: true,
   },
   // A list of effect ids targeting this skill
-  effects: {
+  'effectIds': {
     type: Array,
     optional: true,
     removeBeforeCompute: true,
   },
-  'effects.$': {
-    type: Object,
-    blackbox: true,
+  'effectIds.$': {
+    type: String,
+  },
+  'proficiencyIds': {
+    type: Array,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'proficiencyIds.$': {
+    type: String,
   },
 })
 
