@@ -23,8 +23,11 @@ export default function resolve(fn, node, scope, context = new Context()) {
 
 export function toString(node) {
   if (!node) return '';
+  if (!node.parseType) {
+    throw new Meteor.Error(`Node does not have a parseType defined, node is type ${typeof node} with parseType ${node.parseType}`)
+  }
   let type = nodeTypeIndex[node.parseType];
-  if (!type.toString) {
+  if (!type?.toString) {
     throw new Meteor.Error('toString not implemented on ' + node.parseType);
   }
   return type.toString(node);
