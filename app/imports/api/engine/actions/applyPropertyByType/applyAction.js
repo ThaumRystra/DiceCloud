@@ -10,8 +10,16 @@ import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js'
 import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature.js';
 
 export default function applyAction(node, actionContext) {
-  applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
+  const scope = actionContext.scope;
+
+  let ammo = scope['~ammo'] = [];
+  for (var i = 0; i < prop.resources.itemsConsumed.length; i++) {
+    const itemConsumed = prop.resources.itemsConsumed[i];
+    ammo.push({tag:itemConsumed.tag, item:itemConsumed.itemId && CreatureProperties.findOne(itemConsumed.itemId)});
+  }
+
+  applyNodeTriggers(node, 'before', actionContext);
   if (prop.target === 'self') actionContext.targets = [actionContext.creature];
   const targets = actionContext.targets;
 
@@ -48,6 +56,7 @@ export default function applyAction(node, actionContext) {
   if (prop.actionType === 'event' && prop.variableName) {
     resetProperties(actionContext.creature._id, prop.variableName, actionContext);
   }
+  delete actionContext.scope['~ammo'];
 }
 
 function applyAttackWithoutTarget({ attack, actionContext }) {
