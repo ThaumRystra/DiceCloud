@@ -76,6 +76,7 @@
             v-if="ability"
             :key="ability._id"
             :model="ability"
+            :attribute="model"
             :data-id="ability._id"
             @click="clickEffect(ability._id)"
           />
@@ -83,6 +84,7 @@
             v-for="effect in effects"
             :key="effect._id"
             :model="effect"
+            :attribute="model"
             :data-id="effect._id"
             @click="clickEffect(effect._id)"
           />
@@ -90,7 +92,7 @@
       </property-field>
     </v-row>
     <v-row
-      v-if="baseProficiencies.length || proficiencies.length"
+      v-if="proficiencies.length"
       dense
     >
       <property-field
@@ -98,15 +100,6 @@
         name="Proficiencies"
       >
         <v-list style="width: 100%">
-          <skill-proficiency
-            v-for="proficiency in baseProficiencies"
-            :key="proficiency._id"
-            :model="proficiency"
-            :proficiency-bonus="proficiencyBonus"
-            :hide-breadcrumbs="proficiency._id === model._id"
-            :data-id="proficiency._id"
-            @click="clickEffect(proficiency._id)"
-          />
           <skill-proficiency
             v-for="proficiency in proficiencies"
             :key="proficiency._id"
@@ -127,7 +120,6 @@ import numberToSignedString from '../../../../api/utility/numberToSignedString.j
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/client/ui/properties/components/skills/SkillProficiency.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
 import sortEffects from '/imports/client/ui/utility/sortEffects.js';
 import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
@@ -179,7 +171,9 @@ export default {
       return 10 + this.model.value + this.model.passiveBonus;
     },
     effects() {
-      return sortEffects(this.model.effects);
+      if (!this.model.effectIds) return [];
+      const effects = CreatureProperties.find({ _id: { $in: this.model.effectIds } }).fetch();
+      return sortEffects(effects);
     },
   },
   methods: {
@@ -194,70 +188,44 @@ export default {
     },
   },
   meteor: {
-    variables() {
-      return CreatureVariables.findOne({ _creatureId: this.context.creatureId }) || {};
-    },
-    baseProficiencies() {
-      if (this.context.creatureId) {
-        let creatureId = this.context.creatureId;
-        return CreatureProperties.find({
-          'ancestors.id': creatureId,
-          type: 'skill',
-          variableName: this.model.variableName,
-          removed: { $ne: true },
-          inactive: { $ne: true },
-        }).map(prop => ({
-          _id: prop._id,
-          name: 'Skill base proficiency',
-          value: prop.baseProficiency,
-          stats: [prop.variableName],
-          ancestors: prop.ancestors,
-        })).filter(prof => prof.value);
-      } else {
-        return [];
-      }
-    },
     proficiencies() {
-      let creatureId = this.context.creatureId;
-      if (creatureId) {
-        return CreatureProperties.find({
-          'ancestors.id': creatureId,
-          stats: this.model.variableName,
-          type: 'proficiency',
-          removed: { $ne: true },
-          inactive: { $ne: true },
-        }).fetch();
-      } else {
-        return [];
-      }
+      if (!this.model.proficiencyIds) return [];
+      return CreatureProperties.find({
+          _id: {$in: this.model.proficiencyIds},
+      }, {
+        sort: {order: 1}
+      }).fetch();
     },
     ability() {
       let creatureId = this.context.creatureId;
       let ability = this.model.ability;
       if (!creatureId || !ability) return;
       let abilityProp = CreatureProperties.findOne({
-        'ancestors.id': creatureId,
         variableName: ability,
         type: 'attribute',
         removed: { $ne: true },
         inactive: { $ne: true },
         overridden: { $ne: true },
+        'ancestors.id': creatureId,
       });
       if (!abilityProp) return;
       return {
         _id: abilityProp._id,
         name: abilityProp.name,
-        operation: 'add',
+        operation: 'base',
         amount: { value: abilityProp.modifier },
         stats: [this.model.variableName],
         ancestors: abilityProp.ancestors,
       }
     },
     proficiencyBonus() {
-      let creatureId = this.context.creatureId;
-      if (!creatureId) return;
-      return this.variables.proficiencyBonus &&
-        this.variables.proficiencyBonus.value;
+      return CreatureProperties.findOne({
+        variableName: 'proficiencyBonus',
+        overridden: { $ne: true },
+        removed: { $ne: true },
+        inactive: { $ne: true },
+        'ancestors.id': this.context.creatureId,
+      })?.value;
     },
   },
 }

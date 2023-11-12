@@ -44,7 +44,7 @@
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { isFinite } from 'lodash';
+import { isFinite, find } from 'lodash';
 
 export default {
   components: {
@@ -56,13 +56,17 @@ export default {
       type: Object,
       required: true,
     },
+    attribute: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     hasClickListener(){
       return this.$listeners && this.$listeners.click
     },
     displayedText(){
-      if (this.model.operation === 'conditional'){
+      if (this.operation === 'conditional'){
         return this.model.text || this.model.name || this.operation
       } else {
         return this.model.name || this.operation
@@ -75,10 +79,16 @@ export default {
     },
     effectIcon(){
       let value = this.resolvedValue;
-      return getEffectIcon(this.model.operation, value);
+      return getEffectIcon(this.operation, value);
     },
-    operation(){
-      switch(this.model.operation) {
+    operation() {
+      if (this.model.type === 'pointBuy' || this.model.type === 'attribute') {
+        return 'base'
+      }
+      return this.model.operation;
+    },
+    operationText() {
+      switch(this.operation) {
         case 'base': return 'Base value';
         case 'add': return 'Add';
         case 'mul': return 'Multiply';
@@ -93,7 +103,7 @@ export default {
       }
     },
     showValue(){
-      switch(this.model.operation) {
+      switch(this.operation) {
         case 'base': return true;
         case 'add': return true;
         case 'mul': return true;
@@ -109,7 +119,12 @@ export default {
     },
     displayedValue(){
       let value = this.resolvedValue;
-      switch(this.model.operation) {
+      if (this.model.type === 'pointBuy') {
+        return find(this.model.values, row => this.attribute.variableName === row.variableName)?.value;
+      } else if (this.model.type === 'attribute') {
+        return this.model.baseValue?.value;
+      }
+      switch(this.operation) {
         case 'base': return value;
         case 'add': return isFinite(value) ? Math.abs(value) : value;
         case 'mul': return value;

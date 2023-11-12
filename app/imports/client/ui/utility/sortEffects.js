@@ -1,20 +1,22 @@
 const INDEX = {
-  'base': 1,
-  'add': 2,
-  'mul': 3,
-  'min': 4,
-  'max': 5,
-  'advantage': 6,
-  'disadvantage': 7,
-  'passiveAdd': 8,
-  'fail': 9,
-  'conditional': 10,
+  'attribute': 1,
+  'pointBuy': 2,
+  'base': 3,
+  'add': 4,
+  'mul': 5,
+  'min': 6,
+  'max': 7,
+  'advantage': 8,
+  'disadvantage': 9,
+  'passiveAdd': 10,
+  'fail': 11,
+  'conditional': 12,
 };
 
-function sortEffects(effects){
+function sortEffects(effects) {
   if (!effects || !effects.length) return [];
-  return [...effects].sort(
-    (a, b) => (INDEX[a.operation] || 99) - (INDEX[b.operation] || 99)
+  return effects.sort(
+    (a, b) => (INDEX[a.operation || a.type] || 99) - (INDEX[b.operation || b.type] || 99)
   );
 }
 

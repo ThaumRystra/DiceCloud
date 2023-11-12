@@ -44,7 +44,8 @@
   import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
   import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
   import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
-
+  import numberToSignedString from '/imports/api/utility/numberToSignedString';
+  
   export default {
     components: {
       Breadcrumbs,
@@ -54,15 +55,22 @@
       hideBreadcrumbs: Boolean,
       proficiencyBonus: {
         type: Number,
-        default: null,
+        default: 0,
       },
     },
     computed: {
       icon(){
-        return getProficiencyIcon(this.model.value);
+        return getProficiencyIcon(this.proficiency);
+      },
+      proficiency() {
+        switch (this.model.type) {
+          case 'proficiency': return this.model.value;
+          case 'skill': return this.model.proficiency;
+          default: return 0;
+        }
       },
       proficiencyText(){
-        switch (this.model.value){
+        switch (this.proficiency){
           case 0.49: return 'Half proficiency bonus rounded down';
           case 0.5: return 'Half proficiency bonus rounded up';
           case 1: return 'Proficient';
@@ -71,11 +79,11 @@
         }
       },
       proficiencyValue(){
-        if (!this.proficiencyBonus) return;
-        if (this.model.value === 0.49){
-          return Math.floor(0.5 * this.proficiencyBonus);
+        if (!this.proficiencyBonus) return numberToSignedString(0);
+        if (this.proficiency === 0.49){
+          return numberToSignedString(Math.floor(0.5 * this.proficiencyBonus));
         } else {
-          return Math.ceil(this.model.value * this.proficiencyBonus);
+          return numberToSignedString(Math.ceil(this.proficiency * this.proficiencyBonus));
         }
       },
     },

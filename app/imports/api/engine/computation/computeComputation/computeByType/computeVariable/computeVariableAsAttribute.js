@@ -48,6 +48,7 @@ export default function computeVariableAsAttribute(computation, node, prop) {
     prop.baseValue === undefined ||
     undefined
 
-  // Store effects
+  // Store effects and proficiencies
   prop.effectIds = node.data.effectIds;
+  prop.proficiencyIds = node.data.proficiencyIds;
 }

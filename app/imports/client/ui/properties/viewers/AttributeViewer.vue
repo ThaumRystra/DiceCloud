@@ -126,6 +126,7 @@
             v-for="effect in effects"
             :key="effect._id"
             :model="effect"
+            :attribute="model"
             :data-id="effect._id"
             :hide-breadcrumbs="effect._id === model._id"
             @click="effect._id !== model._id && clickEffect(effect._id)"
@@ -145,6 +146,7 @@
   import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
   import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
   import sortEffects from '/imports/client/ui/utility/sortEffects.js';
+  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
   export default {
     components: {
@@ -189,7 +191,9 @@
         return getProficiencyIcon(this.model.proficiency);
       },
       effects() {
-        return sortEffects(this.model.effects);
+        if (!this.model.effectIds) return [];
+        const effects = CreatureProperties.find({ _id: { $in: this.model.effectIds } }).fetch();
+        return sortEffects(effects);
       },
       fallbackValue() {
         return this.model.baseValue?.value ?? this.model.baseValue?.calculation;
