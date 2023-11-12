@@ -1,27 +1,32 @@
 <template>
-  <v-row justify="center">
+  <v-row
+    justify="center"
+    class="doc-viewer"
+  >
     <v-col
       cols="12"
       lg="8"
+      class="pt-0"
     >
-      <v-card
-        style="float: right; z-index: 4;"
-        class="ma-4"
-      >
-        <v-fade-transition mode="out-in">
-          <v-list
-            v-if="siblingDocs.length > 1"
-            :dense="siblingDocs.length > 5"
-          >
-            <doc-list-item
-              v-for="sibling in siblingDocs"
-              :key="sibling._id"
-              :doc="sibling"
-              :icon="siblingHasIcon"
-            />
-          </v-list>
-        </v-fade-transition>
-      </v-card>
+      <div class="sibling-list-parent">
+        <v-card
+          class="sibling-list"
+        >
+          <v-fade-transition mode="out-in">
+            <v-list
+              v-if="siblingDocs.length > 1"
+              :dense="siblingDocs.length > 5"
+            >
+              <doc-list-item
+                v-for="sibling in siblingDocs"
+                :key="sibling._id"
+                :doc="sibling"
+                :icon="siblingHasIcon"
+              />
+            </v-list>
+          </v-fade-transition>
+        </v-card>
+      </div>
       <v-fade-transition mode="out-in">
         <div
           :key="doc && doc.name || 'Documentation Home'"
@@ -134,3 +139,23 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+@media (min-width: 500px) {
+  .sibling-list-parent {
+    float: right;
+    z-index: 4;
+  }
+  .sibling-list {
+    display: block !important;
+  }
+}
+.sibling-list-parent {
+  text-align: right;
+  margin: 0 16px 8px;
+}
+.sibling-list {
+  text-align: left;
+  display: inline-block;
+}
+</style>
