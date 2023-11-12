@@ -1,8 +1,10 @@
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import applyProperty from '/imports/api/engine/actions/applyProperty.js';
 
-export default function applyChildren(node, actionContext) {
+export default async function applyChildren(node, actionContext) {
   applyNodeTriggers(node, 'after', actionContext);
-  node.children.forEach(child => applyProperty(child, actionContext));
+  for (const child of node.children) {
+    await applyProperty(child, actionContext);
+  }
   applyNodeTriggers(node, 'afterChildren', actionContext);
 }

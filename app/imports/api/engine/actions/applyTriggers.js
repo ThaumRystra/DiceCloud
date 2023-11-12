@@ -6,25 +6,25 @@ import applyProperty from '/imports/api/engine/actions/applyProperty.js';
 import { difference, intersection } from 'lodash';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
 
-export function applyNodeTriggers(node, timing, actionContext) {
+export async function applyNodeTriggers(node, timing, actionContext) {
   const prop = node.node;
   const type = prop.type;
   const triggers = actionContext.triggers?.doActionProperty?.[type]?.[timing];
   if (triggers) {
-    triggers.forEach(trigger => {
-      applyTrigger(trigger, prop, actionContext);
-    });
+    for (const trigger of triggers) {
+      await applyTrigger(trigger, prop, actionContext);
+    }
   }
 }
 
-export function applyTriggers(triggers = [], prop, actionContext) {
+export async function applyTriggers(triggers = [], prop, actionContext) {
   // Apply the triggers
-  triggers.forEach(trigger => {
-    applyTrigger(trigger, prop, actionContext)
-  });
+  for (const trigger of triggers) {
+    await applyTrigger(trigger, prop, actionContext)
+  }
 }
 
-export function applyTrigger(trigger, prop, actionContext) {
+export async function applyTrigger(trigger, prop, actionContext) {
   // If there is a prop we are applying the trigger from,
   // don't fire if the tags don't match
   if (prop && !triggerMatchTags(trigger, prop)) {
@@ -71,9 +71,9 @@ export function applyTrigger(trigger, prop, actionContext) {
   const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
   properties.sort((a, b) => a.order - b.order);
   const propertyForest = nodeArrayToTree(properties);
-  propertyForest.forEach(node => {
-    applyProperty(node, actionContext);
-  });
+  for (const node of propertyForest) {
+    await applyProperty(node, actionContext);
+  }
 
   trigger.firing = false;
 }

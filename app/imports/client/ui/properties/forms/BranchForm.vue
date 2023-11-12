@@ -65,6 +65,7 @@ export default {
         { value: 'eachTarget', text: 'Apply to each target' },
         { value: 'random', text: 'Random' },
         { value: 'index', text: 'Calculated index' },
+        { value: 'choice', text: 'User choice' },
       ],
     }
   },
@@ -79,6 +80,7 @@ export default {
         case 'eachTarget': return 'Applies each child property once per target';
         case 'random': return 'Chooses one child property at random and applies it';
         case 'index': return 'Chooses one child property to apply based on the given index';
+        case 'choice': return 'Pause the action and let the user choose which child to apply';
         default: return '';
       }
     }

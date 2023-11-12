@@ -1,5 +1,5 @@
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import { getCreature } from '/imports/api/engine/loadCreatures';
 
-export default function getRootCreatureAncestor(property){
-  return Creatures.findOne(property.ancestors[0].id);
+export default function getRootCreatureAncestor(property) {
+  return getCreature(property.ancestors[0].id);
 }

@@ -2,8 +2,8 @@ import recalculateInlineCalculations from './shared/recalculateInlineCalculation
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 
-export default function applyNote(node, actionContext) {
-  applyNodeTriggers(node, 'before', actionContext);
+export default async function applyNote(node, actionContext) {
+  await applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
 
   // Log Name, summary
@@ -21,5 +21,5 @@ export default function applyNote(node, actionContext) {
     actionContext.addLog({ value: prop.description.value });
   }
   // Apply children
-  applyChildren(node, actionContext);
+  await applyChildren(node, actionContext);
 }

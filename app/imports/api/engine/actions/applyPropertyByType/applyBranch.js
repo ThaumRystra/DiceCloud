@@ -3,8 +3,9 @@ import recalculateCalculation from './shared/recalculateCalculation.js';
 import rollDice from '/imports/parser/rollDice.js';
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import getUserInput from '/imports/api/engine/actions/getUserInput';
 
-export default function applyBranch(node, actionContext) {
+export default async function applyBranch(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const scope = actionContext.scope;
   const targets = actionContext.targets;
@@ -76,5 +77,20 @@ export default function applyBranch(node, actionContext) {
         applyChildren(node, actionContext);
       }
       break;
+    case 'choice': {
+      console.log('paused waiting for user input');
+      let { index } = await getUserInput({
+        index: 'number',
+      }, actionContext);
+      console.log('resuming with input ' + index);
+      if (!isFinite(index) || index < 0) index = 0;
+      if (index > node.children.length - 1) index = node.children.length - 1;
+      applyNodeTriggers(node, 'after', actionContext);
+      console.log('applying child ', index);
+      console.log(node.children[index]);
+      applyProperty(node.children[index], actionContext);
+      applyNodeTriggers(node, 'afterChildren', actionContext);
+      break;
+    }
   }
 }

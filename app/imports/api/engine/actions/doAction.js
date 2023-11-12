@@ -10,6 +10,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import applyProperty from './applyProperty.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+import ActiveActions from '/imports/api/creature/actions/ActiveActions';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -36,11 +37,18 @@ const doAction = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({ actionId, targetIds = [], scope }) {
+  async run({ actionId, targetIds = [], scope }) {
     // Get action context
     let action = CreatureProperties.findOne(actionId);
     const creatureId = action.ancestors[0].id;
-    const actionContext = new ActionContext(creatureId, targetIds, this);
+    // TODO remove this
+    // For testing, remove all other active actions before inserting this one
+    ActiveActions.remove({});
+    const activeActionId = await ActiveActions.insertAsync({
+      creatureId,
+      userId: this.userId,
+    });
+    const actionContext = new ActionContext(creatureId, targetIds, this, activeActionId);
 
     // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
@@ -56,7 +64,7 @@ const doAction = new ValidatedMethod({
     properties.sort((a, b) => a.order - b.order);
 
     // Do the action
-    doActionWork({ properties, ancestors, actionContext, methodScope: scope });
+    await doActionWork({ properties, ancestors, actionContext, methodScope: scope });
 
     // Recompute all involved creatures
     Creatures.update({
@@ -69,7 +77,7 @@ const doAction = new ValidatedMethod({
 
 export default doAction;
 
-export function doActionWork({
+export async function doActionWork({
   properties, ancestors, actionContext, methodScope = {},
 }) {
   // get the docs
@@ -84,7 +92,9 @@ export function doActionWork({
 
   // Apply the top level property, it is responsible for applying its children
   // recursively
-  applyProperty(propertyForest[0], actionContext);
+  console.log('start apply properties')
+  await applyProperty(propertyForest[0], actionContext);
+  console.log('end apply properties')
 
   // Insert the log
   actionContext.writeLog();

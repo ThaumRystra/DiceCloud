@@ -9,8 +9,8 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature.js';
 
-export default function applyAction(node, actionContext) {
-  applyNodeTriggers(node, 'before', actionContext);
+export default async function applyAction(node, actionContext) {
+  await applyNodeTriggers(node, 'before', actionContext);
   const prop = node.node;
   if (prop.target === 'self') actionContext.targets = [actionContext.creature];
   const targets = actionContext.targets;
@@ -24,7 +24,7 @@ export default function applyAction(node, actionContext) {
   if (!prop.silent) actionContext.addLog(content);
 
   // Spend the resources
-  const failed = spendResources(prop, actionContext);
+  const failed = await spendResources(prop, actionContext);
   if (failed) return;
 
   const attack = prop.attackRoll || prop.attackRollBonus;
@@ -32,18 +32,18 @@ export default function applyAction(node, actionContext) {
   // Attack if there is an attack roll
   if (attack && attack.calculation) {
     if (targets.length) {
-      targets.forEach(target => {
-        applyAttackToTarget({ attack, target, actionContext });
+      for (const target of targets) {
+        await applyAttackToTarget({ attack, target, actionContext });
         // Apply the children, but only to the current target
         actionContext.targets = [target];
-        applyChildren(node, actionContext);
-      });
+        await applyChildren(node, actionContext);
+      }
     } else {
-      applyAttackWithoutTarget({ attack, actionContext });
-      applyChildren(node, actionContext);
+      await applyAttackWithoutTarget({ attack, actionContext });
+      await applyChildren(node, actionContext);
     }
   } else {
-    applyChildren(node, actionContext);
+    await applyChildren(node, actionContext);
   }
   if (prop.actionType === 'event' && prop.variableName) {
     resetProperties(actionContext.creature._id, prop.variableName, actionContext);
@@ -189,7 +189,7 @@ function applyCrits(value, scope) {
   return { criticalHit, criticalMiss };
 }
 
-function spendResources(prop, actionContext) {
+async function spendResources(prop, actionContext) {
   // Check Uses
   if (prop.usesLeft <= 0) {
     if (!prop.silent) actionContext.addLog({
@@ -297,9 +297,9 @@ function spendResources(prop, actionContext) {
   });
 
   // Apply the ammo children
-  ammoToApply.forEach(node => {
-    applyProperty(node, actionContext);
-  });
+  for (const node of ammoToApply) {
+    await applyProperty(node, actionContext);
+  }
 
   // Log all the spending
   if (gainLog.length && !prop.silent) actionContext.addLog({

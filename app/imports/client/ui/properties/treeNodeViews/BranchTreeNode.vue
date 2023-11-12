@@ -29,6 +29,7 @@ export default {
         case 'eachTarget': return 'Each target';
         case 'random': return 'Pick one at random';
         case 'index': return 'Pick one by index';
+        case 'choice': return 'User choice';
         default: return '';
       }
     }

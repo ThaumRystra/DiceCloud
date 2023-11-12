@@ -5,9 +5,11 @@ import {
 import { groupBy, remove } from 'lodash';
 
 export default class ActionContext {
-  constructor(creatureId, targetIds = [], method) {
+  constructor(creatureId, targetIds = [], method, activeActionId) {
     // Get the creature
     this.creature = getCreature(creatureId)
+    // Store an active action ID for pausing/resuming this action
+    this.activeActionId = activeActionId
 
     if (!this.creature) {
       throw new Meteor.Error('No Creature', `No creature could be found with id: ${creatureId}`)

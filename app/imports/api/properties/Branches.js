@@ -22,7 +22,7 @@ let BranchSchema = createPropertySchema({
       'index',
       // if it has option children, asks to select one
       // Otherwise presents its own text with yes/no
-      //'choice',
+      'choice',
       //'option',
     ],
     defaultValue: 'if',

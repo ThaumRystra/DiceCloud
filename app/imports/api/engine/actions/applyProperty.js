@@ -28,8 +28,10 @@ const applyPropertyByType = {
   toggle,
 };
 
-export default function applyProperty(node, actionContext, ...rest) {
+export default async function applyProperty(node, actionContext, ...rest) {
   if (node.node.deactivatedByToggle) return;
   actionContext.scope[`#${node.node.type}`] = node.node;
-  applyPropertyByType[node.node.type]?.(node, actionContext, ...rest);
+  console.log('start apply props by type', node.node.type)
+  await applyPropertyByType[node.node.type]?.(node, actionContext, ...rest);
+  console.log('end apply prop by type', node.node.type)
 }
