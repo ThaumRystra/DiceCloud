@@ -6,6 +6,7 @@ import computeVariableAsClass from './computeVariable/computeVariableAsClass.js'
 import computeVariableAsToggle from './computeVariable/computeVariableAsToggle.js';
 import computeImplicitVariable from './computeVariable/computeImplicitVariable.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import { computedInlineCalculationField } from '/imports/api/properties/subSchemas/inlineCalculationField';
 
 export default function computeVariable(computation, node) {
   const scope = computation.scope;
@@ -31,6 +32,11 @@ function aggregateLinks(computation, node) {
       if (!linkedNode.data) linkedNode.data = {};
       // Ignore inactive props
       if (linkedNode.data.inactive) return;
+      // Ignore point buy rows if their base table is inactive
+      if (
+        linkedNode.data.tableId
+        && computation.propsById[linkedNode.data.tableId]?.inactive
+      ) return;
       // Apply all the aggregations
       let arg = { node, linkedNode, link, computation };
       aggregate.classLevel(arg);

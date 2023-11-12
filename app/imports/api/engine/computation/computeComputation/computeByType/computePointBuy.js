@@ -7,10 +7,6 @@ export default function computePointBuy(computation, node) {
   const max = has(prop, 'max.value') ? prop.max.value : null;
   prop.spent = 0;
   prop.values?.forEach(row => {
-    // Clean up added properties
-    // delete row.tableId;
-    // delete row.tableName;
-    // delete row.type;
 
     row.spent = 0;
     if (row.value === undefined) return;

@@ -7,11 +7,12 @@ export default function () {
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
-  assert.equal(prop('strengthId').value, 26);
+  assert.equal(prop('strengthId').value, 11, 'Point buys should apply a base value when active');
 }
 
 var testProperties = propsFromForest([
   {
+    _id: 'strengthId',
     variableName: 'strength',
     type: 'attribute',
     attributeType: 'ability',
@@ -19,34 +20,19 @@ var testProperties = propsFromForest([
       calculation: '8'
     },
   }, {
-    // This strength is later in order, so it will override the other
-    _id: 'strengthId',
-    variableName: 'strength',
-    type: 'attribute',
-    attributeType: 'ability',
-    baseValue: {
-      calculation: '10'
-    },
+    // calculated inactive toggle with point buy under it
+    // It should not impact the ability score
+    type: 'toggle',
+    condition: { calculation: 'false' },
+    children: [
+      {
+        _id: 'inactivePointBuy',
+        type: 'pointBuy',
+        values: [{ variableName: 'strength', value: 13 }],
+      }
+    ]
   }, {
-    type: 'effect',
-    operation: 'base',
-    amount: {
-      calculation: '10 + 2'
-    },
-    stats: ['strength'],
-  }, {
-    type: 'effect',
-    operation: 'add',
-    amount: {
-      calculation: '1'
-    },
-    stats: ['strength'],
-  }, {
-    type: 'effect',
-    operation: 'mul',
-    amount: {
-      calculation: '2'
-    },
-    stats: ['strength'],
-  },
+    type: 'pointBuy',
+    values: [{ variableName: 'strength', value: 11 }],
+  }
 ]);

@@ -277,7 +277,6 @@ function linkPointBuy(dependencyGraph, prop) {
     linkVariableName(dependencyGraph, pointBuyRow);
     dependencyGraph.addLink(pointBuyRow._id, prop._id, 'pointBuyRow');
   });
-  if (prop.inactive) return;
 }
 
 function linkProficiencies(dependencyGraph, prop, computation) {
