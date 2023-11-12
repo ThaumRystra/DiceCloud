@@ -10,7 +10,7 @@ import resolve from '/imports/parser/resolve.js';
 
 // Redo the work of imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js
 // But in the action scope
-export default function recalculateCalculation(calcObj, actionContext, context, parseLevel = 'reduce') {
+export default function recalculateCalculation(calcObj, actionContext, parseLevel = 'reduce', context) {
   if (!calcObj?.parseNode) return;
   calcObj._parseLevel = parseLevel;
   // Re-resolve the parse node
@@ -40,7 +40,7 @@ export default function recalculateCalculation(calcObj, actionContext, context, 
 
 export function rollAndReduceCalculation(calcObj, actionContext, context) {
   // Compile
-  recalculateCalculation(calcObj, actionContext, context, 'compile');
+  recalculateCalculation(calcObj, actionContext, 'compile', context);
   const compiled = calcObj.valueNode;
   const compileErrors = context.errors;
 

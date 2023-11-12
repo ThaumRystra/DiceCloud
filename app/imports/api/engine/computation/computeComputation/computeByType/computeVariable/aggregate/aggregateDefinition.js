@@ -32,11 +32,12 @@ export default function aggregateDefinition({ node, linkedNode, link }) {
 
   if (propBaseValue === undefined) return;
   // Store a summary of the definition as a base value effect
-  node.data.effectIds = node.data.effectIds || [];
+  node.data.definitions = node.data.definitions || [];
+
   if (prop.type === 'pointBuyRow') {
-    node.data.effectIds.push(prop.tableId);
+    node.data.definitions.push({ _id: prop.tableId, type: 'pointBuy', row: prop.index });
   } else {
-    node.data.effectIds.push(prop._id);
+    node.data.definitions.push({ _id: prop._id, type: node.data.type });
   }
   if (node.data.baseValue === undefined || propBaseValue > node.data.baseValue) {
     node.data.baseValue = propBaseValue;

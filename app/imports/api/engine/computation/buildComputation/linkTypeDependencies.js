@@ -272,6 +272,7 @@ function linkPointBuy(dependencyGraph, prop) {
       type: 'pointBuyRow',
       tableName: prop.name,
       tableId: prop._id,
+      rowIndex: index,
     }
     dependencyGraph.addNode(pointBuyRow._id, pointBuyRow);
     linkVariableName(dependencyGraph, pointBuyRow);

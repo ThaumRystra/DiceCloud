@@ -150,6 +150,24 @@ let ComputedOnlySkillSchema = createPropertySchema({
   'proficiencyIds.$': {
     type: String,
   },
+  'definitions': {
+    type: Array,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'definitions.$': {
+    type: Object,
+  },
+  'definitions.$._id': {
+    type: String,
+  },
+  'definitions.$.type': {
+    type: String,
+  },
+  'definitions.$.row': {
+    type: Number,
+    optional: true,
+  },
 })
 
 const ComputedSkillSchema = new SimpleSchema()

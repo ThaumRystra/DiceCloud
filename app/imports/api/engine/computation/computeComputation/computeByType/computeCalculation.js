@@ -32,10 +32,10 @@ export default function computeCalculation(computation, node) {
   delete calcObj._localScope;
 }
 
-export function resolveCalculationNode(calculation, parseNode, scope) {
+export function resolveCalculationNode(calculation, parseNode, scope, givenContext) {
   const fn = calculation._parseLevel;
   const calculationScope = { ...calculation._localScope, ...scope };
-  const { result: resultNode, context } = resolve(fn, parseNode, calculationScope);
+  const { result: resultNode, context } = resolve(fn, parseNode, calculationScope, givenContext);
   calculation.errors = context.errors;
   calculation.valueNode = resultNode;
 }

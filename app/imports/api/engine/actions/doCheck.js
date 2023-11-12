@@ -8,6 +8,7 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import { applyTriggers } from '/imports/api/engine/actions/applyTriggers.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
 import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
+import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 
 const doCheck = new ValidatedMethod({
   name: 'creatureProperties.doCheck',
@@ -120,13 +121,14 @@ function rollCheck(prop, actionContext) {
 export function applyUnresolvedEffects(prop, actionContext) {
   let effectBonus = 0;
   let effectString = '';
-  if (!prop.effects) {
+  if (!prop.effectIds) {
     return { effectBonus, effectString };
   }
-  prop.effects.forEach(effect => {
+  prop.effectIds.forEach(id => {
+    const effect = getSingleProperty(actionContext.creature._id, id);
     if (!effect.amount?.parseNode) return;
     if (effect.operation !== 'add') return;
-    recalculateCalculation(effect.amount, actionContext, context, 'reduce');
+    recalculateCalculation(effect.amount, actionContext, undefined, 'reduce');
     if (typeof effect.amount?.value !== 'number') return;
     effectBonus += effect.amount.value;
     effectString += ` ${effect.amount.value < 0 ? '-' : '+'} [${effect.amount.calculation}] ${Math.abs(effect.amount.value)}`
