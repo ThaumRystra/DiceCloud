@@ -12,6 +12,12 @@
       Documentation
     </v-toolbar-title>
     <v-spacer />
+    <v-app-bar-nav-icon
+      v-if="editing"
+      @click="toggleRightDrawer"
+    >
+      <v-icon>mdi-file-tree</v-icon>
+    </v-app-bar-nav-icon>
     <v-btn
       v-if="canEdit"
       icon
@@ -45,6 +51,7 @@ export default {
   methods: {
     ...mapMutations([
       'toggleDrawer',
+      'toggleRightDrawer',
     ]),
     toggleEdit() {
       if (!this.canEdit) return;

@@ -9,8 +9,9 @@ import { storedIconsSchema } from '/imports/api/icons/Icons.js';
 import '/imports/api/library/methods/index.js';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import { restore } from '/imports/api/parenting/softRemove.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { getAncestry } from '/imports/api/parenting/parenting.js';
+import { getAncestry, updateParent } from '/imports/api/parenting/parenting.js';
+import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree';
+import { getDocsInDepthFirstOrder } from '/imports/api/parenting/getDescendantsInDepthFirstOrder';
 
 const Docs = new Mongo.Collection('docs');
 
@@ -184,10 +185,7 @@ const insertDoc = new ValidatedMethod({
     }
 
     const docId = Docs.insert(doc);
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    reorderDocs();
     return docId;
   },
 });
@@ -231,10 +229,7 @@ const updateDoc = new ValidatedMethod({
     if (pathString === 'name' || pathString === 'urlName') {
       rebuildDocAncestors(_id);
     }
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    reorderDocs();
     return updates;
   },
 });
@@ -284,10 +279,7 @@ const softRemoveDoc = new ValidatedMethod({
   run({ _id }) {
     assertDocsEditPermission(this.userId);
     softRemove({ _id, collection: Docs });
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    reorderDocs();
   }
 });
 
@@ -304,12 +296,104 @@ const restoreDoc = new ValidatedMethod({
   run({ _id }) {
     assertDocsEditPermission(this.userId);
     restore({ _id, collection: Docs });
-    reorderDocs({
-      collection: Docs,
-      ancestorId: 'root',
-    });
+    reorderDocs();
   }
 });
+
+const organizeDoc = new ValidatedMethod({
+  name: 'docs.organizeDoc',
+  validate: new SimpleSchema({
+    docId: String,
+    parentId: String,
+    order: {
+      type: Number,
+      // Should end in 0.5 to place it reliably between two existing documents
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  run({ docId, parentId, order }) {
+    let doc = Docs.findOne(docId);
+    // The user must be able to edit both the doc and its parent to move it
+    // successfully
+    assertDocsEditPermission(this.userId);
+
+    // Change the doc's parent
+    updateParent({ docRef: { id: docId, collection: 'docs' }, parentRef: { id: parentId, collection: 'docs' } });
+    // Change the doc's order to be a half step ahead of its target location
+    Docs.update(doc._id, { $set: { order } });
+
+    reorderDocs();
+  },
+});
+
+const reorderDoc = new ValidatedMethod({
+  name: 'docs.reorderDoc',
+  validate: new SimpleSchema({
+    docId: String,
+    order: {
+      type: Number,
+      // Should end in 0.5 to place it reliably between two existing documents
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  run({ docId, order }) {
+    assertDocsEditPermission(this.userId);
+    Docs.update(docId, {
+      $set: { order }
+    });
+    reorderDocs();
+  },
+});
+
+function reorderDocs() {
+  const docs = Docs.find({ removed: { $ne: true } }, { sort: { order: 1 } }).fetch();
+  const forest = nodeArrayToTree(docs);
+  const orderedDocs = getDocsInDepthFirstOrder(forest);
+  const bulkWrite = [];
+  orderedDocs.forEach((doc, index) => {
+    if (doc.order !== index) {
+      bulkWrite.push({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { order: index } },
+        },
+      });
+    }
+  });
+  if (Meteor.isServer && bulkWrite.length) {
+    Docs.rawCollection().bulkWrite(
+      bulkWrite,
+      { ordered: false },
+      function (e) {
+        if (e) {
+          console.error('Bulk write failed: ');
+          console.error(e);
+        }
+        // Rebuild the ancestors of all the docs
+        // This is a pretty slow way to do anything, but docs hardly ever get rearranged
+        docs.forEach(doc => {
+          rebuildDocAncestors(doc._id);
+        });
+      }
+    );
+  } else {
+    bulkWrite.forEach(op => {
+      Docs.update(
+        op.updateOne.filter,
+        op.updateOne.update,
+        { selector: { type: 'any' } }
+      );
+    });
+  }
+}
 
 export {
   DocSchema,
@@ -319,6 +403,8 @@ export {
   pullFromDoc,
   softRemoveDoc,
   restoreDoc,
+  organizeDoc,
+  reorderDoc,
 };
 
 export default Docs;

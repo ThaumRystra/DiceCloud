@@ -112,10 +112,14 @@ export default {
       if (!this.doc) return Docs.find({
         'parent': undefined,
         removed: { $ne: true },
+      }, {
+        sort: { order: 1 }
       });
       return Docs.find({
         'parent.id': this.doc._id,
         removed: { $ne: true },
+      }, {
+        sort: { order: 1 }
       })
     },
     siblingDocs() {
@@ -123,6 +127,8 @@ export default {
       return Docs.find({
         'parent.id': this.doc.parent?.id,
         removed: { $ne: true },
+      }, {
+        sort: { order: 1 }
       });
     },
     editing() {

@@ -40,6 +40,7 @@ const Maintenance = () => import('/imports/client/ui/pages/Maintenance.vue');
 const Files = () => import('/imports/client/ui/pages/Files.vue');
 const DocsPage = () => import('/imports/client/ui/pages/DocsPage.vue');
 const DocToolbar = () => import('/imports/client/ui/docs/DocToolbar.vue');
+const DocsRightDrawer = () => import('/imports/client/ui/docs/DocsRightDrawer.vue');
 
 // Not found
 const NotFound = () => import('/imports/client/ui/pages/NotFound.vue');
@@ -285,6 +286,7 @@ RouterFactory.configure(router => {
     components: {
       default: DocsPage,
       toolbar: DocToolbar,
+      rightDrawer: DocsRightDrawer,
     },
     meta: {
       title: 'Documentation',
