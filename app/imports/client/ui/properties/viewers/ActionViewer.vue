@@ -187,7 +187,16 @@ export default {
     },
   },
   methods: {
+    
     doAction() {
+      this.$store.commit('pushDialogStack', {
+        component: 'action-dialog',
+        elementId: 'do-action-button',
+        data: {
+          propId: this.model._id,
+        },
+      });
+      return;
       if (this.model.type === 'action') {
         this.doActionLoading = true;
         doAction.call({ actionId: this.model._id }, error => {

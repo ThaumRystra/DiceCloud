@@ -1,4 +1,5 @@
 // Load commonly used dialogs immediately
+import ActionDialog from '/imports/client/ui/creature/actions/ActionDialog.vue';
 import InsertPropertyDialog from '/imports/client/ui/properties/InsertPropertyDialog.vue';
 import CharacterCreationDialog from '/imports/client/ui/creature/character/CharacterCreationDialog.vue';
 import CastSpellWithSlotDialog from '/imports/client/ui/properties/components/spells/CastSpellWithSlotDialog.vue';
@@ -33,6 +34,7 @@ const ShareDialog = () => import('/imports/client/ui/sharing/ShareDialog.vue');
 const UsernameDialog = () => import('/imports/client/ui/user/UsernameDialog.vue');
 
 export default {
+  ActionDialog,
   InsertPropertyDialog,
   ArchiveDialog,
   CastSpellWithSlotDialog,

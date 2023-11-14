@@ -6,7 +6,6 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import computeCreature from '/imports/api/engine/computeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
-import ActiveActions from '/imports/api/creature/actions/ActiveActions';
 import { loadCreature } from '/imports/api/engine/loadCreatures.js';
 
 let schema = new SimpleSchema({
@@ -54,11 +53,6 @@ Meteor.publish('singleCharacter', function (creatureId) {
       }, {
         limit: 20,
         sort: { date: -1 },
-      }),
-      ActiveActions.find({
-        creatureId,
-      }, {
-        limit: 10,
       }),
       // Also publish the owner's username
       Meteor.users.find(permissionCreature.owner, {

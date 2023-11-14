@@ -10,7 +10,6 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import applyProperty from './applyProperty.js';
 import ActionContext from '/imports/api/engine/actions/ActionContext.js';
-import ActiveActions from '/imports/api/creature/actions/ActiveActions';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -31,24 +30,27 @@ const doAction = new ValidatedMethod({
       blackbox: true,
       optional: true,
     },
+    invocationId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      optional: true,
+    }
   }).validator(),
+  applyOptions: {
+    throwStubExceptions: false,
+  },
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 10,
     timeInterval: 5000,
   },
-  async run({ actionId, targetIds = [], scope }) {
+  async run({ actionId, targetIds = [], scope, invocationId }) {
+    console.log('do Action running');
     // Get action context
     let action = CreatureProperties.findOne(actionId);
     const creatureId = action.ancestors[0].id;
-    // TODO remove this
-    // For testing, remove all other active actions before inserting this one
-    ActiveActions.remove({});
-    const activeActionId = await ActiveActions.insertAsync({
-      creatureId,
-      userId: this.userId,
-    });
-    const actionContext = new ActionContext(creatureId, targetIds, this, activeActionId);
+
+    const actionContext = new ActionContext(creatureId, targetIds, this, invocationId);
 
     // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
@@ -67,11 +69,13 @@ const doAction = new ValidatedMethod({
     await doActionWork({ properties, ancestors, actionContext, methodScope: scope });
 
     // Recompute all involved creatures
-    Creatures.update({
-      _id: { $in: [creatureId, ...targetIds] }
-    }, {
-      $set: { dirty: true },
-    });
+    if (Meteor.isServer) {
+      Creatures.updateAsync({
+        _id: { $in: [creatureId, ...targetIds] }
+      }, {
+        $set: { dirty: true },
+      });
+    }
   },
 });
 

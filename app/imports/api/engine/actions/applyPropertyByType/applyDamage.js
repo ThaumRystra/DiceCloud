@@ -37,7 +37,7 @@ export default function applyDamage(node, actionContext) {
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // roll the dice only and store that string
-  recalculateCalculation(prop.amount, actionContext, undefined, 'compile');
+  recalculateCalculation(prop.amount, actionContext, 'compile');
   const { result: rolled } = resolve('roll', prop.amount.valueNode, scope, context);
   if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
