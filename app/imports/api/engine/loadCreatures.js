@@ -189,6 +189,30 @@ export function getPropertyDecendants(creatureId, propertyId) {
   }
 }
 
+export function getPropertyChildren(creatureId, propertyId) {
+  const property = getSingleProperty(creatureId, propertyId);
+  if (!property) return [];
+  // This propertyId will always appear in the parent of the children
+  if (loadedCreatures.has(creatureId)) {
+    const creature = loadedCreatures.get(creatureId);
+    const props = [];
+    for (const prop of creature.properties.values()) {
+      if (prop.parent?.id === propertyId) {
+        props.push(prop);
+      }
+    }
+    const cloneProps = EJSON.clone(props);
+    return cloneProps.sort((a, b) => a.order - b.order);
+  } else {
+    return CreatureProperties.find({
+      'parent.id': propertyId,
+      removed: { $ne: true },
+    }, {
+      sort: { order: 1 },
+    }).fetch();
+  }
+}
+
 class LoadedCreature {
   constructor(sub, creatureId) {
     // This may be called from a subscription, but we don't want the observers
