@@ -94,6 +94,36 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
     optional: true,
     removeBeforeCompute: true,
   },
+  // Triggers that fire when this property is applied
+  'triggerIds': {
+    type: Object,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'triggerIds.before': {
+    type: Array,
+    optional: true,
+  },
+  'triggerIds.before.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'triggerIds.after': {
+    type: Array,
+    optional: true,
+  },
+  'triggerIds.after.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'triggerIds.afterChildren': {
+    type: Array,
+    optional: true,
+  },
+  'triggerIds.afterChildren.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
   // When this is true on any property, the creature needs to be recomputed
   dirty: {
     type: Boolean,

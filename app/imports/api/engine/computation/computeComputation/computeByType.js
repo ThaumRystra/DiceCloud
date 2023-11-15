@@ -7,6 +7,7 @@ import propertySlot from './computeByType/computeSlot.js';
 import container from './computeByType/computeContainer.js';
 import spellList from './computeByType/computeSpellList.js';
 import toggle from './computeByType/computeToggle.js';
+import trigger from './computeByType/computeTrigger.js'
 import _calculation from './computeByType/computeCalculation.js';
 
 export default Object.freeze({
@@ -21,4 +22,5 @@ export default Object.freeze({
   spell: action,
   spellList,
   toggle,
+  trigger,
 });
