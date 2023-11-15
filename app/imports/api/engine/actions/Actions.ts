@@ -1,20 +1,23 @@
 import SimpleSchema from 'simpl-schema';
-import { forEachRight, forEach, isEmpty } from 'lodash';
+import { forEach, isEmpty } from 'lodash';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
 import { getPropertyChildren, getSingleProperty } from '/imports/api/engine/loadCreatures';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
 
-const Actions = new Mongo.Collection<Action>('actions');
+const Actions = new Mongo.Collection<ActionWithId>('actions');
 
-type Action = {
-  _id: string;
+interface Action {
   creatureId: string;
   rootPropId: string;
-  targetIds: string[];
-  userInputNeeded: boolean;
-  stepThrough: boolean;
+  targetIds?: string[];
+  userInputNeeded?: boolean;
+  stepThrough?: boolean;
   taskQueue: Task[];
   results: TaskResult[];
+}
+
+interface ActionWithId extends Action {
+  _id: string;
 }
 
 type Task = {
@@ -152,6 +155,21 @@ const ActionSchema = new SimpleSchema({
 
 Actions.attachSchema(ActionSchema);
 
+/**
+ * Create a new action ready to be run starting at the given property (or its 'before' triggers)
+ * @param prop 
+ */
+export async function createAction(prop) {
+  const action: Action = {
+    creatureId: prop.ancestors[0].id,
+    rootPropId: prop._id,
+    taskQueue: [],
+    results: [],
+  };
+  pushPropAndTriggers(action, prop);
+  return Actions.insertAsync(action);
+}
+
 // Run an already created action
 export async function runAction(actionId: string, userInput) {
   const action = await Actions.findOneAsync(actionId);
@@ -171,7 +189,7 @@ export async function runAction(actionId: string, userInput) {
   return writeChangedAction(originalAction, action);
 }
 
-function writeChangedAction(original: Action, changed: Action) {
+function writeChangedAction(original: ActionWithId, changed: ActionWithId) {
   const $set = {};
   for (const key of ActionSchema.objectKeys()) {
     if (!EJSON.equals(original[key], changed[key])) {
@@ -189,8 +207,8 @@ async function applyProperty(task, action, userInput) {
   if (!prop) throw new Meteor.Error('Not found', 'Property could not be found');
   if (prop.deactivatedByToggle) return;
 
-  // Apply the property, applyPropertyByType must have no side effects except to action.
-  const { result } = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
+  // Apply the property
+  const { result }: { result: TaskResult } = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
 
   // store the task's details and save the result
   result.propId = task.propId;
@@ -205,7 +223,7 @@ async function applyProperty(task, action, userInput) {
  * @param prop The property to make a task of
  * @param targetIds The targetIds the prop and triggers will apply to
  */
-function pushPropAndTriggers(action: Action, prop, targetIds) {
+function pushPropAndTriggers(action: Action, prop, targetIds?) {
   // Push the before triggers to the queue
   forEach(prop.triggerIds?.before, triggerId => {
     action.taskQueue.push({ propId: triggerId, targetIds });
@@ -227,8 +245,8 @@ function pushPropAndTriggers(action: Action, prop, targetIds) {
  * @param prop The property to make a task of
  * @param targetIds The targetIds the prop and triggers will apply to
  */
-function pushChildrenAndTriggers(action: Action, prop, targetIds) {
-  const children = getPropertyChildren(action.creatureId, prop._id);
+async function pushChildrenAndTriggers(action: Action, prop, targetIds) {
+  const children = await getPropertyChildren(action.creatureId, prop._id);
 
   // Push the child tasks and related triggers to the stack
   forEach(children, childProp => {
@@ -282,7 +300,7 @@ const applyPropertyByType = {
       });
     }
 
-    pushChildrenAndTriggers(action, prop, task.targetIds);
+    await pushChildrenAndTriggers(action, prop, task.targetIds);
 
     return result;
   }
