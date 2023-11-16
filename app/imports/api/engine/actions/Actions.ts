@@ -117,11 +117,11 @@ const ActionSchema = new SimpleSchema({
   'results.$.propId': {
     type: Object,
   },
-  'result.$.targetIds': {
+  'results.$.targetIds': {
     type: Array,
     defaultValue: [],
   },
-  'result.$.targetIds.$': {
+  'results.$.targetIds.$': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
@@ -155,11 +155,13 @@ const ActionSchema = new SimpleSchema({
 
 Actions.attachSchema(ActionSchema);
 
+export default Actions;
+
 /**
  * Create a new action ready to be run starting at the given property (or its 'before' triggers)
  * @param prop 
  */
-export async function createAction(prop) {
+export function createAction(prop) {
   const action: Action = {
     creatureId: prop.ancestors[0].id,
     rootPropId: prop._id,
