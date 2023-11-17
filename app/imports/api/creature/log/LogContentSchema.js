@@ -22,11 +22,16 @@ let LogContentSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  // This log entry was silenced
+  silenced: {
+    type: Boolean,
+    optional: true,
+  },
   context: {
     type: Object,
     optional: true,
   },
-  'context.errors':{
+  'context.errors': {
     type: Array,
     defaultValue: [],
     maxCount: STORAGE_LIMITS.errorCount,

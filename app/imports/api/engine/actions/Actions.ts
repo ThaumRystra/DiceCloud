@@ -8,7 +8,7 @@ import rollDice from '/imports/parser/rollDice';
 
 const Actions = new Mongo.Collection<ActionWithId>('actions');
 
-interface Action {
+export interface Action {
   creatureId: string;
   rootPropId: string;
   targetIds?: string[];
@@ -27,6 +27,7 @@ interface ActionWithId extends Action {
 type Task = {
   propId: string;
   targetIds: string[];
+  step?: number,
 }
 
 type TaskResult = {
@@ -34,17 +35,11 @@ type TaskResult = {
   targetIds: string[];
   scope: any;
   mutations: Mutation[];
-  step?: number;
-  deferred?: boolean;
-  deferredState?: any;
 }
 
 class PartialTaskResult {
   scope: any;
   mutations: Mutation[];
-  step?: number;
-  deferred?: boolean;
-  deferredState?: any;
   constructor() {
     this.scope = {};
     this.mutations = [];
@@ -66,17 +61,19 @@ type Mutation = {
   // Which creatures the mutation is applied to
   targetIds: string[];
   // What changes in the database
-  updates?: {
-    propId: string;
-    set?: any;
-    inc?: any;
-    type: string,
-  }[];
+  updates?: Update[];
   // Logged when this is applied
   contents?: LogContent[];
 }
 
-type LogContent = {
+export type Update = {
+  propId: string;
+  type: string,
+  set?: any;
+  inc?: any;
+}
+
+export type LogContent = {
   name?: string;
   value?: string;
   inline?: boolean;
@@ -122,6 +119,10 @@ const ActionSchema = new SimpleSchema({
   'taskQueue.$.propId': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+  },
+  'taskQueue.$.step': {
+    type: Number,
+    optional: true,
   },
   'taskQueue.$.targetIds': {
     type: Array,
@@ -202,7 +203,16 @@ const ActionSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
+  // Required, because CreatureProperties.update requires a selector of { type }
+  'results.$.mutations.$.updates.$.type': {
+    type: String,
+  },
   'results.$.mutations.$.updates.$.set': {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+  'results.$.mutations.$.updates.$.inc': {
     type: Object,
     optional: true,
     blackbox: true,
@@ -262,9 +272,13 @@ export async function runAction(actionId: string, userInput?) {
   return writePromise;
 }
 
-async function applyNextTask(action, userInput?) {
+// TODO create a function to get the effective value of a property,
+// simulating all the result updates in the action so far
+
+async function applyNextTask(action: Action, userInput?) {
   // Get the next task
-  const task = action.taskQueue[0];
+  const task = action.taskQueue.shift();
+  if (!task) throw 'Next task does not exist';
   // Get the property from the action's task properties or the creature's properties
   let prop;
   const taskProp = action.taskProperties[task.propId];
@@ -278,26 +292,15 @@ async function applyNextTask(action, userInput?) {
   if (prop.deactivatedByToggle) return;
 
   // Apply the property
-  const result: TaskResult | undefined = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
-
-  if (result) {
-    // store the task's details and save the result
-    result.scope[`#${prop.type}`] = prop;
-    result.propId = task.propId;
-    result.targetIds = task.targetIds;
-    if (result.deferred) {
-      delete result.deferred;
-      result.step = (result.step || 0) + 1;
-      action.deferredResults[task.propId] = result;
-    } else {
-      // There was a result and it wasn't deferred, we can remove this task from the queue
-      action.taskQueue.shift();
-      action.results.push(result);
-    }
-  } else if (!action.userInputNeeded) {
-    // Prevent accidental infinite loops if we don't remove the task, but also don't break for input
-    throw 'The only time result can be undefined is if we are waiting for user input';
-  }
+  const result: PartialTaskResult = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
+  // store the task's details and save the result
+  result.scope[`#${prop.type}`] = prop;
+  action.results.push({
+    propId: task.propId,
+    targetIds: task.targetIds,
+    scope: result.scope,
+    mutations: result.mutations,
+  });
 }
 
 function writeChangedAction(original: ActionWithId, changed: ActionWithId) {
@@ -360,14 +363,20 @@ function createResult(): PartialTaskResult {
 }
 
 // Combine all the action results into the scope at present
-export function getEffectiveActionScope(action) {
+export function getEffectiveActionScope(action: Action) {
   const scope = getVariables(action.creatureId);
+  // First combine the applied results
   for (const result of action.results) {
+    Object.assign(scope, result.scope);
+  }
+  // Then the deferred results
+  // Warning: order is not guaranteed here
+  for (const id in action.deferredResults) {
+    const result = action.deferredResults[id];
     Object.assign(scope, result.scope);
   }
   return scope;
 }
-
 
 type DamageProp = {
   _id?: string;
@@ -547,18 +556,30 @@ const applyPropertyByType = {
         }
         break;
       case 'choice': {
-        // If there is no input to consume, return no result, but mark the action as requiring input
-        if (!userInput) {
+        // Step 0, halt the action to get user input
+        if (!task.step) {
+          // Mark the action as needing user input so that it halts
           action.userInputNeeded = pick(prop, ['_id', 'type', 'branchType']);
-          return;
+          // Put this task back in the queue, but at step 1
+          action.taskQueue.push({
+            ...task,
+            step: 1,
+          });
+          return result;
         }
-        const children = await getPropertyChildren(action.creatureId, prop._id);
-        let index = userInput.choice;
-        if (!isFinite(index) || index < 0) index = 0;
-        if (index > children.length - 1) index = children.length - 1;
-        pushPropAndTriggers(action, children[index], targets);
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
+        // Step 1 consume the user input
+        else if (task.step === 1) {
+          if (!userInput) {
+            throw 'User input was required for this step'
+          }
+          const children = await getPropertyChildren(action.creatureId, prop._id);
+          let index = userInput.choice;
+          if (!isFinite(index) || index < 0) index = 0;
+          if (index > children.length - 1) index = children.length - 1;
+          pushPropAndTriggers(action, children[index], targets);
+          pushAfterChildrenTriggers(action, prop, targets);
+        }
+        return result;
       }
     }
 
@@ -566,9 +587,7 @@ const applyPropertyByType = {
   },
 
   async adjustment(prop, task: Task, action: Action): Promise<PartialTaskResult> {
-
-    let result = action.deferredResults[task.propId];
-    if (!result) result = createResult();
+    const result = createResult();
 
     const queueChildren = async function (targetIds) {
       await pushChildren(action, prop, targetIds);
@@ -576,9 +595,10 @@ const applyPropertyByType = {
     }
 
     const damageTargets = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+    task.targetIds = damageTargets;
 
     // Step 0, get the operation and value and push the damage pseudo prop to the queue
-    if (!result.step) {
+    if (!task.step) {
 
       if (!prop.amount) {
         queueChildren(task.targetIds);
@@ -587,7 +607,6 @@ const applyPropertyByType = {
 
       // Evaluate the amount
       recalculateCalculation(prop.amount, action, 'reduce');
-
       const value = +prop.amount.value;
       if (!isFinite(value)) {
         queueChildren(task.targetIds);
@@ -596,7 +615,6 @@ const applyPropertyByType = {
 
       if (damageTargets?.length) {
         for (const targetId of damageTargets) {
-          queueChildren([targetId]);
           const statId = getVariables(targetId)?.[prop.stat]?._propId;
           if (!statId) continue;
 
@@ -610,22 +628,37 @@ const applyPropertyByType = {
             }, [targetId]);
             continue;
           }
+          // Do the damage
           pushDamagePropertyTasks(action, {
             type: 'damageProp',
             value,
             operation: prop.operation,
             targetPropId: stat._id,
           }, stat, [targetId], result);
+          // Do the next step of this property
+          action.taskQueue.push({
+            ...task,
+            step: 1,
+          });
         }
       }
-      result.deferred = true;
-      result.deferredState = { value };
     }
     // Step 1, Log the results
-    else if (result.step === 1) {
-      const value = result.deferredState.value;
+    else if (task.step === 1) {
+      const scope = getEffectiveActionScope(action);
+      let value;
+      if (prop.operation === 'increment') {
+        if (prop.value >= 0) {
+          value = scope['~damage']?.value;
+        } else {
+          value = -scope['~healing']?.value;
+        }
+      } else {
+        value = scope['~set']?.value;
+      }
       if (damageTargets?.length) {
         for (const targetId of damageTargets) {
+          await queueChildren([targetId]);
           result.appendLog({
             name: 'Attribute damage',
             value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
@@ -635,6 +668,7 @@ const applyPropertyByType = {
           }, [targetId]);
         }
       } else {
+        await queueChildren(task.targetIds);
         result.appendLog({
           name: 'Attribute damage',
           value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
@@ -662,7 +696,6 @@ const applyPropertyByType = {
     } else {
       value = scope['~set']?.value;
     }
-
     let damage, newValue, increment;
     if (task.targetIds.length) {
       for (const targetId of task.targetIds) {
