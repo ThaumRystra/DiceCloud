@@ -15,6 +15,8 @@ interface Action {
   userInputNeeded?: any;
   stepThrough?: boolean;
   taskQueue: Task[];
+  taskProperties: any;
+  deferredResults: { [id: string]: PartialTaskResult };
   results: TaskResult[];
 }
 
@@ -32,11 +34,17 @@ type TaskResult = {
   targetIds: string[];
   scope: any;
   mutations: Mutation[];
+  step?: number;
+  deferred?: boolean;
+  deferredState?: any;
 }
 
 class PartialTaskResult {
   scope: any;
   mutations: Mutation[];
+  step?: number;
+  deferred?: boolean;
+  deferredState?: any;
   constructor() {
     this.scope = {};
     this.mutations = [];
@@ -60,7 +68,9 @@ type Mutation = {
   // What changes in the database
   updates?: {
     propId: string;
-    set: any;
+    set?: any;
+    inc?: any;
+    type: string,
   }[];
   // Logged when this is applied
   contents?: LogContent[];
@@ -71,6 +81,7 @@ type LogContent = {
   value?: string;
   inline?: boolean;
   context?: any;
+  silenced?: boolean;
 }
 
 const ActionSchema = new SimpleSchema({
@@ -119,6 +130,21 @@ const ActionSchema = new SimpleSchema({
   'taskQueue.$.targetIds.$': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+  },
+
+  // Pseudo properties that don't exist on the character, but can be applied by the action
+  // {_id: prop}
+  'taskProperties': {
+    type: Object,
+    blackbox: true,
+    defaultValue: {},
+  },
+  // Results that have been partially computed, but require more steps
+  // {_id: partialResult}
+  'deferredResults': {
+    type: Object,
+    blackbox: true,
+    defaultValue: {},
   },
 
   // Applied properties
@@ -190,6 +216,7 @@ const ActionSchema = new SimpleSchema({
   },
 });
 
+// @ts-expect-error Collections2 lacks TypeScript support
 Actions.attachSchema(ActionSchema);
 
 export default Actions;
@@ -203,6 +230,8 @@ export function createAction(prop) {
     creatureId: prop.ancestors[0].id,
     rootPropId: prop._id,
     taskQueue: [],
+    taskProperties: {},
+    deferredResults: {},
     results: [],
   };
   pushPropAndTriggers(action, prop);
@@ -236,8 +265,15 @@ export async function runAction(actionId: string, userInput?) {
 async function applyNextTask(action, userInput?) {
   // Get the next task
   const task = action.taskQueue[0];
+  // Get the property from the action's task properties or the creature's properties
+  let prop;
+  const taskProp = action.taskProperties[task.propId];
+  if (taskProp) {
+    prop = taskProp;
+  } else {
+    prop = await getSingleProperty(action.creatureId, task.propId);
+  }
   // Ensure the prop exists
-  const prop = await getSingleProperty(action.creatureId, task.propId);
   if (!prop) throw new Meteor.Error('Not found', 'Property could not be found');
   if (prop.deactivatedByToggle) return;
 
@@ -245,13 +281,19 @@ async function applyNextTask(action, userInput?) {
   const result: TaskResult | undefined = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
 
   if (result) {
-    // There was a result, we can remove this task from the queue
-    action.taskQueue.shift();
     // store the task's details and save the result
     result.scope[`#${prop.type}`] = prop;
     result.propId = task.propId;
     result.targetIds = task.targetIds;
-    action.results.push(result);
+    if (result.deferred) {
+      delete result.deferred;
+      result.step = (result.step || 0) + 1;
+      action.deferredResults[task.propId] = result;
+    } else {
+      // There was a result and it wasn't deferred, we can remove this task from the queue
+      action.taskQueue.shift();
+      action.results.push(result);
+    }
   } else if (!action.userInputNeeded) {
     // Prevent accidental infinite loops if we don't remove the task, but also don't break for input
     throw 'The only time result can be undefined is if we are waiting for user input';
@@ -326,11 +368,48 @@ export function getEffectiveActionScope(action) {
   return scope;
 }
 
-// Return result object
-// No side effects except pushing to taskQueue
-const applyPropertyByType = {
 
-  async note(prop, task: Task, action: Action) {
+type DamageProp = {
+  _id?: string;
+  operation: 'increment' | 'set';
+  type: 'damageProp';
+  value: number;
+  targetPropId: string;
+}
+
+function pushDamagePropertyTasks(action, damageProp: DamageProp, targetProp, targetIds, result: PartialTaskResult) {
+  // Save the values to the scope
+  if (damageProp.operation === 'increment') {
+    if (damageProp.value >= 0) {
+      result.scope['~damage'] = { value: damageProp.value };
+    } else {
+      result.scope['~healing'] = { value: -damageProp.value };
+    }
+  } else {
+    result.scope['~set'] = { value: damageProp.value };
+  }
+  // Push before triggers
+  if (targetProp.triggers?.damageProperty?.before) {
+    for (const triggerId of targetProp.triggers.damageProperty.before) {
+      action.taskQueue.push({ propId: triggerId, targetIds });
+    }
+  }
+
+  // Push damage pseudo prop
+  if (!damageProp._id) damageProp._id = Random.id();
+  action.taskProperties[damageProp._id] = damageProp;
+  action.taskQueue.push({ propId: damageProp._id, targetIds });
+
+  // Push after triggers
+  if (targetProp.triggers?.damageProperty?.after) {
+    for (const triggerId of targetProp.triggers.damageProperty.after) {
+      action.taskQueue.push({ propId: triggerId, targetIds });
+    }
+  }
+}
+
+const applyPropertyByType = {
+  async note(prop, task: Task, action: Action): Promise<PartialTaskResult> {
     const result = createResult();
 
     let contents: LogContent[] | undefined = undefined;
@@ -362,7 +441,7 @@ const applyPropertyByType = {
     return result;
   },
 
-  async branch(prop, task: Task, action: Action, userInput) {
+  async branch(prop, task: Task, action: Action, userInput): Promise<PartialTaskResult> {
     // const scope = getEffectiveActionScope(action);
     const result = createResult();
     const targets = task.targetIds;
@@ -486,4 +565,150 @@ const applyPropertyByType = {
     return result;
   },
 
+  async adjustment(prop, task: Task, action: Action): Promise<PartialTaskResult> {
+
+    let result = action.deferredResults[task.propId];
+    if (!result) result = createResult();
+
+    const queueChildren = async function (targetIds) {
+      await pushChildren(action, prop, targetIds);
+      await pushAfterChildrenTriggers(action, prop, targetIds);
+    }
+
+    const damageTargets = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+    // Step 0, get the operation and value and push the damage pseudo prop to the queue
+    if (!result.step) {
+
+      if (!prop.amount) {
+        queueChildren(task.targetIds);
+        return result;
+      }
+
+      // Evaluate the amount
+      recalculateCalculation(prop.amount, action, 'reduce');
+
+      const value = +prop.amount.value;
+      if (!isFinite(value)) {
+        queueChildren(task.targetIds);
+        return result;
+      }
+
+      if (damageTargets?.length) {
+        for (const targetId of damageTargets) {
+          queueChildren([targetId]);
+          const statId = getVariables(targetId)?.[prop.stat]?._propId;
+          if (!statId) continue;
+
+          const stat = getSingleProperty(targetId, statId);
+          if (!stat) continue;
+
+          if (!stat?.type) {
+            if (!prop.silent) result.appendLog({
+              name: 'Error',
+              value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`
+            }, [targetId]);
+            continue;
+          }
+          pushDamagePropertyTasks(action, {
+            type: 'damageProp',
+            value,
+            operation: prop.operation,
+            targetPropId: stat._id,
+          }, stat, [targetId], result);
+        }
+      }
+      result.deferred = true;
+      result.deferredState = { value };
+    }
+    // Step 1, Log the results
+    else if (result.step === 1) {
+      const value = result.deferredState.value;
+      if (damageTargets?.length) {
+        for (const targetId of damageTargets) {
+          result.appendLog({
+            name: 'Attribute damage',
+            value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+              ` ${value}`,
+            inline: true,
+            silenced: prop.silent,
+          }, [targetId]);
+        }
+      } else {
+        result.appendLog({
+          name: 'Attribute damage',
+          value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+            ` ${value}`,
+          inline: true,
+          silenced: prop.silent,
+        }, task.targetIds);
+      }
+    }
+    return result;
+  },
+
+  async damageProp(prop: DamageProp, task: Task, action: Action): Promise<PartialTaskResult> {
+    // fetch the value from the scope after the before triggers, in case they changed them
+    const result = createResult();
+    const scope = getEffectiveActionScope(action);
+    const operation = prop.operation;
+    let value;
+    if (prop.operation === 'increment') {
+      if (prop.value >= 0) {
+        value = scope['~damage']?.value;
+      } else {
+        value = -scope['~healing']?.value;
+      }
+    } else {
+      value = scope['~set']?.value;
+    }
+
+    let damage, newValue, increment;
+    if (task.targetIds.length) {
+      for (const targetId of task.targetIds) {
+        const targetProp = getSingleProperty(targetId, prop.targetPropId);
+        if (!targetProp) continue;
+        if (operation === 'set') {
+          const total = targetProp.total || 0;
+          // Set represents what we want the value to be after damage
+          // So we need the actual damage to get to that value
+          damage = total - value;
+          // Damage can't exceed total value
+          if (damage > total && !targetProp.ignoreLowerLimit) damage = total;
+          // Damage must be positive
+          if (damage < 0 && !targetProp.ignoreUpperLimit) damage = 0;
+          newValue = targetProp.total - damage;
+          // Write the results
+          result.mutations.push({
+            targetIds: [targetId],
+            updates: [{
+              propId: targetProp._id,
+              set: { damage, value: newValue },
+              type: targetProp.type,
+            }],
+          });
+        } else if (operation === 'increment') {
+          const currentValue = targetProp.value || 0;
+          const currentDamage = targetProp.damage || 0;
+          increment = value;
+          // Can't increase damage above the remaining value
+          if (increment > currentValue && !targetProp.ignoreLowerLimit) increment = currentValue;
+          // Can't decrease damage below zero
+          if (-increment > currentDamage && !targetProp.ignoreUpperLimit) increment = -currentDamage;
+          damage = currentDamage + increment;
+          newValue = targetProp.total - damage;
+          // Write the results
+          result.mutations.push({
+            targetIds: [targetId],
+            updates: [{
+              propId: targetProp._id,
+              inc: { damage: increment, value: -increment },
+              type: targetProp.type,
+            }],
+          });
+        }
+      }
+    }
+    return result;
+  }
 }
