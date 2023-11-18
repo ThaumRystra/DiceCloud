@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import { forEach, isEmpty, pick } from 'lodash';
+import { forEach, get, isEmpty, pick } from 'lodash';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
 import { getPropertyChildren, getSingleProperty, getVariables } from '/imports/api/engine/loadCreatures';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
@@ -34,15 +34,27 @@ type TaskResult = {
   propId: string;
   targetIds: string[];
   scope: any;
+  popScope?: any;
+  pushScope?: any;
   mutations: Mutation[];
 }
 
 class PartialTaskResult {
   scope: any;
+  // Consume pushed changes from the local scope, every change pushed must be popped later
+  popScope?: any;
+  // Push changes to the scope if the same task intends to consume them in later steps
+  // These changes will be marked as _busy until they are consumed
+  // This allows a property to run in between steps of the same property type without
+  // bashing the variables used to maintain state between steps while still exposing
+  // those variables to triggers that need to change them
+  // If multiple properties use the same variable at once, the values used by outer
+  // properties can be found on variable.previous
+  pushScope?: any;
   mutations: Mutation[];
   constructor() {
-    this.scope = {};
     this.mutations = [];
+    this.scope = {};
   }
   // Appends the log content to the latest mutation
   appendLog(content: LogContent, targetIds: string[]) {
@@ -171,8 +183,20 @@ const ActionSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-  // Changes in local scope made by this result
+  // Changes that override the local scope
   'results.$.scope': {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+  // Changes that consume pushed values from the local scope
+  'results.$.popScope': {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+  // Changes that push values to the local scope
+  'results.$.pushScope': {
     type: Object,
     optional: true,
     blackbox: true,
@@ -294,12 +318,13 @@ async function applyNextTask(action: Action, userInput?) {
   // Apply the property
   const result: PartialTaskResult = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
   // store the task's details and save the result
+  // Because we recomputed the property in the action context, store the whole thing,
+  // rather than just a reference to it
   result.scope[`#${prop.type}`] = prop;
   action.results.push({
+    ...result,
     propId: task.propId,
     targetIds: task.targetIds,
-    scope: result.scope,
-    mutations: result.mutations,
   });
 }
 
@@ -365,55 +390,90 @@ function createResult(): PartialTaskResult {
 // Combine all the action results into the scope at present
 export function getEffectiveActionScope(action: Action) {
   const scope = getVariables(action.creatureId);
-  // First combine the applied results
+  // Combine the applied results
   for (const result of action.results) {
-    Object.assign(scope, result.scope);
-  }
-  // Then the deferred results
-  // Warning: order is not guaranteed here
-  for (const id in action.deferredResults) {
-    const result = action.deferredResults[id];
-    Object.assign(scope, result.scope);
+    // Pop keys that are not longer used by a busy property
+    if (result.popScope) {
+      for (const key in result.popScope) {
+        if (!result.popScope[key]) continue;
+        // If the popped keys have previous results, return to them
+        if (scope[key]?.previous) {
+          scope[key] = scope[key]?.previous;
+        } else {
+          // just remove the busy flag, the prop has been consumed
+          delete scope[key]?._busy
+        }
+      }
+    }
+    // For keys that have just started being used by a busy property
+    if (result.pushScope) {
+      for (const key in result.pushScope) {
+        // If the pushed keys already exist and are busy,
+        // save the previous results and overwrite
+        // the key
+        if (scope[key]?._busy) {
+          scope[key] = {
+            ...result.pushScope[key],
+            previous: scope[key],
+            _busy: true,
+          };
+        } else {
+          scope[key] = {
+            ...result.pushScope[key],
+            _busy: true,
+          };
+        }
+      }
+    }
+    // Assign other scope changes without bashing the scope[key].previous field
+    if (result.scope) {
+      for (const key in result.scope) {
+        if (scope[key]?.previous || scope[key]?._busy) {
+          scope[key] = {
+            ...result.scope[key],
+            previous: scope[key].previous,
+            _busy: scope[key]._busy,
+          };
+        } else {
+          scope[key] = result.scope[key];
+        }
+      }
+    }
   }
   return scope;
 }
 
-type DamageProp = {
-  _id?: string;
-  operation: 'increment' | 'set';
-  type: 'damageProp';
-  value: number;
-  targetPropId: string;
+function pushTriggers(action, targetProp, targetIds, triggerPath) {
+  const triggers = get(targetProp?.triggers, triggerPath);
+  if (triggers) {
+    for (const triggerId of triggers) {
+      action.taskQueue.push({ propId: triggerId, targetIds });
+    }
+  }
 }
 
-function pushDamagePropertyTasks(action, damageProp: DamageProp, targetProp, targetIds, result: PartialTaskResult) {
-  // Save the values to the scope
-  if (damageProp.operation === 'increment') {
-    if (damageProp.value >= 0) {
-      result.scope['~damage'] = { value: damageProp.value };
-    } else {
-      result.scope['~healing'] = { value: -damageProp.value };
+function applyTaskToEachTarget(action, task: Task, targetIds: string[] = task.targetIds) {
+  // Keep propId
+  const propId = task.propId;
+  // Increment step
+  const step = (task.step || 0) + 1;
+
+  if (targetIds.length) {
+    // If there are targets, apply a new task to each target
+    for (const targetId of targetIds) {
+      action.taskQueue.push({
+        propId,
+        step,
+        targetIds: [targetId],
+      });
     }
   } else {
-    result.scope['~set'] = { value: damageProp.value };
-  }
-  // Push before triggers
-  if (targetProp.triggers?.damageProperty?.before) {
-    for (const triggerId of targetProp.triggers.damageProperty.before) {
-      action.taskQueue.push({ propId: triggerId, targetIds });
-    }
-  }
-
-  // Push damage pseudo prop
-  if (!damageProp._id) damageProp._id = Random.id();
-  action.taskProperties[damageProp._id] = damageProp;
-  action.taskQueue.push({ propId: damageProp._id, targetIds });
-
-  // Push after triggers
-  if (targetProp.triggers?.damageProperty?.after) {
-    for (const triggerId of targetProp.triggers.damageProperty.after) {
-      action.taskQueue.push({ propId: triggerId, targetIds });
-    }
+    // Otherwise just do the next step
+    action.taskQueue.push({
+      propId,
+      step,
+      targetIds,
+    });
   }
 }
 
@@ -597,8 +657,13 @@ const applyPropertyByType = {
     const damageTargets = prop.target === 'self' ? [action.creatureId] : task.targetIds;
     task.targetIds = damageTargets;
 
-    // Step 0, get the operation and value and push the damage pseudo prop to the queue
+    // Step 0, split the task
     if (!task.step) {
+      applyTaskToEachTarget(action, task, damageTargets);
+    }
+
+    // Step 1, get the operation and value and push the damage hooks to the queue
+    else if (task.step === 1) {
 
       if (!prop.amount) {
         queueChildren(task.targetIds);
@@ -614,41 +679,62 @@ const applyPropertyByType = {
       }
 
       if (damageTargets?.length) {
-        for (const targetId of damageTargets) {
-          const statId = getVariables(targetId)?.[prop.stat]?._propId;
-          if (!statId) continue;
-
-          const stat = getSingleProperty(targetId, statId);
-          if (!stat) continue;
-
-          if (!stat?.type) {
-            if (!prop.silent) result.appendLog({
-              name: 'Error',
-              value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`
-            }, [targetId]);
-            continue;
-          }
-          // Do the damage
-          pushDamagePropertyTasks(action, {
-            type: 'damageProp',
-            value,
-            operation: prop.operation,
-            targetPropId: stat._id,
-          }, stat, [targetId], result);
-          // Do the next step of this property
-          action.taskQueue.push({
-            ...task,
-            step: 1,
-          });
+        if (damageTargets.length !== 1) {
+          throw 'At this step, only a single target is supported'
         }
+        const targetId = damageTargets[0];
+        const statId = getVariables(targetId)?.[prop.stat]?._propId;
+        const stat = statId && getSingleProperty(targetId, statId);
+        if (!stat?.type) {
+          result.appendLog({
+            name: 'Error',
+            value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
+            silenced: prop.silent,
+          }, [targetId]);
+          return result;
+        }
+        // Set the scope properties
+        result.pushScope = {};
+        if (prop.operation === 'increment') {
+          if (value >= 0) {
+            result.pushScope['~damage'] = { value };
+          } else {
+            result.pushScope['~healing'] = { value: -value };
+          }
+        } else {
+          result.pushScope['~set'] = { value };
+        }
+        // Store which property we're targeting
+        if (targetId === action.creatureId) {
+          result.pushScope['~attributeDamaged'] = { _propId: stat._id };
+        } else {
+          result.pushScope['~attributeDamaged'] = stat;
+        }
+        // Wrap step 1 in the damage property triggers
+        pushTriggers(action, stat, [targetId], 'damageProperty.before');
+        action.taskQueue.push({
+          propId: task.propId,
+          targetIds: [targetId],
+          step: 2,
+        });
+        pushTriggers(action, stat, [targetId], 'damageProperty.after');
+      } else {
+        action.taskQueue.push({
+          propId: task.propId,
+          targetIds: task.targetIds,
+          step: 2,
+        });
       }
     }
-    // Step 1, Log the results
-    else if (task.step === 1) {
+    // Step 2, Apply the damage and Log the results
+    else if (task.step === 2) {
       const scope = getEffectiveActionScope(action);
-      let value;
+      result.popScope = {
+        '~damage': 1, '~healing': 1, '~set': 1, '~attributeDamaged': 1,
+      };
+      let value = +prop.amount.value;
       if (prop.operation === 'increment') {
-        if (prop.value >= 0) {
+        if (value >= 0) {
           value = scope['~damage']?.value;
         } else {
           value = -scope['~healing']?.value;
@@ -656,17 +742,21 @@ const applyPropertyByType = {
       } else {
         value = scope['~set']?.value;
       }
+      const targetPropId = scope['~attributeDamaged']?._propId;
       if (damageTargets?.length) {
-        for (const targetId of damageTargets) {
-          await queueChildren([targetId]);
-          result.appendLog({
-            name: 'Attribute damage',
-            value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
-              ` ${value}`,
-            inline: true,
-            silenced: prop.silent,
-          }, [targetId]);
+        if (damageTargets.length !== 1) {
+          throw 'At this step, only a single target is supported'
         }
+        const targetId = damageTargets[0];
+        await damageProp(action, { value, operation: prop.operation, targetPropId }, targetId, result)
+        await queueChildren([targetId]);
+        result.appendLog({
+          name: 'Attribute damage',
+          value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+            ` ${value}`,
+          inline: true,
+          silenced: prop.silent,
+        }, [targetId]);
       } else {
         await queueChildren(task.targetIds);
         result.appendLog({
@@ -680,68 +770,58 @@ const applyPropertyByType = {
     }
     return result;
   },
+}
 
-  async damageProp(prop: DamageProp, task: Task, action: Action): Promise<PartialTaskResult> {
-    // fetch the value from the scope after the before triggers, in case they changed them
-    const result = createResult();
-    const scope = getEffectiveActionScope(action);
-    const operation = prop.operation;
-    let value;
-    if (prop.operation === 'increment') {
-      if (prop.value >= 0) {
-        value = scope['~damage']?.value;
-      } else {
-        value = -scope['~healing']?.value;
-      }
-    } else {
-      value = scope['~set']?.value;
-    }
-    let damage, newValue, increment;
-    if (task.targetIds.length) {
-      for (const targetId of task.targetIds) {
-        const targetProp = getSingleProperty(targetId, prop.targetPropId);
-        if (!targetProp) continue;
-        if (operation === 'set') {
-          const total = targetProp.total || 0;
-          // Set represents what we want the value to be after damage
-          // So we need the actual damage to get to that value
-          damage = total - value;
-          // Damage can't exceed total value
-          if (damage > total && !targetProp.ignoreLowerLimit) damage = total;
-          // Damage must be positive
-          if (damage < 0 && !targetProp.ignoreUpperLimit) damage = 0;
-          newValue = targetProp.total - damage;
-          // Write the results
-          result.mutations.push({
-            targetIds: [targetId],
-            updates: [{
-              propId: targetProp._id,
-              set: { damage, value: newValue },
-              type: targetProp.type,
-            }],
-          });
-        } else if (operation === 'increment') {
-          const currentValue = targetProp.value || 0;
-          const currentDamage = targetProp.damage || 0;
-          increment = value;
-          // Can't increase damage above the remaining value
-          if (increment > currentValue && !targetProp.ignoreLowerLimit) increment = currentValue;
-          // Can't decrease damage below zero
-          if (-increment > currentDamage && !targetProp.ignoreUpperLimit) increment = -currentDamage;
-          damage = currentDamage + increment;
-          newValue = targetProp.total - damage;
-          // Write the results
-          result.mutations.push({
-            targetIds: [targetId],
-            updates: [{
-              propId: targetProp._id,
-              inc: { damage: increment, value: -increment },
-              type: targetProp.type,
-            }],
-          });
-        }
-      }
-    }
-    return result;
+type DamageProp = {
+  operation: 'increment' | 'set';
+  value: number;
+  targetPropId: string;
+}
+
+async function damageProp(action, prop: DamageProp, targetId, result): Promise<void> {
+  // fetch the value from the scope after the before triggers, in case they changed them
+  const operation = prop.operation;
+  const value = prop.value;
+  let damage, newValue, increment;
+  const targetProp = await getSingleProperty(targetId, prop.targetPropId);
+  if (!targetProp) return;
+  if (operation === 'set') {
+    const total = targetProp.total || 0;
+    // Set represents what we want the value to be after damage
+    // So we need the actual damage to get to that value
+    damage = total - value;
+    // Damage can't exceed total value
+    if (damage > total && !targetProp.ignoreLowerLimit) damage = total;
+    // Damage must be positive
+    if (damage < 0 && !targetProp.ignoreUpperLimit) damage = 0;
+    newValue = targetProp.total - damage;
+    // Write the results
+    result.mutations.push({
+      targetIds: [targetId],
+      updates: [{
+        propId: targetProp._id,
+        set: { damage, value: newValue },
+        type: targetProp.type,
+      }],
+    });
+  } else if (operation === 'increment') {
+    const currentValue = targetProp.value || 0;
+    const currentDamage = targetProp.damage || 0;
+    increment = value;
+    // Can't increase damage above the remaining value
+    if (increment > currentValue && !targetProp.ignoreLowerLimit) increment = currentValue;
+    // Can't decrease damage below zero
+    if (-increment > currentDamage && !targetProp.ignoreUpperLimit) increment = -currentDamage;
+    damage = currentDamage + increment;
+    newValue = targetProp.total - damage;
+    // Write the results
+    result.mutations.push({
+      targetIds: [targetId],
+      updates: [{
+        propId: targetProp._id,
+        inc: { damage: increment, value: -increment },
+        type: targetProp.type,
+      }],
+    });
   }
 }

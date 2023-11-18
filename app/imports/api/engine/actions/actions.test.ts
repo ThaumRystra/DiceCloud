@@ -57,7 +57,7 @@ describe('Interrupt action system', function () {
     );
   });
   it('Applies adjustments', async function () {
-    let action = await runActionById(adjustmentSetId)
+    let action = await runActionById(adjustmentSetId);
     assert.deepEqual(
       allUpdates(action),
       [{
