@@ -4,7 +4,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import Actions, { Action, Update, LogContent, createAction, runAction } from '/imports/api/engine/actions/Actions';
+import Actions, { Action, Update, LogContent, runAction, propTasks } from '/imports/api/engine/actions/Actions';
 import computeCreature from '/imports/api/engine/computeCreature';
 
 let creatureId;
@@ -79,6 +79,16 @@ describe('Interrupt action system', function () {
     );
   });
 });
+
+function createAction(prop, targetIds?) {
+  const action: Action = {
+    creatureId: prop.ancestors[0].id,
+    rootPropId: prop._id,
+    taskQueue: propTasks(prop, targetIds),
+    results: [],
+  };
+  return Actions.insertAsync(action);
+}
 
 async function runActionById(propId) {
   const prop = await CreatureProperties.findOneAsync(propId);

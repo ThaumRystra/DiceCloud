@@ -6,6 +6,8 @@ import recalculateInlineCalculations from '/imports/api/engine/actions/applyProp
 import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
 import rollDice from '/imports/parser/rollDice';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 const Actions = new Mongo.Collection<ActionWithId>('actions');
 
 export interface Action {
@@ -15,8 +17,6 @@ export interface Action {
   userInputNeeded?: any;
   stepThrough?: boolean;
   taskQueue: Task[];
-  taskProperties: any;
-  deferredResults: { [id: string]: PartialTaskResult };
   results: TaskResult[];
 }
 
@@ -255,23 +255,6 @@ Actions.attachSchema(ActionSchema);
 
 export default Actions;
 
-/**
- * Create a new action ready to be run starting at the given property (or its 'before' triggers)
- * @param prop 
- */
-export function createAction(prop) {
-  const action: Action = {
-    creatureId: prop.ancestors[0].id,
-    rootPropId: prop._id,
-    taskQueue: [],
-    taskProperties: {},
-    deferredResults: {},
-    results: [],
-  };
-  pushPropAndTriggers(action, prop);
-  return Actions.insertAsync(action);
-}
-
 // Run an already created action
 export async function runAction(actionId: string, userInput?) {
   const action = await Actions.findOneAsync(actionId);
@@ -303,14 +286,10 @@ async function applyNextTask(action: Action, userInput?) {
   // Get the next task
   const task = action.taskQueue.shift();
   if (!task) throw 'Next task does not exist';
-  // Get the property from the action's task properties or the creature's properties
-  let prop;
-  const taskProp = action.taskProperties[task.propId];
-  if (taskProp) {
-    prop = taskProp;
-  } else {
-    prop = await getSingleProperty(action.creatureId, task.propId);
-  }
+
+  // Get property
+  const prop = await getSingleProperty(action.creatureId, task.propId);
+
   // Ensure the prop exists
   if (!prop) throw new Meteor.Error('Not found', 'Property could not be found');
   if (prop.deactivatedByToggle) return;
@@ -340,46 +319,141 @@ function writeChangedAction(original: ActionWithId, changed: ActionWithId) {
   }
 }
 
+// When doing a thing, you can only change the queue by pushing an array of ordered props
+// to the front of it
+// This makes sure that if the queue is full, you finish doing all subtasks in order
+// before continuing with other properties in the queue
+
 /**
- * Push a prop and its before/after triggers to the task stack
- * Triggers will share the same targetIds as the prop task
- * @param action The action to add the task to
- * @param prop The property to make a task of
- * @param targetIds The targetIds the prop and triggers will apply to
+ * Add the given list of tasks to the front of the queue to be done on the next iteration
+ * of the action. You should return result immediately after calling this.
+ * @param action 
+ * @param tasks 
  */
-function pushPropAndTriggers(action: Action, prop, targetIds?) {
-  // Push the before triggers to the queue
-  forEach(prop.triggerIds?.before, triggerId => {
-    action.taskQueue.push({ propId: triggerId, targetIds });
-  });
-
-  // Push the prop task to the queue
-  action.taskQueue.push({ propId: prop._id, targetIds });
-
-  // Push the after triggers to the queue
-  forEach(prop.triggerIds?.after, triggerId => {
-    action.taskQueue.push({ propId: triggerId, targetIds });
-  });
+function doNext(action: Action, tasks: Task[]) {
+  action.taskQueue.unshift(...tasks);
 }
 
 /**
- * Push all the children of a prop and all trigger of those children to the task queue
- * @param action The action to add the task to
- * @param prop The property to make a task of
- * @param targetIds The targetIds the prop and triggers will apply to
+ * Get all the child tasks of a given property
+ * @param action
+ * @param prop 
+ * @param targetIds 
+ * @returns 
  */
-async function pushChildren(action: Action, prop, targetIds) {
+async function childTasks(action: Action, prop, targetIds) {
+  const tasks: Task[] = [];
   const children = await getPropertyChildren(action.creatureId, prop._id);
   // Push the child tasks and related triggers to the stack
   forEach(children, childProp => {
-    pushPropAndTriggers(action, childProp, targetIds);
+    tasks.push(...propTasks(childProp, targetIds));
   });
+  return tasks
 }
 
-function pushAfterChildrenTriggers(action: Action, prop, targetIds) {
+/**
+ * Get the afterChildren triggers for a given property
+ * @param prop 
+ * @param targetIds 
+ * @returns 
+ */
+function afterChildrenTriggerTasks(prop, targetIds) {
+  const tasks: Task[] = [];
   forEach(prop.triggerIds?.afterChildren, triggerId => {
-    action.taskQueue.push({ propId: triggerId, targetIds });
+    tasks.push({ propId: triggerId, targetIds });
   });
+  return tasks;
+}
+
+/**
+ * Get the child and after children tasks for a given property
+ * @param action 
+ * @param prop 
+ * @param targetIds 
+ * @returns 
+ */
+async function childAndTriggerTasks(action, prop, targetIds) {
+  return [
+    ...await childTasks(action, prop, targetIds),
+    ...afterChildrenTriggerTasks(prop, targetIds)
+  ]
+}
+
+/**
+ * Get all the trigger tasks for a given trigger path
+ * @param action 
+ * @param prop 
+ * @param targetIds 
+ * @param triggerPath 
+ * @returns 
+ */
+function triggerTasks(action: Action, prop, targetIds: string[], triggerPath: string) {
+  const tasks: Task[] = []
+  const triggerIds = get(prop?.triggers, triggerPath);
+  if (triggerIds) {
+    for (const triggerId of triggerIds) {
+      tasks.push({ propId: triggerId, targetIds });
+    }
+  }
+  return tasks;
+}
+
+/**
+ * Get the tasks related to a single property
+ * @param prop 
+ * @param targetIds 
+ * @returns Returns [before triggers, prop, after triggers] tasks
+ */
+export function propTasks(prop, targetIds?) {
+  const tasks: Task[] = [];
+
+  // Push the before triggers
+  forEach(prop.triggerIds?.before, triggerId => {
+    tasks.push({ propId: triggerId, targetIds });
+  });
+
+  // Push the prop task
+  tasks.push({ propId: prop._id, targetIds });
+
+  // Push the after triggers
+  forEach(prop.triggerIds?.after, triggerId => {
+    tasks.push({ propId: triggerId, targetIds });
+  });
+
+  return tasks;
+}
+
+/**
+ * Split a task over its targets, incrementing task step by 1
+ * @param task 
+ * @param targetIds 
+ * @returns Copies of the task, but with a single target each
+ */
+function perTargetTasks(task: Task, targetIds: string[] = task.targetIds) {
+  const tasks: Task[] = [];
+  // Keep propId
+  const propId = task.propId;
+  // Increment step
+  const step = (task.step || 0) + 1;
+
+  if (targetIds.length) {
+    // If there are targets, apply a new task to each target
+    for (const targetId of targetIds) {
+      tasks.push({
+        propId,
+        step,
+        targetIds: [targetId],
+      });
+    }
+  } else {
+    // Otherwise just do the next step
+    tasks.push({
+      propId,
+      step,
+      targetIds,
+    });
+  }
+  return tasks;
 }
 
 function createResult(): PartialTaskResult {
@@ -443,41 +517,317 @@ export function getEffectiveActionScope(action: Action) {
   return scope;
 }
 
-function pushTriggers(action, targetProp, targetIds, triggerPath) {
-  const triggers = get(targetProp?.triggers, triggerPath);
-  if (triggers) {
-    for (const triggerId of triggers) {
-      action.taskQueue.push({ propId: triggerId, targetIds });
-    }
-  }
-}
-
-function applyTaskToEachTarget(action, task: Task, targetIds: string[] = task.targetIds) {
-  // Keep propId
-  const propId = task.propId;
-  // Increment step
-  const step = (task.step || 0) + 1;
-
-  if (targetIds.length) {
-    // If there are targets, apply a new task to each target
-    for (const targetId of targetIds) {
-      action.taskQueue.push({
-        propId,
-        step,
-        targetIds: [targetId],
-      });
-    }
-  } else {
-    // Otherwise just do the next step
-    action.taskQueue.push({
-      propId,
-      step,
-      targetIds,
-    });
-  }
+function doNextStep(action, task) {
+  doNext(action, [{
+    propId: task.propId,
+    targetIds: task.targetIds,
+    step: (task.step || 0) + 1,
+  }]);
 }
 
 const applyPropertyByType = {
+
+  async action(prop, task: Task, action: Action): Promise<PartialTaskResult> {
+    const result = createResult();
+    const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+    // Step 1 Log the name and summary, check that the property has enough resources to fire
+    // Then queue step 2
+    if (!task.step) {
+      const content: LogContent = { name: prop.name };
+      if (prop.summary?.text) {
+        recalculateInlineCalculations(prop.summary, action);
+        content.value = prop.summary.value;
+      }
+      if (prop.silent) content.silenced = true;
+      result.appendLog(content, targetIds);
+      // Check Uses
+      if (prop.usesLeft <= 0) {
+        if (!prop.silent) result.appendLog({
+          name: 'Error',
+          value: `${prop.name || 'action'} does not have enough uses left`,
+        }, targetIds);
+        return result;
+      }
+      // Check Resources
+      if (prop.insufficientResources) {
+        if (!prop.silent) result.appendLog({
+          name: 'Error',
+          value: 'This creature doesn\'t have sufficient resources to perform this action',
+        }, targetIds);
+        return result;
+      }
+    }
+    return result;
+  },
+
+  async adjustment(prop, task: Task, action: Action): Promise<PartialTaskResult> {
+    const result = createResult();
+
+    const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+    const queueChildren = async function () {
+      doNext(action, await childAndTriggerTasks(action, prop, damageTargetIds));
+    }
+
+
+    // Step 0, split the task
+    if (!task.step) {
+      doNext(action, perTargetTasks(task, damageTargetIds));
+      return result;
+    }
+
+    // Step 1, get the operation and value and push the damage hooks to the queue
+    else if (task.step === 1) {
+
+      if (!prop.amount) {
+        queueChildren();
+        return result;
+      }
+
+      // Evaluate the amount
+      recalculateCalculation(prop.amount, action, 'reduce');
+      const value = +prop.amount.value;
+      if (!isFinite(value)) {
+        queueChildren();
+        return result;
+      }
+
+      if (!damageTargetIds?.length) {
+        doNextStep(action, task);
+        return result;
+      }
+
+      if (damageTargetIds.length !== 1) {
+        throw 'At this step, only a single target is supported'
+      }
+      const targetId = damageTargetIds[0];
+      const statId = getVariables(targetId)?.[prop.stat]?._propId;
+      const stat = statId && getSingleProperty(targetId, statId);
+      if (!stat?.type) {
+        result.appendLog({
+          name: 'Error',
+          value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
+          silenced: prop.silent,
+        }, damageTargetIds);
+        return result;
+      }
+      // Set the scope properties
+      result.pushScope = {};
+      if (prop.operation === 'increment') {
+        if (value >= 0) {
+          result.pushScope['~damage'] = { value };
+        } else {
+          result.pushScope['~healing'] = { value: -value };
+        }
+      } else {
+        result.pushScope['~set'] = { value };
+      }
+      // Store which property we're targeting
+      if (targetId === action.creatureId) {
+        result.pushScope['~attributeDamaged'] = { _propId: stat._id };
+      } else {
+        result.pushScope['~attributeDamaged'] = stat;
+      }
+      // Wrap next step in the damage property triggers
+      doNext(action, [
+        ...triggerTasks(action, stat, damageTargetIds, 'damageProperty.before'),
+        {
+          propId: task.propId,
+          targetIds: damageTargetIds,
+          step: 2,
+        },
+        ...triggerTasks(action, stat, damageTargetIds, 'damageProperty.after'),
+      ]);
+      return result;
+    }
+
+    // Step 2, Apply the damage and Log the results
+    else if (task.step === 2) {
+      const scope = getEffectiveActionScope(action);
+      result.popScope = {
+        '~damage': 1, '~healing': 1, '~set': 1, '~attributeDamaged': 1,
+      };
+      let value = +prop.amount.value;
+      if (prop.operation === 'increment') {
+        if (value >= 0) {
+          value = scope['~damage']?.value;
+        } else {
+          value = -scope['~healing']?.value;
+        }
+      } else {
+        value = scope['~set']?.value;
+      }
+      const targetPropId = scope['~attributeDamaged']?._propId;
+      if (damageTargetIds?.length) {
+        if (damageTargetIds.length !== 1) {
+          throw 'At this step, only a single target is supported'
+        }
+        const targetId = damageTargetIds[0];
+        await damageProp(action, { value, operation: prop.operation, targetPropId }, targetId, result)
+        result.appendLog({
+          name: 'Attribute damage',
+          value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+            ` ${value}`,
+          inline: true,
+          silenced: prop.silent,
+        }, [targetId]);
+        await queueChildren();
+        return result;
+      } else {
+        result.appendLog({
+          name: 'Attribute damage',
+          value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
+            ` ${value}`,
+          inline: true,
+          silenced: prop.silent,
+        }, damageTargetIds);
+        await queueChildren();
+        return result;
+      }
+    }
+    return result;
+  },
+
+  async branch(prop, task: Task, action: Action, userInput): Promise<PartialTaskResult> {
+    const result = createResult();
+    const targets = task.targetIds;
+
+    switch (prop.branchType) {
+      case 'if': {
+        recalculateCalculation(prop.condition, action, 'reduce');
+        if (prop.condition?.value) {
+          doNext(action, await childAndTriggerTasks(action, prop, targets));
+        } else {
+          doNext(action, afterChildrenTriggerTasks(action, prop));
+        }
+        return result;
+      }
+      case 'index': {
+        const children = await getPropertyChildren(action.creatureId, prop._id);
+        if (children.length) {
+          recalculateCalculation(prop.condition, action, 'reduce');
+          if (!isFinite(prop.condition?.value)) {
+            result.appendLog({
+              name: 'Branch Error',
+              value: 'Index did not resolve into a valid number'
+            }, targets);
+            doNext(action, afterChildrenTriggerTasks(prop, targets));
+            return result;
+          }
+          let index = Math.floor(prop.condition?.value);
+          if (index < 1) index = 1;
+          if (index > children.length) index = children.length;
+          doNext(action, [
+            ...propTasks(children[index - 1], targets),
+            ...afterChildrenTriggerTasks(prop, targets),
+          ]);
+          return result;
+        }
+        doNext(action, afterChildrenTriggerTasks(prop, targets));
+        return result;
+      }
+      case 'hit': {
+        const scope = getEffectiveActionScope(action);
+        if (scope['~attackHit']?.value) {
+          if (!targets.length && !prop.silent) {
+            result.appendLog({
+              value: '**On hit**'
+            }, targets);
+          }
+          doNext(action, await childAndTriggerTasks(action, prop, targets));
+        } else {
+          doNext(action, afterChildrenTriggerTasks(action, prop));
+        }
+        return result;
+      }
+      case 'miss': {
+        const scope = getEffectiveActionScope(action);
+        if (scope['~attackMiss']?.value) {
+          if (!targets.length && !prop.silent) {
+            result.appendLog({
+              value: '**On miss**'
+            }, targets);
+          }
+          doNext(action, await childAndTriggerTasks(action, prop, targets));
+        } else {
+          doNext(action, afterChildrenTriggerTasks(action, prop));
+        }
+        return result;
+      }
+      case 'failedSave': {
+        const scope = getEffectiveActionScope(action);
+        if (scope['~saveFailed']?.value) {
+          if (!targets.length && !prop.silent) {
+            result.appendLog({
+              value: '**On failed save**'
+            }, targets);
+          }
+          doNext(action, await childAndTriggerTasks(action, prop, targets));
+        } else {
+          doNext(action, afterChildrenTriggerTasks(action, prop));
+        }
+        return result;
+      }
+      case 'successfulSave': {
+        const scope = getEffectiveActionScope(action);
+        if (scope['~saveSucceeded']?.value) {
+          if (!targets.length && !prop.silent) {
+            result.appendLog({
+              value: '**On save**'
+            }, targets);
+          }
+          doNext(action, await childAndTriggerTasks(action, prop, targets));
+        } else {
+          doNext(action, afterChildrenTriggerTasks(action, prop));
+        }
+        return result;
+      }
+      case 'random': {
+        const children = await getPropertyChildren(action.creatureId, prop._id);
+        if (children.length) {
+          const index = rollDice(1, children.length)[0] - 1;
+          doNext(action, [
+            ...propTasks(children[index - 1], targets),
+            ...afterChildrenTriggerTasks(prop, targets),
+          ]);
+        } else {
+          doNext(action, afterChildrenTriggerTasks(action, prop));
+        }
+        return result;
+      }
+      case 'eachTarget':
+        doNext(action, perTargetTasks(task, targets));
+        return result;
+      case 'choice': {
+        // Step 0, halt the action to get user input
+        if (!task.step) {
+          // Mark the action as needing user input so that it halts
+          action.userInputNeeded = pick(prop, ['_id', 'type', 'branchType']);
+          // Put this task back in the queue, but at step 1
+          doNextStep(action, task);
+          return result;
+        }
+        // Step 1 consume the user input
+        else if (task.step === 1) {
+          if (!userInput) {
+            throw 'User input was required for this step'
+          }
+          const children = await getPropertyChildren(action.creatureId, prop._id);
+          let index = userInput.choice;
+          if (!isFinite(index) || index < 0) index = 0;
+          if (index > children.length - 1) index = children.length - 1;
+          doNext(action, [
+            ...propTasks(children[index], targets),
+            ...afterChildrenTriggerTasks(prop, targets),
+          ]);
+          return result;
+        }
+      }
+    }
+    return result;
+  },
+
   async note(prop, task: Task, action: Action): Promise<PartialTaskResult> {
     const result = createResult();
 
@@ -504,272 +854,10 @@ const applyPropertyByType = {
       });
     }
 
-    await pushChildren(action, prop, task.targetIds);
-    await pushAfterChildrenTriggers(action, prop, task.targetIds);
-
+    doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
     return result;
   },
 
-  async branch(prop, task: Task, action: Action, userInput): Promise<PartialTaskResult> {
-    // const scope = getEffectiveActionScope(action);
-    const result = createResult();
-    const targets = task.targetIds;
-
-    switch (prop.branchType) {
-      case 'if': {
-        recalculateCalculation(prop.condition, action, 'reduce');
-        if (prop.condition?.value) {
-          await pushChildren(action, prop, targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'index': {
-        const children = await getPropertyChildren(action.creatureId, prop._id);
-        if (children.length) {
-          recalculateCalculation(prop.condition, action, 'reduce');
-          if (!isFinite(prop.condition?.value)) {
-            result.appendLog({
-              name: 'Branch Error',
-              value: 'Index did not resolve into a valid number'
-            }, targets);
-            break;
-          }
-          let index = Math.floor(prop.condition?.value);
-          if (index < 1) index = 1;
-          if (index > children.length) index = children.length;
-          pushPropAndTriggers(action, children[index - 1], targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'hit': {
-        const scope = getEffectiveActionScope(action);
-        if (scope['~attackHit']?.value) {
-          if (!targets.length && !prop.silent) {
-            result.appendLog({
-              value: '**On hit**'
-            }, targets);
-          }
-          await pushChildren(action, prop, targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'miss': {
-        const scope = getEffectiveActionScope(action);
-        if (scope['~attackMiss']?.value) {
-          if (!targets.length && !prop.silent) {
-            result.appendLog({
-              value: '**On miss**'
-            }, targets);
-          }
-          await pushChildren(action, prop, targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'failedSave': {
-        const scope = getEffectiveActionScope(action);
-        if (scope['~saveFailed']?.value) {
-          if (!targets.length && !prop.silent) {
-            result.appendLog({
-              value: '**On failed save**'
-            }, targets);
-          }
-          await pushChildren(action, prop, targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'successfulSave': {
-        const scope = getEffectiveActionScope(action);
-        if (scope['~saveSucceeded']?.value) {
-          if (!targets.length && !prop.silent) {
-            result.appendLog({
-              value: '**On save**'
-            }, targets);
-          }
-          await pushChildren(action, prop, targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'random': {
-        const children = await getPropertyChildren(action.creatureId, prop._id);
-        if (children.length) {
-          const index = rollDice(1, children.length)[0] - 1;
-          pushPropAndTriggers(action, children[index], targets);
-        }
-        pushAfterChildrenTriggers(action, prop, targets);
-        break;
-      }
-      case 'eachTarget':
-        if (targets.length) {
-          for (const targetId in targets) {
-            await pushChildren(action, prop, [targetId]);
-            pushAfterChildrenTriggers(action, prop, [targetId]);
-          }
-        } else {
-          await pushChildren(action, prop, targets);
-          pushAfterChildrenTriggers(action, prop, targets);
-        }
-        break;
-      case 'choice': {
-        // Step 0, halt the action to get user input
-        if (!task.step) {
-          // Mark the action as needing user input so that it halts
-          action.userInputNeeded = pick(prop, ['_id', 'type', 'branchType']);
-          // Put this task back in the queue, but at step 1
-          action.taskQueue.push({
-            ...task,
-            step: 1,
-          });
-          return result;
-        }
-        // Step 1 consume the user input
-        else if (task.step === 1) {
-          if (!userInput) {
-            throw 'User input was required for this step'
-          }
-          const children = await getPropertyChildren(action.creatureId, prop._id);
-          let index = userInput.choice;
-          if (!isFinite(index) || index < 0) index = 0;
-          if (index > children.length - 1) index = children.length - 1;
-          pushPropAndTriggers(action, children[index], targets);
-          pushAfterChildrenTriggers(action, prop, targets);
-        }
-        return result;
-      }
-    }
-
-    return result;
-  },
-
-  async adjustment(prop, task: Task, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
-
-    const queueChildren = async function (targetIds) {
-      await pushChildren(action, prop, targetIds);
-      await pushAfterChildrenTriggers(action, prop, targetIds);
-    }
-
-    const damageTargets = prop.target === 'self' ? [action.creatureId] : task.targetIds;
-    task.targetIds = damageTargets;
-
-    // Step 0, split the task
-    if (!task.step) {
-      applyTaskToEachTarget(action, task, damageTargets);
-    }
-
-    // Step 1, get the operation and value and push the damage hooks to the queue
-    else if (task.step === 1) {
-
-      if (!prop.amount) {
-        queueChildren(task.targetIds);
-        return result;
-      }
-
-      // Evaluate the amount
-      recalculateCalculation(prop.amount, action, 'reduce');
-      const value = +prop.amount.value;
-      if (!isFinite(value)) {
-        queueChildren(task.targetIds);
-        return result;
-      }
-
-      if (damageTargets?.length) {
-        if (damageTargets.length !== 1) {
-          throw 'At this step, only a single target is supported'
-        }
-        const targetId = damageTargets[0];
-        const statId = getVariables(targetId)?.[prop.stat]?._propId;
-        const stat = statId && getSingleProperty(targetId, statId);
-        if (!stat?.type) {
-          result.appendLog({
-            name: 'Error',
-            value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
-            silenced: prop.silent,
-          }, [targetId]);
-          return result;
-        }
-        // Set the scope properties
-        result.pushScope = {};
-        if (prop.operation === 'increment') {
-          if (value >= 0) {
-            result.pushScope['~damage'] = { value };
-          } else {
-            result.pushScope['~healing'] = { value: -value };
-          }
-        } else {
-          result.pushScope['~set'] = { value };
-        }
-        // Store which property we're targeting
-        if (targetId === action.creatureId) {
-          result.pushScope['~attributeDamaged'] = { _propId: stat._id };
-        } else {
-          result.pushScope['~attributeDamaged'] = stat;
-        }
-        // Wrap step 1 in the damage property triggers
-        pushTriggers(action, stat, [targetId], 'damageProperty.before');
-        action.taskQueue.push({
-          propId: task.propId,
-          targetIds: [targetId],
-          step: 2,
-        });
-        pushTriggers(action, stat, [targetId], 'damageProperty.after');
-      } else {
-        action.taskQueue.push({
-          propId: task.propId,
-          targetIds: task.targetIds,
-          step: 2,
-        });
-      }
-    }
-    // Step 2, Apply the damage and Log the results
-    else if (task.step === 2) {
-      const scope = getEffectiveActionScope(action);
-      result.popScope = {
-        '~damage': 1, '~healing': 1, '~set': 1, '~attributeDamaged': 1,
-      };
-      let value = +prop.amount.value;
-      if (prop.operation === 'increment') {
-        if (value >= 0) {
-          value = scope['~damage']?.value;
-        } else {
-          value = -scope['~healing']?.value;
-        }
-      } else {
-        value = scope['~set']?.value;
-      }
-      const targetPropId = scope['~attributeDamaged']?._propId;
-      if (damageTargets?.length) {
-        if (damageTargets.length !== 1) {
-          throw 'At this step, only a single target is supported'
-        }
-        const targetId = damageTargets[0];
-        await damageProp(action, { value, operation: prop.operation, targetPropId }, targetId, result)
-        await queueChildren([targetId]);
-        result.appendLog({
-          name: 'Attribute damage',
-          value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
-            ` ${value}`,
-          inline: true,
-          silenced: prop.silent,
-        }, [targetId]);
-      } else {
-        await queueChildren(task.targetIds);
-        result.appendLog({
-          name: 'Attribute damage',
-          value: `${prop.stat}${prop.operation === 'set' ? ' set to' : ''}` +
-            ` ${value}`,
-          inline: true,
-          silenced: prop.silent,
-        }, task.targetIds);
-      }
-    }
-    return result;
-  },
 }
 
 type DamageProp = {
