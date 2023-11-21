@@ -36,12 +36,11 @@ interface BaseTask {
 
 interface PropTask extends BaseTask {
   step?: number,
-  type?: undefined,
+  subtaskFn?: undefined,
 }
 
 interface DamagePropTask extends BaseTask {
   subtaskFn: 'damageProp';
-  type: 'subtask';
   params: {
     /**
      * Use getPropertyTitle(prop) to set the title
@@ -313,7 +312,7 @@ async function applyNextTask(action: Action, userInput?) {
 
   let result: PartialTaskResult;
 
-  if (task.type === 'subtask') {
+  if (task.subtaskFn) {
     result = await applySubtask[task.subtaskFn](task, action);
   } else {
     // Get property
