@@ -45,7 +45,7 @@ interface DamagePropTask extends BaseTask {
     /**
      * Use getPropertyTitle(prop) to set the title
      */
-    title: string;
+    title?: string;
     operation: 'increment' | 'set';
     value: number;
     stat: string;
@@ -592,6 +592,42 @@ const applyPropertyByType = {
         return result;
       }
     }
+
+    else if (task.step === 2) {
+      const tasks: Task[] = [];
+      // Iterate through all the resources consumed and push the appropriate subtasks and triggers
+      if (prop.resources?.attributesConsumed?.length) {
+        for (const att of prop.resources.attributesConsumed) {
+          const scope = getEffectiveActionScope(action);
+          const statToDamage = getFromScope(att.variableName, scope);
+          tasks.push(
+            // Wrap damage prop subtask in the damage property triggers
+            // Then run the children after that
+            ...triggerTasks(action, statToDamage, [action.creatureId], 'damageProperty.before'),
+            {
+              propId: task.propId,
+              targetIds: [action.creatureId],
+              subtaskFn: 'damageProp',
+              params: {
+                operation: 'increment',
+                value: +att.quantity?.value || 0,
+                stat: att.variableName,
+                silent: prop.silent,
+              },
+            },
+            ...triggerTasks(action, statToDamage, [action.creatureId], 'damageProperty.after'),
+          );
+        }
+      }
+      // Iterate through all the items consumed and push the appropriate subtasks and triggers
+
+      // TODO
+
+      // Push children tasks
+      tasks.push(...await childAndTriggerTasks(action, prop, task.targetIds));
+      doNext(action, tasks);
+      return result;
+    }
     return result;
   },
 
@@ -669,7 +705,6 @@ const applyPropertyByType = {
         {
           propId: task.propId,
           targetIds: damageTargetIds,
-          type: 'subtask',
           subtaskFn: 'damageProp',
           params: {
             title: getPropertyTitle(prop),
@@ -925,7 +960,7 @@ const applySubtask = {
   async damageProp(task: DamagePropTask, action: Action): Promise<PartialTaskResult> {
     const result = createResult();
     let { value } = task.params;
-    const { operation, silent, stat } = task.params;
+    const { title, operation, silent, stat } = task.params;
 
     // Get the user-mutable state from scope
     const scope = getEffectiveActionScope(action);
@@ -950,7 +985,7 @@ const applySubtask = {
       const localStat = getFromScope(stat, scope);
       const statName = localStat ? getPropertyTitle(localStat) : stat;
       result.appendLog({
-        name: 'Attribute damage',
+        name: title,
         value: `${statName}${operation === 'set' ? ' set to' : ''}` +
           ` ${value}`,
         inline: true,
@@ -988,7 +1023,7 @@ const applySubtask = {
           type: targetProp.type,
         }],
         contents: [{
-          name: 'Attribute damage',
+          name: title,
           value: `${getPropertyTitle(targetProp)} set to ${value}`,
           inline: true,
           silenced: task.params.silent,
