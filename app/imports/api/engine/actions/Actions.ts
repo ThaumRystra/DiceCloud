@@ -3,8 +3,9 @@ import { forEach, get, isEmpty, pick } from 'lodash';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
 import { getPropertyChildren, getSingleProperty, getVariables } from '/imports/api/engine/loadCreatures';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
-import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
+import recalculateCalculation, { rollAndReduceCalculation } from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
 import rollDice from '/imports/parser/rollDice';
+import { toString } from '/imports/parser/resolve';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -828,6 +829,12 @@ const applyPropertyByType = {
     return result;
   },
 
+  async folder(prop, task: Task, action: Action): Promise<PartialTaskResult> {
+    const result = createResult();
+    doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+    return result;
+  },
+
   async note(prop, task: Task, action: Action): Promise<PartialTaskResult> {
     const result = createResult();
 
@@ -854,6 +861,60 @@ const applyPropertyByType = {
       });
     }
 
+    doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+    return result;
+  },
+
+  async roll(prop, task: Task, action: Action): Promise<PartialTaskResult> {
+    const result = createResult();
+
+    // If there isn't a calculation, just apply the children instead
+    if (!prop.roll?.calculation) {
+      doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+      return result;
+    }
+
+    const logValue: string[] = [];
+
+    // roll the dice only and store that string
+    const {
+      rolled, reduced, errors
+    } = rollAndReduceCalculation(prop.roll, action);
+
+    if (rolled.parseType !== 'constant') {
+      logValue.push(toString(rolled));
+    }
+    errors?.forEach(error => {
+      result.appendLog({ name: 'Error', value: error.message }, task.targetIds);
+    });
+
+    // Store the result
+    if (reduced.parseType === 'constant') {
+      prop.roll.value = reduced.value;
+    } else if (reduced.parseType === 'error') {
+      prop.roll.value = null;
+    } else {
+      prop.roll.value = toString(reduced);
+    }
+
+    // If we didn't end up with a constant or a number of finite value, give up
+    if (reduced?.parseType !== 'constant' || (reduced.valueType === 'number' && !isFinite(reduced.value))) {
+      doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+      return result;
+    }
+    const value = reduced.value;
+
+    result.scope[prop.variableName] = { value };
+    logValue.push(`**${value}**`);
+
+    result.appendLog({
+      name: prop.name,
+      value: logValue.join('\n'),
+      inline: true,
+      silenced: prop.silent,
+    }, task.targetIds);
+
+    // Apply children
     doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
     return result;
   },

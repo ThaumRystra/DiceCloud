@@ -1,5 +1,5 @@
 import logErrors from './logErrors.js';
-import { toPrimitiveOrString } from '/imports/parser/resolve.js';
+import { Context, toPrimitiveOrString } from '/imports/parser/resolve.js';
 import {
   aggregateCalculationEffects,
   aggregateCalculationProficiencies,
@@ -9,12 +9,15 @@ import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import resolve from '/imports/parser/resolve.js';
 import { getEffectiveActionScope } from '/imports/api/engine/actions/Actions';
 
+// TODO move this whole file to Actions.ts
 // Redo the work of imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js
 // But in the action scope
-export default function recalculateCalculation(calcObj, action, parseLevel = 'reduce', context) {
+export default function recalculateCalculation(calcObj, action, parseLevel = 'reduce', context, scope) {
   if (!calcObj?.parseNode) return;
   calcObj._parseLevel = parseLevel;
-  const scope = getEffectiveActionScope(action);
+  if (!scope) {
+    scope = getEffectiveActionScope(action);
+  }
   // Re-resolve the parse node
   resolveCalculationNode(calcObj, calcObj.parseNode, scope, context);
   // store the unaffected value
@@ -36,26 +39,22 @@ export default function recalculateCalculation(calcObj, action, parseLevel = 're
 
   // Store the primitive value
   calcObj.value = toPrimitiveOrString(calcObj.valueNode);
-
-  logErrors(calcObj.errors, action);
+  // TODO log errors
 }
 
-export function rollAndReduceCalculation(calcObj, actionContext, context) {
+export function rollAndReduceCalculation(calcObj, action) {
+  const context = new Context();
+  const scope = getEffectiveActionScope(action);
   // Compile
-  recalculateCalculation(calcObj, actionContext, 'compile', context);
+  recalculateCalculation(calcObj, action, 'compile', context, scope);
   const compiled = calcObj.valueNode;
-  const compileErrors = context.errors;
 
   // Roll
-  context.errors = [];
-  const { result: rolled } = resolve('roll', calcObj.valueNode, actionContext.scope, context);
-  const rollErrors = context.errors;
+  const { result: rolled } = resolve('roll', calcObj.valueNode, scope, context);
 
   // Reduce
-  context.errors = [];
-  const { result: reduced } = resolve('reduce', rolled, actionContext.scope, context);
-  const reduceErrors = context.errors;
+  const { result: reduced } = resolve('reduce', rolled, scope, context);
 
   // Return
-  return { compiled, compileErrors, rolled, rollErrors, reduced, reduceErrors };
+  return { compiled, rolled, reduced, errors: context.errors };
 }

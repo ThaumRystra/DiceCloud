@@ -78,6 +78,10 @@ describe('Interrupt action system', function () {
       'Applying increment adjustments should return the correct updates'
     );
   });
+  it('Applies rolls', async function () {
+    const action = await runActionById(rollId);
+    console.log(allLogContent(action));
+  });
 });
 
 function createAction(prop, targetIds?) {
@@ -123,7 +127,8 @@ function allLogContent(action: Action) {
   return contents;
 }
 
-let note1Id, ifTruthyBranchId, ifFalsyBranchId, indexBranchId, choiceBranchId, adjustedStatId, adjustmentIncrementId, adjustmentSetId;
+let note1Id, ifTruthyBranchId, ifFalsyBranchId, indexBranchId, choiceBranchId, adjustedStatId,
+  adjustmentIncrementId, adjustmentSetId, rollId;
 
 const propForest = [
   // Apply a simple note
@@ -201,6 +206,16 @@ const propForest = [
       { type: 'note', summary: { text: 'adjustment increment applied' } },
     ],
   },
+  // Apply rolls
+  {
+    _id: rollId = Random.id(),
+    type: 'roll',
+    roll: { calculation: '1 + 3 + 1d20 + 5' },
+    variableName: 'rollVar',
+    children: [
+      { type: 'note', summary: { text: 'rollVar: {rollVar}' } }
+    ]
+  }
 ];
 
 function insertActionTestProps() {
