@@ -11,9 +11,11 @@ let creatureId;
 
 describe('Interrupt action system', function () {
   before(async function () {
-    CreatureProperties.remove({});
-    Creatures.remove({});
-    CreatureVariables.remove({});
+    await Promise.all([
+      CreatureProperties.removeAsync({}),
+      Creatures.removeAsync({}),
+      CreatureVariables.removeAsync({}),
+    ]);
     creatureId = await Creatures.insertAsync({
       name: 'action test creature',
       owner: Random.id(),
