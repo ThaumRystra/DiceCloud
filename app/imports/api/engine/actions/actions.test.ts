@@ -80,7 +80,15 @@ describe('Interrupt action system', function () {
   });
   it('Applies rolls', async function () {
     const action = await runActionById(rollId);
-    console.log(allLogContent(action));
+    assert.deepEqual(allLogContent(action), [
+      {
+        name: 'New Roll',
+        value: '7d1 [1, 1, 1, 1, 1, 1, 1] + 9\n**16**',
+        inline: true
+      }, {
+        value: 'rollVar: 16'
+      }
+    ]);
   });
 });
 
@@ -210,7 +218,8 @@ const propForest = [
   {
     _id: rollId = Random.id(),
     type: 'roll',
-    roll: { calculation: '1 + 3 + 1d20 + 5' },
+    // Roll d1's because it's a pain to test random numbers
+    roll: { calculation: '1 + 3 + 7d1 + 5' },
     variableName: 'rollVar',
     children: [
       { type: 'note', summary: { text: 'rollVar: {rollVar}' } }
