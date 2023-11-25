@@ -37,6 +37,7 @@ interface BaseTask {
 interface PropTask extends BaseTask {
   step?: number,
   subtaskFn?: undefined,
+  beforeTriggersDone?: undefined | true;
 }
 
 interface DamagePropTask extends BaseTask {
@@ -322,12 +323,29 @@ async function applyNextTask(action: Action, userInput?) {
     if (!prop) throw new Meteor.Error('Not found', 'Property could not be found');
     if (prop.deactivatedByToggle) return;
 
+    // Before triggers
+    const tasks: PropTask[] = [];
+    if (!task.beforeTriggersDone && prop.triggerIds?.before?.length) {
+      // Push the before triggers
+      forEach(prop.triggerIds?.before, triggerId => {
+        tasks.push({ propId: triggerId, targetIds: task.targetIds });
+      });
+      doNext(action, [
+        ...tasks,
+        { ...task, beforeTriggersDone: true },
+      ]);
+      return;
+    }
+
     // Apply the property
     result = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
     // store the task's details and save the result
     // Because we recomputed the property in the action context, store the whole thing,
     // rather than just a reference to it
     result.scope[`#${prop.type}`] = prop;
+
+    // After triggers
+    // Because each property might change its targets, it is responsible for its own after triggers
   }
   action.results.push({
     ...result,
@@ -400,18 +418,65 @@ function afterChildrenTriggerTasks(prop, targetIds) {
 }
 
 /**
- * Get the child and after children tasks for a given property
+ * Returns a list of tasks containing the following:
+ * After triggers
+ * Children of the prop
+ * After-children triggers
  * @param action 
  * @param prop 
  * @param targetIds 
  * @returns 
  */
-async function childAndTriggerTasks(action, prop, targetIds) {
+async function defaultAfterPropTasks(action, prop, targetIds) {
   return [
+    ...afterTriggerTasks(prop, targetIds),
     ...await childTasks(action, prop, targetIds),
     ...afterChildrenTriggerTasks(prop, targetIds)
   ]
 }
+
+/**
+ * Returns a list of tasks containing the following:
+ * After triggers
+ * After-children triggers
+ * @param action 
+ * @param prop 
+ * @param targetIds 
+ * @returns 
+ */
+function skipChildrenTasks(prop, targetIds) {
+  return [
+    ...afterTriggerTasks(prop, targetIds),
+    ...afterChildrenTriggerTasks(prop, targetIds)
+  ]
+}
+
+/**
+ * Returns a list of tasks containing the following:
+ * After triggers
+ * After-children triggers
+ * @param action 
+ * @param prop 
+ * @param targetIds 
+ * @returns 
+ */
+function singleChildTask(prop, targetIds, childProp) {
+  return [
+    ...afterTriggerTasks(prop, targetIds),
+    ...propTasks(childProp, targetIds),
+    ...afterChildrenTriggerTasks(prop, targetIds)
+  ]
+}
+
+function afterTriggerTasks(prop, targetIds) {
+  const tasks: PropTask[] = [];
+  // Push the after triggers
+  forEach(prop.triggerIds?.after, triggerId => {
+    tasks.push({ propId: triggerId, targetIds });
+  });
+  return tasks;
+}
+
 
 /**
  * Get all the trigger tasks for a given trigger path
@@ -439,22 +504,7 @@ function triggerTasks(action: Action, prop, targetIds: string[], triggerPath: st
  * @returns Returns [before triggers, prop, after triggers] tasks
  */
 export function propTasks(prop, targetIds?) {
-  const tasks: Task[] = [];
-
-  // Push the before triggers
-  forEach(prop.triggerIds?.before, triggerId => {
-    tasks.push({ propId: triggerId, targetIds });
-  });
-
-  // Push the prop task
-  tasks.push({ propId: prop._id, targetIds });
-
-  // Push the after triggers
-  forEach(prop.triggerIds?.after, triggerId => {
-    tasks.push({ propId: triggerId, targetIds });
-  });
-
-  return tasks;
+  return [{ propId: prop._id, targetIds }];
 }
 
 /**
@@ -465,8 +515,6 @@ export function propTasks(prop, targetIds?) {
  */
 function perTargetTasks(task: PropTask, targetIds: string[] = task.targetIds) {
   const tasks: Task[] = [];
-  // Keep propId
-  const propId = task.propId;
   // Increment step
   const step = (task.step || 0) + 1;
 
@@ -474,7 +522,7 @@ function perTargetTasks(task: PropTask, targetIds: string[] = task.targetIds) {
     // If there are targets, apply a new task to each target
     for (const targetId of targetIds) {
       tasks.push({
-        propId,
+        ...task,
         step,
         targetIds: [targetId],
       });
@@ -482,7 +530,7 @@ function perTargetTasks(task: PropTask, targetIds: string[] = task.targetIds) {
   } else {
     // Otherwise just do the next step
     tasks.push({
-      propId,
+      ...task,
       step,
       targetIds,
     });
@@ -553,8 +601,7 @@ export function getEffectiveActionScope(action: Action) {
 
 function doNextStep(action, task) {
   doNext(action, [{
-    propId: task.propId,
-    targetIds: task.targetIds,
+    ...task,
     step: (task.step || 0) + 1,
   }]);
 }
@@ -624,7 +671,7 @@ const applyPropertyByType = {
       // TODO
 
       // Push children tasks
-      tasks.push(...await childAndTriggerTasks(action, prop, task.targetIds));
+      tasks.push(...await defaultAfterPropTasks(action, prop, task.targetIds));
       doNext(action, tasks);
       return result;
     }
@@ -636,8 +683,8 @@ const applyPropertyByType = {
 
     const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
-    const queueChildren = async function () {
-      doNext(action, await childAndTriggerTasks(action, prop, damageTargetIds));
+    const queueNext = async function () {
+      doNext(action, await defaultAfterPropTasks(action, prop, damageTargetIds));
     }
 
     // Step 0, split the task
@@ -650,7 +697,7 @@ const applyPropertyByType = {
     else if (task.step === 1) {
 
       if (!prop.amount) {
-        queueChildren();
+        queueNext();
         return result;
       }
 
@@ -658,7 +705,7 @@ const applyPropertyByType = {
       recalculateCalculation(prop.amount, action, 'reduce');
       const value = +prop.amount.value;
       if (!isFinite(value)) {
-        queueChildren();
+        queueNext();
         return result;
       }
 
@@ -715,7 +762,7 @@ const applyPropertyByType = {
           },
         },
         ...triggerTasks(action, stat, damageTargetIds, 'damageProperty.after'),
-        ...await childAndTriggerTasks(action, prop, damageTargetIds)
+        ...await defaultAfterPropTasks(action, prop, damageTargetIds)
       ]);
       return result;
     }
@@ -734,9 +781,9 @@ const applyPropertyByType = {
       case 'if': {
         recalculateCalculation(prop.condition, action, 'reduce');
         if (prop.condition?.value) {
-          doNext(action, await childAndTriggerTasks(action, prop, targets));
+          doNext(action, await defaultAfterPropTasks(action, prop, targets));
         } else {
-          doNext(action, afterChildrenTriggerTasks(action, prop));
+          doNext(action, skipChildrenTasks(prop, targets));
         }
         return result;
       }
@@ -749,19 +796,17 @@ const applyPropertyByType = {
               name: 'Branch Error',
               value: 'Index did not resolve into a valid number'
             }, targets);
-            doNext(action, afterChildrenTriggerTasks(prop, targets));
+            doNext(action, skipChildrenTasks(prop, targets));
             return result;
           }
           let index = Math.floor(prop.condition?.value);
           if (index < 1) index = 1;
           if (index > children.length) index = children.length;
-          doNext(action, [
-            ...propTasks(children[index - 1], targets),
-            ...afterChildrenTriggerTasks(prop, targets),
-          ]);
+          const child = children[index - 1];
+          doNext(action, singleChildTask(prop, targets, child));
           return result;
         }
-        doNext(action, afterChildrenTriggerTasks(prop, targets));
+        doNext(action, skipChildrenTasks(prop, targets));
         return result;
       }
       case 'hit': {
@@ -772,9 +817,9 @@ const applyPropertyByType = {
               value: '**On hit**'
             }, targets);
           }
-          doNext(action, await childAndTriggerTasks(action, prop, targets));
+          doNext(action, await defaultAfterPropTasks(action, prop, targets));
         } else {
-          doNext(action, afterChildrenTriggerTasks(action, prop));
+          doNext(action, skipChildrenTasks(prop, targets));
         }
         return result;
       }
@@ -786,9 +831,9 @@ const applyPropertyByType = {
               value: '**On miss**'
             }, targets);
           }
-          doNext(action, await childAndTriggerTasks(action, prop, targets));
+          doNext(action, await defaultAfterPropTasks(action, prop, targets));
         } else {
-          doNext(action, afterChildrenTriggerTasks(action, prop));
+          doNext(action, skipChildrenTasks(prop, targets));
         }
         return result;
       }
@@ -800,9 +845,9 @@ const applyPropertyByType = {
               value: '**On failed save**'
             }, targets);
           }
-          doNext(action, await childAndTriggerTasks(action, prop, targets));
+          doNext(action, await defaultAfterPropTasks(action, prop, targets));
         } else {
-          doNext(action, afterChildrenTriggerTasks(action, prop));
+          doNext(action, skipChildrenTasks(prop, targets));
         }
         return result;
       }
@@ -814,22 +859,20 @@ const applyPropertyByType = {
               value: '**On save**'
             }, targets);
           }
-          doNext(action, await childAndTriggerTasks(action, prop, targets));
+          doNext(action, await defaultAfterPropTasks(action, prop, targets));
         } else {
-          doNext(action, afterChildrenTriggerTasks(action, prop));
+          doNext(action, skipChildrenTasks(prop, targets));
         }
         return result;
       }
       case 'random': {
         const children = await getPropertyChildren(action.creatureId, prop._id);
         if (children.length) {
-          const index = rollDice(1, children.length)[0] - 1;
-          doNext(action, [
-            ...propTasks(children[index - 1], targets),
-            ...afterChildrenTriggerTasks(prop, targets),
-          ]);
+          const index = rollDice(1, children.length)[0];
+          const child = children[index - 1];
+          doNext(action, singleChildTask(prop, targets, child));
         } else {
-          doNext(action, afterChildrenTriggerTasks(action, prop));
+          doNext(action, skipChildrenTasks(action, prop));
         }
         return result;
       }
@@ -851,13 +894,15 @@ const applyPropertyByType = {
             throw 'User input was required for this step'
           }
           const children = await getPropertyChildren(action.creatureId, prop._id);
+          if (!children.length) {
+            doNext(action, skipChildrenTasks(action, prop));
+            return result;
+          }
           let index = userInput.choice;
           if (!isFinite(index) || index < 0) index = 0;
           if (index > children.length - 1) index = children.length - 1;
-          doNext(action, [
-            ...propTasks(children[index], targets),
-            ...afterChildrenTriggerTasks(prop, targets),
-          ]);
+          const child = children[index];
+          doNext(action, singleChildTask(prop, targets, child));
           return result;
         }
       }
@@ -867,7 +912,7 @@ const applyPropertyByType = {
 
   async folder(prop, task: PropTask, action: Action): Promise<PartialTaskResult> {
     const result = createResult();
-    doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+    doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
     return result;
   },
 
@@ -897,7 +942,7 @@ const applyPropertyByType = {
       });
     }
 
-    doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+    doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
     return result;
   },
 
@@ -906,7 +951,7 @@ const applyPropertyByType = {
 
     // If there isn't a calculation, just apply the children instead
     if (!prop.roll?.calculation) {
-      doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+      doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
       return result;
     }
 
@@ -935,7 +980,7 @@ const applyPropertyByType = {
 
     // If we didn't end up with a constant or a number of finite value, give up
     if (reduced?.parseType !== 'constant' || (reduced.valueType === 'number' && !isFinite(reduced.value))) {
-      doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+      doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
       return result;
     }
     const value = reduced.value;
@@ -951,7 +996,7 @@ const applyPropertyByType = {
     }, task.targetIds);
 
     // Apply children
-    doNext(action, await childAndTriggerTasks(action, prop, task.targetIds));
+    doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
     return result;
   },
 }
