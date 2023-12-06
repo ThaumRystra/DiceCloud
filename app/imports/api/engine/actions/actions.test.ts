@@ -4,12 +4,19 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import Actions, { Action, Update, LogContent, runAction, propTasks } from '/imports/api/engine/actions/Actions';
+import Actions, { Action, Update, LogContent, runActionWork, propTasks } from '/imports/api/engine/actions/Actions';
 import computeCreature from '/imports/api/engine/computeCreature';
+import { loadCreature } from '/imports/api/engine/loadCreatures';
 
 let creatureId;
 
 describe('Interrupt action system', function () {
+  let unload: (() => void) | undefined = undefined;
+  const dummySubscription = {
+    onStop(fn) {
+      unload = fn;
+    }
+  };
   before(async function () {
     await Promise.all([
       CreatureProperties.removeAsync({}),
@@ -22,7 +29,11 @@ describe('Interrupt action system', function () {
       dirty: true,
     });
     await insertActionTestProps();
+    loadCreature(creatureId, dummySubscription);
     computeCreature(creatureId);
+  });
+  after(function () {
+    unload?.();
   });
   it('writes notes to the log', async function () {
     const action = await runActionById(note1Id);
@@ -98,7 +109,7 @@ function createAction(prop, targetIds?) {
   const action: Action = {
     creatureId: prop.ancestors[0].id,
     rootPropId: prop._id,
-    taskQueue: propTasks(prop, targetIds),
+    taskQueue: [{ propId: prop._id, targetIds }],
     results: [],
   };
   return Actions.insertAsync(action);
@@ -107,7 +118,7 @@ function createAction(prop, targetIds?) {
 async function runActionById(propId) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop);
-  await runAction(actionId);
+  await runActionWork(actionId);
   const action = await Actions.findOneAsync(actionId);
   if (!action) throw 'Action is expected to exist'
   return action;

@@ -1,13 +1,16 @@
 import SimpleSchema from 'simpl-schema';
-import { create, forEach, get, isEmpty, pick } from 'lodash';
+import { forEach, get, isEmpty, pick } from 'lodash';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
-import { getPropertyChildren, getSingleProperty, getVariables } from '/imports/api/engine/loadCreatures';
+import { getCreature, getPropertyChildren, getSingleProperty, getVariables } from '/imports/api/engine/loadCreatures';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
 import recalculateCalculation, { rollAndReduceCalculation } from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
 import rollDice from '/imports/parser/rollDice';
 import { toString } from '/imports/parser/resolve';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -18,7 +21,6 @@ export interface Action {
   rootPropId: string;
   targetIds?: string[];
   userInputNeeded?: any;
-  stepThrough?: boolean;
   taskQueue: (Task | DamagePropTask)[];
   results: TaskResult[];
 }
@@ -38,6 +40,9 @@ interface PropTask extends BaseTask {
   step?: number,
   subtaskFn?: undefined,
   beforeTriggersDone?: undefined | true;
+  taskScope?: {
+    [variableName: string]: { value: number },
+  },
 }
 
 interface DamagePropTask extends BaseTask {
@@ -139,10 +144,6 @@ const ActionSchema = new SimpleSchema({
     optional: true,
     blackbox: true,
   },
-  stepThrough: {
-    type: Boolean,
-    defaultValue: false,
-  },
 
   // A stack of tasks to apply
   // Each task has a propId to apply and a targetId list
@@ -167,21 +168,6 @@ const ActionSchema = new SimpleSchema({
   'taskQueue.$.targetIds.$': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-  },
-
-  // Pseudo properties that don't exist on the character, but can be applied by the action
-  // {_id: prop}
-  'taskProperties': {
-    type: Object,
-    blackbox: true,
-    defaultValue: {},
-  },
-  // Results that have been partially computed, but require more steps
-  // {_id: partialResult}
-  'deferredResults': {
-    type: Object,
-    blackbox: true,
-    defaultValue: {},
   },
 
   // Applied properties
@@ -279,10 +265,54 @@ Actions.attachSchema(ActionSchema);
 
 export default Actions;
 
+export const insertAction: ValidatedMethod = new ValidatedMethod({
+  name: 'actions.insertAction',
+  validate: new SimpleSchema({
+    action: ActionSchema
+  }).validator({ clean: true }),
+  run: async function ({ action }: { action: Action }) {
+    assertEditPermission(getCreature(action.creatureId), this.userId);
+    // First remove all other actions on this creature
+    // only do one action at a time, don't wait for this to finish
+    Actions.removeAsync({ creatureId: action.creatureId });
+    const actionId = await Actions.insertAsync(action);
+    return actionId;
+  },
+});
+
+export const runAction = new ValidatedMethod({
+  name: 'actions.runAction',
+  validate: new SimpleSchema({
+    actionId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+    },
+    userInput: {
+      type: Object,
+      blackbox: true,
+      optional: true,
+    },
+    stepThrough: {
+      type: Boolean,
+      optional: true,
+    }
+  }).validator(),
+  run: async function ({ actionId, userInput }) {
+    const action = await Actions.findOneAsync(actionId);
+    if (!action) throw new Meteor.Error('Not found', 'The action does not exist');
+    assertEditPermission(getCreature(action.creatureId), this.userId);
+    return await runActionWork(action, userInput);
+  },
+});
+
 // Run an already created action
-export async function runAction(actionId: string, userInput?) {
-  const action = await Actions.findOneAsync(actionId);
-  if (!action) throw new Meteor.Error('Not found', 'The action does not exist');
+export async function runActionWork(action: string | ActionWithId, stepThrough?: boolean, userInput?) {
+  // If given an actionId, find the action document
+  if (typeof action === 'string') {
+    const foundAction = await Actions.findOneAsync(action);
+    if (!foundAction) throw new Meteor.Error('Not found', 'The action does not exist');
+    action = foundAction;
+  }
   const originalAction = EJSON.clone(action);
   let count = 0;
   do {
@@ -293,7 +323,7 @@ export async function runAction(actionId: string, userInput?) {
     if (count > 100) {
       break;
     }
-  } while (!action.userInputNeeded && !action.stepThrough)
+  } while (!action.userInputNeeded && !stepThrough)
 
   // Persist changes to the action
   const writePromise = writeChangedAction(originalAction, action);
@@ -668,7 +698,35 @@ const applyPropertyByType = {
       }
       // Iterate through all the items consumed and push the appropriate subtasks and triggers
 
-      // TODO
+      if (prop.resources?.itemsConsumed?.length) {
+        for (const itemConsumed of prop.resources.itemsConsumed) {
+          recalculateCalculation(itemConsumed.quantity, action, 'reduce');
+          if (!itemConsumed.itemId) {
+            throw 'No ammo was selected';
+          }
+          const item = getSingleProperty(action.creatureId, itemConsumed.itemId);
+          if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
+            throw 'The prop\'s ammo was not found on the creature';
+          }
+          const quantity = +itemConsumed?.quantity?.value;
+          if (
+            !quantity ||
+            !isFinite(quantity)
+          ) continue;
+          tasks.push(
+            // Wrap ammo subtask in the ammo consumed triggers
+            ...triggerTasks(action, item, targetIds, 'ammo.before'),
+            {
+              propId: item._id,
+              targetIds,
+              taskScope: {
+                //TODO
+              }
+            },
+            ...triggerTasks(action, item, targetIds, 'ammo.after'),
+          );
+        }
+      }
 
       // Push children tasks
       tasks.push(...await defaultAfterPropTasks(action, prop, task.targetIds));
@@ -1101,5 +1159,5 @@ const applySubtask = {
       });
     }
     return result;
-  }
+  },
 }

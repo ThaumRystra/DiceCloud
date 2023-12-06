@@ -5,9 +5,11 @@
         Action
       </v-toolbar-title>
     </template>
-    <div>
-      content
-    </div>
+    <pre>
+      <code>
+        {{ actionJson }}
+      </code>
+    </pre>
     <v-btn
       slot="actions"
       text
@@ -35,41 +37,39 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import doAction from '/imports/api/engine/actions/doAction';
-import { provideUserInput } from '/imports/api/engine/actions/getUserInput.js';
+import Actions, { runAction } from '/imports/api/engine/actions/Actions';
 
 export default {
   components: {
     DialogBase,
   },
   props: {
-    propId: {
+    actionId: {
       type: String,
       default: undefined,
     },
   },
   data() {
     return {
-      invocationId: undefined,
-      answers: {},
       loading: false,
     }
   },
   meteor: { 
-    
+    action() {
+      return Actions.findOne(this.actionId);
+    },
+  },
+  computed: {
+    actionJson() {
+      return JSON.stringify(this.action, null, 2);
+    },
   },
   methods: {
-    apply(step = false) {
-      if (this.invocationId) {
-        provideUserInput(this.invocationId, 0, { index: 1 });
-      } else {
-        this.invocationId = Random.id();
-        doAction.call({
-          invocationId: this.invocationId,
-          actionId: this.propId,
-          targetIds: [],
-        });
-      }
+    async apply(stepThrough) {
+      await runAction.callAsync({
+        actionId: this.actionId,
+        stepThrough
+      });
     },
     cancel() {
       this.$store.dispatch('popDialogStack');

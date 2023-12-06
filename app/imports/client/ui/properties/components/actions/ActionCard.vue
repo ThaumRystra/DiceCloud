@@ -2,6 +2,7 @@
   <v-card
     class="action-card"
     :class="cardClasses"
+    :data-id="model._id"
   >
     <div class="layout align-center px-3">
       <div class="avatar">
@@ -108,7 +109,7 @@
 <script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
-import doAction from '/imports/api/engine/actions/doAction.js';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
@@ -221,18 +222,7 @@ export default {
     doAction({ advantage }) {
       this.doActionLoading = true;
       this.shwing();
-      doAction.call({
-        actionId: this.model._id,
-        scope: {
-          '~attackAdvantage': { value: advantage },
-        }
-      }, error => {
-        this.doActionLoading = false;
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.reason || error.message || error.toString() });
-        }
-      });
+      doAction(this.model, this.$store, this.model._id);
     },
     shwing() {
       this.activated = true;

@@ -3,6 +3,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
+import Actions from '/imports/api/engine/actions/Actions';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import computeCreature from '/imports/api/engine/computeCreature.js';
 import VERSION from '/imports/constants/VERSION.js';
@@ -53,6 +54,9 @@ Meteor.publish('singleCharacter', function (creatureId) {
       }, {
         limit: 20,
         sort: { date: -1 },
+      }),
+      Actions.find({
+        creatureId,
       }),
       // Also publish the owner's username
       Meteor.users.find(permissionCreature.owner, {
