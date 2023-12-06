@@ -219,17 +219,9 @@ export default {
     click(e) {
       this.$emit('click', e);
     },
-    doAction({ advantage }) {
-      this.doActionLoading = true;
-      this.shwing();
+    doAction() {
       doAction(this.model, this.$store, this.model._id);
     },
-    shwing() {
-      this.activated = true;
-      setTimeout(() => {
-        this.activated = undefined;
-      }, 150);
-    }
   }
 }
 </script>

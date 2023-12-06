@@ -10,6 +10,11 @@
         {{ actionJson }}
       </code>
     </pre>
+    <tree-node-view
+      v-for="prop in taskProps"
+      :key="prop._id"
+      :model="prop"
+    />
     <v-btn
       slot="actions"
       text
@@ -38,10 +43,13 @@
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Actions, { runAction } from '/imports/api/engine/actions/Actions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 export default {
   components: {
     DialogBase,
+    TreeNodeView,
   },
   props: {
     actionId: {
@@ -57,6 +65,12 @@ export default {
   meteor: { 
     action() {
       return Actions.findOne(this.actionId);
+    },
+    taskProps() { 
+      if (!this.action) return;
+      return this.action.taskQueue.map(task => {
+        return CreatureProperties.findOne(task.propId);
+      });
     },
   },
   computed: {

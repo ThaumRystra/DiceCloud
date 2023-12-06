@@ -14,19 +14,16 @@ import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-const Actions = new Mongo.Collection<ActionWithId>('actions');
+const Actions = new Mongo.Collection<Action>('actions');
 
 export interface Action {
+  _id?: string;
   creatureId: string;
   rootPropId: string;
   targetIds?: string[];
   userInputNeeded?: any;
   taskQueue: (Task | DamagePropTask)[];
   results: TaskResult[];
-}
-
-interface ActionWithId extends Action {
-  _id: string;
 }
 
 type Task = PropTask | DamagePropTask;
@@ -275,8 +272,9 @@ export const insertAction: ValidatedMethod = new ValidatedMethod({
     // First remove all other actions on this creature
     // only do one action at a time, don't wait for this to finish
     Actions.removeAsync({ creatureId: action.creatureId });
-    const actionId = await Actions.insertAsync(action);
-    return actionId;
+    // Force a random id even if one was provided, we may use it later as the seed for PRNG
+    delete action._id;
+    return await Actions.insertAsync(action);
   },
 });
 
@@ -306,7 +304,7 @@ export const runAction = new ValidatedMethod({
 });
 
 // Run an already created action
-export async function runActionWork(action: string | ActionWithId, stepThrough?: boolean, userInput?) {
+export async function runActionWork(action: string | Action, stepThrough?: boolean, userInput?) {
   // If given an actionId, find the action document
   if (typeof action === 'string') {
     const foundAction = await Actions.findOneAsync(action);
@@ -384,14 +382,14 @@ async function applyNextTask(action: Action, userInput?) {
   });
 }
 
-function writeChangedAction(original: ActionWithId, changed: ActionWithId) {
+function writeChangedAction(original: Action, changed: Action) {
   const $set = {};
   for (const key of ActionSchema.objectKeys()) {
     if (!EJSON.equals(original[key], changed[key])) {
       $set[key] = changed[key];
     }
   }
-  if (!isEmpty($set)) {
+  if (!isEmpty($set) && original._id) {
     return Actions.updateAsync(original._id, { $set });
   }
 }
