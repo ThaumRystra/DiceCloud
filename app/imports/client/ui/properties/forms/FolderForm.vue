@@ -23,6 +23,12 @@
               :error-messages="errors.hideStatsGroup"
               @change="change('hideStatsGroup', ...arguments)"
             />
+            <smart-switch
+              label="Show child list instead of child cards"
+              :value="model.showChildList"
+              :error-messages="errors.showChildList"
+              @change="change('showChildList', ...arguments)"
+            />
             <smart-select
               clearable
               label="Tab"

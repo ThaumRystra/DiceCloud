@@ -22,6 +22,10 @@ let FolderSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  showChildList: {
+    type: Boolean,
+    optional: true,
+  },
   tab: {
     type: String,
     optional: true,
