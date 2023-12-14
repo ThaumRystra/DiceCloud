@@ -11,6 +11,7 @@ import { getPropertyName } from '/imports/constants/PROPERTIES';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { use } from 'chai';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -18,15 +19,16 @@ const Actions = new Mongo.Collection<Action>('actions');
 
 export interface Action {
   _id?: string;
+  _isSimulation?: boolean;
+  _stepThrough?: boolean;
   creatureId: string;
   rootPropId: string;
   targetIds?: string[];
-  userInputNeeded?: any;
-  taskQueue: (Task | DamagePropTask)[];
   results: TaskResult[];
+  taskCount: number;
 }
 
-type Task = PropTask | DamagePropTask;
+type Task = PropTask | DamagePropTask | ItemAsAmmoTask;
 
 interface BaseTask {
   propId: string;
@@ -51,8 +53,20 @@ interface DamagePropTask extends BaseTask {
     title?: string;
     operation: 'increment' | 'set';
     value: number;
-    stat: string;
-    silent?: true;
+    prop: any;
+  };
+}
+
+interface ItemAsAmmoTask extends BaseTask {
+  subtaskFn: 'consumeItemAsAmmo';
+  params: {
+    /**
+     * Use getPropertyTitle(prop) to set the title
+     */
+    title?: string;
+    operation: 'increment' | 'set';
+    value: number;
+    prop: any;
   };
 }
 
@@ -140,31 +154,6 @@ const ActionSchema = new SimpleSchema({
     type: Object,
     optional: true,
     blackbox: true,
-  },
-
-  // A stack of tasks to apply
-  // Each task has a propId to apply and a targetId list
-  taskQueue: {
-    type: Array,
-  },
-  'taskQueue.$': {
-    type: Object,
-  },
-  'taskQueue.$.propId': {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-  },
-  'taskQueue.$.step': {
-    type: Number,
-    optional: true,
-  },
-  'taskQueue.$.targetIds': {
-    type: Array,
-    defaultValue: [],
-  },
-  'taskQueue.$.targetIds.$': {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
   },
 
   // Applied properties
@@ -281,9 +270,9 @@ export const insertAction: ValidatedMethod = new ValidatedMethod({
 export const runAction = new ValidatedMethod({
   name: 'actions.runAction',
   validate: new SimpleSchema({
-    actionId: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
+    action: {
+      type: Object,
+      blackbox: true,
     },
     userInput: {
       type: Object,
@@ -295,91 +284,74 @@ export const runAction = new ValidatedMethod({
       optional: true,
     }
   }).validator(),
-  run: async function ({ actionId, userInput }) {
+  run: async function ({ actionId, userInput }: { actionId: string, userInput?: any }) {
     const action = await Actions.findOneAsync(actionId);
-    if (!action) throw new Meteor.Error('Not found', 'The action does not exist');
+    if (!action) throw 'Action not found';
     assertEditPermission(getCreature(action.creatureId), this.userId);
-    return await runActionWork(action, userInput);
+    const originalAction = EJSON.clone(action);
+    applyAction(action, userInput);
+    // Persist changes to the action
+    const writePromise = writeChangedAction(originalAction, action);
+    return writePromise;
   },
 });
 
-// Run an already created action
-export async function runActionWork(action: string | Action, stepThrough?: boolean, userInput?) {
-  // If given an actionId, find the action document
-  if (typeof action === 'string') {
-    const foundAction = await Actions.findOneAsync(action);
-    if (!foundAction) throw new Meteor.Error('Not found', 'The action does not exist');
-    action = foundAction;
-  }
-  const originalAction = EJSON.clone(action);
-  let count = 0;
-  do {
-    // If there isn't a next task, stop
-    if (!action.taskQueue.length) break;
-    await applyNextTask(action, userInput);
-    count += 1;
-    if (count > 100) {
-      break;
-    }
-  } while (!action.userInputNeeded && !stepThrough)
-
-  // Persist changes to the action
-  const writePromise = writeChangedAction(originalAction, action);
-  if (count > 100) {
-    throw new Meteor.Error('Too many properties', 'Only 100 properties may fire at a time');
-  }
-  return writePromise;
+// Apply an action
+// This is run once as a simulation on the client awaiting all the various inputs or step through
+// clicks from the user, then it is run as part of the runAction method, where it is expected to
+// complete instantly on the client, and sent to the server as a method call
+export async function applyAction(action: Action, userInput?: any, simulate?: boolean, stepThrough?: boolean) {
+  if (!Meteor.isClient && simulate) throw 'Cannot simulate on the server';
+  if (!Meteor.isClient && stepThrough) throw 'Cannot step through on the server';
+  if (Meteor.isClient && !simulate && stepThrough) throw 'Cannot step through on the client without simulating';
+  action._stepThrough = stepThrough;
+  action._isSimulation = simulate;
+  action.taskCount = 0;
+  applyTask(action, {
+    propId: action.rootPropId,
+    targetIds: action.targetIds || [],
+  }, userInput);
+  return { action, userInput };
 }
 
 // TODO create a function to get the effective value of a property,
 // simulating all the result updates in the action so far
 
-async function applyNextTask(action: Action, userInput?) {
-  // Get the next task
-  const task = action.taskQueue.shift();
-  if (!task) throw 'Next task does not exist';
-
-  let result: PartialTaskResult;
+async function applyTask(action: Action, task: Task, userInput?): Promise<void> {
+  action.taskCount += 1;
+  if (action.taskCount > 100) throw 'Only 100 properties can be applied at once';
 
   if (task.subtaskFn) {
-    result = await applySubtask[task.subtaskFn](task, action);
+    await applySubtask[task.subtaskFn](task, action, userInput);
   } else {
     // Get property
     const prop = await getSingleProperty(action.creatureId, task.propId);
 
     // Ensure the prop exists
     if (!prop) throw new Meteor.Error('Not found', 'Property could not be found');
+
+    // If the property is deactivated by a toggle, skip it
     if (prop.deactivatedByToggle) return;
 
     // Before triggers
-    const tasks: PropTask[] = [];
-    if (!task.beforeTriggersDone && prop.triggerIds?.before?.length) {
-      // Push the before triggers
-      forEach(prop.triggerIds?.before, triggerId => {
-        tasks.push({ propId: triggerId, targetIds: task.targetIds });
+    if (prop.triggerIds?.before?.length) {
+      forEach(prop.triggerIds.before, triggerId => {
+        applyTask(action, { propId: triggerId, targetIds: task.targetIds }, userInput);
       });
-      doNext(action, [
-        ...tasks,
-        { ...task, beforeTriggersDone: true },
-      ]);
-      return;
     }
 
-    // Apply the property
-    result = await applyPropertyByType[prop.type]?.(prop, task, action, userInput);
-    // store the task's details and save the result
-    // Because we recomputed the property in the action context, store the whole thing,
-    // rather than just a reference to it
+    // Create a result an push it to the action results, pass it to the apply function to modify
+    const result = new PartialTaskResult();
     result.scope[`#${prop.type}`] = prop;
+    action.results.push({
+      ...result,
+      propId: task.propId,
+      targetIds: task.targetIds,
+    });
 
-    // After triggers
-    // Because each property might change its targets, it is responsible for its own after triggers
+    // Apply the property
+    await applyPropertyByType[prop.type]?.(prop, task, action, result, userInput);
   }
-  action.results.push({
-    ...result,
-    propId: task.propId,
-    targetIds: task.targetIds,
-  });
 }
 
 function writeChangedAction(original: Action, changed: Action) {
@@ -399,21 +371,6 @@ function getPropertyTitle(prop) {
   return getPropertyName(prop.type);
 }
 
-// When doing a thing, you can only change the queue by pushing an array of ordered props
-// to the front of it
-// This makes sure that if the queue is full, you finish doing all subtasks in order
-// before continuing with other properties in the queue
-
-/**
- * Add the given list of tasks to the front of the queue to be done on the next iteration
- * of the action. You should return result immediately after calling this.
- * @param action 
- * @param tasks 
- */
-function doNext(action: Action, tasks: Task[]) {
-  action.taskQueue.unshift(...tasks);
-}
-
 /**
  * Get all the child tasks of a given property
  * @param action
@@ -421,14 +378,12 @@ function doNext(action: Action, tasks: Task[]) {
  * @param targetIds 
  * @returns 
  */
-async function childTasks(action: Action, prop, targetIds) {
-  const tasks: Task[] = [];
+async function applyChildren(action: Action, prop, targetIds, userInput) {
   const children = await getPropertyChildren(action.creatureId, prop._id);
   // Push the child tasks and related triggers to the stack
-  forEach(children, childProp => {
-    tasks.push(...propTasks(childProp, targetIds));
-  });
-  return tasks
+  for (const childProp of children) {
+    await applyTask(action, { propId: childProp._id, targetIds }, userInput);
+  }
 }
 
 /**
@@ -437,16 +392,22 @@ async function childTasks(action: Action, prop, targetIds) {
  * @param targetIds 
  * @returns 
  */
-function afterChildrenTriggerTasks(prop, targetIds) {
-  const tasks: Task[] = [];
-  forEach(prop.triggerIds?.afterChildren, triggerId => {
-    tasks.push({ propId: triggerId, targetIds });
-  });
-  return tasks;
+async function applyAfterChildrenTriggers(action: Action, prop, targetIds, userInput) {
+  if (!prop.triggerIds?.afterChildren) return;
+  for (const triggerId of prop.triggerIds.afterChildren) {
+    await applyTask(action, { propId: triggerId, targetIds }, userInput);
+  }
+}
+
+async function applyAfterTriggers(action: Action, prop, targetIds, userInput) {
+  if (!prop.triggerIds?.after) return;
+  for (const triggerId of prop.triggerIds.after) {
+    await applyTask(action, { propId: triggerId, targetIds }, userInput);
+  }
 }
 
 /**
- * Returns a list of tasks containing the following:
+ * Applies the following:
  * After triggers
  * Children of the prop
  * After-children triggers
@@ -455,12 +416,24 @@ function afterChildrenTriggerTasks(prop, targetIds) {
  * @param targetIds 
  * @returns 
  */
-async function defaultAfterPropTasks(action, prop, targetIds) {
-  return [
-    ...afterTriggerTasks(prop, targetIds),
-    ...await childTasks(action, prop, targetIds),
-    ...afterChildrenTriggerTasks(prop, targetIds)
-  ]
+async function applyDefaultAfterPropTasks(action: Action, prop, targetIds, userInput) {
+  await applyAfterTriggers(action, prop, targetIds, userInput);
+  await applyChildren(action, prop, targetIds, userInput);
+  await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
+}
+
+/**
+ * Applies the following:
+ * After triggers
+ * After-children triggers
+ * @param action 
+ * @param prop 
+ * @param targetIds 
+ * @returns 
+ */
+async function applyAfterTasksSkipChildren(action: Action, prop, targetIds, userInput) {
+  await applyAfterTriggers(action, prop, targetIds, userInput);
+  await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
 }
 
 /**
@@ -472,39 +445,11 @@ async function defaultAfterPropTasks(action, prop, targetIds) {
  * @param targetIds 
  * @returns 
  */
-function skipChildrenTasks(prop, targetIds) {
-  return [
-    ...afterTriggerTasks(prop, targetIds),
-    ...afterChildrenTriggerTasks(prop, targetIds)
-  ]
+async function applyAfterPropTasksForSingleChild(action: Action, prop, childProp, targetIds, userInput) {
+  await applyAfterTriggers(action, prop, targetIds, userInput);
+  await applyTask(action, { propId: childProp._id, targetIds }, userInput);
+  await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
 }
-
-/**
- * Returns a list of tasks containing the following:
- * After triggers
- * After-children triggers
- * @param action 
- * @param prop 
- * @param targetIds 
- * @returns 
- */
-function singleChildTask(prop, targetIds, childProp) {
-  return [
-    ...afterTriggerTasks(prop, targetIds),
-    ...propTasks(childProp, targetIds),
-    ...afterChildrenTriggerTasks(prop, targetIds)
-  ]
-}
-
-function afterTriggerTasks(prop, targetIds) {
-  const tasks: PropTask[] = [];
-  // Push the after triggers
-  forEach(prop.triggerIds?.after, triggerId => {
-    tasks.push({ propId: triggerId, targetIds });
-  });
-  return tasks;
-}
-
 
 /**
  * Get all the trigger tasks for a given trigger path
@@ -514,25 +459,12 @@ function afterTriggerTasks(prop, targetIds) {
  * @param triggerPath 
  * @returns 
  */
-function triggerTasks(action: Action, prop, targetIds: string[], triggerPath: string) {
-  const tasks: Task[] = []
+async function applyTriggers(action: Action, prop, targetIds: string[], triggerPath: string, userInput) {
   const triggerIds = get(prop?.triggers, triggerPath);
-  if (triggerIds) {
-    for (const triggerId of triggerIds) {
-      tasks.push({ propId: triggerId, targetIds });
-    }
+  if (!triggerIds) return;
+  for (const triggerId of triggerIds) {
+    await applyTask(action, { propId: triggerId, targetIds }, userInput);
   }
-  return tasks;
-}
-
-/**
- * Get the tasks related to a single property
- * @param prop 
- * @param targetIds 
- * @returns Returns [before triggers, prop, after triggers] tasks
- */
-export function propTasks(prop, targetIds?) {
-  return [{ propId: prop._id, targetIds }];
 }
 
 /**
@@ -541,34 +473,15 @@ export function propTasks(prop, targetIds?) {
  * @param targetIds 
  * @returns Copies of the task, but with a single target each
  */
-function perTargetTasks(task: PropTask, targetIds: string[] = task.targetIds) {
-  const tasks: Task[] = [];
-  // Increment step
-  const step = (task.step || 0) + 1;
-
-  if (targetIds.length) {
-    // If there are targets, apply a new task to each target
-    for (const targetId of targetIds) {
-      tasks.push({
-        ...task,
-        step,
-        targetIds: [targetId],
-      });
-    }
-  } else {
-    // Otherwise just do the next step
-    tasks.push({
+async function applyTaskToEachTarget(action: Action, task: PropTask, targetIds: string[] = task.targetIds, userInput) {
+  if (targetIds.length <= 1) throw 'Must have multiple targets to split a task';
+  // If there are targets, apply a new task to each target
+  for (const targetId of targetIds) {
+    await applyTask(action, {
       ...task,
-      step,
-      targetIds,
-    });
+      targetIds: [targetId]
+    }, userInput);
   }
-  return tasks;
-}
-
-function createResult(): PartialTaskResult {
-  // Add  the property to the action's local scope
-  return new PartialTaskResult();
 }
 
 // Combine all the action results into the scope at present
@@ -627,243 +540,188 @@ export function getEffectiveActionScope(action: Action) {
   return scope;
 }
 
-function doNextStep(action, task) {
-  doNext(action, [{
-    ...task,
-    step: (task.step || 0) + 1,
-  }]);
-}
-
 const applyPropertyByType = {
 
-  async action(prop, task: PropTask, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
+  async action(prop, task: PropTask, action: Action, result: PartialTaskResult, userInput): Promise<void> {
     const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
-    // Step 1 Log the name and summary, check that the property has enough resources to fire
-    // Then queue step 2
-    if (!task.step) {
-      const content: LogContent = { name: prop.name };
-      if (prop.summary?.text) {
-        recalculateInlineCalculations(prop.summary, action);
-        content.value = prop.summary.value;
-      }
-      if (prop.silent) content.silenced = true;
-      result.appendLog(content, targetIds);
-      // Check Uses
-      if (prop.usesLeft <= 0) {
-        if (!prop.silent) result.appendLog({
-          name: 'Error',
-          value: `${prop.name || 'action'} does not have enough uses left`,
-        }, targetIds);
-        return result;
-      }
-      // Check Resources
-      if (prop.insufficientResources) {
-        if (!prop.silent) result.appendLog({
-          name: 'Error',
-          value: 'This creature doesn\'t have sufficient resources to perform this action',
-        }, targetIds);
-        return result;
-      }
+    //Log the name and summary, check that the property has enough resources to fire
+    const content: LogContent = { name: prop.name };
+    if (prop.summary?.text) {
+      recalculateInlineCalculations(prop.summary, action);
+      content.value = prop.summary.value;
+    }
+    if (prop.silent) content.silenced = true;
+    result.appendLog(content, targetIds);
+
+    // Check Uses
+    if (prop.usesLeft <= 0) {
+      if (!prop.silent) result.appendLog({
+        name: 'Error',
+        value: `${prop.name || 'action'} does not have enough uses left`,
+      }, targetIds);
+      return;
     }
 
-    else if (task.step === 2) {
-      const tasks: Task[] = [];
-      // Iterate through all the resources consumed and push the appropriate subtasks and triggers
-      if (prop.resources?.attributesConsumed?.length) {
-        for (const att of prop.resources.attributesConsumed) {
-          const scope = getEffectiveActionScope(action);
-          const statToDamage = getFromScope(att.variableName, scope);
-          tasks.push(
-            // Wrap damage prop subtask in the damage property triggers
-            // Then run the children after that
-            ...triggerTasks(action, statToDamage, [action.creatureId], 'damageProperty.before'),
-            {
-              propId: task.propId,
-              targetIds: [action.creatureId],
-              subtaskFn: 'damageProp',
-              params: {
-                operation: 'increment',
-                value: +att.quantity?.value || 0,
-                stat: att.variableName,
-                silent: prop.silent,
-              },
-            },
-            ...triggerTasks(action, statToDamage, [action.creatureId], 'damageProperty.after'),
-          );
-        }
-      }
-      // Iterate through all the items consumed and push the appropriate subtasks and triggers
-
-      if (prop.resources?.itemsConsumed?.length) {
-        for (const itemConsumed of prop.resources.itemsConsumed) {
-          recalculateCalculation(itemConsumed.quantity, action, 'reduce');
-          if (!itemConsumed.itemId) {
-            throw 'No ammo was selected';
-          }
-          const item = getSingleProperty(action.creatureId, itemConsumed.itemId);
-          if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
-            throw 'The prop\'s ammo was not found on the creature';
-          }
-          const quantity = +itemConsumed?.quantity?.value;
-          if (
-            !quantity ||
-            !isFinite(quantity)
-          ) continue;
-          tasks.push(
-            // Wrap ammo subtask in the ammo consumed triggers
-            ...triggerTasks(action, item, targetIds, 'ammo.before'),
-            {
-              propId: item._id,
-              targetIds,
-              taskScope: {
-                //TODO
-              }
-            },
-            ...triggerTasks(action, item, targetIds, 'ammo.after'),
-          );
-        }
-      }
-
-      // Push children tasks
-      tasks.push(...await defaultAfterPropTasks(action, prop, task.targetIds));
-      doNext(action, tasks);
-      return result;
-    }
-    return result;
-  },
-
-  async adjustment(prop, task: PropTask, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
-
-    const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
-
-    const queueNext = async function () {
-      doNext(action, await defaultAfterPropTasks(action, prop, damageTargetIds));
+    // Check Resources
+    if (prop.insufficientResources) {
+      if (!prop.silent) result.appendLog({
+        name: 'Error',
+        value: 'This creature doesn\'t have sufficient resources to perform this action',
+      }, targetIds);
+      return;
     }
 
-    // Step 0, split the task
-    if (!task.step) {
-      doNext(action, perTargetTasks(task, damageTargetIds));
-      return result;
-    }
-
-    // Step 1, get the operation and value and push the damage hooks to the queue
-    else if (task.step === 1) {
-
-      if (!prop.amount) {
-        queueNext();
-        return result;
-      }
-
-      // Evaluate the amount
-      recalculateCalculation(prop.amount, action, 'reduce');
-      const value = +prop.amount.value;
-      if (!isFinite(value)) {
-        queueNext();
-        return result;
-      }
-
-      if (!damageTargetIds?.length) {
-        doNextStep(action, task);
-        return result;
-      }
-
-      if (damageTargetIds.length !== 1) {
-        throw 'At this step, only a single target is supported'
-      }
-      const targetId = damageTargetIds[0];
-      const statId = getVariables(targetId)?.[prop.stat]?._propId;
-      const stat = statId && getSingleProperty(targetId, statId);
-      if (!stat?.type) {
-        result.appendLog({
-          name: 'Error',
-          value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
-          silenced: prop.silent,
-        }, damageTargetIds);
-        return result;
-      }
-      // Set the scope properties
-      result.pushScope = {};
-      if (prop.operation === 'increment') {
-        if (value >= 0) {
-          result.pushScope['~damage'] = { value };
-        } else {
-          result.pushScope['~healing'] = { value: -value };
-        }
-      } else {
-        result.pushScope['~set'] = { value };
-      }
-      // Store which property we're targeting
-      if (targetId === action.creatureId) {
-        result.pushScope['~attributeDamaged'] = { _propId: stat._id };
-      } else {
-        result.pushScope['~attributeDamaged'] = stat;
-      }
-      doNext(action, [
-        // Wrap damage prop subtask in the damage property triggers
-        // Then run the children after that
-        ...triggerTasks(action, stat, damageTargetIds, 'damageProperty.before'),
-        {
+    // Iterate through all the resources consumed and damage them
+    if (prop.resources?.attributesConsumed?.length) {
+      for (const att of prop.resources.attributesConsumed) {
+        const scope = getEffectiveActionScope(action);
+        const statToDamage = getFromScope(att.variableName, scope);
+        await applyTask(action, {
           propId: task.propId,
-          targetIds: damageTargetIds,
+          targetIds: [action.creatureId],
           subtaskFn: 'damageProp',
           params: {
-            title: getPropertyTitle(prop),
-            operation: prop.operation,
-            value,
-            stat: prop.stat,
-            silent: prop.silent,
+            operation: 'increment',
+            value: +att.quantity?.value || 0,
+            prop: statToDamage,
           },
-        },
-        ...triggerTasks(action, stat, damageTargetIds, 'damageProperty.after'),
-        ...await defaultAfterPropTasks(action, prop, damageTargetIds)
-      ]);
-      return result;
+        }, userInput);
+      }
     }
 
-    // Handle incorrect steps
-    else {
-      throw `Step ${task.step} is not valid for this task`
+    // Iterate through all the items consumed and consume them
+    if (prop.resources?.itemsConsumed?.length) {
+      for (const itemConsumed of prop.resources.itemsConsumed) {
+        recalculateCalculation(itemConsumed.quantity, action, 'reduce');
+        if (!itemConsumed.itemId) {
+          throw 'No ammo was selected';
+        }
+        const item = getSingleProperty(action.creatureId, itemConsumed.itemId);
+        if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
+          throw 'The prop\'s ammo was not found on the creature';
+        }
+        const quantity = +itemConsumed?.quantity?.value;
+        if (
+          !quantity ||
+          !isFinite(quantity)
+        ) continue;
+        await applyTask(action, {
+          propId: item._id,
+          targetIds,
+          subtaskFn: 'consumeItemAsAmmo',
+          params: {
+            operation: 'increment',
+            value: quantity,
+            prop: item,
+          },
+        }, userInput);
+      }
     }
+
+    // Finish
+    return await applyDefaultAfterPropTasks(action, prop, targetIds, userInput);
   },
 
-  async branch(prop, task: PropTask, action: Action, userInput): Promise<PartialTaskResult> {
-    const result = createResult();
+  async adjustment(prop, task: PropTask, action: Action, result: PartialTaskResult, userInput): Promise<void> {
+    const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+    if (damageTargetIds.length > 1) {
+      return await applyTaskToEachTarget(action, task, damageTargetIds, userInput);
+    }
+
+    // Get the operation and value and push the damage hooks to the queue
+    if (!prop.amount) {
+      return;
+    }
+
+    // Evaluate the amount
+    recalculateCalculation(prop.amount, action, 'reduce');
+    const value = +prop.amount.value;
+    if (!isFinite(value)) {
+      return;
+    }
+
+    if (!damageTargetIds?.length) {
+      return;
+    }
+
+    if (damageTargetIds.length !== 1) {
+      throw 'At this step, only a single target is supported'
+    }
+    const targetId = damageTargetIds[0];
+    const statId = getVariables(targetId)?.[prop.stat]?._propId;
+    const stat = statId && getSingleProperty(targetId, statId);
+    if (!stat?.type) {
+      result.appendLog({
+        name: 'Error',
+        value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
+        silenced: prop.silent,
+      }, damageTargetIds);
+      return;
+    }
+    // Set the scope properties
+    result.pushScope = {};
+    if (prop.operation === 'increment') {
+      if (value >= 0) {
+        result.pushScope['~damage'] = { value };
+      } else {
+        result.pushScope['~healing'] = { value: -value };
+      }
+    } else {
+      result.pushScope['~set'] = { value };
+    }
+    // Store which property we're targeting
+    if (targetId === action.creatureId) {
+      result.pushScope['~attributeDamaged'] = { _propId: stat._id };
+    } else {
+      result.pushScope['~attributeDamaged'] = stat;
+    }
+
+    applyTask(action, {
+      propId: task.propId,
+      targetIds: damageTargetIds,
+      subtaskFn: 'damageProp',
+      params: {
+        title: getPropertyTitle(prop),
+        operation: prop.operation,
+        value,
+        prop: stat,
+      },
+    }, userInput);
+    return applyDefaultAfterPropTasks(action, prop, damageTargetIds, userInput);
+  },
+
+  async branch(prop, task: PropTask, action: Action, result: PartialTaskResult, userInput): Promise<void> {
     const targets = task.targetIds;
 
     switch (prop.branchType) {
       case 'if': {
-        recalculateCalculation(prop.condition, action, 'reduce');
+        await recalculateCalculation(prop.condition, action, 'reduce');
         if (prop.condition?.value) {
-          doNext(action, await defaultAfterPropTasks(action, prop, targets));
+          return applyDefaultAfterPropTasks(action, prop, targets, userInput);
         } else {
-          doNext(action, skipChildrenTasks(prop, targets));
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        return result;
       }
       case 'index': {
         const children = await getPropertyChildren(action.creatureId, prop._id);
-        if (children.length) {
-          recalculateCalculation(prop.condition, action, 'reduce');
-          if (!isFinite(prop.condition?.value)) {
-            result.appendLog({
-              name: 'Branch Error',
-              value: 'Index did not resolve into a valid number'
-            }, targets);
-            doNext(action, skipChildrenTasks(prop, targets));
-            return result;
-          }
-          let index = Math.floor(prop.condition?.value);
-          if (index < 1) index = 1;
-          if (index > children.length) index = children.length;
-          const child = children[index - 1];
-          doNext(action, singleChildTask(prop, targets, child));
-          return result;
+        if (!children.length) {
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        doNext(action, skipChildrenTasks(prop, targets));
-        return result;
+        recalculateCalculation(prop.condition, action, 'reduce');
+        if (!isFinite(prop.condition?.value)) {
+          result.appendLog({
+            name: 'Branch Error',
+            value: 'Index did not resolve into a valid number'
+          }, targets);
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
+        }
+        let index = Math.floor(prop.condition?.value);
+        if (index < 1) index = 1;
+        if (index > children.length) index = children.length;
+        const child = children[index - 1];
+        return applyAfterPropTasksForSingleChild(action, prop, child, targets, userInput);
       }
       case 'hit': {
         const scope = getEffectiveActionScope(action);
@@ -873,11 +731,10 @@ const applyPropertyByType = {
               value: '**On hit**'
             }, targets);
           }
-          doNext(action, await defaultAfterPropTasks(action, prop, targets));
+          return applyDefaultAfterPropTasks(action, prop, targets, userInput);
         } else {
-          doNext(action, skipChildrenTasks(prop, targets));
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        return result;
       }
       case 'miss': {
         const scope = getEffectiveActionScope(action);
@@ -887,11 +744,10 @@ const applyPropertyByType = {
               value: '**On miss**'
             }, targets);
           }
-          doNext(action, await defaultAfterPropTasks(action, prop, targets));
+          return applyDefaultAfterPropTasks(action, prop, targets, userInput);
         } else {
-          doNext(action, skipChildrenTasks(prop, targets));
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        return result;
       }
       case 'failedSave': {
         const scope = getEffectiveActionScope(action);
@@ -901,11 +757,10 @@ const applyPropertyByType = {
               value: '**On failed save**'
             }, targets);
           }
-          doNext(action, await defaultAfterPropTasks(action, prop, targets));
+          return applyDefaultAfterPropTasks(action, prop, targets, userInput);
         } else {
-          doNext(action, skipChildrenTasks(prop, targets));
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        return result;
       }
       case 'successfulSave': {
         const scope = getEffectiveActionScope(action);
@@ -915,70 +770,60 @@ const applyPropertyByType = {
               value: '**On save**'
             }, targets);
           }
-          doNext(action, await defaultAfterPropTasks(action, prop, targets));
+          return applyDefaultAfterPropTasks(action, prop, targets, userInput);
         } else {
-          doNext(action, skipChildrenTasks(prop, targets));
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        return result;
       }
       case 'random': {
         const children = await getPropertyChildren(action.creatureId, prop._id);
         if (children.length) {
           const index = rollDice(1, children.length)[0];
           const child = children[index - 1];
-          doNext(action, singleChildTask(prop, targets, child));
+          return applyAfterPropTasksForSingleChild(action, prop, child, targets, userInput);
         } else {
-          doNext(action, skipChildrenTasks(action, prop));
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        return result;
       }
       case 'eachTarget':
-        doNext(action, perTargetTasks(task, targets));
-        return result;
+        if (targets.length > 1) {
+          return applyTaskToEachTarget(action, task, targets, userInput);
+        }
+        return applyDefaultAfterPropTasks(action, prop, targets, userInput);
       case 'choice': {
-        // Step 0, halt the action to get user input
-        if (!task.step) {
-          // Mark the action as needing user input so that it halts
-          action.userInputNeeded = pick(prop, ['_id', 'type', 'branchType']);
-          // Put this task back in the queue, but at step 1
-          doNextStep(action, task);
-          return result;
+        if (action._isSimulation) {
+          throw 'Not implemented';
+          userInput[prop._id] = {
+            choice: await getUserChoice();
+          };
         }
-        // Step 1 consume the user input
-        else if (task.step === 1) {
-          if (!userInput) {
-            throw 'User input was required for this step'
-          }
-          const children = await getPropertyChildren(action.creatureId, prop._id);
-          if (!children.length) {
-            doNext(action, skipChildrenTasks(action, prop));
-            return result;
-          }
-          let index = userInput.choice;
-          if (!isFinite(index) || index < 0) index = 0;
-          if (index > children.length - 1) index = children.length - 1;
-          const child = children[index];
-          doNext(action, singleChildTask(prop, targets, child));
-          return result;
+        if (!action._isSimulation && !userInput?.[prop._id]) {
+          throw 'User input was required for this step'
         }
+        const children = await getPropertyChildren(action.creatureId, prop._id);
+        if (!children.length) {
+          return applyAfterTasksSkipChildren(action, prop, targets, userInput);
+        }
+        let index = userInput[prop._id].choice;
+        if (!isFinite(index) || index < 0) index = 0;
+        if (index > children.length - 1) index = children.length - 1;
+        const child = children[index];
+        return applyAfterPropTasksForSingleChild(action, prop, child, targets, userInput);
       }
     }
-    return result;
   },
 
-  async folder(prop, task: PropTask, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
-    doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
-    return result;
+  async folder(prop, task: PropTask, action: Action, userInput): Promise<void> {
+    return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
   },
 
-  async note(prop, task: PropTask, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
+  async note(prop, task: PropTask, action: Action, userInput): Promise<void> {
+    const result = new PartialTaskResult();
 
     let contents: LogContent[] | undefined = undefined;
     const logContent = { name: prop.name, value: undefined };
     if (prop.summary?.text) {
-      recalculateInlineCalculations(prop.summary, action);
+      await recalculateInlineCalculations(prop.summary, action);
       logContent.value = prop.summary.value;
     }
 
@@ -987,7 +832,7 @@ const applyPropertyByType = {
     }
     // Log description
     if (prop.description?.text) {
-      recalculateInlineCalculations(prop.description, action);
+      await recalculateInlineCalculations(prop.description, action);
       if (!contents) contents = [];
       contents.push({ value: prop.description.value });
     }
@@ -997,18 +842,15 @@ const applyPropertyByType = {
         targetIds: task.targetIds,
       });
     }
-
-    doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
-    return result;
+    return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
   },
 
-  async roll(prop, task: PropTask, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
+  async roll(prop, task: PropTask, action: Action, userInput): Promise<void> {
+    const result = new PartialTaskResult();
 
     // If there isn't a calculation, just apply the children instead
     if (!prop.roll?.calculation) {
-      doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
-      return result;
+      return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
     }
 
     const logValue: string[] = [];
@@ -1016,7 +858,7 @@ const applyPropertyByType = {
     // roll the dice only and store that string
     const {
       rolled, reduced, errors
-    } = rollAndReduceCalculation(prop.roll, action);
+    } = await rollAndReduceCalculation(prop.roll, action);
 
     if (rolled.parseType !== 'constant') {
       logValue.push(toString(rolled));
@@ -1036,8 +878,7 @@ const applyPropertyByType = {
 
     // If we didn't end up with a constant or a number of finite value, give up
     if (reduced?.parseType !== 'constant' || (reduced.valueType === 'number' && !isFinite(reduced.value))) {
-      doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
-      return result;
+      return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
     }
     const value = reduced.value;
 
@@ -1052,16 +893,16 @@ const applyPropertyByType = {
     }, task.targetIds);
 
     // Apply children
-    doNext(action, await defaultAfterPropTasks(action, prop, task.targetIds));
-    return result;
+    return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
   },
 }
 
 const applySubtask = {
-  async damageProp(task: DamagePropTask, action: Action): Promise<PartialTaskResult> {
-    const result = createResult();
+  async damageProp(task: DamagePropTask, action: Action, userInput): Promise<void> {
+    await applyTriggers(action, task.params.prop, [action.creatureId], 'damageProperty.before', userInput);
+    const result = new PartialTaskResult();
     let { value } = task.params;
-    const { title, operation, silent, stat } = task.params;
+    const { title, operation, silent, prop } = task.params;
 
     // Get the user-mutable state from scope
     const scope = getEffectiveActionScope(action);
@@ -1083,8 +924,7 @@ const applySubtask = {
     // If there are no targets, just log the result that would apply and end
     if (!task.targetIds?.length) {
       // Get the locally equivalent stat with the same variable name
-      const localStat = getFromScope(stat, scope);
-      const statName = localStat ? getPropertyTitle(localStat) : stat;
+      const statName = getPropertyTitle(prop);
       result.appendLog({
         name: title,
         value: `${statName}${operation === 'set' ? ' set to' : ''}` +
@@ -1092,7 +932,7 @@ const applySubtask = {
         inline: true,
         silenced: silent,
       }, task.targetIds);
-      return result;
+      return saveResult(action, prop, result, task);
     }
 
     if (task.targetIds.length !== 1) {
@@ -1103,7 +943,7 @@ const applySubtask = {
     let damage, newValue, increment;
     const targetProp = await getSingleProperty(targetId, targetPropId);
 
-    if (!targetProp) return result;
+    if (!targetProp) return saveResult(action, prop, result, task);
 
     if (operation === 'set') {
       const total = targetProp.total || 0;
@@ -1156,6 +996,16 @@ const applySubtask = {
         }]
       });
     }
-    return result;
+    saveResult(action, prop, result, task);
+    await applyTriggers(action, prop, [action.creatureId], 'damageProperty.after', userInput);
+  },
+
+  async consumeItemAsAmmo(task: ItemAsAmmoTask, action: Action, userInput): Promise<void> {
+    await applyTriggers(action, task.params.prop, [action.creatureId], 'ammo.before', userInput);
+    const result = new PartialTaskResult();
+
+    //TODO
+
+    return applyTriggers(action, prop, [action.creatureId], 'ammo.after', userInput);
   },
 }
