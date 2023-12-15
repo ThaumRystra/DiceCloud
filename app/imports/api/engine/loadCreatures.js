@@ -189,15 +189,22 @@ export function getPropertyDecendants(creatureId, propertyId) {
   }
 }
 
-export function getPropertyChildren(creatureId, propertyId) {
-  const property = getSingleProperty(creatureId, propertyId);
+/**
+ * @param {string} creatureId Creature ID
+ * @param {string | any} property prop or prop ID to get children of
+ * @returns {any[]} An array of child properties in tree order
+ */
+export function getPropertyChildren(creatureId, property) {
+  if (typeof property === 'string') {
+    property = getSingleProperty(creatureId, property);
+  }
   if (!property) return [];
   // This propertyId will always appear in the parent of the children
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
     const props = [];
     for (const prop of creature.properties.values()) {
-      if (prop.parent?.id === propertyId) {
+      if (prop.parent?.id === property._id) {
         props.push(prop);
       }
     }
@@ -205,7 +212,7 @@ export function getPropertyChildren(creatureId, propertyId) {
     return cloneProps.sort((a, b) => a.order - b.order);
   } else {
     return CreatureProperties.find({
-      'parent.id': propertyId,
+      'parent.id': property._id,
       removed: { $ne: true },
     }, {
       sort: { order: 1 },

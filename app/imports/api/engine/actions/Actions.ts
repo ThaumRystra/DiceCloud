@@ -9,9 +9,7 @@ import { toString } from '/imports/parser/resolve';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-import { use } from 'chai';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -31,55 +29,17 @@ export interface Action {
 type Task = PropTask | DamagePropTask | ItemAsAmmoTask;
 
 interface BaseTask {
-  propId: string;
+  prop: { [key: string]: any };
   targetIds: string[];
 }
 
 interface PropTask extends BaseTask {
-  step?: number,
   subtaskFn?: undefined,
-  beforeTriggersDone?: undefined | true;
-  taskScope?: {
-    [variableName: string]: { value: number },
-  },
 }
 
-interface DamagePropTask extends BaseTask {
-  subtaskFn: 'damageProp';
-  params: {
-    /**
-     * Use getPropertyTitle(prop) to set the title
-     */
-    title?: string;
-    operation: 'increment' | 'set';
-    value: number;
-    prop: any;
-  };
-}
-
-interface ItemAsAmmoTask extends BaseTask {
-  subtaskFn: 'consumeItemAsAmmo';
-  params: {
-    /**
-     * Use getPropertyTitle(prop) to set the title
-     */
-    title?: string;
-    operation: 'increment' | 'set';
-    value: number;
-    prop: any;
-  };
-}
-
-type TaskResult = {
+class TaskResult {
   propId: string;
   targetIds: string[];
-  scope: any;
-  popScope?: any;
-  pushScope?: any;
-  mutations: Mutation[];
-}
-
-class PartialTaskResult {
   scope: any;
   // Consume pushed changes from the local scope, every change pushed must be popped later
   popScope?: any;
@@ -92,7 +52,9 @@ class PartialTaskResult {
   // properties can be found on variable.previous
   pushScope?: any;
   mutations: Mutation[];
-  constructor() {
+  constructor(propId: string, targetIds: string[]) {
+    this.propId = propId;
+    this.targetIds = targetIds;
     this.mutations = [];
     this.scope = {};
   }
@@ -307,8 +269,9 @@ export async function applyAction(action: Action, userInput?: any, simulate?: bo
   action._stepThrough = stepThrough;
   action._isSimulation = simulate;
   action.taskCount = 0;
-  applyTask(action, {
-    propId: action.rootPropId,
+  const prop = await getSingleProperty(action.creatureId, action.rootPropId);
+  await applyTask(action, {
+    prop,
     targetIds: action.targetIds || [],
   }, userInput);
   return { action, userInput };
@@ -322,10 +285,17 @@ async function applyTask(action: Action, task: Task, userInput?): Promise<void> 
   if (action.taskCount > 100) throw 'Only 100 properties can be applied at once';
 
   if (task.subtaskFn) {
-    await applySubtask[task.subtaskFn](task, action, userInput);
+    const result = new TaskResult(task.prop._id, task.targetIds);
+    action.results.push(result);
+    switch (task.subtaskFn) {
+      case 'damageProp':
+        return damageProp(task, action, result, userInput);
+      case 'consumeItemAsAmmo':
+        return consumeItemAsAmmo(task, action, result, userInput);
+    }
   } else {
     // Get property
-    const prop = await getSingleProperty(action.creatureId, task.propId);
+    const prop = task.prop;
 
     // Ensure the prop exists
     if (!prop) throw new Meteor.Error('Not found', 'Property could not be found');
@@ -335,22 +305,19 @@ async function applyTask(action: Action, task: Task, userInput?): Promise<void> 
 
     // Before triggers
     if (prop.triggerIds?.before?.length) {
-      forEach(prop.triggerIds.before, triggerId => {
-        applyTask(action, { propId: triggerId, targetIds: task.targetIds }, userInput);
-      });
+      for (const triggerId of prop.triggerIds.before) {
+        const trigger = await getSingleProperty(action.creatureId, triggerId);
+        await applyTask(action, { prop: trigger, targetIds: task.targetIds }, userInput);
+      }
     }
 
     // Create a result an push it to the action results, pass it to the apply function to modify
-    const result = new PartialTaskResult();
+    const result = new TaskResult(task.prop._id, task.targetIds);
     result.scope[`#${prop.type}`] = prop;
-    action.results.push({
-      ...result,
-      propId: task.propId,
-      targetIds: task.targetIds,
-    });
+    action.results.push(result);
 
     // Apply the property
-    await applyPropertyByType[prop.type]?.(prop, task, action, result, userInput);
+    return applyPropertyByType[prop.type]?.(task, action, result, userInput);
   }
 }
 
@@ -379,10 +346,10 @@ function getPropertyTitle(prop) {
  * @returns 
  */
 async function applyChildren(action: Action, prop, targetIds, userInput) {
-  const children = await getPropertyChildren(action.creatureId, prop._id);
+  const children = await getPropertyChildren(action.creatureId, prop);
   // Push the child tasks and related triggers to the stack
   for (const childProp of children) {
-    await applyTask(action, { propId: childProp._id, targetIds }, userInput);
+    await applyTask(action, { prop: childProp, targetIds }, userInput);
   }
 }
 
@@ -395,14 +362,16 @@ async function applyChildren(action: Action, prop, targetIds, userInput) {
 async function applyAfterChildrenTriggers(action: Action, prop, targetIds, userInput) {
   if (!prop.triggerIds?.afterChildren) return;
   for (const triggerId of prop.triggerIds.afterChildren) {
-    await applyTask(action, { propId: triggerId, targetIds }, userInput);
+    const trigger = await getSingleProperty(action.creatureId, triggerId);
+    await applyTask(action, { prop: trigger, targetIds }, userInput);
   }
 }
 
 async function applyAfterTriggers(action: Action, prop, targetIds, userInput) {
   if (!prop.triggerIds?.after) return;
   for (const triggerId of prop.triggerIds.after) {
-    await applyTask(action, { propId: triggerId, targetIds }, userInput);
+    const trigger = await getSingleProperty(action.creatureId, triggerId);
+    await applyTask(action, { prop: trigger, targetIds }, userInput);
   }
 }
 
@@ -447,7 +416,7 @@ async function applyAfterTasksSkipChildren(action: Action, prop, targetIds, user
  */
 async function applyAfterPropTasksForSingleChild(action: Action, prop, childProp, targetIds, userInput) {
   await applyAfterTriggers(action, prop, targetIds, userInput);
-  await applyTask(action, { propId: childProp._id, targetIds }, userInput);
+  await applyTask(action, { prop: childProp, targetIds }, userInput);
   await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
 }
 
@@ -463,7 +432,8 @@ async function applyTriggers(action: Action, prop, targetIds: string[], triggerP
   const triggerIds = get(prop?.triggers, triggerPath);
   if (!triggerIds) return;
   for (const triggerId of triggerIds) {
-    await applyTask(action, { propId: triggerId, targetIds }, userInput);
+    const trigger = await getSingleProperty(action.creatureId, triggerId);
+    await applyTask(action, { prop: trigger, targetIds }, userInput);
   }
 }
 
@@ -540,9 +510,11 @@ export function getEffectiveActionScope(action: Action) {
   return scope;
 }
 
+
 const applyPropertyByType = {
 
-  async action(prop, task: PropTask, action: Action, result: PartialTaskResult, userInput): Promise<void> {
+  async action(task: PropTask, action: Action, result: TaskResult, userInput): Promise<void> {
+    const prop = task.prop;
     const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
     //Log the name and summary, check that the property has enough resources to fire
@@ -578,13 +550,13 @@ const applyPropertyByType = {
         const scope = getEffectiveActionScope(action);
         const statToDamage = getFromScope(att.variableName, scope);
         await applyTask(action, {
-          propId: task.propId,
+          prop,
           targetIds: [action.creatureId],
           subtaskFn: 'damageProp',
           params: {
             operation: 'increment',
             value: +att.quantity?.value || 0,
-            prop: statToDamage,
+            targetProp: statToDamage,
           },
         }, userInput);
       }
@@ -607,13 +579,12 @@ const applyPropertyByType = {
           !isFinite(quantity)
         ) continue;
         await applyTask(action, {
-          propId: item._id,
+          prop,
           targetIds,
           subtaskFn: 'consumeItemAsAmmo',
           params: {
-            operation: 'increment',
             value: quantity,
-            prop: item,
+            item,
           },
         }, userInput);
       }
@@ -623,7 +594,8 @@ const applyPropertyByType = {
     return await applyDefaultAfterPropTasks(action, prop, targetIds, userInput);
   },
 
-  async adjustment(prop, task: PropTask, action: Action, result: PartialTaskResult, userInput): Promise<void> {
+  async adjustment(task: PropTask, action: Action, result: TaskResult, userInput): Promise<void> {
+    const prop = task.prop;
     const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
     if (damageTargetIds.length > 1) {
@@ -660,39 +632,23 @@ const applyPropertyByType = {
       }, damageTargetIds);
       return;
     }
-    // Set the scope properties
-    result.pushScope = {};
-    if (prop.operation === 'increment') {
-      if (value >= 0) {
-        result.pushScope['~damage'] = { value };
-      } else {
-        result.pushScope['~healing'] = { value: -value };
-      }
-    } else {
-      result.pushScope['~set'] = { value };
-    }
-    // Store which property we're targeting
-    if (targetId === action.creatureId) {
-      result.pushScope['~attributeDamaged'] = { _propId: stat._id };
-    } else {
-      result.pushScope['~attributeDamaged'] = stat;
-    }
 
     applyTask(action, {
-      propId: task.propId,
+      prop,
       targetIds: damageTargetIds,
       subtaskFn: 'damageProp',
       params: {
         title: getPropertyTitle(prop),
         operation: prop.operation,
         value,
-        prop: stat,
+        targetProp: stat,
       },
     }, userInput);
     return applyDefaultAfterPropTasks(action, prop, damageTargetIds, userInput);
   },
 
-  async branch(prop, task: PropTask, action: Action, result: PartialTaskResult, userInput): Promise<void> {
+  async branch(task: PropTask, action: Action, result: TaskResult, userInput): Promise<void> {
+    const prop = task.prop;
     const targets = task.targetIds;
 
     switch (prop.branchType) {
@@ -705,7 +661,7 @@ const applyPropertyByType = {
         }
       }
       case 'index': {
-        const children = await getPropertyChildren(action.creatureId, prop._id);
+        const children = await getPropertyChildren(action.creatureId, prop);
         if (!children.length) {
           return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
@@ -776,7 +732,7 @@ const applyPropertyByType = {
         }
       }
       case 'random': {
-        const children = await getPropertyChildren(action.creatureId, prop._id);
+        const children = await getPropertyChildren(action.creatureId, prop);
         if (children.length) {
           const index = rollDice(1, children.length)[0];
           const child = children[index - 1];
@@ -800,7 +756,7 @@ const applyPropertyByType = {
         if (!action._isSimulation && !userInput?.[prop._id]) {
           throw 'User input was required for this step'
         }
-        const children = await getPropertyChildren(action.creatureId, prop._id);
+        const children = await getPropertyChildren(action.creatureId, prop);
         if (!children.length) {
           return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
@@ -813,15 +769,16 @@ const applyPropertyByType = {
     }
   },
 
-  async folder(prop, task: PropTask, action: Action, userInput): Promise<void> {
+  async folder(task: PropTask, action: Action, userInput): Promise<void> {
+    const prop = task.prop;
     return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
   },
 
-  async note(prop, task: PropTask, action: Action, userInput): Promise<void> {
-    const result = new PartialTaskResult();
-
+  async note(task: PropTask, action: Action, result: TaskResult, userInput): Promise<void> {
+    const prop = task.prop;
     let contents: LogContent[] | undefined = undefined;
-    const logContent = { name: prop.name, value: undefined };
+    const logContent: LogContent = {};
+    if (prop.name) logContent.name = prop.name;
     if (prop.summary?.text) {
       await recalculateInlineCalculations(prop.summary, action);
       logContent.value = prop.summary.value;
@@ -845,9 +802,8 @@ const applyPropertyByType = {
     return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
   },
 
-  async roll(prop, task: PropTask, action: Action, userInput): Promise<void> {
-    const result = new PartialTaskResult();
-
+  async roll(task: PropTask, action: Action, result: TaskResult, userInput): Promise<void> {
+    const prop = task.prop;
     // If there isn't a calculation, just apply the children instead
     if (!prop.roll?.calculation) {
       return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
@@ -897,115 +853,192 @@ const applyPropertyByType = {
   },
 }
 
-const applySubtask = {
-  async damageProp(task: DamagePropTask, action: Action, userInput): Promise<void> {
-    await applyTriggers(action, task.params.prop, [action.creatureId], 'damageProperty.before', userInput);
-    const result = new PartialTaskResult();
-    let { value } = task.params;
-    const { title, operation, silent, prop } = task.params;
 
-    // Get the user-mutable state from scope
-    const scope = getEffectiveActionScope(action);
-    result.popScope = {
-      '~damage': 1, '~healing': 1, '~set': 1, '~attributeDamaged': 1,
-    };
-    value = +value;
-    if (operation === 'increment') {
-      if (value >= 0) {
-        value = scope['~damage']?.value;
-      } else {
-        value = -scope['~healing']?.value;
-      }
+// Sub tasks
+
+interface DamagePropTask extends BaseTask {
+  subtaskFn: 'damageProp';
+  params: {
+    /**
+     * Use getPropertyTitle(prop) to set the title
+     */
+    title?: string;
+    operation: 'increment' | 'set';
+    value: number;
+    targetProp: any;
+  };
+}
+
+async function damageProp(task: DamagePropTask, action: Action, result: TaskResult, userInput): Promise<void> {
+  const prop = task.prop;
+
+  if (task.targetIds.length > 1) {
+    throw 'This subtask can only be called on a single target';
+  }
+  const targetId = task.targetIds[0];
+
+  let { value } = task.params;
+  const { title, operation } = task.params;
+  let targetProp = task.params.targetProp;
+
+  // Set the scope properties
+  result.pushScope = {};
+  if (prop.operation === 'increment') {
+    if (value >= 0) {
+      result.pushScope['~damage'] = { value };
     } else {
-      value = scope['~set']?.value;
+      result.pushScope['~healing'] = { value: -value };
     }
-    const targetPropId = scope['~attributeDamaged']?._propId;
+  } else {
+    result.pushScope['~set'] = { value };
+  }
+  // Store which property we're targeting
+  if (targetId === action.creatureId) {
+    result.pushScope['~attributeDamaged'] = { _propId: targetProp._id };
+  } else {
+    result.pushScope['~attributeDamaged'] = targetProp;
+  }
 
-    // If there are no targets, just log the result that would apply and end
-    if (!task.targetIds?.length) {
-      // Get the locally equivalent stat with the same variable name
-      const statName = getPropertyTitle(prop);
-      result.appendLog({
+  // Run the before triggers which may change scope properties
+  await applyTriggers(action, targetProp, [action.creatureId], 'damageProperty.before', userInput);
+
+  // Refetch the scope properties
+  const scope = getEffectiveActionScope(action);
+  result.popScope = {
+    '~damage': 1, '~healing': 1, '~set': 1, '~attributeDamaged': 1,
+  };
+  value = +value;
+  if (operation === 'increment') {
+    if (value >= 0) {
+      value = scope['~damage']?.value;
+    } else {
+      value = -scope['~healing']?.value;
+    }
+  } else {
+    value = scope['~set']?.value;
+  }
+  const targetPropId = scope['~attributeDamaged']?._propId;
+
+  // If there are no targets, just log the result that would apply and end
+  if (!task.targetIds?.length) {
+    // Get the locally equivalent stat with the same variable name
+    const statName = getPropertyTitle(targetProp);
+    result.appendLog({
+      name: title,
+      value: `${statName}${operation === 'set' ? ' set to' : ''}` +
+        ` ${value}`,
+      inline: true,
+      silenced: prop.silent,
+    }, task.targetIds);
+  }
+
+  let damage, newValue, increment;
+  targetProp = await getSingleProperty(targetId, targetPropId);
+
+  if (!targetProp) return;
+
+  if (operation === 'set') {
+    const total = targetProp.total || 0;
+    // Set represents what we want the value to be after damage
+    // So we need the actual damage to get to that value
+    damage = total - value;
+    // Damage can't exceed total value
+    if (damage > total && !targetProp.ignoreLowerLimit) damage = total;
+    // Damage must be positive
+    if (damage < 0 && !targetProp.ignoreUpperLimit) damage = 0;
+    newValue = targetProp.total - damage;
+    // Write the results
+    result.mutations.push({
+      targetIds: [targetId],
+      updates: [{
+        propId: targetProp._id,
+        set: { damage, value: newValue },
+        type: targetProp.type,
+      }],
+      contents: [{
         name: title,
-        value: `${statName}${operation === 'set' ? ' set to' : ''}` +
-          ` ${value}`,
+        value: `${getPropertyTitle(targetProp)} set to ${value}`,
         inline: true,
-        silenced: silent,
-      }, task.targetIds);
-      return saveResult(action, prop, result, task);
-    }
+        silenced: prop.silent,
+      }]
+    });
+  } else if (operation === 'increment') {
+    const currentValue = targetProp.value || 0;
+    const currentDamage = targetProp.damage || 0;
+    increment = value;
+    // Can't increase damage above the remaining value
+    if (increment > currentValue && !targetProp.ignoreLowerLimit) increment = currentValue;
+    // Can't decrease damage below zero
+    if (-increment > currentDamage && !targetProp.ignoreUpperLimit) increment = -currentDamage;
+    damage = currentDamage + increment;
+    newValue = targetProp.total - damage;
+    // Write the results
+    result.mutations.push({
+      targetIds: [targetId],
+      updates: [{
+        propId: targetProp._id,
+        inc: { damage: increment, value: -increment },
+        type: targetProp.type,
+      }],
+      contents: [{
+        name: 'Attribute damage',
+        value: `${getPropertyTitle(targetProp)} ${value}`,
+        inline: true,
+        silenced: prop.silent,
+      }]
+    });
+  }
+  await applyTriggers(action, prop, [action.creatureId], 'damageProperty.after', userInput);
+}
 
-    if (task.targetIds.length !== 1) {
-      throw 'This subtask can only be called on a single target';
-    }
-    const targetId = task.targetIds[0];
 
-    let damage, newValue, increment;
-    const targetProp = await getSingleProperty(targetId, targetPropId);
+interface ItemAsAmmoTask extends BaseTask {
+  subtaskFn: 'consumeItemAsAmmo';
+  params: {
+    value: number;
+    item: any;
+  };
+}
 
-    if (!targetProp) return saveResult(action, prop, result, task);
+async function consumeItemAsAmmo(task: ItemAsAmmoTask, action: Action, result: TaskResult, userInput): Promise<void> {
+  const prop = task.prop;
+  let { value, item } = task.params;
 
-    if (operation === 'set') {
-      const total = targetProp.total || 0;
-      // Set represents what we want the value to be after damage
-      // So we need the actual damage to get to that value
-      damage = total - value;
-      // Damage can't exceed total value
-      if (damage > total && !targetProp.ignoreLowerLimit) damage = total;
-      // Damage must be positive
-      if (damage < 0 && !targetProp.ignoreUpperLimit) damage = 0;
-      newValue = targetProp.total - damage;
-      // Write the results
-      result.mutations.push({
-        targetIds: [targetId],
-        updates: [{
-          propId: targetProp._id,
-          set: { damage, value: newValue },
-          type: targetProp.type,
-        }],
-        contents: [{
-          name: title,
-          value: `${getPropertyTitle(targetProp)} set to ${value}`,
-          inline: true,
-          silenced: task.params.silent,
-        }]
-      });
-    } else if (operation === 'increment') {
-      const currentValue = targetProp.value || 0;
-      const currentDamage = targetProp.damage || 0;
-      increment = value;
-      // Can't increase damage above the remaining value
-      if (increment > currentValue && !targetProp.ignoreLowerLimit) increment = currentValue;
-      // Can't decrease damage below zero
-      if (-increment > currentDamage && !targetProp.ignoreUpperLimit) increment = -currentDamage;
-      damage = currentDamage + increment;
-      newValue = targetProp.total - damage;
-      // Write the results
-      result.mutations.push({
-        targetIds: [targetId],
-        updates: [{
-          propId: targetProp._id,
-          inc: { damage: increment, value: -increment },
-          type: targetProp.type,
-        }],
-        contents: [{
-          name: 'Attribute damage',
-          value: `${getPropertyTitle(targetProp)} ${value}`,
-          inline: true,
-          silenced: silent,
-        }]
-      });
-    }
-    saveResult(action, prop, result, task);
-    await applyTriggers(action, prop, [action.creatureId], 'damageProperty.after', userInput);
-  },
+  if (item.type !== 'item') throw 'Must use an item as ammo';
 
-  async consumeItemAsAmmo(task: ItemAsAmmoTask, action: Action, userInput): Promise<void> {
-    await applyTriggers(action, task.params.prop, [action.creatureId], 'ammo.before', userInput);
-    const result = new PartialTaskResult();
+  // Store the ammo item and value in the scope
+  result.scope[`#ammo`] = { propId: item._id };
+  result.pushScope = { ['~ammoConsumed']: { value } };
 
-    //TODO
+  // Apply the before triggers
+  await applyTriggers(action, item, [action.creatureId], 'ammo.before', userInput);
 
-    return applyTriggers(action, prop, [action.creatureId], 'ammo.after', userInput);
-  },
+  // Refetch the scope properties
+  const scope = getEffectiveActionScope(action);
+  result.popScope = {
+    '~ammoConsumed': 1,
+  };
+  value = scope['~ammoConsumed']?.value || 0;
+
+  const itemChildren = await getPropertyChildren(action.creatureId, item);
+
+  // Do the quantity adjustment
+  // Check if property has quantity
+  result.mutations.push({
+    targetIds: task.targetIds,
+    updates: [{
+      propId: item._id,
+      inc: { quantity: -value },
+      type: 'item',
+    }],
+    // Log the item name as a heading if it has child properties to apply
+    contents: itemChildren.length ? [{
+      name: getPropertyTitle(item) || 'Ammo',
+      inline: false,
+      silenced: prop.silent,
+    }] : undefined,
+  });
+
+  await applyTriggers(action, item, [action.creatureId], 'ammo.after', userInput);
+  return applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
 }

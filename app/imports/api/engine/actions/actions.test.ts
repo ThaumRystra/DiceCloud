@@ -4,7 +4,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import Actions, { Action, Update, LogContent, runActionWork, propTasks } from '/imports/api/engine/actions/Actions';
+import Actions, { Action, Update, LogContent, applyAction } from '/imports/api/engine/actions/Actions';
 import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 
@@ -42,6 +42,13 @@ describe('Interrupt action system', function () {
       [{ value: 'Note 1 summary. 1 + 1 = 2' }]
     );
   });
+  it('Applies children of folders', async function () {
+    const action = await runActionById(folderId);
+    assert.deepEqual(
+      allLogContent(action),
+      [{ value: 'child of folder' }]
+    );
+  });
   it('Applies the children of if branches', async function () {
     let action = await runActionById(ifTruthyBranchId);
     assert.deepEqual(
@@ -62,12 +69,8 @@ describe('Interrupt action system', function () {
     );
   });
   it('Halts execution of choice branches', async function () {
+    throw 'not implemented yet';
     const action = await runActionById(choiceBranchId);
-    assert.exists(action.userInputNeeded);
-    assert.deepEqual(
-      allLogContent(action),
-      []
-    );
   });
   it('Applies adjustments', async function () {
     let action = await runActionById(adjustmentSetId);
@@ -97,7 +100,8 @@ describe('Interrupt action system', function () {
       {
         name: 'New Roll',
         value: '7d1 [1, 1, 1, 1, 1, 1, 1] + 9\n**16**',
-        inline: true
+        inline: true,
+        silenced: undefined,
       }, {
         value: 'rollVar: 16'
       }
@@ -109,8 +113,9 @@ function createAction(prop, targetIds?) {
   const action: Action = {
     creatureId: prop.ancestors[0].id,
     rootPropId: prop._id,
-    taskQueue: [{ propId: prop._id, targetIds }],
     results: [],
+    taskCount: 0,
+    targetIds,
   };
   return Actions.insertAsync(action);
 }
@@ -118,9 +123,9 @@ function createAction(prop, targetIds?) {
 async function runActionById(propId) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop);
-  await runActionWork(actionId);
   const action = await Actions.findOneAsync(actionId);
-  if (!action) throw 'Action is expected to exist'
+  if (!action) throw 'Action is expected to exist';
+  await applyAction(action);
   return action;
 }
 
@@ -148,7 +153,7 @@ function allLogContent(action: Action) {
   return contents;
 }
 
-let note1Id, ifTruthyBranchId, ifFalsyBranchId, indexBranchId, choiceBranchId, adjustedStatId,
+let note1Id, folderId, ifTruthyBranchId, ifFalsyBranchId, indexBranchId, choiceBranchId, adjustedStatId,
   adjustmentIncrementId, adjustmentSetId, rollId;
 
 const propForest = [
@@ -159,6 +164,12 @@ const propForest = [
     summary: {
       text: 'Note 1 summary. 1 + 1 = {1 + 1}'
     },
+  },
+  // Apply a folder with a note inside
+  {
+    _id: folderId = Random.id(),
+    type: 'folder',
+    children: [{ type: 'note', summary: { text: 'child of folder' } }],
   },
   // Apply an if branch with a truthy condition
   {
