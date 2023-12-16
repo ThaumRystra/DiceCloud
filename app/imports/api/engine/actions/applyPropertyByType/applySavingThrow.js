@@ -44,6 +44,7 @@ export default function applySavingThrow(node, actionContext) {
     delete scope['~saveSucceeded'];
     delete scope['~saveDiceRoll'];
     delete scope['~saveRoll'];
+    delete scope['~saveDiscardedRoll'];
 
     const applyChildrenToTarget = function () {
       actionContext.targets = [target];
@@ -72,18 +73,22 @@ export default function applySavingThrow(node, actionContext) {
       if (a >= b) {
         value = a;
         resultPrefix = `Advantage\n1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
+        scope['~saveDiscardedRoll'] = b;
       } else {
         value = b;
         resultPrefix = `Advantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
+        scope['~saveDiscardedRoll'] = a;
       }
     } else if (save.advantage === -1) {
       const [a, b] = rollDice(2, 20);
       if (a <= b) {
         value = a;
         resultPrefix = `Disadvantage\n1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
+        scope['~saveDiscardedRoll'] = b;
       } else {
         value = b;
         resultPrefix = `Disadvantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
+        scope['~saveDiscardedRoll'] = a;
       }
     } else {
       values = rollDice(1, 20);

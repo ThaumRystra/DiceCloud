@@ -93,6 +93,7 @@ function applyAttackToTarget({ attack, target, actionContext }) {
   delete scope['~criticalMiss'];
   delete scope['~attackDiceRoll'];
   delete scope['~attackRoll'];
+  delete scope['~attackDiscardedRoll'];
 
   recalculateCalculation(attack, actionContext);
 
@@ -146,18 +147,22 @@ function rollAttack(attack, scope) {
     if (a >= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
+      scope['~attackDiscardedRoll'] = b;
     } else {
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
+      scope['~attackDiscardedRoll'] = a;
     }
   } else if (scope['~attackAdvantage']?.value === -1) {
     const [a, b] = rollDice(2, 20);
     if (a <= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
+      scope['~attackDiscardedRoll'] = b;
     } else {
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
+      scope['~attackDiscardedRoll'] = a;
     }
   } else {
     value = rollDice(1, 20)[0];

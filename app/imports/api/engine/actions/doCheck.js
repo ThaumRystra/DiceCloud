@@ -47,6 +47,8 @@ export function doCheckWork({ prop, actionContext }) {
   rollCheck(prop, actionContext);
   applyTriggers(actionContext.triggers.check?.after, prop, actionContext);
 
+  delete actionContext.scope['~checkDiscardedRoll'];
+
   // Insert the log
   actionContext.writeLog();
 }
@@ -88,9 +90,11 @@ function rollCheck(prop, actionContext) {
     if (a >= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+      scope['~checkDiscardedRoll'] = b;
     } else {
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+      scope['~checkDiscardedRoll'] = a;
     }
   } else if (scope['~checkAdvantage']?.value === -1) {
     logName += ' (Disadvantage)';
@@ -98,9 +102,11 @@ function rollCheck(prop, actionContext) {
     if (a <= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText} = `;
+      scope['~checkDiscardedRoll'] = b;
     } else {
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText} = `;
+      scope['~checkDiscardedRoll'] = a;
     }
   } else {
     values = rollDice(1, 20);
