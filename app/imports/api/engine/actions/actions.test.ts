@@ -69,8 +69,10 @@ describe('Interrupt action system', function () {
     );
   });
   it('Halts execution of choice branches', async function () {
-    throw 'not implemented yet';
-    const action = await runActionById(choiceBranchId);
+    let userInputRequested = false;
+    const requestUserInput = () => { userInputRequested = true; return 0 };
+    const action = await runActionById(choiceBranchId, requestUserInput);
+    assert.isTrue(userInputRequested, 'User input should be requested when a choice branch is applied');
   });
   it('Applies adjustments', async function () {
     let action = await runActionById(adjustmentSetId);
@@ -120,12 +122,12 @@ function createAction(prop, targetIds?) {
   return Actions.insertAsync(action);
 }
 
-async function runActionById(propId) {
+async function runActionById(propId, userInputFn = () => 0) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop);
   const action = await Actions.findOneAsync(actionId);
   if (!action) throw 'Action is expected to exist';
-  await applyAction(action);
+  await applyAction(action, userInputFn, { simulate: true });
   return action;
 }
 

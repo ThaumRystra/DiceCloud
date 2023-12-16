@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
-import { forEach, get, isEmpty, pick } from 'lodash';
+import { forEach, get, isEmpty, pick, result } from 'lodash';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
-import { getCreature, getPropertyChildren, getSingleProperty, getVariables } from '/imports/api/engine/loadCreatures';
+import { getCreature, getPropertiesOfType, getPropertyChildren, getSingleProperty, getVariables } from '/imports/api/engine/loadCreatures';
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
 import recalculateCalculation, { rollAndReduceCalculation } from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
 import rollDice from '/imports/parser/rollDice';
@@ -10,6 +10,7 @@ import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables'
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -262,10 +263,13 @@ export const runAction = new ValidatedMethod({
 // This is run once as a simulation on the client awaiting all the various inputs or step through
 // clicks from the user, then it is run as part of the runAction method, where it is expected to
 // complete instantly on the client, and sent to the server as a method call
-export async function applyAction(action: Action, userInput?: any, simulate?: boolean, stepThrough?: boolean) {
-  if (!Meteor.isClient && simulate) throw 'Cannot simulate on the server';
-  if (!Meteor.isClient && stepThrough) throw 'Cannot step through on the server';
-  if (Meteor.isClient && !simulate && stepThrough) throw 'Cannot step through on the client without simulating';
+export async function applyAction(action: Action, userInput?: any[] | Function, options?: {
+  simulate?: boolean, stepThrough?: boolean
+}) {
+  const { simulate, stepThrough } = options || {};
+  if (!simulate && stepThrough) throw 'Cannot step through unless simulating';
+  if (simulate && typeof userInput !== 'function') throw 'Must provide a function to get user input when simulating';
+
   action._stepThrough = stepThrough;
   action._isSimulation = simulate;
   action.taskCount = 0;
@@ -455,8 +459,8 @@ async function applyTaskToEachTarget(action: Action, task: PropTask, targetIds: 
 }
 
 // Combine all the action results into the scope at present
-export function getEffectiveActionScope(action: Action) {
-  const scope = getVariables(action.creatureId);
+export async function getEffectiveActionScope(action: Action) {
+  const scope = await getVariables(action.creatureId);
   // Combine the applied results
   for (const result of action.results) {
     // Pop keys that are not longer used by a busy property
@@ -544,54 +548,33 @@ const applyPropertyByType = {
       return;
     }
 
-    // Iterate through all the resources consumed and damage them
-    if (prop.resources?.attributesConsumed?.length) {
-      for (const att of prop.resources.attributesConsumed) {
-        const scope = getEffectiveActionScope(action);
-        const statToDamage = getFromScope(att.variableName, scope);
-        await applyTask(action, {
-          prop,
-          targetIds: [action.creatureId],
-          subtaskFn: 'damageProp',
-          params: {
-            operation: 'increment',
-            value: +att.quantity?.value || 0,
-            targetProp: statToDamage,
-          },
-        }, userInput);
-      }
-    }
+    spendResources(action, prop, targetIds, result, userInput);
 
-    // Iterate through all the items consumed and consume them
-    if (prop.resources?.itemsConsumed?.length) {
-      for (const itemConsumed of prop.resources.itemsConsumed) {
-        recalculateCalculation(itemConsumed.quantity, action, 'reduce');
-        if (!itemConsumed.itemId) {
-          throw 'No ammo was selected';
+    const attack = prop.attackRoll || prop.attackRollBonus;
+
+    // Attack if there is an attack roll
+    if (attack && attack.calculation) {
+      if (targetIds.length) {
+        for (const target of targetIds) {
+          await applyAttackToTarget(action, prop, attack, targetIds, result, userInput);
+          await applyAfterTriggers(action, prop, [target], userInput);
+          await applyChildren(action, prop, [target], userInput);
         }
-        const item = getSingleProperty(action.creatureId, itemConsumed.itemId);
-        if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
-          throw 'The prop\'s ammo was not found on the creature';
-        }
-        const quantity = +itemConsumed?.quantity?.value;
-        if (
-          !quantity ||
-          !isFinite(quantity)
-        ) continue;
-        await applyTask(action, {
-          prop,
-          targetIds,
-          subtaskFn: 'consumeItemAsAmmo',
-          params: {
-            value: quantity,
-            item,
-          },
-        }, userInput);
+      } else {
+        await applyAttackWithoutTarget(action, prop, attack, result, userInput);
+        await applyAfterTriggers(action, prop, targetIds, userInput);
+        await applyChildren(action, prop, targetIds, userInput);
       }
+    } else {
+      await applyAfterTriggers(action, prop, targetIds, userInput);
+      await applyChildren(action, prop, targetIds, userInput);
+    }
+    if (prop.actionType === 'event' && prop.variableName) {
+      resetProperties(action, prop, result, userInput);
     }
 
     // Finish
-    return await applyDefaultAfterPropTasks(action, prop, targetIds, userInput);
+    return await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
   },
 
   async adjustment(task: PropTask, action: Action, result: TaskResult, userInput): Promise<void> {
@@ -680,7 +663,7 @@ const applyPropertyByType = {
         return applyAfterPropTasksForSingleChild(action, prop, child, targets, userInput);
       }
       case 'hit': {
-        const scope = getEffectiveActionScope(action);
+        const scope = await getEffectiveActionScope(action);
         if (scope['~attackHit']?.value) {
           if (!targets.length && !prop.silent) {
             result.appendLog({
@@ -693,7 +676,7 @@ const applyPropertyByType = {
         }
       }
       case 'miss': {
-        const scope = getEffectiveActionScope(action);
+        const scope = await getEffectiveActionScope(action);
         if (scope['~attackMiss']?.value) {
           if (!targets.length && !prop.silent) {
             result.appendLog({
@@ -706,7 +689,7 @@ const applyPropertyByType = {
         }
       }
       case 'failedSave': {
-        const scope = getEffectiveActionScope(action);
+        const scope = await getEffectiveActionScope(action);
         if (scope['~saveFailed']?.value) {
           if (!targets.length && !prop.silent) {
             result.appendLog({
@@ -719,7 +702,7 @@ const applyPropertyByType = {
         }
       }
       case 'successfulSave': {
-        const scope = getEffectiveActionScope(action);
+        const scope = await getEffectiveActionScope(action);
         if (scope['~saveSucceeded']?.value) {
           if (!targets.length && !prop.silent) {
             result.appendLog({
@@ -747,20 +730,17 @@ const applyPropertyByType = {
         }
         return applyDefaultAfterPropTasks(action, prop, targets, userInput);
       case 'choice': {
+        let index;
         if (action._isSimulation) {
-          throw 'Not implemented';
-          userInput[prop._id] = {
-            choice: await getUserChoice();
-          };
-        }
-        if (!action._isSimulation && !userInput?.[prop._id]) {
-          throw 'User input was required for this step'
+          index = await userInput(prop);
+        } else {
+          // TODO
+          throw 'Reading stored user input not implemented'
         }
         const children = await getPropertyChildren(action.creatureId, prop);
         if (!children.length) {
           return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        let index = userInput[prop._id].choice;
         if (!isFinite(index) || index < 0) index = 0;
         if (index > children.length - 1) index = children.length - 1;
         const child = children[index];
@@ -903,7 +883,7 @@ async function damageProp(task: DamagePropTask, action: Action, result: TaskResu
   await applyTriggers(action, targetProp, [action.creatureId], 'damageProperty.before', userInput);
 
   // Refetch the scope properties
-  const scope = getEffectiveActionScope(action);
+  const scope = await getEffectiveActionScope(action);
   result.popScope = {
     '~damage': 1, '~healing': 1, '~set': 1, '~attributeDamaged': 1,
   };
@@ -1002,19 +982,20 @@ interface ItemAsAmmoTask extends BaseTask {
 
 async function consumeItemAsAmmo(task: ItemAsAmmoTask, action: Action, result: TaskResult, userInput): Promise<void> {
   const prop = task.prop;
-  let { value, item } = task.params;
+  const { item } = task.params
+  let { value } = task.params;
 
   if (item.type !== 'item') throw 'Must use an item as ammo';
 
   // Store the ammo item and value in the scope
-  result.scope[`#ammo`] = { propId: item._id };
+  result.scope['#ammo'] = { propId: item._id };
   result.pushScope = { ['~ammoConsumed']: { value } };
 
   // Apply the before triggers
   await applyTriggers(action, item, [action.creatureId], 'ammo.before', userInput);
 
   // Refetch the scope properties
-  const scope = getEffectiveActionScope(action);
+  const scope = await getEffectiveActionScope(action);
   result.popScope = {
     '~ammoConsumed': 1,
   };
@@ -1041,4 +1022,269 @@ async function consumeItemAsAmmo(task: ItemAsAmmoTask, action: Action, result: T
 
   await applyTriggers(action, item, [action.creatureId], 'ammo.after', userInput);
   return applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
+}
+
+async function spendResources(action: Action, prop, targetIds: string[], result: TaskResult, userInput) {
+  // Use uses
+  if (prop.usesLeft) {
+    result.mutations.push({
+      targetIds,
+      updates: [{
+        propId: prop._id,
+        inc: { usesUsed: 1, usesLeft: -1 },
+        type: prop.type,
+      }],
+      contents: [{
+        name: 'Uses left',
+        value: `${prop.usesLeft - 1}`,
+        inline: true,
+        silenced: prop.silent,
+      }]
+    });
+  }
+
+  // Iterate through all the resources consumed and damage them
+  if (prop.resources?.attributesConsumed?.length) {
+    for (const att of prop.resources.attributesConsumed) {
+      const scope = await getEffectiveActionScope(action);
+      const statToDamage = getFromScope(att.variableName, scope);
+      await recalculateCalculation(att.quantity, action, 'reduce');
+      await applyTask(action, {
+        prop,
+        targetIds: [action.creatureId],
+        subtaskFn: 'damageProp',
+        params: {
+          operation: 'increment',
+          value: +att.quantity?.value || 0,
+          targetProp: statToDamage,
+        },
+      }, userInput);
+    }
+  }
+
+  // Iterate through all the items consumed and consume them
+  if (prop.resources?.itemsConsumed?.length) {
+    for (const itemConsumed of prop.resources.itemsConsumed) {
+      await recalculateCalculation(itemConsumed.quantity, action, 'reduce');
+      if (!itemConsumed.itemId) {
+        throw 'No ammo was selected';
+      }
+      const item = getSingleProperty(action.creatureId, itemConsumed.itemId);
+      if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
+        throw 'The prop\'s ammo was not found on the creature';
+      }
+      const quantity = +itemConsumed?.quantity?.value;
+      if (
+        !quantity ||
+        !isFinite(quantity)
+      ) continue;
+      await applyTask(action, {
+        prop,
+        targetIds,
+        subtaskFn: 'consumeItemAsAmmo',
+        params: {
+          value: quantity,
+          item,
+        },
+      }, userInput);
+    }
+  }
+}
+
+async function applyAttackToTarget(action, prop, attack, target, taskResult: TaskResult, userInput) {
+  taskResult.pushScope = {
+    '~attackHit': {},
+    '~attackMiss': {},
+    '~criticalHit': {},
+    '~criticalMiss': {},
+    '~attackRoll': {},
+  }
+
+  await recalculateCalculation(attack, action, 'reduce');
+  const scope = await getEffectiveActionScope(action);
+  const contents: LogContent[] = [];
+
+  const {
+    resultPrefix,
+    result,
+    criticalHit,
+    criticalMiss,
+  } = await rollAttack(attack, scope, taskResult.pushScope);
+
+  if (target.variables.armor) {
+    const armor = target.variables.armor.value;
+
+    let name = criticalHit ? 'Critical Hit!' :
+      criticalMiss ? 'Critical Miss!' :
+        result > armor ? 'Hit!' : 'Miss!';
+    if (scope['~attackAdvantage']?.value === 1) {
+      name += ' (Advantage)';
+    } else if (scope['~attackAdvantage']?.value === -1) {
+      name += ' (Disadvantage)';
+    }
+
+    contents.push({
+      name,
+      value: `${resultPrefix}\n**${result}**`,
+      inline: true,
+      silenced: prop.silent,
+    });
+
+    if (criticalMiss || result < armor) {
+      scope['~attackMiss'] = { value: true };
+    } else {
+      scope['~attackHit'] = { value: true };
+    }
+  } else {
+    contents.push({
+      name: 'Error',
+      value: 'Target has no `armor`',
+      inline: true,
+      silenced: prop.silent,
+    }, {
+      name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit',
+      value: `${resultPrefix}\n**${result}**`,
+      inline: true,
+      silenced: prop.silent,
+    });
+  }
+  if (contents.length) {
+    taskResult.mutations.push({
+      contents,
+      targetIds: [target],
+    });
+  }
+}
+
+async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskResult, userInput) {
+  taskResult.pushScope = {
+    '~attackHit': {},
+    '~attackMiss': {},
+    '~criticalHit': {},
+    '~criticalMiss': {},
+    '~attackRoll': {},
+  }
+  await recalculateCalculation(attack, action, 'reduce');
+  const scope = await getEffectiveActionScope(action);
+  const {
+    resultPrefix,
+    result,
+    criticalHit,
+    criticalMiss,
+  } = await rollAttack(attack, scope, taskResult.pushScope);
+  let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
+  if (scope['~attackAdvantage']?.value === 1) {
+    name += ' (Advantage)';
+  } else if (scope['~attackAdvantage']?.value === -1) {
+    name += ' (Disadvantage)';
+  }
+  if (!criticalMiss) {
+    scope['~attackHit'] = { value: true }
+  }
+  if (!criticalHit) {
+    scope['~attackMiss'] = { value: true };
+  }
+  taskResult.mutations.push({
+    contents: [{
+      name,
+      value: `${resultPrefix}\n**${result}**`,
+      inline: true,
+      silenced: prop.silent,
+    }],
+    targetIds: [],
+  });
+}
+
+async function rollAttack(attack, scope, resultPushScope) {
+  const rollModifierText = numberToSignedString(attack.value, true);
+  let value, resultPrefix;
+  if (scope['~attackAdvantage']?.value === 1) {
+    const [a, b] = await rollDice(2, 20);
+    if (a >= b) {
+      value = a;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
+    } else {
+      value = b;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
+    }
+  } else if (scope['~attackAdvantage']?.value === -1) {
+    const [a, b] = await rollDice(2, 20);
+    if (a <= b) {
+      value = a;
+      resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
+    } else {
+      value = b;
+      resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
+    }
+  } else {
+    value = await rollDice(1, 20)[0];
+    resultPrefix = `1d20 [${value}] ${rollModifierText}`
+  }
+  resultPushScope['~attackDiceRoll'] = { value };
+  const result = value + attack.value;
+  resultPushScope['~attackRoll'] = { value: result };
+  const { criticalHit, criticalMiss } = applyCrits(value, scope, resultPushScope);
+  return { resultPrefix, result, value, criticalHit, criticalMiss };
+}
+
+function applyCrits(value, scope, resultPushScope) {
+  let scopeCrit = scope['~criticalHitTarget']?.value;
+  if (scopeCrit?.parseType === 'constant') {
+    scopeCrit = scopeCrit.value;
+  }
+  const criticalHitTarget = scopeCrit || 20;
+  const criticalHit = value >= criticalHitTarget;
+  let criticalMiss;
+  if (criticalHit) {
+    resultPushScope['~criticalHit'] = { value: true };
+  } else {
+    criticalMiss = value === 1;
+    if (criticalMiss) {
+      resultPushScope['~criticalMiss'] = { value: true };
+    }
+  }
+  return { criticalHit, criticalMiss };
+}
+
+async function resetProperties(action: Action, prop: any, result: TaskResult, userInput) {
+  const attributes = getPropertiesOfType(action.creatureId, 'attribute');
+  for (const att of attributes) {
+    if (att.removed || att.inactive) continue;
+    if (att.reset !== prop.variableName) continue;
+    if (!att.damage) continue;
+    applyTask(action, {
+      prop: att,
+      targetIds: [action.creatureId],
+      subtaskFn: 'damageProp',
+      params: {
+        title: getPropertyTitle(att),
+        operation: 'increment',
+        value: -att.damage ?? 0,
+        targetProp: att,
+      },
+    }, userInput)
+  }
+  const actions = [
+    ...getPropertiesOfType(action.creatureId, 'action'),
+    ...getPropertiesOfType(action.creatureId, 'spell'),
+  ]
+  for (const act of actions) {
+    if (act.removed || act.inactive) continue;
+    if (act.reset !== prop.variableName) continue;
+    if (!act.usesUsed) continue;
+    result.mutations.push({
+      targetIds: [action.creatureId],
+      updates: [{
+        propId: act._id,
+        set: { usesUsed: 0 },
+        type: act.type,
+      }],
+      contents: [{
+        name: getPropertyTitle(act),
+        value: act.usesUsed >= 0 ? `Restored ${act.usesUsed} uses` : `Removed ${-act.usesUsed} uses`,
+        inline: true,
+        silenced: prop.silent,
+      }]
+    });
+  }
 }
