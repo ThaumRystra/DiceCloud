@@ -16,6 +16,9 @@
           }, {
             value: 0,
             name: 'Immunity',
+          }, {
+            value: -1,
+            name: 'Reduction',
           }]"
           :error-messages="errors.value"
           @change="change('value', ...arguments)"
@@ -23,6 +26,21 @@
       </v-col>
     </v-row>
     <v-row dense>
+      <v-expand-transition>
+        <v-col
+          v-if="model.value === -1"
+          cols="12"
+        >
+          <computed-field
+            label="Reduction Amount"
+            hint="The amount by which to reduce the incoming damage"
+            :model="model.reductionAmount"
+            :error-messages="errors.reductionAmount"
+            @change="({path, value, ack}) =>
+              $emit('change', {path: ['reductionAmount', ...path], value, ack})"
+          />
+        </v-col>
+      </v-expand-transition>
       <v-col cols="12">
         <smart-combobox
           label="Damage Types"

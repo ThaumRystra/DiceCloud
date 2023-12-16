@@ -11,6 +11,7 @@ export default function aggregateDamageMultipliers({node, linkedNode, link}){
     immunities: [],
     resistances: [],
     vulnerabilities: [],
+    reductions: [],
   }
   // Store a short reference to the aggregator
   const aggregator = node.data.multiplierAggregator;
@@ -23,6 +24,9 @@ export default function aggregateDamageMultipliers({node, linkedNode, link}){
   if (linkedNode.data.includeTags?.length){
     keysToStore.push('includeTags');
   }
+  if (linkedNode.data.value === -1){
+    keysToStore.push('reductionAmount');
+  }
   const storedMultiplier = pick(linkedNode.data, keysToStore);
 
   // Store the multiplier in the appropriate field
@@ -32,5 +36,7 @@ export default function aggregateDamageMultipliers({node, linkedNode, link}){
     aggregator.resistances.push(storedMultiplier);
   } else if (multiplierValue === 2){
     aggregator.vulnerabilities.push(storedMultiplier);
+  } else if (multiplierValue === -1 && linkedNode.data.reductionAmount){
+    aggregator.reductions.push(storedMultiplier);
   }
 }

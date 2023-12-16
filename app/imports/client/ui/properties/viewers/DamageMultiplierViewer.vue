@@ -6,6 +6,11 @@
         :value="operation"
       />
       <property-field
+        v-if="model.value === -1 && model.reductionAmount"
+        name="Reduction amount"
+        :value="model.reductionAmount.value"
+      />
+      <property-field
         name="Damage types"
         wrap
       >
@@ -67,6 +72,7 @@ export default {
         case 0: return 'Immunity';
         case 0.5: return 'Resistance';
         case 2: return 'Vulnerability';
+        case -1: return 'Reduction';
         default: return '';
       }
     },

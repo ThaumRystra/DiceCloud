@@ -254,6 +254,7 @@ function linkDamageMultiplier(dependencyGraph, prop) {
     const damageName = damageType.replace(/[^a-z]/gi, '')
     dependencyGraph.addLink(damageName, prop._id, prop.type);
   });
+  dependOnCalc({ dependencyGraph, prop, key: 'reductionAmount' });
 }
 
 function linkPointBuy(dependencyGraph, prop) {

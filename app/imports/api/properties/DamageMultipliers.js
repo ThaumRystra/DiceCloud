@@ -1,3 +1,4 @@
+import createPropertySchema from './subSchemas/createPropertySchema';
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
@@ -6,7 +7,7 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
  * DamageMultipliers are multipliers that affect how much damage is taken from
  * a given damage type
  */
-let DamageMultiplierSchema = new SimpleSchema({
+let DamageMultiplierSchema = createPropertySchema({
   name: {
     type: String,
     optional: true,
@@ -27,7 +28,12 @@ let DamageMultiplierSchema = new SimpleSchema({
   value: {
     type: Number,
     defaultValue: 0.5,
-    allowedValues: [0, 0.5, 2],
+    allowedValues: [0, 0.5, 2, -1],
+  },
+  // The amount to apply for flat reductions
+  reductionAmount: {
+    type: 'fieldToCompute',
+    optional: true
   },
   // Tags which bypass this multiplier (OR)
   excludeTags: {
@@ -51,6 +57,15 @@ let DamageMultiplierSchema = new SimpleSchema({
   },
 });
 
-const ComputedOnlyDamageMultiplierSchema = new SimpleSchema({});
+const ComputedOnlyDamageMultiplierSchema = createPropertySchema({
+  reductionAmount: {
+    type: 'computedOnlyField',
+    optional: true,
+  },
+});
 
-export { DamageMultiplierSchema, ComputedOnlyDamageMultiplierSchema };
+const ComputedDamageMultiplierSchema = new SimpleSchema()
+  .extend(ComputedOnlyDamageMultiplierSchema)
+  .extend(DamageMultiplierSchema);
+
+export { DamageMultiplierSchema, ComputedDamageMultiplierSchema, ComputedOnlyDamageMultiplierSchema };
