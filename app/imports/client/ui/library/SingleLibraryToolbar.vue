@@ -46,9 +46,9 @@
 </template>
 
 <script lang="js">
-import Libraries from '/imports/api/library/Libraries.js';
-import formatter from '/imports/client/ui/utility/numberFormatter.js';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import Libraries from '/imports/api/library/Libraries';
+import formatter from '/imports/client/ui/utility/numberFormatter';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { mapMutations } from 'vuex';
 
 export default {

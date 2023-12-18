@@ -21,8 +21,8 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
-import numberToSignedString from '../../../../api/utility/numberToSignedString.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
+import numberToSignedString from '../../../../api/utility/numberToSignedString';
 
 export default {
   mixins: [propertyViewerMixin],

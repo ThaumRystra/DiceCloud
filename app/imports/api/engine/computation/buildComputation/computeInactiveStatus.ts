@@ -1,7 +1,10 @@
-import walkDown from '/imports/api/engine/computation/utility/walkdown.js';
+import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import walkDown from '/imports/api/engine/computation/utility/walkdown';
+import { TreeNode } from '/imports/api/parenting/parentingFunctions';
+import { isSpell } from '/imports/api/properties/Spells';
 
-export default function computeInactiveStatus(node) {
-  const prop = node.node;
+export default function computeInactiveStatus(node: TreeNode<CreatureProperty>): void {
+  const prop = node.doc;
   if (!isActive(prop)) {
     // Mark prop inactive due to self
     prop.inactive = true;
@@ -10,22 +13,21 @@ export default function computeInactiveStatus(node) {
   if (!childrenActive(prop)) {
     // Mark children as inactive due to ancestor
     walkDown(node.children, child => {
-      child.node.inactive = true;
-      child.node.deactivatedByAncestor = true;
+      child.doc.inactive = true;
+      child.doc.deactivatedByAncestor = true;
     });
   }
 }
 
-function isActive(prop) {
+function isActive(prop: CreatureProperty): boolean {
   if (prop.disabled) return false;
-  switch (prop.type) {
-    // Unprepared spells are inactive
-    case 'spell': return !!prop.prepared || !!prop.alwaysPrepared;
-    default: return true;
+  if (isSpell(prop)) {
+    return !!prop.prepared || !!prop.alwaysPrepared;
   }
+  return true;
 }
 
-function childrenActive(prop) {
+function childrenActive(prop): boolean {
   // Children of disabled properties are always inactive
   if (prop.disabled) return false;
   switch (prop.type) {

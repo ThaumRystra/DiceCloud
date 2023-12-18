@@ -58,8 +58,8 @@
   import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
   import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
   import TreeSearchInput from '/imports/client/ui/components/tree/TreeSearchInput.vue';
-  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-  import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+  import { getPropertyName } from '/imports/constants/PROPERTIES';
 
   export default {
     components: {

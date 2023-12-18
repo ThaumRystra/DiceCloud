@@ -43,9 +43,9 @@
 </template>
 
 <script lang="js">
-  import '/imports/client/ui/dialogStack/dialogStackWindowEvents.js';
-  import mockElement from '/imports/client/ui/dialogStack/mockElement.js';
-  import DialogComponentIndex from '/imports/client/ui/dialogStack/DialogComponentIndex.js';
+  import '/imports/client/ui/dialogStack/dialogStackWindowEvents';
+  import mockElement from '/imports/client/ui/dialogStack/mockElement';
+  import DialogComponentIndex from '/imports/client/ui/dialogStack/DialogComponentIndex';
 
   const OFFSET = 16;
   const MOCK_DURATION = 400; // Keep in sync with css transition of .dialog

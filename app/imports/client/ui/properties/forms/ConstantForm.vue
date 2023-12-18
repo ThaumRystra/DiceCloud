@@ -32,9 +32,9 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
-import { ConstantSchema } from '/imports/api/properties/Constants.js';
+import { ConstantSchema } from '/imports/api/properties/Constants';
 
 export default {
   components: {

@@ -45,7 +45,7 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Libraries from '/imports/api/library/Libraries.js';
+import Libraries from '/imports/api/library/Libraries';
 
 export default {
   components: {

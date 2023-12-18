@@ -1,6 +1,6 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
 import { Migrations } from 'meteor/percolate:migrations';
 
 const dbVersionToGitVersion = {

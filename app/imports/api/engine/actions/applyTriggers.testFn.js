@@ -1,5 +1,5 @@
-import { triggerMatchTags } from '/imports/api/engine/actions/applyTriggers.js';
-import clean from '/imports/api/engine/computation/utility/cleanProp.testFn.js';
+import { triggerMatchTags } from '/imports/api/engine/actions/applyTriggers';
+import clean from '/imports/api/engine/computation/utility/cleanProp.testFn';
 import { assert } from 'chai';
 
 export default function () {

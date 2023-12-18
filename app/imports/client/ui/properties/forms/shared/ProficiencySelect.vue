@@ -20,7 +20,7 @@
 </template>
 
 <script lang="js">
-  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon.js';
+  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 
   const ICON_SPIN_DURATION = 300;
 

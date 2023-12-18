@@ -1,15 +1,35 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
-import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
-import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema.js';
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
-import { storedIconsSchema } from '/imports/api/icons/Icons.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
+import ChildSchema, { TreeDoc } from '/imports/api/parenting/ChildSchema';
+import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
+import { storedIconsSchema } from '/imports/api/icons/Icons';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
-let CreatureProperties = new Mongo.Collection('creatureProperties');
+const CreatureProperties: Mongo.Collection<CreatureProperty> = new Mongo.Collection('creatureProperties');
 
-let CreaturePropertySchema = new SimpleSchema({
+export interface CreatureProperty extends TreeDoc {
+  _id: string
+  _migrationError?: string
+  type: string
+  tags: string[]
+  disabled?: boolean
+  icon?: {
+    name: string
+    shape: string
+  },
+  libraryNodeId?: string
+  slotQuantityFilled?: number
+  inactive?: boolean
+  deactivatedByAncestor?: boolean
+  deactivatedBySelf?: boolean
+  deactivatedByToggle?: boolean
+  deactivatingToggleId?: boolean
+  dirty?: boolean
+}
+
+const CreaturePropertySchema = new SimpleSchema({
   _id: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -56,7 +76,7 @@ let CreaturePropertySchema = new SimpleSchema({
 
 const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   // Denormalised flag if this property is inactive on the sheet for any reason
-  // Including being disabled, or a decendent of a disabled property
+  // Including being disabled, or a descendant of a disabled property
   inactive: {
     type: Boolean,
     optional: true,
@@ -135,13 +155,14 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
 
 CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
 
-for (let key in propertySchemasIndex) {
-  let schema = new SimpleSchema({});
+for (const key in propertySchemasIndex) {
+  const schema = new SimpleSchema({});
   schema.extend(propertySchemasIndex[key]);
   schema.extend(CreaturePropertySchema);
   schema.extend(ColorSchema);
   schema.extend(ChildSchema);
   schema.extend(SoftRemovableSchema);
+  // @ts-expect-error don't have types for .attachSchema
   CreatureProperties.attachSchema(schema, {
     selector: { type: key }
   });

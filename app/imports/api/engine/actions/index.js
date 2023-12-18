@@ -1,2 +1,2 @@
-import './doCastSpell.js';
-import './doCheck.js';
+import './doCastSpell';
+import './doCheck';

@@ -1,3 +1,3 @@
-import '/imports/api/library/methods/copyLibraryNodeTo.js';
-import '/imports/api/library/methods/duplicateLibraryNode.js';
-import '/imports/api/library/methods/updateReferenceNode.js';
+import '/imports/api/library/methods/copyLibraryNodeTo';
+import '/imports/api/library/methods/duplicateLibraryNode';
+import '/imports/api/library/methods/updateReferenceNode';

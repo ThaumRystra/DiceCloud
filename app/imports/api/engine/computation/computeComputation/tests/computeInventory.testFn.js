@@ -1,9 +1,10 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import computeCreatureComputation from '../../computeCreatureComputation.js';
-import clean from '../../utility/cleanProp.testFn.js';
+import computeCreatureComputation from '../../computeCreatureComputation';
+import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties, compareOrder } from '/imports/api/parenting/parentingFunctions';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
@@ -13,9 +14,8 @@ export default function(){
   assert.equal(scope('valueEquipment'), 3);
 
   assert.equal(scope('itemsAttuned'), 1);
-
-  assert.equal(prop('childContainerId').carriedWeight, 69);
-  assert.equal(prop('childContainerId').contentsWeight, 69);
+  assert.equal(prop('childContainerId').carriedWeight, 69, 'Calculates container carried weight correctly');
+  assert.equal(prop('childContainerId').contentsWeight, 69, 'Calculates container contents weight correctly');
 
   assert.equal(scope('weightCarried'), 104);
   assert.equal(scope('valueCarried'), 129);
@@ -32,7 +32,6 @@ var testProperties = [
     attuned: true,
     weight: 2,
     value: 3,
-    ancestors: [{id: 'charId'}],
   }),
   clean({
     _id: 'containerId',
@@ -40,22 +39,13 @@ var testProperties = [
     carried: true,
     weight: 5,
     value: 7,
-    ancestors: [{id: 'charId'}],
-  }),
-  clean({
-    _id: 'childContainerId',
-    type: 'container',
-    carried: true,
-    weight: 11,
-    value: 13,
-    ancestors: [{id: 'charId'}, {id: 'containerId'}],
   }),
   clean({
     _id: 'childItemId',
     type: 'item',
     weight: 17,
     value: 19,
-    ancestors: [{id: 'charId'}, {id: 'containerId'}],
+    parentId: 'containerId',
   }),
   clean({
     _id: 'grandchildItemId',
@@ -63,6 +53,16 @@ var testProperties = [
     weight: 23, // 69 total
     value: 29, // 87 total
     quantity: 3,
-    ancestors: [{id: 'charId'}, {id: 'containerId'}, {id: 'childContainerId'}],
+    parentId: 'childContainerId',
+  }),
+  clean({
+    _id: 'childContainerId',
+    type: 'container',
+    carried: true,
+    weight: 11,
+    value: 13,
+    parentId: 'containerId',
   }),
 ];
+applyNestedSetProperties(testProperties);
+testProperties.sort(compareOrder);

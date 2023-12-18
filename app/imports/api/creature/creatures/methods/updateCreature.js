@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
 const updateCreature = new ValidatedMethod({
   name: 'creatures.update',

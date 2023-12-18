@@ -50,8 +50,8 @@
 </template>
 
 <script lang="js">
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 
 export default {

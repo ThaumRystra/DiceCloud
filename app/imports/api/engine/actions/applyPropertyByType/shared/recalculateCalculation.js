@@ -1,13 +1,12 @@
-import logErrors from './logErrors.js';
-import { Context, toPrimitiveOrString } from '/imports/parser/resolve.js';
+import logErrors from './logErrors';
+import { toPrimitiveOrString } from '/imports/parser/resolve';
 import {
   aggregateCalculationEffects,
   aggregateCalculationProficiencies,
   resolveCalculationNode,
-} from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js';
+} from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
-import resolve from '/imports/parser/resolve.js';
-import { getEffectiveActionScope } from '/imports/api/engine/actions/Actions';
+import resolve from '/imports/parser/resolve';
 
 // TODO move this whole file to Actions.ts
 // Redo the work of imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js

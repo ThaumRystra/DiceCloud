@@ -31,7 +31,7 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
 import ActionViewer from './ActionViewer.vue';
 
 const levelText = [

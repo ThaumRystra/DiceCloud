@@ -1,10 +1,10 @@
-import '/imports/api/simpleSchemaConfig.js';
-//import testTypes from './testTypes/index.js';
-import applyTriggers from '/imports/api/engine/actions/applyTriggers.testFn.js';
-import { doActionWork } from './doAction.js';
-import { CreatureLogSchema } from '/imports/api/creature/log/CreatureLogs.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import '/imports/api/simpleSchemaConfig';
+//import testTypes from './testTypes/index';
+import applyTriggers from '/imports/api/engine/actions/applyTriggers.testFn';
+import { doActionWork } from './doAction';
+import { CreatureLogSchema } from '/imports/api/creature/log/CreatureLogs';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 
 function cleanProp(prop) {
   let schema = CreatureProperties.simpleSchema(prop);

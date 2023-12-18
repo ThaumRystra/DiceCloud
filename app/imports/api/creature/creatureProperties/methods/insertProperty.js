@@ -1,14 +1,12 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import SimpleSchema from 'simpl-schema';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { getAncestry } from '/imports/api/parenting/parenting.js';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
-import { getHighestOrder } from '/imports/api/parenting/order.js';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { fetchDocByRef, rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
@@ -25,27 +23,23 @@ const insertProperty = new ValidatedMethod({
     timeInterval: 5000,
   },
   run({ creatureProperty, parentRef }) {
-    // get the new ancestry for the properties
-    let { parentDoc, ancestors } = getAncestry({ parentRef });
+    let rootCreature;
+    const parentDoc = fetchDocByRef(parentRef);
 
     // Check permission to edit
-    let rootCreature;
     if (parentRef.collection === 'creatures') {
       rootCreature = parentDoc;
     } else if (parentRef.collection === 'creatureProperties') {
       rootCreature = getRootCreatureAncestor(parentDoc);
+      creatureProperty.parentId = parentDoc._id;
     } else {
       throw `${parentRef.collection} is not a valid parent collection`
     }
     assertEditPermission(rootCreature, this.userId);
 
-    creatureProperty.parent = parentRef;
-    creatureProperty.ancestors = ancestors;
+    creatureProperty.root = { collection: 'creatures', id: rootCreature._id };
 
-    return insertPropertyWork({
-      property: creatureProperty,
-      creature: rootCreature,
-    });
+    return insertPropertyWork(creatureProperty);
   },
 });
 
@@ -77,18 +71,17 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
   },
   run({ creatureProperty, creatureId, tag, tagDefaultName }) {
     let parentRef = getParentRefByTag(creatureId, tag);
+    let insertFolderFirst = false;
 
     if (!parentRef) {
       // Use the creature as the parent and mark that we need to insert the folder first later
-      var insertFolderFirst = true;
+      insertFolderFirst = true;
       parentRef = { id: creatureId, collection: 'creatures' };
     }
 
-    // get the new ancestry for the properties
-    let { parentDoc, ancestors } = getAncestry({ parentRef });
-
     // Check permission to edit
     let rootCreature;
+    const parentDoc = fetchDocByRef(parentRef);
     if (parentRef.collection === 'creatures') {
       rootCreature = parentDoc;
     } else if (parentRef.collection === 'creatureProperties') {
@@ -98,46 +91,34 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
     }
     assertEditPermission(rootCreature, this.userId);
 
+    const root = { collection: 'creatures', id: rootCreature._id };
+
     // Add the folder first if we need to
     if (insertFolderFirst) {
-      let order = getHighestOrder({
-        collection: CreatureProperties,
-        ancestorId: parentRef.id,
-      }) + 1;
       let id = CreatureProperties.insert({
         type: 'folder',
         name: tagDefaultName || (tag.charAt(0).toUpperCase() + tag.slice(1)),
         tags: [tag],
-        parent: parentRef,
-        ancestors: [parentRef],
-        order,
+        // parentId: undefined,
+        root,
       });
       // Make the folder our new parent
-      let newParentRef = { id, collection: 'creatureProperties' };
-      ancestors = [parentRef, newParentRef];
-      parentRef = newParentRef;
-      creatureProperty.order = order + 1;
+      parentRef = { id, collection: 'creatureProperties' };
     }
 
-    creatureProperty.parent = parentRef;
-    creatureProperty.ancestors = ancestors;
+    creatureProperty.root = root;
+    creatureProperty.parentId = parentRef.id;
 
-    return insertPropertyWork({
-      property: creatureProperty,
-      creature: rootCreature,
-    });
+    return insertPropertyWork(creatureProperty);
   },
 });
 
-export function insertPropertyWork({ property, creature }) {
+export function insertPropertyWork(property) {
   delete property._id;
   property.dirty = true;
   let _id = CreatureProperties.insert(property);
   // Tree structure changed by insert, reorder the tree
-  reorderDocs({
-    collection: CreatureProperties,
-    ancestorId: creature._id,
-  });
+  rebuildNestedSets(CreatureProperties, property.root.id);
   return _id;
 }
 

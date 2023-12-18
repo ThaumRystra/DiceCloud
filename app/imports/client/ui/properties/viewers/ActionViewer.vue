@@ -118,15 +118,15 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js';
-import doAction from '/imports/api/engine/actions/doAction.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
+import doAction from '/imports/api/engine/actions/doAction';
 import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
-import doCastSpell from '/imports/api/engine/actions/doCastSpell.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import doCastSpell from '/imports/api/engine/actions/doCastSpell';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

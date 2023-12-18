@@ -44,7 +44,7 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Invites, { getInviteToken, revokeInvite } from '/imports/api/users/Invites.js';
+import Invites, { getInviteToken, revokeInvite } from '/imports/api/users/Invites';
 
 export default {
   components: {

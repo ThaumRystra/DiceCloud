@@ -1,5 +1,5 @@
 import { has } from 'lodash';
-import resolveCalculationNode from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js';
+import { resolveCalculationNode } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 
 export default function computePointBuy(computation, node) {
   const prop = node.data;

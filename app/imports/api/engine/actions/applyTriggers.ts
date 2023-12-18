@@ -1,13 +1,13 @@
-import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js';
-import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations.js';
-import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import applyProperty from '/imports/api/engine/actions/applyProperty.js';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
+import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
+import { getPropertyDescendants } from '/imports/api/engine/loadCreatures';
+import { TreeNode, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import applyProperty from '/imports/api/engine/actions/applyProperty';
 import { difference, intersection } from 'lodash';
-import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 
-export async function applyNodeTriggers(node, timing, actionContext) {
-  const prop = node.node;
+export function applyNodeTriggers(node: TreeNode<any>, timing, actionContext) {
+  const prop = node.doc;
   const type = prop.type;
   const triggers = actionContext.triggers?.doActionProperty?.[type]?.[timing];
   if (triggers) {
@@ -68,7 +68,7 @@ export async function applyTrigger(trigger, prop, actionContext) {
   if (!trigger.silent) actionContext.addLog(content);
 
   // Get all the trigger's properties and apply them
-  const properties = getPropertyDecendants(actionContext.creature._id, trigger._id);
+  const properties = getPropertyDescendants(actionContext.creature._id, trigger._id);
   properties.sort((a, b) => a.order - b.order);
   const propertyForest = nodeArrayToTree(properties);
   for (const node of propertyForest) {

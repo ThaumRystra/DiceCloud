@@ -27,8 +27,8 @@
 </template>
 
 <script lang="js">
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
 export default {

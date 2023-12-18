@@ -57,8 +57,8 @@
 </template>
 
 <script lang="js">
-import saveListMixin from '/imports/client/ui/properties/forms/shared/lists/saveListMixin.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import saveListMixin from '/imports/client/ui/properties/forms/shared/lists/saveListMixin';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 
 export default {
   mixins: [saveListMixin, propertyFormMixin],

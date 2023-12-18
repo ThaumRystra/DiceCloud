@@ -38,7 +38,7 @@
 </template>
 
 <script lang="js">
-import Tabletops from '/imports/api/tabletop/Tabletops.js';
+import Tabletops from '/imports/api/tabletop/Tabletops';
 import TabletopComponent from '/imports/client/ui/tabletop/TabletopComponent.vue';
 
 export default {

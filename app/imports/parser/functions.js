@@ -1,5 +1,5 @@
-import resolve from '/imports/parser/resolve.js'
-import rollDice from '/imports/parser/rollDice.js';
+import resolve from '/imports/parser/resolve'
+import rollDice from '/imports/parser/rollDice';
 
 export default {
   'abs': {

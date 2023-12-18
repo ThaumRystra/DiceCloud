@@ -1,10 +1,10 @@
-import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
-export default async function applyNote(node, actionContext) {
-  await applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+export default function applyNote(node, actionContext) {
+  applyNodeTriggers(node, 'before', actionContext);
+  const prop = node.doc
 
   // Log Name, summary
   let content = { name: prop.name };

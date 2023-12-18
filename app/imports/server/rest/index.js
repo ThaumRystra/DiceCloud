@@ -1,2 +1,2 @@
-import './restLogin.js';
-import './apiPublications/index.js';
+import './restLogin';
+import './apiPublications/index';

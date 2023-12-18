@@ -63,7 +63,7 @@ import AttributeCardContent from '/imports/client/ui/properties/components/attri
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import FolderGroupChildren from '/imports/client/ui/properties/components/folders/folderGroupComponents/FolderGroupChildren.vue';
 
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
 
 export default {
   components: {

@@ -49,8 +49,8 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 
 export default {
   mixins: [treeNodeViewMixin],

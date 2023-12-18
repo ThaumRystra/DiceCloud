@@ -1,15 +1,14 @@
-import applyProperty from '../applyProperty.js';
-import recalculateCalculation from './shared/recalculateCalculation.js';
-import rollDice from '/imports/parser/rollDice.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import getUserInput from '/imports/api/engine/actions/getUserInput';
+import applyProperty from '../applyProperty';
+import recalculateCalculation from './shared/recalculateCalculation';
+import rollDice from '/imports/parser/rollDice';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default async function applyBranch(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const scope = actionContext.scope;
   const targets = actionContext.targets;
-  const prop = node.node;
+  const prop = node.doc
   switch (prop.branchType) {
     case 'if':
       recalculateCalculation(prop.condition, actionContext);

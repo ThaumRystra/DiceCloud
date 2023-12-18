@@ -139,8 +139,8 @@ import {
   setPublic,
   setReadersCanCopy,
   updateUserSharePermissions
-} from '/imports/api/sharing/sharing.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+} from '/imports/api/sharing/sharing';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 
 export default {

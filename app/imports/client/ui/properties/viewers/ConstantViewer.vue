@@ -15,7 +15,7 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
 
 export default {
   mixins: [propertyViewerMixin],

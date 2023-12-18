@@ -20,8 +20,8 @@
 
 <script lang="js">
 import ItemTreeNode from '/imports/client/ui/properties/treeNodeViews/ItemTreeNode.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import selectAmmoItem from '/imports/api/creature/creatureProperties/methods/selectAmmoItem.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import selectAmmoItem from '/imports/api/creature/creatureProperties/methods/selectAmmoItem';
 import { findIndex } from 'lodash';
 export default {
   components: {

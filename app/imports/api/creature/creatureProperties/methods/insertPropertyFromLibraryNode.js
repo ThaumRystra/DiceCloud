@@ -1,19 +1,17 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import {
-  setLineageOfDocs,
-  getAncestry,
-  renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+  renewDocIds,
+  fetchDocByRef,
+  rebuildNestedSets,
+  getFilter
+} from '/imports/api/parenting/parentingFunctions';
 import { union } from 'lodash';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
@@ -30,19 +28,15 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     parentRef: {
       type: RefSchema,
     },
-    order: {
-      type: Number,
-      optional: true,
-    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ nodeIds, parentRef, order }) {
+  run({ nodeIds, parentRef }) {
     // get the new ancestry for the properties
-    let { parentDoc, ancestors } = getAncestry({ parentRef });
+    const parentDoc = fetchDocByRef(parentRef);
 
     // Check permission to edit
     let rootCreature;
@@ -55,37 +49,32 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     }
     assertEditPermission(rootCreature, this.userId);
 
-    // {libraryId: hasViewPermission}
-    //let libraryPermissionMemoir = {};
+    const root = { collection: 'creatures', id: rootCreature._id };
+    const parentId = parentRef.id;
+
     let node;
     nodeIds.forEach(nodeId => {
-      // TODO: Check library view permission for each node before starting
-      node = insertPropertyFromNode(nodeId, ancestors, order);
+      node = insertPropertyFromNode(nodeId, root, parentId);
     });
-
-    // get one of the root inserted docs
-    let rootId = node._id;
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: CreatureProperties,
-      ancestorId: rootCreature._id,
-    });
-    // Return the docId of the last property, the inserted root property
-    return rootId;
+    rebuildNestedSets(CreatureProperties, rootCreature._id);
+
+    // get one of the root inserted docs
+    const lastInsertedId = node?._id;
+    return lastInsertedId;
   },
 });
 
-function insertPropertyFromNode(nodeId, ancestors, order) {
-  // Fetch the library node and its decendents, provided they have not been
+function insertPropertyFromNode(nodeId, root, parentId) {
+  // Fetch the library node and its descendants, provided they have not been
   // removed
-  // TODO: Check permission to read the library this node is in
   let node = LibraryNodes.findOne({
     _id: nodeId,
     removed: { $ne: true },
   });
   if (!node) {
-    if (Meteor.isClient) return;
+    if (Meteor.isClient) return {};
     else {
       throw new Meteor.Error(
         'Insert property from library failed',
@@ -93,12 +82,11 @@ function insertPropertyFromNode(nodeId, ancestors, order) {
       );
     }
   }
-  let oldParent = node.parent;
+
   let nodes = LibraryNodes.find({
-    'ancestors.id': nodeId,
+    ...getFilter.descendants(node),
     removed: { $ne: true },
   }).fetch();
-
 
   // The root node is first in the array of nodes
   // It must get the first generated ID to prevent flickering
@@ -112,31 +100,17 @@ function insertPropertyFromNode(nodeId, ancestors, order) {
   // set libraryNodeIds
   storeLibraryNodeReferences(nodes);
 
-  // re-map all the ancestors
-  setLineageOfDocs({
-    docArray: nodes,
-    newAncestry: ancestors,
-    oldParent,
-  });
-
   // Give the docs new IDs without breaking internal references
   renewDocIds({
     docArray: nodes,
     collectionMap: { 'libraryNodes': 'creatureProperties' }
   });
 
-  // Order the root node
-  if (order === undefined) {
-    setDocToLastOrder({
-      collection: CreatureProperties,
-      doc: node,
-    });
-  } else {
-    node.order = order;
-  }
+  // Mark root node as dirty
+  node.dirty = true;
 
-  // Mark all nodes as dirty
-  dirtyNodes(nodes);
+  // Move the root node to the end of the order
+  node.left = Number.MAX_SAFE_INTEGER;
 
   // Insert the creature properties
   CreatureProperties.batchInsert(nodes);
@@ -147,12 +121,6 @@ function storeLibraryNodeReferences(nodes) {
   nodes.forEach(node => {
     if (node.libraryNodeId) return;
     node.libraryNodeId = node._id;
-  });
-}
-
-function dirtyNodes(nodes) {
-  nodes.forEach(node => {
-    node.dirty = true;
   });
 }
 
@@ -178,7 +146,6 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     let referencedNode
     try {
       referencedNode = fetchDocByRef(node.ref);
-      referencedNode.order = node.order;
       referencedNode.tags = union(node.tags, referencedNode.tags);
       // We are definitely replacing this node, so add it to the list
       visitedRefs.add(node._id);
@@ -188,23 +155,15 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     }
 
     // Get all the descendants of the referenced node
-    let descendents = LibraryNodes.find({
-      'ancestors.id': referencedNode._id,
+    let descendants = LibraryNodes.find({
+      ...getFilter.descendants(referencedNode),
       removed: { $ne: true },
     }, {
       sort: { order: 1 },
     }).fetch();
 
     // We are adding the referenced node and its descendants
-    let addedNodes = [referencedNode, ...descendents];
-
-    // re-map all the ancestors to parent the new sub-tree into our existing
-    // node tree
-    setLineageOfDocs({
-      docArray: addedNodes,
-      newAncestry: node.ancestors,
-      oldParent: referencedNode.parent,
-    });
+    let addedNodes = [referencedNode, ...descendants];
 
     // Filter all the looped references
     addedNodes = addedNodes.filter(addedNode => {

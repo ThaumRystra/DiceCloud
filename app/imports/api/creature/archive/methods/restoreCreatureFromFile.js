@@ -1,20 +1,20 @@
-import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
+import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import Experiences from '/imports/api/creature/experience/Experiences.js';
-import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
-import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
-import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
+import Experiences from '/imports/api/creature/experience/Experiences';
+import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
+import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety';
 
 let migrateArchive;
 if (Meteor.isServer) {
-  migrateArchive = require('/imports/migrations/archive/migrateArchive.js').default;
+  migrateArchive = require('/imports/migrations/archive/migrateArchive').default;
 }
 
 function restoreCreature(archive, userId) {

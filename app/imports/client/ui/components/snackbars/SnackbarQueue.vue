@@ -42,7 +42,7 @@
 
 <script lang="js">
 // Modified from https://gitlab.com/tozd/vue/snackbar-queue
-import { globalState } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { globalState } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
 
 export default {

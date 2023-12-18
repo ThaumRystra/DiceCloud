@@ -135,13 +135,13 @@
 </template>
 
 <script lang="js">
-import SVG_ICONS from '/imports/constants/SVG_ICONS.js';
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
+import SVG_ICONS from '/imports/constants/SVG_ICONS';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
-import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

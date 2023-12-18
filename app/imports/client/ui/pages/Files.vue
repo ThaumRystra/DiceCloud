@@ -99,16 +99,16 @@
 </template>
 
 <script lang="js">
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import UserImages from '/imports/api/files/UserImages.js';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import UserImages from '/imports/api/files/UserImages';
 import prettyBytes from 'pretty-bytes';
 import ArchiveFileCard from '/imports/client/ui/files/ArchiveFileCard.vue';
 import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
 import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
 import UserImageCard from '/imports/client/ui/files/UserImageCard.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import migrateArchive from '/imports/migrations/archive/migrateArchive.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import migrateArchive from '/imports/migrations/archive/migrateArchive';
 
 export default {
   components: {

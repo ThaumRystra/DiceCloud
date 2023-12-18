@@ -90,8 +90,8 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import Libraries from '/imports/api/library/Libraries';
 import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
 
 export default {

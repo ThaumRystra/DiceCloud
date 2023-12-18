@@ -123,10 +123,10 @@
 </template>
 
 <script lang="js">
-import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import saveListMixin from '/imports/client/ui/properties/forms/shared/lists/saveListMixin.js';
+import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import saveListMixin from '/imports/client/ui/properties/forms/shared/lists/saveListMixin';
 
 export default {
   mixins: [propertyFormMixin, saveListMixin],

@@ -72,16 +72,17 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
-import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 import PrintedLineItem from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedLineItem.vue';
 import PrintedContainer from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedContainer.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -101,10 +102,11 @@ export default {
       organize: false,
     }
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     containers() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'container',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -125,10 +127,8 @@ export default {
     },
     containersWithoutAncestorContainers() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.containerIds
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.containers),
         type: 'container',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -150,10 +150,8 @@ export default {
     },
     carriedItems() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.containerIds
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.containers),
         type: 'item',
         equipped: { $ne: true },
         removed: { $ne: true },
@@ -165,9 +163,7 @@ export default {
     },
     equippedItems() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'item',
         equipped: true,
         removed: { $ne: true },
@@ -198,9 +194,6 @@ export default {
     },
   },
   computed: {
-    containerIds() {
-      return this.containers.map(container => container._id);
-    },
     weightCarried() {
       return stripFloatingPointOddities(
         this.variables &&

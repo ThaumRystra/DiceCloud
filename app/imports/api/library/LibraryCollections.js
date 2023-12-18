@@ -1,11 +1,11 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import SharingSchema from '/imports/api/sharing/SharingSchema.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
-import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js'
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import SharingSchema from '/imports/api/sharing/SharingSchema';
+import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin';
+import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions';
+import { getUserTier } from '/imports/api/users/patreon/tiers'
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 /**
  * LibraryCollections are groups of libraries that are subscribed together at once

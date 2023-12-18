@@ -30,7 +30,7 @@
 
 <script lang="js">
 import AttributeConsumedForm from '/imports/client/ui/properties/forms/AttributeConsumedForm.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 
 export default {
   components: {

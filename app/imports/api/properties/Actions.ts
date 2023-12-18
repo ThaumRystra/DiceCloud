@@ -1,13 +1,60 @@
 import SimpleSchema from 'simpl-schema';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
-import { storedIconsSchema } from '/imports/api/icons/Icons.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import { storedIconsSchema } from '/imports/api/icons/Icons';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { InlineCalculation } from '/imports/api/properties/subSchemas/inlineCalculationField';
+import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
+
+export interface Action extends ActionBase {
+  type: 'action'
+}
+
+export interface ActionBase extends CreatureProperty {
+  name?: string
+  summary?: InlineCalculation
+  description?: InlineCalculation
+  actionType: 'action' | 'bonus' | 'attack' | 'reaction' | 'free' | 'long' | 'event'
+  variableName?: string
+  target: 'self' | 'singleTarget' | 'multipleTargets'
+  attackRoll?: CalculatedField
+  uses?: CalculatedField
+  usesUsed?: number
+  reset?: string
+  silent?: boolean
+  insufficientResources?: boolean
+  usesLeft?: number
+  overridden?: boolean
+  // Resources
+  resources: {
+    itemsConsumed: {
+      _id: string
+      tag?: string
+      itemName?: string
+      quantity?: CalculatedField
+      itemId?: string
+      available?: number
+    }[]
+    attributesConsumed: {
+      _id: string
+      variableName?: string
+      quantity?: CalculatedField
+      available?: number
+      statName?: string
+    }[]
+    conditions?: {
+      _id: string,
+      condition?: CalculatedField
+      conditionNote?: string,
+    }[]
+  }
+}
 
 /*
  * Actions are things a character can do
  */
-let ActionSchema = createPropertySchema({
+const ActionSchema = createPropertySchema({
   name: {
     type: String,
     optional: true,

@@ -50,11 +50,12 @@
 
 <script lang="js">
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import SpellListCard from '/imports/client/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
 import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -76,10 +77,11 @@ export default {
       tabName: 'spells',
     }
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     folderIds() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -89,7 +91,7 @@ export default {
     },
     hasSpellSlots() {
       return !!CreatureProperties.findOne({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         inactive: { $ne: true },
         removed: { $ne: true },
         overridden: { $ne: true },
@@ -100,10 +102,8 @@ export default {
     },
     spellSlots() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        'parentId': {
           $nin: this.folderIds,
         },
         inactive: { $ne: true },
@@ -121,22 +121,20 @@ export default {
     },
     spellLists() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        'parentId': {
           $nin: this.folderIds,
         },
         type: 'spellList',
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
-        sort: { order: 1 }
-      });
+        sort: { left: 1 }
+      }).fetch();
     },
     hasSpells() {
       return !!CreatureProperties.findOne({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'spell',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -144,11 +142,9 @@ export default {
     },
     spellsWithoutList() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.spellListIds,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.spellLists),
+        parentId: {
           $nin: this.folderIds,
         },
         type: 'spell',
@@ -164,11 +160,9 @@ export default {
     },
     spellListsWithoutAncestorSpellLists() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.spellListIds,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.spellLists),
+        parentId: {
           $nin: this.folderIds,
         },
         type: 'spellList',

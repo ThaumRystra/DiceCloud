@@ -1,8 +1,8 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 
 const updateCreatureProperty = new ValidatedMethod({
   name: 'creatureProperties.update',
@@ -14,6 +14,8 @@ const updateCreatureProperty = new ValidatedMethod({
       case 'order':
       case 'parent':
       case 'ancestors':
+      case 'root':
+      case 'parentId':
       case 'damage':
         throw new Meteor.Error('Permission denied',
           'This property can\'t be updated directly');
@@ -27,7 +29,7 @@ const updateCreatureProperty = new ValidatedMethod({
   run({ _id, path, value }) {
     // Permission
     let property = CreatureProperties.findOne(_id, {
-      fields: { type: 1, ancestors: 1 }
+      fields: { type: 1, root: 1 }
     });
     let rootCreature = getRootCreatureAncestor(property);
     assertEditPermission(rootCreature, this.userId);

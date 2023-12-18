@@ -61,7 +61,7 @@
 </template>
 
 <script lang="js">
-import '/imports/api/users/Users.js';
+import '/imports/api/users/Users';
 import Sidebar from '/imports/client/ui/layouts/Sidebar.vue';
 import DialogStack from '/imports/client/ui/dialogStack/DialogStack.vue';
 import { mapMutations } from 'vuex';

@@ -12,7 +12,7 @@ export default function aggregateDefinition({ node, linkedNode, link }) {
     !definingProp ||
     prop.type !== 'pointBuyRow' && (
       definingProp.type === 'pointBuyRow' ||
-      prop.order > definingProp.order
+      prop.left > definingProp.left
     )
   ) {
     // override the current defining prop

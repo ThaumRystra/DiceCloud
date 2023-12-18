@@ -1,5 +1,5 @@
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import getUserLibraryIds from './getUserLibraryIds';
 import { intersection, union } from 'lodash';
 

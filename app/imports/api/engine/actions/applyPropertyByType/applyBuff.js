@@ -1,24 +1,22 @@
 import {
-  setLineageOfDocs,
-  renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
+  renewDocIds,
+} from '/imports/api/parenting/parentingFunctions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get } from 'lodash';
-import resolve, { map, toString } from '/imports/parser/resolve.js';
-import accessor from '/imports/parser/parseTree/accessor.js';
-import logErrors from './shared/logErrors.js';
-import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
-import cyrb53 from '/imports/api/engine/computation/utility/cyrb53.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
-import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
+import resolve, { map, toString } from '/imports/parser/resolve';
+import accessor from '/imports/parser/parseTree/accessor';
+import logErrors from './shared/logErrors';
+import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs';
+import cyrb53 from '/imports/api/engine/computation/utility/cyrb53';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations';
 
 export default function applyBuff(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
   let buffTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
   // Mark the buff as dirty for recalculation
@@ -26,7 +24,7 @@ export default function applyBuff(node, actionContext) {
 
   // Then copy the descendants of the buff to the targets
   let propList = [prop];
-  function addChildrenToPropList(children, { skipCrystalize } = {}) {
+  function addChildrenToPropList(children, { skipCrystalize } = { skipCrystalize: false }) {
     children.forEach(child => {
       if (skipCrystalize) child.node._skipCrystalize = true;
       propList.push(child.node);
@@ -41,13 +39,20 @@ export default function applyBuff(node, actionContext) {
     crystalizeVariables({ propList, actionContext });
   }
 
-  let oldParent = {
-    id: prop.parent.id,
-    collection: prop.parent.collection,
-  };
   buffTargets.forEach(target => {
+    const targetPropList = EJSON.clone(propList);
+    // Move the properties to the target by replacing the old subtree parent and root with the '
+    // target id
+    renewDocIds({
+      docArray: targetPropList,
+      idMap: {
+        [prop.parentId]: target._id,
+        [prop.root.id]: target._id,
+      },
+      collectionMap: { [prop.root.collection]: 'creatures' }
+    });
     // Apply the buff
-    copyNodeListToTarget(propList, target, oldParent);
+    CreatureProperties.batchInsert(targetPropList);
 
     //Log the buff
     let logValue = prop.description?.value
@@ -80,23 +85,6 @@ export default function applyBuff(node, actionContext) {
   applyNodeTriggers(node, 'afterChildren', actionContext);
 
   // Don't apply the children of the buff, they get copied to the target instead
-}
-
-function copyNodeListToTarget(propList, target, oldParent) {
-  let ancestry = [{ collection: 'creatures', id: target._id }];
-  setLineageOfDocs({
-    docArray: propList,
-    newAncestry: ancestry,
-    oldParent,
-  });
-  renewDocIds({
-    docArray: propList,
-  });
-  setDocToLastOrder({
-    collection: CreatureProperties,
-    doc: propList[0],
-  });
-  CreatureProperties.batchInsert(propList);
 }
 
 /**

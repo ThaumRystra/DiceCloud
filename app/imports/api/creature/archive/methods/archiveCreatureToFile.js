@@ -1,21 +1,22 @@
-import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
+import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertOwnership } from '/imports/api/creature/creatures/creaturePermissions.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import Experiences from '/imports/api/creature/experience/Experiences.js';
-import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
+import { assertOwnership } from '/imports/api/creature/creatures/creaturePermissions';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
+import Experiences from '/imports/api/creature/experience/Experiences';
+import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export function getArchiveObj(creatureId){
+export function getArchiveObj(creatureId) {
   // Build the archive document
   const creature = Creatures.findOne(creatureId);
-  const properties = CreatureProperties.find({'ancestors.id': creatureId}).fetch();
-  const experiences = Experiences.find({creatureId}).fetch();
-  const logs = CreatureLogs.find({creatureId}).fetch();
+  const properties = CreatureProperties.find({ ...getFilter.descendantsOfRoot(creatureId) }).fetch();
+  const experiences = Experiences.find({ creatureId }).fetch();
+  const logs = CreatureLogs.find({ creatureId }).fetch();
   let archiveCreature = {
     meta: {
       type: 'DiceCloud V2 Creature Archive',
@@ -31,7 +32,7 @@ export function getArchiveObj(creatureId){
   return archiveCreature;
 }
 
-export function archiveCreature(creatureId){
+export function archiveCreature(creatureId) {
   const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
   ArchiveCreatureFiles.write(buffer, {
@@ -44,7 +45,7 @@ export function archiveCreature(creatureId){
       creatureName: archive.creature.name,
     },
   }, (error) => {
-    if (error){
+    if (error) {
       throw error;
     } else {
       removeCreatureWork(creatureId);
@@ -65,10 +66,10 @@ const archiveCreatureToFile = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  async run({creatureId}) {
+  async run({ creatureId }) {
     assertOwnership(creatureId, this.userId);
-    if (Meteor.isServer){
-      archiveCreature(creatureId, this.userId);
+    if (Meteor.isServer) {
+      archiveCreature(creatureId);
     } else {
       removeCreatureWork(creatureId);
     }

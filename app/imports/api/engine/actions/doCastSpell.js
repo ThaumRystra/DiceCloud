@@ -1,15 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import {
-  getProperyAncestors, getPropertyDecendants
-} from '/imports/api/engine/loadCreatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import { doActionWork } from '/imports/api/engine/actions/doAction.js';
-import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+  getPropertyAncestors, getPropertyDescendants
+} from '/imports/api/engine/loadCreatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import { doActionWork } from '/imports/api/engine/actions/doAction';
+import ActionContext from '/imports/api/engine/actions/ActionContext';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doCastSpell',
@@ -48,7 +48,7 @@ const doAction = new ValidatedMethod({
   run({ spellId, slotId, ritual, targetIds = [], scope = {} }) {
     // Get action context
     let spell = CreatureProperties.findOne(spellId);
-    const creatureId = spell.ancestors[0].id;
+    const creatureId = spell.root.id;
     const actionContext = new ActionContext(creatureId, targetIds, this);
 
     // Check permissions
@@ -57,10 +57,10 @@ const doAction = new ValidatedMethod({
       assertEditPermission(target, this.userId);
     });
 
-    const ancestors = getProperyAncestors(creatureId, spell._id);
+    const ancestors = getPropertyAncestors(creatureId, spell._id);
     ancestors.sort((a, b) => a.order - b.order);
 
-    const properties = getPropertyDecendants(creatureId, spell._id);
+    const properties = getPropertyDescendants(creatureId, spell._id);
     properties.push(spell);
     properties.sort((a, b) => a.order - b.order);
 

@@ -73,8 +73,8 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
 export default {
   mixins: [propertyFormMixin],

@@ -1,8 +1,8 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Libraries, { removeLibaryWork } from '/imports/api/library/Libraries.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature.js';
+import Libraries, { removeLibaryWork } from '/imports/api/library/Libraries';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature';
 
 Meteor.users.deleteMyAccount = new ValidatedMethod({
   name: 'users.deleteMyAccount',

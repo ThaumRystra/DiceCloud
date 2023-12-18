@@ -1,17 +1,17 @@
 import { findLast, difference, intersection, filter } from 'lodash';
-import applyProperty from '../applyProperty.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import { getProperyAncestors, getPropertiesOfType } from '/imports/api/engine/loadCreatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { softRemove } from '/imports/api/parenting/softRemove.js';
-import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
+import applyProperty from '../applyProperty';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import { getPropertyAncestors, getPropertiesOfType } from '/imports/api/engine/loadCreatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { softRemove } from '/imports/api/parenting/softRemove';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
 
 export default function applyBuffRemover(node, actionContext) {
   // Apply triggers
   applyNodeTriggers(node, 'before', actionContext);
 
-  const prop = node.node;
+  const prop = node.doc
 
   // Log Name
   if (prop.name && !prop.silent) {
@@ -21,7 +21,7 @@ export default function applyBuffRemover(node, actionContext) {
   // Remove buffs
   if (prop.targetParentBuff) {
     // Remove nearest ancestor buff
-    const ancestors = getProperyAncestors(actionContext.creature._id, prop._id);
+    const ancestors = getPropertyAncestors(actionContext.creature._id, prop._id);
     const nearestBuff = findLast(ancestors, ancestor => ancestor.type === 'buff');
     if (!nearestBuff) {
       actionContext.addLog({

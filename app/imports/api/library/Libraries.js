@@ -1,12 +1,13 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import SharingSchema from '/imports/api/sharing/SharingSchema.js';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin.js';
-import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js'
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import SharingSchema from '/imports/api/sharing/SharingSchema';
+import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin';
+import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { getUserTier } from '/imports/api/users/patreon/tiers'
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 /**
  * Libraries are trees of library nodes where each node represents a character
@@ -160,7 +161,7 @@ const removeLibrary = new ValidatedMethod({
 
 export function removeLibaryWork(libraryId) {
   Libraries.remove(libraryId);
-  LibraryNodes.remove({ 'ancestors.id': libraryId });
+  LibraryNodes.remove(getFilter.descendantsOfRoot(libraryId));
 }
 
 export { LibrarySchema, insertLibrary, updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary };

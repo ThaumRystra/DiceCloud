@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import dialogStackStore from '/imports/client/ui/dialogStack/dialogStackStore.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import dialogStackStore from '/imports/client/ui/dialogStack/dialogStackStore';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 const tabs = ['stats', 'actions', 'spells', 'inventory', 'features', 'journal', 'build', 'tree'];
 const tabsWithoutSpells = ['stats', 'actions', 'inventory', 'features', 'journal', 'build', 'tree'];
 

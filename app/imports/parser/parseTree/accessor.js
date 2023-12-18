@@ -1,6 +1,6 @@
-import constant from './constant.js';
-import array from './array.js';
-import resolve from '../resolve.js';
+import constant from './constant';
+import array from './array';
+import resolve from '../resolve';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 
 const accessor = {
@@ -39,10 +39,7 @@ const accessor = {
     // Return a parse node based on the constant type returned
     if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
       return {
-        result: constant.create({
-          value,
-          valueType
-        }),
+        result: constant.create({ value }),
         context,
       };
     }

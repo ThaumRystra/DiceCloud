@@ -67,10 +67,10 @@
 
 <script lang="js">
 import { union } from 'lodash';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections.js';
-import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections';
+import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
 
 export default {

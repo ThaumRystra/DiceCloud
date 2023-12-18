@@ -1,12 +1,12 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Libraries from '/imports/api/library/Libraries.js';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import '/imports/api/users/methods/deleteMyAccount.js';
-import '/imports/api/users/methods/addEmail.js';
-import '/imports/api/users/methods/removeEmail.js';
-import '/imports/api/users/methods/updateFileStorageUsed.js';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import '/imports/api/users/methods/deleteMyAccount';
+import '/imports/api/users/methods/addEmail';
+import '/imports/api/users/methods/removeEmail';
+import '/imports/api/users/methods/updateFileStorageUsed';
 import { some } from 'lodash';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 const defaultLibraryCollections = process.env.DEFAULT_LIBRARY_COLLECTIONS && process.env.DEFAULT_LIBRARY_COLLECTIONS.split(',') || [];

@@ -83,13 +83,13 @@
 </template>
 
 <script lang="js">
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 
 export default {
@@ -169,6 +169,7 @@ export default {
   },
   meteor: {
     children() {
+      throw 'TODO: rewrite with nested sets'
       const indicesOfTerminatingProps = [];
       const decendants = CreatureProperties.find({
         'ancestors.id': this.model._id,

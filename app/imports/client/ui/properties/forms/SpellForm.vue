@@ -286,7 +286,7 @@
 
 <script lang="js">
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
 import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
 

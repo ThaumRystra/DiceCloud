@@ -1,14 +1,14 @@
-import { getPropertyDecendants } from '/imports/api/engine/loadCreatures.js';
-import applyProperty from '../applyProperty.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
+import { getPropertyDescendants } from '/imports/api/engine/loadCreatures';
+import applyProperty from '../applyProperty';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import { adjustQuantityWork } from '/imports/api/creature/creatureProperties/methods/adjustQuantity';
 
 export default function applyItemAsAmmo(node, actionContext) {
   // The item node should come without children, since it is not part of the original action tree
-  const prop = node.node;
+  const prop = node.doc
   // Get all the item's descendant properties
-  const properties = getPropertyDecendants(actionContext.creature._id, prop._id);
+  const properties = getPropertyDescendants(actionContext.creature._id, prop._id);
   properties.sort((a, b) => a.order - b.order);
   const propertyForest = nodeArrayToTree(properties);
 

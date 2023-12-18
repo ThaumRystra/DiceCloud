@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed.js';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
 
 const removeArchiveCreature = new ValidatedMethod({
   name: 'ArchiveCreatureFiles.methods.removeArchiveCreature',

@@ -84,7 +84,7 @@
 
 <script lang="js">
 import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 import chroma from 'chroma-js';
 
 export default {

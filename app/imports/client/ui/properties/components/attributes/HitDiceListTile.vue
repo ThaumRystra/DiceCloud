@@ -56,7 +56,7 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '../../../../../api/utility/numberToSignedString';
 export default {
   inject: {
     context: { default: {} }

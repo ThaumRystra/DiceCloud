@@ -1,4 +1,4 @@
-import store from '/imports/client/ui/vuexStore.js';
+import store from '/imports/client/ui/vuexStore';
 
 if (window) {
   window.onpopstate = function (event) {

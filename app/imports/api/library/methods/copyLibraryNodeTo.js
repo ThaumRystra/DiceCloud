@@ -1,23 +1,24 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import {
   assertDocCopyPermission,
   assertDocEditPermission
-} from '/imports/api/sharing/sharingPermissions.js';
+} from '/imports/api/sharing/sharingPermissions';
 import {
   setLineageOfDocs,
-  renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+  renewDocIds,
+  getFilter
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
 var snackbar;
 if (Meteor.isClient) {
   snackbar = require(
-    '/imports/client/ui/components/snackbars/SnackbarQueue.js'
+    '/imports/client/ui/components/snackbars/SnackbarQueue'
   ).snackbar
 }
 
@@ -46,12 +47,14 @@ const copyLibraryNodeTo = new ValidatedMethod({
       );
     }
     const libraryNode = LibraryNodes.findOne(_id);
+    if (!libraryNode) throw new Meteor.Error('not-found', 'Library node was not found');
+
     const parentDoc = fetchDocByRef(parent);
     assertDocCopyPermission(libraryNode, this.userId);
     assertDocEditPermission(parentDoc, this.userId);
 
     let decendants = LibraryNodes.find({
-      'ancestors.id': _id,
+      ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
@@ -69,28 +72,17 @@ const copyLibraryNodeTo = new ValidatedMethod({
 
     const nodes = [libraryNode, ...decendants];
 
-    const newAncestry = parentDoc.ancestors || [];
-    newAncestry.push(parent);
-    // re-map all the ancestors
-    setLineageOfDocs({
-      docArray: nodes,
-      newAncestry,
-      oldParent: libraryNode.parent,
-    });
-
     // Give the docs new IDs without breaking internal references
     renewDocIds({ docArray: nodes });
 
     // Order the root node
-    libraryNode.order = (parentDoc.order || 0) + 0.5;
+    libraryNode.left = Number.MAX_SAFE_INTEGER - 1;
+    libraryNode.right = Number.MAX_SAFE_INTEGER;
 
     LibraryNodes.batchInsert(nodes);
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: LibraryNodes,
-      ancestorId: parent.collection === 'libraries' ? parent.id : parentDoc.ancestors[0].id,
-    });
+    rebuildNestedSets(LibraryNodes, parentDoc.root.id);
   },
 });
 

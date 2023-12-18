@@ -25,7 +25,7 @@
 </template>
 
 <script lang="js">
-import flipToggle from '/imports/api/creature/creatureProperties/methods/flipToggle.js';
+import flipToggle from '/imports/api/creature/creatureProperties/methods/flipToggle';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
   export default {

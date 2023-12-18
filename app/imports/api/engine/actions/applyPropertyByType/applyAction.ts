@@ -1,22 +1,31 @@
-import recalculateInlineCalculations from './shared/recalculateInlineCalculations.js';
-import recalculateCalculation from './shared/recalculateCalculation.js';
-import rollDice from '/imports/parser/rollDice.js';
-import applyProperty from '../applyProperty.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature.js';
+import recalculateInlineCalculations from './shared/recalculateInlineCalculations';
+import recalculateCalculation from './shared/recalculateCalculation';
+import rollDice from '/imports/parser/rollDice';
+import applyProperty from '../applyProperty';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import { resetProperties } from '/imports/api/creature/creatures/methods/restCreature';
+import { TreeNode, hasAncestorRelationship } from '/imports/api/parenting/parentingFunctions';
+import { Action } from '/imports/api/properties/Actions';
+import { LogContent } from '/imports/api/creature/log/LogContentSchema';
+import { Item } from '/imports/api/properties/Items';
 
-export default async function applyAction(node, actionContext) {
-  await applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+interface Ammo extends Item {
+  type: 'ammo'
+  adjustment: number
+}
+
+export default function applyAction(node: TreeNode<Action>, actionContext) {
+  applyNodeTriggers(node, 'before', actionContext);
+  const prop = node.doc;
   if (prop.target === 'self') actionContext.targets = [actionContext.creature];
   const targets = actionContext.targets;
 
   // Log the name and summary
-  let content = { name: prop.name };
+  const content: LogContent = { name: prop.name, };
   if (prop.summary?.text) {
     recalculateInlineCalculations(prop.summary, actionContext);
     content.value = prop.summary.value;
@@ -27,7 +36,7 @@ export default async function applyAction(node, actionContext) {
   const failed = await spendResources(prop, actionContext);
   if (failed) return;
 
-  const attack = prop.attackRoll || prop.attackRollBonus;
+  const attack = prop.attackRoll;
 
   // Attack if there is an attack roll
   if (attack && attack.calculation) {
@@ -59,7 +68,7 @@ function applyAttackWithoutTarget({ attack, actionContext }) {
 
   recalculateCalculation(attack, actionContext);
   const scope = actionContext.scope;
-  let {
+  const {
     resultPrefix,
     result,
     criticalHit,
@@ -96,7 +105,7 @@ function applyAttackToTarget({ attack, target, actionContext }) {
 
   recalculateCalculation(attack, actionContext);
 
-  let {
+  const {
     resultPrefix,
     result,
     criticalHit,
@@ -176,7 +185,7 @@ function applyCrits(value, scope) {
     scopeCrit = scopeCrit.value;
   }
   const criticalHitTarget = scopeCrit || 20;
-  let criticalHit = value >= criticalHitTarget;
+  const criticalHit = value >= criticalHitTarget;
   let criticalMiss;
   if (criticalHit) {
     scope['~criticalHit'] = { value: true };
@@ -189,9 +198,9 @@ function applyCrits(value, scope) {
   return { criticalHit, criticalMiss };
 }
 
-async function spendResources(prop, actionContext) {
+function spendResources(prop: Action, actionContext) {
   // Check Uses
-  if (prop.usesLeft <= 0) {
+  if (!prop.usesLeft || prop.usesLeft <= 0) {
     if (!prop.silent) actionContext.addLog({
       name: 'Error',
       value: `${prop.name || 'action'} does not have enough uses left`,
@@ -207,42 +216,45 @@ async function spendResources(prop, actionContext) {
     return true;
   }
   // Items
-  let spendLog = [];
-  let gainLog = [];
-  const ammoToApply = [];
+  const spendLog: string[] = [];
+  const gainLog: string[] = [];
+  const ammoToApply: TreeNode<Ammo>[] = [];
   try {
     prop.resources.itemsConsumed.forEach(itemConsumed => {
       recalculateCalculation(itemConsumed.quantity, actionContext);
       if (!itemConsumed.itemId) {
         throw 'No ammo was selected for this prop';
       }
-      let item = CreatureProperties.findOne(itemConsumed.itemId);
-      if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
+      const item = CreatureProperties.findOne(itemConsumed.itemId) as Item;
+      if (!item || item.root.id !== prop.root.id) {
         throw 'The prop\'s ammo was not found on the creature';
       }
+
       if (
         !itemConsumed?.quantity?.value ||
-        !isFinite(itemConsumed.quantity.value)
+        !isFinite(+itemConsumed.quantity.value)
       ) return;
+      const quantityConsumed = +itemConsumed.quantity.value;
+
       let logName = item.name;
-      if (itemConsumed.quantity.value > 1 || itemConsumed.quantity.value < -1) {
+      if (quantityConsumed > 1 || quantityConsumed < -1) {
         logName = item.plural || logName;
       }
-      if (itemConsumed.quantity.value > 0) {
-        spendLog.push(logName + ': ' + itemConsumed.quantity.value);
-      } else if (itemConsumed.quantity.value < 0) {
-        gainLog.push(logName + ': ' + -itemConsumed.quantity.value);
+      if (quantityConsumed > 0) {
+        spendLog.push(logName + ': ' + quantityConsumed);
+      } else if (quantityConsumed < 0) {
+        gainLog.push(logName + ': ' + -quantityConsumed);
       }
       // So long as the item isn't an ancestor of the current prop apply it
       // If it was an ancestor this would be an infinite loop
       if (!hasAncestorRelationship(item, prop)) {
         ammoToApply.push({
-          node: {
+          doc: {
             ...item,
             // Use ammo pseudo-type
             type: 'ammo',
             // Store the adjustment to be applied
-            adjustment: itemConsumed.quantity.value,
+            adjustment: quantityConsumed,
           },
           children: []
         });
@@ -263,6 +275,7 @@ async function spendResources(prop, actionContext) {
     CreatureProperties.update(prop._id, {
       $inc: { usesUsed: 1 }
     }, {
+      //@ts-expect-error no typings for collection 2 selector
       selector: prop
     });
     if (!prop.silent) actionContext.addLog({
@@ -277,8 +290,9 @@ async function spendResources(prop, actionContext) {
     recalculateCalculation(attConsumed.quantity, actionContext);
 
     if (!attConsumed.quantity?.value) return;
+    const quantityConsumed = +attConsumed.quantity.value;
     if (!attConsumed.variableName) return;
-    let stat = actionContext.scope[attConsumed.variableName];
+    const stat = actionContext.scope[attConsumed.variableName];
     if (!stat) {
       spendLog.push(attConsumed.variableName + ': ' + ' not found');
       return;
@@ -289,10 +303,10 @@ async function spendResources(prop, actionContext) {
       value: attConsumed.quantity.value,
       actionContext,
     });
-    if (attConsumed.quantity.value > 0) {
-      spendLog.push(stat.name + ': ' + attConsumed.quantity.value);
-    } else if (attConsumed.quantity.value < 0) {
-      gainLog.push(stat.name + ': ' + -attConsumed.quantity.value);
+    if (quantityConsumed > 0) {
+      spendLog.push(stat.name + ': ' + quantityConsumed);
+    } else if (quantityConsumed < 0) {
+      gainLog.push(stat.name + ': ' + -quantityConsumed);
     }
   });
 
@@ -312,21 +326,4 @@ async function spendResources(prop, actionContext) {
     value: spendLog.join('\n'),
     inline: true,
   });
-}
-
-function hasAncestorRelationship(a, b) {
-  let top, bottom;
-  if (a.ancestors.length === b.ancestors.length) {
-    // Can't be ancestors of one another if they have the same number of ancestors
-    return false;
-  } else if (a.ancestors.length > b.ancestors.length) {
-    // longer ancestor list goes on the bottom
-    top = b;
-    bottom = a;
-  } else {
-    top = a;
-    bottom = b;
-  }
-  const expectedAncestorPosition = top.ancestors.length;
-  return bottom.ancestors[expectedAncestorPosition]?.id === top._id;
 }

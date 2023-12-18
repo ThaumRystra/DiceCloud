@@ -1,21 +1,21 @@
 import { some, intersection, difference, remove, includes } from 'lodash';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs.js';
-import resolve, { Context, toString } from '/imports/parser/resolve.js';
-import logErrors from './shared/logErrors.js';
-import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js'
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { insertCreatureLog } from '/imports/api/creature/log/CreatureLogs';
+import resolve, { Context, toString } from '/imports/parser/resolve';
+import logErrors from './shared/logErrors';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation'
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import {
   getPropertiesOfType
-} from '/imports/api/engine/loadCreatures.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags.js';
-import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/applySavingThrow.js';
+} from '/imports/api/engine/loadCreatures';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
+import applySavingThrow from '/imports/api/engine/actions/applyPropertyByType/applySavingThrow';
 
 export default function applyDamage(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
 
-  const prop = node.node;
+  const prop = node.doc
   const scope = actionContext.scope;
 
   // Skip if there is no parse node to work with
@@ -167,7 +167,7 @@ export default function applyDamage(node, actionContext) {
             creatureId: target._id,
             content: [{
               name,
-              value: `Recieved **${damageDealt}** ${suffix}`,
+              value: `Received **${damageDealt}** ${suffix}`,
             }],
           }
         });

@@ -1,8 +1,8 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import clean from '../../utility/cleanProp.testFn.js';
+import clean from '../../utility/cleanProp.testFn';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   const getLink = computation.dependencyGraph.hasLink;
   const getNode = computation.dependencyGraph.getNode;
@@ -22,6 +22,5 @@ var testProperties = [
     _id: 'strengthId',
     type: 'attribute',
     variableName: 'strength',
-    ancestors: [{id: 'charId'}],
   }),
 ];

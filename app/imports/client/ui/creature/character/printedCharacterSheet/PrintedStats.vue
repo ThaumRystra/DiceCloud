@@ -351,15 +351,16 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import PrintedAction from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import numberToSignedString from '../../../../../api/utility/numberToSignedString';
 import PrintedSkill from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSkill.vue';
 import PrintedDamageMultipliers from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedDamageMultipliers.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import { uniqBy } from 'lodash';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 const getProperties = function (creature, filter, options = {
   sort: { order: 1 }
@@ -368,7 +369,7 @@ const getProperties = function (creature, filter, options = {
   if (creature.settings.hideUnusedStats) {
     filter.hide = { $ne: true };
   }
-  filter['ancestors.id'] = creature._id;
+  filter['root.id'] = creature._id;
   filter.removed = { $ne: true };
   filter.inactive = { $ne: true };
   filter.overridden = { $ne: true };
@@ -413,6 +414,7 @@ export default {
       doCheckLoading: false,
     }
   },
+  //@ts-ignore-error Meteor not defined
   meteor: {
     creature() {
       return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
@@ -425,7 +427,7 @@ export default {
     },
     toggles() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'toggle',
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },

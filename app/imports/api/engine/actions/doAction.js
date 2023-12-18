@@ -1,15 +1,15 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import {
-  getProperyAncestors, getPropertyDecendants
-} from '/imports/api/engine/loadCreatures.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import applyProperty from './applyProperty.js';
-import ActionContext from '/imports/api/engine/actions/ActionContext.js';
+  getPropertyAncestors, getPropertyDescendants
+} from '/imports/api/engine/loadCreatures';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import applyProperty from './applyProperty';
+import ActionContext from '/imports/api/engine/actions/ActionContext';
 
 const doAction = new ValidatedMethod({
   name: 'creatureProperties.doAction',
@@ -47,10 +47,10 @@ const doAction = new ValidatedMethod({
   async run({ actionId, targetIds = [], scope, invocationId }) {
     console.log('do Action running');
     // Get action context
-    let action = CreatureProperties.findOne(actionId);
-    const creatureId = action.ancestors[0].id;
-
-    const actionContext = new ActionContext(creatureId, targetIds, this, invocationId);
+    const action = CreatureProperties.findOne(actionId);
+    if (!action) throw new Meteor.Error('not-found', 'The action was not found');
+    const creatureId = action.root.id;
+    const actionContext = new ActionContext(creatureId, targetIds, this);
 
     // Check permissions
     assertEditPermission(actionContext.creature, this.userId);
@@ -58,10 +58,10 @@ const doAction = new ValidatedMethod({
       assertEditPermission(target, this.userId);
     });
 
-    const ancestors = getProperyAncestors(creatureId, action._id);
+    const ancestors = getPropertyAncestors(creatureId, action._id);
     ancestors.sort((a, b) => a.order - b.order);
 
-    const properties = getPropertyDecendants(creatureId, action._id);
+    const properties = getPropertyDescendants(creatureId, action._id);
     properties.push(action);
     properties.sort((a, b) => a.order - b.order);
 
@@ -86,7 +86,7 @@ export async function doActionWork({
 }) {
   // get the docs
   const ancestorScope = getAncestorScope(ancestors);
-  const propertyForest = nodeArrayToTree(properties);
+  const propertyForest = docsToForest(properties);
   if (propertyForest.length !== 1) {
     throw new Meteor.Error(`The action has ${propertyForest.length} top level properties, expected 1`);
   }
@@ -106,7 +106,7 @@ export async function doActionWork({
 
 // Assumes ancestors are in tree order already
 function getAncestorScope(ancestors) {
-  let scope = {};
+  const scope = {};
   ancestors.forEach(prop => {
     scope[`#${prop.type}`] = prop;
   });

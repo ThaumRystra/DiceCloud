@@ -1,5 +1,5 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
-import constant from './constant.js';
+import resolve, { toString, traverse, map } from '../resolve';
+import constant from './constant';
 
 const array = {
   create({ values }) {

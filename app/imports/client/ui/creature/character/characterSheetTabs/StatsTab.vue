@@ -390,9 +390,9 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
 import AttributeCard from '/imports/client/ui/properties/components/attributes/AttributeCard.vue';
 import AbilityListTile from '/imports/client/ui/properties/components/attributes/AbilityListTile.vue';
@@ -402,15 +402,16 @@ import HitDiceListTile from '/imports/client/ui/properties/components/attributes
 import SkillListTile from '/imports/client/ui/properties/components/skills/SkillListTile.vue';
 import ResourceCard from '/imports/client/ui/properties/components/attributes/ResourceCard.vue';
 import RestButton from '/imports/client/ui/creature/RestButton.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import ToggleCard from '/imports/client/ui/properties/components/toggles/ToggleCard.vue';
 import BuffListItem from '/imports/client/ui/properties/components/buffs/BuffListItem.vue';
 import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
 import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import { get, set, uniqBy } from 'lodash';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js'
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 function walkDown(forest, callback){
   let stack = [...forest];
@@ -516,12 +517,13 @@ export default {
       return uniqBy(conditionals, '_id');
     },
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     properties() {
       const creature = this.creature;
       if (!creature) return;
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -530,8 +532,8 @@ export default {
       }, { fields: { _id: 1 } }).map(folder => folder._id);
 
       const filter = {
-        'ancestors.id': this.creatureId,
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        parentId: {
           $nin: folderIds,
         },
         $or: [
@@ -555,11 +557,11 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } });
-      const forest = nodeArrayToTree(allProps);
+      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } }).fetch();
+      const forest = docsToForest(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
-        const prop = node.node;
+        const prop = node.doc
         const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ||
           { propPath: prop.type };
         if (propPath) {
@@ -585,7 +587,7 @@ export default {
     toggles() {
       return CreatureProperties.find({
         type: 'toggle',
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
         deactivatedByToggle: { $ne: true },

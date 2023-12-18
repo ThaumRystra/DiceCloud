@@ -58,15 +58,15 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import archiveCreatureToFile from '/imports/api/creature/archive/methods/archiveCreatureToFile.js';
-import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import archiveCreatureToFile from '/imports/api/creature/archive/methods/archiveCreatureToFile';
+import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { uniq, flatten } from 'lodash';
-import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots.js';
+import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 
 const characterTransform = function(char){
   char.url = `/character/${char._id}/${char.urlName || '-'}`;

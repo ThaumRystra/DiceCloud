@@ -1,18 +1,19 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertOwnership } from '/imports/api/creature/creatures/creaturePermissions.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import Experiences from '/imports/api/creature/experience/Experiences.js';
+import { assertOwnership } from '/imports/api/creature/creatures/creaturePermissions';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
+import Experiences from '/imports/api/creature/experience/Experiences';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-function removeRelatedDocuments(creatureId){
-  CreatureVariables.remove({_creatureId: creatureId});
-  CreatureProperties.remove({'ancestors.id': creatureId});
-  CreatureLogs.remove({creatureId});
-  Experiences.remove({creatureId});
+function removeRelatedDocuments(creatureId) {
+  CreatureVariables.remove({ _creatureId: creatureId });
+  CreatureProperties.remove(getFilter.descendantsOfRoot(creatureId));
+  CreatureLogs.remove({ creatureId });
+  Experiences.remove({ creatureId });
 }
 
 const removeCreature = new ValidatedMethod({
@@ -28,14 +29,14 @@ const removeCreature = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({charId}) {
+  run({ charId }) {
     assertOwnership(charId, this.userId)
     this.unblock();
     removeCreatureWork(charId)
   },
 });
 
-export function removeCreatureWork(creatureId){
+export function removeCreatureWork(creatureId) {
   Creatures.remove(creatureId);
   removeRelatedDocuments(creatureId);
 }

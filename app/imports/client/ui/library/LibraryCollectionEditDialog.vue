@@ -85,9 +85,9 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import LibraryCollections, { updateLibraryCollection, removeLibraryCollection } from '/imports/api/library/LibraryCollections.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import LibraryCollections, { updateLibraryCollection, removeLibraryCollection } from '/imports/api/library/LibraryCollections';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import Libraries from '/imports/api/library/Libraries';
 
 export default {
   components: {

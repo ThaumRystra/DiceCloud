@@ -58,7 +58,7 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 
 export default {

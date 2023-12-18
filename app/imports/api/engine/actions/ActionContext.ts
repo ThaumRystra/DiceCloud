@@ -1,7 +1,7 @@
-import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs.js';
+import { CreatureLogSchema, insertCreatureLogWork } from '/imports/api/creature/log/CreatureLogs';
 import {
   getCreature, getVariables, getPropertiesOfType, replaceLinkedVariablesWithProps
-} from '/imports/api/engine/loadCreatures.js';
+} from '/imports/api/engine/loadCreatures';
 import { groupBy, remove } from 'lodash';
 
 export default class ActionContext {
@@ -56,10 +56,10 @@ export default class ActionContext {
     // Group the triggers into triggers.<event>.<timing> or
     // triggers.doActionProperty.<propertyType>.<timing>
     this.triggers = groupBy(this.triggers, 'event');
-    for (let event in this.triggers) {
+    for (const event in this.triggers) {
       if (event === 'doActionProperty') {
         this.triggers[event] = groupBy(this.triggers[event], 'actionPropertyType');
-        for (let propertyType in this.triggers[event]) {
+        for (const propertyType in this.triggers[event]) {
           this.triggers[event][propertyType] = groupBy(this.triggers[event][propertyType], 'timing');
         }
       } else {

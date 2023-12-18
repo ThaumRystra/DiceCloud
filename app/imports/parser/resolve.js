@@ -1,4 +1,4 @@
-import nodeTypeIndex from './parseTree/_index.js';
+import nodeTypeIndex from './parseTree/_index';
 
 // Takes a parse ndoe and computes it to a set detail level
 // returns {result, context}

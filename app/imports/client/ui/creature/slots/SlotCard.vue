@@ -39,9 +39,9 @@
 <script lang="js">
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 
 export default {
   components: {

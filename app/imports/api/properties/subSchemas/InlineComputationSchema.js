@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 const InlineComputationSchema = new SimpleSchema({
   // The part between bracers {}

@@ -1,11 +1,11 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Tabletops from '../Tabletops.js';
-import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
-import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
-import { assertUserIsTabletopOwner } from './shared/tabletopPermissions.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Tabletops from '../Tabletops';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
+import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
+import { assertUserIsTabletopOwner } from './shared/tabletopPermissions';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 
 const removeTabletop = new ValidatedMethod({
 

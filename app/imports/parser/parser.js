@@ -1,28 +1,28 @@
-import grammar from '/imports/parser/grammar.js';
+import grammar from '/imports/parser/grammar';
 import nearley from 'nearley';
 
 const nearleyGrammar = nearley.Grammar.fromCompiled(grammar);
 
-export default function parser(){
+export default function parser() {
   return new nearley.Parser(nearleyGrammar);
 }
 
-export function parse(string){
+export function parse(string) {
   let parser = new nearley.Parser(nearleyGrammar);
   parser.feed(string);
   let results = parser.results;
-  if (results.length === 1){
+  if (results.length === 1) {
     return results[0];
-  } else if (results.length === 0){
+  } else if (results.length === 0) {
     // Valid parsing up until now, but need more
     throw new EndOfInputError('Unexpected end of input');
   } else {
-    console.warn('Grammar is ambiguous!', {string, results});
+    console.warn('Grammar is ambiguous!', { string, results });
     return results[0];
   }
 }
 
-export function prettifyParseError(e){
+export function prettifyParseError(e) {
   if (e.message) e = e.message
   return e.toString().split('.')[0];
 }

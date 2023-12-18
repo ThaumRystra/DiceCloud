@@ -1,14 +1,14 @@
-import rollDice from '/imports/parser/rollDice.js';
-import recalculateCalculation from './shared/recalculateCalculation.js';
-import applyProperty from '../applyProperty.js';
-import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
-import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck.js';
+import rollDice from '/imports/parser/rollDice';
+import recalculateCalculation from './shared/recalculateCalculation';
+import applyProperty from '../applyProperty';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
+import { applyUnresolvedEffects } from '/imports/api/engine/actions/doCheck';
 
 export default function applySavingThrow(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
   const originalTargets = actionContext.targets;
 
   let saveTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;

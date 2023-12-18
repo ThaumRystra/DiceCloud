@@ -1,12 +1,12 @@
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import logErrors from './shared/logErrors.js';
-import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation.js';
-import resolve, { toString } from '/imports/parser/resolve.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import logErrors from './shared/logErrors';
+import recalculateCalculation from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
+import resolve, { toString } from '/imports/parser/resolve';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyRoll(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
 
   if (prop.roll?.calculation) {
     const logValue = [];

@@ -60,8 +60,8 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
+import { getPropertyName } from '/imports/constants/PROPERTIES';
 import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
 
 const uniqueText = {

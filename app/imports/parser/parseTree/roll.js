@@ -1,8 +1,8 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
-import error from './error.js';
-import rollArray from './rollArray.js';
-import rollDice from '/imports/parser/rollDice.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import resolve, { toString, traverse, map } from '../resolve';
+import error from './error';
+import rollArray from './rollArray';
+import rollDice from '/imports/parser/rollDice';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 const rollNode = {
   create({ left, right }) {

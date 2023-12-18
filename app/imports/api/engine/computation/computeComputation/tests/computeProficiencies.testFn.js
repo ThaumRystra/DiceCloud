@@ -1,10 +1,12 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import computeCreatureComputation from '../../computeCreatureComputation.js';
-import clean from '../../utility/cleanProp.testFn.js';
+import computeCreatureComputation from '../../computeCreatureComputation';
+import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties, compareOrder } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
   const computation = buildComputationFromProps(testProperties);
+  const hasLink = computation.dependencyGraph.hasLink;
   computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   assert.equal(
@@ -38,7 +40,6 @@ var testProperties = [
   clean({
     _id: 'actionId',
     type: 'action',
-    ancestors: [{ id: 'charId' }],
     attackRoll: {
       calculation: 'strength.modifier',
     },
@@ -48,7 +49,6 @@ var testProperties = [
     _id: 'profBonusId',
     type: 'attribute',
     variableName: 'proficiencyBonus',
-    ancestors: [{ id: 'charId' }],
     baseValue: {
       calculation: '13'
     },
@@ -62,3 +62,5 @@ var testProperties = [
     targetTags: ['martial weapon']
   }),
 ];
+applyNestedSetProperties(testProperties);
+testProperties.sort(compareOrder);

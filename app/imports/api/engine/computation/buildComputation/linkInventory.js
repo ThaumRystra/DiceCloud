@@ -10,7 +10,7 @@ export default function linkInventory(forest, dependencyGraph) {
 
   while (stack.length) {
     const top = stack[stack.length - 1];
-    const prop = top.node;
+    const prop = top.doc;
     if (prop._computationDetails.inventoryChildrenVisited) {
       if (prop.type === 'container') containerStack.pop();
       stack.pop();
@@ -18,7 +18,7 @@ export default function linkInventory(forest, dependencyGraph) {
     } else {
       // Add all containers to the stack when we first visit them
       if (prop.type === 'container') {
-        containerStack.push(top.node);
+        containerStack.push(top.doc);
       }
       // Push children onto the stack and mark this as children are visited
       stack.push(...top.children);

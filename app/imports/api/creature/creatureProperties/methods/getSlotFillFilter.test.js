@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js';
+import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter';
 
 describe('Slot fill filter', function () {
 
@@ -33,7 +33,7 @@ describe('Slot fill filter', function () {
       $or: [{
         libraryTags: { $all: ['tag1', 'tag2'] }
       }],
-      'ancestors.id': { $in: ['libraryId1', 'libraryId2'] },
+      'root.id': { $in: ['libraryId1', 'libraryId2'] },
       removed: { $ne: true },
       fillSlots: true,
     });
@@ -76,7 +76,7 @@ describe('Slot fill filter', function () {
       $and: [
         { libraryTags: { $nin: ['tag5', 'tag6', 'tag7', 'tag8'] } },
       ],
-      'ancestors.id': { $in: ['libraryId1', 'libraryId2'] },
+      'root.id': { $in: ['libraryId1', 'libraryId2'] },
       removed: { $ne: true },
       fillSlots: true,
     });

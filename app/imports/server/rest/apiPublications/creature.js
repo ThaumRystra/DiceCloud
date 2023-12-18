@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
 import { JsonRoutes } from 'meteor/simple:json-routes';
-import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import computeCreature from '/imports/api/engine/computeCreature.js';
-import VERSION from '/imports/constants/VERSION.js';
+import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import computeCreature from '/imports/api/engine/computeCreature';
+import VERSION from '/imports/constants/VERSION';
 import { getCreature, getProperties, getVariables } from '/imports/api/engine/loadCreatures';
 
 JsonRoutes.add('get', 'api/creature/:id', function (req, res) {

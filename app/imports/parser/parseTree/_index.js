@@ -1,16 +1,16 @@
-import accessor from './accessor.js';
-import array from './array.js';
-import call from './call.js';
-import constant from './constant.js';
-import error from './error.js';
-import ifNode from './if.js';
-import index from './index.js';
-import not from './not.js';
-import operator from './operator.js';
-import parenthesis from './parenthesis.js';
-import roll from './roll.js';
-import rollArray from './rollArray.js';
-import unaryOperator from './unaryOperator.js';
+import accessor from './accessor';
+import array from './array';
+import call from './call';
+import constant from './constant';
+import error from './error';
+import ifNode from './if';
+import index from './index';
+import not from './not';
+import operator from './operator';
+import parenthesis from './parenthesis';
+import roll from './roll';
+import rollArray from './rollArray';
+import unaryOperator from './unaryOperator';
 
 export default Object.freeze({
   accessor,

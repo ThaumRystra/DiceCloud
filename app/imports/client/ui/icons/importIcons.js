@@ -1,4 +1,4 @@
-import { writeIcons } from '/imports/api/icons/Icons.js';
+import { writeIcons } from '/imports/api/icons/Icons';
 
 /*
  * Import a SVG sprite file.
@@ -13,11 +13,11 @@ import { writeIcons } from '/imports/api/icons/Icons.js';
 */
 let metadata;
 
-export function importIcons(file){
+export function importIcons(file) {
   let reader = new FileReader();
-  if (! metadata) throw 'No metadata to build with';
+  if (!metadata) throw 'No metadata to build with';
 
-  reader.onload = function(){
+  reader.onload = function () {
     let data = JSON.parse(reader.result);
     let icons = [];
     data.svg.symbol.forEach(iconData => {
@@ -38,10 +38,10 @@ export function importIcons(file){
 // Get metadata here:
 // https://gist.github.com/ThaumRystra/ffb264dea8c32e15de95f775596194a4
 // It is probably out of date though
-export function importIconMetadata(file){
+export function importIconMetadata(file) {
   let reader = new FileReader();
 
-  reader.onload = function(){
+  reader.onload = function () {
     metadata = JSON.parse(reader.result);
     console.log(metadata);
   };

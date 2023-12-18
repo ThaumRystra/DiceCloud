@@ -1,6 +1,30 @@
-import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions.js';
+import { ActionBase, ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions';
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+
+export interface Spell extends ActionBase {
+  name?: string
+  type: 'spell'
+  alwaysPrepared?: boolean
+  prepared?: boolean
+  castWithoutSpellSlots?: boolean
+  hasAttackRoll?: boolean
+  castingTime?: string
+  range?: string
+  duration?: string
+  verbal?: boolean
+  somatic?: boolean
+  concentration?: boolean
+  material?: string
+  ritual?: boolean
+  level?: number
+  school?: string
+}
+
+export function isSpell(prop: CreatureProperty): prop is Spell {
+  return prop.type === 'spell';
+}
 
 const magicSchools = [
   'abjuration',

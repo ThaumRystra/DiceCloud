@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles.js';
-import UserImages from '/imports/api/files/UserImages.js';
+import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import UserImages from '/imports/api/files/UserImages';
 const fileCollections = [ArchiveCreatureFiles, UserImages];
 
 const updateFileStorageUsed = new ValidatedMethod({
@@ -29,7 +29,7 @@ export default updateFileStorageUsed;
 export function updateFileStorageUsedWork(userId) {
   if (!userId) {
     throw new Meteor.Error('idRequired',
-    'No user ID was provided to update file storage used')
+      'No user ID was provided to update file storage used')
   }
 
   let sum = 0;
@@ -51,7 +51,7 @@ export function incrementFileStorageUsed(userId, amount) {
     throw new Meteor.Error('idRequired',
       'No user ID was provided to update file storage used')
   }
-  
+
   const user = Meteor.users.findOne(userId);
   if (!user) {
     throw new Meteor.Error('noUser', 'User not found');

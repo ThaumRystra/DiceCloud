@@ -13,7 +13,7 @@
 </template>
 
 <script lang="js">
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties.js';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
 export default {
   props: {

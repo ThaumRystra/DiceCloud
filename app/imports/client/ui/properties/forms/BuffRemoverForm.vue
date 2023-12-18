@@ -76,12 +76,12 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 import {
   BuffRemoverSchema
-} from '/imports/api/properties/BuffRemovers.js';
+} from '/imports/api/properties/BuffRemovers';
 
 export default {
   components: {

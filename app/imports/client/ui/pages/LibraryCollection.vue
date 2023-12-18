@@ -44,8 +44,8 @@
 </template>
 
 <script lang="js">
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import Libraries from '/imports/api/library/Libraries';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 
 export default {

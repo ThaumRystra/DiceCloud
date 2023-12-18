@@ -1,12 +1,12 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import {
   assertDocEditPermission,
   assertViewPermission,
-} from '/imports/api/sharing/sharingPermissions.js';
-import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+} from '/imports/api/sharing/sharingPermissions';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
 const updateReferenceNode = new ValidatedMethod({
   name: 'libraryNodes.updateReferenceNode',
@@ -45,8 +45,8 @@ function updateReferenceNodeWork(node, userId) {
   try {
     doc = fetchDocByRef(node.ref);
     if (doc.removed) throw 'Property has been deleted';
-    if (doc.ancestors[0].id !== node.ancestors[0].id) {
-      library = fetchDocByRef(doc.ancestors[0]);
+    if (doc.root.id !== node.root.id) {
+      library = fetchDocByRef(doc.root);
       assertViewPermission(library, userId)
     }
   } catch (e) {

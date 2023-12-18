@@ -1,14 +1,12 @@
-import computeAction from './computeAction.testFn.js';
-import computeAttribute from './computeAttribute.testFn.js';
-import computeCalculations from './computeCalculations.testFn.js';
-import computeClasses from './computeClasses.testFn.js';
-import computeConstants from './computeConstants.testFn.js';
-import computeInventory from './computeInventory.testFn.js';
-import computeDamageMultipliers from './computeDamageMultipliers.testFn.js';
-import computeEffects from './computeEffects.testFn.js';
-import computeSkills from './computeSkills.testFn.js';
-import computePointBuys from './computePointBuys.testFn.js';
-import computeProficiencies from './computeProficiencies.testFn.js';
+import computeAction from './computeAction.testFn';
+import computeAttribute from './computeAttribute.testFn';
+import computeClasses from './computeClasses.testFn';
+import computeConstants from './computeConstants.testFn';
+import computeInventory from './computeInventory.testFn';
+import computeDamageMultipliers from './computeDamageMultipliers.testFn';
+import computeEffects from './computeEffects.testFn';
+import computeSkills from './computeSkills.testFn';
+import computeProficiencies from './computeProficiencies.testFn';
 
 export default [{
   text: 'Computes actions',

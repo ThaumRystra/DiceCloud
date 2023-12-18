@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 const RollDetailsSchema = new SimpleSchema({
   number: {

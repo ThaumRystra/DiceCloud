@@ -1,11 +1,11 @@
-import computeCreatureComputation from './computeCreatureComputation.js';
-import { buildComputationFromProps } from './buildCreatureComputation.js';
+import computeCreatureComputation from './computeCreatureComputation';
+import { buildComputationFromProps } from './buildCreatureComputation';
 import { assert } from 'chai';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import computeTests from './computeComputation/tests/index.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import computeTests from './computeComputation/tests/index';
 
-describe('Compute compuation', function(){
-  it('Computes something at all', function(){
+describe('Compute compuation', function () {
+  it('Computes something at all', function () {
     let computation = buildComputationFromProps(testProperties);
     computeCreatureComputation(computation);
     assert.exists(computation);
@@ -28,7 +28,7 @@ var testProperties = [
   }),
 ];
 
-function clean(prop){
+function clean(prop) {
   let schema = CreatureProperties.simpleSchema(prop);
   return schema.clean(prop);
 }

@@ -76,10 +76,10 @@
 
 <script lang="js">
 import { orderBy } from 'lodash';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import Libraries from '/imports/api/library/Libraries';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import formatter from '/imports/client/ui/utility/numberFormatter.js';
+import formatter from '/imports/client/ui/utility/numberFormatter';
 
 export default {
   components: {

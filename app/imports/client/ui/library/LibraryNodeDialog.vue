@@ -107,21 +107,20 @@ import LibraryNodes, {
   softRemoveLibraryNode,
   restoreLibraryNode,
   insertNode,
-} from '/imports/api/library/LibraryNodes.js';
-import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode.js';
+} from '/imports/api/library/LibraryNodes';
+import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
 import { get } from 'lodash';
 import {
   assertDocEditPermission, assertDocCopyPermission
-} from '/imports/api/sharing/sharingPermissions.js';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
-import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo.js';
-import { getHighestOrder } from '/imports/api/parenting/order.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
+} from '/imports/api/sharing/sharingPermissions';
+import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
@@ -215,7 +214,6 @@ export default {
             collection: 'libraryNodes',
             id: this.model._id,
           },
-          order: (this.model.order || 0) + 0.5,
         },
         parentRef: this.model.parent,
       }, (error, docId) => {
@@ -257,7 +255,6 @@ export default {
               collection: 'libraryNodes',
               id: parentId
             },
-            order: -0.5
           }, (error) => {
             if (error) console.error(error);
           });
@@ -353,13 +350,7 @@ export default {
             id: parentPropertyId,
             collection: 'libraryNodes',
           };
-          let order = getHighestOrder({
-            collection: LibraryNodes,
-            ancestorId: parentRef.id,
-          }) + 0.5;
           let libraryNode = result;
-          // Get order and parent
-          libraryNode.order = order;
           // Insert the property
           let id = insertNode.call({libraryNode, parentRef});
           return `tree-node-${id}`;

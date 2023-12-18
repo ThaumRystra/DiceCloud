@@ -42,11 +42,11 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity';
 import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

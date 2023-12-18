@@ -46,10 +46,10 @@
 </template>
 
 <script lang="js">
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { mapMutations } from 'vuex';
-import formatter from '/imports/client/ui/utility/numberFormatter.js';
+import formatter from '/imports/client/ui/utility/numberFormatter';
 
 export default {
   data() {

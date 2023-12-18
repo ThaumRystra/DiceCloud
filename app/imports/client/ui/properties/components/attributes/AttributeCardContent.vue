@@ -47,10 +47,10 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString.js';
+import numberToSignedString from '../../../../../api/utility/numberToSignedString';
 import RollPopup from '/imports/client/ui/components/RollPopup.vue';
-import doCheck from '/imports/api/engine/actions/doCheck.js';
-import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import doCheck from '/imports/api/engine/actions/doCheck';
+import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {

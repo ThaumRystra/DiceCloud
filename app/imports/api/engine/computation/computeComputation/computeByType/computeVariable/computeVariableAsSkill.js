@@ -1,4 +1,4 @@
-import aggregate from './aggregate/index.js';
+import aggregate from './aggregate/index';
 
 export default function computeVariableAsSkill(computation, node, prop) {
   // Skills are based on some ability Modifier

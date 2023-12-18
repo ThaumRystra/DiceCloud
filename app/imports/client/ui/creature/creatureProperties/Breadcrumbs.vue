@@ -53,7 +53,7 @@
 </template>
 
 <script lang="js">
-  import fetchDocByRef from '/imports/api/parenting/fetchDocByRef.js';
+  import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
   import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 
   export default {

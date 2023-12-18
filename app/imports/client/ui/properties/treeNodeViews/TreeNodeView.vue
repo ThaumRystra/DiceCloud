@@ -12,7 +12,7 @@
 </template>
 
 <script lang="js">
-import treeNodeViewIndex from '/imports/client/ui/properties/treeNodeViews/treeNodeViewIndex.js';
+import treeNodeViewIndex from '/imports/client/ui/properties/treeNodeViews/treeNodeViewIndex';
 
 export default {
   name: 'TreeNodeView',

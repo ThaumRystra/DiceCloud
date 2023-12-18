@@ -32,7 +32,7 @@
 </template>
 
 <script lang="js">
-  import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
+  import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
   import { isFinite } from 'lodash';
 
   export default {

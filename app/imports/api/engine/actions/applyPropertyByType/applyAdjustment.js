@@ -1,11 +1,11 @@
-import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren.js';
-import recalculateCalculation from './shared/recalculateCalculation.js';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty.js';
-import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers.js';
+import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
+import recalculateCalculation from './shared/recalculateCalculation';
+import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
 export default function applyAdjustment(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
-  const prop = node.node;
+  const prop = node.doc
   const damageTargets = prop.target === 'self' ? [actionContext.creature] : actionContext.targets;
 
   if (!prop.amount) {

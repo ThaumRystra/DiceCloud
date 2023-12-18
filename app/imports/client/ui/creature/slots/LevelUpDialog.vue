@@ -181,17 +181,17 @@
 </template>
 
 <script lang="js">
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue'
-import resolve, { toString } from '/imports/parser/resolve.js';
-import { prettifyParseError, parse } from '/imports/parser/parser.js';
-// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString.js';
-import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter.js'
-import Libraries from '/imports/api/library/Libraries.js';
+import resolve, { toString } from '/imports/parser/resolve';
+import { prettifyParseError, parse } from '/imports/parser/parser';
+// import evaluateString from '/imports/api/creature/computation/afterComputation/evaluateString';
+import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter'
+import Libraries from '/imports/api/library/Libraries';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
 import { clone, difference, isEqual } from 'lodash';

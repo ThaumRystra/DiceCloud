@@ -110,12 +110,12 @@
 </template>
 
 <script lang="js">
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { defer, union, without } from 'lodash';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import insertCreature from '/imports/api/creature/creatures/methods/insertCreature.js';
+import insertCreature from '/imports/api/creature/creatures/methods/insertCreature';
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
 
 export default {
   components: {

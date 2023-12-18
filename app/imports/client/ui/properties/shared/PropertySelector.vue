@@ -58,7 +58,7 @@
 </template>
 
 <script lang="js">
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
+import PROPERTIES from '/imports/constants/PROPERTIES';
 import PropertySelectCard from '/imports/client/ui/properties/shared/PropertySelectCard.vue';
 export default {
   components: {

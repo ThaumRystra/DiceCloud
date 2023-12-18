@@ -152,9 +152,9 @@
 import { union, without, debounce } from 'lodash';
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import { changeAllowedLibraries, toggleAllUserLibraries } from '/imports/api/creature/creatures/methods/changeAllowedLibraries.js';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import { changeAllowedLibraries, toggleAllUserLibraries } from '/imports/api/creature/creatures/methods/changeAllowedLibraries';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 
 export default {
   components: {

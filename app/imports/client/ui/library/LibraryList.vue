@@ -60,9 +60,9 @@
 
 <script lang="js">
 import { union } from 'lodash';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections.js';
-import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections';
+import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
 import LibraryListTile from '/imports/client/ui/library/LibraryListTile.vue'
 import LibraryCollectionHeader from '/imports/client/ui/library/LibraryCollectionHeader.vue';
 

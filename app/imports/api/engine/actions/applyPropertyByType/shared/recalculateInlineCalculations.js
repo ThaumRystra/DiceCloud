@@ -1,7 +1,7 @@
-import embedInlineCalculations from '/imports/api/engine/computation/utility/embedInlineCalculations.js';
-import recalculateCalculation from './recalculateCalculation.js'
+import embedInlineCalculations from '/imports/api/engine/computation/utility/embedInlineCalculations';
+import recalculateCalculation from './recalculateCalculation'
 
-export default function recalculateInlineCalculations(inlineCalcObj, action) {
+export default function recalculateInlineCalculations(inlineCalcObj, actionContext) {
   // Skip if there are no calculations
   if (!inlineCalcObj?.inlineCalculations?.length) return;
   // Recalculate each calculation with the current scope

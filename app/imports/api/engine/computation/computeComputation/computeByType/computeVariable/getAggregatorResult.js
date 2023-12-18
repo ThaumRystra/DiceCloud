@@ -1,4 +1,4 @@
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
 export default function getAggregatorResult(node) {
   // Work out the base value as the greater of the deining stat value

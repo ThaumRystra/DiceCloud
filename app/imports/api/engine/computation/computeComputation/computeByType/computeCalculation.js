@@ -1,8 +1,8 @@
-import call from '/imports/parser/parseTree/call.js';
-import constant from '/imports/parser/parseTree/constant.js';
-import operator from '/imports/parser/parseTree/operator.js';
-import parenthesis from '/imports/parser/parseTree/parenthesis.js';
-import resolve, { toPrimitiveOrString } from '/imports/parser/resolve.js';
+import call from '/imports/parser/parseTree/call';
+import constant from '/imports/parser/parseTree/constant';
+import operator from '/imports/parser/parseTree/operator';
+import parenthesis from '/imports/parser/parseTree/parenthesis';
+import resolve, { toPrimitiveOrString } from '/imports/parser/resolve';
 
 export default function computeCalculation(computation, node) {
   const calcObj = node.data;

@@ -66,8 +66,8 @@
 
 <script lang="js">
   import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
-  import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-  import updateReferenceNode from '/imports/api/library/methods/updateReferenceNode.js';
+  import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+  import updateReferenceNode from '/imports/api/library/methods/updateReferenceNode';
   import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
   export default {

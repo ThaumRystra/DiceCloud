@@ -150,11 +150,11 @@
 </template>
 
 <script lang="js">
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
+import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 
 export default {

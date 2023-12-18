@@ -1,6 +1,14 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+
+export interface Item extends CreatureProperty {
+  type: 'item'
+  name?: string
+  plural?: string
+  quantity: number
+}
 
 const ItemSchema = createPropertySchema({
   name: {

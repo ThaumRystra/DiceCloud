@@ -1,9 +1,9 @@
-import applyFnToKey from './applyFnToKey.js';
+import applyFnToKey from './applyFnToKey';
 import { assert } from 'chai';
 import { get } from 'lodash';
 
-describe('apply function to key', function(){
-  it('uses a basic key correctly', function(){
+describe('apply function to key', function () {
+  it('uses a basic key correctly', function () {
     let obj = getStartingObject();
     applyFnToKey(obj, 'fox.name', (doc, key) => {
       assert.equal(obj, doc);
@@ -11,7 +11,7 @@ describe('apply function to key', function(){
       assert.equal(get(doc, key), 'foxy');
     });
   });
-  it('uses a single nested key correctly', function(){
+  it('uses a single nested key correctly', function () {
     let obj = getStartingObject();
     let foxSounds = [];
     applyFnToKey(obj, 'fox.sound.$', (doc, key) => {
@@ -21,7 +21,7 @@ describe('apply function to key', function(){
     assert.include(foxSounds, 'tjoef');
     assert.include(foxSounds, 'kek');
   });
-  it('uses a double nested key correctly', function(){
+  it('uses a double nested key correctly', function () {
     let obj = getStartingObject();
     let birdSounds = [];
     applyFnToKey(obj, 'birds.$.sound.$', (doc, key) => {
@@ -33,7 +33,7 @@ describe('apply function to key', function(){
   });
 });
 
-function getStartingObject(){
+function getStartingObject() {
   return {
     fox: {
       name: 'foxy',
@@ -48,7 +48,7 @@ function getStartingObject(){
       sound: [
         'koer',
       ]
-    },{
+    }, {
       name: 'parrot',
       sound: [
         'hello',

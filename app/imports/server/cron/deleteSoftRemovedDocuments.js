@@ -1,6 +1,6 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { assertAdmin } from '/imports/api/sharing/sharingPermissions.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
 import { SyncedCron } from 'meteor/littledata:synced-cron';
 
 Meteor.startup(() => {

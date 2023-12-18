@@ -7,16 +7,22 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "baseUrl": ".",
+    "preserveSymlinks": true,
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "build",
     "paths": {
       "/*": [
         "./*"
       ],
+      "meteor/*": [
+        "node_modules/@types/meteor/*",
+        ".meteor/local/types/packages.d.ts"
+      ],
       "meteor/aldeed:collection2": [
-        "packages\\collection2\\collection2.js"
+        "packages/collection2/collection2.js"
       ]
-    },
-    "checkJs": false,
-    "allowJs": true
+    }
   },
   "vueCompilerOptions": {
     "target": 2 // For Vue version <= 2.6.14

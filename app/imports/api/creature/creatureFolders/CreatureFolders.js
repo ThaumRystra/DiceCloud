@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 let CreatureFolders = new Mongo.Collection('creatureFolders');
 
@@ -35,5 +35,5 @@ let creatureFolderSchema = new SimpleSchema({
 
 CreatureFolders.attachSchema(creatureFolderSchema);
 
-import '/imports/api/creature/creatureFolders/methods.js/index.js';
+import '/imports/api/creature/creatureFolders/methods.js/index';
 export default CreatureFolders;

@@ -127,10 +127,11 @@
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
 import { some } from 'lodash';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty.js';
-import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty.js';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { isAncestor } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   name: 'BuildTreeNode',
@@ -233,11 +234,10 @@ export default {
   },
   watch: {
     'node._ancestorOfMatchedDocument'(value){
-      this.expanded = !!value ||
-        some(this.selectedNode?.ancestors, ref => ref.id === this.node._id);
+      this.expanded = !!value || isAncestor(this.node, this.selectedNode);
     },
-    'selectedNode.ancestors'(value){
-      this.expanded = !!some(value, ref => ref.id === this.node._id) || this.expanded;
+    'selectedNode.parentId'(){
+      this.expanded = isAncestor(this.node, this.selectedNode) || this.expanded;
     },
   },
   beforeCreate() {

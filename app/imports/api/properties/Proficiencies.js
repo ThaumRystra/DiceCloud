@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
-import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema.js';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import TagTargetingSchema from '/imports/api/properties/subSchemas/TagTargetingSchema';
 
 let ProficiencySchema = new SimpleSchema({
   name: {

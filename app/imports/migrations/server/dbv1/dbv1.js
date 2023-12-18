@@ -1,9 +1,9 @@
 import { Migrations } from 'meteor/percolate:migrations';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import transformFields from '/imports/migrations/server/transformFields.js';
-import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import transformFields from '/imports/migrations/server/transformFields';
+import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 // Git version 2.0-beta.33
 // Database version 1
@@ -43,7 +43,7 @@ export function migrateProperty({ collection, reversed, prop }) {
   let migratedProp = transformFields(prop, transforms, reversed);
   const schema = collection.simpleSchema({ type: migratedProp.type });
   // Only clean if the schema version matches our destination version
-  if (!reversed && SCHEMA_VERSION >= 1) {
+  if (!reversed && SCHEMA_VERSION == 1) {
     try {
       migratedProp = schema.clean(migratedProp);
       schema.validate(migratedProp);
@@ -81,6 +81,7 @@ const transformsByPropType = {
     ...getComputedPropertyTransforms('rollBonus', 'attackRoll'),
     //change type to action
     { from: 'type', to: 'type', up: () => 'action' },
+    { from: 'results' },
   ],
   'attribute': [
     // from: baseValue must be first or else it will delete the field we need

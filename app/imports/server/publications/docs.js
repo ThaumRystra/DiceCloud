@@ -1,4 +1,4 @@
-import Docs from '/imports/api/docs/Docs.js';
+import Docs from '/imports/api/docs/Docs';
 
 Meteor.publish('docs', function () {
   const filter = { published: true, removed: { $ne: true } };

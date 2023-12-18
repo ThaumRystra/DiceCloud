@@ -83,14 +83,15 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PrintedStats from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedStats.vue';
 import PrintedInventory from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedInventory.vue';
 import PrintedSpells from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedSpells.vue';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import QrcodeVue from 'qrcode.vue'
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -138,6 +139,7 @@ export default {
       ].sort((a, b) => a.order - b.order);
     },
   },
+  // @ts-ignore reactiveProvide isn't defined on vue
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -182,7 +184,7 @@ export default {
     race() {
       if (this.variables?.race?.value?.valueType === 'string') return this.variables.race.value.value;
       const prop = CreatureProperties.findOne({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         tags: 'race',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -194,7 +196,7 @@ export default {
     background() {
       if (this.variables?.background?.value?.valueType === 'string') return this.variables.background.value.value;
       const prop = CreatureProperties.findOne({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         tags: 'background',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -205,7 +207,7 @@ export default {
     },
     classProperties(){
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'class',
         removed: {$ne: true},
         inactive: {$ne: true},
@@ -216,7 +218,7 @@ export default {
     classLevels() {
       const classVariableNames = this.classProperties.map(c => c.variableName)
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'classLevel',
         variableName: {$nin: classVariableNames},
         removed: {$ne: true},

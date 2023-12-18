@@ -199,18 +199,19 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CharacterErrors from '/imports/client/ui/creature/character/errors/CharacterErrors.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty.js';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle.js';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 function traverse(tree, callback, parents = []){
   tree.forEach(node => {
@@ -271,6 +272,7 @@ export default {
       return this.hiddenSlots.length + this.hiddenPointBuys.length;
     },
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     creature(){
       return Creatures.findOne(this.creatureId);
@@ -281,7 +283,7 @@ export default {
     hiddenPointBuys() {
       return CreatureProperties.find({
         type: 'pointBuy',
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         ignored: true,
         pointsLeft: {$ne: 0},
         removed: {$ne: true},
@@ -291,7 +293,7 @@ export default {
     hiddenSlots(){
       return CreatureProperties.find({
         type: 'propertySlot',
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         ignored: true,
         $and: [
           { 
@@ -313,7 +315,7 @@ export default {
     },
     classProperties(){
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'class',
         removed: {$ne: true},
         inactive: {$ne: true},
@@ -324,7 +326,7 @@ export default {
     classLevels() {
       const classVariableNames = this.classProperties.map(c => c.variableName)
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'classLevel',
         variableName: {$nin: classVariableNames},
         removed: {$ne: true},
@@ -335,7 +337,7 @@ export default {
     },
     slotBuildTree(){
       const slots = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: {$in: ['propertySlot', 'pointBuy']},
         $or: [
           {'slotCondition.value': {$nin: [false, 0, '']}},

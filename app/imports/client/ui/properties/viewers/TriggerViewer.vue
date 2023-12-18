@@ -40,9 +40,9 @@
 </template>
 
 <script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin.js'
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import { timingOptions, eventOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers.js';
+import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import { timingOptions, eventOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers';
 
 export default {
   mixins: [propertyViewerMixin],

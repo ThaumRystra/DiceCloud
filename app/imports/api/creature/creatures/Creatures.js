@@ -1,8 +1,8 @@
 import SimpleSchema from 'simpl-schema';
-import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema.js'
-import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema.js';
-import SharingSchema from '/imports/api/sharing/SharingSchema.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema'
+import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
+import SharingSchema from '/imports/api/sharing/SharingSchema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 //set up the collection for creatures
 let Creatures = new Mongo.Collection('creatures');
@@ -195,4 +195,4 @@ Creatures.attachSchema(CreatureSchema);
 export default Creatures;
 export { CreatureSchema };
 
-import '/imports/api/engine/actions/doAction.js';
+import '/imports/api/engine/actions/doAction';

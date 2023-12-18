@@ -1,8 +1,8 @@
-import buildCreatureComputation from './computation/buildCreatureComputation.js';
-import computeCreatureComputation from './computation/computeCreatureComputation.js';
-import writeAlteredProperties from './computation/writeComputation/writeAlteredProperties.js';
-import writeScope from './computation/writeComputation/writeScope.js';
-import writeErrors from './computation/writeComputation/writeErrors.js';
+import buildCreatureComputation from './computation/buildCreatureComputation';
+import computeCreatureComputation from './computation/computeCreatureComputation';
+import writeAlteredProperties from './computation/writeComputation/writeAlteredProperties';
+import writeScope from './computation/writeComputation/writeScope';
+import writeErrors from './computation/writeComputation/writeErrors';
 
 export default function computeCreature(creatureId) {
   if (Meteor.isClient) return;

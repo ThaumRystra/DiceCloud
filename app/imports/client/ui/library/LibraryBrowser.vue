@@ -71,9 +71,9 @@
 
 <script lang="js">
 import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
-import Libraries, { insertLibrary } from '/imports/api/library/Libraries.js';
-import { getUserTier } from '/imports/api/users/patreon/tiers.js';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import InsertLibraryNodeButton from '/imports/client/ui/library/InsertLibraryNodeButton.vue';
 
 export default {

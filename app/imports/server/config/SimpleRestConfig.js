@@ -1,4 +1,4 @@
-import { JsonRoutes, RestMiddleware  } from 'meteor/simple:json-routes';
+import { JsonRoutes, RestMiddleware } from 'meteor/simple:json-routes';
 import { SimpleRest } from 'meteor/simple:rest';
 
 Meteor.startup(() => {
@@ -23,11 +23,11 @@ JsonRoutes.ErrorMiddleware.use(RestMiddleware.handleErrorAsJson);
 // Hack to stop simple:rest adding routes automatically unless their URL
 // has been explicitly set to 'api/...'
 const oldAdd = JsonRoutes.add;
-JsonRoutes.add = function(method, path, handler){
-  if (path.substring(0,4) !== 'api/'){
+JsonRoutes.add = function (method, path, handler) {
+  if (path.substring(0, 4) !== 'api/') {
     return;
   }
   oldAdd(method, path, handler);
 }
 
-import '/imports/server/rest/restLogin.js';
+import '/imports/server/rest/restLogin';

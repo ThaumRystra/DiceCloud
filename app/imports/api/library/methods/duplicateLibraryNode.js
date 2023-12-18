@@ -1,18 +1,19 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import {
   setLineageOfDocs,
-  renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
+  renewDocIds,
+  getFilter
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 var snackbar;
 if (Meteor.isClient) {
   snackbar = require(
-    '/imports/client/ui/components/snackbars/SnackbarQueue.js'
+    '/imports/client/ui/components/snackbars/SnackbarQueue'
   ).snackbar
 }
 
@@ -33,6 +34,8 @@ const duplicateLibraryNode = new ValidatedMethod({
   },
   run({ _id }) {
     let libraryNode = LibraryNodes.findOne(_id);
+    if (!libraryNode) throw new Meteor.Error('not-found', 'Library node was not found');
+
     assertDocEditPermission(libraryNode, this.userId);
 
     let randomSrc = DDP.randomStream('duplicateLibraryNode');
@@ -40,7 +43,7 @@ const duplicateLibraryNode = new ValidatedMethod({
     libraryNode._id = libraryNodeId;
 
     let nodes = LibraryNodes.find({
-      'ancestors.id': _id,
+      ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
@@ -56,16 +59,6 @@ const duplicateLibraryNode = new ValidatedMethod({
       }
     }
 
-    // re-map all the ancestors
-    setLineageOfDocs({
-      docArray: nodes,
-      newAncestry: [
-        ...libraryNode.ancestors,
-        { id: libraryNodeId, collection: 'libraryNodes' }
-      ],
-      oldParent: { id: _id, collection: 'libraryNodes' },
-    });
-
     // Give the docs new IDs without breaking internal references
     const allNodes = [libraryNode, ...nodes];
     renewDocIds({ docArray: allNodes });
@@ -76,10 +69,7 @@ const duplicateLibraryNode = new ValidatedMethod({
     LibraryNodes.batchInsert(allNodes);
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: LibraryNodes,
-      ancestorId: libraryNode.ancestors[0].id,
-    });
+    rebuildNestedSets(LibraryNodes, libraryNode.root.id);
 
     return libraryNodeId;
   },

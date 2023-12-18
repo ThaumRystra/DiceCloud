@@ -131,7 +131,7 @@
 <script lang="js">
 //TODO add a "no character found" screen if shown on a false address
 // or on a character the user does not have permission to view
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import StatsTab from '/imports/client/ui/creature/character/characterSheetTabs/StatsTab.vue';
 import FeaturesTab from '/imports/client/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 import InventoryTab from '/imports/client/ui/creature/character/characterSheetTabs/InventoryTab.vue';
@@ -139,9 +139,9 @@ import SpellsTab from '/imports/client/ui/creature/character/characterSheetTabs/
 import CharacterTab from '/imports/client/ui/creature/character/characterSheetTabs/JournalTab.vue';
 import BuildTab from '/imports/client/ui/creature/character/characterSheetTabs/BuildTab.vue';
 import TreeTab from '/imports/client/ui/creature/character/characterSheetTabs/TreeTab.vue';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs.js';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
 

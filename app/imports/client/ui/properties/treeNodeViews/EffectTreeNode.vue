@@ -36,8 +36,8 @@
 
 <script lang="js">
 // Most of this was copied from EffectViewer and should probably be generalised
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin.js';
-import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
+import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 
 export default {
   mixins: [treeNodeViewMixin],

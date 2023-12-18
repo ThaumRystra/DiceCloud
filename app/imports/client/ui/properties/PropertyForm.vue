@@ -223,13 +223,13 @@
 import ComputedField from '/imports/client/ui/properties/forms/shared/ComputedField.vue';
 import InlineComputationField from '/imports/client/ui/properties/forms/shared/InlineComputationField.vue';
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
+import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex';
 import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
-import { getSuggestedChildren } from '/imports/constants/PROPERTIES.js';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex.js';
+import { getSuggestedChildren } from '/imports/constants/PROPERTIES';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
 
 const slotTypes = [];
 for (let key in PROPERTIES) {

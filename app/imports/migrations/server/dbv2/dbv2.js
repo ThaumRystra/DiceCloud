@@ -1,11 +1,11 @@
 import { Migrations } from 'meteor/percolate:migrations';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { union, get } from 'lodash';
-import Libraries from '/imports/api/library/Libraries.js';
-import LibraryCollections from '/imports/api/library/LibraryCollections.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex.js';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey.js';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 
 // Git version 2.0.52
 // Database version 2
@@ -64,7 +64,7 @@ export function migratePropUp(prop, collection) {
   }
 
   // If there are tags, copy them to libraryTags and set findable flags
-  if (Array.isArray(prop.tags) && prop.tags.length && collection === LibraryNodes) {
+  if (Array.isArray(prop.tags) && prop.tags.length && collection?._name === 'libraryNodes') {
     update = update || { $set: {} };
     update.$set.libraryTags = prop.tags;
     update.$set.fillSlots = true;

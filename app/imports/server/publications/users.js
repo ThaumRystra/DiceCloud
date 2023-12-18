@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
-import '/imports/api/users/Users.js';
-import Invites from '/imports/api/users/Invites.js';
+import '/imports/api/users/Users';
+import Invites from '/imports/api/users/Invites';
 
 Meteor.publish('user', function () {
   return [

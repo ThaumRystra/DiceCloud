@@ -1,6 +1,6 @@
-import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX.js';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
 
-export default function embedInlineCalculations(inlineCalcObj){
+export default function embedInlineCalculations(inlineCalcObj) {
   const string = inlineCalcObj.text;
   const calculations = inlineCalcObj.inlineCalculations;
   if (!string || !calculations) return;

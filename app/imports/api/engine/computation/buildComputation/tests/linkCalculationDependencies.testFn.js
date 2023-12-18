@@ -1,8 +1,9 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import clean from '../../utility/cleanProp.testFn.js';
+import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
   const prop = (id) => computation.propsById[id];
@@ -32,7 +33,6 @@ var testProperties = [
   clean({
     _id: 'spellListId',
     type: 'spellList',
-    ancestors: [{id: 'charId'}],
   }),
   clean({
     _id: 'childId',
@@ -40,7 +40,7 @@ var testProperties = [
     description: {
       text: 'DC {#spellList.dc} save or suck'
     },
-    ancestors: [{id: 'charId'}, {id: 'spellListId'}],
+    parentId: 'spellListId',
   }),
   clean({
     _id: 'grandchildId',
@@ -48,7 +48,7 @@ var testProperties = [
     dc: {
       calculation: '#spellList.dc + strength + wisdom.modifier'
     },
-    ancestors: [{id: 'charId'}, {id: 'spellListId'}, {id: 'childId'}],
+    parentId: 'childId',
   }),
   clean({
     _id: 'strengthId',
@@ -57,6 +57,7 @@ var testProperties = [
     baseValue: {
       calculation: '15 + ',
     },
-    ancestors: [{id: 'charId'}],
   }),
 ];
+
+applyNestedSetProperties(testProperties);

@@ -106,18 +106,19 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/client/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag.js';
-import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS.js';
+import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities.js';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -140,10 +141,11 @@ export default {
       tabName: 'inventory',
     };
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     folderIds() {
       return CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -153,9 +155,7 @@ export default {
     },
     containers() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
         'parent.id': {
           $nin: this.folderIds,
         },
@@ -164,7 +164,7 @@ export default {
         inactive: { $ne: true },
       }, {
         sort: { order: 1 },
-      });
+      }).fetch();
     },
     creature() {
       return Creatures.findOne(this.creatureId, {
@@ -179,11 +179,9 @@ export default {
     },
     containersWithoutAncestorContainers() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.containerIds,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.containers),
+        parentId: {
           $nin: this.folderIds,
         },
         type: 'container',
@@ -195,11 +193,9 @@ export default {
     },
     carriedItems() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-          $nin: this.containerIds,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(this.containers),
+        parentId: {
           $nin: this.folderIds,
         },
         type: 'item',
@@ -213,9 +209,7 @@ export default {
     },
     equippedItems() {
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'item',
         equipped: true,
         removed: { $ne: true },
@@ -246,9 +240,6 @@ export default {
     },
   },
   computed: {
-    containerIds() {
-      return this.containers.map(container => container._id);
-    },
     weightCarried() {
       return stripFloatingPointOddities(
         this.variables &&

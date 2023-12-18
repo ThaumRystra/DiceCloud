@@ -1,4 +1,4 @@
-import applyFnToKey from '../utility/applyFnToKey.js';
+import applyFnToKey from '../utility/applyFnToKey';
 import { unset } from 'lodash';
 
 export default function removeSchemaFields(schemas, prop) {

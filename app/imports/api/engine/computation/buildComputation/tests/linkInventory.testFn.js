@@ -1,8 +1,9 @@
-import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation.js';
+import { buildComputationFromProps } from '/imports/api/engine/computation/buildCreatureComputation';
 import { assert } from 'chai';
-import clean from '../../utility/cleanProp.testFn.js';
+import clean from '../../utility/cleanProp.testFn';
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
-export default function(){
+export default function () {
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
 
@@ -62,28 +63,28 @@ var testProperties = [
     type: 'item',
     equipped: true,
     attuned: true,
-    ancestors: [{id: 'charId'}],
   }),
   clean({
     _id: 'containerId',
     type: 'container',
     carried: true,
-    ancestors: [{id: 'charId'}],
   }),
   clean({
     _id: 'childContainerId',
     type: 'container',
     carried: true,
-    ancestors: [{id: 'charId'}, {id: 'containerId'}],
-  }),
-  clean({
-    _id: 'childItemId',
-    type: 'item',
-    ancestors: [{id: 'charId'}, {id: 'containerId'}],
+    parentId: 'containerId',
   }),
   clean({
     _id: 'grandchildItemId',
     type: 'item',
-    ancestors: [{id: 'charId'}, {id: 'containerId'}, {id: 'childContainerId'}],
+    parentId: 'childContainerId',
+  }),
+  clean({
+    _id: 'childItemId',
+    type: 'item',
+    parentId: 'containerId',
   }),
 ];
+
+applyNestedSetProperties(testProperties);

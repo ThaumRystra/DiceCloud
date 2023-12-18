@@ -1,9 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
 let Experiences = new Mongo.Collection('experiences');
 

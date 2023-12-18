@@ -91,9 +91,9 @@
 </template>
 
 <script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
-import resolveCalculationNode from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js';
+import { resolveCalculationNode } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 import { Tracker } from 'meteor/tracker'
 
 export default {

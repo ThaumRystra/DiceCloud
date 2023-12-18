@@ -118,9 +118,9 @@
 </template>
 
 <script lang="js">
-import getEffectIcon from '/imports/client/ui/utility/getEffectIcon.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin.js';
+import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
 const ICON_SPIN_DURATION = 300;

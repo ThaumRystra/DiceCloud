@@ -40,8 +40,8 @@
 <script lang="js">
 import draggable from 'vuedraggable';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods.js';
-import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders.js';
+import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders';
 
 export default {
   components: {

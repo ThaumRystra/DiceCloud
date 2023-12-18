@@ -185,12 +185,12 @@
 </template>
 
 <script lang="js">
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor.js';
-import PROPERTIES from '/imports/constants/PROPERTIES.js';
-import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
 
 export default {
   components: {

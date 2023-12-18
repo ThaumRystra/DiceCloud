@@ -135,11 +135,11 @@ import Docs, {
   restoreDoc,
   softRemoveDoc,
   updateDoc,
-} from '/imports/api/docs/Docs.js';
+} from '/imports/api/docs/Docs';
 import { get } from 'lodash';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import DocCard from '/imports/client/ui/docs/DocCard.vue';
-import getDocLink from '/imports/client/ui/docs/getDocLink.js';
+import getDocLink from '/imports/client/ui/docs/getDocLink';
 
 export default {
   components: {
@@ -180,10 +180,7 @@ export default {
         doc: {
           name: 'New Doc',
         },
-        parentRef: this.doc && {
-          id: this.docId,
-          collection: 'docs',
-        },
+        parentId: this.docId,
       }, ack);
     },
     remove({ ack } = {}) {

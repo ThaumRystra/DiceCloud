@@ -173,9 +173,9 @@
 </template>
 
 <script lang="js">
-import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin.js';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import { PointBuySchema } from '/imports/api/properties/PointBuys.js';
+import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import { PointBuySchema } from '/imports/api/properties/PointBuys';
 import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
 import PointBuySpendForm from '/imports/client/ui/properties/forms/PointBuySpendForm.vue';
 

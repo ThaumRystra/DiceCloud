@@ -1,18 +1,17 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
-import constant from './constant.js';
+import resolve, { toString, traverse, map } from '../resolve';
+import constant from './constant';
 
 // Which operators can be considered commutative by the parser
 // i.e. 1 + 2 + 3 === 2 + 3 + 1
 const commutativeOperators = ['+', '*']
 
 const operator = {
-  create({ left, right, operator, fn }) {
+  create({ left, right, operator }) {
     return {
       parseType: 'operator',
       left,
       right,
       operator,
-      fn
     };
   },
   resolve(fn, node, scope, context) {

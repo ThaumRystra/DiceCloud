@@ -27,7 +27,7 @@
 
 <script lang="js">
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor.js';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
 export default {

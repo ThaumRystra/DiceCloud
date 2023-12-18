@@ -25,11 +25,11 @@
 </template>
 
 <script lang="js">
-import Libraries from '/imports/api/library/Libraries.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import nodesToTree from '/imports/api/parenting/nodesToTree.js';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { filterToForest } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods.js';
+import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods';
 
 export default {
   components: {
@@ -90,13 +90,15 @@ export default {
     },
     libraryChildren() {
       if (!this.library) return;
-      return nodesToTree({
-        collection: LibraryNodes,
-        ancestorId: this.library._id,
-        filter: this.filter,
-        includeFilteredDocAncestors: true,
-        includeFilteredDocDescendants: true,
-      });
+      return filterToForest(
+        LibraryNodes,
+        this.library._id,
+        this.filter,
+        {
+          includeFilteredDocAncestors: true,
+          includeFilteredDocDescendants: true,
+        }
+      );
     },
   },
   methods: {

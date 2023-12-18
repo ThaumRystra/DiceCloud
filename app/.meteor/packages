@@ -50,3 +50,4 @@ littledata:synced-cron
 typescript@4.9.4
 seba:minifiers-autoprefixer
 mixmax:smart-disconnect
+zodern:types

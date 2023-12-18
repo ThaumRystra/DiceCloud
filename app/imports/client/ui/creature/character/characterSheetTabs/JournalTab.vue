@@ -34,11 +34,12 @@
 
 <script lang="js">
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/client/ui/creature/character/CreatureSummary.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -58,11 +59,12 @@ export default {
       tabName: 'journal',
     };
   },
+  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     notes() {
       // Get all the notes that aren't children of group folders or of other displayed notes
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -71,27 +73,23 @@ export default {
       }, { fields: { _id: 1 } }).map(folder => folder._id);
 
       const noteFilter = {
-        'ancestors.id': {
-          $eq: this.creatureId,
-        },
-        'parent.id': {
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        'parentId': {
           $nin: folderIds,
         },
         type: 'note',
         removed: { $ne: true },
         inactive: { $ne: true },
       };
-      const noteIds = CreatureProperties.find(noteFilter, {
-        sort: { order: 1 },
-        fields: {_id: 1},
-      }).map(note => note._id);
-
-      noteFilter['ancestors.id'] = {
-        $eq: this.creatureId,
-        $nin: noteIds,
-      }
+      const allNotes = CreatureProperties.find(noteFilter, {
+        sort: { left: 1 },
+      });
       
-      return CreatureProperties.find(noteFilter, {
+      return CreatureProperties.find({
+        ...noteFilter,
+        ...getFilter.descendantsOfRoot(this.creatureId),
+        $not: getFilter.descendantsOfAll(allNotes),
+      }, {
         sort: {order: 1},
       });
     },

@@ -83,9 +83,9 @@
 
 <script lang="js">
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin.js';
-import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX.js';
-import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES.js';
+import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES';
 
 export default {
   components: {

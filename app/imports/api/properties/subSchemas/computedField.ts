@@ -1,6 +1,16 @@
 import SimpleSchema from 'simpl-schema';
-import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema.js';
-import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS.js';
+import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+
+export interface CalculatedField {
+  calculation?: string,
+  value?: string | number,
+  effectIds?: string[],
+  parseNode?: any,
+  parseError?: any,
+  hash?: number,
+  errors?: any[],
+}
 
 // Get schemas that apply fields directly so they can be gracefully extended
 // because {type: Schema} fields can't be extended

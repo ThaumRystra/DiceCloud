@@ -1,7 +1,7 @@
 import { slice } from 'lodash';
-import PER_CREATURE_LOG_LIMIT from '/imports/api/creature/log/CreatureLogs.js';
+import PER_CREATURE_LOG_LIMIT from '/imports/api/creature/log/CreatureLogs';
 
-export default function verifyArchiveSafety({ meta, creature, properties, experiences, logs }){
+export default function verifyArchiveSafety({ meta, creature, properties, experiences, logs }) {
   const creatureId = creature._id;
 
   // Check lengths of arrays
@@ -21,8 +21,14 @@ export default function verifyArchiveSafety({ meta, creature, properties, experi
     }
   });
   properties.forEach(prop => {
-    if (prop.ancestors[0].id !== creatureId) {
-      throw new Meteor.Error('Malicious prop', 'Properties contains an entry for the wrong creature');
+    if (meta.schemaVersion.schemaVersion >= 3) {
+      if (prop.root?.id !== creatureId) {
+        throw new Meteor.Error('Malicious prop', 'Properties contains an entry for the wrong creature');
+      }
+    } else {
+      if (prop.ancestors?.[0]?.id !== creatureId) {
+        throw new Meteor.Error('Malicious prop', 'Properties contains an entry for the wrong creature');
+      }
     }
   });
 }

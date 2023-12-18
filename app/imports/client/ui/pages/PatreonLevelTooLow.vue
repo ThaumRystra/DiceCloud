@@ -23,7 +23,7 @@
 </template>
 
 <script lang="js">
-import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers.js';
+import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
 
 export default {
   meteor: {

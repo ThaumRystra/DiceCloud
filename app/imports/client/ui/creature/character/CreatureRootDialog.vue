@@ -63,18 +63,17 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex.js';
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex';
+import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import { getHighestOrder } from '/imports/api/parenting/order.js';
-import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 
 let formIndex = {};
 for (let key in propertyFormIndex){
@@ -163,18 +162,12 @@ export default {
             id: parentPropertyId,
             collection: 'creatures',
           };
-          let order = getHighestOrder({
-            collection: CreatureProperties,
-            ancestorId: parentRef.id,
-          }) + 0.5;
           if (Array.isArray(result)){
             let nodeIds = result;
-            let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef, order});
+            let id = insertPropertyFromLibraryNode.call({ nodeIds, parentRef });
             return `tree-node-${id}`;
           } else {
             let creatureProperty = result;
-            // Get order and parent
-            creatureProperty.order = order;
             // Insert the property
             let id = insertProperty.call({creatureProperty, parentRef});
             return `tree-node-${id}`;

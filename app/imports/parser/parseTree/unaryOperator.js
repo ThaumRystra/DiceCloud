@@ -1,17 +1,17 @@
-import resolve, { toString, traverse, map } from '../resolve.js';
-import constant from './constant.js';
+import resolve, { toString, traverse, map } from '../resolve';
+import constant from './constant';
 
 const unaryOperator = {
-  create({operator, right}) {
+  create({ operator, right }) {
     return {
       parseType: 'unaryOperator',
       operator,
       right,
     };
   },
-  resolve(fn, node, scope, context){
-    const {result: rightNode} = resolve(fn, node.right, scope, context);
-    if (rightNode.valueType !== 'number'){
+  resolve(fn, node, scope, context) {
+    const { result: rightNode } = resolve(fn, node.right, scope, context);
+    if (rightNode.valueType !== 'number') {
       return {
         result: unaryOperator.create({
           operator: node.operator,
@@ -22,7 +22,7 @@ const unaryOperator = {
     }
     let right = rightNode.value;
     let result;
-    switch(node.operator){
+    switch (node.operator) {
       case '-': result = -right; break;
       case '+': result = +right; break;
     }
@@ -34,16 +34,16 @@ const unaryOperator = {
       context,
     };
   },
-  toString(node){
+  toString(node) {
     return `${node.operator}${toString(node.right)}`;
   },
-  traverse(node, fn){
+  traverse(node, fn) {
     fn(node);
     traverse(node.right, fn);
   },
-  map(node, fn){
+  map(node, fn) {
     const resultingNode = fn(node);
-    if (resultingNode === node){
+    if (resultingNode === node) {
       node.right = map(node.right, fn);
     }
     return resultingNode;

@@ -1,22 +1,21 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
-import { RefSchema } from '/imports/api/parenting/ChildSchema.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import {
   assertEditPermission,
   assertDocEditPermission,
   assertCopyPermission
-} from '/imports/api/sharing/sharingPermissions.js';
+} from '/imports/api/sharing/sharingPermissions';
 import {
-  setLineageOfDocs,
-  getAncestry,
+  fetchDocByRef,
+  getFilter,
   renewDocIds
-} from '/imports/api/parenting/parenting.js';
-import { reorderDocs } from '/imports/api/parenting/order.js';
-import { setDocToLastOrder } from '/imports/api/parenting/order.js';
-import Libraries from '/imports/api/library/Libraries.js';
+} from '/imports/api/parenting/parentingFunctions';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import Libraries from '/imports/api/library/Libraries';
 const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const copyPropertyToLibrary = new ValidatedMethod({
@@ -41,33 +40,30 @@ const copyPropertyToLibrary = new ValidatedMethod({
   },
   run({ propId, parentRef, order }) {
     // get the new ancestry for the properties
-    let { parentDoc, ancestors } = getAncestry({ parentRef });
+    const parentDoc = fetchDocByRef(parentRef);
 
     // Check permission to edit the destination
     let rootLibrary;
     if (parentRef.collection === 'libraries') {
       rootLibrary = parentDoc;
     } else if (parentRef.collection === 'libraryNodes') {
-      rootLibrary = Libraries.findOne(parentDoc.ancestors[0].id)
+      rootLibrary = Libraries.findOne(parentDoc.root.id)
     } else {
       throw `${parentRef.collection} is not a valid parent collection`
     }
     assertEditPermission(rootLibrary, this.userId);
 
-    const insertedRootNode = insertNodeFromProperty(propId, ancestors, order, this);
+    const insertedRootNode = insertNodeFromProperty(propId, order, this);
 
     // Tree structure changed by inserts, reorder the tree
-    reorderDocs({
-      collection: LibraryNodes,
-      ancestorId: rootLibrary._id,
-    });
+    rebuildNestedSets(LibraryNodes, rootLibrary._id);
 
     // Return the docId of the inserted root property
     return insertedRootNode?._id;
   },
 });
 
-function insertNodeFromProperty(propId, ancestors, order, method) {
+function insertNodeFromProperty(propId, order, method) {
   // Fetch the property and its descendants, provided they have not been
   // removed
   let prop = CreatureProperties.findOne({
@@ -87,9 +83,9 @@ function insertNodeFromProperty(propId, ancestors, order, method) {
   // Make sure we can edit this property
   assertDocEditPermission(prop, method.userId);
 
-  let oldParent = prop.parent;
+  let oldParentId = prop.parentId;
   const propCursor = CreatureProperties.find({
-    'ancestors.id': propId,
+    ...getFilter.descendants(prop),
     removed: { $ne: true },
   });
 
@@ -109,13 +105,6 @@ function insertNodeFromProperty(propId, ancestors, order, method) {
   // properties
   assertSourceLibraryCopyPermission(props, method);
 
-  // re-map all the ancestors
-  setLineageOfDocs({
-    docArray: props,
-    newAncestry: ancestors,
-    oldParent,
-  });
-
   // Give the docs new IDs without breaking internal references
   renewDocIds({
     docArray: props,
@@ -123,14 +112,8 @@ function insertNodeFromProperty(propId, ancestors, order, method) {
   });
 
   // Order the root node
-  if (order === undefined) {
-    setDocToLastOrder({
-      collection: LibraryNodes,
-      doc: prop,
-    });
-  } else {
-    prop.order = order;
-  }
+  prop.left = Number.MAX_SAFE_INTEGER - 1;
+  prop.right = Number.MAX_SAFE_INTEGER;
 
   // Clean the props
   props = cleanProps(props);
@@ -142,8 +125,8 @@ function insertNodeFromProperty(propId, ancestors, order, method) {
 
 /**
  * 
- * @param {[Property]} props The properties to check
- * @param {String} userId The userId trying to copy these properties to a library
+ * @param props The properties to check
+ * @param userId The userId trying to copy these properties to a library
  * Checks that every property can be copied out of the library that originated it by this user
  */
 function assertSourceLibraryCopyPermission(props, method) {
@@ -162,9 +145,9 @@ function assertSourceLibraryCopyPermission(props, method) {
   LibraryNodes.find({
     _id: { $in: libraryNodeIds }
   }, {
-    fields: { ancestors: 1 }
+    fields: { root: 1 }
   }).forEach(node => {
-    sourceLibIds.add(node.ancestors?.[0]?.id);
+    sourceLibIds.add(node.root.id);
   });
 
   // Assert copy permission on each of those libraries

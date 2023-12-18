@@ -38,7 +38,7 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import { transferOwnership } from '/imports/api/sharing/sharing.js';
+import { transferOwnership } from '/imports/api/sharing/sharing';
 
 export default {
   components: {

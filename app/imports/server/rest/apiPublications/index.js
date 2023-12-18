@@ -1,2 +1,2 @@
-import './creature.js';
-import './healthCheck.js';
+import './creature';
+import './healthCheck';

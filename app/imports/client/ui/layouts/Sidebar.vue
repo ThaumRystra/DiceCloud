@@ -65,10 +65,10 @@
 </template>
 
 <script lang="js">
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
-import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName.js';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
 
 const characterTransform = function (char) {

@@ -1,7 +1,7 @@
-import computeToggles from '/imports/api/engine/computation/computeComputation/computeToggles.js';
-import computeByType from '/imports/api/engine/computation/computeComputation/computeByType.js';
-import embedInlineCalculations from './utility/embedInlineCalculations.js';
-import { removeEmptyCalculations } from './buildComputation/parseCalculationFields.js';
+import computeToggles from '/imports/api/engine/computation/computeComputation/computeToggles';
+import computeByType from '/imports/api/engine/computation/computeComputation/computeByType';
+import embedInlineCalculations from './utility/embedInlineCalculations';
+import { removeEmptyCalculations } from './buildComputation/parseCalculationFields';
 import path from 'ngraph.path';
 
 export default function computeCreatureComputation(computation) {

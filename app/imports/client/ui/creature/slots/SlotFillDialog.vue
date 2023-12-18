@@ -233,22 +233,22 @@
 </template>
 
 <script lang="js">
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
-import LibraryNodes from '/imports/api/library/LibraryNodes.js';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue'
-import resolve, { toString } from '/imports/parser/resolve.js';
-import { prettifyParseError, parse } from '/imports/parser/parser.js';
-import Libraries from '/imports/api/library/Libraries.js';
+import resolve, { toString } from '/imports/parser/resolve';
+import { prettifyParseError, parse } from '/imports/parser/parser';
+import Libraries from '/imports/api/library/Libraries';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES.js';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
 import { clone, difference } from 'lodash';
-import getDefaultSlotFiller from '/imports/api/library/methods/getDefaultSlotFiller.js';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode.js';
-import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty.js';
+import getDefaultSlotFiller from '/imports/api/library/methods/getDefaultSlotFiller';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
 
 export default {
   components: {
