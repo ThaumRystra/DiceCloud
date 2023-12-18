@@ -8,6 +8,7 @@ import { assertViewPermission } from '/imports/api/creature/creatures/creaturePe
 import computeCreature from '/imports/api/engine/computeCreature';
 import VERSION from '/imports/constants/VERSION';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
+import { rebuildCreatureNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 let schema = new SimpleSchema({
   creatureId: {
@@ -35,7 +36,13 @@ Meteor.publish('singleCharacter', function (creatureId) {
     loadCreature(creatureId, self);
     if (permissionCreature.computeVersion !== VERSION && computation.firstRun) {
       try {
-        computeCreature(creatureId)
+        rebuildCreatureNestedSets(creatureId).then(() => {
+          try {
+            computeCreature(creatureId)
+          } catch (e) {
+            console.error(e);
+          }
+        });
       }
       catch (e) { console.error(e) }
     }

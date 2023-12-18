@@ -6,7 +6,7 @@ import applyProperty from '/imports/api/engine/actions/applyProperty';
 import { difference, intersection } from 'lodash';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 
-export function applyNodeTriggers(node: TreeNode<any>, timing, actionContext) {
+export async function applyNodeTriggers(node: TreeNode<any>, timing, actionContext) {
   const prop = node.doc;
   const type = prop.type;
   const triggers = actionContext.triggers?.doActionProperty?.[type]?.[timing];

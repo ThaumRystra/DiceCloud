@@ -103,7 +103,7 @@ export default {
   },
   methods: {
     reordered({ doc, newIndex }) {
-      reorderDoc.call({
+      reorderDoc.callAsync({
         docRef: {
           id: doc._id,
           collection: 'libraryNodes',
@@ -124,7 +124,7 @@ export default {
           collection: 'libraries',
         };
       }
-      organizeDoc.call({
+      organizeDoc.callAsync({
         docRef: {
           id: doc._id,
           collection: 'libraryNodes',

@@ -37,11 +37,13 @@
           :disabled="expanded"
         />
         <!--{{node && node.order}}-->
+        <span>{{ node.left }}</span>
         <tree-node-view
           :model="node"
           :selected="selected"
           :show-external-details="showExternalDetails"
         />
+        <span>{{ node.right }}</span>
       </div>
     </div>
     <v-expand-transition>
@@ -83,7 +85,6 @@
 * the tree view shows off the full character structure, and where each part of
 * character comes from.
 **/
-import { canBeParent } from '/imports/api/parenting/parentingFunctions';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { isAncestor } from '/imports/api/parenting/parentingFunctions';
@@ -145,7 +146,7 @@ export default {
       return children;
     },
     canExpand() {
-      return canBeParent(this.node.type);
+      return true;
     },
   },
   watch: {

@@ -49,7 +49,7 @@
     "pretty-bytes": "^6.1.0",
     "qrcode.vue": "^1.7.0",
     "request": "^2.88.2",
-    "sharp": "^0.30.7",
+    "sharp": "^0.33.1",
     "simpl-schema": "^1.13.1",
     "source-map-support": "^0.5.21",
     "speakingurl": "^14.0.1",

@@ -36,7 +36,7 @@ const equipItem = new ValidatedMethod({
     let parentRef = getParentRefByTag(creature._id, tag);
     if (!parentRef) parentRef = { id: creature._id, collection: 'creatures' };
 
-    organizeDoc.call({
+    organizeDoc.callAsync({
       docRef: {
         id: _id,
         collection: 'creatureProperties',

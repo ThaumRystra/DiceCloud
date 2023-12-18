@@ -162,8 +162,8 @@ import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 
 export default {
@@ -267,7 +267,7 @@ export default {
           return prop.ancestors[buffIndex.ancestorIndex]?.id === buffIndex.id;
         });
       });
-      return nodeArrayToTree(decendants);
+      return docsToForest(decendants);
     },
   },
   methods: {

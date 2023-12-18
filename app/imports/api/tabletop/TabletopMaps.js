@@ -1,5 +1,5 @@
 import SimpleSchema from 'simpl-schema';
-import ChildSchema from '/imports/api/parenting/ChildSchema.js';
+import ChildSchema from '/imports/api/parenting/ChildSchema';
 
 let TabletopMaps = new Mongo.Collection('tabletopmaps');
 

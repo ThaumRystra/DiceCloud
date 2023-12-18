@@ -12,13 +12,13 @@
   >
     <tree-node
       v-for="child in displayedChildren"
-      :key="child.node._id"
+      :key="child.doc._id"
       class="item"
-      :node="child.node"
+      :node="child.doc"
       :children="child.children"
       :group="group"
       :selected-node="selectedNode"
-      :selected="selectedNode && selectedNode._id === child.node._id"
+      :selected="selectedNode && selectedNode._id === child.doc._id"
       :ancestors-of-selected-node="ancestorsOfSelectedNode"
       :organize="organize"
       :lazy="lazy"
@@ -34,7 +34,6 @@
 <script lang="js">
 import draggable from 'vuedraggable';
 import TreeNode from '/imports/client/ui/components/tree/TreeNode.vue';
-import { isParentAllowed } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -93,22 +92,21 @@ export default {
     change({ added, moved }) {
       let event = moved || added;
       if (event) {
-        let doc = event.element.node;
+        let doc = event.element.doc;
         let newIndex;
         if (event.newIndex === 0) {
-          newIndex = -0.5;
+          newIndex = 0.5;
         } else {
           if (event.newIndex < this.children.length) {
             let childAtNewIndex = this.children[event.newIndex];
-            let indexOrder = childAtNewIndex.node.order;
             if (event.newIndex > event.oldIndex) {
-              newIndex = indexOrder + 0.5;
+              newIndex = childAtNewIndex.doc.right + 0.5;
             } else {
-              newIndex = indexOrder - 0.5;
+              newIndex = childAtNewIndex.doc.left - 0.5;
             }
           } else {
             let childBeforeNewIndex = this.children[event.newIndex - 1];
-            newIndex = childBeforeNewIndex.node.order + 0.5;
+            newIndex = childBeforeNewIndex.doc.right + 0.5;
           }
         }
         if (moved) {
@@ -118,12 +116,8 @@ export default {
         }
       }
     },
-    move(evt) {
-      let parentNode = evt.relatedContext.component.$parent.node
-      let parentType = parentNode && parentNode.type || 'root';
-      let childType = evt.draggedContext.element.node.type;
-      let allowed = isParentAllowed({ parentType, childType });
-      return allowed;
+    move() {
+      return true;
     },
   },
 };

@@ -136,7 +136,7 @@
 
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TabletopActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import CreatureBarIcon from '/imports/client/ui/tabletop/selectedCreatureBar/CreatureBarIcon.vue';
 

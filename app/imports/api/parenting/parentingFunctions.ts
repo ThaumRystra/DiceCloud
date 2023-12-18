@@ -1,5 +1,7 @@
 import { chain, reverse } from 'lodash';
 import { TreeDoc, treeDocFields, Reference } from '/imports/api/parenting/ChildSchema';
+import { getProperties } from '/imports/api/engine/loadCreatures';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
   const collection = Mongo.Collection.get(name)
@@ -11,7 +13,7 @@ export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
   return collection;
 }
 
-function assertDocFound(doc) {
+function assertDocFound(doc, ref) {
   if (!doc) {
     throw new Meteor.Error('document-not-found',
       `No document could be found with id: ${ref.id} in ${ref.collection}`
@@ -21,13 +23,13 @@ function assertDocFound(doc) {
 
 export function fetchDocByRefAsync(ref: Reference, options?: Mongo.Options<object>): Promise<TreeDoc> {
   const doc = getCollectionByName(ref.collection).findOneAsync(ref.id, options);
-  assertDocFound(doc);
+  assertDocFound(doc, ref);
   return doc;
 }
 
 export function fetchDocByRef(ref: Reference, options?: Mongo.Options<object>): TreeDoc {
   const doc: TreeDoc = getCollectionByName(ref.collection).findOne(ref.id, options);
-  assertDocFound(doc);
+  assertDocFound(doc, ref);
   return doc;
 }
 
@@ -87,7 +89,9 @@ type FilteredDoc = {
   _ancestorOfMatchedDocument?: boolean,
 } & TreeDoc;
 
-export async function filterToForest(
+let filterToForest: undefined | ((...any) => TreeNode<FilteredDoc>[]) = undefined;
+
+if (Meteor.isClient) filterToForest = function (
   collection: Mongo.Collection<TreeDoc>,
   rootId: string,
   filter: Mongo.Selector<TreeDoc>,
@@ -96,7 +100,7 @@ export async function filterToForest(
     includeFilteredDocAncestors = false,
     includeFilteredDocDescendants = false
   } = {}
-): Promise<TreeNode<FilteredDoc>[]> {
+): TreeNode<FilteredDoc>[] {
   // Setup the filter
   let collectionFilter = {
     'root.id': rootId,
@@ -128,8 +132,8 @@ export async function filterToForest(
     }
   }
   // Find all the docs that match the filter
-  const docs: TreeDoc[] = await collection.find(collectionFilter, collectionOptions)
-    .mapAsync(doc => {
+  const docs: TreeDoc[] = collection.find(collectionFilter, collectionOptions)
+    .map(doc => {
       if (!filter) return doc;
       // Mark the docs that were found by the custom filter
       doc._matchedDocumentFilter = true;
@@ -139,7 +143,7 @@ export async function filterToForest(
   // Get the doc ancestors
   let ancestors: object[] = [];
   if (filter && includeFilteredDocAncestors) {
-    ancestors = await collection.find(getFilter.ancestorsOfAll(docs), collectionOptions).mapAsync(doc => {
+    ancestors = collection.find(getFilter.ancestorsOfAll(docs), collectionOptions).map(doc => {
       // Mark that the nodes are ancestors of the found nodes
       doc._ancestorOfMatchedDocument = true;
       return doc;
@@ -149,25 +153,27 @@ export async function filterToForest(
   // Get the doc descendants
   let descendants: FilteredDoc[] = [];
   if (filter && includeFilteredDocDescendants) {
-    descendants = await collection.find({
+    descendants = collection.find({
       'removed': { $ne: true },
       ...getFilter.descendantsOfAll(docs),
-    }).mapAsync((doc: FilteredDoc) => {
+    }).map((doc: FilteredDoc) => {
       // Mark that the nodes are descendants of the found nodes
       doc._descendantOfMatchedDocument = true;
       return doc;
     });
   }
   const nodes = chain([
-    ancestors,
-    docs,
-    descendants
+    ...ancestors,
+    ...docs,
+    ...descendants
   ]).uniqBy('_id')
     .sortBy('left')
     .value();
   // Find all the nodes
   return docsToForest(nodes);
 }
+
+export { filterToForest };
 
 type ForestAndOrphans = { forest: TreeNode<TreeDoc>[], orphanIds: string[] }
 /**
@@ -339,32 +345,41 @@ export function renewDocIds({ docArray, collectionMap = {}, idMap = {} }) {
  * Changes the doc to be a child of the parent, and then rebuilds the nested sets of the roots
  * of both doc and parent
  * @param doc The doc to move
- * @param parent The new parent of the doc
+ * @param parent The new parent of the doc, null to move the doc to the root of the tree
  * @param collection 
  * @returns 
  */
-export async function changeParent(doc: TreeDoc, parent: TreeDoc, collection: Mongo.Collection<TreeDoc>, order?: number) {
+export async function changeParent(doc: TreeDoc, parent: TreeDoc | null, collection: Mongo.Collection<TreeDoc>, order?: number) {
   // Skip if we aren't changing the parent id
-  if (doc.parentId === parent._id) return;
+  if (doc.parentId === parent?._id) return;
 
   // Store the original roots
-  const rootChange = doc.root.id !== parent.root.id;
+  const rootChange = parent && doc.root.id !== parent.root?.id;
 
   // Check that the doc isn't becoming its own ancestor
-  if (parent.left > doc.left && parent.right < doc.right) {
+  if (parent && parent.left > doc.left && parent.right < doc.right) {
     throw new Meteor.Error('invalid parenting', 'A doc can\'t be its own ancestor');
   }
 
   // update the document's parenting and root if necessary
-  const update: Mongo.Modifier<TreeDoc> = {
-    $set: { parentId: parent._id }
-  };
+  let update: Mongo.Modifier<TreeDoc>;
+  if (!parent) {
+    update = {
+      $unset: { parentId: 1 }
+    };
+  } else {
+    update = {
+      $set: { parentId: parent?._id }
+    };
+  }
   if (rootChange && update.$set) {
     update.$set.root = parent.root;
   }
-  if (order && update.$set) {
+  if (order) {
+    if (!update.$set) update.$set = {};
     update.$set.left = order;
   }
+
   await collection.updateAsync(doc._id, update);
 
   // Rebuild the nested sets of everything on the root document(s)
@@ -403,7 +418,8 @@ export function hasAncestorRelationship(propA: TreeDoc, propB: TreeDoc): boolean
 /**
  * Returns true if A is a direct ancestor of B, assuming their roots are equal
  */
-export function isAncestor(propA: TreeDoc, propB: TreeDoc): boolean {
+export function isAncestor(propA?: TreeDoc, propB?: TreeDoc): boolean {
+  if (!propA || !propB) return false;
   return propA.left < propB.left && propA.right > propB.right;
 }
 
@@ -415,7 +431,7 @@ export function setDocToLastOrder(collection: Mongo.Collection<TreeDoc>, doc: Tr
 }
 
 export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, rootId: string) {
-  const docs = collection.find({
+  const docs = await collection.find({
     'root.id': rootId,
     removed: { $ne: true }
   }, {
@@ -424,11 +440,16 @@ export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, r
       //Reverse sorting so that arrays can be used as stacks with the first item on top
       left: 1,
     },
-  }).fetch();
+  }).fetchAsync();
 
   const operations = calculateNestedSetOperations(docs);
+  return writeBulkOperations(collection, operations);
+}
 
-  await writeBulkOperations(collection, operations);
+export async function rebuildCreatureNestedSets(creatureId) {
+  const docs = getProperties(creatureId);
+  const operations = calculateNestedSetOperations(docs);
+  return writeBulkOperations(CreatureProperties as Mongo.Collection<TreeDoc, TreeDoc>, operations);
 }
 
 /** Calculates the operations needed to make a tree of nested sets
@@ -499,14 +520,14 @@ export function calculateNestedSetOperations(docs: TreeDoc[]) {
 
 /**
  * Same as calculateNestedSetOperations, but applies the ops to the properties
- * Mostly used to create testing documents.
- * @param docs 
- * @returns 
+ * @param docs An array of documents that share a common root. Must already be sorted by `.left` in ascending order
+ * @returns The documents as a forest of tree nodes
  */
 export function applyNestedSetProperties(docs: TreeDoc[]) {
   // Walk around the tree numbering left on the way down and right on the way up like so:
-  const { forest: stack, orphanIds } = docsToForestByParentId(reverse([...docs]));
+  const { forest, orphanIds } = docsToForestByParentId(reverse([...docs]));
 
+  const stack = [...forest];
   const visitedNodes = new Set();
   const visitedChildren = new Set();
   let count = 1;
@@ -540,6 +561,7 @@ export function applyNestedSetProperties(docs: TreeDoc[]) {
       count += 1;
     }
   }
+  return forest;
 }
 
 /**

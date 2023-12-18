@@ -56,6 +56,7 @@ export function getProperties(creatureId) {
   const creature = loadedCreatures.get(creatureId);
   if (creature) {
     const props = Array.from(creature.properties.values());
+    props.sort((a, b) => a.left - b.left);
     return EJSON.clone(props);
   }
   // console.time(`Cache miss on creature properties: ${creatureId}`)
@@ -78,6 +79,7 @@ export function getPropertiesOfType(creatureId, propType) {
         props.push(prop);
       }
     }
+    props.sort((a, b) => a.left - b.left);
     return EJSON.clone(props);
   }
   // console.time(`Cache miss on creature properties: ${creatureId}`)

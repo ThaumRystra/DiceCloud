@@ -18,7 +18,7 @@ interface Ammo extends Item {
   adjustment: number
 }
 
-export default function applyAction(node: TreeNode<Action>, actionContext) {
+export default async function applyAction(node: TreeNode<Action>, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.doc;
   if (prop.target === 'self') actionContext.targets = [actionContext.creature];
@@ -198,7 +198,7 @@ function applyCrits(value, scope) {
   return { criticalHit, criticalMiss };
 }
 
-function spendResources(prop: Action, actionContext) {
+async function spendResources(prop: Action, actionContext) {
   // Check Uses
   if (!prop.usesLeft || prop.usesLeft <= 0) {
     if (!prop.silent) actionContext.addLog({

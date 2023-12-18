@@ -99,7 +99,7 @@ import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
 import MiniCharacterSheet from '/imports/client/ui/creature/character/MiniCharacterSheet.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';

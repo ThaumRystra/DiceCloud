@@ -50,7 +50,7 @@
 </template>
 
 <script lang="js">
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties.js';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
 

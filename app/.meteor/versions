@@ -125,4 +125,5 @@ url@1.3.2
 webapp@1.13.5
 webapp-hashing@1.1.1
 zer0th:meteor-vuetify-loader@0.1.41
+zodern:fix-async-stubs@1.0.2
 zodern:types@1.0.9

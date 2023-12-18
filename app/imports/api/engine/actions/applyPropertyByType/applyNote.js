@@ -2,7 +2,7 @@ import recalculateInlineCalculations from './shared/recalculateInlineCalculation
 import applyChildren from '/imports/api/engine/actions/applyPropertyByType/shared/applyChildren';
 import { applyNodeTriggers } from '/imports/api/engine/actions/applyTriggers';
 
-export default function applyNote(node, actionContext) {
+export default async function applyNote(node, actionContext) {
   applyNodeTriggers(node, 'before', actionContext);
   const prop = node.doc
 

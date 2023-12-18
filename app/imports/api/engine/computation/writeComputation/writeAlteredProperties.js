@@ -23,6 +23,9 @@ export default function writeAlteredProperties(computation) {
       'deactivatingToggleId',
       'damage',
       'dirty',
+      'left',
+      'right',
+      'parentId',
       ...schema.objectKeys(),
     ];
     op = addChangedKeysToOp(op, keys, original, changed);

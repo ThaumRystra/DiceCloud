@@ -19,7 +19,7 @@
 </template>
 
 <script lang="js">
-import { nodeArrayToTree } from '/imports/api/parenting/nodesToTree.js';
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { organizeDoc, reorderDoc } from '/imports/api/docs/Docs.js';
 import Docs from '/imports/api/docs/Docs.js';
@@ -48,7 +48,7 @@ export default {
     },
     docs() {
       const docs = Docs.find({ removed: {$ne: true} }, { sort: {order: 1} }).fetch();
-      return nodeArrayToTree(docs);
+      return docsToForest(docs);
     },
   },
   methods: {
@@ -59,7 +59,7 @@ export default {
       this.$router.push(doc.href);
     },
     reordered({ doc, newIndex }) {
-      reorderDoc.call({
+      reorderDoc.callAsync({
         docId: doc._id,
         order: newIndex,
       });
@@ -70,7 +70,7 @@ export default {
         console.error('Moving docs to root level isn\'t implemented');
         return;
       }
-      organizeDoc.call({
+      organizeDoc.callAsync({
         docId: doc._id,
         parentId: parent?._id,
         order: newIndex,

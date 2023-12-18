@@ -7,6 +7,7 @@ import propertySlot from './computeByType/computeSlot';
 import container from './computeByType/computeContainer';
 import spellList from './computeByType/computeSpellList';
 import toggle from './computeByType/computeToggle';
+import trigger from './computeByType/computeTrigger';
 import _calculation from './computeByType/computeCalculation';
 
 export default Object.freeze({

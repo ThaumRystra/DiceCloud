@@ -47,8 +47,8 @@ export default {
     expanded: Boolean,
   },
   meteor: {
-    async children() {
-      const children = await filterToForest(
+    children() {
+      const children = filterToForest?.(
         getCollectionByName(this.collection),
         this.root.id,
         this.filter,
@@ -56,14 +56,15 @@ export default {
           includeFilteredDocAncestors: true,
           includeFilteredDocDescendants: true,
         }
-      );
+      ) || [];
+      console.log(children)
       this.$emit('length', children.length);
       return children;
     },
   },
   methods: {
     reordered({ doc, newIndex }) {
-      reorderDoc.call({
+      reorderDoc.callAsync({
         docRef: {
           id: doc._id,
           collection: this.collection,
@@ -81,7 +82,7 @@ export default {
       } else {
         parentRef = this.root;
       }
-      organizeDoc.call({
+      organizeDoc.callAsync({
         docRef: {
           id: doc._id,
           collection: this.collection,

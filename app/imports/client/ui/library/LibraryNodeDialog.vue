@@ -246,7 +246,7 @@ export default {
         elementId: 'property-toolbar-menu-button',
         callback(parentId){
           if (!parentId) return;
-          organizeDoc.call({
+          organizeDoc.callAsync({
             docRef: {
               collection: 'libraryNodes',
               id,

@@ -99,7 +99,7 @@ export default {
       // Create the undo function
       const oldOrder = item.order;
       const oldParent = item.parent;
-      const undo = () => organizeDoc.call({
+      const undo = () => organizeDoc.callAsync({
         docRef,
         parentRef: oldParent,
         order: (oldOrder || 0) - 0.5,
@@ -112,7 +112,7 @@ export default {
       });
 
       // Move the doc
-      organizeDoc.call({
+      organizeDoc.callAsync({
         docRef,
         parentRef: { collection: 'creatures', id: this.model._id },
         order: -0.5,
