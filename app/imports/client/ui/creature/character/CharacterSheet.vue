@@ -30,18 +30,17 @@
       <div
         v-else
         key="character-tabs"
-        class="fill-height"
+        class="card-background fill-height"
       >
         <v-tabs-items
           :key=" '' +
             creature.settings.hideSpellsTab +
             creature.settings.showTreeTab
           "
-          :value="$store.getters.tabById($route.params.id)"
-          class="card-background"
+          :value="$store.getters.tabById(creatureId)"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
-            {id: $route.params.id, tab: e}
+            {id: creatureId, tab: e}
           )"
         >
           <v-tab-item>
@@ -72,7 +71,7 @@
       </div>
     </v-fade-transition>
     <character-sheet-fab
-      v-if="$vuetify.breakpoint.xsOnly"
+      v-if="!embedded && $vuetify.breakpoint.xsOnly"
       direction="top"
       fixed
       bottom
@@ -81,15 +80,15 @@
       :edit-permission="editPermission"
     />
     <v-bottom-navigation
-      v-if="$vuetify.breakpoint.xsOnly && creature && creature.settings"
+      v-if="!embedded && $vuetify.breakpoint.xsOnly && creature && creature.settings"
       app
       shift
       mandatory
       class="bottom-nav-btns"
-      :value="$store.getters.tabById($route.params.id)"
+      :value="$store.getters.tabById(creatureId)"
       @change="e => $store.commit(
         'setTabForCharacterSheet',
-        {id: $route.params.id, tab: e}
+        {id: creatureId, tab: e}
       )"
     >
       <v-btn>
@@ -144,6 +143,7 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
+import CharacterSheetInitiative from '/imports/client/ui/creature/character/CharacterSheetInitiative.vue';
 
 export default {
   components: {
@@ -156,13 +156,16 @@ export default {
     BuildTab,
     TreeTab,
     CharacterSheetFab,
+    CharacterSheetInitiative,
   },
   props: {
     creatureId: {
       type: String,
       required: true,
     },
+    embedded: Boolean,
   },
+  // @ts-ignore
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -249,5 +252,10 @@ export default {
 .character-sheet .v-window-item {
   min-height: calc(100vh - 96px);
   overflow: hidden;
+}
+
+.dialog-component .character-sheet .v-window-item {
+  min-height: unset;
+  overflow: unset;
 }
 </style>

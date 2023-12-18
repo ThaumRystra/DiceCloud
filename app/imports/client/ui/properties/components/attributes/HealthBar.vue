@@ -19,34 +19,18 @@
     <v-flex
       style="height: 24px; flex-basis: 300px; flex-grow: 100;"
     >
-      <div
-        column
-        align-center
+      <health-bar-progress
+        :model="model"
         style="cursor: pointer;"
-        class="bar"
         @click="edit"
       >
         <div
-          style="height: 24px; width: 100%; position: relative; transition: background-color 0.5s ease;"
-          :style="{
-            backgroundColor: barBackgroundColor
+          class="value"
+          :class="{
+            'white--text': isTextLight,
+            'black--text': !isTextLight,
           }"
-        >
-          <div
-            class="filler"
-            style="height: 100%; transform-origin: left; transition: all 0.5s ease;"
-            :style="{
-              backgroundColor: barColor,
-              transform: `scaleX(${fillFraction})`,
-            }"
-          />
-          <div
-            class="value"
-            :class="{
-              'white--text': isTextLight,
-              'black--text': !isTextLight,
-            }"
-            style="font-size: 15px;
+          style="font-size: 15px;
               line-height: 24px;
               font-weight: 600;
               position: absolute;
@@ -55,11 +39,10 @@
               right: 0;
               bottom: 0;
               text-align: center;"
-          >
-            {{ model.value }} / {{ model.total }}
-          </div>
+        >
+          {{ model.value }} / {{ model.total }}
         </div>
-      </div>
+      </health-bar-progress>
       <v-menu
         v-model="editing"
         absolute
@@ -85,11 +68,13 @@
 <script lang="js">
 import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
 import chroma from 'chroma-js';
 
 export default {
   components: {
-    IncrementMenu
+    IncrementMenu,
+    HealthBarProgress,
   },
   inject: {
     theme: {

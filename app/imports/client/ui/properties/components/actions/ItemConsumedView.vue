@@ -27,28 +27,30 @@
             :color="model.itemColor"
           />
           <div
+            v-if="quantity !== 1"
             class="mr-2 text-no-wrap"
             style="min-width: 24px; text-align: center;"
           >
-            <template v-if="quantity !== 1">
-              {{ model.available }} / {{ quantity }}
-            </template>
-            <template v-else>
-              {{ model.available }}
-            </template>
+            {{ quantity }}
           </div>
-          <div
-            class="text-no-wrap text-truncate flex"
-          >
-            <template v-if="model.itemId">
-              {{ model.itemName }}
-            </template>
-            <span
-              v-else
-              class="error--text"
+          <template v-if="model.itemId">
+            <div
+              class="text-no-wrap text-truncate"
             >
-              Select item
-            </span>
+              {{ model.itemName }}
+            </div>
+            <div
+              v-if="(typeof model.available) == 'number'"
+              class="text--disabled text-no-wrap text-truncate ml-1 flex-shrink-0"
+            >
+              ({{ model.available }})
+            </div>
+          </template>
+          <div
+            v-else
+            class="error--text text-no-wrap text-truncate flex"
+          >
+            Select item
           </div>
           <v-icon
             v-if="context.editPermission"

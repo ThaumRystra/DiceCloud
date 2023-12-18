@@ -1,52 +1,38 @@
 <template lang="html">
-  <div class="tabletop-log">
-    <div class="messages layout column justify-end align-end">
-      <div
-        v-for="message in messages"
-        :key="message._id"
-        class="message"
-      >
-        {{ message.content }}
-      </div>
-    </div>
-    <v-textarea
-      v-model="messageContent"
-      @keyup.enter.prevent="sendMessage"
-    />
-  </div>
+  <character-log
+    :tabletop-id="tabletopId"
+    :creature-id="activeCreatureId"
+  />
 </template>
 
 <script lang="js">
-import Messages, { sendMessage } from '/imports/api/tabletop/Messages';
+import { insertTabletopLog } from '/imports/api/creature/log/CreatureLogs';
+import CharacterLog from '/imports/client/ui/log/CharacterLog.vue';
+
 export default {
+  components: {
+    CharacterLog,
+  },
+  inject: {
+    context: {
+      default: {},
+    },
+  },
   props: {
     tabletopId: {
       type: String,
-      required: true,
+      default: undefined,
     },
   },
-  data(){ return {
-    messageContent: '',
-  }},
-  meteor: {
-    messages() {
-      return Messages.find({
-        tabletopId: this.tabletopId,
-      }, {
-        sort: {
-          timeStamp: 1,
-        },
-      });
+  data() {
+    return {
+      activeCreatureId: undefined,
     }
   },
-  methods: {
-    sendMessage(){
-      sendMessage.call({
-        content: this.messageContent,
-        tabletopId: this.tabletopId,
-      });
-      this.messageContent = '';
-    },
+  mounted() {
+    this.$root.$on('active-tabletop-character-change', (id) => {
+      this.activeCreatureId = id;
+    });
   },
 }
 </script>

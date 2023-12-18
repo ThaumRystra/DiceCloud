@@ -14,7 +14,7 @@
           class="mr-2"
           :color="model.color || 'primary'"
           :loading="doActionLoading"
-          :disabled="model.insufficientResources || !context.editPermission"
+          :disabled="model.insufficientResources || !context.editPermission || !!targetingError"
           :roll-text="rollBonus"
           :name="model.name"
           :advantage="model.attackRoll && model.attackRoll.advantage"
@@ -36,7 +36,7 @@
           class="mr-2"
           :color="model.color || 'primary'"
           :loading="doActionLoading"
-          :disabled="model.insufficientResources || !context.editPermission"
+          :disabled="model.insufficientResources || !context.editPermission || !!targetingError"
           @click.stop="doAction"
         >
           <property-icon :model="model" />
@@ -53,12 +53,20 @@
           {{ model.name || propertyName }}
         </div>
         <div class="action-sub-title layout align-center">
-          <div class="flex">
-            {{ model.actionType }}
+          <div
+            v-if="targetingError"
+            class="flex error--text"
+          >
+            {{ targetingError }}
           </div>
-          <div v-if="Number.isFinite(model.usesLeft)">
-            {{ model.usesLeft }} uses
-          </div>
+          <template v-else>
+            <div class="flex">
+              {{ model.actionType }}
+            </div>
+            <div v-if="Number.isFinite(model.usesLeft)">
+              {{ model.usesLeft }} uses
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -149,6 +157,10 @@ export default {
       type: Object,
       required: true,
     },
+    targets: {
+      type: Array,
+      default: undefined,
+    },
   },
   data() {
     return {
@@ -185,6 +197,16 @@ export default {
     actionTypeIcon() {
       return `$vuetify.icons.${this.model.actionType}`;
     },
+    targetingError(){
+      // Can always do an action without a target
+      if (!this.targets || !this.targets.length) return undefined;
+      if (this.targets.length > 1 && this.model.target !== 'multipleTargets'){
+        return 'Single target';
+      } else if (this.model.target === 'self' && this.targets[0] !== this.model.ancestors[0]._id){
+        return 'Can only target self';
+      }
+      return undefined;
+    }
   },
   meteor: {
     children() {

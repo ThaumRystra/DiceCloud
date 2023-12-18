@@ -16,8 +16,7 @@ export default function computeAction(computation, node) {
     }
   });
   prop.resources.itemsConsumed?.forEach(itemConsumed => {
-    if (!itemConsumed.itemId) return;
-    if (itemConsumed.available < itemConsumed.quantity?.value) {
+    if (!itemConsumed.itemId || itemConsumed.available < itemConsumed.quantity?.value) {
       prop.insufficientResources = true;
     }
   });

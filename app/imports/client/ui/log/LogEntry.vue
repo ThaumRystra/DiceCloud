@@ -2,6 +2,9 @@
   <v-card
     class="ma-2 log-entry"
   >
+    <v-card-title v-if="showName && model.creatureName">
+      {{ model.creatureName }}
+    </v-card-title>
     <v-card-text
       v-if="model.text || (model.content && model.content.length)"
       class="pa-2"
@@ -23,6 +26,7 @@ export default {
       type: Object,
       required: true,
     },
+    showName: Boolean,
   },
 }
 </script>

@@ -8,6 +8,7 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { parse, prettifyParseError } from '/imports/parser/parser';
 import resolve, { toString } from '/imports/parser/resolve';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { assertUserInTabletop } from '/imports/api/tabletop/methods/shared/tabletopPermissions.js';
 
 const PER_CREATURE_LOG_LIMIT = 100;
 
@@ -41,6 +42,12 @@ let CreatureLogSchema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     index: 1,
+  },
+  tabletopId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    index: 1,
+    optional: true,
   },
   creatureName: {
     type: String,
@@ -119,6 +126,7 @@ const insertCreatureLog = new ValidatedMethod({
         'settings.discordWebhook': 1,
         name: 1,
         avatarPicture: 1,
+        tabletop: 1,
       }
     });
     assertEditPermission(creature, this.userId);
@@ -128,7 +136,7 @@ const insertCreatureLog = new ValidatedMethod({
   },
 });
 
-export function insertCreatureLogWork({ log, creature, method }) {
+export function insertCreatureLogWork({ log, creature, tabletopId, method }) {
   // Build the new log
   if (typeof log === 'string') {
     log = { content: [{ value: log }] };
@@ -142,13 +150,20 @@ export function insertCreatureLogWork({ log, creature, method }) {
     }
   });
   log.date = new Date();
-
+  if (tabletopId) log.tabletopId = tabletopId;
+  if (creature && creature.tabletop) log.tabletopId = creature.tabletop;
   // Insert it
   let id = CreatureLogs.insert(log);
   if (Meteor.isServer) {
     method?.unblock();
-    removeOldLogs(creature._id);
-    logWebhook({ log, creature });
+    if (creature) {
+      removeOldLogs(creature._id);
+      logWebhook({ log, creature });
+    }
+    if (log.tabletopId) {
+      // Todo remove old tabletop logs
+      // Log webhook if it's different to creature webhook
+    }
   }
   return id;
 }
@@ -170,24 +185,39 @@ const logRoll = new ValidatedMethod({
     roll: {
       type: String,
     },
+    tabletopId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id,
+      optional: true,
+    },
     creatureId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
+      optional: true,
     },
   }).validator(),
-  run({ roll, creatureId }) {
-    const creature = Creatures.findOne(creatureId, {
-      fields: {
-        readers: 1,
-        writers: 1,
-        owner: 1,
-        'settings.discordWebhook': 1,
-        name: 1,
-        avatarPicture: 1,
-      }
-    });
-    assertEditPermission(creature, this.userId);
-    const variables = CreatureVariables.findOne({ _creatureId: creatureId });
+  run({ roll, tabletopId, creatureId }) {
+    if (!creatureId && !tabletopId) throw new Meteor.Error('no-id',
+      'A creature id or tabletop id must be given'
+    );
+    let creature;
+    if (creatureId) {
+      creature = Creatures.findOne(creatureId, {
+        fields: {
+          readers: 1,
+          writers: 1,
+          owner: 1,
+          'settings.discordWebhook': 1,
+          name: 1,
+          avatarPicture: 1,
+        }
+      });
+      assertEditPermission(creature, this.userId);
+    }
+    if (tabletopId) {
+      assertUserInTabletop(tabletopId, this.userId);
+    }
+    const variables = CreatureVariables.findOne({ _creatureId: creatureId }) || {};
     let logContent = []
     let parsedResult = undefined;
     try {
@@ -228,7 +258,7 @@ const logRoll = new ValidatedMethod({
       date: new Date(),
     };
 
-    let id = insertCreatureLogWork({ log, creature, method: this });
+    let id = insertCreatureLogWork({ log, creature, tabletopId, method: this });
 
     return id;
   },

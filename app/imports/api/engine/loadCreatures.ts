@@ -12,15 +12,17 @@ export const loadedCreatures: Map<string, LoadedCreature> = new Map(); // creatu
 export function loadCreature(creatureId: string, subscription: Tracker.Computation) {
   if (!creatureId) throw 'creatureId is required';
   let creature = loadedCreatures.get(creatureId);
+  if (!creature || !creature.subs.has(subscription)) {
+    subscription.onStop(() => {
+      unloadCreature(creatureId, subscription);
+    });
+  }
   if (creature) {
     creature.subs.add(subscription);
   } else {
     creature = new LoadedCreature(subscription, creatureId);
     loadedCreatures.set(creatureId, creature);
   }
-  subscription.onStop(() => {
-    unloadCreature(creatureId, subscription);
-  });
 }
 
 function unloadCreature(creatureId, subscription) {
@@ -188,14 +190,15 @@ export function getPropertyChildren(creatureId, property) {
   // This propertyId will always appear in the parent of the children
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
-    const props = [];
+    if (!creature) return [];
+    const props: CreatureProperty[] = [];
     for (const prop of creature.properties.values()) {
-      if (prop.parent?.id === property._id) {
+      if (prop.parentId === property._id) {
         props.push(prop);
       }
     }
     const cloneProps = EJSON.clone(props);
-    return cloneProps.sort((a, b) => a.order - b.order);
+    return cloneProps.sort((a, b) => a.left - b.left);
   } else {
     return CreatureProperties.find({
       'parent.id': property._id,

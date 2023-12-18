@@ -56,6 +56,7 @@ const store = new Vuex.Store({
     setTabForCharacterSheet(state, { tab, id }) {
       // Convert tab names to tab numbers
       if (typeof tab === 'string') {
+        const tabInput = tab;
         const creature = Creatures.findOne(id);
         if (creature?.settings?.hideSpellsTab) {
           tab = tabsWithoutSpells.indexOf(tab);
@@ -63,9 +64,9 @@ const store = new Vuex.Store({
           tab = tabs.indexOf(tab);
         }
         if (!(tab > -1)) {
-          throw 'Could not find requested tab';
+          console.warn(`could not find a tab called ${tabInput}`);
+          tab = 0;
         }
-        console.log('resolved: ', tab);
       }
       Vue.set(state.characterSheetTabs, id, tab);
     },

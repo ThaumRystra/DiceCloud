@@ -1,5 +1,10 @@
 <template lang="html">
-  <div class="mini-character-sheet" />
+  <v-card
+    hover
+    @click="$emit('click')"
+  >
+    Character sheet
+  </v-card>
 </template>
 
 <script lang="js">
