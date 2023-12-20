@@ -1,9 +1,12 @@
-import { docsToForest, calculateNestedSetOperations, getFilter } from '/imports/api/parenting/parentingFunctions'
+import '/imports/api/simpleSchemaConfig';
+import { docsToForest, calculateNestedSetOperations, getFilter, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions'
 import { TreeDoc } from '/imports/api/parenting/ChildSchema';
 import { assert } from 'chai';
 
 function doc(_id, left, right, parentId?): TreeDoc {
-  return { _id, root: { id: 'root', collection: 'col' }, left, right, parentId };
+  const doc = { _id, root: { id: 'root', collection: 'col' }, left, right, parentId };
+  if (!parentId) delete doc.parentId;
+  return doc;
 }
 
 function op(_id, left, right) {
@@ -184,3 +187,108 @@ describe('Document tree filters can fetch other documents based on their positio
     assert.sameMembers(parentIds['dbm'], ['Databases']);
   });
 });
+
+describe('Document can be moved without breaking the tree', function () {
+  /**
+  * Test the following structure
+  * 
+  *           1 Books 12                           13 Videos 24
+  *               ┃                                     ┃
+  *        2 Programming 11                        14 Cooking 23
+  *      ┏━━━━━━━━┻━━━━━━━━━┓                  ┏━━━━━━━━┻━━━━━━━━━┓
+  * 3 Languages 4     5 Databases 10      15 Meat 16         17 Vegetarian 22
+  *                 ┏━━━━━━━┻━━━━━━━┓                     ┏━━━━━━━┻━━━━━━━┓
+  *            6 MongoDB 7       8 dbm 9             18 Pasta 19        20 Mains 21
+  */
+  const treeCollection: Mongo.Collection<TreeDoc> = new Mongo.Collection('treeDocsMove');
+  beforeEach(function () {
+    treeCollection.remove({});
+    [
+      doc('Books', 1, 12, undefined),
+      doc('Programming', 2, 11, 'Books'),
+      doc('Languages', 3, 4, 'Programming'),
+      doc('Databases', 5, 10, 'Programming'),
+      doc('MongoDB', 6, 7, 'Databases'),
+      doc('dbm', 8, 9, 'Databases'),
+      doc('Videos', 13, 24, undefined),
+      doc('Cooking', 14, 23, 'Videos'),
+      doc('Meat', 15, 16, 'Cooking'),
+      doc('Vegetarian', 17, 22, 'Cooking'),
+      doc('Pasta', 18, 19, 'Vegetarian'),
+      doc('Mains', 20, 21, 'Vegetarian'),
+    ].map(doc => {
+      return treeCollection.insert(doc);
+    });
+  });
+  it('can move a document within its parent', async function () {
+    const languagesDoc = await treeCollection.findOneAsync({ _id: 'Languages' });
+    if (!languagesDoc) throw new Error('Languages doc not found');
+    await moveDocWithinRoot(languagesDoc, treeCollection, 10.5);
+    /**
+     * Expected resulting structure
+     *                   1 Books 12                            13 Videos 24
+     *                       ┃                                      ┃
+     *                2 Programming 11                        14 Cooking 23
+     *              ┏━━━━━━━━┻━━━━━━━━━┓                   ┏━━━━━━━━┻━━━━━━━━━┓
+     *         3 Databases 8     9 Languages 10       15 Meat 16         17 Vegetarian 22
+     *        ┏━━━━━━━┻━━━━━━━┓                     ┏━━━━━━━┻━━━━━━━┓
+     *   4 MongoDB 5       6 dbm 7             18 Pasta 19        20 Mains 21
+     */
+    const docs = await treeCollection.find({}, { sort: { left: 1 } }).fetchAsync();
+    assert.deepEqual(docs, [
+      doc('Books', 1, 12, undefined),
+      doc('Programming', 2, 11, 'Books'),
+      doc('Databases', 3, 8, 'Programming'),
+      doc('MongoDB', 4, 5, 'Databases'),
+      doc('dbm', 6, 7, 'Databases'),
+      doc('Languages', 9, 10, 'Programming'),
+      doc('Videos', 13, 24, undefined),
+      doc('Cooking', 14, 23, 'Videos'),
+      doc('Meat', 15, 16, 'Cooking'),
+      doc('Vegetarian', 17, 22, 'Cooking'),
+      doc('Pasta', 18, 19, 'Vegetarian'),
+      doc('Mains', 20, 21, 'Vegetarian'),
+    ]);
+  });
+  it('can move a document to a whole new parent', async function () {
+    const videos = await treeCollection.findOneAsync({ _id: 'Videos' });
+    if (!videos) throw new Error('Videos doc not found');
+    await moveDocWithinRoot(videos, treeCollection, 6.5);
+    /**
+     * Expected resulting structure
+     *           1 Books 24                
+     *               ┃                     
+     *        2 Programming 23             
+     *      ┏━━━━━━━━┻━━━━━━━━━┓           
+     * 3 Languages 4     5 Databases 22    
+     *                 ┏━━━━━━━┻━━━━━━━┓   
+     *            6 MongoDB 19       20 dbm 21
+     *                 ┃
+     *            7 Videos 18
+     *                 ┃
+     *            8 Cooking 17
+     *        ┏━━━━━━━━┻━━━━━━━━━┓
+     *   9 Meat 10         11 Vegetarian 16
+     *                   ┏━━━━━━━┻━━━━━━━┓
+     *              12 Pasta 13        14 Mains 15
+     */
+    const docs = await treeCollection.find({}, { sort: { left: 1 } }).fetchAsync();
+    assert.deepEqual(docs, [
+      doc('Books', 1, 24, undefined),
+      doc('Programming', 2, 23, 'Books'),
+      doc('Languages', 3, 4, 'Programming'),
+      doc('Databases', 5, 22, 'Programming'),
+      doc('MongoDB', 6, 19, 'Databases'),
+      doc('Videos', 7, 18, 'MongoDB'),
+      doc('Cooking', 8, 17, 'Videos'),
+      doc('Meat', 9, 10, 'Cooking'),
+      doc('Vegetarian', 11, 16, 'Cooking'),
+      doc('Pasta', 12, 13, 'Vegetarian'),
+      doc('Mains', 14, 15, 'Vegetarian'),
+      doc('dbm', 20, 21, 'Databases'),
+    ]);
+  });
+});
+
+
+// TODO test moving between roots

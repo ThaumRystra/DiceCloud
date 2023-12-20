@@ -342,8 +342,175 @@ export function renewDocIds({ docArray, collectionMap = {}, idMap = {} }) {
 }
 
 /**
+ * Moves a document within its root. The destination must be halfway between two positions (n.5)
+ * @param doc
+ * @param collection 
+ */
+export async function moveDocWithinRoot(doc: TreeDoc, collection: Mongo.Collection<TreeDoc>, newPosition: number) {
+  let move: number;
+  let includedRange;
+  // Ensure the destination is at a midway point
+  if (newPosition % 1 !== 0.5) {
+    throw new Meteor.Error('invalid-move', 'Destination must be halfway between two positions (n.5)');
+  }
+
+  // Get the distance to move and the range between the current document and the destination
+  const docSize = doc.right - doc.left + 1;
+  let shiftDistance;
+  if (newPosition < doc.left) {
+    move = newPosition - doc.left + 0.5;
+    includedRange = { left: newPosition, right: doc.left - 0.5 };
+    shiftDistance = docSize;
+  } else if (newPosition > doc.right) {
+    move = newPosition - doc.right - 0.5;
+    includedRange = { left: doc.right + 0.5, right: newPosition };
+    shiftDistance = -docSize;
+  } else {
+    throw new Meteor.Error('invalid-move', 'Destination must be outside the doc\'s current location');
+  }
+
+  console.log(`Moving ${doc._id} ${move} spaces, while everything between ${includedRange.left} and ${includedRange.right} is shifted by ${shiftDistance}`);
+
+  // If the move isn't meaningfully changing the doc's location, skip
+  if (Math.abs(move) < 1) {
+    return;
+  }
+
+  // Get the new parent of the doc after the move
+  const newParent = await collection.findOneAsync({
+    'root.id': doc.root.id,
+    left: { $lt: newPosition },
+    right: { $gt: newPosition },
+  }, {
+    sort: { left: -1 }, // Many ancestors match, taking the right most one gets the immediate parent
+    fields: { _id: 1 },
+  });
+  const newParentId = newParent?._id;
+
+  // get ids of the doc and its children, so we can move them even after other docs have been
+  // moved around to potentially overlap the moving doc
+  const movedIds = await collection.find({
+    'root.id': doc.root.id,
+    left: { $gte: doc.left },
+    right: { $lte: doc.right },
+  }, {
+    fields: { _id: 1 }
+  }).mapAsync(doc => doc._id);
+
+  // Move all the lefts and rights of documents between the current doc edge and the destination
+  const moveIncludedLeft = collection.updateAsync({
+    'root.id': doc.root.id,
+    left: { $gt: includedRange.left, $lt: includedRange.right },
+  }, {
+    $inc: { left: shiftDistance }
+  }, {
+    multi: true
+  });
+  const moveIncludedRight = collection.updateAsync({
+    'root.id': doc.root.id,
+    right: { $gt: includedRange.left, $lt: includedRange.right },
+  }, {
+    $inc: { right: shiftDistance }
+  }, {
+    multi: true
+  });
+
+  // Move the doc and its children to the new location
+  const moveDocAndChildren = collection.updateAsync({
+    _id: { $in: movedIds }
+  }, {
+    $inc: {
+      left: move,
+      right: move,
+    }
+  }, {
+    multi: true,
+  });
+
+  // Set the doc's parent to the new parentId
+  let changeParent: Promise<number> | undefined;
+  if (newParentId !== doc.parentId) {
+    let update;
+    if (newParentId) {
+      update = { $set: { parentId: newParentId } };
+    } else {
+      update = { $unset: { parentId: 1 } };
+    }
+    changeParent = collection.updateAsync(doc._id, update);
+  }
+  return Promise.all([moveIncludedLeft, moveIncludedRight, moveDocAndChildren, changeParent]);
+}
+
+export async function moveDocBetweenRoots(doc: TreeDoc, collection: Mongo.Collection<TreeDoc>, newRoot: Reference, newPosition: number) {
+  if (newRoot.id === doc.root.id) {
+    throw new Meteor.Error('invalid-move', 'Document is already in the given root')
+  }
+
+  // get ids of the doc and its children, so we can move them even after other docs have been
+  // moved around to potentially overlap the moving doc
+  const movedIds = await collection.find({
+    'root.id': doc.root.id,
+    left: { $gte: doc.left },
+    right: { $lte: doc.right },
+  }, {
+    fields: { _id: 1 }
+  }).mapAsync(doc => doc._id);
+
+  // Close the gap in the root we are leaving
+  const docSize = doc.right - doc.left + 1;
+  const closeGapLeft = collection.updateAsync({
+    'root.id': doc.root.id,
+    left: { $gt: doc.right },
+  }, {
+    $inc: { left: -docSize },
+  }, {
+    multi: true,
+  });
+  const closeGapRight = collection.updateAsync({
+    'root.id': doc.root.id,
+    right: { $gt: doc.right },
+  }, {
+    $inc: { right: -docSize },
+  }, {
+    multi: true,
+  });
+
+  // Open a gap in the root we are moving to at the new location
+  const openGapLeft = collection.updateAsync({
+    'root.id': newRoot.id,
+    left: { $gt: newPosition },
+  }, {
+    $inc: { left: -docSize },
+  }, {
+    multi: true,
+  });
+  const openGapRight = collection.updateAsync({
+    'root.id': newRoot.id,
+    right: { $gt: newPosition },
+  }, {
+    $inc: { right: -docSize },
+  }, {
+    multi: true,
+  });
+
+  // Move the docs to the new root and update their left and right positions to land in the gap
+  const moveDistance = newPosition + 0.5 - doc.left;
+  const moveDocs = collection.updateAsync({
+    _id: { $in: movedIds },
+  }, {
+    $set: { root: newRoot },
+    $inc: { left: moveDistance, right: moveDistance },
+  }, {
+    multi: true,
+  });
+
+  return Promise.all([closeGapLeft, closeGapRight, openGapLeft, openGapRight, moveDocs]);
+}
+
+/**
  * Changes the doc to be a child of the parent, and then rebuilds the nested sets of the roots
  * of both doc and parent
+ * @deprecated Use moveDocWithinRoot or moveDocBetweenRoots instead
  * @param doc The doc to move
  * @param parent The new parent of the doc, null to move the doc to the root of the tree
  * @param collection 

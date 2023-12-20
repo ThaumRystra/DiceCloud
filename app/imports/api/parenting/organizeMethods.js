@@ -2,18 +2,72 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { assertDocEditPermission, assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
+import { compact } from 'lodash';
 import Creatures from '/imports/api/creature/creatures/Creatures.js';
-import { changeParent, fetchDocByRefAsync, getCollectionByName, rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import { fetchDocByRefAsync, getCollectionByName, moveDocBetweenRoots, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions';
 
-const organizeDoc = new ValidatedMethod({
-  name: 'organize.organizeDoc',
+const moveBetweenRoots = new ValidatedMethod({
+  name: 'organize.moveDocBetweenRoots',
   validate: new SimpleSchema({
     docRef: RefSchema,
-    parentRef: RefSchema,
-    order: {
-      type: Number,
-      // Should end in 0.5 to place it reliably between two existing documents
+    newPosition: {
+      type: Number, // Must end in .5
+    },
+    newRootRef: RefSchema,
+    skipRecompute: {
+      type: Boolean,
+      optional: true,
+    },
+    skipClient: {
+      type: Boolean,
+      optional: true,
+    },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 5000,
+  },
+  async run({ docRef, newPosition, newRootRef, skipRecompute, skipClient }) {
+    if (skipClient && this.isSimulation) {
+      return;
+    }
+    let doc = await fetchDocByRefAsync(docRef);
+    let collection = getCollectionByName(docRef.collection);
+    // The user must be able to edit both the doc and its parent to move it
+    // successfully
+    assertDocEditPermission(doc, this.userId);
+    const newRoot = await fetchDocByRefAsync(newRootRef);
+    assertEditPermission(newRoot, this.userId);
+
+
+    // Move the doc
+    await moveDocBetweenRoots(doc, collection, newRootRef, newPosition);
+
+    // Figure out which creatures need to be recalculated after this move
+    const creatureIdsToRecalculate = compact([
+      getCreatureAncestorId(doc),
+      getCreatureAncestorId(newRoot),
+    ]);
+
+    // Mark the creatures for recompute
+    if (!skipRecompute && creatureIdsToRecalculate.length) {
+      Creatures.updateAsync({
+        _id: { $in: creatureIdsToRecalculate },
+      }, {
+        $set: { dirty: true },
+      });
+    }
+  },
+});
+
+const moveWithinRoot = new ValidatedMethod({
+  name: 'organize.moveDocWithinRoot',
+  validate: new SimpleSchema({
+    docRef: RefSchema,
+    newPosition: {
+      type: Number, // Must end in .5
     },
     skipRecompute: {
       type: Boolean,
@@ -29,76 +83,26 @@ const organizeDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ docRef, parentRef, order, skipRecompute, skipClient }) {
+  async run({ docRef, newPosition, skipRecompute, skipClient }) {
     if (skipClient && this.isSimulation) {
       return;
     }
     let doc = await fetchDocByRefAsync(docRef);
     let collection = getCollectionByName(docRef.collection);
-    // The user must be able to edit both the doc and its parent to move it
-    // successfully
+
+    // The user must be able to edit the doc
     assertDocEditPermission(doc, this.userId);
-    let parent;
-    parent = await fetchDocByRefAsync(parentRef);
-    assertDocEditPermission(parent, this.userId);
 
-    // Moving the doc to the root level means changing its parent to undefined
-    if (doc.root.id === parent._id) {
-      parent = null;
-    }
-    // Change the doc's parent
-    await changeParent(doc, parent, collection, order);
+    // Move the doc
+    await moveDocWithinRoot(doc, collection, newPosition);
 
-    // Figure out which creatures need to be recalculated after this move
-    const docCreature = getCreatureAncestorId(doc);
-    const parentCreature = getCreatureAncestorId(parent);
+    // Figure out which creature needs to be recalculated after this move
+    const creatureIdToRecalculate = getCreatureAncestorId(doc);
+
     // Mark the creatures for recompute
-    if (!skipRecompute) {
-      if (docCreature) {
-        Creatures.updateAsync({
-          _id: docCreature,
-        }, {
-          $set: { dirty: true },
-        });
-      }
-      if (parentCreature && parentCreature !== docCreature) {
-        Creatures.updateAsync({
-          _id: parentCreature,
-        }, {
-          $set: { dirty: true },
-        });
-      }
-    }
-  },
-});
-
-const reorderDoc = new ValidatedMethod({
-  name: 'organize.reorderDoc',
-  validate: new SimpleSchema({
-    docRef: RefSchema,
-    order: {
-      type: Number,
-      // Should end in 0.5 to place it reliably between two existing documents
-    },
-  }).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  async run({ docRef, order }) {
-    const doc = await fetchDocByRefAsync(docRef);
-    assertDocEditPermission(doc, this.userId);
-
-    let collection = getCollectionByName(docRef.collection);
-    console.log('setting doc left to ', order);
-    await collection.updateAsync(doc._id, { $set: { left: order } });
-
-    // Recompute the affected creatures
-    const creatureId = getCreatureAncestorId(doc);
-    if (creatureId) {
-      return Creatures.updateAsync({
-        _id: creatureId
+    if (!skipRecompute && creatureIdToRecalculate) {
+      Creatures.updateAsync({
+        _id: creatureIdToRecalculate,
       }, {
         $set: { dirty: true },
       });
@@ -115,4 +119,4 @@ function getCreatureAncestorId(doc) {
   }
 }
 
-export { organizeDoc, reorderDoc };
+export { moveBetweenRoots, moveWithinRoot };
