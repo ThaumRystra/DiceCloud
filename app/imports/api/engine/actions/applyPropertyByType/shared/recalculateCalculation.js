@@ -1,5 +1,5 @@
 import logErrors from './logErrors';
-import { toPrimitiveOrString } from '/imports/parser/resolve';
+import { Context, toPrimitiveOrString } from '/imports/parser/resolve';
 import {
   aggregateCalculationEffects,
   aggregateCalculationProficiencies,
@@ -7,15 +7,16 @@ import {
 } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import resolve from '/imports/parser/resolve';
+import { getEffectiveActionScope } from '/imports/api/engine/actions/Actions';
 
 // TODO move this whole file to Actions.ts
 // Redo the work of imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js
 // But in the action scope
-export default function recalculateCalculation(calcObj, action, parseLevel = 'reduce', context, scope) {
+export default async function recalculateCalculation(calcObj, action, parseLevel = 'reduce', context, scope) {
   if (!calcObj?.parseNode) return;
   calcObj._parseLevel = parseLevel;
   if (!scope) {
-    scope = getEffectiveActionScope(action);
+    scope = await getEffectiveActionScope(action);
   }
   // Re-resolve the parse node
   resolveCalculationNode(calcObj, calcObj.parseNode, scope, context);
@@ -41,9 +42,9 @@ export default function recalculateCalculation(calcObj, action, parseLevel = 're
   // TODO log errors
 }
 
-export function rollAndReduceCalculation(calcObj, action) {
+export async function rollAndReduceCalculation(calcObj, action) {
   const context = new Context();
-  const scope = getEffectiveActionScope(action);
+  const scope = await getEffectiveActionScope(action);
   // Compile
   recalculateCalculation(calcObj, action, 'compile', context, scope);
   const compiled = calcObj.valueNode;

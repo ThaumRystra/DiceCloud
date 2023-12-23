@@ -12,6 +12,7 @@ export interface TreeDoc {
   parentId?: string,
   left: number,
   right: number,
+  removed?: true,
 }
 
 const RefSchema = new SimpleSchema({

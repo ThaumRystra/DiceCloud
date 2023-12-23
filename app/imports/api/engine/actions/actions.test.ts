@@ -29,8 +29,9 @@ describe('Interrupt action system', function () {
       dirty: true,
     });
     await insertActionTestProps();
-    loadCreature(creatureId, dummySubscription);
+    // Compute before load or we might run tests before the computation changes reflect in the cache
     computeCreature(creatureId);
+    loadCreature(creatureId, dummySubscription);
   });
   after(function () {
     unload?.();
@@ -113,7 +114,7 @@ describe('Interrupt action system', function () {
 
 function createAction(prop, targetIds?) {
   const action: Action = {
-    creatureId: prop.ancestors[0].id,
+    creatureId: prop.root.id,
     rootPropId: prop._id,
     results: [],
     taskCount: 0,
@@ -254,7 +255,7 @@ const propForest = [
 ];
 
 function insertActionTestProps() {
-  const promises = propsFromForest(propForest, [{ id: creatureId, collection: 'creatures' }]).map(prop => {
+  const promises = propsFromForest(propForest, creatureId).map(prop => {
     return CreatureProperties.insertAsync(prop);
   });
   return Promise.all(promises);

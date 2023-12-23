@@ -274,6 +274,7 @@ export async function applyAction(action: Action, userInput?: any[] | Function, 
   action._isSimulation = simulate;
   action.taskCount = 0;
   const prop = await getSingleProperty(action.creatureId, action.rootPropId);
+  if (!prop) throw new Meteor.Error('Not found', 'Root action property could not be found');
   await applyTask(action, {
     prop,
     targetIds: action.targetIds || [],
@@ -311,6 +312,7 @@ async function applyTask(action: Action, task: Task, userInput?): Promise<void> 
     if (prop.triggerIds?.before?.length) {
       for (const triggerId of prop.triggerIds.before) {
         const trigger = await getSingleProperty(action.creatureId, triggerId);
+        if (!trigger) continue;
         await applyTask(action, { prop: trigger, targetIds: task.targetIds }, userInput);
       }
     }
@@ -367,6 +369,7 @@ async function applyAfterChildrenTriggers(action: Action, prop, targetIds, userI
   if (!prop.triggerIds?.afterChildren) return;
   for (const triggerId of prop.triggerIds.afterChildren) {
     const trigger = await getSingleProperty(action.creatureId, triggerId);
+    if (!trigger) continue;
     await applyTask(action, { prop: trigger, targetIds }, userInput);
   }
 }
@@ -375,6 +378,7 @@ async function applyAfterTriggers(action: Action, prop, targetIds, userInput) {
   if (!prop.triggerIds?.after) return;
   for (const triggerId of prop.triggerIds.after) {
     const trigger = await getSingleProperty(action.creatureId, triggerId);
+    if (!trigger) continue;
     await applyTask(action, { prop: trigger, targetIds }, userInput);
   }
 }
@@ -437,6 +441,7 @@ async function applyTriggers(action: Action, prop, targetIds: string[], triggerP
   if (!triggerIds) return;
   for (const triggerId of triggerIds) {
     const trigger = await getSingleProperty(action.creatureId, triggerId);
+    if (!trigger) continue;
     await applyTask(action, { prop: trigger, targetIds }, userInput);
   }
 }
@@ -461,6 +466,8 @@ async function applyTaskToEachTarget(action: Action, task: PropTask, targetIds: 
 // Combine all the action results into the scope at present
 export async function getEffectiveActionScope(action: Action) {
   const scope = await getVariables(action.creatureId);
+  delete scope._id;
+  delete scope._creatureId;
   // Combine the applied results
   for (const result of action.results) {
     // Pop keys that are not longer used by a busy property
@@ -524,7 +531,7 @@ const applyPropertyByType = {
     //Log the name and summary, check that the property has enough resources to fire
     const content: LogContent = { name: prop.name };
     if (prop.summary?.text) {
-      recalculateInlineCalculations(prop.summary, action);
+      await recalculateInlineCalculations(prop.summary, action);
       content.value = prop.summary.value;
     }
     if (prop.silent) content.silenced = true;
@@ -591,7 +598,7 @@ const applyPropertyByType = {
     }
 
     // Evaluate the amount
-    recalculateCalculation(prop.amount, action, 'reduce');
+    await recalculateCalculation(prop.amount, action, 'reduce');
     const value = +prop.amount.value;
     if (!isFinite(value)) {
       return;
@@ -648,7 +655,7 @@ const applyPropertyByType = {
         if (!children.length) {
           return applyAfterTasksSkipChildren(action, prop, targets, userInput);
         }
-        recalculateCalculation(prop.condition, action, 'reduce');
+        await recalculateCalculation(prop.condition, action, 'reduce');
         if (!isFinite(prop.condition?.value)) {
           result.appendLog({
             name: 'Branch Error',
@@ -1070,7 +1077,7 @@ async function spendResources(action: Action, prop, targetIds: string[], result:
         throw 'No ammo was selected';
       }
       const item = getSingleProperty(action.creatureId, itemConsumed.itemId);
-      if (!item || item.ancestors[0].id !== prop.ancestors[0].id) {
+      if (!item || item.root.id !== prop.root.id) {
         throw 'The prop\'s ammo was not found on the creature';
       }
       const quantity = +itemConsumed?.quantity?.value;

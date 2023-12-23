@@ -87,12 +87,7 @@ export function buildComputationFromProps(properties, creature, variables) {
 
   // Get all the properties as a forest, with their nested set properties set
   const forest = applyNestedSetProperties(properties);
-  const ops = calculateNestedSetOperations(properties);
-  if (ops.length > 20) {
-    console.log(ops.length + ' operations to get fixed nested sets');
-  } else {
-    console.log(JSON.stringify(ops, null, 2));
-  }
+
   // Walk the property trees computing things that need to be inherited
   walkDown(forest, node => {
     computeInactiveStatus(node);

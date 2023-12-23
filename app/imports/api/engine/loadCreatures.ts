@@ -234,7 +234,7 @@ class LoadedCreature {
       self.properties = new Map();
       // Observe all creature properties which are needed for computation
       self.propertyObserver = CreatureProperties.find({
-        'ancestors.id': creatureId,
+        'root.id': creatureId,
         removed: { $ne: true },
       }, {
         sort: { order: 1 },

@@ -1,3 +1,5 @@
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
+
 /**
  * Take a forest of props, which can have sub-props nested in children: [], and return a list of
  * clean props with correct tree and ancestry data
@@ -6,7 +8,9 @@
  */
 export function propsFromForest(
   props,
-  ancestry = [{ id: 'creatureId', collection: 'creatures' }],
+  creatureId = Random.id(),
+  parentId = undefined,
+  recursionDepth = 0
 ) {
   const result = [];
   props.forEach(prop => {
@@ -17,24 +21,29 @@ export function propsFromForest(
       throw 'Type is required on every property, not found on above doc';
     }
     // Create the clean doc
-    const doc = { ...prop };
+    const doc = {
+      ...prop,
+      left: result.length,
+      root: { id: creatureId, collection: 'creatures' },
+    };
+    if (parentId) {
+      doc.parentId = parentId;
+    }
     if (!doc._id) {
       doc._id = Random.id();
     }
     delete doc.children;
-    doc.order = result.length;
-    doc.parent = { ...ancestry[ancestry.length - 1] };
-    doc.ancestors = [...ancestry];
 
     // Add the doc to the result and ancestry
     result.push(doc);
     if (children) {
-      ancestry.push({ id: doc._id, collection: 'creatureProperties' });
-      // Add the children to the result
-      result.push(...propsFromForest(children, ancestry));
-      // Remove the doc from the ancestry after its children are done
-      ancestry.pop();
+      result.push(...propsFromForest(children, creatureId, doc._id, recursionDepth + 1));
     }
   });
+
+  // Apply the nested set properties on the top level
+  if (recursionDepth === 0) {
+    applyNestedSetProperties(result);
+  }
   return result;
 }

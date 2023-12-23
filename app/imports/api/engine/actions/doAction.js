@@ -96,10 +96,7 @@ export async function doActionWork({
 
   // Apply the top level property, it is responsible for applying its children
   // recursively
-  console.log('start apply properties')
   await applyProperty(propertyForest[0], actionContext);
-  console.log('end apply properties')
-
   // Insert the log
   actionContext.writeLog();
 }

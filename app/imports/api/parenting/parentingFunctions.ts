@@ -369,8 +369,6 @@ export async function moveDocWithinRoot(doc: TreeDoc, collection: Mongo.Collecti
     throw new Meteor.Error('invalid-move', 'Destination must be outside the doc\'s current location');
   }
 
-  console.log(`Moving ${doc._id} ${move} spaces, while everything between ${includedRange.left} and ${includedRange.right} is shifted by ${shiftDistance}`);
-
   // If the move isn't meaningfully changing the doc's location, skip
   if (Math.abs(move) < 1) {
     return;
