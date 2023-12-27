@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import Actions from '/imports/api/engine/actions/Actions';
+import Actions from '/imports/api/engine/actions/ActionEngine';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';

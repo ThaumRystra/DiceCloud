@@ -4,7 +4,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import Actions, { Action, Update, LogContent, applyAction } from '/imports/api/engine/actions/Actions';
+import Actions, { Action, Update, LogContent, applyAction } from '/imports/api/engine/actions/ActionEngine';
 import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 

@@ -7,7 +7,7 @@ import {
 } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import resolve from '/imports/parser/resolve';
-import { getEffectiveActionScope } from '/imports/api/engine/actions/Actions';
+import { getEffectiveActionScope } from '/imports/api/engine/actions/ActionEngine';
 
 // TODO move this whole file to Actions.ts
 // Redo the work of imports/api/engine/computation/computeComputation/computeByType/computeCalculation.js
