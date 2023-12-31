@@ -1,4 +1,4 @@
-import { chain, reverse } from 'lodash';
+import { chain, reverse, set } from 'lodash';
 import { TreeDoc, treeDocFields, Reference } from '/imports/api/parenting/ChildSchema';
 import { getProperties } from '/imports/api/engine/loadCreatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -89,20 +89,19 @@ type FilteredDoc = {
   _ancestorOfMatchedDocument?: boolean,
 } & TreeDoc;
 
-let filterToForest: undefined | ((...any) => TreeNode<FilteredDoc>[]) = undefined;
-
-if (Meteor.isClient) filterToForest = function (
+export function filterToForest(
   collection: Mongo.Collection<TreeDoc>,
   rootId: string,
-  filter: Mongo.Selector<TreeDoc>,
+  filter?: Mongo.Query<TreeDoc>,
   {
     options = <Mongo.Options<object>>{},
     includeFilteredDocAncestors = false,
     includeFilteredDocDescendants = false
   } = {}
 ): TreeNode<FilteredDoc>[] {
+  if (!Meteor.isClient) throw 'Only available on the client';
   // Setup the filter
-  let collectionFilter = {
+  let collectionFilter: Mongo.Query<TreeDoc> = {
     'root.id': rootId,
     'removed': { $ne: true },
   };
@@ -172,8 +171,6 @@ if (Meteor.isClient) filterToForest = function (
   // Find all the nodes
   return docsToForest(nodes);
 }
-
-export { filterToForest };
 
 type ForestAndOrphans = { forest: TreeNode<TreeDoc>[], orphanIds: string[] }
 /**
@@ -385,48 +382,33 @@ export async function moveDocWithinRoot(doc: TreeDoc, collection: Mongo.Collecti
   });
   const newParentId = newParent?._id;
 
-  // get ids of the doc and its children, so we can move them even after other docs have been
-  // moved around to potentially overlap the moving doc
-  const movedIds = await collection.find({
+  // Use bulk operations with $set only, because using $inc caused a lot of trouble with both
+  // latency compensation and oplog tailing
+  const bulkOps: any[] = [];
+
+  // Move the doc and its children the move distance
+  await collection.find({
     'root.id': doc.root.id,
     left: { $gte: doc.left },
     right: { $lte: doc.right },
   }, {
-    fields: { _id: 1 }
-  }).mapAsync(doc => doc._id);
-
-  // Move all the lefts and rights of documents between the current doc edge and the destination
-  const moveIncludedLeft = collection.updateAsync({
-    'root.id': doc.root.id,
-    left: { $gt: includedRange.left, $lt: includedRange.right },
-  }, {
-    $inc: { left: shiftDistance }
-  }, {
-    multi: true
-  });
-  const moveIncludedRight = collection.updateAsync({
-    'root.id': doc.root.id,
-    right: { $gt: includedRange.left, $lt: includedRange.right },
-  }, {
-    $inc: { right: shiftDistance }
-  }, {
-    multi: true
+    fields: { _id: 1, left: 1, right: 1 },
+  }).forEachAsync(moveDoc => {
+    const update = {
+      $set: {
+        left: (moveDoc.left + move) || 0,
+        right: (moveDoc.right + move) || 0,
+      }
+    };
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: moveDoc._id },
+        update,
+      }
+    });
   });
 
-  // Move the doc and its children to the new location
-  const moveDocAndChildren = collection.updateAsync({
-    _id: { $in: movedIds }
-  }, {
-    $inc: {
-      left: move,
-      right: move,
-    }
-  }, {
-    multi: true,
-  });
-
-  // Set the doc's parent to the new parentId
-  let changeParent: Promise<number> | undefined;
+  // Change the doc's parent if necessary
   if (newParentId !== doc.parentId) {
     let update;
     if (newParentId) {
@@ -434,9 +416,41 @@ export async function moveDocWithinRoot(doc: TreeDoc, collection: Mongo.Collecti
     } else {
       update = { $unset: { parentId: 1 } };
     }
-    changeParent = collection.updateAsync(doc._id, update);
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: doc._id },
+        update,
+      }
+    });
   }
-  return Promise.all([moveIncludedLeft, moveIncludedRight, moveDocAndChildren, changeParent]);
+
+  // Move all the lefts and rights of documents between the current doc edge and the destination
+  await collection.find({
+    'root.id': doc.root.id,
+    $or: [
+      { left: { $gt: includedRange.left, $lt: includedRange.right } },
+      { right: { $gt: includedRange.left, $lt: includedRange.right } },
+    ],
+  }, {
+    fields: { _id: 1, left: 1, right: 1 },
+  }).forEachAsync(doc => {
+    const $set: { [P in keyof TreeDoc]?: TreeDoc[P] } = {};
+    if (doc.left > includedRange.left && doc.left < includedRange.right) {
+      $set.left = (doc.left + shiftDistance) || 0;
+    }
+    if (doc.right > includedRange.left && doc.right < includedRange.right) {
+      $set.right = (doc.right + shiftDistance || 0);
+    }
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: doc._id },
+        update: { $set },
+      }
+    });
+  });
+
+  await writeBulkOperations(collection, bulkOps);
+  return rebuildNestedSets(collection, doc.root.id);
 }
 
 export async function moveDocBetweenRoots(doc: TreeDoc, collection: Mongo.Collection<TreeDoc>, newRoot: Reference, newPosition: number) {
@@ -444,65 +458,117 @@ export async function moveDocBetweenRoots(doc: TreeDoc, collection: Mongo.Collec
     throw new Meteor.Error('invalid-move', 'Document is already in the given root')
   }
 
-  // get ids of the doc and its children, so we can move them even after other docs have been
-  // moved around to potentially overlap the moving doc
-  const movedIds = await collection.find({
+  // Use bulk operations with $set only, because using $inc caused a lot of trouble with both
+  // latency compensation and oplog tailing
+  const bulkOps: {
+    updateOne: {
+      filter: Mongo.Query<TreeDoc>,
+      update: Mongo.Modifier<TreeDoc>
+    }
+  }[] = [];
+
+  // Get the new parent of the doc after the move
+  const newParent = await collection.findOneAsync({
+    'root.id': newRoot.id,
+    left: { $lt: newPosition },
+    right: { $gt: newPosition },
+  }, {
+    sort: { left: -1 }, // Many ancestors match, taking the right most one gets the immediate parent
+    fields: { _id: 1 },
+  });
+  const newParentId = newParent?._id;
+
+  // Change the doc's parent if necessary
+  if (newParentId !== doc.parentId) {
+    let update;
+    if (newParentId) {
+      update = { $set: { parentId: newParentId } };
+    } else {
+      update = { $unset: { parentId: 1 } };
+    }
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: doc._id },
+        update,
+      }
+    });
+  }
+
+  // Open a gap in the root we are moving to at the new location
+  const docSize = doc.right - doc.left + 1;
+  await collection.find({
+    'root.id': newRoot.id,
+    $or: [
+      { left: { $gt: newPosition } },
+      { right: { $gt: newPosition } },
+    ],
+  }, {
+    fields: { _id: 1, left: 1, right: 1 },
+  }).forEachAsync(openGapDoc => {
+    const $set: { [P in keyof TreeDoc]?: TreeDoc[P] } = {};
+    if (openGapDoc.left > newPosition) {
+      $set.left = (openGapDoc.left + docSize) || 0;
+    }
+    if (openGapDoc.right > newPosition) {
+      $set.right = (openGapDoc.right + docSize) || 0;
+    }
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: openGapDoc._id },
+        update: { $set },
+      }
+    });
+  });
+
+  // Move the doc and its children the move distance, and set their new root
+  const move = newPosition + 0.5 - doc.left;
+  await collection.find({
     'root.id': doc.root.id,
     left: { $gte: doc.left },
     right: { $lte: doc.right },
   }, {
-    fields: { _id: 1 }
-  }).mapAsync(doc => doc._id);
+    fields: { _id: 1, left: 1, right: 1 },
+  }).forEachAsync(moveDoc => {
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: moveDoc._id },
+        update: {
+          $set: {
+            left: (moveDoc.left + move) || 0,
+            right: (moveDoc.right + move) || 0,
+            root: newRoot
+          }
+        },
+      }
+    });
+  });
 
   // Close the gap in the root we are leaving
-  const docSize = doc.right - doc.left + 1;
-  const closeGapLeft = collection.updateAsync({
+  await collection.find({
     'root.id': doc.root.id,
-    left: { $gt: doc.right },
+    $or: [
+      { left: { $gt: doc.right } },
+      { right: { $gt: doc.right } },
+    ],
   }, {
-    $inc: { left: -docSize },
-  }, {
-    multi: true,
-  });
-  const closeGapRight = collection.updateAsync({
-    'root.id': doc.root.id,
-    right: { $gt: doc.right },
-  }, {
-    $inc: { right: -docSize },
-  }, {
-    multi: true,
-  });
-
-  // Open a gap in the root we are moving to at the new location
-  const openGapLeft = collection.updateAsync({
-    'root.id': newRoot.id,
-    left: { $gt: newPosition },
-  }, {
-    $inc: { left: -docSize },
-  }, {
-    multi: true,
-  });
-  const openGapRight = collection.updateAsync({
-    'root.id': newRoot.id,
-    right: { $gt: newPosition },
-  }, {
-    $inc: { right: -docSize },
-  }, {
-    multi: true,
+    fields: { _id: 1, left: 1, right: 1 },
+  }).forEachAsync(closeGapDoc => {
+    const $set: { [P in keyof TreeDoc]?: TreeDoc[P] } = {};
+    if (closeGapDoc.left > doc.right) {
+      $set.left = (closeGapDoc.left - docSize) || 0;
+    }
+    if (closeGapDoc.right > doc.right) {
+      $set.right = (closeGapDoc.right - docSize || 0);
+    }
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: closeGapDoc._id },
+        update: { $set },
+      }
+    });
   });
 
-  // Move the docs to the new root and update their left and right positions to land in the gap
-  const moveDistance = newPosition + 0.5 - doc.left;
-  const moveDocs = collection.updateAsync({
-    _id: { $in: movedIds },
-  }, {
-    $set: { root: newRoot },
-    $inc: { left: moveDistance, right: moveDistance },
-  }, {
-    multi: true,
-  });
-
-  return Promise.all([closeGapLeft, closeGapRight, openGapLeft, openGapRight, moveDocs]);
+  return writeBulkOperations(collection, bulkOps);
 }
 
 /**
@@ -658,7 +724,16 @@ export function calculateNestedSetOperations(docs: TreeDoc[]) {
       visitedNodes.add(top);
       stack.pop();
       if (top.doc.right !== count) {
-        opsById[top.doc._id].updateOne.update.$set.right = count;
+        if (!opsById[top.doc._id]) {
+          opsById[top.doc._id] = {
+            updateOne: {
+              filter: { _id: top.doc._id },
+              update: { $set: { right: count } }
+            }
+          }
+        } else {
+          opsById[top.doc._id].updateOne.update.$set.right = count;
+        }
       }
       count += 1;
     } else {
@@ -753,21 +828,19 @@ async function writeBulkOperations(collection: Mongo.Collection<TreeDoc>, operat
       );
     });
   } else {
+    // Don't do latency compensation if there are too many operations, it just causes client
+    // lag without much benefit
     const promises = operations.map(op => {
       if (op.updateOne) {
         return collection.updateAsync(
           op.updateOne.filter,
           op.updateOne.update,
-          { selector: { type: 'any' } }
         );
       } else if (op.updateMany) {
         return collection.updateAsync(
           op.updateMany.filter,
           op.updateMany.update,
-          {
-            selector: { type: 'any' },
-            multi: true,
-          },
+          { multi: true },
         )
       }
     });

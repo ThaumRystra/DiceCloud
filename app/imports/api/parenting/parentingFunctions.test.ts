@@ -1,5 +1,5 @@
 import '/imports/api/simpleSchemaConfig';
-import { docsToForest, calculateNestedSetOperations, getFilter, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions'
+import { docsToForest, calculateNestedSetOperations, getFilter, moveDocWithinRoot, moveDocBetweenRoots } from '/imports/api/parenting/parentingFunctions'
 import { TreeDoc } from '/imports/api/parenting/ChildSchema';
 import { assert } from 'chai';
 
@@ -188,7 +188,7 @@ describe('Document tree filters can fetch other documents based on their positio
   });
 });
 
-describe('Document can be moved without breaking the tree', function () {
+describe('Document can be moved withing root without breaking the tree', function () {
   /**
   * Test the following structure
   * 
@@ -250,6 +250,37 @@ describe('Document can be moved without breaking the tree', function () {
       doc('Mains', 20, 21, 'Vegetarian'),
     ]);
   });
+  it('can move a document within its parent to the start of the tree', async function () {
+    const videosDoc = await treeCollection.findOneAsync({ _id: 'Videos' });
+    if (!videosDoc) throw new Error('Languages doc not found');
+    await moveDocWithinRoot(videosDoc, treeCollection, 0.5);
+    /**
+     * Expected resulting structure
+     * 
+     *          1 Videos 12                               13 Books 24                
+     *               ┃                                         ┃                     
+     *          2 Cooking 11                           14 Programming 23             
+     *      ┏━━━━━━━━┻━━━━━━━━━┓                      ┏━━━━━━━━┻━━━━━━━━━┓           
+     * 3 Meat 4         5 Vegetarian 10       15 Languages 16     17 Databases 22    
+     *                 ┏━━━━━━━┻━━━━━━━┓                         ┏━━━━━━━┻━━━━━━━┓   
+     *            6 Pasta 7        8 Mains 9            18 MongoDB 19       20 dbm 21
+     **/
+    const docs = await treeCollection.find({}, { sort: { left: 1 } }).fetchAsync();
+    assert.deepEqual(docs, [
+      doc('Videos', 1, 12, undefined),
+      doc('Cooking', 2, 11, 'Videos'),
+      doc('Meat', 3, 4, 'Cooking'),
+      doc('Vegetarian', 5, 10, 'Cooking'),
+      doc('Pasta', 6, 7, 'Vegetarian'),
+      doc('Mains', 8, 9, 'Vegetarian'),
+      doc('Books', 13, 24, undefined),
+      doc('Programming', 14, 23, 'Books'),
+      doc('Languages', 15, 16, 'Programming'),
+      doc('Databases', 17, 22, 'Programming'),
+      doc('MongoDB', 18, 19, 'Databases'),
+      doc('dbm', 20, 21, 'Databases'),
+    ]);
+  });
   it('can move a document to a whole new parent', async function () {
     const videos = await treeCollection.findOneAsync({ _id: 'Videos' });
     if (!videos) throw new Error('Videos doc not found');
@@ -291,4 +322,74 @@ describe('Document can be moved without breaking the tree', function () {
 });
 
 
-// TODO test moving between roots
+describe('Documents can be moved between roots without breaking the trees', function () {
+  /**
+  * Test the following structure
+  *             Root 1                               Root 2
+  *           1 Books 12                           1 Videos 12
+  *               ┃                                     ┃
+  *        2 Programming 11                        2 Cooking 11
+  *      ┏━━━━━━━━┻━━━━━━━━━┓                  ┏━━━━━━━━┻━━━━━━━━━┓
+  * 3 Languages 4     5 Databases 10      3 Meat 4         5 Vegetarian 10
+  *                 ┏━━━━━━━┻━━━━━━━┓                     ┏━━━━━━━┻━━━━━━━┓
+  *            6 MongoDB 7       8 dbm 9             6 Pasta 7        8 Mains 9
+  */
+  const treeCollection: Mongo.Collection<TreeDoc> = new Mongo.Collection('treeDocsMoveBetween');
+  const doc = function (_id, left, right, parentId, rootId): TreeDoc {
+    const doc = { _id, root: { id: rootId, collection: 'someCol' }, left, right, parentId };
+    if (!parentId) delete doc.parentId;
+    return doc;
+  }
+  beforeEach(function () {
+    treeCollection.remove({});
+    [
+      doc('Books', 1, 12, undefined, 'root1'),
+      doc('Programming', 2, 11, 'Books', 'root1'),
+      doc('Languages', 3, 4, 'Programming', 'root1'),
+      doc('Databases', 5, 10, 'Programming', 'root1'),
+      doc('MongoDB', 6, 7, 'Databases', 'root1'),
+      doc('dbm', 8, 9, 'Databases', 'root1'),
+      doc('Videos', 1, 12, undefined, 'root2'),
+      doc('Cooking', 2, 11, 'Videos', 'root2'),
+      doc('Meat', 3, 4, 'Cooking', 'root2'),
+      doc('Vegetarian', 5, 10, 'Cooking', 'root2'),
+      doc('Pasta', 6, 7, 'Vegetarian', 'root2'),
+      doc('Mains', 8, 9, 'Vegetarian', 'root2'),
+    ].map(doc => {
+      return treeCollection.insert(doc);
+    });
+  });
+  it('can move a document from one root to another', async function () {
+    /**
+      * Move veg to languages
+      *                     Root 1                                            Root 2
+      *                   1 Books 18                                        1 Videos 6
+      *                       ┃                                                  ┃
+      *                2 Programming 17                                     2 Cooking 5
+      *              ┏━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━┓                           ┃
+      *         3 Languages 10                  11 Databases 16              3 Meat 4    
+      *              ┃                       ┏━━━━━━━┻━━━━━━┓                  
+      *       4 Vegetarian 9           12 MongoDB 13    14 dbm 15                   
+      *      ┏━━━━━━━┻━━━━━━━┓       
+      * 5 Pasta 6        7 Mains 8 
+      */
+    const vegDoc = await treeCollection.findOneAsync({ _id: 'Vegetarian' });
+    if (!vegDoc) throw new Error('Vegetarian doc not found');
+    await moveDocBetweenRoots(vegDoc, treeCollection, { id: 'root1', collection: 'someCol' }, 3.5);
+    const docs = await treeCollection.find({}, { sort: { 'root.id': 1, left: 1 } }).fetchAsync();
+    assert.deepEqual(docs, [
+      doc('Books', 1, 18, undefined, 'root1'),
+      doc('Programming', 2, 17, 'Books', 'root1'),
+      doc('Languages', 3, 10, 'Programming', 'root1'),
+      doc('Vegetarian', 4, 9, 'Languages', 'root1'),
+      doc('Pasta', 5, 6, 'Vegetarian', 'root1'),
+      doc('Mains', 7, 8, 'Vegetarian', 'root1'),
+      doc('Databases', 11, 16, 'Programming', 'root1'),
+      doc('MongoDB', 12, 13, 'Databases', 'root1'),
+      doc('dbm', 14, 15, 'Databases', 'root1'),
+      doc('Videos', 1, 6, undefined, 'root2'),
+      doc('Cooking', 2, 5, 'Videos', 'root2'),
+      doc('Meat', 3, 4, 'Cooking', 'root2'),
+    ]);
+  });
+});

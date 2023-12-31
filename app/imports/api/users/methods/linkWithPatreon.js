@@ -1,6 +1,5 @@
 // Adds accounts-patreon support to bozhao:link-accounts
 import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
 
 export default function linkWithPatreon(options, callback) {
   if (!Meteor.userId()) {

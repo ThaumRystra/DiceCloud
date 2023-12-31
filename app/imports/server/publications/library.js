@@ -11,9 +11,15 @@ const LIBRARY_NODE_TREE_FIELDS = {
   type: 1,
   icon: 1,
   color: 1,
+  // Old tree fields
   order: 1,
   parent: 1,
   ancestors: 1,
+  // Tree fields
+  parentId: 1,
+  left: 1,
+  right: 1,
+  root: 1,
   removed: 1,
   removedAt: 1,
   // Actions
@@ -235,7 +241,7 @@ Meteor.publish('libraryNodes', function (libraryId, extraFields) {
     });
     return [
       LibraryNodes.find({
-        'ancestors.id': libraryId,
+        'root.id': libraryId,
       }, {
         sort: { order: 1 },
         fields,

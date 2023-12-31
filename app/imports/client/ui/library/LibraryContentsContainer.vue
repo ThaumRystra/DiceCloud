@@ -6,9 +6,10 @@
       :children="libraryChildren"
       :organize="organizeMode"
       :selected-node="selectedNode"
+      :root="{collection: 'libraries', id: libraryId}"
       @selected="e => $emit('selected', e)"
-      @reordered="reordered"
-      @reorganized="reorganized"
+      @move-within-root="moveWithinRoot"
+      @move-between-roots="moveBetweenRoots"
     />
     <v-layout
       v-else
@@ -29,7 +30,7 @@ import Libraries from '/imports/api/library/Libraries';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { filterToForest } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods';
+import { moveBetweenRoots, moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 
 export default {
   components: {
@@ -92,7 +93,7 @@ export default {
       if (!this.library) return;
       return filterToForest(
         LibraryNodes,
-        this.library._id,
+        this.libraryId,
         this.filter,
         {
           includeFilteredDocAncestors: true,
@@ -102,35 +103,23 @@ export default {
     },
   },
   methods: {
-    reordered({ doc, newIndex }) {
-      reorderDoc.callAsync({
+    moveWithinRoot({ doc, newPosition }) {
+      moveWithinRoot.callAsync({
         docRef: {
           id: doc._id,
           collection: 'libraryNodes',
         },
-        order: newIndex,
+        newPosition,
       });
     },
-    reorganized({ doc, parent, newIndex }) {
-      let parentRef;
-      if (parent) {
-        parentRef = {
-          id: parent._id,
-          collection: 'libraryNodes',
-        };
-      } else {
-        parentRef = {
-          id: this.libraryId,
-          collection: 'libraries',
-        };
-      }
-      organizeDoc.callAsync({
+    moveBetweenRoots({ doc, newPosition, newRootRef }) {
+      moveBetweenRoots.callAsync({
         docRef: {
           id: doc._id,
           collection: 'libraryNodes',
         },
-        parentRef,
-        order: newIndex,
+        newPosition,
+        newRootRef,
       });
     },
   },

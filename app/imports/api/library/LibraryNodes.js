@@ -115,6 +115,13 @@ for (let key in propertySchemasIndex) {
   schema.extend(propertySchemasIndex[key]);
   schema.extend(ChildSchema);
   schema.extend(SoftRemovableSchema);
+  // Use the any schema as a default schema for the collection
+  if (key === 'any') {
+    // @ts-expect-error don't have types for .attachSchema
+    LibraryNodes.attachSchema(schema);
+  }
+  // TODO make this an else branch and remove all {selector: {type: any}} options
+  // @ts-expect-error don't have types for .attachSchema
   LibraryNodes.attachSchema(schema, {
     selector: { type: key }
   });

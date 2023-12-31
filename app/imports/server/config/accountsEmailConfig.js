@@ -1,4 +1,3 @@
-import { Accounts } from 'meteor/accounts-base'
 import emailTemplate from './emailTemplate';
 
 Accounts.emailTemplates.from = 'no-reply@dicecloud.com';

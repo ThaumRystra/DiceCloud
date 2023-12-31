@@ -25,8 +25,8 @@
       :start-expanded="startExpanded"
       :show-external-details="showExternalDetails"
       @selected="e => $emit('selected', e)"
-      @reordered="e => $emit('reordered', e)"
-      @reorganized="e => $emit('reorganized', e)"
+      @move-within-root="e => $emit('move-within-root', e)"
+      @move-between-roots="e => $emit('move-between-roots', e)"
     />
   </draggable>
 </template>
@@ -44,6 +44,10 @@ export default {
     node: {
       type: Object,
       default: undefined,
+    },
+    root: {
+      type: Object,
+      required: true,
     },
     group: {
       type: String,
@@ -93,31 +97,30 @@ export default {
       let event = moved || added;
       if (event) {
         let doc = event.element.doc;
-        let newIndex;
-        if (event.newIndex === 0) {
-          newIndex = 0.5;
-        } else {
-          if (event.newIndex < this.children.length) {
-            let childAtNewIndex = this.children[event.newIndex];
-            if (event.newIndex > event.oldIndex) {
-              newIndex = childAtNewIndex.doc.right + 0.5;
-            } else {
-              newIndex = childAtNewIndex.doc.left - 0.5;
-            }
+        let newPosition;
+        if (!this.children.length) {
+          if (this.node) {
+            newPosition = this.node.left + 0.5;
           } else {
-            let childBeforeNewIndex = this.children[event.newIndex - 1];
-            newIndex = childBeforeNewIndex.doc.right + 0.5;
+            newPosition = 0.5;
           }
+        } else if (event.newIndex < this.children.length) {
+          let childAtNewIndex = this.children[event.newIndex];
+          if (event.newIndex > event.oldIndex) {
+            newPosition = childAtNewIndex.doc.right + 0.5;
+          } else {
+            newPosition = childAtNewIndex.doc.left - 0.5;
+          }
+        } else {
+          let childBeforeNewIndex = this.children[event.newIndex - 1];
+          newPosition = childBeforeNewIndex.doc.right + 0.5;
         }
-        if (moved) {
-          this.$emit('reordered', { doc, newIndex });
-        } else if (added) {
-          this.$emit('reorganized', { doc, parent: this.node, newIndex });
+        if (doc.root.id === this.root.id) {
+          this.$emit('move-within-root', { doc, newPosition });
+        } else {
+          this.$emit('move-between-roots', { doc, newPosition, newRootRef: this.root });
         }
       }
-    },
-    move() {
-      return true;
     },
   },
 };

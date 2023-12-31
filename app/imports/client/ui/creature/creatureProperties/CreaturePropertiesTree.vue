@@ -6,16 +6,17 @@
     :organize="organize"
     :selected-node="selectedNode"
     :start-expanded="expanded"
+    :root="root"
     @selected="e => $emit('selected', e)"
-    @reordered="reordered"
-    @reorganized="reorganized"
+    @move-within-root="moveWithinRoot"
+    @move-between-roots="moveBetweenRoots"
   />
 </template>
 
 <script lang="js">
 import { filterToForest } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { organizeDoc, reorderDoc } from '/imports/api/parenting/organizeMethods';
+import { moveBetweenRoots, moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 import { getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 
 export default {
@@ -57,38 +58,28 @@ export default {
           includeFilteredDocDescendants: true,
         }
       ) || [];
-      console.log(children)
       this.$emit('length', children.length);
       return children;
     },
   },
   methods: {
-    reordered({ doc, newIndex }) {
-      reorderDoc.callAsync({
+    moveWithinRoot({ doc, newPosition }) {
+      moveWithinRoot.callAsync({
         docRef: {
           id: doc._id,
           collection: this.collection,
         },
-        order: newIndex,
+        newPosition,
       });
     },
-    reorganized({ doc, parent, newIndex }) {
-      let parentRef;
-      if (parent) {
-        parentRef = {
-          id: parent._id,
-          collection: this.collection,
-        };
-      } else {
-        parentRef = this.root;
-      }
-      organizeDoc.callAsync({
+    moveBetweenRoots({ doc, newPosition, newRootRef }) {
+      moveBetweenRoots.callAsync({
         docRef: {
           id: doc._id,
           collection: this.collection,
         },
-        parentRef,
-        order: newIndex,
+        newPosition,
+        newRootRef,
       });
     },
   },

@@ -55,14 +55,15 @@
           <tree-node-list
             v-if="showExpanded"
             :node="node"
+            :root="node.root"
             :children="computedChildren"
             :group="group"
             :organize="organize"
             :selected-node="selectedNode"
             :start-expanded="startExpanded"
             :show-external-details="showExternalDetails"
-            @reordered="e => $emit('reordered', e)"
-            @reorganized="e => $emit('reorganized', e)"
+            @move-within-root="e => $emit('move-within-root', e)"
+            @move-between-roots="e => $emit('move-between-roots', e)"
             @selected="e => $emit('selected', e)"
           />
           <div v-else>

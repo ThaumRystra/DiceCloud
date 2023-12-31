@@ -104,9 +104,9 @@ Meteor.publish('searchLibraryNodes', function (creatureId) {
           sort: {
             // `score` property specified in the projection fields above.
             // score: { $meta: 'textScore' },
-            'ancestors.0.id': 1,
+            'root.id': 1,
             name: 1,
-            order: 1,
+            left: 1,
           }
         }
       } else {
@@ -114,9 +114,9 @@ Meteor.publish('searchLibraryNodes', function (creatureId) {
         delete filter.$and;
         options = {
           sort: {
-            'ancestors.0.id': 1,
+            'root.id': 1,
             name: 1,
-            order: 1,
+            left: 1,
           }
         };
       }
