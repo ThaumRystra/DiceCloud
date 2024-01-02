@@ -5,12 +5,16 @@ import { getCreature, getPropertiesOfType, getPropertyChildren, getSinglePropert
 import recalculateInlineCalculations from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateInlineCalculations';
 import recalculateCalculation, { rollAndReduceCalculation } from '/imports/api/engine/actions/applyPropertyByType/shared/recalculateCalculation';
 import rollDice from '/imports/parser/rollDice';
-import { toString } from '/imports/parser/resolve';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import computedSchemas from '/imports/api/properties/computedPropertySchemasIndex';
+import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
+import resolve, { map, toString } from '/imports/parser/resolve';
+import accessor from '/imports/parser/parseTree/accessor';
+import cyrb53 from '/imports/api/engine/computation/utility/cyrb53';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -756,6 +760,76 @@ const applyPropertyByType = {
     }
   },
 
+  async buff(task: PropTask, action: Action, userInput) {
+    const prop = task.prop;
+    const buffTargets = task.targetIds;
+
+    // Mark the buff as dirty for recalculation
+    prop.dirty = true;
+
+    // Then copy the descendants of the buff to the targets
+    const propList = [prop];
+    function addChildrenToPropList(children, { skipCrystalize } = { skipCrystalize: false }) {
+      children.forEach(child => {
+        if (skipCrystalize) child.node._skipCrystalize = true;
+        propList.push(child.node);
+        // recursively add the child's children, but don't crystalize nested buffs
+        addChildrenToPropList(child.children, {
+          skipCrystalize: skipCrystalize || child.node.type === 'buff'
+        });
+      });
+    }
+    addChildrenToPropList(node.children);
+    if (!prop.skipCrystalization) {
+      crystalizeVariables({ propList, actionContext });
+    }
+
+    buffTargets.forEach(target => {
+      const targetPropList = EJSON.clone(propList);
+      // Move the properties to the target by replacing the old subtree parent and root with the '
+      // target id
+      renewDocIds({
+        docArray: targetPropList,
+        idMap: {
+          [prop.parentId]: target._id,
+          [prop.root.id]: target._id,
+        },
+        collectionMap: { [prop.root.collection]: 'creatures' }
+      });
+      // Apply the buff
+      CreatureProperties.batchInsert(targetPropList);
+
+      //Log the buff
+      let logValue = prop.description?.value
+      if (prop.description?.text) {
+        recalculateInlineCalculations(prop.description, actionContext);
+        logValue = prop.description?.value;
+      }
+      if ((prop.name || prop.description?.value) && !prop.silent) {
+        if (target._id === actionContext.creature._id) {
+          // Targeting self
+          actionContext.addLog({
+            name: prop.name,
+            value: logValue,
+          });
+        } else {
+          // Targeting other
+          insertCreatureLog.call({
+            log: {
+              creatureId: target._id,
+              content: [{
+                name: prop.name,
+                value: logValue,
+              }],
+            }
+          });
+        }
+      }
+    });
+    applyNodeTriggers(node, 'after', actionContext);
+    applyNodeTriggers(node, 'afterChildren', actionContext);
+  },
+
   async folder(task: PropTask, action: Action, userInput): Promise<void> {
     const prop = task.prop;
     return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
@@ -1294,4 +1368,85 @@ async function resetProperties(action: Action, prop: any, result: TaskResult, us
       }]
     });
   }
+}
+
+/**
+ * Replaces all variables with their resolved values
+ * except variables of the form `~target.thing.total` become `thing.total`
+ */
+function crystalizeVariables({ propList, actionContext }) {
+  propList.forEach(prop => {
+    if (prop._skipCrystalize) {
+      delete prop._skipCrystalize;
+      return;
+    }
+    // Iterate through all the calculations and crystalize them
+    computedSchemas[prop.type].computedFields().forEach(calcKey => {
+      applyFnToKey(prop, calcKey, (prop, key) => {
+        const calcObj = get(prop, key);
+        if (!calcObj?.parseNode) return;
+        calcObj.parseNode = map(calcObj.parseNode, node => {
+          // Skip nodes that aren't symbols or accessors
+          if (
+            node.parseType !== 'accessor'
+          ) return node;
+          // Handle variables
+          if (node.name === '~target') {
+            // strip ~target
+            if (node.parseType === 'accessor') {
+              node.name = node.path.shift();
+              if (!node.path.length) {
+                return accessor.create({ name: node.name })
+              }
+            } else {
+              // Can't strip symbols
+              actionContext.addLog({
+                name: 'Error',
+                value: 'Variable `~target` should not be used without a property: ~target.property',
+              });
+            }
+            return node;
+          } else {
+            // Resolve all other variables
+            const { result, context } = resolve('reduce', node, actionContext.scope);
+            logErrors(context.errors, actionContext);
+            return result;
+          }
+        });
+        calcObj.calculation = toString(calcObj.parseNode);
+        calcObj.hash = cyrb53(calcObj.calculation);
+      });
+    });
+    // For each key in the schema
+    computedSchemas[prop.type].inlineCalculationFields().forEach(calcKey => {
+      // That ends in .inlineCalculations
+      applyFnToKey(prop, calcKey, (prop, key) => {
+        const inlineCalcObj = get(prop, key);
+        if (!inlineCalcObj) return;
+
+        // If there is no text, skip
+        if (!inlineCalcObj.text) {
+          return;
+        }
+
+        // Replace all the existing calculations
+        let index = -1;
+        inlineCalcObj.text = inlineCalcObj.text.replace(INLINE_CALCULATION_REGEX, () => {
+          index += 1;
+          return `{${inlineCalcObj.inlineCalculations[index].calculation}}`;
+        });
+
+        // Set the value to the uncomputed string
+        inlineCalcObj.value = inlineCalcObj.text;
+
+        // Write a new hash
+        const inlineCalcHash = cyrb53(inlineCalcObj.text);
+        if (inlineCalcHash === inlineCalcObj.hash) {
+          // Skip if nothing changed
+          return;
+        }
+        inlineCalcObj.hash = inlineCalcHash;
+      });
+    });
+  });
 }

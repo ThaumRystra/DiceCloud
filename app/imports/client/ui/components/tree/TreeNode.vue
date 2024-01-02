@@ -36,14 +36,11 @@
           :class="selected && 'primary--text'"
           :disabled="expanded"
         />
-        <!--{{node && node.order}}-->
-        <span>{{ node.left }}</span>
         <tree-node-view
           :model="node"
           :selected="selected"
           :show-external-details="showExternalDetails"
         />
-        <span>{{ node.right }}</span>
       </div>
     </div>
     <v-expand-transition>
