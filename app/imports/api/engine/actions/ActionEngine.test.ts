@@ -8,7 +8,8 @@ import Actions, { Action, Update, LogContent, applyAction } from '/imports/api/e
 import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 
-let creatureId;
+const creatureId = Random.id();
+const targetId; = Random.id();
 
 describe('Interrupt action system', function () {
   let unload: (() => void) | undefined = undefined;
@@ -18,19 +19,32 @@ describe('Interrupt action system', function () {
     }
   };
   before(async function () {
+    // Remove old data
     await Promise.all([
       CreatureProperties.removeAsync({}),
       Creatures.removeAsync({}),
       CreatureVariables.removeAsync({}),
     ]);
-    creatureId = await Creatures.insertAsync({
-      name: 'action test creature',
-      owner: Random.id(),
-      dirty: true,
-    });
+    // Add creatures
+    await Promise.all([
+      Creatures.insertAsync({
+        _id: creatureId,
+        name: 'action test creature',
+        owner: Random.id(),
+        dirty: true,
+      }),
+      Creatures.insertAsync({
+        _id: targetId,
+        name: 'action test creature',
+        owner: Random.id(),
+        dirty: true,
+      })
+    ]);
+    // Add test props
     await insertActionTestProps();
     // Compute before load or we might run tests before the computation changes reflect in the cache
     computeCreature(creatureId);
+    computeCreature(targetId);
     loadCreature(creatureId, dummySubscription);
   });
   after(function () {
@@ -254,9 +268,21 @@ const propForest = [
   }
 ];
 
+const targetPropForest = [
+  {
+    type: 'attribute',
+    attributeType: 'stat',
+    variableName: 'armor',
+    baseValue: { calculation: '10' },
+  }
+];
+
 function insertActionTestProps() {
   const promises = propsFromForest(propForest, creatureId).map(prop => {
     return CreatureProperties.insertAsync(prop);
+  });
+  propsFromForest(targetPropForest, targetId).forEach(prop => {
+    promises.push(CreatureProperties.insertAsync(prop));
   });
   return Promise.all(promises);
 }
