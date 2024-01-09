@@ -9,7 +9,7 @@ import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 
 const creatureId = Random.id();
-const targetId; = Random.id();
+const targetId = Random.id();
 
 describe('Interrupt action system', function () {
   let unload: (() => void) | undefined = undefined;
