@@ -30,7 +30,7 @@ export default async function spendResources(
   if (prop.resources?.attributesConsumed?.length) {
     for (const att of prop.resources.attributesConsumed) {
       const scope = await getEffectiveActionScope(action);
-      const statToDamage = getFromScope(att.variableName, scope);
+      const statToDamage = await getFromScope(att.variableName, scope);
       await recalculateCalculation(att.quantity, action, 'reduce');
       await applyTask(action, {
         prop,

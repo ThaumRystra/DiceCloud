@@ -1,4 +1,6 @@
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
+import array from '/imports/parser/parseTree/constant';
+import constant from '/imports/parser/parseTree/constant';
 
 //set up the collection for creature variables
 let CreatureVariables = new Mongo.Collection('creatureVariables');
@@ -32,6 +34,56 @@ export function getFromScope(name, scope) {
     value = getSingleProperty(scope._creatureId, value._propId);
   }
   return value;
+}
+
+export function getNumberFromScope(name, scope) {
+  const parseNode = getParseNodeFromScope(name, scope);
+  if (!parseNode || parseNode.valueType !== 'number') {
+    return undefined;
+  }
+  return parseNode.value;
+}
+
+export function getParseNodeFromScope(name, scope) {
+  let value = getFromScope(name, scope);
+  if (!value) return;
+  let valueType = getType(value);
+  // Iterate into object.values
+  while (valueType === 'object') {
+    // Prefer the valueNode over the value
+    if (value.valueNode) {
+      value = value.valueNode;
+    } else {
+      value = value.value;
+    }
+    valueType = getType(value);
+  }
+  // Return a discovered parse node
+  if (valueType === 'parseNode') {
+    return value;
+  }
+  // Return a parse node based on the constant type returned
+  if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
+    return constant.create({ value });
+  }
+  // Return a parser array
+  if (valueType === 'array') {
+    // If the first value is a parse node, assume all the values are
+    if (getType(value[0]) === 'parseNode') {
+      return array.create({
+        values: value,
+      });
+    }
+    // Create the array from js primitives instead
+    return array.fromConstantArray(value);
+  }
+}
+
+function getType(val) {
+  if (!val) return typeof val;
+  if (Array.isArray(val)) return 'array';
+  if (val.parseType) return 'parseNode';
+  return typeof val;
 }
 
 export default CreatureVariables;

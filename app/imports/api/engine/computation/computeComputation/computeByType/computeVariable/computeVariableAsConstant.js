@@ -7,6 +7,7 @@ export default function computeVariableAsConstant(computation, node, prop) {
   try {
     parseNode = parse(string);
   } catch (e) {
+    console.error(e);
     return;
   }
   prop.value = parseNode;

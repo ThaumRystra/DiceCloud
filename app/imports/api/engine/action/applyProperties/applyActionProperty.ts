@@ -1,7 +1,7 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { PropTask } from '../tasks/Task';
 import TaskResult, { LogContent } from '../tasks/TaskResult';
-import { getPropertiesOfType } from '/imports/api/engine/loadCreatures';
+import { getPropertiesOfType, getVariables } from '/imports/api/engine/loadCreatures';
 import applyTask from '/imports/api/engine/action/tasks/applyTask';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import recalculateInlineCalculations from '/imports/api/engine/action/functions/recalculateInlineCalculations';
@@ -11,6 +11,7 @@ import recalculateCalculation from '/imports/api/engine/action/functions/recalcu
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import rollDice from '/imports/parser/rollDice';
+import { getFromScope, getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 
 export default async function applyActionProperty(
   task: PropTask, action: EngineAction, result: TaskResult, userInput
@@ -19,7 +20,7 @@ export default async function applyActionProperty(
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
   //Log the name and summary, check that the property has enough resources to fire
-  const content: LogContent = { name: prop.name };
+  const content: LogContent = { name: getPropertyTitle(prop) };
   if (prop.summary?.text) {
     await recalculateInlineCalculations(prop.summary, action);
     content.value = prop.summary.value;
@@ -52,10 +53,10 @@ export default async function applyActionProperty(
   // Attack if there is an attack roll
   if (attack && attack.calculation) {
     if (targetIds.length) {
-      for (const target of targetIds) {
-        await applyAttackToTarget(action, prop, attack, targetIds, result, userInput);
-        await applyAfterTriggers(action, prop, [target], userInput);
-        await applyChildren(action, prop, [target], userInput);
+      for (const targetId of targetIds) {
+        await applyAttackToTarget(task, action, attack, targetId, result);
+        await applyAfterTriggers(action, prop, [targetId], userInput);
+        await applyChildren(action, prop, [targetId], userInput);
       }
     } else {
       await applyAttackWithoutTarget(action, prop, attack, result, userInput);
@@ -74,7 +75,9 @@ export default async function applyActionProperty(
   return await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
 }
 
-async function applyAttackToTarget(action, prop, attack, target, taskResult: TaskResult, userInput) {
+async function applyAttackToTarget(
+  task: PropTask, action: EngineAction, attack, targetId, taskResult: TaskResult
+) {
   taskResult.pushScope = {
     '~attackHit': {},
     '~attackMiss': {},
@@ -94,12 +97,13 @@ async function applyAttackToTarget(action, prop, attack, target, taskResult: Tas
     criticalMiss,
   } = await rollAttack(attack, scope, taskResult.pushScope);
 
-  if (target.variables.armor) {
-    const armor = target.variables.armor.value;
+  const targetScope = getVariables(targetId);
+  const targetArmor = getNumberFromScope('armor', targetScope)
 
+  if (Number.isFinite(targetArmor)) {
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
-        result > armor ? 'Hit!' : 'Miss!';
+        result > targetArmor ? 'Hit!' : 'Miss!';
     if (scope['~attackAdvantage']?.value === 1) {
       name += ' (Advantage)';
     } else if (scope['~attackAdvantage']?.value === -1) {
@@ -110,10 +114,10 @@ async function applyAttackToTarget(action, prop, attack, target, taskResult: Tas
       name,
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
-      silenced: prop.silent,
+      ...task.prop.silent && { silenced: true },
     });
 
-    if (criticalMiss || result < armor) {
+    if (criticalMiss || result < targetArmor) {
       scope['~attackMiss'] = { value: true };
     } else {
       scope['~attackHit'] = { value: true };
@@ -123,18 +127,18 @@ async function applyAttackToTarget(action, prop, attack, target, taskResult: Tas
       name: 'Error',
       value: 'Target has no `armor`',
       inline: true,
-      silenced: prop.silent,
+      ...task.prop.silent && { silenced: true },
     }, {
       name: criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit',
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
-      silenced: prop.silent,
+      ...task.prop.silent && { silenced: true },
     });
   }
   if (contents.length) {
     taskResult.mutations.push({
       contents,
-      targetIds: [target],
+      targetIds: [targetId],
     });
   }
 }
@@ -172,7 +176,7 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
       name,
       value: `${resultPrefix}\n**${result}**`,
       inline: true,
-      silenced: prop.silent,
+      ...prop.silent && { silenced: true },
     }],
     targetIds: [],
   });
@@ -211,20 +215,18 @@ async function rollAttack(attack, scope, resultPushScope) {
 }
 
 function applyCrits(value, scope, resultPushScope) {
-  let scopeCrit = scope['~criticalHitTarget']?.value;
-  if (scopeCrit?.parseType === 'constant') {
-    scopeCrit = scopeCrit.value;
-  }
-  const criticalHitTarget = scopeCrit || 20;
+  const scopeCritTarget = getNumberFromScope('~criticalHitTarget', scope);
+  const criticalHitTarget = Number.isFinite(scopeCritTarget) ? scopeCritTarget : 20;
+
+  const scopeCritMissTarget = getNumberFromScope('~criticalMissTarget', scope);
+  const criticalMissTarget = Number.isFinite(scopeCritMissTarget) ? scopeCritMissTarget : 1;
+
   const criticalHit = value >= criticalHitTarget;
-  let criticalMiss;
+  const criticalMiss = value <= criticalMissTarget;
   if (criticalHit) {
     resultPushScope['~criticalHit'] = { value: true };
-  } else {
-    criticalMiss = value === 1;
-    if (criticalMiss) {
-      resultPushScope['~criticalMiss'] = { value: true };
-    }
+  } else if (criticalMiss) {
+    resultPushScope['~criticalMiss'] = { value: true };
   }
   return { criticalHit, criticalMiss };
 }
@@ -266,7 +268,7 @@ async function resetProperties(action: EngineAction, prop: any, result: TaskResu
         name: getPropertyTitle(act),
         value: act.usesUsed >= 0 ? `Restored ${act.usesUsed} uses` : `Removed ${-act.usesUsed} uses`,
         inline: true,
-        silenced: prop.silent,
+        ...prop.silent && { silenced: true },
       }]
     });
   }

@@ -1,5 +1,5 @@
 import accessor from './accessor';
-import array from './array';
+import array from './array.js';
 import call from './call';
 import constant from './constant';
 import error from './error';
@@ -12,7 +12,7 @@ import roll from './roll';
 import rollArray from './rollArray';
 import unaryOperator from './unaryOperator';
 
-export default Object.freeze({
+export default {
   accessor,
   array,
   call,
@@ -28,4 +28,4 @@ export default Object.freeze({
   // What used to be symbols are now just treated as accessors without a path
   symbol: accessor,
   unaryOperator,
-});
+};
