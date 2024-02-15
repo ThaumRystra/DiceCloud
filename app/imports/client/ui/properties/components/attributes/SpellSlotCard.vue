@@ -84,4 +84,4 @@ export default {
     },
   }
 }
-</script>
+</script>../../../../../api/engine/action/methods/doCastSpell

@@ -21,7 +21,7 @@
 </template>
 
 <script lang="js">
-import doAction from '/imports/api/engine/actions/doAction';
+//TODO import doAction from '/imports/api/engine/actions/doAction';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 

@@ -93,7 +93,7 @@ const accessor = {
     }
   },
   toString(node) {
-    if (!node.path) return `${node.name}`;
+    if (!node.path?.length) return `${node.name}`;
     return `${node.name}.${node.path.join('.')}`;
   }
 }

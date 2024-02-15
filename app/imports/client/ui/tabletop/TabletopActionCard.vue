@@ -153,7 +153,7 @@
 <script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
-import doAction from '/imports/api/engine/actions/doAction.js';
+//TODO import doAction from '/imports/api/engine/actions/doAction.js';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';

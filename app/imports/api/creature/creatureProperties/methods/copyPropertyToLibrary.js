@@ -172,7 +172,7 @@ function assertSourceLibraryCopyPermission(props, method) {
   });
 }
 
-function cleanProps(props) {
+export function cleanProps(props) {
   return props.map(prop => {
     let schema = LibraryNodes.simpleSchema(prop);
     return schema.clean(prop);

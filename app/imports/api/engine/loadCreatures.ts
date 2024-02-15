@@ -163,12 +163,13 @@ export function getPropertyDescendants(creatureId, propertyId) {
       if (
         prop.left > property.left
         && prop.right < property.right
+        && prop.removed !== true
       ) {
         props.push(prop);
       }
     }
-    const cloneProps = EJSON.clone(props);
-    return cloneProps
+    const cloneProps = EJSON.clone(props).sort((a, b) => a.left - b.left);
+    return cloneProps;
   } else {
     return CreatureProperties.find({
       ...getFilter.descendants(property),

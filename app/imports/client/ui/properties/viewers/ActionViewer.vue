@@ -119,7 +119,7 @@
 
 <script lang="js">
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
-import doAction from '/imports/api/engine/actions/doAction';
+//TODO import doAction from '/imports/api/engine/actions/doAction';
 import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
@@ -254,3 +254,4 @@ export default {
   height: 40px;
 }
 </style>
+../../../../api/engine/action/methods/doCastSpell

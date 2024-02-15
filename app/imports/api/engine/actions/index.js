@@ -1,2 +1,0 @@
-import './doCastSpell';
-import './doCheck';

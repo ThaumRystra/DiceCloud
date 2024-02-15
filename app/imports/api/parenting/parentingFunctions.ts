@@ -315,13 +315,13 @@ export function renewDocIds({ docArray, collectionMap = {}, idMap = {} }) {
   // Give new ids and map the changes as {oldId: newId}
   docArray.forEach(doc => {
     const oldId = doc._id;
-    const newId = idMap[oldId] || randomSrc.id();
+    const newId = oldId in idMap ? idMap[oldId] : randomSrc.id();
     doc._id = newId;
     idMap[oldId] = newId;
   });
 
   // Get the id from the map if it exists, leave unchanged otherwise
-  const remap = id => idMap[id] || id
+  const remap = id => id in idMap ? idMap[id] : id
 
   // If there are references by id that need to be maintained when copying from 
   // a library, here is where we would update them

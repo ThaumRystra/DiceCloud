@@ -226,5 +226,3 @@ Creatures.attachSchema(CreatureSchema);
 
 export default Creatures;
 export { CreatureSchema };
-
-import '/imports/api/engine/actions/doAction';
