@@ -175,14 +175,12 @@ describe('Interrupt action system', function () {
   });
   it('Removes parent buffs', async function () {
     const action = await runActionById(removeParentBuffId);
-    console.log(allLogContent(action));
     assert.deepEqual(allRemovals(action), [
       { propId: buffId }
     ]);
   });
   it('Removes all buffs by tag', async function () {
     const action = await runActionById(removeTaggedBuffsId);
-    console.log(allLogContent(action));
     assert.deepEqual(allRemovals(action), [
       { propId: taggedBuffId },
       { propId: secondTaggedBuffId },
@@ -190,7 +188,6 @@ describe('Interrupt action system', function () {
   });
   it('Removes a single buff by tag', async function () {
     const action = await runActionById(removeOneTaggedBuffId);
-    console.log(allLogContent(action));
     assert.deepEqual(allRemovals(action), [
       { propId: taggedBuffId },
     ]);
