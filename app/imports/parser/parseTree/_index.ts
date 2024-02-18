@@ -1,18 +1,19 @@
 import accessor from './accessor';
-import array from './array.js';
+import array from './array';
 import call from './call';
 import constant from './constant';
 import error from './error';
 import ifNode from './if';
-import index from './index';
+import index from './indexNode';
 import not from './not';
 import operator from './operator';
 import parenthesis from './parenthesis';
 import roll from './roll';
 import rollArray from './rollArray';
 import unaryOperator from './unaryOperator';
+import NodeFactory from '/imports/parser/parseTree/NodeFactory';
 
-export default {
+const factories: Record<string, NodeFactory> = {
   accessor,
   array,
   call,
@@ -29,3 +30,5 @@ export default {
   symbol: accessor,
   unaryOperator,
 };
+
+export default factories;

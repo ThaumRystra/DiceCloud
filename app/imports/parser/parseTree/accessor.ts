@@ -1,17 +1,41 @@
 import constant from './constant';
 import array from './array';
-import resolve from '../resolve';
+import resolve, { Context, ResolvedResult } from '/imports/parser/resolve';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import NodeFactory from '/imports/parser/parseTree/NodeFactory';
 
-const accessor = {
-  create({ name, path }) {
+export type AccessorNode = {
+  parseType: 'accessor';
+  path?: string[];
+  name: string;
+}
+
+interface AccessorFactory extends NodeFactory {
+  create(node: Partial<AccessorNode>): AccessorNode;
+  compile(
+    node: AccessorNode, scope: Record<string, any>, context: Context
+  ): ResolvedResult;
+  roll?: undefined;
+  resolve?: undefined;
+  reduce(
+    node: AccessorNode, scope: Record<string, any>, context: Context
+  ): ResolvedResult;
+  toString(node: AccessorNode): string;
+  traverse?: undefined;
+  map?: undefined;
+}
+
+const accessor: AccessorFactory = {
+  create({ name, path }: { name: string, path?: string[] }): AccessorNode {
     return {
       parseType: 'accessor',
       path,
       name,
     };
   },
-  compile(node, scope, context) {
+  compile(
+    node: AccessorNode, scope: Record<string, any>, context: Context
+  ): ResolvedResult {
     let value = getFromScope(node.name, scope);
     // Get the value from the given path
     node.path?.forEach(name => {
@@ -78,7 +102,7 @@ const accessor = {
       context,
     };
   },
-  reduce(node, scope, context) {
+  reduce(node, scope, context): ResolvedResult {
     let { result } = accessor.compile(node, scope, context);
     ({ result } = resolve('reduce', result, scope, context));
     if (result.parseType === 'accessor') {

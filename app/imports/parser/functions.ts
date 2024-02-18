@@ -1,7 +1,19 @@
+import { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
 import resolve from '/imports/parser/resolve'
 import rollDice from '/imports/parser/rollDice';
 
-export default {
+export type ParserFunction = {
+  comment: string;
+  examples: { input: string, result: string }[];
+  arguments: string[];
+  maxResolveLevels?: ResolveLevel[];
+  minArguments?: number,
+  maxArguments?: number,
+  resultType: string;
+  fn: (...args: any[]) => any;
+}
+
+const parserFunctions: { [name: string]: ParserFunction } = {
   'abs': {
     comment: 'Returns the absolute value of a number',
     examples: [
@@ -105,22 +117,23 @@ export default {
     arguments: ['array', 'number'],
     resultType: 'number',
     fn: function tableLookup(arrayNode, number) {
-      for (let i in arrayNode.values) {
-        let node = arrayNode.values[i];
+      for (const i in arrayNode.values) {
+        const node = arrayNode.values[i];
         if (node.value > number) return +i;
       }
       return arrayNode.values.length;
     }
   },
   'resolve': {
-    comment: 'Forces the given calcultion to resolve into a number, even in calculations where it would usually keep the unknown values as is',
+    comment: 'Forces the given calculation to resolve into a number, even in calculations where it would usually keep the unknown values as is',
     examples: [
       { input: 'resolve(someUndefinedVariable + 3 + 4)', result: '7' },
       { input: 'resolve(1d6)', result: '4' },
     ],
     arguments: ['parseNode'],
+    resultType: 'parseNode',
     fn: function resolveFn(node) {
-      let { result } = resolve('reduce', node, this.scope, this.context);
+      const { result } = resolve('reduce', node, this.scope, this.context);
       return result;
     }
   },
@@ -181,7 +194,7 @@ export default {
     maxArguments: 3,
     resultType: 'rollArray',
     fn: function rerollFn(rollArray, numberToReroll = 1, keepNewRoll = false) {
-      let rollValues = rollArray.values
+      const rollValues = rollArray.values
       // Iterate through the roll values
       for (let i = 0; i < rollValues.length; i += 1) {
         // If the number is less than the reroll limit
@@ -218,7 +231,7 @@ export default {
     fn: function explodeFn(rollArray, depth = 1, numberToReroll = rollArray.diceSize) {
       let overflowErrored = false;
       if (depth > 99) depth = 99;
-      let rollValues = rollArray.values
+      const rollValues = rollArray.values
       // Iterate through the roll values
       for (let i = 0; i < rollValues.length; i += 1) {
         // If the number is greater than or equal to the reroll limit
@@ -255,7 +268,9 @@ export default {
 }
 
 function anyNumberOf(type) {
-  let argumentArray = [type];
+  const argumentArray = [type];
   argumentArray.anyLength = true;
   return argumentArray;
 }
+
+export default parserFunctions;

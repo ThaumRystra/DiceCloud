@@ -1,8 +1,29 @@
-import resolve, { traverse, toString, map } from '../resolve';
+import resolve, { traverse, toString, map, ResolvedResult, Context } from '/imports/parser/resolve';
 import error from './error';
+import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import ParseNode from '/imports/parser/parseTree/ParseNode';
 
-const indexNode = {
-  create({ array, index }) {
+export type IndexNode = {
+  parseType: 'index';
+  array: ParseNode;
+  index: ParseNode;
+}
+
+interface IndexFactory extends NodeFactory {
+  create(node: Partial<IndexNode>): IndexNode;
+  compile?: undefined;
+  roll?: undefined;
+  reduce?: undefined;
+  resolve(
+    fn: ResolveLevel, node: IndexNode, scope: Record<string, any>, context: Context
+  ): ResolvedResult;
+  toString(node: IndexNode): string;
+  traverse(node: IndexNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  map(node: IndexNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+}
+
+const indexNode: IndexFactory = {
+  create({ array, index }: { array: ParseNode, index: ParseNode }) {
     return {
       parseType: 'index',
       array,
@@ -10,8 +31,8 @@ const indexNode = {
     }
   },
   resolve(fn, node, scope, context) {
-    let { result: index } = resolve(fn, node.index, scope, context);
-    let { result: array } = resolve(fn, node.array, scope, context);
+    const { result: index } = resolve(fn, node.index, scope, context);
+    const { result: array } = resolve(fn, node.array, scope, context);
 
     if (
       index.valueType === 'number' &&
@@ -25,7 +46,7 @@ const indexNode = {
             ` of length ${array.values.length}`,
         });
       }
-      let selection = array.values[index.value - 1];
+      const selection = array.values[index.value - 1];
       if (selection) {
         return resolve(fn, selection, scope, context);
       }
@@ -63,12 +84,12 @@ const indexNode = {
   toString(node) {
     return `${toString(node.array)}[${toString(node.index)}]`;
   },
-  traverse(node, fn) {
+  traverse(node, fn: (node: ParseNode) => any) {
     fn(node);
     traverse(node.array, fn);
     traverse(node.index, fn);
   },
-  map(node, fn) {
+  map(node, fn: (node: ParseNode) => any) {
     const resultingNode = fn(node);
     if (resultingNode === node) {
       node.array = map(node.array, fn);

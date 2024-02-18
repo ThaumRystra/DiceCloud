@@ -1,12 +1,41 @@
-import resolve, { toString, traverse, map } from '../resolve';
+import resolve, { toString, traverse, map, ResolvedResult, Context } from '/imports/parser/resolve';
 import constant from './constant';
+import ParseNode from '/imports/parser/parseTree/ParseNode';
+import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+
+type OperatorSymbol = '*' | '/' | '^' | '+' | '-' | '%' | '&' | '&&' | '|' | '||' | '=' |
+  '==' | '===' | '!=' | '!==' | '>' | '<' | '>=' | '<=';
+
+export type OperatorNode = {
+  parseType: 'operator';
+  left: ParseNode;
+  right: ParseNode;
+  operator: OperatorSymbol;
+}
+
+interface OperatorFactory extends NodeFactory {
+  create(node: Partial<OperatorNode>): OperatorNode;
+  compile?: undefined;
+  roll?: undefined;
+  reduce?: undefined;
+  resolve(
+    fn: ResolveLevel, node: OperatorNode, scope: Record<string, any>, context: Context
+  ): ResolvedResult;
+  toString(node: OperatorNode): string;
+  traverse(node: OperatorNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  map(node: OperatorNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+}
 
 // Which operators can be considered commutative by the parser
 // i.e. 1 + 2 + 3 === 2 + 3 + 1
 const commutativeOperators = ['+', '*']
 
-const operator = {
-  create({ left, right, operator }) {
+const operator: OperatorFactory = {
+  create({
+    left, right, operator
+  }: {
+    left: ParseNode, right: ParseNode, operator: OperatorSymbol
+  }) {
     return {
       parseType: 'operator',
       left,
@@ -45,7 +74,7 @@ const operator = {
     };
   },
   toString(node) {
-    let { left, right, operator } = node;
+    const { left, right, operator } = node;
     // special case of adding a negative number
     if (operator === '+' && right.valueType === 'number' && right.value < 0) {
       return `${toString(left)} - ${-right.value}`
@@ -67,7 +96,7 @@ const operator = {
   },
 }
 
-function applyOperator(operator, left, right) {
+function applyOperator(operator: OperatorSymbol, left: ParseNode, right: ParseNode) {
   let result;
   switch (operator) {
     case '+': result = left + right; break;
@@ -93,7 +122,9 @@ function applyOperator(operator, left, right) {
   return result;
 }
 
-function reorderCommutativeOperations(node, leftNode, rightNode) {
+function reorderCommutativeOperations(
+  node: OperatorNode, leftNode: ParseNode, rightNode: ParseNode
+) {
   // Make sure the operator is commutative
   if (!commutativeOperators.includes(node.operator)) return;
 
