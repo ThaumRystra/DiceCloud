@@ -1,4 +1,5 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 import { applyAfterPropTasksForSingleChild, applyAfterTasksSkipChildren, applyDefaultAfterPropTasks, applyTaskToEachTarget } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
@@ -8,7 +9,7 @@ import { getPropertyChildren } from '/imports/api/engine/loadCreatures';
 import rollDice from '/imports/parser/rollDice';
 
 export default async function applyBranchProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput
+  task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
 ): Promise<void> {
   const prop = task.prop;
   const targets = task.targetIds;

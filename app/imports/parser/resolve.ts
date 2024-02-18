@@ -1,5 +1,6 @@
 import nodeTypeIndex from './parseTree/_index';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
+import { ConstantValueType } from '/imports/parser/parseTree/constant';
 
 // Takes a parse node and computes it to a set detail level
 // returns {result, context}
@@ -37,10 +38,10 @@ export function toString(node: ParseNode) {
   return type.toString(node);
 }
 
-export function toPrimitiveOrString(node) {
+export function toPrimitiveOrString(node: ParseNode): ConstantValueType {
   if (!node) return '';
   if (node.parseType === 'constant') return node.value;
-  if (node.parseType === 'error') return null;
+  if (node.parseType === 'error') return undefined;
   return toString(node);
 }
 

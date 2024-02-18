@@ -1,7 +1,7 @@
 import NodeFactory from '/imports/parser/parseTree/NodeFactory';
 import { Context, ResolvedResult } from '/imports/parser/resolve';
 
-type ConstantValueType = number | string | boolean | undefined
+export type ConstantValueType = number | string | boolean | undefined
 
 export type ConstantNode = {
   parseType: 'constant';

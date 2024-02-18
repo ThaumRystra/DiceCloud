@@ -10,11 +10,12 @@ import { applyAfterChildrenTriggers, applyAfterTriggers, applyChildren } from '/
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import rollDice from '/imports/parser/rollDice';
-import { getFromScope, getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import { getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
 
 export default async function applyActionProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput
+  task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
 ): Promise<void> {
   const prop = task.prop;
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
@@ -48,13 +49,13 @@ export default async function applyActionProperty(
 
   spendResources(action, prop, targetIds, result, userInput);
 
-  const attack = prop.attackRoll || prop.attackRollBonus;
+  const attack: CalculatedField = prop.attackRoll || prop.attackRollBonus;
 
   // Attack if there is an attack roll
   if (attack && attack.calculation) {
     if (targetIds.length) {
       for (const targetId of targetIds) {
-        await applyAttackToTarget(task, action, attack, targetId, result);
+        await applyAttackToTarget(task, action, attack, targetId, result, userInput);
         await applyAfterTriggers(action, prop, [targetId], userInput);
         await applyChildren(action, prop, [targetId], userInput);
       }
@@ -76,7 +77,8 @@ export default async function applyActionProperty(
 }
 
 async function applyAttackToTarget(
-  task: PropTask, action: EngineAction, attack, targetId, taskResult: TaskResult
+  task: PropTask, action: EngineAction, attack: CalculatedField, targetId: string,
+  taskResult: TaskResult, userInput: InputProvider
 ) {
   taskResult.pushScope = {
     '~attackHit': {},
@@ -86,7 +88,7 @@ async function applyAttackToTarget(
     '~attackRoll': {},
   }
 
-  await recalculateCalculation(attack, action, 'reduce');
+  await recalculateCalculation(attack, action, 'reduce', userInput);
   const scope = await getEffectiveActionScope(action);
   const contents: LogContent[] = [];
 
@@ -95,7 +97,7 @@ async function applyAttackToTarget(
     result,
     criticalHit,
     criticalMiss,
-  } = await rollAttack(attack, scope, taskResult.pushScope);
+  } = await rollAttack(attack, scope, taskResult.pushScope, userInput);
 
   const targetScope = getVariables(targetId);
   const targetArmor = getNumberFromScope('armor', targetScope)
@@ -143,7 +145,7 @@ async function applyAttackToTarget(
   }
 }
 
-async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskResult, userInput) {
+async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskResult, userInput: InputProvider) {
   taskResult.pushScope = {
     '~attackHit': {},
     '~attackMiss': {},
@@ -151,14 +153,14 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
     '~criticalMiss': {},
     '~attackRoll': {},
   }
-  await recalculateCalculation(attack, action, 'reduce');
+  await recalculateCalculation(attack, action, 'reduce', userInput);
   const scope = await getEffectiveActionScope(action);
   const {
     resultPrefix,
     result,
     criticalHit,
     criticalMiss,
-  } = await rollAttack(attack, scope, taskResult.pushScope);
+  } = await rollAttack(attack, scope, taskResult.pushScope, userInput);
   let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
   if (scope['~attackAdvantage']?.value === 1) {
     name += ' (Advantage)';
@@ -182,11 +184,11 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
   });
 }
 
-async function rollAttack(attack, scope, resultPushScope) {
+async function rollAttack(attack, scope, resultPushScope, userInput: InputProvider) {
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
   if (scope['~attackAdvantage']?.value === 1) {
-    const [a, b] = await rollDice(2, 20);
+    const [[a, b]] = await userInput.rollDice(attack, [{ number: 2, diceSize: 20 }]);
     if (a >= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
@@ -195,7 +197,7 @@ async function rollAttack(attack, scope, resultPushScope) {
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
   } else if (scope['~attackAdvantage']?.value === -1) {
-    const [a, b] = await rollDice(2, 20);
+    const [[a, b]] = await userInput.rollDice(attack, [{ number: 2, diceSize: 20 }]);
     if (a <= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
@@ -204,7 +206,7 @@ async function rollAttack(attack, scope, resultPushScope) {
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
   } else {
-    value = await rollDice(1, 20)[0];
+    [[value]] = await userInput.rollDice(attack, [{ number: 1, diceSize: 20 }]);
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
   resultPushScope['~attackDiceRoll'] = { value };
@@ -231,7 +233,7 @@ function applyCrits(value, scope, resultPushScope) {
   return { criticalHit, criticalMiss };
 }
 
-async function resetProperties(action: EngineAction, prop: any, result: TaskResult, userInput) {
+async function resetProperties(action: EngineAction, prop: any, result: TaskResult, userInput: InputProvider) {
   const attributes = getPropertiesOfType(action.creatureId, 'attribute');
   for (const att of attributes) {
     if (att.removed || att.inactive) continue;

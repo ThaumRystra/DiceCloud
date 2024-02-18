@@ -16,9 +16,10 @@ import recalculateInlineCalculations from '/imports/api/engine/action/functions/
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
 import { applyAfterTasksSkipChildren } from '/imports/api/engine/action/functions/applyTaskGroups';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 
 export default async function applyBuffProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput
+  task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
 ) {
   const prop = EJSON.clone(task.prop);
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;

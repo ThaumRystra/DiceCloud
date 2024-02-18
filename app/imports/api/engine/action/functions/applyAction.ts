@@ -1,7 +1,8 @@
-import { EngineAction, ActionSchema } from '/imports/api/engine/action/EngineActions';
+import EngineActions, { EngineAction, ActionSchema } from '/imports/api/engine/action/EngineActions';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import applyTask from '/imports/api/engine/action/tasks/applyTask'
 import { isEmpty } from 'lodash';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 
 // TODO create a function to get the effective value of a property,
 // simulating all the result updates in the action so far
@@ -10,12 +11,12 @@ import { isEmpty } from 'lodash';
 // This is run once as a simulation on the client awaiting all the various inputs or step through
 // clicks from the user, then it is run as part of the runAction method, where it is expected to
 // complete instantly on the client, and sent to the server as a method call
-export async function applyAction(action: EngineAction, userInput?: any[] | Function, options?: {
+export async function applyAction(action: EngineAction, userInput: InputProvider, options?: {
   simulate?: boolean, stepThrough?: boolean
 }) {
   const { simulate, stepThrough } = options || {};
   if (!simulate && stepThrough) throw 'Cannot step through unless simulating';
-  if (simulate && typeof userInput !== 'function') throw 'Must provide a function to get user input when simulating';
+  if (simulate && !userInput) throw 'Must provide a function to get user input when simulating';
 
   action._stepThrough = stepThrough;
   action._isSimulation = simulate;
@@ -37,6 +38,6 @@ function writeChangedAction(original: EngineAction, changed: EngineAction) {
     }
   }
   if (!isEmpty($set) && original._id) {
-    return Actions.updateAsync(original._id, { $set });
+    return EngineActions.updateAsync(original._id, { $set });
   }
 }

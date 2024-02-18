@@ -1,4 +1,5 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 import { applyDefaultAfterPropTasks, applyTaskToEachTarget } from '/imports/api/engine/action/functions/applyTaskGroups';
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
@@ -8,7 +9,7 @@ import { getSingleProperty, getVariables } from '/imports/api/engine/loadCreatur
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 
 export default async function applyAdjustmentProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput
+  task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
 ): Promise<void> {
   const prop = task.prop;
   const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;

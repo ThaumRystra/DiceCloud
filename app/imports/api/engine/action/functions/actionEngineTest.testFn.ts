@@ -1,4 +1,3 @@
-import { assert } from 'chai';
 import '/imports/api/simpleSchemaConfig.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
@@ -9,6 +8,7 @@ import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { applyAction } from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Mutation, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 
 /**
  * Removes all creatures, properties, and creatureVariable documents from the database
@@ -59,12 +59,12 @@ export const randomIds = new Array(100).fill(undefined).map(() => Random.id());
  * @param userInputFn A function that simulates user input
  * @returns The Engine Action with mutations resulting from running the action
  */
-export async function runActionById(propId, targetIds?, userInputFn = () => 0) {
+export async function runActionById(propId, targetIds?, userInput = testInputProvider) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop, targetIds);
   const action = await EngineActions.findOneAsync(actionId);
   if (!action) throw 'Action is expected to exist';
-  await applyAction(action, userInputFn, { simulate: true });
+  await applyAction(action, userInput, { simulate: true });
   return action;
 }
 
@@ -148,3 +148,25 @@ export function allLogContent(action: EngineAction) {
   });
   return contents;
 }
+
+const testInputProvider: InputProvider = {
+  /**
+   * For testing, randomness is hard to deal with
+   * rollDice function returns the average roll for every dice rolled
+   * [5d10, 1d4] => [[6,6,6,6,6], [3]]
+   */
+  async rollDice(action, dice) {
+    const result: number[][] = [];
+    for (const diceRoll of dice) {
+      const averageRoll = Math.round(diceRoll.diceSize / 2);
+      // Return an array full of averagely rolled dice
+      result.push(
+        new Array(diceRoll.number)
+          .fill(averageRoll)
+      )
+    }
+    return result;
+  }
+}
+
+export { testInputProvider }

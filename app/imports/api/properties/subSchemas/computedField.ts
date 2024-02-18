@@ -1,15 +1,20 @@
 import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import ParseNode from '/imports/parser/parseTree/ParseNode';
+import { ConstantValueType } from '/imports/parser/parseTree/constant';
 
 export interface CalculatedField {
-  calculation?: string,
-  value?: string | number,
-  effectIds?: string[],
-  parseNode?: any,
-  parseError?: any,
-  hash?: number,
-  errors?: any[],
+  calculation?: string;
+  value?: ConstantValueType;
+  valueNode: ParseNode;
+  effectIds?: string[];
+  proficiencyIds?: string[];
+  unaffected?: ConstantValueType;
+  parseNode?: ParseNode;
+  parseError?: any;
+  hash?: number;
+  errors?: any[];
 }
 
 // Get schemas that apply fields directly so they can be gracefully extended

@@ -1,11 +1,13 @@
 import { assert } from 'chai';
 import {
   allMutations,
+  allUpdates,
   createTestCreature,
   randomIds,
   removeAllCreaturesAndProps,
   runActionById
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
+import { Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
 
 const [
   creatureId, targetCreatureId, targetCreature2Id,
@@ -30,7 +32,7 @@ const actionTestCreature = {
     {
       _id: attackMissId,
       type: 'action',
-      attackRoll: { calculation: '-20' },
+      attackRoll: { calculation: '-5' },
     },
     // Disable crits
     {
@@ -105,48 +107,57 @@ describe('Apply Action Properties', function () {
       targetCreatureId,
       targetCreature2Id,
     ]);
-    assert.deepEqual(allMutations(action), [{
-      contents: [{
-        name: 'Action'
-      }],
-      targetIds: [
-        targetCreatureId,
-        targetCreature2Id,
-      ]
-    }, {
-      contents: [{
-        inline: true,
-        name: 'Hit!',
-        value: '1d20 [10] + 10\n**20**',
-      }],
-      targetIds: [targetCreatureId],
-    }, {
-      contents: [{
-        inline: true,
-        name: 'Hit!',
-        value: '1d20 [10] + 10\n**20**',
-      }],
-      targetIds: [targetCreature2Id],
-    }]);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{ name: 'Action' }],
+        targetIds: [targetCreatureId, targetCreature2Id]
+      }, {
+        contents: [{
+          inline: true,
+          name: 'Hit!',
+          value: '1d20 [10] + 10\n**20**',
+        }],
+        targetIds: [targetCreatureId],
+      }, {
+        contents: [{
+          inline: true,
+          name: 'Hit!',
+          value: '1d20 [10] + 10\n**20**',
+        }],
+        targetIds: [targetCreature2Id],
+      },
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
+  it('should make attack rolls that use uses', async function () {
+    const action = await runActionById(usesActionId, [targetCreatureId]);
+    const expectedUpdates: Update[] = [
+      {
+        propId: usesActionId,
+        type: 'action',
+        inc: { usesUsed: 1, usesLeft: -1 },
+      }
+    ]
+    assert.deepEqual(allUpdates(action), expectedUpdates);
   });
 
   it('should make attack rolls that miss', async function () {
     const action = await runActionById(attackMissId, [targetCreatureId]);
-    assert.deepEqual(allMutations(action), [{
-      contents: [{
-        name: 'Action'
-      }],
-      targetIds: [
-        targetCreatureId,
-      ]
-    }, {
-      contents: [{
-        inline: true,
-        name: 'Miss!',
-        value: '1d20 [10] + 10\n**20**',
-      }],
-      targetIds: [targetCreatureId],
-    }]);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{ name: 'Action' }],
+        targetIds: [targetCreatureId],
+      }, {
+        contents: [{
+          inline: true,
+          name: 'Miss!',
+          value: '1d20 [10] − 5\n**5**', // DiceCloud uses unicode minus
+        }],
+        targetIds: [targetCreatureId],
+      }
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
   });
 
 });
