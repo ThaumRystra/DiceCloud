@@ -7,12 +7,12 @@ import propertySchemasIndex from '/imports/api/properties/computedPropertySchema
 import { storedIconsSchema } from '/imports/api/icons/Icons';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
-const CreatureProperties: Mongo.Collection<CreatureProperty> = new Mongo.Collection('creatureProperties');
+// TODO make this a union type of all CreatureProperty types
+const CreatureProperties: Mongo.Collection<any> = new Mongo.Collection('creatureProperties');
 
-export interface CreatureProperty extends TreeDoc {
+export interface CreatureProperty {
   _id: string
   _migrationError?: string
-  type: string
   tags: string[]
   disabled?: boolean
   icon?: {

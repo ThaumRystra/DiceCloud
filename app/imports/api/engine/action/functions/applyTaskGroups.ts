@@ -16,7 +16,6 @@ export async function applyChildren(
   action: EngineAction, prop, targetIds: string[], userInput
 ) {
   const children = await getPropertyChildren(action.creatureId, prop);
-  // Push the child tasks and related triggers to the stack
   for (const childProp of children) {
     await applyTask(action, { prop: childProp, targetIds }, userInput);
   }
@@ -98,6 +97,25 @@ export async function applyAfterPropTasksForSingleChild(
 ) {
   await applyAfterTriggers(action, prop, targetIds, userInput);
   await applyTask(action, { prop: childProp, targetIds }, userInput);
+  await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
+}
+
+/**
+ * Returns a list of tasks containing the following:
+ * After triggers
+ * After-children triggers
+ * @param action 
+ * @param prop 
+ * @param targetIds 
+ * @returns 
+ */
+export async function applyAfterPropTasksForSomeChildren(
+  action: EngineAction, prop, children, targetIds: string[], userInput
+) {
+  await applyAfterTriggers(action, prop, targetIds, userInput);
+  for (const childProp of children) {
+    await applyTask(action, { prop: childProp, targetIds }, userInput);
+  }
   await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
 }
 

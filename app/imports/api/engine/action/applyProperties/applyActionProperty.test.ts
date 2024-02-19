@@ -8,6 +8,7 @@ import {
   runActionById
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
 import { Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
+import Alea from 'alea';
 
 const [
   creatureId, targetCreatureId, targetCreature2Id,
@@ -91,6 +92,14 @@ describe('Apply Action Properties', function () {
     await createTestCreature(actionTestCreature);
     await createTestCreature(actionTargetCreature);
     await createTestCreature(actionTargetCreature2);
+  });
+
+  it('should generate random numbers reliably given consistent seeds', function () {
+    const aleaFraction = Alea('test', 'seeds');
+    const randomNumbers = [aleaFraction(), aleaFraction(), aleaFraction()];
+    assert.deepEqual(randomNumbers, [
+      0.19889510236680508, 0.9176857066340744, 0.042551583144813776
+    ]);
   });
 
   it('should run empty actions', async function () {

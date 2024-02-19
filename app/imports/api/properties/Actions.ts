@@ -6,12 +6,24 @@ import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
 import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { InlineCalculation } from '/imports/api/properties/subSchemas/inlineCalculationField';
 import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
+import Property from '/imports/api/properties/Properties.type';
 
+export type CreatureAction = Action & CreatureProperty & {
+  overridden?: boolean
+  insufficientResources?: boolean
+}
+
+/*
+ * Actions are things a character can do
+ */
 export interface Action extends ActionBase {
   type: 'action'
 }
 
-export interface ActionBase extends CreatureProperty {
+/**
+ * Base property type for both spells and actions
+ */
+export interface ActionBase extends Property {
   name?: string
   summary?: InlineCalculation
   description?: InlineCalculation
@@ -23,9 +35,7 @@ export interface ActionBase extends CreatureProperty {
   usesUsed?: number
   reset?: string
   silent?: boolean
-  insufficientResources?: boolean
   usesLeft?: number
-  overridden?: boolean
   // Resources
   resources: {
     itemsConsumed: {

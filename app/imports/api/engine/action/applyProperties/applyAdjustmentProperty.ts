@@ -24,7 +24,7 @@ export default async function applyAdjustmentProperty(
   }
 
   // Evaluate the amount
-  await recalculateCalculation(prop.amount, action, 'reduce');
+  await recalculateCalculation(prop.amount, action, 'reduce', userInput);
   const value = +prop.amount.value;
   if (!isFinite(value)) {
     return;

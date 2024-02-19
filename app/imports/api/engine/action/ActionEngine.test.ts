@@ -9,6 +9,7 @@ import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { applyAction } from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
+import inputProvider from '/imports/api/engine/action/functions/inputProviderForTests.testFn';
 
 const creatureId = Random.id();
 const targetId = Random.id();
@@ -81,11 +82,12 @@ describe('Interrupt action system', function () {
       [{ value: 'child 2 of index branch' }]
     );
   });
-  it('Halts execution of choice branches', async function () {
-    let userInputRequested = false;
-    const requestUserInput = () => { userInputRequested = true; return 0 };
-    await runActionById(choiceBranchId, requestUserInput);
-    assert.isTrue(userInputRequested, 'User input should be requested when a choice branch is applied');
+  it('Gets choices from choice branches', async function () {
+    const action = await runActionById(choiceBranchId);
+    assert.deepEqual(
+      allLogContent(action),
+      [{ value: 'child 1 of choice branch' }]
+    );
   });
   it('Applies adjustments', async function () {
     let action = await runActionById(adjustmentSetId);
@@ -205,12 +207,12 @@ function createAction(prop, targetIds?) {
   return EngineActions.insertAsync(action);
 }
 
-async function runActionById(propId, userInputFn = () => 0) {
+async function runActionById(propId) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop);
   const action = await EngineActions.findOneAsync(actionId);
   if (!action) throw 'Action is expected to exist';
-  await applyAction(action, userInputFn, { simulate: true });
+  await applyAction(action, inputProvider, { simulate: true });
   return action;
 }
 

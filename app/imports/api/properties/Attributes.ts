@@ -2,11 +2,57 @@ import SimpleSchema from 'simpl-schema';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
+import { InlineCalculation } from '/imports/api/properties/subSchemas/inlineCalculationField';
+import { ConstantValueType } from '/imports/parser/parseTree/constant';
+import Property from '/imports/api/properties/Properties.type';
+
+export type CreatureAttribute = Attribute & CreatureProperty & {
+  total?: ConstantValueType;
+  value?: ConstantValueType;
+  modifier?: number;
+  proficiency?: 0 | 0.49 | 0.5 | 1 | 2;
+  advantage?: -1 | 0 | 1;
+  constitutionMod?: number;
+  hide?: true;
+  overridden?: true;
+  effectIds?: string[];
+  proficiencyIds?: string[];
+  definitions?: { _id: string, type: string, row?: number }[];
+}
+
+export interface Attribute extends Property {
+  type: 'attribute';
+  name?: string;
+  variableName?: string;
+  attributeType: 'ability' | 'stat' | 'modifier' | 'hitDice' | 'healthBar' | 'resource' |
+  'spellSlot' | 'utility';
+  hitDiceSize?: 'd1' | 'd2' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';
+  spellSlotLevel?: CalculatedField;
+  healthBarColorMid?: string;
+  healthBarColorLow?: string;
+  healthBarNoDamage?: true;
+  healthBarNoHealing?: true;
+  healthBarNoDamageOverflow?: true;
+  healthBarNoHealingOverflow?: true;
+  healthBarDamageOrder?: number;
+  healthBarHealingOrder?: number;
+  baseValue?: CalculatedField;
+  description?: InlineCalculation;
+  damage?: number;
+  decimal?: true;
+  ignoreLowerLimit?: true;
+  ignoreUpperLimit?: true;
+  hideWhenTotalZero?: true;
+  hideWhenValueZero?: true;
+  reset?: string;
+}
 
 /*
  * Attributes are numbered stats of a character
  */
-let AttributeSchema = createPropertySchema({
+const AttributeSchema = createPropertySchema({
   name: {
     type: String,
     optional: true,
@@ -134,7 +180,7 @@ let AttributeSchema = createPropertySchema({
   },
 });
 
-let ComputedOnlyAttributeSchema = createPropertySchema({
+const ComputedOnlyAttributeSchema = createPropertySchema({
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,

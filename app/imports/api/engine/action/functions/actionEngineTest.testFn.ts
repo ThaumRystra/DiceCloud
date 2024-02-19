@@ -8,8 +8,7 @@ import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { applyAction } from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Mutation, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
-
+import inputProvider from '/imports/api/engine/action/functions/inputProviderForTests.testFn';
 /**
  * Removes all creatures, properties, and creatureVariable documents from the database
  */
@@ -59,7 +58,7 @@ export const randomIds = new Array(100).fill(undefined).map(() => Random.id());
  * @param userInputFn A function that simulates user input
  * @returns The Engine Action with mutations resulting from running the action
  */
-export async function runActionById(propId, targetIds?, userInput = testInputProvider) {
+export async function runActionById(propId, targetIds?, userInput = inputProvider) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop, targetIds);
   const action = await EngineActions.findOneAsync(actionId);
@@ -148,25 +147,3 @@ export function allLogContent(action: EngineAction) {
   });
   return contents;
 }
-
-const testInputProvider: InputProvider = {
-  /**
-   * For testing, randomness is hard to deal with
-   * rollDice function returns the average roll for every dice rolled
-   * [5d10, 1d4] => [[6,6,6,6,6], [3]]
-   */
-  async rollDice(action, dice) {
-    const result: number[][] = [];
-    for (const diceRoll of dice) {
-      const averageRoll = Math.round(diceRoll.diceSize / 2);
-      // Return an array full of averagely rolled dice
-      result.push(
-        new Array(diceRoll.number)
-          .fill(averageRoll)
-      )
-    }
-    return result;
-  }
-}
-
-export { testInputProvider }
