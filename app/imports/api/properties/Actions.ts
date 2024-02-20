@@ -235,6 +235,7 @@ const ComputedOnlyActionSchema = createPropertySchema({
     optional: true,
   },
   uses: {
+    parseLevel: 'reduce',
     type: 'computedOnlyField',
     optional: true,
   },

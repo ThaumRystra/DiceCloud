@@ -40,8 +40,6 @@ export async function resolveCalculationNode(calculation, parseNode, scope, give
   const fn = calculation._parseLevel;
   const calculationScope = { ...calculation._localScope, ...scope };
   const { result: resultNode, context } = await resolve(fn, parseNode, calculationScope, givenContext);
-  if (calculation.hash === 1318417319946211 && calculation._key === 'attackRoll') console.log({ calculation, resultNode, parseNode, ers: context.errors })
-
   calculation.errors = context.errors;
   calculation.valueNode = resultNode;
 }

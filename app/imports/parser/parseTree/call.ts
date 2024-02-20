@@ -108,7 +108,7 @@ const call: CallFactory = {
 
     try {
       // Run the function
-      const value = func.fn.apply({
+      const value = await func.fn.apply({
         scope,
         context,
       }, mappedArgs);
@@ -166,20 +166,22 @@ const call: CallFactory = {
     let failed = false;
     // Check that each argument is of the correct type
     resolvedArgs.forEach((node, index) => {
-      let type;
+      let expectedType;
       if (argumentsExpected.anyLength) {
-        type = argumentsExpected[0];
+        expectedType = argumentsExpected[0];
       } else {
-        type = argumentsExpected[index];
+        expectedType = argumentsExpected[index];
       }
-      if (type === 'parseNode') return;
+      if (expectedType === 'parseNode') return;
       if (
-        node.parseType !== type
-        && node.parseType === 'constant'
-        && node.valueType !== type
+        node.parseType !== expectedType
+        || (
+          node.parseType === 'constant'
+          && node.valueType !== expectedType
+        )
       ) failed = true;
       if (failed && fn === 'reduce') {
-        const typeName = typeof type === 'string' ? type : type.constructor.name;
+        const typeName = typeof expectedType === 'string' ? expectedType : expectedType.constructor.name;
         const nodeName = node.parseType;
         context.error(`Incorrect arguments to ${callNode.functionName} function` +
           `expected ${typeName} got ${nodeName}`);

@@ -132,8 +132,8 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     ],
     arguments: ['parseNode'],
     resultType: 'parseNode',
-    fn: function resolveFn(node) {
-      const { result } = resolve('reduce', node, this.scope, this.context);
+    fn: async function resolveFn(node) {
+      const { result } = await resolve('reduce', node, this.scope, this.context);
       return result;
     }
   },
@@ -268,7 +268,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
 }
 
 function anyNumberOf(type) {
-  const argumentArray = [type];
+  const argumentArray: any = [type];
   argumentArray.anyLength = true;
   return argumentArray;
 }

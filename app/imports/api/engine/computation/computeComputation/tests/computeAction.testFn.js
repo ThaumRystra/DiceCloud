@@ -57,7 +57,7 @@ var testProperties = [
       }],
     },
     uses: {
-      calculation: 'nonExistantProperty + 7',
+      calculation: 'nonExistentProperty + 7',
     },
     usesUsed: 5,
     left: 1,

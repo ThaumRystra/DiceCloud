@@ -1,5 +1,3 @@
-console.log('index.ts imports')
-
 import accessor from '/imports/parser/parseTree/accessor';
 import array from '/imports/parser/parseTree/array';
 import call from '/imports/parser/parseTree/call';
@@ -13,8 +11,6 @@ import parenthesis from '/imports/parser/parseTree/parenthesis';
 import roll from '/imports/parser/parseTree/roll';
 import rollArray from '/imports/parser/parseTree/rollArray';
 import unaryOperator from '/imports/parser/parseTree/unaryOperator';
-
-console.log('index.ts')
 
 const factories = {
   accessor,
@@ -33,13 +29,5 @@ const factories = {
   symbol: accessor,
   unaryOperator,
 };
-
-console.log('---------------------');
-console.log('---------------------');
-console.log('---------------------');
-console.log(factories.array);
-console.log('---------------------');
-console.log('---------------------');
-console.log('---------------------');
 
 export default factories;

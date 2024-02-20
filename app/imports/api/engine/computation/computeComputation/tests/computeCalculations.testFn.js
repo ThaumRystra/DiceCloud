@@ -8,7 +8,6 @@ export default async function () {
   await computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   // Tag targeted effects make complicated parse trees
-  console.log(prop('attackAction2'));
   assert.equal(prop('attackAction2').attackRoll.value, 'min(3 + d4, d100)', 'Tag targeted effects change the attack roll correctly');
   // Tags target effects on attributes
   assert.equal(prop('taggedCon').value, 26, 'Tagged targeted effects affect attribute values');

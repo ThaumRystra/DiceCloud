@@ -8,6 +8,7 @@ export type AccessorNode = {
   parseType: 'accessor' | 'symbol';
   path?: string[];
   name: string;
+  isUndefined?: true,
 }
 
 type AccessorFactory = {
@@ -18,18 +19,29 @@ type AccessorFactory = {
 }
 
 const accessor: AccessorFactory = {
-  create({ name, path }: { name: string, path?: string[] }): AccessorNode {
+  create({
+    name, path, isUndefined
+  }: {
+    name: string, path?: string[], isUndefined?: true
+  }): AccessorNode {
     return {
       parseType: 'accessor',
-      path,
       name,
+      ...path && { path },
+      ...isUndefined && { isUndefined: true },
     };
   },
   async compile(node, scope, context) {
     let value = getFromScope(node.name, scope);
     // Get the value from the given path
     node.path?.forEach(name => {
-      if (value === undefined) return;
+      if (name === 'isUndefined') {
+        value = value === undefined;
+        return;
+      }
+      if (value === undefined) {
+        return;
+      }
       value = value[name];
     });
     let valueType = getType(value);
@@ -75,14 +87,17 @@ const accessor: AccessorFactory = {
       };
     }
     if (valueType === 'undefined') {
-      // Undefined defaults to zero
+      // We are only at compile, if it isn't defined in the scope, return a copy of the accessor
       return {
-        result: constant.create({
-          value: 0,
+        result: accessor.create({
+          name: node.name,
+          path: node.path,
+          isUndefined: true,
         }),
-        context
+        context,
       };
     }
+    // The type being accessed isn't supported above, make an error and return a copy of the node
     context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
     return {
       result: accessor.create({
@@ -93,18 +108,19 @@ const accessor: AccessorFactory = {
     };
   },
   async reduce(node, scope, context, inputProvider, resolveOthers): Promise<ResolvedResult> {
-    let { result } = await accessor.compile(node, scope, context, inputProvider, resolveOthers);
-    ({ result } = await resolveOthers('reduce', result, scope, context, inputProvider));
-    if (result.parseType === 'accessor') {
+    // First compile the accessor
+    const { result } = await accessor.compile(node, scope, context, inputProvider, resolveOthers);
+    // If compilation didn't find a suitable replacement, return 0
+    if (result.parseType === 'accessor' && result.isUndefined) {
       return {
         result: constant.create({
           value: 0,
+          isUndefined: true,
         }),
         context
       };
-    } else {
-      return { result, context };
     }
+    return { result, context };
   },
   toString(node) {
     if (!node.path?.length) return `${node.name}`;
