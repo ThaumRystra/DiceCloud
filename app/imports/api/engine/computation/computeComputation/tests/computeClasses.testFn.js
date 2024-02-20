@@ -4,9 +4,9 @@ import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
 import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const scope = id => computation.scope[id];
   const prop = id => computation.propsById[id];
   assert.equal(scope('level').value, 5);

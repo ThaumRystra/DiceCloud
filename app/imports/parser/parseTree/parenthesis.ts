@@ -1,23 +1,20 @@
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
-import resolve, { toString, traverse, map, Context, ResolvedResult } from '/imports/parser/resolve';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 export type ParenthesisNode = {
   parseType: 'parenthesis';
   content: ParseNode;
 }
 
-interface ParenthesisFactory extends NodeFactory {
+type ParenthesisFactory = {
   create(node: Partial<ParenthesisNode>): ParenthesisNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: ParenthesisNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: ParenthesisNode): string;
-  traverse(node: ParenthesisNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: ParenthesisNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<ParenthesisNode>;
+  toString: ToStringFunction<ParenthesisNode>;
+  traverse: TraverseFunction<ParenthesisNode>;
+  map: MapFunction<ParenthesisNode>;
 }
 
 const parenthesis: ParenthesisFactory = {
@@ -27,8 +24,8 @@ const parenthesis: ParenthesisFactory = {
       content,
     };
   },
-  resolve(fn, node, scope, context) {
-    const { result: content } = resolve(fn, node.content, scope, context);
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers) {
+    const { result: content } = await resolveOthers(fn, node.content, scope, context, inputProvider);
     if (
       fn === 'reduce' ||
       content.parseType === 'constant' ||
@@ -42,17 +39,17 @@ const parenthesis: ParenthesisFactory = {
       };
     }
   },
-  toString(node) {
-    return `(${toString(node.content)})`;
+  toString(node, stringOthers) {
+    return `(${stringOthers(node.content)})`;
   },
-  traverse(node, fn: (node: ParseNode) => any) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.content, fn);
+    traverseOthers(node.content, fn);
   },
-  map(node, fn: (node: ParseNode) => any) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.content = map(node.content, fn);
+      node.content = await mapOthers(node.content, fn);
     }
     return resultingNode;
   },

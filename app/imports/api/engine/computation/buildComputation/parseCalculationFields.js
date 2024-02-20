@@ -125,6 +125,6 @@ function parseCalculation(calcObj) {
       message: prettifyParseError(e),
     };
     calcObj.parseError = error;
-    calcObj.parseNode = errorNode.create({ error });
+    calcObj.parseNode = errorNode.create({ error: error.message });
   }
 }

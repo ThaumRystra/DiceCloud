@@ -4,16 +4,16 @@ import writeAlteredProperties from './computation/writeComputation/writeAlteredP
 import writeScope from './computation/writeComputation/writeScope';
 import writeErrors from './computation/writeComputation/writeErrors';
 
-export default function computeCreature(creatureId) {
+export default async function computeCreature(creatureId) {
   if (Meteor.isClient) return;
   // console.log('compute ' + creatureId);
   const computation = buildCreatureComputation(creatureId);
-  computeComputation(computation, creatureId);
+  await computeComputation(computation, creatureId);
 }
 
-function computeComputation(computation, creatureId) {
+async function computeComputation(computation, creatureId) {
   try {
-    computeCreatureComputation(computation);
+    await computeCreatureComputation(computation);
     writeAlteredProperties(computation);
     writeScope(creatureId, computation);
   } catch (e) {

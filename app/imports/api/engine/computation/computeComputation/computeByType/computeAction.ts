@@ -1,4 +1,7 @@
-export default function computeAction(computation, node) {
+import CreatureComputation from '/imports/api/engine/computation/CreatureComputation';
+import { Node } from 'ngraph.graph';
+
+export default function computeAction(computation: CreatureComputation, node: Node) {
   const prop = node.data;
   if (Number.isFinite(prop.uses?.value)) {
     prop.usesLeft = prop.uses.value - (prop.usesUsed || 0);

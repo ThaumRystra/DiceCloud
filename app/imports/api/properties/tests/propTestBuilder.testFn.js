@@ -17,7 +17,6 @@ export function propsFromForest(
     const children = prop.children;
     // Check the property has a type
     if (!prop.type) {
-      console.log(prop);
       throw 'Type is required on every property, not found on above doc';
     }
     // Create the clean doc

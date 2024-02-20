@@ -3,9 +3,11 @@ import { get } from 'lodash';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
 import { getPropertyDescendants } from '/imports/api/engine/loadCreatures';
-import resolve, { toString, map } from '/imports/parser/resolve';
+import resolve from '/imports/parser/resolve';
+import map from '/imports/parser/map';
+import toString from '/imports/parser/toString';
 import computedSchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex.js';
-import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
+import applyFnToKey, { applyFnToKeyAsync } from '/imports/api/engine/computation/utility/applyFnToKey';
 import accessor from '/imports/parser/parseTree/accessor';
 import TaskResult, { Mutation } from '/imports/api/engine/action/tasks/TaskResult';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
@@ -55,7 +57,7 @@ export default async function applyBuffProperty(
     //Log the buff
     let logValue = prop.description?.value
     if (prop.description?.text) {
-      recalculateInlineCalculations(prop.description, action);
+      recalculateInlineCalculations(prop.description, action, 'resolve', userInput);
       logValue = prop.description?.value;
     }
     result.appendLog({
@@ -83,17 +85,17 @@ async function crystalizeVariables(
   action: EngineAction, propList: any[], task: PropTask, result: TaskResult
 ) {
   const scope = await getEffectiveActionScope(action);
-  propList.forEach(prop => {
+  for (const prop of propList) {
     if (prop._skipCrystalize) {
       delete prop._skipCrystalize;
       return;
     }
     // Iterate through all the calculations and crystalize them
-    computedSchemas[prop.type].computedFields().forEach(calcKey => {
-      applyFnToKey(prop, calcKey, (prop, key) => {
+    for (const calcKey of computedSchemas[prop.type].computedFields()) {
+      await applyFnToKeyAsync(prop, calcKey, async (prop, key) => {
         const calcObj = get(prop, key);
         if (!calcObj?.parseNode) return;
-        calcObj.parseNode = map(calcObj.parseNode, node => {
+        calcObj.parseNode = await map(calcObj.parseNode, async node => {
           // Skip nodes that aren't symbols or accessors
           if (
             node.parseType !== 'accessor'
@@ -117,22 +119,17 @@ async function crystalizeVariables(
             return node;
           } else {
             // Resolve all other variables
-            const { result, context } = resolve('reduce', node, scope);
-            context.errors?.forEach(error => {
-              result.appendLog({
-                name: 'Error',
-                value: error,
-              }, task.targetIds);
-            });
-            return result;
+            const { result: nodeResult, context } = await resolve('reduce', node, scope);
+            result.appendParserContextErrors(context, task.targetIds);
+            return nodeResult;
           }
         });
         calcObj.calculation = toString(calcObj.parseNode);
         calcObj.hash = cyrb53(calcObj.calculation);
       });
-    });
+    }
     // For each key in the schema
-    computedSchemas[prop.type].inlineCalculationFields().forEach(calcKey => {
+    for (const calcKey of computedSchemas[prop.type].inlineCalculationFields()) {
       // That ends in .inlineCalculations
       applyFnToKey(prop, calcKey, (prop, key) => {
         const inlineCalcObj = get(prop, key);
@@ -161,6 +158,6 @@ async function crystalizeVariables(
         }
         inlineCalcObj.hash = inlineCalcHash;
       });
-    });
-  });
+    }
+  }
 }

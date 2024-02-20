@@ -183,3 +183,4 @@ export default {
     margin-bottom: 0;
   }
 </style>
+resolveimport { toString } from '/imports/parser/toString';

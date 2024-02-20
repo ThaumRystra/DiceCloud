@@ -1,10 +1,12 @@
-import resolve, { toString, traverse, map, ResolvedResult, Context } from '../resolve';
-import error from './error';
-import rollArray from './rollArray';
-import rollDice from '/imports/parser/rollDice';
+import error from '/imports/parser/parseTree/error';
+import rollArray from '/imports/parser/parseTree/rollArray';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
-import NodeFactory from '/imports/parser/parseTree/NodeFactory';
+import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import Context from '/imports/parser/types/Context';
 
 export type RollNode = {
   parseType: 'roll';
@@ -12,21 +14,14 @@ export type RollNode = {
   right: ParseNode;
 }
 
-interface RollNodeFactory extends NodeFactory {
+type RollNodeFactory = {
   create(node: Partial<RollNode>): RollNode;
-  compile(
-    node: RollNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  roll(
-    node: RollNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  reduce(
-    node: RollNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  resolve?: undefined;
-  toString(node: RollNode): string;
-  traverse(node: RollNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: RollNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  compile: ResolveLevelFunction<RollNode>;
+  roll: ResolveLevelFunction<RollNode>;
+  reduce: ResolveLevelFunction<RollNode>;
+  toString: ToStringFunction<RollNode>;
+  traverse: TraverseFunction<RollNode>;
+  map: MapFunction<RollNode>;
 }
 
 const rollNode: RollNodeFactory = {
@@ -37,28 +32,28 @@ const rollNode: RollNodeFactory = {
       right,
     };
   },
-  compile(node, scope, context) {
-    const { result: left } = resolve('compile', node.left, scope, context);
-    const { result: right } = resolve('compile', node.right, scope, context);
+  async compile(node, scope, context, inputProvider, resolveOthers) {
+    const { result: left } = await resolveOthers('compile', node.left, scope, context, inputProvider);
+    const { result: right } = await resolveOthers('compile', node.right, scope, context, inputProvider);
     return {
       result: rollNode.create({ left, right }),
       context,
     };
   },
-  toString(node) {
+  toString(node, stringOthers) {
     if (
       node.left.parseType === 'constant'
       && typeof node.left.value === 'number'
       && node.left.value === 1
     ) {
-      return `d${toString(node.right)}`;
+      return `d${stringOthers(node.right)}`;
     } else {
-      return `${toString(node.left)}d${toString(node.right)}`;
+      return `${stringOthers(node.left)}d${stringOthers(node.right)}`;
     }
   },
-  roll(node, scope, context) {
-    const { result: left } = resolve('reduce', node.left, scope, context);
-    const { result: right } = resolve('reduce', node.right, scope, context);
+  async roll(node, scope, context, inputProvider, resolveOthers) {
+    const { result: left } = await resolveOthers('reduce', node.left, scope, context, inputProvider);
+    const { result: right } = await resolveOthers('reduce', node.right, scope, context, inputProvider);
     if (
       left.parseType !== 'constant'
       || typeof left.value !== 'number'
@@ -82,7 +77,7 @@ const rollNode: RollNodeFactory = {
       return errorResult(message, node, context);
     }
     const diceSize = right.value;
-    const values = rollDice(number, diceSize);
+    const [values] = await inputProvider.rollDice([{ number, diceSize }]);
     if (context) {
       context.rolls.push({ number, diceSize, values });
     }
@@ -95,20 +90,20 @@ const rollNode: RollNodeFactory = {
       context
     };
   },
-  reduce(node, scope, context) {
-    const { result } = rollNode.roll(node, scope, context);
-    return resolve('reduce', result, scope, context);
+  async reduce(node, scope, context, inputProvider, resolveOthers) {
+    const { result } = await rollNode.roll(node, scope, context, inputProvider, resolveOthers);
+    return resolveOthers('reduce', result, scope, context, inputProvider);
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.left, fn);
-    traverse(node.right, fn);
+    traverseOthers(node.left, fn);
+    traverseOthers(node.right, fn);
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.left = map(node.left, fn);
-      node.right = map(node.right, fn);
+      node.left = await mapOthers(node.left, fn);
+      node.right = await mapOthers(node.right, fn);
     }
     return resultingNode;
   },

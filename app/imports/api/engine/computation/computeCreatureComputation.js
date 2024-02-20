@@ -4,7 +4,7 @@ import embedInlineCalculations from './utility/embedInlineCalculations';
 import { removeEmptyCalculations } from './buildComputation/parseCalculationFields';
 import path from 'ngraph.path';
 
-export default function computeCreatureComputation(computation) {
+export default async function computeCreatureComputation(computation) {
   const stack = [];
   // Computation scope of {variableName: prop}
   const graph = computation.dependencyGraph;
@@ -31,7 +31,7 @@ export default function computeCreatureComputation(computation) {
       top._visited = true;
       stack.pop();
       // Compute the top object of the stack
-      compute(computation, top);
+      await compute(computation, top);
     } else {
       top._visitedChildren = true;
       // Push dependencies to graph to be computed first
@@ -40,14 +40,16 @@ export default function computeCreatureComputation(computation) {
   }
 
   // Finish the props after the dependency graph has been traversed
-  computation.props.forEach(finalizeProp);
+  for (const prop of computation.props) {
+    finalizeProp(prop);
+  }
 }
 
-function compute(computation, node) {
+async function compute(computation, node) {
   // Determine the prop's active status by its toggles
   computeToggles(computation, node);
   // Compute the property by type
-  computeByType[node.data?.type || '_variable']?.(computation, node);
+  await computeByType[node.data?.type || '_variable']?.(computation, node);
 }
 
 function pushDependenciesToStack(nodeId, graph, stack, computation) {

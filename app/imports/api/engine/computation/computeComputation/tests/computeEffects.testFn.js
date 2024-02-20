@@ -4,9 +4,9 @@ import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   assert.equal(prop('strengthId').value, 26);
 }

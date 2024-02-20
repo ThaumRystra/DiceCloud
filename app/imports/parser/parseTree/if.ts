@@ -1,7 +1,9 @@
-import resolve, { traverse, toString, map } from '../resolve';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
-import { Context, ResolvedResult } from '/imports/parser/resolve';
+import ResolvedResult from '../types/ResolvedResult';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 export type IfNode = {
   parseType: 'if';
@@ -10,17 +12,12 @@ export type IfNode = {
   alternative: ParseNode;
 }
 
-interface IfFactory extends NodeFactory {
+type IfFactory = {
   create(node: Partial<IfNode>): IfNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: IfNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: IfNode): string;
-  traverse(node: IfNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: IfNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<IfNode>;
+  toString: ToStringFunction<IfNode>;
+  traverse: TraverseFunction<IfNode>;
+  map: MapFunction<IfNode>;
 }
 
 const ifNode: IfFactory = {
@@ -35,18 +32,18 @@ const ifNode: IfFactory = {
       alternative,
     };
   },
-  toString(node) {
+  toString(node, stringOthers) {
     const { condition, consequent, alternative } = node;
     condition.parseType
-    return `${toString(condition)} ? ${toString(consequent)} : ${toString(alternative)}`
+    return `${stringOthers(condition)} ? ${stringOthers(consequent)} : ${stringOthers(alternative)}`
   },
-  resolve(fn, node, scope, context): ResolvedResult {
-    const { result: condition } = resolve(fn, node.condition, scope, context);
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers): Promise<ResolvedResult> {
+    const { result: condition } = await resolveOthers(fn, node.condition, scope, context, inputProvider);
     if (condition.parseType === 'constant') {
       if (condition.value) {
-        return resolve(fn, node.consequent, scope, context);
+        return resolveOthers(fn, node.consequent, scope, context, inputProvider);
       } else {
-        return resolve(fn, node.alternative, scope, context);
+        return resolveOthers(fn, node.alternative, scope, context, inputProvider);
       }
     } else {
       return {
@@ -59,18 +56,18 @@ const ifNode: IfFactory = {
       };
     }
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.condition, fn);
-    traverse(node.consequent, fn);
-    traverse(node.alternative, fn);
+    traverseOthers(node.condition, fn);
+    traverseOthers(node.consequent, fn);
+    traverseOthers(node.alternative, fn);
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.condition = map(node.condition, fn);
-      node.consequent = map(node.consequent, fn);
-      node.alternative = map(node.alternative, fn);
+      node.condition = await mapOthers(node.condition, fn);
+      node.consequent = await mapOthers(node.consequent, fn);
+      node.alternative = await mapOthers(node.alternative, fn);
     }
     return resultingNode;
   },

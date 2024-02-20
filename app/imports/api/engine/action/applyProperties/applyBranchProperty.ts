@@ -115,7 +115,7 @@ export default async function applyBranchProperty(
       let choices: string[];
       let chosenChildren: typeof children = [];
       if (children.length) {
-        choices = await userInput.choose(action, children);
+        choices = await userInput.choose(children);
         chosenChildren = filter(children, child => choices.includes(child._id));
       }
       if (!children.length || !chosenChildren.length) {

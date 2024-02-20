@@ -1,15 +1,13 @@
 import embedInlineCalculations from '/imports/api/engine/computation/utility/embedInlineCalculations';
 import recalculateCalculation from './recalculateCalculation'
 
-export default async function recalculateInlineCalculations(inlineCalcObj, action) {
+export default async function recalculateInlineCalculations(inlineCalcObj, action, parseLevel, userInput) {
   // Skip if there are no calculations
   if (!inlineCalcObj?.inlineCalculations?.length) return;
   // Recalculate each calculation with the current scope
-  const promises = [];
   for (const calc of inlineCalcObj.inlineCalculations) {
-    promises.push(recalculateCalculation(calc, action));
+    await recalculateCalculation(calc, action, undefined, userInput);
   }
-  await Promise.all(promises);
   // Embed the new calculated values
   embedInlineCalculations(inlineCalcObj);
 }

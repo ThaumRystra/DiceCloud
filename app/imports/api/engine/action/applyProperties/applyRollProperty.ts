@@ -3,7 +3,7 @@ import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions
 import { rollAndReduceCalculation } from '/imports/api/engine/action/functions/recalculateCalculation';
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
-import { toString } from '/imports/parser/resolve';
+import toString from '/imports/parser/toString';
 
 export default async function roll(
   task: PropTask, action: EngineAction, result: TaskResult, userInput

@@ -1,9 +1,16 @@
-import error from './error';
-import constant from './constant';
+console.log('call.ts imports')
+import error from '/imports/parser/parseTree/error';
+import constant from '/imports/parser/parseTree/constant';
 import functions, { ParserFunction } from '/imports/parser/functions';
-import resolve, { toString, traverse, map, Context, ResolvedResult } from '/imports/parser/resolve';
+import Context from '../types/Context';
+import ResolvedResult from '../types/ResolvedResult';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import { serialMap } from '/imports/api/utility/asyncMap';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import ResolveLevel from '/imports/parser/types/ResolveLevel';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 export type CallNode = {
   parseType: 'call';
@@ -11,14 +18,12 @@ export type CallNode = {
   args: ParseNode[];
 }
 
-interface CallFactory extends NodeFactory {
+type CallFactory = {
   create(node: Partial<CallNode>): CallNode;
-  resolve(
-    fn: ResolveLevel, node: CallNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: CallNode): string;
-  traverse(node: CallNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: CallNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<CallNode>;
+  toString: ToStringFunction<CallNode>;
+  traverse: TraverseFunction<CallNode>;
+  map: MapFunction<CallNode>;
   checkArguments(node: CallNode, fn: ResolveLevel, func: ParserFunction,
     resolvedArgs: ParseNode[], context: Context): boolean;
 }
@@ -31,7 +36,7 @@ const call: CallFactory = {
       args,
     }
   },
-  resolve(fn, node, scope, context): ResolvedResult {
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers): Promise<ResolvedResult> {
     const func = functions[node.functionName];
     // Check that the function exists
     if (!func) {
@@ -46,7 +51,7 @@ const call: CallFactory = {
     }
 
     // Resolve a given node to a maximum depth of resolution
-    const resolveToLevel = (node, maxResolveFn = 'reduce'): ResolvedResult => {
+    const resolveToLevel = (node, maxResolveFn = 'reduce'): Promise<ResolvedResult> => {
       // Determine the actual depth to resolve to
       let resolveFn: ResolveLevel = 'reduce';
       if (fn === 'compile' || maxResolveFn === 'compile') {
@@ -55,14 +60,15 @@ const call: CallFactory = {
         resolveFn = 'roll';
       }
       // Resolve
-      return resolve(resolveFn, node, scope, context);
+      return resolveOthers(resolveFn, node, scope, context, inputProvider);
     }
 
     // Resolve the arguments
-    const resolvedArgs = node.args.map((arg, i) => {
-      const { result } = resolveToLevel(arg, func.maxResolveLevels?.[i]);
-      return result;
-    });
+    const resolvedArgs: ParseNode[] = [];
+    for (const [i, arg] of node.args.entries()) {
+      const { result } = await resolveToLevel(arg, func.maxResolveLevels?.[i]);
+      resolvedArgs.push(result);
+    }
 
     // Check that the arguments match what is expected
     const checkFailed = call.checkArguments(node, fn, func, resolvedArgs, context);
@@ -116,7 +122,7 @@ const call: CallFactory = {
         };
       } else {
         // Resolve the return value
-        return resolve(fn, value, scope, context);
+        return resolveOthers(fn, value, scope, context, inputProvider);
       }
     } catch (err) {
       context.error(`Internal error: ${err.message || err}`);
@@ -129,22 +135,22 @@ const call: CallFactory = {
       }
     }
   },
-  toString(node) {
-    return `${node.functionName}(${node.args.map(arg => toString(arg)).join(', ')})`;
+  toString(node, toStringOthers) {
+    return `${node.functionName}(${node.args.map(arg => toStringOthers(arg)).join(', ')})`;
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    node.args.forEach(arg => traverse(arg, fn));
+    node.args.forEach(arg => traverseOthers(arg, fn));
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.args = node.args.map(arg => map(arg, fn));
+      node.args = await serialMap(node.args, async arg => mapOthers(arg, fn));
     }
     return resultingNode;
   },
-  checkArguments(node, fn, func, resolvedArgs, context) {
-    const argumentsExpected = func.arguments;
+  checkArguments(callNode, fn, func, resolvedArgs, context) {
+    const argumentsExpected = func.arguments as any;
     // Check that the number of arguments matches the number expected
     if (
       !argumentsExpected.anyLength &&
@@ -152,7 +158,7 @@ const call: CallFactory = {
       resolvedArgs.length < (func.minArguments ?? argumentsExpected.length)
     ) {
       context.error('Incorrect number of arguments ' +
-        `to ${node.functionName} function, ` +
+        `to ${callNode.functionName} function, ` +
         `expected ${argumentsExpected.length} got ${resolvedArgs.length}`);
       return true;
     }
@@ -160,18 +166,22 @@ const call: CallFactory = {
     let failed = false;
     // Check that each argument is of the correct type
     resolvedArgs.forEach((node, index) => {
-      let type: string;
+      let type;
       if (argumentsExpected.anyLength) {
         type = argumentsExpected[0];
       } else {
         type = argumentsExpected[index];
       }
       if (type === 'parseNode') return;
-      if (node.parseType !== type && node.valueType !== type) failed = true;
+      if (
+        node.parseType !== type
+        && node.parseType === 'constant'
+        && node.valueType !== type
+      ) failed = true;
       if (failed && fn === 'reduce') {
         const typeName = typeof type === 'string' ? type : type.constructor.name;
         const nodeName = node.parseType;
-        context.error(`Incorrect arguments to ${node.functionName} function` +
+        context.error(`Incorrect arguments to ${callNode.functionName} function` +
           `expected ${typeName} got ${nodeName}`);
       }
     });

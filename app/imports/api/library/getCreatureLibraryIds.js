@@ -4,7 +4,6 @@ import getUserLibraryIds from './getUserLibraryIds';
 import { intersection, union } from 'lodash';
 
 export default function getCreatureLibraryIds(creature, userId) {
-  if (!userId) console.log('no userId, returning empty array');
   if (!userId) return [];
 
   // Get the ids of libraries the user is permitted to view

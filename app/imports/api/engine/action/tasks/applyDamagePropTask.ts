@@ -8,7 +8,7 @@ import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 
 export default async function applyDamagePropTask(
   task: DamagePropTask, action: EngineAction, result: TaskResult, userInput
-): Promise<void> {
+): Promise<number> {
   const prop = task.prop;
 
   if (task.targetIds.length > 1) {
@@ -74,7 +74,7 @@ export default async function applyDamagePropTask(
   let damage, newValue, increment;
   targetProp = await getSingleProperty(targetId, targetPropId);
 
-  if (!targetProp) return;
+  if (!targetProp) return value;
 
   if (operation === 'set') {
     const total = targetProp.total || 0;
@@ -128,4 +128,5 @@ export default async function applyDamagePropTask(
     });
   }
   await applyTriggers(action, prop, [action.creatureId], 'damageProperty.after', userInput);
+  return increment;
 }

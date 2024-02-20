@@ -6,7 +6,9 @@ import {
   prettifyParseError,
 } from '/imports/parser/parser';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import resolve, { Context, traverse } from '/imports/parser/resolve';
+import resolve from '/imports/parser/resolve';
+import Context from '../../parser/types/Context';
+import traverse from '/imports/parser/traverse';
 
 /*
  * Constants are primitive values that can be used elsewhere in computations

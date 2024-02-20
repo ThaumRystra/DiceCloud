@@ -1,9 +1,10 @@
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
-import array from '/imports/parser/parseTree/constant';
-import constant from '/imports/parser/parseTree/constant';
+import ParseNode from '/imports/parser/parseTree/ParseNode';
+import array from '/imports/parser/parseTree/array';
+import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 
 //set up the collection for creature variables
-let CreatureVariables = new Mongo.Collection('creatureVariables');
+const CreatureVariables = new Mongo.Collection('creatureVariables');
 
 // Unique index on _creatureId
 if (Meteor.isServer) {
@@ -28,7 +29,7 @@ if (Meteor.isServer) {
  * Get the property from the given scope, respecting properties that are just a link to the actual
  * property document
  */
-export function getFromScope(name, scope) {
+export function getFromScope(name: string, scope) {
   let value = scope?.[name];
   if (value?._propId) {
     value = getSingleProperty(scope._creatureId, value._propId);
@@ -38,13 +39,13 @@ export function getFromScope(name, scope) {
 
 export function getNumberFromScope(name, scope) {
   const parseNode = getParseNodeFromScope(name, scope);
-  if (!parseNode || parseNode.valueType !== 'number') {
+  if (!parseNode || !isFiniteNode(parseNode)) {
     return undefined;
   }
   return parseNode.value;
 }
 
-export function getParseNodeFromScope(name, scope) {
+export function getParseNodeFromScope(name, scope): ParseNode | undefined {
   let value = getFromScope(name, scope);
   if (!value) return;
   let valueType = getType(value);

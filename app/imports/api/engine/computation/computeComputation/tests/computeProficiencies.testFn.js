@@ -4,10 +4,10 @@ import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
 import { applyNestedSetProperties, compareOrder } from '/imports/api/parenting/parentingFunctions';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
   const hasLink = computation.dependencyGraph.hasLink;
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   assert.equal(
     prop('strengthId').value, 8,

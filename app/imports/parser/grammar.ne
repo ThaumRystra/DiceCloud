@@ -1,6 +1,6 @@
 @preprocessor esmodule
 @{%
-  import node from './parseTree/_index';
+  import node from '/imports/parser/parseTree/_index';
 
   import moo from 'moo';
 

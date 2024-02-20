@@ -114,13 +114,13 @@ export default {
     min(row) {
       return row.min ? row.min && row.min.value : this.model.min && this.model.min.value;
     },
-    dragSlider(row, value) {
+    async dragSlider(row, value) {
       const currentSpent = this.model.spent;
       let newSpent = currentSpent - row.spent;
       const costFunction = EJSON.clone(row.cost || this.model.cost);
       if (!costFunction?.parseNode) return;
       if (costFunction) costFunction.parseLevel = 'reduce';
-      resolveCalculationNode(costFunction, costFunction.parseNode, { value });
+      await resolveCalculationNode(costFunction, costFunction.parseNode, { value });
       if (Number.isFinite(costFunction.value)) {
         newSpent += costFunction.value;
         if (this.useEstimate) this.estimatedCost = newSpent;

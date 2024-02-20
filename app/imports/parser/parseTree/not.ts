@@ -1,24 +1,21 @@
-import resolve, { toString, traverse, map, Context, ResolvedResult } from '/imports/parser/resolve';
-import constant from './constant';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import constant from '/imports/parser/parseTree/constant';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 export type NotNode = {
   parseType: 'not';
   right: ParseNode;
 }
 
-interface NotFactory extends NodeFactory {
+type NotFactory = {
   create(node: Partial<NotNode>): NotNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: NotNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: NotNode): string;
-  traverse(node: NotNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: NotNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<NotNode>;
+  toString: ToStringFunction<NotNode>;
+  traverse: TraverseFunction<NotNode>;
+  map: MapFunction<NotNode>;
 }
 
 const not: NotFactory = {
@@ -28,8 +25,8 @@ const not: NotFactory = {
       right,
     }
   },
-  resolve(fn, node, scope, context) {
-    const { result: right } = resolve(fn, node.right, scope, context);
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers) {
+    const { result: right } = await resolveOthers(fn, node.right, scope, context, inputProvider);
     if (right.parseType !== 'constant') {
       return {
         result: not.create({
@@ -45,17 +42,17 @@ const not: NotFactory = {
       context,
     };
   },
-  toString(node) {
-    return `!${toString(node.right)}`;
+  toString(node, stringOthers) {
+    return `!${stringOthers(node.right)}`;
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.right, fn);
+    traverseOthers(node.right, fn);
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.right = map(node.right, fn);
+      node.right = await mapOthers(node.right, fn);
     }
     return resultingNode;
   },

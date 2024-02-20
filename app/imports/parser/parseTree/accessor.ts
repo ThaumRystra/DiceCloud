@@ -1,28 +1,20 @@
-import constant from './constant';
-import array from './array';
-import resolve, { Context, ResolvedResult } from '/imports/parser/resolve';
+import constant from '/imports/parser/parseTree/constant';
+import array from '/imports/parser/parseTree/array';
+import ResolvedResult from '/imports/parser/types/ResolvedResult';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
-import NodeFactory from '/imports/parser/parseTree/NodeFactory';
+import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
 
 export type AccessorNode = {
-  parseType: 'accessor';
+  parseType: 'accessor' | 'symbol';
   path?: string[];
   name: string;
 }
 
-interface AccessorFactory extends NodeFactory {
+type AccessorFactory = {
   create(node: Partial<AccessorNode>): AccessorNode;
-  compile(
-    node: AccessorNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  roll?: undefined;
-  resolve?: undefined;
-  reduce(
-    node: AccessorNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
+  compile: ResolveLevelFunction<AccessorNode>;
+  reduce: ResolveLevelFunction<AccessorNode>;
   toString(node: AccessorNode): string;
-  traverse?: undefined;
-  map?: undefined;
 }
 
 const accessor: AccessorFactory = {
@@ -33,9 +25,7 @@ const accessor: AccessorFactory = {
       name,
     };
   },
-  compile(
-    node: AccessorNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult {
+  async compile(node, scope, context) {
     let value = getFromScope(node.name, scope);
     // Get the value from the given path
     node.path?.forEach(name => {
@@ -102,9 +92,9 @@ const accessor: AccessorFactory = {
       context,
     };
   },
-  reduce(node, scope, context): ResolvedResult {
-    let { result } = accessor.compile(node, scope, context);
-    ({ result } = resolve('reduce', result, scope, context));
+  async reduce(node, scope, context, inputProvider, resolveOthers): Promise<ResolvedResult> {
+    let { result } = await accessor.compile(node, scope, context, inputProvider, resolveOthers);
+    ({ result } = await resolveOthers('reduce', result, scope, context, inputProvider));
     if (result.parseType === 'accessor') {
       return {
         result: constant.create({

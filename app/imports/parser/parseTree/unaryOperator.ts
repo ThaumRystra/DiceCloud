@@ -1,7 +1,9 @@
-import resolve, { toString, traverse, map, Context, ResolvedResult } from '/imports/parser/resolve';
-import constant from './constant';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import constant from '/imports/parser/parseTree/constant';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 type UnaryOperatorSymbol = '+' | '-';
 
@@ -11,17 +13,12 @@ export type UnaryOperatorNode = {
   right: ParseNode;
 }
 
-interface UnaryOperatorFactory extends NodeFactory {
+type UnaryOperatorFactory = {
   create(node: Partial<UnaryOperatorNode>): UnaryOperatorNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: UnaryOperatorNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: UnaryOperatorNode): string;
-  traverse(node: UnaryOperatorNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: UnaryOperatorNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<UnaryOperatorNode>;
+  toString: ToStringFunction<UnaryOperatorNode>;
+  traverse: TraverseFunction<UnaryOperatorNode>;
+  map: MapFunction<UnaryOperatorNode>;
 }
 
 const unaryOperator: UnaryOperatorFactory = {
@@ -32,8 +29,8 @@ const unaryOperator: UnaryOperatorFactory = {
       right,
     };
   },
-  resolve(fn, node, scope, context) {
-    const { result: rightNode } = resolve(fn, node.right, scope, context);
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers) {
+    const { result: rightNode } = await resolveOthers(fn, node.right, scope, context, inputProvider);
     if (
       rightNode.parseType !== 'constant'
       || typeof rightNode.value !== 'number'
@@ -59,17 +56,17 @@ const unaryOperator: UnaryOperatorFactory = {
       context,
     };
   },
-  toString(node) {
-    return `${node.operator}${toString(node.right)}`;
+  toString(node, stringOthers) {
+    return `${node.operator}${stringOthers(node.right)}`;
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.right, fn);
+    traverseOthers(node.right, fn);
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.right = map(node.right, fn);
+      node.right = await mapOthers(node.right, fn);
     }
     return resultingNode;
   },

@@ -2,27 +2,30 @@ import call from '/imports/parser/parseTree/call';
 import constant from '/imports/parser/parseTree/constant';
 import operator from '/imports/parser/parseTree/operator';
 import parenthesis from '/imports/parser/parseTree/parenthesis';
-import resolve, { toPrimitiveOrString } from '/imports/parser/resolve';
+import resolve from '/imports/parser/resolve';
+import toPrimitiveOrString from '/imports/parser/toPrimitiveOrString';
 
-export default function computeCalculation(computation, node) {
+export default async function computeCalculation(computation, node) {
   const calcObj = node.data;
   if (!calcObj) return;
   // resolve the parse node into the initial value
-  resolveCalculationNode(calcObj, calcObj.parseNode, computation.scope);
+  await resolveCalculationNode(calcObj, calcObj.parseNode, computation.scope);
 
-  // link and aggregate the effects and proficiencies
+  // link the effects and proficiencies
   linkCalculationEffects(node, computation);
-  aggregateCalculationEffects(calcObj, id => computation.propsById[id]);
   linkCalculationProficiencies(node, computation)
-  aggregateCalculationProficiencies(calcObj, id => computation.propsById[id], computation.scope['proficiencyBonus']?.value || 0);
 
   // Store the unaffected value
   if (calcObj.effectIds || calcObj.proficiencyIds) {
     calcObj.unaffected = toPrimitiveOrString(calcObj.valueNode);
   }
 
+  // Aggregate the effects and proficiencies
+  aggregateCalculationEffects(calcObj, id => computation.propsById[id]);
+  aggregateCalculationProficiencies(calcObj, id => computation.propsById[id], computation.scope['proficiencyBonus']?.value || 0);
+
   // Resolve the valueNode after effects and proficiencies have been applied to it
-  resolveCalculationNode(calcObj, calcObj.valueNode, computation.scope);
+  await resolveCalculationNode(calcObj, calcObj.valueNode, computation.scope);
 
   // Store the value as a primitive
   calcObj.value = toPrimitiveOrString(calcObj.valueNode);
@@ -32,10 +35,13 @@ export default function computeCalculation(computation, node) {
   delete calcObj._localScope;
 }
 
-export function resolveCalculationNode(calculation, parseNode, scope, givenContext) {
+export async function resolveCalculationNode(calculation, parseNode, scope, givenContext) {
+  if (!parseNode) throw new Error('parseNode is required');
   const fn = calculation._parseLevel;
   const calculationScope = { ...calculation._localScope, ...scope };
-  const { result: resultNode, context } = resolve(fn, parseNode, calculationScope, givenContext);
+  const { result: resultNode, context } = await resolve(fn, parseNode, calculationScope, givenContext);
+  if (calculation.hash === 1318417319946211 && calculation._key === 'attackRoll') console.log({ calculation, resultNode, parseNode, ers: context.errors })
+
   calculation.errors = context.errors;
   calculation.valueNode = resultNode;
 }

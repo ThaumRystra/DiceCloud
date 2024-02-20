@@ -3,9 +3,9 @@ import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const scope = id => computation.scope[id];
   assert.isTrue(scope('blugeoning').vulnerability);
   assert.isTrue(scope('customDamage').resistance);

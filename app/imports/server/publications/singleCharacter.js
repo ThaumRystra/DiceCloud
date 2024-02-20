@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import Actions from '/imports/api/engine/actions/ActionEngine';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
@@ -9,6 +8,7 @@ import computeCreature from '/imports/api/engine/computeCreature';
 import VERSION from '/imports/constants/VERSION';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import { rebuildCreatureNestedSets } from '/imports/api/parenting/parentingFunctions';
+import EngineActions from '/imports/api/engine/action/EngineActions';
 
 let schema = new SimpleSchema({
   creatureId: {
@@ -62,7 +62,7 @@ Meteor.publish('singleCharacter', function (creatureId) {
         limit: 20,
         sort: { date: -1 },
       }),
-      Actions.find({
+      EngineActions.find({
         creatureId,
       }),
       // Also publish the owner's username

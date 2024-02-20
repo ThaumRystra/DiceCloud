@@ -1,5 +1,5 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import Task from './Task';
+import Task, { DamagePropTask, ItemAsAmmoTask, PropTask } from './Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import applyDamagePropTask from '/imports/api/engine/action/tasks/applyDamagePropTask';
 import applyItemAsAmmoTask from '/imports/api/engine/action/tasks/applyItemAsAmmoTask';
@@ -7,9 +7,19 @@ import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import applyProperties from '/imports/api/engine/action/applyProperties';
 import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 
+// DamagePropTask promises a number of actual damage done
+export default async function applyTask(
+  action: EngineAction, task: DamagePropTask, userInput: InputProvider
+): Promise<number>
+
+// Other tasks promise nothing
+export default async function applyTask(
+  action: EngineAction, task: PropTask | ItemAsAmmoTask, userInput: InputProvider
+): Promise<void>
+
 export default async function applyTask(
   action: EngineAction, task: Task, userInput: InputProvider
-): Promise<void> {
+): Promise<void | number> {
   action.taskCount += 1;
   if (action.taskCount > 100) throw 'Only 100 properties can be applied at once';
 

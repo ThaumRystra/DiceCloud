@@ -1,105 +1,57 @@
-import nodeTypeIndex from './parseTree/_index';
+import '/imports/parser/parseTree/array';
+import factories from '/imports/parser/parseTree';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
-import { ConstantValueType } from '/imports/parser/parseTree/constant';
+import rollDice from '/imports/parser/rollDice';
+import ResolveLevel from './types/ResolveLevel';
+import ResolvedResult from './types/ResolvedResult';
+import Context from './types/Context';
+import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
 
 // Takes a parse node and computes it to a set detail level
 // returns {result, context}
-export default function resolve(
-  fn: 'roll' | 'reduce' | 'compile',
+export default async function resolve(
+  fn: ResolveLevel,
   node: ParseNode,
-  scope: Record<string, any>,
-  context = new Context()
-): ResolvedResult {
-  if (!node) throw 'Node must be supplied';
-  const factory = nodeTypeIndex[node.parseType];
-  const handlerFunction = factory[fn];
+  scope: Record<string, any> = {},
+  context = new Context(),
+  inputProvider = computationInputProvider,
+): Promise<ResolvedResult> {
+  if (!node) throw new Error('Node must be supplied');
+  const factory = factories[node.parseType];
+  const handlerFunction: ResolveLevelFunction<ParseNode> = factory[fn];
   if (!factory) {
     throw new Meteor.Error(`Parse node type: ${node.parseType} not implemented`);
   }
-  if (factory.resolve) {
-    return factory.resolve(fn, node, scope, context);
-  } else if (handlerFunction) {
-    return handlerFunction(node, scope, context);
-  } else if (fn === 'reduce' && factory.roll) {
-    return factory.roll(node, scope, context)
+  if ('resolve' in factory) {
+    return factory.resolve(fn, node as any, scope, context, inputProvider, resolve);
+  } else if (fn in factory) {
+    return handlerFunction(node, scope, context, inputProvider, resolve);
+  } else if (fn === 'reduce' && 'roll' in factory) {
+    return factory.roll(node as any, scope, context, inputProvider, resolve)
   } else if (factory.compile) {
-    return factory.compile(node, scope, context)
+    return factory.compile(node as any, scope, context, inputProvider, resolve)
   } else {
     throw new Meteor.Error('Compile not implemented on ' + node.parseType);
   }
 }
 
-export function toString(node: ParseNode) {
-  if (!node) return '';
-  const type = nodeTypeIndex[node.parseType];
-  if (!type?.toString) {
-    throw new Meteor.Error('toString not implemented on ' + node.parseType);
-  }
-  return type.toString(node);
-}
-
-export function toPrimitiveOrString(node: ParseNode): ConstantValueType {
-  if (!node) return '';
-  if (node.parseType === 'constant') return node.value;
-  if (node.parseType === 'error') return undefined;
-  return toString(node);
-}
-
-export function traverse(node: ParseNode, fn: (ParseNode) => any): ReturnType<typeof fn> {
-  if (!node) return;
-  const type = nodeTypeIndex[node.parseType];
-  if (!type) {
-    console.error(node);
-    throw new Meteor.Error('Not valid parse node');
-  }
-  if (type.traverse) {
-    return type.traverse(node, fn);
-  }
-  return fn(node);
-}
-
-export function map(node: ParseNode, fn: (ParseNode) => any): ReturnType<typeof fn> {
-  if (!node) return;
-  const type = nodeTypeIndex[node.parseType];
-  if (!type) {
-    console.error(node);
-    throw new Meteor.Error('Not valid parse node');
-  }
-  if (type.map) {
-    return type.map(node, fn);
-  }
-  return fn(node);
-}
-
-export type ResolvedResult = {
-  result: ParseNode,
-  context: Context
-}
-
-export class Context {
-  errors: (Error | { type: string, message: string })[];
-  rolls: { number: number, diceSize: number, values: number[] }[];
-  options: { [key: string]: any };
-
-  constructor({ errors = [], rolls = [], options = {} } = {}) {
-    this.errors = errors;
-    this.rolls = rolls;
-    this.options = options;
-  }
-
-  error(e: Error | string) {
-    if (!e) return;
-    if (typeof e === 'string') {
-      this.errors.push({
-        type: 'error',
-        message: e,
-      });
-    } else {
-      this.errors.push(e);
+const computationInputProvider: InputProvider = {
+  /**
+   * By default, just roll the dice as usual
+   */
+  async rollDice(dice) {
+    return dice.map(d => rollDice(d.number, d.diceSize));
+  },
+  /**
+   * By default just choose the minimum number of options from the front of the list
+   */
+  async choose(choices, quantity = [1, 1]) {
+    const chosen: string[] = [];
+    const choiceQuantity = quantity[0] <= 0 ? 1 : quantity[0];
+    for (let i = 0; i < choiceQuantity && i < choices.length; i += 1) {
+      chosen.push(choices[i]._id);
     }
-  }
-
-  roll(r) {
-    this.rolls.push(r);
+    return chosen;
   }
 }

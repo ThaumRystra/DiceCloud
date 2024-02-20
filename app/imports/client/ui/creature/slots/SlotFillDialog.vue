@@ -558,3 +558,4 @@ export default {
   opacity: 0.7;
 }
 </style>
+resolveimport { toString } from '/imports/parser/toString';

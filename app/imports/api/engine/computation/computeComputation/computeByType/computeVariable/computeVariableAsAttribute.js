@@ -8,11 +8,9 @@ export default function computeVariableAsAttribute(computation, node, prop) {
   // Apply damage in a way that respects the damage rules, modifying damage if need be
   // Bound the damage
   if (!prop.ignoreLowerLimit && prop.damage > prop.total) {
-    console.log(`reducing damage from ${prop.damage} to ${prop.total}`);
     prop.damage = prop.total;
   }
   if (!prop.ignoreUpperLimit && prop.damage < 0) {
-    console.log(`increasing damage from ${prop.damage} to 0`);
     prop.damage = 0;
   }
   // Apply damage

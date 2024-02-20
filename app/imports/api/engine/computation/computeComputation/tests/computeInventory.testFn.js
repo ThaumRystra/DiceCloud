@@ -4,9 +4,9 @@ import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
 import { applyNestedSetProperties, compareOrder } from '/imports/api/parenting/parentingFunctions';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   const scope = id => computation.scope[id].value;
 

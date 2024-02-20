@@ -1,4 +1,5 @@
-import { Context, toPrimitiveOrString } from '/imports/parser/resolve';
+import Context from '../../../../parser/types/Context';
+import toPrimitiveOrString from '/imports/parser/toPrimitiveOrString';
 import {
   aggregateCalculationEffects,
   aggregateCalculationProficiencies,
@@ -26,7 +27,7 @@ export default async function recalculateCalculation(
   const {
     result: unaffectedResult,
     context
-  } = resolve(parseLevel, calcObj.parseNode, scope);
+  } = await resolve(parseLevel, calcObj.parseNode, scope);
   calcObj.valueNode = unaffectedResult;
 
   // store the unaffected value
@@ -47,7 +48,7 @@ export default async function recalculateCalculation(
   // Resolve the modified valueNode, use the same context
   const {
     result: finalResult
-  } = resolve(parseLevel, calcObj.parseNode, scope, context);
+  } = await resolve(parseLevel, calcObj.parseNode, scope, context);
 
   // Store the errors
   calcObj.errors = context.errors;
@@ -55,12 +56,12 @@ export default async function recalculateCalculation(
   // Store the value and its primitive
   calcObj.value = toPrimitiveOrString(finalResult);
   calcObj.valueNode = finalResult;
-
 }
 
 export async function rollAndReduceCalculation(
   calcObj: CalculatedField, action: EngineAction, userInput: InputProvider
 ) {
+  if (!calcObj) throw new Error('calcObj is required');
   const context = new Context();
   const scope = await getEffectiveActionScope(action);
   // Compile
@@ -68,10 +69,10 @@ export async function rollAndReduceCalculation(
   const compiled = calcObj.valueNode;
 
   // Roll
-  const { result: rolled } = resolve('roll', calcObj.valueNode, scope, context);
+  const { result: rolled } = await resolve('roll', calcObj.valueNode, scope, context, userInput);
 
   // Reduce
-  const { result: reduced } = resolve('reduce', rolled, scope, context);
+  const { result: reduced } = await resolve('reduce', rolled, scope, context, userInput);
 
   // Return
   return { compiled, rolled, reduced, errors: context.errors };

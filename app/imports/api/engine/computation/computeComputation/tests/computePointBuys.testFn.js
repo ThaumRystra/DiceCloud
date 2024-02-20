@@ -3,9 +3,9 @@ import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation.js';
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn.js';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   assert.equal(prop('strengthId').value, 11, 'Point buys should apply a base value when active');
 }

@@ -1,7 +1,11 @@
-import resolve, { traverse, toString, map, ResolvedResult, Context } from '/imports/parser/resolve';
-import error from './error';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import error from '/imports/parser/parseTree/error';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
+import toString from '/imports/parser/toString';
+import { isFiniteNode } from '/imports/parser/parseTree/constant';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 export type IndexNode = {
   parseType: 'index';
@@ -9,17 +13,12 @@ export type IndexNode = {
   index: ParseNode;
 }
 
-interface IndexFactory extends NodeFactory {
+type IndexFactory = {
   create(node: Partial<IndexNode>): IndexNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: IndexNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: IndexNode): string;
-  traverse(node: IndexNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: IndexNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<IndexNode>;
+  toString: ToStringFunction<IndexNode>;
+  traverse: TraverseFunction<IndexNode>;
+  map: MapFunction<IndexNode>;
 }
 
 const indexNode: IndexFactory = {
@@ -30,25 +29,22 @@ const indexNode: IndexFactory = {
       index,
     }
   },
-  resolve(fn, node, scope, context) {
-    const { result: index } = resolve(fn, node.index, scope, context);
-    const { result: array } = resolve(fn, node.array, scope, context);
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers) {
+    const { result: index } = await resolveOthers(fn, node.index, scope, context, inputProvider);
+    const { result: array } = await resolveOthers(fn, node.array, scope, context, inputProvider);
 
     if (
-      index.valueType === 'number' &&
+      isFiniteNode(index) &&
       Number.isInteger(index.value) &&
       array.parseType === 'array'
     ) {
       if (index.value < 1 || index.value > array.values.length) {
-        context.error({
-          type: 'warning',
-          message: `Index of ${index.value} is out of range for an array` +
-            ` of length ${array.values.length}`,
-        });
+        context.error(`Index of ${index.value} is out of range for an array` +
+          ` of length ${array.values.length}`);
       }
       const selection = array.values[index.value - 1];
       if (selection) {
-        return resolve(fn, selection, scope, context);
+        return resolveOthers(fn, selection, scope, context, inputProvider);
       }
     } else if (fn === 'reduce') {
       if (array.parseType !== 'array') {
@@ -61,7 +57,7 @@ const indexNode: IndexFactory = {
           }),
           context,
         };
-      } else if (!index.isInteger) {
+      } else if (!isFiniteNode(index) || !Number.isInteger(index.value)) {
         const message = `${toString(array)} is not an integer index of the array`
         context.error(message);
         return {
@@ -81,19 +77,19 @@ const indexNode: IndexFactory = {
       context,
     };
   },
-  toString(node) {
-    return `${toString(node.array)}[${toString(node.index)}]`;
+  toString(node, stringOthers) {
+    return `${stringOthers(node.array)}[${stringOthers(node.index)}]`;
   },
-  traverse(node, fn: (node: ParseNode) => any) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.array, fn);
-    traverse(node.index, fn);
+    traverseOthers(node.array, fn);
+    traverseOthers(node.index, fn);
   },
-  map(node, fn: (node: ParseNode) => any) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.array = map(node.array, fn);
-      node.index = map(node.index, fn);
+      node.array = await mapOthers(node.array, fn);
+      node.index = await mapOthers(node.index, fn);
     }
     return resultingNode;
   },

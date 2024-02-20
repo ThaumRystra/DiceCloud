@@ -3,9 +3,9 @@ import { assert } from 'chai';
 import computeCreatureComputation from '../../computeCreatureComputation';
 import clean from '../../utility/cleanProp.testFn';
 
-export default function () {
+export default async function () {
   const computation = buildComputationFromProps(testProperties);
-  computeCreatureComputation(computation);
+  await computeCreatureComputation(computation);
   const prop = id => computation.propsById[id];
   const scope = variableName => computation.scope[variableName];
   assert.equal(prop('emptyId').value, 0, 'calculates empty props to zero');

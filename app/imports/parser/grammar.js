@@ -2,7 +2,7 @@
 // http://github.com/Hardmath123/nearley
 function id(x) { return x[0]; }
 
-import node from './parseTree/_index';
+import node from '/imports/parser/parseTree/';
 
 import moo from 'moo';
 

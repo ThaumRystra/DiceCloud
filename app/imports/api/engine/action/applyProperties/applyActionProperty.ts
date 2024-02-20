@@ -23,7 +23,7 @@ export default async function applyActionProperty(
   //Log the name and summary, check that the property has enough resources to fire
   const content: LogContent = { name: getPropertyTitle(prop) };
   if (prop.summary?.text) {
-    await recalculateInlineCalculations(prop.summary, action);
+    await recalculateInlineCalculations(prop.summary, action, 'reduce', userInput);
     content.value = prop.summary.value;
   }
   if (prop.silent) content.silenced = true;
@@ -188,7 +188,7 @@ async function rollAttack(attack, scope, resultPushScope, userInput: InputProvid
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
   if (scope['~attackAdvantage']?.value === 1) {
-    const [[a, b]] = await userInput.rollDice(attack, [{ number: 2, diceSize: 20 }]);
+    const [[a, b]] = await userInput.rollDice([{ number: 2, diceSize: 20 }]);
     if (a >= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
@@ -197,7 +197,7 @@ async function rollAttack(attack, scope, resultPushScope, userInput: InputProvid
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
   } else if (scope['~attackAdvantage']?.value === -1) {
-    const [[a, b]] = await userInput.rollDice(attack, [{ number: 2, diceSize: 20 }]);
+    const [[a, b]] = await userInput.rollDice([{ number: 2, diceSize: 20 }]);
     if (a <= b) {
       value = a;
       resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
@@ -206,7 +206,7 @@ async function rollAttack(attack, scope, resultPushScope, userInput: InputProvid
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
   } else {
-    [[value]] = await userInput.rollDice(attack, [{ number: 1, diceSize: 20 }]);
+    [[value]] = await userInput.rollDice([{ number: 1, diceSize: 20 }]);
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
   resultPushScope['~attackDiceRoll'] = { value };
@@ -218,10 +218,12 @@ async function rollAttack(attack, scope, resultPushScope, userInput: InputProvid
 
 function applyCrits(value, scope, resultPushScope) {
   const scopeCritTarget = getNumberFromScope('~criticalHitTarget', scope);
-  const criticalHitTarget = Number.isFinite(scopeCritTarget) ? scopeCritTarget : 20;
+  const criticalHitTarget = scopeCritTarget !== undefined &&
+    Number.isFinite(scopeCritTarget) ? scopeCritTarget : 20;
 
   const scopeCritMissTarget = getNumberFromScope('~criticalMissTarget', scope);
-  const criticalMissTarget = Number.isFinite(scopeCritMissTarget) ? scopeCritMissTarget : 1;
+  const criticalMissTarget = scopeCritMissTarget !== undefined &&
+    Number.isFinite(scopeCritMissTarget) ? scopeCritMissTarget : 1;
 
   const criticalHit = value >= criticalHitTarget;
   const criticalMiss = value <= criticalMissTarget;

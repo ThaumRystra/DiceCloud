@@ -6,7 +6,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import { parse, prettifyParseError } from '/imports/parser/parser';
-import resolve, { toString } from '/imports/parser/resolve';
+import resolve from '/imports/parser/resolve';
+import toString from '/imports/parser/toString';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { assertUserInTabletop } from '/imports/api/tabletop/methods/shared/tabletopPermissions.js';
 
@@ -196,7 +197,7 @@ const logRoll = new ValidatedMethod({
       optional: true,
     },
   }).validator(),
-  run({ roll, tabletopId, creatureId }) {
+  async run({ roll, tabletopId, creatureId }) {
     if (!creatureId && !tabletopId) throw new Meteor.Error('no-id',
       'A creature id or tabletop id must be given'
     );
@@ -230,7 +231,7 @@ const logRoll = new ValidatedMethod({
       let {
         result: compiled,
         context
-      } = resolve('compile', parsedResult, variables);
+      } = await resolve('compile', parsedResult, variables);
       const compiledString = toString(compiled);
       if (!equalIgnoringWhitespace(compiledString, roll)) logContent.push({
         value: roll
@@ -238,12 +239,12 @@ const logRoll = new ValidatedMethod({
       logContent.push({
         value: compiledString
       });
-      let { result: rolled } = resolve('roll', compiled, variables, context);
+      let { result: rolled } = await resolve('roll', compiled, variables, context);
       let rolledString = toString(rolled);
       if (rolledString !== compiledString) logContent.push({
         value: rolledString
       });
-      let { result } = resolve('reduce', rolled, variables, context);
+      let { result } = await resolve('reduce', rolled, variables, context);
       let resultString = toString(result);
       if (resultString !== rolledString) logContent.push({
         value: resultString

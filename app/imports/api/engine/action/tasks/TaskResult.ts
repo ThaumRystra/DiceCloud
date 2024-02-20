@@ -1,3 +1,5 @@
+import Context from '../../../../parser/types/Context';
+
 /**
  * The result of running a task containing all the changes that need to be made to the listed
  * targets
@@ -35,6 +37,22 @@ export default class TaskResult {
       latestMutation.contents = [];
     }
     latestMutation.contents.push(content);
+  }
+  appendParserContextErrors(context: Context, targetIds) {
+    if (!context.errors?.length) return;
+    if (!this.mutations.length) {
+      this.mutations.push({ targetIds, contents: [] });
+    }
+    const latestMutation = this.mutations[this.mutations.length - 1]
+    if (!latestMutation.contents) {
+      latestMutation.contents = [];
+    }
+    context.errors?.forEach(error => {
+      latestMutation.contents?.push({
+        name: 'Error',
+        value: error.message,
+      });
+    });
   }
 }
 

@@ -1,28 +1,26 @@
-import resolve, { toString, traverse, map, Context, ResolvedResult } from '/imports/parser/resolve';
-import constant from './constant';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import { serialMap } from '/imports/api/utility/asyncMap';
+import constant from '/imports/parser/parseTree/constant';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 export type ArrayNode = {
   parseType: 'array';
   values: ParseNode[];
 }
 
-interface ArrayFactory extends NodeFactory {
+type ArrayFactory = {
   create(node: Partial<ArrayNode>): ArrayNode;
   fromConstantArray(array: (string | number | boolean | undefined)[]): ArrayNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: ArrayNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: ArrayNode): string;
-  traverse(node: ArrayNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: ArrayNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<ArrayNode>;
+  toString: ToStringFunction<ArrayNode>;
+  traverse: TraverseFunction<ArrayNode>;
+  map: MapFunction<ArrayNode>;
 }
 
-const array: ArrayFactory = {
+const arrayFactory: ArrayFactory = {
   create({ values }: { values: ParseNode[] }) {
     return {
       parseType: 'array',
@@ -44,32 +42,33 @@ const array: ArrayFactory = {
         return constant.create({ value: undefined });
       }
     });
-    return array.create({ values });
+    return arrayFactory.create({ values });
   },
-  resolve(fn, node, scope, context): ResolvedResult {
-    const values = node.values.map(node => {
-      const { result } = resolve(fn, node, scope, context);
-      return result;
-    });
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers) {
+    const values: ParseNode[] = [];
+    for (const val of node.values) {
+      const { result } = await resolveOthers(fn, val, scope, context, inputProvider);
+      values.push(result);
+    }
     return {
-      result: array.create({ values }),
+      result: arrayFactory.create({ values }),
       context,
     };
   },
-  toString(node) {
-    return `[${node.values.map(value => toString(value)).join(', ')}]`;
+  toString(node, toStringOthers) {
+    return `[${node.values.map(value => toStringOthers(value)).join(', ')}]`;
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    node.values.forEach(value => traverse(value, fn));
+    node.values.forEach(value => traverseOthers(value, fn));
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.values = node.values.map(value => map(value, fn));
+      node.values = await serialMap(node.values, async value => await mapOthers(value, fn));
     }
     return resultingNode;
   },
 }
 
-export default array;
+export default arrayFactory;

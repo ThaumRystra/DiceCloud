@@ -1,5 +1,6 @@
-import { parse } from './parser';
-import resolve, { toString } from './resolve';
+import { parse } from '/imports/parser/parser';
+import resolve from '/imports/parser/resolve';
+import toString from './toString';
 import { assert } from 'chai';
 
 describe('Parser', function () {
@@ -7,19 +8,19 @@ describe('Parser', function () {
     assert.typeOf(parse('1'), 'object');
   });
   it('parses various operations', function () {
-    assert.typeOf(parse('1 + 2 * 3 / 4 * 1d8'), 'object');
+    assert.typeOf(parse('[1,2,3][2] + 1 + 2 * 3 / 4 * 1d8'), 'object');
   });
-  it('simplifies basic addition and multiplication', function () {
+  it('simplifies basic addition and multiplication', async function () {
     let add = parse('1 + 3 + 3 + 4');
-    ({ result: add } = resolve('compile', add));
+    ({ result: add } = await resolve('compile', add));
     assert.equal(toString(add), '11');
 
     let mul = parse('2 * 3 * 4');
-    ({ result: mul } = resolve('compile', mul));
+    ({ result: mul } = await resolve('compile', mul));
     assert.equal(toString(mul), '24');
   });
-  it('simplifies addition when possible, even if a roll is in the way', function () {
-    let { result } = resolve('compile', parse('1 + 3 + d12 + 3 + 4'));
+  it('simplifies addition when possible, even if a roll is in the way', async function () {
+    let { result } = await resolve('compile', parse('1 + 3 + d12 + 3 + 4'));
     assert.equal(toString(result), 'd12 + 11');
   });
 });

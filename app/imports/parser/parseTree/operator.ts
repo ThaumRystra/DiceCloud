@@ -1,7 +1,9 @@
-import resolve, { toString, traverse, map, ResolvedResult, Context } from '/imports/parser/resolve';
-import constant from './constant';
+import constant, { ConstantValueType, isFiniteNode } from '/imports/parser/parseTree/constant';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
-import NodeFactory, { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
+import ResolveFunction from '/imports/parser/types/ResolveFunction';
+import TraverseFunction from '/imports/parser/types/TraverseFunction';
+import MapFunction from '/imports/parser/types/MapFunction';
+import ToStringFunction from '/imports/parser/types/ToStringFunction';
 
 type OperatorSymbol = '*' | '/' | '^' | '+' | '-' | '%' | '&' | '&&' | '|' | '||' | '=' |
   '==' | '===' | '!=' | '!==' | '>' | '<' | '>=' | '<=';
@@ -13,17 +15,12 @@ export type OperatorNode = {
   operator: OperatorSymbol;
 }
 
-interface OperatorFactory extends NodeFactory {
+type OperatorFactory = {
   create(node: Partial<OperatorNode>): OperatorNode;
-  compile?: undefined;
-  roll?: undefined;
-  reduce?: undefined;
-  resolve(
-    fn: ResolveLevel, node: OperatorNode, scope: Record<string, any>, context: Context
-  ): ResolvedResult;
-  toString(node: OperatorNode): string;
-  traverse(node: OperatorNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
-  map(node: OperatorNode, fn: (node: ParseNode) => any): ReturnType<typeof fn>;
+  resolve: ResolveFunction<OperatorNode>;
+  toString: ToStringFunction<OperatorNode>;
+  traverse: TraverseFunction<OperatorNode>;
+  map: MapFunction<OperatorNode>;
 }
 
 // Which operators can be considered commutative by the parser
@@ -43,10 +40,10 @@ const operator: OperatorFactory = {
       operator,
     };
   },
-  resolve(fn, node, scope, context) {
-    const { result: leftNode } = resolve(fn, node.left, scope, context);
-    const { result: rightNode } = resolve(fn, node.right, scope, context);
-    let left, right;
+  async resolve(fn, node, scope, context, inputProvider, resolveOthers) {
+    const { result: leftNode } = await resolveOthers(fn, node.left, scope, context, inputProvider);
+    const { result: rightNode } = await resolveOthers(fn, node.right, scope, context, inputProvider);
+    let left: ConstantValueType, right: ConstantValueType;
 
     // If commutation is possible, do it and return that result
     const commutatedResult = reorderCommutativeOperations(node, leftNode, rightNode);
@@ -73,32 +70,39 @@ const operator: OperatorFactory = {
       context,
     };
   },
-  toString(node) {
+  toString(node, stringOthers) {
     const { left, right, operator } = node;
     // special case of adding a negative number
-    if (operator === '+' && right.valueType === 'number' && right.value < 0) {
-      return `${toString(left)} - ${-right.value}`
+    if (operator === '+' && isFiniteNode(right) && right.value < 0) {
+      return `${stringOthers(left)} - ${-right.value}`
     }
-    return `${toString(left)} ${operator} ${toString(right)}`;
+    return `${stringOthers(left)} ${operator} ${stringOthers(right)}`;
   },
-  traverse(node, fn) {
+  traverse(node, fn, traverseOthers) {
     fn(node);
-    traverse(node.left, fn);
-    traverse(node.right, fn);
+    traverseOthers(node.left, fn);
+    traverseOthers(node.right, fn);
   },
-  map(node, fn) {
-    const resultingNode = fn(node);
+  async map(node, fn, mapOthers) {
+    const resultingNode = await fn(node);
     if (resultingNode === node) {
-      node.left = map(node.left, fn);
-      node.right = map(node.right, fn);
+      node.left = await mapOthers(node.left, fn);
+      node.right = await mapOthers(node.right, fn);
     }
     return resultingNode;
   },
 }
 
-function applyOperator(operator: OperatorSymbol, left: ParseNode, right: ParseNode) {
+function applyOperator(operator: OperatorSymbol, left: ConstantValueType, right: ConstantValueType) {
   let result;
+  if (left === undefined) {
+    left = 0;
+  }
+  if (right === undefined) {
+    right = 0;
+  }
   switch (operator) {
+    // Typescript might complain about these, but they return NaN as expected
     case '+': result = left + right; break;
     case '-': result = left - right; break;
     case '*': result = left * right; break;
