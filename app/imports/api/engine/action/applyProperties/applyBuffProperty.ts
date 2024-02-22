@@ -57,7 +57,7 @@ export default async function applyBuffProperty(
     //Log the buff
     let logValue = prop.description?.value
     if (prop.description?.text) {
-      recalculateInlineCalculations(prop.description, action, 'resolve', userInput);
+      recalculateInlineCalculations(prop.description, action, 'reduce', userInput);
       logValue = prop.description?.value;
     }
     result.appendLog({

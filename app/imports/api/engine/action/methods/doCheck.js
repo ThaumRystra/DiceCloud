@@ -5,9 +5,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import rollDice from '/imports/parser/rollDice';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import { applyTriggers } from '/imports/api/engine/actions/applyTriggers';
-import ActionContext from '/imports/api/engine/actions/ActionContext';
-import recalculateCalculation from '../../actions/applyPropertyByType/shared/recalculateCalculation';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 
 // TODO Migrate this to the new action engine

@@ -1,6 +1,6 @@
 import { some, includes, difference, intersection } from 'lodash';
 
-import { getParseNodeFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import { getConstantValueFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
@@ -9,15 +9,16 @@ import { PropTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { isFiniteNode } from '/imports/parser/parseTree/constant';
 import resolve from '/imports/parser/resolve';
-import Context from '../../../../parser/types/Context';
 import toString from '/imports/parser/toString';
 import { getPropertiesOfType } from '/imports/api/engine/loadCreatures';
 import applyTask from '/imports/api/engine/action/tasks/applyTask';
 import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
+import Context from '/imports/parser/types/Context';
+import applySavingThrowProperty from '/imports/api/engine/action/applyProperties/applySavingThrowProperty';
 
 export default async function applyDamageProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput
+  task: PropTask, action: EngineAction, result: TaskResult, inputProvider: InputProvider
 ) {
   const prop = task.prop;
   const scope = getEffectiveActionScope(action);
@@ -28,7 +29,7 @@ export default async function applyDamageProperty(
   // Choose target
   const damageTargets = prop.target === 'self' ? [action.creatureId] : task.targetIds;
   // Determine if the hit is critical
-  const criticalHit = getParseNodeFromScope('~criticalHit', scope)?.value
+  const criticalHit = await getConstantValueFromScope('~criticalHit', scope)
     && prop.damageType !== 'healing'; // Can't critically heal
   // Double the damage rolls if the hit is critical
   const context = new Context({
@@ -40,7 +41,7 @@ export default async function applyDamageProperty(
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // roll the dice only and store that string
-  recalculateCalculation(prop.amount, action, 'compile', userInput);
+  recalculateCalculation(prop.amount, action, 'compile', inputProvider);
   const { result: rolled } = await resolve('roll', prop.amount.valueNode, scope, context);
   if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
@@ -72,7 +73,7 @@ export default async function applyDamageProperty(
     typeof damage !== 'number'
     || !isFinite(damage)
   ) {
-    return applyDefaultAfterPropTasks(action, prop, damageTargets, userInput);
+    return applyDefaultAfterPropTasks(action, prop, damageTargets, inputProvider);
   }
 
   // Round the damage to a whole number
@@ -80,7 +81,7 @@ export default async function applyDamageProperty(
   scope['~damage'] = { value: damage };
 
   // Convert extra damage into the stored type
-  const lastDamageType = getParseNodeFromScope('~lastDamageType')?.value;
+  const lastDamageType = await getConstantValueFromScope('~lastDamageType', scope);
   if (prop.damageType === 'extra' && typeof lastDamageType === 'string') {
     prop.damageType = lastDamageType;
   }
@@ -95,10 +96,10 @@ export default async function applyDamageProperty(
     (prop.damageType !== 'healing' ? ' damage ' : '');
 
   // If there is a save, calculate the save damage
-  let damageOnSave, saveNode, saveRoll;
+  let damageOnSave, saveProp, saveRoll;
   if (prop.save) {
     if (prop.save.damageFunction?.calculation) {
-      recalculateCalculation(prop.save.damageFunction, action, 'compile', userInput);
+      recalculateCalculation(prop.save.damageFunction, action, 'compile', inputProvider);
       context.errors = [];
       const { result: saveDamageRolled } = await resolve(
         'roll', prop.save.damageFunction.valueNode, scope, context
@@ -112,14 +113,14 @@ export default async function applyDamageProperty(
       if (
         !isFiniteNode(saveDamageResult)
       ) {
-        return applyDefaultAfterPropTasks(action, prop, damageTargets, userInput);
+        return applyDefaultAfterPropTasks(action, prop, damageTargets, inputProvider);
       }
       // Round the damage to a whole number
       damageOnSave = Math.floor(saveDamageResult.value);
     } else {
       damageOnSave = Math.floor(damage / 2);
     }
-    saveNode = {
+    saveProp = {
       node: {
         ...prop.save,
         name: prop.save.stat,
@@ -136,8 +137,11 @@ export default async function applyDamageProperty(
 
       // If there is a saving throw, apply that first
       if (prop.save) {
-        await applySavingThrow(saveNode, actionContext);
-        if (getParseNodeFromScope('~saveSucceeded', scope)?.value) {
+        await applySavingThrowProperty({
+          prop: saveProp,
+          targetIds: task.targetIds,
+        }, action, result, inputProvider);
+        if (await getConstantValueFromScope('~saveSucceeded', scope)) {
           // Log the total damage
           logValue.push(toString(reduced));
           // Log the save damage
@@ -165,14 +169,18 @@ export default async function applyDamageProperty(
 
       // Deal the damage to the target
       await dealDamage(
-        action, prop, result, userInput, target, prop.damageType, damageToApply
+        action, prop, result, inputProvider, target, prop.damageType, damageToApply
       );
     }
   } else {
     // There are no targets, just log the result
     logValue.push(`**${damage}** ${suffix}`);
     if (prop.save) {
-      await applySavingThrow(saveNode, actionContext);
+      await applySavingThrowProperty(saveProp, action, result, inputProvider);
+      await applySavingThrowProperty({
+        prop: saveProp,
+        targetIds: task.targetIds,
+      }, action, result, inputProvider);
       logValue.push(`**${damageOnSave}** ${suffix} on a successful save`);
     }
   }
@@ -181,7 +189,7 @@ export default async function applyDamageProperty(
     value: logValue.join('\n'),
     inline: true,
   }, damageTargets);
-  return applyDefaultAfterPropTasks(action, prop, damageTargets, userInput);
+  return applyDefaultAfterPropTasks(action, prop, damageTargets, inputProvider);
 }
 
 function damageFunctionText(save) {

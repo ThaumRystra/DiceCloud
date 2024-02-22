@@ -102,7 +102,7 @@ async function applyAttackToTarget(
   const targetScope = getVariables(targetId);
   const targetArmor = getNumberFromScope('armor', targetScope)
 
-  if (Number.isFinite(targetArmor)) {
+  if (targetArmor !== undefined) {
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
         result > targetArmor ? 'Hit!' : 'Miss!';

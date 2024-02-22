@@ -9,14 +9,6 @@ import {
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
 import { Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import Alea from 'alea';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-
-process.on('unhandledRejection', (error, p) => {
-  console.dir(error.stack);
-  console.error('Unhandled Rejection at:', p, 'reason:', error)
-  process.exit(1)
-});
 
 const [
   creatureId, targetCreatureId, targetCreature2Id,

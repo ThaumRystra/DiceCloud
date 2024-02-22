@@ -173,16 +173,13 @@ const call: CallFactory = {
         expectedType = argumentsExpected[index];
       }
       if (expectedType === 'parseNode') return;
-      if (
-        node.parseType !== expectedType
-        || (
-          node.parseType === 'constant'
-          && node.valueType !== expectedType
-        )
-      ) failed = true;
+      failed = !(
+        node.parseType === expectedType
+        || (node.parseType === 'constant' && node.valueType === expectedType)
+      );
       if (failed && fn === 'reduce') {
         const typeName = typeof expectedType === 'string' ? expectedType : expectedType.constructor.name;
-        const nodeName = node.parseType;
+        const nodeName = node.parseType === 'constant' ? node.valueType : node.parseType;
         context.error(`Incorrect arguments to ${callNode.functionName} function` +
           `expected ${typeName} got ${nodeName}`);
       }

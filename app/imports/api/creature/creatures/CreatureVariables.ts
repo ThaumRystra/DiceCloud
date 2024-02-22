@@ -2,6 +2,9 @@ import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
 import array from '/imports/parser/parseTree/array';
 import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
+import resolve from '/imports/parser/resolve';
+import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import Context from '/imports/parser/types/Context';
 
 //set up the collection for creature variables
 const CreatureVariables = new Mongo.Collection('creatureVariables');
@@ -42,6 +45,15 @@ export function getNumberFromScope(name, scope) {
   if (!parseNode || !isFiniteNode(parseNode)) {
     return undefined;
   }
+  return parseNode.value;
+}
+
+export async function getConstantValueFromScope(
+  name, scope
+) {
+  const parseNode = getParseNodeFromScope(name, scope);
+  if (!parseNode) return;
+  if (parseNode.parseType !== 'constant') return;
   return parseNode.value;
 }
 
